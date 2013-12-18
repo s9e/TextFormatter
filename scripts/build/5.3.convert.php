@@ -88,16 +88,16 @@ function convertCustom($filepath, &$file)
 				'$test=$this;DummyBundle::$afterParse = function ($arg) use ($test)'
 			),
 			array(
-				"\$this->assertSame('<pt></pt>', \$arg);",
-				"\$test->assertSame('<pt></pt>', \$arg);"
+				"\$this->assertSame('<t></t>', \$arg);",
+				"\$test->assertSame('<t></t>', \$arg);"
 			),
 			array(
 				'DummyBundle::$beforeRender = function ($arg)',
 				'$test=$this;DummyBundle::$beforeRender = function ($arg) use ($test)'
 			),
 			array(
-				"\$this->assertSame('<pt></pt>', \$arg);",
-				"\$test->assertSame('<pt></pt>', \$arg);",
+				"\$this->assertSame('<t></t>', \$arg);",
+				"\$test->assertSame('<t></t>', \$arg);",
 			),
 			array(
 				'DummyBundle::$afterRender = function ($arg)',
@@ -112,8 +112,8 @@ function convertCustom($filepath, &$file)
 				'$test=$this;DummyBundle::$beforeUnparse = function ($arg) use ($test)'
 			),
 			array(
-				"\$this->assertSame('<pt>original</pt>', \$arg);",
-				"\$test->assertSame('<pt>original</pt>', \$arg);"
+				"\$this->assertSame('<t>original</t>', \$arg);",
+				"\$test->assertSame('<t>original</t>', \$arg);"
 			),
 			array(
 				'DummyBundle::$afterUnparse = function ($arg)',

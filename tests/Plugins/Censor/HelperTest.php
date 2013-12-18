@@ -121,7 +121,7 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar');
 
-		$xml = '<rt>foo <CENSOR>bar</CENSOR> baz</rt>';
+		$xml = '<r>foo <CENSOR>bar</CENSOR> baz</r>';
 
 		$this->assertSame(
 			$xml,
@@ -136,10 +136,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar', 'baz');
 
-		$xml = '<rt>foo <CENSOR>bar</CENSOR> <CENSOR with="****">bar</CENSOR> baz</rt>';
+		$xml = '<r>foo <CENSOR>bar</CENSOR> <CENSOR with="****">bar</CENSOR> baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <CENSOR with="baz">bar</CENSOR> <CENSOR with="baz">bar</CENSOR> baz</rt>',
+			'<r>foo <CENSOR with="baz">bar</CENSOR> <CENSOR with="baz">bar</CENSOR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -151,10 +151,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar');
 
-		$xml = '<rt>foo bar baz</rt>';
+		$xml = '<r>foo bar baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <CENSOR>bar</CENSOR> baz</rt>',
+			'<r>foo <CENSOR>bar</CENSOR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -166,10 +166,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar', 'quux');
 
-		$xml = '<rt>foo bar baz</rt>';
+		$xml = '<r>foo bar baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <CENSOR with="quux">bar</CENSOR> baz</rt>',
+			'<r>foo <CENSOR with="quux">bar</CENSOR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -181,10 +181,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar', '<"BAR">');
 
-		$xml = '<rt>foo bar baz</rt>';
+		$xml = '<r>foo bar baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <CENSOR with="&lt;&quot;BAR&quot;&gt;">bar</CENSOR> baz</rt>',
+			'<r>foo <CENSOR with="&lt;&quot;BAR&quot;&gt;">bar</CENSOR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -196,10 +196,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar');
 
-		$xml = '<pt>foo bar baz</pt>';
+		$xml = '<t>foo bar baz</t>';
 
 		$this->assertSame(
-			'<rt>foo <CENSOR>bar</CENSOR> baz</rt>',
+			'<r>foo <CENSOR>bar</CENSOR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -211,10 +211,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('BAR');
 
-		$xml = '<rt>foo <BAR>bar</BAR> baz</rt>';
+		$xml = '<r>foo <BAR>bar</BAR> baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <BAR><CENSOR>bar</CENSOR></BAR> baz</rt>',
+			'<r>foo <BAR><CENSOR>bar</CENSOR></BAR> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -226,10 +226,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar');
 
-		$xml = '<rt>foo <FOO bar="">bar</FOO> baz</rt>';
+		$xml = '<r>foo <FOO bar="">bar</FOO> baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <FOO bar=""><CENSOR>bar</CENSOR></FOO> baz</rt>',
+			'<r>foo <FOO bar=""><CENSOR>bar</CENSOR></FOO> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -241,10 +241,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->Censor->add('bar');
 
-		$xml = '<rt>foo <FOO bar="bar">bar</FOO> baz</rt>';
+		$xml = '<r>foo <FOO bar="bar">bar</FOO> baz</r>';
 
 		$this->assertSame(
-			'<rt>foo <FOO bar="bar"><CENSOR>bar</CENSOR></FOO> baz</rt>',
+			'<r>foo <FOO bar="bar"><CENSOR>bar</CENSOR></FOO> baz</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
@@ -256,10 +256,10 @@ class HelperTest extends Test
 	{
 		$this->configurator->plugins->load('Censor', ['tagName' => 'C']);
 
-		$xml = '<rt>foo <C>bar</C> <CC>bar</CC> </rt>';
+		$xml = '<r>foo <C>bar</C> <CC>bar</CC> </r>';
 
 		$this->assertSame(
-			'<rt>foo bar <CC>bar</CC> </rt>',
+			'<r>foo bar <CC>bar</CC> </r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}

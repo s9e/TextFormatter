@@ -29,7 +29,7 @@ class TagProcessingTest extends Test
 		return [
 			[
 				'foo bar',
-				'<rt><X><Y>foo</Y> <Z>bar</Z></X></rt>',
+				'<r><X><Y>foo</Y> <Z>bar</Z></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -46,7 +46,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo <X>bar</X></rt>',
+				'<r>foo <X>bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -58,7 +58,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<pt>foo bar</pt>',
+				'<t>foo bar</t>',
 				null,
 				function ($parser)
 				{
@@ -67,7 +67,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>fo<Y>o</Y></X> bar</rt>',
+				'<r><X>fo<Y>o</Y></X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -83,7 +83,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>fo<Y>o</Y></X><Y> b</Y>ar</rt>',
+				'<r><X>fo<Y>o</Y></X><Y> b</Y>ar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -99,7 +99,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</rt>',
+				'<r><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -117,7 +117,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i]...[/b][/i] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><i>[/i]</i> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><i>[/i]</i> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -133,7 +133,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i]...[/b]![/i] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><I>!<e>[/i]</e></I> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><I>!<e>[/i]</e></I> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -149,7 +149,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i][u]...[/b][/u][/i] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -168,7 +168,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i][u]...[/b][/u][/i] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -187,7 +187,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i][u]...[/b][/i][/u] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i][/u]</i> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i][/u]</i> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -206,7 +206,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i][u]...[/b][/i][/u] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B>[/i][/u] y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B>[/i][/u] y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -229,7 +229,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [b][i][u]...[/b][/i]u[/u] y',
-				'<rt>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i]</i><U>u<e>[/u]</e></U> y</rt>',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i]</i><U>u<e>[/u]</e></U> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B');
@@ -248,7 +248,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'x [i][b][u]...[/b][/i][/u] y',
-				'<rt>x <I><s>[i]</s><B><s>[b]</s><U><s>[u]</s>...</U><e>[/b]</e></B><e>[/i]</e></I><i>[/u]</i> y</rt>',
+				'<r>x <I><s>[i]</s><B><s>[b]</s><U><s>[u]</s>...</U><e>[/b]</e></B><e>[/i]</e></I><i>[/u]</i> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('B')->rules->autoReopen();
@@ -267,7 +267,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo <X>bar</X></rt>',
+				'<r>foo <X>bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -281,7 +281,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo</X> bar</rt>',
+				'<r><X>foo</X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -295,7 +295,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'fooo bar',
-				'<rt><X>f<X>oo</X>o</X> bar</rt>',
+				'<r><X>f<X>oo</X>o</X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->nestingLimit = 2;
@@ -330,7 +330,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>f</X><X>o</X>o bar</rt>',
+				'<r><X>f</X><X>o</X>o bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->tagLimit = 2;
@@ -363,7 +363,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo</X> bar</rt>',
+				'<r><X>foo</X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -378,7 +378,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
-				"<rt><PRE><s>[pre]</s>foo<B><s>[b]</s>x<br/>\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</rt>",
+				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x<br/>\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('PRE')->rules->noBrChild();
@@ -394,7 +394,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
-				"<rt><PRE><s>[pre]</s>foo<B><s>[b]</s>x\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</rt>",
+				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('PRE')->rules->noBrDescendant();
@@ -410,7 +410,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo</X> bar</rt>',
+				'<r><X>foo</X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -423,7 +423,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo</X><i> b</i>ar</rt>',
+				'<r><X>foo</X><i> b</i>ar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -436,7 +436,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo <X>bar</X></rt>',
+				'<r>foo <X>bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -448,7 +448,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<pt>foo bar</pt>',
+				'<t>foo bar</t>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -460,7 +460,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo bar</X></rt>',
+				'<r><X>foo bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -472,7 +472,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo bar',
-				'<pt>foo bar</pt>',
+				'<t>foo bar</t>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -484,7 +484,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'*foo* bar',
-				'<rt><X><s>*</s>foo<e>*</e></X> bar</rt>',
+				'<r><X><s>*</s>foo<e>*</e></X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -497,7 +497,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'*foo* bar',
-				'<rt><X><s>*</s>foo* bar</X></rt>',
+				'<r><X><s>*</s>foo* bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -510,7 +510,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'*foo* bar',
-				'<rt><X><s>*</s>foo* bar</X></rt>',
+				'<r><X><s>*</s>foo* bar</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -524,7 +524,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'*_foo* bar_',
-				'<rt><X><s>*</s><Y><s>_</s>foo</Y><e>*</e></X><Y> bar<e>_</e></Y></rt>',
+				'<r><X><s>*</s><Y><s>_</s>foo</Y><e>*</e></X><Y> bar<e>_</e></Y></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -541,7 +541,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'**x**x***',
-				'<rt><X><s>**</s>x<Y><s>**</s>x<e>**</e></Y><e>*</e></X></rt>',
+				'<r><X><s>**</s>x<Y><s>**</s>x<e>**</e></Y><e>*</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -557,7 +557,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'**x[**]x',
-				'<rt><X><s>**</s>x<Y>[**]</Y></X>x</rt>',
+				'<r><X><s>**</s>x<Y>[**]</Y></X>x</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -572,7 +572,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xy',
-				'<pt>x<br/>y</pt>',
+				'<t>x<br/>y</t>',
 				null,
 				function ($parser)
 				{
@@ -581,7 +581,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xy',
-				'<pt>xy</pt>',
+				'<t>xy</t>',
 				function ($constructor)
 				{
 					$constructor->rootRules->noBrDescendant();
@@ -593,7 +593,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xx',
-				'<rt><X>x</X><X>x</X></rt>',
+				'<r><X>x</X><X>x</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->closeParent('X');
@@ -606,7 +606,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xx [hr] yy',
-				'<rt>xx <HR>[hr]</HR> yy</rt>',
+				'<r>xx <HR>[hr]</HR> yy</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('HR')->rules->autoClose();
@@ -618,7 +618,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xx [img=foo.png] yy',
-				'<rt>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</rt>',
+				'<r>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</r>',
 				function ($configurator)
 				{
 					$tag = $configurator->tags->add('IMG');
@@ -632,7 +632,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xx [img]foo.png[/img] yy',
-				'<rt>xx <IMG src="foo.png"><s>[img]</s>foo.png<e>[/img]</e></IMG> yy</rt>',
+				'<r>xx <IMG src="foo.png"><s>[img]</s>foo.png<e>[/img]</e></IMG> yy</r>',
 				function ($configurator)
 				{
 					$tag = $configurator->tags->add('IMG');
@@ -649,7 +649,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYX',
-				'<rt><X><s>X</s><Y>Y</Y><e>X</e></X></rt>',
+				'<r><X><s>X</s><Y>Y</Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -664,7 +664,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYX',
-				'<rt><X><s>X</s>Y<e>X</e></X></rt>',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyChild('Y');
@@ -679,7 +679,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYZYX',
-				'<rt><X><s>X</s><Y><s>Y</s><Z>Z</Z><e>Y</e></Y><e>X</e></X></rt>',
+				'<r><X><s>X</s><Y><s>Y</s><Z>Z</Z><e>Y</e></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyChild('Z');
@@ -697,7 +697,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYZYX',
-				'<rt><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></rt>',
+				'<r><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyChild('Z');
@@ -715,7 +715,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYX',
-				'<rt><X><s>X</s>Y<e>X</e></X></rt>',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyDescendant('Y');
@@ -730,7 +730,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYZYX',
-				'<rt><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></rt>',
+				'<r><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyDescendant('Z');
@@ -748,7 +748,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYX',
-				'<rt><X><s>X</s>Y<e>X</e></X></rt>',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
 				function ($configurator)
 				{
 					$rules = $configurator->tags->add('X')->rules;
@@ -786,7 +786,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYYYYX',
-				'<rt><X><s>X</s><Y><s>Y</s><Y>Y</Y><Y>Y</Y><e>Y</e></Y><e>X</e></X></rt>',
+				'<r><X><s>X</s><Y><s>Y</s><Y>Y</Y><Y>Y</Y><e>Y</e></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -807,7 +807,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'..',
-				'<rt><X>.</X><X>.</X></rt>',
+				'<r><X>.</X><X>.</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -824,7 +824,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'...',
-				'<rt><X>.</X><X>.</X><X>.</X></rt>',
+				'<r><X>.</X><X>.</X><X>.</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->filterChain->append(
@@ -847,7 +847,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'...',
-				'<rt><X>.</X><X>.</X><X>.</X></rt>',
+				'<r><X>.</X><X>.</X><X>.</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->filterChain->append(
@@ -873,10 +873,10 @@ class TagProcessingTest extends Test
 					[*] foo
 					[*] bar
 				[/UL]',
-				'<rt><UL><s>[UL]</s>
+				'<r><UL><s>[UL]</s>
 					<LI><s>[*]</s> foo</LI>
 					<LI><s>[*]</s> bar</LI>
-				<e>[/UL]</e></UL></rt>',
+				<e>[/UL]</e></UL></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('UL');
@@ -897,10 +897,10 @@ class TagProcessingTest extends Test
 					[*] foo
 					[*] bar
 				[/UL]',
-				'<rt><UL><s>[UL]</s>
+				'<r><UL><s>[UL]</s>
 					<LI><s>[*]</s> foo</LI>
 					<LI><s>[*]</s> bar</LI>
-				<e>[/UL]</e></UL></rt>',
+				<e>[/UL]</e></UL></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('UL');
@@ -918,7 +918,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XX',
-				'<rt>X<X>X</X></rt>',
+				'<r>X<X>X</X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->filterChain->append(
@@ -936,7 +936,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'XYX',
-				'<rt><X><s>X</s>Y<e>X</e></X></rt>',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->denyChild('Y');
@@ -969,7 +969,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'X',
-				'<pt>X</pt>',
+				'<t>X</t>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->requireAncestor('Y');
@@ -982,7 +982,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'.X.',
-				'<rt><NOPARSE><s>.</s>X<e>.</e></NOPARSE></rt>',
+				'<r><NOPARSE><s>.</s>X<e>.</e></NOPARSE></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
@@ -996,7 +996,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'.X.',
-				'<rt><NOPARSE><s>.</s>X<e>.</e></NOPARSE></rt>',
+				'<r><NOPARSE><s>.</s>X<e>.</e></NOPARSE></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
@@ -1010,7 +1010,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'X.X.X',
-				'<rt><X><s>X</s><NOPARSE><s>.</s>X<e>.</e></NOPARSE><e>X</e></X></rt>',
+				'<r><X><s>X</s><NOPARSE><s>.</s>X<e>.</e></NOPARSE><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
@@ -1026,7 +1026,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foobar',
-				'<pt><p>foo</p><p>bar</p></pt>',
+				'<t><p>foo</p><p>bar</p></t>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
@@ -1038,7 +1038,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'foo|bar',
-				'<rt><p>foo</p><i>|</i><p>bar</p></rt>',
+				'<r><p>foo</p><i>|</i><p>bar</p></r>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
@@ -1051,7 +1051,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				"\n\n",
-				"<rt><X><br/>\n</X><X>\n</X></rt>",
+				"<r><X><br/>\n</X><X>\n</X></r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -1064,7 +1064,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'xxx',
-				"<rt><T8>x<T8>x</T8>x</T8></rt>",
+				"<r><T8>x<T8>x</T8>x</T8></r>",
 				function ($configurator)
 				{
 					// Create 9 tags with different rules so that they don't occupy the same bit in
@@ -1083,7 +1083,7 @@ class TagProcessingTest extends Test
 			],
 			[
 				'[x][y]..[/y][/x]',
-				'<rt><X><s>[x]</s></X><Y><s>[y]</s><X>..</X><e>[/y]</e></Y><i>[/x]</i></rt>',
+				'<r><X><s>[x]</s></X><Y><s>[y]</s><X>..</X><e>[/y]</e></Y><i>[/x]</i></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->autoReopen();

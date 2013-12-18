@@ -23,25 +23,25 @@ class ParserTest extends Test
 		return [
 			[
 				'Hit me at example@example.com',
-				'<rt>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL></rt>'
+				'<r>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL></r>'
 			],
 			[
 				'Hit me at example@example.com.',
-				'<rt>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL>.</rt>'
+				'<r>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL>.</r>'
 			],
 			[
 				'Hit me at example@example.com',
-				'<rt>Hit me at <FOO email="example@example.com">example@example.com</FOO></rt>',
+				'<r>Hit me at <FOO email="example@example.com">example@example.com</FOO></r>',
 				['tagName' => 'FOO']
 			],
 			[
 				'Hit me at example@example.com',
-				'<rt>Hit me at <EMAIL bar="example@example.com">example@example.com</EMAIL></rt>',
+				'<r>Hit me at <EMAIL bar="example@example.com">example@example.com</EMAIL></r>',
 				['attrName' => 'bar']
 			],
 			[
 				'Twit me at @foo.bar',
-				'<pt>Twit me at @foo.bar</pt>'
+				'<t>Twit me at @foo.bar</t>'
 			],
 		];
 	}

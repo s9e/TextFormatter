@@ -1,1 +1,1 @@
-<rt>x <URL url="http://example.org"><s>[url:123=http://example.org]</s>[url=http://example.org]text[/url]<e>[/url:123]</e></URL> y</rt>
+<r>x <URL url="http://example.org"><s>[url:123=http://example.org]</s>[url=http://example.org]text[/url]<e>[/url:123]</e></URL> y</r>

@@ -23,33 +23,33 @@ class ParserTest extends Test
 		return [
 			[
 				'AT&amp;T',
-				'<rt>AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
+				'<r>AT<HE char="&amp;">&amp;amp;</HE>T</r>'
 			],
 			[
 				'AT&amp;T',
-				'<rt>AT<FOO char="&amp;">&amp;amp;</FOO>T</rt>',
+				'<r>AT<FOO char="&amp;">&amp;amp;</FOO>T</r>',
 				['tagName' => 'FOO']
 			],
 			[
 				'AT&amp;T',
-				'<rt>AT<HE bar="&amp;">&amp;amp;</HE>T</rt>',
+				'<r>AT<HE bar="&amp;">&amp;amp;</HE>T</r>',
 				['attrName' => 'bar']
 			],
 			[
 				'I &hearts; AT&amp;T',
-				'<rt>I <HE char="♥">&amp;hearts;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
+				'<r>I <HE char="♥">&amp;hearts;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</r>'
 			],
 			[
 				'I &#x2665; AT&amp;T',
-				'<rt>I <HE char="♥">&amp;#x2665;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
+				'<r>I <HE char="♥">&amp;#x2665;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</r>'
 			],
 			[
 				'I &#9829; AT&amp;T',
-				'<rt>I <HE char="♥">&amp;#9829;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
+				'<r>I <HE char="♥">&amp;#9829;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</r>'
 			],
 			[
 				'Some &unknown; entity',
-				'<pt>Some &amp;unknown; entity</pt>'
+				'<t>Some &amp;unknown; entity</t>'
 			],
 		];
 	}

@@ -11,46 +11,46 @@ use s9e\TextFormatter\Tests\Test;
 class UnparserTest extends Test
 {
 	/**
-	* @testdox unparse('<pt>Plain text</pt>') returns 'Plain text'
+	* @testdox unparse('<t>Plain text</t>') returns 'Plain text'
 	*/
 	public function testUnparsePlainText()
 	{
 		$this->assertSame(
 			'Plain text',
-			Unparser::unparse('<pt>Plain text</pt>')
+			Unparser::unparse('<t>Plain text</t>')
 		);
 	}
 
 	/**
-	* @testdox removeFormatting('<pt>Plain text</pt>') returns 'Plain text'
+	* @testdox removeFormatting('<t>Plain text</t>') returns 'Plain text'
 	*/
 	public function testRemoveFormattingPlainText()
 	{
 		$this->assertSame(
 			'Plain text',
-			Unparser::removeFormatting('<pt>Plain text</pt>')
+			Unparser::removeFormatting('<t>Plain text</t>')
 		);
 	}
 
 	/**
-	* @testdox unparse('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+	* @testdox unparse('<t>&lt;Plain text&gt;</t>') returns '<Plain text>'
 	*/
 	public function testUnparsePlainTextWithSpecialChars()
 	{
 		$this->assertSame(
 			'<Plain text>',
-			Unparser::unparse('<pt>&lt;Plain text&gt;</pt>')
+			Unparser::unparse('<t>&lt;Plain text&gt;</t>')
 		);
 	}
 
 	/**
-	* @testdox removeFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+	* @testdox removeFormatting('<t>&lt;Plain text&gt;</t>') returns '<Plain text>'
 	*/
 	public function testRemoveFormattingPlainTextWithSpecialChars()
 	{
 		$this->assertSame(
 			'<Plain text>',
-			Unparser::removeFormatting('<pt>&lt;Plain text&gt;</pt>')
+			Unparser::removeFormatting('<t>&lt;Plain text&gt;</t>')
 		);
 	}
 
@@ -61,7 +61,7 @@ class UnparserTest extends Test
 	{
 		$this->assertSame(
 			"a\nb",
-			Unparser::unparse("<pt>a<br/>\nb</pt>")
+			Unparser::unparse("<t>a<br/>\nb</t>")
 		);
 	}
 
@@ -72,29 +72,29 @@ class UnparserTest extends Test
 	{
 		$this->assertSame(
 			"a\nb",
-			Unparser::removeFormatting("<pt>a<br/>\nb</pt>")
+			Unparser::removeFormatting("<t>a<br/>\nb</t>")
 		);
 	}
 
 	/**
-	* @testdox unparse('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
+	* @testdox unparse('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns '[b]Rich[/b] text :)'
 	*/
 	public function testUnparseRichText()
 	{
 		$this->assertSame(
 			'[b]Rich[/b] text :)',
-			Unparser::unparse('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>')
+			Unparser::unparse('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>')
 		);
 	}
 
 	/**
-	* @testdox removeFormatting('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>') returns 'Rich text :)'
+	* @testdox removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns 'Rich text :)'
 	*/
 	public function testRemoveFormattingRichText()
 	{
 		$this->assertSame(
 			'Rich text :)',
-			Unparser::removeFormatting('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>')
+			Unparser::removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>')
 		);
 	}
 
@@ -105,7 +105,7 @@ class UnparserTest extends Test
 	{
 		$this->assertSame(
 			'&<>"\'',
-			Unparser::unparse('<pt>&amp;&lt;&gt;&quot;&#039;</pt>')
+			Unparser::unparse('<t>&amp;&lt;&gt;&quot;&#039;</t>')
 		);
 	}
 }

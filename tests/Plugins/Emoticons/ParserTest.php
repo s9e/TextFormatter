@@ -23,7 +23,7 @@ class ParserTest extends Test
 		return [
 			[
 				':)',
-				'<rt><E>:)</E></rt>',
+				'<r><E>:)</E></r>',
 				[],
 				function ($constructor)
 				{
@@ -32,7 +32,7 @@ class ParserTest extends Test
 			],
 			[
 				':)',
-				'<rt><EMOTE>:)</EMOTE></rt>',
+				'<r><EMOTE>:)</EMOTE></r>',
 				['tagName' => 'EMOTE'],
 				function ($constructor)
 				{
@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				':)',
-				'<rt><E>:)</E></rt>',
+				'<r><E>:)</E></r>',
 				[],
 				function ($constructor)
 				{
@@ -51,7 +51,7 @@ class ParserTest extends Test
 			],
 			[
 				' :)',
-				'<rt> <E>:)</E></rt>',
+				'<r> <E>:)</E></r>',
 				[],
 				function ($constructor)
 				{
@@ -61,7 +61,7 @@ class ParserTest extends Test
 			],
 			[
 				'x:)',
-				'<pt>x:)</pt>',
+				'<t>x:)</t>',
 				[],
 				function ($constructor)
 				{

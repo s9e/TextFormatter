@@ -1,1 +1,1 @@
-<rt>x <FLASH height="400" url="http://example.org/foo.swf" width="600"><s>[FLASH=600,400]</s>http://example.org/foo.swf<e>[/FLASH]</e></FLASH> y</rt>
+<r>x <FLASH height="400" url="http://example.org/foo.swf" width="600"><s>[FLASH=600,400]</s>http://example.org/foo.swf<e>[/FLASH]</e></FLASH> y</r>

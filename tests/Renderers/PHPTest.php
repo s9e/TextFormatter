@@ -49,7 +49,7 @@ class PHPTest extends Test
 	public function testNoOutputSerialize()
 	{
 		$renderer = $this->configurator->getRenderer();
-		$renderer->render('<rt>xxx</rt>');
+		$renderer->render('<r>xxx</r>');
 
 		$this->assertNotContains('out', serialize($renderer));
 	}
@@ -77,7 +77,7 @@ class PHPTest extends Test
 		$this->configurator->tags->add('FOO')->template = '<xsl:value-of select="lang()"/>';
 
 		$renderer = $this->configurator->getRenderer();
-		$renderer->render('<rt>xxx</rt>');
+		$renderer->render('<r>xxx</r>');
 
 		$reflection = new ReflectionObject($renderer);
 		foreach ($reflection->getProperties() as $prop)

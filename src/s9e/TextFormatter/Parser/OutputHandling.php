@@ -64,8 +64,8 @@ trait OutputHandling
 			$this->output = str_replace('</i><i>', '', $this->output);
 		}
 
-		// Use a <rt> root if the text is rich, or <pt> for plain text (including <p></p> and <br/>)
-		$tagName = ($this->isRich) ? 'rt' : 'pt';
+		// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
+		$tagName = ($this->isRich) ? 'r' : 't';
 
 		// Prepare the root node with all the namespace declarations
 		$tmp = '<' . $tagName;

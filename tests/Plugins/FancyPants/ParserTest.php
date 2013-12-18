@@ -23,129 +23,129 @@ class ParserTest extends Test
 		return [
 			[
 				'...',
-				'<rt><FP char="…">...</FP></rt>'
+				'<r><FP char="…">...</FP></r>'
 			],
 			[
 				'...',
-				'<rt><FOO char="…">...</FOO></rt>',
+				'<r><FOO char="…">...</FOO></r>',
 				['tagName' => 'FOO']
 			],
 			[
 				'...',
-				'<rt><FP bar="…">...</FP></rt>',
+				'<r><FP bar="…">...</FP></r>',
 				['attrName' => 'bar']
 			],
 			[
 				"'Good morning, Frank,' greeted HAL.",
-				'<rt><FP char="‘">\'</FP>Good morning, Frank,<FP char="’">\'</FP> greeted HAL.</rt>'
+				'<r><FP char="‘">\'</FP>Good morning, Frank,<FP char="’">\'</FP> greeted HAL.</r>'
 			],
 			[
 				"\"'Good morning, Frank,' greeted HAL.\" is how the book starts.",
-				'<rt><FP char="“">"</FP><FP char="‘">\'</FP>Good morning, Frank,<FP char="’">\'</FP> greeted HAL.<FP char="”">"</FP> is how the book starts.</rt>'
+				'<r><FP char="“">"</FP><FP char="‘">\'</FP>Good morning, Frank,<FP char="’">\'</FP> greeted HAL.<FP char="”">"</FP> is how the book starts.</r>'
 			],
 			[
 				'"Good morning, Frank," greeted HAL.',
-				'<rt><FP char="“">"</FP>Good morning, Frank,<FP char="”">"</FP> greeted HAL.</rt>'
+				'<r><FP char="“">"</FP>Good morning, Frank,<FP char="”">"</FP> greeted HAL.</r>'
 			],
 			[
 				'\'"Good morning, Frank," greeted HAL.\' is how the book starts.',
-				'<rt><FP char="‘">\'</FP><FP char="“">"</FP>Good morning, Frank,<FP char="”">"</FP> greeted HAL.<FP char="’">\'</FP> is how the book starts.</rt>'
+				'<r><FP char="‘">\'</FP><FP char="“">"</FP>Good morning, Frank,<FP char="”">"</FP> greeted HAL.<FP char="’">\'</FP> is how the book starts.</r>'
 			],
 			[
 				'Hello world...',
-				'<rt>Hello world<FP char="…">...</FP></rt>'
+				'<r>Hello world<FP char="…">...</FP></r>'
 			],
 			[
 				'foo--bar',
-				'<rt>foo<FP char="–">--</FP>bar</rt>'
+				'<r>foo<FP char="–">--</FP>bar</r>'
 			],
 			[
 				'foo---bar',
-				'<rt>foo<FP char="—">---</FP>bar</rt>'
+				'<r>foo<FP char="—">---</FP>bar</r>'
 			],
 			[
 				'(tm)',
-				'<rt><FP char="™">(tm)</FP></rt>'
+				'<r><FP char="™">(tm)</FP></r>'
 			],
 			[
 				'(TM)',
-				'<rt><FP char="™">(TM)</FP></rt>'
+				'<r><FP char="™">(TM)</FP></r>'
 			],
 			[
 				'(c)',
-				'<rt><FP char="©">(c)</FP></rt>'
+				'<r><FP char="©">(c)</FP></r>'
 			],
 			[
 				'(C)',
-				'<rt><FP char="©">(C)</FP></rt>'
+				'<r><FP char="©">(C)</FP></r>'
 			],
 			[
 				'(r)',
-				'<rt><FP char="®">(r)</FP></rt>'
+				'<r><FP char="®">(r)</FP></r>'
 			],
 			[
 				'(R)',
-				'<rt><FP char="®">(R)</FP></rt>'
+				'<r><FP char="®">(R)</FP></r>'
 			],
 			[
 				"'Twas the night. 'Twas the night before Christmas.",
-				'<rt><FP char="’">\'</FP>Twas the night. <FP char="’">\'</FP>Twas the night before Christmas.</rt>'
+				'<r><FP char="’">\'</FP>Twas the night. <FP char="’">\'</FP>Twas the night before Christmas.</r>'
 			],
 			[
 				"Say. 'Twas the night before Christmas.",
-				'<rt>Say. <FP char="’">\'</FP>Twas the night before Christmas.</rt>'
+				'<r>Say. <FP char="’">\'</FP>Twas the night before Christmas.</r>'
 			],
 			[
 				"Occam's razor",
-				'<rt>Occam<FP char="’">\'</FP>s razor</rt>'
+				'<r>Occam<FP char="’">\'</FP>s razor</r>'
 			],
 			[
 				"Ridin' dirty",
-				'<rt>Ridin<FP char="’">\'</FP> dirty</rt>'
+				'<r>Ridin<FP char="’">\'</FP> dirty</r>'
 			],
 			[
 				"Get rich or die tryin'",
-				'<rt>Get rich or die tryin<FP char="’">\'</FP></rt>'
+				'<r>Get rich or die tryin<FP char="’">\'</FP></r>'
 			],
 			[
 				"Get rich or die tryin', yo.",
-				'<rt>Get rich or die tryin<FP char="’">\'</FP>, yo.</rt>'
+				'<r>Get rich or die tryin<FP char="’">\'</FP>, yo.</r>'
 			],
 			[
 				"'88 was the year. '88 was the year indeed.",
-				'<rt><FP char="’">\'</FP>88 was the year. <FP char="’">\'</FP>88 was the year indeed.</rt>'
+				'<r><FP char="’">\'</FP>88 was the year. <FP char="’">\'</FP>88 was the year indeed.</r>'
 			],
 			[
 				"'88 bottles of beer on the wall'",
-				'<rt><FP char="‘">\'</FP>88 bottles of beer on the wall<FP char="’">\'</FP></rt>'
+				'<r><FP char="‘">\'</FP>88 bottles of beer on the wall<FP char="’">\'</FP></r>'
 			],
 			[
 				"1950's",
-				'<rt>1950<FP char="’">\'</FP>s</rt>'
+				'<r>1950<FP char="’">\'</FP>s</r>'
 			],
 			[
 				"I am 7' tall",
-				'<rt>I am 7<FP char="′">\'</FP> tall</rt>'
+				'<r>I am 7<FP char="′">\'</FP> tall</r>'
 			],
 			[
 				'12" vinyl',
-				'<rt>12<FP char="″">"</FP> vinyl</rt>'
+				'<r>12<FP char="″">"</FP> vinyl</r>'
 			],
 			[
 				'3x3',
-				'<rt>3<FP char="×">x</FP>3</rt>'
+				'<r>3<FP char="×">x</FP>3</r>'
 			],
 			[
 				'3 x 3',
-				'<rt>3 <FP char="×">x</FP> 3</rt>'
+				'<r>3 <FP char="×">x</FP> 3</r>'
 			],
 			[
 				'3" x 3"',
-				'<rt>3<FP char="″">"</FP> <FP char="×">x</FP> 3<FP char="″">"</FP></rt>'
+				'<r>3<FP char="″">"</FP> <FP char="×">x</FP> 3<FP char="″">"</FP></r>'
 			],
 			[
 				"O'Connor's pants",
-				'<rt>O<FP char="’">\'</FP>Connor<FP char="’">\'</FP>s pants</rt>'
+				'<r>O<FP char="’">\'</FP>Connor<FP char="’">\'</FP>s pants</r>'
 			]
 		];
 	}

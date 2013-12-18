@@ -72,7 +72,7 @@ class ParserTest extends Test
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
-			'<pt>Plain text</pt>',
+			'<t>Plain text</t>',
 			$parser->parse('Plain text')
 		);
 	}
@@ -88,7 +88,7 @@ class ParserTest extends Test
 		$parser->parse('Foo');
 
 		$this->assertSame(
-			'<pt>Plain text</pt>',
+			'<t>Plain text</t>',
 			$parser->parse('Plain text')
 		);
 	}
@@ -103,7 +103,7 @@ class ParserTest extends Test
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
-			"<pt>Plain\ntext</pt>",
+			"<t>Plain\ntext</t>",
 			$parser->parse("Plain\rtext")
 		);
 	}
@@ -118,7 +118,7 @@ class ParserTest extends Test
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
-			"<pt>Plain\ntext</pt>",
+			"<t>Plain\ntext</t>",
 			$parser->parse("Plain\r\ntext")
 		);
 	}
@@ -133,7 +133,7 @@ class ParserTest extends Test
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
-			"<pt>Plain\t\n\n text</pt>",
+			"<t>Plain\t\n\n text</t>",
 			$parser->parse('Plain' . implode('', array_map('chr', range(0, 0x20))) . 'text')
 		);
 	}
@@ -242,14 +242,14 @@ class ParserTest extends Test
 		);
 
 		$this->assertSame(
-			'<rt><X>0</X><X>1</X><X>2</X>34567</rt>',
+			'<r><X>0</X><X>1</X><X>2</X>34567</r>',
 			$parser->parse('01234567')
 		);
 
 		$parser->setTagLimit('X', 7);
 
 		$this->assertSame(
-			'<rt><X>0</X><X>1</X><X>2</X><X>3</X><X>4</X><X>5</X><X>6</X>7</rt>',
+			'<r><X>0</X><X>1</X><X>2</X><X>3</X><X>4</X><X>5</X><X>6</X>7</r>',
 			$parser->parse('01234567')
 		);
 	}
@@ -297,14 +297,14 @@ class ParserTest extends Test
 		);
 
 		$this->assertSame(
-			'<rt><X><X><X> </X></X></X></rt>',
+			'<r><X><X><X> </X></X></X></r>',
 			$parser->parse(' ')
 		);
 
 		$parser->setNestingLimit('X', 7);
 
 		$this->assertSame(
-			'<rt><X><X><X><X><X><X><X> </X></X></X></X></X></X></X></rt>',
+			'<r><X><X><X><X><X><X><X> </X></X></X></X></X></X></X></r>',
 			$parser->parse(' ')
 		);
 	}

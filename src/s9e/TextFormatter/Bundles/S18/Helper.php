@@ -24,7 +24,7 @@ abstract class Helper
 	*/
 	public static function applyTimeformat($xml)
 	{
-		if (substr($xml, 0, 3) === '<rt')
+		if (substr($xml, 0, 2) === '<r')
 		{
 			$xml = preg_replace_callback(
 				'/(<(?:QUOT|TIM)E [^>]*?\\b(?:dat|tim)e=")(\\d+)(?=")/',

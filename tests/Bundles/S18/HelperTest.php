@@ -59,11 +59,11 @@ class HelperTest extends Test
 
 		$xml = S18::parse('[quote date=1344833733]Hello[/quote]');
 		$this->assertSame(
-			'<rt><QUOTE date="1344833733"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></rt>',
+			'<r><QUOTE date="1344833733"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></r>',
 			$xml
 		);
 		$this->assertSame(
-			'<rt><QUOTE date="August 13, 2012, 04:55:33 AM"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></rt>',
+			'<r><QUOTE date="August 13, 2012, 04:55:33 AM"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></r>',
 			Helper::applyTimeformat($xml)
 		);
 	}
@@ -80,11 +80,11 @@ class HelperTest extends Test
 
 		$xml = S18::parse('[time]1344833733[/time]');
 		$this->assertSame(
-			'<rt><TIME time="1344833733"><s>[time]</s>1344833733<e>[/time]</e></TIME></rt>',
+			'<r><TIME time="1344833733"><s>[time]</s>1344833733<e>[/time]</e></TIME></r>',
 			$xml
 		);
 		$this->assertSame(
-			'<rt><TIME time="August 13, 2012, 04:55:33 AM"><s>[time]</s>1344833733<e>[/time]</e></TIME></rt>',
+			'<r><TIME time="August 13, 2012, 04:55:33 AM"><s>[time]</s>1344833733<e>[/time]</e></TIME></r>',
 			Helper::applyTimeformat($xml)
 		);
 	}
@@ -98,11 +98,11 @@ class HelperTest extends Test
 
 		$xml = S18::parse('[quote date=1344833733]Hello[/quote]');
 		$this->assertSame(
-			'<rt><QUOTE date="1344833733"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></rt>',
+			'<r><QUOTE date="1344833733"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></r>',
 			$xml
 		);
 		$this->assertSame(
-			'<rt><QUOTE date="s:10:&quot;1344833733&quot;;"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></rt>',
+			'<r><QUOTE date="s:10:&quot;1344833733&quot;;"><s>[quote date=1344833733]</s>Hello<e>[/quote]</e></QUOTE></r>',
 			Helper::applyTimeformat($xml)
 		);
 	}

@@ -33,7 +33,7 @@ class XSLTTest extends Test
 	public function testSerializableNoProc()
 	{
 		$renderer = $this->configurator->getRenderer();
-		$renderer->render('<rt>..</rt>');
+		$renderer->render('<r>..</r>');
 
 		$this->assertNotContains(
 			'XSLTProcessor',
@@ -61,7 +61,7 @@ class XSLTTest extends Test
 	*/
 	public function testUnserializedMultiLineTextHTML()
 	{
-		$xml = '<pt>One<br/>two</pt>';
+		$xml = '<t>One<br/>two</t>';
 
 		$this->configurator->stylesheet->setOutputMethod('html');
 		$renderer = unserialize(serialize($this->configurator->getRenderer()));
@@ -77,7 +77,7 @@ class XSLTTest extends Test
 	*/
 	public function testUnserializedMultiLineTextXHTML()
 	{
-		$xml = '<pt>One<br/>two</pt>';
+		$xml = '<t>One<br/>two</t>';
 
 		$this->configurator->stylesheet->setOutputMethod('xml');
 		$renderer = unserialize(serialize($this->configurator->getRenderer()));
@@ -107,7 +107,7 @@ class XSLTTest extends Test
 			$renderer->setParameter('foo', $value);
 			$this->assertSame(
 				str_replace('"', "\xEF\xBC\x82", $value),
-				$renderer->render('<rt><X/></rt>')
+				$renderer->render('<r><X/></r>')
 			);
 		}
 	}
@@ -122,7 +122,7 @@ class XSLTTest extends Test
 
 		$this->assertSame(
 			'<object><embed src="foo"></object>',
-			$this->configurator->getRenderer()->render('<rt><X/></rt>')
+			$this->configurator->getRenderer()->render('<r><X/></r>')
 		);
 	}
 }

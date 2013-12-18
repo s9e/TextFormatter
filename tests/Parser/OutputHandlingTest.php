@@ -27,15 +27,15 @@ class OutputHandlingTest extends Test
 		return [
 			[
 				'Plain text',
-				'<pt>Plain text</pt>'
+				'<t>Plain text</t>'
 			],
 			[
 				"Plain\ntext",
-				"<pt>Plain<br/>\ntext</pt>"
+				"<t>Plain<br/>\ntext</t>"
 			],
 			[
 				'foo bar',
-				'<rt><X/>foo bar</rt>',
+				'<r><X/>foo bar</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -47,7 +47,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo<X/> bar</rt>',
+				'<r>foo<X/> bar</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -59,7 +59,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo bar<X/></rt>',
+				'<r>foo bar<X/></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -71,7 +71,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X>foo</X> bar</rt>',
+				'<r><X>foo</X> bar</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -83,7 +83,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo<X> </X>bar</rt>',
+				'<r>foo<X> </X>bar</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -95,7 +95,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt>foo<i> </i>bar</rt>',
+				'<r>foo<i> </i>bar</r>',
 				null,
 				function ($parser)
 				{
@@ -104,7 +104,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo  bar',
-				'<rt>foo<i>  </i>bar</rt>',
+				'<r>foo<i>  </i>bar</r>',
 				null,
 				function ($parser)
 				{
@@ -114,7 +114,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<pt>foo<br/> bar</pt>',
+				'<t>foo<br/> bar</t>',
 				null,
 				function ($parser)
 				{
@@ -123,7 +123,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</rt>',
+				'<r xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('foo:X');
@@ -135,7 +135,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</rt>',
+				'<r xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('foo:X');
@@ -148,7 +148,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X xx="&quot;xx&quot;" yy="&lt;&gt;"/>foo bar</rt>',
+				'<r><X xx="&quot;xx&quot;" yy="&lt;&gt;"/>foo bar</r>',
 				function ($constructor)
 				{
 					$tag = $constructor->tags->add('X');
@@ -165,7 +165,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X><i>foo</i></X> bar</rt>',
+				'<r><X><i>foo</i></X> bar</r>',
 				function ($constructor)
 				{
 					$tag = $constructor->tags->add('X')->rules->ignoreText();
@@ -178,7 +178,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar baz',
-				'<rt><X><i>foo</i></X><X> </X>bar<X><i> baz</i></X></rt>',
+				'<r><X><i>foo</i></X><X> </X>bar<X><i> baz</i></X></r>',
 				function ($constructor)
 				{
 					$tag = $constructor->tags->add('X')->rules->ignoreText();
@@ -195,7 +195,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<rt><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</rt>',
+				'<r><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</r>',
 				function ($constructor)
 				{
 					$tag = $constructor->tags->add('X');
@@ -213,7 +213,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
-				"<rt>xxx\n<DIV><s>[DIV]</s>\n...\n<e>[/DIV]</e></DIV>\nyyy</rt>",
+				"<r>xxx\n<DIV><s>[DIV]</s>\n...\n<e>[/DIV]</e></DIV>\nyyy</r>",
 				function ($constructor)
 				{
 					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
@@ -226,7 +226,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n\n[DIV]\n\n...\n\n[/DIV]\n\nyyy",
-				"<rt>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</rt>",
+				"<r>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</r>",
 				function ($constructor)
 				{
 					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
@@ -246,14 +246,14 @@ class OutputHandlingTest extends Test
 				[/UL]
 
 yyy',
-				'<rt>xxx
+				'<r>xxx
 
 				<UL><s>[UL]</s>
 					<LI><s>[LI]</s>aaa<e>[/LI]</e></LI>
 					<LI><s>[LI]</s>bbb<e>[/LI]</e></LI>
 				<e>[/UL]</e></UL>
 
-yyy</rt>',
+yyy</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('UL')->rules->ignoreSurroundingWhitespace();
@@ -271,7 +271,7 @@ yyy</rt>',
 			],
 			[
 				'foo bar',
-				'<pt><p>foo bar</p></pt>',
+				'<t><p>foo bar</p></t>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -279,7 +279,7 @@ yyy</rt>',
 			],
 			[
 				"foo\nbar",
-				"<pt><p>foo<br/>\nbar</p></pt>",
+				"<t><p>foo<br/>\nbar</p></t>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -287,7 +287,7 @@ yyy</rt>',
 			],
 			[
 				"foo\n\nbar",
-				"<pt><p>foo</p>\n\n<p>bar</p></pt>",
+				"<t><p>foo</p>\n\n<p>bar</p></t>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -295,7 +295,7 @@ yyy</rt>',
 			],
 			[
 				"foo\n\n\n\n\nbar\n\n\n\n\nbaz",
-				"<pt><p>foo</p>\n\n\n\n\n<p>bar</p>\n\n\n\n\n<p>baz</p></pt>",
+				"<t><p>foo</p>\n\n\n\n\n<p>bar</p>\n\n\n\n\n<p>baz</p></t>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -309,13 +309,13 @@ yyy</rt>',
 [/UL]
 
 ',
-				'<rt>
+				'<r>
 <UL><s>[UL]</s>
 	<LI><s>[LI]</s>foo
 	</LI><LI><s>[LI]</s>bar
 </LI><e>[/UL]</e></UL>
 
-</rt>',
+</r>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -343,14 +343,14 @@ yyy</rt>',
 [/UL]
 
 xxx',
-				'<rt><p>...</p>
+				'<r><p>...</p>
 
 <UL><s>[UL]</s>
 	<LI><s>[LI]</s>foo
 	</LI><LI><s>[LI]</s>bar
 </LI><e>[/UL]</e></UL>
 
-<p>xxx</p></rt>',
+<p>xxx</p></r>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -371,7 +371,7 @@ xxx',
 			],
 			[
 				'[b]...[/b]',
-				'<rt><p><B><s>[b]</s>...<e>[/b]</e></B></p></rt>',
+				'<r><p><B><s>[b]</s>...<e>[/b]</e></B></p></r>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -384,7 +384,7 @@ xxx',
 			],
 			[
 				"\n[b]...[/b]\n",
-				"<rt>\n<p><B><s>[b]</s>...<e>[/b]</e></B></p>\n</rt>",
+				"<r>\n<p><B><s>[b]</s>...<e>[/b]</e></B></p>\n</r>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -397,7 +397,7 @@ xxx',
 			],
 			[
 				"x\n[b]...[/b]\ny",
-				"<rt><p>x<br/>\n<B><s>[b]</s>...<e>[/b]</e></B><br/>\ny</p></rt>",
+				"<r><p>x<br/>\n<B><s>[b]</s>...<e>[/b]</e></B><br/>\ny</p></r>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -410,7 +410,7 @@ xxx',
 			],
 			[
 				'[img]',
-				'<rt><p><IMG>[img]</IMG></p></rt>',
+				'<r><p><IMG>[img]</IMG></p></r>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -423,7 +423,7 @@ xxx',
 			],
 			[
 				"[x]\n\n\nxxx",
-				"<rt><p><X>[x]</X>\n<Y>\n</Y><br/>\nxxx</p></rt>",
+				"<r><p><X>[x]</X>\n<Y>\n</Y><br/>\nxxx</p></r>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -438,7 +438,7 @@ xxx',
 			],
 			[
 				"x\n\n\n\nx",
-				"<rt><p><X>x</X></p>\n\n\n\n<p><X>x</X></p></rt>",
+				"<r><p><X>x</X></p>\n\n\n\n<p><X>x</X></p></r>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -453,7 +453,7 @@ xxx',
 			[
 				// Test the attribute order
 				'X',
-				'<rt><X bar="2" baz="3" foo="1">X</X></rt>',
+				'<r><X bar="2" baz="3" foo="1">X</X></r>',
 				function ($constructor)
 				{
 					$tag = $constructor->tags->add('X');

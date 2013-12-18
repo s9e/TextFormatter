@@ -18,7 +18,7 @@ class UnformattedTest extends Test
 
 		$this->assertSame(
 			'[b]bold[/b]',
-			$renderer->render("<rt><B><s>[b]</s>bold<e>[/b]</e></B>")
+			$renderer->render("<r><B><s>[b]</s>bold<e>[/b]</e></B>")
 		);
 	}
 
@@ -31,7 +31,7 @@ class UnformattedTest extends Test
 
 		$this->assertSame(
 			"a<br>\nb",
-			$renderer->render("<rt>a\nb</rt>")
+			$renderer->render("<r>a\nb</r>")
 		);
 	}
 
@@ -45,7 +45,7 @@ class UnformattedTest extends Test
 
 		$this->assertSame(
 			"a<br/>\nb",
-			$renderer->render("<rt>a\nb</rt>")
+			$renderer->render("<r>a\nb</r>")
 		);
 	}
 
@@ -58,7 +58,7 @@ class UnformattedTest extends Test
 
 		$this->assertSame(
 			'AT&amp;T &lt;b&gt;',
-			$renderer->render("<rt>AT&amp;T &lt;b&gt;</rt>")
+			$renderer->render("<r>AT&amp;T &lt;b&gt;</r>")
 		);
 	}
 

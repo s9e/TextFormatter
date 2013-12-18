@@ -67,8 +67,8 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '', output);
 
-	// Use a <rt> root if the text is rich, or <pt> for plain text (including <p></p> and <br/>)
-	var tagName = (isRich) ? 'rt' : 'pt';
+	// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
+	var tagName = (isRich) ? 'r' : 't';
 
 	// Prepare the root node with all the namespace declarations
 	tmp = '<' + tagName;

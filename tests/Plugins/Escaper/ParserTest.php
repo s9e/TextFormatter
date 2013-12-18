@@ -23,16 +23,16 @@ class ParserTest extends Test
 		return [
 			[
 				'\\[',
-				'<rt><ESC>\\[</ESC></rt>'
+				'<r><ESC>\\[</ESC></r>'
 			],
 			[
 				'\\[',
-				'<rt><FOO>\\[</FOO></rt>',
+				'<r><FOO>\\[</FOO></r>',
 				['tagName' => 'FOO']
 			],
 			[
 				"a\\\nb",
-				"<rt>a<ESC>\\\n</ESC>b</rt>",
+				"<r>a<ESC>\\\n</ESC>b</r>",
 				[],
 				function ($configurator, $plugin)
 				{
@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				'a\\♥b',
-				'<rt>a<ESC>\\♥</ESC>b</rt>',
+				'<r>a<ESC>\\♥</ESC>b</r>',
 				[],
 				function ($configurator, $plugin)
 				{

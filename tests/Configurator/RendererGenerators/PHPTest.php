@@ -363,7 +363,7 @@ class PHPTest extends Test
 		foreach ($values as $value)
 		{
 			$renderer->setParameter('foo', $value);
-			$this->assertSame($value, $renderer->render('<rt><X/></rt>'));
+			$this->assertSame($value, $renderer->render('<r><X/></r>'));
 		}
 	}
 
@@ -378,8 +378,8 @@ class PHPTest extends Test
 
 		$renderer = $configurator->getRenderer('PHP');
 
-		$this->assertSame('1',  $renderer->render('<rt><X/></rt>'));
-		$this->assertSame('22', $renderer->render('<rt><X/><X/></rt>'));
+		$this->assertSame('1',  $renderer->render('<r><X/></r>'));
+		$this->assertSame('22', $renderer->render('<r><X/><X/></r>'));
 	}
 
 	/**
@@ -394,7 +394,7 @@ class PHPTest extends Test
 		$configurator->setRendererGenerator('PHP');
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<div/>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<div/>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -409,7 +409,7 @@ class PHPTest extends Test
 		$configurator->setRendererGenerator('PHP')->forceEmptyElements = false;
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -427,7 +427,7 @@ class PHPTest extends Test
 
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -442,7 +442,7 @@ class PHPTest extends Test
 		$configurator->setRendererGenerator('PHP');
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<div/>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<div/>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -457,7 +457,7 @@ class PHPTest extends Test
 		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -472,7 +472,7 @@ class PHPTest extends Test
 		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
 		$renderer = $configurator->getRenderer();
 
-		$this->assertSame('<hr/>', $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('<hr/>', $renderer->render('<r><X/></r>'));
 	}
 
 	/**
@@ -604,7 +604,7 @@ class PHPTest extends Test
 	{
 		return [
 			[
-				"<rt>x <B/> y</rt>",
+				"<r>x <B/> y</r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('B')->template
@@ -612,7 +612,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				"<rt>x <B/> y</rt>",
+				"<r>x <B/> y</r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('B')->template = new UnsafeTemplate(
@@ -621,7 +621,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				"<rt>x <HR/> y</rt>",
+				"<r>x <HR/> y</r>",
 				function ($configurator)
 				{
 					$configurator->tags->add('HR')->template = new UnsafeTemplate(
@@ -630,7 +630,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', "'FOO'");
@@ -639,7 +639,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/><X/></rt>',
+				'<r><X/><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', "count(//X)");
@@ -648,7 +648,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -657,7 +657,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -670,7 +670,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -679,7 +679,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -688,7 +688,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -701,7 +701,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
@@ -714,7 +714,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', 3);
@@ -723,7 +723,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/></rt>',
+				'<r><X/></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('xxx', 3);
@@ -732,7 +732,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X/><Y>1</Y><Y>2</Y></rt>',
+				'<r><X/><Y>1</Y><Y>2</Y></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('xxx', '//Y');
@@ -741,7 +741,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt xmlns:html="urn:s9e:TextFormatter:html"><html:b>...</html:b></rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:b>...</html:b></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('html:b')->template
@@ -749,7 +749,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt xmlns:x="urn:s9e:TextFormatter:x"><x:b>...</x:b><x:c>!!!</x:c></rt>',
+				'<r xmlns:x="urn:s9e:TextFormatter:x"><x:b>...</x:b><x:c>!!!</x:c></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('x:b')->template
@@ -762,7 +762,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt xmlns:html="urn:s9e:TextFormatter:html"><html:b title="\'&quot;&amp;\'">...</html:b></rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:b title="\'&quot;&amp;\'">...</html:b></r>',
 				function ($configurator)
 				{
 					$configurator->stylesheet->setWildcardTemplate(
@@ -772,7 +772,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><E>:)</E><E>:(</E></rt>',
+				'<r><E>:)</E><E>:(</E></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('E')->template
@@ -780,7 +780,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><E>:)</E><E>:(</E><E>:-)</E></rt>',
+				'<r><E>:)</E><E>:(</E><E>:-)</E></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('E')->template
@@ -788,7 +788,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt>x <X/> y</rt>',
+				'<r>x <X/> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template
@@ -796,7 +796,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt>x <X>...</X> y</rt>',
+				'<r>x <X>...</X> y</r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template
@@ -804,7 +804,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO"/></rt>',
+				'<r><X foo="FOO"/></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template =
@@ -817,7 +817,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO"/></rt>',
+				'<r><X foo="FOO"/></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template =
@@ -828,7 +828,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO"/></rt>',
+				'<r><X foo="FOO"/></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template =
@@ -849,7 +849,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO">..</X></rt>',
+				'<r><X foo="FOO">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -862,7 +862,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO">..</X></rt>',
+				'<r><X foo="FOO">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -875,7 +875,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="FOO">..</X></rt>',
+				'<r><X foo="FOO">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -888,7 +888,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				'<r><X foo="ABCDEF0153">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -901,7 +901,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				'<r><X foo="ABCDEF0153">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -914,7 +914,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				'<r><X foo="ABCDEF0153">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -927,7 +927,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
+				'<r><X foo="ABCDEF0153" x="3">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))
@@ -940,7 +940,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
+				'<r><X foo="ABCDEF0153" x="3">..</X></r>',
 				function ($configurator, $test)
 				{
 					if (!extension_loaded('mbstring'))

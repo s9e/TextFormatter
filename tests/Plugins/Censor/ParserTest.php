@@ -23,7 +23,7 @@ class ParserTest extends Test
 		return [
 			[
 				'apple',
-				'<rt><CENSOR>apple</CENSOR></rt>',
+				'<r><CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -32,7 +32,7 @@ class ParserTest extends Test
 			],
 			[
 				'apple',
-				'<rt><FOO>apple</FOO></rt>',
+				'<r><FOO>apple</FOO></r>',
 				['tagName' => 'FOO'],
 				function ($constructor)
 				{
@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				'apple',
-				'<rt><CENSOR replacement="orange">apple</CENSOR></rt>',
+				'<r><CENSOR replacement="orange">apple</CENSOR></r>',
 				['attrName' => 'replacement'],
 				function ($constructor)
 				{
@@ -50,7 +50,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty 苹果',
-				'<rt>You dirty <CENSOR with="orange">苹果</CENSOR></rt>',
+				'<r>You dirty <CENSOR with="orange">苹果</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -59,7 +59,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -68,7 +68,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -77,7 +77,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -86,7 +86,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -95,7 +95,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty Pokéman',
-				'<rt>You dirty <CENSOR>Pokéman</CENSOR></rt>',
+				'<r>You dirty <CENSOR>Pokéman</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -104,7 +104,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty Pok3man',
-				'<rt>You dirty <CENSOR>Pok3man</CENSOR></rt>',
+				'<r>You dirty <CENSOR>Pok3man</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -113,7 +113,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty Pok3man',
-				'<rt>You dirty <CENSOR>Pok3man</CENSOR></rt>',
+				'<r>You dirty <CENSOR>Pok3man</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -122,7 +122,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty Pok#man',
-				'<rt>You dirty <CENSOR>Pok#man</CENSOR></rt>',
+				'<r>You dirty <CENSOR>Pok#man</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -131,7 +131,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty Pokéman',
-				'<rt>You dirty <CENSOR with="digiman">Pokéman</CENSOR></rt>',
+				'<r>You dirty <CENSOR with="digiman">Pokéman</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -140,7 +140,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -149,7 +149,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty pineapple',
-				'<pt>You dirty pineapple</pt>',
+				'<t>You dirty pineapple</t>',
 				[],
 				function ($constructor)
 				{
@@ -158,7 +158,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty $0',
-				'<rt>You dirty <CENSOR>$0</CENSOR></rt>',
+				'<r>You dirty <CENSOR>$0</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -167,7 +167,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty A P P L E',
-				'<rt>You dirty <CENSOR>A P P L E</CENSOR></rt>',
+				'<r>You dirty <CENSOR>A P P L E</CENSOR></r>',
 				[],
 				function ($constructor)
 				{
@@ -176,7 +176,7 @@ class ParserTest extends Test
 			],
 			[
 				'You dirty apple',
-				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
 				function ($constructor)
 				{

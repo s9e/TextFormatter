@@ -23,7 +23,7 @@ class ParserTest extends Test
 		return [
 			[
 				'foo bar baz',
-				'<rt><KEYWORD value="foo">foo</KEYWORD> bar baz</rt>',
+				'<r><KEYWORD value="foo">foo</KEYWORD> bar baz</r>',
 				[],
 				function ($configurator)
 				{
@@ -32,7 +32,7 @@ class ParserTest extends Test
 			],
 			[
 				'foo bar baz',
-				'<rt><FOO value="foo">foo</FOO> bar baz</rt>',
+				'<r><FOO value="foo">foo</FOO> bar baz</r>',
 				['tagName' => 'FOO'],
 				function ($configurator)
 				{
@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				'foo bar baz',
-				'<rt><KEYWORD foo="foo">foo</KEYWORD> bar baz</rt>',
+				'<r><KEYWORD foo="foo">foo</KEYWORD> bar baz</r>',
 				['attrName' => 'foo'],
 				function ($configurator)
 				{
@@ -50,7 +50,7 @@ class ParserTest extends Test
 			],
 			[
 				'foo foo foo',
-				'<rt><KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD></rt>',
+				'<r><KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD></r>',
 				[],
 				function ($configurator)
 				{
@@ -59,7 +59,7 @@ class ParserTest extends Test
 			],
 			[
 				'foo foo foo',
-				'<rt><KEYWORD value="foo">foo</KEYWORD> foo foo</rt>',
+				'<r><KEYWORD value="foo">foo</KEYWORD> foo foo</r>',
 				[],
 				function ($configurator)
 				{
@@ -69,7 +69,7 @@ class ParserTest extends Test
 			],
 			[
 				'foo foo bar bar',
-				'<rt><KEYWORD value="foo">foo</KEYWORD> foo <KEYWORD value="bar">bar</KEYWORD> bar</rt>',
+				'<r><KEYWORD value="foo">foo</KEYWORD> foo <KEYWORD value="bar">bar</KEYWORD> bar</r>',
 				[],
 				function ($configurator)
 				{

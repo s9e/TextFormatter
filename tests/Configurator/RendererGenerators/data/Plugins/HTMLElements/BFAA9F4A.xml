@@ -1,1 +1,1 @@
-<rt xmlns:foo="urn:s9e:TextFormatter:foo">x <foo:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></foo:b> x</rt>
+<r xmlns:foo="urn:s9e:TextFormatter:foo">x <foo:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></foo:b> x</r>

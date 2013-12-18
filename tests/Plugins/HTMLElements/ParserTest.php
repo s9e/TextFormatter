@@ -23,7 +23,7 @@ class ParserTest extends Test
 		return [
 			[
 				'x <b>bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -32,7 +32,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b>bold</b> x',
-				'<rt xmlns:foo="urn:s9e:TextFormatter:foo">x <foo:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></foo:b> x</rt>',
+				'<r xmlns:foo="urn:s9e:TextFormatter:foo">x <foo:b><s>&lt;b&gt;</s>bold<e>&lt;/b&gt;</e></foo:b> x</r>',
 				['prefix' => 'foo'],
 				function ($configurator)
 				{
@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b title="is bold">bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><s>&lt;b title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><s>&lt;b title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -51,7 +51,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b title="is bold">bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -60,7 +60,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <B>bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;B&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;B&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -69,7 +69,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b Title="is bold">bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><s>&lt;b Title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><s>&lt;b Title="is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -79,7 +79,7 @@ class ParserTest extends Test
 			],
 			[
 				'x<br/>y',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br><s>&lt;br/&gt;</s></html:br>y</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x<html:br><s>&lt;br/&gt;</s></html:br>y</r>',
 				[],
 				function ($configurator)
 				{
@@ -88,7 +88,7 @@ class ParserTest extends Test
 			],
 			[
 				'x<br />y',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br><s>&lt;br /&gt;</s></html:br>y</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x<html:br><s>&lt;br /&gt;</s></html:br>y</r>',
 				[],
 				function ($configurator)
 				{
@@ -97,7 +97,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <input disabled name=foo readonly /> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input disabled="disabled" name="foo" readonly="readonly"><s>&lt;input disabled name=foo readonly /&gt;</s></html:input> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:input disabled="disabled" name="foo" readonly="readonly"><s>&lt;input disabled name=foo readonly /&gt;</s></html:input> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -109,7 +109,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b title = "is bold">bold</b> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b title = "is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:b><s>&lt;b title = "is bold"&gt;</s>bold<e>&lt;/b&gt;</e></html:b> x</r>',
 				[],
 				function ($configurator)
 				{
@@ -118,7 +118,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <b>...</b> y',
-				'<rt>x <BOLD><s>&lt;b&gt;</s>...<e>&lt;/b&gt;</e></BOLD> y</rt>',
+				'<r>x <BOLD><s>&lt;b&gt;</s>...<e>&lt;/b&gt;</e></BOLD> y</r>',
 				[],
 				function ($configurator)
 				{
@@ -128,7 +128,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <a href="http://example.org">...</a> y',
-				'<rt>x <URL url="http://example.org"><s>&lt;a href="http://example.org"&gt;</s>...<e>&lt;/a&gt;</e></URL> y</rt>',
+				'<r>x <URL url="http://example.org"><s>&lt;a href="http://example.org"&gt;</s>...<e>&lt;/a&gt;</e></URL> y</r>',
 				[],
 				function ($configurator)
 				{
@@ -142,7 +142,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <span title="foo">...</b> <div title="bar">...</div> y',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:span data-title="foo"><s>&lt;span title="foo"&gt;</s>...&lt;/b&gt; <html:div title="bar"><s>&lt;div title="bar"&gt;</s>...<e>&lt;/div&gt;</e></html:div> y</html:span></rt>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:span data-title="foo"><s>&lt;span title="foo"&gt;</s>...&lt;/b&gt; <html:div title="bar"><s>&lt;div title="bar"&gt;</s>...<e>&lt;/div&gt;</e></html:div> y</html:span></r>',
 				[],
 				function ($configurator)
 				{

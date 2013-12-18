@@ -179,7 +179,7 @@ foreach ($void as $voidType => $case)
 	{
 		$basename = "$voidTestsDir/$voidType$emptyType";
 
-		$xml = '<rt><FOO' . $attribute . '/></rt>';
+		$xml = '<r><FOO' . $attribute . '/></r>';
 		file_put_contents("$basename.xml", $xml);
 
 		foreach (['html' => 'html', 'xml' => 'xhtml'] as $mode => $ext)

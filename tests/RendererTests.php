@@ -12,7 +12,7 @@ trait RendererTests
 	*/
 	public function testPlainText()
 	{
-		$xml = '<pt>Plain text</pt>';
+		$xml = '<t>Plain text</t>';
 
 		$this->assertSame(
 			'Plain text',
@@ -25,7 +25,7 @@ trait RendererTests
 	*/
 	public function testMultiLineTextHTML()
 	{
-		$xml = '<pt>One<br/>two</pt>';
+		$xml = '<t>One<br/>two</t>';
 
 		$this->configurator->stylesheet->setOutputMethod('html');
 
@@ -40,7 +40,7 @@ trait RendererTests
 	*/
 	public function testMultiLineTextXHTML()
 	{
-		$xml = '<pt>One<br/>two</pt>';
+		$xml = '<t>One<br/>two</t>';
 
 		$this->configurator->stylesheet->setOutputMethod('xml');
 
@@ -55,7 +55,7 @@ trait RendererTests
 	*/
 	public function testRichText()
 	{
-		$xml = '<rt>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>';
+		$xml = '<r>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</r>';
 
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
@@ -71,10 +71,10 @@ trait RendererTests
 	public function testMulti()
 	{
 		$parsed = [
-			'<rt>1Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>',
-			'<pt>2Plain text</pt>',
-			'<rt>3Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>',
-			'<pt>4Plain text</pt>'
+			'<r>1Hello <B><s>[b]</s>world<e>[/b]</e></B>!</r>',
+			'<t>2Plain text</t>',
+			'<r>3Hello <B><s>[b]</s>world<e>[/b]</e></B>!</r>',
+			'<t>4Plain text</t>'
 		];
 
 		$expected = [
@@ -98,12 +98,12 @@ trait RendererTests
 	public function testMultiOrder()
 	{
 		$parsed = [
-			'<rt>1<B>One</B></rt>',
-			'<pt>2Two</pt>',
-			'p3' => '<rt>3<B>Three</B></rt>',
-			'p4' => '<pt>4Four</pt>',
-			'<rt>5<B>Five</B></rt>',
-			'<pt>6Six</pt>'
+			'<r>1<B>One</B></r>',
+			'<t>2Two</t>',
+			'p3' => '<r>3<B>Three</B></r>',
+			'p4' => '<t>4Four</t>',
+			'<r>5<B>Five</B></r>',
+			'<t>6Six</t>'
 		];
 
 		$expected = [
@@ -130,7 +130,7 @@ trait RendererTests
 	{
 		$this->configurator->stylesheet->setOutputMethod('html');
 
-		$parsed   = ['<pt>One<br/>two</pt>'];
+		$parsed   = ['<t>One<br/>two</t>'];
 		$expected = ['One<br>two'];
 
 		$this->assertSame(
@@ -146,7 +146,7 @@ trait RendererTests
 	{
 		$this->configurator->stylesheet->setOutputMethod('xml');
 
-		$parsed   = ['<pt>One<br/>two</pt>'];
+		$parsed   = ['<t>One<br/>two</t>'];
 		$expected = ['One<br/>two'];
 
 		$this->assertSame(
@@ -168,7 +168,7 @@ trait RendererTests
 
 		$this->assertSame(
 			'bar',
-			$renderer->render('<rt><X/></rt>')
+			$renderer->render('<r><X/></r>')
 		);
 	}
 
@@ -190,7 +190,7 @@ trait RendererTests
 
 		$this->assertSame(
 			'FOOBAR',
-			$renderer->render('<rt><X/></rt>')
+			$renderer->render('<r><X/></r>')
 		);
 	}
 
@@ -211,7 +211,7 @@ trait RendererTests
 		foreach ($values as $value)
 		{
 			$renderer->setParameter('foo', $value);
-			$this->assertSame($value, $renderer->render('<rt><X/></rt>'));
+			$this->assertSame($value, $renderer->render('<r><X/></r>'));
 		}
 	}
 }

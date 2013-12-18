@@ -154,11 +154,11 @@ class Helper
 			$cnt
 		);
 
-		// If we've censored a word, ensure that the root node is rt, not pt
-		if ($cnt && $xml[1] === 'p')
+		// If we've censored a word, ensure that the root node is r, not t
+		if ($cnt && $xml[1] === 't')
 		{
 			$xml[1] = 'r';
-			$xml[strlen($xml) - 3] = 'r';
+			$xml[strlen($xml) - 2] = 'r';
 		}
 
 		return $xml;

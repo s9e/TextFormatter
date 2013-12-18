@@ -27,7 +27,7 @@ class RulesHandlingTest extends Test
 		return [
 			[
 				'xx',
-				'<rt><X>x</X><X>x</X></rt>',
+				'<r><X>x</X><X>x</X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->closeParent('X');
@@ -40,7 +40,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xy',
-				'<rt><X>x<Y>y</Y></X></rt>',
+				'<r><X>x<Y>y</Y></X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->closeParent('Y');
@@ -54,7 +54,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xyx',
-				'<rt><X>x</X><Y>y</Y>x</rt>',
+				'<r><X>x</X><Y>y</Y>x</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -69,7 +69,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xyx',
-				'<rt><X>x</X><Y>y</Y>x</rt>',
+				'<r><X>x</X><Y>y</Y>x</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -84,7 +84,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xxy',
-				'<rt><X>x<X>x</X></X><Y>y</Y></rt>',
+				'<r><X>x<X>x</X></X><Y>y</Y></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -99,7 +99,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xy',
-				'<rt><X>x<Y>y</Y></X></rt>',
+				'<r><X>x<Y>y</Y></X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->closeAncestor('Y');
@@ -113,7 +113,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xx',
-				'<pt>xx</pt>',
+				'<t>xx</t>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->requireAncestor('X');
@@ -126,7 +126,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'xy',
-				'<rt><X>x<Y>y</Y></X></rt>',
+				'<r><X>x<Y>y</Y></X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -140,7 +140,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[b]..[div]..[/div]',
-				'<rt><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV></rt>',
+				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('B');
@@ -155,7 +155,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[b]..[div]..[/div]..[/b]',
-				'<rt><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV><B>..<e>[/b]</e></B></rt>',
+				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV><B>..<e>[/b]</e></B></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('B')->rules->autoReopen();
@@ -171,7 +171,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[b]..[div].[/b].[/div]..[/b]',
-				'<rt><B><s>[b]</s>..</B><DIV><s>[div]</s><B>.<e>[/b]</e></B>.<e>[/div]</e></DIV>..[/b]</rt>',
+				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>.<e>[/b]</e></B>.<e>[/div]</e></DIV>..[/b]</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('B')->rules->autoReopen();
@@ -188,7 +188,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[div][div]..[/div][/div]',
-				'<rt><DIV><s>[div]</s></DIV><DIV><s>[div]</s>..<e>[/div]</e></DIV>[/div]</rt>',
+				'<r><DIV><s>[div]</s></DIV><DIV><s>[div]</s>..<e>[/div]</e></DIV>[/div]</r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('DIV')->rules->fosterParent('DIV');
@@ -203,7 +203,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[X][Y]..',
-				'<rt><X><s>[X]</s></X><Y><s>[Y]</s>..</Y></rt>',
+				'<r><X><s>[X]</s></X><Y><s>[Y]</s>..</Y></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->fosterParent('Y');
@@ -218,7 +218,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[X][Y]..',
-				'<rt><X><s>[X]</s></X><Y><s>[Y]</s></Y><X>..</X></rt>',
+				'<r><X><s>[X]</s></X><Y><s>[Y]</s></Y><X>..</X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X')->rules->fosterParent('Y');
@@ -235,7 +235,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[x].[z/].[/x]',
-				'<rt><X><s>[x]</s>.</X><Z>[z/]</Z><X>.<e>[/x]</e></X></rt>',
+				'<r><X><s>[x]</s>.</X><Z>[z/]</Z><X>.<e>[/x]</e></X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');
@@ -250,7 +250,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[x][y].[z/].[/y][/x]',
-				'<rt><X><s>[x]</s><Y><s>[y]</s>.<Z>[z/]</Z>.<e>[/y]</e></Y><e>[/x]</e></X></rt>',
+				'<r><X><s>[x]</s><Y><s>[y]</s>.<Z>[z/]</Z>.<e>[/y]</e></Y><e>[/x]</e></X></r>',
 				function ($constructor)
 				{
 					$constructor->tags->add('X');

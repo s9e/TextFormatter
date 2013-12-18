@@ -13,7 +13,7 @@ $configurator->Censor;
 extract($configurator->finalize());
 
 // Create an "old" parsed text that contains no censored words.
-// The result will be: <pt>Hello world</pt>
+// The result will be: <t>Hello world</t>
 $old = $parser->parse('Hello world');
 
 // Configure the Censor plugin to censor a new word, "world"
@@ -23,7 +23,7 @@ $configurator->Censor->add('world');
 $helper = $configurator->Censor->getHelper();
 
 // Update the parsed text
-// The result will be: <rt>Hello <CENSOR>world</CENSOR></rt>
+// The result will be: <r>Hello <CENSOR>world</CENSOR></r>
 $new = $helper->reparse($old);
 
 // Normally, you would update your database with the new version

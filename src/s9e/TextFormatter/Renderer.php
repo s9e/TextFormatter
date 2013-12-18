@@ -42,7 +42,7 @@ abstract class Renderer
 	*/
 	public function render($xml)
 	{
-		return (substr($xml, 0, 4) === '<pt>')
+		return (substr($xml, 0, 3) === '<t>')
 		     ? $this->renderPlainText($xml)
 		     : $this->renderRichText($xml);
 	}
@@ -61,7 +61,7 @@ abstract class Renderer
 		// First replace intermediate representations of plain text
 		foreach ($arr as $k => $xml)
 		{
-			if (substr($xml, 0, 4) === '<pt>')
+			if (substr($xml, 0, 3) === '<t>')
 			{
 				$arr[$k] = $this->renderPlainText($xml);
 			}
@@ -97,8 +97,8 @@ abstract class Renderer
 	*/
 	protected function renderPlainText($xml)
 	{
-		// Remove the <pt> and </pt> tags
-		$html = substr($xml, 4, -5);
+		// Remove the <t> and </t> tags
+		$html = substr($xml, 3, -4);
 
 		// Replace all <br/> with <br> if we output HTML
 		if ($this->htmlOutput)

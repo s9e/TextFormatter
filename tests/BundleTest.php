@@ -21,7 +21,7 @@ class BundleTest extends Test
 	public function testParse()
 	{
 		$text = 'Hello world';
-		$xml  = '<pt>Hello world</pt>';
+		$xml  = '<t>Hello world</t>';
 
 		$mock = $this->getMock('stdClass', ['parse']);
 		$mock->expects($this->once())
@@ -41,10 +41,10 @@ class BundleTest extends Test
 	public function testParseSingleton()
 	{
 		$text1 = 'Hello world';
-		$xml1  = '<pt>Hello world</pt>';
+		$xml1  = '<t>Hello world</t>';
 
 		$text2 = 'Sup Earth :)';
-		$xml2  = '<rt>Sup Earth <E>:)</e></rt>';
+		$xml2  = '<r>Sup Earth <E>:)</e></r>';
 
 		$mock = $this->getMock('stdClass', ['parse']);
 		$mock->expects($this->at(0))
@@ -72,7 +72,7 @@ class BundleTest extends Test
 		$mock->expects($this->once())
 		     ->method('parse')
 		     ->with('beforeParse')
-		     ->will($this->returnValue('<pt></pt>'));
+		     ->will($this->returnValue('<t></t>'));
 		DummyBundle::$_parser = $mock;
 
 		DummyBundle::$beforeParse = function ($arg)
@@ -82,7 +82,7 @@ class BundleTest extends Test
 			return 'beforeParse';
 		};
 
-		$this->assertSame('<pt></pt>', DummyBundle::parse(''));
+		$this->assertSame('<t></t>', DummyBundle::parse(''));
 	}
 
 	/**
@@ -94,17 +94,17 @@ class BundleTest extends Test
 		$mock->expects($this->once())
 		     ->method('parse')
 		     ->with('')
-		     ->will($this->returnValue('<pt></pt>'));
+		     ->will($this->returnValue('<t></t>'));
 		DummyBundle::$_parser = $mock;
 
 		DummyBundle::$afterParse = function ($arg)
 		{
-			$this->assertSame('<pt></pt>', $arg);
+			$this->assertSame('<t></t>', $arg);
 
-			return '<pt>afterParse</pt>';
+			return '<t>afterParse</t>';
 		};
 
-		$this->assertSame('<pt>afterParse</pt>', DummyBundle::parse(''));
+		$this->assertSame('<t>afterParse</t>', DummyBundle::parse(''));
 	}
 
 	/**
@@ -112,7 +112,7 @@ class BundleTest extends Test
 	*/
 	public function testRender()
 	{
-		$xml  = '<pt>Hello world</pt>';
+		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
 		$mock = $this->getMock('stdClass', ['render', 'setParameters']);
@@ -132,7 +132,7 @@ class BundleTest extends Test
 	*/
 	public function testRenderSingleton()
 	{
-		$xml  = '<pt>Hello world</pt>';
+		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
 		$mock = $this->getMock('stdClass', ['render', 'setParameters']);
@@ -153,7 +153,7 @@ class BundleTest extends Test
 	*/
 	public function testRenderParameters()
 	{
-		$xml    = '<pt>Hello world</pt>';
+		$xml    = '<t>Hello world</t>';
 		$html   = 'Hello world';
 		$params = ['foo' => 'bar'];
 
@@ -180,18 +180,18 @@ class BundleTest extends Test
 		$mock = $this->getMock('stdClass', ['render']);
 		$mock->expects($this->once())
 		     ->method('render')
-		     ->with('<pt>beforeRender</pt>')
+		     ->with('<t>beforeRender</t>')
 		     ->will($this->returnValue('...'));
 		DummyBundle::$_renderer = $mock;
 
 		DummyBundle::$beforeRender = function ($arg)
 		{
-			$this->assertSame('<pt></pt>', $arg);
+			$this->assertSame('<t></t>', $arg);
 
-			return '<pt>beforeRender</pt>';
+			return '<t>beforeRender</t>';
 		};
 
-		$this->assertSame('...', DummyBundle::render('<pt></pt>'));
+		$this->assertSame('...', DummyBundle::render('<t></t>'));
 	}
 
 	/**
@@ -221,7 +221,7 @@ class BundleTest extends Test
 	*/
 	public function testRenderMulti()
 	{
-		$xml  = '<pt>Hello world</pt>';
+		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
 		$mock = $this->getMock('stdClass', ['renderMulti', 'setParameters']);
@@ -241,7 +241,7 @@ class BundleTest extends Test
 	*/
 	public function testRenderMultiSingleton()
 	{
-		$xml  = '<pt>Hello world</pt>';
+		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
 		$mock = $this->getMock('stdClass', ['renderMulti', 'setParameters']);
@@ -262,7 +262,7 @@ class BundleTest extends Test
 	*/
 	public function testRenderMultiParameters()
 	{
-		$xml    = '<pt>Hello world</pt>';
+		$xml    = '<t>Hello world</t>';
 		$html   = 'Hello world';
 		$params = ['foo' => 'bar'];
 
@@ -289,19 +289,19 @@ class BundleTest extends Test
 		$mock = $this->getMock('stdClass', ['renderMulti']);
 		$mock->expects($this->once())
 		     ->method('renderMulti')
-		     ->with(['<pt>beforeRender0</pt>', '<pt>beforeRender1</pt>'])
+		     ->with(['<t>beforeRender0</t>', '<t>beforeRender1</t>'])
 		     ->will($this->returnValue(['x0x', 'x1x']));
 		DummyBundle::$_renderer = $mock;
 
 		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->at(0))
 		     ->method('foo')
-		     ->with('<pt>0</pt>')
-		     ->will($this->returnValue('<pt>beforeRender0</pt>'));
+		     ->with('<t>0</t>')
+		     ->will($this->returnValue('<t>beforeRender0</t>'));
 		$mock->expects($this->at(1))
 		     ->method('foo')
-		     ->with('<pt>1</pt>')
-		     ->will($this->returnValue('<pt>beforeRender1</pt>'));
+		     ->with('<t>1</t>')
+		     ->will($this->returnValue('<t>beforeRender1</t>'));
 		DummyBundle::$beforeRender = [$mock, 'foo'];
 
 		$this->assertSame(
@@ -310,8 +310,8 @@ class BundleTest extends Test
 				'x1x'
 			],
 			DummyBundle::renderMulti([
-				'<pt>0</pt>',
-				'<pt>1</pt>'
+				'<t>0</t>',
+				'<t>1</t>'
 			])
 		);
 	}
@@ -324,7 +324,7 @@ class BundleTest extends Test
 		$mock = $this->getMock('stdClass', ['renderMulti']);
 		$mock->expects($this->once())
 		     ->method('renderMulti')
-		     ->with(['<pt>0</pt>', '<pt>1</pt>'])
+		     ->with(['<t>0</t>', '<t>1</t>'])
 		     ->will($this->returnValue(['x0x', 'x1x']));
 		DummyBundle::$_renderer = $mock;
 
@@ -345,8 +345,8 @@ class BundleTest extends Test
 				'afterRender1'
 			],
 			DummyBundle::renderMulti([
-				'<pt>0</pt>',
-				'<pt>1</pt>'
+				'<t>0</t>',
+				'<t>1</t>'
 			])
 		);
 	}
@@ -356,7 +356,7 @@ class BundleTest extends Test
 	*/
 	public function testUnparse()
 	{
-		$this->assertSame('Hello', DummyBundle::unparse('<pt>Hello</pt>'));
+		$this->assertSame('Hello', DummyBundle::unparse('<t>Hello</t>'));
 	}
 
 	/**
@@ -366,12 +366,12 @@ class BundleTest extends Test
 	{
 		DummyBundle::$beforeUnparse = function ($arg)
 		{
-			$this->assertSame('<pt>original</pt>', $arg);
+			$this->assertSame('<t>original</t>', $arg);
 
-			return '<pt>beforeUnparse</pt>';
+			return '<t>beforeUnparse</t>';
 		};
 
-		$this->assertSame('beforeUnparse', DummyBundle::unparse('<pt>original</pt>'));
+		$this->assertSame('beforeUnparse', DummyBundle::unparse('<t>original</t>'));
 	}
 
 	/**
@@ -386,7 +386,7 @@ class BundleTest extends Test
 			return 'afterUnparse';
 		};
 
-		$this->assertSame('afterUnparse', DummyBundle::unparse('<pt>original</pt>'));
+		$this->assertSame('afterUnparse', DummyBundle::unparse('<t>original</t>'));
 	}
 
 	/**

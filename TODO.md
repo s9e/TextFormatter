@@ -44,3 +44,4 @@ TODO
 - Test whether closures use more memory than static methods
 - Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
 - Remove dynamic params
+- Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
