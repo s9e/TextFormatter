@@ -1,44 +1,60 @@
-## Renderers
+## Rendering engines
 
 s9e\TextFormatter offers multiple renderers: 3 general purpose renderers, plus a special one. In general, you can just use the default setting but in some cases, some renderers may offer better performance. The type of renderer can be during configuration. Multiple renderers can be created based on the same config, and except for the special one, they will produce the same output.
 
-### How to create different renderers
-
-If you call `$configurator->getRenderer()` you'll get an instance of the default renderer. If you want a specific renderer, you can specify its name and options.
-
 #### XSLT renderer
 
-`$configurator->getRenderer('XSLT')` will return an instance of the XSLT renderer, no configuration required. It uses [PHP's default XSL extension](http://php.net/manual/en/book.xsl.php).
+```php
+$configurator->rendering->engine = 'XSLT';
+```
+
+This is the default renderer. It uses [PHP's XSL extension](http://php.net/manual/en/book.xsl.php). You don't need to configure it or specify that you want the XSLT since it's the default.
 
 #### PHP renderer
 
-`$configurator->getRenderer('PHP')` will return an instance of the PHP renderer. The PHP renderer is a special class that is dynamically generated, similar in design to what most PHP templating engine would use. The first time you generate a PHP renderer, its source code is available in `$renderer->source`. Obviously, you need to save this source code if you wish to reuse the renderer.
+```php
+// With no caching (not recommended)
+$configurator->rendering->engine = 'PHP';
 
-You can specify a class name for the renderer, and path where to save it by passing them as such:
-```php
-$configurator->getRenderer('PHP', 'MyRenderer', '/path/to/MyRenderer.php');
-```
-This will automatically create a `MyRenderer` class and save it to the specified path. If you don't specify a path, no file will be saved. If you don't specify a class name, a random name will be generated. The class name can be namespaced if you want, e.g.
-```php
-$configurator->getRenderer('PHP', 'My\Renderer', '/path/to/My/Renderer.php');
+// With automatic caching to /tmp
+$configurator->rendering->setEngine('PHP', '/tmp');
 ```
 
-#### XSLCache renderer
+This renderer uses plain PHP plus [PHP's DOM extension](http://www.php.net/manual/en/book.dom.php). It uses a special class that is dynamically generated, similar in design to what most PHP templating engine would use. The first time you generate a PHP renderer, its source code is available in `$renderer->source`.
 
-`$configurator->getRenderer('XSLCache', '/path/to/cache')` will return an instance of the XSLCache renderer and create an XSL file in the `/path/to/cache` directory. It uses [PECL's xslcache extension](http://pecl.php.net/package/xslcache).
-
-#### Unformatted renderer
-
-`$configurator->getRenderer('Unformatted')` will return an instance of the Unformatted renderer. This renderer is special, as it removes formatting from the text. Paragraphs and line breaks are preserved, special HTML characters are escaped but everything else is rendered as plain text.
-
-### How to change the default renderer
-
-You can change the default renderer in the configurator, using the same syntax as presented above:
+A class name is automatically generated for the class, based on its content. Alternatively, you can specify a class name for the renderer by setting the `className` property.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->setRendererGenerator('PHP', 'MyRenderer', '/path/to/MyRenderer.php');
+$configurator->rendering->engine = 'PHP';
 
-// Will return an instance of MyRenderer (the PHP renderer) and save it to /path/to/MyRenderer.php
-$configurator->getRenderer();
+extract($configurator->finalize());
+echo get_class($renderer), "\n";
+
+$configurator->rendering->engine->className = 'MyRenderer';
+extract($configurator->finalize());
+echo get_class($renderer);
 ```
+```
+Renderer_97a4e8b0b45237bddc001d5d4848a1c27a51379f
+MyRenderer
+```
+
+This is the fastest renderer if you enable automatic caching and you have an opcode cache.
+
+#### XSLCache renderer
+
+```php
+// With automatic caching to /tmp
+$configurator->rendering->setEngine('XSLCache', '/tmp');
+```
+
+This renderer uses [PECL's xslcache extension](http://pecl.php.net/package/xslcache).
+
+#### Unformatted renderer
+
+```php
+$configurator->rendering->engine = 'Unformatted';
+```
+
+This is a special renderer that actually removes formatting from the text. Paragraphs and line breaks are preserved, special HTML characters are escaped but everything else is rendered as plain text. It is meant to be used as a fallback if all other renderers fail.
