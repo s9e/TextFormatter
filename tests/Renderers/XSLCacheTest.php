@@ -11,7 +11,7 @@ class XSLCacheTest extends XSLTTest
 {
 	public function setUp()
 	{
-		$this->configurator->setRendererGenerator('XSLCache', sys_get_temp_dir());
+		$this->configurator->rendering->setEngine('XSLCache', sys_get_temp_dir());
 	}
 
 	public function tearDown()

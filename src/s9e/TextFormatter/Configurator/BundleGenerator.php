@@ -154,11 +154,11 @@ class BundleGenerator
 
 		// If this is a PHP renderer and we know where it's saved, automatically load it as needed
 		if (!empty($options['autoInclude'])
-		 && $this->configurator->rendererGenerator instanceof PHP
-		 && isset($this->configurator->rendererGenerator->lastFilepath))
+		 && $this->configurator->rendering->engine instanceof PHP
+		 && isset($this->configurator->rendering->engine->lastFilepath))
 		{
 			$className = get_class($renderer);
-			$filepath  = realpath($this->configurator->rendererGenerator->lastFilepath);
+			$filepath  = realpath($this->configurator->rendering->engine->lastFilepath);
 
 			$php[] = '		if (!class_exists(' . var_export($className, true) . ', false)';
 			$php[] = '		 && file_exists(' . var_export($filepath, true) . '))';

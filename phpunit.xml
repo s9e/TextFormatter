@@ -42,12 +42,12 @@
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
 			<file>tests/Configurator/Collections/RulesGeneratorListTest.php</file>
 			<file>tests/Configurator/Collections/SchemeListTest.php</file>
-			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
 			<file>tests/Configurator/Collections/TagListTest.php</file>
 			<file>tests/Configurator/Collections/TemplateCheckListTest.php</file>
 			<file>tests/Configurator/Collections/TemplateNormalizationListTest.php</file>
+			<file>tests/Configurator/Collections/TemplateParameterCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateForensicsTest.php</file>
@@ -80,8 +80,6 @@
 			<file>tests/Configurator/Items/AttributeFilters/SimpletextTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UintTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UrlTest.php</file>
-			<file>tests/Configurator/Items/DynamicStylesheetParameterTest.php</file>
-			<file>tests/Configurator/Items/StaticStylesheetParameterTest.php</file>
 			<file>tests/Configurator/Items/RegexpTest.php</file>
 			<file>tests/Configurator/Items/TagTest.php</file>
 			<file>tests/Configurator/Items/TagFilterTest.php</file>
@@ -94,6 +92,7 @@
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerApplicationTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
+			<file>tests/Configurator/RenderingTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoCloseIfVoidTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoReopenFormattingElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/BlockElementsCloseFormattingElementsTest.php</file>
@@ -142,11 +141,10 @@
 			<file>tests/Configurator/TemplateChecks/RestrictFlashNetworkingTest.php</file>
 			<file>tests/Configurator/TemplateChecks/RestrictFlashScriptAccessTest.php</file>
 			<file>tests/Configurator/TemplateCheckerTest.php</file>
-			<file>tests/Configurator/StylesheetTest.php</file>
 			<file>tests/Configurator/UrlConfigTest.php</file>
 			<file>tests/Configurator/Validators/AttributeNameTest.php</file>
-			<file>tests/Configurator/Validators/StylesheetParameterNameTest.php</file>
 			<file>tests/Configurator/Validators/TagNameTest.php</file>
+			<file>tests/Configurator/Validators/TemplateParameterNameTest.php</file>
 			<file>tests/Configurator/JavaScriptTest.php</file>
 			<file>tests/Configurator/BundleTest.php</file>
 			<file>tests/Configurator/BundleGeneratorTest.php</file>

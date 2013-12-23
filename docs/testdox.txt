@@ -104,10 +104,9 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->javascript is an instance of JavaScript
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->registeredVars is a publicly accessible array
- [x] $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
+ [x] $configurator->rendering is an instance of Rendering
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->rulesGenerator is an instance of RulesGenerator
- [x] $configurator->stylesheet is an instance of Stylesheet
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->templateChecker is an instance of TemplateChecker
  [x] $configurator->templateNormalizer is an instance of TemplateNormalizer
@@ -125,9 +124,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] getParser() removes JavaScript-specific data from tag filters
  [x] getParser() removes JavaScript-specific data from attribute filters
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
- [x] getRenderer() invokes $this->rendererGenerator->getRenderer()
- [x] getRenderer('PHP') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP to generate a renderer
- [x] getRenderer('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
+ [x] getRenderer() invokes $this->rendering->getRenderer()
  [x] $configurator->BBCodes returns an instance of the BBCodes plugin's configurator, and loads it if applicable
  [x] isset($configurator->BBCodes) returns whether the BBCodes plugin is loaded
  [x] unset($configurator->BBCodes) unloads the BBCodes plugin
@@ -143,9 +140,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] addHTML5Rules() adds tag rules
  [x] addHTML5Rules() does not overwrite boolean tag rules
  [x] addHTML5Rules() passes its options to the generator
- [x] setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
- [x] setRendererGenerator() passes extra arguments to the generator's constructor
- [x] setRendererGenerator() returns the new instance of RendererGenerator
  [x] loadBundle('../Invalid') throws an exception
  [x] loadBundle('Forum') adds the Forum bundle's configuration
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
@@ -343,13 +337,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
  [x] add('*invalid*') throws an exception
  [x] add() normalizes schemes to lowercase
 
-s9e\TextFormatter\Tests\Configurator\Collections\StylesheetParameterCollection
- [x] add() accepts instances of DynamicStylesheetParameter as-is
- [x] add() accepts instances of StaticStylesheetParameter as-is
- [x] add() normalizes values to an instance of StaticStylesheetParameter
- [x] add('foo') adds parameter 'foo' with an empty value
- [x] add('foo', 1) adds parameter 'foo' with value '1'
-
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
  [x] add() normalizes the tag name
@@ -381,6 +368,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
  [x] append() normalizes a callback into an instance of s9e\TextFormatter\Configurator\TemplateNormalizations\Custom
  [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateNormalizations
  [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateNormalization as-is
+
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateParameterCollection
+ [x] add('foo') adds parameter 'foo' with an empty value
+ [x] add('foo', 1) adds parameter 'foo' with value '1'
+ [x] add('foo bar') throws an exception
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
@@ -882,30 +874,6 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\DynamicStylesheetParameter
- [x] __construct() does not require an argument
- [x] __construct() can take the parameter's default expression as argument
- [x] Returns its default value as an XPath expression when cast as a string
- [x] Minifies the XPath expression passed to the constructor
- [x] isSafeAsURL() returns false by default
- [x] isSafeAsURL() returns true if markAsSafeAsURL() was called
- [x] isSafeInCSS() returns false by default
- [x] isSafeInCSS() returns true if markAsSafeInCSS() was called
- [x] isSafeInJS() returns false by default
- [x] isSafeInJS() returns true if markAsSafeInJS() was called
-
-s9e\TextFormatter\Tests\Configurator\Items\StaticStylesheetParameter
- [x] __construct() does not require an argument
- [x] __construct() can take the parameter's default value as argument
- [x] Returns its default value as an XPath expression when cast as a string
- [x] isSafeAsURL() returns false by default
- [x] isSafeAsURL() returns true if markAsSafeAsURL() was called
- [x] isSafeInCSS() returns false by default
- [x] isSafeInCSS() returns true if markAsSafeInCSS() was called
- [x] isSafeInJS() returns false by default
- [x] isSafeInJS() returns true if markAsSafeInJS() was called
- [x] getValue() returns the literal value of the parameter
-
 s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
@@ -1054,6 +1022,22 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
+
+s9e\TextFormatter\Tests\Configurator\Rendering
+ [x] The default rendering type is "html"
+ [x] The rendering type can be set to "xhtml"
+ [x] The rendering type is normalized to lowercase
+ [x] An exception is thrown if the rendering type is set to an invalid value
+ [x] Default engine is XSLT
+ [x] setEngine('PHP') sets the engine to a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
+ [x] setEngine('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
+ [x] setEngine() returns the new instance of RendererGenerator
+ [x] getRenderer() invokes $this->engine->getRenderer()
+ [x] getAllParameters() returns parameters that were formally defined
+ [x] getAllParameters() returns parameters that are inferred from the templates
+ [x] getAllParameters() returns parameters that were formally defined over those that are inferred from the templates
+ [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
+ [x] getTemplates() returns templates gathered from tags
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoCloseIfVoid
  [x] Generates an autoClose rule for <hr/>
@@ -1416,35 +1400,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] disable() disables all checks
  [x] enable() re-enables all checks
 
-s9e\TextFormatter\Tests\Configurator\Stylesheet
- [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
- [x] setOutputMethod('xml') sets the stylesheet's output to omit the XML declaration
- [x] setOutputMethod('text') throws an exception
- [x] setWildcardTemplate() accepts a string as template
- [x] setWildcardTemplate() accepts an instance of Template as template
- [x] setWildcardTemplate() sets a template with a * matching rule for given prefix
- [x] setWildcardTemplate() throws an exception if the prefix is empty
- [x] setWildcardTemplate() throws an exception if the prefix is invalid
- [x] get() tests the wildcard templates' safeness
- [x] get() only tests the wildcard templates' safeness against tags in its namespace
- [x] get() only tests the wildcard templates' safeness against tags that do not have a default template
- [x] get() merges duplicate templates
- [x] get() represents empty templates with a self-closing element
- [x] get() generates the namespace declarations necessary for prefixed tags
- [x] get() generates an exclude-result-prefixes directive for all the declared prefixes
- [x] get() includes parameters in the stylesheet
- [x] get() includes a parameter's default value in the stylesheet
- [x] get() escapes a parameter's default value
- [x] get() calls the plugins' finalize() method before assembling the stylesheet
- [x] get() normalizes wildcard templates before assembling the stylesheet
- [x] get() normalizes tags' templates before assembling the stylesheet
- [x] getUsedParameters() returns parameters that were formally defined
- [x] getUsedParameters() returns undefined parameters used in tags' templates
- [x] getUsedParameters() returns undefined parameters used in wildcard templates
- [x] get() outputs <xsl:param/> elements for undefined parameters used in templates
- [x] Creates a default template for <br/>
- [x] Creates a default template for <p></p>
-
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() returns a JavaScript variant for disallowedHosts
  [x] asConfig() returns a JavaScript variant for resolveRedirectsHosts
@@ -1496,14 +1451,6 @@ s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\Configurator\Validators\StylesheetParameterName
- [x] normalize() throws an InvalidArgumentException if the name is invalid
- [x] "foo" is normalized to "foo"
- [x] "Foo" is normalized to "Foo"
- [x] "*" is invalid (name must start with a letter or an underscore)
- [x] "foo:bar" is invalid (name can only contain letters, digits, dashes and underscores)
- [x] "foo\n" is invalid (no newlines allowed)
-
 s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "b" is normalized to "B"
@@ -1527,6 +1474,14 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\Configurator\Validators\TemplateParameterName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "foo" is normalized to "foo"
+ [x] "Foo" is normalized to "Foo"
+ [x] "*" is invalid (name must start with a letter or an underscore)
+ [x] "foo:bar" is invalid (name can only contain letters, digits, dashes and underscores)
+ [x] "foo\n" is invalid (no newlines allowed)
 
 s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] getMinifier() returns an instance of Noop by default
@@ -2259,7 +2214,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
- [x] get() can be called multiple times with the same stylesheet
+ [x] getRenderer() can be called multiple times with the same rendering configuration
  [x] The returned instance contains its own source code in $renderer->source
  [x] If no class name is set, a class name is generated based on the renderer's source
  [x] The prefix used for generated class names can be changed in $rendererGenerator->defaultClassPrefix
@@ -2278,19 +2233,12 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Throws an exception when encountering namespaced elements
  [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
  [x] Throws an exception on unterminated strings in XPath expressions
- [x] setParameter() accepts values that contain both types of quotes
- [x] Correctly handles dynamic stylesheet parameters
  [x] Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
  [x] Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
  [x] Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE
  [x] Empty elements use the empty-elements tag syntax in XML mode by default
  [x] Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
  [x] Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
- [x] HTML rendering
- [x] XHTML rendering
- [x] Rendering of void and empty elements in HTML
- [x] Rendering of void and empty elements in XHTML
- [x] Rendering tests from plugins
  [x] Matches the reference rendering in edge cases
  [x] XPath expressions are inlined as PHP whenever possible
  [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
@@ -2298,6 +2246,11 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Calls the optimizer's optimize() and optimizeControlStructures() methods if applicable
  [x] Can run without an optimizer
  [x] Code optimization tests
+ [x] HTML rendering
+ [x] XHTML rendering
+ [x] Rendering of void and empty elements in HTML
+ [x] Rendering of void and empty elements in XHTML
+ [x] Tests from plugins
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer
@@ -2311,6 +2264,15 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
+ [x] Sets the output method to "xml" if the rendering type is "xhtml"
+ [x] Sets the stylesheet's output to omit the XML declaration if rendering type is "xhtml"
+ [x] Merges duplicate templates
+ [x] Represents empty templates with a self-closing element
+ [x] Generates the namespace declarations necessary for prefixed tags
+ [x] Generates an exclude-result-prefixes directive for all the declared prefixes
+ [x] Includes parameters in the stylesheet
+ [x] Includes a parameter's default value in the stylesheet
+ [x] escapes a parameter's default value
 
 s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument
@@ -2360,6 +2322,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] The last output of the renderer is omitted for serialization
  [x] Custom properties are preserved during serialization
  [x] Internal objects and resources are unset after rendering
+ [x] setParameter() accepts values that contain both types of quotes
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML
@@ -2370,7 +2333,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] renderMulti() renders multi-line text in XHTML
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
- [x] setParameter() accepts values that contain both types of quotes
 
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text

@@ -18,7 +18,7 @@ class UnformattedTest extends Test
 		$generator = new Unformatted;
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Renderer',
-			$generator->getRenderer($this->configurator->stylesheet)
+			$generator->getRenderer($this->configurator->rendering)
 		);
 	}
 
@@ -27,13 +27,13 @@ class UnformattedTest extends Test
 	*/
 	public function testOutputHTML()
 	{
-		$this->configurator->stylesheet->outputMethod = 'html';
+		$this->configurator->rendering->type = 'html';
 		$generator = new Unformatted;
 
 		$this->assertAttributeSame(
 			true,
 			'htmlOutput',
-			$generator->getRenderer($this->configurator->stylesheet)
+			$generator->getRenderer($this->configurator->rendering)
 		);
 	}
 
@@ -42,13 +42,13 @@ class UnformattedTest extends Test
 	*/
 	public function testOutputXML()
 	{
-		$this->configurator->stylesheet->outputMethod = 'xml';
+		$this->configurator->rendering->type = 'xhtml';
 		$generator = new Unformatted;
 
 		$this->assertAttributeSame(
 			false,
 			'htmlOutput',
-			$generator->getRenderer($this->configurator->stylesheet)
+			$generator->getRenderer($this->configurator->rendering)
 		);
 	}
 }

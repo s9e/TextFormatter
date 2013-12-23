@@ -17,11 +17,11 @@ $configurator->Emoticons->set(':lol:', '<img src="/path/to/lol.png" alt="LOL"/>'
 $configurator->Emoticons->set(':mad:', '<img src="/path/to/mad.png" alt="Mad"/>');
 
 // Also, we want the output to be XHTML, not HTML
-$configurator->stylesheet->outputMethod = 'xml';
+$configurator->rendering->type = 'xhtml';
 
 // OPTIONAL: we use the PHP renderer instead of the default XSL renderer.
 //           It will create a new class file in the /tmp directory
-$configurator->setRendererGenerator('PHP', '/tmp');
+$configurator->rendering->setEngine('PHP', '/tmp');
 
 // Save the bundle to /tmp/Bundle.php
 $configurator->saveBundle('My\Bundle', '/tmp/Bundle.php');

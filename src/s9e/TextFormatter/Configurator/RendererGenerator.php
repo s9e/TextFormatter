@@ -12,8 +12,8 @@ interface RendererGenerator
 	/**
 	* Generate and return a renderer
 	*
-	* @param  Stylesheet $stylesheet Stylesheet used for rendering
-	* @return Renderer               Instance of Renderer
+	* @param  Rendering $rendering Rendering configuration
+	* @return Renderer             Instance of Renderer
 	*/
-	public function getRenderer(Stylesheet $stylesheet);
+	public function getRenderer(Rendering $rendering);
 }

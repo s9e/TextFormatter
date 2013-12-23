@@ -1,5 +1,0 @@
-[quote="foo"]
-	[quote="bar"]...[/quote]
-....
-[/quote]
-!!!!		

@@ -19,15 +19,11 @@ class S18 extends Bundle
 	{
 		$configurator->urlConfig->allowScheme('ftp');
 		$configurator->urlConfig->allowScheme('ftps');
-		$configurator->stylesheet->parameters['L_CODE']        = 'Code';
-		$configurator->stylesheet->parameters['L_CODE_SELECT'] = '[Select]';
-		$configurator->stylesheet->parameters['L_QUOTE']       = 'Quote';
-		$configurator->stylesheet->parameters['L_QUOTE_FROM']  = 'Quote from';
-		$configurator->stylesheet->parameters['L_SEARCH_ON']   = 'on';
-
-		// Indicate that SCRIPT_URL and SMILEYS_PATH are safe to be used as a URL
-		$configurator->stylesheet->parameters->add('SCRIPT_URL')->markAsSafeAsURL();
-		$configurator->stylesheet->parameters->add('SMILEYS_PATH')->markAsSafeAsURL();
+		$configurator->rendering->parameters['L_CODE']        = 'Code';
+		$configurator->rendering->parameters['L_CODE_SELECT'] = '[Select]';
+		$configurator->rendering->parameters['L_QUOTE']       = 'Quote';
+		$configurator->rendering->parameters['L_QUOTE_FROM']  = 'Quote from';
+		$configurator->rendering->parameters['L_SEARCH_ON']   = 'on';
 
 		// Allow the methods that prepend http:// or ftp:// to an URL to be used on attributes
 		$prependFtp  = 's9e\\TextFormatter\\Bundles\\S18\\Helper::prependFtp';

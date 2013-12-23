@@ -63,7 +63,7 @@ class XSLTTest extends Test
 	{
 		$xml = '<t>One<br/>two</t>';
 
-		$this->configurator->stylesheet->setOutputMethod('html');
+		$this->configurator->rendering->type = 'html';
 		$renderer = unserialize(serialize($this->configurator->getRenderer()));
 
 		$this->assertSame(
@@ -79,7 +79,7 @@ class XSLTTest extends Test
 	{
 		$xml = '<t>One<br/>two</t>';
 
-		$this->configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->rendering->type = 'xhtml';
 		$renderer = unserialize(serialize($this->configurator->getRenderer()));
 
 		$this->assertSame(
@@ -94,7 +94,7 @@ class XSLTTest extends Test
 	public function testSetParameterBothQuotes()
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
-		$this->configurator->stylesheet->parameters->add('foo');
+		$this->configurator->rendering->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();
 
 		$values = [

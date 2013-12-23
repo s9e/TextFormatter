@@ -30,7 +30,7 @@ class AbstractDynamicContentCheckTest extends Test
 	/**
 	* @testdox Stylesheet parameters are considered safe
 	*/
-	public function testStylesheetParameter()
+	public function testTemplateParameter()
 	{
 		$node = $this->loadTemplate('<b><xsl:value-of select="$var"/></b>');
 

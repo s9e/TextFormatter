@@ -140,7 +140,7 @@ class BundleGeneratorTest extends Test
 	public function testAutoInclude()
 	{
 		$cacheDir = sys_get_temp_dir();
-		$rendererGenerator = $this->configurator->setRendererGenerator('PHP', $cacheDir);
+		$rendererGenerator = $this->configurator->rendering->setEngine('PHP', $cacheDir);
 
 		$bundle    = $this->configurator->bundleGenerator->generate('Foo');
 		$className = $rendererGenerator->lastClassName;
@@ -164,7 +164,7 @@ class BundleGeneratorTest extends Test
 	public function testAutoIncludeFalse()
 	{
 		$cacheDir = sys_get_temp_dir();
-		$rendererGenerator = $this->configurator->setRendererGenerator('PHP', $cacheDir);
+		$rendererGenerator = $this->configurator->rendering->setEngine('PHP', $cacheDir);
 
 		$bundle    = $this->configurator->bundleGenerator->generate('Foo', ['autoInclude' => false]);
 		$className = $rendererGenerator->lastClassName;

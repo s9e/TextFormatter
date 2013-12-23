@@ -86,7 +86,7 @@ class Serializer
 	* @param  string $expr XPath expression
 	* @return string       PHP code
 	*/
-	public function convertCondition($expr)
+	protected function convertCondition($expr)
 	{
 		$expr = trim($expr);
 
@@ -714,9 +714,9 @@ class Serializer
 		// Serialize this element's content
 		$php .= $this->serializeChildren($element);
 
-		// If we're in XML mode and the element is or may be empty, we may not need to close it at
+		// If we're in XHTML mode and the element is or may be empty, we may not need to close it at
 		// all
-		if ($this->outputMethod === 'xml')
+		if ($this->outputMethod === 'xhtml')
 		{
 			// If this element is definitely empty, it has already been closed with a self-closing
 			// tag in serializeCloseTag()
@@ -757,6 +757,7 @@ class Serializer
 
 	/**
 	* Unused
+	* @todo Remove
 	*/
 	protected function serializeMatch()
 	{

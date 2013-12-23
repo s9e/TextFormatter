@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
-use s9e\TextFormatter\Configurator\Stylesheet;
+use s9e\TextFormatter\Configurator\Rendering;
 
 /**
 * @see docs/DifferencesInRendering.md
@@ -67,16 +67,6 @@ class PHP implements RendererGenerator
 	public $optimizer;
 
 	/**
-	* @var string Output method
-	*/
-	protected $outputMethod;
-
-	/**
-	* @var string PHP source of generated renderer
-	*/
-	protected $php;
-
-	/**
 	* @var Serializer Serializer
 	*/
 	public $serializer;
@@ -118,10 +108,10 @@ class PHP implements RendererGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRenderer(Stylesheet $stylesheet)
+	public function getRenderer(Rendering $rendering)
 	{
 		// Generate the source file
-		$php = $this->generate($stylesheet->get());
+		$php = $this->generate($rendering);
 
 		// Save the file if applicable
 		if (isset($this->filepath))
@@ -154,280 +144,223 @@ class PHP implements RendererGenerator
 
 	/**
 	* Generate the source for a PHP class that renders an intermediate representation according to
-	* given stylesheet
+	* given rendering configuration
 	*
-	* @param  string $xsl XSL stylesheet
+	* @param  Rendering $rendering
 	* @return string
 	*/
-	public function generate($xsl)
+	public function generate(Rendering $rendering)
 	{
-		$header = "/**\n"
-		        . "* @package   s9e\TextFormatter\n"
-		        . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
-		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
-		        . "*/\n\n";
-
-		// Parse the stylesheet
-		$ir    = TemplateParser::parse($xsl);
-		$xpath = new DOMXPath($ir);
-
-		// Set the output method
-		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
-
-		// Apply the empty-element options
-		$this->fixEmptyElements($ir);
-
 		// Copy some options to the serializer
-		$this->serializer->forceEmptyElements          = $this->forceEmptyElements;
-		$this->serializer->outputMethod                = $this->outputMethod;
+		$this->serializer->outputMethod                = $rendering->type;
 		$this->serializer->useEmptyElements            = $this->useEmptyElements;
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
-		// Generate the arrays of parameters, sorted by whether they are static or dynamic
-		$dynamicParams = [];
-		$staticParams  = [];
-
-		foreach ($ir->getElementsByTagName('param') as $param)
+		// Group templates by content to deduplicate them
+		$groupedTemplates = [];
+		foreach ($rendering->getTemplates() as $tagName => $template)
 		{
-			$paramName  = $param->getAttribute('name');
-			$paramValue = ($param->hasAttribute('select')) ? $param->getAttribute('select') : "''";
-
-			// Test whether the param value is a literal
-			if (preg_match('#^(?:\'[^\']*\'|"[^"]*"|[0-9]+)$#', $paramValue))
-			{
-				$staticParams[] = var_export($paramName, true) . '=>' . $paramValue;
-			}
-			else
-			{
-				$dynamicParams[] = var_export($paramName, true) . '=>' . var_export($paramValue, true);
-			}
+			$groupedTemplates[$template][] = '$nodeName===' . self::export($tagName);
 		}
 
-		// Start the code right after the class name, we'll prepend the header when we're done
-		$this->php = ' extends \\s9e\\TextFormatter\\Renderer
-			{
-				protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
-				protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
-				protected $params=[' . implode(',', $staticParams) . '];
-				protected $xpath;
-				public function __sleep()
-				{
-					$props = get_object_vars($this);
-					unset($props["out"], $props["proc"], $props["source"], $props["xpath"]);
+		// Record whether the template has a <xsl:apply-templates/> with a select attribute
+		$hasApplyTemplatesSelect = false;
 
-					return array_keys($props);
-				}
-				public function setParameter($paramName, $paramValue)
-				{
-					$this->params[$paramName] = (string) $paramValue;
-					unset($this->dynamicParams[$paramName]);
-				}
-				public function renderRichText($xml)
-				{
-					$dom = $this->loadXML($xml);
-					$this->xpath = new \\DOMXPath($dom);
-					$this->out = "";';
-
-		if ($dynamicParams)
+		// Parse each template and serialize it to PHP
+		$templatesSource = '';
+		foreach ($groupedTemplates as $template => $conditions)
 		{
-			$this->php .= '
-					foreach ($this->dynamicParams as $k => $v)
+			/**
+			* @todo temp hack
+			*/
+			$template = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '"><xsl:output method="' . $rendering->type . '"/><xsl:template match="X">' . $template . '</xsl:template></xsl:stylesheet>';
+
+			// Parse the template
+			$ir = TemplateParser::parse($template);
+
+			// Apply the empty-element options
+			if ($rendering->type === 'xhtml')
+			{
+				$this->fixEmptyElements($ir);
+			}
+
+			// Test whether this template uses an <xsl:apply-templates/> element with a select
+			if (!$hasApplyTemplatesSelect)
+			{
+				foreach ($ir->getElementsByTagName('applyTemplates') as $applyTemplates)
+				{
+					if ($applyTemplates->hasAttribute('select'))
 					{
-						$this->params[$k] = $this->xpath->evaluate("string($v)", $dom);
-					}';
-		}
+						$hasApplyTemplatesSelect = true;
+					}
+				}
+			}
 
-		if ($xpath->evaluate('count(//applyTemplates[@select])'))
+			// Serialize the representation to PHP
+			$templateSource = $this->serializer->serializeChildren($ir->documentElement->firstChild);
+			if (isset($this->optimizer))
+			{
+				$templateSource = $this->optimizer->optimize($templateSource);
+			}
+
+			$templatesSource .= 'if(' . implode('||', $conditions) . '){' . $templateSource . '}else';
+		}
+		unset($groupedTemplates, $ir);
+
+		// Append the default handling of unknown tags
+		$templatesSource .= ' $this->at($node);';
+
+		// Test whether any templates needs an XPath engine
+		if ($hasApplyTemplatesSelect)
 		{
-			$nodesPHP = '(isset($xpath)) ? $this->xpath->query($xpath, $root) : $root->childNodes';
+			$needsXPath = true;
+		}
+		elseif (strpos($templatesSource, '$this->getParamAsXPath') !== false)
+		{
+			$needsXPath = true;
+		}
+		elseif (strpos($templatesSource, '$this->xpath') !== false)
+		{
+			$needsXPath = true;
 		}
 		else
 		{
-			$nodesPHP = '$root->childNodes';
+			$needsXPath = false;
 		}
 
-		$this->php .= '
-					$this->at($dom->documentElement);
-					unset($this->xpath);
+		// Start the code right after the class name, we'll prepend the header when we're done
+		$php = [];
+		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
+		$php[] = '{';
+		$php[] = '	protected $htmlOutput=' . self::export($rendering->type === 'html') . ';';
+		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
 
-					return $this->out;
-				}
-				protected function at($root, $xpath = null)
-				{
-					if ($root->nodeType === 3)
-					{
-						$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');
-					}
-					else
-					{
-						foreach (' . $nodesPHP . ' as $node)
-						{
-							$nodeName = $node->nodeName;';
-
-		// Remove the excess indentation
-		$this->php = str_replace("\n\t\t\t", "\n", $this->php);
-
-		// Collect and sort templates
-		$templates = [];
-		foreach ($ir->getElementsByTagName('template') as $template)
+		if ($needsXPath)
 		{
-			// Parse this template and save its internal representation
-			$irXML = $template->ownerDocument->saveXML($template);
-
-			// Get the template's match values
-			foreach ($template->getElementsByTagName('match') as $match)
-			{
-				$expr     = $match->textContent;
-				$priority = $match->getAttribute('priority');
-
-				// Separate the tagName from the predicate, if any
-				if (preg_match('#^(\\w+)\\[(.*)\\]$#s', $expr, $m))
-				{
-					$tagName   = $m[1];
-					$predicate = $m[2];
-				}
-				else
-				{
-					$tagName   = $expr;
-					$predicate = '';
-				}
-
-				// Test whether this is a wildcard template
-				if (preg_match('#^(\\w+):\\*#', $tagName, $m))
-				{
-					$condition = '$node->prefix===' . var_export($m[1], true);
-				}
-				else
-				{
-					$condition = '$nodeName===' . var_export($tagName, true);
-				}
-
-				// Add the predicate to the condition
-				if ($predicate !== '')
-				{
-					$condition = '(' . $condition . '&&' . $this->serializer->convertCondition($predicate) . ')';
-				}
-
-				// Record this template
-				$templates[$priority][$irXML][] = $condition;
-			}
+			$php[] = '	protected $xpath;';
 		}
 
-		// Sort templates by priority descending
-		krsort($templates);
+		$php[] = '	public function __sleep()';
+		$php[] = '	{';
+		$php[] = '		$props = get_object_vars($this);';
+		$php[] = "		unset(\$props['out'], \$props['proc'], \$props['source']" . (($needsXPath) ? ", \$props['xpath']" : '') . ');';
+		$php[] = '		return array_keys($props);';
+		$php[] = '	}';
+		$php[] = '	public function setParameter($paramName, $paramValue)';
+		$php[] = '	{';
+		$php[] = '		$this->params[$paramName] = (string) $paramValue;';
+		$php[] = '	}';
+		$php[] = '	public function renderRichText($xml)';
+		$php[] = '	{';
+		$php[] = '		$dom = $this->loadXML($xml);';
 
-		// Build the big if/else structure
-		$else = '';
-		foreach ($templates as $groupedTemplates)
+		if ($needsXPath)
 		{
-			// Process the grouped templates in reverse order so that the last templates apply first
-			// to match XSLT's default behaviour
-			foreach (array_reverse($groupedTemplates) as $irXML => $conditions)
-			{
-				$ir = new DOMDocument;
-				$ir->loadXML($irXML);
-
-				$this->php .= $else;
-				$else = 'else';
-
-				// If there's only one condition, remove its parentheses if applicable
-				if (count($conditions) === 1
-				 && $conditions[0][0] === '('
-				 && substr($conditions[0], -1) === ')')
-				{
-					 $conditions[0] = substr($conditions[0], 1, -1);
-				}
-
-				$php = $this->serializer->serializeChildren($ir->documentElement);
-				if (isset($this->optimizer))
-				{
-					$php = $this->optimizer->optimize($php);
-				}
-
-				$this->php .= 'if(' . implode('||', $conditions) . ')';
-				$this->php .= '{';
-				$this->php .= $php;
-				$this->php .= '}';
-			}
+			$php[] = '		$this->xpath = new \\DOMXPath($dom);';
 		}
 
-		// Add the default handling and close the method
-		$this->php .= "else \$this->at(\$node);\n\t\t\t}\n\t\t}\n\t}";
+		$php[] = "		\$this->out = '';";
+		$php[] = '		$this->at($dom->documentElement);';
+
+		if ($needsXPath)
+		{
+			$php[] = '		unset($this->xpath);';
+		}
+
+		$php[] = '		return $this->out;';
+		$php[] = '	}';
+
+		if ($hasApplyTemplatesSelect)
+		{
+			$php[] = '	protected function at($root, $xpath = null)';
+		}
+		else
+		{
+			$php[] = '	protected function at($root)';
+		}
+
+		$php[] = '	{';
+		$php[] = '		if ($root->nodeType === 3)';
+		$php[] = '		{';
+		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');';
+		$php[] = '		}';
+		$php[] = '		else';
+		$php[] = '		{';
+
+		if ($hasApplyTemplatesSelect)
+		{
+			$php[] = '			foreach (isset($xpath) ? $this->xpath->query($xpath, $root) : $root->childNodes as $node)';
+		}
+		else
+		{
+			$php[] = '			foreach ($root->childNodes as $node)';
+		}
+
+		$php[] = '			{';
+		$php[] = '				$nodeName = $node->nodeName;' . $templatesSource;
+		$php[] = '			}';
+		$php[] = '		}';
+		$php[] = '	}';
 
 		// Add the getParamAsXPath() method if necessary
-		if (strpos($this->php, '$this->getParamAsXPath(') !== false)
+		if (strpos($templatesSource, '$this->getParamAsXPath') !== false)
 		{
-			$this->php .= str_replace(
-				"\n\t\t\t\t",
-				"\n",
-				<<<'EOT'
-				protected function getParamAsXPath($k)
-				{
-					if (isset($this->dynamicParams[$k]))
-					{
-						return $this->dynamicParams[$k];
-					}
-					if (!isset($this->params[$k]))
-					{
-						return "''";
-					}
-					$str = $this->params[$k];
-					if (strpos($str, "'") === false)
-					{
-						return "'" . $str . "'";
-					}
-					if (strpos($str, '"') === false)
-					{
-						return '"' . $str . '"';
-					}
-
-					$toks = [];
-					$c = '"';
-					$pos = 0;
-					while ($pos < strlen($str))
-					{
-						$spn = strcspn($str, $c, $pos);
-						if ($spn)
-						{
-							$toks[] = $c . substr($str, $pos, $spn) . $c;
-							$pos += $spn;
-						}
-						$c = ($c === '"') ? "'" : '"';
-					}
-
-					return 'concat(' . implode(',', $toks) . ')';
-				}
-EOT
-			);
-		}
-
-		// Remove the references to $this->xpath if it's never used
-		if (strpos($this->php, '$this->xpath->') === false)
-		{
-			$this->php = preg_replace(
-				[
-					'#\\s*\\$this->xpath\\s*=.*#',
-					'#\\s*unset\\(\\$this->xpath\\);#'
-				],
-				'',
-				$this->php
-			);
+			$php[] = '	protected function getParamAsXPath($k)';
+			$php[] = '	{';
+			$php[] = '		if (!isset($this->params[$k]))';
+			$php[] = '		{';
+			$php[] = '			return "\'\'";';
+			$php[] = '		}';
+			$php[] = '		$str = $this->params[$k];';
+			$php[] = '		if (strpos($str, "\'") === false)';
+			$php[] = '		{';
+			$php[] = '			return "\'$str\'";';
+			$php[] = '		}';
+			$php[] = '		if (strpos($str, \'"\') === false)';
+			$php[] = '		{';
+			$php[] = '			return "\\"$str\\"";';
+			$php[] = '		}';
+			$php[] = '		$toks = [];';
+			$php[] = '		$c = \'"\';';
+			$php[] = '		$pos = 0;';
+			$php[] = '		while ($pos < strlen($str))';
+			$php[] = '		{';
+			$php[] = '			$spn = strcspn($str, $c, $pos);';
+			$php[] = '			if ($spn)';
+			$php[] = '			{';
+			$php[] = '				$toks[] = $c . substr($str, $pos, $spn) . $c;';
+			$php[] = '				$pos += $spn;';
+			$php[] = '			}';
+			$php[] = '			$c = ($c === \'"\') ? "\'" : \'"\';';
+			$php[] = '		}';
+			$php[] = '		return \'concat(\' . implode(\',\', $toks) . \')\';';
+			$php[] = '	}';
 		}
 
 		// Close the class definition
-		$this->php .= "\n}";
+		$php[] = '}';
+
+		// Assemble the source
+		$php = implode("\n", $php);
 
 		// Finally, optimize the control structures
 		if (isset($this->optimizer))
 		{
-			$this->php = $this->optimizer->optimizeControlStructures($this->php);
+			$php = $this->optimizer->optimizeControlStructures($php);
 		}
 
 		// Generate a name for that class if necessary, and save it
 		$className = (isset($this->className))
 		           ? $this->className
-		           : $this->defaultClassPrefix . sha1($this->php);
+		           : $this->defaultClassPrefix . sha1($php);
 		$this->lastClassName = $className;
+
+		// Prepare the header
+		$header = "/**\n"
+		        . "* @package   s9e\TextFormatter\n"
+		        . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
+		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
+		        . "*/\n\n";
 
 		// Declare the namespace and class name
 		$pos = strrpos($className, '\\');
@@ -438,9 +371,31 @@ EOT
 		}
 
 		// Prepend the header and the class name
-		$this->php = $header . 'class ' . $className . $this->php;
+		$php = $header . 'class ' . $className . $php;
 
-		return $this->php;
+		return $php;
+	}
+
+	/**
+	* Export given value as PHP code
+	*
+	* @param  mixed  $value Original value
+	* @return string        PHP code
+	*/
+	protected static function export($value)
+	{
+		if (is_array($value))
+		{
+			$pairs = [];
+			foreach ($value as $k => $v)
+			{
+				$pairs[] = var_export($k, true) . '=>' . var_export($v, true);
+			}
+
+			return '[' . implode(',', $pairs) . ']';
+		}
+
+		return var_export($value, true);
 	}
 
 	/**
@@ -451,11 +406,6 @@ EOT
 	*/
 	protected function fixEmptyElements(DOMNode $ir)
 	{
-		if ($this->outputMethod !== 'xml')
-		{
-			return;
-		}
-
 		foreach ($ir->getElementsByTagName('element') as $element)
 		{
 			$isEmpty = $element->getAttribute('empty');

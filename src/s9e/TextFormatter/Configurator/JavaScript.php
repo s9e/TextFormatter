@@ -19,6 +19,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -116,7 +117,8 @@ class JavaScript
 		}
 
 		// Get the stylesheet used for rendering
-		$xsl = $this->configurator->stylesheet->get();
+		$rendererGenerator = new XSLT;
+		$xsl = $rendererGenerator->getXSL($this->configurator->rendering);
 
 		// Reset this instance's callbacks
 		$this->callbacks = [];

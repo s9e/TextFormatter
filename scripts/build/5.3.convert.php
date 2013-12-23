@@ -214,16 +214,12 @@ function convertCustom($filepath, &$file)
 		),
 		'PHP.php' => array(
 			array(
-				"protected \$dynamicParams=[' . implode(',', \$dynamicParams) . '];",
-				"protected \$dynamicParams=array(' . implode(',', \$dynamicParams) . ');"
-			),
-			array(
 				"protected \$params=[' . implode(',', \$staticParams) . '];",
 				"protected \$params=array(' . implode(',', \$staticParams) . ');"
 			),
 			array(
-				'return ["htmlOutput","dynamicParams","params"];',
-				'return array("htmlOutput","dynamicParams","params");'
+				"return '[' . implode(',', \$pairs) . ']';",
+				"return 'array(' . implode(',', \$pairs) . ')';"
 			),
 			array(
 				'$toks = [];',

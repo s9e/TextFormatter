@@ -27,7 +27,7 @@ trait RendererTests
 	{
 		$xml = '<t>One<br/>two</t>';
 
-		$this->configurator->stylesheet->setOutputMethod('html');
+		$this->configurator->rendering->type = 'html';
 
 		$this->assertSame(
 			'One<br>two',
@@ -42,7 +42,7 @@ trait RendererTests
 	{
 		$xml = '<t>One<br/>two</t>';
 
-		$this->configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->rendering->type = 'xhtml';
 
 		$this->assertSame(
 			'One<br/>two',
@@ -128,7 +128,7 @@ trait RendererTests
 	*/
 	public function testMultiMultiPlainTextHTML()
 	{
-		$this->configurator->stylesheet->setOutputMethod('html');
+		$this->configurator->rendering->type = 'html';
 
 		$parsed   = ['<t>One<br/>two</t>'];
 		$expected = ['One<br>two'];
@@ -144,7 +144,7 @@ trait RendererTests
 	*/
 	public function testMultiMultiPlainTextXHTML()
 	{
-		$this->configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->rendering->type = 'xhtml';
 
 		$parsed   = ['<t>One<br/>two</t>'];
 		$expected = ['One<br/>two'];
@@ -161,7 +161,7 @@ trait RendererTests
 	public function testSetParameter()
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
-		$this->configurator->stylesheet->parameters->add('foo');
+		$this->configurator->rendering->parameters->add('foo');
 
 		$renderer = $this->configurator->getRenderer();
 		$renderer->setParameter('foo', 'bar');
@@ -179,8 +179,8 @@ trait RendererTests
 	{
 		$this->configurator->tags->add('X')->template
 			= '<xsl:value-of select="$foo"/><xsl:value-of select="$bar"/>';
-		$this->configurator->stylesheet->parameters->add('foo');
-		$this->configurator->stylesheet->parameters->add('bar');
+		$this->configurator->rendering->parameters->add('foo');
+		$this->configurator->rendering->parameters->add('bar');
 
 		$renderer = $this->configurator->getRenderer();
 		$renderer->setParameters([
@@ -200,7 +200,7 @@ trait RendererTests
 	public function testSetParameterBothQuotes()
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
-		$this->configurator->stylesheet->parameters->add('foo');
+		$this->configurator->rendering->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();
 
 		$values = [

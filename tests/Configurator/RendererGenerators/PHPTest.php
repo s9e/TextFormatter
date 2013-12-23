@@ -4,9 +4,10 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators;
 
 use DOMDocument;
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Items\DynamicStylesheetParameter;
+use s9e\TextFormatter\Configurator\Items\DynamicTemplateParameter;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodesTest;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -15,24 +16,14 @@ use s9e\TextFormatter\Tests\Test;
 */
 class PHPTest extends Test
 {
+	protected function setUp()
+	{
+		$this->configurator->rendering->engine = 'PHP';
+	}
+
 	protected function tearDown()
 	{
 		array_map('unlink', glob(sys_get_temp_dir() . '/Renderer_*.php'));
-	}
-
-	protected function getRendererFromXsl($xsl)
-	{
-		$className = 'Renderer_' . md5($xsl);
-
-		if (!class_exists($className, false))
-		{
-			$generator = new PHP;
-			$generator->className = $className;
-
-			eval($generator->generate($xsl));
-		}
-
-		return new $className;
 	}
 
 	/**
@@ -40,21 +31,19 @@ class PHPTest extends Test
 	*/
 	public function testInstance()
 	{
-		$generator = new PHP;
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Renderer',
-			$generator->getRenderer($this->configurator->stylesheet)
+			$this->configurator->getRenderer()
 		);
 	}
 
 	/**
-	* @testdox get() can be called multiple times with the same stylesheet
+	* @testdox getRenderer() can be called multiple times with the same rendering configuration
 	*/
-	public function testMultipleGet()
+	public function testMultipleGetRenderer()
 	{
-		$generator = new PHP;
-		$renderer1 = $generator->getRenderer($this->configurator->stylesheet);
-		$renderer2 = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer1 = $this->configurator->getRenderer();
+		$renderer2 = $this->configurator->getRenderer();
 
 		$this->assertEquals($renderer1, $renderer2);
 		$this->assertNotSame($renderer1, $renderer2);
@@ -65,8 +54,7 @@ class PHPTest extends Test
 	*/
 	public function testInstanceSource()
 	{
-		$generator = new PHP;
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer = $this->configurator->getRenderer();
 
 		$this->assertObjectHasAttribute('source', $renderer);
 		$this->assertContains('class Renderer', $renderer->source);
@@ -77,18 +65,9 @@ class PHPTest extends Test
 	*/
 	public function testClassNameGenerated()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" indent="no"/>
-				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
-				<xsl:template match="br"><br/></xsl:template>
-				<xsl:template match="e|i|s"/>
-			</xsl:stylesheet>';
-
 		$this->assertRegexp(
-			'/class Renderer_\\w+/',
-			$generator->generate($xsl)
+			'/class Renderer_\\w{40}/',
+			$this->configurator->getRenderer()->source
 		);
 	}
 
@@ -97,20 +76,11 @@ class PHPTest extends Test
 	*/
 	public function testClassNameGeneratedCustom()
 	{
-		$generator = new PHP;
-		$generator->defaultClassPrefix = 'Foo\\Bar_renderer_';
-
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" indent="no"/>
-				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
-				<xsl:template match="br"><br/></xsl:template>
-				<xsl:template match="e|i|s"/>
-			</xsl:stylesheet>';
+		$this->configurator->rendering->engine->defaultClassPrefix = 'Foo\\Bar_renderer_';
 
 		$this->assertRegexp(
-			'/class Bar_renderer_\\w+/',
-			$generator->generate($xsl)
+			'/class Bar_renderer_\\w{40}/',
+			$this->configurator->getRenderer()->source
 		);
 	}
 
@@ -120,13 +90,11 @@ class PHPTest extends Test
 	public function testClassNameProp()
 	{
 		$className = uniqid('renderer_');
-
-		$generator = new PHP;
-		$generator->className = $className;
+		$this->configurator->rendering->engine->className = $className;
 
 		$this->assertInstanceOf(
 			$className,
-			$generator->getRenderer($this->configurator->stylesheet)
+			$this->configurator->getRenderer()
 		);
 	}
 
@@ -136,11 +104,9 @@ class PHPTest extends Test
 	public function testNamespacedClass()
 	{
 		$className = uniqid('foo\\bar\\renderer_');
+		$this->configurator->rendering->engine->className = $className;
 
-		$generator = new PHP;
-		$generator->className = $className;
-
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer = $this->configurator->getRenderer();
 
 		$this->assertInstanceOf($className, $renderer);
 		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $renderer->source);
@@ -151,12 +117,10 @@ class PHPTest extends Test
 	*/
 	public function testFilepathProp()
 	{
-		$filepath  = $this->tempnam();
+		$filepath = $this->tempnam();
+		$this->configurator->rendering->engine->filepath = $filepath;
 
-		$generator = new PHP;
-		$generator->filepath = $filepath;
-
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer = $this->configurator->getRenderer();
 
 		$this->assertFileExists($filepath);
 		$this->assertContains($renderer->source, file_get_contents($filepath));
@@ -177,10 +141,10 @@ class PHPTest extends Test
 	*/
 	public function testCacheDirSave()
 	{
-		$cacheDir  = sys_get_temp_dir();
-		$generator = new PHP($cacheDir);
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
-		$filepath  = $cacheDir . '/' . get_class($renderer) . '.php';
+		$cacheDir = sys_get_temp_dir();
+		$this->configurator->rendering->engine->cacheDir = $cacheDir;
+		$renderer = $this->configurator->getRenderer();
+		$filepath = $cacheDir . '/' . get_class($renderer) . '.php';
 
 		$this->assertFileExists($filepath);
 		unlink($filepath);
@@ -191,10 +155,10 @@ class PHPTest extends Test
 	*/
 	public function testCacheDirSaveNamespace()
 	{
-		$cacheDir  = sys_get_temp_dir();
-		$generator = new PHP($cacheDir);
-		$generator->className = 'Foo\\Bar';
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$cacheDir = sys_get_temp_dir();
+		$this->configurator->rendering->engine->cacheDir  = $cacheDir;
+		$this->configurator->rendering->engine->className = 'Foo\\Bar';
+		$this->configurator->getRenderer();
 
 		$this->assertFileExists($cacheDir . '/Foo_Bar.php');
 		unlink($cacheDir . '/Foo_Bar.php');
@@ -208,9 +172,10 @@ class PHPTest extends Test
 		$cacheDir  = sys_get_temp_dir();
 		$filepath  = $this->tempnam();
 
-		$generator = new PHP($cacheDir);
-		$generator->filepath = $filepath;
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$this->configurator->rendering->engine->cacheDir = $cacheDir;
+		$this->configurator->rendering->engine->filepath = $filepath;
+
+		$renderer = $this->configurator->getRenderer();
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists($cacheDir . '/' . get_class($renderer) . '.php');
@@ -221,10 +186,10 @@ class PHPTest extends Test
 	*/
 	public function testLastClassName()
 	{
-		$generator = new PHP;
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
-
-		$this->assertSame(get_class($renderer), $generator->lastClassName);
+		$this->assertSame(
+			get_class($this->configurator->getRenderer()),
+			$this->configurator->rendering->engine->lastClassName
+		);
 	}
 
 	/**
@@ -232,13 +197,14 @@ class PHPTest extends Test
 	*/
 	public function testLastFilepath()
 	{
-		$cacheDir  = sys_get_temp_dir();
-		$generator = new PHP($cacheDir);
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$cacheDir = sys_get_temp_dir();
+		$this->configurator->rendering->engine->cacheDir  = $cacheDir;
+
+		$this->configurator->getRenderer();
 
 		$this->assertRegexp(
-			'(^' . preg_quote($cacheDir) . '/Renderer_\\w+\\.php$)',
-			$generator->lastFilepath
+			'(^' . preg_quote($cacheDir) . '/Renderer_\\w{40}\\.php$)',
+			$this->configurator->rendering->engine->lastFilepath
 		);
 	}
 
@@ -247,16 +213,11 @@ class PHPTest extends Test
 	*/
 	public function testComment()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="FOO"><!-- Nothing here --></xsl:template>
-			</xsl:stylesheet>';
+		$this->configurator->tags->add('X')->template = '<!-- Nothing here -->';
 
 		$this->assertNotContains(
 			'Nothing',
-			$generator->generate($xsl)
+			$this->configurator->getRenderer()->source
 		);
 	}
 
@@ -266,14 +227,8 @@ class PHPTest extends Test
 	*/
 	public function testPI()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="FOO"><?pi ?></xsl:template>
-			</xsl:stylesheet>';
-
-		$generator->generate($xsl);
+		$this->configurator->tags->add('X')->template = '<?pi ?>';
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -283,14 +238,8 @@ class PHPTest extends Test
 	*/
 	public function testUnsupported()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="FOO"><xsl:foo/></xsl:template>
-			</xsl:stylesheet>';
-
-		$generator->generate($xsl);
+		$this->configurator->tags->add('X')->template = '<xsl:foo/>';
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -300,14 +249,8 @@ class PHPTest extends Test
 	*/
 	public function testUnsupportedNamespace()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="FOO"><x:x xmlns:x="urn:x"/></xsl:template>
-			</xsl:stylesheet>';
-
-		$generator->generate($xsl);
+		$this->configurator->tags->add('X')->template = '<x:x xmlns:x="urn:x"/>';
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -317,14 +260,8 @@ class PHPTest extends Test
 	*/
 	public function testUnsupportedCopyOf()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="FOO"><xsl:copy-of select="current()"/></xsl:template>
-			</xsl:stylesheet>';
-
-		$generator->generate($xsl);
+		$this->configurator->tags->add('X')->template = '<xsl:copy-of select="current()"/>';
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -334,52 +271,8 @@ class PHPTest extends Test
 	*/
 	public function testUnterminatedStrings()
 	{
-		$generator = new PHP;
-		$xsl =
-			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:output method="html" encoding="utf-8" />
-				<xsl:template match="X"><xsl:value-of select="&quot;"/></xsl:template>
-			</xsl:stylesheet>';
-
-		$generator->generate($xsl);
-	}
-
-	/**
-	* @testdox setParameter() accepts values that contain both types of quotes
-	*/
-	public function testSetParameterBothQuotes()
-	{
-		$configurator = new Configurator;
-		$configurator->stylesheet->parameters->add('foo');
-		$configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
-
-		$renderer = $configurator->getRenderer('PHP');
-
-		$values = [
-			'"\'...\'"',
-			'\'\'""...\'\'"\'"'
-		];
-
-		foreach ($values as $value)
-		{
-			$renderer->setParameter('foo', $value);
-			$this->assertSame($value, $renderer->render('<r><X/></r>'));
-		}
-	}
-
-	/**
-	* @testdox Correctly handles dynamic stylesheet parameters
-	*/
-	public function testDynamicParameters()
-	{
-		$configurator = new Configurator;
-		$configurator->stylesheet->parameters['foo'] = new DynamicStylesheetParameter('count(//X)');
-		$configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
-
-		$renderer = $configurator->getRenderer('PHP');
-
-		$this->assertSame('1',  $renderer->render('<r><X/></r>'));
-		$this->assertSame('22', $renderer->render('<r><X/><X/></r>'));
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="&quot;"/>';
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -387,14 +280,10 @@ class PHPTest extends Test
 	*/
 	public function testForceEmptyElementsTrue()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
+		$this->configurator->rendering->type = 'xhtml';
 
-		$configurator->setRendererGenerator('PHP');
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<div/>', $renderer->render('<r><X/></r>'));
+		$this->assertSame('<div/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -402,14 +291,11 @@ class PHPTest extends Test
 	*/
 	public function testForceEmptyElementsFalse()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
+		$this->configurator->rendering->type = 'xhtml';
+		$this->configurator->rendering->engine->forceEmptyElements = false;
 
-		$configurator->setRendererGenerator('PHP')->forceEmptyElements = false;
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
+		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -417,17 +303,12 @@ class PHPTest extends Test
 	*/
 	public function testForceEmptyElementsTrueUseEmptyElementsFalse()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
+		$this->configurator->rendering->type = 'xhtml';
+		$this->configurator->rendering->engine->forceEmptyElements = true;
+		$this->configurator->rendering->engine->useEmptyElements   = false;
 
-		$generator = $configurator->setRendererGenerator('PHP');
-		$generator->forceEmptyElements = true;
-		$generator->useEmptyElements   = false;
-
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
+		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -435,14 +316,10 @@ class PHPTest extends Test
 	*/
 	public function testUseEmptyElementsTrue()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<div></div>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
+		$this->configurator->rendering->type = 'xhtml';
 
-		$configurator->setRendererGenerator('PHP');
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<div/>', $renderer->render('<r><X/></r>'));
+		$this->assertSame('<div/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -450,14 +327,11 @@ class PHPTest extends Test
 	*/
 	public function testUseEmptyElementsFalse()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<div></div>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
+		$this->configurator->rendering->type = 'xhtml';
+		$this->configurator->rendering->engine->useEmptyElements = false;
 
-		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<div></div>', $renderer->render('<r><X/></r>'));
+		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -465,114 +339,11 @@ class PHPTest extends Test
 	*/
 	public function testUseEmptyElementsFalseVoidTrue()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->template = '<hr></hr>';
-		$configurator->stylesheet->setOutputMethod('xml');
+		$this->configurator->tags->add('X')->template = '<hr></hr>';
+		$this->configurator->rendering->type = 'xhtml';
+		$this->configurator->rendering->engine->useEmptyElements = false;
 
-		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
-		$renderer = $configurator->getRenderer();
-
-		$this->assertSame('<hr/>', $renderer->render('<r><X/></r>'));
-	}
-
-	/**
-	* @dataProvider getHTMLData
-	* @testdox HTML rendering
-	*/
-	public function testHTML($xml, $xsl, $html)
-	{
-		$this->assertSame(
-			$html,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	/**
-	* @dataProvider getXHTMLData
-	* @testdox XHTML rendering
-	*/
-	public function testXHTML($xml, $xsl, $xhtml)
-	{
-		$this->assertSame(
-			$xhtml,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	public function getHTMLData()
-	{
-		return $this->getRendererData('EdgeCases/e*', 'html');
-	}
-
-	public function getXHTMLData()
-	{
-		return $this->getRendererData('EdgeCases/e*', 'xhtml');
-	}
-
-	public function getRendererData($pattern, $outputMethod)
-	{
-		$testCases = [];
-		foreach (glob(__DIR__ . '/data/' . $pattern . '.xml') as $filepath)
-		{
-			$testCases[] = [
-				file_get_contents($filepath),
-				file_get_contents(substr($filepath, 0, -3) . $outputMethod . '.xsl'),
-				file_get_contents(substr($filepath, 0, -3) . $outputMethod)
-			];
-		}
-
-		return $testCases;
-	}
-
-	/**
-	* @dataProvider getVoidTestsHTML
-	* @testdox Rendering of void and empty elements in HTML
-	*/
-	public function testVoidHTML($xml, $xsl, $expected)
-	{
-		$this->assertSame(
-			$expected,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	public function getVoidTestsHTML()
-	{
-		return $this->getRendererData('VoidTests/*', 'html');
-	}
-
-	/**
-	* @dataProvider getVoidTestsXHTML
-	* @testdox Rendering of void and empty elements in XHTML
-	*/
-	public function testVoidXHTML($xml, $xsl, $expected)
-	{
-		$this->assertSame(
-			$expected,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	public function getVoidTestsXHTML()
-	{
-		return $this->getRendererData('VoidTests/*', 'xhtml');
-	}
-
-	/**
-	* @testdox Rendering tests from plugins
-	* @dataProvider getPluginsData
-	*/
-	public function testPlugins($xml, $xsl, $html)
-	{
-		$this->assertSame(
-			$html,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	public function getPluginsData()
-	{
-		return $this->getRendererData('Plugins/*/*', 'html');
+		$this->assertSame('<hr/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
 	}
 
 	/**
@@ -582,11 +353,12 @@ class PHPTest extends Test
 	*/
 	public function testEdgeCases($xml, $configuratorSetup, $rendererSetup = null)
 	{
-		$configurator = new Configurator;
-		call_user_func($configuratorSetup, $configurator, $this);
+		call_user_func($configuratorSetup, $this->configurator, $this);
 
-		$phpRenderer  = $configurator->getRenderer('PHP');
-		$xsltRenderer = $configurator->getRenderer('XSLT');
+		$xsltRenderer = $this->configurator->getRenderer();
+
+		$this->configurator->rendering->engine = 'PHP';
+		$phpRenderer  = $this->configurator->getRenderer();
 
 		if ($rendererSetup)
 		{
@@ -633,7 +405,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo', "'FOO'");
+					$configurator->rendering->parameters->add('foo', "'FOO'");
 					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
@@ -642,7 +414,7 @@ class PHPTest extends Test
 				'<r><X/><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo', "count(//X)");
+					$configurator->rendering->parameters->add('foo', "count(//X)");
 					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
@@ -651,7 +423,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
@@ -660,7 +432,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				},
@@ -673,7 +445,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo">!</xsl:if>';
 				}
@@ -682,7 +454,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="not($foo)">!</xsl:if>';
 				}
@@ -691,7 +463,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo">!</xsl:if>';
 				},
@@ -704,7 +476,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo');
+					$configurator->rendering->parameters->add('foo');
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="not($foo)">!</xsl:if>';
 				},
@@ -717,7 +489,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('foo', 3);
+					$configurator->rendering->parameters->add('foo', 3);
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo &lt; 5">!</xsl:if>';
 				}
@@ -726,7 +498,7 @@ class PHPTest extends Test
 				'<r><X/></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('xxx', 3);
+					$configurator->rendering->parameters->add('xxx', 3);
 					$configurator->tags->add('X')->template
 						= '<xsl:if test="$xxx &lt; 1">!</xsl:if>';
 				}
@@ -735,7 +507,7 @@ class PHPTest extends Test
 				'<r><X/><Y>1</Y><Y>2</Y></r>',
 				function ($configurator)
 				{
-					$configurator->stylesheet->parameters->add('xxx', '//Y');
+					$configurator->rendering->parameters->add('xxx', '//Y');
 					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$xxx"/>';
 				}
@@ -746,29 +518,6 @@ class PHPTest extends Test
 				{
 					$configurator->tags->add('html:b')->template
 						= '<b><xsl:apply-templates /></b>';
-				}
-			],
-			[
-				'<r xmlns:x="urn:s9e:TextFormatter:x"><x:b>...</x:b><x:c>!!!</x:c></r>',
-				function ($configurator)
-				{
-					$configurator->tags->add('x:b')->template
-						= '<b><xsl:apply-templates /></b>';
-
-					$configurator->stylesheet->setWildcardTemplate(
-						'x',
-						'<span><xsl:apply-templates /></span>'
-					);
-				}
-			],
-			[
-				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:b title="\'&quot;&amp;\'">...</html:b></r>',
-				function ($configurator)
-				{
-					$configurator->stylesheet->setWildcardTemplate(
-						'html',
-						new UnsafeTemplate('<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>')
-					);
 				}
 			],
 			[
@@ -952,39 +701,33 @@ class PHPTest extends Test
 						= '<xsl:value-of select="substring(@foo,3,@x)"/>';
 				}
 			],
+			[
+				'<r><X data-foo="foo" data-bar="bar">..</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<hr><xsl:copy-of select="@*"/></hr>';
+				}
+			],
 		];
 	}
 
-	protected function runCodeTest($xsl, $contains, $notContains, $setup = null)
+	protected function runCodeTest($template, $contains, $notContains, $setup = null)
 	{
-		if (strpos('xsl:output', $xsl) === false)
-		{
-			$xsl = '<xsl:output method="html" encoding="utf-8" />' . $xsl;
-		}
-
-		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $xsl . '</xsl:stylesheet>';
-
-		// Remove whitespace
-		$dom = new DOMDocument;
-		$dom->preserveWhiteSpace = false;
-		$dom->loadXML($xsl);
-		$xsl = $dom->saveXML();
-
-		$generator = new PHP;
-		$generator->className = 'foo';
+		$this->configurator->tags->add('X')->template = $template;
 
 		if (isset($setup))
 		{
-			call_user_func($setup, $generator, $this);
+			call_user_func($setup, $this->configurator->rendering->engine, $this);
 		}
 
-		$php = $generator->generate($xsl);
+		$renderer = $this->configurator->getRenderer();
 
 		if (isset($contains))
 		{
 			foreach ((array) $contains as $str)
 			{
-				$this->assertContains($str, $php);
+				$this->assertContains($str, $renderer->source);
 			}
 		}
 
@@ -992,7 +735,7 @@ class PHPTest extends Test
 		{
 			foreach ((array) $notContains as $str)
 			{
-				$this->assertNotContains($str, $php);
+				$this->assertNotContains($str, $renderer->source);
 			}
 		}
 	}
@@ -1002,14 +745,9 @@ class PHPTest extends Test
 	* @dataProvider getXPathTests
 	* @testdox XPath expressions are inlined as PHP whenever possible
 	*/
-	public function testXPath($xsl, $contains = null, $notContains = null, $setup = null)
+	public function testXPath($template, $contains = null, $notContains = null, $setup = null)
 	{
-		if (isset($setup))
-		{
-			call_user_func($setup, $this);
-		}
-
-		$this->runCodeTest($xsl, $contains, $notContains);
+		$this->runCodeTest($template, $contains, $notContains, $setup);
 	}
 
 	public function getXPathTests()
@@ -1017,50 +755,50 @@ class PHPTest extends Test
 		return [
 			// XPath in values
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="@bar"/></xsl:template>',
+				'<xsl:value-of select="@bar"/>',
 				"\$node->getAttribute('bar')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="."/></xsl:template>',
+				'<xsl:value-of select="."/>',
 				"\$node->textContent"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="$foo"/></xsl:template>',
+				'<xsl:value-of select="$foo"/>',
 				"\$this->params['foo']"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				'<xsl:value-of select="\'foo\'"/>',
 				null,
 				'$this->xpath->evaluate'
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="local-name()"/></xsl:template>',
+				'<xsl:value-of select="local-name()"/>',
 				'$node->localName',
 				'$this->xpath->evaluate'
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="name()"/></xsl:template>',
+				'<xsl:value-of select="name()"/>',
 				'$node->nodeName',
 				'$this->xpath->evaluate'
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				'<xsl:value-of select="\'foo\'"/>',
 				"\$this->out.='foo';"
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select=\'"foo"\'/></xsl:template>',
+				'<xsl:value-of select=\'"foo"\'/>',
 				"\$this->out.='foo';"
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="123"/></xsl:template>',
+				'<xsl:value-of select="123"/>',
 				"\$this->out.='123';"
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="not(@bar)"/></xsl:template>',
+				'<xsl:value-of select="not(@bar)"/>',
 				"\$this->xpath->evaluate('not(@bar)',\$node)"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="string-length(@bar)"/></xsl:template>',
+				'<xsl:value-of select="string-length(@bar)"/>',
 				"mb_strlen(\$node->getAttribute('bar'),'utf-8')",
 				'string-length',
 				function ($test)
@@ -1072,7 +810,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="string-length()"/></xsl:template>',
+				'<xsl:value-of select="string-length()"/>',
 				"mb_strlen(\$node->textContent,'utf-8')",
 				'string-length',
 				function ($test)
@@ -1084,7 +822,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="substring(.,1,2)"/></xsl:template>',
+				'<xsl:value-of select="substring(.,1,2)"/>',
 				"mb_substr(\$node->textContent,0,2,'utf-8')",
 				'substring',
 				function ($test)
@@ -1097,7 +835,7 @@ class PHPTest extends Test
 			],
 			[
 				// NOTE: as per XPath specs, the length is adjusted to the negative position
-				'<xsl:template match="X"><xsl:value-of select="substring(.,0,2)"/></xsl:template>',
+				'<xsl:value-of select="substring(.,0,2)"/>',
 				"mb_substr(\$node->textContent,0,1,'utf-8')",
 				'substring',
 				function ($test)
@@ -1109,7 +847,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="substring(.,@x,1)"/></xsl:template>',
+				'<xsl:value-of select="substring(.,@x,1)"/>',
 				"mb_substr(\$node->textContent,max(0,\$node->getAttribute('x')-1),1,'utf-8')",
 				'substring',
 				function ($test)
@@ -1121,7 +859,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="substring(.,1,@x)"/></xsl:template>',
+				'<xsl:value-of select="substring(.,1,@x)"/>',
 				"mb_substr(\$node->textContent,0,max(0,\$node->getAttribute('x')),'utf-8')",
 				'substring',
 				function ($test)
@@ -1133,7 +871,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="substring(.,2)"/></xsl:template>',
+				'<xsl:value-of select="substring(.,2)"/>',
 				"mb_substr(\$node->textContent,1,null,'utf-8')",
 				'substring',
 				function ($test)
@@ -1145,104 +883,104 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,&quot;abc&quot;,&quot;ABC&quot;)"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,&quot;abc&quot;,&quot;ABC&quot;)"/>',
 				"strtr(\$node->getAttribute('bar'),'abc','ABC')"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abc\',\'ABC\')"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,\'abc\',\'ABC\')"/>',
 				"strtr(\$node->getAttribute('bar'),'abc','ABC')"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'éè\',\'ÉÈ\')"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,\'éè\',\'ÉÈ\')"/>',
 				"strtr(\$node->getAttribute('bar'),['é'=>'É','è'=>'È'])"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'ab\',\'ABC\')"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,\'ab\',\'ABC\')"/>',
 				"strtr(\$node->getAttribute('bar'),'ab','AB')"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abcd\',\'AB\')"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,\'abcd\',\'AB\')"/>',
 				"strtr(\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])"
 			],
 			[
-				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abbd\',\'ABCD\')"/></xsl:template>',
+				'<xsl:value-of select="translate(@bar,\'abbd\',\'ABCD\')"/>',
 				"strtr(\$node->getAttribute('bar'),'abd','ABD')"
 			],
 			// XPath in conditions
 			[
-				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="@foo">Foo</xsl:if>',
 				"if(\$node->hasAttribute('foo'))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="not(@foo)">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="not(@foo)">Foo</xsl:if>',
 				"if(!\$node->hasAttribute('foo'))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="$foo">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="$foo">Foo</xsl:if>',
 				"if(!empty(\$this->params['foo']))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="not($foo)">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="not($foo)">Foo</xsl:if>',
 				"if(empty(\$this->params['foo']))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=\'foo\'">Foo</xsl:if>',
 				"if(\$node->textContent==='foo')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="@foo=\'foo\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="@foo=\'foo\'">Foo</xsl:if>',
 				"if(\$node->getAttribute('foo')==='foo')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=\'fo&quot;o\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=\'fo&quot;o\'">Foo</xsl:if>',
 				"if(\$node->textContent==='fo\"o')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=\'&quot;_&quot;\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=\'&quot;_&quot;\'">Foo</xsl:if>',
 				'if($node->textContent===\'"_"\')'
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if>',
 				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=3">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=3">Foo</xsl:if>',
 				"if(\$node->textContent==3)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=022">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=022">Foo</xsl:if>',
 				"if(\$node->textContent==22)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="044=.">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="044=.">Foo</xsl:if>',
 				"if(44==\$node->textContent)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="@foo != @bar">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="@foo != @bar">Foo</xsl:if>',
 				"if(\$node->getAttribute('foo')!==\$node->getAttribute('bar'))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="@foo = @bar or @baz">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="@foo = @bar or @baz">Foo</xsl:if>',
 				"if(\$node->getAttribute('foo')===\$node->getAttribute('bar')||\$node->hasAttribute('baz'))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="not(@foo) and @bar">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="not(@foo) and @bar">Foo</xsl:if>',
 				"if(!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=".=\'x\'or.=\'y\'or.=\'z\'">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=".=\'x\'or.=\'y\'or.=\'z\'">Foo</xsl:if>',
 				"if(\$node->textContent==='x'||\$node->textContent==='y'||\$node->textContent==='z')"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="contains(@foo,\'x\')">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="contains(@foo,\'x\')">Foo</xsl:if>',
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test=" contains( @foo , \'x\' ) ">Foo</xsl:if></xsl:template>',
+				'<xsl:if test=" contains( @foo , \'x\' ) ">Foo</xsl:if>',
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="@foo and (@bar or @baz)">...</xsl:if></xsl:template>',
+				'<xsl:if test="@foo and (@bar or @baz)">...</xsl:if>',
 				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))",
 				null,
 				function ()
@@ -1254,7 +992,7 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="(@a = @b) or (@b = @c)">...</xsl:if></xsl:template>',
+				'<xsl:if test="(@a = @b) or (@b = @c)">...</xsl:if>',
 				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))",
 				null,
 				function ()
@@ -1265,30 +1003,34 @@ class PHPTest extends Test
 					}
 				}
 			],
+			[
+				'<xsl:if test="$a+$b=$c">...</xsl:if>',
+				['$this->xpath = new \\DOMXPath($dom);', 'function getParamAsXPath(']
+			],
 			// Custom representations
 			[
-				'<xsl:template match="FOO"><xsl:if test="contains(\'upperlowerdecim\',substring(@type,1,5))">Foo</xsl:if></xsl:template>',
+				'<xsl:if test="contains(\'upperlowerdecim\',substring(@type,1,5))">Foo</xsl:if>',
 				"if(strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="substring(\'songWw\',6-5*boolean(@songid),5)"/></xsl:template>',
+				'<xsl:value-of select="substring(\'songWw\',6-5*boolean(@songid),5)"/>',
 				"(\$node->hasAttribute('songid')?'songW':'w')"
 			],
 			[
-				'<xsl:template match="FOO"><hr title="{250-210*boolean(@songid)}"/></xsl:template>',
+				'<hr title="{250-210*boolean(@songid)}"/>',
 				"(\$node->hasAttribute('songid')?40:250)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)"/></xsl:template>',
+				'<xsl:value-of select="substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)"/>',
 				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 			],
 			[
-				'<xsl:template match="FOO"><iframe height="{120-78*boolean(@track_id|@track_num)}"/></xsl:template>',
+				'<iframe height="{120-78*boolean(@track_id|@track_num)}"/>',
 				"(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)",
 				'@track_'
 			],
 			[
-				"<xsl:template match='FOO'><hr title=\"{380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))}\"/></xsl:template>",
+				"<hr title=\"{380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))}\"/>",
 				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'/track/')!==false?80:380)"
 			],
 		];
@@ -1310,7 +1052,7 @@ class PHPTest extends Test
 	public function testNoMbstring()
 	{
 		$this->runCodeTest(
-			'<xsl:template match="X"><xsl:value-of select="string-length(@foo)"/></xsl:template>',
+			'<xsl:value-of select="string-length(@foo)"/>',
 			'string-length',
 			'mb_strlen',
 			function ($generator)
@@ -1331,10 +1073,8 @@ class PHPTest extends Test
 		     ->method('optimizeControlStructures')
 		     ->will($this->returnArgument(0));
 
-		$generator = new PHP;
-		$generator->optimizer = $mock;
-
-		$generator->getRenderer($this->configurator->stylesheet);
+		$this->configurator->rendering->engine->optimizer = $mock;
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -1342,10 +1082,8 @@ class PHPTest extends Test
 	*/
 	public function testNoOptimizer()
 	{
-		$generator = new PHP;
-		unset($generator->optimizer);
-
-		$generator->getRenderer($this->configurator->stylesheet);
+		unset($this->configurator->rendering->engine->optimizer);
+		$this->configurator->getRenderer();
 	}
 
 	/**
@@ -1353,125 +1091,636 @@ class PHPTest extends Test
 	* @dataProvider getOptimizationTests
 	* @testdox Code optimization tests
 	*/
-	public function testOptimizations($xsl, $contains = null, $notContains = null)
+	public function testOptimizations($xsl, $contains = null, $notContains = null, $setup = null)
 	{
-		$this->runCodeTest($xsl, $contains, $notContains);
+		$this->runCodeTest($xsl, $contains, $notContains, $setup);
 	}
 
 	public function getOptimizationTests()
 	{
 		return [
 			[
-				'<xsl:template match="FOO"><br/></xsl:template>',
+				'<br/>',
 				"\$this->out.='<br>';"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:text/></xsl:template>',
-				"if(\$nodeName==='FOO')",
+				'<xsl:text/>',
+				"if(\$nodeName==='X')",
 				"\$this->out.='';"
 			],
 			[
-				'<xsl:template match="FOO">
-					<xsl:choose>
-						<xsl:when test="@foo">foo</xsl:when>
-						<xsl:otherwise><xsl:text/></xsl:otherwise>
-					</xsl:choose>
-				</xsl:template>',
+				'<xsl:choose>
+					<xsl:when test="@foo">foo</xsl:when>
+					<xsl:otherwise><xsl:text/></xsl:otherwise>
+				</xsl:choose>',
 				"{if(\$node->hasAttribute('foo'))\$this->out.='foo';}",
 				['else{}', 'else;', "\$this->out.=''"]
 			],
 			[
-				'<xsl:template match="html:*">
-					<xsl:element name="{concat(\'x\',local-name())}">
-						<xsl:copy-of select="@*"/>
-						<xsl:apply-templates/>
-					</xsl:element>
-				</xsl:template>',
-				[
-					"\$this->out.='<'.\$e",
-					"\$this->out.='</'.\$e"
-				],
-				"\$this->out.='</'.htmlspecialchars("
-			],
-			[
-				'<xsl:template match="FOO">...</xsl:template>',
-				null,
-				'foreach ($this->dynamicParams as $k => $v)'
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				'<xsl:value-of select="\'foo\'"/>',
 				"\$this->out.='foo';"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
+				'<xsl:value-of select="\'fo\\o\'"/>',
 				"\$this->out.='fo\\\\o';"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'&quot;&lt;AT&amp;T&gt;\'"/></xsl:template>',
+				'<xsl:value-of select="\'&quot;&lt;AT&amp;T&gt;\'"/>',
 				"\$this->out.='\"&lt;AT&amp;T&gt;';"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:value-of select="&quot;&apos;&lt;AT&amp;T&gt;&quot;"/></xsl:template>',
+				'<xsl:value-of select="&quot;&apos;&lt;AT&amp;T&gt;&quot;"/>',
 				"\$this->out.='\\'&lt;AT&amp;T&gt;';"
 			],
 			[
-				'<xsl:template match="FOO"><b title="{\'&quot;foo&quot;\'}"></b></xsl:template>',
+				'<b title="{\'&quot;foo&quot;\'}"></b>',
 				var_export('<b title="&quot;foo&quot;"></b>', true)
 			],
 			[
-				'<xsl:template match="FOO"><b title="{&quot;&apos;foo&apos;&quot;}"></b></xsl:template>',
+				'<b title="{&quot;&apos;foo&apos;&quot;}"></b>',
 				var_export('<b title="\'foo\'"></b>', true)
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="local-name()"/></xsl:template>',
+				'<xsl:value-of select="local-name()"/>',
 				'$this->out.=$node->localName',
 				'htmlspecialchars($node->localName'
 			],
 			[
-				'<xsl:template match="*"><xsl:value-of select="name()"/></xsl:template>',
+				'<xsl:value-of select="name()"/>',
 				'$this->out.=$node->nodeName',
 				'htmlspecialchars($node->nodeName'
 			],
 			[
 				// This test ensures that we concatenate inside the htmlspecialchars() call rather
 				// than concatenate the result of two htmlspecialchars() calls
-				'<xsl:template match="*"><xsl:value-of select="@foo"/><xsl:value-of select="@bar"/></xsl:template>',
+				'<xsl:value-of select="@foo"/><xsl:value-of select="@bar"/>',
 				"htmlspecialchars(\$node->getAttribute('foo').\$node->getAttribute('bar')"
 			],
 			[
 				// This test ensures that we pre-escape literals before merging htmlspecialchars()
 				// calls together
-				'<xsl:template match="FOO"><img src="{$PATH}/bar.png"/></xsl:template>',
+				'<img src="{$PATH}/bar.png"/>',
 				"'<img src=\"'.htmlspecialchars(\$this->params['PATH'],2).'/bar.png\">'"
 			],
 			[
-				'<xsl:template match="FOO[@bar]|BAR[@baz]">...</xsl:template>
-				<xsl:template match="BAZ[@quux]">***</xsl:template>',
-				[
-					"if(\$nodeName==='BAZ'",
-					"if((\$nodeName==='BAR'"
-				],
-				[
-					"if((\$nodeName==='BAZ'",
-					"if(\$nodeName==='BAR'"
-				]
-			],
-			[
-				// Not part of optimizeCode() but considered an optimization nonetheless
-				'<xsl:template match="FOO">Hi</xsl:template>',
+				'Hi',
 				null,
 				'getParamAsXPath'
 			],
 			[
-				// Not part of optimizeCode() but considered an optimization nonetheless
-				'<xsl:template match="FOO"><xsl:apply-templates/></xsl:template>',
+				'<xsl:apply-templates/>',
 				null,
 				'$this->xpath'
 			],
 			[
-				'<xsl:template match="FOO"><xsl:apply-templates select="*"/></xsl:template>',
-				'$this->xpath = new \\DOMXPath'
+				'<xsl:apply-templates select="*"/>',
+				'$this->xpath = new \\DOMXPath',
+				'getParamAsXPath'
 			],
 		];
+	}
+
+	/**
+	* @testdox HTML rendering
+	* @dataProvider getConformanceTests
+	*/
+	public function testHTML($xml, $html, $xhtml, $setup = null)
+	{
+		if (isset($setup))
+		{
+			call_user_func($setup, $this->configurator);
+		}
+
+		$this->configurator->rendering->type = 'html';
+
+		extract($this->configurator->finalize(['returnParser' => false]));
+		$this->assertSame($html, $renderer->render($xml));
+	}
+
+	/**
+	* @testdox XHTML rendering
+	* @dataProvider getConformanceTests
+	*/
+	public function testXHTML($xml, $html, $xhtml, $setup = null)
+	{
+		if (isset($setup))
+		{
+			call_user_func($setup, $this->configurator);
+		}
+
+		$this->configurator->rendering->type = 'xhtml';
+
+		extract($this->configurator->finalize(['returnParser' => false]));
+		$this->assertSame($xhtml, $renderer->render($xml));
+	}
+
+	public function getConformanceTests()
+	{
+		return [
+			[
+				'<t>Plain text</t>',
+				'Plain text',
+				'Plain text'
+			],
+			[
+				"<t>Multi<br/>\nline</t>",
+				"Multi<br>\nline",
+				"Multi<br/>\nline"
+			],
+			[
+				'<r>x <B><s>[b]</s>bold<e>[/b]</e></B> y</r>',
+				'x <b>bold</b> y',
+				'x <b>bold</b> y',
+				function ($configurator)
+				{
+					$configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+				}
+			],
+			[
+				'<r>x <T1>[t1/]</T1> y</r>',
+				'x <b foo="FOO"><i>!</i><i>?</i></b> y',
+				'x <b foo="FOO"><i>!</i><i>?</i></b> y',
+				function ($configurator)
+				{
+					$configurator->tags->add('T1')->template =
+						'<b>
+							<xsl:choose>
+								<xsl:when test="1">
+									<xsl:attribute name="foo">FOO</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<i>!</i>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="0">
+									<xsl:attribute name="bar"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<i>!</i>
+								</xsl:otherwise>
+							</xsl:choose>
+							<i>?</i>
+						</b>';
+				}
+			],
+			[
+				'<r>x <URL url="http://google.com"><s>[url="http://google.com"]</s>google<e>[/url]</e></URL> y</r>',
+				'x <a href="http://google.com">google</a> y',
+				'x <a href="http://google.com">google</a> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('URL');
+				}
+			],
+			[
+				'<r><B><s>[b]</s>...<e>[/b]</e></B><T2><s>[t2]</s><B><s>[b]</s>...<e>[/b]</e></B><I><s>[i]</s>...<e>[/i]</e></I><e>[/t2]</e></T2></r>',
+				'<b>...</b><b><i>...</i></b>',
+				'<b>...</b><b><i>...</i></b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+					$configurator->tags->add('I')->template = '<i><xsl:apply-templates/></i>';
+					$configurator->tags->add('T2')->template = '<b><xsl:apply-templates select="I"/></b>';
+				}
+			],
+			[
+				'<r>x <HR>[hr/]</HR> y</r>',
+				'x <hr> y',
+				'x <hr/> y',
+				function ($configurator)
+				{
+					$configurator->tags->add('HR')->template = '<hr/>';
+				}
+			],
+			[
+				'<r><QUOTE author="foo"><s>[quote="foo"]</s>
+	<QUOTE author="bar"><s>[quote="bar"]</s>...<e>[/quote]</e></QUOTE>
+....
+<e>[/quote]</e></QUOTE>
+!!!!		</r>',
+				'<blockquote><div><cite>foo wrote:</cite>
+	<blockquote><div><cite>bar wrote:</cite>...</div></blockquote>
+....
+</div></blockquote>
+!!!!		',
+				'<blockquote><div><cite>foo wrote:</cite>
+	<blockquote><div><cite>bar wrote:</cite>...</div></blockquote>
+....
+</div></blockquote>
+!!!!		',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('QUOTE');
+				}
+			],
+			[
+				'<r><QUOTE author="foo"><s>[quote="foo"]</s>
+	<QUOTE><s>[quote]</s>...<e>[/quote]</e></QUOTE>
+....
+<e>[/quote]</e></QUOTE>
+!!!!		</r>',
+				'<blockquote><div><cite>foo wrote:</cite>
+	<blockquote class="uncited"><div>...</div></blockquote>
+....
+</div></blockquote>
+!!!!		',
+				'<blockquote><div><cite>foo wrote:</cite>
+	<blockquote class="uncited"><div>...</div></blockquote>
+....
+</div></blockquote>
+!!!!		',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('QUOTE');
+				}
+			],
+			[
+				'<r>x <B>[b/]</B> y</r>',
+				'x <b>[b/]</b> y',
+				'x <b>[b/]</b> y',
+				function ($configurator)
+				{
+					$configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+				}
+			],
+			[
+				'<r><T3><s>[t3 bar="BAR"]</s>...<e>[/t3]</e></T3></r>',
+				'<b title="foo  {baz}">...</b>',
+				'<b title="foo  {baz}">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T3')->template = '<b title="foo {@bar} {{baz}}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T4><s>[t4]</s>...<e>[/t4]</e></T4></r>',
+				'<b title="foo [t4] {baz}">...</b>',
+				'<b title="foo [t4] {baz}">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T4')->template = '<b title="foo {s} {{baz}}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T5><s>[t5]</s>...<e>[/t5]</e></T5></r>',
+				'<b title="foo [t5]...[/t5] {baz}">...</b>',
+				'<b title="foo [t5]...[/t5] {baz}">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T5')->template = '<b title="foo {.} {{baz}}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T6><s>[t6]</s>...<e>[/t6]</e></T6></r>',
+				'<b title="">...</b>',
+				'<b title="">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T6')->template = '<b title=""><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T7><s>[t7]</s>...<e>[/t7]</e></T7></r>',
+				'<b title="}}}">...</b>',
+				'<b title="}}}">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T7')->template = '<b title="{concat(\'}\',\'}}\')}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T8>[t8]</T8>...[/t8]</r>',
+				'<b>xy</b>...[/t8]',
+				'<b>xy</b>...[/t8]',
+				function ($configurator)
+				{
+					$configurator->tags->add('T8')->template = '<b>x<xsl:value-of select="\'\'" />y</b>';
+				}
+			],
+			[
+				'<r><B><s>[b]</s>&lt;&gt;\'"&amp;<e>[/b]</e></B></r>',
+				'<b>&lt;&gt;\'"&amp;</b>',
+				'<b>&lt;&gt;\'"&amp;</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+				}
+			],
+			[
+				'<r><T9><s>[t9 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t9]</e></T9></r>',
+				'<b data-a="">...</b>',
+				'<b data-a="">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T9')->template = '<b data-a="{@a}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T10><s>[t10 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t10]</e></T10></r>',
+				'<b data-a="">...</b>',
+				'<b data-a="">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T10')->template = '<b><xsl:attribute name="data-a"><xsl:value-of select="@a" /></xsl:attribute><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T11>[t11 a="&lt;&gt;\'\\"&amp;"]</T11>...[/t11]</r>',
+				'<b></b>...[/t11]',
+				'<b/>...[/t11]',
+				function ($configurator)
+				{
+					$configurator->tags->add('T11')->template = '<b><xsl:value-of select="@a" /></b>';
+				}
+			],
+			[
+				'<r><T12><s>[t12]</s>...<e>[/t12]</e></T12></r>',
+				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
+				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T12')->template = '<b data-a="&quot;\'&lt;&gt;&amp;"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T13><s>[t13]</s>...<e>[/t13]</e></T13></r>',
+				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
+				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T13')->template = '<b><xsl:attribute name="data-a">&quot;\'&lt;&gt;&amp;</xsl:attribute><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T14>[t14/]</T14></r>',
+				'<b>"\'&lt;&gt;&amp;</b>',
+				'<b>"\'&lt;&gt;&amp;</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T14')->template = '<b>&quot;\'&lt;&gt;&amp;</b>';
+				}
+			],
+			[
+				'<r><T15>[t15/]</T15></r>',
+				'<b>"\'&lt;&gt;&amp;</b>',
+				'<b>"\'&lt;&gt;&amp;</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T15')->template = '<b><xsl:value-of select="concat(\'&quot;\',&quot;\'&lt;&gt;&amp;&quot;)" /></b>';
+				}
+			],
+			[
+				'<r><T16><s>[t16 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t16]</e></T16></r>',
+				'<b data-a="">...</b>',
+				'<b data-a="">...</b>',
+				function ($configurator)
+				{
+					$configurator->tags->add('T16')->template = '<b data-a="{@a}{@a}{@a}"><xsl:apply-templates /></b>';
+				}
+			],
+			[
+				'<r><T17>[t17 a="&lt;&gt;\'\\"&amp;"]</T17>...[/t17]</r>',
+				'<b></b>...[/t17]',
+				'<b/>...[/t17]',
+				function ($configurator)
+				{
+					$configurator->tags->add('T17')->template = '<b><xsl:value-of select="@a" /><xsl:value-of select="@a" /><xsl:value-of select="@a" /></b>';
+				}
+			],
+			[
+				'<r>x <IMG src="http://example.com/foo.png"><s>[img]</s>http://example.com/foo.png<e>[/img]</e></IMG> y</r>',
+				'x <img src="http://example.com/foo.png" title="" alt=""> y',
+				'x <img src="http://example.com/foo.png" title="" alt=""/> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('IMG');
+				}
+			],
+			[
+				'<r><LIST><s>[list]</s><i>[*]one[*]two</i><e>[/list]</e></LIST></r>',
+				'<ul></ul>',
+				'<ul/>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('LIST');
+				}
+			],
+			[
+				'<r><LIST type="decimal"><s>[list=1]</s><i>[*]one[*]two</i><e>[/list]</e></LIST></r>',
+				'<ol style="list-style-type:decimal"></ol>',
+				'<ol style="list-style-type:decimal"/>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('LIST');
+				}
+			],
+			[
+				'<r>x <T18><s>[T18]</s> ... <e>[/T18]</e></T18> y</r>',
+				'x <!-- ... --> y',
+				'x <!-- ... --> y',
+				function ($configurator)
+				{
+					$configurator->tags->add('T18')->template = '<xsl:comment><xsl:apply-templates/></xsl:comment>';
+				}
+			],
+		];
+	}
+
+	/**
+	* @dataProvider getVoidTests
+	* @testdox Rendering of void and empty elements in HTML
+	*/
+	public function testVoidHTML($xml, $template, $html, $xhtml)
+	{
+		$this->configurator->rendering->type = 'html';
+		$this->configurator->tags->add('FOO')->template = new UnsafeTemplate($template);
+		extract($this->configurator->finalize(['returnParser' => false]));
+		$this->assertSame($html, $renderer->render($xml));
+	}
+
+	/**
+	* @dataProvider getVoidTests
+	* @testdox Rendering of void and empty elements in XHTML
+	*/
+	public function testVoidXHTML($xml, $template, $html, $xhtml)
+	{
+		$this->configurator->rendering->type = 'xhtml';
+		$this->configurator->tags->add('FOO')->template = new UnsafeTemplate($template);
+		extract($this->configurator->finalize(['returnParser' => false]));
+		$this->assertSame($xhtml, $renderer->render($xml));
+	}
+
+	public function getVoidTests($type)
+	{
+		return [
+			[
+				'<r><FOO/></r>',
+				'<hr id="foo"/>',
+				'<hr id="foo">',
+				'<hr id="foo"/>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<hr id="foo">foo</hr>',
+				'<hr id="foo">',
+				'<hr id="foo">foo</hr>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<hr id="foo"><xsl:apply-templates/></hr>',
+				'<hr id="foo">',
+				'<hr id="foo"/>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<hr id="foo"><xsl:value-of select="@name"/></hr>',
+				'<hr id="foo">',
+				'<hr id="foo"/>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<div id="foo"/>',
+				'<div id="foo"></div>',
+				'<div id="foo"/>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<div id="foo">foo</div>',
+				'<div id="foo">foo</div>',
+				'<div id="foo">foo</div>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<div id="foo"><xsl:apply-templates/></div>',
+				'<div id="foo"></div>',
+				'<div id="foo"/>'
+			],
+			[
+				'<r><FOO/></r>',
+				'<div id="foo"><xsl:value-of select="@name"/></div>',
+				'<div id="foo"></div>',
+				'<div id="foo"/>'
+			],
+			[
+				'<r><FOO name="hr"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
+				'<hr id="foo">',
+				'<hr id="foo"/>'
+			],
+			[
+				'<r><FOO name="hr"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute>foo</xsl:element>',
+				'<hr id="foo">',
+				'<hr id="foo">foo</hr>'
+			],
+			[
+				'<r><FOO name="hr"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>',
+				'<hr id="foo">',
+				'<hr id="foo"/>'
+			],
+			[
+				'<r><FOO name="hr"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:value-of select="@name"/></xsl:element>',
+				'<hr id="foo">',
+				'<hr id="foo">hr</hr>'
+			],
+			[
+				'<r><FOO name="div"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
+				'<div id="foo"></div>',
+				'<div id="foo"/>'
+			],
+			[
+				'<r><FOO name="div"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute>foo</xsl:element>',
+				'<div id="foo">foo</div>',
+				'<div id="foo">foo</div>'
+			],
+			[
+				'<r><FOO name="div"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>',
+				'<div id="foo"></div>',
+				'<div id="foo"/>'
+			],
+			[
+				'<r><FOO name="div"/></r>',
+				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:value-of select="@name"/></xsl:element>',
+				'<div id="foo">div</div>',
+				'<div id="foo">div</div>'
+			]
+		];
+	}
+
+	/**
+	* @testdox Tests from plugins
+	* @dataProvider getPluginsTests
+	*/
+	public function testPlugins($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
+	{
+		$this->configurator->rendering->engine = 'PHP';
+		$plugin = $this->configurator->plugins->load($pluginName, $pluginOptions);
+
+		if ($setup)
+		{
+			$setup($this->configurator, $plugin);
+		}
+
+		if ($pluginName === 'BBCodes')
+		{
+			// Capture the names of the BBCodes used
+			preg_match_all('/\\[([*\\w]+)/', $original, $matches);
+
+			foreach ($matches[1] as $bbcodeName)
+			{
+				if (!isset($this->configurator->BBCodes[$bbcodeName]))
+				{
+					$this->configurator->BBCodes->addFromRepository($bbcodeName);
+				}
+			}
+		}
+
+		extract($this->configurator->finalize());
+
+		$this->assertSame($expected, $renderer->render($parser->parse($original)));
+	}
+
+	public function getPluginsTests()
+	{
+		$pluginsDir = __DIR__ . '/../../Plugins';
+
+		$tests = [];
+		foreach (glob($pluginsDir . '/*', GLOB_ONLYDIR) as $dirpath)
+		{
+			$pluginName = basename($dirpath);
+			$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
+
+			$obj = new $className;
+			if (is_callable([$obj, 'getRenderingTests']))
+			{
+				foreach ($obj->getRenderingTests() as $test)
+				{
+					array_unshift($test, $pluginName);
+					$tests[] = $test;
+				}
+			}
+		}
+
+		$obj = new BBCodesTest;
+		foreach ($obj->getPredefinedBBCodesTests() as $test)
+		{
+			// Insert an empty array for pluginOptions
+			if (isset($test[2]))
+			{
+				$test[3] = $test[2];
+				$test[2] = [];
+			}
+
+			array_unshift($test, 'BBCodes');
+			$tests[] = $test;
+		}
+
+		return $tests;
 	}
 }

@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
 use s9e\TextFormatter\Configurator\RendererGenerator;
-use s9e\TextFormatter\Configurator\Stylesheet;
+use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Renderers\Unformatted as UnformattedRenderer;
 
 class Unformatted implements RendererGenerator
@@ -16,9 +16,9 @@ class Unformatted implements RendererGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRenderer(Stylesheet $stylesheet)
+	public function getRenderer(Rendering $rendering)
 	{
-		$htmlOutput = (bool) ($stylesheet->outputMethod === 'html');
+		$htmlOutput = (bool) ($rendering->type === 'html');
 
 		return new UnformattedRenderer($htmlOutput);
 	}

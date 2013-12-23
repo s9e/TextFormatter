@@ -39,7 +39,7 @@ class Forum extends Bundle
 		$configurator->BBCodes->addFromRepository('U');
 		$configurator->BBCodes->addFromRepository('URL');
 
-		$configurator->stylesheet->parameters = [
+		$configurator->rendering->parameters = [
 			'L_WROTE'   => 'wrote:',
 			'L_HIDE'    => 'Hide',
 			'L_SHOW'    => 'Show',

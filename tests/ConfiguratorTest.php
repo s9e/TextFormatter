@@ -71,13 +71,13 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
+	* @testdox $configurator->rendering is an instance of Rendering
 	*/
-	public function testRendererGeneratorInstance()
+	public function testRenderingInstance()
 	{
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT',
-			$this->configurator->rendererGenerator
+			's9e\\TextFormatter\\Configurator\\Rendering',
+			$this->configurator->rendering
 		);
 	}
 
@@ -100,17 +100,6 @@ class ConfiguratorTest extends Test
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\RulesGenerator',
 			$this->configurator->rulesGenerator
-		);
-	}
-
-	/**
-	* @testdox $configurator->stylesheet is an instance of Stylesheet
-	*/
-	public function testStylesheetInstance()
-	{
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Stylesheet',
-			$this->configurator->stylesheet
 		);
 	}
 
@@ -403,39 +392,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getRenderer() invokes $this->rendererGenerator->getRenderer()
+	* @testdox getRenderer() invokes $this->rendering->getRenderer()
 	*/
 	public function testGetRendererInvokesGenerator()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT');
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Rendering')
+		             ->disableOriginalConstructor()
+		             ->getMock();
 		$mock->expects($this->once())
-		     ->method('getRenderer')
-		     ->with($this->configurator->stylesheet);
+		     ->method('getRenderer');
 
-		$this->configurator->rendererGenerator = $mock;
+		$this->configurator->rendering = $mock;
 		$this->configurator->getRenderer();
-	}
-
-	/**
-	* @testdox getRenderer('PHP') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP to generate a renderer
-	*/
-	public function testGetRendererArg()
-	{
-		$renderer = $this->configurator->getRenderer('PHP');
-		$this->assertRegexp('/^\\w+$/', get_class($renderer));
-	}
-
-	/**
-	* @testdox getRenderer('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
-	*/
-	public function testGetRendererArgs()
-	{
-		$cacheDir = sys_get_temp_dir();
-		$renderer = $this->configurator->getRenderer('PHP', $cacheDir);
-		$filepath = $cacheDir . '/' . get_class($renderer) . '.php';
-
-		$this->assertFileExists($filepath);
-		unlink($filepath);
 	}
 
 	/**
@@ -608,40 +576,6 @@ class ConfiguratorTest extends Test
 		$this->configurator->addHTML5Rules(['parentHTML' => '<ul>']);
 
 		$this->assertSame(['UL'], $this->configurator->rootRules['denyChild']);
-	}
-
-	/**
-	* @testdox setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
-	*/
-	public function testSetRendererGenerator()
-	{
-		$this->configurator->setRendererGenerator('PHP');
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\RendererGenerators\\PHP',
-			$this->configurator->rendererGenerator
-		);
-	}
-
-	/**
-	* @testdox setRendererGenerator() passes extra arguments to the generator's constructor
-	*/
-	public function testSetRendererGeneratorArguments()
-	{
-		$this->configurator->setRendererGenerator('PHP', '/tmp');
-		$this->assertSame('/tmp', $this->configurator->rendererGenerator->cacheDir);
-	}
-
-	/**
-	* @testdox setRendererGenerator() returns the new instance of RendererGenerator
-	*/
-	public function testSetRendererGeneratorReturn()
-	{
-		$return = $this->configurator->setRendererGenerator('PHP');
-
-		$this->assertSame(
-			$this->configurator->rendererGenerator,
-			$return
-		);
 	}
 
 	/**

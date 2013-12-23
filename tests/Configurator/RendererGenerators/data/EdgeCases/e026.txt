@@ -1,1 +1,0 @@
-x [img]http://example.com/foo.png[/img] y

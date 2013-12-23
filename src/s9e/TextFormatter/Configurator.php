@@ -20,8 +20,8 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Configurator\RulesGenerator;
-use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\UrlConfig;
@@ -54,9 +54,9 @@ class Configurator implements ConfigProvider
 	public $registeredVars;
 
 	/**
-	* @var RendererGenerator Generator used by $this->getRenderer()
+	* @var Rendering Rendering configuration
 	*/
-	public $rendererGenerator;
+	public $rendering;
 
 	/**
 	* @var Ruleset Rules that apply at the root of the text
@@ -101,14 +101,12 @@ class Configurator implements ConfigProvider
 		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->registeredVars     = ['urlConfig' => new UrlConfig];
+		$this->rendering          = new Rendering($this);
 		$this->rootRules          = new Ruleset;
 		$this->rulesGenerator     = new RulesGenerator;
 		$this->tags               = new TagCollection;
 		$this->templateChecker    = new TemplateChecker;
 		$this->templateNormalizer = new TemplateNormalizer;
-		$this->stylesheet         = new Stylesheet($this);
-
-		$this->setRendererGenerator('XSLT');
 	}
 
 	//==========================================================================
@@ -288,25 +286,11 @@ class Configurator implements ConfigProvider
 	/**
 	* Return an instance of Renderer based on the current config
 	*
-	* NOTE: extra parameters are passed to the RendererGenerator's constructor
-	*
-	* @param  string $name Name of the RendererGenerator, e.g. "PHP"
 	* @return Renderer
 	*/
-	public function getRenderer($name = null)
+	public function getRenderer()
 	{
-		if (isset($name))
-		{
-			// Create a specific generator
-			$rendererGenerator = $this->getRendererGenerator(func_get_args());
-		}
-		else
-		{
-			// Use the default renderer
-			$rendererGenerator = $this->rendererGenerator;
-		}
-
-		return $rendererGenerator->getRenderer($this->stylesheet);
+		return $this->rendering->getRenderer();
 	}
 
 	/**
@@ -393,7 +377,7 @@ class Configurator implements ConfigProvider
 		unset($properties['attributeFilters']);
 		unset($properties['bundleGenerator']);
 		unset($properties['javascript']);
-		unset($properties['rendererGenerator']);
+		unset($properties['rendering']);
 		unset($properties['rulesGenerator']);
 		unset($properties['templateChecker']);
 		unset($properties['templateNormalizer']);
@@ -427,34 +411,5 @@ class Configurator implements ConfigProvider
 		unset($config['rootRules']);
 
 		return $config;
-	}
-
-	/**
-	* Set the RendererGenerator instance used by this Configurator
-	*
-	* NOTE: extra parameters are passed to the RendererGenerator's constructor
-	*
-	* @param  string $name      Name of the RendererGenerator, e.g. "PHP"
-	* @return RendererGenerator New instance of RendererGenerator
-	*/
-	public function setRendererGenerator($name)
-	{
-		$this->rendererGenerator = $this->getRendererGenerator(func_get_args());
-
-		return $this->rendererGenerator;
-	}
-
-	/**
-	* Generate and return an instance of RendererGenerator
-	*
-	* @param  array $args List of arguments, starting with the name of the generator
-	* @return RendererGenerator
-	*/
-	protected function getRendererGenerator(array $args)
-	{
-		$className  = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\' . $args[0];
-		$reflection = new ReflectionClass($className);
-
-		return $reflection->newInstanceArgs(array_slice($args, 1));
 	}
 }

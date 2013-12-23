@@ -19,7 +19,7 @@ class XSLCacheTest extends Test
 		$generator = new XSLCache(sys_get_temp_dir());
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Renderer',
-			$generator->getRenderer($this->configurator->stylesheet)
+			$generator->getRenderer($this->configurator->rendering)
 		);
 	}
 

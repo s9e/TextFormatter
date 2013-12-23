@@ -42,6 +42,7 @@ TODO
 - Create an exception used in security checks so that an implementor can log security exceptions differently from other exceptions
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
 - Test whether closures use more memory than static methods
+- Remove support for dynamic parameters. Keep parameters in Renderer. Implement getParameters() and getParameter()
 - Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
-- Remove dynamic params
 - Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
+- Update docs/Cookbook/40_Templating/TemplateParameters.md when Renderer#getParameters() is implemented

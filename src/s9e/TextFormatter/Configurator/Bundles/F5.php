@@ -208,8 +208,8 @@ class F5 extends Bundle
 		$configurator->Autolink;
 		$configurator->urlConfig->allowScheme('ftp');
 		$configurator->rulesGenerator->append('ManageParagraphs');
-		$configurator->stylesheet->setOutputMethod('xml');
-		$configurator->stylesheet->parameters['SHOW_IMG'] = 1;
-		$configurator->stylesheet->parameters['L_WROTE'] = 'wrote:';
+		$configurator->rendering->type = 'xhtml';
+		$configurator->rendering->parameters['SHOW_IMG'] = 1;
+		$configurator->rendering->parameters['L_WROTE'] = 'wrote:';
 	}
 }

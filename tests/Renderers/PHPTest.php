@@ -15,7 +15,7 @@ class PHPTest extends Test
 
 	public function setUp()
 	{
-		$this->configurator->setRendererGenerator('PHP');
+		$this->configurator->rendering->engine = 'PHP';
 	}
 
 	/**
@@ -23,7 +23,7 @@ class PHPTest extends Test
 	*/
 	public function testSerializable()
 	{
-		$this->configurator->stylesheet->parameters->add('foo', "'bar'");
+		$this->configurator->rendering->parameters->add('foo', "'bar'");
 		$renderer = $this->configurator->getRenderer();
 		unset($renderer->source);
 
@@ -92,6 +92,29 @@ class PHPTest extends Test
 				$prop->getName(),
 				$renderer
 			);
+		}
+	}
+
+	/**
+	* @testdox setParameter() accepts values that contain both types of quotes
+	*/
+	public function testSetParameterBothQuotes()
+	{
+		$this->configurator->rendering->parameters->add('foo');
+		$this->configurator->rendering->engine = 'PHP';
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
+
+		$renderer = $this->configurator->getRenderer();
+
+		$values = [
+			'"\'...\'"',
+			'\'\'""...\'\'"\'"'
+		];
+
+		foreach ($values as $value)
+		{
+			$renderer->setParameter('foo', $value);
+			$this->assertSame($value, $renderer->render('<r><X/></r>'));
 		}
 	}
 }

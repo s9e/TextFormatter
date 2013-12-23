@@ -8,11 +8,10 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\RendererGenerator;
-use s9e\TextFormatter\Configurator\Stylesheet;
+use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Renderers\XSLCache as XSLCacheRenderer;
 
-class XSLCache implements RendererGenerator
+class XSLCache extends XSLT
 {
 	/**
 	* @var string Path to the directory in which the stylesheet files will be saved
@@ -38,9 +37,9 @@ class XSLCache implements RendererGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRenderer(Stylesheet $stylesheet)
+	public function getRenderer(Rendering $rendering)
 	{
-		$xsl = $stylesheet->get();
+		$xsl = $this->getXSL($rendering);
 		$md5 = md5($xsl);
 
 		$filepath = $this->cacheDir . '/xslcache.' . $md5 . '.xsl';
