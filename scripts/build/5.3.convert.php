@@ -126,11 +126,6 @@ function convertCustom($filepath, &$file)
 		),
 		'Configurator.php' => array(
 			array(
-				// https://bugs.php.net/52854
-				'return $reflection->newInstanceArgs(array_slice($args, 1));',
-				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
-			),
-			array(
 				'$options[\'finalizeParser\']($parser);',
 				'call_user_func($options[\'finalizeParser\'], $parser);'
 			),
@@ -277,6 +272,13 @@ function convertCustom($filepath, &$file)
 			array(
 				'if (preg_match_all(\'#.#us\', $word, $matches) === false)',
 				'if (preg_match_all(\'#.#us\', $word, $matches) === false || !preg_match(\'/^(?:[[:ascii:]]|[\\xC0-\\xDF][\\x80-\\xBF]|[\\xE0-\\xEF][\\x80-\\xBF]{2}|[\\xF0-\\xF7][\\x80-\\xBF]{3})*$/D\', $word))'
+			)
+		),
+		'Rendering.php' => array(
+			array(
+				// https://bugs.php.net/52854
+				'$engine = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));',
+				'$engine = (func_num_args() > 1) ? $reflection->newInstanceArgs(array_slice(func_get_args(), 1)) : $reflection->newInstance();'
 			)
 		),
 		'Variant.php' => array(
