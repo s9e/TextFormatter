@@ -214,16 +214,12 @@ function convertCustom($filepath, &$file)
 		),
 		'PHP.php' => array(
 			array(
-				"protected \$params=[' . implode(',', \$staticParams) . '];",
-				"protected \$params=array(' . implode(',', \$staticParams) . ');"
-			),
-			array(
 				"return '[' . implode(',', \$pairs) . ']';",
 				"return 'array(' . implode(',', \$pairs) . ')';"
 			),
 			array(
-				'$toks = [];',
-				'$toks = array();'
+				"\$php[] = '		\$toks = [];';",
+				"\$php[] = '		\$toks = array();';"
 			),
 		),
 		'PHP/Serializer.php' => array(

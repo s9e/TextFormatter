@@ -2322,7 +2322,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] The last output of the renderer is omitted for serialization
  [x] Custom properties are preserved during serialization
  [x] Internal objects and resources are unset after rendering
- [x] setParameter() accepts values that contain both types of quotes
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML
@@ -2333,6 +2332,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] renderMulti() renders multi-line text in XHTML
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
+ [x] setParameter() accepts values that contain both types of quotes
 
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
