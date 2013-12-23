@@ -13,11 +13,6 @@ use s9e\TextFormatter\Tests\Test;
 */
 class ConfiguratorTest extends Test
 {
-	public function setUp()
-	{
-		$this->configurator = new Configurator;
-	}
-
 	/**
 	* @testdox $configurator->attributeFilters is an instance of AttributeFilterCollection
 	*/
