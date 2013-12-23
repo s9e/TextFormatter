@@ -70,11 +70,9 @@ class BBCodesTest extends Test
 	*/
 	public function test($original, $expected, $setup = null)
 	{
-		$configurator = new Configurator;
-
 		if (isset($setup))
 		{
-			call_user_func($setup, $configurator);
+			call_user_func($setup, $this->configurator);
 		}
 
 		// Capture the names of the BBCodes used
@@ -82,21 +80,15 @@ class BBCodesTest extends Test
 
 		foreach ($matches[1] as $bbcodeName)
 		{
-			if (!isset($configurator->BBCodes[$bbcodeName]))
+			if (!isset($this->configurator->BBCodes[$bbcodeName]))
 			{
-				$configurator->BBCodes->addFromRepository($bbcodeName);
+				$this->configurator->BBCodes->addFromRepository($bbcodeName);
 			}
 		}
 
-		$configurator->addHTML5Rules();
+		extract($this->configurator->finalize());
 
-		$xml  = $configurator->getParser()->parse($original);
-		$html = $configurator->getRenderer()->render($xml);
-
-		$this->assertSame(
-			$expected,
-			$html
-		);
+		$this->assertSame($expected, $renderer->render($parser->parse($original)));
 	}
 
 	/**
