@@ -45,9 +45,10 @@ var text;
 var textLen;
 
 /**
-* @type {!number} Random number generated everytime the parser is reset
+* @type {!number} Counter incremented everytime the parser is reset. Used to as a canary to detect
+*                 whether the parser was reset during execution
 */
-var uid;
+var uid = 0;
 
 //==========================================================================
 // Public API
@@ -136,8 +137,10 @@ function reset(_text)
 	text       = _text;
 	textLen    = text.length;
 	tagStack   = [];
-	uid        = Math.random();
 	wsPos      = 0;
+
+	// Bump the UID
+	++uid;
 
 	// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
 	tagStackIsSorted = false;

@@ -65,9 +65,10 @@ class Parser
 	protected $textLen;
 
 	/**
-	* @var integer Random number generated everytime the parser is reset
+	* @var integer Counter incremented everytime the parser is reset. Used to as a canary to detect
+	*              whether the parser was reset during execution
 	*/
-	protected $uid;
+	protected $uid = 0;
 
 	/**
 	* Constructor
@@ -130,8 +131,10 @@ class Parser
 		$this->text       = $text;
 		$this->textLen    = strlen($text);
 		$this->tagStack   = [];
-		$this->uid        = mt_rand();
 		$this->wsPos      = 0;
+
+		// Bump the UID
+		++$this->uid;
 
 		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
 		$this->tagStackIsSorted = false;
