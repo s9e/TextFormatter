@@ -30,6 +30,11 @@ class XSLCache extends Renderer
 	protected $proc;
 
 	/**
+	* @var bool Whether parameters need to be reloaded
+	*/
+	protected $reloadParams = false;
+
+	/**
 	* Constructor
 	*
 	* @param  string $filepath Path to the stylesheet used by this renderer
@@ -39,8 +44,20 @@ class XSLCache extends Renderer
 	{
 		$this->filepath = $filepath;
 
+		// Load the stylesheet for inspection
+		$stylesheet = file_get_contents($this->filepath);
+
 		// Test whether we output HTML or XML
-		$this->htmlOutput = (strpos(file_get_contents($this->filepath), '<xsl:output method="html') !== false);
+		$this->htmlOutput = (strpos($stylesheet, '<xsl:output method="html') !== false);
+
+		// Capture the parameters' values from the stylesheet
+		preg_match_all('#<xsl:param name="([^"]+)"(?>/>|>([^<]+))#', $stylesheet, $matches);
+		foreach ($matches[1] as $k => $paramName)
+		{
+			$this->params[$paramName] = (isset($matches[2][$k]))
+			                          ? htmlspecialchars_decode($matches[2][$k])
+			                          : '';
+		}
 	}
 
 	/**
@@ -53,7 +70,28 @@ class XSLCache extends Renderer
 		$props = get_object_vars($this);
 		unset($props['proc']);
 
+		if (empty($props['reloadParams']))
+		{
+			unset($props['reloadParams']);
+		}
+
 		return array_keys($props);
+	}
+
+	/**
+	* Unserialize helper
+	*
+	* Will reload parameters if they were changed between generation and serialization
+	*
+	* @return void
+	*/
+	public function __wakeup()
+	{
+		if (!empty($this->reloadParams))
+		{
+			$this->setParameters($this->params);
+			$this->reloadParams = false;
+		}
 	}
 
 	/**
@@ -79,9 +117,18 @@ class XSLCache extends Renderer
 		{
 			$paramValue = str_replace('"', "\xEF\xBC\x82", $paramValue);
 		}
+		else
+		{
+			$paramValue = (string) $paramValue;
+		}
 
-		$this->load();
-		$this->proc->setParameter('', $paramName, $paramValue);
+		if (!isset($this->params[$paramName]) || $this->params[$paramName] !== $paramValue)
+		{
+			$this->load();
+			$this->proc->setParameter('', $paramName, $paramValue);
+			$this->params[$paramName] = $paramValue;
+			$this->reloadParams = true;
+		}
 	}
 
 	/**

@@ -32,9 +32,11 @@ Hello you
 Hello Joe123
 ```
 
-### How to get a list of template parameters in use
+### How to get a list of template parameters
 
-If you let the end user define their own templates (for custom BBCodes for example) you may not always know in advance what template parameters are in use. And since you have to set their value before rendering, you need to get their names. This can be done with `$configurator->rendering>getAllParameters()`, which will return the names and default values of all the template parameters that have been created and/or are in use.
+During configuration, you can access the list of template parameters that have been defined via `$configurator->rendering->parameters`. But if you let the end user define their own templates (for custom BBCodes for example) they might be trying to use parameters that you haven't defined. You can get a list of all parameters (both defined and used in templates) with `$configurator->rendering->getAllParameters()`.
+
+Before and during rendering, you can get the list of parameters via `$renderer->getParameters()`.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -43,9 +45,10 @@ $configurator->BBCodes->addCustom(
 	'<xsl:if test="$S_LOGGED_IN=1">{TEXT}</xsl:if>'
 );
 
-// Get the list of parameters, which you should probably save with the renderer
-// because you'll need it at rendering time
-$parameters = $configurator->rendering->getAllParameters();
+// Get a list of all parameters during configuration
+echo "During configuration:\n";
+print_r($configurator->rendering->getAllParameters());
+echo "\n";
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
@@ -53,18 +56,27 @@ extract($configurator->finalize());
 $text = 'Are you are logged in? [noguests]Yes you are.[/noguests]';
 $xml  = $parser->parse($text);
 
+echo "During rendering:\n";
+
 // First with no value
+echo 'Result with S_LOGGED_IN=', $renderer->getParameter('S_LOGGED_IN'), "\n";
 echo $renderer->render($xml), "\n";
 
 // Then with a value
-if (isset($parameters['S_LOGGED_IN']))
-{
-	$renderer->setParameter('S_LOGGED_IN', true);
-}
-
+$renderer->setParameter('S_LOGGED_IN', true);
+echo 'Result with S_LOGGED_IN=', $renderer->getParameter('S_LOGGED_IN'), "\n";
 echo $renderer->render($xml);
 ```
 ```html
+During configuration:
+Array
+(
+    [S_LOGGED_IN] => 
+)
+
+During rendering:
+Result with S_LOGGED_IN=
 Are you are logged in? 
+Result with S_LOGGED_IN=1
 Are you are logged in? Yes you are.
 ```

@@ -17,6 +17,11 @@ abstract class Renderer
 	protected $htmlOutput = true;
 
 	/**
+	* @var array Associative array of [paramName => paramValue]
+	*/
+	protected $params = [];
+
+	/**
 	* Create a return a new DOMDocument loaded with given XML
 	*
 	* @param  string      $xml Source XML
@@ -118,13 +123,37 @@ abstract class Renderer
 	abstract protected function renderRichText($xml);
 
 	/**
+	* Get the value of a parameter
+	*
+	* @param  string $paramName
+	* @return string
+	*/
+	public function getParameter($paramName)
+	{
+		return (isset($this->params[$paramName])) ? $this->params[$paramName] : '';
+	}
+
+	/**
+	* Get the values of all parameters
+	*
+	* @return array Associative array of parameter names and values
+	*/
+	public function getParameters()
+	{
+		return $this->params;
+	}
+
+	/**
 	* Set the value of a parameter from the stylesheet
 	*
 	* @param  string $paramName  Parameter name
 	* @param  mixed  $paramValue Parameter's value
 	* @return void
 	*/
-	abstract public function setParameter($paramName, $paramValue);
+	public function setParameter($paramName, $paramValue)
+	{
+		$this->params[$paramName] = (string) $paramValue;
+	}
 
 	/**
 	* Set the values of several parameters from the stylesheet

@@ -25,7 +25,6 @@ TODO
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
 - Conditional comments can create IE-specific exploits. Consider removing them
 - PHP renderer generator: optimize substring() in convertXPath()
-- PHP renderer generator: can precompute the value from getParamAsXPath() if the param is not dynamic
 - Consider adding Configurable::__set_state()
 - HINT.RULE_* hints must check for the use of Tag.setFlags()
 - Consider adding one callback opportunity before and after rendering. The callback would receive the XML (before) or HTML (after) and the Renderer instance
@@ -42,7 +41,5 @@ TODO
 - Create an exception used in security checks so that an implementor can log security exceptions differently from other exceptions
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
 - Test whether closures use more memory than static methods
-- Remove support for dynamic parameters. Keep parameters in Renderer. Implement getParameters() and getParameter()
 - Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
 - Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
-- Update docs/Cookbook/40_Templating/TemplateParameters.md when Renderer#getParameters() is implemented

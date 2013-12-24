@@ -37,11 +37,4 @@ class Unformatted extends Renderer
 			strip_tags($xml)
 		);
 	}
-
-	/**
-	* Unused
-	*/
-	public function setParameter($paramName, $paramValue)
-	{
-	}
 }

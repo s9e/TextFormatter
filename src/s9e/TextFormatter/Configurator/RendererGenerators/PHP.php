@@ -246,10 +246,6 @@ class PHP implements RendererGenerator
 		$php[] = "		unset(\$props['out'], \$props['proc'], \$props['source']" . (($needsXPath) ? ", \$props['xpath']" : '') . ');';
 		$php[] = '		return array_keys($props);';
 		$php[] = '	}';
-		$php[] = '	public function setParameter($paramName, $paramValue)';
-		$php[] = '	{';
-		$php[] = '		$this->params[$paramName] = (string) $paramValue;';
-		$php[] = '	}';
 		$php[] = '	public function renderRichText($xml)';
 		$php[] = '	{';
 		$php[] = '		$dom = $this->loadXML($xml);';
