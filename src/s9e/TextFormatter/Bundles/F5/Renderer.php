@@ -18,10 +18,6 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		unset($props['out'], $props['proc'], $props['source'], $props['xpath']);
 		return array_keys($props);
 	}
-	public function setParameter($paramName, $paramValue)
-	{
-		$this->params[$paramName] = (string) $paramValue;
-	}
 	public function renderRichText($xml)
 	{
 		$dom = $this->loadXML($xml);
