@@ -19,7 +19,7 @@
     * [Add custom BBCodes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/AddCustom.md)
     * [Add BBCodes from the bundled repository](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/AddFromRepository.md)
     * [Localize strings in a BBCode template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/Localize.md)
-    * [Use stylesheet parameters in a BBCode template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/Parameters.md)
+    * [Use template parameters in a BBCode template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/Parameters.md)
   * **Censor**
     * [Using the Censor plugin in plain text and HTML](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/CensorText.md)
     * [Quickly patch old parsed texts for a new list of words](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/Reparse.md)
