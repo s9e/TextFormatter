@@ -20,26 +20,73 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 include __DIR__ . '/../../src/s9e/TextFormatter/Configurator/RendererGenerators/PHP/Optimizer.php';
 $optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 
-function optimizeDir($dir)
+function optimizeDir($dir, array $options = [])
 {
-	foreach (glob($dir . '/*', GLOB_ONLYDIR) as $sub)
-	{
-		optimizeDir($sub);
-	}
-
 	foreach (glob($dir . '/*.php') as $filepath)
 	{
-		optimizeFile($filepath);
+		optimizeFile($filepath, $options);
+	}
+
+	foreach (glob($dir . '/*', GLOB_ONLYDIR) as $sub)
+	{
+		optimizeDir($sub, $options);
 	}
 }
 
-function optimizeFile($filepath)
+function optimizeFile($filepath, array $options = [])
 {
 	global $optimizer;
 
-	$old    = file_get_contents($filepath);
-	$new    = $optimizer->optimizeControlStructures($old);
-	$save   = ($new !== $old);
+	$old     = file_get_contents($filepath);
+	$changed = false;
+
+	// Inline traits in the main Parser class
+	if (strpos($filepath, 's9e/TextFormatter/Parser.php'))
+	{
+		// Replace "use" statements with the content of the trait
+		$old = preg_replace_callback(
+			'/^	use Parser\\\\(\\w+);/m',
+			function ($m) use ($filepath)
+			{
+				$traitName = $m[1];
+
+				// Capture the trait's content
+				$traitFilepath = dirname($filepath) . '/Parser/' . $traitName . '.php';
+				preg_match('#\\n{\\n(.*)\\n}$#s', file_get_contents($traitFilepath), $m);
+
+				// Remove the trait's file
+				unlink($traitFilepath);
+
+				// Fix the test's code coverage annotation
+				$testFilepath  = __DIR__ . '/../../tests/Parser/' . $traitName . 'Test.php';
+				file_put_contents(
+					$testFilepath,
+					str_replace(
+						'@covers s9e\\TextFormatter\\Parser\\' . $traitName,
+						'@covers s9e\\TextFormatter\\Parser',
+						file_get_contents($testFilepath)
+					)
+				);
+
+				return $m[1] . "\n";
+			},
+			$old
+		);
+
+		// Traits live in the s9e\TextFormatter\Parser namespace whereas the Parser live in the
+		// s9e\TextFormatter namespace so we need to add a use statement for Tag
+		$old = str_replace("\n\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
+
+		// Add a use statement for InvalidArgumentException that is used in PluginsHandling
+		$old = str_replace("\n\nuse", "\n\nuse InvalidArgumentException;\nuse", $old);
+	}
+
+	$new = $optimizer->optimizeControlStructures($old);
+	if ($new !== $old)
+	{
+		$changed = true;
+	}
+
 	$tokens = token_get_all($new);
 
 	// strpos() => \strpos()
@@ -71,7 +118,7 @@ function optimizeFile($filepath)
 		}
 
 		$tokens[$i - 1][1] = '\\' . $tokens[$i - 1][1];
-		$save = true;
+		$changed = true;
 	}
 	unset($token);
 
@@ -104,21 +151,81 @@ function optimizeFile($filepath)
 		}
 
 		$token[1] = '\\' . $token[1];
-		$save = true;
+		$changed  = true;
 	}
 	unset($token);
 
-	if ($save)
+	if (!empty($options['removeComments']))
 	{
-		$php = '';
-		foreach ($tokens as $token)
+		foreach ($tokens as $i => &$token)
 		{
-			$php .= (is_array($token)) ? $token[1] : $token;
+			if ($token[0] === T_DOC_COMMENT)
+			{
+				if (empty($options['removeDocblock']))
+				{
+					continue;
+				}
+			}
+			elseif ($token[0] !== T_COMMENT)
+			{
+				continue;
+			}
+
+			if (empty($options['removeLicense']) && strpos($token[1], '@license') !== false)
+			{
+				continue;
+			}
+
+			if ($tokens[$i + 1][0] === T_WHITESPACE)
+			{
+				$tokens[$i + 1][1] = '';
+			}
+
+			$token[1] = '';
+			$changed  = true;
+		}
+		unset($token);
+	}
+
+	if (!empty($options['removeWhitespace']))
+	{
+		if ($changed)
+		{
+			$tokens = token_get_all(rebuild($tokens));
 		}
 
-		file_put_contents($filepath, $php);
+		foreach ($tokens as $i => &$token)
+		{
+			if ($token[0] !== T_WHITESPACE)
+			{
+				continue;
+			}
+
+			$before = (is_array($tokens[$i - 1])) ? $tokens[$i - 1][1] : $tokens[$i - 1];
+			$after  = (is_array($tokens[$i + 1])) ? $tokens[$i + 1][1] : $tokens[$i + 1];
+
+			$token[1] = (preg_match('/\\w$/', $before) && preg_match('/^\\w/', $after)) ? "\n" : '';
+			$changed  = true;
+		}
+		unset($token);
+	}
+
+	if ($changed)
+	{
+		file_put_contents($filepath, rebuild($tokens));
 		echo "Optimized $filepath\n";
 	}
+}
+
+function rebuild(array &$tokens)
+{
+	$php = '';
+	foreach ($tokens as $token)
+	{
+		$php .= (is_array($token)) ? $token[1] : $token;
+	}
+
+	return $php;
 }
 
 // PHP 5.3 compatibility
@@ -127,4 +234,16 @@ if (!defined('T_TRAIT'))
 	define('T_TRAIT', 357);
 }
 
-optimizeDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'));
+// NOTE: none of those make any measurable difference with an opcode cache except for a slight
+//       reduction in size when removing docblocks (which are cached by opcode caches because of
+//       Reflection.) Minifying the source does reduce the time spent parsing it, so it does make a
+//       difference without an opcode cache. However, those changes are too radical to be enabled
+//       by default
+$options = [
+	'removeComments'   => false,
+	'removeDocblock'   => false,
+	'removeLicense'    => false,
+	'removeWhitespace' => false
+];
+
+optimizeDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'), $options);
