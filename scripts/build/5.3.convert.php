@@ -493,3 +493,13 @@ function convertArraySyntax(&$file)
 
 convertDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'));
 convertDir(realpath(__DIR__ . '/../../tests'));
+
+// Remove traits files
+array_map('unlink', glob(__DIR__ . '/../../src/s9e/TextFormatter/Configurator/Traits/*'));
+rmdir(__DIR__ . '/../../src/s9e/TextFormatter/Configurator/Traits');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/FilterProcessing.php');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/OutputHandling.php');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/PluginsHandling.php');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/RulesHandling.php');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/TagProcessing.php');
+unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/TagStack.php');
