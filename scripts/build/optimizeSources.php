@@ -75,10 +75,16 @@ function optimizeFile($filepath, array $options = [])
 
 		// Traits live in the s9e\TextFormatter\Parser namespace whereas the Parser live in the
 		// s9e\TextFormatter namespace so we need to add a use statement for Tag
-		$old = str_replace("\n\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
+		if (strpos($old, 'use s9e\TextFormatter\Parser\Tag;') === false)
+		{
+			$old = str_replace("\n\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
+		}
 
 		// Add a use statement for InvalidArgumentException that is used in PluginsHandling
-		$old = str_replace("\n\nuse", "\n\nuse InvalidArgumentException;\nuse", $old);
+		if (strpos($old, 'use InvalidArgumentException;') === false)
+		{
+			$old = str_replace("\n\nuse", "\n\nuse InvalidArgumentException;\nuse", $old);
+		}
 	}
 
 	$new = $optimizer->optimizeControlStructures($old);
