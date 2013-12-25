@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Parser;
 
 use Closure;
+use ReflectionClass;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
@@ -26,7 +27,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Parser\BuiltInFilters;
-use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Tests\Test;
 
@@ -35,6 +35,11 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
+	public function tearDown()
+	{
+		Hax::tearDown();
+	}
+
 	/**
 	* @dataProvider getRegressionsData
 	* @testdox Regression tests
@@ -58,12 +63,37 @@ class BuiltInFiltersTest extends Test
 	*/
 	public function testFilters($filter, $original, $expected, $logs = [], $setup = null)
 	{
+		$this->configurator
+			->tags->add('FOO')
+			->attributes->add('foo')
+			->filterChain->append($filter);
+
+		if (isset($setup))
+		{
+			$setup($this->configurator);
+		}
+
+		$config = $this->configurator->asConfig();
+		ConfigHelper::filterVariants($config);
+
 		$logger = new Logger;
 
-		$this->assertSame(
-			$expected,
-			Hax::filterValue($original, $filter, $logger, $setup)
+		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
+		$method = $parser->getMethod('executeFilter');
+		$method->setAccessible(true);
+
+		$actual = $method->invoke(
+			null,
+			$config['tags']['FOO']['attributes']['foo']['filterChain'][0],
+			[
+				'attrName'       => 'foo',
+				'attrValue'      => $original,
+				'logger'         => $logger,
+				'registeredVars' => $config['registeredVars']
+			]
 		);
+
+		$this->assertSame($expected, $actual);
 
 		if ($logs instanceof Closure)
 		{
@@ -778,65 +808,26 @@ class BuiltInFiltersTest extends Test
 
 class Hax
 {
-	use FilterProcessing;
-
 	static protected $redirectTo = [];
 
-	public static function filterValue($attrValue, AttributeFilter $filter, Logger $logger, $setup = null)
+	public static function fakeRedirect($from, $to)
 	{
-		$configurator = new Configurator;
-		$configurator
-			->tags->add('FOO')
-			->attributes->add('foo')
-			->filterChain->append($filter);
-
-		if (isset($setup))
-		{
-			$setup($configurator);
-		}
-
-		$config = $configurator->asConfig();
-		ConfigHelper::filterVariants($config);
-
-		if (self::$redirectTo)
+		if (empty(self::$redirectTo))
 		{
 			stream_wrapper_unregister('http');
 			stream_wrapper_register('http', __CLASS__);
 		}
 
-		try
-		{
-			$attrValue = self::executeFilter(
-				$config['tags']['FOO']['attributes']['foo']['filterChain'][0],
-				[
-					'attrName'       => 'foo',
-					'attrValue'      => $attrValue,
-					'logger'         => $logger,
-					'registeredVars' => $config['registeredVars']
-				]
-			);
-		}
-		catch (Exception $e)
-		{
-		}
+		self::$redirectTo[$from] = $to;
+	}
 
-		if (self::$redirectTo)
+	public static function tearDown()
+	{
+		if (!empty(self::$redirectTo))
 		{
 			self::$redirectTo = [];
 			stream_wrapper_restore('http');
 		}
-
-		if (isset($e))
-		{
-			throw $e;
-		}
-
-		return $attrValue;
-	}
-
-	public static function fakeRedirect($from, $to)
-	{
-		self::$redirectTo[$from] = $to;
 	}
 
 	public function stream_open($url)
