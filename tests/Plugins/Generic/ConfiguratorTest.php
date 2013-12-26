@@ -18,15 +18,33 @@ include_once __DIR__ . '/../../bootstrap.php';
 class ConfiguratorTest extends Test
 {
 	/**
+	* @testdox add() generates a tag name automatically
+	*/
+	public function testAddDefaultTagName()
+	{
+		$this->configurator->Generic->add('/(?<foo>[0-9]+)/', '');
+
+		$this->assertTrue(isset($this->configurator->tags['GC53BB427']));
+	}
+
+	/**
+	* @testdox The name of the tag can be specified
+	*/
+	public function testAddCustomTagName()
+	{
+		$this->configurator->Generic->add('/(?<foo>[0-9]+)/', '', 'FOO');
+
+		$this->assertTrue(isset($this->configurator->tags['FOO']));
+	}
+
+	/**
 	* @testdox add() returns the name of the tag it creates
 	*/
 	public function testAddReturn()
 	{
-		$plugin = $this->configurator->plugins->load('Generic');
-
 		$this->assertSame(
 			'GC53BB427',
-			$plugin->add('/(?<foo>[0-9]+)/', '')
+			$this->configurator->Generic->add('/(?<foo>[0-9]+)/', '')
 		);
 	}
 

@@ -37,9 +37,11 @@ class Configurator extends ConfiguratorBase
 	*
 	* @param  string $regexp   Regexp to be used by the parser
 	* @param  string $template Template to be used for rendering
+	* @param  string $tagName  Name of the tag to create. If none is provided a name is
+	*                          automatically generated based on the regexp
 	* @return string           The name of the tag created to represent this replacement
 	*/
-	public function add($regexp, $template)
+	public function add($regexp, $template, $tagName = null)
 	{
 		$valid = false;
 
@@ -109,7 +111,10 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Generate a tag name based on the regexp
-		$tagName = sprintf('G%08X', crc32($regexp));
+		if (!isset($tagName))
+		{
+			$tagName = sprintf('G%08X', crc32($regexp));
+		}
 
 		// Create the tag that will represent the regexp but don't add it right now
 		$tag = new Tag;

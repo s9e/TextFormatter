@@ -2034,6 +2034,8 @@ s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
+ [x] add() generates a tag name automatically
+ [x] The name of the tag can be specified
  [x] add() returns the name of the tag it creates
  [x] add() throws an exception if the regexp is invalid
  [x] add() throws an exception on duplicate named subpatterns
