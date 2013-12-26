@@ -374,14 +374,14 @@ Node.prototype.appendChild = function(newChild) {};
 Node.prototype.childNodes;
 /**
  * @param {boolean} deep
- * @return {Node}
+ * @return {!Node}
  * @nosideeffects
  */
 Node.prototype.cloneNode = function(deep) {};
 /**
  * @param {Node} newChild
- * @param {Node?} refChild
- * @return {Node}
+ * @param {Node} refChild
+ * @return {!Node}
  */
 Node.prototype.insertBefore = function(newChild, refChild) {};
 /**
@@ -406,7 +406,7 @@ Node.prototype.ownerDocument;
 Node.prototype.parentNode;
 /**
  * @param {Node} oldChild
- * @return {Node}
+ * @return {!Node}
  */
 Node.prototype.removeChild = function(oldChild) {};
 /**
