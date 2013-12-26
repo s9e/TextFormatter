@@ -73,3 +73,7 @@ echo $html;
 ```html
 <script>alert(1)</script><b onmouseover="alert(1)">Hover me</b>.
 ```
+
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).

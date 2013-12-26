@@ -76,3 +76,7 @@ echo $html;
 ```html
 My <a href="http://bulbapedia.bulbagarden.net/wiki/Pikachu">Pikachu</a> is the best Pikachu. <a href="http://bulbapedia.bulbagarden.net/wiki/Raichu">Raichu</a> sucks.
 ```
+
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).

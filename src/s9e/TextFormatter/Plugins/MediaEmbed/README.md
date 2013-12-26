@@ -78,6 +78,10 @@ echo $html;
 <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
 
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).
+
 ### Supported sites
 
 <table>

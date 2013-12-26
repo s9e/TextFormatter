@@ -21,3 +21,7 @@ echo $html;
 ```html
 Hello world <img src="happy.png" alt=":)" title="Happy">
 ```
+
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).

@@ -64,3 +64,7 @@ echo $helper->censorHtml($html);
 Some <**** ****="****">**** ****</****>
 Some <strong id="id">**** ****</strong>
 ```
+
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).

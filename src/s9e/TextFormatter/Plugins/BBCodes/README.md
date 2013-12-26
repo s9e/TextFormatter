@@ -82,3 +82,7 @@ Attribute 'title' is not properly sanitized to be used in this context
   &lt;xsl:apply-templates/&gt;
 &lt;/a&gt;</code>
 </pre>
+
+### More examples
+
+You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).
