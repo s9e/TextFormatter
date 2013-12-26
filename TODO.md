@@ -40,6 +40,5 @@ TODO
 - BuiltInFilters: don't encode brackets used in the host part, e.g. IPv6 address. Low priority, as ext/filter does not allow IPv6 addresses in URLs anyway -- https://bugs.php.net/bug.php?id=54629
 - Create an exception used in security checks so that an implementor can log security exceptions differently from other exceptions
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
-- Test whether closures use more memory than static methods
 - Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
 - Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
