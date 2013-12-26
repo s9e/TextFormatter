@@ -73,7 +73,7 @@ class Configurator extends ConfiguratorBase
 			$captures[$idx] = false;
 		}
 
-		// Load the template as a DOM so we can inspect it
+		// Load the template as a DOMDocument so we can inspect it
 		$dom   = TemplateHelper::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 
