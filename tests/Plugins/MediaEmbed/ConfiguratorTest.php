@@ -405,6 +405,38 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() accepts zero "match" elements in "scrape"
+	*/
+	public function testAddZeroMatchScrape()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					[
+						'extract' => "#id=(?'id'\\d+)#"
+					]
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertEquals(
+			[
+				'scrapeConfig' => [
+					[
+						'/./',
+						"#id=(?'id'\d+)#",
+						['id']
+					]
+				]
+			],
+			$tag->filterChain[1]->getVars()
+		);
+	}
+
+	/**
 	* @testdox add() accepts multiple "extract" elements in "scrape"
 	*/
 	public function testAddMultipleExtractScrape()

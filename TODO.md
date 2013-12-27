@@ -42,3 +42,4 @@ TODO
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
 - Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
 - Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
+- RegexpConvertor: an empty regexp // is interpreted as a comment. Empty regexps should be converted as /.*/ or similar

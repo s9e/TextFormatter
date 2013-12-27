@@ -7,8 +7,8 @@ To add a site, you'll need to pass as a second argument to `add()` an array that
     * `scheme` is a custom scheme handled by given site, e.g. `spotify` for handling `spotify:` URIs
   * at least one of the following:
     * `extract` is a regexp used to extract values from the URL
-    * `scrape` is an array that must contain at least one of each:
-      * `match` is a regexp used to determine whether to scrape the content of the URL
+    * `scrape` is an array that must contain at least one `extract` and zero or more `match` where:
+      * `match` is a regexp used to determine whether to scrape the content of the URL. If it's not specified, every URL is scraped
       * `extract` is a regexp used to extract values from the scraped page
   * plus at least one of the following:
     * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
