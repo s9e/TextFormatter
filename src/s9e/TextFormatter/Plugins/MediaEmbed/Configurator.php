@@ -244,7 +244,7 @@ class Configurator extends ConfiguratorBase
 				{
 					// No "match" regexp means that all URLs should be scraped. We do need an entry
 					// so we use a regexp that matches anything
-					$scrape['match'] = '/./';
+					$scrape['match'] = '//';
 				}
 				$entry = [$scrape['match'], $scrape['extract'], $attrNames];
 				if (isset($scrape['url']))

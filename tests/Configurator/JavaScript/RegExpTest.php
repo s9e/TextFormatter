@@ -22,6 +22,17 @@ class RegExpTest extends Test
 	}
 
 	/**
+	* @testdox Returns /(?:)/ if the regexp is empty to avoid being parsed as a comment
+	*/
+	public function testAsStringEmptyRegexp()
+	{
+		$this->assertEquals(
+			'/(?:)/',
+			new RegExp('')
+		);
+	}
+
+	/**
 	* @testdox The default map as an empty entry that represents capture #0
 	*/
 	public function testDefaultMap()

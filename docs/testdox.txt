@@ -948,6 +948,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Code
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
  [x] Returns a JavaScript literal when cast as a string
+ [x] Returns /(?:)/ if the regexp is empty to avoid being parsed as a comment
  [x] The default map as an empty entry that represents capture #0
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor

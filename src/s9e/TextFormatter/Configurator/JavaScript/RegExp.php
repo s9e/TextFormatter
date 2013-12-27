@@ -46,6 +46,13 @@ class RegExp
 	*/
 	public function __toString()
 	{
+		// We cannot return // as it would be interpreted as a comment. We need to put anything
+		// between the slashes
+		if ($this->regexp === '')
+		{
+			return '/(?:)/';
+		}
+
 		return '/' . $this->regexp . '/' . $this->flags;
 	}
 }

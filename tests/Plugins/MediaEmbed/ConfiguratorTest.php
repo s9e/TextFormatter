@@ -426,7 +426,7 @@ class ConfiguratorTest extends Test
 			[
 				'scrapeConfig' => [
 					[
-						'/./',
+						'//',
 						"#id=(?'id'\d+)#",
 						['id']
 					]
