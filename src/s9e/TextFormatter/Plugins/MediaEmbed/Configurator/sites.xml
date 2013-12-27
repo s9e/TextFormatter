@@ -224,6 +224,20 @@
 		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
+	<site id="gfycat">
+		<name>gfycat</name>
+		<homepage>http://gfycat.com/</homepage>
+		<example>http://gfycat.com/SereneIllfatedCapybara</example>
+
+		<host>gfycat.com</host>
+		<extract>!gfycat\.com/(?'id'\w+)!</extract>
+		<scrape>
+			<extract>!gfyHeight[ ="]+(?'height'\d+)!</extract>
+			<extract>!gfyWidth[ ="]+(?'width'\d+)!</extract>
+		</scrape>
+		<iframe width="{@width}" height="{@height}" src="http://gfycat.com/iframe/{@id}"/>
+	</site>
+
 	<site id="gist">
 		<name>GitHub Gist</name>
 		<homepage>https://gist.github.com/</homepage>

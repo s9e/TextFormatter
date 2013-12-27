@@ -288,6 +288,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://gfycat.com/SereneIllfatedCapybara',
+				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://gfycat.com/SereneIllfatedCapybara" width="600">http://gfycat.com/SereneIllfatedCapybara</GFYCAT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gfycat');
+				}
+			],
+			[
 				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
 				'<r><GROOVESHARK songid="35292216" url="http://grooveshark.com/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></r>',
 				[],
@@ -501,6 +511,16 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('dailyshow');
+				}
+			],
+			[
+				'http://gfycat.com/SereneIllfatedCapybara',
+				'<iframe width="600" height="338" src="http://gfycat.com/iframe/SereneIllfatedCapybara" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gfycat');
 				}
 			],
 			[

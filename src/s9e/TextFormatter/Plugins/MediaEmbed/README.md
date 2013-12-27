@@ -166,6 +166,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-<br/>http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review<br/>http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</td>
 	</tr>
 	<tr>
+		<td><code>gfycat</code></td>
+		<td>gfycat</td>
+		<td>http://gfycat.com/SereneIllfatedCapybara</td>
+	</tr>
+	<tr>
 		<td><code>gist</code></td>
 		<td>GitHub Gist</td>
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
