@@ -164,8 +164,8 @@ class Configurator extends ConfiguratorBase
 			$attributes[$idx] = $token;
 		}
 
-		// Remove any passthrough whose value isn't true. We can only have one passthrough, so we
-		// if there are more than one left, we ignore them all
+		// Remove any passthrough whose value isn't true. We can only have one passthrough, so if
+		// there are more than one left, we ignore them all
 		$passthrough    = array_filter($passthrough);
 		$passthroughIdx = 0;
 		if (count($passthrough) === 1)
