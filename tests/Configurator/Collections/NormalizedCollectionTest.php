@@ -86,7 +86,7 @@ class NormalizedCollectionTest extends Test
 	}
 
 	/**
-	* @testdox get() throws a RuntimeException if the item already exists
+	* @testdox add() throws a RuntimeException if the item already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Item 'foobar' already exists
 	*/
@@ -320,6 +320,88 @@ class NormalizedCollectionTest extends Test
 		$collection = new DummyNormalizedCollection(['a' => new stdClass]);
 
 		$this->assertSame('a', $collection->indexOf(new stdClass));
+	}
+
+	/**
+	* @testdox onDuplicate() can be called with no value
+	*/
+	public function testOnDuplicateNoValue()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate();
+	}
+
+	/**
+	* @testdox onDuplicate() returns 'error' by default
+	*/
+	public function testOnDuplicateDefault()
+	{
+		$collection = new NormalizedCollection;
+		$this->assertSame('error', $collection->onDuplicate());
+	}
+
+	/**
+	* @testdox onDuplicate() returns the previous value
+	*/
+	public function testOnDuplicateReturn()
+	{
+		$collection = new NormalizedCollection;
+		$this->assertSame('error', $collection->onDuplicate('replace'));
+	}
+
+	/**
+	* @testdox add() has no effect on duplicates if the onDuplicate action is "ignore"
+	*/
+	public function testOnDuplicateIgnore()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate('ignore');
+
+		$collection->add('foo', 'bar');
+		$collection->add('foo', 'baz');
+
+		$this->assertSame('bar', $collection->get('foo'));
+	}
+
+	/**
+	* @testdox add() returns the original element when trying to add a duplicate and the onDuplicate action is "ignore"
+	*/
+	public function testOnDuplicateIgnoreReturn()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate('ignore');
+
+		$collection->add('foo', 'bar');
+
+		$this->assertSame('bar', $collection->add('foo', 'baz'));
+	}
+
+	/**
+	* @testdox add() replaces the original element if the onDuplicate action is "replace"
+	*/
+	public function testOnDuplicateReplace()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate('replace');
+
+		$collection->add('foo', 'bar');
+		$collection->add('foo', 'baz');
+
+		$this->assertSame('baz', $collection->get('foo'));
+	}
+
+	/**
+	* @testdox add() throws a RuntimeException on duplicate elements if the onDuplicate action is "error"
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Item 'foo' already exists
+	*/
+	public function testOnDuplicateError()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate('error');
+
+		$collection->add('foo', 'bar');
+		$collection->add('foo', 'baz');
 	}
 }
 

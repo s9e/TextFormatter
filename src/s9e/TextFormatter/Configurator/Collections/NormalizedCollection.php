@@ -13,6 +13,32 @@ use RuntimeException;
 
 class NormalizedCollection extends Collection implements ArrayAccess
 {
+	/**
+	* @var string Action to take when add() is called with a key that already exists
+	*/
+	protected $onDuplicateAction = 'error';
+
+	/**
+	* Query and set the action to take when add() is called with a key that already exists
+	*
+	* @param  string $action Either "error", "ignore" or "replace"
+	* @return string         Old action
+	*/
+	public function onDuplicate($action = null)
+	{
+		// Save the old action so it can be returned
+		$old = $this->onDuplicateAction;
+
+		if (func_num_args() && $action !== 'error' && $action !== 'ignore' && $action !== 'replace')
+		{
+			throw new InvalidArgumentException("Invalid onDupulicate action '" . $action . "'. Expected: 'error', 'ignore' or 'replace'");
+		}
+
+		$this->onDuplicateAction = $action;
+
+		return $old;
+	}
+
 	//==========================================================================
 	// Overridable methods
 	//==========================================================================
@@ -58,9 +84,19 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*/
 	public function add($key, $value = null)
 	{
+		// Test whether this key is already in use
 		if ($this->exists($key))
 		{
-			throw new RuntimeException("Item '" . $key . "' already exists");
+			// If the action is "ignore" we return the old value, if it's "error" we throw an
+			// exception. Otherwise, we keep going and replace the value
+			if ($this->onDuplicateAction === 'ignore')
+			{
+				return $this->get($key);
+			}
+			elseif ($this->onDuplicateAction === 'error')
+			{
+				throw new RuntimeException("Item '" . $key . "' already exists");
+			}
 		}
 
 		return $this->set($key, $value);

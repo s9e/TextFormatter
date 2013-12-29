@@ -16,7 +16,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] add() calls normalizeKey()
  [x] add() calls normalizeValue()
  [x] add() can be called without a second parameter
- [x] get() throws a RuntimeException if the item already exists
+ [x] add() throws a RuntimeException if the item already exists
  [x] exists() returns TRUE if the item exists
  [x] exists() returns FALSE if the item does not exist
  [x] exists() calls normalizeKey()
@@ -35,6 +35,13 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] indexOf() returns the key if the given value is present in the collection
  [x] indexOf() returns false if the given value is not present in the collection
  [x] indexOf() checks for equality, not identity
+ [x] onDuplicate() can be called with no value
+ [x] onDuplicate() returns 'error' by default
+ [x] onDuplicate() returns the previous value
+ [x] add() has no effect on duplicates if the onDuplicate action is "ignore"
+ [x] add() returns the original element when trying to add a duplicate and the onDuplicate action is "ignore"
+ [x] add() replaces the original element if the onDuplicate action is "replace"
+ [x] add() throws a RuntimeException on duplicate elements if the onDuplicate action is "error"
 
 s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] append() adds the value at the end of the list
