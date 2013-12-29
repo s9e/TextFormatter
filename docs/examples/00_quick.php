@@ -16,3 +16,8 @@ $xml  = TextFormatter::parse($text);
 $html = TextFormatter::render($xml, ['EMOTICONS_PATH' => '/path/to/emoticons']);
 
 echo $html, "\n";
+
+// Outputs:
+//
+// Hello, <i>world</i> <img src="/path/to/emoticons/smile.png" alt=":)"><br>
+// Find more examples in the <a href="https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook">Cookbook</a>.
