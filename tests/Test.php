@@ -131,16 +131,17 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function execJS($src, $input)
 	{
-		static $exec, $function;
+		static $exec, $function, $options;
 
 		if (!isset($exec))
 		{
 			$interpreters = [
-				'd8'   => 'print',
-				'node' => 'console.log'
+				'js17' => ['print', ' -U'],
+				'd8'   => ['print', ''],
+				'node' => ['console.log', '']
 			];
 
-			foreach ($interpreters as $interpreter => $function)
+			foreach ($interpreters as $interpreter => list($function, $options))
 			{
 				$exec = trim(shell_exec('which ' . $interpreter . ' 2> /dev/null'));
 
@@ -160,7 +161,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		$src = file_get_contents(__DIR__ . '/browserStub.js') . $src . ';' . $function . '(window.s9e.TextFormatter.parse(' . json_encode($input) . '))';
 
-		return substr(shell_exec($exec . ' -e ' . escapeshellarg($src)), 0, -1);
+		return substr(shell_exec($exec . $options . ' -e ' . escapeshellarg($src)), 0, -1);
 	}
 
 	protected static $tmpFiles = [];
