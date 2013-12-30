@@ -133,7 +133,8 @@ abstract class RegexpBuilder
 	*
 	* 1. Remove the longest prefix shared by all the chains
 	* 2. Remove the longest suffix shared by all the chains
-	* 3. Group each chain by their first element, e.g. all the chains that start with "a" (or in 	*    some cases, "[xy]") are grouped together
+	* 3. Group each chain by their first element, e.g. all the chains that start with "a" (or in
+	*    some cases, "[xy]") are grouped together
 	* 4. If no group has more than 1 chain, we assemble them in a regexp, such as (aa|bb). If any
 	*    group has more than 1 chain, for each group we merge the chains from that group together so
 	*    that no group has more than 1 chain. When we're done, we remerge all the chains together.
