@@ -2,6 +2,7 @@
 * [Requirements](#requirements)
 * [General features](#general-features)
 * [Security](#security)
+* [Performance](#performance)
 * [Plugins](#plugins)
 
 ## Goals
@@ -31,7 +32,7 @@
 	* Tests are [automatically](https://github.com/s9e/TextFormatter/blob/master/scripts/pre-commit) run before every commit. A failing test blocks the commit
 	* [Testdox output](https://github.com/s9e/TextFormatter/blob/master/docs/testdox.txt) is updated [with every commit](https://github.com/s9e/TextFormatter/commit/83d959aebe601eac207c499ef6922224b3958211)
 	* Travis follows the [build status across the supported PHP versions: ![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
-	* Aiming for 100% code coverage at all time [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
+	* Aiming for [100% code coverage](http://s9e.github.io/TextFormatter/coverage/) at all time [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
 
 * Stable format
 	* Formatted text is returned as XML, which can be read easily
@@ -151,6 +152,14 @@
 
 	* Templates that are identified as unsafe cause an `s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException` to be thrown
 		* `UnsafeTemplateException::highlightNode()` will return the source of the template with the part that has triggered the exception highlighted
+
+## Performance
+
+* Designed to clearly separate [configuration](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Configurator), [parsing](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Parser) and [rendering](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Renderers). Configuration happens rarely (if ever), parsing is run on every new text and rendering is run everytime a text is displayed
+* Configuration can run thousands of lines of code across dozens of files but parsing only runs a few hundreds of lines across a few files and rendering only runs a few dozens of lines across a couple of files. Complexity is pushed towards configuration and parsing to keep rendering simple and fast
+* The goal is to run configuration in less than a second, parsing in less than 100 ms and rendering in less than 10 ms
+	* In actuality it's closer to 100 ms/10 ms/1 ms depending on content and hardware
+* The source code in the release branches is automatically optimized for speed. The codebase is modified to produce better opcodes and some files are merged. The code used in [development looks nice](https://github.com/s9e/TextFormatter/blob/master/src/s9e/TextFormatter/Parser.php), the code run in production and testing [doesn't look as nice](https://github.com/s9e/TextFormatter/blob/release/php5.5/src/s9e/TextFormatter/Parser.php) but runs faster
 
 ## Plugins
 
