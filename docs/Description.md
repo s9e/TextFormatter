@@ -31,7 +31,7 @@
 	* Tests are [automatically](https://github.com/s9e/TextFormatter/blob/master/scripts/pre-commit) run before every commit. A failing test blocks the commit
 	* [Testdox output](https://github.com/s9e/TextFormatter/blob/master/docs/testdox.txt) is updated [with every commit](https://github.com/s9e/TextFormatter/commit/83d959aebe601eac207c499ef6922224b3958211)
 	* Travis follows the [build status across the supported PHP versions: ![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
-	* Aiming for [100% code coverage](http://s9e.github.io/TextFormatter/coverage/index.html) at all time
+	* Aiming for 100% code coverage at all time [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
 
 * Stable format
 	* Formatted text is returned as XML, which can be read easily
@@ -52,11 +52,7 @@
 	* BBCodes, HTML, Emoticons, every plugin uses *tags*, which is the underlying system that unifies all plugins. Most plugins have a 1:1 relation between their syntax and the underlying tags (e.g. the BBCode `[B]` will transparently use a tag called `B`)
 
 	* Comprehensive [list of rules](https://github.com/s9e/TextFormatter/blob/master/docs/Rules.md) that control what tag is allowed where
-		* Most of the rules can be automatically created, based on heuristics provided by the HTML5 specs
-
-			```php
-			$configurator->addHTML5Rules();
-			```
+		* Most of the rules are automatically created, based on heuristics provided by the HTML5 specs
 
 	* You can control the maximum number of times a given tag can be used, or how many times they can be nested into each other (limit set at the tag level)
 
@@ -90,6 +86,9 @@
 		* Can render as HTML or XHTML
 		* Cannot produce malformed HTML or XHTML
 			* ...unless you purposely disable some of the template checks and manually disable the escaping
+
+	* Is extensible
+		* ...as long as [you can convert it back to XSLT](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/03_Extends.md)
 
 	* Offer multiple renderers
 		* the __XSLT__ renderer uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
@@ -125,6 +124,14 @@
 			$configurator->urlConfig->disallowHost('example.*');
 			```
 
+		* ...or you can set a whitelist of hosts
+
+			```php
+			// Bans everything except example.org, example.com and all their subdomains
+			$configurator->urlConfig->restrictHost('example.org');
+			$configurator->urlConfig->restrictHost('example.com');
+			```
+
 		* You can force some redirectors to be resolved to reveal the actual URL, e.g.
 
 			```php
@@ -133,7 +140,7 @@
 
 * Templates are systematically inspected
 
-	* Improperly sanitized content is not allowed in a sensitive context:
+	* Content that is not properly sanitized is not allowed in a sensitive context:
 		* Text that can contain quotes or parentheses is not allowed in JavaScript (e.g. in an onclick event), but numbers are
 		* Unfiltered text is not allowed in a CSS context (e.g. in an style attribute) but colors are
 		* Unfiltered text is not allowed *as* a URL, but attributes using the URL filter are
@@ -212,12 +219,17 @@
 
 	* Turns HTML entities into their Unicode literal
 
+* [Keywords](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Keywords)
+
+	* Automatically replace a given list of keywords, e.g. Magic: the Gathering cards (autocard)
+	* Very efficient
+
 * [MediaEmbed](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed)
 
 	* Creates a `[media]` BBCode for embedded content
 		* Creates a site-specific BBCode (e.g. `[youtube]`) for every available site
-	* Replaces URLs in plain text with embedded content
-	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and more](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml)
+	* Optionally replaces URLs in plain text with embedded content
+	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml)
 	* Flexible syntax
 
 * Upcoming plugins
