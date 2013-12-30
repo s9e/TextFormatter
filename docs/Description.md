@@ -240,6 +240,7 @@
 	* Optionally replaces URLs in plain text with embedded content
 	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml)
 	* Flexible syntax
+	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
 
 * Upcoming plugins
 	* MarkdownLite, a Markdown-like syntax
