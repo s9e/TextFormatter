@@ -679,6 +679,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] replaceTokens() tests
  [x] highlightNode() tests
  [x] minifyXPath() tests
+ [x] getMetaElementsRegexp() tests
 
 s9e\TextFormatter\Tests\Configurator\Helpers\XPathParser
  [x] parse() tests

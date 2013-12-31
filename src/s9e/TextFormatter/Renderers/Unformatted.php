@@ -16,6 +16,11 @@ use s9e\TextFormatter\Renderer;
 class Unformatted extends Renderer
 {
 	/**
+	* {@inheritdoc}
+	*/
+	public $metaElementsRegexp = '((?!))';
+
+	/**
 	* Constructor
 	*
 	* @param  bool Whether this renderer's stylesheet produces HTML (as opposed to XHTML)

@@ -36,6 +36,6 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	*/
 	public static function getRenderer()
 	{
-		return unserialize("O:40:\"s9e\\TextFormatter\\Bundles\\Forum\\Renderer\":2:{s:13:\"\000*\000htmlOutput\";b:1;s:9:\"\000*\000params\";a:5:{s:14:\"EMOTICONS_PATH\";s:0:\"\";s:6:\"L_HIDE\";s:4:\"Hide\";s:6:\"L_SHOW\";s:4:\"Show\";s:9:\"L_SPOILER\";s:7:\"Spoiler\";s:7:\"L_WROTE\";s:6:\"wrote:\";}}");
+		return unserialize("O:40:\"s9e\\TextFormatter\\Bundles\\Forum\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:1;s:9:\"\000*\000params\";a:5:{s:14:\"EMOTICONS_PATH\";s:0:\"\";s:6:\"L_HIDE\";s:4:\"Hide\";s:6:\"L_SHOW\";s:4:\"Show\";s:9:\"L_SPOILER\";s:7:\"Spoiler\";s:7:\"L_WROTE\";s:6:\"wrote:\";}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
 	}
 }

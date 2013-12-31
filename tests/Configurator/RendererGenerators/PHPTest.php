@@ -1184,16 +1184,22 @@ class PHPTest extends Test
 	* @testdox HTML rendering
 	* @dataProvider getConformanceTests
 	*/
-	public function testHTML($xml, $html, $xhtml, $setup = null)
+	public function testHTML($xml, $html, $xhtml, $setup = null, $rendererSetup = null)
 	{
 		if (isset($setup))
 		{
-			call_user_func($setup, $this->configurator);
+			$setup($this->configurator);
 		}
 
 		$this->configurator->rendering->type = 'html';
 
 		extract($this->configurator->finalize(['returnParser' => false]));
+
+		if (isset($rendererSetup))
+		{
+			$rendererSetup($renderer);
+		}
+
 		$this->assertSame($html, $renderer->render($xml));
 	}
 
@@ -1201,16 +1207,22 @@ class PHPTest extends Test
 	* @testdox XHTML rendering
 	* @dataProvider getConformanceTests
 	*/
-	public function testXHTML($xml, $html, $xhtml, $setup = null)
+	public function testXHTML($xml, $html, $xhtml, $setup = null, $rendererSetup = null)
 	{
 		if (isset($setup))
 		{
-			call_user_func($setup, $this->configurator);
+			$setup($this->configurator);
 		}
 
 		$this->configurator->rendering->type = 'xhtml';
 
 		extract($this->configurator->finalize(['returnParser' => false]));
+
+		if (isset($rendererSetup))
+		{
+			$rendererSetup($renderer);
+		}
+
 		$this->assertSame($xhtml, $renderer->render($xml));
 	}
 
@@ -1360,6 +1372,10 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->tags->add('T4')->template = '<b title="foo {s} {{baz}}"><xsl:apply-templates /></b>';
+				},
+				function ($renderer)
+				{
+					$renderer->metaElementsRegexp = '((?!))';
 				}
 			],
 			[
@@ -1369,6 +1385,10 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->tags->add('T5')->template = '<b title="foo {.} {{baz}}"><xsl:apply-templates /></b>';
+				},
+				function ($renderer)
+				{
+					$renderer->metaElementsRegexp = '((?!))';
 				}
 			],
 			[

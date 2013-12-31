@@ -17,6 +17,11 @@ abstract class Renderer
 	protected $htmlOutput = true;
 
 	/**
+	* @var string Regexp that matches meta elements to be removed
+	*/
+	public $metaElementsRegexp = '(<[eis]>[^<]*</[eis]>)';
+
+	/**
 	* @var array Associative array of [paramName => paramValue]
 	*/
 	protected $params = [];
@@ -47,9 +52,14 @@ abstract class Renderer
 	*/
 	public function render($xml)
 	{
-		return (substr($xml, 0, 3) === '<t>')
-		     ? $this->renderPlainText($xml)
-		     : $this->renderRichText($xml);
+		if (substr($xml, 0, 3) === '<t>')
+		{
+			return $this->renderPlainText($xml);
+		}
+		else
+		{
+			return $this->renderRichText(preg_replace($this->metaElementsRegexp, '', $xml));
+		}
 	}
 
 	/**
