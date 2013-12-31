@@ -1,5 +1,5 @@
 /**
-* @type {!boolean} Whether the output contains "rich" tags, IOW any tag that is not <i> or <br/>
+* @type {!boolean} Whether the output contains "rich" tags, IOW any tag that is not <p> or <br/>
 */
 var isRich;
 

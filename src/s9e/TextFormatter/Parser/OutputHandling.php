@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Parser;
 trait OutputHandling
 {
 	/**
-	* @var bool Whether the output contains "rich" tags, IOW any tag that is not <i> or <br/>
+	* @var bool Whether the output contains "rich" tags, IOW any tag that is not <p> or <br/>
 	*/
 	protected $isRich;
 
