@@ -350,6 +350,17 @@ class NormalizedCollectionTest extends Test
 	}
 
 	/**
+	* @testdox onDuplicate('unknownvalue') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid onDuplicate action
+	*/
+	public function testOnDuplicateInvalid()
+	{
+		$collection = new NormalizedCollection;
+		$collection->onDuplicate('unknownvalue');
+	}
+
+	/**
 	* @testdox add() has no effect on duplicates if the onDuplicate action is "ignore"
 	*/
 	public function testOnDuplicateIgnore()

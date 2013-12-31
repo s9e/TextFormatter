@@ -38,6 +38,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] onDuplicate() can be called with no value
  [x] onDuplicate() returns 'error' by default
  [x] onDuplicate() returns the previous value
+ [x] onDuplicate('unknownvalue') throws an exception
  [x] add() has no effect on duplicates if the onDuplicate action is "ignore"
  [x] add() returns the original element when trying to add a duplicate and the onDuplicate action is "ignore"
  [x] add() replaces the original element if the onDuplicate action is "replace"

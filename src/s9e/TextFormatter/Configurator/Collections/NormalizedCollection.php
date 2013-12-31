@@ -31,7 +31,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 
 		if (func_num_args() && $action !== 'error' && $action !== 'ignore' && $action !== 'replace')
 		{
-			throw new InvalidArgumentException("Invalid onDupulicate action '" . $action . "'. Expected: 'error', 'ignore' or 'replace'");
+			throw new InvalidArgumentException("Invalid onDuplicate action '" . $action . "'. Expected: 'error', 'ignore' or 'replace'");
 		}
 
 		$this->onDuplicateAction = $action;
