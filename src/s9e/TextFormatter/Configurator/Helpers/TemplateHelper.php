@@ -22,6 +22,11 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 abstract class TemplateHelper
 {
 	/**
+	* XSL namespace
+	*/
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+
+	/**
 	* Load a template as an xsl:template node
 	*
 	* Will attempt to load it as XML first, then as HTML as a fallback. Either way, an xsl:template
@@ -35,7 +40,7 @@ abstract class TemplateHelper
 		$dom = new DOMDocument;
 
 		// First try as XML
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</xsl:template>';
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
 
 		$useErrors = libxml_use_internal_errors(true);
 		$success   = $dom->loadXML($xml);
@@ -230,7 +235,7 @@ abstract class TemplateHelper
 		$paramNames = [];
 
 		// Wrap the XSL in boilerplate code because it might not have a root element
-		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		$xsl = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '">'
 		     . '<xsl:template>'
 		     . $xsl
 		     . '</xsl:template>'
@@ -259,7 +264,7 @@ abstract class TemplateHelper
 		}
 
 		// Collecting XPath expressions in attribute value templates
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]'
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
 		       . '/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
@@ -609,10 +614,7 @@ abstract class TemplateHelper
 					// Expressions are evaluated in a <xsl:value-of/> node
 					$parentNode
 						->insertBefore(
-							$dom->createElementNS(
-								'http://www.w3.org/1999/XSL/Transform',
-								'xsl:value-of'
-							),
+							$dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'),
 							$node
 						)
 						->setAttribute('select', $replacement[1]);
@@ -621,10 +623,7 @@ abstract class TemplateHelper
 				{
 					// Passthrough token, replace with <xsl:apply-templates/>
 					$parentNode->insertBefore(
-						$dom->createElementNS(
-							'http://www.w3.org/1999/XSL/Transform',
-							'xsl:apply-templates'
-						),
+						$dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates'),
 						$node
 					);
 				}
