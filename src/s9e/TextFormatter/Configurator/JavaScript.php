@@ -255,6 +255,7 @@ class JavaScript
 	protected function getHints($xsl)
 	{
 		$hints = [
+			'attributeGenerator'      => 0,
 			'closeAncestor'           => 0,
 			'closeParent'             => 0,
 			'fosterParent'            => 0,
@@ -285,11 +286,11 @@ class JavaScript
 			}
 		}
 
-		// Testing which rules are in use. First we aggregate the flags set on all the tags and test
-		// for the presence of other rules at the tag level
 		$flags = 0;
 		foreach ($this->config['tags'] as $tagConfig)
 		{
+			// Testing which rules are in use. First we aggregate the flags set on all the tags and
+			// test for the presence of other rules at the tag level
 			foreach ($tagConfig['rules'] as $k => $v)
 			{
 				if ($k === 'flags')
@@ -300,6 +301,18 @@ class JavaScript
 				{
 					// This will set HINT.closeAncestor and others
 					$hints[$k] = 1;
+				}
+			}
+
+			// Test the presence of an attribute generator
+			if (!empty($tagConfig['attributes']))
+			{
+				foreach ($tagConfig['attributes'] as $attrConfig)
+				{
+					if (isset($attrConfig['generator']))
+					{
+						$hints['attributeGenerator'] = 1;
+					}
 				}
 			}
 		}

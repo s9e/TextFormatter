@@ -428,6 +428,30 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.attributeGenerator=0 by default
+	*/
+	public function testHintAttributeGeneratorFalse()
+	{
+		$this->assertContains(
+			'HINT.attributeGenerator=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.attributeGenerator=1 if any tag has a attributeGenerator rule
+	*/
+	public function testHintAttributeGeneratorTrue()
+	{
+		$this->configurator->tags->add('X')->attributes->add('x')->generator = 'mt_rand';
+
+		$this->assertContains(
+			'HINT.attributeGenerator=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.closeAncestor=0 by default
 	*/
 	public function testHintCloseAncestorFalse()

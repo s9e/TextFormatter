@@ -74,15 +74,19 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 		return true;
 	}
 
-	// Generate values for attributes with a generator set
 	var attrName, attrConfig;
-	for (attrName in tagConfig.attributes)
-	{
-		attrConfig = tagConfig.attributes[attrName];
 
-		if (attrConfig.generator)
+	// Generate values for attributes with a generator set
+	if (HINT.attributeGenerator)
+	{
+		for (attrName in tagConfig.attributes)
 		{
-			tag.setAttribute(attrName, attrConfig.generator(attrName));
+			attrConfig = tagConfig.attributes[attrName];
+
+			if (attrConfig.generator)
+			{
+				tag.setAttribute(attrName, attrConfig.generator(attrName));
+			}
 		}
 	}
 

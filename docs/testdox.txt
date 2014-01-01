@@ -1516,6 +1516,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Callbacks correctly encode values
  [x] isLegalProp() tests
  [x] encode() tests
+ [x] HINT.attributeGenerator=0 by default
+ [x] HINT.attributeGenerator=1 if any tag has a attributeGenerator rule
  [x] HINT.closeAncestor=0 by default
  [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
  [x] HINT.closeParent=0 by default
