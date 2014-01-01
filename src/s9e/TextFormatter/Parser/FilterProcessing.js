@@ -144,7 +144,7 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 		// Test whether this attribute is missing
 		if (!tag.hasAttribute(attrName))
 		{
-			if (attrConfig.defaultValue !== undefined)
+			if (HINT.attributeDefaultValue && attrConfig.defaultValue !== undefined)
 			{
 				// Use the attribute's default value
 				tag.setAttribute(attrName, attrConfig.defaultValue);

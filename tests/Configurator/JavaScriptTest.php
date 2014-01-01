@@ -439,7 +439,7 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox HINT.attributeGenerator=1 if any tag has a attributeGenerator rule
+	* @testdox HINT.attributeGenerator=1 if any attribute has a generator
 	*/
 	public function testHintAttributeGeneratorTrue()
 	{
@@ -447,6 +447,30 @@ class JavaScriptTest extends Test
 
 		$this->assertContains(
 			'HINT.attributeGenerator=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.attributeDefaultValue=0 by default
+	*/
+	public function testHintAttributeDefaultValueFalse()
+	{
+		$this->assertContains(
+			'HINT.attributeDefaultValue=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.attributeDefaultValue=1 if any attribute has a defaultValue
+	*/
+	public function testHintAttributeDefaultValueTrue()
+	{
+		$this->configurator->tags->add('X')->attributes->add('x')->defaultValue = 0;
+
+		$this->assertContains(
+			'HINT.attributeDefaultValue=1',
 			$this->configurator->javascript->getParser()
 		);
 	}

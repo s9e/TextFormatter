@@ -256,6 +256,7 @@ class JavaScript
 	{
 		$hints = [
 			'attributeGenerator'      => 0,
+			'attributeDefaultValue'   => 0,
 			'closeAncestor'           => 0,
 			'closeParent'             => 0,
 			'fosterParent'            => 0,
@@ -304,7 +305,7 @@ class JavaScript
 				}
 			}
 
-			// Test the presence of an attribute generator
+			// Test the presence of an attribute generator, and an attribute's defaultValue
 			if (!empty($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as $attrConfig)
@@ -312,6 +313,11 @@ class JavaScript
 					if (isset($attrConfig['generator']))
 					{
 						$hints['attributeGenerator'] = 1;
+					}
+
+					if (isset($attrConfig['defaultValue']))
+					{
+						$hints['attributeDefaultValue'] = 1;
 					}
 				}
 			}
