@@ -315,7 +315,7 @@ abstract class RegexpBuilder
 			}
 		}
 
-		foreach ($groups as $tail => $groupChains)
+		foreach ($groups as $groupChains)
 		{
 			if (count($groupChains) < 2)
 			{

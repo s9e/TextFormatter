@@ -233,7 +233,7 @@ class JavaScript
 		foreach (str_split($bitfield, 4) as $quad)
 		{
 			$v = '';
-			foreach (str_split($quad, 1) as $n => $c)
+			foreach (str_split($quad, 1) as $c)
 			{
 				$v = sprintf('%02X', ord($c)) . $v;
 			}
@@ -602,7 +602,7 @@ class JavaScript
 	*/
 	protected function replaceCallbacks()
 	{
-		foreach ($this->config['tags'] as $tagName => &$tagConfig)
+		foreach ($this->config['tags'] as &$tagConfig)
 		{
 			if (isset($tagConfig['filterChain']))
 			{

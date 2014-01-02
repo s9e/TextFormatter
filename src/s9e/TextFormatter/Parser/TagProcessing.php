@@ -446,8 +446,6 @@ trait TagProcessing
 		// reopened by removing those that would immediately be closed
 		if ($closeTags && $this->currentFixingCost < $this->maxFixingCost)
 		{
-			$upcomingEndTags = [];
-
 			/**
 			* @var integer Rightmost position of the portion of text to ignore
 			*/

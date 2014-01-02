@@ -26,12 +26,10 @@ class AttributePreprocessorCollection extends Collection
 	{
 		$attrName = AttributeName::normalize($attrName);
 
-		$ap = new AttributePreprocessor($regexp);
-
 		$k = serialize([$attrName, $regexp]);
-		$this->items[$k] = $ap;
+		$this->items[$k] = new AttributePreprocessor($regexp);
 
-		return $ap;
+		return $this->items[$k];
 	}
 
 	/**
@@ -39,7 +37,7 @@ class AttributePreprocessorCollection extends Collection
 	*/
 	public function key()
 	{
-		list($attrName, $regexp) = unserialize(key($this->items));
+		list($attrName) = unserialize(key($this->items));
 
 		return $attrName;
 	}

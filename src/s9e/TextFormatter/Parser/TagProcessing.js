@@ -425,8 +425,6 @@ function processEndTag(tag)
 	// reopened by removing those that would immediately be closed
 	if (closeTags.length && currentFixingCost < maxFixingCost)
 	{
-		var upcomingEndTags = [];
-
 		/**
 		* @type {number} Rightmost position of the portion of text to ignore
 		*/

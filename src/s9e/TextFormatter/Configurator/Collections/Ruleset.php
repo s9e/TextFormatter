@@ -131,9 +131,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			}
 		}
 
-		// Create the JavaScript config. Ensure that BBCode names are preserved
-		$jsConfig = new Dictionary;
-
 		// Add the bitfield to the config
 		$config['flags'] = $bitfield;
 

@@ -481,7 +481,6 @@ abstract class TemplateHelper
 	{
 		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
-		$xpath  = new DOMXPath($dom);
 
 		/**
 		* @link http://helpx.adobe.com/flash/kb/object-tag-syntax-flash-professional.html
