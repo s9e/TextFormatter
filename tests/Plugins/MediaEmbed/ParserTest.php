@@ -23,6 +23,11 @@ class ParserTest extends Test
 	{
 		$cacheDir = __DIR__ . '/../../.cache';
 
+		if (!file_exists($cacheDir))
+		{
+			$cacheDir = sys_get_temp_dir();
+		}
+
 		$prefix = $suffix = '';
 		if (extension_loaded('zlib'))
 		{
