@@ -71,8 +71,10 @@ function (tag, tagStack, sites)
 		var lpos = tag.getPos(),
 			rpos = endTag.getPos() + endTag.getLen();
 
-		// Create a new tag and copy this tag's attributes
-		addSelfClosingTag(tagName.toUpperCase(), lpos, rpos - lpos).setAttributes(tag.getAttributes());
+		// Create a new tag and copy this tag's attributes and priority
+		var newTag = addSelfClosingTag(tagName.toUpperCase(), lpos, rpos - lpos);
+		newTag.setAttributes(tag.getAttributes());
+		newTag.setSortPriority(tag.getSortPriority());
 	}
 
 	return false;

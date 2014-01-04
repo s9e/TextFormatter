@@ -57,6 +57,35 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox The [MEDIA] tag transfers its priority to the tag it creates
+	*/
+	public function testTagPriority()
+	{
+		$newTag = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$newTag->expects($this->once())
+		       ->method('setSortPriority')
+		       ->with(123);
+
+		$tagStack = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		                 ->disableOriginalConstructor()
+		                 ->setMethods(['addSelfClosingTag'])
+		                 ->getMock();
+
+		$tagStack->expects($this->once())
+		         ->method('addSelfClosingTag')
+		         ->will($this->returnValue($newTag));
+
+		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0);
+		$tag->setAttribute('media', 'foo');
+		$tag->setSortPriority(123);
+
+		Parser::filterTag($tag, $tagStack, []);
+	}
+
+	/**
 	* @testdox Abstract tests (not tied to bundled sites)
 	* @dataProvider getAbstractTests
 	*/

@@ -103,9 +103,10 @@ class Parser extends ParserBase
 			$lpos = $tag->getPos();
 			$rpos = $endTag->getPos() + $endTag->getLen();
 
-			// Create a new tag and copy this tag's attributes
-			$tagStack->addSelfClosingTag(strtoupper($tagName), $lpos, $rpos - $lpos)
-			         ->setAttributes($tag->getAttributes());
+			// Create a new tag and copy this tag's attributes and priority
+			$newTag = $tagStack->addSelfClosingTag(strtoupper($tagName), $lpos, $rpos - $lpos);
+			$newTag->setAttributes($tag->getAttributes());
+			$newTag->setSortPriority($tag->getSortPriority());
 		}
 
 		return false;
