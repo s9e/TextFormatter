@@ -63,6 +63,7 @@ class ParserTest extends Test
 	{
 		$newTag = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
 		               ->disableOriginalConstructor()
+		               ->setMethods(['setAttributes', 'setSortPriority'])
 		               ->getMock();
 
 		$newTag->expects($this->once())
