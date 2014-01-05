@@ -143,7 +143,14 @@ function addTag(type, name, pos, len)
 	}
 	else
 	{
-		if (tagStack.length && pos > tagStack[tagStack.length - 1].getPos())
+		// If the stack is sorted we check whether this tag should be stored at a lower offset
+		// than the last tag which would mean we need to sort the stack. Note that we cannot use
+		// compareTags() to break ties here because setSortPriority() can be called *after* tags
+		// have been put on the stack, therefore we need to properly sort the stack if the
+		// positions are the same
+		if (tagStackIsSorted
+		 && tagStack.length
+		 && tag.getPos() >= tagStack[tagStack.length - 1].getPos())
 		{
 			tagStackIsSorted = false;
 		}

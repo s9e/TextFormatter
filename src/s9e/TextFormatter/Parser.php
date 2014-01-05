@@ -131,13 +131,11 @@ class Parser
 		$this->text       = $text;
 		$this->textLen    = strlen($text);
 		$this->tagStack   = [];
+		$this->tagStackIsSorted = true;
 		$this->wsPos      = 0;
 
 		// Bump the UID
 		++$this->uid;
-
-		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
-		$this->tagStackIsSorted = false;
 	}
 
 	/**

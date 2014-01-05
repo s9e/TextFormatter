@@ -413,6 +413,43 @@ class TagStackTest extends Test
 			$dummyStack->tagStack
 		);
 	}
+
+	/**
+	* @testdox Tags occupying the same position are properly sorted regardless of the order they've been added
+	*/
+	public function testTagsAtSamePosAreSorted()
+	{
+		$this->configurator->tags->add('X');
+		$this->configurator->tags->add('Y');
+
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('Y', 0, 0)->setSortPriority(20);
+				$parser->addSelfClosingTag('X', 0, 0)->setSortPriority(10);
+			}
+		);
+		$this->assertSame(
+			'<r><X/><Y/></r>',
+			$parser->parse('')
+		);
+
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 0)->setSortPriority(10);
+				$parser->addSelfClosingTag('Y', 0, 0)->setSortPriority(20);
+			}
+		);
+		$this->assertSame(
+			'<r><X/><Y/></r>',
+			$parser->parse('')
+		);
+	}
 }
 
 class DummyStack extends Parser

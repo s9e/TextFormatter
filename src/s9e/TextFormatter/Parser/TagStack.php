@@ -154,7 +154,14 @@ trait TagStack
 		}
 		else
 		{
-			if (!empty($this->tagStack) && $pos > end($this->tagStack)->getPos())
+			// If the stack is sorted we check whether this tag should be stored at a lower offset
+			// than the last tag which would mean we need to sort the stack. Note that we cannot use
+			// compareTags() to break ties here because setSortPriority() can be called *after* tags
+			// have been put on the stack, therefore we need to properly sort the stack if the
+			// positions are the same
+			if ($this->tagStackIsSorted
+			 && !empty($this->tagStack)
+			 && $tag->getPos() >= end($this->tagStack)->getPos())
 			{
 				$this->tagStackIsSorted = false;
 			}

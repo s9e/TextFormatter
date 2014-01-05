@@ -137,13 +137,11 @@ function reset(_text)
 	text       = _text;
 	textLen    = text.length;
 	tagStack   = [];
+	tagStackIsSorted = true;
 	wsPos      = 0;
 
 	// Bump the UID
 	++uid;
-
-	// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
-	tagStackIsSorted = false;
 }
 
 /**
