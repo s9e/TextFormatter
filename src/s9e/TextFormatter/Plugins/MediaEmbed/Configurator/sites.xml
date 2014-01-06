@@ -347,7 +347,7 @@
 
 		<host>liveleak.com</host>
 		<extract>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</extract>
-		<iframe width="560" height="315" src="http://www.liveleak.com/e/{@id}"/>
+		<iframe width="560" height="315" src="http://www.liveleak.com/ll_embed?i={@id}"/>
 	</site>
 
 	<site id="metacafe">

@@ -1565,7 +1565,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
-				'<iframe width="560" height="315" src="http://www.liveleak.com/e/3dd_1366238099" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="http://www.liveleak.com/ll_embed?i=3dd_1366238099" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
