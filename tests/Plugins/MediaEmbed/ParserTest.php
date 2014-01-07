@@ -560,7 +560,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=&amp;songID=35292216"><embed type="application/x-shockwave-flash" src="http://grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="playlistID=&amp;songID=35292216"></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="//grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=&amp;songID=35292216"><embed type="application/x-shockwave-flash" src="//grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="playlistID=&amp;songID=35292216"></object>',
 				[],
 				function ($configurator)
 				{
@@ -1466,7 +1466,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<iframe width="560" height="315" src="http://www.dailymotion.com/embed/video/x222z1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/x222z1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1502,7 +1502,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<iframe width="640" height="400" src="http://www.gamespot.com/videos/embed/6415176/" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="640" height="400" src="//www.gamespot.com/videos/embed/6415176/" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1520,7 +1520,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="250" data="http://grooveshark.com/widget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=74854761&amp;songID="><embed type="application/x-shockwave-flash" src="http://grooveshark.com/widget.swf" width="250" height="250" allowfullscreen="" flashvars="playlistID=74854761&amp;songID="></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="250" data="//grooveshark.com/widget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=74854761&amp;songID="><embed type="application/x-shockwave-flash" src="//grooveshark.com/widget.swf" width="250" height="250" allowfullscreen="" flashvars="playlistID=74854761&amp;songID="></object>',
 				[],
 				function ($configurator)
 				{
@@ -1538,7 +1538,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<iframe width="224" height="486" src="http://www.indiegogo.com/project/513633/widget" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="224" height="486" src="//www.indiegogo.com/project/513633/widget" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1547,7 +1547,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<iframe width="220" height="380" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="220" height="380" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1556,7 +1556,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<iframe width="480" height="360" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="480" height="360" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1583,7 +1583,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<iframe width="720" height="405" src="http://rutube.ru/video/embed/4118278" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="720" height="405" src="//rutube.ru/video/embed/4118278" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1592,7 +1592,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/23431564" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="427" height="356" src="//www.slideshare.net/slideshow/embed_code/23431564" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1710,7 +1710,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<iframe width="560" height="315" src="http://player.vimeo.com/video/67207222" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//player.vimeo.com/video/67207222" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

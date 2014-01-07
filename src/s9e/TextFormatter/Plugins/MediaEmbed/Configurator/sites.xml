@@ -142,8 +142,8 @@
 
 		<host>dailymotion.com</host>
 		<extract>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</extract>
-		<iframe width="560" height="315" src="http://www.dailymotion.com/embed/video/{@id}"/>
-		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
+		<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/{@id}"/>
+		<flash width="560" height="315" src="//www.dailymotion.com/swf/{@id}"/>
 		<oembed url="http://www.dailymotion.com/services/oembed"/>
 	</site>
 
@@ -205,7 +205,7 @@
 
 		<host>gamespot.com</host>
 		<extract>!gamespot\.com.*?/(?:events|videos)/.*?-(?'id'\d+)/(?:[#?].*)?$!</extract>
-		<iframe width="640" height="400" src="http://www.gamespot.com/videos/embed/{@id}/"/>
+		<iframe width="640" height="400" src="//www.gamespot.com/videos/embed/{@id}/"/>
 	</site>
 
 	<site id="gametrailers">
@@ -266,7 +266,7 @@
 		</scrape>
 		<flash width="250"
 		       height="{250-210*boolean(@songid)}"
-		       src="http://grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf"
+		       src="//grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf"
 		       flashvars="playlistID={@playlistid}&amp;songID={@songid}"
 		/>
 	</site>
@@ -305,7 +305,7 @@
 			<match>!indiegogo\.com/projects/.!</match>
 			<extract>!indiegogo\.com/projects/(?'id'[0-9]+)/!</extract>
 		</scrape>
-		<iframe width="224" height="486" src="http://www.indiegogo.com/project/{@id}/widget"/>
+		<iframe width="224" height="486" src="//www.indiegogo.com/project/{@id}/widget"/>
 	</site>
 
 	<site id="instagram">
@@ -331,10 +331,10 @@
 		<template><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@video">
-					<iframe width="480" height="360" src="http://www.kickstarter.com/projects/{@id}/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"/>
+					<iframe width="480" height="360" src="//www.kickstarter.com/projects/{@id}/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<iframe width="220" height="380" src="http://www.kickstarter.com/projects/{@id}/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"/>
+					<iframe width="220" height="380" src="//www.kickstarter.com/projects/{@id}/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		]]></template>
@@ -372,7 +372,7 @@
 			<match>!rutube\.ru/video/[0-9a-f]{32}!</match>
 			<extract>!rutube\.ru/video/embed/(?'id'[0-9]+)!</extract>
 		</scrape>
-		<iframe width="720" height="405" src="http://rutube.ru/video/embed/{@id}"/>
+		<iframe width="720" height="405" src="//rutube.ru/video/embed/{@id}"/>
 	</site>
 
 	<site id="slideshare">
@@ -387,7 +387,7 @@
 			<match>!slideshare\.net/[^/]+/\w!</match>
 			<extract>!"presentationId":(?'id'[0-9]+)!</extract>
 		</scrape>
-		<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/{@id}"/>
+		<iframe width="427" height="356" src="//www.slideshare.net/slideshow/embed_code/{@id}"/>
 	</site>
 
 	<site id="soundcloud">
@@ -487,7 +487,7 @@
 			<match>!teamcoco\.com/video/.!</match>
 			<extract>!teamcoco\.com/embed/v/(?'id'\d+)!</extract>
 		</scrape>
-		<iframe width="640" height="415" src="http://teamcoco.com/embed/v/{@id}"/>
+		<iframe width="640" height="415" src="//teamcoco.com/embed/v/{@id}"/>
 	</site>
 
 	<site id="ted">
@@ -584,7 +584,7 @@
 
 		<host>vimeo.com</host>
 		<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</extract>
-		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
+		<iframe width="560" height="315" src="//player.vimeo.com/video/{@id}"/>
 	</site>
 
 	<site id="vine">
@@ -608,7 +608,7 @@
 			<match>!vk\.com/video-?[0-9]+_[0-9]+!</match>
 			<extract>!embed_hash=(?'hash'[0-9a-f]+)!</extract>
 		</scrape>
-		<iframe width="607" height="360" src="http://vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}&amp;hd=1"/>
+		<iframe width="607" height="360" src="//vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}&amp;hd=1"/>
 	</site>
 
 	<site id="wshh">
