@@ -19,7 +19,7 @@
 		</scrape>
 		<iframe width="400" height="{120-78*boolean(@track_id|@track_num)}">
 			<src><![CDATA[
-				<xsl:text>http://bandcamp.com/EmbeddedPlayer/</xsl:text>
+				<xsl:text>//bandcamp.com/EmbeddedPlayer/</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@album_id">
 						<xsl:text>album=</xsl:text>
@@ -55,7 +55,7 @@
 			<match>!blip\.tv/[^/]+/[^/]+-\d+$!</match>
 			<extract>!blip\.tv/play/(?'id'[\w%+/_]+)!</extract>
 		</scrape>
-		<iframe width="560" height="315" src="http://blip.tv/play/{@id}"/>
+		<iframe width="560" height="315" src="//blip.tv/play/{@id}"/>
 	</site>
 
 	<site id="break">
