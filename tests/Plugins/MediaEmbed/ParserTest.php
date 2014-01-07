@@ -490,7 +490,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<iframe width="400" height="120" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/album=1122163921/size=medium"></iframe>',
+				'<iframe width="400" height="120" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/album=1122163921/size=medium"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -500,7 +500,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/album=1122163921/size=small/t=7"></iframe>',
+				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/album=1122163921/size=small/t=7"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -510,7 +510,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://therunons.bandcamp.com/track/still-feel',
-				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/track=2146686782/size=small"></iframe>',
+				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/track=2146686782/size=small"></iframe>',
 				[],
 				function ($configurator)
 				{
