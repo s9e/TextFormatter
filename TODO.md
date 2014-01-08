@@ -43,3 +43,5 @@ TODO
 - Consider adding <q> (quick) as root element to indentify content that is not plain text but might be renderable via regexps
 - RegexpConvertor: an empty regexp // is interpreted as a comment. Empty regexps should be converted as /.*/ or similar
 - Add hints to the PHP parser. Makes hints take the form of a bitfield, e.g. "if ($this->hints & self::HAS_ATTRIBUTE_GENERATORS)"
+- Clean up illegal UTF-8 in parse()?
+- Set DOMDocument::$recover in Renderer#loadXML()
