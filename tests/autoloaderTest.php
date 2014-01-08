@@ -16,6 +16,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	* @testdox Can load s9e\TextFormatter\Configurator
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
+	* @group no-hhvm
 	*/
 	public function testConfigurator()
 	{
@@ -27,6 +28,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	* @testdox Can load s9e\TextFormatter\Parser\Logger
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
+	* @group no-hhvm
 	*/
 	public function testParserTag()
 	{
@@ -38,6 +40,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	* @testdox Can load s9e\TextFormatter\Plugins\Emoticons\Parser
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
+	* @group no-hhvm
 	*/
 	public function testEmoticonsParserTag()
 	{
