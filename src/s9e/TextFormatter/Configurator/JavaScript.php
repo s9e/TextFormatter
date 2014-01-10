@@ -117,8 +117,7 @@ class JavaScript
 		}
 
 		// Get the stylesheet used for rendering
-		$rendererGenerator = new XSLT;
-		$xsl = $rendererGenerator->getXSL($this->configurator->rendering);
+		$xsl = (new XSLT)->getXSL($this->configurator->rendering);
 
 		// Reset this instance's callbacks
 		$this->callbacks = [];

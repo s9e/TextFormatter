@@ -191,6 +191,16 @@ function convertCustom($filepath, &$file)
 				'public function buildTag($word)'
 			)
 		),
+		'JavaScript.php' => array(
+			array(
+				'$rendererGenerator = new XSLT;',
+				''
+			),
+			array(
+				'$xsl = $rendererGenerator->getXSL($this->configurator->rendering);',
+				'$xsl = (new XSLT)->getXSL($this->configurator->rendering);'
+			)
+		),
 		'Logger.php' => array(
 			array(
 				'$callback($msg, $context);',
