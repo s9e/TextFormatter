@@ -193,12 +193,8 @@ function convertCustom($filepath, &$file)
 		),
 		'JavaScript.php' => array(
 			array(
-				'$rendererGenerator = new XSLT;',
-				''
-			),
-			array(
-				'$xsl = $rendererGenerator->getXSL($this->configurator->rendering);',
-				'$xsl = (new XSLT)->getXSL($this->configurator->rendering);'
+				'$xsl = (new XSLT)->getXSL($this->configurator->rendering);',
+				"\$rendererGenerator = new XSLT;\n\t\t\$xsl = \$rendererGenerator->getXSL(\$this->configurator->rendering);"
 			)
 		),
 		'Logger.php' => array(
