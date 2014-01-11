@@ -131,6 +131,10 @@ class OptimizerTest extends Test
 				'while (--$i);'
 			],
 			[
+				'while (--$i) { /* do nothing */ }',
+				'while (--$i) /* do nothing */;'
+			],
+			[
 				'if ($foo)
 				{
 					if ($bar)
