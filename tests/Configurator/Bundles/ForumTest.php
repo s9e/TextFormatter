@@ -21,10 +21,11 @@ class ForumTest extends Test
 		$this->assertTrue(isset($configurator->Autolink));
 
 		$this->assertTrue($configurator->BBCodes->exists('B'));
-		$this->assertTrue($configurator->BBCodes->exists('I'));
+		$this->assertTrue($configurator->BBCodes->exists('CENTER'));
 		$this->assertTrue($configurator->BBCodes->exists('CODE'));
 		$this->assertTrue($configurator->BBCodes->exists('COLOR'));
 		$this->assertTrue($configurator->BBCodes->exists('EMAIL'));
+		$this->assertTrue($configurator->BBCodes->exists('I'));
 		$this->assertTrue($configurator->BBCodes->exists('LIST'));
 		$this->assertTrue($configurator->BBCodes->exists('*'));
 		$this->assertTrue($configurator->BBCodes->exists('LI'));
@@ -36,11 +37,19 @@ class ForumTest extends Test
 		$this->assertTrue($configurator->BBCodes->exists('URL'));
 
 		$this->assertTrue($configurator->BBCodes->exists('MEDIA'));
+		$this->assertTrue($configurator->BBCodes->exists('BANDCAMP'));
 		$this->assertTrue($configurator->BBCodes->exists('DAILYMOTION'));
 		$this->assertTrue($configurator->BBCodes->exists('FACEBOOK'));
+		$this->assertTrue($configurator->BBCodes->exists('GROOVESHARK'));
+		$this->assertTrue($configurator->BBCodes->exists('INDIEGOGO'));
+		$this->assertTrue($configurator->BBCodes->exists('INSTAGRAM'));
+		$this->assertTrue($configurator->BBCodes->exists('KICKSTARTER'));
 		$this->assertTrue($configurator->BBCodes->exists('LIVELEAK'));
+		$this->assertTrue($configurator->BBCodes->exists('SOUNDCLOUD'));
 		$this->assertTrue($configurator->BBCodes->exists('TWITCH'));
 		$this->assertTrue($configurator->BBCodes->exists('VIMEO'));
+		$this->assertTrue($configurator->BBCodes->exists('VINE'));
+		$this->assertTrue($configurator->BBCodes->exists('WSHH'));
 		$this->assertTrue($configurator->BBCodes->exists('YOUTUBE'));
 	}
 }

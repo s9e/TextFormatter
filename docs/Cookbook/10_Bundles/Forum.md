@@ -25,8 +25,8 @@ echo $html;
 
 ### BBCodes
 
-BBCodes enabled: b, center, code, color, email, i, list, quote, s, size, spoiler, u, url.
-Media BBCodes: dailymotion, facebook, instagram, liveleak, twitch, vimeo, vine, youtube.
+BBCodes enabled: b, center, code, color, email, i, list, li, *, media, quote, s, size, spoiler, u, url.
+Media BBCodes: Bandcamp, Dailymotion, Facebook, Grooveshark, Indiegogo, Instagram, Kickstarter, Liveleak, Soundcloud, Twitch, Vimeo, Vine, WSHH, YouTube.
 
 ### Emoticons
 

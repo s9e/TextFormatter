@@ -76,13 +76,19 @@ class Forum extends Bundle
 			);
 		}
 
+		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');
+		$configurator->MediaEmbed->add('grooveshark');
+		$configurator->MediaEmbed->add('indiegogo');
 		$configurator->MediaEmbed->add('instagram');
+		$configurator->MediaEmbed->add('kickstarter');
 		$configurator->MediaEmbed->add('liveleak');
+		$configurator->MediaEmbed->add('soundcloud');
 		$configurator->MediaEmbed->add('twitch');
 		$configurator->MediaEmbed->add('vimeo');
 		$configurator->MediaEmbed->add('vine');
+		$configurator->MediaEmbed->add('wshh');
 		$configurator->MediaEmbed->add('youtube');
 
 		$configurator->Autoemail;
