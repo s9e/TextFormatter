@@ -839,6 +839,29 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[foo={MAP=sans serif:sans-serif,sansserif:sans-serif}/]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [
+									new Map([
+										'sans serif' => 'sans-serif',
+										'sansserif'  => 'sans-serif'
+									])
+								]
+							]
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
 				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
 				'{NUMBER1}{NUMBER2}',
 				[

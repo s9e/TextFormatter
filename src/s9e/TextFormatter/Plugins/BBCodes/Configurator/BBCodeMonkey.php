@@ -189,6 +189,16 @@ class BBCodeMonkey
 			'passthroughToken' => null
 		];
 
+		// Encode maps to avoid special characters to interfere with definitions
+		$usage = preg_replace_callback(
+			'#(\\{(?>HASH)?MAP=)([^:]+:[^,;}]+(?>,[^:]+:[^,;}]+)*)(?=[;}])#',
+			function ($m)
+			{
+				return $m[1] . base64_encode($m[2]);
+			},
+			$usage
+		);
+
 		// Encode regexps to avoid special characters to interfere with definitions
 		$usage = preg_replace_callback(
 			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . '(?:,' . self::REGEXP . ')*)#',
@@ -201,7 +211,7 @@ class BBCodeMonkey
 
 		$regexp = '#^'
 		        // [BBCODE
-		        . '\\[(?<bbcodeName>.+?)'
+		        . '\\[(?<bbcodeName>\\S+?)'
 		        // ={TOKEN}
 		        . '(?<defaultAttribute>=\\S+?)?'
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
@@ -253,9 +263,9 @@ class BBCodeMonkey
 			$name  = substr($definition, 0, $pos);
 			$value = substr($definition, 1 + $pos);
 
-			// Decode base64-encoded regexps
+			// Decode base64-encoded tokens
 			$value = preg_replace_callback(
-				'#(\\{(?:PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
+				'#(\\{(?>HASHMAP|MAP|PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
 				function ($m)
 				{
 					return $m[1] . base64_decode($m[2]);
