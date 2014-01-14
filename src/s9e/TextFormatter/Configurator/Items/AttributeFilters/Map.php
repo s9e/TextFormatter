@@ -78,10 +78,37 @@ class Map extends AttributeFilter
 			$valueKeys[$value][] = $key;
 		}
 
+		// Reset the template safeness marks for the new map
+		$this->resetSafeness();
+
+		// Consider the values safe unless the map isn't strict and until we find an unsafe value
+		$isSafeInCSS = $strict;
+		$isSafeInJS  = $strict;
+
 		// Now create a regexp and an entry in the map for each group
 		$map = [];
 		foreach ($valueKeys as $value => $keys)
 		{
+			// Test the value's safeness
+			if ($isSafeInCSS && preg_match('/[:();]/', $value))
+			{
+				$isSafeInCSS = false;
+			}
+
+			if ($isSafeInJS)
+			{
+				if (preg_match('/[()\'"\\\\\\r\\n]/', $value))
+				{
+					$isSafeInJS = false;
+				}
+
+				if (strpos($value, "\xE2\x80\xA8") !== false
+				 || strpos($value, "\xE2\x80\xA9") !== false)
+				{
+					$isSafeInJS = false;
+				}
+			}
+
 			$regexp = RegexpBuilder::fromList(
 				$keys,
 				[
@@ -116,5 +143,15 @@ class Map extends AttributeFilter
 
 		// Record the map in this filter's variables
 		$this->vars['map'] = $map;
+
+		// Mark this map as safe if applicable
+		if ($isSafeInCSS)
+		{
+			$this->markAsSafeInCSS();
+		}
+		if ($isSafeInJS)
+		{
+			$this->markAsSafeInJS();
+		}
 	}
 }

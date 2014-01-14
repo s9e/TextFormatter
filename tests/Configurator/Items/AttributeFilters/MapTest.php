@@ -146,4 +146,158 @@ class MapTest extends Test
 		$filter = new Map;
 		$filter->setMap(['foo' => 'bar'], true, 'notbool');
 	}
+
+	/**
+	* @testdox isSafeInCSS() returns false if the map is not strict
+	*/
+	public function testIsSafeInCSSNotStrict()
+	{
+		$filter = new Map(['foo' => 'bar'], true, false);
+
+		$this->assertFalse($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns true if the map is strict
+	*/
+	public function testIsSafeInCSSStrict()
+	{
+		$filter = new Map(['foo' => 'bar'], true, true);
+
+		$this->assertTrue($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns false if a safe map is replaced with an unsafe map state
+	*/
+	public function testIsSafeInCSSReset()
+	{
+		$filter = new Map(['foo' => 'bar'], true, true);
+		$filter->setMap(['foo' => 'bar'], true, false);
+
+		$this->assertFalse($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns false if a value in the map contains a parenthesis
+	*/
+	public function testIsSafeInCSSParenthesis()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => 'foo()'], true, true);
+
+		$this->assertFalse($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns false if a value in the map contains a colon
+	*/
+	public function testIsSafeInCSSColon()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => 'foo:bar'], true, true);
+
+		$this->assertFalse($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns false if a value in the map contains a semicolon
+	*/
+	public function testIsSafeInCSSSemicolon()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => 'foo;bar'], true, true);
+
+		$this->assertFalse($filter->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if the map is not strict
+	*/
+	public function testIsSafeInJSNotStrict()
+	{
+		$filter = new Map(['foo' => 'bar'], true, false);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns true if the map is strict
+	*/
+	public function testIsSafeInJSStrict()
+	{
+		$filter = new Map(['foo' => 'bar'], true, true);
+
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a safe map is replaced with an unsafe map state
+	*/
+	public function testIsSafeInJSReset()
+	{
+		$filter = new Map(['foo' => 'bar'], true, true);
+		$filter->setMap(['foo' => 'bar'], true, false);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains a parenthesis
+	*/
+	public function testIsSafeInJSParenthesis()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => 'foo()'], true, true);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains a single quote
+	*/
+	public function testIsSafeInJSSingleQuote()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => "foo'bar"], true, true);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains a double quote
+	*/
+	public function testIsSafeInJSDoubleQuote()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => 'foo"bar'], true, true);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains \r or \n
+	*/
+	public function testIsSafeInJSNewLine()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => "foo\rbar"], true, true);
+		$this->assertFalse($filter->isSafeInJS());
+
+		$filter = new Map(['foo' => 'bar', 'baz' => "foo\nbar"], true, true);
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains U+2028
+	*/
+	public function testIsSafeInJSLineSeparator()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => "\xE2\x80\xA8"], true, true);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns false if a value in the map contains U+2029
+	*/
+	public function testIsSafeInJSParagraphSeparator()
+	{
+		$filter = new Map(['foo' => 'bar', 'baz' => "\xE2\x80\xA9"], true, true);
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
 }

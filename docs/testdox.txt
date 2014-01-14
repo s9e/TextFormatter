@@ -841,6 +841,21 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
  [x] setMap() uses the pattern modifier 'u' if a regexp is not entirely ASCII
  [x] setMap() throws an exception if the second argument is not a boolean
  [x] setMap() throws an exception if the third argument is not a boolean
+ [x] isSafeInCSS() returns false if the map is not strict
+ [x] isSafeInCSS() returns true if the map is strict
+ [x] isSafeInCSS() returns false if a safe map is replaced with an unsafe map state
+ [x] isSafeInCSS() returns false if a value in the map contains a parenthesis
+ [x] isSafeInCSS() returns false if a value in the map contains a colon
+ [x] isSafeInCSS() returns false if a value in the map contains a semicolon
+ [x] isSafeInJS() returns false if the map is not strict
+ [x] isSafeInJS() returns true if the map is strict
+ [x] isSafeInJS() returns false if a safe map is replaced with an unsafe map state
+ [x] isSafeInJS() returns false if a value in the map contains a parenthesis
+ [x] isSafeInJS() returns false if a value in the map contains a single quote
+ [x] isSafeInJS() returns false if a value in the map contains a double quote
+ [x] isSafeInJS() returns false if a value in the map contains \r or \n
+ [x] isSafeInJS() returns false if a value in the map contains U+2028
+ [x] isSafeInJS() returns false if a value in the map contains U+2029
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Number
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
