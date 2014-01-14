@@ -476,11 +476,14 @@ class BBCodeMonkey
 					while (isset($tag->attributes[$matchName]));
 
 					// Create the attribute that corresponds to this subpattern
-					$tag->attributes[$matchName] = new Attribute;
+					$attribute = $tag->attributes->add($matchName);
 
-					// Append the corresponding filter
-					$filter = $this->configurator->attributeFilters->get('#' . strtolower($tokenType));
-					$tag->attributes[$matchName]->filterChain->append($filter);
+					// Append the corresponding filter if applicable
+					if (!in_array($tokenType, $this->unfilteredTokens, true))
+					{
+						$filter = $this->configurator->attributeFilters->get('#' . strtolower($tokenType));
+						$attribute->filterChain->append($filter);
+					}
 
 					// Record the attribute name associated with this token ID
 					$table[$tokenId] = $matchName;
@@ -539,8 +542,7 @@ class BBCodeMonkey
 			$filter = $this->configurator->attributeFilters->get('#regexp');
 
 			// Create the attribute using this regexp as filter
-			$tag->attributes[$attrName] = new Attribute;
-			$tag->attributes[$attrName]->filterChain->append($filter)->setRegexp($regexp);
+			$tag->attributes->add($attrName)->filterChain->append($filter)->setRegexp($regexp);
 		}
 
 		return $table;
