@@ -91,4 +91,16 @@ trait TemplateSafeness
 
 		return $this;
 	}
+
+	/**
+	* Reset the "marked safe" statuses
+	*
+	* @return self
+	*/
+	public function resetSafeness()
+	{
+		$this->markedSafe = [];
+
+		return $this;
+	}
 }

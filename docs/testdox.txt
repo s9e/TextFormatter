@@ -102,9 +102,17 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __unset('foo') throws an exception if unsetFoo() does not exist and the property is set
 
 s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
+ [x] isSafeAsURL() returns false by default
+ [x] isSafeAsURL() returns true if markAsSafeAsURL() was called
+ [x] isSafeInCSS() returns false by default
+ [x] isSafeInCSS() returns true if markAsSafeInCSS() was called
+ [x] isSafeInJS() returns false by default
+ [x] isSafeInJS() returns true if markAsSafeInJS() was called
  [x] markAsSafeAsURL() is chainable
  [x] markAsSafeInCSS() is chainable
  [x] markAsSafeInJS() is chainable
+ [x] resetSafeness() resets the contexts marked as safe
+ [x] resetSafeness() is chainable
 
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
