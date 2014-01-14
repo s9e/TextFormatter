@@ -1,6 +1,8 @@
 ## Installation
 
-s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and above. Choose the branch that corresponds to the lowest PHP version you want to support, they are functionally identical.
+s9e\\TextFormatter is developed on the latest version of PHP and is compatible with PHP 5.3.3 and above. Choose the branch that corresponds to the lowest PHP version you want to support, they are functionally identical.
+
+Once installed, you can try this [basic example](https://github.com/s9e/TextFormatter/blob/master/docs/examples/00_quick.php).
 
 ### Via Composer/[Packagist](https://packagist.org/)
 

@@ -1,6 +1,6 @@
 <?php
 
-// Get the autoloader
+// Get the autoloader (unless you have already loaded Composer's)
 include __DIR__ . '/../../src/autoloader.php';
 
 // Use the Forum bundle. It supports BBCodes, emoticons and autolinking
