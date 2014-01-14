@@ -793,6 +793,19 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Hashmap
  [x] Throws an exception if the second argument is not a boolean
  [x] Values identical to their key are optimized away if the map is sparse
  [x] Values identical to their key are preserved if the map is strict
+ [x] isSafeInCSS() returns false if the map is not strict
+ [x] isSafeInCSS() returns true if the map is strict
+ [x] isSafeInCSS() returns false if a value in the map contains a parenthesis
+ [x] isSafeInCSS() returns false if a value in the map contains a colon
+ [x] isSafeInCSS() returns false if a value in the map contains a semicolon
+ [x] isSafeInJS() returns false if the map is not strict
+ [x] isSafeInJS() returns true if the map is strict
+ [x] isSafeInJS() returns false if a value in the map contains a parenthesis
+ [x] isSafeInJS() returns false if a value in the map contains a single quote
+ [x] isSafeInJS() returns false if a value in the map contains a double quote
+ [x] isSafeInJS() returns false if a value in the map contains \r or \n
+ [x] isSafeInJS() returns false if a value in the map contains U+2028
+ [x] isSafeInJS() returns false if a value in the map contains U+2029
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Identifier
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
