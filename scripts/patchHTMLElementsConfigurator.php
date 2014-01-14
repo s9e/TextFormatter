@@ -65,7 +65,7 @@ foreach ($filters as $attrName => $filterName)
 
 $php = substr($php, 0, -1) . "\n\t";
 
-$filepath = __DIR__ . '/../src/s9e/TextFormatter/Plugins/HTMLElements/Configurator.php';
+$filepath = __DIR__ . '/../src/Plugins/HTMLElements/Configurator.php';
 $file = file_get_contents($filepath);
 $file = preg_replace(
 	'/(protected \\$attributeFilters = \\[)[^\\]]+/',

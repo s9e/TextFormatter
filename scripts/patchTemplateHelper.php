@@ -5,7 +5,7 @@ use s9e\SimpleDOM\SimpleDOM;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 include 's9e/SimpleDOM/src/SimpleDOM.php';
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../src/autoloader.php';
 
 function getPage($filepath, $url)
 {
@@ -98,7 +98,7 @@ foreach ($attributes as $type => $attrNames)
 	}
 }
 
-$filepath = __DIR__ . '/../src/s9e/TextFormatter/Configurator/Helpers/TemplateHelper.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateHelper.php';
 $file = file_get_contents($filepath);
 
 foreach ($regexps as $type => $typeRegexps)

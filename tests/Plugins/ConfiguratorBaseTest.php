@@ -243,7 +243,7 @@ class ConfiguratorBaseTest extends Test
 		$configurator = new Configurator;
 
 		$this->assertStringEqualsFile(
-			__DIR__ . '/../../src/s9e/TextFormatter/Plugins/Autolink/Parser.js',
+			__DIR__ . '/../../src/Plugins/Autolink/Parser.js',
 			$configurator->Autolink->getJSParser()
 		);
 	}

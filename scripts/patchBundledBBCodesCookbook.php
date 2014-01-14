@@ -1,10 +1,10 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../src/autoloader.php';
 
 $dom = new DOMDocument;
-$dom->load(__DIR__ . '/../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
+$dom->load(__DIR__ . '/../src/Plugins/BBCodes/Configurator/repository.xml');
 
 $list = [];
 

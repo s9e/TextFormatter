@@ -40,7 +40,7 @@ Clone this repository and use the bundled autoloader.
 git clone https://github.com/s9e/TextFormatter.git -b release/php5.3
 ```
 ```php
-include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
+include 'TextFormatter/src/autoloader.php';
 ```
 
 #### PHP 5.4
@@ -48,7 +48,7 @@ include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 git clone https://github.com/s9e/TextFormatter.git -b release/php5.4
 ```
 ```php
-include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
+include 'TextFormatter/src/autoloader.php';
 ```
 
 #### PHP 5.5
@@ -56,5 +56,5 @@ include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 git clone https://github.com/s9e/TextFormatter.git -b release/php5.5
 ```
 ```php
-include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
+include 'TextFormatter/src/autoloader.php';
 ```

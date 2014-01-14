@@ -16,7 +16,7 @@ All the times are expressed in microseconds. (1/1,000,000th of a second)
 
 */
 
-include __DIR__ . '/../../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../../src/autoloader.php';
 
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 

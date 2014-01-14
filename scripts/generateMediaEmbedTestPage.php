@@ -1,13 +1,13 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../src/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
-$sites = simplexml_load_file(__DIR__ . '/../src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml');
+$sites = simplexml_load_file(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites.xml');
 
 foreach ($sites->site as $site)
 {

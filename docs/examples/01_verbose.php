@@ -1,11 +1,11 @@
 <?php
 
-include __DIR__ . '/../../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../../src/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 
 // Add some BBCodes from the default repository that you can find in
-// ../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml
+// ../src/Plugins/BBCodes/Configurator/repository.xml
 $configurator->BBCodes->addFromRepository('B');
 $configurator->BBCodes->addFromRepository('I');
 $configurator->BBCodes->addFromRepository('U');

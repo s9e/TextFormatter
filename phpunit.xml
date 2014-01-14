@@ -229,9 +229,9 @@
 		<whitelist>
 			<directory suffix=".php">src</directory>
 			<exclude>
-				<file>src/s9e/TextFormatter/Bundles/F5/Renderer.php</file>
-				<file>src/s9e/TextFormatter/Bundles/Forum/Renderer.php</file>
-				<file>src/s9e/TextFormatter/Bundles/S18/Renderer.php</file>
+				<file>src/Bundles/F5/Renderer.php</file>
+				<file>src/Bundles/Forum/Renderer.php</file>
+				<file>src/Bundles/S18/Renderer.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

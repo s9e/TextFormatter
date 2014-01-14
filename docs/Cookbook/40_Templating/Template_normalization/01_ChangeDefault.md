@@ -1,6 +1,6 @@
 ## Change the default normalization
 
-By default, template normalization consists in optimizing a template's content by removing superfluous whitespace and inlining content wherever possible, as well as normalize HTML elements' and attributes' names to lowercase and [other menial tasks](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Configurator/TemplateNormalizations).
+By default, template normalization consists in optimizing a template's content by removing superfluous whitespace and inlining content wherever possible, as well as normalize HTML elements' and attributes' names to lowercase and [other menial tasks](https://github.com/s9e/TextFormatter/tree/master/src/Configurator/TemplateNormalizations).
 
 Template normalization is performed by `$configurator->templateNormalizer`, which you can access as an array.
 

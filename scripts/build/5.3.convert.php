@@ -396,10 +396,10 @@ function convertUse($filepath, &$file)
 		function ($m) use ($namespace, &$table)
 		{
 			$fqn  = (isset($table[$m[1]])) ? $table[$m[1]] : $namespace . '\\' . $m[1];
-			$path = __DIR__ . '/../../src/s9e/TextFormatter' . str_replace('\\', DIRECTORY_SEPARATOR, substr($fqn, 17)) . '.php';
+			$path = __DIR__ . '/../../src' . str_replace('\\', DIRECTORY_SEPARATOR, substr($fqn, 17)) . '.php';
 
 			$path = str_replace(
-				'/../../src/s9e/TextFormatter/Tests/',
+				'/../../src/Tests/',
 				'/../../tests/',
 				$path
 			);
@@ -497,15 +497,15 @@ function convertArraySyntax(&$file)
 	}
 }
 
-convertDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'));
+convertDir(realpath(__DIR__ . '/../../src'));
 convertDir(realpath(__DIR__ . '/../../tests'));
 
 // Remove traits files
-array_map('unlink', glob(__DIR__ . '/../../src/s9e/TextFormatter/Configurator/Traits/*'));
-rmdir(__DIR__ . '/../../src/s9e/TextFormatter/Configurator/Traits');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/FilterProcessing.php');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/OutputHandling.php');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/PluginsHandling.php');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/RulesHandling.php');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/TagProcessing.php');
-unlink(__DIR__ . '/../../src/s9e/TextFormatter/Parser/TagStack.php');
+array_map('unlink', glob(__DIR__ . '/../../src/Configurator/Traits/*'));
+rmdir(__DIR__ . '/../../src/Configurator/Traits');
+unlink(__DIR__ . '/../../src/Parser/FilterProcessing.php');
+unlink(__DIR__ . '/../../src/Parser/OutputHandling.php');
+unlink(__DIR__ . '/../../src/Parser/PluginsHandling.php');
+unlink(__DIR__ . '/../../src/Parser/RulesHandling.php');
+unlink(__DIR__ . '/../../src/Parser/TagProcessing.php');
+unlink(__DIR__ . '/../../src/Parser/TagStack.php');

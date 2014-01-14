@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../src/autoloader.php';
 
 function patchDir($dirpath)
 {
@@ -59,7 +59,7 @@ function patchFile($filepath)
 	}
 }
 
-patchDir(__DIR__ . '/../src/s9e/TextFormatter/Plugins/');
+patchDir(__DIR__ . '/../src/Plugins/');
 patchDir(__DIR__ . '/../docs/Cookbook/');
 
 die("Done.\n");

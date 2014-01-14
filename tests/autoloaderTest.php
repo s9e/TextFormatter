@@ -53,7 +53,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	*/
 	public function testBadPath()
 	{
-		include_once __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+		include_once __DIR__ . '/../src/autoloader.php';
 		class_exists('s9e\\TextFormatter\\..\\..\\..\\tests\\error');
 	}
 }

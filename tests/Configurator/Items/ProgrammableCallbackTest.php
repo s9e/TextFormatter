@@ -212,7 +212,7 @@ class ProgrammableCallbackTest extends Test
 
 		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Code', $js);
 		$this->assertStringEqualsFile(
-			__DIR__ . '/../../../src/s9e/TextFormatter/Configurator/JavaScript/functions/strtolower.js',
+			__DIR__ . '/../../../src/Configurator/JavaScript/functions/strtolower.js',
 			(string) $js
 		);
 	}
@@ -329,7 +329,7 @@ class ProgrammableCallbackTest extends Test
 			$config['js']
 		);
 		$this->assertStringEqualsFile(
-			__DIR__ . '/../../../src/s9e/TextFormatter/Configurator/JavaScript/functions/strtolower.js',
+			__DIR__ . '/../../../src/Configurator/JavaScript/functions/strtolower.js',
 			(string) $config['js']->get('JS')
 		);
 	}

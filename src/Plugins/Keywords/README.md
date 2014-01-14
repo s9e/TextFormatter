@@ -13,7 +13,7 @@ Keywords are case-sensitive by default.
 
 ## When *not* to use this plugin
 
-In some cases, it might be preferable to use the [Generic](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Generic) plugin. For instance, in a programming forum, instead of creating a list of every function name as keywords (in order to link them to a manual, for example) you may want to use the generic plugin and simply capture any series of valid characters immediately followed by a parenthesis.
+In some cases, it might be preferable to use the [Generic](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Generic) plugin. For instance, in a programming forum, instead of creating a list of every function name as keywords (in order to link them to a manual, for example) you may want to use the generic plugin and simply capture any series of valid characters immediately followed by a parenthesis.
 
 ## Examples
 

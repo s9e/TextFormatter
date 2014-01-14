@@ -63,7 +63,7 @@ file_put_contents('/tmp/renderer.txt', serialize($renderer));
 
 ### Parsing
 
-Parsing is the second most frequent operation. It happens everytime the end user posts new content, or edits old content. Parsing turns unformatted text into formatted text, an intermediate representation in XML that you are meant to store (in database) in place of the original text. It literally takes [one line of PHP](https://github.com/s9e/TextFormatter/blob/master/src/s9e/TextFormatter/Unparser.php#L22) to return formatted text to its original form, and barely a few more to render it to HTML.
+Parsing is the second most frequent operation. It happens everytime the end user posts new content, or edits old content. Parsing turns unformatted text into formatted text, an intermediate representation in XML that you are meant to store (in database) in place of the original text. It literally takes [one line of PHP](https://github.com/s9e/TextFormatter/blob/master/src/Unparser.php#L22) to return formatted text to its original form, and barely a few more to render it to HTML.
 
 In the following example, we load the serialized parser from `/tmp/parser.txt` then we parse a text containing a bit of markup. Here, the formatted text is saved to `/tmp/formatted.xml` but you would typically save it to your database instead.
 

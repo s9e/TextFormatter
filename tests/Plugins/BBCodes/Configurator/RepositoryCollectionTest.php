@@ -18,7 +18,7 @@ class RepositoryCollectionTest extends Test
 	*/
 	public function testAddRepository()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
+		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 
 		$collection = new RepositoryCollection(new BBCodeMonkey(new Configurator));
 		$collection->add('foo', $repository);
@@ -32,7 +32,7 @@ class RepositoryCollectionTest extends Test
 	public function testAddFilePath()
 	{
 		$collection = new RepositoryCollection(new BBCodeMonkey(new Configurator));
-		$collection->add('foo', __DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
+		$collection->add('foo', __DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\Repository',

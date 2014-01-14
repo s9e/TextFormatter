@@ -1,11 +1,11 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../src/autoloader.php';
 
-$bundlesDir = __DIR__ . '/../src/s9e/TextFormatter/Bundles';
+$bundlesDir = __DIR__ . '/../src/Bundles';
 
-foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Bundles/*.php') as $filepath)
+foreach (glob(__DIR__ . '/../src/Configurator/Bundles/*.php') as $filepath)
 {
 	$bundleName = basename($filepath, '.php');
 	$bundleDir  = $bundlesDir . '/' . $bundleName;

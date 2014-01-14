@@ -115,7 +115,7 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->excludeDefaultExterns = true;
 
 		$this->assertTrue(in_array(
-			file_get_contents(__DIR__ . '/../../../../src/s9e/TextFormatter/Configurator/JavaScript/externs.js'),
+			file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.js'),
 			$minifier->getCacheDifferentiator(),
 			true
 		));

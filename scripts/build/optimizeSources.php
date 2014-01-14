@@ -17,7 +17,7 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 
 */
 
-include __DIR__ . '/../../src/s9e/TextFormatter/Configurator/RendererGenerators/PHP/Optimizer.php';
+include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/Optimizer.php';
 $optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 
 function optimizeDir($dir, array $options = [])
@@ -252,4 +252,4 @@ $options = [
 	'removeWhitespace' => false
 ];
 
-optimizeDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'), $options);
+optimizeDir(realpath(__DIR__ . '/../../src'), $options);

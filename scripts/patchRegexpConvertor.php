@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$filepath = __DIR__ . '/../src/s9e/TextFormatter/Configurator/JavaScript/RegexpConvertor.php';
+$filepath = __DIR__ . '/../src/Configurator/JavaScript/RegexpConvertor.php';
 
 function generateRange($start, $end)
 {

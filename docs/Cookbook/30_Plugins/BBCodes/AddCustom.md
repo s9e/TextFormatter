@@ -1,7 +1,7 @@
 ## Add custom BBCodes
 
 You can read about the custom syntax in [BBCodeMonkey.md](https://github.com/s9e/TextFormatter/blob/master/docs/BBCodeMonkey.md).
-You can find more examples of custom BBCodes in the bundled [repository.xml](https://github.com/s9e/TextFormatter/blob/master/src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml).
+You can find more examples of custom BBCodes in the bundled [repository.xml](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/BBCodes/Configurator/repository.xml).
 
 You may also look into [phpBB's own custom BBCodes](https://www.phpbb.com/customise/db/custom_bbcodes-26/) as most of them are compatible.
 

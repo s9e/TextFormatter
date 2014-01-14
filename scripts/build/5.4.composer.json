@@ -18,7 +18,7 @@
 		"ext-zlib":      "Enables gzip compression when scraping content via the MediaEmbed plugin"
 	},
 	"autoload": {
-		"psr-0": {
+		"psr-4": {
 			"s9e\\TextFormatter": "src"
 		}
 	}

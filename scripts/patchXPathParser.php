@@ -205,7 +205,7 @@ foreach ($regexps as $k => $v)
 }
 $php = substr($php, 0, -1);
 
-$filepath = __DIR__ . '/../src/s9e/TextFormatter/Configurator/Helpers/XPathParser.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/XPathParser.php';
 $file = file_get_contents($filepath);
 
 if (!preg_match('#(?<=static \\$regexps = \\[)(.*?)(?=\\n\\t\\];)#s', $file, $m, PREG_OFFSET_CAPTURE))

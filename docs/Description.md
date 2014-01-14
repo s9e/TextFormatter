@@ -155,23 +155,23 @@
 
 ## Performance
 
-* Designed to clearly separate [configuration](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Configurator), [parsing](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Parser) and [rendering](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Renderers). Configuration happens rarely (if ever), parsing is run on every new text and rendering is run everytime a text is displayed
+* Designed to clearly separate [configuration](https://github.com/s9e/TextFormatter/tree/master/src/Configurator), [parsing](https://github.com/s9e/TextFormatter/tree/master/src/Parser) and [rendering](https://github.com/s9e/TextFormatter/tree/master/src/Renderers). Configuration happens rarely (if ever), parsing is run on every new text and rendering is run everytime a text is displayed
 * Configuration can run thousands of lines of code across dozens of files but parsing only runs a few hundreds of lines across a few files and rendering only runs a few dozens of lines across a couple of files. Complexity is pushed towards configuration and parsing to keep rendering simple and fast
 * The goal is to run configuration in less than a second, parsing in less than 100 ms and rendering in less than 10 ms
 	* In actuality it's closer to 100 ms/10 ms/1 ms depending on content and hardware
-* The source code in the release branches is automatically optimized for speed. The codebase is modified to produce better opcodes and some files are merged. The code used in [development looks nice](https://github.com/s9e/TextFormatter/blob/master/src/s9e/TextFormatter/Parser.php), the code run in production and testing [doesn't look as nice](https://github.com/s9e/TextFormatter/blob/release/php5.5/src/s9e/TextFormatter/Parser.php) but runs faster
+* The source code in the release branches is automatically optimized for speed. The codebase is modified to produce better opcodes and some files are merged. The code used in [development looks nice](https://github.com/s9e/TextFormatter/blob/master/src/Parser.php), the code run in production and testing [doesn't look as nice](https://github.com/s9e/TextFormatter/blob/release/php5.5/src/Parser.php) but runs faster
 
 ## Plugins
 
-* [Autoemail](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Autoemail)
+* [Autoemail](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Autoemail)
 
 	* Turns email addresses in plain text into mailto: links
 
-* [Autolink](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Autolink)
+* [Autolink](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Autolink)
 
 	* Turns URLs in plain text into links
 
-* [BBCodes](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/BBCodes)
+* [BBCodes](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/BBCodes)
 
 	* Flexible BBCode parser
 
@@ -197,48 +197,48 @@
 		);
 		```
 
-	* Custom BBCodes can be organized in a repository. The [default repository](https://github.com/s9e/TextFormatter/blob/master/src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml) comes with dozens of commonly requested BBCodes
+	* Custom BBCodes can be organized in a repository. The [default repository](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/BBCodes/Configurator/repository.xml) comes with dozens of commonly requested BBCodes
 
-* [Censor](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Censor)
+* [Censor](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Censor)
 
 	* Censors words. Accepts jokers
 
-* [Emoticons](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Emoticons)
+* [Emoticons](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoticons)
 
 	* Lets you define emoticons and the corresponding HTML
 
-* [Escaper](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Escaper)
+* [Escaper](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Escaper)
 
 	* Provides an escaping mechanism using `\`
 
-* [FancyPants](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/FancyPants)
+* [FancyPants](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/FancyPants)
 
 	* Enhanced typography, similar to [SmartyPants](http://daringfireball.net/projects/smartypants/) and [RedCloth's Textile](http://redcloth.org/textile/writing-paragraph-text/#typographers-quotes)
 
-* [Generic](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Generic)
+* [Generic](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Generic)
 
 	* Performs regexp-based replacements
 	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html) but without the possibility of introducing XSS vectors
 
-* [HTMLElements](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/HTMLElements)
+* [HTMLElements](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLElements)
 
 	* Whitelist of HTML elements (each element has a whitelist of attributes)
 
-* [HTMLEntities](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/HTMLEntities)
+* [HTMLEntities](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLEntities)
 
 	* Turns HTML entities into their Unicode literal
 
-* [Keywords](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/Keywords)
+* [Keywords](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Keywords)
 
 	* Automatically replace a given list of keywords, e.g. Magic: the Gathering cards (autocard)
 	* Very efficient
 
-* [MediaEmbed](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed)
+* [MediaEmbed](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed)
 
 	* Creates a `[media]` BBCode for embedded content
 		* Creates a site-specific BBCode (e.g. `[youtube]`) for every available site
 	* Optionally replaces URLs in plain text with embedded content
-	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml)
+	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites.xml)
 	* Flexible syntax
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
 
