@@ -19,7 +19,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"s9e\\TextFormatter": "src"
+			"s9e\\TextFormatter\\": "src"
 		}
 	}
 }
