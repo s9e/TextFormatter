@@ -862,6 +862,27 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[foo={NUMBER}/x]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/^(?<foo0>\\d+)\\/x$/D']
+						],
+						'attributes' => [
+							'foo0' => [
+								'filterChain' => [new Number]
+							]
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
 				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
 				'{NUMBER1}{NUMBER2}',
 				[

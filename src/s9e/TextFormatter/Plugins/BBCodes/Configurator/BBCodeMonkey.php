@@ -517,7 +517,7 @@ class BBCodeMonkey
 			}
 
 			// Append the literal text that follows the last token and finish the regexp
-			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$/D';
+			$regexp .= preg_quote(substr($definition, $lastPos), '/') . '$/D';
 
 			// Add the attribute preprocessor to the config
 			$tag->attributePreprocessors->add($attrName, $regexp);
