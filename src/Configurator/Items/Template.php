@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use DOMDocument;
-use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
