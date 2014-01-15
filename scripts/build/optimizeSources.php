@@ -41,7 +41,7 @@ function optimizeFile($filepath, array $options = [])
 	$changed = false;
 
 	// Inline traits in the main Parser class
-	if (strpos($filepath, 's9e/TextFormatter/Parser.php'))
+	if (strpos($filepath, 'src/Parser.php'))
 	{
 		// Replace "use" statements with the content of the trait
 		$old = preg_replace_callback(
@@ -77,7 +77,7 @@ function optimizeFile($filepath, array $options = [])
 		// s9e\TextFormatter namespace so we need to add a use statement for Tag
 		if (strpos($old, 'use s9e\TextFormatter\Parser\Tag;') === false)
 		{
-			$old = str_replace("\n\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
+			$old = str_replace("\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
 		}
 
 		// Add a use statement for InvalidArgumentException that is used in PluginsHandling
