@@ -16,9 +16,10 @@ done
 
 for version in 5.5 5.4 5.3;
 do
-	branch="tmp-$version"
-	git branch -D $branch 2> /dev/null
-	git checkout -b $branch master 2> /dev/null
+	tmp="tmp-$version"
+	rel="release/php$version"
+	git branch -D "$tmp" 2> /dev/null
+	git checkout -b "$tmp" master 2> /dev/null
 
 	for file in $ignore;
 	do
@@ -38,8 +39,8 @@ do
 	php scripts/build/optimizeSources.php
 
 	git commit -aq --no-verify -m"$msg"
-	git checkout "release/php$version"
-	git merge -Xtheirs -m"$msg" $branch
+	git show-branch "$rel" && git checkout "$rel" || git checkout -b "$rel" "$tmp"
+	git merge -Xtheirs -m"$msg" "$tmp"
 done
 
 git checkout master
