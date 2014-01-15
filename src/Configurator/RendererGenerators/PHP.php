@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
-use DOMDocument;
 use DOMNode;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
