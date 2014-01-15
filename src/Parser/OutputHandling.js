@@ -18,7 +18,6 @@ var output;
 */
 var wsPos;
 
-// TODO: replace/merge?
 function htmlspecialchars_compat(str)
 {
 	var t = {

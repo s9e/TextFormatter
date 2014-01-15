@@ -14,7 +14,6 @@ matches.forEach(function(m)
 		// properties, so we try to cover the most common usage
 		url = url.replace(/[\s!"',.<>?]+$/, '');
 
-		// TODO: url.substr(url.length - 1) for IE7
 		if (url.substr(-1) === ')'
 		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{

@@ -146,7 +146,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
-		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
 		$regexpOptions = [
 			'caseInsensitive' => true,
 			'specialChars'    => [

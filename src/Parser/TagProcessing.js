@@ -171,7 +171,6 @@ function processCurrentTag()
 		// Test whether this tag is paired with a start tag and this tag is still open
 		var startTag = currentTag.getStartTag();
 
-		// TODO: IE support?
 		if (startTag && openTags.indexOf(startTag) >= 0)
 		{
 			// Create an end tag that matches current tag's start tag, which consumes as much of
