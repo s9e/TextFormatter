@@ -266,11 +266,11 @@ class PHP implements RendererGenerator
 
 		if ($hasApplyTemplatesSelect)
 		{
-			$php[] = '	protected function at($root, $xpath = null)';
+			$php[] = '	protected function at(\\DOMNode $root, $xpath = null)';
 		}
 		else
 		{
-			$php[] = '	protected function at($root)';
+			$php[] = '	protected function at(\\DOMNode $root)';
 		}
 
 		$php[] = '	{';

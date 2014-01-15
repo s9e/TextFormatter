@@ -27,7 +27,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		unset($this->xpath);
 		return $this->out;
 	}
-	protected function at($root)
+	protected function at(\DOMNode $root)
 	{
 		if ($root->nodeType === 3)
 			$this->out .= htmlspecialchars($root->textContent,0);
