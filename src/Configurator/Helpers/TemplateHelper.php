@@ -15,10 +15,8 @@ use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Exceptions\InvalidTemplateException;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class TemplateHelper
 {

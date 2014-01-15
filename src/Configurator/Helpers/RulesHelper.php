@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class RulesHelper
 {

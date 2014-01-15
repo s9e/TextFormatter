@@ -8,13 +8,10 @@
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use Exception;
-use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class Regexp extends AttributeFilter
 {

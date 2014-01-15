@@ -9,13 +9,11 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use ArrayAccess;
 use Countable;
-use DOMDocument;
 use InvalidArgumentException;
 use Iterator;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;

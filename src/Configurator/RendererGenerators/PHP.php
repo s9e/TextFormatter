@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
 use DOMNode;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;

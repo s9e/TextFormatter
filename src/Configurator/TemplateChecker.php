@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator;
 
 use ArrayAccess;
-use DOMDocument;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;

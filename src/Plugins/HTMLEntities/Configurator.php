@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\HTMLEntities;
 
-use InvalidArgumentException;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase

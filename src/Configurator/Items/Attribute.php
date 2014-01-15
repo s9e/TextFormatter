@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
-use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterChain;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;

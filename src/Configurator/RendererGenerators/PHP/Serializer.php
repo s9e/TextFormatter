@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 use DOMNode;
-use DOMText;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;

@@ -8,9 +8,7 @@
 namespace s9e\TextFormatter\Configurator;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
-use s9e\TextFormatter\Parser;
 
 class BundleGenerator
 {

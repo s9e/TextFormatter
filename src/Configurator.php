@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter;
 
 use InvalidArgumentException;
-use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\BundleGenerator;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
@@ -18,7 +17,6 @@ use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Configurator\RulesGenerator;

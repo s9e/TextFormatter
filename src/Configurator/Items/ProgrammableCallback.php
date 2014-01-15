@@ -12,7 +12,6 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
-use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class ProgrammableCallback implements ConfigProvider
 {

@@ -10,7 +10,6 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
-use DOMText;
 use DOMXPath;
 use RuntimeException;
 

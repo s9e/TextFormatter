@@ -7,8 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
 
-use ArrayObject;
-
 class RegExp
 {
 	/**

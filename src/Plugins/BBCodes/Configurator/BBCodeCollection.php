@@ -7,9 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
-use Exception;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
-use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 

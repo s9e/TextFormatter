@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\Escaper;
 
-use DOMDocument;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase

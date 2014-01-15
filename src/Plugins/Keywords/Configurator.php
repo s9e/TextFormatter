@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\Keywords;
 
-use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedList;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;

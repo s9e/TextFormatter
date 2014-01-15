@@ -20,8 +20,6 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
-use s9e\TextFormatter\Configurator\Traits\Configurable;
-use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class JavaScript
 {

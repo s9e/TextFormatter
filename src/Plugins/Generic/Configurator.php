@@ -14,7 +14,6 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;

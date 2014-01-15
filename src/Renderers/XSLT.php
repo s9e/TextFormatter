@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Renderers;
 
-use DOMDocument;
 use XSLTProcessor;
 use s9e\TextFormatter\Renderer;
 

@@ -7,8 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\Traits;
 
-use InvalidArgumentException;
-
 /**
 * Allows an object to act as a proxy for a NormalizedCollection stored in $this->collection
 */
