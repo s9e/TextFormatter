@@ -89,29 +89,29 @@ class Serializer
 	{
 		$expr = trim($expr);
 
-		// <xsl:if test="@foo">
-		// if ($node->hasAttribute('foo'))
+		// XSL: <xsl:if test="@foo">
+		// PHP: if ($node->hasAttribute('foo'))
 		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			return '$node->hasAttribute(' . var_export($m[1], true) . ')';
 		}
 
-		// <xsl:if test="not(@foo)">
-		// if (!$node->hasAttribute('foo'))
+		// XSL: <xsl:if test="not(@foo)">
+		// PHP: if (!$node->hasAttribute('foo'))
 		if (preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
 		{
 			return '!$node->hasAttribute(' . var_export($m[1], true) . ')';
 		}
 
-		// <xsl:if test="$foo">
-		// if (!empty($this->params['foo']))
+		// XSL: <xsl:if test="$foo">
+		// PHP: if (!empty($this->params['foo']))
 		if (preg_match('#^\\$(\\w+)$#', $expr, $m))
 		{
 			return '!empty($this->params[' . var_export($m[1], true) . '])';
 		}
 
-		// <xsl:if test="not($foo)">
-		// if (empty($this->params['foo']))
+		// XSL: <xsl:if test="not($foo)">
+		// PHP: if (empty($this->params['foo']))
 		if (preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
 		{
 			return 'empty($this->params[' . var_export($m[1], true) . '])';
@@ -121,13 +121,13 @@ class Serializer
 		// function call, we wrap it inside of a boolean() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
 		{
-			// <xsl:if test="parent::foo">
-			// if ($this->xpath->evaluate("boolean(parent::foo)",$node))
+			// XSL: <xsl:if test="parent::foo">
+			// PHP: if ($this->xpath->evaluate("boolean(parent::foo)",$node))
 			$expr = 'boolean(' . $expr . ')';
 		}
 
-		// <xsl:if test="@foo='bar'">
-		// if ($this->xpath->evaluate("@foo='bar'",$node))
+		// XSL: <xsl:if test="@foo='bar'">
+		// PHP: if ($this->xpath->evaluate("@foo='bar'",$node))
 		return $this->convertXPath($expr);
 	}
 
@@ -235,56 +235,56 @@ class Serializer
 		{
 			if (!empty($m['attrName']))
 			{
-				// <xsl:value-of select="@foo"/>
-				// $this->out .= $node->getAttribute('foo');
+				// XSL: <xsl:value-of select="@foo"/>
+				// PHP: $this->out .= $node->getAttribute('foo');
 				return '$node->getAttribute(' . var_export($m['attrName'], true) . ')';
 			}
 
-			// <xsl:value-of select="."/>
-			// $this->out .= $node->textContent;
+			// XSL: <xsl:value-of select="."/>
+			// PHP: $this->out .= $node->textContent;
 			if (!empty($m['dot']))
 			{
 				return '$node->textContent';
 			}
 
-			// <xsl:value-of select="$foo"/>
-			// $this->out .= $this->params['foo'];
+			// XSL: <xsl:value-of select="$foo"/>
+			// PHP: $this->out .= $this->params['foo'];
 			if (!empty($m['paramName']))
 			{
 				return '$this->params[' . var_export($m['paramName'], true) . ']';
 			}
 
-			// <xsl:value-of select="'foo'"/>
-			// <xsl:value-of select='"foo"'/>
-			// $this->out .= 'foo';
+			// XSL: <xsl:value-of select="'foo'"/>
+			// XSL: <xsl:value-of select='"foo"'/>
+			// PHP: $this->out .= 'foo';
 			if (!empty($m['string']))
 			{
 				return var_export(substr($m['string'], 1, -1), true);
 			}
 
-			// <xsl:value-of select="local-name()"/>
-			// $this->out .= $node->localName;
+			// XSL: <xsl:value-of select="local-name()"/>
+			// PHP: $this->out .= $node->localName;
 			if (!empty($m['lname']))
 			{
 				return '$node->localName';
 			}
 
-			// <xsl:value-of select="name()"/>
-			// $this->out .= $node->nodeName;
+			// XSL: <xsl:value-of select="name()"/>
+			// PHP: $this->out .= $node->nodeName;
 			if (!empty($m['name']))
 			{
 				return '$node->nodeName';
 			}
 
-			// <xsl:value-of select="3"/>
-			// $this->out .= '3';
+			// XSL: <xsl:value-of select="3"/>
+			// PHP: $this->out .= '3';
 			if (!empty($m['number']))
 			{
 				return "'" . $expr . "'";
 			}
 
-			// <xsl:value-of select="string-length(@foo)"/>
-			// $this->out .= mb_strlen($node->getAttribute('foo'),'utf-8');
+			// XSL: <xsl:value-of select="string-length(@foo)"/>
+			// PHP: $this->out .= mb_strlen($node->getAttribute('foo'),'utf-8');
 			if (!empty($m['strlen']) && $this->useMultibyteStringFunctions)
 			{
 				if (!isset($m['strlen0']))
@@ -295,8 +295,8 @@ class Serializer
 				return 'mb_strlen(' . $this->convertXPath($m['strlen0']) . ",'utf-8')";
 			}
 
-			// <xsl:value-of select="substring(@foo, 1, 2)"/>
-			// $this->out .= mb_substring($node->getAttribute('foo'),0,2,'utf-8');
+			// XSL: <xsl:value-of select="substring(@foo, 1, 2)"/>
+			// PHP: $this->out .= mb_substring($node->getAttribute('foo'),0,2,'utf-8');
 			//
 			// NOTE: negative values for the second argument do not produce the same result as
 			//       specified in XPath if the argument is not a literal number
