@@ -148,8 +148,9 @@ class Parser extends ParserBase
 				             ->setAttribute('url', self::decode($m[2][0], $hasEscapedChars));
 			}
 
-			// Overwrite the markup
-			self::overwrite($text, $matchPos, $matchLen);
+			// Overwrite the markup without touching the link's text
+			self::overwrite($text, $startTagPos, $startTagLen);
+			self::overwrite($text, $endTagPos,   $endTagLen);
 		}
 
 		// Strikethrough

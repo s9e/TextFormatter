@@ -135,8 +135,9 @@ if (text.indexOf('[') > -1)
 			.setAttribute('url', decode(m[2], hasEscapedChars));
 	}
 
-	// Overwrite the markup
-	overwrite(matchPos, matchLen);
+	// Overwrite the markup without touching the link's text
+	overwrite(startTagPos, startTagLen);
+	overwrite(endTagPos,   endTagLen);
 }
 
 // Strikethrough

@@ -38,6 +38,10 @@ class ParserTest extends Test
 				'Go to [\\[x\\[x\\]x\\]](http://example.org/?foo[]=1&bar\\[\\]=1) now!',
 				'<r><p>Go to <URL url="http://example.org/?foo%5B%5D=1&amp;bar%5B%5D=1"><s>[</s>\\[x\\[x\\]x\\]<e>](http://example.org/?foo[]=1&amp;bar\\[\\]=1)</e></URL> now!</p></r>'
 			],
+			[
+				'Check out my [~~lame~~ cool site](http://example.org) now!',
+				'<r><p>Check out my <URL url="http://example.org"><s>[</s><DEL><s>~~</s>lame<e>~~</e></DEL> cool site<e>](http://example.org)</e></URL> now!</p></r>'
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
