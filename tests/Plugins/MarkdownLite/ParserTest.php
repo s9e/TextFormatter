@@ -77,7 +77,7 @@ class ParserTest extends Test
 				'.. `![foo](http://example.org)` ..',
 				'<r><p>.. <C><s>`</s>![foo](http://example.org)<e>`</e></C> ..</p></r>'
 			],
-			//Strikethrough
+			// Strikethrough
 			[
 				'.. ~~foo~~ ~~bar~~ ..',
 				'<r><p>.. <DEL><s>~~</s>foo<e>~~</e></DEL> <DEL><s>~~</s>bar<e>~~</e></DEL> ..</p></r>'

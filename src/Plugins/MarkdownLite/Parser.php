@@ -16,13 +16,12 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$unescape = false;
+		$hasEscapedChars = (strpos($text, '\\') !== false && preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text));
 
 		// Encode escaped literals that have a special meaning otherwise, so that we don't have to
 		// take them into account in regexps
-		if (strpos($text, '\\') !== false && preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
+		if ($hasEscapedChars)
 		{
-			$unescape = true;
 			$text = strtr(
 				$text,
 				[
@@ -112,12 +111,12 @@ class Parser extends ParserBase
 				$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
 				$startTag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-				$startTag->setAttribute('alt', self::decode($m[1][0], $unescape));
-				$startTag->setAttribute('src', self::decode($m[2][0], $unescape));
+				$startTag->setAttribute('alt', self::decode($m[1][0], $hasEscapedChars));
+				$startTag->setAttribute('src', self::decode($m[2][0], $hasEscapedChars));
 
 				if (isset($m[3]))
 				{
-					$startTag->setAttribute('title', self::decode($m[3][0], $unescape));
+					$startTag->setAttribute('title', self::decode($m[3][0], $hasEscapedChars));
 				}
 
 				// Overwrite the markup
@@ -146,7 +145,7 @@ class Parser extends ParserBase
 				$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
 				$this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen)
-				             ->setAttribute('url', self::decode($m[2][0], $unescape));
+				             ->setAttribute('url', self::decode($m[2][0], $hasEscapedChars));
 			}
 
 			// Overwrite the markup

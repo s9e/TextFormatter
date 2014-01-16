@@ -43,13 +43,12 @@ function overwrite(pos, len)
 	text = text.substr(0, pos) + new Array(1 + len).join("\x1A") + text.substr(pos + len);
 }
 
-var unescape = false;
+var hasEscapedChars = (text.indexOf('\\') > -1);
 
 // Encode escaped literals that have a special meaning otherwise, so that we don't have to
 // take them into account in regexps
-if (text.indexOf('\\') > -1)
+if (hasEscapedChars)
 {
-	unescape = true;
 	text = text.replace(
 		/\\[!")*[\\\]^_`~]/g,
 		function (str)
@@ -104,12 +103,12 @@ if (text.indexOf('![') > -1)
 		endTagLen   = matchLen - startTagLen - contentLen;
 
 		startTag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		startTag.setAttribute('alt', decode(m[1], unescape));
-		startTag.setAttribute('src', decode(m[2], unescape));
+		startTag.setAttribute('alt', decode(m[1], hasEscapedChars));
+		startTag.setAttribute('src', decode(m[2], hasEscapedChars));
 
 		if (m[3] > '')
 		{
-			startTag.setAttribute('title', decode(m[3], unescape));
+			startTag.setAttribute('title', decode(m[3], hasEscapedChars));
 		}
 
 		// Overwrite the markup
@@ -133,7 +132,7 @@ if (text.indexOf('[') > -1)
 		endTagLen   = matchLen - startTagLen - contentLen;
 
 		addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen)
-			.setAttribute('url', decode(m[2], unescape));
+			.setAttribute('url', decode(m[2], hasEscapedChars));
 	}
 
 	// Overwrite the markup
