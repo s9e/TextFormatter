@@ -2192,13 +2192,13 @@ s9e\TextFormatter\Tests\Plugins\Keywords\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 
-s9e\TextFormatter\Tests\Plugins\MarkdownLite\Configurator
+s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
  [x] Turns on automatic paragraph management
  [x] Automatically creates a "URL" tag
  [x] Does not overwrite the "URL" tag if it already exists
  [x] asConfig() returns an array
 
-s9e\TextFormatter\Tests\Plugins\MarkdownLite\Parser
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 

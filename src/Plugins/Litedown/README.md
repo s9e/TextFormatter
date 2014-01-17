@@ -14,7 +14,7 @@ This plugin implements a Markdown-like syntax, inspired by modern flavors of Mar
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->plugins->load('MarkdownLite');
+$configurator->plugins->load('Litedown');
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

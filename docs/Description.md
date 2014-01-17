@@ -243,4 +243,4 @@
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
 
 * Upcoming plugins
-	* MarkdownLite, a Markdown-like syntax
+	* Litedown, a Markdown-like syntax
