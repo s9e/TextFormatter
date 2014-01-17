@@ -17,9 +17,14 @@
 
 * PHP 5.3.3 or later (see [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md))
 * [ext/dom](http://docs.php.net/manual/en/book.dom.php)
-* [ext/filter](http://docs.php.net/manual/en/book.filter.php)
-* [ext/pcre](http://docs.php.net/manual/en/book.pcre.php) with Unicode support
-* [ext/xsl](http://docs.php.net/manual/en/book.xsl.php) recommended
+* [ext/filter](http://docs.php.net/manual/en/book.filter.php) unless you implement your own validation
+* Optional
+   * [ext/intl](http://docs.php.net/manual/en/book.intl.php) for allowing international domain names
+   * [ext/json](http://docs.php.net/manual/en/book.json.php) for generating the JavaScript parser
+   * [ext/mbstring](http://docs.php.net/manual/en/book.mbstring.php) enables some optimizations in the PHP renderer
+   * [ext/tokenizer](http://docs.php.net/manual/en/book.tokenizer.php) enables most optimizations in the PHP renderer
+   * [ext/xsl](http://docs.php.net/manual/en/book.xsl.php) enables the XSL renderer
+   * [ext/zlib](http://docs.php.net/manual/en/book.zlib.php) enables gzip compression when scraping content
 
 ## General features
 
@@ -58,8 +63,8 @@
 	* You can control the maximum number of times a given tag can be used, or how many times they can be nested into each other (limit set at the tag level)
 
 		```php
-		$configurator->tags['QUOTE']->setNestingLimit(3);
-		$configurator->tags['URL']->setTagLimit(1);
+		$configurator->tags['QUOTE']->nestingLimit = 3;
+		$configurator->tags['URL']->tagLimit = 1;
 		```
 
 	* Tag filters can alter a tag at parsing time and determine whether to invalidate it
@@ -217,8 +222,9 @@
 
 * [Generic](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Generic)
 
-	* Performs regexp-based replacements
-	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html) but without the possibility of introducing XSS vectors
+	* Performs regexp-based replacements although it does *not* use `preg_replace()`
+	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html)
+	* Subject to the same filtering and validation as other plugins, meaning it offers the same protection against XSS
 
 * [HTMLElements](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLElements)
 
@@ -242,5 +248,6 @@
 	* Flexible syntax
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
 
-* Upcoming plugins
-	* Litedown, a Markdown-like syntax
+## Upcoming plugins
+
+* [Litedown](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed), a Markdown-like syntax
