@@ -38,3 +38,5 @@ TODO
 - Add hints to the PHP parser. Makes hints take the form of a bitfield, e.g. "if ($this->hints & self::HAS_ATTRIBUTE_GENERATORS)"
 - Clean up illegal UTF-8 in parse()?
 - Set DOMDocument::$recover in Renderer#loadXML()
+- Force a paragraph break when a formatting element is open and two newlines are found?
+- s9e\TextFormatter\Configurator\Helpers\RegexpBuilder::fromList(['*x', 'x'],['specialChars'=>['*'=>'[^z]+']]) should return '(?:[^z]+)?x' not '[^z]+?x'
