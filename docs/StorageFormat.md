@@ -7,18 +7,18 @@ The XML representation of a text should *not* be altered unless you *really* kno
 
 ### Plain text
 
-In the following example, we use the Forum bundle to parse a plain text and see what the XML representation looks like.
+In the following example, we use the Forum bundle to parse a plain text and see what the XML representation looks like. Nothing special here.
 
 ```php
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
-$text = 'Original, plain text.';
+$text = 'Plain & boring text.';
 $xml  = TextFormatter::parse($text);
 
 echo $xml;
 ```
 ```xml
-<t>Original, plain text.</t>
+<t>Plain &amp; boring text.</t>
 ```
 
 ### Rich text
@@ -39,7 +39,7 @@ echo $xml;
 <URL url="http://example.org">http://example.org</URL></r>
 ```
 
-In the following example, instead of the Forum bundle, we create a new configurator and load the Litedown plugin to see what link looks like when the Markdown syntax is used. We can see that links created with the Markdown syntax use the same structure as the BBCodes syntax or the Autolink links.
+In the following example, instead of the Forum bundle, we create a new configurator and load the Litedown plugin to see what links look like when the Markdown syntax is used. We can see that links created with the Markdown syntax are represented by the same structure as links created with the BBCodes syntax or the Autolink plugin.
 
 ```php
 // Create a new configurator and load the Litedown plugin
@@ -59,7 +59,7 @@ echo $xml;
 <r><p><URL url="http://example.org"><s>[</s>Go to example.org<e>](http://example.org)</e></URL></p></r>
 ```
 
-Because the XML representation of the links is the same, they are rendered the same way. Moreover, it means that a renderer originally configured for the BBCode syntax will correctly render links that use the Markdown syntax. In the following example, we create a new configurator and load the Litedown plugin. We create a new parser, parse a link using the Markdown syntax, then render the XML representation with a different renderer.
+Because the XML representation of the links is the same, they are rendered the same way. Moreover, it means that a renderer originally configured for the BBCode syntax will correctly render links that were created with the Markdown syntax. In the following example, we create a new configurator and load the Litedown plugin. We create a new parser, parse a link using the Markdown syntax, then render the XML representation with a different renderer.
 
 ```php
 // Create a new configurator and load the Litedown plugin
