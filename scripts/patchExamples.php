@@ -61,6 +61,6 @@ function patchFile($filepath)
 
 patchDir(__DIR__ . '/../src/Plugins/');
 patchDir(__DIR__ . '/../docs/Cookbook/');
-patchFile(__DIR__ . '/../docs/StorageFormat.xml');
+patchFile(__DIR__ . '/../docs/StorageFormat.md');
 
 die("Done.\n");
