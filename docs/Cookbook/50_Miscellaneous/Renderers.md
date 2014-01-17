@@ -36,7 +36,7 @@ extract($configurator->finalize());
 echo get_class($renderer);
 ```
 ```
-Renderer_8e0c73b757581b92b9486e6bf523561d40ebc3be
+Renderer_92868074523513e68664d056e7ef3f9da2edfc3f
 MyRenderer
 ```
 
