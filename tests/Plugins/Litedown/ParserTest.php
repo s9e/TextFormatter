@@ -107,6 +107,107 @@ class ParserTest extends Test
 				'.. \\^_^ ..',
 				'<t><p>.. \^_^ ..</p></t>'
 			],
+			// Emphasis
+			[
+				'xx ***x*****x** xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG><STRONG><s>**</s>x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx ***x****x* xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG><EM><s>*</s>x<e>*</e></EM> xx</p></r>'
+			],
+			[
+				'xx ***x*** xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx ***x**x* xx',
+				'<r><p>xx <EM><s>*</s><STRONG><s>**</s>x<e>**</e></STRONG>x<e>*</e></EM> xx</p></r>'
+			],
+			[
+				'xx ***x*x** xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM>x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx **x*****x*** xx',
+				'<r><p>xx <STRONG><s>**</s>x<e>**</e></STRONG><STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx **x****x** xx',
+				'<r><p>xx <STRONG><s>**</s>x<e>**</e></STRONG><STRONG><s>**</s>x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx **x***x* xx',
+				'<r><p>xx <STRONG><s>**</s>x<e>**</e></STRONG><EM><s>*</s>x<e>*</e></EM> xx</p></r>'
+			],
+			[
+				'xx **x** xx',
+				'<r><p>xx <STRONG><s>**</s>x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx **x*x** xx',
+				'<r><p>xx <STRONG><s>**</s>x*x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx *x*****x*** xx',
+				'<r><p>xx <EM><s>*</s>x<e>*</e></EM>*<STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx *x****x*** xx',
+				'<r><p>xx <EM><s>*</s>x<e>*</e></EM><STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx *x**x* xx',
+				'<r><p>xx <EM><s>*</s>x**x<e>*</e></EM> xx</p></r>'
+			],
+			[
+				'xx *x* xx',
+				'<r><p>xx <EM><s>*</s>x<e>*</e></EM> xx</p></r>'
+			],
+			[
+				'xx *x**x*x** xx',
+				'<r><p>xx <EM><s>*</s>x<STRONG><s>**</s>x</STRONG><e>*</e></EM><STRONG>x<e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx _x_ xx',
+				'<r><p>xx <EM><s>_</s>x<e>_</e></EM> xx</p></r>'
+			],
+			[
+				'xx __x__ xx',
+				'<r><p>xx <STRONG><s>__</s>x<e>__</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx foo_bar_baz xx',
+				'<t><p>xx foo_bar_baz xx</p></t>'
+			],
+			[
+				'xx foo__bar__baz xx',
+				'<r><p>xx foo<STRONG><s>__</s>bar<e>__</e></STRONG>baz xx</p></r>'
+			],
+			[
+				'x _foo_',
+				'<r><p>x <EM><s>_</s>foo<e>_</e></EM></p></r>'
+			],
+			[
+				'_foo_ x',
+				'<r><p><EM><s>_</s>foo<e>_</e></EM> x</p></r>'
+			],
+			[
+				'_foo_',
+				'<r><p><EM><s>_</s>foo<e>_</e></EM></p></r>'
+			],
+			[
+				'xx ***x******x*** xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG><STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx ***x*******x*** xx',
+				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG>*<STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx *****x***** xx',
+				'<r><p>xx **<STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG>** xx</p></r>'
+			],
 		];
 
 		foreach ($tests as &$test)

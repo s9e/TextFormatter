@@ -201,7 +201,144 @@ class Parser extends ParserBase
 			}
 		}
 
-		// TODO: ***x**y* and **_k**_
+		// Emphasis
+		foreach (['*' => '/\\*+/', '_' => '/_+/'] as $c => $regexp)
+		{
+			if (strpos($text, $c) === false)
+			{
+				continue;
+			}
+
+			$buffered = 0;
+			$breakPos = strpos($text, "\x17");
+
+			preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
+			foreach ($matches[0] as list($match, $matchPos))
+			{
+				$matchLen = strlen($match);
+
+				// Test whether we've just passed the limits of a block
+				if ($breakPos !== false && $matchPos > $breakPos)
+				{
+					// Reset the buffer then look for the next break
+					$buffered = 0;
+					$breakPos = strpos($text, "\x17", $matchPos);
+				}
+
+				if ($matchLen >= 3)
+				{
+					// Number of characters left unconsumed
+					$remaining = $matchLen;
+
+					if ($buffered < 3)
+					{
+						$strongEndPos = $emEndPos = $matchPos;
+					}
+					else
+					{
+						// If the buffer holds three consecutive characters and the order of strong
+						// and em is not defined we push em inside of strong
+						if ($strongPos === $emPos)
+						{
+							$emPos += 2;
+						}
+
+						// Determine the order of the end of strong and em
+						if ($strongPos < $emPos)
+						{
+							$strongEndPos = $matchPos + 1;
+							$emEndPos     = $matchPos;
+						}
+						else
+						{
+							$strongEndPos = $matchPos;
+							$emEndPos     = $matchPos + 2;
+						}
+					}
+
+					// 2 or 3 means a strong is buffered
+					// Strong uses the outer characters
+					if ($buffered & 2)
+					{
+						$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+						$remaining -= 2;
+					}
+
+					// 1 or 3 means an em is buffered
+					// Em uses the inner characters
+					if ($buffered & 1)
+					{
+						$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+						--$remaining;
+					}
+
+					if (!$remaining)
+					{
+						$buffered = 0;
+					}
+					else
+					{
+						$buffered = min($remaining, 3);
+
+						if ($buffered & 1)
+						{
+							$emPos = $matchPos + $matchLen - $buffered; 
+						}
+
+						if ($buffered & 2)
+						{
+							$strongPos = $matchPos + $matchLen - $buffered; 
+						}
+					}
+				}
+				elseif ($matchLen === 2)
+				{
+					if ($buffered === 3 && $strongPos === $emPos)
+					{
+						$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
+						$buffered = 1;
+					}
+					elseif ($buffered & 2)
+					{
+						$this->parser->addTagPair('STRONG', $strongPos, 2, $matchPos, 2);
+						$buffered -= 2;
+					}
+					else
+					{
+						$buffered += 2;
+						$strongPos = $matchPos;
+					}
+				}
+				else
+				{
+					// Ignore single underscores when they are between alphanumeric ASCII chars
+					if ($c === '_'
+					 && $matchPos > 0
+					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos - 1]) > 0
+					 && $matchPos < strlen($text) - 1
+					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos + 1]) > 0)
+					{
+						 continue;
+					}
+
+					if ($buffered === 3 && $strongPos === $emPos)
+					{
+						$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
+						$buffered = 2;
+					}
+					elseif ($buffered & 1)
+					{
+						$this->parser->addTagPair('EM', $emPos, 1, $matchPos, 1);
+						--$buffered;
+					}
+					else
+					{
+						++$buffered;
+						$emPos = $matchPos;
+					}
+				}
+			}
+		}
 	}
 
 	/**
