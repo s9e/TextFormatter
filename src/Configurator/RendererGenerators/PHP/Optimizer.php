@@ -121,7 +121,7 @@ class Optimizer
 					{
 						// Test whether we should avoid removing the braces because it's followed by
 						// an else/elseif that would become part of an inner if/elseif
-						if ($context['preventElse'] && $i < $cnt + 3)
+						if ($context['preventElse'] && $i < $cnt - 3)
 						{
 							// Compute the index of the next non-whitespace token
 							$j = $i + 1;

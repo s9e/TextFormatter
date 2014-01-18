@@ -218,6 +218,10 @@ class OptimizerTest extends Test
 					*/
 					foo();'
 			],
+			[
+				'if (1) {} else { if (2) { a(); b(); } c(); }',
+				'if (1); else { if (2) { a(); b(); } c(); }'
+			],
 		];
 	}
 }
