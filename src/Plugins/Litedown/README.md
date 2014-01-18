@@ -32,5 +32,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<p><a href="http://example.org">inline url text</a></p>
+<p><a href="http://example.org">Link text</a></p>
 ```
