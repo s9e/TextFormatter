@@ -177,23 +177,25 @@ if (text.indexOf('^') > -1)
 			}
 			else
 			{
-				// If the buffer holds three consecutive characters and the order of strong
-				// and em is not defined we push em inside of strong
-				if (strongPos === emPos)
+				// Determine the order of strong's and em's end tags
+				if (emPos < strongPos)
 				{
-					emPos += 2;
-				}
-
-				// Determine the order of the end of strong and em
-				if (strongPos < emPos)
-				{
-					strongEndPos = matchPos + 1;
-					emEndPos     = matchPos;
+					// If em starts before strong, it must end after it
+					strongEndPos = matchPos;
+					emEndPos     = matchPos + 2;
 				}
 				else
 				{
-					strongEndPos = matchPos;
-					emEndPos     = matchPos + 2;
+					// Make strong end after em
+					strongEndPos = matchPos + 1;
+					emEndPos     = matchPos;
+
+					// If the buffer holds three consecutive characters and the order of
+					// strong and em is not defined we push em inside of strong
+					if (strongPos === emPos)
+					{
+						emPos += 2;
+					}
 				}
 			}
 

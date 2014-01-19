@@ -208,6 +208,14 @@ class ParserTest extends Test
 				'xx *****x***** xx',
 				'<r><p>xx **<STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG>** xx</p></r>'
 			],
+			[
+				'xx **x*x*** xx',
+				'<r><p>xx <STRONG><s>**</s>x<EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
+			],
+			[
+				'xx *x**x*** xx',
+				'<r><p>xx <EM><s>*</s>x<STRONG><s>**</s>x<e>**</e></STRONG><e>*</e></EM> xx</p></r>'
+			],
 		];
 
 		foreach ($tests as &$test)
