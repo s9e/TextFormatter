@@ -165,13 +165,33 @@
 	<site id="espn">
 		<name>ESPN</name>
 		<homepage>http://espn.go.com/</homepage>
-		<example>http://espn.go.com/video/clip?id=espn:9895232</example>
+		<example>http://espn.go.com/video/clip?id=10315344</example>
+		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=deportes:2001302</example>
 
-		<host>go.com</host>
-		<extract>!espn\.go\.com/video/clip\?id=(?'id'[:\w]+)!</extract>
-		<template><![CDATA[
-			<script src="http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId={@id}&amp;thruParam_espn-ui%5BautoPlay%5D=false&amp;thruParam_espn-ui%5BplayRelatedExternally%5D=true"></script>
-		]]></template>
+		<host>espn.go.com</host>
+		<extract>#\?id=(?'cms'deportes|espn):(?'id'\d+)#</extract>
+		<extract>#\?id=(?'id'\d+)#</extract>
+		<extract>#(?'cms'deportes|espn(?!d))#</extract>
+		<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
+		<x-template><![CDATA[
+			<script>
+				<xsl:attribute name="src">
+					<xsl:text>http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@cms='deportes'">
+							<xsl:text>c36b9d45d5a34800944308541b5f32e0</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text>&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId=</xsl:text>
+					<xsl:if test="@cms"><xsl:value-of select="@cms"/>:</xsl:if>
+					<xsl:value-of select="@id"/>
+					<xsl:text>&amp;thruParam_espn-ui%5BautoPlay%5D=false&amp;thruParam_espn-ui%5BplayRelatedExternally%5D=true</xsl:text>
+				</xsl:attribute>
+			</script>
+		]]></x-template>
 	</site>
 
 	<site id="facebook">

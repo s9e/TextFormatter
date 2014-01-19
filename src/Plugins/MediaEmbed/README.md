@@ -143,7 +143,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>espn</code></td>
 		<td>ESPN</td>
-		<td>http://espn.go.com/video/clip?id=espn:9895232</td>
+		<td>http://espn.go.com/video/clip?id=10315344<br/>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=deportes:2001302</td>
 	</tr>
 	<tr>
 		<td><code>facebook</code></td>

@@ -908,8 +908,17 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://espn.go.com/video/clip?id=espn:9895232',
-				'<r><ESPN id="espn:9895232" url="http://espn.go.com/video/clip?id=espn:9895232">http://espn.go.com/video/clip?id=espn:9895232</ESPN></r>',
+				'http://espn.go.com/video/clip?id=10315344',
+				'<r><ESPN cms="espn" id="10315344" url="http://espn.go.com/video/clip?id=10315344">http://espn.go.com/video/clip?id=10315344</ESPN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
+				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
+				'<r><ESPN cms="deportes" id="2002850" url="http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850">http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1474,8 +1483,17 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://espn.go.com/video/clip?id=espn:9895232',
-				'<script src="http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId=espn:9895232&amp;thruParam_espn-ui%5BautoPlay%5D=false&amp;thruParam_espn-ui%5BplayRelatedExternally%5D=true"></script>',
+				'http://espn.go.com/video/clip?id=10315344',
+				'<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms=espn&amp;id=10315344" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
+				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
+				'<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms=deportes&amp;id=2002850" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
