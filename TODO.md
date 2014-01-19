@@ -41,3 +41,4 @@ TODO
 - Force a paragraph break when a formatting element is open and two newlines are found?
 - s9e\TextFormatter\Configurator\Helpers\RegexpBuilder::fromList(['*x', 'x'],['specialChars'=>['*'=>'[^z]+']]) should return '(?:[^z]+)?x' not '[^z]+?x'
 - PHP renderer optimizer: replace "else if" with "elseif". Must be applied during or after optimizeControlStructures()
+- Consider adding a whitelist to Censor
