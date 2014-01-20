@@ -90,6 +90,7 @@ class Optimizer
 			'index'       => -1,
 			'parent'      => [],
 			'preventElse' => false,
+			'savedIndex'  => 0,
 			'statements'  => 0
 		];
 
@@ -100,6 +101,119 @@ class Optimizer
 
 		while (++$i < $cnt)
 		{
+			if ($tokens[$i] === ';')
+			{
+				++$context['statements'];
+
+				continue;
+			}
+
+			if ($tokens[$i] === '{')
+			{
+				++$braces;
+
+				continue;
+			}
+
+			if ($tokens[$i] === '}')
+			{
+				if ($context['braces'] === $braces)
+				{
+					// Test whether we should avoid removing the braces because it's followed by
+					// an else/elseif that would become part of an inner if/elseif
+					if ($context['preventElse'] && $i < $cnt - 3)
+					{
+						// Compute the index of the next non-whitespace token
+						$j = $i + 1;
+
+						if ($tokens[$j][0] === T_WHITESPACE)
+						{
+							++$j;
+						}
+
+						if ($tokens[$j][0] === T_ELSE
+						 || $tokens[$j][0] === T_ELSEIF)
+						{
+							// Bump the number of statements to prevent the braces from being
+							// removed
+							$context['statements'] = 2;
+						}
+					}
+
+					if ($context['statements'] < 2)
+					{
+						// Replace the first brace with the saved replacement
+						$tokens[$context['index']] = $context['replacement'];
+
+						// Remove the second brace or replace it with a semicolon if there are
+						// no statements in this block
+						$tokens[$i] = ($context['statements']) ? [T_WHITESPACE, ''] : ';';
+
+						// Remove the whitespace before braces. This is mainly cosmetic
+						foreach ([$context['index'] - 1, $i - 1] as $tokenIndex)
+						{
+							if ($tokens[$tokenIndex][0] === T_WHITESPACE)
+							{
+								$tokens[$tokenIndex][1] = '';
+							}
+						}
+
+						// Test whether the current block followed an else statement then test
+						// whether this else was followed by an if
+						if ($tokens[$context['savedIndex']][0] === T_ELSE)
+						{
+							$j = 1 + $context['savedIndex'];
+
+							while ($tokens[$j][0] === T_WHITESPACE
+							    || $tokens[$j][0] === T_COMMENT
+							    || $tokens[$j][0] === T_DOC_COMMENT )
+							{
+								++$j;
+							}
+
+							if ($tokens[$j][0] === T_IF)
+							{
+								// Replace if with elseif
+								$tokens[$j][0] = T_ELSEIF;
+								$tokens[$j][1] = 'elseif';
+
+								// Remove the original else
+								$j = $context['savedIndex'];
+								$tokens[$j] = [T_WHITESPACE, ''];
+
+								// Remove the whitespace before the original else
+								if ($tokens[$j - 1][0] === T_WHITESPACE)
+								{
+									$tokens[$j - 1][1] = '';
+								}
+
+								// Unindent what was the else's content
+								while (++$j < $i)
+								{
+									if ($tokens[$j][0] === T_WHITESPACE
+									 || $tokens[$j][0] === T_DOC_COMMENT)
+									{
+										$tokens[$j][1] = preg_replace("/^\t/m", '', $tokens[$j][1]);
+									}
+								}
+							}
+						}
+
+						$rebuild = true;
+					}
+
+					$context = $context['parent'];
+
+					// Propagate the "preventElse" property upwards to handle multiple nested
+					// if statements
+					$context['parent']['preventElse'] = $context['preventElse'];
+				}
+
+				--$braces;
+
+				continue;
+			}
+
 			if ($tokens[$i][0] !== T_ELSE
 			 && $tokens[$i][0] !== T_ELSEIF
 			 && $tokens[$i][0] !== T_FOR
@@ -107,71 +221,6 @@ class Optimizer
 			 && $tokens[$i][0] !== T_IF
 			 && $tokens[$i][0] !== T_WHILE)
 			{
-				if ($tokens[$i] === ';')
-				{
-					++$context['statements'];
-				}
-				elseif ($tokens[$i] === '{')
-				{
-					++$braces;
-				}
-				elseif ($tokens[$i] === '}')
-				{
-					if ($context['braces'] === $braces)
-					{
-						// Test whether we should avoid removing the braces because it's followed by
-						// an else/elseif that would become part of an inner if/elseif
-						if ($context['preventElse'] && $i < $cnt - 3)
-						{
-							// Compute the index of the next non-whitespace token
-							$j = $i + 1;
-
-							if ($tokens[$j][0] === T_WHITESPACE)
-							{
-								++$j;
-							}
-
-							if ($tokens[$j][0] === T_ELSE
-							 || $tokens[$j][0] === T_ELSEIF)
-							{
-								// Bump the number of statements to prevent the braces from being
-								// removed
-								$context['statements'] = 2;
-							}
-						}
-
-						if ($context['statements'] < 2)
-						{
-							// Replace the first brace with the saved replacement
-							$tokens[$context['index']] = $context['replacement'];
-
-							// Remove the second brace or replace it with a semicolon if there are
-							// no statements in this block
-							$tokens[$i] = ($context['statements']) ? '' : ';';
-
-							// Remove the whitespace before braces. This is mainly cosmetic
-							foreach ([$context['index'] - 1, $i - 1] as $tokenIndex)
-							{
-								if (is_array($tokens[$tokenIndex])
-								 && $tokens[$tokenIndex][0] === T_WHITESPACE)
-								{
-									unset($tokens[$tokenIndex]);
-								}
-							}
-
-							$rebuild = true;
-						}
-
-						$context = $context['parent'];
-
-						// Propagate the "preventElse" property upwards to handle multiple nested
-						// if statements
-						$context['parent']['preventElse'] = $context['preventElse'];
-					}
-
-					--$braces;
-				}
-
 				continue;
 			}
 
@@ -220,7 +269,7 @@ class Optimizer
 				++$braces;
 
 				// Replacement for the first brace
-				$replacement = '';
+				$replacement = [T_WHITESPACE, ''];
 
 				// Add a space after "else" if the brace is removed and it's not followed by
 				// whitespace or a variable
@@ -228,7 +277,7 @@ class Optimizer
 				 && $tokens[$i + 1][0]      !== T_VARIABLE
 				 && $tokens[$i + 1][0]      !== T_WHITESPACE)
 				{
-					$replacement = ' ';
+					$replacement = [T_WHITESPACE, ' '];
 				}
 
 				// If the new block is an if or elseif block, prevent an else statement from parent
@@ -249,6 +298,7 @@ class Optimizer
 					'parent'      => $context,
 					'preventElse' => false,
 					'replacement' => $replacement,
+					'savedIndex'  => $savedIndex,
 					'statements'  => 0
 				];
 			}

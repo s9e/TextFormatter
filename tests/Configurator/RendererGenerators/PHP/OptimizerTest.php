@@ -222,6 +222,66 @@ class OptimizerTest extends Test
 				'if (1) {} else { if (2) { a(); b(); } c(); }',
 				'if (1); else { if (2) { a(); b(); } c(); }'
 			],
+			[
+				'if (1) {} else { if (2) {} }',
+				'if (1); elseif (2);'
+			],
+			[
+				'if (1)
+				{
+					foo();
+				}
+				else
+				{
+					if (0)
+					{
+						bar();
+					}
+					else
+					{
+						bar();
+					}
+				}',
+				'if (1)
+					foo();
+				elseif (0)
+					bar();
+				else
+					bar();'
+			],
+			[
+				'if (1)
+				{
+					foo();
+				}
+				else
+				{
+					// Comment
+					if (1)
+					{
+						bar();
+					}
+					else
+					{
+						/**
+						* Line 1
+						* Line 2
+						*/
+						baz();
+					}
+				}',
+				'if (1)
+					foo();
+				// Comment
+				elseif (1)
+					bar();
+				else
+					/**
+					* Line 1
+					* Line 2
+					*/
+					baz();'
+			],
 		];
 	}
 }
