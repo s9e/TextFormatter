@@ -73,17 +73,19 @@ class Parser extends ParserBase
 		if (strpos($text, '`') !== false)
 		{
 			preg_match_all(
-				'/`[^\\x17`]++`/',
+				'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
 				$text,
 				$matches,
-				PREG_OFFSET_CAPTURE
+				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
 			);
 
-			foreach ($matches[0] as list($match, $matchPos))
+			foreach ($matches as $m)
 			{
-				$matchLen = strlen($match);
+				$matchLen = strlen($m[0][0]);
+				$matchPos = $m[0][1];
+				$tagLen   = strlen($m[1][0]);
 
-				$this->parser->addTagPair('C', $matchPos, 1, $matchPos + $matchLen - 1, 1);
+				$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
 
 				// Overwrite the markup
 				self::overwrite($text, $matchPos, $matchLen);
@@ -97,7 +99,7 @@ class Parser extends ParserBase
 				'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
 				$text,
 				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
 			);
 
 			foreach ($matches as $m)
@@ -131,7 +133,7 @@ class Parser extends ParserBase
 				'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
 				$text,
 				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
 			);
 
 			foreach ($matches as $m)

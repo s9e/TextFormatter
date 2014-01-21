@@ -70,6 +70,22 @@ class ParserTest extends Test
 				'<r><p>.. <C><s>`</s>foo<e>`</e></C> <C><s>`</s>bar<e>`</e></C> ..</p></r>'
 			],
 			[
+				'.. `foo `` bar` ..',
+				'<r><p>.. <C><s>`</s>foo `` bar<e>`</e></C> ..</p></r>'
+			],
+			[
+				'.. `foo ``` bar` ..',
+				'<r><p>.. <C><s>`</s>foo ``` bar<e>`</e></C> ..</p></r>'
+			],
+			[
+				'.. ``foo`` ``bar`` ..',
+				'<r><p>.. <C><s>``</s>foo<e>``</e></C> <C><s>``</s>bar<e>``</e></C> ..</p></r>'
+			],
+			[
+				'.. ``foo `bar` baz`` ..',
+				'<r><p>.. <C><s>``</s>foo `bar` baz<e>``</e></C> ..</p></r>'
+			],
+			[
 				'.. `foo\\` \\`b\\\\ar` ..',
 				'<r><p>.. <C><s>`</s>foo\\` \\`b\\\\ar<e>`</e></C> ..</p></r>'
 			],
@@ -80,6 +96,14 @@ class ParserTest extends Test
 			[
 				'.. `![foo](http://example.org)` ..',
 				'<r><p>.. <C><s>`</s>![foo](http://example.org)<e>`</e></C> ..</p></r>'
+			],
+			[
+				'.. `x` ..',
+				'<r><p>.. <C><s>`</s>x<e>`</e></C> ..</p></r>'
+			],
+			[
+				'.. ``x`` ..',
+				'<r><p>.. <C><s>``</s>x<e>``</e></C> ..</p></r>'
 			],
 			// Strikethrough
 			[

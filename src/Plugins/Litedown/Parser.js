@@ -1,4 +1,4 @@
-var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos,
+var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos, tagLen,
 	hasEscapedChars = (text.indexOf('\\') > -1);
 
 // Encode escaped literals that have a special meaning otherwise, so that we don't have to
@@ -29,14 +29,15 @@ if (hasEscapedChars)
 // Inline code
 if (text.indexOf('`') > -1)
 {
-	regexp = /`[^\x17`]+`/g;
+	regexp = /(``?)[^\x17]*?[^`]\1(?!`)/g;
 
 	while (m = regexp.exec(text))
 	{
 		matchPos = m['index'];
 		matchLen = m[0].length;
+		tagLen   = m[1].length;
 
-		addTagPair('C', matchPos, 1, matchPos + matchLen - 1, 1);
+		addTagPair('C', matchPos, tagLen, matchPos + matchLen - tagLen, tagLen);
 
 		// Overwrite the markup
 		overwrite(matchPos, matchLen);
