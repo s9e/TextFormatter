@@ -146,8 +146,22 @@ class Parser extends ParserBase
 				$endTagPos   = $startTagPos + $startTagLen + $contentLen;
 				$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
-				$this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen)
-				             ->setAttribute('url', self::decode($m[2][0], $hasEscapedChars));
+				// Split the URL from the title if applicable
+				$url   = $m[2][0];
+				$title = '';
+				if (preg_match('/^(.+?) "(.*?)"$/', $url, $m))
+				{
+					$url   = $m[1];
+					$title = $m[2];
+				}
+
+				$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+				$tag->setAttribute('url', self::decode($url, $hasEscapedChars));
+
+				if ($title !== '')
+				{
+					$tag->setAttribute('title', self::decode($title, $hasEscapedChars));
+				}
 			}
 
 			// Overwrite the markup without touching the link's text

@@ -1,4 +1,4 @@
-var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos, tagLen,
+var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos, tag, tagLen, title, url,
 	hasEscapedChars = (text.indexOf('\\') > -1);
 
 // Encode escaped literals that have a special meaning otherwise, so that we don't have to
@@ -88,8 +88,22 @@ if (text.indexOf('[') > -1)
 		endTagPos   = startTagPos + startTagLen + contentLen;
 		endTagLen   = matchLen - startTagLen - contentLen;
 
-		addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen)
-			.setAttribute('url', decode(m[2], hasEscapedChars));
+		// Split the URL from the title if applicable
+		url   = m[2];
+		title = '';
+		if (m = /^(.+?) "(.*?)"$/.exec(url))
+		{
+			url   = m[1];
+			title = m[2];
+		}
+
+		tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
+		tag.setAttribute('url', decode(url, hasEscapedChars));
+
+		if (title !== '')
+		{
+			tag.setAttribute('title', decode(title, hasEscapedChars));
+		}
 	}
 
 	// Overwrite the markup without touching the link's text

@@ -73,7 +73,10 @@ class Configurator extends ConfiguratorBase
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
 		'URL'    => [
 			'attributes' => [
-				'url' => [
+				'title' => [
+					'required' => false
+				],
+				'url'   => [
 					'filterChain' => ['#url']
 				]
 			],

@@ -42,6 +42,14 @@ class ParserTest extends Test
 				'Check out my [~~lame~~ cool site](http://example.org) now!',
 				'<r><p>Check out my <URL url="http://example.org"><s>[</s><DEL><s>~~</s>lame<e>~~</e></DEL> cool site<e>](http://example.org)</e></URL> now!</p></r>'
 			],
+			[
+				'This is [an example](http://example.com/ "Link title") inline link.',
+				'<r><p>This is <URL title="Link title" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ "Link title")</e></URL> inline link.</p></r>'
+			],
+			[
+				'This is [an example](http://example.com/ ""Link title"") inline link.',
+				'<r><p>This is <URL title="&quot;Link title&quot;" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ ""Link title"")</e></URL> inline link.</p></r>'
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
