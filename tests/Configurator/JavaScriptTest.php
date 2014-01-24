@@ -424,6 +424,22 @@ class JavaScriptTest extends Test
 				new Code('function(){return false;}'),
 				'function(){return false;}'
 			],
+			[
+				new Dictionary(['foo' => "bar\r\n"]),
+				'{"foo":"bar\\r\\n"}'
+			],
+			[
+				new Dictionary(["foo\r\n" => 'bar']),
+				'{"foo\\r\\n":"bar"}'
+			],
+			[
+				new Dictionary(['foo' => "bar\xE2\x80\xA8"]),
+				'{"foo":"bar\\u2028"}'
+			],
+			[
+				new Dictionary(['foo' => "bar\xE2\x80\xA9"]),
+				'{"foo":"bar\\u2029"}'
+			],
 		];
 	}
 
