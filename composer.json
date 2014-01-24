@@ -9,9 +9,6 @@
 		"ext-dom":    "*",
 		"ext-filter": "*"
 	},
-	"require-dev": {
-		"satooshi/php-coveralls": "dev-master"
-	},
 	"suggest": {
 		"ext-intl":      "Allows international URLs to be accepted by the URL filter",
 		"ext-json":      "Enables the generation of a JavaScript parser",
