@@ -168,7 +168,7 @@ class Template
 	/**
 	* Replace parts of this template that match given regexp
 	*
-	* @param  array    $regexp   Regexp for matching parts that need replacement
+	* @param  string   $regexp   Regexp for matching parts that need replacement
 	* @param  callback $fn       Callback used to get the replacement
 	* @return void
 	*/
