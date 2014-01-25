@@ -551,7 +551,7 @@ class TemplateForensics
 			// Save the name of the last node processed
 			if (isset($leafNode))
 			{
-				$this->leafNodes[] = $node->localName;
+				$this->leafNodes[] = $leafNode;
 			}
 
 			// If any branch disallows elements, the template disallows elements
