@@ -63,7 +63,7 @@ abstract class TemplateHelper
 		$html = '<html><body><div>' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
-		$success   = $dom->loadHTML($html);
+		$dom->loadHTML($html);
 		libxml_use_internal_errors($useErrors);
 
 		// Now dump the thing as XML and reload it with the proper namespace declaration
