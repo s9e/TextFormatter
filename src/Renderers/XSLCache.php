@@ -96,7 +96,7 @@ class XSLCache extends Renderer
 	/**
 	* Return the path to the stylesheet used by this renderer
 	*
-	* @return void
+	* @return string
 	*/
 	public function getFilepath()
 	{

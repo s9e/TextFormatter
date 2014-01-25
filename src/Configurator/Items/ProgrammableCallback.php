@@ -102,7 +102,7 @@ class ProgrammableCallback implements ConfigProvider
 	* Set this callback's JavaScript
 	*
 	* @param  string $js JavaScript source code for this callback
-	* @return mixed      Instance of Code if available, NULL otherwise
+	* @return Code       Instance of Code
 	*/
 	public function getJS()
 	{

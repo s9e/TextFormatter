@@ -300,8 +300,9 @@ abstract class TemplateHelper
 	/**
 	* Return all attributes (literal or generated) that match given regexp
 	*
-	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp Regexp
+	* @return array               Array of DOMNode instances
 	*/
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
@@ -344,8 +345,9 @@ abstract class TemplateHelper
 	/**
 	* Return all elements (literal or generated) that match given regexp
 	*
-	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp Regexp
+	* @return array               Array of DOMNode instances
 	*/
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
@@ -513,7 +515,7 @@ abstract class TemplateHelper
 	*    replacement becomes an <xsl:apply-templates/> node and the second element is ignored.
 	*
 	* @param  string   $template Original template
-	* @param  array    $regexp   Regexp for matching parts that need replacement
+	* @param  string   $regexp   Regexp for matching parts that need replacement
 	* @param  callback $fn       Callback used to get the replacement
 	* @return string             Processed template
 	*/

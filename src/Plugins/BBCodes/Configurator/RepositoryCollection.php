@@ -31,8 +31,8 @@ class RepositoryCollection extends NormalizedCollection
 	/**
 	* Normalize a value for storage
 	*
-	* @param  mixed $value Original value
-	* @return mixed        Normalized value
+	* @param  mixed      $value Original value
+	* @return Repository        Normalized value
 	*/
 	public function normalizeValue($value)
 	{

@@ -519,7 +519,7 @@ abstract class RegexpBuilder
 	/**
 	* Assemble an array of chains into one expression
 	*
-	* @param  array  $chain
+	* @param  array  $chains
 	* @return string
 	*/
 	protected static function assemble(array $chains)

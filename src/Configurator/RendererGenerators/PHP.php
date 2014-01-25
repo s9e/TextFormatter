@@ -82,8 +82,7 @@ class PHP implements RendererGenerator
 	/**
 	* Constructor
 	*
-	* @param  string $className Name of the class to be created
-	* @param  string $filepath  If set, path to the file where the renderer will be saved
+	* @param  string $cacheDir If set, path to the directory where the renderer will be saved
 	* @return void
 	*/
 	public function __construct($cacheDir = null)

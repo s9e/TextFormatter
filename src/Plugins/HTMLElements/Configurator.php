@@ -256,9 +256,8 @@ class Configurator extends ConfiguratorBase
 	*
 	* @link http://dev.w3.org/html5/spec/syntax.html#syntax-tag-name
 	*
-	* @param  string $elName    Original element name
-	* @param  bool   $mustExist If TRUE, throw an exception if the element is not allowed
-	* @return string            Normalized element name, in lowercase
+	* @param  string $elName Original element name
+	* @return string         Normalized element name, in lowercase
 	*/
 	protected function normalizeElementName($elName)
 	{
