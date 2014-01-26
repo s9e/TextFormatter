@@ -456,7 +456,7 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
-	* @testdox toJS() escapes backslashes that preceded literal line terminators
+	* @testdox toJS() escapes backslashes that precede literal line terminators
 	*/
 	public function testBackslashBeforeLiteralLineTerminators()
 	{
