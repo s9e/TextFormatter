@@ -114,6 +114,29 @@ abstract class RegexpConvertor
 			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
 		}
 
+		// Escape line terminators
+		$regexp = preg_replace_callback(
+			"/(\\\\*)([\\r\\n]|\xE2\x80\xA8|\xE2\x80\xA9)/",
+			function ($m)
+			{
+				$table = [
+					"\r" => '\\r',
+					"\n" => '\\n',
+					"\xE2\x80\xA8" => '\\u2028',
+					"\xE2\x80\xA9" => '\\u2029'
+				];
+
+				// Ensure we have an even number of backslashes
+				if (strlen($m[1]) & 1)
+				{
+					$m[1] .= '\\';
+				}
+
+				return $m[1] . $table[$m[2]];
+			},
+			$regexp
+		);
+
 		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
 
 		$regexp = new RegExp($regexp, $modifiers);

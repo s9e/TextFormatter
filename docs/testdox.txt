@@ -1031,6 +1031,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
  [x] toJS() converts atomic groups to non-capturing groups
  [x] toJS() throws a RuntimeException on unknown regexp features/tokens
+ [x] toJS() converts literal ASCII line terminators \r and \n
+ [x] toJS() converts literal Unicode line terminators \u2028 and \u2029
+ [x] toJS() escapes backslashes that preceded literal line terminators
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result

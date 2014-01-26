@@ -40,4 +40,3 @@ TODO
 - Force a paragraph break when a formatting element is open and two newlines are found?
 - s9e\TextFormatter\Configurator\Helpers\RegexpBuilder::fromList(['*x', 'x'],['specialChars'=>['*'=>'[^z]+']]) should return '(?:[^z]+)?x' not '[^z]+?x'
 - Consider adding a whitelist to Censor
-- Escape newlines in JavaScript RegExps

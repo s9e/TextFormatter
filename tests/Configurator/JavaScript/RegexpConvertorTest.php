@@ -432,4 +432,37 @@ class RegexpConvertorTest extends Test
 			]
 		];
 	}
+
+	/**
+	* @testdox toJS() converts literal ASCII line terminators \r and \n
+	*/
+	public function testLiteralASCIILineTerminators()
+	{
+		$this->assertEquals(
+			'/\\r\\n/',
+			RegexpConvertor::toJS("/\r\n/")
+		);
+	}
+
+	/**
+	* @testdox toJS() converts literal Unicode line terminators \u2028 and \u2029
+	*/
+	public function testLiteralUnicodeLineTerminators()
+	{
+		$this->assertEquals(
+			'/\\u2028\\u2029/',
+			RegexpConvertor::toJS("/\xE2\x80\xA8\xE2\x80\xA9/")
+		);
+	}
+
+	/**
+	* @testdox toJS() escapes backslashes that preceded literal line terminators
+	*/
+	public function testBackslashBeforeLiteralLineTerminators()
+	{
+		$this->assertEquals(
+			'/\\\\\\n/',
+			RegexpConvertor::toJS("/\\\n/")
+		);
+	}
 }
