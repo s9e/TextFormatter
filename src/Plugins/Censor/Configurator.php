@@ -137,34 +137,30 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function asConfig()
 	{
-		$collection = array_diff_key(iterator_to_array($this->collection), $this->allowed);
+		$words = array_diff_key(iterator_to_array($this->collection), $this->allowed);
 
-		if (empty($collection))
+		if (empty($words))
 		{
 			return false;
 		}
 
-		$words = [];
+		// Create the config
+		$config = [
+			'attrName' => $this->attrName,
+			'regexp'   => $this->getWordsRegexp(array_keys($words)),
+			'tagName'  => $this->tagName
+		];
+
+		// Add custom replacements
 		$replacementWords = [];
-
-		foreach ($collection as $word => $replacement)
+		foreach ($words as $word => $replacement)
 		{
-			$words[] = $word;
-
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 			{
 				$replacementWords[$replacement][] = $word;
 			}
 		}
 
-		// Create the config
-		$config = [
-			'attrName' => $this->attrName,
-			'regexp'   => $this->getWordsRegexp($words),
-			'tagName'  => $this->tagName
-		];
-
-		// Add custom replacements
 		foreach ($replacementWords as $replacement => $words)
 		{
 			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
