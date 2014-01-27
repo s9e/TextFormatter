@@ -24,6 +24,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	use CollectionProxy;
 
 	/**
+	* @var array List of whitelisted words as [word => true]
+	*/
+	protected $allowed = [];
+
+	/**
 	* @var string Name of attribute used for the replacement
 	*/
 	protected $attrName = 'with';
@@ -37,6 +42,18 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	* @var string Default string used to replace censored words
 	*/
 	protected $defaultReplacement = '****';
+
+	/**
+	* @var array Options passed to the RegexpBuilder
+	*/
+	protected $regexpOptions = [
+		'caseInsensitive' => true,
+		'specialChars'    => [
+			'*' => '[\\pL\\pN]*',
+			'?' => '.',
+			' ' => '\\s*'
+		]
+	];
 
 	/**
 	* @var string Name of the tag used to mark censored words
@@ -79,6 +96,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
+	* Add a word to the list of uncensored words
+	*
+	* @param  string $word Word to exclude from the censored list
+	* @return void
+	*/
+	public function allow($word)
+	{
+		$this->allowed[$word] = true;
+	}
+
+	/**
 	* Return an instance of s9e\TextFormatter\Plugins\Censor\Helper
 	*
 	* @return Helper
@@ -109,20 +137,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
+		$collection = array_diff_key(iterator_to_array($this->collection), $this->allowed);
+
+		if (empty($collection))
 		{
 			return false;
 		}
 
-		$config = [
-			'attrName' => $this->attrName,
-			'tagName'  => $this->tagName
-		];
-
 		$words = [];
 		$replacementWords = [];
 
-		foreach ($this->collection as $word => $replacement)
+		foreach ($collection as $word => $replacement)
 		{
 			$words[] = $word;
 
@@ -132,31 +157,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
-		$regexpOptions = [
-			'caseInsensitive' => true,
-			'specialChars'    => [
-				'*' => '[\\pL\\pN]*',
-				'?' => '.',
-				' ' => '\\s*'
-			]
+		// Create the config
+		$config = [
+			'attrName' => $this->attrName,
+			'regexp'   => $this->getWordsRegexp($words),
+			'tagName'  => $this->tagName
 		];
-		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 
-		// Force atomic grouping for performance. Theorically it could prevent some matches but in
-		// practice it shouldn't happen
-		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
-
-		// Add the regexp to the config, along with a JavaScript variant
-		$config['regexp'] = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
-
-		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
-		// we'll accept any non-whitespace, non-common punctuation
-		$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-		$config['regexp']->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
-
+		// Add custom replacements
 		foreach ($replacementWords as $replacement => $words)
 		{
-			$regexp = '/^' . RegexpBuilder::fromList($words, $regexpOptions) . '$/Diu';
+			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
 
 			// Create a regexp with a JavaScript variant for each group of words
 			$variant = new Variant($regexp);
@@ -167,6 +178,37 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$config['replacements'][] = [$variant, $replacement];
 		}
 
+		// Add the whitelist
+		if ($this->allowed)
+		{
+			$config['allowed'] = $this->getWordsRegexp(array_keys($this->allowed));
+		}
+
 		return $config;
+	}
+
+	/**
+	* Generate a regexp that matches the given list of words
+	*
+	* @param  array   $words List of words
+	* @return Variant        Regexp in a Variant container, with a JS variant
+	*/
+	protected function getWordsRegexp(array $words)
+	{
+		$regexp = RegexpBuilder::fromList($words, $this->regexpOptions);
+
+		// Force atomic grouping for performance. Theorically it could prevent some matches but in
+		// practice it shouldn't happen
+		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+
+		// Create a variant for the return value
+		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
+
+		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
+		// we'll accept any non-whitespace, non-common punctuation
+		$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
+		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
+
+		return $variant;
 	}
 }

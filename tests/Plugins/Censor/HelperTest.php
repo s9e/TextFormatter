@@ -89,6 +89,20 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() ignores words on the allowed list
+	*/
+	public function testCensorHtmlAllowed()
+	{
+		$this->configurator->Censor->add('foo*') ;
+		$this->configurator->Censor->allow('fool') ;
+
+		$this->assertSame(
+			'Dat fool went ****',
+			$this->configurator->Censor->getHelper()->censorHtml('Dat fool went foobar')
+		);
+	}
+
+	/**
 	* @testdox censorText() censors plain text
 	*/
 	public function testCensorText()
@@ -111,6 +125,20 @@ class HelperTest extends Test
 		$this->assertSame(
 			'bar bar baz',
 			$this->configurator->Censor->getHelper()->censorText('foo bar baz')
+		);
+	}
+
+	/**
+	* @testdox censorText() ignores words on the allowed list
+	*/
+	public function testCensorTextAllowed()
+	{
+		$this->configurator->Censor->add('foo*') ;
+		$this->configurator->Censor->allow('fool') ;
+
+		$this->assertSame(
+			'Dat fool went ****',
+			$this->configurator->Censor->getHelper()->censorText('Dat fool went foobar')
 		);
 	}
 
@@ -260,6 +288,38 @@ class HelperTest extends Test
 
 		$this->assertSame(
 			'<r>foo bar <CC>bar</CC> </r>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
+	* @testdox reparse() ignores words on the allowed list
+	*/
+	public function testReparseAllowed()
+	{
+		$this->configurator->Censor->add('foo*') ;
+		$this->configurator->Censor->allow('fool') ;
+
+		$xml = '<r>Dat fool went foobar</r>';
+
+		$this->assertSame(
+			'<r>Dat fool went <CENSOR>foobar</CENSOR></r>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
+	* @testdox reparse() uncensors words on the allowed list
+	*/
+	public function testReparseUncensorsAllowed()
+	{
+		$this->configurator->Censor->add('foo*') ;
+		$this->configurator->Censor->allow('fool') ;
+
+		$xml = '<r>Dat <CENSOR>fool</CENSOR> went <CENSOR>foobar</CENSOR></r>';
+
+		$this->assertSame(
+			'<r>Dat fool went <CENSOR>foobar</CENSOR></r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}

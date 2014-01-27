@@ -3,6 +3,11 @@ var tagName  = config.tagName,
 
 matches.forEach(function(m)
 {
+	if (config.allowed && config.allowed.test(m[0][0]))
+	{
+		return;
+	}
+
 	// NOTE: unlike the PCRE regexp, the JavaScript regexp can consume an extra character at the
 	//       start of the match, so we have to adjust the position and length accordingly
 	var offset = /^\W/.test(m[0][0]) ? 1 : 0,

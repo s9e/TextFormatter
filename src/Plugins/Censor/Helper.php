@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\Plugins\Censor;
 class Helper
 {
 	/**
+	* @var string Regexp matching whitelisted words
+	*/
+	public $allowed;
+
+	/**
 	* @var string Name of attribute used for the replacement
 	*/
 	public $attrName;
@@ -62,6 +67,11 @@ class Helper
 			$regexp,
 			function ($m)
 			{
+				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
+				{
+					return $m[0];
+				}
+
 				foreach ($this->replacements as list($regexp, $replacement))
 				{
 					if (preg_match($regexp, $m[0]))
@@ -88,6 +98,11 @@ class Helper
 			$this->regexp,
 			function ($m)
 			{
+				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
+				{
+					return $m[0];
+				}
+
 				foreach ($this->replacements as list($regexp, $replacement))
 				{
 					if (preg_match($regexp, $m[0]))
@@ -129,6 +144,11 @@ class Helper
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
 				function ($m)
 				{
+					if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
+					{
+						return $m[1];
+					}
+
 					return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];
 				},
 				$xml
@@ -147,6 +167,11 @@ class Helper
 			$regexp,
 			function ($m)
 			{
+				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
+				{
+					return $m[0];
+				}
+
 				return $this->buildTag($m[0]);
 			},
 			$xml,

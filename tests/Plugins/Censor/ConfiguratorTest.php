@@ -250,4 +250,33 @@ class ConfiguratorTest extends Test
 		$this->configurator->Censor->add('foo');
 		$this->configurator->Censor->add('foo');
 	}
+
+	/**
+	* @testdox asConfig() does not return an entry for "allowed" by default
+	*/
+	public function testAsConfigAllowedDefault()
+	{
+		$this->configurator->Censor->add('foo');
+		$this->assertArrayNotHasKey('allowed', $this->configurator->Censor->asConfig());
+	}
+
+	/**
+	* @testdox asConfig() returns an entry for "allowed" if any word was allowed with allow()
+	*/
+	public function testAsConfigAllowed()
+	{
+		$this->configurator->Censor->add('foo*');
+		$this->configurator->Censor->allow('fool');
+		$this->assertArrayHasKey('allowed', $this->configurator->Censor->asConfig());
+	}
+
+	/**
+	* @testdox asConfig() returns false if all censored words are also on the allowed list
+	*/
+	public function testAsConfigAllowedAll()
+	{
+		$this->configurator->Censor->add('foo');
+		$this->configurator->Censor->allow('foo');
+		$this->assertFalse($this->configurator->Censor->asConfig());
+	}
 }

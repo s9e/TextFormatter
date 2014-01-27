@@ -25,6 +25,12 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
+			if (isset($this->config['allowed'])
+			 && preg_match($this->config['allowed'], $m[0][0]))
+			{
+				continue;
+			}
+
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
 
 			foreach ($replacements as list($regexp, $replacement))

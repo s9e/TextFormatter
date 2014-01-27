@@ -24,6 +24,7 @@
     * [Using the Censor plugin in plain text and HTML](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/CensorText.md)
     * [Quickly patch old parsed texts for a new list of words](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/Reparse.md)
     * [Using the Censor plugin as a standalone word filter](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/Standalone.md)
+    * [Whitelist specific words to escape the censor](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/Whitelist.md)
   * **Emoticons**
     * [Add emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/AddEmoticons.md)
     * [How to restrict where emoticons are parsed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ChangeRegexp.md)

@@ -183,6 +183,16 @@ class ParserTest extends Test
 					$constructor->Censor->add('a p p l e');
 				}
 			],
+			[
+				"Don't be such a Scunthorpe problem, thorpy",
+				"<r>Don't be such a Scunthorpe problem, <CENSOR>thorpy</CENSOR></r>",
+				[],
+				function ($constructor)
+				{
+					$constructor->Censor->add('*thorp*');
+					$constructor->Censor->allow('scunthorpe');
+				}
+			],
 		];
 	}
 

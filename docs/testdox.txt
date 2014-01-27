@@ -1997,6 +1997,9 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] getHelper() returns a configured instance of Helper
  [x] getHelper() returns an instance of Helper even if no words were added
  [x] add() does not throw an exception on duplicates
+ [x] asConfig() does not return an entry for "allowed" by default
+ [x] asConfig() returns an entry for "allowed" if any word was allowed with allow()
+ [x] asConfig() returns false if all censored words are also on the allowed list
 
 s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() censors text nodes in HTML
@@ -2005,8 +2008,10 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() does not replace HTML tag names
  [x] censorHtml() does not replace HTML attribute names
  [x] censorHtml() does not replace HTML attribute values
+ [x] censorHtml() ignores words on the allowed list
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements
+ [x] censorText() ignores words on the allowed list
  [x] reparse() preserves old tags
  [x] reparse() updates replacement in old tags
  [x] reparse() add new tags
@@ -2017,6 +2022,8 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] reparse() does not replace attribute names
  [x] reparse() does not replace attribute values
  [x] reparse() does not erroneously alter tags whose name resembles Censor's tag name
+ [x] reparse() ignores words on the allowed list
+ [x] reparse() uncensors words on the allowed list
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
