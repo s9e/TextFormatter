@@ -51,6 +51,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	protected function setUp()
 	{
 		$this->collection = new NormalizedCollection;
+		$this->collection->onDuplicate('replace');
 
 		if (isset($this->configurator->tags[$this->tagName]))
 		{
@@ -75,21 +76,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				</xsl:when>
 				<xsl:otherwise>' . htmlspecialchars($this->defaultReplacement) . '</xsl:otherwise>
 			</xsl:choose>';
-	}
-
-	/**
-	* Add a word to the censored list
-	*
-	* Technically, add() is already provided by the CollectionProxy trait but in this case we map it
-	* to set() instead because it does not make sense to throw an exception on duplicates
-	*
-	* @param  string $word        Word to censor
-	* @param  string $replacement Replacement
-	* @return void
-	*/
-	public function add($word, $replacement = null)
-	{
-		$this->set($word, $replacement);
 	}
 
 	/**
