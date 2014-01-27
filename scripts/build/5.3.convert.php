@@ -167,6 +167,10 @@ function convertCustom($filepath, &$file)
 				'function ($m) use ($_this)'
 			),
 			array(
+				'if (isset($this->allowed) && preg_match($this->allowed, $m[0]))',
+				'if (isset($_this->allowed) && preg_match($_this->allowed, $m[0]))',
+			),
+			array(
 				'			foreach ($this->replacements as list($regexp, $replacement))',
 				'			foreach ($_this->replacements as list($regexp, $replacement))'
 			),
