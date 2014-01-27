@@ -105,7 +105,7 @@ class Parser
 	*/
 	public function __wakeup()
 	{
-		$this->logger = new Logger($this);
+		$this->logger = new Logger;
 	}
 
 	/**
