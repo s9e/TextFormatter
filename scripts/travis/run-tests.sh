@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$TRAVIS_PHP_VERSION" = "5.5" ]
+if [ -n "$COVERAGE" ]
 then
 	phpunit --exclude-group none --coverage-clover /tmp/clover.xml
 elif [ "$TRAVIS_PHP_VERSION" = "hhvm" ]

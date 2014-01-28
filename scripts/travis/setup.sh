@@ -13,6 +13,10 @@ then
 	# the current version of PHP
 	echo "Installing XSLCache"
 	./installXSLCache.sh >/dev/null 2>&1 &
+
+	# Install Scrutinizer's external code coverage tool
+	echo "Installing Scrutinizer"
+	./installScrutinizer.sh >/dev/null 2>&1 &
 else
 	echo "Removing XDebug"
 	phpenv config-rm xdebug.ini
@@ -28,7 +32,10 @@ mkdir ../../tests/.cache
 # Patch the sources for current PHP version
 php ../build/patchSources.php
 
-# Optimize the sources
-php ../build/optimizeSources.php
+# Optimize the sources if applicable
+if [ -n "$OPTIMIZE" ]
+then
+	php ../build/optimizeSources.php
+fi
 
 wait

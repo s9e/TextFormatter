@@ -104,15 +104,18 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function assertJSParsing($original, $expected)
 	{
-		// Minify and cache the parser if we have a cache dir
-		$cacheDir           = __DIR__ . '/.cache';
-		$closureCompilerBin = $this->getClosureCompilerBin();
-
-		if (file_exists($cacheDir) && file_exists($closureCompilerBin) && empty($_SERVER['TRAVIS']))
+		// Minify and cache the parser if we have a cache dir and we're not on Travis
+		$cacheDir = __DIR__ . '/.cache';
+		if (empty($_SERVER['TRAVIS']) && file_exists($cacheDir))
 		{
-			$this->configurator->javascript
-				->setMinifier('ClosureCompilerApplication', $closureCompilerBin)
-				->cacheDir = $cacheDir;
+			$closureCompilerBin = $this->getClosureCompilerBin();
+
+			if ($closureCompilerBin !== false)
+			{
+				$this->configurator->javascript
+					->setMinifier('ClosureCompilerApplication', $closureCompilerBin)
+					->cacheDir = $cacheDir;
+			}
 		}
 
 		$this->configurator->javascript->exportMethods = ['parse'];
@@ -126,7 +129,21 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	public function getClosureCompilerBin()
 	{
-		return (isset($_SERVER['CLOSURE_COMPILER'])) ? $_SERVER['CLOSURE_COMPILER'] : '/usr/local/bin/compiler.jar';
+		$paths = [
+			'/usr/local/bin/compiler.jar',
+			'/usr/bin/compiler.jar',
+			'/tmp/compiler.jar'
+		];
+
+		foreach ($paths as $path)
+		{
+			if (file_exists($path))
+			{
+				return $path;
+			}
+		}
+
+		return false;
 	}
 
 	protected function execJS($src, $input)
