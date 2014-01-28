@@ -34,38 +34,8 @@ function convertCustom($filepath, &$file)
 	$replacements = array(
 		'BBCodeMonkey.php' => array(
 			array(
-				'$template->replaceTokens(',
-				'$_this=$this;$template->replaceTokens('
-			),
-			array(
-				'function ($m) use ($config)',
-				'function ($m) use ($_this, $config)'
-			),
-			array(
-				'if ($this->isFilter($tokenId))',
-				'if ($_this->isFilter($tokenId))'
-			),
-			array(
 				'protected function isFilter($tokenId)',
 				'public function isFilter($tokenId)'
-			)
-		),
-		'BuiltInFiltersTest.php' => array(
-			function ($file)
-			{
-				return preg_replace(
-					'/public function getData\\(\\)\\s+\\{(\\s+)/',
-					'$0\\$test = \\$this;$1',
-					$file
-				);
-			},
-			array(
-				'function ()',
-				'function () use ($test)'
-			),
-			array(
-				"\$this->markTestSkipped('Extension intl is required.');",
-				"\$test->markTestSkipped('Extension intl is required.');"
 			)
 		),
 		'BundleGenerator.php' => array(
@@ -73,56 +43,6 @@ function convertCustom($filepath, &$file)
 				'protected function exportCallback($namespace, callable $callback, $argument)',
 				'protected function exportCallback($namespace, $callback, $argument)'
 			)
-		),
-		'BundleTest.php' => array(
-			array(
-				'DummyBundle::$beforeParse = function ($arg)',
-				'$test=$this;DummyBundle::$beforeParse = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('', \$arg);",
-				"\$test->assertSame('', \$arg);"
-			),
-			array(
-				'DummyBundle::$afterParse = function ($arg)',
-				'$test=$this;DummyBundle::$afterParse = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('<t></t>', \$arg);",
-				"\$test->assertSame('<t></t>', \$arg);"
-			),
-			array(
-				'DummyBundle::$beforeRender = function ($arg)',
-				'$test=$this;DummyBundle::$beforeRender = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('<t></t>', \$arg);",
-				"\$test->assertSame('<t></t>', \$arg);",
-			),
-			array(
-				'DummyBundle::$afterRender = function ($arg)',
-				'$test=$this;DummyBundle::$afterRender = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('...', \$arg);",
-				"\$test->assertSame('...', \$arg);"
-			),
-			array(
-				'DummyBundle::$beforeUnparse = function ($arg)',
-				'$test=$this;DummyBundle::$beforeUnparse = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('<t>original</t>', \$arg);",
-				"\$test->assertSame('<t>original</t>', \$arg);"
-			),
-			array(
-				'DummyBundle::$afterUnparse = function ($arg)',
-				'$test=$this;DummyBundle::$afterUnparse = function ($arg) use ($test)'
-			),
-			array(
-				"\$this->assertSame('original', \$arg);",
-				"\$test->assertSame('original', \$arg);"
-			),
 		),
 		'Configurator.php' => array(
 			array(
@@ -154,42 +74,6 @@ function convertCustom($filepath, &$file)
 			)
 		),
 		'Censor/Helper.php' => array(
-			array(
-				'return preg_replace_callback(',
-				'$_this=$this;return preg_replace_callback('
-			),
-			array(
-				'$xml = preg_replace_callback(',
-				'$_this=$this;$xml = preg_replace_callback('
-			),
-			array(
-				'function ($m)',
-				'function ($m) use ($_this)'
-			),
-			array(
-				'if (isset($this->allowed) && preg_match($this->allowed, $m[0]))',
-				'if (isset($_this->allowed) && preg_match($_this->allowed, $m[0]))',
-			),
-			array(
-				'			foreach ($this->replacements as list($regexp, $replacement))',
-				'			foreach ($_this->replacements as list($regexp, $replacement))'
-			),
-			array(
-				'return htmlspecialchars($this->defaultReplacement);',
-				'return htmlspecialchars($_this->defaultReplacement);'
-			),
-			array(
-				'return $this->defaultReplacement;',
-				'return $_this->defaultReplacement;'
-			),
-			array(
-				'return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];',
-				'return (preg_match($_this->regexp, $m[1])) ? $_this->buildTag($m[1]) : $m[1];'
-			),
-			array(
-				'return $this->buildTag($m[0]);',
-				'return $_this->buildTag($m[0]);'
-			),
 			array(
 				'protected function buildTag($word)',
 				'public function buildTag($word)'
@@ -254,28 +138,6 @@ function convertCustom($filepath, &$file)
 			array(
 				"\"strtr(\\\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])\"",
 				"\"strtr(\\\$node->getAttribute('bar'),array('a'=>'A','b'=>'B','c'=>'','d'=>''))\""
-			),
-			function ($file)
-			{
-				return preg_replace(
-					'/public function getXPathTests\\(\\)\\s+\\{(\\s+)/',
-					'$0\\$test = \\$this;$1',
-					$file
-				);
-			},
-			array(
-				'function ()',
-				'function () use ($test)'
-			),
-			array(
-				"\$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');",
-				"\$test->markTestSkipped('This optimization requires PCRE 8.13 or newer');"
-			)
-		),
-		'Regexp.php' => array(
-			array(
-				"\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction ()\n\t\t\t{\n\t\t\t\treturn \$this",
-				"\$_this=\$this;\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction () use (\$_this)\n\t\t\t{\n\t\t\t\treturn \$_this"
 			)
 		),
 		'RegexpBuilder.php' => array(
@@ -369,6 +231,7 @@ function convertFile($filepath)
 	$oldFile = $file;
 
 	convertUse($filepath, $file);
+	convertClosureBinding($filepath, $file);
 	convertCustom($filepath, $file);
 	convertArraySyntax($file);
 
@@ -498,6 +361,119 @@ function convertArraySyntax(&$file)
 	foreach ($tokens as $token)
 	{
 		$file .= (is_string($token)) ? $token : $token[1];
+	}
+}
+
+function convertClosureBinding($filepath, &$file)
+{
+	if (!strpos($file, 'function ('))
+	{
+		return;
+	}
+
+	$tokens  = token_get_all($file);
+	$rebuild = false;
+
+	$i   = 0;
+	$cnt = count($tokens);
+
+	while (++$i < $cnt)
+	{
+		if ($tokens[$i    ][0] !== T_FUNCTION
+		 || $tokens[$i + 1][0] !== T_WHITESPACE
+		 || $tokens[$i + 2]    !== '(')
+		{
+			continue;
+		}
+
+		$rebind     = false;
+		$savedIndex = $i;
+		$hasUse     = false;
+
+		$braces = 0;
+		while (++$i < $cnt)
+		{
+			if ($tokens[$i] === '{')
+			{
+				++$braces;
+
+				if ($braces === 1)
+				{
+					$braceIndex = $i;
+				}
+			}
+			elseif ($tokens[$i] === '}')
+			{
+				--$braces;
+
+				if (!$braces)
+				{
+					break;
+				}
+			}
+			elseif ($tokens[$i][0] === T_USE)
+			{
+				$hasUse = true;
+			}
+			elseif ($tokens[$i][0] === T_VARIABLE && $tokens[$i][1] === '$this')
+			{
+				$tokens[$i][1] = '$_this';
+				$rebind = true;
+			}
+		}
+
+		if ($rebind)
+		{
+			$rebuild = true;
+
+			$j = $savedIndex;
+			while (--$j)
+			{
+				if ($tokens[$j][0] === '{'
+				 && $tokens[$j - 1][0] === T_WHITESPACE
+				 && $tokens[$j - 1][1] === "\n\t")
+				{
+					break;
+				}
+			}
+
+			if ($tokens[$j] === '{')
+			{
+				$tokens[$j] = "{\n\t\t\$_this = \$this;\n";
+			}
+
+			if ($hasUse)
+			{
+				if ($tokens[$braceIndex - 2] !== ')')
+				{
+					echo "Could not find use statement in $filepath around line " . $tokens[$braceIndex - 2][2] . "\n";
+
+					return;
+				}
+
+				$tokens[$braceIndex - 2] = ', $_this)';
+			}
+			else
+			{
+				if ($tokens[$braceIndex - 2] !== ')')
+				{
+					echo "Could not find right parenthesis in $filepath around line " . $tokens[$braceIndex - 2][2] . "\n";
+
+					return;
+				}
+
+				$tokens[$braceIndex - 2] = ') use ($_this)';
+			}
+		}
+	}
+
+	if ($rebuild)
+	{
+		$file = '';
+		foreach ($tokens as $token)
+		{
+			$file .= (is_array($token)) ? $token[1] : $token;
+		}
 	}
 }
 
