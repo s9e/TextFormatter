@@ -129,21 +129,28 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	public function getClosureCompilerBin()
 	{
-		$paths = [
-			'/usr/local/bin/compiler.jar',
-			'/usr/bin/compiler.jar',
-			'/tmp/compiler.jar'
-		];
+		static $filepath;
 
-		foreach ($paths as $path)
+		if (!isset($filepath))
 		{
-			if (file_exists($path))
+			$filepath = false;
+			$paths = [
+				'/usr/local/bin/compiler.jar',
+				'/usr/bin/compiler.jar',
+				'/tmp/compiler.jar'
+			];
+
+			foreach ($paths as $path)
 			{
-				return $path;
+				if (file_exists($path))
+				{
+					$filepath = $path;
+					break;
+				}
 			}
 		}
 
-		return false;
+		return $filepath;
 	}
 
 	protected function execJS($src, $input)
