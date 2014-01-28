@@ -669,8 +669,8 @@ class BBCodeMonkey
 	/**
 	* Generate an attribute based on a token
 	*
-	* @param  array  $token  Token this attribute is based on
-	* @return void
+	* @param  array     $token Token this attribute is based on
+	* @return Attribute
 	*/
 	protected function generateAttribute(array $token)
 	{
