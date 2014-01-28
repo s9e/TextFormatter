@@ -5,6 +5,15 @@ cd $(dirname $(dirname $(dirname "$0")))
 git checkout master
 msg="Synced to $(git rev-parse HEAD)"
 
+ignore=
+for file in $(ls -1A);
+do
+	if [[ "$file" != .git* && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "README.md" && "$file" != "src" && "$file" != ".travis.yml" ]]
+	then
+		ignore="$ignore$file"$'\n'
+	fi
+done
+
 for version in 5.5 5.4 5.3;
 do
 	tmp="tmp-$version"
@@ -20,6 +29,14 @@ do
 	php scripts/build/patchSources.php $version
 	php scripts/build/optimizeSources.php
 
+	for file in $ignore;
+	do
+		if [ -a "$file" ]
+		then
+			git rm -rfq --cached "$file" 2> /dev/null
+		fi
+	done
+
 	git show-branch "$rel" || git branch "$rel"
 	patch=$(git diff --no-color "$rel")
 	git reset --hard
@@ -31,7 +48,6 @@ do
 		git checkout "$rel"
 		echo "$patch" | git apply --whitespace=nowarn -
 		git commit -aq --no-verify -m"$msg"
-		git reset --hard master
 	fi
 done
 
