@@ -272,7 +272,16 @@ trait OutputHandling
 		}
 
 		// Start a paragraph if applicable
-		$this->outputParagraphStart($catchupPos);
+		if (!$this->context['inParagraph']
+		 && $this->context['flags'] & self::RULE_CREATE_PARAGRAPHS)
+		{
+			$this->skipWhitespace($catchupPos);
+
+			if ($catchupPos > $this->pos)
+			{
+				$this->outputParagraphStart($catchupPos);
+			}
+		}
 
 		// Compute the amount of text to ignore at the end of the output
 		$ignorePos = $catchupPos;
@@ -407,16 +416,7 @@ trait OutputHandling
 		}
 
 		// Output the whitespace between $this->pos and $maxPos if applicable
-		if ($maxPos > $this->pos)
-		{
-			$spn = strspn($this->text, self::WHITESPACE, $this->pos, $maxPos - $this->pos);
-
-			if ($spn)
-			{
-				$this->output .= substr($this->text, $this->pos, $spn);
-				$this->pos += $spn;
-			}
-		}
+		$this->skipWhitespace($maxPos);
 
 		// Open the paragraph, but only if it's not at the very end of the text
 		if ($this->pos < $this->textLen)
@@ -441,5 +441,25 @@ trait OutputHandling
 
 		$this->output .= '</p>';
 		$this->context['inParagraph'] = false;
+	}
+
+	/**
+	* Skip as much whitespace after current position as possible
+	*
+	* @param  integer $maxPos Rightmost character to be skipped
+	* @return void
+	*/
+	protected function skipWhitespace($maxPos)
+	{
+		if ($maxPos > $this->pos)
+		{
+			$spn = strspn($this->text, self::WHITESPACE, $this->pos, $maxPos - $this->pos);
+
+			if ($spn)
+			{
+				$this->output .= substr($this->text, $this->pos, $spn);
+				$this->pos += $spn;
+			}
+		}
 	}
 }

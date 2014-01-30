@@ -451,6 +451,18 @@ xxx',
 				}
 			],
 			[
+				'      ',
+				'<r>  <i>  </i>  </r>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+				},
+				function ($parser)
+				{
+					$parser->addIgnoreTag(2, 2);
+				}
+			],
+			[
 				// Test the attribute order
 				'X',
 				'<r><X bar="2" baz="3" foo="1">X</X></r>',

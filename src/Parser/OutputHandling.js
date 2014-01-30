@@ -276,7 +276,16 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	}
 
 	// Start a paragraph if applicable
-	outputParagraphStart(catchupPos);
+	if (!context.inParagraph
+	 && context.flags & RULE_CREATE_PARAGRAPHS)
+	{
+		skipWhitespace(catchupPos);
+
+		if (catchupPos > pos)
+		{
+			outputParagraphStart(catchupPos);
+		}
+	}
 
 	// Compute the amount of text to ignore at the end of the output
 	var ignorePos = catchupPos,
@@ -413,16 +422,7 @@ function outputParagraphStart(maxPos)
 	}
 
 	// Output the whitespace between pos and maxPos if applicable
-	if (maxPos > pos)
-	{
-		var ignoreText = /^[ \n\t]*/.exec(text)[0];
-
-		if (ignoreText !== '')
-		{
-			output += ignoreText;
-			pos += ignoreText.length;
-		}
-	}
+	skipWhitespace(maxPos);
 
 	// Open the paragraph, but only if it's not at the very end of the text
 	if (pos < textLen)
@@ -445,4 +445,23 @@ function outputParagraphEnd()
 
 	output += '</p>';
 	context.inParagraph = false;
+}
+
+/**
+* Skip as much whitespace after current position as possible
+*
+* @param  {!number} maxPos Rightmost character to be skipped
+*/
+function skipWhitespace(maxPos)
+{
+	if (maxPos > pos)
+	{
+		var ignoreText = /^[ \n\t]*/.exec(text)[0];
+
+		if (ignoreText !== '')
+		{
+			output += ignoreText;
+			pos += ignoreText.length;
+		}
+	}
 }
