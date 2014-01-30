@@ -300,12 +300,12 @@ class Parser extends ParserBase
 
 						if ($buffered & 1)
 						{
-							$emPos = $matchPos + $matchLen - $buffered; 
+							$emPos = $matchPos + $matchLen - $buffered;
 						}
 
 						if ($buffered & 2)
 						{
-							$strongPos = $matchPos + $matchLen - $buffered; 
+							$strongPos = $matchPos + $matchLen - $buffered;
 						}
 					}
 				}

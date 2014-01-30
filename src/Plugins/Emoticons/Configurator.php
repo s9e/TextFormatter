@@ -71,7 +71,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public function finalize()
 	{
 		$tag = $this->getTag();
-		
+
 		if (!isset($tag->template))
 		{
 			$tag->template = $this->getTemplate();
