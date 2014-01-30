@@ -46,14 +46,8 @@ function finalizeOutput()
 {
 	var tmp;
 
-	// Output the rest of the text
-	if (pos < textLen)
-	{
-		outputText(textLen, 0, true);
-	}
-
-	// Close the last paragraph if applicable
-	outputParagraphEnd();
+	// Output the rest of the text and close the last paragraph
+	outputText(textLen, 0, true);
 
 	// Remove empty tag pairs, e.g. <I><U></U></I> as well as empty paragraphs
 	do
@@ -129,11 +123,7 @@ function outputTag(tag)
 	if (tag.isStartTag())
 	{
 		// Handle paragraphs before opening the tag
-		if (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH))
-		{
-			outputParagraphEnd();
-		}
-		else
+		if (!HINT.RULE_BREAK_PARAGRAPH || !(tagFlags & RULE_BREAK_PARAGRAPH))
 		{
 			outputParagraphStart(tagPos);
 		}
@@ -223,6 +213,19 @@ function outputTag(tag)
 */
 function outputText(catchupPos, maxLines, closeParagraph)
 {
+	if (closeParagraph)
+	{
+		if (!(context.flags & RULE_CREATE_PARAGRAPHS))
+		{
+			closeParagraph = false;
+		}
+		else
+		{
+			// Ignore any number of lines at the end if we're closing a paragraph
+			maxLines = -1;
+		}
+	}
+
 	if (pos >= catchupPos)
 	{
 		// We're already there, close the paragraph if applicable and return
@@ -230,7 +233,6 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		{
 			outputParagraphEnd();
 		}
-
 	}
 
 	// Skip over previously identified whitespace if applicable
@@ -240,7 +242,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		output += text.substr(pos, skipPos - pos);
 		pos = skipPos;
 
-		if (skipPos === catchupPos)
+		if (pos >= catchupPos)
 		{
 			// Skipped everything. Close the paragraph if applicable and return
 			if (closeParagraph)
@@ -275,30 +277,9 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		return;
 	}
 
-	// Start a paragraph if applicable
-	if (!context.inParagraph
-	 && context.flags & RULE_CREATE_PARAGRAPHS)
-	{
-		skipWhitespace(catchupPos);
-
-		if (catchupPos > pos)
-		{
-			outputParagraphStart(catchupPos);
-		}
-	}
-
 	// Compute the amount of text to ignore at the end of the output
 	var ignorePos = catchupPos,
 		ignoreLen = 0;
-
-	// Ignore newlines at the end of the text if we're going to close the paragraph
-	if (closeParagraph && context.inParagraph)
-	{
-		while (--ignorePos >= 0 && text.charAt(ignorePos) === "\n")
-		{
-			++ignoreLen;
-		}
-	}
 
 	// Ignore as many lines (including whitespace) as specified
 	while (maxLines && --ignorePos >= pos)
@@ -323,6 +304,16 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	// Break down the text in paragraphs if applicable
 	if (HINT.RULE_CREATE_PARAGRAPHS && context.flags & RULE_CREATE_PARAGRAPHS)
 	{
+		if (!context.inParagraph)
+		{
+			outputWhitespace(catchupPos);
+
+			if (catchupPos > pos)
+			{
+				outputParagraphStart(catchupPos);
+			}
+		}
+
 		// Look for a paragraph break in this text
 		var pbPos = text.indexOf("\n\n", pos);
 
@@ -422,7 +413,7 @@ function outputParagraphStart(maxPos)
 	}
 
 	// Output the whitespace between pos and maxPos if applicable
-	skipWhitespace(maxPos);
+	outputWhitespace(maxPos);
 
 	// Open the paragraph, but only if it's not at the very end of the text
 	if (pos < textLen)
@@ -452,7 +443,7 @@ function outputParagraphEnd()
 *
 * @param  {!number} maxPos Rightmost character to be skipped
 */
-function skipWhitespace(maxPos)
+function outputWhitespace(maxPos)
 {
 	if (maxPos > pos)
 	{

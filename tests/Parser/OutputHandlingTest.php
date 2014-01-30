@@ -463,6 +463,19 @@ xxx',
 				}
 			],
 			[
+				"foo\n  \nQUOTE\n  \nbar",
+				"<r><p>foo</p>\n  \n<QUOTE>QUOTE</QUOTE>\n  \n<p>bar</p></r>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$constructor->tags->add('QUOTE')->rules->breakParagraph();
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('QUOTE', 7, 5);
+				}
+			],
+			[
 				// Test the attribute order
 				'X',
 				'<r><X bar="2" baz="3" foo="1">X</X></r>',

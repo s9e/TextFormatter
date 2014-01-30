@@ -36,14 +36,8 @@ trait OutputHandling
 	*/
 	protected function finalizeOutput()
 	{
-		// Output the rest of the text
-		if ($this->pos < $this->textLen)
-		{
-			$this->outputText($this->textLen, 0, true);
-		}
-
-		// Close the last paragraph if applicable
-		$this->outputParagraphEnd();
+		// Output the rest of the text and close the last paragraph
+		$this->outputText($this->textLen, 0, true);
 
 		// Remove empty tag pairs, e.g. <I><U></U></I> as well as empty paragraphs
 		do
@@ -130,11 +124,7 @@ trait OutputHandling
 		if ($tag->isStartTag())
 		{
 			// Handle paragraphs before opening the tag
-			if ($tagFlags & self::RULE_BREAK_PARAGRAPH)
-			{
-				$this->outputParagraphEnd();
-			}
-			else
+			if (!($tagFlags & self::RULE_BREAK_PARAGRAPH))
 			{
 				$this->outputParagraphStart($tagPos);
 			}
@@ -181,9 +171,6 @@ trait OutputHandling
 		}
 		else
 		{
-			// Close current paragraph if applicable
-			$this->outputParagraphEnd();
-
 			if ($tagLen)
 			{
 				$this->output .= '<e>' . $tagText . '</e>';
@@ -217,6 +204,19 @@ trait OutputHandling
 	*/
 	protected function outputText($catchupPos, $maxLines, $closeParagraph)
 	{
+		if ($closeParagraph)
+		{
+			if (!($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS))
+			{
+				$closeParagraph = false;
+			}
+			else
+			{
+				// Ignore any number of lines at the end if we're closing a paragraph
+				$maxLines = -1;
+			}
+		}
+
 		if ($this->pos >= $catchupPos)
 		{
 			// We're already there, close the paragraph if applicable and return
@@ -235,7 +235,7 @@ trait OutputHandling
 			$this->output .= substr($this->text, $this->pos, $skipPos - $this->pos);
 			$this->pos     = $skipPos;
 
-			if ($skipPos === $catchupPos)
+			if ($this->pos >= $catchupPos)
 			{
 				// Skipped everything. Close the paragraph if applicable and return
 				if ($closeParagraph)
@@ -271,30 +271,9 @@ trait OutputHandling
 			return;
 		}
 
-		// Start a paragraph if applicable
-		if (!$this->context['inParagraph']
-		 && $this->context['flags'] & self::RULE_CREATE_PARAGRAPHS)
-		{
-			$this->skipWhitespace($catchupPos);
-
-			if ($catchupPos > $this->pos)
-			{
-				$this->outputParagraphStart($catchupPos);
-			}
-		}
-
 		// Compute the amount of text to ignore at the end of the output
 		$ignorePos = $catchupPos;
 		$ignoreLen = 0;
-
-		// Ignore newlines at the end of the text if we're going to close the paragraph
-		if ($closeParagraph && $this->context['inParagraph'])
-		{
-			while (--$ignorePos >= $this->pos && $this->text[$ignorePos] === "\n")
-			{
-				++$ignoreLen;
-			}
-		}
 
 		// Ignore as many lines (including whitespace) as specified
 		while ($maxLines && --$ignorePos >= $this->pos)
@@ -319,6 +298,16 @@ trait OutputHandling
 		// Break down the text in paragraphs if applicable
 		if ($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS)
 		{
+			if (!$this->context['inParagraph'])
+			{
+				$this->outputWhitespace($catchupPos);
+
+				if ($catchupPos > $this->pos)
+				{
+					$this->outputParagraphStart($catchupPos);
+				}
+			}
+
 			// Look for a paragraph break in this text
 			$pbPos = strpos($this->text, "\n\n", $this->pos);
 
@@ -416,7 +405,7 @@ trait OutputHandling
 		}
 
 		// Output the whitespace between $this->pos and $maxPos if applicable
-		$this->skipWhitespace($maxPos);
+		$this->outputWhitespace($maxPos);
 
 		// Open the paragraph, but only if it's not at the very end of the text
 		if ($this->pos < $this->textLen)
@@ -449,7 +438,7 @@ trait OutputHandling
 	* @param  integer $maxPos Rightmost character to be skipped
 	* @return void
 	*/
-	protected function skipWhitespace($maxPos)
+	protected function outputWhitespace($maxPos)
 	{
 		if ($maxPos > $this->pos)
 		{
