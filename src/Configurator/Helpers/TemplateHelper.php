@@ -86,15 +86,15 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Get the XML content of a node
+	* Get the XML content of an element
 	*
-	* @param  DOMNode $node
+	* @param  DOMElement $element
 	* @return string
 	*/
-	protected static function innerXML(DOMNode $node)
+	protected static function innerXML(DOMElement $element)
 	{
-		// Serialize the XML then remove the outer node
-		$xml = $node->ownerDocument->saveXML($node);
+		// Serialize the XML then remove the outer element
+		$xml = $element->ownerDocument->saveXML($element);
 
 		$pos = 1 + strpos($xml, '>');
 		$len = strrpos($xml, '<') - $pos;

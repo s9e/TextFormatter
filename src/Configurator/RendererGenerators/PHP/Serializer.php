@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
-use DOMNode;
+use DOMElement;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
@@ -514,10 +514,10 @@ class Serializer
 	/**
 	* Serialize an <applyTemplates/> node
 	*
-	* @param  DOMNode $applyTemplates <applyTemplates/> node
+	* @param  DOMElement $applyTemplates <applyTemplates/> node
 	* @return string
 	*/
-	protected function serializeApplyTemplates(DOMNode $applyTemplates)
+	protected function serializeApplyTemplates(DOMElement $applyTemplates)
 	{
 		$php = '$this->at($node';
 		if ($applyTemplates->hasAttribute('select'))
@@ -532,10 +532,10 @@ class Serializer
 	/**
 	* Serialize an <attribute/> node
 	*
-	* @param  DOMNode $attribute <attribute/> node
+	* @param  DOMElement $attribute <attribute/> node
 	* @return string
 	*/
-	protected function serializeAttribute(DOMNode $attribute)
+	protected function serializeAttribute(DOMElement $attribute)
 	{
 		$attrName = $attribute->getAttribute('name');
 
@@ -553,10 +553,10 @@ class Serializer
 	/**
 	* Serialize all the children of given node into PHP
 	*
-	* @param  DOMNode $ir Internal representation
+	* @param  DOMElement $ir Internal representation
 	* @return string
 	*/
-	public function serializeChildren(DOMNode $ir)
+	public function serializeChildren(DOMElement $ir)
 	{
 		$php = '';
 		foreach ($ir->childNodes as $node)
@@ -571,10 +571,10 @@ class Serializer
 	/**
 	* Serialize a <closeTag/> node
 	*
-	* @param  DOMNode $closeTag <closeTag/> node
+	* @param  DOMElement $closeTag <closeTag/> node
 	* @return string
 	*/
-	protected function serializeCloseTag(DOMNode $closeTag)
+	protected function serializeCloseTag(DOMElement $closeTag)
 	{
 		$php = '';
 		$id  = $closeTag->getAttribute('id');
@@ -638,10 +638,10 @@ class Serializer
 	/**
 	* Serialize a <comment/> node
 	*
-	* @param  DOMNode $comment <comment/> node
+	* @param  DOMElement $comment <comment/> node
 	* @return string
 	*/
-	protected function serializeComment(DOMNode $comment)
+	protected function serializeComment(DOMElement $comment)
 	{
 		return "\$this->out.='<!--';"
 		     . $this->serializeChildren($comment)
@@ -651,10 +651,10 @@ class Serializer
 	/**
 	* Serialize a <copyOfAttributes/> node
 	*
-	* @param  DOMNode $copyOfAttributes <copyOfAttributes/> node
+	* @param  DOMElement $copyOfAttributes <copyOfAttributes/> node
 	* @return string
 	*/
-	protected function serializeCopyOfAttributes(DOMNode $copyOfAttributes)
+	protected function serializeCopyOfAttributes(DOMElement $copyOfAttributes)
 	{
 		return 'foreach($node->attributes as $attribute)'
 		     . '{'
@@ -669,10 +669,10 @@ class Serializer
 	/**
 	* Serialize an <element/> node
 	*
-	* @param  DOMNode $element <element/> node
+	* @param  DOMElement $element <element/> node
 	* @return string
 	*/
-	protected function serializeElement(DOMNode $element)
+	protected function serializeElement(DOMElement $element)
 	{
 		$php     = '';
 		$elName  = $element->getAttribute('name');
@@ -766,10 +766,10 @@ class Serializer
 	/**
 	* Serialize an <output/> node
 	*
-	* @param  DOMNode $output <output/> node
+	* @param  DOMElement $output <output/> node
 	* @return string
 	*/
-	protected function serializeOutput(DOMNode $output)
+	protected function serializeOutput(DOMElement $output)
 	{
 		$php        = '';
 		$xpath      = new DOMXPath($output->ownerDocument);
@@ -797,10 +797,10 @@ class Serializer
 	/**
 	* Serialize a <switch/> node
 	*
-	* @param  DOMNode $switch <switch/> node
+	* @param  DOMElement $switch <switch/> node
 	* @return string
 	*/
-	protected function serializeSwitch(DOMNode $switch)
+	protected function serializeSwitch(DOMElement $switch)
 	{
 		$php  = '';
 		$else = '';

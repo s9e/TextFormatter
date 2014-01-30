@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
 use DOMElement;
-use DOMNode;
 use DOMXPath;
 use RuntimeException;
 
@@ -51,13 +50,13 @@ class TemplateParser
 	//==========================================================================
 
 	/**
-	* Parse all the children of a given node
+	* Parse all the children of a given element
 	*
-	* @param  DOMNode $ir     Node in the internal representation that represents the parent node
-	* @param  DOMNode $parent Parent node
+	* @param  DOMElement $ir     Node in the internal representation that represents the parent node
+	* @param  DOMElement $parent Parent node
 	* @return void
 	*/
-	protected static function parseChildren(DOMNode $ir, DOMNode $parent)
+	protected static function parseChildren(DOMElement $ir, DOMElement $parent)
 	{
 		foreach ($parent->childNodes as $child)
 		{
@@ -84,11 +83,11 @@ class TemplateParser
 	/**
 	* Parse a given node into the internal representation
 	*
-	* @param  DOMNode $ir Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node Node to parse
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node Node to parse
 	* @return void
 	*/
-	protected static function parseNode(DOMNode $ir, DOMNode $node)
+	protected static function parseNode(DOMElement $ir, DOMElement $node)
 	{
 		// XSL elements are parsed by the corresponding parseXsl* method
 		if ($node->namespaceURI === self::XMLNS_XSL)
@@ -134,11 +133,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:apply-templates/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:apply-templates/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:apply-templates/> node
 	* @return void
 	*/
-	protected static function parseXslApplyTemplates(DOMNode $ir, DOMNode $node)
+	protected static function parseXslApplyTemplates(DOMElement $ir, DOMElement $node)
 	{
 		$applyTemplates = $ir->appendChild($ir->ownerDocument->createElement('applyTemplates'));
 
@@ -154,11 +153,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:attribute/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:attribute/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:attribute/> node
 	* @return void
 	*/
-	protected static function parseXslAttribute(DOMNode $ir, DOMNode $node)
+	protected static function parseXslAttribute(DOMElement $ir, DOMElement $node)
 	{
 		$attrName = $node->getAttribute('name');
 
@@ -178,11 +177,11 @@ class TemplateParser
 	* Parse an <xsl:choose/> node and its <xsl:when/> and <xsl:otherwise/> children into the
 	* internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:choose/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:choose/> node
 	* @return void
 	*/
-	protected static function parseXslChoose(DOMNode $ir, DOMNode $node)
+	protected static function parseXslChoose(DOMElement $ir, DOMElement $node)
 	{
 		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
 
@@ -224,11 +223,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:comment/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:comment/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:comment/> node
 	* @return void
 	*/
-	protected static function parseXslComment(DOMNode $ir, DOMNode $node)
+	protected static function parseXslComment(DOMElement $ir, DOMElement $node)
 	{
 		$comment = $ir->appendChild($ir->ownerDocument->createElement('comment'));
 
@@ -241,11 +240,11 @@ class TemplateParser
 	*
 	* NOTE: only attributes are supported
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:copy-of/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:copy-of/> node
 	* @return void
 	*/
-	protected static function parseXslCopyOf(DOMNode $ir, DOMNode $node)
+	protected static function parseXslCopyOf(DOMElement $ir, DOMElement $node)
 	{
 		$expr = $node->getAttribute('select');
 
@@ -281,11 +280,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:element/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:element/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:element/> node
 	* @return void
 	*/
-	protected static function parseXslElement(DOMNode $ir, DOMNode $node)
+	protected static function parseXslElement(DOMElement $ir, DOMElement $node)
 	{
 		$elName = $node->getAttribute('name');
 
@@ -304,11 +303,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:if/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:if/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:if/> node
 	* @return void
 	*/
-	protected static function parseXslIf(DOMNode $ir, DOMNode $node)
+	protected static function parseXslIf(DOMElement $ir, DOMElement $node)
 	{
 		// An <xsl:if/> is represented by a <switch/> with only one <case/>
 		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
@@ -324,11 +323,11 @@ class TemplateParser
 	*
 	* NOTE: this method expects the <xsl:output/> node to be the child of an <xsl:stylesheet/>
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:output/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:output/> node
 	* @return void
 	*/
-	protected static function parseXslOutput(DOMNode $ir, DOMNode $node)
+	protected static function parseXslOutput(DOMElement $ir, DOMElement $node)
 	{
 		// Copy the output method
 		$ir->setAttribute('outputMethod', $node->getAttribute('method'));
@@ -337,11 +336,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:param/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:param/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:param/> node
 	* @return void
 	*/
-	protected static function parseXslParam(DOMNode $ir, DOMNode $node)
+	protected static function parseXslParam(DOMElement $ir, DOMElement $node)
 	{
 		$param = $ir->appendChild($ir->ownerDocument->createElement('param'));
 		$param->setAttribute('name', $node->getAttribute('name'));
@@ -355,11 +354,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:template/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:template/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:template/> node
 	* @return void
 	*/
-	protected static function parseXslTemplate(DOMNode $ir, DOMNode $node)
+	protected static function parseXslTemplate(DOMElement $ir, DOMElement $node)
 	{
 		// Append a <template/> node in the IR
 		$template = $ir->appendChild($ir->ownerDocument->createElement('template'));
@@ -462,11 +461,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:text/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:text/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:text/> node
 	* @return void
 	*/
-	protected static function parseXslText(DOMNode $ir, DOMNode $node)
+	protected static function parseXslText(DOMElement $ir, DOMElement $node)
 	{
 		self::appendOutput($ir, 'literal', $node->textContent);
 	}
@@ -474,11 +473,11 @@ class TemplateParser
 	/**
 	* Parse an <xsl:value-of/> node into the internal representation
 	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:value-of/> node
+	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMElement $node <xsl:value-of/> node
 	* @return void
 	*/
-	protected static function parseXslValueOf(DOMNode $ir, DOMNode $node)
+	protected static function parseXslValueOf(DOMElement $ir, DOMElement $node)
 	{
 		self::appendOutput($ir, 'xpath', $node->getAttribute('select'));
 	}
@@ -747,12 +746,12 @@ class TemplateParser
 	/**
 	* Append an <output/> element to given node in the IR
 	*
-	* @param  DOMNode $ir      Parent node
+	* @param  DOMElement $ir      Parent node
 	* @param  string  $type    Either 'avt', 'literal' or 'xpath'
 	* @param  string  $content Content to output
 	* @return void
 	*/
-	protected static function appendOutput(DOMNode $ir, $type, $content)
+	protected static function appendOutput(DOMElement $ir, $type, $content)
 	{
 		// Reparse AVTs and add them as separate xpath/literal outputs
 		if ($type === 'avt')

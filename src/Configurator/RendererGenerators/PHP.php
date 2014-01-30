@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
@@ -178,7 +178,7 @@ class PHP implements RendererGenerator
 			// Apply the empty-element options
 			if ($rendering->type === 'xhtml')
 			{
-				$this->fixEmptyElements($ir);
+				$this->fixEmptyElements($ir->documentElement);
 			}
 
 			// Test whether this template uses an <xsl:apply-templates/> element with a select
@@ -394,10 +394,10 @@ class PHP implements RendererGenerator
 	/**
 	* Change the IR to respect the empty-element options
 	*
-	* @param  DOMNode $ir
+	* @param  DOMElement $ir
 	* @return void
 	*/
-	protected function fixEmptyElements(DOMNode $ir)
+	protected function fixEmptyElements(DOMElement $ir)
 	{
 		foreach ($ir->getElementsByTagName('element') as $element)
 		{

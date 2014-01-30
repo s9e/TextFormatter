@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
-use DOMNode;
+use DOMElement;
 use DOMXPath;
 
 /**
@@ -612,11 +612,11 @@ class TemplateForensics
 	/**
 	* Evaluate a boolean XPath query
 	*
-	* @param  string  $query XPath query
-	* @param  DOMNode $node  Context node
+	* @param  string     $query XPath query
+	* @param  DOMElement $node  Context node
 	* @return boolean
 	*/
-	protected function evaluate($query, DOMNode $node = null)
+	protected function evaluate($query, DOMElement $node = null)
 	{
 		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
 	}
@@ -638,10 +638,10 @@ class TemplateForensics
 	* Will return TRUE if the node is a span element with a class attribute and/or a style attribute
 	* and no other attributes
 	*
-	* @param  DOMNode $node
+	* @param  DOMElement $node
 	* @return boolean
 	*/
-	protected function isFormattingSpan(DOMNode $node)
+	protected function isFormattingSpan(DOMElement $node)
 	{
 		if ($node->nodeName !== 'span')
 		{
@@ -826,12 +826,12 @@ class TemplateForensics
 	/**
 	* Get the bitfield value for a given element name in a given context
 	*
-	* @param  string  $elName Name of the HTML element
-	* @param  string  $k      Bitfield name: either 'c', 'ac' or 'dd'
-	* @param  DOMNode $node   Context node (not necessarily the same as $elName)
+	* @param  string     $elName Name of the HTML element
+	* @param  string     $k      Bitfield name: either 'c', 'ac' or 'dd'
+	* @param  DOMElement $node   Context node (not necessarily the same as $elName)
 	* @return string
 	*/
-	protected function getBitfield($elName, $k, DOMNode $node)
+	protected function getBitfield($elName, $k, DOMElement $node)
 	{
 		if (!isset(self::$htmlElements[$elName][$k]))
 		{
@@ -880,12 +880,12 @@ class TemplateForensics
 	/**
 	* Test whether given element has given property in context
 	*
-	* @param  string  $elName   Element name
-	* @param  string  $propName Property name, see self::$htmlElements
-	* @param  DOMNode $node     Context node
+	* @param  string     $elName   Element name
+	* @param  string     $propName Property name, see self::$htmlElements
+	* @param  DOMElement $node     Context node
 	* @return bool
 	*/
-	protected function hasProperty($elName, $propName, DOMNode $node)
+	protected function hasProperty($elName, $propName, DOMElement $node)
 	{
 		if (!empty(self::$htmlElements[$elName][$propName]))
 		{
