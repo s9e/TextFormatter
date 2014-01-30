@@ -104,10 +104,10 @@ class Tag
 	/**
 	* Set given tag to be invalidated if this tag is invalidated
 	*
-	* @param  self $tag
+	* @param  Tag  $tag
 	* @return void
 	*/
-	public function cascadeInvalidationTo(self $tag)
+	public function cascadeInvalidationTo(Tag $tag)
 	{
 		$this->cascade[] = $tag;
 
@@ -142,10 +142,10 @@ class Tag
 	/**
 	* Pair this tag with given tag
 	*
-	* @param  self $tag
+	* @param  Tag  $tag
 	* @return void
 	*/
-	public function pairWith(self $tag)
+	public function pairWith(Tag $tag)
 	{
 		if ($this->name === $tag->name)
 		{
