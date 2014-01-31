@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
@@ -83,7 +84,7 @@ class Repository
 		$xpath = new DOMXPath($this->dom);
 		$node  = $xpath->query('//bbcode[@name="' . htmlspecialchars($name) . '"]')->item(0);
 
-		if (!$node)
+		if (!($node instanceof DOMElement))
 		{
 			throw new RuntimeException("Could not find '" . $name . "' in repository");
 		}
