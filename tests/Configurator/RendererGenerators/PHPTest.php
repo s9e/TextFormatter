@@ -137,6 +137,16 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox Uses the system's temporary files dir if no cache dir is passed to the constructor
+	*/
+	public function testSysCacheDir()
+	{
+		$generator = new PHP;
+
+		$this->assertSame(sys_get_temp_dir(), $generator->cacheDir);
+	}
+
+	/**
 	* @testdox If $rendererGenerator->filepath is not set, and $rendererGenerator->cacheDir is set, the renderer is saved to the cache dir using the renderer's class name + '.php' as file name
 	*/
 	public function testCacheDirSave()

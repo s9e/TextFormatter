@@ -2287,6 +2287,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] The class name can be namespaced
  [x] If $rendererGenerator->filepath is set, the renderer is saved to this file
  [x] A path to a cache dir can be passed to the constructor
+ [x] Uses the system's temporary files dir if no cache dir is passed to the constructor
  [x] If $rendererGenerator->filepath is not set, and $rendererGenerator->cacheDir is set, the renderer is saved to the cache dir using the renderer's class name + '.php' as file name
  [x] When saving the renderer to the cache dir, backslashes in the class name are replaced with underscores
  [x] If $rendererGenerator->filepath and $rendererGenerator->cacheDir are set, the renderer is saved to $rendererGenerator->filepath

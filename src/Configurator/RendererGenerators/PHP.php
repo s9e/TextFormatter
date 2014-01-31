@@ -87,10 +87,7 @@ class PHP implements RendererGenerator
 	*/
 	public function __construct($cacheDir = null)
 	{
-		if (isset($cacheDir))
-		{
-			$this->cacheDir = $cacheDir;
-		}
+		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : sys_get_temp_dir();
 
 		if (extension_loaded('tokenizer'))
 		{
@@ -115,21 +112,18 @@ class PHP implements RendererGenerator
 		{
 			$filepath = $this->filepath;
 		}
-		elseif (isset($this->cacheDir))
+		else
 		{
 			$filepath = $this->cacheDir . '/' . str_replace('\\', '_', $this->lastClassName) . '.php';
 		}
 
-		if (isset($filepath))
-		{
-			file_put_contents($filepath, "<?php\n" . $php);
-			$this->lastFilepath = realpath($filepath);
-		}
+		file_put_contents($filepath, "<?php\n" . $php);
+		$this->lastFilepath = realpath($filepath);
 
 		// Execute the source to create the class if it doesn't exist
 		if (!class_exists($this->lastClassName, false))
 		{
-			eval($php);
+			include $filepath;
 		}
 
 		// Create an instance and copy the source into the instance
