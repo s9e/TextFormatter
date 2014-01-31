@@ -129,7 +129,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowElement($elName)
 	{
-		return $this->_allowElement($elName, false);
+		return $this->allowElementWithSafety($elName, false);
 	}
 
 	/**
@@ -140,7 +140,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowUnsafeElement($elName)
 	{
-		return $this->_allowElement($elName, true);
+		return $this->allowElementWithSafety($elName, true);
 	}
 
 	/**
@@ -150,7 +150,7 @@ class Configurator extends ConfiguratorBase
 	* @param  bool   $allowUnsafe Whether to allow unsafe elements
 	* @return Tag                 Tag that represents this element
 	*/
-	protected function _allowElement($elName, $allowUnsafe)
+	protected function allowElementWithSafety($elName, $allowUnsafe)
 	{
 		$elName  = $this->normalizeElementName($elName);
 		$tagName = $this->prefix . ':' . $elName;
@@ -183,7 +183,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowAttribute($elName, $attrName)
 	{
-		return $this->_allowAttribute($elName, $attrName, false);
+		return $this->allowAttributeWithSafety($elName, $attrName, false);
 	}
 
 	/**
@@ -195,7 +195,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowUnsafeAttribute($elName, $attrName)
 	{
-		return $this->_allowAttribute($elName, $attrName, true);
+		return $this->allowAttributeWithSafety($elName, $attrName, true);
 	}
 
 	/**
@@ -206,7 +206,7 @@ class Configurator extends ConfiguratorBase
 	* @param  bool      $allowUnsafe
 	* @return Attribute
 	*/
-	protected function _allowAttribute($elName, $attrName, $allowUnsafe)
+	protected function allowAttributeWithSafety($elName, $attrName, $allowUnsafe)
 	{
 		$elName   = $this->normalizeElementName($elName);
 		$attrName = $this->normalizeAttributeName($attrName);
