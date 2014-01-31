@@ -23,7 +23,7 @@ class PHPTest extends Test
 
 	protected function tearDown()
 	{
-		array_map('unlink', glob(sys_get_temp_dir() . '/Renderer_*.php'));
+		array_map('unlink', glob(sys_get_temp_dir() . '/*enderer_*.php'));
 	}
 
 	/**
