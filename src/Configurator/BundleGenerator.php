@@ -55,7 +55,9 @@ class BundleGenerator
 		$options += ['autoInclude' => true];
 
 		// Get the parser and renderer
-		extract($this->configurator->finalize($options));
+		$objects  = $this->configurator->finalize($options);
+		$parser   = $objects['parser'];
+		$renderer = $objects['renderer'];
 
 		// Split the bundle's class name and its namespace
 		$namespace = '';
