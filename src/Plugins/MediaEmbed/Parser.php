@@ -243,7 +243,7 @@ class Parser extends ParserBase
 	* @param  string $cacheDir Path to the cache directory
 	* @return string           External content
 	*/
-	protected static function wget($url, $cacheDir)
+	protected static function wget($url, $cacheDir = null)
 	{
 		$prefix = $suffix = $context = null;
 		if (extension_loaded('zlib'))
