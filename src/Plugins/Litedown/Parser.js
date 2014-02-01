@@ -31,6 +31,8 @@ else
 	);
 }
 
+// We append a couple of lines and a non-whitespace character at the end of the text in
+// order to trigger the closure of all open blocks such as quotes and lists
 text += "\n\n\x04";
 
 regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
@@ -375,7 +377,6 @@ if (text.indexOf('^') > -1)
 			if (c === '_'
 			 && matchPos > 0
 			 && ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.indexOf(text.charAt(matchPos - 1)) > 0
-			 && matchPos < textLen - 1
 			 && ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.indexOf(text.charAt(matchPos + 1)) > 0)
 			{
 				 continue;
