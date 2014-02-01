@@ -33,7 +33,7 @@ else
 
 // We append a couple of lines and a non-whitespace character at the end of the text in
 // order to trigger the closure of all open blocks such as quotes and lists
-text += "\n\n\x04";
+text += "\n\n\x17";
 
 regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 
@@ -278,7 +278,7 @@ if (text.indexOf('^') > -1)
 		matchLen  = match.length;
 
 		// Test whether we've just passed the limits of a block
-		if (breakPos > -1 && matchPos > breakPos)
+		if (matchPos > breakPos)
 		{
 			// Reset the buffer then look for the next break
 			buffered = 0;

@@ -46,7 +46,7 @@ class Parser extends ParserBase
 
 		// We append a couple of lines and a non-whitespace character at the end of the text in
 		// order to trigger the closure of all open blocks such as quotes and lists
-		$text .= "\n\n\x04";
+		$text .= "\n\n\x17";
 
 		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
 		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
@@ -299,7 +299,7 @@ class Parser extends ParserBase
 				$matchLen = strlen($match);
 
 				// Test whether we've just passed the limits of a block
-				if ($breakPos !== false && $matchPos > $breakPos)
+				if ($matchPos > $breakPos)
 				{
 					// Reset the buffer then look for the next break
 					$buffered = 0;
