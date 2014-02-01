@@ -445,14 +445,9 @@ function outputParagraphEnd()
 */
 function outputWhitespace(maxPos)
 {
-	if (maxPos > pos)
+	while (pos < maxPos && " \n\t".indexOf(text.charAt(pos)) > -1)
 	{
-		var ignoreText = /^[ \n\t]*/.exec(text)[0];
-
-		if (ignoreText !== '')
-		{
-			output += ignoreText;
-			pos += ignoreText.length;
-		}
+		output += text.charAt(pos);
+		++pos;
 	}
 }

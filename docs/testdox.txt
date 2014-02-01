@@ -2211,6 +2211,7 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Extends ArrayObject

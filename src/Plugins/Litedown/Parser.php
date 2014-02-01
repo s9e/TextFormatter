@@ -16,12 +16,18 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$hasEscapedChars = (strpos($text, '\\') !== false && preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text));
+		$textLen = strlen($text);
 
-		// Encode escaped literals that have a special meaning otherwise, so that we don't have to
-		// take them into account in regexps
-		if ($hasEscapedChars)
+		if (strpos($text, '\\') === false || !preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
 		{
+			$hasEscapedChars = false;
+		}
+		else
+		{
+			$hasEscapedChars = true;
+
+			// Encode escaped literals that have a special meaning otherwise, so that we don't have
+			// to take them into account in regexps
 			$text = strtr(
 				$text,
 				[
@@ -40,33 +46,92 @@ class Parser extends ParserBase
 			);
 		}
 
-		$lines = explode("\n", $text);
-		foreach ($lines as $line)
-		{
-			$spn = strspn($line, ' -+*#>0123456789.');
+		$text .= "\n\n\x04";
 
-			if (!$spn)
+		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+		$boundaries   = [];
+		$continuation = true;
+		$inCode       = false;
+		$lastTextPos  = 0;
+		$lists        = [];
+		$listsCnt     = 0;
+		$quotes       = [];
+		$quotesCnt    = 0;
+
+		foreach ($matches as $m)
+		{
+			$matchPos  = $m[0][1];
+			$matchLen  = strlen($m[0][0]);
+			$ignoreLen = $matchLen;
+
+			$quoteDepth = (isset($m[1])) ? substr_count($m[1][0], '>') : 0;
+
+			// If the line is empty and it's the first empty line (not a continuation) then we break
+			// current paragraph. If it's not empty, we mark the position so we can locate the last
+			// line of text
+			$lineIsEmpty = ($text[$matchPos + $matchLen] === "\n");
+			if ($lineIsEmpty && $continuation && $matchPos)
 			{
-				// NOTE: might be the continuation of a quote :\
-				continue;
+				$lfPos = strpos($text, "\n", $lastTextPos);
+				$this->parser->addParagraphBreak($lfPos);
+				$boundaries[] = $lfPos;
 			}
 
-			preg_match_all(
-				'/> ?|\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|[-*+] |\\d\\. |#+$/S',
-				substr($line, 0, $spn),
-				$matches
-			);
+			// Close supernumerary quotes
+			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
+			{
+				do
+				{
+					--$quotesCnt;
 
-			// Blockquote: ">" or "> "
-			// List item:  "* "
-			// List item:  "- "
-			// List item:  "+ "
-			// List item:  at least one digit followed by ". "
-			// HR:         At least three * or - alone on a line, with any number of spaces between
-			// Headings:   #+ alone on a line
-			// Headings:   possibly any number of - or = alone on a line
-			//
-			// NOTE: apparently the only elements allowed after a list item are more list items
+					$tag = $this->parser->addEndTag('QUOTE', strpos($text, "\n", $lastTextPos), 0);
+					$tag->setSortPriority(-$quotesCnt);
+					$tag->pairWith($quotes[$quotesCnt]);
+
+					array_pop($quotes);
+				}
+				while ($quoteDepth < $quotesCnt);
+
+				// Mark the block boundary
+				$boundaries[] = $matchPos;
+			}
+
+			// Open new quotes
+			if ($quoteDepth > $quotesCnt && !$lineIsEmpty)
+			{
+				do
+				{
+					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0);
+					$tag->setSortPriority($quotesCnt);
+
+					$quotes[] = $tag;
+				}
+				while ($quoteDepth > ++$quotesCnt);
+
+				// Mark the block boundary
+				$boundaries[] = $matchPos;
+			}
+
+			if ($lineIsEmpty)
+			{
+				$continuation = false;
+			}
+			else
+			{
+				$lastTextPos = $matchPos;
+			}
+
+			if ($ignoreLen)
+			{
+				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
+			}
+		}
+
+		foreach ($boundaries as $pos)
+		{
+			$text[$pos] = "\x17";
 		}
 
 		// Inline code
@@ -333,7 +398,7 @@ class Parser extends ParserBase
 					if ($c === '_'
 					 && $matchPos > 0
 					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos - 1]) > 0
-					 && $matchPos < strlen($text) - 1
+					 && $matchPos < $textLen - 1
 					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos + 1]) > 0)
 					{
 						 continue;

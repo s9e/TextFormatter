@@ -16,11 +16,87 @@ class ParserTest extends Test
 {
 	use ParsingTestsRunner;
 	use ParsingTestsJavaScriptRunner;
-//	use RenderingTestsRunner;
+	use RenderingTestsRunner;
 
 	public function getParsingTests()
 	{
-		$tests = [
+		return self::fixTests([
+			[
+				'foo',
+				'<t><p>foo</p></t>'
+			],
+			[
+				"foo\n\nbar",
+				"<t><p>foo</p>\n\n<p>bar</p></t>"
+			],
+			[
+				'> foo',
+				'<r><QUOTE><i>&gt; </i><p>foo</p></QUOTE></r>'
+			],
+			[
+				[
+					'> > foo',
+					'> ',
+					'> bar',
+					'',
+					'baz'
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p></QUOTE>',
+					'<i>&gt; </i>',
+					'<i>&gt; </i><p>bar</p></QUOTE>',
+					'',
+					'<p>baz</p></r>'
+				]
+			],
+			[
+				[
+					'> > foo',
+					'> ',
+					'> > bar',
+					'',
+					'baz'
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p>',
+					'<i>&gt; </i>',
+					'<i>&gt; &gt; </i><p>bar</p></QUOTE></QUOTE>',
+					'',
+					'<p>baz</p></r>'
+				]
+			],
+			[
+				[
+					'> > foo',
+					'',
+					'> > bar',
+					'',
+					'baz'
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p>',
+					'',
+					'<i>&gt; &gt; </i><p>bar</p></QUOTE></QUOTE>',
+					'',
+					'<p>baz</p></r>'
+				]
+			],
+			[
+				[
+					'> foo',
+					'bar',
+					'baz',
+					'',
+					'quux'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>foo',
+					'bar',
+					'baz</p></QUOTE>',
+					'',
+					'<p>quux</p></r>'
+				]
+			],
 			// Links
 			[
 				'Go to [that site](http://example.org) now!',
@@ -113,6 +189,14 @@ class ParserTest extends Test
 				'.. ``x`` ..',
 				'<r><p>.. <C><s>``</s>x<e>``</e></C> ..</p></r>'
 			],
+			[
+				"`foo\nbar`",
+				"<r><p><C><s>`</s>foo\nbar<e>`</e></C></p></r>"
+			],
+			[
+				"`foo\n\nbar`",
+				"<t><p>`foo</p>\n\n<p>bar`</p></t>"
+			],
 			// Strikethrough
 			[
 				'.. ~~foo~~ ~~bar~~ ..',
@@ -129,6 +213,14 @@ class ParserTest extends Test
 			[
 				'.. ~~~~ ..',
 				'<t><p>.. ~~~~ ..</p></t>'
+			],
+			[
+				"~~foo\nbar~~",
+				"<r><p><DEL><s>~~</s>foo\nbar<e>~~</e></DEL></p></r>"
+			],
+			[
+				"~~foo\n\nbar~~",
+				"<t><p>~~foo</p>\n\n<p>bar~~</p></t>"
 			],
 			// Superscript
 			[
@@ -201,6 +293,22 @@ class ParserTest extends Test
 				'<r><p>xx <EM><s>*</s>x<STRONG><s>**</s>x</STRONG><e>*</e></EM><STRONG>x<e>**</e></STRONG> xx</p></r>'
 			],
 			[
+				"*foo\nbar*",
+				"<r><p><EM><s>*</s>foo\nbar<e>*</e></EM></p></r>"
+			],
+			[
+				"*foo\n\nbar*",
+				"<t><p>*foo</p>\n\n<p>bar*</p></t>"
+			],
+			[
+				"***foo*\n\nbar**",
+				"<r><p>**<EM><s>*</s>foo<e>*</e></EM></p>\n\n<p>bar**</p></r>"
+			],
+			[
+				"***foo**\n\nbar*",
+				"<r><p>*<STRONG><s>**</s>foo<e>**</e></STRONG></p>\n\n<p>bar*</p></r>"
+			],
+			[
 				'xx _x_ xx',
 				'<r><p>xx <EM><s>_</s>x<e>_</e></EM> xx</p></r>'
 			],
@@ -248,10 +356,49 @@ class ParserTest extends Test
 				'xx *x**x*** xx',
 				'<r><p>xx <EM><s>*</s>x<STRONG><s>**</s>x<e>**</e></STRONG><e>*</e></EM> xx</p></r>'
 			],
-		];
+		]);
+	}
 
+	public function getRenderingTests()
+	{
+		return self::fixTests([
+			[
+				'> foo',
+				'<blockquote><p>foo</p></blockquote>'
+			],
+			[
+				[
+					'> > foo',
+					'> ',
+					'> bar',
+					'',
+					'baz'
+				],
+				[
+					'<blockquote><blockquote><p>foo</p></blockquote>',
+					'',
+					'<p>bar</p></blockquote>',
+					'',
+					'<p>baz</p>'
+				]
+			],
+		]);
+	}
+
+	protected static function fixTests($tests)
+	{
 		foreach ($tests as &$test)
 		{
+			if (is_array($test[0]))
+			{
+				$test[0] = implode("\n", $test[0]);
+			}
+
+			if (is_array($test[1]))
+			{
+				$test[1] = implode("\n", $test[1]);
+			}
+
 			$test[] = [];
 			$test[] = function ($configurator)
 			{

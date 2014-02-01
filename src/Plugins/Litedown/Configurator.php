@@ -89,6 +89,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function setUp()
 	{
+		$this->configurator->rootRules->noBrDescendant();
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
 
 		foreach ($this->tags as $tagName => $tagConfig)

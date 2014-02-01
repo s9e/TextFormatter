@@ -126,7 +126,7 @@ function addTag(type, name, pos, len)
 	{
 		tag.invalidate();
 	}
-	else if (tagsConfig[name].isDisabled)
+	else if (tagsConfig[name] && tagsConfig[name].isDisabled)
 	{
 		logger.warn(
 			'Tag is disabled',

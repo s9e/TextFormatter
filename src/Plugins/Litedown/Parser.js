@@ -1,10 +1,15 @@
-var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos, tag, tagLen, title, url,
-	hasEscapedChars = (text.indexOf('\\') > -1);
+var contentLen, endTagLen, endTagPos, hasEscapedChars, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos, tag, tagLen, title, url;
 
-// Encode escaped literals that have a special meaning otherwise, so that we don't have to
-// take them into account in regexps
-if (hasEscapedChars)
+if (text.indexOf('\\') < 0)
 {
+	hasEscapedChars = false;
+}
+else
+{
+	hasEscapedChars = true;
+
+	// Encode escaped literals that have a special meaning otherwise, so that we don't have
+	// to take them into account in regexps
 	text = text.replace(
 		/\\[!")*[\\\]^_`~]/g,
 		function (str)
@@ -25,6 +30,103 @@ if (hasEscapedChars)
 		}
 	);
 }
+
+text += "\n\n\x04";
+
+regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
+
+var boundaries   = [],
+	continuation = true,
+	inCode       = false,
+	lastTextPos  = 0,
+	lists        = [],
+	listsCnt     = 0,
+	quotes       = [],
+	quotesCnt    = 0,
+	ignoreLen,
+	lfPos,
+	lineIsEmpty,
+	quoteDepth;
+
+while (m = regexp.exec(text))
+{
+	matchPos  = m['index'];
+	matchLen  = m[0].length;
+	ignoreLen = matchLen;
+
+	// If the match is empty we need to move the cursor manually
+	if (!matchLen)
+	{
+		++regexp.lastIndex;
+	}
+
+	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
+
+	// If the line is empty and it's the first empty line (not a continuation) then we break
+	// current paragraph. If it's not empty, we mark the position so we can locate the last
+	// line of text
+	lineIsEmpty = (text.charAt(matchPos + matchLen) === "\n");
+	if (lineIsEmpty && continuation && matchPos)
+	{
+		lfPos = text.indexOf("\n", lastTextPos);
+		addParagraphBreak(lfPos);
+		boundaries.push(lfPos);
+	}
+
+	// Close supernumerary quotes
+	if (quoteDepth < quotesCnt && !continuation && !lineIsEmpty)
+	{
+		do
+		{
+			--quotesCnt;
+
+			tag = addEndTag('QUOTE', text.indexOf("\n", lastTextPos), 0);
+			tag.setSortPriority(-quotesCnt);
+			tag.pairWith(quotes[quotesCnt]);
+
+			quotes.pop();
+		}
+		while (quoteDepth < quotesCnt);
+
+		// Mark the block boundary
+		boundaries.push(matchPos);
+	}
+
+	// Open new quotes
+	if (quoteDepth > quotesCnt && !lineIsEmpty)
+	{
+		do
+		{
+			tag = addStartTag('QUOTE', matchPos, 0);
+			tag.setSortPriority(quotesCnt);
+
+			quotes.push(tag);
+		}
+		while (quoteDepth > ++quotesCnt);
+
+		// Mark the block boundary
+		boundaries.push(matchPos);
+	}
+
+	if (lineIsEmpty)
+	{
+		continuation = false;
+	}
+	else
+	{
+		lastTextPos = matchPos;
+	}
+
+	if (ignoreLen)
+	{
+		addIgnoreTag(matchPos, ignoreLen).setSortPriority(1000);
+	}
+}
+
+boundaries.forEach(function(pos)
+{
+	text = text.substr(0, pos) + "\x17" + text.substr(1 + pos);
+});
 
 // Inline code
 if (text.indexOf('`') > -1)
