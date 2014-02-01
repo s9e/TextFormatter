@@ -27,6 +27,13 @@ then
 	git update-index --add "src/Plugins/MediaEmbed/README.md"
 fi
 
+if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]
+then
+	./scripts/patchLitedownSyntax.php
+
+	git update-index --add "src/Plugins/Litedown/Syntax.md"
+fi
+
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
 	phpunit --exclude-group none --testdox-text docs/testdox.txt | tee $TMP
