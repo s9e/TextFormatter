@@ -45,6 +45,7 @@ var boundaries   = [],
 	listsCnt     = 0,
 	quotes       = [],
 	quotesCnt    = 0,
+	breakParagraph,
 	ignoreLen,
 	lfPos,
 	lineIsEmpty,
@@ -55,6 +56,10 @@ while (m = regexp.exec(text))
 	matchPos  = m['index'];
 	matchLen  = m[0].length;
 	ignoreLen = matchLen;
+	lfPos     = text.indexOf("\n", matchPos);
+
+	breakParagraph = false;
+	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
 
 	// If the match is empty we need to move the cursor manually
 	if (!matchLen)
@@ -62,17 +67,13 @@ while (m = regexp.exec(text))
 		++regexp.lastIndex;
 	}
 
-	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
-
 	// If the line is empty and it's the first empty line (not a continuation) then we break
 	// current paragraph. If it's not empty, we mark the position so we can locate the last
 	// line of text
-	lineIsEmpty = (text.charAt(matchPos + matchLen) === "\n");
+	lineIsEmpty = (lfPos === matchPos + matchLen);
 	if (lineIsEmpty && continuation && matchPos)
 	{
-		lfPos = text.indexOf("\n", lastTextPos);
-		addParagraphBreak(lfPos);
-		boundaries.push(lfPos);
+		breakParagraph = true;
 	}
 
 	// Close supernumerary quotes
@@ -82,7 +83,7 @@ while (m = regexp.exec(text))
 		{
 			--quotesCnt;
 
-			tag = addEndTag('QUOTE', text.indexOf("\n", lastTextPos), 0);
+			tag = addEndTag('QUOTE', lastTextPos, 0);
 			tag.setSortPriority(-quotesCnt);
 			tag.pairWith(quotes[quotesCnt]);
 
@@ -110,13 +111,49 @@ while (m = regexp.exec(text))
 		boundaries.push(matchPos);
 	}
 
+	if (m[5])
+	{
+		// Headers
+		if (m[5].charAt(0) === '#')
+		{
+			startTagPos = matchPos + matchLen;
+			startTagLen = 0;
+			endTagPos   = lfPos;
+			endTagLen   = 0;
+
+			// Consume the leftmost whitespace and # characters as part of the end tag
+			while (" #\t".indexOf(text.charAt(endTagPos - 1)) > -1)
+			{
+				--endTagPos;
+				++endTagLen;
+			}
+
+			addTagPair('H' + /#{1,6}/.exec(m[5])[0].length, startTagPos, startTagLen, endTagPos, endTagLen);
+
+			// Mark the start and the end of the header as boundaries
+			boundaries.push(startTagPos);
+			boundaries.push(endTagPos);
+
+			if (continuation)
+			{
+				breakParagraph = true;
+			}
+		}
+	}
+
+	if (breakParagraph)
+	{
+		addParagraphBreak(lastTextPos);
+		boundaries.push(lastTextPos);
+	}
+
 	if (lineIsEmpty)
 	{
 		continuation = false;
 	}
 	else
 	{
-		lastTextPos = matchPos;
+		lastTextPos = lfPos;
 	}
 
 	if (ignoreLen)

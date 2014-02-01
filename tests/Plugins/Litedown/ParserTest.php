@@ -21,6 +21,7 @@ class ParserTest extends Test
 	public function getParsingTests()
 	{
 		return self::fixTests([
+			// Paragraphs and quotes
 			[
 				'foo',
 				'<t><p>foo</p></t>'
@@ -95,6 +96,67 @@ class ParserTest extends Test
 					'baz</p></QUOTE>',
 					'',
 					'<p>quux</p></r>'
+				]
+			],
+			// Headers
+			[
+				'# H1',
+				'<r><i># </i><H1>H1</H1></r>'
+			],
+			[
+				'###### H6',
+				'<r><i>###### </i><H6>H6</H6></r>'
+			],
+			[
+				'####### H7',
+				'<r><i>####### </i><H6>H7</H6></r>'
+			],
+			[
+				'# H1 #',
+				'<r><i># </i><H1>H1<e> #</e></H1></r>'
+			],
+			[
+				'### H3 # H3 ####',
+				'<r><i>### </i><H3>H3 # H3<e> ####</e></H3></r>'
+			],
+			[
+				'### foo *bar*',
+				'<r><i>### </i><H3>foo <EM><s>*</s>bar<e>*</e></EM></H3></r>'
+			],
+			[
+				"*foo\n### bar*",
+				"<r><p>*foo</p>\n<i>### </i><H3>bar*</H3></r>"
+			],
+			[
+				"*foo\n### bar*\nbaz*",
+				"<r><p>*foo</p>\n<i>### </i><H3>bar*</H3>\n<p>baz*</p></r>"
+			],
+			[
+				"foo\n\n### bar\n\nbaz",
+				"<r><p>foo</p>\n\n<i>### </i><H3>bar</H3>\n\n<p>baz</p></r>"
+			],
+			[
+				"foo\n\n### bar\n\nbaz",
+				"<r><p>foo</p>\n\n<i>### </i><H3>bar</H3>\n\n<p>baz</p></r>"
+			],
+			[
+				[
+					'> > foo',
+					'> ',
+					'> # BAR',
+					'> ',
+					'> baz',
+					'',
+					'text'
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p></QUOTE>',
+					'<i>&gt; </i>',
+					'<i>&gt; # </i><H1>BAR</H1>',
+					'<i>&gt; </i>',
+					'<i>&gt; </i><p>baz</p></QUOTE>',
+					'',
+					'<p>text</p></r>'
 				]
 			],
 			// Links
@@ -378,6 +440,22 @@ class ParserTest extends Test
 					'<blockquote><blockquote><p>foo</p></blockquote>',
 					'',
 					'<p>bar</p></blockquote>',
+					'',
+					'<p>baz</p>'
+				]
+			],
+			[
+				[
+					'foo',
+					' ',
+					'## bar',
+					'',
+					'baz'
+				],
+				[
+					'<p>foo</p>',
+					'',
+					'<h2>bar</h2>',
 					'',
 					'<p>baz</p>'
 				]

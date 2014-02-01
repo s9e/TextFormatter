@@ -65,18 +65,18 @@ class Parser extends ParserBase
 			$matchPos  = $m[0][1];
 			$matchLen  = strlen($m[0][0]);
 			$ignoreLen = $matchLen;
+			$lfPos     = strpos($text, "\n", $matchPos);
 
+			$breakParagraph = false;
 			$quoteDepth = (isset($m[1])) ? substr_count($m[1][0], '>') : 0;
 
 			// If the line is empty and it's the first empty line (not a continuation) then we break
 			// current paragraph. If it's not empty, we mark the position so we can locate the last
 			// line of text
-			$lineIsEmpty = ($text[$matchPos + $matchLen] === "\n");
+			$lineIsEmpty = ($lfPos === $matchPos + $matchLen);
 			if ($lineIsEmpty && $continuation && $matchPos)
 			{
-				$lfPos = strpos($text, "\n", $lastTextPos);
-				$this->parser->addParagraphBreak($lfPos);
-				$boundaries[] = $lfPos;
+				$breakParagraph = true;
 			}
 
 			// Close supernumerary quotes
@@ -86,7 +86,7 @@ class Parser extends ParserBase
 				{
 					--$quotesCnt;
 
-					$tag = $this->parser->addEndTag('QUOTE', strpos($text, "\n", $lastTextPos), 0);
+					$tag = $this->parser->addEndTag('QUOTE', $lastTextPos, 0);
 					$tag->setSortPriority(-$quotesCnt);
 					$tag->pairWith($quotes[$quotesCnt]);
 
@@ -114,13 +114,49 @@ class Parser extends ParserBase
 				$boundaries[] = $matchPos;
 			}
 
+			if (isset($m[5]))
+			{
+				// Headers
+				if ($m[5][0][0] === '#')
+				{
+					$startTagPos = $matchPos + $matchLen;
+					$startTagLen = 0;
+					$endTagPos   = $lfPos;
+					$endTagLen   = 0;
+
+					// Consume the leftmost whitespace and # characters as part of the end tag
+					while (strpos(" #\t", $text[$endTagPos - 1]) !== false)
+					{
+						--$endTagPos;
+						++$endTagLen;
+					}
+
+					$this->parser->addTagPair('H' . strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+
+					// Mark the start and the end of the header as boundaries
+					$boundaries[] = $startTagPos;
+					$boundaries[] = $endTagPos;
+
+					if ($continuation)
+					{
+						$breakParagraph = true;
+					}
+				}
+			}
+
+			if ($breakParagraph)
+			{
+				$this->parser->addParagraphBreak($lastTextPos);
+				$boundaries[] = $lastTextPos;
+			}
+
 			if ($lineIsEmpty)
 			{
 				$continuation = false;
 			}
 			else
 			{
-				$lastTextPos = $matchPos;
+				$lastTextPos = $lfPos;
 			}
 
 			if ($ignoreLen)
