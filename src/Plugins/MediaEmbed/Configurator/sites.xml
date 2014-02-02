@@ -526,13 +526,14 @@
 		<name>Trailer Addict</name>
 		<homepage>http://www.traileraddict.com/</homepage>
 		<example>http://www.traileraddict.com/trailer/watchmen/feature-trailer</example>
+		<example>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</example>
 
 		<host>traileraddict.com</host>
 		<scrape>
-			<match>!traileraddict\.com/trailer/.!</match>
-			<extract>!traileraddict\.com/emd/(?'id'\d+)!</extract>
+			<match>@traileraddict\.com/(?!tags/)[^/]+/.@</match>
+			<extract>@v\.traileraddict\.com/(?'id'\d+)@</extract>
 		</scrape>
-		<flash width="450" height="238" src="http://www.traileraddict.com/emd/{@id}"/>
+		<iframe width="560" height="315" src="http://v.traileraddict.com/{@id}"/>
 	</site>
 
 	<site id="twitch">

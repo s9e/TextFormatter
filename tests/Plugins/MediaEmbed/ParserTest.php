@@ -1224,6 +1224,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.traileraddict.com/tags/musical',
+				'<t>http://www.traileraddict.com/tags/musical</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('traileraddict');
+				}
+			],
+			[
 				'http://www.twitch.tv/minigolf2000',
 				'<r><TWITCH channel="minigolf2000" url="http://www.twitch.tv/minigolf2000">http://www.twitch.tv/minigolf2000</TWITCH></r>',
 				[],
