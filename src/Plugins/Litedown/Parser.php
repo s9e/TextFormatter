@@ -54,11 +54,11 @@ class Parser extends ParserBase
 		$boundaries   = [];
 		$continuation = true;
 		$inCode       = false;
-		$lastTextPos  = 0;
 		$lists        = [];
 		$listsCnt     = 0;
 		$quotes       = [];
 		$quotesCnt    = 0;
+		$textBoundary = 0;
 
 		foreach ($matches as $m)
 		{
@@ -84,7 +84,7 @@ class Parser extends ParserBase
 			{
 				do
 				{
-					$this->parser->addEndTag('QUOTE', $lastTextPos, 0)->pairWith(array_pop($quotes));
+					$this->parser->addEndTag('QUOTE', $textBoundary, 0)->pairWith(array_pop($quotes));
 				}
 				while ($quoteDepth < --$quotesCnt);
 
@@ -140,8 +140,8 @@ class Parser extends ParserBase
 
 			if ($breakParagraph)
 			{
-				$this->parser->addParagraphBreak($lastTextPos);
-				$boundaries[] = $lastTextPos;
+				$this->parser->addParagraphBreak($textBoundary);
+				$boundaries[] = $textBoundary;
 			}
 
 			if ($lineIsEmpty)
@@ -150,7 +150,7 @@ class Parser extends ParserBase
 			}
 			else
 			{
-				$lastTextPos = $lfPos;
+				$textBoundary = $lfPos;
 			}
 
 			if ($ignoreLen)

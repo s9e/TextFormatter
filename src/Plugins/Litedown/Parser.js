@@ -40,11 +40,11 @@ regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- 
 var boundaries   = [],
 	continuation = true,
 	inCode       = false,
-	lastTextPos  = 0,
 	lists        = [],
 	listsCnt     = 0,
 	quotes       = [],
 	quotesCnt    = 0,
+	textBoundary = 0,
 	breakParagraph,
 	ignoreLen,
 	lfPos,
@@ -81,7 +81,7 @@ while (m = regexp.exec(text))
 	{
 		do
 		{
-			addEndTag('QUOTE', lastTextPos, 0).pairWith(quotes.pop());
+			addEndTag('QUOTE', textBoundary, 0).pairWith(quotes.pop());
 		}
 		while (quoteDepth < --quotesCnt);
 
@@ -137,8 +137,8 @@ while (m = regexp.exec(text))
 
 	if (breakParagraph)
 	{
-		addParagraphBreak(lastTextPos);
-		boundaries.push(lastTextPos);
+		addParagraphBreak(textBoundary);
+		boundaries.push(textBoundary);
 	}
 
 	if (lineIsEmpty)
@@ -147,7 +147,7 @@ while (m = regexp.exec(text))
 	}
 	else
 	{
-		lastTextPos = lfPos;
+		textBoundary = lfPos;
 	}
 
 	if (ignoreLen)
