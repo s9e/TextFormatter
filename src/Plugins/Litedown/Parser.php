@@ -84,15 +84,9 @@ class Parser extends ParserBase
 			{
 				do
 				{
-					--$quotesCnt;
-
-					$tag = $this->parser->addEndTag('QUOTE', $lastTextPos, 0);
-					$tag->setSortPriority(-$quotesCnt);
-					$tag->pairWith($quotes[$quotesCnt]);
-
-					array_pop($quotes);
+					$this->parser->addEndTag('QUOTE', $lastTextPos, 0)->pairWith(array_pop($quotes));
 				}
-				while ($quoteDepth < $quotesCnt);
+				while ($quoteDepth < --$quotesCnt);
 
 				// Mark the block boundary
 				$boundaries[] = $matchPos;

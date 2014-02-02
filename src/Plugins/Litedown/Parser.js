@@ -81,15 +81,9 @@ while (m = regexp.exec(text))
 	{
 		do
 		{
-			--quotesCnt;
-
-			tag = addEndTag('QUOTE', lastTextPos, 0);
-			tag.setSortPriority(-quotesCnt);
-			tag.pairWith(quotes[quotesCnt]);
-
-			quotes.pop();
+			addEndTag('QUOTE', lastTextPos, 0).pairWith(quotes.pop());
 		}
-		while (quoteDepth < quotesCnt);
+		while (quoteDepth < --quotesCnt);
 
 		// Mark the block boundary
 		boundaries.push(matchPos);
