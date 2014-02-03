@@ -87,7 +87,7 @@ abstract class RegexpBuilder
 				if ($pos === 0)
 				{
 					// Store the initial for later
-					$initials[$esc[$c]] = true;
+					$initials[] = $esc[$c];
 				}
 
 				$splitWord[] = $esc[$c];
@@ -104,7 +104,7 @@ abstract class RegexpBuilder
 		{
 			$useLookahead = true;
 
-			foreach ($initials as $initial => $void)
+			foreach ($initials as $initial)
 			{
 				if (!self::canBeUsedInCharacterClass($initial))
 				{
@@ -115,7 +115,7 @@ abstract class RegexpBuilder
 
 			if ($useLookahead)
 			{
-				$regexp = '(?=' . self::generateCharacterClass(array_keys($initials)) . ')' . $regexp;
+				$regexp = '(?=' . self::generateCharacterClass($initials) . ')' . $regexp;
 			}
 		}
 
