@@ -540,6 +540,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['ax', 'ay', 'bx', 'by']) returns '[ab][xy]'
  [x] fromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?>c|[ab][xy])'
  [x] fromList(['ax', 'ay', 'bx', 'by', 'x', 'y']) returns '[ab]?[xy]'
+ [x] fromList(['03', '04', '13', '14', '3', '4']) returns '[01]?[34]'
  [x] fromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?>c|a[xy]|bb[xy])'
  [x] fromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?>c|dd[xy]|[ab][xy])'
  [x] fromList(['']) returns ''

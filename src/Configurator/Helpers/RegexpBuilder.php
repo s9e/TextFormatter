@@ -203,6 +203,8 @@ abstract class RegexpBuilder
 		$characterClass = [];
 		foreach ($groups as $head => $groupChains)
 		{
+			$head = (string) $head;
+
 			if ($groupChains === [[$head]]
 			 && self::canBeUsedInCharacterClass($head))
 			{
