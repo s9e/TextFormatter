@@ -62,22 +62,19 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$matchPos  = $m[0][1];
-			$matchLen  = strlen($m[0][0]);
-			$ignoreLen = $matchLen;
-			$lfPos     = strpos($text, "\n", $matchPos);
-
-			$breakParagraph = false;
-			$quoteDepth = (isset($m[1])) ? substr_count($m[1][0], '>') : 0;
+			$matchPos    = $m[0][1];
+			$matchLen    = strlen($m[0][0]);
+			$ignoreLen   = $matchLen;
+			$lfPos       = strpos($text, "\n", $matchPos);
+			$lineIsEmpty = ($lfPos === $matchPos + $matchLen);
 
 			// If the line is empty and it's the first empty line (not a continuation) then we break
 			// current paragraph. If it's not empty, we mark the position so we can locate the last
 			// line of text
-			$lineIsEmpty = ($lfPos === $matchPos + $matchLen);
-			if ($lineIsEmpty && $continuation && $matchPos)
-			{
-				$breakParagraph = true;
-			}
+			$breakParagraph = ($lineIsEmpty && $continuation && $matchPos);
+
+			// Count quote marks
+			$quoteDepth = (!empty($m[1][0])) ? substr_count($m[1][0], '>') : 0;
 
 			// Close supernumerary quotes
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)

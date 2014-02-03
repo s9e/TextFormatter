@@ -53,13 +53,11 @@ regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- 
 
 while (m = regexp.exec(text))
 {
-	matchPos  = m['index'];
-	matchLen  = m[0].length;
-	ignoreLen = matchLen;
-	lfPos     = text.indexOf("\n", matchPos);
-
-	breakParagraph = false;
-	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
+	matchPos    = m['index'];
+	matchLen    = m[0].length;
+	ignoreLen   = matchLen;
+	lfPos       = text.indexOf("\n", matchPos);
+	lineIsEmpty = (lfPos === matchPos + matchLen);
 
 	// If the match is empty we need to move the cursor manually
 	if (!matchLen)
@@ -70,11 +68,10 @@ while (m = regexp.exec(text))
 	// If the line is empty and it's the first empty line (not a continuation) then we break
 	// current paragraph. If it's not empty, we mark the position so we can locate the last
 	// line of text
-	lineIsEmpty = (lfPos === matchPos + matchLen);
-	if (lineIsEmpty && continuation && matchPos)
-	{
-		breakParagraph = true;
-	}
+	breakParagraph = (lineIsEmpty && continuation && matchPos);
+
+	// Count quote marks
+	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
 
 	// Close supernumerary quotes
 	if (quoteDepth < quotesCnt && !continuation && !lineIsEmpty)
