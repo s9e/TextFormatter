@@ -35,8 +35,6 @@ else
 // order to trigger the closure of all open blocks such as quotes and lists
 text += "\n\n\x17";
 
-regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
-
 var boundaries   = [],
 	continuation = true,
 	inCode       = false,
@@ -50,6 +48,8 @@ var boundaries   = [],
 	lfPos,
 	lineIsEmpty,
 	quoteDepth;
+
+regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 
 while (m = regexp.exec(text))
 {

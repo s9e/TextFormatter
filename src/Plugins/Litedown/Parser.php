@@ -48,9 +48,6 @@ class Parser extends ParserBase
 		// order to trigger the closure of all open blocks such as quotes and lists
 		$text .= "\n\n\x17";
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
-		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-
 		$boundaries   = [];
 		$continuation = true;
 		$inCode       = false;
@@ -59,6 +56,9 @@ class Parser extends ParserBase
 		$quotes       = [];
 		$quotesCnt    = 0;
 		$textBoundary = 0;
+
+		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
 		{
