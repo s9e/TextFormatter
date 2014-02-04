@@ -98,6 +98,22 @@ class ParserTest extends Test
 					'<p>quux</p></r>'
 				]
 			],
+			[
+				[
+					'foo',
+					'> bar',
+					'baz',
+					'',
+					'quux'
+				],
+				[
+					'<r><p>foo</p>',
+					'<QUOTE><i>&gt; </i><p>bar',
+					'baz</p></QUOTE>',
+					'',
+					'<p>quux</p></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',
