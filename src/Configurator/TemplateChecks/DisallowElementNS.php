@@ -41,7 +41,7 @@ class DisallowElementNS extends TemplateCheck
 	* Test for the presence of an element of given name in given namespace
 	*
 	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag     $tag      Tag this template belongs to
+	* @param  Tag        $tag      Tag this template belongs to
 	* @return void
 	*/
 	public function check(DOMElement $template, Tag $tag)

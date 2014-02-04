@@ -24,7 +24,7 @@ class DisallowObjectParamsWithGeneratedName extends TemplateCheck
 	* content it expects
 	*
 	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag     $tag      Tag this template belongs to
+	* @param  Tag        $tag      Tag this template belongs to
 	* @return void
 	*/
 	public function check(DOMElement $template, Tag $tag)

@@ -20,7 +20,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 	* Any select expression that is not a single attribute is considered unsafe
 	*
 	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag     $tag      Tag this template belongs to
+	* @param  Tag        $tag      Tag this template belongs to
 	* @return void
 	*/
 	public function check(DOMElement $template, Tag $tag)
