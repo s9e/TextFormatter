@@ -91,8 +91,8 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	/**
 	* Test whether an <xsl:copy-of/> node is safe
 	*
-	* @param  DOMAttr $node <xsl:copy-of/> node
-	* @param  Tag     $tag  Reference tag
+	* @param  DOMElement $node <xsl:copy-of/> node
+	* @param  Tag        $tag  Reference tag
 	* @return void
 	*/
 	protected function checkCopyOfNode(DOMElement $node, Tag $tag)
@@ -213,14 +213,17 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		{
 			$this->checkAttributeNode($node, $tag);
 		}
-		elseif ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
-		     && $node->localName    === 'copy-of')
+		elseif ($node instanceof DOMElement)
 		{
-			$this->checkCopyOfNode($node, $tag);
-		}
-		else
-		{
-			$this->checkElementNode($node, $tag);
+			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+			 && $node->localName    === 'copy-of')
+			{
+				$this->checkCopyOfNode($node, $tag);
+			}
+			else
+			{
+				$this->checkElementNode($node, $tag);
+			}
 		}
 	}
 
