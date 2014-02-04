@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
-use DOMNode;
+use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -35,11 +35,11 @@ class DisallowElement extends TemplateCheck
 	/**
 	* Test for the presence of an element of given name
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @param  Tag     $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function check(DOMNode $template, Tag $tag)
+	public function check(DOMElement $template, Tag $tag)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query

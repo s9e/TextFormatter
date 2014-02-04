@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
@@ -17,11 +17,11 @@ class DisallowDynamicElementNames extends TemplateCheck
 	/**
 	* Test for the presence of an <xsl:element/> node using a dynamic name
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @param  Tag     $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function check(DOMNode $template, Tag $tag)
+	public function check(DOMElement $template, Tag $tag)
 	{
 		$nodes = $template->getElementsByTagNameNS(
 			'http://www.w3.org/1999/XSL/Transform',

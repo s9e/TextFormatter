@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
 /**
@@ -18,9 +18,9 @@ abstract class TemplateCheck
 	/**
 	* Check a template for infractions to this check and throw any relevant Exception
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @param  Tag     $tag      Tag this template belongs to
 	* @return void
 	*/
-	abstract public function check(DOMNode $template, Tag $tag);
+	abstract public function check(DOMElement $template, Tag $tag);
 }

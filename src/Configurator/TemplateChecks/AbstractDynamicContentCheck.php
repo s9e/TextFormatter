@@ -22,10 +22,10 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	/**
 	* Get the nodes targeted by this check
 	*
-	* @param  DOMNode $template <xsl:template/> node
-	* @return array             Array of DOMNode instances
+	* @param  DOMElement $template <xsl:template/> node
+	* @return array             Array of DOMElement instances
 	*/
-	abstract protected function getNodes(DOMNode $template);
+	abstract protected function getNodes(DOMElement $template);
 
 	/**
 	* Return whether an attribute is considered safe
@@ -38,11 +38,11 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	/**
 	* Look for improperly-filtered dynamic content
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @param  Tag     $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function check(DOMNode $template, Tag $tag)
+	public function check(DOMElement $template, Tag $tag)
 	{
 		foreach ($this->getNodes($template) as $node)
 		{
@@ -95,7 +95,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	* @param  Tag     $tag  Reference tag
 	* @return void
 	*/
-	protected function checkCopyOfNode(DOMNode $node, Tag $tag)
+	protected function checkCopyOfNode(DOMElement $node, Tag $tag)
 	{
 		$this->checkSelectNode($node->getAttributeNode('select'), $tag);
 	}

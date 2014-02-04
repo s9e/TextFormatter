@@ -3,7 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 
 use DOMDocument;
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -187,7 +187,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 class DummyContentCheck extends AbstractDynamicContentCheck
 {
-	protected function getNodes(DOMNode $template)
+	protected function getNodes(DOMElement $template)
 	{
 		return $template->getElementsByTagName('b');
 	}

@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use DOMElement;
 use DOMNode;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
@@ -65,11 +66,11 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	/**
 	* Test for the set Flash restriction
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @param  Tag     $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function check(DOMNode $template, Tag $tag)
+	public function check(DOMElement $template, Tag $tag)
 	{
 		$dom         = $template->ownerDocument;
 		$settingName = strtolower($this->settingName);
