@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
-use ArrayObject;
 use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
@@ -527,7 +526,7 @@ class JavaScript
 			return (string) $value;
 		}
 
-		if (!is_array($value) && !($value instanceof ArrayObject))
+		if (!is_array($value) && !($value instanceof Dictionary))
 		{
 			throw new RuntimeException('Cannot encode non-scalar value');
 		}
