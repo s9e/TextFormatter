@@ -186,7 +186,21 @@ class ParserTest extends Test
 	*/
 	public function testScraping()
 	{
-		call_user_func_array([$this, 'testParsing'], func_get_args());
+		try
+		{
+			call_user_func_array([$this, 'testParsing'], func_get_args());
+		}
+		catch (\PHPUnit_Framework_Error_Warning $e)
+		{
+			$msg = $e->getMessage();
+
+			if (strpos($msg, 'HTTP request failed') !== false)
+			{
+				$this->markTestSkipped($msg);
+			}
+
+			throw $e;
+		}
 	}
 
 	public function getScrapingTests()
@@ -482,7 +496,21 @@ class ParserTest extends Test
 	*/
 	public function testScrapingRendering()
 	{
-		call_user_func_array([$this, 'testRendering'], func_get_args());
+		try
+		{
+			call_user_func_array([$this, 'testRendering'], func_get_args());
+		}
+		catch (\PHPUnit_Framework_Error_Warning $e)
+		{
+			$msg = $e->getMessage();
+
+			if (strpos($msg, 'HTTP request failed') !== false)
+			{
+				$this->markTestSkipped($msg);
+			}
+
+			throw $e;
+		}
 	}
 
 	public function getScrapingRenderingTests()
