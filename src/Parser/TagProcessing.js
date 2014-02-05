@@ -117,10 +117,11 @@ function processTags()
 			currentTag = tagStack.pop();
 
 			// Skip current tag if tags are disabled and current tag would not close the last
-			// open tag
+			// open tag and is not a special tag such as a line/paragraph break or an ignore tag
 			if (context.flags & RULE_IGNORE_TAGS)
 			{
-				if (!currentTag.canClose(openTags[openTags.length - 1]))
+				if (!currentTag.canClose(openTags[openTags.length - 1])
+				 && !currentTag.isSpecial())
 				{
 					continue;
 				}

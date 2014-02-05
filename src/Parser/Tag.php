@@ -365,7 +365,17 @@ class Tag
 	*/
 	public function isSelfClosingTag()
 	{
-		return (bool) ($this->type === self::SELF_CLOSING_TAG);
+		return ($this->type === self::SELF_CLOSING_TAG);
+	}
+
+	/**
+	* Test whether this tag is a special tag: "br", "i" or "pb"
+	*
+	* @return bool
+	*/
+	public function isSpecial()
+	{
+		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb');
 	}
 
 	/**

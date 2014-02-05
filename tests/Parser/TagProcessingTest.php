@@ -1025,6 +1025,47 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'.X.',
+				'<r><NOPARSE>.<i>X</i>.</NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 3, 0);
+					$parser->addIgnoreTag(1, 1);
+				}
+			],
+			[
+				'.XX.',
+				'<r><NOPARSE><p>.X</p><p>X.</p></NOPARSE></r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('NOPARSE');
+					$tag->rules->createParagraphs();
+					$tag->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 4, 0);
+					$parser->addParagraphBreak(2);
+				}
+			],
+			[
+				'.X.',
+				'<r><NOPARSE>.<br/>X.</NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 3, 0);
+					$parser->addBrTag(1);
+				}
+			],
+			[
 				'foobar',
 				'<t><p>foo</p><p>bar</p></t>',
 				function ($configurator)

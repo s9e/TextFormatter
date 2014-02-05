@@ -1658,6 +1658,10 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] isSelfClosingTag() returns false if the tag's type is Tag::START_TAG
  [x] isSelfClosingTag() returns false if the tag's type is Tag::END_TAG
  [x] isSelfClosingTag() returns true if the tag's type is Tag::SELF_CLOSING_TAG
+ [x] isSpecial() returns false by default
+ [x] isSpecial() returns true if the tag's name is "i"
+ [x] isSpecial() returns true if the tag's name is "br"
+ [x] isSpecial() returns true if the tag's name is "pb"
  [x] invalidate() makes isInvalid() return true
  [x] $tag1->cascadeInvalidationTo($tag2) causes $tag1->invalidate() to call $tag2->invalidate()
  [x] $tag1->cascadeInvalidationTo($tag2) does not cause $tag2->invalidate() to call $tag1->invalidate()

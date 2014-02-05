@@ -227,6 +227,42 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox isSpecial() returns false by default
+	*/
+	public function testIsSpecialDefault()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 12, 34);
+		$this->assertFalse($tag->isSpecial());
+	}
+
+	/**
+	* @testdox isSpecial() returns true if the tag's name is "i"
+	*/
+	public function testIsSpecialIgnore()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'i', 10, 10);
+		$this->assertTrue($tag->isSpecial());
+	}
+
+	/**
+	* @testdox isSpecial() returns true if the tag's name is "br"
+	*/
+	public function testIsSpecialLineBreak()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'pb', 0, 0);
+		$this->assertTrue($tag->isSpecial());
+	}
+
+	/**
+	* @testdox isSpecial() returns true if the tag's name is "pb"
+	*/
+	public function testIsSpecialParagraphBreak()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'pb', 0, 0);
+		$this->assertTrue($tag->isSpecial());
+	}
+
+	/**
 	* @testdox invalidate() makes isInvalid() return true
 	*/
 	public function testInvalidate()

@@ -356,6 +356,16 @@ Tag.prototype.isSelfClosingTag = function()
 }
 
 /**
+* Test whether this tag is a special tag: "br", "i" or "pb"
+*
+* @return {!boolean}
+*/
+Tag.prototype.isSpecial = function()
+{
+	return (this.name === 'br' || this.name === 'i' || this.name === 'pb');
+}
+
+/**
 * Test whether this tag is a start tag (self-closing tags inclusive)
 *
 * @return {!boolean}

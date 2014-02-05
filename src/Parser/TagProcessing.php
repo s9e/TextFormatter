@@ -133,10 +133,11 @@ trait TagProcessing
 				$this->currentTag = array_pop($this->tagStack);
 
 				// Skip current tag if tags are disabled and current tag would not close the last
-				// open tag
+				// open tag and is not a special tag such as a line/paragraph break or an ignore tag
 				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
 				{
-					if (!$this->currentTag->canClose(end($this->openTags)))
+					if (!$this->currentTag->canClose(end($this->openTags))
+					 && !$this->currentTag->isSpecial())
 					{
 						continue;
 					}

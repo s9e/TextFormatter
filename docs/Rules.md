@@ -92,7 +92,7 @@ Whether whitespace around this tag should be ignored. Useful for allowing whites
 
 <dt>ignoreTags</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreTags();</code><br/>
-Silently ignore all tags until current tag is closed. Does not effect the automatic conversion of new lines.</dd>
+Silently ignore all tags until current tag is closed. Does not effect the automatic conversion of new lines or special tags such as line breaks, paragraphs breaks and ignore tags.</dd>
 
 <dt>ignoreText</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreText();</code><br/>
