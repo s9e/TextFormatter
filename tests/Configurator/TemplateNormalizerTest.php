@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
@@ -150,7 +150,7 @@ class DummyNormalization extends TemplateNormalization
 		$this->str = $str;
 	}
 
-	public function normalize(DOMNode $template)
+	public function normalize(DOMElement $template)
 	{
 		$dom = $template->ownerDocument;
 		$template->appendChild($dom->createTextNode($this->str));

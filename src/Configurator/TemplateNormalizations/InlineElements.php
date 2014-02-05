@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMException;
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineElements extends TemplateNormalization
@@ -21,10 +21,10 @@ class InlineElements extends TemplateNormalization
 	* with
 	*     <div><xsl:apply-templates/></div>
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	public function normalize(DOMNode $template)
+	public function normalize(DOMElement $template)
 	{
 		$dom = $template->ownerDocument;
 

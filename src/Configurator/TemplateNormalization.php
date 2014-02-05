@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
-use DOMNode;
+use DOMElement;
 
 /**
 * @codeCoverageIgnore
@@ -27,8 +27,8 @@ abstract class TemplateNormalization
 	/**
 	* Apply this normalization rule to given template
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	abstract public function normalize(DOMNode $template);
+	abstract public function normalize(DOMElement $template);
 }

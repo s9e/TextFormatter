@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
@@ -16,10 +16,10 @@ class InlineTextElements extends TemplateNormalization
 	/**
 	* Replace <xsl:text/> nodes with a Text node, except for nodes whose content is only whitespace
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	public function normalize(DOMNode $template)
+	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);

@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMElement;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class Custom extends TemplateNormalization
@@ -31,10 +31,10 @@ class Custom extends TemplateNormalization
 	/**
 	* Call the user-supplied callback
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	public function normalize(DOMNode $template)
+	public function normalize(DOMElement $template)
 	{
 		call_user_func($this->callback, $template);
 	}

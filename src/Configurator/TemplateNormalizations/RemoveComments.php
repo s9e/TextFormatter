@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
@@ -16,10 +16,10 @@ class RemoveComments extends TemplateNormalization
 	/**
 	* Remove all comments
 	*
-	* @param  DOMNode $template <xsl:template/> node
+	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	public function normalize(DOMNode $template)
+	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 

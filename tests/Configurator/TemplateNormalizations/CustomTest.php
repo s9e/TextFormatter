@@ -22,7 +22,7 @@ class CustomTest extends Test
 	}
 
 	/**
-	* @testdox normalize() calls the user-defined callback with a DOMNode as argument
+	* @testdox normalize() calls the user-defined callback with a DOMElement as argument
 	*/
 	public function testNormalize()
 	{
