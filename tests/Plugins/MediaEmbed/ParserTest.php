@@ -47,6 +47,29 @@ class ParserTest extends Test
 	}
 
 	/**
+	* Run a test that involves scraping without causing a fail if the remote server errors out
+	*/
+	protected function runScrapingTest($methodName, $args)
+	{
+		try
+		{
+			call_user_func_array([$this, $methodName], $args);
+		}
+		catch (\PHPUnit_Framework_Error_Warning $e)
+		{
+			$msg = $e->getMessage();
+
+			if (strpos($msg, 'HTTP request failed')  !== false
+			 || strpos($msg, 'Connection timed out') !== false)
+			{
+				$this->markTestSkipped($msg);
+			}
+
+			throw $e;
+		}
+	}
+
+	/**
 	* @testdox scrape() does not do anything if the tag does not have a "url" attribute
 	*/
 	public function testScrapeNoUrl()
@@ -186,21 +209,7 @@ class ParserTest extends Test
 	*/
 	public function testScraping()
 	{
-		try
-		{
-			call_user_func_array([$this, 'testParsing'], func_get_args());
-		}
-		catch (\PHPUnit_Framework_Error_Warning $e)
-		{
-			$msg = $e->getMessage();
-
-			if (strpos($msg, 'HTTP request failed') !== false)
-			{
-				$this->markTestSkipped($msg);
-			}
-
-			throw $e;
-		}
+		$this->runScrapingTest('testParsing', func_get_args());
 	}
 
 	public function getScrapingTests()
@@ -496,21 +505,7 @@ class ParserTest extends Test
 	*/
 	public function testScrapingRendering()
 	{
-		try
-		{
-			call_user_func_array([$this, 'testRendering'], func_get_args());
-		}
-		catch (\PHPUnit_Framework_Error_Warning $e)
-		{
-			$msg = $e->getMessage();
-
-			if (strpos($msg, 'HTTP request failed') !== false)
-			{
-				$this->markTestSkipped($msg);
-			}
-
-			throw $e;
-		}
+		$this->runScrapingTest('testRendering', func_get_args());
 	}
 
 	public function getScrapingRenderingTests()
