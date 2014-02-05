@@ -122,7 +122,7 @@ function addTag(type, name, pos, len)
 
 	// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
 	// position is negative
-	if (!tagsConfig[name] && !tag.isSpecial())
+	if (!tagsConfig[name] && !tag.isSystemTag())
 	{
 		tag.invalidate();
 	}

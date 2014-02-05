@@ -360,7 +360,7 @@ Tag.prototype.isSelfClosingTag = function()
 *
 * @return {!boolean}
 */
-Tag.prototype.isSpecial = function()
+Tag.prototype.isSystemTag = function()
 {
 	return (this.name === 'br' || this.name === 'i' || this.name === 'pb');
 }

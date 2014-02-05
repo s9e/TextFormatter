@@ -373,7 +373,7 @@ class Tag
 	*
 	* @return bool
 	*/
-	public function isSpecial()
+	public function isSystemTag()
 	{
 		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb');
 	}

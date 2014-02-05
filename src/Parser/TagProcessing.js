@@ -121,7 +121,7 @@ function processTags()
 			if (context.flags & RULE_IGNORE_TAGS)
 			{
 				if (!currentTag.canClose(openTags[openTags.length - 1])
-				 && !currentTag.isSpecial())
+				 && !currentTag.isSystemTag())
 				{
 					continue;
 				}

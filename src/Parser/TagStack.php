@@ -133,7 +133,7 @@ trait TagStack
 
 		// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
 		// position is negative
-		if (!isset($this->tagsConfig[$name]) && !$tag->isSpecial())
+		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
 		{
 			$tag->invalidate();
 		}

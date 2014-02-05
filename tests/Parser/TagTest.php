@@ -227,39 +227,39 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox isSpecial() returns false by default
+	* @testdox isSystemTag() returns false by default
 	*/
-	public function testIsSpecialDefault()
+	public function testIsSystemTagDefault()
 	{
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 12, 34);
-		$this->assertFalse($tag->isSpecial());
+		$this->assertFalse($tag->isSystemTag());
 	}
 
 	/**
-	* @testdox isSpecial() returns true if the tag's name is "i"
+	* @testdox isSystemTag() returns true if the tag's name is "i"
 	*/
-	public function testIsSpecialIgnore()
+	public function testIsSystemTagIgnore()
 	{
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'i', 10, 10);
-		$this->assertTrue($tag->isSpecial());
+		$this->assertTrue($tag->isSystemTag());
 	}
 
 	/**
-	* @testdox isSpecial() returns true if the tag's name is "br"
+	* @testdox isSystemTag() returns true if the tag's name is "br"
 	*/
-	public function testIsSpecialLineBreak()
+	public function testIsSystemTagLineBreak()
 	{
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'pb', 0, 0);
-		$this->assertTrue($tag->isSpecial());
+		$this->assertTrue($tag->isSystemTag());
 	}
 
 	/**
-	* @testdox isSpecial() returns true if the tag's name is "pb"
+	* @testdox isSystemTag() returns true if the tag's name is "pb"
 	*/
-	public function testIsSpecialParagraphBreak()
+	public function testIsSystemTagParagraphBreak()
 	{
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'pb', 0, 0);
-		$this->assertTrue($tag->isSpecial());
+		$this->assertTrue($tag->isSystemTag());
 	}
 
 	/**

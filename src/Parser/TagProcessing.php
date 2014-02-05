@@ -137,7 +137,7 @@ trait TagProcessing
 				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
 				{
 					if (!$this->currentTag->canClose(end($this->openTags))
-					 && !$this->currentTag->isSpecial())
+					 && !$this->currentTag->isSystemTag())
 					{
 						continue;
 					}
