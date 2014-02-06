@@ -401,7 +401,7 @@ abstract class RegexpBuilder
 		while (1)
 		{
 			// $c will be used to store the character we're matching against
-			unset($c);
+			$c = null;
 
 			foreach ($chains as $chain)
 			{
@@ -477,7 +477,7 @@ abstract class RegexpBuilder
 		while ($sLen < $maxLen)
 		{
 			// $c will be used to store the character we're matching against
-			unset($c);
+			$c = null;
 
 			foreach ($chains as $k => $chain)
 			{
