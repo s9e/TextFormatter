@@ -28,7 +28,7 @@ class Configurator extends ConfiguratorBase
 	public $caseSensitive = true;
 
 	/**
-	* @var NormalizedCollection List of [keyword => value]
+	* @var \s9e\TextFormatter\Configurator\Collections\NormalizedCollection List of [keyword => value]
 	*/
 	protected $collection;
 
