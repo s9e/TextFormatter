@@ -109,13 +109,13 @@ class TemplateParser
 		}
 
 		// Create an <element/> with a name attribute equal to given node's name
-		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
+		$element = self::appendElement($ir, 'element');
 		$element->setAttribute('name', $node->localName);
 
 		// Append an <attribute/> element for each of this node's attribute
 		foreach ($node->attributes as $attribute)
 		{
-			$irAttribute = $element->appendChild($ir->ownerDocument->createElement('attribute'));
+			$irAttribute = self::appendElement($element, 'attribute');
 			$irAttribute->setAttribute('name', $attribute->name);
 
 			// Append an <output/> element to represent the attribute's value
@@ -139,7 +139,7 @@ class TemplateParser
 	*/
 	protected static function parseXslApplyTemplates(DOMElement $ir, DOMElement $node)
 	{
-		$applyTemplates = $ir->appendChild($ir->ownerDocument->createElement('applyTemplates'));
+		$applyTemplates = self::appendElement($ir, 'applyTemplates');
 
 		if ($node->hasAttribute('select'))
 		{
@@ -163,7 +163,7 @@ class TemplateParser
 
 		if ($attrName !== '')
 		{
-			$attribute = $ir->appendChild($ir->ownerDocument->createElement('attribute'));
+			$attribute = self::appendElement($ir, 'attribute');
 
 			// Copy this attribute's name
 			$attribute->setAttribute('name', $attrName);
@@ -183,7 +183,7 @@ class TemplateParser
 	*/
 	protected static function parseXslChoose(DOMElement $ir, DOMElement $node)
 	{
-		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
+		$switch = self::appendElement($ir, 'switch');
 
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
 		{
@@ -194,7 +194,7 @@ class TemplateParser
 			}
 
 			// Create a <case/> element with the original test condition in @test
-			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
+			$case = self::appendElement($switch, 'case');
 			$case->setAttribute('test', $when->getAttribute('test'));
 
 			// Parse this branch's content
@@ -210,7 +210,7 @@ class TemplateParser
 				continue;
 			}
 
-			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
+			$case = self::appendElement($switch, 'case');
 
 			// Parse this branch's content
 			self::parseChildren($case, $otherwise);
@@ -229,7 +229,7 @@ class TemplateParser
 	*/
 	protected static function parseXslComment(DOMElement $ir, DOMElement $node)
 	{
-		$comment = $ir->appendChild($ir->ownerDocument->createElement('comment'));
+		$comment = self::appendElement($ir, 'comment');
 
 		// Parse this branch's content
 		self::parseChildren($comment, $node);
@@ -252,12 +252,12 @@ class TemplateParser
 		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			// Create a switch element in the IR
-			$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
-			$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
+			$switch = self::appendElement($ir, 'switch');
+			$case   = self::appendElement($switch, 'case');
 			$case->setAttribute('test', $expr);
 
 			// Append an attribute element
-			$attribute = $case->appendChild($ir->ownerDocument->createElement('attribute'));
+			$attribute = self::appendElement($case, 'attribute');
 			$attribute->setAttribute('name', $m[1]);
 
 			// Set the attribute's content, which is simply the copied attribute's value
@@ -269,7 +269,7 @@ class TemplateParser
 		// <xsl:copy-of select="@*"/>
 		if ($expr === '@*')
 		{
-			$ir->appendChild($ir->ownerDocument->createElement('copyOfAttributes'));
+			self::appendElement($ir, 'copyOfAttributes');
 
 			return;
 		}
@@ -290,7 +290,7 @@ class TemplateParser
 
 		if ($elName !== '')
 		{
-			$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
+			$element = self::appendElement($ir, 'element');
 
 			// Copy this element's name
 			$element->setAttribute('name', $elName);
@@ -310,8 +310,8 @@ class TemplateParser
 	protected static function parseXslIf(DOMElement $ir, DOMElement $node)
 	{
 		// An <xsl:if/> is represented by a <switch/> with only one <case/>
-		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
-		$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
+		$switch = self::appendElement($ir, 'switch');
+		$case   = self::appendElement($switch, 'case');
 		$case->setAttribute('test', $node->getAttribute('test'));
 
 		// Parse this branch's content
@@ -342,7 +342,7 @@ class TemplateParser
 	*/
 	protected static function parseXslParam(DOMElement $ir, DOMElement $node)
 	{
-		$param = $ir->appendChild($ir->ownerDocument->createElement('param'));
+		$param = self::appendElement($ir, 'param');
 		$param->setAttribute('name', $node->getAttribute('name'));
 
 		if ($node->hasAttribute('select'))
@@ -361,7 +361,7 @@ class TemplateParser
 	protected static function parseXslTemplate(DOMElement $ir, DOMElement $node)
 	{
 		// Append a <template/> node in the IR
-		$template = $ir->appendChild($ir->ownerDocument->createElement('template'));
+		$template = self::appendElement($ir, 'template');
 
 		// Parse the match expression
 		$match   = $node->getAttribute('match');
@@ -450,8 +450,7 @@ class TemplateParser
 			}
 
 			// Append a <match/> element to the IR, with its priority
-			$template->appendChild($ir->ownerDocument->createElement('match', $match))
-			         ->setAttribute('priority', $priority);
+			self::appendElement($template, 'match', $match)->setAttribute('priority', $priority);
 		}
 
 		// Parse this template's content
@@ -499,7 +498,7 @@ class TemplateParser
 		// Add an empty default <case/> to <switch/> nodes that don't have one
 		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
 		{
-			$switch->appendChild($ir->createElement('case'));
+			self::appendElement($switch, 'case');
 		}
 
 		// Add an id attribute to <element/> nodes
@@ -541,8 +540,8 @@ class TemplateParser
 			// Append a <closeTag/> to <element/> nodes to ensure that empty elements get closed
 			if ($node->nodeName === 'element')
 			{
-				$node->appendChild($ir->createElement('closeTag'))
-				     ->setAttribute('id', $node->getAttribute('id'));
+				self::appendElement($node, 'closeTag')
+					->setAttribute('id', $node->getAttribute('id'));
 			}
 		}
 
@@ -744,11 +743,27 @@ class TemplateParser
 	//==========================================================================
 
 	/**
+	* Create and append an element to given node in the IR
+	*
+	* @param  DOMElement $parentNode Parent node of the element
+	* @param  string     $name       Tag name of the element
+	* @param  string     $value      Value of the element
+	* @return DOMElement             The created element
+	*/
+	protected static function appendElement(DOMElement $parentNode, $name, $value = '')
+	{
+		$element = $parentNode->ownerDocument->createElement($name, $value);
+		$parentNode->appendChild($element);
+
+		return $element;
+	}
+
+	/**
 	* Append an <output/> element to given node in the IR
 	*
 	* @param  DOMElement $ir      Parent node
-	* @param  string  $type    Either 'avt', 'literal' or 'xpath'
-	* @param  string  $content Content to output
+	* @param  string     $type    Either 'avt', 'literal' or 'xpath'
+	* @param  string     $content Content to output
 	* @return void
 	*/
 	protected static function appendOutput(DOMElement $ir, $type, $content)
@@ -784,13 +799,7 @@ class TemplateParser
 			return;
 		}
 
-		$ir
-			->appendChild(
-				$ir->ownerDocument->createElement(
-					'output',
-					htmlspecialchars($content)
-				)
-			)
+		self::appendElement($ir, 'output', htmlspecialchars($content))
 			->setAttribute('type', $type);
 	}
 
