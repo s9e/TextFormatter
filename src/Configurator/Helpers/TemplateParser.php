@@ -752,7 +752,15 @@ class TemplateParser
 	*/
 	protected static function appendElement(DOMElement $parentNode, $name, $value = '')
 	{
-		$element = $parentNode->ownerDocument->createElement($name, $value);
+		if ($value === '')
+		{
+			$element = $parentNode->ownerDocument->createElement($name);
+		}
+		else
+		{
+			$element = $parentNode->ownerDocument->createElement($name, $value);
+		}
+
 		$parentNode->appendChild($element);
 
 		return $element;
