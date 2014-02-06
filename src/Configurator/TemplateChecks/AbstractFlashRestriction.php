@@ -203,10 +203,10 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	/**
 	* Test whether given node contains dynamic content (XSL elements or attribute value template)
 	*
-	* @param  DOMNode $node Node
+	* @param  DOMElement $node Node
 	* @return bool
 	*/
-	protected function isDynamic(DOMNode $node)
+	protected function isDynamic(DOMElement $node)
 	{
 		if ($node->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', '*')->length)
 		{
