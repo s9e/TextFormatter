@@ -456,8 +456,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.traileraddict.com/trailer/watchmen/feature-trailer',
-				'<r><TRAILERADDICT id="7376" url="http://www.traileraddict.com/trailer/watchmen/feature-trailer">http://www.traileraddict.com/trailer/watchmen/feature-trailer</TRAILERADDICT></r>',
+				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
+				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
 				[],
 				function ($configurator)
 				{

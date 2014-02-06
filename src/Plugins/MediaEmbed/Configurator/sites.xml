@@ -525,7 +525,6 @@
 	<site id="traileraddict">
 		<name>Trailer Addict</name>
 		<homepage>http://www.traileraddict.com/</homepage>
-		<example>http://www.traileraddict.com/trailer/watchmen/feature-trailer</example>
 		<example>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</example>
 
 		<host>traileraddict.com</host>
