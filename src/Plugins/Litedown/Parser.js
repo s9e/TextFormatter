@@ -45,7 +45,6 @@ var boundaries   = [],
 	breakParagraph,
 	ignoreLen,
 	lfPos,
-	lineIsEmpty,
 	quoteDepth;
 
 regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
