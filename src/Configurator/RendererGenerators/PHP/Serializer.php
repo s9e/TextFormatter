@@ -49,6 +49,11 @@ class Serializer
 	public $outputMethod = 'html';
 
 	/**
+	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
+	*/
+	public $useMultibyteStringFunctions = false;
+
+	/**
 	* Convert an attribute value template into PHP
 	*
 	* NOTE: escaping must be performed by the caller

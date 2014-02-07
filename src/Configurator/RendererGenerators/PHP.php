@@ -144,7 +144,6 @@ class PHP implements RendererGenerator
 	{
 		// Copy some options to the serializer
 		$this->serializer->outputMethod                = $rendering->type;
-		$this->serializer->useEmptyElements            = $this->useEmptyElements;
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
 		// Group templates by content to deduplicate them
