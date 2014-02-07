@@ -36,8 +36,7 @@ else
 text += "\n\n\x17";
 
 var boundaries   = [],
-	continuation = true,
-	inCode       = false,
+	lineIsEmpty  = true,
 	lists        = [],
 	listsCnt     = 0,
 	quotes       = [],
@@ -53,9 +52,14 @@ regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- 
 
 while (m = regexp.exec(text))
 {
-	matchPos    = m['index'];
-	matchLen    = m[0].length;
-	ignoreLen   = matchLen;
+	matchPos  = m['index'];
+	matchLen  = m[0].length;
+	ignoreLen = matchLen;
+
+	// If the last line was empty then this is not a continuation, and vice-versa
+	continuation = !lineIsEmpty;
+
+	// Capture the position of the end of the line and determine whether the line is empty
 	lfPos       = text.indexOf("\n", matchPos);
 	lineIsEmpty = (lfPos === matchPos + matchLen);
 
@@ -65,10 +69,8 @@ while (m = regexp.exec(text))
 		++regexp.lastIndex;
 	}
 
-	// If the line is empty and it's the first empty line (not a continuation) then we break
-	// current paragraph. If it's not empty, we mark the position so we can locate the last
-	// line of text
-	breakParagraph = (lineIsEmpty && continuation && matchPos);
+	// If the line is empty and it's the first empty line then we break current paragraph.
+	breakParagraph = (lineIsEmpty && continuation);
 
 	// Count quote marks
 	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
@@ -138,11 +140,7 @@ while (m = regexp.exec(text))
 		boundaries.push(textBoundary);
 	}
 
-	if (lineIsEmpty)
-	{
-		continuation = false;
-	}
-	else
+	if (!lineIsEmpty)
 	{
 		textBoundary = lfPos;
 	}

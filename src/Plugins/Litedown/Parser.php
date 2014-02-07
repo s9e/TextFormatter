@@ -49,8 +49,7 @@ class Parser extends ParserBase
 		$text .= "\n\n\x17";
 
 		$boundaries   = [];
-		$continuation = true;
-		$inCode       = false;
+		$lineIsEmpty  = true;
 		$lists        = [];
 		$listsCnt     = 0;
 		$quotes       = [];
@@ -62,16 +61,19 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$matchPos    = $m[0][1];
-			$matchLen    = strlen($m[0][0]);
-			$ignoreLen   = $matchLen;
+			$matchPos  = $m[0][1];
+			$matchLen  = strlen($m[0][0]);
+			$ignoreLen = $matchLen;
+
+			// If the last line was empty then this is not a continuation, and vice-versa
+			$continuation = !$lineIsEmpty;
+
+			// Capture the position of the end of the line and determine whether the line is empty
 			$lfPos       = strpos($text, "\n", $matchPos);
 			$lineIsEmpty = ($lfPos === $matchPos + $matchLen);
 
-			// If the line is empty and it's the first empty line (not a continuation) then we break
-			// current paragraph. If it's not empty, we mark the position so we can locate the last
-			// line of text
-			$breakParagraph = ($lineIsEmpty && $continuation && $matchPos);
+			// If the line is empty and it's the first empty line then we break current paragraph.
+			$breakParagraph = ($lineIsEmpty && $continuation);
 
 			// Count quote marks
 			$quoteDepth = (!empty($m[1][0])) ? substr_count($m[1][0], '>') : 0;
@@ -141,11 +143,7 @@ class Parser extends ParserBase
 				$boundaries[] = $textBoundary;
 			}
 
-			if ($lineIsEmpty)
-			{
-				$continuation = false;
-			}
-			else
+			if (!$lineIsEmpty)
 			{
 				$textBoundary = $lfPos;
 			}
