@@ -234,6 +234,18 @@ class ParserTest extends Test
 					'<p>bar</p></r>'
 				]
 			],
+			[
+				[
+					'    ## foo ##',
+					'',
+					'bar'
+				],
+				[
+					'<r><i>    </i><CODE>## foo ##</CODE>',
+					'',
+					'<p>bar</p></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',

@@ -159,6 +159,9 @@ while (m = regexp.exec(text))
 				// Create code block
 				codeTag = addStartTag('CODE', matchPos + ignoreLen, 0);
 			}
+
+			// Clear the captures to prevent any further processing
+			m = {};
 		}
 	}
 	else if (codeTag && !lineIsEmpty)

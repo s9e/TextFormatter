@@ -162,6 +162,9 @@ class Parser extends ParserBase
 						// Create code block
 						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
 					}
+
+					// Clear the captures to prevent any further processing
+					$m = [];
 				}
 			}
 			elseif (isset($codeTag) && !$lineIsEmpty)
