@@ -61,14 +61,14 @@ abstract class RulesHelper
 		// Record the bit number of each tag, and the name of a tag for each bit
 		$bitTag    = [];
 		$bitNumber = 0;
-		foreach ($groupedTags as $k => $tagNames)
+		foreach ($groupedTags as $tagNames)
 		{
 			foreach ($tagNames as $tagName)
 			{
 				$return['tags'][$tagName]['bitNumber'] = $bitNumber;
+				$bitTag[$bitNumber] = $tagName;
 			}
 
-			$bitTag[] = $tagName;
 			++$bitNumber;
 		}
 
