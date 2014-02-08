@@ -49,6 +49,8 @@ class Parser extends ParserBase
 		$text .= "\n\n\x17";
 
 		$boundaries   = [];
+		$codeIndent   = 4;
+		$codeTag      = null;
 		$lineIsEmpty  = true;
 		$lists        = [];
 		$listsCnt     = 0;
@@ -70,7 +72,7 @@ class Parser extends ParserBase
 
 			// Capture the position of the end of the line and determine whether the line is empty
 			$lfPos       = strpos($text, "\n", $matchPos);
-			$lineIsEmpty = ($lfPos === $matchPos + $matchLen);
+			$lineIsEmpty = ($lfPos === $matchPos + $matchLen && empty($m[3][0]) && empty($m[4][0]) && empty($m[5][0]));
 
 			// If the line is empty and it's the first empty line then we break current paragraph.
 			$breakParagraph = ($lineIsEmpty && $continuation);
@@ -83,9 +85,19 @@ class Parser extends ParserBase
 			{
 				do
 				{
-					$this->parser->addEndTag('QUOTE', $textBoundary, 0)->pairWith(array_pop($quotes));
+					$this->parser->addEndTag('QUOTE', $textBoundary, 0)
+					             ->pairWith(array_pop($quotes));
 				}
 				while ($quoteDepth < --$quotesCnt);
+
+				// Close the code block if applicable
+				if (isset($codeTag))
+				{
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag->pairWith($codeTag);
+					$endTag->setSortPriority(-1);
+					$codeTag = null;
+				}
 
 				// Mark the block boundary
 				$boundaries[] = $matchPos;
@@ -103,8 +115,61 @@ class Parser extends ParserBase
 				}
 				while ($quoteDepth > ++$quotesCnt);
 
+				// Close the code block if applicable
+				if (isset($codeTag))
+				{
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag->pairWith($codeTag);
+					$endTag->setSortPriority(-1);
+					$codeTag = null;
+				}
+
 				// Mark the block boundary
 				$boundaries[] = $matchPos;
+			}
+
+			// Compute the width of the indentation
+			$indentWidth = 0;
+			if (!empty($m[2][0]))
+			{
+				$indentStr = $m[2][0];
+				$indentLen = strlen($indentStr);
+				$indentPos = 0;
+
+				do
+				{
+					if ($indentStr[$indentPos] === ' ')
+					{
+						++$indentWidth;
+					}
+					else
+					{
+						$indentWidth = ($indentWidth + 4) & ~3;
+					}
+				}
+				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
+			}
+
+			if ($indentWidth >= $codeIndent)
+			{
+				if (isset($codeTag) || !$continuation)
+				{
+					// Adjust the amount of text being ignored
+					$ignoreLen = strlen($m[1][0]) + $indentPos;
+
+					if (!isset($codeTag))
+					{
+						// Create code block
+						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
+					}
+				}
+			}
+			elseif (isset($codeTag) && !$lineIsEmpty)
+			{
+				$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+				$endTag->pairWith($codeTag);
+				$endTag->setSortPriority(-1);
+				$codeTag = null;
 			}
 
 			if (isset($m[5]))

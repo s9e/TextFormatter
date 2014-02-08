@@ -114,6 +114,126 @@ class ParserTest extends Test
 					'<p>quux</p></r>'
 				]
 			],
+			[
+				[
+					'    code',
+					'    more code',
+					'',
+					'foo'
+				],
+				[
+					'<r><i>    </i><CODE>code',
+					'<i>    </i>more code</CODE>',
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'bar',
+					'',
+					'    code',
+					'    more code',
+					'',
+					'foo'
+				],
+				[
+					'<r><p>bar</p>',
+					'',
+					'<i>    </i><CODE>code',
+					'<i>    </i>more code</CODE>',
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'bar',
+					'',
+					'    code',
+					'',
+					'    more code',
+					'',
+					'foo'
+				],
+				[
+					'<r><p>bar</p>',
+					'',
+					'<i>    </i><CODE>code',
+					'',
+					'<i>    </i>more code</CODE>',
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'    bar',
+					'',
+					'foo'
+				],
+				[
+					'<r><p>foo',
+					'<i>    </i>bar</p>',
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'>     code',
+					'>     more code',
+					'> ',
+					'> foo',
+					'',
+					'bar'
+				],
+				[
+					'<r><QUOTE><i>&gt;     </i><CODE>code',
+					'<i>&gt;     </i>more code</CODE>',
+					'<i>&gt; </i>',
+					'<i>&gt; </i><p>foo</p></QUOTE>',
+					'',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'>     code',
+					'>     more code',
+					'> ',
+					'> >     another block',
+					'',
+					'bar'
+				],
+				[
+					'<r><QUOTE><i>&gt;     </i><CODE>code',
+					'<i>&gt;     </i>more code</CODE>',
+					'<i>&gt; </i>',
+					'<QUOTE><i>&gt; &gt;     </i><CODE>another block</CODE></QUOTE></QUOTE>',
+					'',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'> >     code',
+					'> >     more code',
+					'> ',
+					'>       another block',
+					'',
+					'bar'
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt;     </i><CODE>code',
+					'<i>&gt; &gt;     </i>more code</CODE></QUOTE>',
+					'<i>&gt; </i>',
+					'<i>&gt;     </i><CODE>  another block</CODE></QUOTE>',
+					'',
+					'<p>bar</p></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',

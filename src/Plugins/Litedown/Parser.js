@@ -36,6 +36,8 @@ else
 text += "\n\n\x17";
 
 var boundaries   = [],
+	codeIndent   = 4,
+	codeTag,
 	lineIsEmpty  = true,
 	lists        = [],
 	listsCnt     = 0,
@@ -43,6 +45,8 @@ var boundaries   = [],
 	quotesCnt    = 0,
 	textBoundary = 0,
 	breakParagraph,
+	continuation,
+	endTag,
 	ignoreLen,
 	lfPos,
 	quoteDepth;
@@ -60,7 +64,7 @@ while (m = regexp.exec(text))
 
 	// Capture the position of the end of the line and determine whether the line is empty
 	lfPos       = text.indexOf("\n", matchPos);
-	lineIsEmpty = (lfPos === matchPos + matchLen);
+	lineIsEmpty = (lfPos === matchPos + matchLen && !m[3] && !m[4] && !m[5]);
 
 	// If the match is empty we need to move the cursor manually
 	if (!matchLen)
@@ -83,6 +87,15 @@ while (m = regexp.exec(text))
 		}
 		while (quoteDepth < --quotesCnt);
 
+		// Close the code block if applicable
+		if (codeTag)
+		{
+			endTag = addEndTag('CODE', textBoundary, 0);
+			endTag.pairWith(codeTag);
+			endTag.setSortPriority(-1);
+			codeTag = null;
+		}
+
 		// Mark the block boundary
 		boundaries.push(matchPos);
 	}
@@ -99,8 +112,61 @@ while (m = regexp.exec(text))
 		}
 		while (quoteDepth > ++quotesCnt);
 
+		// Close the code block if applicable
+		if (codeTag)
+		{
+			endTag = addEndTag('CODE', textBoundary, 0);
+			endTag.pairWith(codeTag);
+			endTag.setSortPriority(-1);
+			codeTag = null;
+		}
+
 		// Mark the block boundary
 		boundaries.push(matchPos);
+	}
+
+	// Compute the width of the indentation
+	var indentWidth = 0, indentStr, indentLen, indentPos;
+	if (m[2])
+	{
+		indentStr = m[2];
+		indentLen = indentStr.length;
+		indentPos = 0;
+
+		do
+		{
+			if (indentStr.charAt(indentPos) === ' ')
+			{
+				++indentWidth;
+			}
+			else
+			{
+				indentWidth = (indentWidth + 4) & ~3;
+			}
+		}
+		while (++indentPos < indentLen && indentWidth < codeIndent);
+	}
+
+	if (indentWidth >= codeIndent)
+	{
+		if (codeTag || !continuation)
+		{
+			// Adjust the amount of text being ignored
+			ignoreLen = (m[1] || '').length + indentPos;
+
+			if (!codeTag)
+			{
+				// Create code block
+				codeTag = addStartTag('CODE', matchPos + ignoreLen, 0);
+			}
+		}
+	}
+	else if (codeTag && !lineIsEmpty)
+	{
+		endTag = addEndTag('CODE', textBoundary, 0);
+		endTag.pairWith(codeTag);
+		endTag.setSortPriority(-1);
+		codeTag = null;
 	}
 
 	if (m[5])
