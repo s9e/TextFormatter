@@ -58,8 +58,6 @@ class Repository
 
 		$this->bbcodeMonkey = $bbcodeMonkey;
 		$this->dom = $value;
-
-		return $value;
 	}
 
 	/**
