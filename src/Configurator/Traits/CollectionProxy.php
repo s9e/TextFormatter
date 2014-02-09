@@ -9,6 +9,29 @@ namespace s9e\TextFormatter\Configurator\Traits;
 
 /**
 * Allows an object to act as a proxy for a NormalizedCollection stored in $this->collection
+*
+* @method mixed   add(string $key, mixed $value)
+* @method array   asConfig()
+* @method void    clear()
+* @method bool    contains(mixed $value)
+* @method integer count()
+* @method mixed   current()
+* @method void    delete(string $key)
+* @method bool    exists(string $key)
+* @method mixed   get(string $key)
+* @method mixed   indexOf(mixed $value)
+* @method mixed   key()
+* @method next()
+* @method string  normalizeKey(string $key)
+* @method mixed   normalizeValue(mixed $value)
+* @method bool    offsetExists(mixed $offset)
+* @method mixed   offsetGet(mixed $offset)
+* @method void    offsetSet(mixed $offset, mixed $value)
+* @method void    offsetUnset(mixed $offset)
+* @method string  onDuplicate(string $action)
+* @method rewind()
+* @method mixed   set(string $key, mixed $value)
+* @method bool    valid()
 */
 trait CollectionProxy
 {
