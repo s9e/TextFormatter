@@ -260,6 +260,16 @@ class ParserTest extends Test
 					'<p>baz*</p></r>'
 				]
 			],
+			[
+				[
+					'    foo',
+					'*bar*'
+				],
+				[
+					'<r><i>    </i><CODE>foo</CODE>',
+					'<p><EM><s>*</s>bar<e>*</e></EM></p></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',

@@ -147,8 +147,11 @@ while (m = regexp.exec(text))
 			codeTag = null;
 		}
 
-		// Mark the block boundary
-		boundaries.push(matchPos);
+		if (matchPos)
+		{
+			// Mark the block boundary
+			boundaries.push(matchPos - 1);
+		}
 	}
 
 	if (indentWidth >= codeIndent)

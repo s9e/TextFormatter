@@ -151,7 +151,10 @@ class Parser extends ParserBase
 				}
 
 				// Mark the block boundary
-				$boundaries[] = $matchPos;
+				if ($matchPos)
+				{
+					$boundaries[] = $matchPos - 1;
+				}
 			}
 
 			if ($indentWidth >= $codeIndent)
