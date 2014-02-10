@@ -41,6 +41,7 @@ var boundaries   = [],
 	lineIsEmpty  = true,
 	lists        = [],
 	listsCnt     = 0,
+	newContext   = false,
 	quotes       = [],
 	quotesCnt    = 0,
 	textBoundary = 0,
@@ -81,28 +82,20 @@ while (m = regexp.exec(text))
 	// Close supernumerary quotes
 	if (quoteDepth < quotesCnt && !continuation && !lineIsEmpty)
 	{
+		newContext = true;
+
 		do
 		{
 			addEndTag('QUOTE', textBoundary, 0).pairWith(quotes.pop());
 		}
 		while (quoteDepth < --quotesCnt);
-
-		// Close the code block if applicable
-		if (codeTag)
-		{
-			endTag = addEndTag('CODE', textBoundary, 0);
-			endTag.pairWith(codeTag);
-			endTag.setSortPriority(-1);
-			codeTag = null;
-		}
-
-		// Mark the block boundary
-		boundaries.push(matchPos);
 	}
 
 	// Open new quotes
 	if (quoteDepth > quotesCnt && !lineIsEmpty)
 	{
+		newContext = true;
+
 		do
 		{
 			tag = addStartTag('QUOTE', matchPos, 0);
@@ -111,18 +104,6 @@ while (m = regexp.exec(text))
 			quotes.push(tag);
 		}
 		while (quoteDepth > ++quotesCnt);
-
-		// Close the code block if applicable
-		if (codeTag)
-		{
-			endTag = addEndTag('CODE', textBoundary, 0);
-			endTag.pairWith(codeTag);
-			endTag.setSortPriority(-1);
-			codeTag = null;
-		}
-
-		// Mark the block boundary
-		boundaries.push(matchPos);
 	}
 
 	// Compute the width of the indentation
@@ -147,6 +128,29 @@ while (m = regexp.exec(text))
 		while (++indentPos < indentLen && indentWidth < codeIndent);
 	}
 
+	// Test whether we're out of a code block
+	if (indentWidth < codeIndent && codeTag && !lineIsEmpty)
+	{
+		newContext = true;
+	}
+
+	if (newContext)
+	{
+		newContext = false;
+
+		// Close the code block if applicable
+		if (codeTag)
+		{
+			endTag = addEndTag('CODE', textBoundary, 0);
+			endTag.pairWith(codeTag);
+			endTag.setSortPriority(-1);
+			codeTag = null;
+		}
+
+		// Mark the block boundary
+		boundaries.push(matchPos);
+	}
+
 	if (indentWidth >= codeIndent)
 	{
 		if (codeTag || !continuation)
@@ -163,13 +167,6 @@ while (m = regexp.exec(text))
 			// Clear the captures to prevent any further processing
 			m = {};
 		}
-	}
-	else if (codeTag && !lineIsEmpty)
-	{
-		endTag = addEndTag('CODE', textBoundary, 0);
-		endTag.pairWith(codeTag);
-		endTag.setSortPriority(-1);
-		codeTag = null;
 	}
 
 	if (m[5])

@@ -54,6 +54,7 @@ class Parser extends ParserBase
 		$lineIsEmpty  = true;
 		$lists        = [];
 		$listsCnt     = 0;
+		$newContext   = false;
 		$quotes       = [];
 		$quotesCnt    = 0;
 		$textBoundary = 0;
@@ -83,29 +84,21 @@ class Parser extends ParserBase
 			// Close supernumerary quotes
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
 			{
+				$newContext = true;
+
 				do
 				{
 					$this->parser->addEndTag('QUOTE', $textBoundary, 0)
 					             ->pairWith(array_pop($quotes));
 				}
 				while ($quoteDepth < --$quotesCnt);
-
-				// Close the code block if applicable
-				if (isset($codeTag))
-				{
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
-					$endTag->pairWith($codeTag);
-					$endTag->setSortPriority(-1);
-					$codeTag = null;
-				}
-
-				// Mark the block boundary
-				$boundaries[] = $matchPos;
 			}
 
 			// Open new quotes
 			if ($quoteDepth > $quotesCnt && !$lineIsEmpty)
 			{
+				$newContext = true;
+
 				do
 				{
 					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0);
@@ -114,18 +107,6 @@ class Parser extends ParserBase
 					$quotes[] = $tag;
 				}
 				while ($quoteDepth > ++$quotesCnt);
-
-				// Close the code block if applicable
-				if (isset($codeTag))
-				{
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
-					$endTag->pairWith($codeTag);
-					$endTag->setSortPriority(-1);
-					$codeTag = null;
-				}
-
-				// Mark the block boundary
-				$boundaries[] = $matchPos;
 			}
 
 			// Compute the width of the indentation
@@ -150,6 +131,29 @@ class Parser extends ParserBase
 				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
 			}
 
+			// Test whether we're out of a code block
+			if ($indentWidth < $codeIndent && isset($codeTag) && !$lineIsEmpty)
+			{
+				$newContext = true;
+			}
+
+			if ($newContext)
+			{
+				$newContext = false;
+
+				// Close the code block if applicable
+				if (isset($codeTag))
+				{
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag->pairWith($codeTag);
+					$endTag->setSortPriority(-1);
+					$codeTag = null;
+				}
+
+				// Mark the block boundary
+				$boundaries[] = $matchPos;
+			}
+
 			if ($indentWidth >= $codeIndent)
 			{
 				if (isset($codeTag) || !$continuation)
@@ -166,13 +170,6 @@ class Parser extends ParserBase
 					// Clear the captures to prevent any further processing
 					$m = [];
 				}
-			}
-			elseif (isset($codeTag) && !$lineIsEmpty)
-			{
-				$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
-				$endTag->pairWith($codeTag);
-				$endTag->setSortPriority(-1);
-				$codeTag = null;
 			}
 
 			if (isset($m[5]))
