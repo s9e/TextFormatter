@@ -96,7 +96,7 @@ function patchFile($filepath)
 
 	$old  = $file;
 	$file = preg_replace_callback(
-		'#^(?:(/\\*\\*.*?)(^\\*$)*(^\\* @method[^\\n]*)*\\*/)?\\nclass#ms',
+		"#(?<=\n)(?:(/[*]+\n(?:[*](?! @method).*\n)*?)(?:[*]\n)*(?:[*] @method.*\n)*[*]/\n)?class#",
 		function ($m) use ($methods)
 		{
 			$doc = (isset($m[1])) ? $m[1] : "\n/**\n";
