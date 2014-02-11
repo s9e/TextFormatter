@@ -590,6 +590,14 @@ class ParserTest extends Test
 				'xx *x**x*** xx',
 				'<r><p>xx <EM><s>*</s>x<STRONG><s>**</s>x<e>**</e></STRONG><e>*</e></EM> xx</p></r>'
 			],
+			[
+				'\\\\*foo*',
+				'<r><p>\\\\<EM><s>*</s>foo<e>*</e></EM></p></r>'
+			],
+			[
+				'*\\\\*foo*',
+				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
+			]
 		]);
 	}
 
