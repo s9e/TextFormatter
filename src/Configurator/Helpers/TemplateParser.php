@@ -656,7 +656,7 @@ class TemplateParser
 				// Insert the first child of the last <case/>, which should be the same <closeTag/>
 				// as every other <case/>
 				$switch->parentNode->insertBefore(
-					$case->firstChild->cloneNode(),
+					$switch->lastChild->firstChild->cloneNode(),
 					$switch
 				);
 			}
