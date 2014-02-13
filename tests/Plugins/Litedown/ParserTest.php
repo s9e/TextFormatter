@@ -114,6 +114,7 @@ class ParserTest extends Test
 					'<p>quux</p></r>'
 				]
 			],
+			// Indented code blocks
 			[
 				[
 					'    code',
@@ -124,6 +125,48 @@ class ParserTest extends Test
 				[
 					'<r><i>    </i><CODE>code',
 					'<i>    </i>more code</CODE>',
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'    code',
+					"\tmore code",
+					'',
+					'foo'
+				],
+				[
+					'<r><i>    </i><CODE>code',
+					"<i>\t</i>more code</CODE>",
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'    code',
+					"   \tmore code",
+					'',
+					'foo'
+				],
+				[
+					'<r><i>    </i><CODE>code',
+					"<i>   \t</i>more code</CODE>",
+					'',
+					'<p>foo</p></r>'
+				]
+			],
+			[
+				[
+					'    code',
+					"    \tmore code",
+					'',
+					'foo'
+				],
+				[
+					'<r><i>    </i><CODE>code',
+					"<i>    </i>\tmore code</CODE>",
 					'',
 					'<p>foo</p></r>'
 				]
