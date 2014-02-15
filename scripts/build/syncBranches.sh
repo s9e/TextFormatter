@@ -46,7 +46,7 @@ do
 		echo "No patching: $rel is up-to-date"
 	else
 		git checkout "$rel"
-		echo "$patch" | git apply --whitespace=nowarn -
+		echo "$patch" | git apply --index --whitespace=nowarn -
 		git commit -aq --no-verify -m"$msg"
 	fi
 done

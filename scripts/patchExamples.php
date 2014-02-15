@@ -48,11 +48,7 @@ function patchFile($filepath)
 		$file
 	);
 
-	if ($text === $file)
-	{
-		echo "Skipping $filepath\n";
-	}
-	else
+	if ($text !== $file)
 	{
 		echo "\x1b[1mPatching $filepath\x1b[0m\n";
 		file_put_contents($filepath, $text);
