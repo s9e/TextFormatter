@@ -418,11 +418,11 @@ if (text.indexOf('[') > -1)
 		{
 			tag.setAttribute('title', decode(title, hasEscapedChars));
 		}
-	}
 
-	// Overwrite the markup without touching the link's text
-	overwrite(startTagPos, startTagLen);
-	overwrite(endTagPos,   endTagLen);
+		// Overwrite the markup without touching the link's text
+		overwrite(startTagPos, startTagLen);
+		overwrite(endTagPos,   endTagLen);
+	}
 }
 
 // Strikethrough

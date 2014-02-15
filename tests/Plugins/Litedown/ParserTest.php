@@ -430,6 +430,10 @@ class ParserTest extends Test
 				'This is [an example](http://example.com/ ""Link title"") inline link.',
 				'<r><p>This is <URL title="&quot;Link title&quot;" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ ""Link title"")</e></URL> inline link.</p></r>'
 			],
+			[
+				'[not a link]',
+				'<t><p>[not a link]</p></t>'
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',

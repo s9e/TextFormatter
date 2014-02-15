@@ -433,11 +433,11 @@ class Parser extends ParserBase
 				{
 					$tag->setAttribute('title', self::decode($title, $hasEscapedChars));
 				}
-			}
 
-			// Overwrite the markup without touching the link's text
-			self::overwrite($text, $startTagPos, $startTagLen);
-			self::overwrite($text, $endTagPos,   $endTagLen);
+				// Overwrite the markup without touching the link's text
+				self::overwrite($text, $startTagPos, $startTagLen);
+				self::overwrite($text, $endTagPos,   $endTagLen);
+			}
 		}
 
 		// Strikethrough
