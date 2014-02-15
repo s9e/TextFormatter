@@ -313,6 +313,33 @@ class ParserTest extends Test
 					'<p><EM><s>*</s>bar<e>*</e></EM></p></r>'
 				]
 			],
+			// Lists
+			[
+				[
+					'* 0',
+					' * 1',
+					'  * 2',
+					'   * 3',
+					'    * 4',
+					'     * 5',
+					'      * 6',
+					'       * 7',
+					'        * 8',
+					'         * 9'
+				],
+				[
+					'<r><i>* </i><LIST><LI>0',
+					'<i> * </i><LIST><LI>1</LI>',
+					'<i>  * </i><LI>2</LI>',
+					'<i>   * </i><LI>3</LI>',
+					'<i>    * </i><LI>4',
+					'<i>     * </i><LIST><LI>5</LI>',
+					'<i>      * </i><LI>6</LI>',
+					'<i>       * </i><LI>7</LI>',
+					'<i>        * </i><LI>8',
+					'<i>         * </i><LIST><LI>9</LI></LIST></LI></LIST></LI></LIST></LI></LIST></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',
@@ -681,6 +708,32 @@ class ParserTest extends Test
 					'<h2>bar</h2>',
 					'',
 					'<p>baz</p>'
+				]
+			],
+			[
+				[
+					'* 0',
+					' * 1',
+					'  * 2',
+					'   * 3',
+					'    * 4',
+					'     * 5',
+					'      * 6',
+					'       * 7',
+					'        * 8',
+					'         * 9'
+				],
+				[
+					'<ul><li>0',
+					'<ul><li>1</li>',
+					'<li>2</li>',
+					'<li>3</li>',
+					'<li>4',
+					'<ul><li>5</li>',
+					'<li>6</li>',
+					'<li>7</li>',
+					'<li>8',
+					'<ul><li>9</li></ul></li></ul></li></ul></li></ul>'
 				]
 			],
 		]);

@@ -49,7 +49,12 @@ var boundaries   = [],
 	continuation,
 	endTag,
 	ignoreLen,
+	itemTag,
 	lfPos,
+	listIndex,
+	listTag,
+	maxIndent,
+	minIndent,
 	quoteDepth;
 
 regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
@@ -147,9 +152,18 @@ while (m = regexp.exec(text))
 			codeTag = null;
 		}
 
+		// Close all the lists
+		lists.forEach(function(list)
+		{
+			addEndTag('LIST', textBoundary, 0).pairWith(list.listTag);
+			addEndTag('LI',   textBoundary, 0).pairWith(list.itemTag);
+		});
+		lists    = [];
+		listsCnt = 0;
+
+		// Mark the block boundary
 		if (matchPos)
 		{
-			// Mark the block boundary
 			boundaries.push(matchPos - 1);
 		}
 	}
@@ -170,6 +184,108 @@ while (m = regexp.exec(text))
 			// Clear the captures to prevent any further processing
 			m = {};
 		}
+	}
+	else
+	{
+		var hasListItem = !!m[4];
+
+		if (!indentWidth && !continuation && !hasListItem)
+		{
+			// Start of a new paragraph
+			listIndex = -1;
+		}
+		else if (continuation && !hasListItem)
+		{
+			// Continuation of current list item or paragraph
+			listIndex = listsCnt - 1;
+		}
+		else if (!listsCnt)
+		{
+			// We're not inside of a list already, we can start one if there's a list item
+			// and it's not in continuation of a paragraph
+			if (!continuation && hasListItem)
+			{
+				// Start of a new list
+				listIndex = 0;
+			}
+			else
+			{
+				// We're in a normal paragraph
+				listIndex = -1;
+			}
+		}
+		else
+		{
+			// We're inside of a list but we need to compute the depth
+			listIndex = 0;
+			while (listIndex < listsCnt && indentWidth > lists[listIndex].maxIndent)
+			{
+				++listIndex;
+			}
+		}
+
+		// Close deeper lists
+		while (listIndex < listsCnt - 1)
+		{
+			list = lists.pop();
+			--listsCnt;
+
+			addEndTag('LIST', textBoundary, 0).pairWith(list.listTag);
+			addEndTag('LI',   textBoundary, 0).pairWith(list.itemTag);
+		}
+
+		// If there's no list item at current index, we'll need to either create one or
+		// drop down to previous index, in which case we have to adjust maxIndent
+		if (listIndex >= listsCnt)
+		{
+			if (hasListItem)
+			{
+				++listsCnt;
+
+				if (listIndex)
+				{
+					minIndent = lists[listIndex - 1].maxIndent + 1;
+					maxIndent = Math.max(minIndent, listIndex * 4);
+				}
+				else
+				{
+					minIndent = 0;
+					maxIndent = indentWidth;
+				}
+
+				breakParagraph = true;
+
+				listTag = addStartTag('LIST', matchPos + ignoreLen, 0);
+				listTag.setSortPriority(1);
+
+				itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
+				itemTag.setSortPriority(2);
+				itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
+
+				lists.push({
+					listTag:   listTag,
+					itemTag:   itemTag,
+					minIndent: minIndent,
+					maxIndent: maxIndent
+				});
+			}
+			else
+			{
+				--listIndex;
+			}
+		}
+		else if (hasListItem && listIndex > -1)
+		{
+			addEndTag('LI', textBoundary, 0).pairWith(lists[listIndex].itemTag);
+
+			itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
+			itemTag.setSortPriority(2);
+			itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
+
+			lists[listIndex].itemTag = itemTag;
+		}
+
+		codeIndent = (listsCnt + 1) * 4;
 	}
 
 	if (m[5])

@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
 
+use s9e\TextFormatter\Parser as Rules;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
@@ -150,6 +151,15 @@ class Parser extends ParserBase
 					$codeTag = null;
 				}
 
+				// Close all the lists
+				foreach ($lists as $list)
+				{
+					$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
+					$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
+				}
+				$lists    = [];
+				$listsCnt = 0;
+
 				// Mark the block boundary
 				if ($matchPos)
 				{
@@ -173,6 +183,108 @@ class Parser extends ParserBase
 					// Clear the captures to prevent any further processing
 					$m = [];
 				}
+			}
+			else
+			{
+				$hasListItem = !empty($m[4][0]);
+
+				if (!$indentWidth && !$continuation && !$hasListItem)
+				{
+					// Start of a new paragraph
+					$listIndex = -1;
+				}
+				elseif ($continuation && !$hasListItem)
+				{
+					// Continuation of current list item or paragraph
+					$listIndex = $listsCnt - 1;
+				}
+				elseif (!$listsCnt)
+				{
+					// We're not inside of a list already, we can start one if there's a list item
+					// and it's not in continuation of a paragraph
+					if (!$continuation && $hasListItem)
+					{
+						// Start of a new list
+						$listIndex = 0;
+					}
+					else
+					{
+						// We're in a normal paragraph
+						$listIndex = -1;
+					}
+				}
+				else
+				{
+					// We're inside of a list but we need to compute the depth
+					$listIndex = 0;
+					while ($listIndex < $listsCnt && $indentWidth > $lists[$listIndex]['maxIndent'])
+					{
+						++$listIndex;
+					}
+				}
+
+				// Close deeper lists
+				while ($listIndex < $listsCnt - 1)
+				{
+					$list = array_pop($lists);
+					--$listsCnt;
+
+					$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
+					$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
+				}
+
+				// If there's no list item at current index, we'll need to either create one or
+				// drop down to previous index, in which case we have to adjust maxIndent
+				if ($listIndex >= $listsCnt)
+				{
+					if ($hasListItem)
+					{
+						++$listsCnt;
+
+						if ($listIndex)
+						{
+							$minIndent = $lists[$listIndex - 1]['maxIndent'] + 1;
+							$maxIndent = max($minIndent, $listIndex * 4);
+						}
+						else
+						{
+							$minIndent = 0;
+							$maxIndent = $indentWidth;
+						}
+
+						$breakParagraph = true;
+
+						$listTag = $this->parser->addStartTag('LIST', $matchPos + $ignoreLen, 0);
+						$listTag->setSortPriority(1);
+
+						$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
+						$itemTag->setSortPriority(2);
+						$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
+
+						$lists[] = [
+							'listTag'   => $listTag,
+							'itemTag'   => $itemTag,
+							'minIndent' => $minIndent,
+							'maxIndent' => $maxIndent
+						];
+					}
+					else
+					{
+						--$listIndex;
+					}
+				}
+				elseif ($hasListItem && $listIndex > -1)
+				{
+					$this->parser->addEndTag('LI', $textBoundary, 0)->pairWith($lists[$listIndex]['itemTag']);
+
+					$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
+					$itemTag->setSortPriority(2);
+					$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
+
+					$lists[$listIndex]['itemTag'] = $itemTag;
+				}
+
+				$codeIndent = ($listsCnt + 1) * 4;
 			}
 
 			if (isset($m[5]))
@@ -219,6 +331,7 @@ class Parser extends ParserBase
 			if ($ignoreLen)
 			{
 				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
+				self::overwrite($text, $matchPos, $ignoreLen);
 			}
 		}
 
