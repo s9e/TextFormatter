@@ -90,6 +90,13 @@ while (isset($node->nextSibling))
 	{
 		$closeParent[$m[1]][$elName] = 0;
 	}
+	elseif (preg_match('#^((?:[a-z]+(?:, | or )?)+) element$#', $text, $m))
+	{
+		foreach (preg_split('#, | or #', $m[1]) as $target)
+		{
+			$closeParent[$target][$elName] = 0;
+		}
+	}
 	elseif (preg_match('#^([a-z]+) element or an? ([a-z]+) element$#', $text, $m)
 	     || preg_match('#^([a-z]+) or ([a-z]+) element$#', $text, $m)
 	     || preg_match('#^([a-z]+) element, or if it is immediately followed by an? ([a-z]+) element$#', $text, $m))
@@ -244,6 +251,11 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) elements$#', $value, $m))
 					{
 						$elements[$elName]['allowChildElement'][$m[2]]['not(@' . $m[1] . ')'] = 0;
+					}
+					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) and ([a-z]+) elements$#', $value, $m))
+					{
+						$elements[$elName]['allowChildElement'][$m[2]]['not(@' . $m[1] . ')'] = 0;
+						$elements[$elName]['allowChildElement'][$m[3]]['not(@' . $m[1] . ')'] = 0;
 					}
 					elseif (preg_match('#^optionally a (legend) element, followed by (flow content)$#', $value, $m))
 					{
@@ -404,7 +416,9 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 						$elements[$elName]['allowChildElement']['rp'][''] = 0;
 					}
 					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element'
-						 || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element')
+					     || $value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element and no more than one is a base element'
+					     || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element'
+					     || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element and no more than one is a base element')
 					{
 						$elements[$elName]['allowChildCategory']['metadata content'][''] = 0;
 					}
@@ -424,6 +438,25 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					{
 						$elements[$elName]['allowChildElement']['option'][''] = 0;
 						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
+					}
+					elseif ($value === 'if the element has a label attribute and a value attribute: empty')
+					{
+						$elements[$elName]['isEmpty']['@label and @value'] = 0;
+					}
+					elseif ($value === 'if the element has a label attribute but no value attribute: text')
+					{
+						$elements[$elName]['allowText'] = 0;
+						$elements[$elName]['textOnly'] = 0;
+					}
+					elseif ($value === 'if the element has no label attribute: text that is not inter-element whitespace')
+					{
+						$elements[$elName]['allowText'] = 0;
+						$elements[$elName]['textOnly'] = 0;
+					}
+					elseif ($value === 'text that is not inter-element whitespace')
+					{
+						$elements[$elName]['allowText'] = 0;
+						$elements[$elName]['textOnly'] = 0;
 					}
 					elseif ($elName === 'style')
 					{
@@ -447,6 +480,10 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					{
 						$elements[$elName]['textOnly'] = 0;
 						$elements[$elName]['isEmpty'][''] = 0;
+					}
+					elseif ($elName === 'template')
+					{
+						// Do nothing: template elements can follow basically any content model
 					}
 					else
 					{
