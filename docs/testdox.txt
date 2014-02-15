@@ -1626,6 +1626,9 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
 s9e\TextFormatter\Tests\Configurator\Bundles\F5
  [x] Features
 
+s9e\TextFormatter\Tests\Configurator\Bundles\Fatdown
+ [x] Features
+
 s9e\TextFormatter\Tests\Configurator\Bundles\Forum
  [x] Features
 
@@ -2460,6 +2463,9 @@ s9e\TextFormatter\Tests\Bundle
  [x] reset() removes the cached parser and renderer
 
 s9e\TextFormatter\Tests\Bundles\F5
+ [x] Rendering tests
+
+s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests
 
 s9e\TextFormatter\Tests\Bundles\Forum
