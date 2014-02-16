@@ -23,6 +23,7 @@ class Fatdown extends Bundle
 		$configurator->Autoemail;
 		$configurator->Autolink;
 		$configurator->Escaper;
+		$configurator->FancyPants;
 		$configurator->HTMLEntities;
 
 		$htmlElements = [
@@ -32,6 +33,8 @@ class Fatdown extends Bundle
 			'code',
 			'del',
 			'em',
+			'hr',
+			'i',
 			'img' => ['src'],
 			's',
 			'strong',
@@ -64,6 +67,25 @@ class Fatdown extends Bundle
 			{
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 			}
+		}
+
+		$configurator->plugins->load('MediaEmbed', ['createBBCodes' => false]);
+		$sites = [
+			'bandcamp',
+			'dailymotion',
+			'facebook',
+			'grooveshark',
+			'liveleak',
+			'soundcloud',
+			'spotify',
+			'twitch',
+			'vimeo',
+			'vine',
+			'youtube'
+		];
+		foreach ($sites as $site)
+		{
+			$configurator->MediaEmbed->add($site);
 		}
 	}
 }

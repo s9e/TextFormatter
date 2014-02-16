@@ -20,8 +20,10 @@ class FatdownTest extends Test
 		$this->assertTrue(isset($configurator->Autoemail));
 		$this->assertTrue(isset($configurator->Autolink));
 		$this->assertTrue(isset($configurator->Escaper));
+		$this->assertTrue(isset($configurator->FancyPants));
 		$this->assertTrue(isset($configurator->HTMLElements));
 		$this->assertTrue(isset($configurator->HTMLEntities));
 		$this->assertTrue(isset($configurator->Litedown));
+		$this->assertTrue(isset($configurator->MediaEmbed));
 	}
 }
