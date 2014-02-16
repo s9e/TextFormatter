@@ -255,10 +255,10 @@ class Parser extends ParserBase
 						$breakParagraph = true;
 
 						$listTag = $this->parser->addStartTag('LIST', $matchPos + $ignoreLen, 0);
-						$listTag->setSortPriority(1);
+						$listTag->setSortPriority(-2);
 
 						$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
-						$itemTag->setSortPriority(2);
+						$itemTag->setSortPriority(-1);
 						$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
 
 						$lists[] = [
@@ -278,7 +278,7 @@ class Parser extends ParserBase
 					$this->parser->addEndTag('LI', $textBoundary, 0)->pairWith($lists[$listIndex]['itemTag']);
 
 					$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
-					$itemTag->setSortPriority(2);
+					$itemTag->setSortPriority(-1);
 					$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
 
 					$lists[$listIndex]['itemTag'] = $itemTag;

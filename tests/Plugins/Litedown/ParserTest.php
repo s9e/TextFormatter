@@ -340,6 +340,16 @@ class ParserTest extends Test
 					'<i>         * </i><LIST><LI>9</LI></LIST></LI></LIST></LI></LIST></LI></LIST></r>'
 				]
 			],
+			[
+				[
+					' * **foo**',
+					' * *bar*'
+				],
+				[
+					'<r><i> * </i><LIST><LI><STRONG><s>**</s>foo<e>**</e></STRONG></LI>',
+					'<i> * </i><LI><EM><s>*</s>bar<e>*</e></EM></LI></LIST></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',

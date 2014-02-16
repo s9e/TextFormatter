@@ -256,10 +256,10 @@ while (m = regexp.exec(text))
 				breakParagraph = true;
 
 				listTag = addStartTag('LIST', matchPos + ignoreLen, 0);
-				listTag.setSortPriority(1);
+				listTag.setSortPriority(-2);
 
 				itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
-				itemTag.setSortPriority(2);
+				itemTag.setSortPriority(-1);
 				itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
 
 				lists.push({
@@ -279,7 +279,7 @@ while (m = regexp.exec(text))
 			addEndTag('LI', textBoundary, 0).pairWith(lists[listIndex].itemTag);
 
 			itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
-			itemTag.setSortPriority(2);
+			itemTag.setSortPriority(-1);
 			itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
 
 			lists[listIndex].itemTag = itemTag;
