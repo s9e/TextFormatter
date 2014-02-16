@@ -188,7 +188,7 @@ class Parser extends ParserBase
 			{
 				$hasListItem = !empty($m[4][0]);
 
-				if (!$indentWidth && !$continuation && !$hasListItem)
+				if (!$indentWidth && !$continuation && !$hasListItem && !$lineIsEmpty)
 				{
 					// Start of a new paragraph
 					$listIndex = -1;
