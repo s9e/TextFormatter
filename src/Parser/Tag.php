@@ -102,6 +102,17 @@ class Tag
 	//==========================================================================
 
 	/**
+	* Add a set of flags to this tag's
+	*
+	* @param  integer $flags
+	* @return void
+	*/
+	public function addFlags($flags)
+	{
+		$this->flags |= $flags;
+	}
+
+	/**
 	* Set given tag to be invalidated if this tag is invalidated
 	*
 	* @param  Tag  $tag
@@ -164,6 +175,17 @@ class Tag
 				$tag->endTag    = $this;
 			}
 		}
+	}
+
+	/**
+	* Remove a set of flags from this tag's
+	*
+	* @param  integer $flags
+	* @return void
+	*/
+	public function removeFlags($flags)
+	{
+		$this->flags &= ~$flags;
 	}
 
 	/**

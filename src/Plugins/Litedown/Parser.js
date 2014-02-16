@@ -260,7 +260,7 @@ while (m = regexp.exec(text))
 
 				itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
 				itemTag.setSortPriority(-1);
-				itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
+				itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
 
 				lists.push({
 					listTag:   listTag,
@@ -280,7 +280,7 @@ while (m = regexp.exec(text))
 
 			itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
 			itemTag.setSortPriority(-1);
-			itemTag.setFlags(itemTag.getFlags() & ~RULE_CREATE_PARAGRAPHS);
+			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
 
 			lists[listIndex].itemTag = itemTag;
 		}

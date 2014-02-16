@@ -740,4 +740,40 @@ class TagTest extends Test
 
 		$this->assertSame(32, $tag->getFlags());
 	}
+
+	/**
+	* @testdox addFlags() adds given flags to the tag's
+	*/
+	public function testAddFlags()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$tag->setFlags(2);
+		$tag->addFlags(5);
+
+		$this->assertSame(7, $tag->getFlags());
+	}
+
+	/**
+	* @testdox removeFlags() removes given flags from the tag's
+	*/
+	public function testRemoveFlags()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$tag->setFlags(7);
+		$tag->removeFlags(5);
+
+		$this->assertSame(2, $tag->getFlags());
+	}
+
+	/**
+	* @testdox removeFlags() can be called on flags that haven't been set
+	*/
+	public function testRemoveFlagsUnset()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$tag->setFlags(2);
+		$tag->removeFlags(5);
+
+		$this->assertSame(2, $tag->getFlags());
+	}
 }

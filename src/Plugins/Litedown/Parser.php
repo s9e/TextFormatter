@@ -259,7 +259,7 @@ class Parser extends ParserBase
 
 						$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
 						$itemTag->setSortPriority(-1);
-						$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
+						$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 
 						$lists[] = [
 							'listTag'   => $listTag,
@@ -279,7 +279,7 @@ class Parser extends ParserBase
 
 					$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
 					$itemTag->setSortPriority(-1);
-					$itemTag->setFlags($itemTag->getFlags() & ~Rules::RULE_CREATE_PARAGRAPHS);
+					$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 
 					$lists[$listIndex]['itemTag'] = $itemTag;
 				}

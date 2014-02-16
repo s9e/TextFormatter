@@ -1703,6 +1703,9 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] canClose() returns TRUE if the tags are paired together
  [x] setFlags() sets the tag's flags
  [x] getFlags() returns the tag's flags
+ [x] addFlags() adds given flags to the tag's
+ [x] removeFlags() removes given flags from the tag's
+ [x] removeFlags() can be called on flags that haven't been set
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests

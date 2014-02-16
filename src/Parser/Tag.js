@@ -84,6 +84,16 @@ Tag.prototype.startTag;
 Tag.prototype.type;
 
 /**
+* Add a set of flags to this tag's
+*
+* @param {!number} flags
+*/
+Tag.prototype.addFlags = function(flags)
+{
+	this.flags |= flags;
+};
+
+/**
 * Set given tag to be invalidated if this tag is invalidated
 *
 * @param {!Tag} tag
@@ -148,6 +158,16 @@ Tag.prototype.pairWith = function(tag)
 		}
 	}
 }
+
+/**
+* Remove a set of flags from this tag's
+*
+* @param {!number} flags
+*/
+Tag.prototype.removeFlags = function(flags)
+{
+	this.flags &= ~flags;
+};
 
 /**
 * Set the bitfield of boolean rules that apply to this tag
