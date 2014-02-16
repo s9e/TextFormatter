@@ -168,7 +168,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>gfycat</code></td>
 		<td>gfycat</td>
-		<td>http://gfycat.com/SereneIllfatedCapybara</td>
+		<td>http://gfycat.com/SereneIllfatedCapybara<br/>http://giant.gfycat.com/SereneIllfatedCapybara.gif</td>
 	</tr>
 	<tr>
 		<td><code>gist</code></td>

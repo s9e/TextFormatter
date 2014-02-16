@@ -356,6 +356,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://giant.gfycat.com/SereneIllfatedCapybara.gif',
+				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://giant.gfycat.com/SereneIllfatedCapybara.gif" width="600">http://giant.gfycat.com/SereneIllfatedCapybara.gif</GFYCAT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gfycat');
+				}
+			],
+			[
 				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
 				'<r><GROOVESHARK songid="35292216" url="http://grooveshark.com/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></r>',
 				[],
