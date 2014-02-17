@@ -35,8 +35,8 @@ class Serializer
 			=> "(\$node->hasAttribute('songid')?40:250)",
 
 		// MediaEmbed: Spotify
-		"380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))"
-			=> "(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'/track/')!==false?80:380)",
+		"380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))"
+			=> "(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'track/')===0?80:380)",
 
 		// MediaEmbed: Twitch
 		"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)"

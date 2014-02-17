@@ -1040,8 +1040,8 @@ class PHPTest extends Test
 				'@track_'
 			],
 			[
-				"<hr title=\"{380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))}\"/>",
-				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'/track/')!==false?80:380)"
+				"<hr title=\"{380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))}\"/>",
+				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'track/')===0?80:380)"
 			],
 		];
 	}

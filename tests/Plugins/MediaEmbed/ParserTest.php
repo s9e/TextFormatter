@@ -1724,6 +1724,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
+				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
 				'<iframe width="560" height="315" src="http://embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
