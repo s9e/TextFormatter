@@ -7,7 +7,7 @@ function patchFile($filepath)
 
 	// Execute PHP and replace output
 	$text = preg_replace_callback(
-		'#(```md\\n([^`]+)\\n```\\s+```html).*?(\\n```)#s',
+		'#(```md\\n(.*?)\\n```\\s+```html).*?(\\n```)#s',
 		function ($m)
 		{
 			global $parser, $renderer;

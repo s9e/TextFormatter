@@ -4,9 +4,10 @@
 
 A line that starts with a right angle bracket > (optionally followed by a space) is a blockquote.
 
-### Code
+### Indented code blocks
 
 A series of lines indented by at least 4 spaces or a tab, preceded with an empty line.
+
 
 ## Formatting elements
 
@@ -47,4 +48,15 @@ Any text between two `~~` markers.
 ```
 ```html
 <p>90s haircuts are <del>cool</del> <del>lame</del> cool again.</p>
+```
+
+### Inline code
+
+Any text between two `\`` or `\`\`` markers.
+
+```md
+Single `print("``")` or double ``print("`")``
+```
+```html
+<p>Single <code class="inline">print("``")</code> or double <code class="inline">print("`")</code></p>
 ```
