@@ -4,6 +4,10 @@
 
 A line that starts with a right angle bracket > (optionally followed by a space) is a blockquote.
 
+### Code
+
+A series of lines indented by at least 4 spaces or a tab, preceded with an empty line.
+
 ## Formatting elements
 
 ### Emphasis
@@ -32,4 +36,15 @@ When a block of three `*` or `_` is found, the order of strong/em depends on the
 <p><strong><em>foo</em> bar</strong></p>
 
 <p><em><strong>foo</strong> bar</em></p>
+```
+
+### Strikethrough
+
+Any text between two `~~` markers.
+
+```md
+90s haircuts are ~~cool~~ ~~lame~~ cool again.
+```
+```html
+<p>90s haircuts are <del>cool</del> <del>lame</del> cool again.</p>
 ```
