@@ -542,7 +542,7 @@
 		<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
 		<example>http://www.twitch.tv/minigolf2000</example>
 		<example>http://www.twitch.tv/minigolf2000/c/2475925</example>
-		<example>http://www.twitch.tv/minigolf2000/b/361358487</example>
+		<example>http://www.twitch.tv/minigolf2000/b/497929990</example>
 		<example>http://www.twitch.tv/m/57217</example>
 
 		<host>twitch.tv</host>
@@ -560,7 +560,7 @@
 			>
 				<param name="allowfullscreen" value="true"/>
 				<param name="flashvars">
-					<xsl:attribute name="value">channel=<xsl:value-of select="@channel"/><xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if><xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if></xsl:attribute>
+					<xsl:attribute name="value">channel=<xsl:value-of select="@channel"/><xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if><xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if>&amp;auto_play=false</xsl:attribute>
 				</param>
 				<embed type="application/x-shockwave-flash"
 				       width="620"
