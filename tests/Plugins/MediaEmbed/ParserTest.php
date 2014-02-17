@@ -1203,6 +1203,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'spotify:album:0coYJwk0uFvOXDkgMzQJMG',
+				'<r><SPOTIFY uri="spotify:album:0coYJwk0uFvOXDkgMzQJMG">spotify:album:0coYJwk0uFvOXDkgMzQJMG</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'[spotify]spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe[/spotify]',
 				'<r><SPOTIFY uri="spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe"><s>[spotify]</s>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<e>[/spotify]</e></SPOTIFY></r>',
 				[],
