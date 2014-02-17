@@ -257,6 +257,12 @@ class Parser extends ParserBase
 						$listTag = $this->parser->addStartTag('LIST', $matchPos + $ignoreLen, 0);
 						$listTag->setSortPriority(-2);
 
+						// Test whether the list item ends with a dot, as in "1."
+						if (substr($m[4][0], -1) === '.')
+						{
+							$listTag->setAttribute('type', 'decimal');
+						}
+
 						$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
 						$itemTag->setSortPriority(-1);
 						$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);

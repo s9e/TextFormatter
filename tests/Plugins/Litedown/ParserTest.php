@@ -368,6 +368,16 @@ class ParserTest extends Test
 					'<i> * </i><LI>baz</LI></LIST></r>'
 				]
 			],
+			[
+				[
+					'1. one',
+					'2. two'
+				],
+				[
+					'<r><i>1. </i><LIST type="decimal"><LI>one</LI>',
+					'<i>2. </i><LI>two</LI></LIST></r>'
+				]
+			],
 			// Headers
 			[
 				'# H1',
@@ -766,6 +776,16 @@ class ParserTest extends Test
 					'<li>7</li>',
 					'<li>8',
 					'<ul><li>9</li></ul></li></ul></li></ul></li></ul>'
+				]
+			],
+			[
+				[
+					'1. one',
+					'2. two'
+				],
+				[
+					'<ol style="list-style-type:decimal"><li>one</li>',
+					'<li>two</li></ol>'
 				]
 			],
 		]);
