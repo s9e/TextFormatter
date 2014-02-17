@@ -192,6 +192,14 @@ class Serializer
 					'(?<substr1>(?&value))',
 					'(?:, (?<substr2>(?&value)))?',
 					'\\)'
+				],
+				'startswith'  => [
+					'starts-with',
+					'\\(',
+					'(?<startswith0>(?&value))',
+					',',
+					'(?<startswith1>(?&value))',
+					'\\)'
 				]
 			];
 
@@ -353,6 +361,11 @@ class Serializer
 			if (!empty($m['contains']))
 			{
 				return '(strpos(' . $this->convertXPath($m['contains0']) . ',' . $this->convertXPath($m['contains1']) . ')!==false)';
+			}
+
+			if (!empty($m['startswith']))
+			{
+				return '(strpos(' . $this->convertXPath($m['startswith0']) . ',' . $this->convertXPath($m['startswith1']) . ')===0)';
 			}
 
 			if (!empty($m['cmp1']))

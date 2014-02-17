@@ -990,6 +990,10 @@ class PHPTest extends Test
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
 			[
+				'<xsl:if test="starts-with(@foo,\'bar\')">Foo</xsl:if>',
+				"(strpos(\$node->getAttribute('foo'),'bar')===0)"
+			],
+			[
 				'<xsl:if test="@foo and (@bar or @baz)">...</xsl:if>',
 				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))",
 				null,
