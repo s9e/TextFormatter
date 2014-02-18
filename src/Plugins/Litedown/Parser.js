@@ -297,10 +297,10 @@ while (m = regexp.exec(text))
 
 				// Record the new list depth
 				lists.push({
-					listTag:   listTag,
-					itemTag:   itemTag,
-					minIndent: minIndent,
-					maxIndent: maxIndent
+					listTag   : listTag,
+					itemTag   : itemTag,
+					minIndent : minIndent,
+					maxIndent : maxIndent
 				});
 			}
 		}
