@@ -55,7 +55,7 @@ var boundaries   = [],
 	minIndent,
 	quoteDepth;
 
-regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
+regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ * _ * _[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 
 while (m = regexp.exec(text))
 {
@@ -336,6 +336,12 @@ while (m = regexp.exec(text))
 				breakParagraph = true;
 			}
 		}
+	}
+	else if (m[3] && !listsCnt)
+	{
+		// Horizontal rule
+		addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
+		breakParagraph = true;
 	}
 
 	if (breakParagraph)

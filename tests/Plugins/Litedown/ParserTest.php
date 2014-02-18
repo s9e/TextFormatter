@@ -459,6 +459,87 @@ class ParserTest extends Test
 					'<p>text</p></r>'
 				]
 			],
+			// Horizontal rules
+			[
+				[
+					'foo',
+					'',
+					'---',
+					'',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'',
+					'<HR>---</HR>',
+					'',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					' _ _ _ ',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'<HR> _ _ _ </HR>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'***',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'<HR>***</HR>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'* * *',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'<HR>* * *</HR>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'   * * * * *   ',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'<HR>   * * * * *   </HR>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					' - foo',
+					'   ***',
+					'   bar'
+				],
+				[
+					'<r> <LIST><LI><s>- </s>foo',
+					'   ***',
+					'   bar</LI></LIST></r>'
+				]
+			],
+			[
+				'>  *** ',
+				'<r><QUOTE><i>&gt; </i><HR> *** </HR></QUOTE></r>'
+			],
 			// Links
 			[
 				'Go to [that site](http://example.org) now!',
