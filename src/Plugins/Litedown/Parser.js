@@ -44,6 +44,7 @@ var boundaries   = [],
 	newContext   = false,
 	quotes       = [],
 	quotesCnt    = 0,
+	setextLines  = {},
 	textBoundary = 0,
 	breakParagraph,
 	continuation,
@@ -54,6 +55,36 @@ var boundaries   = [],
 	maxIndent,
 	minIndent,
 	quoteDepth;
+
+// Capture the underlines used for Setext-style headers
+if (text.indexOf("-\n") || text.indexOf("=\n"))
+{
+	// Capture the any series of - or = alone on a line, optionally preceded with the
+	// angle brackets notation used in blockquotes
+	regexp = /^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+)$/gm;
+
+	while (m = regexp.exec(text))
+	{
+		match    = m[0];
+		matchPos = m['index'];
+
+		// Compute the position of the end tag. We start on the LF character before the
+		// match and keep rewinding until we find a non-space character
+		endTagPos = matchPos - 1;
+		while (endTagPos > 0 && text[endTagPos - 1] === ' ')
+		{
+			--endTagPos;
+		}
+
+		// Store at the offset of the LF character
+		setextLines[matchPos - 1] = {
+			endTagLen  : matchPos + match.length - endTagPos,
+			endTagPos  : endTagPos,
+			quoteDepth : match.length - match.replace(/>/g, '').length,
+			tagName    : ((match.charAt(0)) === '=') ? 'H1' : 'H2'
+		};
+	}
+}
 
 regexp = /^(?:(?=[-*+\d \t>`#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 
@@ -342,6 +373,17 @@ while (m = regexp.exec(text))
 		// Horizontal rule
 		addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
 		breakParagraph = true;
+	}
+	else if (setextLines[lfPos] && setextLines[lfPos].quoteDepth === quoteDepth && !lineIsEmpty && !listsCnt && !codeTag)
+	{
+		// Setext-style header
+		addTagPair(
+			setextLines[lfPos].tagName,
+			matchPos + ignoreLen,
+			0,
+			setextLines[lfPos].endTagPos,
+			setextLines[lfPos].endTagLen
+		);
 	}
 
 	if (breakParagraph)

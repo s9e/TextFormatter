@@ -58,9 +58,39 @@ class Parser extends ParserBase
 		$newContext   = false;
 		$quotes       = [];
 		$quotesCnt    = 0;
+		$setextLines  = [];
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		// Capture the underlines used for Setext-style headers
+		if (strpos($text, "-\n") || strpos($text, "=\n"))
+		{
+			// Capture the any series of - or = alone on a line, optionally preceded with the
+			// angle brackets notation used in blockquotes
+			$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+)$/m';
+			if (preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE))
+			{
+				foreach ($matches[0] as list($match, $matchPos))
+				{
+					// Compute the position of the end tag. We start on the LF character before the
+					// match and keep rewinding until we find a non-space character
+					$endTagPos = $matchPos - 1;
+					while ($endTagPos > 0 && $text[$endTagPos - 1] === ' ')
+					{
+						--$endTagPos;
+					}
+
+					// Store at the offset of the LF character
+					$setextLines[$matchPos - 1] = [
+						'endTagLen'  => $matchPos + strlen($match) - $endTagPos,
+						'endTagPos'  => $endTagPos,
+						'quoteDepth' => substr_count($match, '>'),
+						'tagName'    => (($match[0]) === '=') ? 'H1' : 'H2'
+					];
+				}
+			}
+		}
+
+		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
 		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
@@ -342,6 +372,17 @@ class Parser extends ParserBase
 				// Horizontal rule
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = true;
+			}
+			elseif (isset($setextLines[$lfPos]) && $setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
+			{
+				// Setext-style header
+				$this->parser->addTagPair(
+					$setextLines[$lfPos]['tagName'],
+					$matchPos + $ignoreLen,
+					0,
+					$setextLines[$lfPos]['endTagPos'],
+					$setextLines[$lfPos]['endTagLen']
+				);
 			}
 
 			if ($breakParagraph)

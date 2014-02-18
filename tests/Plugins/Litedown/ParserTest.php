@@ -398,7 +398,7 @@ class ParserTest extends Test
 					'<LI><s>2. </s>two</LI></LIST></r>'
 				]
 			],
-			// Headers
+			// atx-style headers
 			[
 				'# H1',
 				'<r><H1><s># </s>H1</H1></r>'
@@ -457,6 +457,130 @@ class ParserTest extends Test
 					'<i>&gt; </i><p>baz</p></QUOTE>',
 					'',
 					'<p>text</p></r>'
+				]
+			],
+			// Setext-style headers
+			[
+				[
+					'foo',
+					'===',
+					'bar'
+				],
+				[
+					'<r><H1>foo<e>',
+					'===</e></H1>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'---',
+					'bar'
+				],
+				[
+					'<r><H2>foo<e>',
+					'---</e></H2>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'=-=',
+					'bar'
+				],
+				[
+					'<t><p>foo',
+					'=-=',
+					'bar</p></t>'
+				]
+			],
+			[
+				[
+					'foo',
+					'= = =',
+					'bar'
+				],
+				[
+					'<t><p>foo',
+					'= = =',
+					'bar</p></t>'
+				]
+			],
+			[
+				[
+					'> foo',
+					'> -'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><H2>foo<e>',
+					'&gt; -</e></H2></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'> foo',
+					'> > -'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>foo</p>',
+					'<QUOTE><i>&gt; &gt; </i><p>-</p></QUOTE></QUOTE></r>'
+				]
+			],
+			[
+				// NOTE: implementations vary wildly on that one. The old Markdown and PHP Markdown
+				//       both interpret it as an header whose text content is "> foo" but most other
+				//       implementations interpret it as an header inside of a blockquote. Here we
+				//       choose a different path: ignore the header altogether to prevent an
+				//       accidental dash to turn the last line of a blockquote into a header
+				[
+					'> foo',
+					'-'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>foo',
+					'-</p></QUOTE></r>'
+				]
+			],
+			[
+				// NOTE: implementations vary wildly. Same as for blockquotes, a loose dash should
+				//       not create headers
+				[
+					'- foo',
+					'-'
+				],
+				[
+					'<r><LIST><LI><s>- </s>foo',
+					'-</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'    code',
+					'-'
+				],
+				[
+					'<r><i>    </i><CODE>code</CODE>',
+					'<p>-</p></r>'
+				]
+			],
+			[
+				'-',
+				'<t><p>-</p></t>'
+			],
+			[
+				" \n-",
+				"<t> \n<p>-</p></t>"
+			],
+			[
+				[
+					'## foo',
+					'======'
+				],
+				[
+					'<r><H2><s>## </s>foo</H2>',
+					'<p>======</p></r>'
 				]
 			],
 			// Horizontal rules
