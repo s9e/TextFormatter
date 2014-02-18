@@ -491,6 +491,18 @@ class ParserTest extends Test
 			[
 				[
 					'foo',
+					'___',
+					'bar'
+				],
+				[
+					'<r><p>foo</p>',
+					'<HR>___</HR>',
+					'<p>bar</p></r>'
+				]
+			],
+			[
+				[
+					'foo',
 					'***',
 					'bar'
 				],
