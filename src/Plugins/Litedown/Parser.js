@@ -49,21 +49,19 @@ var boundaries   = [],
 	continuation,
 	endTag,
 	ignoreLen,
-	itemTag,
 	lfPos,
 	listIndex,
-	listTag,
 	maxIndent,
 	minIndent,
 	quoteDepth;
 
-regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
+regexp = /^(?:(?=[-*+\d \t>`#])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 
 while (m = regexp.exec(text))
 {
 	matchPos  = m['index'];
 	matchLen  = m[0].length;
-	ignoreLen = matchLen;
+	ignoreLen = 0;
 
 	// If the last line was empty then this is not a continuation, and vice-versa
 	continuation = !lineIsEmpty;
@@ -82,7 +80,15 @@ while (m = regexp.exec(text))
 	breakParagraph = (lineIsEmpty && continuation);
 
 	// Count quote marks
-	quoteDepth = (m[1]) ? m[1].length - m[1].replace(/>/g, '').length : 0;
+	if (m[1])
+	{
+		quoteDepth = m[1].length - m[1].replace(/>/g, '').length;
+		ignoreLen  = m[1].length;
+	}
+	else
+	{
+		quoteDepth = 0;
+	}
 
 	// Close supernumerary quotes
 	if (quoteDepth < quotesCnt && !continuation && !lineIsEmpty)
@@ -112,12 +118,14 @@ while (m = regexp.exec(text))
 	}
 
 	// Compute the width of the indentation
-	var indentWidth = 0, indentStr, indentLen, indentPos;
+	var indentWidth = 0,
+		indentPos   = 0,
+		indentStr,
+		indentLen;
 	if (m[2])
 	{
 		indentStr = m[2];
 		indentLen = indentStr.length;
-		indentPos = 0;
 
 		do
 		{
@@ -236,9 +244,34 @@ while (m = regexp.exec(text))
 
 		// If there's no list item at current index, we'll need to either create one or
 		// drop down to previous index, in which case we have to adjust maxIndent
-		if (listIndex >= listsCnt)
+		if (listIndex === listsCnt && !hasListItem)
 		{
-			if (hasListItem)
+			--listIndex;
+		}
+
+		if (hasListItem && listIndex >= 0)
+		{
+			breakParagraph = true;
+
+			// Compute the position and amount of text consumed by the item tag
+			var tagPos = matchPos + ignoreLen + indentPos,
+				tagLen = m[4].length;
+
+			// Create a LI tag that consumes its markup
+			var itemTag = addStartTag('LI', tagPos, tagLen);
+			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
+
+			// Overwrite the markup
+			overwrite(tagPos, tagLen);
+
+			// If the list index is within current lists count it means this is not a new
+			// list and we have to close the last item. Otherwise, it's a new list that we
+			// have to create
+			if (listIndex < listsCnt)
+			{
+				addEndTag('LI', textBoundary, 0).pairWith(lists[listIndex].itemTag);
+			}
+			else
 			{
 				++listsCnt;
 
@@ -253,21 +286,16 @@ while (m = regexp.exec(text))
 					maxIndent = indentWidth;
 				}
 
-				breakParagraph = true;
-
-				listTag = addStartTag('LIST', matchPos + ignoreLen, 0);
-				listTag.setSortPriority(-2);
+				// Create a 0-width LIST tag right before the item tag LI
+				var listTag = addStartTag('LIST', tagPos, 0);
 
 				// Test whether the list item ends with a dot, as in "1."
-				if (m[4].charAt(m[4].length - 1) === '.')
+				if (m[4].indexOf('.') > -1)
 				{
 					listTag.setAttribute('type', 'decimal');
 				}
 
-				itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
-				itemTag.setSortPriority(-1);
-				itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
-
+				// Record the new list depth
 				lists.push({
 					listTag:   listTag,
 					itemTag:   itemTag,
@@ -275,20 +303,6 @@ while (m = regexp.exec(text))
 					maxIndent: maxIndent
 				});
 			}
-			else
-			{
-				--listIndex;
-			}
-		}
-		else if (hasListItem && listIndex > -1)
-		{
-			addEndTag('LI', textBoundary, 0).pairWith(lists[listIndex].itemTag);
-
-			itemTag = addStartTag('LI', matchPos + ignoreLen, 0);
-			itemTag.setSortPriority(-1);
-			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
-
-			lists[listIndex].itemTag = itemTag;
 		}
 
 		codeIndent = (listsCnt + 1) * 4;
@@ -299,8 +313,8 @@ while (m = regexp.exec(text))
 		// Headers
 		if (m[5].charAt(0) === '#')
 		{
-			startTagPos = matchPos + matchLen;
-			startTagLen = 0;
+			startTagLen = m[5].length;
+			startTagPos = matchPos + matchLen - startTagLen;
 			endTagPos   = lfPos;
 			endTagLen   = 0;
 

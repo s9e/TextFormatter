@@ -217,10 +217,10 @@ class ParserTest extends Test
 					'foo'
 				],
 				[
-					'<r><p>foo',
-					'<i>    </i>bar</p>',
+					'<t><p>foo',
+					'    bar</p>',
 					'',
-					'<p>foo</p></r>'
+					'<p>foo</p></t>'
 				]
 			],
 			[
@@ -328,16 +328,16 @@ class ParserTest extends Test
 					'         * 9'
 				],
 				[
-					'<r><i>* </i><LIST><LI>0',
-					'<i> * </i><LIST><LI>1</LI>',
-					'<i>  * </i><LI>2</LI>',
-					'<i>   * </i><LI>3</LI>',
-					'<i>    * </i><LI>4',
-					'<i>     * </i><LIST><LI>5</LI>',
-					'<i>      * </i><LI>6</LI>',
-					'<i>       * </i><LI>7</LI>',
-					'<i>        * </i><LI>8',
-					'<i>         * </i><LIST><LI>9</LI></LIST></LI></LIST></LI></LIST></LI></LIST></r>'
+					'<r><LIST><LI><s>* </s>0',
+					' <LIST><LI><s>* </s>1</LI>',
+					'  <LI><s>* </s>2</LI>',
+					'   <LI><s>* </s>3</LI>',
+					'    <LI><s>* </s>4',
+					'     <LIST><LI><s>* </s>5</LI>',
+					'      <LI><s>* </s>6</LI>',
+					'       <LI><s>* </s>7</LI>',
+					'        <LI><s>* </s>8',
+					'         <LIST><LI><s>* </s>9</LI></LIST></LI></LIST></LI></LIST></LI></LIST></r>'
 				]
 			],
 			[
@@ -346,8 +346,28 @@ class ParserTest extends Test
 					' * *bar*'
 				],
 				[
-					'<r><i> * </i><LIST><LI><STRONG><s>**</s>foo<e>**</e></STRONG></LI>',
-					'<i> * </i><LI><EM><s>*</s>bar<e>*</e></EM></LI></LIST></r>'
+					'<r> <LIST><LI><s>* </s><STRONG><s>**</s>foo<e>**</e></STRONG></LI>',
+					' <LI><s>* </s><EM><s>*</s>bar<e>*</e></EM></LI></LIST></r>'
+				]
+			],
+			[
+				[
+					' - *foo',
+					'   bar*'
+				],
+				[
+					'<r> <LIST><LI><s>- </s><EM><s>*</s>foo',
+					'   bar<e>*</e></EM></LI></LIST></r>'
+				]
+			],
+			[
+				[
+					' - *foo',
+					' - bar*'
+				],
+				[
+					'<r> <LIST><LI><s>- </s>*foo</LI>',
+					' <LI><s>- </s>bar*</LI></LIST></r>'
 				]
 			],
 			[
@@ -360,12 +380,12 @@ class ParserTest extends Test
 					' * baz'
 				],
 				[
-					'<r><i> * </i><LIST><LI>foo',
+					'<r> <LIST><LI><s>* </s>foo',
 					'',
 					'',
-					'<i>   </i>bar</LI>',
+					'   bar</LI>',
 					'',
-					'<i> * </i><LI>baz</LI></LIST></r>'
+					' <LI><s>* </s>baz</LI></LIST></r>'
 				]
 			],
 			[
@@ -374,50 +394,50 @@ class ParserTest extends Test
 					'2. two'
 				],
 				[
-					'<r><i>1. </i><LIST type="decimal"><LI>one</LI>',
-					'<i>2. </i><LI>two</LI></LIST></r>'
+					'<r><LIST type="decimal"><LI><s>1. </s>one</LI>',
+					'<LI><s>2. </s>two</LI></LIST></r>'
 				]
 			],
 			// Headers
 			[
 				'# H1',
-				'<r><i># </i><H1>H1</H1></r>'
+				'<r><H1><s># </s>H1</H1></r>'
 			],
 			[
 				'###### H6',
-				'<r><i>###### </i><H6>H6</H6></r>'
+				'<r><H6><s>###### </s>H6</H6></r>'
 			],
 			[
 				'####### H7',
-				'<r><i>####### </i><H6>H7</H6></r>'
+				'<r><H6><s>####### </s>H7</H6></r>'
 			],
 			[
 				'# H1 #',
-				'<r><i># </i><H1>H1<e> #</e></H1></r>'
+				'<r><H1><s># </s>H1<e> #</e></H1></r>'
 			],
 			[
 				'### H3 # H3 ####',
-				'<r><i>### </i><H3>H3 # H3<e> ####</e></H3></r>'
+				'<r><H3><s>### </s>H3 # H3<e> ####</e></H3></r>'
 			],
 			[
 				'### foo *bar*',
-				'<r><i>### </i><H3>foo <EM><s>*</s>bar<e>*</e></EM></H3></r>'
+				'<r><H3><s>### </s>foo <EM><s>*</s>bar<e>*</e></EM></H3></r>'
 			],
 			[
 				"*foo\n### bar*",
-				"<r><p>*foo</p>\n<i>### </i><H3>bar*</H3></r>"
+				"<r><p>*foo</p>\n<H3><s>### </s>bar*</H3></r>"
 			],
 			[
 				"*foo\n### bar*\nbaz*",
-				"<r><p>*foo</p>\n<i>### </i><H3>bar*</H3>\n<p>baz*</p></r>"
+				"<r><p>*foo</p>\n<H3><s>### </s>bar*</H3>\n<p>baz*</p></r>"
 			],
 			[
 				"foo\n\n### bar\n\nbaz",
-				"<r><p>foo</p>\n\n<i>### </i><H3>bar</H3>\n\n<p>baz</p></r>"
+				"<r><p>foo</p>\n\n<H3><s>### </s>bar</H3>\n\n<p>baz</p></r>"
 			],
 			[
 				"foo\n\n### bar\n\nbaz",
-				"<r><p>foo</p>\n\n<i>### </i><H3>bar</H3>\n\n<p>baz</p></r>"
+				"<r><p>foo</p>\n\n<H3><s>### </s>bar</H3>\n\n<p>baz</p></r>"
 			],
 			[
 				[
@@ -432,7 +452,7 @@ class ParserTest extends Test
 				[
 					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p></QUOTE>',
 					'<i>&gt; </i>',
-					'<i>&gt; # </i><H1>BAR</H1>',
+					'<i>&gt; </i><H1><s># </s>BAR</H1>',
 					'<i>&gt; </i>',
 					'<i>&gt; </i><p>baz</p></QUOTE>',
 					'',
@@ -739,7 +759,7 @@ class ParserTest extends Test
 			[
 				[
 					'foo',
-					' ',
+					'',
 					'## bar',
 					'',
 					'baz'
@@ -767,15 +787,15 @@ class ParserTest extends Test
 				],
 				[
 					'<ul><li>0',
-					'<ul><li>1</li>',
-					'<li>2</li>',
-					'<li>3</li>',
-					'<li>4',
-					'<ul><li>5</li>',
-					'<li>6</li>',
-					'<li>7</li>',
-					'<li>8',
-					'<ul><li>9</li></ul></li></ul></li></ul></li></ul>'
+					' <ul><li>1</li>',
+					'  <li>2</li>',
+					'   <li>3</li>',
+					'    <li>4',
+					'     <ul><li>5</li>',
+					'      <li>6</li>',
+					'       <li>7</li>',
+					'        <li>8',
+					'         <ul><li>9</li></ul></li></ul></li></ul></li></ul>'
 				]
 			],
 			[

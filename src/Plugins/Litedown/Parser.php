@@ -60,14 +60,14 @@ class Parser extends ParserBase
 		$quotesCnt    = 0;
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?(?:([-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`#])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
 		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
 		{
 			$matchPos  = $m[0][1];
 			$matchLen  = strlen($m[0][0]);
-			$ignoreLen = $matchLen;
+			$ignoreLen = 0;
 
 			// If the last line was empty then this is not a continuation, and vice-versa
 			$continuation = !$lineIsEmpty;
@@ -80,7 +80,15 @@ class Parser extends ParserBase
 			$breakParagraph = ($lineIsEmpty && $continuation);
 
 			// Count quote marks
-			$quoteDepth = (!empty($m[1][0])) ? substr_count($m[1][0], '>') : 0;
+			if (!empty($m[1][0]))
+			{
+				$quoteDepth = substr_count($m[1][0], '>');
+				$ignoreLen  = strlen($m[1][0]);
+			}
+			else
+			{
+				$quoteDepth = 0;
+			}
 
 			// Close supernumerary quotes
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
@@ -112,11 +120,11 @@ class Parser extends ParserBase
 
 			// Compute the width of the indentation
 			$indentWidth = 0;
+			$indentPos   = 0;
 			if (!empty($m[2][0]))
 			{
 				$indentStr = $m[2][0];
 				$indentLen = strlen($indentStr);
-				$indentPos = 0;
 
 				do
 				{
@@ -172,7 +180,7 @@ class Parser extends ParserBase
 				if (isset($codeTag) || !$continuation)
 				{
 					// Adjust the amount of text being ignored
-					$ignoreLen = strlen($m[1][0]) + $indentPos;
+					$ignoreLen += $indentPos;
 
 					if (!isset($codeTag))
 					{
@@ -235,9 +243,35 @@ class Parser extends ParserBase
 
 				// If there's no list item at current index, we'll need to either create one or
 				// drop down to previous index, in which case we have to adjust maxIndent
-				if ($listIndex >= $listsCnt)
+				if ($listIndex === $listsCnt && !$hasListItem)
 				{
-					if ($hasListItem)
+					--$listIndex;
+				}
+
+				if ($hasListItem && $listIndex >= 0)
+				{
+					$breakParagraph = true;
+
+					// Compute the position and amount of text consumed by the item tag
+					$tagPos = $matchPos + $ignoreLen + $indentPos;
+					$tagLen = strlen($m[4][0]);
+
+					// Create a LI tag that consumes its markup
+					$itemTag = $this->parser->addStartTag('LI', $tagPos, $tagLen);
+					$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
+
+					// Overwrite the markup
+					self::overwrite($text, $tagPos, $tagLen);
+
+					// If the list index is within current lists count it means this is not a new
+					// list and we have to close the last item. Otherwise, it's a new list that we
+					// have to create
+					if ($listIndex < $listsCnt)
+					{
+						$this->parser->addEndTag('LI', $textBoundary, 0)
+						             ->pairWith($lists[$listIndex]['itemTag']);
+					}
+					else
 					{
 						++$listsCnt;
 
@@ -252,21 +286,16 @@ class Parser extends ParserBase
 							$maxIndent = $indentWidth;
 						}
 
-						$breakParagraph = true;
-
-						$listTag = $this->parser->addStartTag('LIST', $matchPos + $ignoreLen, 0);
-						$listTag->setSortPriority(-2);
+						// Create a 0-width LIST tag right before the item tag LI
+						$listTag = $this->parser->addStartTag('LIST', $tagPos, 0);
 
 						// Test whether the list item ends with a dot, as in "1."
-						if (substr($m[4][0], -1) === '.')
+						if (strpos($m[4][0], '.') !== false)
 						{
 							$listTag->setAttribute('type', 'decimal');
 						}
 
-						$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
-						$itemTag->setSortPriority(-1);
-						$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
-
+						// Record the new list depth
 						$lists[] = [
 							'listTag'   => $listTag,
 							'itemTag'   => $itemTag,
@@ -274,20 +303,6 @@ class Parser extends ParserBase
 							'maxIndent' => $maxIndent
 						];
 					}
-					else
-					{
-						--$listIndex;
-					}
-				}
-				elseif ($hasListItem && $listIndex > -1)
-				{
-					$this->parser->addEndTag('LI', $textBoundary, 0)->pairWith($lists[$listIndex]['itemTag']);
-
-					$itemTag = $this->parser->addStartTag('LI', $matchPos + $ignoreLen, 0);
-					$itemTag->setSortPriority(-1);
-					$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
-
-					$lists[$listIndex]['itemTag'] = $itemTag;
 				}
 
 				$codeIndent = ($listsCnt + 1) * 4;
@@ -298,8 +313,8 @@ class Parser extends ParserBase
 				// Headers
 				if ($m[5][0][0] === '#')
 				{
-					$startTagPos = $matchPos + $matchLen;
-					$startTagLen = 0;
+					$startTagLen = strlen($m[5][0]);
+					$startTagPos = $matchPos + $matchLen - $startTagLen;
 					$endTagPos   = $lfPos;
 					$endTagLen   = 0;
 
@@ -337,7 +352,6 @@ class Parser extends ParserBase
 			if ($ignoreLen)
 			{
 				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
-				self::overwrite($text, $matchPos, $ignoreLen);
 			}
 		}
 
