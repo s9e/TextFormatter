@@ -27,7 +27,7 @@ class Fatdown extends Bundle
 		$configurator->HTMLEntities;
 
 		$htmlElements = [
-			'a' => ['href', 'title'],
+			'a' => ['!href', 'title'],
 			'abbr' => ['title'],
 			'b',
 			'br',
@@ -36,7 +36,7 @@ class Fatdown extends Bundle
 			'em',
 			'hr',
 			'i',
-			'img' => ['src'],
+			'img' => ['alt', '!src', 'title'],
 			's',
 			'strong',
 			'sub',
@@ -66,7 +66,17 @@ class Fatdown extends Bundle
 			$configurator->HTMLElements->allowElement($elName);
 			foreach ($attrNames as $attrName)
 			{
-				$configurator->HTMLElements->allowAttribute($elName, $attrName);
+				if ($attrName[0] === '!')
+				{
+					$attrName = substr($attrName, 1);
+					$required = true;
+				}
+				else
+				{
+					$required = false;
+				}
+
+				$configurator->HTMLElements->allowAttribute($elName, $attrName)->required = $required;
 			}
 		}
 

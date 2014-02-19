@@ -1,18 +1,39 @@
 ## Fatdown, a Markdown bundle that doesn't suck too bad
 
-### Example
+### Synopsis
+
+**Fatdown** is a bundle based on the Litedown plugin which supports most of Markdown's features plus media embedding and enhanced typography.
+
+### Examples
 
 ```php
 use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
 
-$text = '**Fatdown** implements a Markdown-like syntax plus extra "stuff".';
+$text = '**Fatdown** implements a Markdown-like syntax plus extra Stuff(tm).';
 $xml  = TextFormatter::parse($text);
 $html = TextFormatter::render($xml);
 
 echo $html;
 ```
 ```html
-<p><strong>Fatdown</strong> implements a Markdown-like syntax plus extra “stuff”.</p>
+<p><strong>Fatdown</strong> implements a Markdown-like syntax plus extra Stuff™.</p>
+```
+
+#### Why Fatdown doesn't suck
+
+Unlike the original Markdown, Fatdown's HTML support **does not leave you wide open to [XSS](http://en.wikipedia.org/wiki/Cross-site_scripting)**.
+
+```php
+use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
+
+$text = '<img src="http://127.0.0.1/fake.png" onerror="alert(1)"/>';
+$xml  = TextFormatter::parse($text);
+$html = TextFormatter::render($xml);
+
+echo $html;
+```
+```html
+<p><img src="http://127.0.0.1/fake.png"></p>
 ```
 
 ### Plugins
