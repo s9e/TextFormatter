@@ -690,10 +690,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] minifyXPath() tests
  [x] getMetaElementsRegexp() tests
 
-s9e\TextFormatter\Tests\Configurator\Helpers\XPathParser
- [x] parse() tests
- [x] parse() throws an exception if the expression cannot be parsed
-
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array
