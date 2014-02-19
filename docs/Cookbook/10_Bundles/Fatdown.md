@@ -49,14 +49,14 @@ echo $html;
 
 ### HTMLElements
 
- * `a`, with optional `href` and `title` attributes
+ * `a` with a mandatory `href` attribute and an optional `title` attributes
  * `abbr` with an optional `title` attribute
  * `b`, `em`, `i`, `s`, `strong`, `u`
  * `br`
  * `code`
  * `del` and `ins`
  * `hr`
- * `img`, with an optional `src` attribute
+ * `img` with a mandatory `src` attribute and optional `alt` and `title` attributes
  * `sub` and `sup`
  * `table`, `tbody`, `tfoot`, `thead`
  * `td` with optional `colspan` and `rowspan` attributes
