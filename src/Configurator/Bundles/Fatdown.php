@@ -28,6 +28,7 @@ class Fatdown extends Bundle
 
 		$htmlElements = [
 			'a' => ['href', 'title'],
+			'abbr' => ['title'],
 			'b',
 			'br',
 			'code',

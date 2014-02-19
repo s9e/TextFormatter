@@ -29,6 +29,7 @@ echo $html;
 ### HTMLElements
 
  * `a`, with optional `href` and `title` attributes
+ * `abbr` with an optional `title` attribute
  * `b`, `em`, `i`, `s`, `strong`, `u`
  * `br`
  * `code`
