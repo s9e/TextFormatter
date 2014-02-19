@@ -226,6 +226,10 @@
 	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html)
 	* Subject to the same filtering and validation as other plugins, meaning it offers the same protection against XSS
 
+* [HTMLComments](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLComments)
+
+	* Supports the use of HTML comments
+
 * [HTMLElements](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLElements)
 
 	* Whitelist of HTML elements (each element has a whitelist of attributes)
@@ -239,6 +243,11 @@
 	* Automatically replace a given list of keywords, e.g. Magic: the Gathering cards (autocard)
 	* Very efficient
 
+* [Litedown](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Litedown)
+
+	* Markdown-like syntax
+	* Only the good parts: no raw HTML, no obscure markup
+
 * [MediaEmbed](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed)
 
 	* Creates a `[media]` BBCode for embedded content
@@ -247,7 +256,3 @@
 	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites.xml)
 	* Flexible syntax
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
-
-## Upcoming plugins
-
-* [Litedown](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed), a Markdown-like syntax
