@@ -26,18 +26,41 @@ class Fatdown extends Bundle
 		$configurator->FancyPants;
 		$configurator->HTMLEntities;
 
+		$htmlAliases = [
+			'a'      => ['URL', 'href' => 'url'],
+			'hr'     => 'HR',
+			'img'    => 'IMG',
+			'em'     => 'EM',
+			's'      => 'S',
+			'strong' => 'STRONG',
+			'sub'    => 'SUB',
+			'sup'    => 'SUP'
+		];
+		foreach ($htmlAliases as $elName => $alias)
+		{
+			if (is_array($alias))
+			{
+				$configurator->HTMLElements->aliasElement($elName, $alias[0]);
+				unset($alias[0]);
+
+				foreach ($alias as $attrName => $alias)
+				{
+					$configurator->HTMLElements->aliasAttribute($elName, $attrName, $alias);
+				}
+			}
+			else
+			{
+				$configurator->HTMLElements->aliasElement($elName, $alias);
+			}
+		}
+
 		$htmlElements = [
-			'a' => ['!href', 'title'],
 			'abbr' => ['title'],
 			'b',
 			'br',
 			'code',
 			'del',
-			'em',
-			'hr',
 			'i',
-			'img' => ['alt', '!src', 'title'],
-			's',
 			'strong',
 			'sub',
 			'sup',
@@ -66,17 +89,7 @@ class Fatdown extends Bundle
 			$configurator->HTMLElements->allowElement($elName);
 			foreach ($attrNames as $attrName)
 			{
-				if ($attrName[0] === '!')
-				{
-					$attrName = substr($attrName, 1);
-					$required = true;
-				}
-				else
-				{
-					$required = false;
-				}
-
-				$configurator->HTMLElements->allowAttribute($elName, $attrName)->required = $required;
+				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 			}
 		}
 

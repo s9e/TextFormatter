@@ -162,8 +162,8 @@ class Configurator extends ConfiguratorBase
 
 		// Retrieve or create the tag
 		$tag = ($this->configurator->tags->exists($tagName))
-		      ? $this->configurator->tags->get($tagName)
-		      : $this->configurator->tags->add($tagName);
+		     ? $this->configurator->tags->get($tagName)
+		     : $this->configurator->tags->add($tagName);
 
 		// Rebuild this tag's template
 		$this->rebuildTemplate($tag, $elName, $allowUnsafe);

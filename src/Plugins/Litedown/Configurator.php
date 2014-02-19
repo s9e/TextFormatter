@@ -45,7 +45,7 @@ class Configurator extends ConfiguratorBase
 				'src'   => ['filterChain' => ['#url']],
 				'title' => ['required' => false]
 			],
-			'template' => '<img alt="{@alt}" src="{@src}" title="{@title}"/>'
+			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => [
