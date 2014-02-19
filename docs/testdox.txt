@@ -2146,6 +2146,21 @@ s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\HTMLComments\Configurator
+ [x] Automatically creates an "HC" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] Has a quickMatch
+ [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+ [x] getTag() returns the tag that is associated with this plugin
+
+s9e\TextFormatter\Tests\Plugins\HTMLComments\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] aliasElement('A', 'url') creates an alias for HTML element "a" to tag "URL"
  [x] aliasAttribute('A', 'HREF', 'URL') creates an alias for HTML attribute "href" in HTML element "a" to attribute "url"
