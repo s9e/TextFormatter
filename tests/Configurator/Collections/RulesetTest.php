@@ -49,16 +49,18 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox unset($ruleset['allowChild']) clears all allowChild rules
+	* @testdox unset($ruleset['allowChild']) removes all allowChild rules but doesn't touch the rest
 	*/
 	public function testOffsetUnset()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->allowChild('FOO');
+		$ruleset->denyChild('BAR');
 
 		unset($ruleset['allowChild']);
 
 		$this->assertFalse(isset($ruleset['allowChild']));
+		$this->assertTrue(isset($ruleset['denyChild']));
 	}
 
 	/**

@@ -63,7 +63,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function offsetUnset($k)
 	{
-		return $this->clear($k);
+		return $this->remove($k);
 	}
 
 	//==========================================================================
