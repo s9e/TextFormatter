@@ -24,6 +24,7 @@ class Fatdown extends Bundle
 		$configurator->Autolink;
 		$configurator->Escaper;
 		$configurator->FancyPants;
+		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 
 		$htmlAliases = [

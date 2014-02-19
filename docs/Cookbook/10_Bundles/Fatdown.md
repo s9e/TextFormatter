@@ -42,6 +42,7 @@ echo $html;
  * Autolink
  * Escaper
  * FancyPants
+ * HTMLComments
  * HTMLElements
  * HTMLEntities
  * Litedown

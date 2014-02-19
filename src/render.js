@@ -134,8 +134,8 @@ function preview(text, target)
 			return false;
 		}
 
-		// Node.TEXT_NODE
-		if (oldNode.nodeType === 3)
+		// Node.TEXT_NODE || Node.COMMENT_NODE
+		if (oldNode.nodeType === 3 || oldNode.nodeType === 8)
 		{
 			if (oldNode.nodeValue !== newNode.nodeValue)
 			{

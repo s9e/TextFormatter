@@ -57,6 +57,7 @@ ob_start();
  - **Autolink** --- URLs such as http://github.com are automatically turned into links
  - **Escaper** --- special characters can be escaped with a backslash
  - **FancyPants** --- some typography is enhanced, e.g. (c) (tm) and "quotes"
+ - **HTMLComments** --- you can use HTML comments
  - **HTMLElements** --- several HTML elements are allowed
  - **HTMLEntities** --- HTML entities such as &amp;hearts; are decoded
  - **Litedown** --- a Markdown*-like* syntax
