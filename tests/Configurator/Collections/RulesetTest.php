@@ -77,14 +77,14 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox clear('allowChild') removes only 'allowChild' rules
+	* @testdox remove('allowChild') removes only 'allowChild' rules
 	*/
-	public function testClearSome()
+	public function testRemoveAll()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->allowChild('FOO');
 		$ruleset->requireParent('BAR');
-		$ruleset->clear('allowChild');
+		$ruleset->remove('allowChild');
 
 		$this->assertSame(
 			['requireParent' => ['BAR']],
@@ -105,23 +105,6 @@ class RulesetTest extends Test
 
 		$this->assertSame(
 			['denyChild' => ['FOO']],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox remove('denyChild') unsets the denyChild list in the ruleset
-	*/
-	public function testRemoveAll()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->denyChild('FOO');
-		$ruleset->denyChild('IMG');
-		$ruleset->denyChild('IMG');
-		$ruleset->remove('denyChild');
-
-		$this->assertSame(
-			[],
 			iterator_to_array($ruleset)
 		);
 	}

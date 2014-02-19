@@ -137,23 +137,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Remove a subset of, or all the rules
-	*
-	* @param string $type Type of rules to clear
-	*/
-	public function clear($type = null)
-	{
-		if (isset($type))
-		{
-			unset($this->items[$type]);
-		}
-		else
-		{
-			$this->items = [];
-		}
-	}
-
-	/**
 	* Merge a set of rules into this collection
 	*
 	* @param array|Ruleset $rules     2D array of rule definitions, or instance of Ruleset
