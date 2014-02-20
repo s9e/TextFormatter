@@ -388,6 +388,28 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'- one',
+					'',
+					'  - foo',
+					'  - bar',
+					'',
+					'- two',
+					'',
+					'- three'
+				],
+				[
+					'<r><LIST><LI><s>- </s><p>one</p>',
+					'',
+					'  <LIST><LI><s>- </s>foo</LI>',
+					'  <LI><s>- </s>bar</LI></LIST></LI>',
+					'',
+					'<LI><s>- </s><p>two</p></LI>',
+					'',
+					'<LI><s>- </s><p>three</p></LI></LIST></r>',
+				]
+			],
+			[
+				[
 					' * **foo**',
 					' * *bar*'
 				],

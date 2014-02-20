@@ -339,8 +339,8 @@ class Parser extends ParserBase
 				// If we're in a list, on a non-empty line preceded with a blank line...
 				if ($listsCnt && !$continuation && !$lineIsEmpty)
 				{
-					// ...and this is not the first item of the first level...
-					if ($listsCnt > 1 || count($lists[0]['itemTags']) > 1 || !$hasListItem)
+					// ...and this is not the first item of the list...
+					if (count($lists[0]['itemTags']) > 1 || !$hasListItem)
 					{
 						// ...every list that is currently open becomes loose
 						foreach ($lists as &$list)
