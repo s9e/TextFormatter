@@ -58,13 +58,10 @@ class Configurator extends ConfiguratorBase
 			'template' =>
 				'<xsl:choose>
 					<xsl:when test="not(@type)">
-						<ul><xsl:apply-templates /></ul>
-					</xsl:when>
-					<xsl:when test="contains(\'upperlowerdecim\',substring(@type,1,5))">
-						<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+						<ul><xsl:apply-templates/></ul>
 					</xsl:when>
 					<xsl:otherwise>
-						<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
+						<ol><xsl:apply-templates/></ol>
 					</xsl:otherwise>
 				</xsl:choose>'
 		],

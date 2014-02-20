@@ -1043,7 +1043,7 @@ class ParserTest extends Test
 					'2. two'
 				],
 				[
-					'<ol style="list-style-type:decimal"><li>one</li>',
+					'<ol><li>one</li>',
 					'<li>two</li></ol>'
 				]
 			],

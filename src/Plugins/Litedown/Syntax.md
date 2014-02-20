@@ -31,7 +31,7 @@ The indentation inside of nested lists emulates the behaviour of the original Ma
 3. Profit
 ```
 ```html
-<ol style="list-style-type:decimal"><li>Collect underpants</li>
+<ol><li>Collect underpants</li>
 <li><strong>?</strong></li>
 <li>Profit</li></ol>
 ```
