@@ -1151,6 +1151,14 @@ class ParserTest extends Test
 					'<li><p>three</p></li></ul>'
 				],
 			],
+			[
+				'[Link text](http://example.org)',
+				'<p><a href="http://example.org">Link text</a></p>'
+			],
+			[
+				'[Link text](http://example.org "Link title")',
+				'<p><a href="http://example.org" title="Link title">Link text</a></p>'
+			],
 		]);
 	}
 

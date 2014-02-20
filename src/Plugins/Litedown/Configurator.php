@@ -77,7 +77,7 @@ class Configurator extends ConfiguratorBase
 					'filterChain' => ['#url']
 				]
 			],
-			'template' => '<a href="{@url}"><xsl:apply-templates/></a>'
+			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		]
 	];
 
