@@ -194,8 +194,7 @@ while (m = regexp.exec(text))
 		// Close all the lists
 		lists.forEach(function(list)
 		{
-			addEndTag('LIST', textBoundary, 0).pairWith(list.listTag);
-			addEndTag('LI',   textBoundary, 0).pairWith(list.itemTag);
+			closeList(list, textBoundary);
 		});
 		lists    = [];
 		listsCnt = 0;
@@ -266,11 +265,8 @@ while (m = regexp.exec(text))
 		// Close deeper lists
 		while (listIndex < listsCnt - 1)
 		{
-			list = lists.pop();
+			closeList(lists.pop(), textBoundary);
 			--listsCnt;
-
-			addEndTag('LIST', textBoundary, 0).pairWith(list.listTag);
-			addEndTag('LI',   textBoundary, 0).pairWith(list.itemTag);
 		}
 
 		// If there's no list item at current index, we'll need to either create one or
@@ -290,7 +286,6 @@ while (m = regexp.exec(text))
 
 			// Create a LI tag that consumes its markup
 			var itemTag = addStartTag('LI', tagPos, tagLen);
-			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
 
 			// Overwrite the markup
 			overwrite(tagPos, tagLen);
@@ -301,6 +296,10 @@ while (m = regexp.exec(text))
 			if (listIndex < listsCnt)
 			{
 				addEndTag('LI', textBoundary, 0).pairWith(lists[listIndex].itemTag);
+
+				// Record the item in the list
+				lists[listIndex].itemTag = itemTag;
+				lists[listIndex].itemTags.push(itemTag);
 			}
 			else
 			{
@@ -330,8 +329,24 @@ while (m = regexp.exec(text))
 				lists.push({
 					listTag   : listTag,
 					itemTag   : itemTag,
+					itemTags  : [itemTag],
 					minIndent : minIndent,
-					maxIndent : maxIndent
+					maxIndent : maxIndent,
+					tight     : true
+				});
+			}
+		}
+
+		// If we're in a list, on a non-empty line preceded with a blank line...
+		if (listsCnt && !continuation && !lineIsEmpty)
+		{
+			// ...and this is not the first item of the first level...
+			if (listsCnt > 1 || lists[0].itemTags.length > 1 || !hasListItem)
+			{
+				// ...every list that is currently open becomes loose
+				lists.forEach(function(list)
+				{
+					list.tight = false;
 				});
 			}
 		}
@@ -678,6 +693,26 @@ if (text.indexOf('^') > -1)
 		}
 	}
 });
+
+/**
+* Close a list at given offset
+*
+* @param  {!Array}  list
+* @param  {!number} textBoundary
+*/
+function closeList(list, textBoundary)
+{
+	addEndTag('LIST', textBoundary, 0).pairWith(list.listTag);
+	addEndTag('LI',   textBoundary, 0).pairWith(list.itemTag);
+
+	if (list.tight)
+	{
+		list.itemTags.forEach(function(itemTag)
+		{
+			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
+		});
+	}
+}
 
 /**
 * Decode a chunk of encoded text to be used as an attribute value

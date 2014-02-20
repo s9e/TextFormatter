@@ -192,8 +192,7 @@ class Parser extends ParserBase
 				// Close all the lists
 				foreach ($lists as $list)
 				{
-					$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
-					$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
+					$this->closeList($list, $textBoundary);
 				}
 				$lists    = [];
 				$listsCnt = 0;
@@ -264,11 +263,8 @@ class Parser extends ParserBase
 				// Close deeper lists
 				while ($listIndex < $listsCnt - 1)
 				{
-					$list = array_pop($lists);
+					$this->closeList(array_pop($lists), $textBoundary);
 					--$listsCnt;
-
-					$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
-					$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
 				}
 
 				// If there's no list item at current index, we'll need to either create one or
@@ -288,7 +284,6 @@ class Parser extends ParserBase
 
 					// Create a LI tag that consumes its markup
 					$itemTag = $this->parser->addStartTag('LI', $tagPos, $tagLen);
-					$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 
 					// Overwrite the markup
 					self::overwrite($text, $tagPos, $tagLen);
@@ -300,6 +295,10 @@ class Parser extends ParserBase
 					{
 						$this->parser->addEndTag('LI', $textBoundary, 0)
 						             ->pairWith($lists[$listIndex]['itemTag']);
+
+						// Record the item in the list
+						$lists[$listIndex]['itemTag']    = $itemTag;
+						$lists[$listIndex]['itemTags'][] = $itemTag;
 					}
 					else
 					{
@@ -329,9 +328,26 @@ class Parser extends ParserBase
 						$lists[] = [
 							'listTag'   => $listTag,
 							'itemTag'   => $itemTag,
+							'itemTags'  => [$itemTag],
 							'minIndent' => $minIndent,
-							'maxIndent' => $maxIndent
+							'maxIndent' => $maxIndent,
+							'tight'     => true
 						];
+					}
+				}
+
+				// If we're in a list, on a non-empty line preceded with a blank line...
+				if ($listsCnt && !$continuation && !$lineIsEmpty)
+				{
+					// ...and this is not the first item of the first level...
+					if ($listsCnt > 1 || count($lists[0]['itemTags']) > 1 || !$hasListItem)
+					{
+						// ...every list that is currently open becomes loose
+						foreach ($lists as &$list)
+						{
+							$list['tight'] = false;
+						}
+						unset($list);
 					}
 				}
 
@@ -692,6 +708,27 @@ class Parser extends ParserBase
 						$emPos = $matchPos;
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	* Close a list at given offset
+	*
+	* @param  array   $list
+	* @param  integer $textBoundary
+	* @return void
+	*/
+	protected function closeList(array $list, $textBoundary)
+	{
+		$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
+		$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
+
+		if ($list['tight'])
+		{
+			foreach ($list['itemTags'] as $itemTag)
+			{
+				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 			}
 		}
 	}

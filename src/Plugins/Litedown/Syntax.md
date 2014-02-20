@@ -25,6 +25,8 @@ No blockquote
 
 The indentation inside of nested lists emulates the behaviour of the original Markdown, meaning that sublists after the first should be indented by 4 spaces or a tab.
 
+If a list has any of its content separated with a blank line, each of its items' content is wrapped in a paragraph.
+
 ```md
 1. Collect underpants
 2. **?**

@@ -342,6 +342,52 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'+ one',
+					'+ two'
+				],
+				[
+					'<r><LIST><LI><s>+ </s>one</LI>',
+					'<LI><s>+ </s>two</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'- one',
+					'',
+					'- two'
+				],
+				[
+					'<r><LIST><LI><s>- </s><p>one</p></LI>',
+					'',
+					'<LI><s>- </s><p>two</p></LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'- one',
+					'  - foo',
+					'  - bar',
+					'',
+					'- two',
+					'  - bar',
+					'  - baz',
+					'',
+					'- three'
+				],
+				[
+					'<r><LIST><LI><s>- </s><p>one</p>',
+					'  <LIST><LI><s>- </s>foo</LI>',
+					'  <LI><s>- </s>bar</LI></LIST></LI>',
+					'',
+					'<LI><s>- </s><p>two</p>',
+					'  <LIST><LI><s>- </s>bar</LI>',
+					'  <LI><s>- </s>baz</LI></LIST></LI>',
+					'',
+					'<LI><s>- </s><p>three</p></LI></LIST></r>',
+				]
+			],
+			[
+				[
 					' * **foo**',
 					' * *bar*'
 				],
@@ -380,12 +426,12 @@ class ParserTest extends Test
 					' * baz'
 				],
 				[
-					'<r> <LIST><LI><s>* </s>foo',
+					'<r> <LIST><LI><s>* </s><p>foo</p>',
 					'',
 					'',
-					'   bar</LI>',
+					'   <p>bar</p></LI>',
 					'',
-					' <LI><s>* </s>baz</LI></LIST></r>'
+					' <LI><s>* </s><p>baz</p></LI></LIST></r>'
 				]
 			],
 			[
@@ -1058,6 +1104,30 @@ class ParserTest extends Test
 					'<ol><li>one</li>',
 					'<li>two</li></ol>'
 				]
+			],
+			[
+				[
+					'- one',
+					'  - foo',
+					'  - bar',
+					'',
+					'- two',
+					'  - bar',
+					'  - baz',
+					'',
+					'- three'
+				],
+				[
+					'<ul><li><p>one</p>',
+					'  <ul><li>foo</li>',
+					'  <li>bar</li></ul></li>',
+					'',
+					'<li><p>two</p>',
+					'  <ul><li>bar</li>',
+					'  <li>baz</li></ul></li>',
+					'',
+					'<li><p>three</p></li></ul>'
+				],
 			],
 		]);
 	}
