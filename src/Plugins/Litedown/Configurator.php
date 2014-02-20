@@ -15,7 +15,7 @@ class Configurator extends ConfiguratorBase
 	* @var array Default tags
 	*/
 	protected $tags = [
-		'C'      => '<code class="inline"><xsl:apply-templates /></code>',
+		'C'      => '<code><xsl:apply-templates /></code>',
 		'CODE'   => [
 			'attributes' => [
 				'lang' => [

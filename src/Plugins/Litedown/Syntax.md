@@ -92,5 +92,5 @@ Any text between two `\`` or `\`\`` markers.
 Single `print("``")` or double ``print("`")``
 ```
 ```html
-<p>Single <code class="inline">print("``")</code> or double <code class="inline">print("`")</code></p>
+<p>Single <code>print("``")</code> or double <code>print("`")</code></p>
 ```
