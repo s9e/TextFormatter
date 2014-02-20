@@ -2,7 +2,39 @@
 
 ### Blockquotes
 
-A line that starts with a right angle bracket > (optionally followed by a space) is a blockquote.
+A line that starts with a right angle bracket > (optionally followed by a space) is a blockquote. Blockquotes can be nested but they can't be used inside of lists.
+
+```md
+> > Deep blockquote
+>
+> Shallower blockquote
+
+No blockquote
+```
+```html
+<blockquote><blockquote><p>Deep blockquote</p></blockquote>
+
+<p>Shallower blockquote</p></blockquote>
+
+<p>No blockquote</p>
+```
+
+### Lists
+
+`*`, `-` and `+` for unordered lists, or any number of digits followed by a dot such as `1.` for an ordered list. The list item must be followed by a space then at least one characters. Lists can be nested and they can be used inside of blockquotes.
+
+The indentation inside of nested lists emulates the behaviour of the original Markdown, meaning that sublists after the first should be indented by 4 spaces or a tab.
+
+```md
+1. Collect underpants
+2. **?**
+3. Profit
+```
+```html
+<ol style="list-style-type:decimal"><li>Collect underpants</li>
+<li><strong>?</strong></li>
+<li>Profit</li></ol>
+```
 
 ### Indented code blocks
 
