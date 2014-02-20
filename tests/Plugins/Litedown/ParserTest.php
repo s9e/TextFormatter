@@ -398,6 +398,18 @@ class ParserTest extends Test
 					'<LI><s>2. </s>two</LI></LIST></r>'
 				]
 			],
+			[
+				[
+					'* foo',
+					'',
+					'> bar'
+				],
+				[
+					'<r><LIST><LI><s>* </s>foo</LI></LIST>',
+					'',
+					'<QUOTE><i>&gt; </i><p>bar</p></QUOTE></r>'
+				]
+			],
 			// atx-style headers
 			[
 				'# H1',
