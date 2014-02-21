@@ -1468,6 +1468,21 @@ class RegexpBuilderTest extends Test
 				['d', 'dd', 'ddd'],
 				['specialChars' => ['d' => '\\d']]
 			],
+			[
+				'[^z]*?x',
+				['*x', 'x'],
+				['specialChars' => ['*' => '[^z]+']]
+			],
+			[
+				'[^z]?x',
+				['*x', 'x'],
+				['specialChars' => ['*' => '[^z]?']]
+			],
+			[
+				'[^z]?x',
+				['*x', 'x'],
+				['specialChars' => ['*' => '[^z]']]
+			],
 			// Atomic grouping tests
 			[
 				'x(?:.|bb)x',

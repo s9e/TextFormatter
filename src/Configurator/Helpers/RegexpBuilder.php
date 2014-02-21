@@ -641,6 +641,17 @@ abstract class RegexpBuilder
 					$len      = $tokens[0]['len'];
 
 					$isAtomic = (bool) ($startPos === 0 && $len === strlen($regexp));
+
+					// If the regexp is [..]+ it becomes [..]* (to which a ? will be appended)
+					if ($isAtomic && $tokens[0]['type'] === 'characterClass')
+					{
+						$regexp = rtrim($regexp, '+*?');
+
+						if (!empty($tokens[0]['quantifiers']) && $tokens[0]['quantifiers'] !== '?')
+						{
+							$regexp .= '*';
+						}
+					}
 					break;
 
 				// One subpattern covering the entire regexp

@@ -38,7 +38,7 @@ TODO
 - Clean up illegal UTF-8 in parse()?
 - Set DOMDocument::$recover in Renderer#loadXML()
 - Force a paragraph break when a formatting element is open and two newlines are found?
-- s9e\TextFormatter\Configurator\Helpers\RegexpBuilder::fromList(['*x', 'x'],['specialChars'=>['*'=>'[^z]+']]) should return '(?:[^z]+)?x' not '[^z]+?x'
+- s9e\TextFormatter\Configurator\Helpers\RegexpBuilder::makeRegexpOptional() assumes # as delimiter, should be changed
 - Add hints to Censor's JS parser
 - Litedown: consider handling URLs in brackets http://six.pairlist.net/pipermail/markdown-discuss/2007-May/000626.html
 - Escaper: consume the backslash as its start tag and render via apply-templates in order to avoid relying on substring()
