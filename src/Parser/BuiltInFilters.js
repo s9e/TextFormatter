@@ -297,19 +297,11 @@ var BuiltInFilters =
 		*/
 		var validateScheme = true;
 
-		if (attrValue.substr(0, 2) === '//')
+		if (attrValue.substr(0, 2) === '//' && !urlConfig.requireScheme)
 		{
-			if (urlConfig.defaultScheme)
-			{
-				attrValue    = urlConfig.defaultScheme + ':' + attrValue;
-				removeScheme = true;
-			}
-			else if (!urlConfig.requireScheme)
-			{
-				attrValue      = 'http:' + attrValue;
-				removeScheme   = true;
-				validateScheme = false;
-			}
+			attrValue      = 'http:' + attrValue;
+			removeScheme   = true;
+			validateScheme = false;
 		}
 
 		/**

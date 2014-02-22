@@ -21,11 +21,6 @@ class UrlConfig implements ConfigProvider
 	protected $allowedSchemes;
 
 	/**
-	* @var string Default scheme to be used when validating scheme-less URLs
-	*/
-	protected $defaultScheme;
-
-	/**
 	* @var HostnameList List of disallowed hosts
 	*/
 	protected $disallowedHosts;
@@ -150,15 +145,5 @@ class UrlConfig implements ConfigProvider
 		}
 
 		$this->requireScheme = $bool;
-	}
-
-	/**
-	* Set a default scheme to be used for validation of scheme-less URLs
-	*
-	* @param string $scheme URL scheme, e.g. "http" or "https"
-	*/
-	public function setDefaultScheme($scheme)
-	{
-		$this->defaultScheme = $this->allowedSchemes->normalizeValue($scheme);
 	}
 }

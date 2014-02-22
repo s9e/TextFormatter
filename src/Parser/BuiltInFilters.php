@@ -328,19 +328,11 @@ class BuiltInFilters
 		*/
 		$validateScheme = true;
 
-		if (substr($attrValue, 0, 2) === '//')
+		if (substr($attrValue, 0, 2) === '//' && empty($urlConfig['requireScheme']))
 		{
-			if (isset($urlConfig['defaultScheme']))
-			{
-				$attrValue    = $urlConfig['defaultScheme'] . ':' . $attrValue;
-				$removeScheme = true;
-			}
-			elseif (empty($urlConfig['requireScheme']))
-			{
-				$attrValue      = 'http:' . $attrValue;
-				$removeScheme   = true;
-				$validateScheme = false;
-			}
+			$attrValue      = 'http:' . $attrValue;
+			$removeScheme   = true;
+			$validateScheme = false;
 		}
 
 		// Test whether the URL has a non-ASCII host and encode it to IDN if applicable

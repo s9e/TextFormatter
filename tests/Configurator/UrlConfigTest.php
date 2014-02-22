@@ -305,36 +305,6 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox There is no default scheme by default
-	*/
-	public function testNoDefaultScheme()
-	{
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayNotHasKey('defaultScheme', $urlConfig);
-	}
-
-	/**
-	* @testdox setDefaultScheme('http') sets "http" as default scheme
-	*/
-	public function testSetDefaultScheme()
-	{
-		$this->urlConfig->setDefaultScheme('http');
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayHasKey('defaultScheme', $urlConfig);
-		$this->assertSame('http', $urlConfig['defaultScheme']);
-	}
-
-	/**
-	* @testdox setDefaultScheme('<invalid>') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid scheme name '<invalid>'
-	*/
-	public function testInvalidDefaultScheme()
-	{
-		$this->urlConfig->setDefaultScheme('<invalid>');
-	}
-
-	/**
 	* @testdox URLs do not require a scheme by default
 	*/
 	public function testNoRequiredScheme()
