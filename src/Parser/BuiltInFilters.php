@@ -309,9 +309,6 @@ class BuiltInFilters
 	*/
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = null)
 	{
-		$followedUrls = [];
-		checkUrl:
-
 		/**
 		* Trim the URL to conform with HTML5
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
@@ -430,47 +427,5 @@ class BuiltInFilters
 		}
 
 		return $attrValue;
-	}
-
-	/**
-	* Get the "Location:" value returned by an HTTP(S) query
-	*
-	* @param  string $url Request URL
-	* @return mixed       Location URL if applicable, FALSE in case of error, NULL if no Location
-	*/
-	protected static function getRedirectLocation($url)
-	{
-		$fp = @fopen(
-			$url,
-			'rb',
-			false,
-			stream_context_create([
-				'http' => [
-					// Bit.ly doesn't like HEAD =\
-					//'method' => 'HEAD',
-					'header' => "Connection: close\r\n",
-					'follow_location' => false
-				]
-			])
-		);
-
-		if (!$fp)
-		{
-			return false;
-		}
-
-		$meta = stream_get_meta_data($fp);
-		fclose($fp);
-
-		foreach ($meta['wrapper_data'] as $k => $line)
-		{
-			if (is_numeric($k)
-			 && preg_match('#^Location:(.*)#i', $line, $m))
-			{
-				return trim($m[1]);
-			}
-		}
-
-		return null;
 	}
 }

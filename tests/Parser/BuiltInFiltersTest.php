@@ -35,11 +35,6 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
-	public function tearDown()
-	{
-		Hax::tearDown();
-	}
-
 	/**
 	* @dataProvider getRegressionsData
 	* @testdox Regression tests
@@ -593,60 +588,5 @@ class BuiltInFiltersTest extends Test
 			['-12e-3', ['int' => false, 'uint' => false, 'float' => -0.012, 'number' => false]],
 			['0x123', ['int' => false, 'uint' => false, 'float' => false, 'number' => false]],
 		];
-	}
-}
-
-class Hax
-{
-	static protected $redirectTo = [];
-
-	public static function fakeRedirect($from, $to)
-	{
-		if (empty(self::$redirectTo))
-		{
-			stream_wrapper_unregister('http');
-			stream_wrapper_register('http', __CLASS__);
-		}
-
-		self::$redirectTo[$from] = $to;
-	}
-
-	public static function tearDown()
-	{
-		if (!empty(self::$redirectTo))
-		{
-			self::$redirectTo = [];
-			stream_wrapper_restore('http');
-		}
-	}
-
-	public function stream_open($url)
-	{
-		if (isset(self::$redirectTo[$url]))
-		{
-			if (self::$redirectTo[$url] === false)
-			{
-				return false;
-			}
-
-			$this->{'0'} = 'Location: ' . self::$redirectTo[$url];
-		}
-
-		return true;
-	}
-
-	public function stream_stat()
-	{
-		return false;
-	}
-
-	public function stream_read()
-	{
-		return '';
-	}
-
-	public function stream_eof()
-	{
-		return true;
 	}
 }
