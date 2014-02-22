@@ -31,11 +31,6 @@ class UrlConfig implements ConfigProvider
 	protected $disallowedHosts;
 
 	/**
-	* @var HostnameList List of hosts whose URL we check for redirects
-	*/
-	protected $resolveRedirectsHosts;
-
-	/**
 	* @var HostnameList List of allowed hosts
 	*/
 	protected $restrictedHosts;
@@ -53,9 +48,8 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->disallowedHosts       = new HostnameList;
-		$this->resolveRedirectsHosts = new HostnameList;
-		$this->restrictedHosts       = new HostnameList;
+		$this->disallowedHosts = new HostnameList;
+		$this->restrictedHosts = new HostnameList;
 
 		$this->allowedSchemes   = new SchemeList;
 		$this->allowedSchemes[] = 'http';
@@ -122,22 +116,6 @@ class UrlConfig implements ConfigProvider
 	public function getAllowedSchemes()
 	{
 		return iterator_to_array($this->allowedSchemes);
-	}
-
-	/**
-	* Force URLs from given hostmask to be followed and resolved to their true location
-	*
-	* @param string $host            Hostname or hostmask
-	* @param bool   $matchSubdomains Whether to match subdomains of given host
-	*/
-	public function resolveRedirectsFrom($host, $matchSubdomains = true)
-	{
-		$this->resolveRedirectsHosts[] = $host;
-
-		if ($matchSubdomains && substr($host, 0, 1) !== '*')
-		{
-			$this->resolveRedirectsHosts[] = '*.' . $host;
-		}
 	}
 
 	/**

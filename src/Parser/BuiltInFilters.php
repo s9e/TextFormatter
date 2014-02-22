@@ -418,55 +418,6 @@ class BuiltInFilters
 			return false;
 		}
 
-		if (isset($urlConfig['resolveRedirectsHosts'])
-		 && preg_match($urlConfig['resolveRedirectsHosts'], $host)
-		 && preg_match('#^https?#i', $p['scheme']))
-		{
-			if (isset($followedUrls[$attrValue]))
-			{
-				if (isset($logger))
-				{
-					$logger->err(
-						'Infinite recursion detected while following redirects',
-						['attrValue' => $attrValue]
-					);
-				}
-
-				return false;
-			}
-
-			$redirect = self::getRedirectLocation($attrValue);
-
-			if ($redirect === false)
-			{
-				if (isset($logger))
-				{
-					$logger->err(
-						'Could not resolve redirect',
-						['attrValue' => $attrValue]
-					);
-				}
-
-				return false;
-			}
-
-			if (isset($redirect))
-			{
-				if (isset($logger))
-				{
-					$logger->debug(
-						'Resolved redirect',
-						['from' => $attrValue, 'to' => $redirect]
-					);
-				}
-
-				$followedUrls[$attrValue] = 1;
-				$attrValue = $redirect;
-
-				goto checkUrl;
-			}
-		}
-
 		// Normalize scheme, or remove if applicable
 		$pos = strpos($attrValue, ':');
 

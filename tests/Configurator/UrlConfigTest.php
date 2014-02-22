@@ -36,25 +36,6 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns a JavaScript variant for resolveRedirectsHosts
-	*/
-	public function testAsConfigResolveRedirectsHostsVariant()
-	{
-		$this->urlConfig->resolveRedirectsFrom('t.co');
-		$urlConfig = $this->urlConfig->asConfig();
-
-		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$urlConfig['resolveRedirectsHosts']
-		);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
-			$urlConfig['resolveRedirectsHosts']->get('JS')
-		);
-	}
-
-	/**
 	* @requires extension intl
 	* @testdox Disallowed IDNs are punycoded
 	*/
@@ -185,42 +166,6 @@ class UrlConfigTest extends Test
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
 		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'myxxxsite.com');
-	}
-
-	/**
-	* @testdox resolveRedirectsFrom('bit.ly') matches "bit.ly"
-	*/
-	public function testResolveRedirects()
-	{
-		$this->urlConfig->resolveRedirectsFrom('bit.ly');
-		$urlConfig = $this->urlConfig->asConfig();
-
-		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertRegExp($urlConfig['resolveRedirectsHosts']->get(), 'bit.ly');
-	}
-
-	/**
-	* @testdox resolveRedirectsFrom('bit.ly') matches "foo.bit.ly"
-	*/
-	public function testResolveRedirectsSubdomains()
-	{
-		$this->urlConfig->resolveRedirectsFrom('bit.ly');
-		$urlConfig = $this->urlConfig->asConfig();
-
-		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertRegExp($urlConfig['resolveRedirectsHosts']->get(), 'foo.bit.ly');
-	}
-
-	/**
-	* @testdox resolveRedirectsFrom('bit.ly', false) does not match "foo.bit.ly"
-	*/
-	public function testResolveRedirectsNoSubdomains()
-	{
-		$this->urlConfig->resolveRedirectsFrom('bit.ly', false);
-		$urlConfig = $this->urlConfig->asConfig();
-
-		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertNotRegExp($urlConfig['resolveRedirectsHosts']->get(), 'foo.bit.ly');
 	}
 
 	/**

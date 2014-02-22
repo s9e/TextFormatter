@@ -138,12 +138,6 @@
 			$configurator->urlConfig->restrictHost('example.com');
 			```
 
-		* You can force some redirectors to be resolved to reveal the actual URL, e.g.
-
-			```php
-			$configurator->resolveRedirectsFrom('t.co');
-			```
-
 * Templates are systematically inspected
 
 	* Content that is not properly sanitized is not allowed in a sensitive context:

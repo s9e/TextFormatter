@@ -1447,7 +1447,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() returns a JavaScript variant for disallowedHosts
- [x] asConfig() returns a JavaScript variant for resolveRedirectsHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
  [x] disallowHost('example.org') disallows "EXAMPLE.ORG"
@@ -1461,9 +1460,6 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] disallowHost('*xxx*') disallows "xxx.com"
  [x] disallowHost('*xxx*') disallows "foo.xxx"
  [x] disallowHost('*xxx*') disallows "myxxxsite.com"
- [x] resolveRedirectsFrom('bit.ly') matches "bit.ly"
- [x] resolveRedirectsFrom('bit.ly') matches "foo.bit.ly"
- [x] resolveRedirectsFrom('bit.ly', false) does not match "foo.bit.ly"
  [x] restrictHost('example.org') allows "www.example.org"
  [x] restrictHost('example.org', false) does not allow "www.example.org"
  [x] "http" is an allowed scheme by default
