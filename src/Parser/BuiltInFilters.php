@@ -428,4 +428,45 @@ class BuiltInFilters
 
 		return $attrValue;
 	}
+
+	/**
+	* Parse a URL and return its components
+	*
+	* Similar to PHP's own parse_url() except that all parts are always returned
+	*
+	* @param  string   $url Original URL
+	* @return string[]
+	*/
+	public static function parseUrl($url)
+	{
+		// URL parts
+		$parts = [
+			'scheme'   => '',
+			'user'     => '',
+			'pass'     => '',
+			'host'     => '',
+			'port'     => '',
+			'path'     => '',
+			'query'    => '',
+			'fragment' => ''
+		];
+
+		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://+(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)D';
+
+		// NOTE: this regexp always matches because of the last three captures
+		preg_match($regexp, $url, $m);
+
+		$i = 0;
+		foreach (array_keys($parts) as $k)
+		{
+			++$i;
+
+			if (!empty($m[$i]))
+			{
+				$parts[$k] = $m[$i];
+			}
+		}
+
+		return $parts;
+	}
 }

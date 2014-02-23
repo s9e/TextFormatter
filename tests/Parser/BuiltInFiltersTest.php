@@ -53,6 +53,163 @@ class BuiltInFiltersTest extends Test
 	}
 
 	/**
+	* @testdox parseUrl() tests
+	* @dataProvider getParseUrlTests
+	*/
+	public function textParseUrl($url, $expected)
+	{
+		$default = [
+			'scheme'   => '',
+			'user'     => '',
+			'pass'     => '',
+			'host'     => '',
+			'port'     => '',
+			'path'     => '',
+			'query'    => '',
+			'fragment' => ''
+		];
+
+		$actual = BuiltInFilters::parseUrl($url);
+
+		if ($expected === false)
+		{
+			$this->assertFalse($actual);
+		}
+		else
+		{
+			$this->assertSame(array_merge($default, $expected), $actual);
+		}
+	}
+
+	public function getParseUrlTests()
+	{
+		return [
+			[
+				'',
+				[]
+			],
+			[
+				// parse_url() identifies reddit.com as host, browsers think it's localhost
+				'http://localhost#foo@reddit.com/bar',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'fragment' => 'foo@reddit.com/bar'
+				]
+			],
+			[
+				'http://@localhost',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost'
+				]
+			],
+			[
+				'javascript:alert(1)',
+				[
+					'scheme'   => 'javascript',
+					'path'     => 'alert(1)'
+				]
+			],
+			[
+				'http://us3r@localhost',
+				[
+					'scheme'   => 'http',
+					'user'     => 'us3r',
+					'host'     => 'localhost'
+				]
+			],
+			[
+				'http://us3r:p4ss@localhost',
+				[
+					'scheme'   => 'http',
+					'user'     => 'us3r',
+					'pass'     => 'p4ss',
+					'host'     => 'localhost'
+				]
+			],
+			[
+				'http://localhost:80',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'port'     => '80'
+				]
+			],
+			[
+				'http://localhost/:80',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'path'     => '/:80'
+				]
+			],
+			[
+				'http://localhost/foo?bar=1',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'path'     => '/foo',
+					'query'    => 'bar=1'
+				]
+			],
+			[
+				'http://localhost/foo#?bar=1',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'path'     => '/foo',
+					'fragment' => '?bar=1'
+				]
+			],
+			[
+				'http://user@example.org@localhost',
+				[
+					'scheme'   => 'http',
+					'host'     => 'localhost',
+					'user'     => 'user@example.org'
+				]
+			],
+			[
+				'//example.org/:foo',
+				[
+					'host'     => 'example.org',
+					'path'     => '/:foo'
+				]
+			],
+			[
+				'/foo?k=1',
+				[
+					'path'     => '/foo',
+					'query'    => 'k=1'
+				]
+			],
+			[
+				'foo?k=1',
+				[
+					'path'     => 'foo',
+					'query'    => 'k=1'
+				]
+			],
+			[
+				'#foo',
+				[
+					'fragment' => 'foo'
+				]
+			],
+			[
+				'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/',
+				[
+					'scheme'   => 'https',
+					'host'     => '[2001:db8:85a3:8d3:1319:8a2e:370:7348]',
+					'port'     => '443',
+					'path'     => '/'
+				]
+			],
+		];
+	}
+
+	/**
 	* @testdox Filters work
 	* @dataProvider getData
 	*/
