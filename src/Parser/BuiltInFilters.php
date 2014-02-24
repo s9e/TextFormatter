@@ -434,8 +434,8 @@ class BuiltInFilters
 	*
 	* Similar to PHP's own parse_url() except that all parts are always returned
 	*
-	* @param  string   $url Original URL
-	* @return string[]
+	* @param  string $url Original URL
+	* @return array
 	*/
 	public static function parseUrl($url)
 	{
@@ -451,7 +451,7 @@ class BuiltInFilters
 			'fragment' => ''
 		];
 
-		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://+(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)D';
+		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
 
 		// NOTE: this regexp always matches because of the last three captures
 		preg_match($regexp, $url, $m);
@@ -466,6 +466,21 @@ class BuiltInFilters
 				$parts[$k] = $m[$i];
 			}
 		}
+
+		/**
+		* @link http://tools.ietf.org/html/rfc3986#section-3.1
+		*
+		* 'An implementation should accept uppercase letters as equivalent to lowercase in
+		* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
+		* should only produce lowercase scheme names for consistency.'
+		*/
+		$parts['scheme'] = strtolower($parts['scheme']);
+
+		/**
+		* Normalize the domain label separators and remove trailing dots
+		* @link http://url.spec.whatwg.org/#domain-label-separators
+		*/
+		$parts['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $parts['host']), '.');
 
 		return $parts;
 	}

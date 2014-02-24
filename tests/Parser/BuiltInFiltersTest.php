@@ -56,7 +56,7 @@ class BuiltInFiltersTest extends Test
 	* @testdox parseUrl() tests
 	* @dataProvider getParseUrlTests
 	*/
-	public function textParseUrl($url, $expected)
+	public function testParseUrl($url, $expected)
 	{
 		$default = [
 			'scheme'   => '',
@@ -69,16 +69,7 @@ class BuiltInFiltersTest extends Test
 			'fragment' => ''
 		];
 
-		$actual = BuiltInFilters::parseUrl($url);
-
-		if ($expected === false)
-		{
-			$this->assertFalse($actual);
-		}
-		else
-		{
-			$this->assertSame(array_merge($default, $expected), $actual);
-		}
+		$this->assertSame(array_merge($default, $expected), BuiltInFilters::parseUrl($url));
 	}
 
 	public function getParseUrlTests()
@@ -204,6 +195,36 @@ class BuiltInFiltersTest extends Test
 					'host'     => '[2001:db8:85a3:8d3:1319:8a2e:370:7348]',
 					'port'     => '443',
 					'path'     => '/'
+				]
+			],
+			[
+				'http:///example.org',
+				[
+					'scheme'   => 'http',
+					'host'     => '',
+					'path'     => '/example.org'
+				]
+			],
+			[
+				'file:///example.org',
+				[
+					'scheme'   => 'file',
+					'host'     => '',
+					'path'     => '/example.org'
+				]
+			],
+			[
+				'HTTP://example.org',
+				[
+					'scheme'   => 'http',
+					'host'     => 'example.org'
+				]
+			],
+			[
+				'mailto:joe@example.org',
+				[
+					'scheme'   => 'mailto',
+					'path'     => 'joe@example.org'
 				]
 			],
 		];
