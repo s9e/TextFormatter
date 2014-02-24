@@ -221,6 +221,14 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
+				"http://evil\xEF\xBD\xA1example.com.\xEF\xBD\xA1./",
+				[
+					'scheme'   => 'http',
+					'host'     => 'evil.example.com',
+					'path'     => '/'
+				]
+			],
+			[
 				'mailto:joe@example.org',
 				[
 					'scheme'   => 'mailto',
