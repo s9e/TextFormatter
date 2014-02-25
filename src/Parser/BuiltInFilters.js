@@ -1,4 +1,19 @@
 /**
+* @param  {!string} str
+* @return {!string}
+*/
+function rawurldecode(str)
+{
+	return encodeURIComponent(str).replace(
+		/[!'()*]/g,
+		function(c)
+		{
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		}
+	);
+}
+
+/**
 * IMPORTANT NOTE: those filters are only meant to catch bad input and honest mistakes. They don't
 *                 match their PHP equivalent exactly and may let unwanted values through. Their
 *                 result should always be checked by PHP filters
@@ -137,7 +152,7 @@ var BuiltInFilters =
 	*/
 	filterIpv4: function(attrValue)
 	{
-		if (/^\d+\.\d+\.\d+\.\d+$/.test(attrValue))
+		if (!/^\d+\.\d+\.\d+\.\d+$/.test(attrValue))
 		{
 			return false;
 		}
@@ -282,92 +297,135 @@ var BuiltInFilters =
 	filterUrl: function(attrValue, urlConfig, logger)
 	{
 		/**
-		* Trim the URL to conform with HTML5
+		* Trim the URL to conform with HTML5 then parse it
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
 		*/
-		attrValue = attrValue.replace(/^\s+/, '').replace(/\s+$/, '');
+		var p = BuiltInFilters.parseUrl(attrValue.replace(/^\s+/, '').replace(/\s+$/, ''));
 
-		/**
-		* @type {!boolean} Whether to remove the scheme part of the URL
-		*/
-		var removeScheme = false;
+		// This is the reconstructed URL
+		var url = '';
 
-		/**
-		* @type {!boolean} Whether to validate the scheme part of the URL
-		*/
-		var validateScheme = true;
-
-		if (attrValue.substr(0, 2) === '//' && !urlConfig.requireScheme)
+		// Start with the scheme
+		if (p.scheme !== '')
 		{
-			attrValue      = 'http:' + attrValue;
-			removeScheme   = true;
-			validateScheme = false;
-		}
-
-		// Encode some potentially troublesome chars
-		attrValue = BuiltInFilters.sanitizeUrl(attrValue);
-
-		// Parse the URL... kinda
-		var m =/^([a-z\d]+):\/\/(?:[^/]*@)?([^/]+)(?:\/.*)?$/i.exec(attrValue);
-
-		if (!m)
-		{
-			return false;
-		}
-
-		if (validateScheme && !urlConfig.allowedSchemes.test(m[1]))
-		{
-			if (logger)
+			if (!urlConfig.allowedSchemes.test(p.scheme))
 			{
-				logger.err(
-					'URL scheme is not allowed',
-					{'attrValue': attrValue, 'scheme': m[1]}
-				);
+				if (logger)
+				{
+					logger.err(
+						'URL scheme is not allowed',
+						{'attrValue': attrValue, 'scheme': p.scheme}
+					);
+				}
+
+				return false;
 			}
 
-			return false;
+			url += p.scheme + ':';
 		}
 
-		/**
-		* Normalize the domain label separators and remove trailing dots
-		* @link http://url.spec.whatwg.org/#domain-label-separators
-		*/
-		var host = m[2].replace(/[\u3002\uff0e\uff61]/g, '.').replace(/\.+$/g, '');
-
-		if ((urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
-		 || (urlConfig.restrictedHosts && !urlConfig.restrictedHosts.test(host)))
+		// Add the host if applicable
+		if (p.host === '')
 		{
-			if (logger)
+			// Allow the file: scheme to not have a host and ensure it starts with slashes
+			if (p.scheme === 'file')
 			{
-				logger.err(
-					'URL host is not allowed',
-					{'attrValue': attrValue, 'host': m[2]}
-				);
+				url += '//';
 			}
-
-			return false;
-		}
-
-		// Normalize scheme, or remove if applicable
-		var pos = attrValue.indexOf(':');
-
-		if (removeScheme)
-		{
-			attrValue = attrValue.substr(pos + 1);
+			// Reject malformed URLs such as http:///example.org but allow schemeless paths
+			else if (p.scheme !== '')
+			{
+				return false;
+			}
 		}
 		else
 		{
+			url += '//';
+
 			/**
-			* @link http://tools.ietf.org/html/rfc3986#section-3.1
-			*
-			* 'An implementation should accept uppercase letters as equivalent to lowercase in
-			* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
-			* should only produce lowercase scheme names for consistency.'
+			* Test whether the host is valid
+			* @link http://tools.ietf.org/html/rfc1035#section-2.3.1
 			*/
-			attrValue = attrValue.substr(0, pos).toLowerCase() + attrValue.substr(pos);
+			var regexp = /^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i;
+			if (!regexp.test(p.host))
+			{
+				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
+				if (!BuiltInFilters.filterIpv4(p.host)
+				 && !BuiltInFilters.filterIpv6(p.host.replace(/^\[(.*)\]$/, '$1', p.host)))
+				{
+					if (logger)
+					{
+						logger.err(
+							'URL host is invalid',
+							{'attrValue': attrValue, 'host': p.host}
+						);
+					}
+
+					return false;
+				}
+			}
+
+			if ((urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(p.host))
+			 || (urlConfig.restrictedHosts && !urlConfig.restrictedHosts.test(p.host)))
+			{
+				if (logger)
+				{
+					logger.err(
+						'URL host is not allowed',
+						{'attrValue': attrValue, 'host': p.host}
+					);
+				}
+
+				return false;
+			}
+
+			// Add the credentials if applicable
+			if (p.user !== '')
+			{
+				// Reencode the credentials in case there are invalid chars in them, or suspicious
+				// characters such as : or @ that could confuse a browser into connecting to the
+				// wrong host (or at least, to a host that is different than the one we thought)
+				url += rawurlencode(decodeURIComponent(p.user));
+
+				if (p.pass !== '')
+				{
+					url += ':' + rawurlencode(decodeURIComponent(p.pass));
+				}
+
+				url += '@';
+			}
+
+			url += p.host;
+
+			// Append the port number (note that as per the regexp it can only contain digits)
+			if (p.port !== '')
+			{
+				url += ':' + p.port;
+			}
 		}
 
-		return attrValue;
+		// Build the path, including the query and fragment parts
+		var path = p.path;
+		if (p.query !== '')
+		{
+			path += '?' + p.query;
+		}
+		if (p.fragment !== '')
+		{
+			path += '#' + p.fragment;
+		}
+
+		// Append the sanitized path to the URL
+		url += BuiltInFilters.sanitizeUrl(path);
+
+		// Replace the first colon if there's no scheme and it could potentially be interpreted as
+		// the scheme separator
+		if (!p.scheme)
+		{
+			url = url.replace(/^([^\/]*):/, '$1%3A', url);
+		}
+
+		return url;
 	},
 
 	/**

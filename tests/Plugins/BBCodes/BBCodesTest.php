@@ -600,14 +600,6 @@ class BBCodesTest extends Test
 				'x <a href="//example.org">text</a> y'
 			],
 			[
-				'x [url=//example.org]text[/url] y',
-				'x [url=//example.org]text[/url] y',
-				function ($configurator)
-				{
-					$configurator->urlConfig->requireScheme();
-				}
-			],
-			[
 				'x [url=foo://example.org]text[/url] y',
 				'x [url=foo://example.org]text[/url] y'
 			],

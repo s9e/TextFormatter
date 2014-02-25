@@ -1472,9 +1472,6 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] allowScheme('<invalid>') throws an exception
  [x] allowScheme('javascript') throws an exception
  [x] allowScheme('javaScript') throws an exception
- [x] URLs do not require a scheme by default
- [x] requireScheme() forces URLs to require a scheme
- [x] requireScheme('nonbool') throws an exception
 
 s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] normalize() throws an InvalidArgumentException if the name is invalid

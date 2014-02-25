@@ -31,12 +31,6 @@ class UrlConfig implements ConfigProvider
 	protected $restrictedHosts;
 
 	/**
-	* @var bool Whether URLs should require a scheme
-	* @link http://tools.ietf.org/html/rfc3986#section-4.2
-	*/
-	protected $requireScheme = false;
-
-	/**
 	* Constructor
 	*
 	* @return void
@@ -130,20 +124,5 @@ class UrlConfig implements ConfigProvider
 		{
 			$this->restrictedHosts[] = '*.' . $host;
 		}
-	}
-
-	/**
-	* Force URLs to have a scheme part
-	*
-	* @param bool $bool Whether to disallow scheme-less URLs
-	*/
-	public function requireScheme($bool = true)
-	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('requireScheme() expects a boolean');
-		}
-
-		$this->requireScheme = $bool;
 	}
 }

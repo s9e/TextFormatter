@@ -310,100 +310,135 @@ class BuiltInFilters
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = null)
 	{
 		/**
-		* Trim the URL to conform with HTML5
+		* Trim the URL to conform with HTML5 then parse it
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
 		*/
-		$attrValue = trim($attrValue);
+		$p = self::parseUrl(trim($attrValue));
 
-		/**
-		* @var bool Whether to remove the scheme part of the URL
-		*/
-		$removeScheme = false;
+		// This is the reconstructed URL
+		$url = '';
 
-		/**
-		* @var bool Whether to validate the scheme part of the URL
-		*/
-		$validateScheme = true;
-
-		if (substr($attrValue, 0, 2) === '//' && empty($urlConfig['requireScheme']))
+		// Start with the scheme
+		if ($p['scheme'] !== '')
 		{
-			$attrValue      = 'http:' . $attrValue;
-			$removeScheme   = true;
-			$validateScheme = false;
-		}
-
-		// Test whether the URL has a non-ASCII host and encode it to IDN if applicable
-		if (preg_match('#^([^:]+://(?>[^/@]+@)?)([^/]+)#i', $attrValue, $m)
-		 && preg_match('#[^[:ascii:]]#', $m[2])
-		 && function_exists('idn_to_ascii'))
-		{
-			$attrValue = $m[1] . idn_to_ascii($m[2]) . substr($attrValue, strlen($m[0]));
-		}
-
-		// Encode some potentially troublesome chars
-		$attrValue = self::sanitizeUrl($attrValue);
-
-		// Validate the URL
-		$attrValue = filter_var($attrValue, FILTER_VALIDATE_URL);
-
-		if (!$attrValue)
-		{
-			return false;
-		}
-
-		// Now parse it to check its scheme and host
-		$p = parse_url($attrValue);
-
-		// Save the host part if available, remove trailing dots from the hostname
-		$host = (isset($p['host'])) ? rtrim($p['host'], '.') : '';
-
-		if ($validateScheme && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
-		{
-			if (isset($logger))
+			if (!preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 			{
-				$logger->err(
-					'URL scheme is not allowed',
-					['attrValue' => $attrValue, 'scheme' => $p['scheme']]
-				);
+				if (isset($logger))
+				{
+					$logger->err(
+						'URL scheme is not allowed',
+						['attrValue' => $attrValue, 'scheme' => $p['scheme']]
+					);
+				}
+
+				return false;
 			}
 
-			return false;
+			$url .= $p['scheme'] . ':';
 		}
 
-		if ((isset($urlConfig['disallowedHosts']) && preg_match($urlConfig['disallowedHosts'], $host))
-		 || (isset($urlConfig['restrictedHosts']) && !preg_match($urlConfig['restrictedHosts'], $host)))
+		// Add the host if applicable
+		if ($p['host'] === '')
 		{
-			if (isset($logger))
+			// Allow the file: scheme to not have a host and ensure it starts with slashes
+			if ($p['scheme'] === 'file')
 			{
-				$logger->err(
-					'URL host is not allowed',
-					['attrValue' => $attrValue, 'host' => $host]
-				);
+				$url .= '//';
 			}
-
-			return false;
-		}
-
-		// Normalize scheme, or remove if applicable
-		$pos = strpos($attrValue, ':');
-
-		if ($removeScheme)
-		{
-			$attrValue = substr($attrValue, $pos + 1);
+			// Reject malformed URLs such as http:///example.org but allow schemeless paths
+			elseif ($p['scheme'] !== '')
+			{
+				return false;
+			}
 		}
 		else
 		{
+			$url .= '//';
+
 			/**
-			* @link http://tools.ietf.org/html/rfc3986#section-3.1
-			*
-			* 'An implementation should accept uppercase letters as equivalent to lowercase in
-			* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
-			* should only produce lowercase scheme names for consistency.'
+			* Test whether the host is valid
+			* @link http://tools.ietf.org/html/rfc1035#section-2.3.1
 			*/
-			$attrValue = strtolower(substr($attrValue, 0, $pos)) . substr($attrValue, $pos);
+			$regexp = '/^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i';
+			if (!preg_match($regexp, $p['host']))
+			{
+				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
+				if (!self::filterIpv4($p['host'])
+				 && !self::filterIpv6(preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
+				{
+					if (isset($logger))
+					{
+						$logger->err(
+							'URL host is invalid',
+							['attrValue' => $attrValue, 'host' => $p['host']]
+						);
+					}
+
+					return false;
+				}
+			}
+
+			if ((isset($urlConfig['disallowedHosts']) && preg_match($urlConfig['disallowedHosts'], $p['host']))
+			 || (isset($urlConfig['restrictedHosts']) && !preg_match($urlConfig['restrictedHosts'], $p['host'])))
+			{
+				if (isset($logger))
+				{
+					$logger->err(
+						'URL host is not allowed',
+						['attrValue' => $attrValue, 'host' => $p['host']]
+					);
+				}
+
+				return false;
+			}
+
+			// Add the credentials if applicable
+			if ($p['user'] !== '')
+			{
+				// Reencode the credentials in case there are invalid chars in them, or suspicious
+				// characters such as : or @ that could confuse a browser into connecting to the
+				// wrong host (or at least, to a host that is different than the one we thought)
+				$url .= rawurlencode(urldecode($p['user']));
+
+				if ($p['pass'] !== '')
+				{
+					$url .= ':' . rawurlencode(urldecode($p['pass']));
+				}
+
+				$url .= '@';
+			}
+
+			$url .= $p['host'];
+
+			// Append the port number (note that as per the regexp it can only contain digits)
+			if ($p['port'] !== '')
+			{
+				$url .= ':' . $p['port'];
+			}
 		}
 
-		return $attrValue;
+		// Build the path, including the query and fragment parts
+		$path = $p['path'];
+		if ($p['query'] !== '')
+		{
+			$path .= '?' . $p['query'];
+		}
+		if ($p['fragment'] !== '')
+		{
+			$path .= '#' . $p['fragment'];
+		}
+
+		// Append the sanitized path to the URL
+		$url .= self::sanitizeUrl($path);
+
+		// Replace the first colon if there's no scheme and it could potentially be interpreted as
+		// the scheme separator
+		if (!$p['scheme'])
+		{
+			$url = preg_replace('#^([^/]*):#', '$1%3A', $url);
+		}
+
+		return $url;
 	}
 
 	/**

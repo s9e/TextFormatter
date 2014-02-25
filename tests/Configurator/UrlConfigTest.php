@@ -303,33 +303,4 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->allowScheme('javaScript');
 	}
-
-	/**
-	* @testdox URLs do not require a scheme by default
-	*/
-	public function testNoRequiredScheme()
-	{
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertFalse($urlConfig['requireScheme']);
-	}
-
-	/**
-	* @testdox requireScheme() forces URLs to require a scheme
-	*/
-	public function testRequireScheme()
-	{
-		$this->urlConfig->requireScheme();
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertTrue($urlConfig['requireScheme']);
-	}
-
-	/**
-	* @testdox requireScheme('nonbool') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage requireScheme() expects a boolean
-	*/
-	public function testRequireSchemeInvalid()
-	{
-		$this->urlConfig->requireScheme('nonbool');
-	}
 }

@@ -339,56 +339,72 @@ class BuiltInFiltersTest extends Test
 	public function getData()
 	{
 		return [
-			[new Alnum, '', false],
-			[new Alnum, 'abcDEF', 'abcDEF'],
-			[new Alnum, 'abc_def', false],
-			[new Alnum, '0123', '0123'],
-			[new Alnum, 'é', false],
-			[new Range(2, 5), '2', 2],
-			[new Range(2, 5), '5', 5],
-			[new Range(-5, 5), '-5', -5],
-			[
-				new Range(2, 5),
-				'1',
-				2,
-				[
-					[
-						'warn',
-						'Value outside of range, adjusted up to min value',
-						['attrValue' => 1, 'min' => 2, 'max' => 5]
-					]
-				]
-			],
-			[
-				new Range(2, 5),
-				'10',
-				5,
-				[
-					[
-						'warn',
-						'Value outside of range, adjusted down to max value',
-						['attrValue' => 10, 'min' => 2, 'max' => 5]
-					]
-				]
-			],
-			[new Range(2, 5), '5x', false],
-			[
-				new Url,
-				'http://www.älypää.com',
-				'http://www.xn--lyp-plada.com',
-				[],
-				function ()
-				{
-					if (!extension_loaded('intl'))
-					{
-						$this->markTestSkipped('Extension intl is required.');
-					}
-				}
-			],
+//			[new Alnum, '', false],
+//			[new Alnum, 'abcDEF', 'abcDEF'],
+//			[new Alnum, 'abc_def', false],
+//			[new Alnum, '0123', '0123'],
+//			[new Alnum, 'é', false],
+//			[new Range(2, 5), '2', 2],
+//			[new Range(2, 5), '5', 5],
+//			[new Range(-5, 5), '-5', -5],
+//			[
+//				new Range(2, 5),
+//				'1',
+//				2,
+//				[
+//					[
+//						'warn',
+//						'Value outside of range, adjusted up to min value',
+//						['attrValue' => 1, 'min' => 2, 'max' => 5]
+//					]
+//				]
+//			],
+//			[
+//				new Range(2, 5),
+//				'10',
+//				5,
+//				[
+//					[
+//						'warn',
+//						'Value outside of range, adjusted down to max value',
+//						['attrValue' => 10, 'min' => 2, 'max' => 5]
+//					]
+//				]
+//			],
+//			[new Range(2, 5), '5x', false],
+//			[
+//				new Url,
+//				'http://www.älypää.com',
+//				'http://www.xn--lyp-plada.com',
+//				[],
+//				function ()
+//				{
+//					if (!extension_loaded('intl'))
+//					{
+//						$this->markTestSkipped('Extension intl is required.');
+//					}
+//				}
+//			],
 			[
 				new Url,
 				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
 			],
+			[
+				new Url,
+				'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/', 'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/'
+			],
+			[
+				new Url,
+				'http://127.0.0.1:80/',
+				'http://127.0.0.1:80/'
+			],
+			[new Url, '//foo', '//foo'],
+			[new Url, '/foo', '/foo'],
+			[new Url, '?foo', '?foo'],
+			[new Url, '#bar', '#bar'],
+			[new Url, '://bar', '%3A//bar'],
+			[new Url, '*://bar', '*%3A//bar'],
+			[new Url, '/:foo/:bar', '/:foo/:bar'],
 			[
 				new Url,
 				'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nykänen?foo&bar#baz', 'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nyk%C3%A4nen?foo&bar#baz'
@@ -406,19 +422,20 @@ class BuiltInFiltersTest extends Test
 					}
 				}
 			],
-			[new Url, 'javascript:alert()', false],
-			[new Url, 'http://www.example.com', 'http://www.example.com'],
-			[new Url, '//www.example.com', '//www.example.com'],
 			[
 				new Url,
-				'//www.example.com',
+				'javascript:alert()',
 				false,
-				[],
-				function ($configurator)
-				{
-					$configurator->urlConfig->requireScheme();
-				}
+				[
+					[
+						'err',
+						'URL scheme is not allowed',
+						['attrValue' => 'javascript:alert()', 'scheme' => 'javascript']
+					]
+				]
 			],
+			[new Url, 'http://www.example.com', 'http://www.example.com'],
+			[new Url, '//www.example.com', '//www.example.com'],
 			[new Url, 'HTTP://www.example.com', 'http://www.example.com'],
 			[new Url, ' http://www.example.com ', 'http://www.example.com'],
 			[new Url, "http://example.com/''", 'http://example.com/%27%27'],
@@ -466,16 +483,6 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new Url,
-				'mailto:joe@example.com',
-				'mailto:joe@example.com',
-				[],
-				function ($configurator)
-				{
-					$configurator->urlConfig->allowScheme('mailto');
-				}
-			],
-			[
-				new Url,
 				'http://evil.example.com',
 				false,
 				[
@@ -495,6 +502,25 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new Url,
+				'//evil.example.com',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => '//evil.example.com',
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
 				"http://evil\xE3\x80\x82example.com",
 				false,
 				[
@@ -502,18 +528,13 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://evil.example.com',
+							'attrValue' => "http://evil\xE3\x80\x82example.com",
 							'host'      => 'evil.example.com'
 						]
 					]
 				],
 				function ($configurator)
 				{
-					if (!extension_loaded('intl'))
-					{
-						$this->markTestSkipped('Extension intl is required.');
-					}
-
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -526,18 +547,13 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://evil.example.com',
+							'attrValue' => "http://evil\xEF\xBC\x8Eexample.com",
 							'host'      => 'evil.example.com'
 						]
 					]
 				],
 				function ($configurator)
 				{
-					if (!extension_loaded('intl'))
-					{
-						$this->markTestSkipped('Extension intl is required.');
-					}
-
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -550,18 +566,13 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://evil.example.com',
+							'attrValue' => "http://evil\xEF\xBD\xA1example.com",
 							'host'      => 'evil.example.com'
 						]
 					]
 				],
 				function ($configurator)
 				{
-					if (!extension_loaded('intl'))
-					{
-						$this->markTestSkipped('Extension intl is required.');
-					}
-
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -569,25 +580,16 @@ class BuiltInFiltersTest extends Test
 				new Url,
 				"http://evil.example.com.",
 				false,
-				function ()
-				{
-					if (version_compare(PHP_VERSION, '5.5.4', '>=')
-					 || (version_compare(PHP_VERSION, '5.4.21', '>=') && version_compare(PHP_VERSION, '5.5', '<')))
-					{
-						return [
-							[
-								'err',
-								'URL host is not allowed',
-								[
-									'attrValue' => 'http://evil.example.com.',
-									'host'      => 'evil.example.com'
-								]
-							]
-						];
-					}
-
-					return [];
-				},
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => "http://evil.example.com.",
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
 				function ($configurator)
 				{
 					$configurator->urlConfig->disallowHost('evil.example.com');
@@ -597,41 +599,35 @@ class BuiltInFiltersTest extends Test
 				new Url,
 				"http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
 				false,
-				function ()
-				{
-					if (version_compare(PHP_VERSION, '5.5.4', '>=')
-					 || (version_compare(PHP_VERSION, '5.4.21', '>=') && version_compare(PHP_VERSION, '5.5', '<')))
-					{
-						return [
-							[
-								'err',
-								'URL host is not allowed',
-								[
-									'attrValue' => 'http://evil.example.com.',
-									'host'      => 'evil.example.com'
-								]
-							]
-						];
-					}
-
-					return [];
-				},
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => "http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
 				function ($configurator)
 				{
-					if (!extension_loaded('intl'))
-					{
-						$this->markTestSkipped('Extension intl is required.');
-					}
-
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
 			[
 				new Url,
-				// NOTE: this URL is actually rejected for being malformed
 				"http://evil.ex%41mple.com",
 				false,
-				[],
+				[
+					[
+						'err',
+						'URL host is invalid',
+						[
+							'attrValue' => 'http://evil.ex%41mple.com',
+							'host'      => 'evil.ex%41mple.com'
+						]
+					]
+				],
 				function ($configurator)
 				{
 					$configurator->urlConfig->disallowHost('evil.example.com');
@@ -646,7 +642,7 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://www.xn--pypal-4ve.com',
+							'attrValue' => 'http://www.pаypal.com',
 							'host'      => 'www.xn--pypal-4ve.com'
 						]
 					]
