@@ -1,6 +1,21 @@
-TODO
-====
+Immediate goals (March 2014)
+----------------------------
+- Finish up Litedown: forced line breaks, fenced code blocks, perhaps reference links
 
+
+Near-future goals (2014)
+------------------------
+- Have a piece of utilities that converts a parsed text to BBCodes or Markdown
+
+
+Long-term goals (?)
+-------------------
+- RTE
+- Slowly convince every forum, blog and wiki software, open source and otherwise, to use s9e\TextFormatter 
+
+
+Random stuff that may never happen
+----------------------------------
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
