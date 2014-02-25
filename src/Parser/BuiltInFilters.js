@@ -304,24 +304,8 @@ var BuiltInFilters =
 			validateScheme = false;
 		}
 
-		/**
-		* We URL-encode some sensitive characters in case someone would want to use the URL in
-		* some JavaScript thingy, or in CSS. We also encode illegal characters.
-		*
-		* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
-		* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
-		* < and > to prevent breaking out of <script>
-		* \r and \n because they're illegal in JavaScript
-		* [ and ] because the W3 validator rejects and they "should" be escaped as per RFC 3986
-		* Non-ASCII characters as per RFC 3986
-		* Control codes and spaces, as per RFC 3986
-		*
-		* @link http://sla.ckers.org/forum/read.php?2,51478
-		* @link http://timelessrepo.com/json-isnt-a-javascript-subset
-		* @link http://www.ietf.org/rfc/rfc3986.txt
-		* @link http://stackoverflow.com/a/1547922
-		*/
-		attrValue = attrValue.replace(/["'()<>[\]\x00-\x20\x7F]+/g, escape).replace(/[^\u0020-\u007E]+/g, encodeURIComponent);
+		// Encode some potentially troublesome chars
+		attrValue = BuiltInFilters.sanitizeUrl(attrValue);
 
 		// Parse the URL... kinda
 		var m =/^([a-z\d]+):\/\/(?:[^/]*@)?([^/]+)(?:\/.*)?$/i.exec(attrValue);
@@ -384,5 +368,76 @@ var BuiltInFilters =
 		}
 
 		return attrValue;
+	},
+
+	/**
+	* Parse a URL and return its components
+	*
+	* Similar to PHP's own parse_url() except that all parts are always returned
+	*
+	* @param  {!string} url Original URL
+	* @return {!Object}
+	*/
+	parseUrl: function(url)
+	{
+		var regexp = /^(?:([a-z][-+.\w]*):)?(?:\/\/(?:([^:\/?#]*)(?::([^\/?#]*)?)?@)?(?:(\[[a-f\d:]+\]|[^:\/?#]+)(?::(\d*))?)?(?![^\/?#]))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?$/i;
+
+		// NOTE: this regexp always matches because of the last three captures
+		var m = regexp.exec(url);
+
+		var parts = {
+			scheme   : (m[1] > '') ? m[1] : '',
+			user     : (m[2] > '') ? m[2] : '',
+			pass     : (m[3] > '') ? m[3] : '',
+			host     : (m[4] > '') ? m[4] : '',
+			port     : (m[5] > '') ? m[5] : '',
+			path     : (m[6] > '') ? m[6] : '',
+			query    : (m[7] > '') ? m[7] : '',
+			fragment : (m[8] > '') ? m[8] : ''
+		};
+
+		/**
+		* @link http://tools.ietf.org/html/rfc3986#section-3.1
+		*
+		* 'An implementation should accept uppercase letters as equivalent to lowercase in
+		* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
+		* should only produce lowercase scheme names for consistency.'
+		*/
+		parts.scheme = parts.scheme.toLowerCase();
+
+		/**
+		* Normalize the domain label separators and remove trailing dots
+		* @link http://url.spec.whatwg.org/#domain-label-separators
+		*/
+		parts.host = parts.host.replace(/[\u3002\uff0e\uff61]/g, '.').replace(/\.+$/g, '');
+
+		return parts;
+	},
+
+	/**
+	* Sanitize a URL for safe use regardless of context
+	*
+	* This method URL-encodes some sensitive characters in case someone would want to use the URL in
+	* some JavaScript thingy, or in CSS. We also encode illegal characters
+	*
+	* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
+	* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
+	* < and > to prevent breaking out of <script>
+	* \r and \n because they're illegal in JavaScript
+	* [ and ] because the W3 validator rejects them and they "should" be escaped as per RFC 3986
+	* Non-ASCII characters as per RFC 3986
+	* Control codes and spaces, as per RFC 3986
+	*
+	* @link http://sla.ckers.org/forum/read.php?2,51478
+	* @link http://timelessrepo.com/json-isnt-a-javascript-subset
+	* @link http://www.ietf.org/rfc/rfc3986.txt
+	* @link http://stackoverflow.com/a/1547922
+	*
+	* @param  {!string} url Original URL
+	* @return {!string}     Sanitized URL
+	*/
+	sanitizeUrl: function(url)
+	{
+		return url.replace(/["'()<>[\]\x00-\x20\x7F]+/g, escape).replace(/[^\u0020-\u007E]+/g, encodeURIComponent);
 	}
 }

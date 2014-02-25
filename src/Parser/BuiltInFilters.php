@@ -340,31 +340,8 @@ class BuiltInFilters
 			$attrValue = $m[1] . idn_to_ascii($m[2]) . substr($attrValue, strlen($m[0]));
 		}
 
-		/**
-		* We URL-encode some sensitive characters in case someone would want to use the URL in
-		* some JavaScript thingy, or in CSS. We also encode illegal characters.
-		*
-		* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
-		* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
-		* < and > to prevent breaking out of <script>
-		* \r and \n because they're illegal in JavaScript
-		* [ and ] because the W3 validator rejects and they "should" be escaped as per RFC 3986
-		* Non-ASCII characters as per RFC 3986
-		* Control codes and spaces, as per RFC 3986
-		*
-		* @link http://sla.ckers.org/forum/read.php?2,51478
-		* @link http://timelessrepo.com/json-isnt-a-javascript-subset
-		* @link http://www.ietf.org/rfc/rfc3986.txt
-		* @link http://stackoverflow.com/a/1547922
-		*/
-		$attrValue = preg_replace_callback(
-			'/["\'()<>[\\]\\x00-\\x20\\x7F-\\xFF]+/S',
-			function ($m)
-			{
-				return rawurlencode($m[0]);
-			},
-			$attrValue
-		);
+		// Encode some potentially troublesome chars
+		$attrValue = self::sanitizeUrl($attrValue);
 
 		// Validate the URL
 		$attrValue = filter_var($attrValue, FILTER_VALIDATE_URL);
@@ -439,33 +416,21 @@ class BuiltInFilters
 	*/
 	public static function parseUrl($url)
 	{
-		// URL parts
-		$parts = [
-			'scheme'   => '',
-			'user'     => '',
-			'pass'     => '',
-			'host'     => '',
-			'port'     => '',
-			'path'     => '',
-			'query'    => '',
-			'fragment' => ''
-		];
-
 		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
 
 		// NOTE: this regexp always matches because of the last three captures
 		preg_match($regexp, $url, $m);
 
-		$i = 0;
-		foreach (array_keys($parts) as $k)
-		{
-			++$i;
-
-			if (!empty($m[$i]))
-			{
-				$parts[$k] = $m[$i];
-			}
-		}
+		$parts = [
+			'scheme'   => (isset($m[1])) ? $m[1] : '',
+			'user'     => (isset($m[2])) ? $m[2] : '',
+			'pass'     => (isset($m[3])) ? $m[3] : '',
+			'host'     => (isset($m[4])) ? $m[4] : '',
+			'port'     => (isset($m[5])) ? $m[5] : '',
+			'path'     => (isset($m[6])) ? $m[6] : '',
+			'query'    => (isset($m[7])) ? $m[7] : '',
+			'fragment' => (isset($m[8])) ? $m[8] : ''
+		];
 
 		/**
 		* @link http://tools.ietf.org/html/rfc3986#section-3.1
@@ -482,6 +447,46 @@ class BuiltInFilters
 		*/
 		$parts['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $parts['host']), '.');
 
+		// Test whether host has non-ASCII characters and punycode it if possible
+		if (preg_match('#[^[:ascii:]]#', $parts['host']) && function_exists('idn_to_ascii'))
+		{
+			$parts['host'] = idn_to_ascii($parts['host']);
+		}
+
 		return $parts;
+	}
+
+	/**
+	* Sanitize a URL for safe use regardless of context
+	*
+	* This method URL-encodes some sensitive characters in case someone would want to use the URL in
+	* some JavaScript thingy, or in CSS. We also encode illegal characters
+	*
+	* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
+	* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
+	* < and > to prevent breaking out of <script>
+	* \r and \n because they're illegal in JavaScript
+	* [ and ] because the W3 validator rejects them and they "should" be escaped as per RFC 3986
+	* Non-ASCII characters as per RFC 3986
+	* Control codes and spaces, as per RFC 3986
+	*
+	* @link http://sla.ckers.org/forum/read.php?2,51478
+	* @link http://timelessrepo.com/json-isnt-a-javascript-subset
+	* @link http://www.ietf.org/rfc/rfc3986.txt
+	* @link http://stackoverflow.com/a/1547922
+	*
+	* @param  string $url Original URL
+	* @return string      Sanitized URL
+	*/
+	public static function sanitizeUrl($url)
+	{
+		return preg_replace_callback(
+			'/["\'()<>[\\]\\x00-\\x20\\x7F-\\xFF]+/S',
+			function ($m)
+			{
+				return rawurlencode($m[0]);
+			},
+			$url
+		);
 	}
 }

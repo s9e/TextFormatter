@@ -1701,6 +1701,7 @@ s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Filters work
  [x] filterRange() can be called without a logger
  [x] filterUrl() can be called without a logger
+ [x] sanitizeUrl() tests
 
 s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeAttributePreprocessors() sets captured attributes on match

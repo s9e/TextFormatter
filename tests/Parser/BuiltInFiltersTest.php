@@ -221,6 +221,20 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
+				'http://^*!example.org',
+				[
+					'scheme'   => 'http',
+					'host'     => '^*!example.org'
+				]
+			],
+			[
+				'http://www.älypää.com',
+				[
+					'scheme'   => 'http',
+					'host'     => 'www.xn--lyp-plada.com'
+				]
+			],
+			[
 				"http://evil\xEF\xBD\xA1example.com.\xEF\xBD\xA1./",
 				[
 					'scheme'   => 'http',
@@ -233,6 +247,12 @@ class BuiltInFiltersTest extends Test
 				[
 					'scheme'   => 'mailto',
 					'path'     => 'joe@example.org'
+				]
+			],
+			[
+				'0',
+				[
+					'path'     => '0'
 				]
 			],
 		];
@@ -711,6 +731,9 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->restrictHost('example.org');
 				}
 			],
+			[new Url, 'http:', false],
+			[new Url, 'http:?foo', false],
+			[new Url, 'http:#foo', false],
 			[new Identifier, '123abcABC', '123abcABC'],
 			[new Identifier, '-_-', '-_-'],
 			[new Identifier, 'a b', false],
@@ -773,6 +796,77 @@ class BuiltInFiltersTest extends Test
 			['12e-3', ['int' => false, 'uint' => false, 'float' => 0.012, 'number' => false]],
 			['-12e-3', ['int' => false, 'uint' => false, 'float' => -0.012, 'number' => false]],
 			['0x123', ['int' => false, 'uint' => false, 'float' => false, 'number' => false]],
+		];
+	}
+
+	/**
+	* @testdox sanitizeUrl() tests
+	* @dataProvider getSanitizeUrlTests
+	*/
+	public function testSanitizeUrl($url, $expected)
+	{
+		$this->assertSame($expected, BuiltInFilters::sanitizeUrl($url));
+	}
+
+	public function getSanitizeUrlTests()
+	{
+		return [
+			[
+				"http://example.com/''",
+				'http://example.com/%27%27'
+			],
+			[
+				'http://example.com/""',
+				'http://example.com/%22%22'
+			],
+			[
+				'http://example.com/((',
+				'http://example.com/%28%28'
+			],
+			[
+				'http://example.com/))',
+				'http://example.com/%29%29'
+			],
+			[
+				"http://example.com/x\0y",
+				'http://example.com/x%00y'
+			],
+			[
+				'http://example.com/x y',
+				'http://example.com/x%20y'
+			],
+			[
+				"http://example.com/x\ry",
+				'http://example.com/x%0Dy'
+			],
+			[
+				"http://example.com/x\ny",
+				'http://example.com/x%0Ay'
+			],
+			[
+				'http://example.com/foo.php?a[]=1',
+				'http://example.com/foo.php?a%5B%5D=1'
+			],
+			[
+				'http://example.com/</script>',
+				'http://example.com/%3C/script%3E'
+			],
+			[
+				"http://example.com/\xE2\x80\xA8",
+				'http://example.com/%E2%80%A8',
+			],
+			[
+				"http://example.com/\xE2\x80\xA8",
+				'http://example.com/%E2%80%A8',
+			],
+			[
+				"http://example.com/\xE2\x80\xA9",
+				'http://example.com/%E2%80%A9',
+			],
+			[
+				"http://example.com/♥",
+				'http://example.com/%E2%99%A5',
+			],
 		];
 	}
 }
