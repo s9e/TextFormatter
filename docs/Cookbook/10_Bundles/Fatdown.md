@@ -4,6 +4,10 @@
 
 **Fatdown** is a bundle based on the Litedown plugin which supports most of Markdown's features plus media embedding and enhanced typography.
 
+### Demo
+
+You can try the [real-time JavaScript demo](http://s9e.github.io/TextFormatter/fatdown.html), or you can compare Fatdown to various Markdown implementations via [the wonderful Babelmark 2](http://johnmacfarlane.net/babelmark2/).
+
 ### Examples
 
 ```php
