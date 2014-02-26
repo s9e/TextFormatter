@@ -30,3 +30,15 @@ document = {
 		};
 	}
 };
+
+// Emulate punycode.js from https://github.com/bestiejs/punycode.js/
+punycode = {
+	toASCII: function(host)
+	{
+		var table= {
+			'www.älypää.com': 'www.xn--lyp-plada.com'
+		}
+
+		return (host in table) ? table[host] : host;
+	}
+};

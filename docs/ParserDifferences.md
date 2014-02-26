@@ -1,7 +1,6 @@
 Differences between the PHP parser and its JavaScript port
 ==========================================================
 
- * #url filter (no punycode)
  * #email filter (non-validating regexp, only catches the most egregious errors)
  * HTMLEntities might convert a slightly different set of HTML entities due to the differences between each browser's translation table and PHP's
 

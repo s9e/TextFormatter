@@ -83,8 +83,7 @@ class ParserTest extends Test
 					{
 						$this->markTestSkipped('Extension intl is required.');
 					}
-				},
-				'<r><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for http://www.älypää.com</r>'
+				}
 			],
 			[
 				'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen for http://en.wikipedia.org/wiki/Matti_Nykänen',
