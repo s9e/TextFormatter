@@ -488,6 +488,11 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <br/> is not passthrough
  [x] <b/> is not passthrough
  [x] <b><xsl:apply-templates/></b> is passthrough
+ [x] <ruby> allows <rb> as a child
+ [x] <ruby> allows <rp> as a child
+ [x] <ruby> allows <rt> as a child
+ [x] <ruby> allows <rtc> as a child
+ [x] <ruby> does not allow <blockquote> as a child
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'

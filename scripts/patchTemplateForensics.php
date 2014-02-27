@@ -411,9 +411,10 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 						// the "prose" where its exact content model is discussed. Here, we'll take
 						// a big shortcut and hardcode something that makes sense in our context
 						$elements[$elName]['allowChildCategory']['phrasing content'][''] = 0;
-						$elements[$elName]['denyDescendantElement']['ruby'][''] = 0;
-						$elements[$elName]['allowChildElement']['rt'][''] = 0;
+						$elements[$elName]['allowChildElement']['rb'][''] = 0;
 						$elements[$elName]['allowChildElement']['rp'][''] = 0;
+						$elements[$elName]['allowChildElement']['rt'][''] = 0;
+						$elements[$elName]['allowChildElement']['rtc'][''] = 0;
 					}
 					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element'
 					     || $value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element and no more than one is a base element'
