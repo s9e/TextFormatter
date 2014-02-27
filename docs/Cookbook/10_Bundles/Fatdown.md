@@ -62,6 +62,7 @@ echo $html;
  * `del` and `ins`
  * `hr`
  * `img` with a mandatory `src` attribute and optional `alt` and `title` attributes
+ * `rb`, `rp`, `rt` and `rtc` for all your `ruby` needs
  * `sub` and `sup`
  * `table`, `tbody`, `tfoot`, `thead`
  * `td` with optional `colspan` and `rowspan` attributes
