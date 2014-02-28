@@ -63,6 +63,7 @@ class Fatdown extends Bundle
 			'del',
 			'div' => ['class'],
 			'i',
+			'ins',
 			'rb',
 			'rp',
 			'rt',
