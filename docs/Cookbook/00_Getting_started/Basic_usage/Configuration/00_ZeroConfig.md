@@ -1,6 +1,6 @@
 ## Zero-configuration: using predefined bundles
 
-The fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the "Forum" bundle, which supports the same kind of formatting that is used in internet forums.
+Once [installed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md), he fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the "Forum" bundle, which supports the same kind of formatting that is used in internet forums.
 
 Here is the simplest way to use the Forum bundle:
 

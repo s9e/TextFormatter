@@ -12,4 +12,6 @@ You can use s9e\\TextFormatter via Composer or by cloning this repository. See [
 
 ## Examples
 
-You can run the scripts from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), look into the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/Plugins) for a description of each plugin or into the [Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook) for topical snippets.
+If you can only read one example, [read how to use a bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Configuration/00_ZeroConfig.md).
+
+You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), you can look into the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/Plugins) for a description of each plugin or into the [Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook) for topical snippets.
