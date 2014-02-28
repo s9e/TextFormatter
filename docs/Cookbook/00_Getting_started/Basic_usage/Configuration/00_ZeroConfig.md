@@ -1,6 +1,6 @@
 ## Zero-configuration: using predefined bundles
 
-Once [installed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md), he fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the [Forum bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/Forum.md), which supports the same kind of BBCodes/formatting that is used in internet forums. If you prefer Markdown, try the [https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/Fatdown.md](Fatdown) bundle.
+Once [installed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md), he fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the [Forum bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/Forum.md), which supports the same kind of BBCodes/formatting that is used in internet forums. If you prefer Markdown, try the [Fatdown](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/Fatdown.md) bundle.
 
 Here is the simplest way to use the Forum bundle:
 
