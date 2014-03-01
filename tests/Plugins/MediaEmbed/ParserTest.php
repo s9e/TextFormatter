@@ -60,7 +60,8 @@ class ParserTest extends Test
 			$msg = $e->getMessage();
 
 			if (strpos($msg, 'HTTP request failed')  !== false
-			 || strpos($msg, 'Connection timed out') !== false)
+			 || strpos($msg, 'Connection timed out') !== false
+			 || strpos($msg, 'Connection refused')   !== false)
 			{
 				$this->markTestSkipped($msg);
 			}
