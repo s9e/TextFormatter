@@ -1,6 +1,6 @@
 ## Overview
 
-s9e\\TextFormatter is a text formatting library that supports BBCode, HTML and other markup via plugins. The library is in PHP, with a JavaScript port also available for client-side preview (see below.)
+s9e\\TextFormatter is a text formatting library that supports BBCode, Markdown, HTML and other markup via plugins. The library is in PHP, with a JavaScript port also available for client-side preview (see below.)
 
 [![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
 [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
