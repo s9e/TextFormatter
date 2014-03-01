@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
-use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
