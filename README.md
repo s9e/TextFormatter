@@ -5,7 +5,7 @@ s9e\\TextFormatter is a text formatting library that supports BBCode, HTML and o
 [![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
 [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/s9e/TextFormatter/badges/quality-score.png?s=3942dab3c410fb9ce02001e7446d1083fa91172c)](https://scrutinizer-ci.com/g/s9e/TextFormatter/)
-<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#57;&#101;&#46;&#100;&#101;&#118;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">Contact the author</a>.
+<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#57;&#101;&#46;&#100;&#101;%76%2B+github&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">Contact the author</a>.
 
 ## Installation
 
