@@ -145,4 +145,72 @@ class XSLTTest extends Test
 			$this->getXSL()
 		);
 	}
+
+	/**
+	* @testdox Merges simple templates together
+	*/
+	public function testSimpleTemplates()
+	{
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('I')->template = '<i><xsl:apply-templates/></i>';
+		$this->configurator->tags->add('U')->template = '<u><xsl:apply-templates/></u>';
+
+		$xsl = $this->getXSL();
+
+		$this->assertContains(
+			'<xsl:template match="B|I|U|p"><xsl:element name="{translate(name(),\'BIU\',\'biu\')}"><xsl:apply-templates/></xsl:element></xsl:template>',
+			$xsl
+		);
+
+		foreach ($this->configurator->tags as $tag)
+		{
+			$this->assertNotContains((string) $tag->template, $xsl);
+		}
+	}
+
+	/**
+	* @testdox Does not attempt to merge simple templates together if there's only one user-defined simple tag
+	*/
+	public function testSimpleTemplatesNot()
+	{
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+
+		$xsl = $this->getXSL();
+
+		$this->assertContains('<b><xsl:apply-templates/></b>', $xsl);
+		$this->assertNotContains('<xsl:element>', $xsl);
+	}
+
+	/**
+	* @testdox The merged simple template handles namespaced tags
+	*/
+	public function testSimpleTemplatesNamespaced()
+	{
+		$this->configurator->tags->add('B')->template      = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('html:b')->template = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('html:i')->template = '<i><xsl:apply-templates/></i>';
+
+		$xsl = $this->getXSL();
+
+		$this->assertContains(
+			'<xsl:template match="B|html:b|html:i|p"><xsl:element name="{translate(local-name(),\'B\',\'b\')}"><xsl:apply-templates/></xsl:element></xsl:template>',
+			$xsl
+		);
+	}
+
+	/**
+	* @testdox The merged simple template handles namespaced tags that don't need to be lowercased
+	*/
+	public function testSimpleTemplatesNamespacedLowercased()
+	{
+		$this->configurator->tags->add('html:b')->template = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('html:i')->template = '<i><xsl:apply-templates/></i>';
+
+		$xsl = $this->getXSL();
+
+		$this->assertContains(
+			'<xsl:template match="html:b|html:i|p"><xsl:element name="{local-name()}"><xsl:apply-templates/></xsl:element></xsl:template>',
+			$xsl
+		);
+	}
 }
