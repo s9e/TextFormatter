@@ -63,7 +63,7 @@ class PluginCollection extends NormalizedCollection
 	* Create a plugin instance/ensure it implements the correct interface
 	*
 	* @param  mixed Either a class name or an object that implements ConfiguratorBase
-	* @return void
+	* @return ConfiguratorBase
 	*/
 	public function normalizeValue($value)
 	{
