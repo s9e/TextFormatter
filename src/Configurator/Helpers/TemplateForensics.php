@@ -625,7 +625,7 @@ class TemplateForensics
 	* Get all XSL elements of given name
 	*
 	* @param  string      $elName XSL element's name, e.g. "apply-templates"
-	* @return DOMNodeList
+	* @return \DOMNodeList
 	*/
 	protected function getXSLElements($elName)
 	{
