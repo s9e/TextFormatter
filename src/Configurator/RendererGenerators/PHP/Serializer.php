@@ -82,7 +82,7 @@ class Serializer
 	}
 
 	/**
-	* Convert an XPath condition into a PHP condition
+	* Convert an XPath expression (used in a condition) into PHP code
 	*
 	* This method is similar to convertXPath() but it selectively replaces some simple conditions
 	* with the corresponding DOM method for performance reasons
@@ -90,7 +90,7 @@ class Serializer
 	* @param  string $expr XPath expression
 	* @return string       PHP code
 	*/
-	protected function convertCondition($expr)
+	public function convertCondition($expr)
 	{
 		$expr = trim($expr);
 
@@ -137,12 +137,12 @@ class Serializer
 	}
 
 	/**
-	* Convert an XPath expression into PHP code
+	* Convert an XPath expression (used as value) into PHP code
 	*
 	* @param  string $expr XPath expression
 	* @return string       PHP code
 	*/
-	protected function convertXPath($expr)
+	public function convertXPath($expr)
 	{
 		static $regexp;
 

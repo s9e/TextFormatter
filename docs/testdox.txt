@@ -2296,6 +2296,10 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
  [x] optimize() tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
+ [x] convertXPath() tests
+ [x] convertCondition() tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] getRenderer() can be called multiple times with the same rendering configuration
