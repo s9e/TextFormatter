@@ -887,6 +887,9 @@ abstract class TemplateHelper
 	{
 		$tagNames = [];
 
+		// Prepare the XPath expression used for the element's name
+		$expr = 'name()';
+
 		// Identify "simple" tags, whose template is one element of the same name. Their template
 		// can be replaced with a dynamic template shared by all the simple tags
 		foreach ($templates as $tagName => $template)
@@ -894,12 +897,15 @@ abstract class TemplateHelper
 			// Generate the element name based on the tag's localName, lowercased
 			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
 
-			// Generate the corresponding simple template
-			$simpleTemplate = '<' . $elName . '><xsl:apply-templates/></' . $elName . '>';
-
-			if ($template === $simpleTemplate)
+			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
 			{
 				$tagNames[] = $tagName;
+
+				// Use local-name() if any of the tags are namespaced
+				if (strpos($tagName, ':') !== false)
+				{
+					$expr = 'local-name()';
+				}
 			}
 		}
 
@@ -908,19 +914,6 @@ abstract class TemplateHelper
 		if (count($tagNames) < $minCount)
 		{
 			return;
-		}
-
-		// Prepare the XPath expression used for the element's name
-		$expr = 'name()';
-
-		// Use local-name() if any of the simple tags are namespaced
-		foreach ($tagNames as $tagName)
-		{
-			if (strpos($tagName, ':') !== false)
-			{
-				$expr = 'local-name()';
-				break;
-			}
 		}
 
 		// Generate a list of uppercase characters from the tags' names
@@ -933,8 +926,8 @@ abstract class TemplateHelper
 
 		// Prepare the common template
 		$template = '<xsl:element name="{' . $expr . '}">'
-				  . '<xsl:apply-templates/>'
-				  . '</xsl:element>';
+		          . '<xsl:apply-templates/>'
+		          . '</xsl:element>';
 
 		// Replace the templates
 		foreach ($tagNames as $tagName)
