@@ -197,7 +197,7 @@ trait TagStack
 	*/
 	protected function sortTags()
 	{
-		usort($this->tagStack, [__CLASS__, 'compareTags']);
+		usort($this->tagStack, __CLASS__ . '::compareTags');
 		$this->tagStackIsSorted = true;
 	}
 
