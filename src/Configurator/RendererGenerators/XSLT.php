@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
@@ -31,59 +32,10 @@ class XSLT implements RendererGenerator
 	{
 		$groupedTemplates = [];
 		$prefixes         = [];
-		$simpleTags       = [];
 		$templates        = $rendering->getTemplates();
 
-		// Identify "simple" tags, whose template is one element of the same name. Their template
-		// can be replaced with a dynamic template shared by all the simple tags
-		foreach ($templates as $tagName => $template)
-		{
-			// Generate the element name based on the tag's localName, lowercased
-			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
-
-			// Generate the corresponding simple template
-			$simpleTemplate = '<' . $elName . '><xsl:apply-templates/></' . $elName . '>';
-
-			if ($template === $simpleTemplate)
-			{
-				$simpleTags[] = $tagName;
-			}
-		}
-
-		// We only bother replacing their template if there are at least 3 simple tags. Otherwise
-		// it only makes the stylesheet bigger
-		if (count($simpleTags) > 2)
-		{
-			// Prepare the XPath expression used for the element's name
-			$expr = 'name()';
-
-			// Use local-name() if any of the simple tags are namespaced
-			foreach ($simpleTags as $tagName)
-			{
-				if (strpos($tagName, ':') !== false)
-				{
-					$expr = 'local-name()';
-					break;
-				}
-			}
-
-			// Generate a list of uppercase characters from the tags' names
-			$chars = preg_replace('/[^A-Z]+/', '', count_chars(implode('', $simpleTags), 3));
-
-			if ($chars)
-			{
-				$expr = 'translate(' . $expr . ",'" . $chars . "','" . strtolower($chars) . "')";
-			}
-
-			$template = '<xsl:element name="{' . $expr . '}">'
-			          . '<xsl:apply-templates/>'
-			          . '</xsl:element>';
-
-			foreach ($simpleTags as $tagName)
-			{
-				$templates[$tagName] = $template;
-			}
-		}
+		// Replace simple templates if there are at least 3 of them
+		TemplateHelper::replaceHomogeneousTemplates($templates, 3);
 
 		// Group tags with identical templates together
 		foreach ($templates as $tagName => $template)

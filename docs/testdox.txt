@@ -694,6 +694,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] highlightNode() tests
  [x] minifyXPath() tests
  [x] getMetaElementsRegexp() tests
+ [x] replaceHomogeneousTemplates() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
@@ -2363,9 +2364,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Includes a parameter's default value in the stylesheet
  [x] escapes a parameter's default value
  [x] Merges simple templates together
- [x] Does not attempt to merge simple templates together if there's only one user-defined simple tag
- [x] The merged simple template handles namespaced tags
- [x] The merged simple template handles namespaced tags that don't need to be lowercased
 
 s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument

@@ -1004,4 +1004,95 @@ class TemplateHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox replaceHomogeneousTemplates() tests
+	* @dataProvider getReplaceHomogeneousTemplatesTests
+	*/
+	public function testReplaceHomogeneousTemplates($templates, $expected)
+	{
+		TemplateHelper::replaceHomogeneousTemplates($templates);
+		$this->assertSame($expected, $templates);
+	}
+
+	public function getReplaceHomogeneousTemplatesTests()
+	{
+		return [
+			[
+				// Nothing happens if there's only one template
+				[
+					'p' => '<p><xsl:apply-templates/></p>'
+				],
+				[
+					'p' => '<p><xsl:apply-templates/></p>'
+				]
+			],
+			[
+				[
+					'b' => '<b><xsl:apply-templates/></b>',
+					'i' => '<i><xsl:apply-templates/></i>',
+					'u' => '<u><xsl:apply-templates/></u>'
+				],
+				[
+					'b' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>',
+					'i' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>',
+					'u' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>'
+				]
+			],
+			[
+				// Ensure we don't over-replace
+				[
+					'b' => '<b><xsl:apply-templates/></b>',
+					'i' => '<i><xsl:apply-templates/></i>',
+					'u' => '<u><xsl:apply-templates/></u>',
+					'p' => '<p><xsl:apply-templates/></p>!'
+				],
+				[
+					'b' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>',
+					'i' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>',
+					'u' => '<xsl:element name="{name()}"><xsl:apply-templates/></xsl:element>',
+					'p' => '<p><xsl:apply-templates/></p>!'
+				]
+			],
+			[
+				// Test that names are lowercased
+				[
+					'B' => '<b><xsl:apply-templates/></b>',
+					'I' => '<i><xsl:apply-templates/></i>',
+					'p' => '<p><xsl:apply-templates/></p>'
+				],
+				[
+					'B' => '<xsl:element name="{translate(name(),\'BI\',\'bi\')}"><xsl:apply-templates/></xsl:element>',
+					'I' => '<xsl:element name="{translate(name(),\'BI\',\'bi\')}"><xsl:apply-templates/></xsl:element>',
+					'p' => '<xsl:element name="{translate(name(),\'BI\',\'bi\')}"><xsl:apply-templates/></xsl:element>',
+				]
+			],
+			[
+				// Test namespaced tags
+				[
+					'html:b' => '<b><xsl:apply-templates/></b>',
+					'html:i' => '<i><xsl:apply-templates/></i>',
+					'html:u' => '<u><xsl:apply-templates/></u>'
+				],
+				[
+					'html:b' => '<xsl:element name="{local-name()}"><xsl:apply-templates/></xsl:element>',
+					'html:i' => '<xsl:element name="{local-name()}"><xsl:apply-templates/></xsl:element>',
+					'html:u' => '<xsl:element name="{local-name()}"><xsl:apply-templates/></xsl:element>'
+				]
+			],
+			[
+				// Test namespaced tags
+				[
+					'html:b' => '<b><xsl:apply-templates/></b>',
+					'html:I' => '<i><xsl:apply-templates/></i>',
+					'html:u' => '<u><xsl:apply-templates/></u>'
+				],
+				[
+					'html:b' => '<xsl:element name="{translate(local-name(),\'I\',\'i\')}"><xsl:apply-templates/></xsl:element>',
+					'html:I' => '<xsl:element name="{translate(local-name(),\'I\',\'i\')}"><xsl:apply-templates/></xsl:element>',
+					'html:u' => '<xsl:element name="{translate(local-name(),\'I\',\'i\')}"><xsl:apply-templates/></xsl:element>'
+				]
+			],
+		];
+	}
 }

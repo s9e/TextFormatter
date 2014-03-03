@@ -867,4 +867,79 @@ abstract class TemplateHelper
 
 		return '(<' . RegexpBuilder::fromList(array_keys($tagNames)) . '>[^<]*</[^>]+>)';
 	}
+
+	/**
+	* Replace simple templates (in an array, in-place) with a common template
+	*
+	* In some situations, renderers can take advantage of multiple tags having the same template. In
+	* any configuration, there's almost always a number of "simple" tags that are rendered as an
+	* HTML element of the same name with no HTML attributes. For instance, the system tag "p" used
+	* for paragraphs, "B" tags used for "b" HTML elements, etc... This method replaces those
+	* templates with a common template that uses a dynamic element name based on the tag's name,
+	* either its nodeName or localName depending on whether the tag is namespaced, and normalized to
+	* lowercase using XPath's translate() function
+	*
+	* @param  array   &$templates Associative array of [tagName => template]
+	* @param  integer  $minCount
+	* @return void
+	*/
+	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
+	{
+		$tagNames = [];
+
+		// Identify "simple" tags, whose template is one element of the same name. Their template
+		// can be replaced with a dynamic template shared by all the simple tags
+		foreach ($templates as $tagName => $template)
+		{
+			// Generate the element name based on the tag's localName, lowercased
+			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
+
+			// Generate the corresponding simple template
+			$simpleTemplate = '<' . $elName . '><xsl:apply-templates/></' . $elName . '>';
+
+			if ($template === $simpleTemplate)
+			{
+				$tagNames[] = $tagName;
+			}
+		}
+
+		// We only bother replacing their template if there are at least $minCount simple tags.
+		// Otherwise it only makes the stylesheet bigger
+		if (count($tagNames) < $minCount)
+		{
+			return;
+		}
+
+		// Prepare the XPath expression used for the element's name
+		$expr = 'name()';
+
+		// Use local-name() if any of the simple tags are namespaced
+		foreach ($tagNames as $tagName)
+		{
+			if (strpos($tagName, ':') !== false)
+			{
+				$expr = 'local-name()';
+				break;
+			}
+		}
+
+		// Generate a list of uppercase characters from the tags' names
+		$chars = preg_replace('/[^A-Z]+/', '', count_chars(implode('', $tagNames), 3));
+
+		if (is_string($chars) && $chars !== '')
+		{
+			$expr = 'translate(' . $expr . ",'" . $chars . "','" . strtolower($chars) . "')";
+		}
+
+		// Prepare the common template
+		$template = '<xsl:element name="{' . $expr . '}">'
+				  . '<xsl:apply-templates/>'
+				  . '</xsl:element>';
+
+		// Replace the templates
+		foreach ($tagNames as $tagName)
+		{
+			$templates[$tagName] = $template;
+		}
+	}
 }
