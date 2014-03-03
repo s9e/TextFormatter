@@ -14,6 +14,11 @@ use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
+/**
+* @property RendererGenerator $engine
+* @property TemplateParameterCollection $parameters
+* @property string $type
+*/
 class Rendering
 {
 	use Configurable;

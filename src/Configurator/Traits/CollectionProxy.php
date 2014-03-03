@@ -10,6 +10,8 @@ namespace s9e\TextFormatter\Configurator\Traits;
 /**
 * Allows an object to act as a proxy for a NormalizedCollection stored in $this->collection
 *
+* @property \s9e\TextFormatter\Collections\NormalizedCollection $collection
+*
 * @method mixed   add(string $key, mixed $value)
 * @method array   asConfig()
 * @method void    clear()
