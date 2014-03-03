@@ -2341,6 +2341,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Rendering of void and empty elements in HTML
  [x] Rendering of void and empty elements in XHTML
  [x] Tests from plugins
+ [x] Merges simple templates together
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

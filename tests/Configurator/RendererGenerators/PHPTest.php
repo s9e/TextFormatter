@@ -1537,4 +1537,21 @@ class PHPTest extends Test
 
 		return $tests;
 	}
+
+	/**
+	* @testdox Merges simple templates together
+	*/
+	public function testSimpleTemplates()
+	{
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('I')->template = '<i><xsl:apply-templates/></i>';
+		$this->configurator->tags->add('U')->template = '<u><xsl:apply-templates/></u>';
+
+		$renderer = $this->configurator->getRenderer();
+
+		$this->assertContains(
+			"if(\$nodeName==='B'||\$nodeName==='I'||\$nodeName==='U'||\$nodeName==='p'){",
+			$renderer->source
+		);
+	}
 }

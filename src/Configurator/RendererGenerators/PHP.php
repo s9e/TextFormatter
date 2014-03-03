@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
 use DOMElement;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
@@ -146,9 +147,13 @@ class PHP implements RendererGenerator
 		$this->serializer->outputMethod                = $rendering->type;
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
+		// Gather templates and optimize simple templates
+		$templates = $rendering->getTemplates();
+		TemplateHelper::replaceHomogeneousTemplates($templates);
+
 		// Group templates by content to deduplicate them
 		$groupedTemplates = [];
-		foreach ($rendering->getTemplates() as $tagName => $template)
+		foreach ($templates as $tagName => $template)
 		{
 			$groupedTemplates[$template][] = '$nodeName===' . self::export($tagName);
 		}
