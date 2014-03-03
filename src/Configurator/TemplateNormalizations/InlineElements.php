@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMException;
 use DOMElement;
+use DOMException;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineElements extends TemplateNormalization
