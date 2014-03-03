@@ -879,8 +879,8 @@ abstract class TemplateHelper
 	* either its nodeName or localName depending on whether the tag is namespaced, and normalized to
 	* lowercase using XPath's translate() function
 	*
-	* @param  array   &$templates Associative array of [tagName => template]
-	* @param  integer  $minCount
+	* @param  array<string> &$templates Associative array of [tagName => template]
+	* @param  integer       $minCount
 	* @return void
 	*/
 	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
