@@ -395,8 +395,9 @@ abstract class TemplateHelper
 	* matches given regexp. This method will NOT catch <param/> elements whose 'name' attribute is
 	* set via an <xsl:attribute/>
 	*
-	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp
+	* @return array               Array of DOMNode instances
 	*/
 	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
 	{

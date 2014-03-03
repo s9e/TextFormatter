@@ -37,12 +37,12 @@ class TemplateForensics
 	protected $allowChildBitfield = "\0";
 
 	/**
-	* @var string Whether elements are allowed as children
+	* @var bool Whether elements are allowed as children
 	*/
 	protected $allowsElements = true;
 
 	/**
-	* @var string Whether text nodes are allowed as children
+	* @var bool Whether text nodes are allowed as children
 	*/
 	protected $allowsText = true;
 
@@ -82,12 +82,12 @@ class TemplateForensics
 	protected $isEmpty = true;
 
 	/**
-	* @var string Whether this template adds to the list of active formatting elements
+	* @var bool Whether this template adds to the list of active formatting elements
 	*/
 	protected $isFormattingElement = false;
 
 	/**
-	* @var string Whether this template lets content through via an xsl:apply-templates element
+	* @var bool Whether this template lets content through via an xsl:apply-templates element
 	*/
 	protected $isPassthrough = false;
 
