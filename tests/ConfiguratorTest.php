@@ -608,14 +608,25 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox saveBundle() returns the number of bytes written to disk
+	* @testdox saveBundle() returns true on success
 	*/
-	public function testSaveBundleReturn()
+	public function testSaveBundleReturnTrue()
 	{
 		$filepath = $this->tempnam();
 		$return   = $this->configurator->saveBundle('Foo', $filepath);
 
-		$this->assertSame(filesize($filepath), $return);
+		$this->assertTrue($return);
+	}
+
+	/**
+	* @testdox saveBundle() returns false on failure
+	*/
+	public function testSaveBundleReturnFalse()
+	{
+		$filepath = '/does/not/exist/' . uniqid();
+		$return   = @$this->configurator->saveBundle('Foo', $filepath);
+
+		$this->assertFalse($return);
 	}
 
 	/**

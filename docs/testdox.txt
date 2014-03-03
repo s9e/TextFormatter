@@ -159,7 +159,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] loadBundle('../Invalid') throws an exception
  [x] loadBundle('Forum') adds the Forum bundle's configuration
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
- [x] saveBundle() returns the number of bytes written to disk
+ [x] saveBundle() returns true on success
+ [x] saveBundle() returns false on failure
  [x] saveBundle() passes its third parameter to BundleGenerator::generate()
  [x] finalize() returns a parser and a renderer
  [x] finalize(['returnParser' => false]) does not return a parser
