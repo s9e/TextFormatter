@@ -6,7 +6,7 @@ use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\Parser
+* @covers s9e\TextFormatter\Parser
 */
 class PluginsHandlingTest extends Test
 {
