@@ -483,7 +483,6 @@ convertDir(realpath(__DIR__ . '/../../tests'));
 // Remove traits files
 array_map('unlink', glob(__DIR__ . '/../../src/Configurator/Traits/*'));
 rmdir(__DIR__ . '/../../src/Configurator/Traits');
-unlink(__DIR__ . '/../../src/Parser/FilterProcessing.php');
 unlink(__DIR__ . '/../../src/Parser/OutputHandling.php');
 unlink(__DIR__ . '/../../src/Parser/PluginsHandling.php');
 unlink(__DIR__ . '/../../src/Parser/RulesHandling.php');

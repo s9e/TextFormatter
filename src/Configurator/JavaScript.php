@@ -99,7 +99,6 @@ class JavaScript
 			'Parser/Logger.js',
 			'Parser/Tag.js',
 			'Parser.js',
-			'Parser/FilterProcessing.js',
 			'Parser/OutputHandling.js',
 			'Parser/PluginsHandling.js',
 			'Parser/RulesHandling.js',
@@ -676,7 +675,7 @@ class JavaScript
 		}
 
 		// List of arguments (and their type) for each type of callbacks. MUST be kept in sync with
-		// the invocations in FilterProcessing.js
+		// the invocations in Parser.js
 		$arguments = [
 			'attributeFilter' => [
 				'attrValue' => '*',

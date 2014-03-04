@@ -6,13 +6,12 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag as TagConfig;
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\FilterProcessing
+* @covers s9e\TextFormatter\Parser
 */
 class FilterProcessingTest extends Test
 {
