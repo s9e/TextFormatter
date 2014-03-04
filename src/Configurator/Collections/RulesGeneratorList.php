@@ -7,20 +7,34 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+
 class RulesGeneratorList extends NormalizedList
 {
 	/**
 	* Normalize the value to an object
 	*
-	* @param  mixed  $generator  Either a string, or an instance of a rules generator
-	* @return object
+	* @param  string|BooleanRulesGenerator|TargetedRulesGenerator $generator Either a string, or an instance of a rules generator
+	* @return BooleanRulesGenerator|TargetedRulesGenerator
 	*/
 	public function normalizeValue($generator)
 	{
 		if (is_string($generator))
 		{
 			$className = 's9e\\TextFormatter\\Configurator\\RulesGenerators\\' . $generator;
-			$generator = new $className;
+
+			if (class_exists($className))
+			{
+				$generator = new $className;
+			}
+		}
+
+		if (!($generator instanceof BooleanRulesGenerator)
+		 && !($generator instanceof TargetedRulesGenerator))
+		{
+			throw new InvalidArgumentException('Invalid rules generator ' . var_export($generator, true));
 		}
 
 		return $generator;

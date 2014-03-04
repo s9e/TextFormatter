@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
 use s9e\TextFormatter\Configurator\RulesGenerators\AutoCloseIfVoid;
+use s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -12,29 +13,54 @@ use s9e\TextFormatter\Tests\Test;
 class RulesGeneratorListTest extends Test
 {
 	/**
-	* @testdox append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
+	* @testdox add() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
 	*/
-	public function testAppendNormalizeValue()
+	public function testAddNormalizeValue()
 	{
 		$collection = new RulesGeneratorList;
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\RulesGenerators\\AutoCloseIfVoid',
-			$collection->append('AutoCloseIfVoid')
+			$collection->add('AutoCloseIfVoid')
 		);
 	}
 
 	/**
-	* @testdox append() adds objects as-is
+	* @testdox add() adds BooleanRulesGenerator instances as-is
 	*/
-	public function testAppendInstance()
+	public function testAddInstanceBoolean()
 	{
 		$collection = new RulesGeneratorList;
 		$generator  = new AutoCloseIfVoid;
 
 		$this->assertSame(
 			$generator,
-			$collection->append($generator)
+			$collection->add($generator)
 		);
+	}
+
+	/**
+	* @testdox add() adds TargetedRulesGenerator instances as-is
+	*/
+	public function testAddInstanceTargeted()
+	{
+		$collection = new RulesGeneratorList;
+		$generator  = new EnforceOptionalEndTags;
+
+		$this->assertSame(
+			$generator,
+			$collection->add($generator)
+		);
+	}
+
+	/**
+	* @testdox add() throws an exception on invalid values
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid rules generator 'foo'
+	*/
+	public function testAddInvalid()
+	{
+		$collection = new RulesGeneratorList;
+		$collection->add('foo');
 	}
 }

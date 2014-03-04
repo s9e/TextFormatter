@@ -342,8 +342,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
 s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
- [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
- [x] append() adds objects as-is
+ [x] add() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
+ [x] add() adds BooleanRulesGenerator instances as-is
+ [x] add() adds TargetedRulesGenerator instances as-is
+ [x] add() throws an exception on invalid values
 
 s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
  [x] asConfig() returns an instance of Variant
