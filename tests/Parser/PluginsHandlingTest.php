@@ -3,11 +3,10 @@
 namespace s9e\TextFormatter\Tests\Parser;
 
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\Parser\PluginsHandling;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\PluginsHandling
+* @covers s9e\TextFormatter\Parser\Parser
 */
 class PluginsHandlingTest extends Test
 {
