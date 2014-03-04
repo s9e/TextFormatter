@@ -99,7 +99,6 @@ class JavaScript
 			'Parser/Logger.js',
 			'Parser/Tag.js',
 			'Parser.js',
-			'Parser/RulesHandling.js',
 			'Parser/TagProcessing.js',
 			'Parser/TagStack.js'
 		];

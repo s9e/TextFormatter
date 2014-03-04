@@ -4,12 +4,11 @@ namespace s9e\TextFormatter\Tests\Parser;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\Parser\RulesHandling;
 use s9e\TextFormatter\Plugins\ParserBase;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\RulesHandling
+* @covers s9e\TextFormatter\Parser
 */
 class RulesHandlingTest extends Test
 {
