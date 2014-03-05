@@ -98,8 +98,7 @@ class JavaScript
 			'Parser/BuiltInFilters.js',
 			'Parser/Logger.js',
 			'Parser/Tag.js',
-			'Parser.js',
-			'Parser/TagStack.js'
+			'Parser.js'
 		];
 
 		// Append render.js if we export the preview method

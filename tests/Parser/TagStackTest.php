@@ -5,11 +5,10 @@ namespace s9e\TextFormatter\Tests\Parser;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Parser\Tag;
-use s9e\TextFormatter\Parser\TagStack;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\TagStack
+* @covers s9e\TextFormatter\Parser
 */
 class TagStackTest extends Test
 {
