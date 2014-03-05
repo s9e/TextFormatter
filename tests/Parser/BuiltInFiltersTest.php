@@ -339,52 +339,52 @@ class BuiltInFiltersTest extends Test
 	public function getData()
 	{
 		return [
-//			[new Alnum, '', false],
-//			[new Alnum, 'abcDEF', 'abcDEF'],
-//			[new Alnum, 'abc_def', false],
-//			[new Alnum, '0123', '0123'],
-//			[new Alnum, 'é', false],
-//			[new Range(2, 5), '2', 2],
-//			[new Range(2, 5), '5', 5],
-//			[new Range(-5, 5), '-5', -5],
-//			[
-//				new Range(2, 5),
-//				'1',
-//				2,
-//				[
-//					[
-//						'warn',
-//						'Value outside of range, adjusted up to min value',
-//						['attrValue' => 1, 'min' => 2, 'max' => 5]
-//					]
-//				]
-//			],
-//			[
-//				new Range(2, 5),
-//				'10',
-//				5,
-//				[
-//					[
-//						'warn',
-//						'Value outside of range, adjusted down to max value',
-//						['attrValue' => 10, 'min' => 2, 'max' => 5]
-//					]
-//				]
-//			],
-//			[new Range(2, 5), '5x', false],
-//			[
-//				new Url,
-//				'http://www.älypää.com',
-//				'http://www.xn--lyp-plada.com',
-//				[],
-//				function ()
-//				{
-//					if (!function_exists('idn_to_ascii'))
-//					{
-//						$this->markTestSkipped('idn_to_ascii() is required.');
-//					}
-//				}
-//			],
+			[new Alnum, '', false],
+			[new Alnum, 'abcDEF', 'abcDEF'],
+			[new Alnum, 'abc_def', false],
+			[new Alnum, '0123', '0123'],
+			[new Alnum, 'é', false],
+			[new Range(2, 5), '2', 2],
+			[new Range(2, 5), '5', 5],
+			[new Range(-5, 5), '-5', -5],
+			[
+				new Range(2, 5),
+				'1',
+				2,
+				[
+					[
+						'warn',
+						'Value outside of range, adjusted up to min value',
+						['attrValue' => 1, 'min' => 2, 'max' => 5]
+					]
+				]
+			],
+			[
+				new Range(2, 5),
+				'10',
+				5,
+				[
+					[
+						'warn',
+						'Value outside of range, adjusted down to max value',
+						['attrValue' => 10, 'min' => 2, 'max' => 5]
+					]
+				]
+			],
+			[new Range(2, 5), '5x', false],
+			[
+				new Url,
+				'http://www.älypää.com',
+				'http://www.xn--lyp-plada.com',
+				[],
+				function ()
+				{
+					if (!function_exists('idn_to_ascii'))
+					{
+						$this->markTestSkipped('idn_to_ascii() is required.');
+					}
+				}
+			],
 			[
 				new Url,
 				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
