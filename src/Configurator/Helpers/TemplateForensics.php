@@ -389,7 +389,7 @@ class TemplateForensics
 		       . '|'
 		       . '//xsl:value-of' . $predicate;
 
-		if ($this->evaluate($query))
+		if ($this->evaluate($query, $this->dom->documentElement))
 		{
 			$this->hasRootText = true;
 		}
@@ -616,7 +616,7 @@ class TemplateForensics
 	* @param  DOMElement $node  Context node
 	* @return boolean
 	*/
-	protected function evaluate($query, DOMElement $node = null)
+	protected function evaluate($query, DOMElement $node)
 	{
 		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
 	}
