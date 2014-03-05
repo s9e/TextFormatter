@@ -103,7 +103,7 @@ class TemplateParser
 		}
 
 		// Namespaced elements are not supported
-		if (isset($node->namespaceURI))
+		if (!is_null($node->namespaceURI))
 		{
 			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
 		}
