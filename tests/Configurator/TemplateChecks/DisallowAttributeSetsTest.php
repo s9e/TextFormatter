@@ -42,9 +42,10 @@ class DisallowAttributeSetsTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->getAttributeNode('use-attribute-sets')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('use-attribute-sets')
+				)
 			);
 
 			throw $e;

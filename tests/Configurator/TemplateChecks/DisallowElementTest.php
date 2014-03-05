@@ -43,7 +43,11 @@ class DisallowElementTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -65,7 +69,11 @@ class DisallowElementTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -98,7 +106,11 @@ class DisallowElementTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -120,7 +132,11 @@ class DisallowElementTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}

@@ -42,7 +42,11 @@ class DisallowElementNSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -64,7 +68,11 @@ class DisallowElementNSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}

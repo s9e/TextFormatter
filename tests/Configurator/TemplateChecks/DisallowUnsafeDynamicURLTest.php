@@ -115,7 +115,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -140,7 +144,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -165,7 +173,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -190,7 +202,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -215,7 +231,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -240,7 +260,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -265,7 +289,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -289,7 +317,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('href')
+				)
+			);
 
 			throw $e;
 		}
@@ -327,9 +359,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -355,9 +388,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -396,9 +430,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -437,9 +472,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->nextSibling->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->nextSibling->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -465,9 +501,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -492,9 +529,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -519,7 +557,11 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -543,9 +585,10 @@ class DisallowUnsafeDynamicURLTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;

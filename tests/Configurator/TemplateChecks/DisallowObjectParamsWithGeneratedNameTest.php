@@ -53,7 +53,11 @@ class DisallowObjectParamsWithGeneratedNameTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -75,7 +79,11 @@ class DisallowObjectParamsWithGeneratedNameTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}

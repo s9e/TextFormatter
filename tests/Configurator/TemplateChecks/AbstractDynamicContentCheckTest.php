@@ -84,9 +84,10 @@ class AbstractDynamicContentCheckTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->lastChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->lastChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -126,9 +127,10 @@ class AbstractDynamicContentCheckTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->lastChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->lastChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;

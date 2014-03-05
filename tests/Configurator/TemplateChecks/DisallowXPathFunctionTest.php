@@ -42,7 +42,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('select'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('select')
+				)
+			);
 
 			throw $e;
 		}
@@ -64,7 +68,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('select'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('select')
+				)
+			);
 
 			throw $e;
 		}
@@ -86,7 +94,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('select'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('select')
+				)
+			);
 
 			throw $e;
 		}
@@ -108,7 +120,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('title'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('title')
+				)
+			);
 
 			throw $e;
 		}
@@ -130,7 +146,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('title'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('title')
+				)
+			);
 
 			throw $e;
 		}
@@ -152,7 +172,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('title'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('title')
+				)
+			);
 
 			throw $e;
 		}
@@ -174,7 +198,11 @@ class DisallowXPathFunctionTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('title'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('title')
+				)
+			);
 
 			throw $e;
 		}

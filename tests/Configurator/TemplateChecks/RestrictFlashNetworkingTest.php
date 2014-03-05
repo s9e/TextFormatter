@@ -43,7 +43,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -85,7 +89,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -107,7 +115,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -129,7 +141,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -151,7 +167,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -173,7 +193,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -205,7 +229,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->attributes->item(0));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->attributes->item(0)
+				)
+			);
 
 			throw $e;
 		}
@@ -227,7 +255,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -249,7 +281,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -291,7 +327,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -313,7 +353,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -335,7 +379,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -357,7 +405,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -399,7 +451,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -421,7 +477,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -443,7 +503,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -475,7 +539,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -497,7 +565,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -519,7 +591,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -551,7 +627,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -573,7 +653,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -595,7 +679,11 @@ class RestrictFlashNetworkingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
 
 			throw $e;
 		}

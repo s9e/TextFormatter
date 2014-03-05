@@ -42,9 +42,10 @@ class DisallowDisableOutputEscapingTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->getAttributeNode('disable-output-escaping')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('disable-output-escaping')
+				)
 			);
 
 			throw $e;

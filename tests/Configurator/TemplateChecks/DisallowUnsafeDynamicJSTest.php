@@ -82,7 +82,11 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('onclick'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('onclick')
+				)
+			);
 
 			throw $e;
 		}
@@ -107,7 +111,11 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('onclick'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('onclick')
+				)
+			);
 
 			throw $e;
 		}
@@ -131,7 +139,11 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('onclick'));
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->getAttributeNode('onclick')
+				)
+			);
 
 			throw $e;
 		}
@@ -169,9 +181,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -197,9 +210,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -238,9 +252,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -266,9 +281,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -293,9 +309,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
@@ -320,7 +337,11 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame($e->getNode(), $node->firstChild->firstChild->firstChild);
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild
+				)
+			);
 
 			throw $e;
 		}
@@ -344,9 +365,10 @@ class DisallowUnsafeDynamicJSTest extends Test
 		}
 		catch (UnsafeTemplateException $e)
 		{
-			$this->assertSame(
-				$e->getNode(),
-				$node->firstChild->firstChild->firstChild->firstChild->getAttributeNode('select')
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild->firstChild->firstChild->firstChild->getAttributeNode('select')
+				)
 			);
 
 			throw $e;
