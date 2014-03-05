@@ -1,5 +1,4 @@
 #!/bin/sh
-TMP=/dev/shm/phpunit.out
 ROOT=$(dirname $(dirname $(realpath $0)))
 
 cd "$ROOT"
@@ -36,14 +35,12 @@ fi
 
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
-	phpunit --exclude-group none --testdox-text docs/testdox.txt | tee $TMP
+	phpunit --exclude-group none --stop-on-failure --testdox-text docs/testdox.txt
 
-	if [[ `tail -n3 $TMP` != *OK* ]]
+	if [ $? -ne 0 ]
 	then
 		exit 1;
 	fi
 
 	git update-index --add "docs/testdox.txt"
 fi
-
-exit 0
