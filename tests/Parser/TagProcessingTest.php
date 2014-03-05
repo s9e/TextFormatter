@@ -6,12 +6,11 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\Tag;
-use s9e\TextFormatter\Parser\TagProcessing;
 use s9e\TextFormatter\Plugins\ParserBase;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Parser\TagProcessing
+* @covers s9e\TextFormatter\Parser
 */
 class TagProcessingTest extends Test
 {

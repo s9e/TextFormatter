@@ -483,5 +483,4 @@ convertDir(realpath(__DIR__ . '/../../tests'));
 // Remove traits files
 array_map('unlink', glob(__DIR__ . '/../../src/Configurator/Traits/*'));
 rmdir(__DIR__ . '/../../src/Configurator/Traits');
-unlink(__DIR__ . '/../../src/Parser/TagProcessing.php');
 unlink(__DIR__ . '/../../src/Parser/TagStack.php');
