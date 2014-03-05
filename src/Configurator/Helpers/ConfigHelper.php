@@ -23,28 +23,30 @@ abstract class ConfigHelper
 	*/
 	public static function filterVariants(&$config, $variant = null)
 	{
-		foreach ($config as $k => &$v)
+		foreach ($config as $name => $value)
 		{
 			// Use while instead of if to handle recursive variants. This is not supposed to happen
 			// though
-			while ($v instanceof Variant)
+			while ($value instanceof Variant)
 			{
-				$v = $v->get($variant);
+				$value = $value->get($variant);
 
 				// A null value indicates that the value is not supposed to exist for given variant.
 				// This is different from having no specific value for given variant
-				if ($v === null)
+				if ($value === null)
 				{
-					unset($config[$k]);
+					unset($config[$name]);
 
 					continue 2;
 				}
 			}
 
-			if (is_array($v) || $v instanceof Traversable)
+			if (is_array($value) || $value instanceof Traversable)
 			{
-				self::filterVariants($v, $variant);
+				self::filterVariants($value, $variant);
 			}
+
+			$config[$name] = $value;
 		}
 	}
 
