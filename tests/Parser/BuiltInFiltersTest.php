@@ -379,9 +379,9 @@ class BuiltInFiltersTest extends Test
 //				[],
 //				function ()
 //				{
-//					if (!extension_loaded('intl'))
+//					if (!function_exists('idn_to_ascii'))
 //					{
-//						$this->markTestSkipped('Extension intl is required.');
+//						$this->markTestSkipped('idn_to_ascii() is required.');
 //					}
 //				}
 //			],
@@ -416,9 +416,9 @@ class BuiltInFiltersTest extends Test
 				[],
 				function ()
 				{
-					if (!extension_loaded('intl'))
+					if (!function_exists('idn_to_ascii'))
 					{
-						$this->markTestSkipped('Extension intl is required.');
+						$this->markTestSkipped('idn_to_ascii() is required.');
 					}
 				}
 			],
@@ -649,9 +649,9 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
-					if (!extension_loaded('intl'))
+					if (!function_exists('idn_to_ascii'))
 					{
-						$this->markTestSkipped('Extension intl is required.');
+						$this->markTestSkipped('idn_to_ascii() is required.');
 					}
 
 					// This is a paypal homograph
