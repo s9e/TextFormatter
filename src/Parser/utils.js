@@ -12,3 +12,32 @@ function html_entity_decode(str)
 
 	return b.textContent;
 }
+
+/**
+* @param  {!string} str
+* @return {!string}
+*/
+function htmlspecialchars_compat(str)
+{
+	var t = {
+		'<' : '&lt;',
+		'>' : '&gt;',
+		'&' : '&amp;',
+		'"' : '&quot;'
+	}
+	return str.replace(/[<>&"]/g, function(c) { return t[c]; });
+}
+
+/**
+* @param  {!string} str
+* @return {!string}
+*/
+function htmlspecialchars_noquotes(str)
+{
+	var t = {
+		'<' : '&lt;',
+		'>' : '&gt;',
+		'&' : '&amp;'
+	}
+	return str.replace(/[<>&]/g, function(c) { return t[c]; });
+}
