@@ -175,4 +175,66 @@ class DisallowPHPTagsTest extends Test
 		$check = new DisallowPHPTags;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <script>echo "sup";</script>
+	*/
+	public function testAllowedScript()
+	{
+		$node = $this->loadTemplate('<script>echo "sup";</script>');
+		$check = new DisallowPHPTags;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <script language="php">echo "sup";</script>
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage PHP tags are not allowed in the template
+	*/
+	public function testDisallowedScript()
+	{
+		$node = $this->loadTemplate('<script language="php">echo "sup";</script>');
+
+		try
+		{
+			$check = new DisallowPHPTags;
+			$check->check($node, new Tag);
+		}
+		catch (UnsafeTemplateException $e)
+		{
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
+
+			throw $e;
+		}
+	}
+
+	/**
+	* @testdox Disallowed: <script language="PHP">echo "sup";</script>
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage PHP tags are not allowed in the template
+	*/
+	public function testDisallowedScriptCaseInsensitive()
+	{
+		$node = $this->loadTemplate('<script language="PHP">echo "sup";</script>');
+
+		try
+		{
+			$check = new DisallowPHPTags;
+			$check->check($node, new Tag);
+		}
+		catch (UnsafeTemplateException $e)
+		{
+			$this->assertTrue(
+				$e->getNode()->isSameNode(
+					$node->firstChild
+				)
+			);
+
+			throw $e;
+		}
+	}
 }

@@ -1298,6 +1298,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowPHPTags
  [x] Disallowed: <b><xsl:processing-instruction name="{@foo}"/></b>
  [x] Allowed: <b><?foo ?></b>
  [x] Allowed: <b><xsl:processing-instruction name="foo"/></b>
+ [x] Allowed: <script>echo "sup";</script>
+ [x] Disallowed: <script language="php">echo "sup";</script>
+ [x] Disallowed: <script language="PHP">echo "sup";</script>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeCopyOf
  [x] Allowed: <b><xsl:copy-of select="@title"/></b>
