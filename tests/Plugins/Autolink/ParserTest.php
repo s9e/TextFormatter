@@ -79,7 +79,7 @@ class ParserTest extends Test
 				[],
 				function ()
 				{
-					if (!extension_loaded('intl'))
+					if (!function_exists('idn_to_ascii'))
 					{
 						$this->markTestSkipped('idn_to_ascii() is required.');
 					}

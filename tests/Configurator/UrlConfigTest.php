@@ -36,7 +36,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @requires extension intl
+	* @requires function idn_to_ascii
 	* @testdox Disallowed IDNs are punycoded
 	*/
 	public function testDisallowedIDNsArePunycoded()
