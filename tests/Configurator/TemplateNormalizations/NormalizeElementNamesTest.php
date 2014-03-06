@@ -27,6 +27,10 @@ class NormalizeElementNamesTest extends AbstractTest
 				'<svg xmlns="http://www.w3.org/2000/svg"/>'
 			],
 			[
+				'<SVG xmlns="http://www.w3.org/2000/svg"><TEXT/></SVG>',
+				'<svg xmlns="http://www.w3.org/2000/svg"><text/></svg>'
+			],
+			[
 				'<xsl:element name="B"><BR/></xsl:element>',
 				'<xsl:element name="b"><br/></xsl:element>'
 			],

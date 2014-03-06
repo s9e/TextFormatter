@@ -39,7 +39,9 @@ class NormalizeElementNames extends TemplateNormalization
 			}
 
 			// Create a new element with the correct name
-			$newElement = $dom->createElementNS($element->namespaceURI, $elName);
+			$newElement = (is_null($element->namespaceURI))
+			            ? $dom->createElement($elName)
+			            : $dom->createElementNS($element->namespaceURI, $elName);
 
 			// Move every child to the new element
 			while ($element->firstChild)
