@@ -1157,6 +1157,9 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Root does not have a denyChild rule for <li> if parentHTML is <ul>
  [x] Default rules
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalization
+ [x] lowercase() makes an ASCII string lowercase
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressionsInText
  [x] Works
 

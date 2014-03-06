@@ -31,4 +31,15 @@ abstract class TemplateNormalization
 	* @return void
 	*/
 	abstract public function normalize(DOMElement $template);
+
+	/**
+	* Make an ASCII string lowercase
+	*
+	* @param  string $str Original string
+	* @return string      Lowercased string
+	*/
+	public static function lowercase($str)
+	{
+		return strtr($str, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+	}
 }

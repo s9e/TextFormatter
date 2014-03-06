@@ -27,11 +27,7 @@ class NormalizeElementNames extends TemplateNormalization
 		// Normalize elements' names
 		foreach ($xpath->query('//*[namespace-uri() != "' . self::XMLNS_XSL . '"]') as $element)
 		{
-			$elName = strtr(
-				$element->localName,
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'abcdefghijklmnopqrstuvwxyz'
-			);
+			$elName = self::lowercase($element->localName);
 
 			if ($elName === $element->localName)
 			{
@@ -66,11 +62,7 @@ class NormalizeElementNames extends TemplateNormalization
 		// Normalize <xsl:element/> names
 		foreach ($xpath->query('//xsl:element[not(contains(@name, "{"))]') as $element)
 		{
-			$elName = strtr(
-				$element->getAttribute('name'),
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'abcdefghijklmnopqrstuvwxyz'
-			);
+			$elName = self::lowercase($element->getAttribute('name'));
 
 			$element->setAttribute('name', $elName);
 		}

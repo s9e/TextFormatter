@@ -26,11 +26,7 @@ class NormalizeAttributeNames extends TemplateNormalization
 		// Normalize elements' attributes
 		foreach ($xpath->query('.//@*', $template) as $attribute)
 		{
-			$attrName = strtr(
-				$attribute->localName,
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'abcdefghijklmnopqrstuvwxyz'
-			);
+			$attrName = self::lowercase($attribute->localName);
 
 			if ($attrName !== $attribute->localName)
 			{
@@ -42,11 +38,7 @@ class NormalizeAttributeNames extends TemplateNormalization
 		// Normalize <xsl:attribute/> names
 		foreach ($xpath->query('//xsl:attribute[not(contains(@name, "{"))]') as $attribute)
 		{
-			$attrName = strtr(
-				$attribute->getAttribute('name'),
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'abcdefghijklmnopqrstuvwxyz'
-			);
+			$attrName = self::lowercase($attribute->getAttribute('name'));
 
 			$attribute->setAttribute('name', $attrName);
 		}
