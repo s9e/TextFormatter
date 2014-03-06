@@ -16,7 +16,7 @@ class TemplateNormalizerTest extends Test
 	/**
 	* @testdox Implements ArrayAccess
 	*/
-	public function textImplementsArrayAccess()
+	public function testImplementsArrayAccess()
 	{
 		$this->assertInstanceOf('ArrayAccess', new TemplateNormalizer);
 	}
@@ -24,7 +24,7 @@ class TemplateNormalizerTest extends Test
 	/**
 	* @testdox Implements Iterator
 	*/
-	public function textImplementsIterator()
+	public function testImplementsIterator()
 	{
 		$this->assertInstanceOf('Iterator', new TemplateNormalizer);
 	}
