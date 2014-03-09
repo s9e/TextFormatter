@@ -33,7 +33,7 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 * @method void    key()
 * @method void    next()
 * @method integer normalizeKey()
-* @method object  normalizeValue()
+* @method BooleanRulesGenerator|TargetedRulesGenerator normalizeValue(string|BooleanRulesGenerator|TargetedRulesGenerator $generator)
 * @method void    offsetExists()
 * @method void    offsetGet()
 * @method void    offsetSet(mixed $offset, mixed $value)
