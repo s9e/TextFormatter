@@ -255,7 +255,7 @@ class PHP implements RendererGenerator
 
 		if ($needsXPath)
 		{
-			$php[] = '		unset($this->xpath);';
+			$php[] = '		$this->xpath = null;';
 		}
 
 		$php[] = '		return $this->out;';
