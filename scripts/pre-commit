@@ -33,6 +33,13 @@ then
 	git update-index --add "src/Plugins/Litedown/Syntax.md"
 fi
 
+if [[ -n `git diff --cached --name-only -b tests/Configurator/Helpers/RegexpBuilderTest.php` ]]
+then
+	./scripts/patchRegexpBuilderTest.php
+
+	git update-index --add "tests/Configurator/Helpers/RegexpBuilderTest.php"
+fi
+
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
 	phpunit --exclude-group none --stop-on-failure --testdox-text docs/testdox.txt
