@@ -23,6 +23,7 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": "php scripts/build/patchSources.php"
+		"post-install-cmd": "php scripts/build/patchSources.php",
+		"post-update-cmd":  "php scripts/build/patchSources.php"
 	}
 }
