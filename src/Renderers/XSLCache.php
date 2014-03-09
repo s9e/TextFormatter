@@ -24,7 +24,7 @@ class XSLCache extends Renderer
 	protected $filepath;
 
 	/**
-	* @var XSLCache The lazy-loaded XSLCache instance used by this renderer
+	* @var XSLTCache The lazy-loaded XSLCache instance used by this renderer
 	*/
 	protected $proc;
 
@@ -162,7 +162,7 @@ class XSLCache extends Renderer
 	}
 
 	/**
-	* Cache the XSLCache instance used by this renderer if it does not exist
+	* Cache the XSLTCache instance used by this renderer if it does not exist
 	*
 	* @return void
 	*/
