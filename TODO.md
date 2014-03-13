@@ -35,7 +35,6 @@ Random stuff that may never happen
 - Test how conditional comments in templates are rendered
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
 - Conditional comments can create IE-specific exploits. Consider removing them
-- PHP renderer generator: optimize substring() in convertXPath()
 - HINT.RULE_* hints must check for the use of Tag.setFlags()
 - Consider adding one callback opportunity before and after rendering. The callback would receive the XML (before) or HTML (after) and the Renderer instance
 - Consider adding an option to abort parsing when tagLimit is exceeded (good for Censor)
