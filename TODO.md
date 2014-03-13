@@ -6,6 +6,7 @@ Immediate goals (March 2014)
 Near-future goals (2014)
 ------------------------
 - Have a piece of utilities that converts a parsed text to BBCodes or Markdown
+- Move (and expand) to ReadTheDocs.org
 
 
 Long-term goals (?)
