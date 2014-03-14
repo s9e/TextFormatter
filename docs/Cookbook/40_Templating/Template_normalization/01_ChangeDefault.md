@@ -12,7 +12,7 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 	echo $i, "\t", get_class($normalizer), "\n";
 }
 ```
-<pre>
+```
 0	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 1	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineCDATA
 2	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineElements
@@ -26,7 +26,7 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 10	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
 11	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
 12	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
-</pre>
+```
 
 ### Remove a normalization
 
@@ -39,10 +39,10 @@ $configurator->templateNormalizer->remove('InlineCDATA');
 
 echo $configurator->templateNormalizer->normalizeTemplate('<![CDATA[ Will not be inlined ]]>');
 ```
-<pre>
+```html
  Will be inlined 
 <![CDATA[ Will not be inlined ]]>
-</pre>
+```
 
 ### Add your own custom normalization
 
@@ -69,6 +69,6 @@ $configurator->templateNormalizer->append(
 
 echo $configurator->templateNormalizer->normalizeTemplate('Hello world');
 ```
-<pre>
+```html
 Hello world?!!!!!
-</pre>
+```
