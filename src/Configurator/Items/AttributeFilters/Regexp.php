@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use Exception;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
@@ -96,10 +97,14 @@ class Regexp extends AttributeFilter
 				return true;
 			}
 
-			// Test whether this regexp could allow the use of a colon :
-			if (preg_match(RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']), ':'))
+			// Test whether this regexp could allow any character that's disallowed in URLs
+			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+			foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
 			{
-				return false;
+				if (preg_match($regexp, $char))
+				{
+					return false;
+				}
 			}
 
 			return true;
@@ -118,11 +123,9 @@ class Regexp extends AttributeFilter
 	{
 		try
 		{
+			// Test whether this regexp could allow any character that's disallowed in URLs
 			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-
-			// Test whether this regexp could allow any of the following characters
-			$disallowedChars = "\\\"'():";
-			foreach (str_split($disallowedChars, 1) as $char)
+			foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
 			{
 				if (preg_match($regexp, $char))
 				{

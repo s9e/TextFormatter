@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Hashmap extends AttributeFilter
@@ -93,12 +94,16 @@ class Hashmap extends AttributeFilter
 			return false;
 		}
 
+		// Test each value against the list of disallowed characters
+		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
 		foreach ($this->vars['map'] as $value)
 		{
-			// Reject anything that could break out of a definition, or exploit functions
-			if (preg_match('/[:();]/', $value))
+			foreach ($disallowedChars as $char)
 			{
-				return false;
+				if (strpos($value, $char) !== false)
+				{
+					return false;
+				}
 			}
 		}
 
@@ -115,19 +120,16 @@ class Hashmap extends AttributeFilter
 			return false;
 		}
 
+		// Test each value against the list of disallowed characters
+		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
 		foreach ($this->vars['map'] as $value)
 		{
-			// Reject anything that could break out of a string, or execute functions
-			if (preg_match('/[()\'"\\\\\\r\\n]/', $value))
+			foreach ($disallowedChars as $char)
 			{
-				return false;
-			}
-
-			// Test Unicode line terminators
-			if (strpos($value, "\xE2\x80\xA8") !== false
-			 || strpos($value, "\xE2\x80\xA9") !== false)
-			{
-				return false;
+				if (strpos($value, $char) !== false)
+				{
+					return false;
+				}
 			}
 		}
 

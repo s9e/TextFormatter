@@ -51,6 +51,7 @@
 			<file>tests/Configurator/Collections/TemplateParameterCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
+			<file>tests/Configurator/Helpers/ContextSafenessTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateForensicsTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpParserTest.php</file>

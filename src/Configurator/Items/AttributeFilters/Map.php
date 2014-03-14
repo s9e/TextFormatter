@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
@@ -71,6 +72,15 @@ class Map extends AttributeFilter
 			throw new InvalidArgumentException('Argument 3 passed to ' . __METHOD__ . ' must be a boolean');
 		}
 
+		// Reset the template safeness marks for the new map
+		$this->resetSafeness();
+
+		// If the map is strict, we can assess its safeness
+		if ($strict)
+		{
+			$this->assessSafeness($map);
+		}
+
 		// Group values by keys
 		$valueKeys = [];
 		foreach ($map as $key => $value)
@@ -78,37 +88,10 @@ class Map extends AttributeFilter
 			$valueKeys[$value][] = $key;
 		}
 
-		// Reset the template safeness marks for the new map
-		$this->resetSafeness();
-
-		// Consider the values safe unless the map isn't strict and until we find an unsafe value
-		$isSafeInCSS = $strict;
-		$isSafeInJS  = $strict;
-
 		// Now create a regexp and an entry in the map for each group
 		$map = [];
 		foreach ($valueKeys as $value => $keys)
 		{
-			// Test the value's safeness
-			if ($isSafeInCSS && preg_match('/[:();]/', $value))
-			{
-				$isSafeInCSS = false;
-			}
-
-			if ($isSafeInJS)
-			{
-				if (preg_match('/[()\'"\\\\\\r\\n]/', $value))
-				{
-					$isSafeInJS = false;
-				}
-
-				if (strpos($value, "\xE2\x80\xA8") !== false
-				 || strpos($value, "\xE2\x80\xA9") !== false)
-				{
-					$isSafeInJS = false;
-				}
-			}
-
 			$regexp = RegexpBuilder::fromList(
 				$keys,
 				[
@@ -143,11 +126,43 @@ class Map extends AttributeFilter
 
 		// Record the map in this filter's variables
 		$this->vars['map'] = $map;
+	}
 
-		// Mark this map as safe if applicable
+	/**
+	* Assess the safeness of given map in contexts
+	*
+	* @param  array $map
+	* @return void
+	*/
+	protected function assessSafeness(array $map)
+	{
+		// Concatenate the values so we can check them as a single string
+		$values = implode('', $map);
+
+		// Test whether the values contain any character that's disallowed in CSS
+		$isSafeInCSS = true;
+		foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
+		{
+			if (strpos($values, $char) !== false)
+			{
+				$isSafeInCSS = false;
+				break;
+			}
+		}
 		if ($isSafeInCSS)
 		{
 			$this->markAsSafeInCSS();
+		}
+
+		// Test whether the values contain any character that's disallowed in JS
+		$isSafeInJS = true;
+		foreach (ContextSafeness::getDisallowedCharactersInJS() as $char)
+		{
+			if (strpos($values, $char) !== false)
+			{
+				$isSafeInJS = false;
+				break;
+			}
 		}
 		if ($isSafeInJS)
 		{

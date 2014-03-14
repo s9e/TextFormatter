@@ -418,6 +418,11 @@ s9eTextFormatterTestsConfiguratorHelpersConfigHelper
  [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
  [x] optimizeArray() reduces the size of a serialized config
 
+s9eTextFormatterTestsConfiguratorHelpersContextSafeness
+ [x] getDisallowedCharactersAsURL() returns a list of strings
+ [x] getDisallowedCharactersInCSS() returns a list of strings
+ [x] getDisallowedCharactersInJS() returns a list of strings
+
 s9eTextFormatterTestsConfiguratorHelpersTemplateForensics
  [x] getDOM() returns the template as a DOMDocument
  [x] <span> does not allow <div> as child
