@@ -658,6 +658,10 @@ class ParserTest extends Test
 				['captureURLs' => false],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
+						'http://example.invalid/123?x"> foo="bar' => '456'
+					]);
+
 					$configurator->MediaEmbed->add(
 						'example',
 						[

@@ -146,9 +146,10 @@ class Parser extends ParserBase
 			return true;
 		}
 
-		// Ensure that the URL is valid
-		$url = filter_var($tag->getAttribute('url'), FILTER_VALIDATE_URL);
-		if (!preg_match('#^https?://#', $url))
+		$url = $tag->getAttribute('url');
+
+		// Ensure that the URL actually looks like a URL
+		if (!preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
 		{
 			// A bad URL means we don't scrape, but it doesn't necessarily invalidate the tag
 			return true;
