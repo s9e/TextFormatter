@@ -428,6 +428,21 @@ class BuiltInFilters
 			$path .= '#' . $p['fragment'];
 		}
 
+		/**
+		* "For consistency, URI producers and normalizers should use uppercase hexadecimal digits
+		* for all percent- encodings."
+		*
+		* @link http://tools.ietf.org/html/rfc3986#section-2.1
+		*/
+		$path = preg_replace_callback(
+			'/%.?[a-f]/',
+			function ($m)
+			{
+				return strtoupper($m[0]);
+			},
+			$path
+		);
+
 		// Append the sanitized path to the URL
 		$url .= self::sanitizeUrl($path);
 
@@ -495,7 +510,9 @@ class BuiltInFilters
 	* Sanitize a URL for safe use regardless of context
 	*
 	* This method URL-encodes some sensitive characters in case someone would want to use the URL in
-	* some JavaScript thingy, or in CSS. We also encode illegal characters
+	* some JavaScript thingy, or in CSS. We also encode characters that are not allowed in the path
+	* of a URL as defined in RFC 3986 appendix A, including percent signs that are not immediately
+	* followed by two hex digits.
 	*
 	* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
 	* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
@@ -509,6 +526,7 @@ class BuiltInFilters
 	* @link http://timelessrepo.com/json-isnt-a-javascript-subset
 	* @link http://www.ietf.org/rfc/rfc3986.txt
 	* @link http://stackoverflow.com/a/1547922
+	* @link http://tools.ietf.org/html/rfc3986#appendix-A
 	*
 	* @param  string $url Original URL
 	* @return string      Sanitized URL
@@ -516,7 +534,7 @@ class BuiltInFilters
 	public static function sanitizeUrl($url)
 	{
 		return preg_replace_callback(
-			'/["\'()<>[\\]\\x00-\\x20\\x7F-\\xFF]+/S',
+			'/%(?![0-9A-Fa-f]{2})|[^!#-&*-;=?-Z_a-z]/S',
 			function ($m)
 			{
 				return rawurlencode($m[0]);

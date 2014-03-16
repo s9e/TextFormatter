@@ -730,6 +730,11 @@ class BuiltInFiltersTest extends Test
 			[new Url, 'http:', false],
 			[new Url, 'http:?foo', false],
 			[new Url, 'http:#foo', false],
+			[
+				new Url,
+				'http://example.org/Pok%c3%a9mon%c2%ae',
+				'http://example.org/Pok%C3%A9mon%C2%AE',
+			],
 			[new Identifier, '123abcABC', '123abcABC'],
 			[new Identifier, '-_-', '-_-'],
 			[new Identifier, 'a b', false],
@@ -862,6 +867,18 @@ class BuiltInFiltersTest extends Test
 			[
 				"http://example.com/♥",
 				'http://example.com/%E2%99%A5',
+			],
+			[
+				'?foo&bar=1',
+				'?foo&bar=1'
+			],
+			[
+				'#foo',
+				'#foo'
+			],
+			[
+				'%FOO%BAR',
+				'%25FOO%BAR'
 			],
 		];
 	}
