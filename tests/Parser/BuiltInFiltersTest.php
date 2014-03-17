@@ -732,6 +732,26 @@ class BuiltInFiltersTest extends Test
 			[new Url, 'http:#foo', false],
 			[
 				new Url,
+				'file:///foo.txt',
+				'file:///foo.txt',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('file');
+				}
+			],
+			[
+				new Url,
+				'file://localhost/c:/WINDOWS/clock.avi',
+				'file://localhost/c:/WINDOWS/clock.avi',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('file');
+				}
+			],
+			[
+				new Url,
 				'http://example.org/Pok%c3%a9mon%c2%ae',
 				'http://example.org/Pok%C3%A9mon%C2%AE',
 			],
