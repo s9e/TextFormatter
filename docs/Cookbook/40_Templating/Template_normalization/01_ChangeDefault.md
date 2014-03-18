@@ -21,11 +21,12 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 5	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyXPathExpressions
 6	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeAttributeNames
 7	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
-8	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
-9	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
-10	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
-11	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
-12	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
+8	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
+9	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
+10	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+11	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
+12	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
+13	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
 ```
 
 ### Remove a normalization
