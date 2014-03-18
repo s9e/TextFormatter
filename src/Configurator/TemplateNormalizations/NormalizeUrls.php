@@ -55,7 +55,7 @@ class NormalizeUrls extends TemplateNormalization
 		{
 			if ($type === 'literal')
 			{
-				$attrValue .= preg_replace('([{}])', '$0$0', BuiltInFilters::sanitizeUrl($content));
+				$attrValue .= BuiltInFilters::sanitizeUrl($content);
 			}
 			else
 			{

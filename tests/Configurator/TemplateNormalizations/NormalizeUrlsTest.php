@@ -31,6 +31,10 @@ class NormalizeUrlsTest extends AbstractTest
 				'<a href="http://[fe80::a-en1]/?foo%5B%5D=1">xxx</a>'
 			],
 			[
+				'<a><xsl:attribute name="href">http://[fe80::a-en1]/?x[]=1</xsl:attribute>x</a>',
+				'<a><xsl:attribute name="href">http://[fe80::a-en1]/?x%5B%5D=1</xsl:attribute>x</a>'
+			],
+			[
 				'<a>
 					<xsl:attribute name="href">
 						<xsl:text>http://example.org/?foo[]=</xsl:text>
