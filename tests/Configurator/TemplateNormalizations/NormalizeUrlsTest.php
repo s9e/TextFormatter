@@ -48,6 +48,10 @@ class NormalizeUrlsTest extends AbstractTest
 					<xsl:apply-templates/>
 				</a>'
 			],
+			[
+				'<a href="http://example.org/{{@url}}">xxx</a>',
+				'<a href="http://example.org/%7B@url%7D">xxx</a>'
+			],
 		];
 	}
 }
