@@ -117,6 +117,7 @@
 			<file>tests/Configurator/TemplateNormalizations/MinifyXPathExpressionsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/NormalizeAttributeNamesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/NormalizeElementNamesTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/NormalizeUrlsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalValueOfTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/PreserveSingleSpacesTest.php</file>

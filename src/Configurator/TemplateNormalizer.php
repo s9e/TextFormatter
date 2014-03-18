@@ -70,6 +70,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('MinifyXPathExpressions');
 		$this->collection->append('NormalizeAttributeNames');
 		$this->collection->append('NormalizeElementNames');
+		$this->collection->append('NormalizeUrls');
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('PreserveSingleSpaces');

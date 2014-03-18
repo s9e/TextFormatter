@@ -1201,6 +1201,9 @@ s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeAttributeNames
 s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeElementNames
  [x] Works
 
+s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeUrls
+ [x] Works
+
 s9eTextFormatterTestsConfiguratorTemplateNormalizationsOptimizeConditionalAttributes
  [x] Works
 
