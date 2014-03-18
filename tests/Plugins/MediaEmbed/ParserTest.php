@@ -298,7 +298,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
-				'<r><DAILYSHOW id="mgid:cms:video:thedailyshow.com:429537" url="http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508">http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</DAILYSHOW></r>',
+				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" url="http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508">http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</DAILYSHOW></r>',
 				[],
 				function ($configurator)
 				{
@@ -308,7 +308,17 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-',
-				'<r><DAILYSHOW id="mgid:cms:video:thedailyshow.com:416478" url="http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-">http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</DAILYSHOW></r>',
+				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:627cc3c2-4218-4a78-bf1d-c8258f4db2f8" url="http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-">http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</DAILYSHOW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('dailyshow');
+				}
+			],
+			[
+				'http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy',
+				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:e2ed81f7-a322-4ef9-82d9-12ba07e5c319" url="http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy">http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</DAILYSHOW></r>',
 				[],
 				function ($configurator)
 				{
@@ -574,7 +584,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
-				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:cms:video:thedailyshow.com:429537" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

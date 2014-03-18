@@ -152,11 +152,13 @@
 		<homepage>http://www.thedailyshow.com/</homepage>
 		<example>http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</example>
 		<example>http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</example>
+		<example>http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</example>
 
 		<host>thedailyshow.com</host>
+		<host>thedailyshow.cc.com</host>
 		<scrape>
-			<match>!thedailyshow\.com/(?:collection|watch)/!</match>
-			<extract>!(?'id'mgid:cms:video:thedailyshow\.com:[0-9]+)!</extract>
+			<match>!thedailyshow\.c(?:c\.c)?om/(?:collection|videos|watch)/!</match>
+			<extract>!(?'id'mgid:arc:video:thedailyshow\.com:[-0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
 		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>

@@ -24,7 +24,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		$this->xpath = new \DOMXPath($dom);
 		$this->out = '';
 		$this->at($dom->documentElement);
-		unset($this->xpath);
+		$this->xpath = null;
 		return $this->out;
 	}
 	protected function at(\DOMNode $root)
