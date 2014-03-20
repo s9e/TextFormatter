@@ -875,6 +875,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://abcnews.go.com/Politics/video/special-live-1-14476486',
+				'<r><ABCNEWS id="14476486" url="http://abcnews.go.com/Politics/video/special-live-1-14476486">http://abcnews.go.com/Politics/video/special-live-1-14476486</ABCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('abcnews');
+				}
+			],
+			[
 				'http://blip.tv/play/AYKn_x0A',
 				'<r><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></r>',
 				[],
