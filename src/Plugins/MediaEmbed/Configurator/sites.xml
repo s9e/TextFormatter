@@ -1,4 +1,14 @@
 <sites>
+	<site id="abcnews">
+		<name>ABC News</name>
+		<homepage>http://abcnews.go.com/</homepage>
+		<example>http://abcnews.go.com/WNN/video/dog-goes-wild-when-owner-leaves-22936610</example>
+
+		<host>abcnews.go.com</host>
+		<extract>!abcnews\.go\.com/[^/]+/video/[^/]+-(?'id'\d+)!</extract>
+		<iframe width="640" height="360" src="//abcnews.go.com/video/embed?id={@id}"/>
+	</site>
+
 	<site id="bandcamp">
 		<name>Bandcamp</name>
 		<homepage>http://bandcamp.com/</homepage>
