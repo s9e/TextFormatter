@@ -329,7 +329,7 @@
 		<example>http://instagram.com/p/gbGaIXBQbn/</example>
 
 		<host>instagram.com</host>
-		<extract>!instagram\.com/p/(?'id'\w+)!</extract>
+		<extract>!instagram\.com/p/(?'id'[-_\w]+)!</extract>
 		<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
 	</site>
 

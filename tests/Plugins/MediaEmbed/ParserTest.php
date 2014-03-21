@@ -1118,6 +1118,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://instagram.com/p/lx39ciHzD_/',
+				'<r><INSTAGRAM id="lx39ciHzD_" url="http://instagram.com/p/lx39ciHzD_/">http://instagram.com/p/lx39ciHzD_/</INSTAGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('instagram');
+				}
+			],
+			[
+				'http://instagram.com/p/k28LE0Dte-/',
+				'<r><INSTAGRAM id="k28LE0Dte-" url="http://instagram.com/p/k28LE0Dte-/">http://instagram.com/p/k28LE0Dte-/</INSTAGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('instagram');
+				}
+			],
+			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
 				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></r>',
 				[],
