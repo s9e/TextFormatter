@@ -1425,6 +1425,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2',
+				'<r><WSJ id="09FB2B3B-583E-4284-99D8-FEF6C23BE4E2" url="http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2">http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2</WSJ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wsj');
+				}
+			],
+			[
+				'http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html',
+				'<r><WSJ id="9B3DF790-9D20-442C-B564-51524B06FD26" url="http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html">http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</WSJ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wsj');
+				}
+			],
+			[
+				'http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8',
+				'<r><WSJ id="3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8" url="http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8">http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</WSJ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wsj');
+				}
+			],
+			[
 				'[media=youtube]-cEzsCAzTak[/media]',
 				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></r>',
 				[],
@@ -1871,6 +1898,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2',
+				'<iframe width="512" height="288" src="http://live.wsj.com/public/page/embed-09FB2B3B_583E_4284_99D8_FEF6C23BE4E2.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wsj');
 				}
 			],
 			[
