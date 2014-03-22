@@ -113,11 +113,6 @@ function convertCustom($filepath, &$file)
 		),
 		'PHP/Serializer.php' => array(
 			array(
-				// Some old versions of PCRE segfault
-				"'not'       => ['not', '\\(', '(?<not0>(?&bool)|(?&value))', '\\\\)'],",
-				"'not'       => ['not', '\\(', '(?<not0>(?&value))', '\\\\)'],"
-			),
-			array(
 				// mb_substr() doesn't like null as third parameter on PHP 5.3
 				"\$php .= 'null';",
 				'$php .= 0x7fffffe;'
