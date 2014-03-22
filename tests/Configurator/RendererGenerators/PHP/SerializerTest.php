@@ -279,7 +279,15 @@ class SerializerTest extends Test
 			],
 			[
 				'not(@foo and @bar)',
-				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
+				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						// Not exactly sure of the oldest version that doesn't segault
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				".='x'or.='y'or.='z'",
