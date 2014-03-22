@@ -803,10 +803,6 @@ class PHPTest extends Test
 				"\$this->out.='123';"
 			],
 			[
-				'<xsl:value-of select="not(@bar)"/>',
-				"\$this->xpath->evaluate('not(@bar)',\$node)"
-			],
-			[
 				'<xsl:value-of select="string-length(@bar)"/>',
 				"mb_strlen(\$node->getAttribute('bar'),'utf-8')",
 				'string-length',

@@ -159,7 +159,7 @@ class Serializer
 			$patterns = [
 				'attr'      => ['@', '(?<attrName>[-\\w]+)'],
 				'dot'       => '\\.',
-				'not'       => ['not', '\\(', '(?&value)', '\\)'],
+				'not'       => ['not', '\\(', '(?<not0>(?&bool)|(?&value))', '\\)'],
 				'name'      => 'name\\(\\)',
 				'lname'     => 'local-name\\(\\)',
 				'param'     => ['\\$', '(?<paramName>\\w+)'],
@@ -366,6 +366,17 @@ class Serializer
 			if (!empty($m['startswith']))
 			{
 				return '(strpos(' . $this->convertXPath($m['startswith0']) . ',' . $this->convertXPath($m['startswith1']) . ')===0)';
+			}
+
+			if (!empty($m['not']))
+			{
+				// Test for special case "not(contains(...))"
+				if (preg_match($regexp, $m['not0'], $notMatches) && !empty($notMatches['contains']))
+				{
+					return '(strpos(' . $this->convertXPath($notMatches['contains0']) . ',' . $this->convertXPath($notMatches['contains1']) . ')===false)';
+				}
+
+				return '!(' . $this->convertCondition($m['not0']) . ')';
 			}
 
 			if (!empty($m['cmp1']))

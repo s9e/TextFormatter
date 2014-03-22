@@ -78,8 +78,8 @@ class SerializerTest extends Test
 				"'123'"
 			],
 			[
-				'not(@bar)',
-				"\$this->xpath->evaluate('not(@bar)',\$node)"
+				'normalize-space(@bar)',
+				"\$this->xpath->evaluate('normalize-space(@bar)',\$node)"
 			],
 			[
 				'string-length(@bar)',
@@ -278,6 +278,10 @@ class SerializerTest extends Test
 				"!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar')"
 			],
 			[
+				'not(@foo and @bar)',
+				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
+			],
+			[
 				".='x'or.='y'or.='z'",
 				"\$node->textContent==='x'||\$node->textContent==='y'||\$node->textContent==='z'"
 			],
@@ -288,6 +292,10 @@ class SerializerTest extends Test
 			[
 				" contains( @foo , 'x' ) ",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
+			],
+			[
+				"not(contains(@id, 'bar'))",
+				"(strpos(\$node->getAttribute('id'),'bar')===false)"
 			],
 			[
 				"starts-with(@foo,'bar')",
