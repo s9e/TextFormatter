@@ -221,12 +221,13 @@ class Serializer
 			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
 			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
-			// Match parenthesized expressions and not() expressions on PCRE >= 8.13 only. Previous
-			// versions segfault because of the mutual references
-			$parensMatch = '';
+			// Match parenthesized expressions and some not() expressions on PCRE >= 8.13 only.
+			// Previous versions segfault because of the mutual references
+			$boolMatch = $parensMatch = '';
 			if (version_compare(PCRE_VERSION, '8.13', '>='))
 			{
-				$parensMatch = '|(?&parens)|(?&not)';
+				$boolMatch   = '(?&bool)|';
+				$parensMatch = '|(?&parens)';
 
 				// Create a regexp that matches a parenthesized expression
 				// NOTE: could be expanded to support any expression
@@ -234,10 +235,10 @@ class Serializer
 			}
 
 			// Create a regexp that matches boolean operations
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)' . $parensMatch . '))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)' . $parensMatch . '))';
 
 			// Create a regexp that matches not() expressions
-			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+			$exprs[] = '(?<not>not \\( (?<not0>' . $boolMatch . '(?&value)) \\))';
 
 			// Assemble the final regexp
 			$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
