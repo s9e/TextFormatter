@@ -192,7 +192,7 @@ class SerializerTest extends Test
 			],
 			// Custom representations
 			[
-				'substring(\'songWw\',6-5*boolean(@songid),5)',
+				"substring('songWw',6-5*boolean(@songid),5)",
 				"(\$node->hasAttribute('songid')?'songW':'w')"
 			],
 			[
@@ -200,7 +200,7 @@ class SerializerTest extends Test
 				"(\$node->hasAttribute('songid')?40:250)"
 			],
 			[
-				'substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)',
+				"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)",
 				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 			],
 			[
@@ -234,15 +234,15 @@ class SerializerTest extends Test
 				"empty(\$this->params['foo'])"
 			],
 			[
-				'.=\'foo\'',
+				".='foo'",
 				"\$node->textContent==='foo'"
 			],
 			[
-				'@foo=\'foo\'',
+				"@foo='foo'",
 				"\$node->getAttribute('foo')==='foo'"
 			],
 			[
-				'.=\'fo"o\'',
+				".='fo\"o'",
 				"\$node->textContent==='fo\"o'"
 			],
 			[
@@ -250,7 +250,7 @@ class SerializerTest extends Test
 				'$node->textContent===\'"_"\''
 			],
 			[
-				'.=\'foo\'or.=\'bar\'',
+				".='foo'or.='bar'",
 				"\$node->textContent==='foo'||\$node->textContent==='bar'"
 			],
 			[
@@ -278,19 +278,19 @@ class SerializerTest extends Test
 				"!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar')"
 			],
 			[
-				'.=\'x\'or.=\'y\'or.=\'z\'',
+				".='x'or.='y'or.='z'",
 				"\$node->textContent==='x'||\$node->textContent==='y'||\$node->textContent==='z'"
 			],
 			[
-				'contains(@foo,\'x\')',
+				"contains(@foo,'x')",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
 			[
-				' contains( @foo , \'x\' ) ',
+				" contains( @foo , 'x' ) ",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
 			[
-				'starts-with(@foo,\'bar\')',
+				"starts-with(@foo,'bar')",
 				"(strpos(\$node->getAttribute('foo'),'bar')===0)"
 			],
 			[
@@ -317,7 +317,7 @@ class SerializerTest extends Test
 			],
 			// Custom representations
 			[
-				'contains(\'upperlowerdecim\',substring(@type,1,5))',
+				"contains('upperlowerdecim',substring(@type,1,5))",
 				"strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
 			],
 		];
