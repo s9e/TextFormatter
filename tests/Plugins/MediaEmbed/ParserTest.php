@@ -268,7 +268,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk',
-				'<r><COLBERTNATION id="mgid:cms:video:colbertnation.com:429637" url="http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk">http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</COLBERTNATION></r>',
+				'<r><COLBERTNATION id="mgid:arc:video:colbertnation.com:94b7c7d0-dbc8-4e76-8f2b-9dd88b5db1e1" url="http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk">http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</COLBERTNATION></r>',
 				[],
 				function ($configurator)
 				{
@@ -278,7 +278,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/',
-				'<r><COLBERTNATION id="mgid:cms:video:colbertnation.com:427533" url="http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/">http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</COLBERTNATION></r>',
+				'<r><COLBERTNATION id="mgid:arc:video:colbertnation.com:e3348c6a-4f5e-4c28-bf71-80420c399a02" url="http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/">http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</COLBERTNATION></r>',
 				[],
 				function ($configurator)
 				{
@@ -564,7 +564,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk',
-				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:cms:video:colbertnation.com:429637" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:arc:video:colbertnation.com:94b7c7d0-dbc8-4e76-8f2b-9dd88b5db1e1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

@@ -113,7 +113,7 @@
 		<host>colbertnation.com</host>
 		<scrape>
 			<match>!colbertnation\.com/[^/]*(?:collection|video)s/!</match>
-			<extract>!(?'id'mgid:cms:video:colbertnation\.com:[0-9]+)!</extract>
+			<extract>!(?'id'mgid:arc:video:colbertnation\.com:[-0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
 		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
