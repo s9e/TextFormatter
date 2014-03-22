@@ -109,10 +109,12 @@
 		<homepage>http://www.colbertnation.com/</homepage>
 		<example>http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</example>
 		<example>http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</example>
+		<example>http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</example>
 
 		<host>colbertnation.com</host>
+		<host>thecolbertreport.cc.com</host>
 		<scrape>
-			<match>!colbertnation\.com/[^/]*(?:collection|video)s/!</match>
+			<match>!(?:colbertnation|thecolbertreport\.cc)\.com/[^/]*(?:collection|video)s/!</match>
 			<extract>!(?'id'mgid:arc:video:colbertnation\.com:[-0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>

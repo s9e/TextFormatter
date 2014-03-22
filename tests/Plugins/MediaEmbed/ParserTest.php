@@ -287,6 +287,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1',
+				'<r><COLBERTNATION id="mgid:arc:video:colbertnation.com:676d3a42-4c19-47e0-9509-f333fa76b4eb" url="http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1">http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</COLBERTNATION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('colbertnation');
+				}
+			],
+			[
 				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
 				[],
