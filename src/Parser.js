@@ -1327,14 +1327,6 @@ function processCurrentTag()
 	var tagPos = currentTag.getPos(),
 		tagLen = currentTag.getLen();
 
-	// Test whether this tag is out of bounds
-	if (tagPos + tagLen > textLen)
-	{
-		currentTag.invalidate();
-
-		return;
-	}
-
 	// Test whether the cursor passed this tag's position already
 	if (pos > tagPos)
 	{
@@ -1885,8 +1877,8 @@ function addTag(type, name, pos, len)
 		tag.setFlags(tagsConfig[name].rules.flags);
 	}
 
-	// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
-	// position is negative
+	// Invalidate this tag if it's an unknown tag, a disabled tag, if either of its length or
+	// position is negative or if it's out of bounds
 	if (!tagsConfig[name] && !tag.isSystemTag())
 	{
 		tag.invalidate();
@@ -1902,7 +1894,7 @@ function addTag(type, name, pos, len)
 		);
 		tag.invalidate();
 	}
-	else if (len < 0 || pos < 0)
+	else if (len < 0 || pos < 0 || pos + len > textLen)
 	{
 		tag.invalidate();
 	}

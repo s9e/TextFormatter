@@ -1437,14 +1437,6 @@ class Parser
 		$tagPos = $this->currentTag->getPos();
 		$tagLen = $this->currentTag->getLen();
 
-		// Test whether this tag is out of bounds
-		if ($tagPos + $tagLen > $this->textLen)
-		{
-			$this->currentTag->invalidate();
-
-			return;
-		}
-
 		// Test whether the cursor passed this tag's position already
 		if ($this->pos > $tagPos)
 		{
@@ -1981,8 +1973,8 @@ class Parser
 			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
 		}
 
-		// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
-		// position is negative
+		// Invalidate this tag if it's an unknown tag, a disabled tag, if either of its length or
+		// position is negative or if it's out of bounds
 		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
 		{
 			$tag->invalidate();
@@ -1998,7 +1990,7 @@ class Parser
 			);
 			$tag->invalidate();
 		}
-		elseif ($len < 0 || $pos < 0)
+		elseif ($len < 0 || $pos < 0 || $pos + $len > $this->textLen)
 		{
 			$tag->invalidate();
 		}

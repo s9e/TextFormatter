@@ -453,6 +453,7 @@ class TagStackTest extends Test
 
 class DummyStack extends Parser
 {
+	public $textLen = 9999;
 	public $tagsConfig = [
 		'FOO' => ['rules' => ['flags' => 0]],
 		'X' => ['rules' => ['flags' => 0]],
