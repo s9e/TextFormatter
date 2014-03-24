@@ -154,7 +154,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 					// Test whether this <param/> is a child of this object. If it's not, it might
 					// actually apply to another <object/> descendant used as fallback, or perhaps
 					// it's in an <xsl:if/> condition
-					if ($param->parentNode === $object)
+					if ($param->parentNode->isSameNode($object))
 					{
 						$useDefault = false;
 					}
