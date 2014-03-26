@@ -96,7 +96,8 @@ class TemplateChecker implements ArrayAccess, Iterator
 	{
 		if (isset($tag->template) && !($tag->template instanceof UnsafeTemplate))
 		{
-			$this->checkTemplate($tag->template, $tag);
+			$template = (string) $tag->template;
+			$this->checkTemplate($template, $tag);
 		}
 	}
 
