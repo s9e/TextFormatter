@@ -1803,6 +1803,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				// http://xenforo.com/community/threads/s9e-media-bbcodes-pack.61883/page-16#post-741750
+				'[media=soundcloud]nruau/nruau-mix2[/media]',
+				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/nruau/nruau-mix2"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
 				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe>',
 				[],
