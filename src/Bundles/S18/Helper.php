@@ -53,12 +53,12 @@ abstract class Helper
 	*/
 	public static function configureParser(Parser $parser)
 	{
-		global $modSettings;
-
-		if (!defined('SMF'))
+		if (!isset($GLOBALS['modSettings']))
 		{
 			return;
 		}
+
+		$modSettings = $GLOBALS['modSettings'];
 
 		$plugins = [
 			'Autoemail'    => 'autoLinkUrls',
@@ -68,13 +68,13 @@ abstract class Helper
 		];
 		foreach ($plugins as $pluginName => $settingName)
 		{
-			if (!$modSettings[$settingName])
+			if (empty($modSettings[$settingName]))
 			{
 				$parser->disablePlugin($pluginName);
 			}
 		}
 
-		if ($modSettings['disabledBBC'])
+		if (!empty($modSettings['disabledBBC']))
 		{
 			foreach (explode(',', strtoupper($modSettings['disabledBBC'])) as $bbcodeName)
 			{
@@ -82,7 +82,7 @@ abstract class Helper
 			}
 		}
 
-		if (!$modSettings['enableEmbeddedFlash'])
+		if (empty($modSettings['enableEmbeddedFlash']))
 		{
 			$parser->disableTag('FLASH');
 		}
@@ -98,25 +98,37 @@ abstract class Helper
 	*/
 	public static function configureRenderer(AbstractRenderer $renderer)
 	{
-		global $modSettings, $scripturl, $txt, $user_info;
+		$params = [];
 
-		if (!defined('SMF'))
+		if (function_exists('isBrowser'))
 		{
-			return;
+			$params['IS_GECKO'] = isBrowser('gecko');
+			$params['IS_IE']    = isBrowser('ie');
+			$params['IS_OPERA'] = isBrowser('opera');
 		}
 
-		$renderer->setParameters([
-			'IS_GECKO'      => isBrowser('gecko'),
-			'IS_IE'         => isBrowser('ie'),
-			'IS_OPERA'      => isBrowser('opera'),
-			'L_CODE'        => $txt['code'],
-			'L_CODE_SELECT' => $txt['code_select'],
-			'L_QUOTE'       => $txt['quote'],
-			'L_QUOTE_FROM'  => $txt['quote_from'],
-			'L_SEARCH_ON'   => $txt['search_on'],
-			'SCRIPT_URL'    => $scripturl,
-			'SMILEYS_PATH'  => $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/'
-		]);
+		foreach (['code', 'code_select', 'quote', 'quote_from', 'search_on'] as $key)
+		{
+			if (isset($GLOBALS['txt'][$key]))
+			{
+				$params['L_' . strtoupper($key)] = $GLOBALS['txt'][$key];
+			}
+		}
+
+		if (isset($GLOBALS['scripturl']))
+		{
+			$params['SCRIPT_URL'] = $GLOBALS['scripturl'];
+		}
+
+		if (isset($GLOBALS['modSettings'], $GLOBALS['user_info']['smiley_set']))
+		{
+			$params['SMILEYS_PATH'] = $GLOBALS['modSettings']['smileys_url'] . '/' . $GLOBALS['user_info']['smiley_set'] . '/';
+		}
+
+		if ($params)
+		{
+			$renderer->setParameters($params);
+		}
 	}
 
 	/**

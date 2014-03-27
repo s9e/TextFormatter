@@ -91,6 +91,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox applyTimeformat() uses timeformat() if it exists
+	* @runInSeparateProcess
 	*/
 	public function testTimeformatQuoteSMF()
 	{
@@ -109,6 +110,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureParser() disables the Autoemail and Autolink plugins if $modSettings['autoLinkUrls'] is falsy
+	* @runInSeparateProcess
 	*/
 	public function testConfigureParserDisableAutoPlugins()
 	{
@@ -134,6 +136,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureParser() disables the BBCodes plugin if $modSettings['enableBBC'] is falsy
+	* @runInSeparateProcess
 	*/
 	public function testConfigureParserDisableBBCodes()
 	{
@@ -155,6 +158,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureParser() disables the HTMLElements plugin if $modSettings['enablePostHTML'] is falsy
+	* @runInSeparateProcess
 	*/
 	public function testConfigureParserDisableHTMLElements()
 	{
@@ -176,6 +180,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureParser() disables the BBCodes found in $modSettings['disabledBBC']
+	* @runInSeparateProcess
 	*/
 	public function testConfigureParserDisableTags()
 	{
@@ -201,6 +206,7 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureParser() disables the FLASH tag if $modSettings['enableEmbeddedFlash'] is falsy
+	* @runInSeparateProcess
 	*/
 	public function testConfigureParserDisableFlash()
 	{
