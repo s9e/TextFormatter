@@ -17,6 +17,15 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
+/**
+* @property AttributeCollection $attributes This tag's attributes
+* @property AttributePreprocessorCollection $attributePreprocessors This tag's attribute parsers
+* @property TagFilterChain $filterChain This tag's filter chain
+* @property integer $nestingLimit Maximum nesting level for this tag
+* @property Ruleset $rules Rules associated with this tag
+* @property integer $tagLimit Maximum number of this tag per message
+* @property Template $template Template associated with this tag
+*/
 class Tag implements ConfigProvider
 {
 	use Configurable;

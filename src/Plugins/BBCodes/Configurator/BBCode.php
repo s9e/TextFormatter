@@ -15,6 +15,13 @@ use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
+/**
+* @property AttributeList $contentAttributes List of attributes whose value is to be made the content between the BBCode's tags if it's not explicitly given
+* @property string $defaultAttribute Name of the default attribute
+* @property bool $forceLookahead Whether the parser should look ahead in the text for an end tag before adding a start tag
+* @property AttributeValueCollection $predefinedAttributes Predefined attribute values, can be overwritten by user input
+* @property string $tagName Name of the tag used to represent this BBCode in the intermediate representation
+*/
 class BBCode implements ConfigProvider
 {
 	use Configurable;

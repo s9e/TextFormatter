@@ -14,6 +14,12 @@ use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
 
+/**
+* @property mixed $defaultValue Default value used for this attribute
+* @property AttributeFilterChain $filterChain This attribute's filter chain
+* @property ProgrammableCallback $generator Generator used to generate a value for this attribute during parsing
+* @property bool $required Whether this attribute is required for the tag to be valid
+*/
 class Attribute implements ConfigProvider
 {
 	use Configurable;

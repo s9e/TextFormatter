@@ -16,8 +16,8 @@ use s9e\TextFormatter\Configurator\Traits\Configurable;
 
 /**
 * @property RendererGenerator $engine
-* @property TemplateParameterCollection $parameters
-* @property string $type
+* @property TemplateParameterCollection $parameters Parameters used by the renderer
+* @property string $type Output method, either "html" or "xhtml"
 */
 class Rendering
 {
