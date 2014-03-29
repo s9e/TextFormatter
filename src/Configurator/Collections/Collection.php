@@ -39,6 +39,9 @@ class Collection implements ConfigProvider, Countable, Iterator
 	// Countable stuff
 	//==========================================================================
 
+	/**
+	* @return integer
+	*/
 	public function count()
 	{
 		return count($this->items);
@@ -48,26 +51,41 @@ class Collection implements ConfigProvider, Countable, Iterator
 	// Iterator stuff
 	//==========================================================================
 
+	/**
+	* @return mixed
+	*/
 	public function current()
 	{
 		return current($this->items);
 	}
 
+	/**
+	* @return integer|string
+	*/
 	public function key()
 	{
 		return key($this->items);
 	}
 
+	/**
+	* @return mixed
+	*/
 	public function next()
 	{
 		return next($this->items);
 	}
 
+	/**
+	* @return void
+	*/
 	public function rewind()
 	{
 		reset($this->items);
 	}
 
+	/**
+	* @return bool
+	*/
 	public function valid()
 	{
 		return (key($this->items) !== null);
