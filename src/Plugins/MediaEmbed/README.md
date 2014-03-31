@@ -221,6 +221,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</td>
 	</tr>
 	<tr>
+		<td><code>rdio</code></td>
+		<td>Rdio</td>
+		<td>http://rd.io/x/QcD7oTdeWevg/<br/>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</td>
+	</tr>
+	<tr>
 		<td><code>rutube</code></td>
 		<td>Rutube</td>
 		<td>http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/<br/>http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>

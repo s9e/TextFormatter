@@ -376,6 +376,22 @@
 		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
 	</site>
 
+	<site id="rdio">
+		<name>Rdio</name>
+		<homepage>http://www.rdio.com/</homepage>
+		<example>http://rd.io/x/QcD7oTdeWevg/</example>
+		<example>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</example>
+
+		<host>rd.io</host>
+		<host>rdio.com</host>
+		<extract>!rd\.io/./(?'id'\w+)!</extract>
+		<scrape url="http://www.rdio.com/api/oembed/?url={@url}">
+			<match>!rdio\.com/.*?(?:playlist|track)!</match>
+			<extract>!rd\.io/./(?'id'\w+)!</extract>
+		</scrape>
+		<iframe width="400" height="80" src="https://rd.io/i/{@id}"/>
+	</site>
+
 	<site id="rutube">
 		<name>Rutube</name>
 		<homepage>http://rutube.ru/</homepage>
