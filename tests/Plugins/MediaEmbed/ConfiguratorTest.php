@@ -699,6 +699,52 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() uses explicit attribute declarations
+	*/
+	public function testAddExplicitAttributes()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => false],
+					'xx' => ['type' => 'number']
+				]
+			]
+		);
+
+		$this->assertFalse($tag->attributes['id']->required);
+		$this->assertTrue(isset($tag->attributes['xx']));
+		$this->assertEquals(
+			[$this->configurator->attributeFilters['#number']],
+			iterator_to_array($tag->attributes['xx']->filterChain)
+		);
+	}
+
+	/**
+	* @testdox add() casts explicit "required" to bool
+	*/
+	public function testAddExplicitAttributesBool()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => '0']
+				]
+			]
+		);
+
+		$this->assertFalse($tag->attributes['id']->required);
+	}
+
+	/**
 	* @testdox appendTemplate() sets a template to be appended to media sites' templates
 	*/
 	public function testAppend()

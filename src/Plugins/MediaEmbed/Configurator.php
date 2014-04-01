@@ -285,6 +285,23 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
+		// Overwrite attribute declarations
+		if (isset($siteConfig['attributes']))
+		{
+			foreach ($siteConfig['attributes'] as $attrName => $attrConfig)
+			{
+				foreach ($attrConfig as $configName => $configValue)
+				{
+					if ($configName === 'required')
+					{
+						$configValue = (bool) $configValue;
+					}
+
+					$attributes[$attrName][$configName] = $configValue;
+				}
+			}
+		}
+
 		// Create the attributes
 		$hasRequiredAttribute = false;
 		foreach ($attributes as $attrName => $attrConfig)

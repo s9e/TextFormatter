@@ -2293,6 +2293,8 @@ s9eTextFormatterTestsPluginsMediaEmbedConfigurator
  [x] add() checks the tag's safety before adding it
  [x] add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
  [x] add() does not test for non-default attributes if the tag has a required attribute
+ [x] add() uses explicit attribute declarations
+ [x] add() casts explicit "required" to bool
  [x] appendTemplate() sets a template to be appended to media sites' templates
  [x] appendTemplate() accepts HTML
  [x] asConfig() returns false if no site was added
