@@ -113,7 +113,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>cbsnews</code></td>
 		<td>CBS News Video</td>
-		<td>http://www.cbsnews.com/video/watch/?id=50156501n</td>
+		<td>http://www.cbsnews.com/video/watch/?id=50156501n<br/>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</td>
 	</tr>
 	<tr>
 		<td><code>cnn</code></td>

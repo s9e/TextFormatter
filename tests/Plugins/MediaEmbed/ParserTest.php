@@ -583,6 +583,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.cbsnews.com/videos/is-the-us-stock-market-rigged',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="425" height="279" data="http://www.cbsnews.com/common/video/cbsnews_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=W4MVSOaNEYMq"><embed type="application/x-shockwave-flash" width="425" height="279" allowfullscreen="" src="http://www.cbsnews.com/common/video/cbsnews_player.swf" flashvars="pType=embed&amp;si=254&amp;pid=W4MVSOaNEYMq"></object>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
 				'http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk',
 				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:arc:video:colbertnation.com:94b7c7d0-dbc8-4e76-8f2b-9dd88b5db1e1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
@@ -1615,7 +1625,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="425" height="279" data="http://cnettv.cnet.com/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501&amp;shareUrl=http://www.cbsnews.com/video/watch/?id=50156501n"><embed type="application/x-shockwave-flash" src="http://cnettv.cnet.com/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" width="425" height="279" allowfullscreen="" flashvars="si=254&amp;contentValue=50156501&amp;shareUrl=http://www.cbsnews.com/video/watch/?id=50156501n"></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="425" height="279" data="http://i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501"><embed type="application/x-shockwave-flash" width="425" height="279" allowfullscreen="" src="http://i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" flashvars="si=254&amp;contentValue=50156501"></object>',
 				[],
 				function ($configurator)
 				{
