@@ -90,6 +90,8 @@ s9eTextFormatterTestsConfiguratorTraitsConfigurable
  [x] __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
  [x] __set() can replace a scalar value with a value of the same type
  [x] __set() can replace a scalar value with another scalar value if it can be losslessly cast to the same type
+ [x] __set() can replace a boolean value by changing the string "true" to boolean true
+ [x] __set() can replace a boolean value by changing the string "false" to boolean false
  [x] __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
  [x] __set() will clear and repopulate a NormalizedCollection rather than overwrite it
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
@@ -2294,7 +2296,6 @@ s9eTextFormatterTestsPluginsMediaEmbedConfigurator
  [x] add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
  [x] add() does not test for non-default attributes if the tag has a required attribute
  [x] add() uses explicit attribute declarations
- [x] add() casts explicit "required" to bool
  [x] appendTemplate() sets a template to be appended to media sites' templates
  [x] appendTemplate() accepts HTML
  [x] asConfig() returns false if no site was added

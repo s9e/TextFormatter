@@ -292,11 +292,6 @@ class Configurator extends ConfiguratorBase
 			{
 				foreach ($attrConfig as $configName => $configValue)
 				{
-					if ($configName === 'required')
-					{
-						$configValue = (bool) $configValue;
-					}
-
 					$attributes[$attrName][$configName] = $configValue;
 				}
 			}

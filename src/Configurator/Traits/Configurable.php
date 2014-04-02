@@ -113,6 +113,21 @@ trait Configurable
 			$oldType = gettype($this->$propName);
 			$newType = gettype($propValue);
 
+			// If the property is a boolean, we'll accept "true" and "false" as strings
+			if ($oldType === 'boolean')
+			{
+				if ($propValue === 'false')
+				{
+					$newType   = 'boolean';
+					$propValue = false;
+				}
+				elseif ($propValue === 'true')
+				{
+					$newType   = 'boolean';
+					$propValue = true;
+				}
+			}
+
 			if ($oldType !== $newType)
 			{
 				// Test whether the PHP type roundtrip is lossless

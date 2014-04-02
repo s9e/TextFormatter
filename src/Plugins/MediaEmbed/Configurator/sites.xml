@@ -91,7 +91,7 @@
 			<extract>#"pid":"(?'pid'\w+)"#</extract>
 		</scrape>
 		<attributes>
-			<id required="0"/>
+			<id required="false"/>
 		</attributes>
 		<flash width="425" height="279">
 			<src><![CDATA[

@@ -136,6 +136,28 @@ class ConfigurableTest extends Test
 	}
 
 	/**
+	* @testdox __set() can replace a boolean value by changing the string "true" to boolean true
+	*/
+	public function testMagicSetBoolStringTrue()
+	{
+		$dummy = new ConfigurableTestDummy;
+		$dummy->bool = 'true';
+
+		$this->assertTrue($dummy->bool);
+	}
+
+	/**
+	* @testdox __set() can replace a boolean value by changing the string "false" to boolean false
+	*/
+	public function testMagicSetBoolStringFalse()
+	{
+		$dummy = new ConfigurableTestDummy;
+		$dummy->bool = 'false';
+
+		$this->assertFalse($dummy->bool);
+	}
+
+	/**
 	* @testdox __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Cannot replace property 'int' of type integer with value of type string
@@ -271,6 +293,7 @@ class ConfigurableTestDummy
 	use Configurable;
 
 	protected $int = 42;
+	protected $bool = false;
 	protected $null = null;
 	protected $collection;
 	protected $fooObject;
