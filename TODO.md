@@ -1,6 +1,7 @@
-Immediate goals (March 2014)
+Immediate goals (April 2014)
 ----------------------------
 - Finish up Litedown: forced line breaks, fenced code blocks, perhaps reference links
+- Add Parser::getText() to retrieve the normalized text
 
 
 Near-future goals (2014)
