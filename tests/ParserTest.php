@@ -64,6 +64,32 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox getText() returns the last text that's been parsed
+	*/
+	public function testGetText()
+	{
+		$parser = $this->configurator->getParser();
+		$text   = 'Hello world';
+
+		$parser->parse($text);
+
+		$this->assertSame($text, $parser->getText());
+	}
+
+	/**
+	* @testdox getText() returns the text, normalized
+	*/
+	public function testGetTextNormalized()
+	{
+		$parser = $this->configurator->getParser();
+		$text   = "Hello world\r\n";
+
+		$parser->parse($text);
+
+		$this->assertSame("Hello world\n", $parser->getText());
+	}
+
+	/**
 	* @testdox parse() returns the intermediate representation
 	*/
 	public function testParse()

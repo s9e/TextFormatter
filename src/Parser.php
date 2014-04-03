@@ -283,6 +283,23 @@ class Parser
 	}
 
 	/**
+	* Return the last text parsed
+	*
+	* This method returns the normalized text, which may be slightly different from the original
+	* text in that EOLs are normalized to LF and other control codes are stripped. This method is
+	* meant to be used in support of processing log entries, which contain offsets based on the
+	* normalized text
+	*
+	* @see Parser::reset()
+	*
+	* @return string
+	*/
+	public function getText()
+	{
+		return $this->text;
+	}
+
+	/**
 	* Parse a text
 	*
 	* @param  string $text Text to parse

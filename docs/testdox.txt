@@ -1833,6 +1833,8 @@ s9eTextFormatterTestsParser
  [x] Parser can be unserialized
  [x] getLogger() returns an instance of Logger
  [x] The logger is cleared before parsing a new text
+ [x] getText() returns the last text that's been parsed
+ [x] getText() returns the text, normalized
  [x] parse() returns the intermediate representation
  [x] parse() can be called multiple times in succession
  [x] parse() normalizes \r to \n
