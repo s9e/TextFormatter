@@ -57,11 +57,11 @@ var boundaries   = [],
 	quoteDepth;
 
 // Capture the underlines used for Setext-style headers
-if (text.indexOf("-\n") || text.indexOf("=\n"))
+if (text.indexOf('-') > 0 || text.indexOf('=') > 0)
 {
 	// Capture the any series of - or = alone on a line, optionally preceded with the
 	// angle brackets notation used in blockquotes
-	regexp = /^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+)$/gm;
+	regexp = /^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/gm;
 
 	while (m = regexp.exec(text))
 	{
@@ -81,7 +81,7 @@ if (text.indexOf("-\n") || text.indexOf("=\n"))
 			endTagLen  : matchPos + match.length - endTagPos,
 			endTagPos  : endTagPos,
 			quoteDepth : match.length - match.replace(/>/g, '').length,
-			tagName    : ((match.charAt(0)) === '=') ? 'H1' : 'H2'
+			tagName    : (match.charAt(0) === '=') ? 'H1' : 'H2'
 		};
 	}
 }

@@ -566,6 +566,18 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'foo ',
+					'--- ',
+					'bar '
+				],
+				[
+					'<r><H2>foo<e> ',
+					'--- </e></H2>',
+					'<p>bar</p> </r>'
+				]
+			],
+			[
+				[
 					'foo',
 					'=-=',
 					'bar'

@@ -62,11 +62,11 @@ class Parser extends ParserBase
 		$textBoundary = 0;
 
 		// Capture the underlines used for Setext-style headers
-		if (strpos($text, "-\n") || strpos($text, "=\n"))
+		if (strpos($text, '-') > 0 || strpos($text, '=') > 0)
 		{
 			// Capture the any series of - or = alone on a line, optionally preceded with the
 			// angle brackets notation used in blockquotes
-			$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+)$/m';
+			$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
 			if (preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE))
 			{
 				foreach ($matches[0] as list($match, $matchPos))
@@ -84,7 +84,7 @@ class Parser extends ParserBase
 						'endTagLen'  => $matchPos + strlen($match) - $endTagPos,
 						'endTagPos'  => $endTagPos,
 						'quoteDepth' => substr_count($match, '>'),
-						'tagName'    => (($match[0]) === '=') ? 'H1' : 'H2'
+						'tagName'    => ($match[0] === '=') ? 'H1' : 'H2'
 					];
 				}
 			}
