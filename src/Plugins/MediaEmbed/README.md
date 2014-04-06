@@ -261,6 +261,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>http://embed.ted.com/playlists/26/our_digital_lives.html</td>
 	</tr>
 	<tr>
+		<td><code>theatlantic</code></td>
+		<td>The Atlantic Video</td>
+		<td>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
+	</tr>
+	<tr>
 		<td><code>traileraddict</code></td>
 		<td>Trailer Addict</td>
 		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>

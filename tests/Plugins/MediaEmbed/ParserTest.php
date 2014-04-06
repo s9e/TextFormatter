@@ -1356,6 +1356,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/',
+				'<r><THEATLANTIC id="358928" url="http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/">http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</THEATLANTIC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('theatlantic');
+				}
+			],
+			[
 				'http://www.traileraddict.com/tags/musical',
 				'<t>http://www.traileraddict.com/tags/musical</t>',
 				[],

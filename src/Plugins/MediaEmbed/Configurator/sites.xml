@@ -562,6 +562,16 @@
 		</iframe>
 	</site>
 
+	<site id="theatlantic">
+		<name>The Atlantic Video</name>
+		<homepage>http://www.theatlantic.com/video/</homepage>
+		<example>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</example>
+
+		<host>theatlantic.com</host>
+		<extract>!theatlantic\.com/video/index/(?'id'\d+)!</extract>
+		<iframe width="640" height="360" src="http://www.theatlantic.com/video/iframe/{@id}/"/>
+	</site>
+
 	<site id="traileraddict">
 		<name>Trailer Addict</name>
 		<homepage>http://www.traileraddict.com/</homepage>
