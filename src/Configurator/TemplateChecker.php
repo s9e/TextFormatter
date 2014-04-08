@@ -24,15 +24,15 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 * @method array   asConfig()
 * @method void    clear()
 * @method bool    contains(mixed $value)
-* @method void    count()
-* @method void    current()
+* @method integer count()
+* @method mixed   current()
 * @method void    delete(string $key)
 * @method bool    exists(string $key)
 * @method mixed   get(string $key)
 * @method mixed   indexOf(mixed $value)
 * @method mixed   insert(integer $offset)
-* @method void    key()
-* @method void    next()
+* @method integer|string key()
+* @method mixed   next()
 * @method integer normalizeKey()
 * @method TemplateCheck normalizeValue()
 * @method void    offsetExists()
@@ -44,7 +44,7 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 * @method integer remove()
 * @method void    rewind()
 * @method mixed   set(string $key)
-* @method void    valid()
+* @method bool    valid()
 */
 class TemplateChecker implements ArrayAccess, Iterator
 {
