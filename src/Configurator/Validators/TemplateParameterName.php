@@ -30,10 +30,15 @@ abstract class TemplateParameterName
 	}
 
 	/**
-	* {@inheritdoc}
+	* Normalize a template parameter name
+	*
+	* @param  string $name Original name
+	* @return string       Normalized name
 	*/
 	public static function normalize($name)
 	{
+		$name = (string) $name;
+
 		if (!static::isValid($name))
 		{
 			throw new InvalidArgumentException("Invalid parameter name '" . $name . "'");

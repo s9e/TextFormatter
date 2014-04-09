@@ -14,26 +14,15 @@ namespace s9e\TextFormatter\Configurator\Traits;
 *
 * @method mixed   add(string $key, mixed $value)
 * @method array   asConfig()
-* @method void    clear()
 * @method bool    contains(mixed $value)
-* @method integer count()
-* @method mixed   current()
 * @method void    delete(string $key)
 * @method bool    exists(string $key)
 * @method mixed   get(string $key)
 * @method mixed   indexOf(mixed $value)
-* @method mixed   key()
-* @method next()
 * @method string  normalizeKey(string $key)
 * @method mixed   normalizeValue(mixed $value)
-* @method bool    offsetExists(mixed $offset)
-* @method mixed   offsetGet(mixed $offset)
-* @method void    offsetSet(mixed $offset, mixed $value)
-* @method void    offsetUnset(mixed $offset)
 * @method string  onDuplicate(string $action)
-* @method rewind()
 * @method mixed   set(string $key, mixed $value)
-* @method bool    valid()
 */
 trait CollectionProxy
 {
@@ -53,21 +42,38 @@ trait CollectionProxy
 	// ArrayAccess
 	//==========================================================================
 
+	/**
+	* @param  string|integer $offset
+	* @return bool
+	*/
 	public function offsetExists($offset)
 	{
 		return isset($this->collection[$offset]);
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @return mixed
+	*/
 	public function offsetGet($offset)
 	{
 		return $this->collection[$offset];
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @param  mixed          $value
+	* @return void
+	*/
 	public function offsetSet($offset, $value)
 	{
 		$this->collection[$offset] = $value;
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @return void
+	*/
 	public function offsetUnset($offset)
 	{
 		unset($this->collection[$offset]);
@@ -77,6 +83,9 @@ trait CollectionProxy
 	// Countable
 	//==========================================================================
 
+	/**
+	* @return integer
+	*/
 	public function count()
 	{
 		return count($this->collection);
@@ -86,26 +95,41 @@ trait CollectionProxy
 	// Iterator
 	//==========================================================================
 
+	/**
+	* @return mixed
+	*/
 	public function current()
 	{
 		return $this->collection->current();
 	}
 
+	/**
+	* @return string|integer
+	*/
 	public function key()
 	{
 		return $this->collection->key();
 	}
 
+	/**
+	* @return mixed
+	*/
 	public function next()
 	{
 		return $this->collection->next();
 	}
 
+	/**
+	* @return void
+	*/
 	public function rewind()
 	{
 		$this->collection->rewind();
 	}
 
+	/**
+	* @return boolean
+	*/
 	public function valid()
 	{
 		return $this->collection->valid();
