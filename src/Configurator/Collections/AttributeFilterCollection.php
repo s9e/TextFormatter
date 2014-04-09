@@ -72,7 +72,10 @@ class AttributeFilterCollection extends NormalizedCollection
 	}
 
 	/**
-	* {@inheritdoc}
+	* Normalize a value to an instance of AttributeFilter
+	*
+	* @param  mixed $value
+	* @return AttributeFilter
 	*/
 	public function normalizeValue($value)
 	{

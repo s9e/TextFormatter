@@ -15,7 +15,10 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 class TagList extends NormalizedList
 {
 	/**
-	* {@inheritdoc}
+	* Normalize a value to a tag name
+	*
+	* @param  string $value
+	* @return string
 	*/
 	public function normalizeValue($attrName)
 	{

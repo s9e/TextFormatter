@@ -13,7 +13,10 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 class AttributeCollection extends NormalizedCollection
 {
 	/**
-	* {@inheritdoc}
+	* Normalize a key as an attribute name
+	*
+	* @param  string $key
+	* @return string
 	*/
 	public function normalizeKey($key)
 	{
@@ -21,7 +24,10 @@ class AttributeCollection extends NormalizedCollection
 	}
 
 	/**
-	* {@inheritdoc}
+	* Normalize a value to an instance of Attribute
+	*
+	* @param  array|null|Attribute $value
+	* @return Attribute
 	*/
 	public function normalizeValue($value)
 	{

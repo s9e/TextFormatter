@@ -21,7 +21,10 @@ class TagCollection extends NormalizedCollection
 	}
 
 	/**
-	* {@inheritdoc}
+	* Normalize a value to an instance of Tag
+	*
+	* @param  array|null|Tag $value
+	* @return Tag
 	*/
 	public function normalizeValue($value)
 	{
