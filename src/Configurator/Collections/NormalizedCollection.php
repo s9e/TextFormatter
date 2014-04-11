@@ -21,8 +21,8 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Query and set the action to take when add() is called with a key that already exists
 	*
-	* @param  string $action Either "error", "ignore" or "replace"
-	* @return string         Old action
+	* @param  string|null $action If specified: either "error", "ignore" or "replace"
+	* @return string              Old action
 	*/
 	public function onDuplicate($action = null)
 	{
@@ -190,21 +190,38 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	// ArrayAccess stuff
 	//==========================================================================
 
+	/**
+	* @param  string|integer $offset
+	* @return bool
+	*/
 	public function offsetExists($offset)
 	{
 		return $this->exists($offset);
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @return mixed
+	*/
 	public function offsetGet($offset)
 	{
 		return $this->get($offset);
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @param  mixed          $value
+	* @return void
+	*/
 	public function offsetSet($offset, $value)
 	{
 		$this->set($offset, $value);
 	}
 
+	/**
+	* @param  string|integer $offset
+	* @return void
+	*/
 	public function offsetUnset($offset)
 	{
 		$this->delete($offset);

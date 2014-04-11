@@ -52,7 +52,10 @@ class AttributeFilterCollection extends NormalizedCollection
 	}
 
 	/**
-	* {@inheritdoc}
+	* Normalize the name of an attribute filter
+	*
+	* @param  string $key
+	* @return string
 	*/
 	public function normalizeKey($key)
 	{

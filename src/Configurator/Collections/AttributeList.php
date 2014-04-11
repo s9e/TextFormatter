@@ -16,7 +16,10 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 class AttributeList extends NormalizedList
 {
 	/**
-	* {@inheritdoc}
+	* Normalize the name of an attribute
+	*
+	* @param  string $attrName
+	* @return string
 	*/
 	public function normalizeValue($attrName)
 	{
