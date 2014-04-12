@@ -56,3 +56,4 @@ Random stuff that may never happen
 - Escaper: consume the backslash as its start tag and render via apply-templates in order to avoid relying on substring()
 - Escaper: find an easier way to add/remove characters to be escaped
 - Add an option for Tag's position to be flexible; It can start anywhere within its consumed text. IOW, if the parser's current position is past the tag's position, its position is adjusted up to pos+len (which is already the case with ignore tags, although ignore tags can't be 0 length)
+- Test this in Renderer: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
