@@ -262,12 +262,12 @@ s9eTextFormatterTestsConfiguratorCollectionsRuleset
  [x] remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
  [x] remove('denyChild', 'IMG') unsets the denyChild list in the ruleset if there is no denyChild rules left
  [x] remove('denyChild', 'IMG') rearranges keys to remove gaps
- [x] remove('denyChild', 'img') normalizes tag name
+ [x] remove('denyChild', 'img') normalizes tag names
  [x] allowChild() throws an exception on invalid tag name
- [x] allowChild() normalizes tag name
+ [x] allowChild() normalizes tag names
  [x] allowChild() is chainable
  [x] allowDescendant() throws an exception on invalid tag name
- [x] allowDescendant() normalizes tag name
+ [x] allowDescendant() normalizes tag names
  [x] allowDescendant() is chainable
  [x] autoClose() accepts a boolean
  [x] autoClose() throws an exception if its argument is not a boolean
@@ -279,8 +279,8 @@ s9eTextFormatterTestsConfiguratorCollectionsRuleset
  [x] breakParagraph() throws an exception if its argument is not a boolean
  [x] breakParagraph() is chainable
  [x] closeAncestor() throws an exception on invalid tag name
- [x] closeAncestor() normalizes tag name
- [x] closeParent() normalizes tag name
+ [x] closeAncestor() normalizes tag names
+ [x] closeParent() normalizes tag names
  [x] closeParent() is chainable
  [x] createParagraphs() accepts a boolean
  [x] createParagraphs() throws an exception if its argument is not a boolean
@@ -295,13 +295,13 @@ s9eTextFormatterTestsConfiguratorCollectionsRuleset
  [x] ignoreTags() throws an exception if its argument is not a boolean
  [x] ignoreTags() is chainable
  [x] denyChild() throws an exception on invalid tag name
- [x] denyChild() normalizes tag name
+ [x] denyChild() normalizes tag names
  [x] denyChild() is chainable
  [x] denyDescendant() throws an exception on invalid tag name
- [x] denyDescendant() normalizes tag name
+ [x] denyDescendant() normalizes tag names
  [x] denyDescendant() is chainable
  [x] fosterParent() throws an exception on invalid tag name
- [x] fosterParent() normalizes tag name
+ [x] fosterParent() normalizes tag names
  [x] fosterParent() is chainable
  [x] ignoreText() accepts a boolean
  [x] ignoreText() throws an exception if its argument is not a boolean
@@ -319,10 +319,10 @@ s9eTextFormatterTestsConfiguratorCollectionsRuleset
  [x] ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
  [x] ignoreSurroundingWhitespace() is chainable
  [x] requireAncestor() throws an exception on invalid tag name
- [x] requireAncestor() normalizes tag name
+ [x] requireAncestor() normalizes tag names
  [x] requireAncestor() is chainable
  [x] requireParent() throws an exception on invalid tag name
- [x] requireParent() normalizes tag name
+ [x] requireParent() normalizes tag names
  [x] requireParent() is chainable
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the defaultChildRule setting from an array

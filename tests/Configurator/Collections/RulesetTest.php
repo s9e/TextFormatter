@@ -145,7 +145,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox remove('denyChild', 'img') normalizes tag name
+	* @testdox remove('denyChild', 'img') normalizes tag names
 	*/
 	public function testRemoveNormalizesTagName()
 	{
@@ -173,7 +173,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox allowChild() normalizes tag name
+	* @testdox allowChild() normalizes tag names
 	*/
 	public function testAllowChildNormalizesTagName()
 	{
@@ -208,7 +208,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox allowDescendant() normalizes tag name
+	* @testdox allowDescendant() normalizes tag names
 	*/
 	public function testAllowDescendantNormalizesTagName()
 	{
@@ -330,7 +330,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox closeAncestor() normalizes tag name
+	* @testdox closeAncestor() normalizes tag names
 	*/
 	public function testCloseAncestorNormalizesTagName()
 	{
@@ -345,7 +345,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox closeParent() normalizes tag name
+	* @testdox closeParent() normalizes tag names
 	*/
 	public function testCloseParentNormalizesTagName()
 	{
@@ -517,7 +517,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox denyChild() normalizes tag name
+	* @testdox denyChild() normalizes tag names
 	*/
 	public function testDenyChildNormalizesTagName()
 	{
@@ -553,7 +553,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox denyDescendant() normalizes tag name
+	* @testdox denyDescendant() normalizes tag names
 	*/
 	public function testDenyDescendantNormalizesTagName()
 	{
@@ -589,7 +589,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox fosterParent() normalizes tag name
+	* @testdox fosterParent() normalizes tag names
 	*/
 	public function testFosterParentNormalizesTagName()
 	{
@@ -770,7 +770,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox requireAncestor() normalizes tag name
+	* @testdox requireAncestor() normalizes tag names
 	*/
 	public function testRequireAncestorNormalizesTagName()
 	{
@@ -806,7 +806,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox requireParent() normalizes tag name
+	* @testdox requireParent() normalizes tag names
 	*/
 	public function testRequireParentNormalizesTagName()
 	{
