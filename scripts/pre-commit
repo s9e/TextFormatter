@@ -3,6 +3,16 @@ ROOT=$(dirname $(dirname $(realpath $0)))
 
 cd "$ROOT"
 
+if [[ -n `git diff --cached --name-only -b "src" | grep js` ]]
+then
+	./scripts/checkUnminifiedVariables.php
+
+	if [ $? -ne 0 ]
+	then
+		exit 1;
+	fi
+fi
+
 if [[ -n `git diff --cached --name-only -b | grep \.md` ]]
 then
 	./scripts/patchExamples.php

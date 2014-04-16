@@ -1,0 +1,33 @@
+#!/usr/bin/php
+<?php
+
+$usedVars = [];
+foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
+{
+	preg_match_all('/\\w+(?=\\.\\w+[(=])/', file_get_contents($filepath), $m);
+	$usedVars += array_flip($m[0]);
+}
+
+$knownVars = array_flip(range('a', 'z')) + array_flip(range('A', 'Z'));
+
+// Known minified names
+$knownVars['ta'] = 1;
+
+// Browser stuff
+$knownVars['Math']      = 1;
+$knownVars['document']  = 1;
+$knownVars['punycode']  = 1;
+$knownVars['prototype'] = 1;
+$knownVars['this']      = 1;
+$knownVars['url']       = 1;
+$knownVars['window']    = 1;
+
+// Known false positives
+$knownVars['pok'] = 1;
+
+$unknownVars = array_diff_key($usedVars, $knownVars);
+if ($unknownVars)
+{
+	echo 'Found unminified vars: ', implode(', ', array_keys($unknownVars)), "\n";
+	exit(1);
+}
