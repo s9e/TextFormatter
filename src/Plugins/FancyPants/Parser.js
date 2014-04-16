@@ -12,7 +12,7 @@ if (hasSingleQuote)
 
 	while (m = regexp.exec(text))
 	{
-		tag = addSelfClosingTag(tagName, m['index'] + m[0].indexOf("'"), 1);
+		var tag = addSelfClosingTag(tagName, m['index'] + m[0].indexOf("'"), 1);
 		tag.setAttribute(attrName, "\u2019");
 
 		// Give this tag a worse priority than default so that quote pairs take precedence
