@@ -4,14 +4,17 @@
 $usedVars = [];
 foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 {
-	preg_match_all('/\\w+(?=\\.\\w+[(=])/', file_get_contents($filepath), $m);
+	preg_match_all('/\\w{2,}+(?=\\.\\w+[(=,])/S', file_get_contents($filepath), $m);
 	$usedVars += array_flip($m[0]);
 }
 
-$knownVars = array_flip(range('a', 'z')) + array_flip(range('A', 'Z'));
+$knownVars = [];
 
-// Known minified names
-$knownVars['ta'] = 1;
+// 2-letters minified names
+foreach (range('a', 't') as $c)
+{
+	$knownVars[$c . 'a'] = 1;
+}
 
 // Browser stuff
 $knownVars['Math']      = 1;
