@@ -2417,6 +2417,7 @@ s9eTextFormatterTestsRenderersXSLT
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
  [x] Custom parameters are properly saved and restored after serialization
+ [x] Is not vulnerable to XXE
 
 s9eTextFormatterTestsRenderersXSLCache
  [x] getFilepath() returns the path to the stylesheet file
@@ -2442,6 +2443,7 @@ s9eTextFormatterTestsRenderersXSLCache
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
  [x] Custom parameters are properly saved and restored after serialization
+ [x] Is not vulnerable to XXE
 
 s9eTextFormatterTestsRenderersPHP
  [x] Is serializable
@@ -2465,6 +2467,7 @@ s9eTextFormatterTestsRenderersPHP
  [x] setParameters() sets the values of any number of parameters in an associative array
  [x] setParameter() accepts values that contain both types of quotes
  [x] Custom parameters are properly saved and restored after serialization
+ [x] Is not vulnerable to XXE
 
 s9eTextFormatterTestsRenderersUnformatted
  [x] Returns unformatted version of rich text

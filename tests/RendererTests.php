@@ -283,4 +283,19 @@ trait RendererTests
 			unserialize(serialize($renderer))->getParameters()
 		);
 	}
+
+	/**
+	* @testdox Is not vulnerable to XXE
+	*/
+	public function testXXE()
+	{
+		$xml = '<?xml version="1.0" encoding="UTF-8"?>'
+		     . '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
+		     . '<r>x&xxe;y</r>';
+
+		$this->assertSame(
+			'xy',
+			$this->configurator->getRenderer()->render($xml)
+		);
+	}
 }
