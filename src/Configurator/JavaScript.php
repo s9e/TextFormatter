@@ -96,7 +96,8 @@ class JavaScript
 		$files = [
 			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
-			'Parser/Logger.js',
+			// If getLogger() is not exported we use a dummy Logger that can be optimized away
+			'Parser/' . (in_array('getLogger', $this->exportMethods) ? '' : 'Null') . 'Logger.js',
 			'Parser/Tag.js',
 			'Parser.js'
 		];

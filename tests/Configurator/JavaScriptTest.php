@@ -306,6 +306,43 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox The normal Logger is present by default
+	*/
+	public function testLoggerDefault()
+	{
+		$js = $this->configurator->javascript->getParser();
+
+		$this->assertContains(
+			file_get_contents(__DIR__ . '/../../src/Parser/Logger.js'),
+			$js
+		);
+
+		$this->assertNotContains(
+			file_get_contents(__DIR__ . '/../../src/Parser/NullLogger.js'),
+			$js
+		);
+	}
+
+	/**
+	* @testdox The null Logger is use if getLogger() is not exported
+	*/
+	public function testNullLogger()
+	{
+		$this->configurator->javascript->exportMethods = ['preview'];
+		$js = $this->configurator->javascript->getParser();
+
+		$this->assertNotContains(
+			file_get_contents(__DIR__ . '/../../src/Parser/Logger.js'),
+			$js
+		);
+
+		$this->assertContains(
+			file_get_contents(__DIR__ . '/../../src/Parser/NullLogger.js'),
+			$js
+		);
+	}
+
+	/**
 	* @testdox Callbacks correctly encode values
 	*/
 	public function testCallbackValue()

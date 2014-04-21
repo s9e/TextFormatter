@@ -50,6 +50,13 @@ then
 	git update-index --add "tests/Configurator/Helpers/RegexpBuilderTest.php"
 fi
 
+if [[ -n `git diff --cached --name-only -b src/Parser/Logger.js` ]]
+then
+	./scripts/generateNullLogger.php
+
+	git update-index --add "src/Parser/NullLogger.js"
+fi
+
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
 	phpunit --exclude-group none --stop-on-failure --testdox-text docs/testdox.txt

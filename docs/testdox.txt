@@ -1566,6 +1566,8 @@ s9eTextFormatterTestsConfiguratorJavaScript
  [x] "cacheDir" is removed from registered vars
  [x] "className" is removed from the plugins' config
  [x] Callbacks use the bracket syntax to access registered vars
+ [x] The normal Logger is present by default
+ [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
  [x] isLegalProp() tests
  [x] encode() tests
