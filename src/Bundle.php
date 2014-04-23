@@ -7,6 +7,10 @@
 */
 namespace s9e\TextFormatter;
 
+/**
+* @method Parser   getParser()
+* @method Renderer getRenderer()
+*/
 abstract class Bundle
 {
 	/**
