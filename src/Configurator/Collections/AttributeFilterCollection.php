@@ -77,7 +77,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	/**
 	* Normalize a value to an instance of AttributeFilter
 	*
-	* @param  mixed $value
+	* @param  callable|AttributeFilter $value
 	* @return AttributeFilter
 	*/
 	public function normalizeValue($value)
