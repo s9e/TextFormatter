@@ -82,11 +82,16 @@ class AttributeFilterCollection extends NormalizedCollection
 	*/
 	public function normalizeValue($value)
 	{
-		if (!($value instanceof AttributeFilter))
+		if ($value instanceof AttributeFilter)
 		{
-			$value = new AttributeFilter($value);
+			return $value;
 		}
 
-		return $value;
+		if (is_callable($value))
+		{
+			return new AttributeFilter($value);
+		}
+
+		throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback or an instance of s9e\\TextFormatter\\Configurator\\Items\\AttributeFilter');
 	}
 }

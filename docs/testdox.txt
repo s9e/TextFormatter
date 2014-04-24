@@ -195,6 +195,7 @@ s9eTextFormatterTestsConfiguratorCollectionsAttributeFilterCollection
  [x] Filter names that start with # are normalized to lowercase
  [x] set() accepts instances of AttributeFilter as-is
  [x] set() accepts a valid callback and returns an instance of AttributeFilter
+ [x] set() throws an exception if value is not a valid callback or an instance of AttributeFilter
  [x] get() automatically loads built-in filters if no filter was set
  [x] get() does not overwrite custom filters with built-in filters
  [x] get() automatically creates filters whose name is a valid PHP callback if no filter was set

@@ -51,6 +51,17 @@ class AttributeFilterCollectionTest extends Test
 	}
 
 	/**
+	* @testdox set() throws an exception if value is not a valid callback or an instance of AttributeFilter
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage must be a valid callback or an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
+	*/
+	public function testInvalidValue()
+	{
+		$collection = new AttributeFilterCollection;
+		$collection->set('#foo', '#foo');
+	}
+
+	/**
 	* @testdox get() automatically loads built-in filters if no filter was set
 	*/
 	public function testGetAutoload()
