@@ -268,7 +268,7 @@ class Configurator implements ConfigProvider
 	/**
 	* Return an instance of Parser based on the current config
 	*
-	* @return Parser
+	* @return \s9e\TextFormatter\Parser
 	*/
 	public function getParser()
 	{
@@ -284,7 +284,7 @@ class Configurator implements ConfigProvider
 	/**
 	* Return an instance of Renderer based on the current config
 	*
-	* @return Renderer
+	* @return \s9e\TextFormatter\Renderer
 	*/
 	public function getRenderer()
 	{
