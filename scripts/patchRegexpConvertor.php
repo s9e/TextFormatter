@@ -113,6 +113,7 @@ foreach ($ranges as $propName => &$propRanges)
 }
 unset($propRanges);
 
+$props = [];
 foreach ($ranges as $propName => $propRanges)
 {
 	$str = '';
