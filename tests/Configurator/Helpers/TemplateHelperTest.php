@@ -346,7 +346,7 @@ class TemplateHelperTest extends Test
 		];
 	}
 
-	public function runTestGetNodes($methodName, $template, $query)
+	public function runTestGetNodes($methodName, $args, $template, $query)
 	{
 		$dom = new DOMDocument;
 		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
@@ -354,13 +354,30 @@ class TemplateHelperTest extends Test
 		     . '</xsl:template>';
 		$dom->loadXML($xsl);
 
-		$xpath = new DOMXPath($dom);
-		$nodes = ($query) ? iterator_to_array($xpath->query($query), false) : [];
+		if ($query)
+		{
+			$xpath    = new DOMXPath($dom);
+			$expected = iterator_to_array($xpath->query($query), false);
+		}
+		else
+		{
+			$expected = [];
+		}
 
-		$this->assertEquals(
-			$nodes,
-			TemplateHelper::$methodName($dom)
-		);
+		array_unshift($args, $dom);
+		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\TemplateHelper::' . $methodName, $args);;
+
+		$this->assertEquals(count($expected), count($actual), 'Wrong node count');
+
+		$i   = -1;
+		$cnt = count($expected);
+		while (++$i < $cnt)
+		{
+			$this->assertTrue(
+				$expected[$i]->isSameNode($actual[$i]),
+				'Node ' . $i . ' does not match'
+			);
+		}
 	}
 
 	/**
@@ -369,19 +386,7 @@ class TemplateHelperTest extends Test
 	*/
 	public function testGetObjectParamsByRegexp($regexp, $template, $query = null)
 	{
-		$dom = new DOMDocument;
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-		$dom->loadXML($xsl);
-
-		$xpath = new DOMXPath($dom);
-		$nodes = ($query) ? iterator_to_array($xpath->query($query), false) : [];
-
-		$this->assertEquals(
-			$nodes,
-			TemplateHelper::getObjectParamsByRegexp($dom, $regexp)
-		);
+		$this->runTestGetNodes('getObjectParamsByRegexp', [$regexp], $template, $query);
 	}
 
 	/**
@@ -390,7 +395,7 @@ class TemplateHelperTest extends Test
 	*/
 	public function testGetCSSNodes($template, $query = null)
 	{
-		$this->runTestGetNodes('getCSSNodes', $template, $query);
+		$this->runTestGetNodes('getCSSNodes', [], $template, $query);
 	}
 
 	/**
@@ -399,7 +404,7 @@ class TemplateHelperTest extends Test
 	*/
 	public function testGetJSNodes($template, $query = null)
 	{
-		$this->runTestGetNodes('getJSNodes', $template, $query);
+		$this->runTestGetNodes('getJSNodes', [], $template, $query);
 	}
 
 	/**
@@ -408,7 +413,7 @@ class TemplateHelperTest extends Test
 	*/
 	public function testGetURLNodes($template, $query = null)
 	{
-		$this->runTestGetNodes('getURLNodes', $template, $query);
+		$this->runTestGetNodes('getURLNodes', [], $template, $query);
 	}
 
 	public function getObjectParamsByRegexpTests()
