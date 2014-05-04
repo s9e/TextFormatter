@@ -365,7 +365,7 @@ class TemplateHelperTest extends Test
 		}
 
 		array_unshift($args, $dom);
-		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\TemplateHelper::' . $methodName, $args);;
+		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\TemplateHelper::' . $methodName, $args);
 
 		$this->assertEquals(count($expected), count($actual), 'Wrong node count');
 
