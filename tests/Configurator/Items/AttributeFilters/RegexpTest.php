@@ -200,6 +200,76 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is safe in JS if the regexp is /^\d+$/D
+	*/
+	public function testJSSafe1()
+	{
+		$filter = new Regexp('/^\\d+$/D');
+
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is safe in JS if the regexp is /^[0-9]+$/D
+	*/
+	public function testJSSafe2()
+	{
+		$filter = new Regexp('/^[0-9]+$/D');
+
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is safe in JS if the regexp is /^(?:[0-9]+)$/D
+	*/
+	public function testJSSafe3()
+	{
+		$filter = new Regexp('/^(?:[0-9]+)$/D');
+
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is not safe in JS if the regexp is /^\d+/D
+	*/
+	public function testJSUnsafeUnanchoredStart()
+	{
+		$filter = new Regexp('/^\\d+/D');
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is not safe in JS if the regexp is /\d+$/D
+	*/
+	public function testJSUnsafeUnanchoredEnd()
+	{
+		$filter = new Regexp('/\\d+$/D');
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is not safe in JS if the regexp is /^\d+$/
+	*/
+	public function testJSUnsafeNoDollarEndOnly()
+	{
+		$filter = new Regexp('/^\\d+$/');
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Is not safe in JS if the regexp is /^\d+$/Dm
+	*/
+	public function testJSUnsafeMultiLine()
+	{
+		$filter = new Regexp('/^\\d+$/Dm');
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
 	* @testdox __construct() forwards its arguments to setRegexp()
 	*/
 	public function testConstructorArguments()

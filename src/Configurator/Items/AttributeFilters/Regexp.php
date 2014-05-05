@@ -141,4 +141,26 @@ class Regexp extends AttributeFilter
 			return false;
 		}
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function isSafeInJS()
+	{
+		$safeExpressions = [
+			'\\d+',
+			'[0-9]+'
+		];
+
+		// Ensure that the regexp is anchored with ^ and $, that it only contains a safe expression
+		// optionally contained in a subpattern and that its modifiers contain PCRE_DOLLAR_ENDONLY
+		// but no modifiers other than Dis
+		$regexp = '(^(?<delim>.)\\^(?:'
+		        . '(?<expr>' . implode('|', array_map('preg_quote', $safeExpressions)) . ')'
+		        . '|'
+		        . '\\((?:\\?[:>])?(?&expr)\\)'
+		        . ')\\$(?&delim)(?=.*D)[Dis]*$)D';
+
+		return (bool) preg_match($regexp, $this->vars['regexp']);
+	}
 }

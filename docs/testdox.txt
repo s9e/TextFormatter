@@ -911,6 +911,13 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersRegexp
  [x] Is not safe in CSS if the regexp is /^[A-z]$/ because it would allow backslashes
  [x] Is not safe in CSS if the regexp is invalid
  [x] Is not safe in CSS if no regexp is set
+ [x] Is safe in JS if the regexp is /^\d+$/D
+ [x] Is safe in JS if the regexp is /^[0-9]+$/D
+ [x] Is safe in JS if the regexp is /^(?:[0-9]+)$/D
+ [x] Is not safe in JS if the regexp is /^\d+/D
+ [x] Is not safe in JS if the regexp is /\d+$/D
+ [x] Is not safe in JS if the regexp is /^\d+$/
+ [x] Is not safe in JS if the regexp is /^\d+$/Dm
  [x] __construct() forwards its arguments to setRegexp()
  [x] getRegexp() returns the filter's regexp
  [x] setRegexp() sets the filter's regexp
