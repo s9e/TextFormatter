@@ -1043,6 +1043,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.ebay.com/itm/251053262701',
+				'<r><EBAY itemid="251053262701" url="http://www.ebay.com/itm/251053262701">http://www.ebay.com/itm/251053262701</EBAY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ebay');
+				}
+			],
+			[
 				'http://espn.go.com/video/clip?id=10315344',
 				'<r><ESPN cms="espn" id="10315344" url="http://espn.go.com/video/clip?id=10315344">http://espn.go.com/video/clip?id=10315344</ESPN></r>',
 				[],

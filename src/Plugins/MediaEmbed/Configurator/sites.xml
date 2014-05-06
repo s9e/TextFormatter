@@ -200,6 +200,7 @@
 		<example>http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153</example>
 		<example>http://www.ebay.de/itm/Converse-Chucks-All-Star-OX-Klassiker-Gr-35-48-/320748648909</example>
 		<example>http://www.ebay.fr/itm/CONVERSE-CHUCK-TAYLOR-AS-CORE-OX-All-Star-Sneakers-Men-Women-Free-Shipping-/380728186640</example>
+		<example>http://www.ebay.com/itm/261416432518</example>
 
 		<host>ebay.com</host>
 		<host>ebay.de</host>
@@ -211,7 +212,7 @@
 		<host>ebay.es</host>
 		<host>ebay.ca</host>
 		<host>ebay.at</host>
-		<extract>#ebay.[\w.]+/itm/[^/]+/(?'itemid'\d+)#</extract>
+		<extract>#ebay.[\w.]+/itm/(?:[-\w]+/)?(?'itemid'\d+)#</extract>
 		<scrape>
 			<match>#ebay\.(?!com/)#</match>
 			<extract>#"locale":"(?'lang'[\w_]+)"#</extract>
