@@ -628,7 +628,10 @@
 		<example>https://twitter.com/DerekTVShow/status/463372588690202624</example>
 
 		<host>twitter.com</host>
-		<extract>!(?'url'https://twitter\.com/[^/]+/status(?:es)?/(?'id'\d+))!</extract>
+		<extract>!(?'url'https://twitter\.com/[^/]+/status(?:es)?/\d+)!</extract>
+		<attributes>
+			<url required="true"/>
+		</attributes>
 
 		<!--
 			var iframe = this;

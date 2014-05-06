@@ -1450,7 +1450,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<r><TWEET id="266031293945503744" url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWEET></r>',
+				'<r><TWEET url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWEET></r>',
 				[],
 				function ($configurator)
 				{
@@ -1459,7 +1459,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/status/266031293945503744',
-				'<r><TWEET id="266031293945503744" url="https://twitter.com/BarackObama/status/266031293945503744">https://twitter.com/BarackObama/status/266031293945503744</TWEET></r>',
+				'<r><TWEET url="https://twitter.com/BarackObama/status/266031293945503744">https://twitter.com/BarackObama/status/266031293945503744</TWEET></r>',
 				[],
 				function ($configurator)
 				{

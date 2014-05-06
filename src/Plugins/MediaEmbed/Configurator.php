@@ -202,10 +202,7 @@ class Configurator extends ConfiguratorBase
 		// Store attributes' configuration, starting with a default "url" attribute to store the
 		// original URL if applicable
 		$attributes = [
-			'url' => [
-				'required' => false,
-				'type'     => 'url'
-			]
+			'url' => ['type' => 'url']
 		];
 
 		// Process the "scrape" directives
