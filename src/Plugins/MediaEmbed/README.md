@@ -276,6 +276,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>
 	</tr>
 	<tr>
+		<td><code>tweet</code></td>
+		<td>Twitter (via custom iframe)</td>
+		<td>https://twitter.com/BarackObama/statuses/266031293945503744<br/>https://twitter.com/DerekTVShow/status/463372588690202624</td>
+	</tr>
+	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
 		<td>http://www.twitch.tv/minigolf2000<br/>http://www.twitch.tv/minigolf2000/c/2475925<br/>http://www.twitch.tv/minigolf2000/b/497929990<br/>http://www.twitch.tv/m/57217</td>

@@ -1449,6 +1449,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://twitter.com/BarackObama/statuses/266031293945503744',
+				'<r><TWEET id="266031293945503744" url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWEET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tweet');
+				}
+			],
+			[
+				'https://twitter.com/BarackObama/status/266031293945503744',
+				'<r><TWEET id="266031293945503744" url="https://twitter.com/BarackObama/status/266031293945503744">https://twitter.com/BarackObama/status/266031293945503744</TWEET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tweet');
+				}
+			],
+			[
 				'http://vimeo.com/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],
@@ -1977,6 +1995,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'https://twitter.com/BarackObama/statuses/266031293945503744',
+				'<iframe width="500" height="186" src="//s9e.github.io/tweetframe.min.html?https://twitter.com/BarackObama/statuses/266031293945503744" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener(\'message\',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+\'px\')});b.contentWindow.postMessage(\'s9e:init\',\'*\')"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tweet');
 				}
 			],
 			[

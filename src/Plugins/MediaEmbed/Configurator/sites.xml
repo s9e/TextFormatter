@@ -621,6 +621,34 @@
 		<iframe width="560" height="315" src="http://v.traileraddict.com/{@id}"/>
 	</site>
 
+	<site id="tweet">
+		<name>Twitter (via custom iframe)</name>
+		<homepage>https://twitter.com/</homepage>
+		<example>https://twitter.com/BarackObama/statuses/266031293945503744</example>
+		<example>https://twitter.com/DerekTVShow/status/463372588690202624</example>
+
+		<host>twitter.com</host>
+		<extract>!(?'url'https://twitter\.com/[^/]+/status(?:es)?/(?'id'\d+))!</extract>
+
+		<!--
+			var iframe = this;
+			window.addEventListener('message', function(e)
+			{
+				if (!/^https?:\/\/s9e\.github\.io$/.test(e.origin) || !e.data.url || !e.data.height)
+				{
+					return;
+				}
+
+				if (iframe.src == e.data.url)
+				{
+					iframe.style.height = e.data.height + 'px';
+				}
+			});
+			iframe.contentWindow.postMessage('s9e:init','*');
+		-->
+		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/tweetframe.min.html?{@url}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+	</site>
+
 	<site id="twitch">
 		<name>Twitch</name>
 		<homepage>http://www.twitch.tv/</homepage>
