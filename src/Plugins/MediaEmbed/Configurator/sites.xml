@@ -626,9 +626,10 @@
 		<homepage>https://twitter.com/</homepage>
 		<example>https://twitter.com/BarackObama/statuses/266031293945503744</example>
 		<example>https://twitter.com/DerekTVShow/status/463372588690202624</example>
+		<example>https://twitter.com/#!/BarackObama/status/266031293945503744</example>
 
 		<host>twitter.com</host>
-		<extract>!(?'url'https://twitter\.com/[^/]+/status(?:es)?/\d+)!</extract>
+		<extract>@(?'url'https://twitter\.com/(?:#!/)?\w+/status(?:es)?/\d+)@</extract>
 		<attributes>
 			<url required="true"/>
 		</attributes>

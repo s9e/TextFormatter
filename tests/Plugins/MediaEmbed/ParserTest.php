@@ -1467,6 +1467,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://twitter.com/#!/BarackObama/status/266031293945503744',
+				'<r><TWEET url="https://twitter.com/#!/BarackObama/status/266031293945503744">https://twitter.com/#!/BarackObama/status/266031293945503744</TWEET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tweet');
+				}
+			],
+			[
 				'http://vimeo.com/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],
