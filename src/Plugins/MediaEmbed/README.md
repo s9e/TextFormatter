@@ -182,7 +182,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	</tr>
 	<tr>
 		<td><code>gist</code></td>
-		<td>GitHub Gist</td>
+		<td>GitHub Gist (via custom iframe)</td>
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>

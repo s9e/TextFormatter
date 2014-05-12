@@ -1790,7 +1790,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305',
-				'<script src="https://gist.github.com/s9e/6806305.js"></script>',
+				'<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html?s9e/6806305" frameborder="0" onload="var b=this;window.addEventListener(\'message\',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+\'px\')});b.contentWindow.postMessage(\'s9e:init\',\'*\')"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2008,7 +2008,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe width="500" height="186" src="//s9e.github.io/tweetframe.min.html?https://twitter.com/BarackObama/statuses/266031293945503744" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener(\'message\',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+\'px\')});b.contentWindow.postMessage(\'s9e:init\',\'*\')"></iframe>',
+				'<iframe width="500" height="186" src="//s9e.github.io/iframe/tweet.min.html?https://twitter.com/BarackObama/statuses/266031293945503744" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener(\'message\',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+\'px\')});b.contentWindow.postMessage(\'s9e:init\',\'*\')"></iframe>',
 				[],
 				function ($configurator)
 				{

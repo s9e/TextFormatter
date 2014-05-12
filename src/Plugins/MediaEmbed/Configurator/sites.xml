@@ -308,7 +308,7 @@
 	</site>
 
 	<site id="gist">
-		<name>GitHub Gist</name>
+		<name>GitHub Gist (via custom iframe)</name>
 		<homepage>https://gist.github.com/</homepage>
 		<example>https://gist.github.com/s9e/6806305</example>
 		<example>https://gist.github.com/6806305</example>
@@ -316,7 +316,7 @@
 
 		<host>github.com</host>
 		<extract>!gist\.github\.com/(?'id'(?:\w+/)?[0-9]+(?:/[0-9a-f]+)?)!</extract>
-		<template><![CDATA[<script src="https://gist.github.com/{@id}.js"></script>]]></template>
+		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html?{@id}" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
 	<site id="grooveshark">
@@ -650,7 +650,7 @@
 			});
 			iframe.contentWindow.postMessage('s9e:init','*');
 		-->
-		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/tweetframe.min.html?{@url}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/iframe/tweet.min.html?{@url}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
 	<site id="twitch">
