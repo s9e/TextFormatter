@@ -13,7 +13,10 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 class TagCollection extends NormalizedCollection
 {
 	/**
-	* {@inheritdoc}
+	* Normalize a tag name used as a key in this colelction
+	*
+	* @param  string $key Original name
+	* @return string      Normalized name
 	*/
 	public function normalizeKey($key)
 	{
