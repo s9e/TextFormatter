@@ -1061,6 +1061,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://m.espn.go.com/general/video?vid=10926479',
+				'<r><ESPN cms="espn" id="10926479" url="http://m.espn.go.com/general/video?vid=10926479">http://m.espn.go.com/general/video?vid=10926479</ESPN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
 				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
 				'<r><ESPN cms="deportes" id="2002850" url="http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850">http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850</ESPN></r>',
 				[],
