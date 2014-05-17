@@ -123,7 +123,7 @@
 
 		<host>break.com</host>
 		<extract>!break\.com/video/.*-(?'id'[0-9]+)$!</extract>
-		<iframe width="464" height="290" src="http://www.break.com/embed/{@id}"/>
+		<iframe width="464" height="290" src="//break.com/embed/{@id}"/>
 	</site>
 
 	<site id="cbsnews">

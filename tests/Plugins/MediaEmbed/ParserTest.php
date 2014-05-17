@@ -1852,15 +1852,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
-				'<iframe width="464" height="290" src="http://www.break.com/embed/2278131" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('break');
-				}
-			],
-			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
 				'<object type="application/x-shockwave-flash" typemustmatch="" width="425" height="279" data="http://i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501"><embed type="application/x-shockwave-flash" width="425" height="279" allowfullscreen="" src="http://i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" flashvars="si=254&amp;contentValue=50156501"></object>',
 				[],
