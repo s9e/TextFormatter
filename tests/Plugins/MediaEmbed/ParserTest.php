@@ -944,6 +944,87 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
+				'<r><AMAZON id="B00GQT1LNO" tld="ca" url="http://www.amazon.ca/gp/product/B00GQT1LNO/">http://www.amazon.ca/gp/product/B00GQT1LNO/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
+				'<r><AMAZON id="B003AKZ6I8" tld="jp" url="http://www.amazon.co.jp/gp/product/B003AKZ6I8/">http://www.amazon.co.jp/gp/product/B003AKZ6I8/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
+				'<r><AMAZON id="B00BET0NR6" tld="uk" url="http://www.amazon.co.uk/gp/product/B00BET0NR6/">http://www.amazon.co.uk/gp/product/B00BET0NR6/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.com/dp/B002MUC0ZY',
+				'<r><AMAZON id="B002MUC0ZY" url="http://www.amazon.com/dp/B002MUC0ZY">http://www.amazon.com/dp/B002MUC0ZY</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/',
+				'<r><AMAZON id="B001RB2CXY" url="http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/">http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.com/gp/product/B0094H8H7I',
+				'<r><AMAZON id="B0094H8H7I" url="http://www.amazon.com/gp/product/B0094H8H7I">http://www.amazon.com/gp/product/B0094H8H7I</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
+				'<r><AMAZON id="B00ET2LTE6" tld="de" url="http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/">http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
+				'<r><AMAZON id="B005NIKPAY" tld="fr" url="http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/">http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.it/gp/product/B00JGOMIP6/',
+				'<r><AMAZON id="B00JGOMIP6" tld="it" url="http://www.amazon.it/gp/product/B00JGOMIP6/">http://www.amazon.it/gp/product/B00JGOMIP6/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
 				'http://blip.tv/play/AYKn_x0A',
 				'<r><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></r>',
 				[],
@@ -1707,6 +1788,69 @@ class ParserTest extends Test
 	public function getRenderingTests()
 	{
 		return [
+			[
+				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-ca.amazon.ca/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B003AKZ6I8&amp;o=9"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-uk.amazon.co.uk/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00BET0NR6&amp;o=2"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.com/dp/B002MUC0ZY',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm.amazon.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B002MUC0ZY&amp;o=1"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-de.amazon.de/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-fr.amazon.fr/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B005NIKPAY&amp;o=8"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.it/gp/product/B00JGOMIP6/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="http://rcm-it.amazon.it/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00JGOMIP6&amp;o=29"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
 			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
 				'<iframe width="464" height="290" src="http://www.break.com/embed/2278131" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
