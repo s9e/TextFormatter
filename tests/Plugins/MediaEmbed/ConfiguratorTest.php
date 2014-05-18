@@ -541,6 +541,31 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Extra attributes can be added to an iframe
+	*/
+	public function testAddIframeAttributes()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'iframe'  => [
+					'width'  => '{@width}',
+					'height' => '{@height}',
+					'src'    => 'foo',
+					'onload' => "this.foo='bar'"
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<iframe width="{@width}" height="{@height}" src="foo" onload="this.foo=\'bar\'" allowfullscreen="" frameborder="0" scrolling="no"/>',
+			$tag->template
+		);
+	}
+
+	/**
 	* @testdox add() sets the tag's default template to the object defined in the "flash" element if available
 	*/
 	public function testAddFlash()

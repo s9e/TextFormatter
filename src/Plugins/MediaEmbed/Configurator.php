@@ -445,11 +445,17 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function buildIframe(array $siteConfig)
 	{
+		// Get attributes from the original definition
 		$attributes = $siteConfig['iframe'];
-		$attributes['allowfullscreen'] = '';
-		$attributes['frameborder']     = '0';
-		$attributes['scrolling']       = 'no';
 
+		// Add the default attributes
+		$attributes += [
+			'allowfullscreen' => '',
+			'frameborder'     => '0',
+			'scrolling'       => 'no'
+		];
+
+		// Build the template
 		$template = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
 
 		return $template;
