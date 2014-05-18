@@ -1161,7 +1161,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
-				'<r><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
+				'<r><FACEBOOK id="10100658170103643" mode="photo" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1170,7 +1170,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10150451523596807',
-				'<r><FACEBOOK id="10150451523596807" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
+				'<r><FACEBOOK id="10150451523596807" mode="video" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1907,7 +1907,16 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
-				'<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id=10100658170103643" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/facebook.min.html?10151471074398553" onload="var b=this;window.addEventListener(\'message\',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+\'px\')});b.contentWindow.postMessage(\'s9e:init\',\'*\')"></iframe>',
 				[],
 				function ($configurator)
 				{

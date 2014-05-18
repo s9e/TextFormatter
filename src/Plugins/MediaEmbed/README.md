@@ -41,7 +41,7 @@ foreach ($examples as $text)
 ```
 ```html
 <iframe width="560" height="315" src="//www.dailymotion.com/embed/video/x222z1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
-<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id=10100658170103643" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
+<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>
 <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe>
 ```
 
@@ -163,7 +163,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>facebook</code></td>
 		<td>Facebook</td>
-		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807</td>
+		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</td>
 	</tr>
 	<tr>
 		<td><code>funnyordie</code></td>

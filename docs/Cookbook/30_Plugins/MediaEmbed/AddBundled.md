@@ -28,6 +28,6 @@ foreach ($examples as $text)
 ```
 ```html
 <iframe width="560" height="315" src="//www.dailymotion.com/embed/video/x222z1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
-<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id=10100658170103643" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
+<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>
 <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe>
 ```
