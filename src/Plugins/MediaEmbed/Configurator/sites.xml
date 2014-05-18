@@ -307,7 +307,7 @@
 		<template><![CDATA[<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no">
 			<xsl:attribute name="src">
 				<xsl:choose>
-					<xsl:when test="@mode='post'">//s9e.github.io/iframe/facebook.min.html?</xsl:when>
+					<xsl:when test="@mode='post'">//s9e.github.io/iframe/facebook.min.html#</xsl:when>
 					<xsl:otherwise>https://www.facebook.com/video/embed?video_id=</xsl:otherwise>
 				</xsl:choose>
 				<xsl:value-of select="@id"/>
@@ -380,8 +380,8 @@
 		<example>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</example>
 
 		<host>github.com</host>
-		<extract>!gist\.github\.com/(?'id'(?:\w+/)?[0-9]+(?:/[0-9a-f]+)?)!</extract>
-		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html?{@id}" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+		<extract>!gist\.github\.com/(?'id'(?:\w+/)?\d+(?:/[\da-f]+)?)!</extract>
+		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
 	<site id="grooveshark">
@@ -715,7 +715,7 @@
 			});
 			iframe.contentWindow.postMessage('s9e:init','*');
 		-->
-		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/iframe/tweet.min.html?{@url}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&&a.data.url&&a.data.height&&b.src==a.data.url&&(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/iframe/tweet.min.html#{@url}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
 	<site id="twitch">
