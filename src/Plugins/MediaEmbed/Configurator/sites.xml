@@ -520,9 +520,9 @@
 		<extract>!rutube\.ru/tracks/(?'id'[0-9]+)!</extract>
 		<scrape>
 			<match>!rutube\.ru/video/[0-9a-f]{32}!</match>
-			<extract>!rutube\.ru/video/embed/(?'id'[0-9]+)!</extract>
+			<extract>!rutube\.ru/play/embed/(?'id'[0-9]+)!</extract>
 		</scrape>
-		<iframe width="720" height="405" src="//rutube.ru/video/embed/{@id}"/>
+		<iframe width="720" height="405" src="//rutube.ru/play/embed/{@id}"/>
 	</site>
 
 	<site id="slideshare">

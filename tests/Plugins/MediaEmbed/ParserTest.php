@@ -2015,7 +2015,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<iframe width="720" height="405" src="//rutube.ru/video/embed/4118278" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="720" height="405" src="//rutube.ru/play/embed/4118278" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
