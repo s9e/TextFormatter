@@ -41,7 +41,7 @@
 					<xsl:when test="@tld and contains('cadefrit',@tld)"><xsl:value-of select="@tld"/></xsl:when>
 					<xsl:otherwise>com</xsl:otherwise>
 				</xsl:choose>
-				<xsl:text>/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=_&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
+				<xsl:text>/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
 				<xsl:value-of select="@id"/>
 				<xsl:text>&amp;o=</xsl:text>
 				<xsl:choose>
@@ -52,6 +52,11 @@
 					<xsl:when test="@tld='jp'">9</xsl:when>
 					<xsl:when test="@tld='uk'">2</xsl:when>
 					<xsl:otherwise>1</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>&amp;t=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when>
+					<xsl:otherwise>_</xsl:otherwise>
 				</xsl:choose>
 			]]></src>
 		</iframe>
