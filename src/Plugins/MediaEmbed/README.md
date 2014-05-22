@@ -121,6 +121,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.cbsnews.com/video/watch/?id=50156501n<br/>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</td>
 	</tr>
 	<tr>
+		<td><code>cnbc</code></td>
+		<td>CNBC</td>
+		<td>http://video.cnbc.com/gallery/?video=3000269279</td>
+	</tr>
+	<tr>
 		<td><code>cnn</code></td>
 		<td>CNN</td>
 		<td>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html<br/>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>

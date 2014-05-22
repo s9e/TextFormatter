@@ -162,6 +162,16 @@
 		</flash>
 	</site>
 
+	<site id="cnbc">
+		<name>CNBC</name>
+		<homepage>http://www.cnbc.com/</homepage>
+		<example>http://video.cnbc.com/gallery/?video=3000269279</example>
+
+		<host>video.cnbc.com</host>
+		<extract>!cnbc\.com/gallery/\?video=(?'id'\d+)!</extract>
+		<flash width="400" height="380" src="http://plus.cnbc.com/rssvideosearch/action/player/id/{@id}/code/cnbcplayershare"/>
+	</site>
+
 	<site id="cnn">
 		<name>CNN</name>
 		<homepage>http://edition.cnn.com/video/</homepage>

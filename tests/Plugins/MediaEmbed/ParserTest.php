@@ -1070,6 +1070,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://video.cnbc.com/gallery/?video=3000269279',
+				'<r><CNBC id="3000269279" url="http://video.cnbc.com/gallery/?video=3000269279">http://video.cnbc.com/gallery/?video=3000269279</CNBC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cnbc');
+				}
+			],
+			[
 				'http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html',
 				'<r><CNN id="showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn" url="http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html">http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</CNN></r>',
 				[],
