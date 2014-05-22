@@ -1575,6 +1575,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.vevo.com/watch/USUV71400682',
+				'<r><VEVO id="USUV71400682" url="http://www.vevo.com/watch/USUV71400682">http://www.vevo.com/watch/USUV71400682</VEVO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vevo');
+				}
+			],
+			[
+				'http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925',
+				'<r><VEVO id="USUV71302925" url="http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925">http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</VEVO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vevo');
+				}
+			],
+			[
 				'http://vimeo.com/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],

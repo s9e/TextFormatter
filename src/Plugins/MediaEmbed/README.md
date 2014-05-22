@@ -301,6 +301,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.ustream.tv/channel/ps4-ustream-gameplay<br/>http://www.ustream.tv/baja1000tv<br/>http://www.ustream.tv/recorded/40688256</td>
 	</tr>
 	<tr>
+		<td><code>vevo</code></td>
+		<td>VEVO</td>
+		<td>http://www.vevo.com/watch/USUV71400682<br/>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>
+	</tr>
+	<tr>
 		<td><code>vimeo</code></td>
 		<td>Vimeo</td>
 		<td>http://vimeo.com/67207222<br/>http://vimeo.com/channels/staffpicks/67207222</td>
