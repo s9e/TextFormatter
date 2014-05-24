@@ -21,5 +21,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<div class="embed-youtube"><iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div>
+<div class="embed-youtube"><iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/-cEzsCAzTak?controls=2"></iframe></div>
 ```

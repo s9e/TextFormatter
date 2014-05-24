@@ -879,17 +879,14 @@
 			<src><![CDATA[
 				<xsl:text>//www.youtube.com/embed/</xsl:text>
 				<xsl:value-of select="@id"/>
-				<xsl:if test="@list or @t">
-					<xsl:text>?</xsl:text>
-					<xsl:if test="@list">
-						<xsl:text>list=</xsl:text>
-						<xsl:value-of select="@list"/>
-						<xsl:if test="@t">&amp;</xsl:if>
-					</xsl:if>
-					<xsl:if test="@t">
-						<xsl:text>start=</xsl:text>
-						<xsl:value-of select="@t"/>
-					</xsl:if>
+				<xsl:text>?controls=2</xsl:text>
+				<xsl:if test="@list">
+					<xsl:text>&amp;list=</xsl:text>
+					<xsl:value-of select="@list"/>
+				</xsl:if>
+				<xsl:if test="@t">
+					<xsl:text>&amp;start=</xsl:text>
+					<xsl:value-of select="@t"/>
 				</xsl:if>
 			]]></src>
 		</iframe>
