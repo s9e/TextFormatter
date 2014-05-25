@@ -387,6 +387,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://gty.im/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://gty.im/3232182" width="594">http://gty.im/3232182</GETTY></r>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('getty');
+				},
+				null,
+				'assertRegexp'
+			],
+			[
+				'http://www.gettyimages.com/detail/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://www.gettyimages.com/detail/3232182" width="594">http://www.gettyimages.com/detail/3232182</GETTY></r>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('getty');
+				},
+				null,
+				'assertRegexp'
+			],
+			[
+				'http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182" width="594">http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</GETTY></r>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('getty');
+				},
+				null,
+				'assertRegexp'
+			],
+			[
 				'http://gfycat.com/SereneIllfatedCapybara',
 				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://gfycat.com/SereneIllfatedCapybara" width="600">http://gfycat.com/SereneIllfatedCapybara</GFYCAT></r>',
 				[],
@@ -651,6 +687,17 @@ class ParserTest extends Test
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('ebay');
 				}
+			],
+			[
+				'http://www.gettyimages.com/detail/3232182',
+				'(<iframe width="594" height="448" src="//embed.gettyimages.com/embed/3232182\?et=[-\\w]{22}&amp;sig=[-\\w]{43}=" allowfullscreen="" frameborder="0" scrolling="no"></iframe>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('getty');
+				},
+				'assertRegexp'
 			],
 			[
 				'http://gfycat.com/SereneIllfatedCapybara',

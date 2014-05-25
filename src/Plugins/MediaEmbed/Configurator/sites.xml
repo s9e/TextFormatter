@@ -372,6 +372,41 @@
 		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
+	<site id="getty">
+		<name>Getty Images</name>
+		<homepage>http://www.gettyimages.com/</homepage>
+		<example>http://gty.im/3232182</example>
+		<example>http://www.gettyimages.com/detail/3232182</example>
+		<example>http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</example>
+		<example>http://www.gettyimages.co.uk/detail/3232182</example>
+
+		<host>gettyimages.be</host>
+		<host>gettyimages.cn</host>
+		<host>gettyimages.co.jp</host>
+		<host>gettyimages.co.uk</host>
+		<host>gettyimages.com</host>
+		<host>gettyimages.com.au</host>
+		<host>gettyimages.de</host>
+		<host>gettyimages.dk</host>
+		<host>gettyimages.es</host>
+		<host>gettyimages.fr</host>
+		<host>gettyimages.ie</host>
+		<host>gettyimages.it</host>
+		<host>gettyimages.nl</host>
+		<host>gettyimages.pt</host>
+		<host>gettyimages.se</host>
+		<host>gty.im</host>
+		<extract>!gty\.im/(?'id'\d+)!</extract>
+		<extract>!gettyimages\.[.\w]+/detail/(?:[-\w/]+/)?(?'id'\d+)!</extract>
+		<scrape url="http://embed.gettyimages.com/preview/{@id}">
+			<extract>!"height":[ "]*(?'height'\d+)!</extract>
+			<extract>!"width":[ "]*(?'width'\d+)!</extract>
+			<extract>!et=(?'et'[-=\w]+)!</extract>
+			<extract>!sig=(?'sig'[-=\w]+)!</extract>
+		</scrape>
+		<iframe width="{@width}" height="{49+@height}" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;sig={@sig}"/>
+	</site>
+
 	<site id="gfycat">
 		<name>gfycat</name>
 		<homepage>http://gfycat.com/</homepage>
