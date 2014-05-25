@@ -10,7 +10,7 @@ trait ParsingTestsRunner
 	* @testdox Parsing tests
 	* @dataProvider getParsingTests
 	*/
-	public function testParsing($original, $expected, array $pluginOptions = [], $setup = null)
+	public function testParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = null, $assertMethod = 'assertSame')
 	{
 		$pluginName = preg_replace('/.*\\\\([^\\\\]+)\\\\.*/', '$1', get_class($this));
 
@@ -22,6 +22,6 @@ trait ParsingTestsRunner
 			$setup($configurator, $plugin);
 		}
 
-		$this->assertSame($expected, $configurator->getParser()->parse($original));
+		$this->$assertMethod($expected, $configurator->getParser()->parse($original));
 	}
 }

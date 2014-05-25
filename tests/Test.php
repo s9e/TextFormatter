@@ -102,7 +102,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function assertJSParsing($original, $expected)
+	protected function assertJSParsing($original, $expected, $assertMethod = 'assertSame')
 	{
 		// Minify and cache the parser if we have a cache dir and we're not on Travis
 		$cacheDir = __DIR__ . '/.cache';
@@ -121,7 +121,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$this->configurator->javascript->exportMethods = ['parse'];
 		$src = $this->configurator->javascript->getParser();
 
-		$this->assertSame(
+		$this->$assertMethod(
 			$expected,
 			$this->execJS($src, $original)
 		);

@@ -13,9 +13,9 @@ trait ParsingTestsJavaScriptRunner
 	* @requires extension json
 	* @covers s9e\TextFormatter\Configurator\JavaScript
 	*/
-	public function testJavaScriptParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = false)
+	public function testJavaScriptParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = null, $assertMethod = 'assertSame')
 	{
-		if ($expectedJS)
+		if (isset($expectedJS))
 		{
 			$expected = $expectedJS;
 		}
