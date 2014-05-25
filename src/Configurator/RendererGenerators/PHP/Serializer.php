@@ -165,6 +165,11 @@ class Serializer
 				'string'    => '"[^"]*"|\'[^\']*\'',
 				'number'    => ['-?', '\\d++'],
 				'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'],
+				'mathadd'   => [
+					'(?<mathadd0>(?&attr)|(?&number)|(?&param))',
+					'\\+',
+					'(?<mathadd1>(?&attr)|(?&number)|(?&param))'
+				],
 				'contains'  => [
 					'contains',
 					'\\(',
@@ -488,6 +493,21 @@ class Serializer
 				$php .= ')';
 
 				return $php;
+			}
+
+			if (!empty($m['mathadd']))
+			{
+				if (!is_numeric($m['mathadd0']))
+				{
+					$m['mathadd0'] = $this->convertXPath($m['mathadd0']);
+				}
+
+				if (!is_numeric($m['mathadd1']))
+				{
+					$m['mathadd1'] = $this->convertXPath($m['mathadd1']);
+				}
+
+				return '(' . $m['mathadd0'] . '+' . $m['mathadd1'] . ')';
 			}
 		}
 

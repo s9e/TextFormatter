@@ -211,6 +211,15 @@ class SerializerTest extends Test
 				"380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))",
 				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'track/')===0?80:380)"
 			],
+			// Math
+			[
+				'@foo + 12',
+				"(\$node->getAttribute('foo')+12)"
+			],
+			[
+				'44 + $bar',
+				"(44+\$this->params['bar'])"
+			],
 		];
 	}
 
