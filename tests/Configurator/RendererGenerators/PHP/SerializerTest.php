@@ -214,11 +214,25 @@ class SerializerTest extends Test
 			// Math
 			[
 				'@foo + 12',
-				"(\$node->getAttribute('foo')+12)"
+				"(\$node->getAttribute('foo')+12)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				'44 + $bar',
-				"(44+\$this->params['bar'])"
+				"(44+\$this->params['bar'])",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 		];
 	}

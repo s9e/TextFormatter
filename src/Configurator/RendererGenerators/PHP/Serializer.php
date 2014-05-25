@@ -165,11 +165,6 @@ class Serializer
 				'string'    => '"[^"]*"|\'[^\']*\'',
 				'number'    => ['-?', '\\d++'],
 				'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'],
-				'mathadd'   => [
-					'(?<mathadd0>(?&attr)|(?&number)|(?&param))',
-					'\\+',
-					'(?<mathadd1>(?&attr)|(?&number)|(?&param))'
-				],
 				'contains'  => [
 					'contains',
 					'\\(',
@@ -206,6 +201,17 @@ class Serializer
 					'\\)'
 				]
 			];
+
+			// Old versions of PCRE and/or PHP choke on long expressions, so we only add those
+			// if the version of PCRE isn't ancient
+			if (version_compare(PCRE_VERSION, '8.13', '>='))
+			{
+				$patterns['mathadd'] = [
+					'(?<mathadd0>(?&attr)|(?&number)|(?&param))',
+					'\\+',
+					'(?<mathadd1>(?&attr)|(?&number)|(?&param))'
+				];
+			}
 
 			$exprs = [];
 
