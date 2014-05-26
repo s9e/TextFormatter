@@ -187,6 +187,21 @@ function optimizeFile($filepath, array $options = [])
 		unset($token);
 	}
 
+	if (!empty($options['convertDocblock']))
+	{
+		foreach ($tokens as $i => &$token)
+		{
+			if ($token[0] !== T_DOC_COMMENT)
+			{
+				continue;
+			}
+
+			$token[1] = '/' . substr($token[1], 2);
+			$changed  = true;
+		}
+		unset($token);
+	}
+
 	if (!empty($options['removeWhitespace']))
 	{
 		if ($changed)
@@ -240,6 +255,7 @@ if (!defined('T_TRAIT'))
 //       difference without an opcode cache. However, those changes are too radical to be enabled
 //       by default
 $options = [
+	'convertDocblock'  => true,
 	'removeComments'   => false,
 	'removeDocblock'   => false,
 	'removeLicense'    => false,
