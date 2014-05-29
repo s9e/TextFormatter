@@ -517,6 +517,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://i.mixcloud.com/CH9VU9',
+				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
 				'https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/',
 				'<r><RDIO id="QitDVOn7" url="https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/">https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</RDIO></r>',
 				[],
@@ -1430,7 +1440,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/',
-				'<r><MIXCLOUD feed="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/" url="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/">http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</MIXCLOUD></r>',
+				'<r><MIXCLOUD id="OneTakeTapes/timsch-one-take-tapes-2" url="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/">http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</MIXCLOUD></r>',
 				[],
 				function ($configurator)
 				{

@@ -243,7 +243,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>mixcloud</code></td>
 		<td>Mixcloud</td>
-		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
+		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/<br/>http://i.mixcloud.com/CH9VU9</td>
 	</tr>
 	<tr>
 		<td><code>rdio</code></td>

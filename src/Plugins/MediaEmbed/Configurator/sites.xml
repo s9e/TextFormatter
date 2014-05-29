@@ -548,10 +548,15 @@
 		<name>Mixcloud</name>
 		<homepage>http://www.mixcloud.com/</homepage>
 		<example>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</example>
+		<example>http://i.mixcloud.com/CH9VU9</example>
 
-		<host>www.mixcloud.com</host>
-		<extract>@(?'feed'https?://www.mixcloud\.com/(?!categories|tag)[-\w]+/[^/&amp;]+/)@</extract>
-		<iframe width="660" height="180" src="//www.mixcloud.com/widget/iframe/?feed={@feed}&amp;hide_cover=1&amp;embed_type=widget_standard&amp;hide_tracklist=1"/>
+		<host>mixcloud.com</host>
+		<extract>@mixcloud\.com/(?!categories|tag)(?'id'[-\w]+/[^/&amp;]+)/@</extract>
+		<scrape>
+			<match>@//i\.mixcloud\.com/\w+$@</match>
+			<extract>@link rel="canonical" href="https?://[^/]+/(?'id'[-\w]+/[^/&amp;]+)/@</extract>
+		</scrape>
+		<iframe width="660" height="180" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;hide_cover=1&amp;embed_type=widget_standard&amp;hide_tracklist=1"/>
 	</site>
 
 	<site id="rdio">
