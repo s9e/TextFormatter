@@ -192,7 +192,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	</tr>
 	<tr>
 		<td><code>gfycat</code></td>
-		<td>gfycat</td>
+		<td>Gfycat</td>
 		<td>http://gfycat.com/SereneIllfatedCapybara<br/>http://giant.gfycat.com/SereneIllfatedCapybara.gif</td>
 	</tr>
 	<tr>
@@ -239,6 +239,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td><code>metacafe</code></td>
 		<td>Metacafe</td>
 		<td>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</td>
+	</tr>
+	<tr>
+		<td><code>mixcloud</code></td>
+		<td>Mixcloud</td>
+		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
 	<tr>
 		<td><code>rdio</code></td>

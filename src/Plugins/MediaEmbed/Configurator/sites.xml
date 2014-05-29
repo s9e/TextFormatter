@@ -544,6 +544,16 @@
 		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
 	</site>
 
+	<site id="mixcloud">
+		<name>Mixcloud</name>
+		<homepage>http://www.mixcloud.com/</homepage>
+		<example>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</example>
+
+		<host>www.mixcloud.com</host>
+		<extract>@(?'feed'https?://www.mixcloud\.com/(?!categories|tag)[-\w]+/[^/&amp;]+/)@</extract>
+		<iframe width="660" height="180" src="//www.mixcloud.com/widget/iframe/?feed={@feed}&amp;hide_cover=1&amp;embed_type=widget_standard&amp;hide_tracklist=1"/>
+	</site>
+
 	<site id="rdio">
 		<name>Rdio</name>
 		<homepage>http://www.rdio.com/</homepage>

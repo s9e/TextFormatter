@@ -1429,6 +1429,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/',
+				'<r><MIXCLOUD feed="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/" url="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/">http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</MIXCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
+				'http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2&foo=1/',
+				'<t>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2&amp;foo=1/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
+				'http://www.mixcloud.com/categories/classical/',
+				'<t>http://www.mixcloud.com/categories/classical/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
+				'http://www.mixcloud.com/tag/npr/',
+				'<t>http://www.mixcloud.com/tag/npr/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
 				'http://rd.io/x/QcD7oTdeWevg/',
 				'<r><RDIO id="QcD7oTdeWevg" url="http://rd.io/x/QcD7oTdeWevg/">http://rd.io/x/QcD7oTdeWevg/</RDIO></r>',
 				[],
