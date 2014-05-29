@@ -556,7 +556,7 @@
 			<match>@//i\.mixcloud\.com/\w+$@</match>
 			<extract>@link rel="canonical" href="https?://[^/]+/(?'id'[-\w]+/[^/&amp;]+)/@</extract>
 		</scrape>
-		<iframe width="660" height="180" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;hide_cover=1&amp;embed_type=widget_standard&amp;hide_tracklist=1"/>
+		<iframe width="300" height="300" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
 	</site>
 
 	<site id="rdio">
