@@ -246,6 +246,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/<br/>http://i.mixcloud.com/CH9VU9</td>
 	</tr>
 	<tr>
+		<td><code>nytimes</code></td>
+		<td>The New York Times Video</td>
+		<td>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</td>
+	</tr>
+	<tr>
 		<td><code>rdio</code></td>
 		<td>Rdio</td>
 		<td>http://rd.io/x/QcD7oTdeWevg/<br/>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</td>

@@ -1493,6 +1493,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html',
+				'<r><NYTIMES id="100000002907606" url="http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html">http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</NYTIMES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
+				'http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html',
+				'<r><NYTIMES id="100000001950744" url="http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html">http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</NYTIMES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
 				'http://rd.io/x/QcD7oTdeWevg/',
 				'<r><RDIO id="QcD7oTdeWevg" url="http://rd.io/x/QcD7oTdeWevg/">http://rd.io/x/QcD7oTdeWevg/</RDIO></r>',
 				[],

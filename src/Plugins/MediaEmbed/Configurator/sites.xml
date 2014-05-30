@@ -559,6 +559,18 @@
 		<iframe width="300" height="300" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
 	</site>
 
+	<site id="nytimes">
+		<name>The New York Times Video</name>
+		<homepage>http://www.nytimes.com/video/</homepage>
+		<example>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</example>
+		<example>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</example>
+
+		<host>nytimes.com</host>
+		<extract>!nytimes\.com/video/[a-z]+/[a-z]+/(?'id'\d+)!</extract>
+		<extract>!nytimes\.com/video/\d+/\d+/\d+/[a-z]+/(?'id'\d+)!</extract>
+		<iframe width="480" height="373" src="http://graphics8.nytimes.com/bcvideo/1.0/iframe/embed.html?videoId={@id}&amp;playerType=embed"/>
+	</site>
+
 	<site id="rdio">
 		<name>Rdio</name>
 		<homepage>http://www.rdio.com/</homepage>
