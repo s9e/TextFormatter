@@ -517,6 +517,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://archive.org/details/BillGate99',
+				'<r><INTERNETARCHIVE height="240" id="BillGate99" url="https://archive.org/details/BillGate99" width="320">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
+				'https://archive.org/details/DFTS2014-05-30',
+				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" url="https://archive.org/details/DFTS2014-05-30" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
 				'http://i.mixcloud.com/CH9VU9',
 				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
 				[],

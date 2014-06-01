@@ -503,6 +503,22 @@
 		<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
 	</site>
 
+	<site id="internetarchive">
+		<name>Internet Archive</name>
+		<homepage>https://archive.org/</homepage>
+		<example>https://archive.org/details/BillGate99</example>
+		<example>https://archive.org/details/DFTS2014-05-30</example>
+
+		<host>archive.org</host>
+		<scrape>
+			<match>!archive\.org/details/!</match>
+			<extract>!meta property="twitter:player" content="https://archive.org/embed/(?'id'[^/"]+)!</extract>
+			<extract>!meta property="og:video:width" content="(?'width'\d+)!</extract>
+			<extract>!meta property="og:video:height" content="(?'height'\d+)!</extract>
+		</scrape>
+		<iframe width="{@width}" height="{@height}" src="https://archive.org/embed/{@id}"/>
+	</site>
+
 	<site id="kickstarter">
 		<name>Kickstarter</name>
 		<homepage>http://www.kickstarter.com/</homepage>
