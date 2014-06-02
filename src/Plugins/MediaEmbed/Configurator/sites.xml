@@ -587,6 +587,20 @@
 		<iframe width="480" height="373" src="http://graphics8.nytimes.com/bcvideo/1.0/iframe/embed.html?videoId={@id}&amp;playerType=embed"/>
 	</site>
 
+	<site id="podbean">
+		<name>Podbean</name>
+		<homepage>http://www.podbean.com/</homepage>
+		<example>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</example>
+
+		<host>podbean.com</host>
+		<extract>!podbean.com/site/player/index/pid/\d+/eid/(?'id'\d+)!</extract>
+		<scrape>
+			<match>!podbean.com/e/!</match>
+			<extract>!embed/postId/(?'id'\d+)!</extract>
+		</scrape>
+		<iframe width="300" height="100" src="http://www.podbean.com/media/player/audio/postId/{@id}"/>
+	</site>
+
 	<site id="rdio">
 		<name>Rdio</name>
 		<homepage>http://www.rdio.com/</homepage>

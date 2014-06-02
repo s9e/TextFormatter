@@ -547,6 +547,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
+				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('podbean');
+				}
+			],
+			[
 				'https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/',
 				'<r><RDIO id="QitDVOn7" url="https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/">https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</RDIO></r>',
 				[],

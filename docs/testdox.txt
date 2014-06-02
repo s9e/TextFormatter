@@ -4,13 +4,13 @@ autoloader
  [x] Can load s9e\TextFormatter\Plugins\Emoticons\Parser
  [x] Does not attempt to load a class whose name contains dots
 
-s9eTextFormatterTestsConfiguratorCollectionsCollection
+s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
  [x] clear() empties the collection
  [x] asConfig() returns the items as an array
 
-s9eTextFormatterTestsConfiguratorCollectionsNormalizedCollection
+s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] set() calls normalizeKey()
  [x] set() calls normalizeValue()
  [x] add() calls normalizeKey()
@@ -44,7 +44,7 @@ s9eTextFormatterTestsConfiguratorCollectionsNormalizedCollection
  [x] add() replaces the original element if the onDuplicate action is "replace"
  [x] add() throws a RuntimeException on duplicate elements if the onDuplicate action is "error"
 
-s9eTextFormatterTestsConfiguratorCollectionsNormalizedList
+s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] append() adds the value at the end of the list
  [x] $normalizedList[] = 'foo' maps to $normalizedList->append('foo')
  [x] prepend() adds the value at the beginning of the list
@@ -62,7 +62,7 @@ s9eTextFormatterTestsConfiguratorCollectionsNormalizedList
  [x] remove() returns the number of items removed
  [x] remove() reorders the list to remove gaps
 
-s9eTextFormatterTestsConfiguratorTraitsCollectionProxy
+s9e\TextFormatter\Tests\Configurator\Traits\CollectionProxy
  [x] $proxy->add() gets forwarded to $proxy->collection->add() with all arguments
  [x] $proxy->add() returns the value returned by $proxy->collection->add()
  [x] $proxy->exists() gets forwarded to $proxy->collection->exists() with all arguments
@@ -78,7 +78,7 @@ s9eTextFormatterTestsConfiguratorTraitsCollectionProxy
  [x] count($proxy) returns count($proxy->collection)
  [x] A collection proxy is iterable with foreach
 
-s9eTextFormatterTestsConfiguratorTraitsConfigurable
+s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __get('foo') calls getFoo() if it exists
  [x] __get($k) returns the property if it exists
  [x] __get() throws a RuntimeException if the property does not exist
@@ -103,7 +103,7 @@ s9eTextFormatterTestsConfiguratorTraitsConfigurable
  [x] __unset('foo') has no effect unsetFoo() does not exist and the the property is not set
  [x] __unset('foo') throws an exception if unsetFoo() does not exist and the property is set
 
-s9eTextFormatterTestsConfiguratorTraitsTemplateSafeness
+s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
  [x] isSafeAsURL() returns false by default
  [x] isSafeAsURL() returns true if markAsSafeAsURL() was called
  [x] isSafeInCSS() returns false by default
@@ -116,7 +116,7 @@ s9eTextFormatterTestsConfiguratorTraitsTemplateSafeness
  [x] resetSafeness() resets the contexts marked as safe
  [x] resetSafeness() is chainable
 
-s9eTextFormatterTestsConfigurator
+s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->bundleGenerator is an instance of BundleGenerator
  [x] $configurator->javascript is an instance of JavaScript
@@ -174,7 +174,7 @@ s9eTextFormatterTestsConfigurator
  [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
 
-s9eTextFormatterTestsConfiguratorCollectionsAttributeCollection
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
  [x] add() normalizes the attribute name
  [x] delete() normalizes the attribute name
@@ -182,7 +182,7 @@ s9eTextFormatterTestsConfiguratorCollectionsAttributeCollection
  [x] get() normalizes the attribute name
  [x] set() normalizes the attribute name
 
-s9eTextFormatterTestsConfiguratorCollectionsAttributeFilterChain
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] append() throws an InvalidArgumentException on invalid callbacks
  [x] prepend() throws an InvalidArgumentException on invalid callbacks
  [x] append() throws an InvalidArgumentException on uncallable callbacks
@@ -191,7 +191,7 @@ s9eTextFormatterTestsConfiguratorCollectionsAttributeFilterChain
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
  [x] Instances of AttributeFilter are added as-is
 
-s9eTextFormatterTestsConfiguratorCollectionsAttributeFilterCollection
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
  [x] Filter names that start with # are normalized to lowercase
  [x] set() accepts instances of AttributeFilter as-is
  [x] set() accepts a valid callback and returns an instance of AttributeFilter
@@ -204,13 +204,13 @@ s9eTextFormatterTestsConfiguratorCollectionsAttributeFilterCollection
  [x] get() throws an exception on unknown filter
  [x] get() returns a clone of the filter, not the original instance
 
-s9eTextFormatterTestsConfiguratorCollectionsAttributeList
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
  [x] asConfig() returns a deduplicated list of attribute names
  [x] asConfig() returns a list of attribute names in alphabetical order
 
-s9eTextFormatterTestsConfiguratorCollectionsAttributePreprocessorCollection
+s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\AttributePreprocessor
  [x] asConfig() returns a list of [attrName, regexp] arrays
  [x] asConfig() has a JavaScript variant for each attribute preprocessor
@@ -223,7 +223,7 @@ s9eTextFormatterTestsConfiguratorCollectionsAttributePreprocessorCollection
  [x] merge() throws an exception when passed a non-array, non-AttributProcessorCollection
  [x] merge() throws an exception when passed a one-dimensional array
 
-s9eTextFormatterTestsConfiguratorCollectionsHostnameList
+s9e\TextFormatter\Tests\Configurator\Collections\HostnameList
  [x] asConfig() returns null if the collection is empty
  [x] asConfig() returns a Variant
  [x] asConfig() returns a Variant that contains a regexp that matches its hostnames
@@ -233,7 +233,7 @@ s9eTextFormatterTestsConfiguratorCollectionsHostnameList
  [x] add('example.*') matches 'example.org'
  [x] add('example') does not match 'example.org'
 
-s9eTextFormatterTestsConfiguratorCollectionsPluginCollection
+s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] load() can load a stock plugin
  [x] load() throws an exception if the stock plugin does not exist
  [x] Accepts an object that implements ConfiguratorBase
@@ -253,7 +253,7 @@ s9eTextFormatterTestsConfiguratorCollectionsPluginCollection
  [x] asConfig() preserves className from the plugin's configuration if it's using a custom value
  [x] finalize() calls every plugin's finalize() method
 
-s9eTextFormatterTestsConfiguratorCollectionsRuleset
+s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist
  [x] Trying to set rules via array access throws a RuntimeException
@@ -344,13 +344,13 @@ s9eTextFormatterTestsConfiguratorCollectionsRuleset
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
  [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
-s9eTextFormatterTestsConfiguratorCollectionsRulesGeneratorList
+s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
  [x] add() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
  [x] add() adds BooleanRulesGenerator instances as-is
  [x] add() adds TargetedRulesGenerator instances as-is
  [x] add() throws an exception on invalid values
 
-s9eTextFormatterTestsConfiguratorCollectionsSchemeList
+s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
  [x] asConfig() returns an instance of Variant
  [x] asConfig() returns a regexp that matches all the allowed schemes in the default variant
  [x] asConfig() returns an instance of RegExp as the JS variant
@@ -358,7 +358,7 @@ s9eTextFormatterTestsConfiguratorCollectionsSchemeList
  [x] add('*invalid*') throws an exception
  [x] add() normalizes schemes to lowercase
 
-s9eTextFormatterTestsConfiguratorCollectionsTagCollection
+s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
  [x] add() normalizes the tag name
  [x] delete() normalizes the tag name
@@ -366,7 +366,7 @@ s9eTextFormatterTestsConfiguratorCollectionsTagCollection
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
-s9eTextFormatterTestsConfiguratorCollectionsTagFilterChain
+s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] append() throws an InvalidArgumentException on invalid callbacks
  [x] prepend() throws an InvalidArgumentException on invalid callbacks
  [x] append() throws an InvalidArgumentException on uncallable callbacks
@@ -375,32 +375,32 @@ s9eTextFormatterTestsConfiguratorCollectionsTagFilterChain
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
 
-s9eTextFormatterTestsConfiguratorCollectionsTagList
+s9e\TextFormatter\Tests\Configurator\Collections\TagList
  [x] Tag names are normalized for storage
  [x] Tag names are normalized during retrieval
  [x] asConfig() returns a deduplicated list of tag names
  [x] asConfig() returns a list of tag names in alphabetical order
 
-s9eTextFormatterTestsConfiguratorCollectionsTemplateCheckList
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
  [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateChecks
  [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateCheck as-is
 
-s9eTextFormatterTestsConfiguratorCollectionsTemplateNormalizationList
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
  [x] append() normalizes a callback into an instance of s9e\TextFormatter\Configurator\TemplateNormalizations\Custom
  [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateNormalizations
  [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateNormalization as-is
 
-s9eTextFormatterTestsConfiguratorCollectionsTemplateParameterCollection
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateParameterCollection
  [x] add('foo') adds parameter 'foo' with an empty value
  [x] add('foo', 1) adds parameter 'foo' with value '1'
  [x] add('foo bar') throws an exception
 
-s9eTextFormatterTestsConfiguratorUnsafeTemplateException
+s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
  [x] setNode() sets the stored node
  [x] highlightNode() returns the template's source formatted and with the stored node highlighted
 
-s9eTextFormatterTestsConfiguratorHelpersConfigHelper
+s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] filterVariants() filters the right variant
  [x] filterVariants() recurses into deep arrays
  [x] filterVariants() recurses into variants
@@ -421,12 +421,12 @@ s9eTextFormatterTestsConfiguratorHelpersConfigHelper
  [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
  [x] optimizeArray() reduces the size of a serialized config
 
-s9eTextFormatterTestsConfiguratorHelpersContextSafeness
+s9e\TextFormatter\Tests\Configurator\Helpers\ContextSafeness
  [x] getDisallowedCharactersAsURL() returns a list of strings
  [x] getDisallowedCharactersInCSS() returns a list of strings
  [x] getDisallowedCharactersInJS() returns a list of strings
 
-s9eTextFormatterTestsConfiguratorHelpersTemplateForensics
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] getDOM() returns the template as a DOMDocument
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
@@ -505,7 +505,7 @@ s9eTextFormatterTestsConfiguratorHelpersTemplateForensics
  [x] <ruby> allows <rtc> as a child
  [x] <ruby> does not allow <blockquote> as a child
 
-s9eTextFormatterTestsConfiguratorHelpersRegexpBuilder
+s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
  [x] fromList(['foo', 'foo']) returns 'foo'
  [x] fromList(['FOO', 'foo']) returns '(?>FOO|foo)'
@@ -625,7 +625,7 @@ s9eTextFormatterTestsConfiguratorHelpersRegexpBuilder
  [x] fromList(['x*x', 'xb-bx'], ["specialChars" => ["*" => "\\w+"]]) returns 'x(?:\\w+|b-b)x'
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
-s9eTextFormatterTestsConfiguratorHelpersRegexpParser
+s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() can parse plain regexps
  [x] parse() throws a RuntimeException if delimiters can't be parsed
  [x] parse() parses pattern modifiers
@@ -655,7 +655,7 @@ s9eTextFormatterTestsConfiguratorHelpersRegexpParser
  [x] parse() parses negative lookbehind assertions
  [x] getAllowedCharacterRegexp() works
 
-s9eTextFormatterTestsConfiguratorHelpersRulesHelper
+s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Works with a single tag
  [x] If no rule is defined, the default is to allow children and descendants
  [x] Correctly applies denyChild
@@ -677,14 +677,14 @@ s9eTextFormatterTestsConfiguratorHelpersRulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
-s9eTextFormatterTestsConfiguratorHelpersTemplateParser
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() tests
  [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
  [x] parse() throws an exception if it encounters an unsupported XSL element
  [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
  [x] parse() throws an exception if it encounters a non-XSL namespaced element
 
-s9eTextFormatterTestsConfiguratorHelpersTemplateHelper
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load 'foo'
  [x] saveTemplate() correctly handles 'foo'
  [x] loadTemplate() can load '<xsl:value-of select="@foo"/>'
@@ -710,7 +710,7 @@ s9eTextFormatterTestsConfiguratorHelpersTemplateHelper
  [x] getMetaElementsRegexp() tests
  [x] replaceHomogeneousTemplates() tests
 
-s9eTextFormatterTestsConfiguratorItemsAttribute
+s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array
  [x] $attr->generator accepts an instance of ProgrammableCallback
@@ -726,7 +726,7 @@ s9eTextFormatterTestsConfiguratorItemsAttribute
  [x] isSafeInJS() returns TRUE if any filter is safe in context
  [x] markAsSafeInJS() unconditionally marks the attribute as safe in context
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFilter
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilter
  [x] Sets the filter's signature to ['attrValue' => null]
  [x] isSafeInCSS() returns FALSE by default
  [x] isSafeInCSS() returns TRUE if markAsSafeInCSS() is called
@@ -738,13 +738,13 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFilter
  [x] isSafeAsURL() returns FALSE by default
  [x] isSafeAsURL() returns TRUE if markAsSafeAsURL() is called
 
-s9eTextFormatterTestsConfiguratorItemsAttributePreprocessor
+s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] getAttributes() returns an array where keys are the name of the named subpatterns/attributes and values is the regexp that exactly matches them
  [x] getAttributes() preserves the original's regexp "i", "s" and "u" flags
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
-s9eTextFormatterTestsConfiguratorItemsProgrammableCallback
+s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
  [x] An array of variables can be set with setVars() or retrieved with getVars()
  [x] setVars() is chainable
@@ -773,12 +773,12 @@ s9eTextFormatterTestsConfiguratorItemsProgrammableCallback
  [x] asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
  [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersAlnum
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Alnum
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
  [x] Is safe in CSS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersChoice
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Choice
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] __construct() forwards its arguments to setValues()
  [x] setValues() creates a regexp that matches all given values (case-insensitive) and calls setRegexp()
@@ -786,20 +786,20 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersChoice
  [x] setValues() creates a Unicode-aware regexp if any values are non-ASCII
  [x] setValues() throws an exception if its second argument is not a boolean
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersColor
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Color
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterColor()
  [x] Is safe in CSS
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersEmail
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Email
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterEmail()
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersFloat
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Float
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFloat()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersHashmap
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Hashmap
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterHashmap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
@@ -823,30 +823,30 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersHashmap
  [x] isSafeInJS() returns false if a value in the map contains U+2028
  [x] isSafeInJS() returns false if a value in the map contains U+2029
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersIdentifier
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Identifier
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
  [x] Is safe in CSS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersInt
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Int
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterInt()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersIp
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ip
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIp()
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersIpport
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipport
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpport()
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersIpv4
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv4()
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersIpv6
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv6()
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersMap
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
@@ -873,13 +873,13 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersMap
  [x] isSafeInJS() returns false if a value in the map contains U+2028
  [x] isSafeInJS() returns false if a value in the map contains U+2029
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersNumber
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Number
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersRange
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Range
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRange()
  [x] Is safe in CSS
  [x] Is safe in JS
@@ -893,7 +893,7 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersRange
  [x] setRange() throws an exception if the second argument is not a number
  [x] setRange() throws an exception if the min value is greater than the max value
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersRegexp
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is not safe as URL
  [x] Is safe as URL if the regexp is /^[a-z]$/
@@ -926,23 +926,23 @@ s9eTextFormatterTestsConfiguratorItemsAttributeFiltersRegexp
  [x] asConfig() throws an exception if the 'regexp' var is missing
  [x] asConfig() creates a JS variant for the regexp
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersSimpletext
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Simpletext
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()
  [x] Is safe in CSS
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersUint
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Uint
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUint()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsAttributeFiltersUrl
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUrl()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9eTextFormatterTestsConfiguratorItemsRegexp
+s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
  [x] toJS() returns a JavaScript RegExp
@@ -951,7 +951,7 @@ s9eTextFormatterTestsConfiguratorItemsRegexp
  [x] asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
  [x] asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
 
-s9eTextFormatterTestsConfiguratorItemsTag
+s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->attributePreprocessors can be assigned a 2D array of regexps
  [x] $tag->attributePreprocessors can be assigned an instance of AttributePreprocessorCollection to copy its content
@@ -975,10 +975,10 @@ s9eTextFormatterTestsConfiguratorItemsTag
  [x] asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
  [x] asConfig() does not modify the tag's filterChain itself
 
-s9eTextFormatterTestsConfiguratorItemsTagFilter
+s9e\TextFormatter\Tests\Configurator\Items\TagFilter
  [x] Sets the filter's signature to ['tag' => null]
 
-s9eTextFormatterTestsConfiguratorItemsTemplate
+s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] When cast as string, returns the template's content
  [x] getParameters() returns the list of parameters used in this template
  [x] asDOM() returns the template as a DOMDocument
@@ -996,7 +996,7 @@ s9eTextFormatterTestsConfiguratorItemsTemplate
  [x] replaceTokens() resets isNormalized
  [x] Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateForensics instance
 
-s9eTextFormatterTestsConfiguratorItemsVariant
+s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] When cast as a string, returns its default value as a string
  [x] get() returns the default value
  [x] get('JS') returns the 'JS' variant if it exists
@@ -1011,15 +1011,15 @@ s9eTextFormatterTestsConfiguratorItemsVariant
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
  [x] setDynamic() throws an exception on invalid callback
 
-s9eTextFormatterTestsConfiguratorJavaScriptCode
+s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 
-s9eTextFormatterTestsConfiguratorJavaScriptRegExp
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
  [x] Returns a JavaScript literal when cast as a string
  [x] Returns /(?:)/ if the regexp is empty to avoid being parsed as a comment
  [x] The default map as an empty entry that represents capture #0
 
-s9eTextFormatterTestsConfiguratorJavaScriptRegexpConvertor
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
  [x] toJS() can convert plain regexps
  [x] toJS() escapes forward slashes
@@ -1058,7 +1058,7 @@ s9eTextFormatterTestsConfiguratorJavaScriptRegexpConvertor
  [x] toJS() converts literal Unicode line terminators \u2028 and \u2029
  [x] toJS() escapes backslashes that precede literal line terminators
 
-s9eTextFormatterTestsConfiguratorJavaScriptMinifier
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result
  [x] Caching is disabled by default
  [x] Caching is enabled if cacheDir is set and the minifier implements getCacheDifferentiator()
@@ -1066,7 +1066,7 @@ s9eTextFormatterTestsConfiguratorJavaScriptMinifier
  [x] get() rethrows exception thrown during minification by default
  [x] get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE
 
-s9eTextFormatterTestsConfiguratorJavaScriptMinifiersClosureCompilerApplication
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
  [x] Throws an exception if the filename passed to the constructor does not exist
  [x] Allows caching
  [x] The cache key depends on the compilation level
@@ -1078,7 +1078,7 @@ s9eTextFormatterTestsConfiguratorJavaScriptMinifiersClosureCompilerApplication
  [x] Works
  [x] Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
 
-s9eTextFormatterTestsConfiguratorJavaScriptMinifiersClosureCompilerService
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] Works
  [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
  [x] Excludes default externs by default
@@ -1092,10 +1092,10 @@ s9eTextFormatterTestsConfiguratorJavaScriptMinifiersClosureCompilerService
  [x] Throws an exception in case of a server error
  [x] Throws an exception in case of a compilation error
 
-s9eTextFormatterTestsConfiguratorJavaScriptMinifiersNoop
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
-s9eTextFormatterTestsConfiguratorRendering
+s9e\TextFormatter\Tests\Configurator\Rendering
  [x] The default rendering type is "html"
  [x] The rendering type can be set to "xhtml"
  [x] The rendering type is normalized to lowercase
@@ -1111,26 +1111,26 @@ s9eTextFormatterTestsConfiguratorRendering
  [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
  [x] getTemplates() returns templates gathered from tags
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsAutoCloseIfVoid
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoCloseIfVoid
  [x] Generates an autoClose rule for <hr/>
  [x] Does not generate an autoClose rule for <span>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsAutoReopenFormattingElements
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoReopenFormattingElements
  [x] Generates an autoReopen rule for <b>
  [x] Does not generate an autoReopen rule for <div>
  [x] Does not generate an autoReopen rule for <div><b>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsBlockElementsCloseFormattingElements
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsCloseFormattingElements
  [x] <div> has a closeParent rule for <b>
  [x] <div> does not have a closeParent rule for <div>
  [x] <b> does not have a closeParent rule for <b>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsBlockElementsFosterFormattingElements
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
  [x] <div> has a fosterParent rule for <b>
  [x] <div> does not have a fosterParent rule for <div>
  [x] <b> does not have a fosterParent rule for <b>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsEnforceContentModels
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] <b> has a denyChild rule for <div>
  [x] <a> has a denyChild and a denyDescendant rule for <a>
  [x] <p> does not have a rule for <p>
@@ -1139,97 +1139,97 @@ s9eTextFormatterTestsConfiguratorRulesGeneratorsEnforceContentModels
  [x] Does not generate any boolean rules for <b>
  [x] Generates a noBrChild rule and a noBrDescendant rule for <style>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsEnforceOptionalEndTags
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
  [x] <li> closes parent <li>
  [x] <ul> closes parent <p>
  [x] <p> does not close parent <li>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsIgnoreTagsInCode
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTagsInCode
  [x] Generates an ignoreTags rule for <code><xsl:apply-templates/></code>
  [x] Generates an ignoreTags rule for <pre><code><xsl:apply-templates/></code></pre>
  [x] Does not generate an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
  [x] Does not generate an ignoreTags rule for <b>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsIgnoreTextIfDisallowed
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTextIfDisallowed
  [x] Generates an ignoreText rule for <ul>
  [x] Does not generate an ignoreText rule for <b>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsIgnoreWhitespaceAroundBlockElements
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
  [x] Generates a ignoreSurroundingWhitespace rule for <div>
  [x] Does not generate a ignoreSurroundingWhitespace rule for <span>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsManageParagraphs
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\ManageParagraphs
  [x] Generates a breakParagraph rule for <ol>
  [x] Does not generate any rules for <b>
  [x] Generates a breakParagraph and a createParagraphs rule for <blockquote>
  [x] Generates a breakParagraph rule but no createParagraphs rule for <p>
 
-s9eTextFormatterTestsConfiguratorRulesGeneratorsNoBrIfNewLinesArePreserved
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\NoBrIfNewLinesArePreserved
  [x] Does not generate a noBrDescendant rule for <ol>
  [x] Generates a noBrDescendant rule for <pre>
 
-s9eTextFormatterTestsConfiguratorRulesGenerator
+s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Implements ArrayAccess
  [x] Implements Iterator
  [x] Root has a denyChild rule for <li> if parentHTML is not specified
  [x] Root does not have a denyChild rule for <li> if parentHTML is <ul>
  [x] Default rules
 
-s9eTextFormatterTestsConfiguratorTemplateNormalization
+s9e\TextFormatter\Tests\Configurator\TemplateNormalization
  [x] lowercase() makes an ASCII string lowercase
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsConvertCurlyExpressionsInText
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressionsInText
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsCustom
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] Constructor expects a valid callback
  [x] normalize() calls the user-defined callback with a DOMElement as argument
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsInlineAttributes
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsInlineCDATA
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineCDATA
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsInlineElements
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineElements
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsInlineTextElements
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsInlineInferredValues
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
  [x] normalize() ignores unknown tokens from TemplateHelper::parseAttributeValueTemplate()
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsMinifyXPathExpressions
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions
  [x] Throws an exception if a string isn't properly closed
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeAttributeNames
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\NormalizeAttributeNames
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeElementNames
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\NormalizeElementNames
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsNormalizeUrls
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\NormalizeUrls
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsOptimizeConditionalAttributes
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsOptimizeConditionalValueOf
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsPreserveSingleSpaces
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\PreserveSingleSpaces
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsRemoveComments
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveComments
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizationsRemoveInterElementWhitespace
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
  [x] Works
 
-s9eTextFormatterTestsConfiguratorTemplateNormalizer
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Implements ArrayAccess
  [x] Implements Iterator
  [x] Only executes a normalization once per run if its "onlyOnce" property is true
@@ -1237,7 +1237,7 @@ s9eTextFormatterTestsConfiguratorTemplateNormalizer
  [x] normalizeTag() does not call normalize() if the template was already normalized
  [x] Default normalization rules
 
-s9eTextFormatterTestsConfiguratorTemplateChecksAbstractDynamicContentCheck
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Stylesheet parameters are considered safe
  [x] Variables pointing to an unknown attribute are unsafe
  [x] Variables pointing to a safe attribute are safe
@@ -1249,39 +1249,39 @@ s9eTextFormatterTestsConfiguratorTemplateChecksAbstractDynamicContentCheck
  [x] Local parameters pointing to an unknown attribute are unsafe
  [x] Local parameters pointing to a safe attribute are safe
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowAttributeSets
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
  [x] Disallowed: <b use-attribute-sets="foo"/>
  [x] Allowed: <b>...</b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowCopy
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowCopy
  [x] Disallowed: <b><xsl:copy/></b>
  [x] Allowed: <b>...</b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowDisableOutputEscaping
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDisableOutputEscaping
  [x] Disallowed: <b disable-output-escaping="1"/>
  [x] Allowed: <b>...</b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowDynamicAttributeNames
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicAttributeNames
  [x] Disallowed: <b><xsl:attribute name="{@foo}"/></b>
  [x] Allowed: <b><xsl:attribute name="title"/></b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowDynamicElementNames
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicElementNames
  [x] Disallowed: <xsl:element name="{s}"/>
  [x] Allowed: <xsl:element name="b"/>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowElement
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElement
  [x] DisallowElement('script') disallows <b><script/></b>
  [x] DisallowElement('svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
  [x] DisallowElement('script') allows <b><span/></b>
  [x] DisallowElement('script') disallows <b><SCRIPT/></b>
  [x] DisallowElement('script') disallows <b><xsl:element name="script"/></b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowElementNS
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElementNS
  [x] DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
  [x] DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg xmlns="http://www.w3.org/2000/svg"/>
  [x] DisallowElementNS('urn:foo', 'script') allows <b><script/></b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowFlashFullScreen
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowFlashFullScreen
  [x] Disallows <embed allowFullScreen="true"/>
  [x] Allows <embed allowFullScreen="false"/>
  [x] Allows <embed/>
@@ -1303,15 +1303,15 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowFlashFullScreen
  [x] DisallowFlashFullScreen(true) disallows <object><param name="allowFullScreen" value="true"/><param name="movie" value="{@url}"/></object>
  [x] DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true"><xsl:apply-templates/></embed>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowNodeByXPath
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowNodeByXPath
  [x] '//script[@src]' disallows <div><script src=""/></div>
  [x] '//script[@src]' allows <div><script/></div>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowObjectParamsWithGeneratedName
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowObjectParamsWithGeneratedName
  [x] Allowed: <object><param name="foo"/></object>
  [x] Disallowed: <object><param name="{@foo"/></object>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowPHPTags
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowPHPTags
  [x] Disallowed: <b><?php ?></b>
  [x] Disallowed: <b><?PHP ?></b>
  [x] Disallowed: <b><xsl:processing-instruction name="php"/></b>
@@ -1323,12 +1323,12 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowPHPTags
  [x] Disallowed: <script language="php">echo "sup";</script>
  [x] Disallowed: <script language="PHP">echo "sup";</script>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeCopyOf
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeCopyOf
  [x] Allowed: <b><xsl:copy-of select="@title"/></b>
  [x] Allowed: <b><xsl:copy-of select="@data-title"/></b>
  [x] Disallowed: <b><xsl:copy-of select="FOO"/></b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicCSS
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS
  [x] Allowed: <style>.important { color:red }</style>
  [x] Allowed: <b style="color:red">...</b>
  [x] Allowed if #color: <b style="color:{@foo}">...</b>
@@ -1345,7 +1345,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicCSS
  [x] Disallowed: <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="style"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicJS
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
  [x] Allowed: <script>.important { alert(1) }</script>
  [x] Allowed: <b onclick="alert(1)">...</b>
  [x] Allowed if #number: <b onclick="alert({@foo})">...</b>
@@ -1362,7 +1362,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicJS
  [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicURL
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
  [x] Allowed: <a href="http://example.org">...</a>
  [x] Allowed if #url: <a href="{@foo}">...</a>
  [x] Allowed even if unknown: <a href="http://{@foo}">...</a>
@@ -1388,7 +1388,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowUnsafeDynamicURL
  [x] Disallowed: <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute>...</a>
  [x] Disallowed: <a><xsl:attribute name="href"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</a>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksDisallowXPathFunction
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowXPathFunction
  [x] Disallowed: <xsl:value-of select="document(@foo)"/>
  [x] Disallowed: <xsl:value-of select="php:function()"/>
  [x] Disallowed: <xsl:value-of select="php : function()"/>
@@ -1399,7 +1399,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksDisallowXPathFunction
  [x] Allowed: <b title="document()"/>
  [x] Allowed: <b title="{&quot;document()&quot;}"/>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksRestrictFlashNetworking
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashNetworking
  [x] 'internal' disallows <embed allowNetworking="all"/>
  [x] 'internal' allows <embed allowNetworking="internal"/>
  [x] 'internal' allows <embed allowNetworking="none"/>
@@ -1428,7 +1428,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksRestrictFlashNetworking
  [x] 'none',true disallows <object><param name="movie" value="{@url}"/></object>
  [x] 'none',true disallows <embed><xsl:apply-templates/></embed>
 
-s9eTextFormatterTestsConfiguratorTemplateChecksRestrictFlashScriptAccess
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashScriptAccess
  [x] 'sameDomain' disallows <embed allowScriptAccess="always"/>
  [x] 'sameDomain' allows <embed allowScriptAccess="sameDomain"/>
  [x] 'sameDomain' allows <embed allowScriptAccess="never"/>
@@ -1457,7 +1457,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecksRestrictFlashScriptAccess
  [x] 'never',true disallows <object><param name="movie" value="{@url}"/></object>
  [x] 'never',true disallows <embed><xsl:apply-templates/></embed>
 
-s9eTextFormatterTestsConfiguratorTemplateChecker
+s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] Implements ArrayAccess
  [x] Implements Iterator
  [x] Disallows attribute sets by default
@@ -1481,7 +1481,7 @@ s9eTextFormatterTestsConfiguratorTemplateChecker
  [x] disable() disables all checks
  [x] enable() re-enables all checks
 
-s9eTextFormatterTestsConfiguratorUrlConfig
+s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() returns a JavaScript variant for disallowedHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
@@ -1509,7 +1509,7 @@ s9eTextFormatterTestsConfiguratorUrlConfig
  [x] allowScheme('javascript') throws an exception
  [x] allowScheme('javaScript') throws an exception
 
-s9eTextFormatterTestsConfiguratorValidatorsAttributeName
+s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "url" is normalized to "url"
  [x] "URL" is normalized to "url"
@@ -1522,7 +1522,7 @@ s9eTextFormatterTestsConfiguratorValidatorsAttributeName
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
 
-s9eTextFormatterTestsConfiguratorValidatorsTagName
+s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "b" is normalized to "B"
  [x] "B" is normalized to "B"
@@ -1546,7 +1546,7 @@ s9eTextFormatterTestsConfiguratorValidatorsTagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
-s9eTextFormatterTestsConfiguratorValidatorsTemplateParameterName
+s9e\TextFormatter\Tests\Configurator\Validators\TemplateParameterName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "foo" is normalized to "foo"
  [x] "Foo" is normalized to "Foo"
@@ -1554,7 +1554,7 @@ s9eTextFormatterTestsConfiguratorValidatorsTemplateParameterName
  [x] "foo:bar" is invalid (name can only contain letters, digits, dashes and underscores)
  [x] "foo\n" is invalid (no newlines allowed)
 
-s9eTextFormatterTestsConfiguratorJavaScript
+s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] getMinifier() returns an instance of Noop by default
  [x] setMinifier() accepts the name of a minifier type and returns an instance
  [x] setMinifier() accepts the name of a minifier type plus any number of arguments passed to the minifier's constructor
@@ -1625,11 +1625,11 @@ s9eTextFormatterTestsConfiguratorJavaScript
  [x] HINT.RULE_TRIM_WHITESPACE=0 by default
  [x] HINT.RULE_TRIM_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
 
-s9eTextFormatterTestsConfiguratorBundle
+s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator
  [x] getOptions() returns an empty array
 
-s9eTextFormatterTestsConfiguratorBundleGenerator
+s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() returns the bundle's PHP source
  [x] generate() accepts namespaced class names
  [x] A custom serializer can be set in $bundleGenerator->serializer
@@ -1646,20 +1646,20 @@ s9eTextFormatterTestsConfiguratorBundleGenerator
  [x] exportCallback()
  [x] exportObject()
 
-s9eTextFormatterTestsConfiguratorBundlesF5
+s9e\TextFormatter\Tests\Configurator\Bundles\F5
  [x] Features
 
-s9eTextFormatterTestsConfiguratorBundlesFatdown
+s9e\TextFormatter\Tests\Configurator\Bundles\Fatdown
  [x] Features
 
-s9eTextFormatterTestsConfiguratorBundlesForum
+s9e\TextFormatter\Tests\Configurator\Bundles\Forum
  [x] Features
 
-s9eTextFormatterTestsConfiguratorBundlesS18
+s9e\TextFormatter\Tests\Configurator\Bundles\S18
  [x] Features
  [x] getOptions() sets the helper's callbacks
 
-s9eTextFormatterTestsParserTag
+s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
  [x] getEndTag() returns NULL if the tag has no end tag set
  [x] getPos() returns the tag's length (amount of text consumed)
@@ -1730,7 +1730,7 @@ s9eTextFormatterTestsParserTag
  [x] removeFlags() removes given flags from the tag's
  [x] removeFlags() can be called on flags that haven't been set
 
-s9eTextFormatterTestsParserBuiltInFilters
+s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
  [x] parseUrl() tests
  [x] Filters work
@@ -1738,7 +1738,7 @@ s9eTextFormatterTestsParserBuiltInFilters
  [x] filterUrl() can be called without a logger
  [x] sanitizeUrl() tests
 
-s9eTextFormatterTestsParserFilterProcessing
+s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeAttributePreprocessors() sets captured attributes on match
  [x] executeAttributePreprocessors() does not overwrite attributes that were already set
  [x] executeAttributePreprocessors() does not unset the source attribute on match
@@ -1765,7 +1765,7 @@ s9eTextFormatterTestsParserFilterProcessing
  [x] filterAttributes() adds missing attributes with their defaultValue if applicable
  [x] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
 
-s9eTextFormatterTestsParserLogger
+s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs
  [x] err() generates a "err" entry in the logs
  [x] info() generates a "info" entry in the logs
@@ -1783,7 +1783,7 @@ s9eTextFormatterTestsParserLogger
  [x] on() callbacks can modify the log message and its context if their signature accepts them as a reference
  [x] on() callbacks are only executed for the log type they were registered for
 
-s9eTextFormatterTestsParserPluginsHandling
+s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] disablePlugin() disables given plugin
  [x] disablePlugin() does not have side-effects due to references
  [x] enablePlugin() re-enables a disabled plugin
@@ -1804,7 +1804,7 @@ s9eTextFormatterTestsParserPluginsHandling
  [x] registerParser() can register a callback that acts as the parser of a new plugin
  [x] registerParser() throws an exception if its second argument is not callable
 
-s9eTextFormatterTestsParserTagStack
+s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() adds a start tag to the stack
  [x] addEndTag() adds an end tag to the stack
  [x] addSelfClosingTag() adds a self-closing tag to the stack
@@ -1829,16 +1829,16 @@ s9eTextFormatterTestsParserTagStack
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
  [x] Tags occupying the same position are properly sorted regardless of the order they've been added
 
-s9eTextFormatterTestsParserOutputHandling
+s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Works
 
-s9eTextFormatterTestsParserTagProcessing
+s9e\TextFormatter\Tests\Parser\TagProcessing
  [x] Works
 
-s9eTextFormatterTestsParserRulesHandling
+s9e\TextFormatter\Tests\Parser\RulesHandling
  [x] Works
 
-s9eTextFormatterTestsParser
+s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
  [x] Parser can be unserialized
  [x] getLogger() returns an instance of Logger
@@ -1859,7 +1859,7 @@ s9eTextFormatterTestsParser
  [x] setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
  [x] setNestingLimit() does not have side-effects due to references
 
-s9eTextFormatterTestsPluginsConfiguratorBase
+s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set
  [x] Constructor calls setUp()
@@ -1886,12 +1886,12 @@ s9eTextFormatterTestsPluginsConfiguratorBase
  [x] getTag() returns the tag that is associated with this plugin
  [x] getTag() throws an exception if the plugin does not have a tagName property set
 
-s9eTextFormatterTestsPluginsParserBase
+s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Has a default empty setUp() method
  [x] Constructor calls setUp()
  [x] Constructor sets up $this->config and $this->parser before calling setUp()
 
-s9eTextFormatterTestsPluginsAutoemailConfigurator
+s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
  [x] Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -1902,12 +1902,12 @@ s9eTextFormatterTestsPluginsAutoemailConfigurator
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsAutoemailParser
+s9e\TextFormatter\Tests\Plugins\Autoemail\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsAutolinkConfigurator
+s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -1923,15 +1923,15 @@ s9eTextFormatterTestsPluginsAutolinkConfigurator
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsAutolinkParser
+s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorAttributeValueCollection
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
  [x] Throws an exception on invalid attribute name
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorBBCode
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
@@ -1943,7 +1943,7 @@ s9eTextFormatterTestsPluginsBBCodesConfiguratorBBCode
  [x] asConfig() returns its set properties
  [x] asConfig() omits forceLookahead is it's FALSE
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorBBCodeCollection
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode
  [x] Instances of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode are added as-is
  [x] add() normalizes the BBCode's name
@@ -1954,13 +1954,13 @@ s9eTextFormatterTestsPluginsBBCodesConfiguratorBBCodeCollection
  [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorBBCodeMonkey
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] $bbcodeMonkey->allowedFilters is a publicly-accessible list of callbacks
  [x] create() creates and return a BBCode, its name and its tag
  [x] create() accepts an instance of UnsafeTemplate as second argument
  [x] create() tests
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorRepository
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() accepts the path to an XML file as argument
  [x] __construct() accepts a DOMDocument as argument
  [x] __construct() throws an exception if passed anything else
@@ -1977,11 +1977,11 @@ s9eTextFormatterTestsPluginsBBCodesConfiguratorRepository
  [x] Boolean rules are set to their default value
  [x] predefinedAttributes is correctly set
 
-s9eTextFormatterTestsPluginsBBCodesConfiguratorRepositoryCollection
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Instances of Repository are added as-is
  [x] Anything else gets a new instance of Repository to be created
 
-s9eTextFormatterTestsPluginsBBCodesConfigurator
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] $plugin->bbcodeMonkey is a publicly-accessible instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] Automatically loads its default BBCode repository
  [x] addFromRepository('B') adds BBCode B and its tag from the default repository
@@ -2007,16 +2007,16 @@ s9eTextFormatterTestsPluginsBBCodesConfigurator
  [x] asConfig() creates a JavaScript variant that preserves BBCode names
  [x] asConfig() creates a JavaScript variant that preserves attribute names in predefinedAttributes
 
-s9eTextFormatterTestsPluginsBBCodesParser
+s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 
-s9eTextFormatterTestsPluginsBBCodesBBCodes
+s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] Examples from BBCodeMonkey.md
  [x] BBCodes from repository.xml render nicely
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser
 
-s9eTextFormatterTestsPluginsCensorConfigurator
+s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
  [x] Automatically creates a "with" attribute with required=false
  [x] Does not attempt to create a tag if it already exists
@@ -2039,7 +2039,7 @@ s9eTextFormatterTestsPluginsCensorConfigurator
  [x] asConfig() returns an entry for "allowed" if any word was allowed with allow()
  [x] asConfig() returns false if all censored words are also on the allowed list
 
-s9eTextFormatterTestsPluginsCensorHelper
+s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() censors text nodes in HTML
  [x] censorHtml() uses custom replacements
  [x] censorHtml() escapes custom replacements
@@ -2063,12 +2063,12 @@ s9eTextFormatterTestsPluginsCensorHelper
  [x] reparse() ignores words on the allowed list
  [x] reparse() uncensors words on the allowed list
 
-s9eTextFormatterTestsPluginsCensorParser
+s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsEmoticonsConfigurator
+s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -2093,16 +2093,16 @@ s9eTextFormatterTestsPluginsEmoticonsConfigurator
  [x] getTag() returns the tag that is associated with this plugin
  [x] notIfCondition appears first in the template
 
-s9eTextFormatterTestsPluginsEmoticonsConfiguratorEmoticonCollection
+s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
 
-s9eTextFormatterTestsPluginsEmoticonsParser
+s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsEscaperConfigurator
+s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] By default only escapes the characters !#()*+-.:@[\]^_`{}
  [x] $plugin->escapeAll() makes it escape any Unicode character
  [x] $plugin->escapeAll(false) reverts to default escape list
@@ -2113,12 +2113,12 @@ s9eTextFormatterTestsPluginsEscaperConfigurator
  [x] The config array contains the name of the tag
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsEscaperParser
+s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsFancyPantsConfigurator
+s9e\TextFormatter\Tests\Plugins\FancyPants\Configurator
  [x] Automatically creates a "FP" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -2127,12 +2127,12 @@ s9eTextFormatterTestsPluginsFancyPantsConfigurator
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsFancyPantsParser
+s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsGenericConfigurator
+s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() generates a tag name automatically
  [x] The name of the tag can be specified
  [x] add() returns the name of the tag it creates
@@ -2168,12 +2168,12 @@ s9eTextFormatterTestsPluginsGenericConfigurator
  [x] asConfig() creates a JavaScript variant of generics
  [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 
-s9eTextFormatterTestsPluginsGenericParser
+s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsHTMLCommentsConfigurator
+s9e\TextFormatter\Tests\Plugins\HTMLComments\Configurator
  [x] Automatically creates an "HC" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
@@ -2183,12 +2183,12 @@ s9eTextFormatterTestsPluginsHTMLCommentsConfigurator
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsHTMLCommentsParser
+s9e\TextFormatter\Tests\Plugins\HTMLComments\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsHTMLElementsConfigurator
+s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] aliasElement('A', 'url') creates an alias for HTML element "a" to tag "URL"
  [x] aliasAttribute('A', 'HREF', 'URL') creates an alias for HTML attribute "href" in HTML element "a" to attribute "url"
  [x] allowElement('b') creates a tag named 'html:b'
@@ -2216,12 +2216,12 @@ s9eTextFormatterTestsPluginsHTMLElementsConfigurator
  [x] asConfig() preserves aliased elements' keys in a JS variant
  [x] asConfig() preserves aliased attributes' keys in a JS variant
 
-s9eTextFormatterTestsPluginsHTMLElementsParser
+s9e\TextFormatter\Tests\Plugins\HTMLElements\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsHTMLEntitiesConfigurator
+s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
  [x] Automatically creates an "HE" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
@@ -2231,12 +2231,12 @@ s9eTextFormatterTestsPluginsHTMLEntitiesConfigurator
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
 
-s9eTextFormatterTestsPluginsHTMLEntitiesParser
+s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsKeywordsConfigurator
+s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
  [x] Automatically creates a "KEYWORD" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
@@ -2251,22 +2251,22 @@ s9eTextFormatterTestsPluginsKeywordsConfigurator
  [x] asConfig() has an entry for onlyFirst if it's true
  [x] asConfig() does not return an entry for onlyFirst if it's false
 
-s9eTextFormatterTestsPluginsKeywordsParser
+s9e\TextFormatter\Tests\Plugins\Keywords\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 
-s9eTextFormatterTestsPluginsLitedownConfigurator
+s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
  [x] Turns on automatic paragraph management
  [x] Automatically creates a "URL" tag
  [x] Does not overwrite the "URL" tag if it already exists
  [x] asConfig() returns an array
 
-s9eTextFormatterTestsPluginsLitedownParser
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsPluginsMediaEmbedConfiguratorMediaSiteCollection
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Extends ArrayObject
  [x] Implements ConfigProvider
  [x] asConfig() returns a JS variant
@@ -2274,7 +2274,7 @@ s9eTextFormatterTestsPluginsMediaEmbedConfiguratorMediaSiteCollection
  [x] The config contains a map of ['scheme:' => 'site id']
  [x] Accept "host" as a string or an array of strings
 
-s9eTextFormatterTestsPluginsMediaEmbedConfigurator
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] Registers mediasites as a variable for the parser
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createBBCodes is false
@@ -2320,7 +2320,7 @@ s9eTextFormatterTestsPluginsMediaEmbedConfigurator
  [x] asConfig() returns ':' as quickMatch if it has a site with a "scheme"
  [x] asConfig() returns '://' as quickMatch if it has no site with a "scheme"
 
-s9eTextFormatterTestsPluginsMediaEmbedParser
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute
  [x] The [MEDIA] tag transfers its priority to the tag it creates
  [x] Abstract tests (not tied to bundled sites)
@@ -2330,14 +2330,14 @@ s9eTextFormatterTestsPluginsMediaEmbedParser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsPHPOptimizer
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
  [x] optimize() tests
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsPHPSerializer
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] convertXPath() tests
  [x] convertCondition() tests
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsPHP
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] getRenderer() can be called multiple times with the same rendering configuration
  [x] The returned instance contains its own source code in $renderer->source
@@ -2379,17 +2379,17 @@ s9eTextFormatterTestsConfiguratorRendererGeneratorsPHP
  [x] Tests from plugins
  [x] Merges simple templates together
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsUnformatted
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer
  [x] Configures the renderer for HTML output if applicable
  [x] Configures the renderer for XML output if applicable
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsXSLCache
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer
  [x] The path given to the constructor is canonicalized
  [x] The constructor throws an exception if the given path does not exist
 
-s9eTextFormatterTestsConfiguratorRendererGeneratorsXSLT
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
  [x] Sets the output method to "xml" if the rendering type is "xhtml"
  [x] Sets the stylesheet's output to omit the XML declaration if rendering type is "xhtml"
@@ -2402,10 +2402,10 @@ s9eTextFormatterTestsConfiguratorRendererGeneratorsXSLT
  [x] escapes a parameter's default value
  [x] Merges simple templates together
 
-s9eTextFormatterTestsRenderer
+s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument
 
-s9eTextFormatterTestsRenderersXSLT
+s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
  [x] Preserves other properties during serialization
@@ -2430,7 +2430,7 @@ s9eTextFormatterTestsRenderersXSLT
  [x] Custom parameters are properly saved and restored after serialization
  [x] Is not vulnerable to XXE
 
-s9eTextFormatterTestsRenderersXSLCache
+s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] getFilepath() returns the path to the stylesheet file
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
@@ -2456,7 +2456,7 @@ s9eTextFormatterTestsRenderersXSLCache
  [x] Custom parameters are properly saved and restored after serialization
  [x] Is not vulnerable to XXE
 
-s9eTextFormatterTestsRenderersPHP
+s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
  [x] The source of the renderer is omitted for serialization
  [x] The last output of the renderer is omitted for serialization
@@ -2480,14 +2480,14 @@ s9eTextFormatterTestsRenderersPHP
  [x] Custom parameters are properly saved and restored after serialization
  [x] Is not vulnerable to XXE
 
-s9eTextFormatterTestsRenderersUnformatted
+s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
  [x] Converts newlines to <br>
  [x] Converts newlines to <br/> if output is set to xml
  [x] Keeps HTML's special characters escaped
  [x] setParameter() doesn't do anything
 
-s9eTextFormatterTestsUnparser
+s9e\TextFormatter\Tests\Unparser
  [x] unparse('<t>Plain text</t>') returns 'Plain text'
  [x] removeFormatting('<t>Plain text</t>') returns 'Plain text'
  [x] unparse('<t>&lt;Plain text&gt;</t>') returns '<Plain text>'
@@ -2498,7 +2498,7 @@ s9eTextFormatterTestsUnparser
  [x] removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns 'Rich text :)'
  [x] Can unparse representations that were over-escaped
 
-s9eTextFormatterTestsBundle
+s9e\TextFormatter\Tests\Bundle
  [x] parse() creates a parser, parses the input and returns the output
  [x] parse() reuses the same parser on consecutive calls
  [x] parse() executes static::$beforeParse before calling the parser's parse() method
@@ -2518,19 +2518,19 @@ s9eTextFormatterTestsBundle
  [x] unparse() executes static::$afterUnparse after calling the parser's unparse() method
  [x] reset() removes the cached parser and renderer
 
-s9eTextFormatterTestsBundlesF5
+s9e\TextFormatter\Tests\Bundles\F5
  [x] Rendering tests
 
-s9eTextFormatterTestsBundlesFatdown
+s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests
 
-s9eTextFormatterTestsBundlesForum
+s9e\TextFormatter\Tests\Bundles\Forum
  [x] Rendering tests
 
-s9eTextFormatterTestsBundlesS18
+s9e\TextFormatter\Tests\Bundles\S18
  [x] Rendering tests
 
-s9eTextFormatterTestsBundlesS18Helper
+s9e\TextFormatter\Tests\Bundles\S18\Helper
  [x] configureParser() has no effect if SMF is not loaded
  [x] configureRenderer() has no effect if SMF is not loaded
  [x] applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
