@@ -1875,6 +1875,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://screen.yahoo.com/mr-short-term-memory-000000263.html',
+				'<r><YAHOOSCREEN id="mr-short-term-memory-000000263" url="https://screen.yahoo.com/mr-short-term-memory-000000263.html">https://screen.yahoo.com/mr-short-term-memory-000000263.html</YAHOOSCREEN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('yahooscreen');
+				}
+			],
+			[
+				'https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html',
+				'<r><YAHOOSCREEN id="church-chat-satan-000000502" url="https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('yahooscreen');
+				}
+			],
+			[
 				'[media=youtube]-cEzsCAzTak[/media]',
 				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></r>',
 				[],

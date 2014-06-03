@@ -356,6 +356,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2<br/>http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html<br/>http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</td>
 	</tr>
 	<tr>
+		<td><code>yahooscreen</code></td>
+		<td>Yahoo! Screen</td>
+		<td>https://screen.yahoo.com/mr-short-term-memory-000000263.html<br/>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</td>
+	</tr>
+	<tr>
 		<td><code>youtube</code></td>
 		<td>YouTube</td>
 		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>
