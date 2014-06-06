@@ -33,7 +33,7 @@
 		<extract>#amazon\.(?:co\.)?(?'tld'ca|de|fr|it|jp|uk)#</extract>
 		<iframe width="120" height="240">
 			<src><![CDATA[
-				<xsl:text>http://rcm</xsl:text>
+				<xsl:text>//rcm</xsl:text>
 				<xsl:if test="@tld and contains('cadefritjpuk',@tld)">-<xsl:value-of select="@tld"/></xsl:if>
 				<xsl:text>.amazon.</xsl:text>
 				<xsl:choose>
@@ -169,7 +169,7 @@
 
 		<host>video.cnbc.com</host>
 		<extract>!cnbc\.com/gallery/\?video=(?'id'\d+)!</extract>
-		<flash width="400" height="380" src="http://plus.cnbc.com/rssvideosearch/action/player/id/{@id}/code/cnbcplayershare"/>
+		<flash width="400" height="380" src="//plus.cnbc.com/rssvideosearch/action/player/id/{@id}/code/cnbcplayershare"/>
 	</site>
 
 	<site id="cnn">
@@ -186,19 +186,15 @@
 
 	<site id="colbertnation">
 		<name>Colbert Nation</name>
-		<homepage>http://www.colbertnation.com/</homepage>
-		<example>http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</example>
-		<example>http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</example>
+		<homepage>http://thecolbertreport.cc.com/</homepage>
 		<example>http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</example>
 
-		<host>colbertnation.com</host>
 		<host>thecolbertreport.cc.com</host>
 		<scrape>
-			<match>!(?:colbertnation|thecolbertreport\.cc)\.com/[^/]*(?:collection|video)s/!</match>
+			<match>!thecolbertreport\.cc\.com/videos/!</match>
 			<extract>!(?'id'mgid:arc:video:colbertnation\.com:[-0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
-		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="collegehumor">
@@ -208,7 +204,7 @@
 
 		<host>collegehumor.com</host>
 		<extract>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</extract>
-		<iframe width="600" height="369" src="http://www.collegehumor.com/e/{@id}"/>
+		<iframe width="600" height="369" src="//www.collegehumor.com/e/{@id}"/>
 	</site>
 
 	<site id="comedycentral">
@@ -222,7 +218,6 @@
 			<extract>!(?'id'mgid:arc:video:comedycentral\.com:[-\w]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
-		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="dailymotion">
@@ -253,7 +248,6 @@
 			<extract>!(?'id'mgid:arc:(?:playlist|video):thedailyshow\.com:[-0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
-		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="ebay">
@@ -280,7 +274,7 @@
 			<match>#ebay\.(?!com/)#</match>
 			<extract>#"locale":"(?'lang'[\w_]+)"#</extract>
 		</scrape>
-		<flash width="355" height="300" src="http://togo.ebay.com/togo/togo.swf?2008013100">
+		<flash width="355" height="300" src="//togo.ebay.com/togo/togo.swf?2008013100">
 			<flashvars><![CDATA[
 				<xsl:text>base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=</xsl:text>
 				<xsl:value-of select="@itemid"/>
@@ -369,7 +363,6 @@
 			<extract>!(?'id'mgid:arc:(?:episode|video):gametrailers\.com:[-\w]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
-		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="getty">
@@ -419,7 +412,7 @@
 			<extract>!gfyHeight[ ="]+(?'height'\d+)!</extract>
 			<extract>!gfyWidth[ ="]+(?'width'\d+)!</extract>
 		</scrape>
-		<iframe width="{@width}" height="{@height}" src="http://gfycat.com/iframe/{@id}"/>
+		<iframe width="{@width}" height="{@height}" src="//gfycat.com/iframe/{@id}"/>
 	</site>
 
 	<site id="gist">
@@ -557,7 +550,7 @@
 
 		<host>metacafe.com</host>
 		<extract>!metacafe\.com/watch/(?'id'[0-9]+)!</extract>
-		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
+		<iframe width="560" height="315" src="//www.metacafe.com/embed/{@id}/"/>
 	</site>
 
 	<site id="mixcloud">
@@ -790,7 +783,7 @@
 			<match>@traileraddict\.com/(?!tags/)[^/]+/.@</match>
 			<extract>@v\.traileraddict\.com/(?'id'\d+)@</extract>
 		</scrape>
-		<iframe width="560" height="315" src="http://v.traileraddict.com/{@id}"/>
+		<iframe width="560" height="315" src="//v.traileraddict.com/{@id}"/>
 	</site>
 
 	<site id="twitch">
@@ -822,7 +815,7 @@
 				<embed type="application/x-shockwave-flash"
 				       width="620"
 				       height="378"
-				       src="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
+				       src="//www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
 				       allowfullscreen=""
 				/>
 			</object>
@@ -872,7 +865,7 @@
 		</scrape>
 		<iframe width="480" height="302">
 			<src><![CDATA[
-				<xsl:text>http://www.ustream.tv/embed/</xsl:text>
+				<xsl:text>//www.ustream.tv/embed/</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@vid">recorded/<xsl:value-of select="@vid"/></xsl:when>
 					<xsl:otherwise><xsl:value-of select="@cid"/></xsl:otherwise>
