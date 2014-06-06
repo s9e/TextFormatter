@@ -806,7 +806,7 @@
 			        typemustmatch=""
 			        width="620"
 			        height="378"
-			        data="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
+			        data="//www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
 			>
 				<param name="allowfullscreen" value="true"/>
 				<param name="flashvars">
