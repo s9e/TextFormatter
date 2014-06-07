@@ -848,7 +848,7 @@
 			});
 			iframe.contentWindow.postMessage('s9e:init','*');
 		-->
-		<template><![CDATA[<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" allowfullscreen="" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+		<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>
 	</site>
 
 	<site id="ustream">
