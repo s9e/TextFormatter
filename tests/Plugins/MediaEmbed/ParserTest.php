@@ -714,7 +714,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="355" height="300" data="//togo.ebay.com/togo/togo.swf?2008013100"><param name="allowfullscreen" value="true"><param name="flashvars" value="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=230993099153&amp;lang=en-GB"><embed type="application/x-shockwave-flash" src="//togo.ebay.com/togo/togo.swf?2008013100" width="355" height="300" allowfullscreen="" flashvars="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=230993099153&amp;lang=en-GB"></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="355" height="300" data="http://togo.ebay.com/togo/togo.swf?2008013100"><param name="allowfullscreen" value="true"><param name="flashvars" value="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=230993099153&amp;lang=en-GB"><embed type="application/x-shockwave-flash" src="http://togo.ebay.com/togo/togo.swf?2008013100" width="355" height="300" allowfullscreen="" flashvars="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=230993099153&amp;lang=en-GB"></object>',
 				[],
 				function ($configurator)
 				{
@@ -1216,6 +1216,15 @@ class ParserTest extends Test
 			[
 				'http://www.ebay.com/itm/251053262701',
 				'<r><EBAY itemid="251053262701" url="http://www.ebay.com/itm/251053262701">http://www.ebay.com/itm/251053262701</EBAY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ebay');
+				}
+			],
+			[
+				'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item=171349018269',
+				'<r><EBAY itemid="171349018269" url="http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269">http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269</EBAY></r>',
 				[],
 				function ($configurator)
 				{
@@ -2088,7 +2097,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="355" height="300" data="//togo.ebay.com/togo/togo.swf?2008013100"><param name="allowfullscreen" value="true"><param name="flashvars" value="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=251053262701"><embed type="application/x-shockwave-flash" src="//togo.ebay.com/togo/togo.swf?2008013100" width="355" height="300" allowfullscreen="" flashvars="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=251053262701"></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="355" height="300" data="http://togo.ebay.com/togo/togo.swf?2008013100"><param name="allowfullscreen" value="true"><param name="flashvars" value="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=251053262701"><embed type="application/x-shockwave-flash" src="http://togo.ebay.com/togo/togo.swf?2008013100" width="355" height="300" allowfullscreen="" flashvars="base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=251053262701"></object>',
 				[],
 				function ($configurator)
 				{
