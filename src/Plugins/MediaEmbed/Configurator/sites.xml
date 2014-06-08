@@ -269,8 +269,8 @@
 		<host>ebay.es</host>
 		<host>ebay.ca</host>
 		<host>ebay.at</host>
-		<extract>#ebay.[\w.]+/itm/(?:[-\w]+/)?(?'itemid'\d+)#</extract>
-		<extract>#[?&amp;]item=(?'itemid'\d+)#</extract>
+		<extract>#ebay.[\w.]+/itm/(?:[-\w]+/)?(?'id'\d+)#</extract>
+		<extract>#[?&amp;]item=(?'id'\d+)#</extract>
 		<scrape>
 			<match>#ebay\.(?!com/)#</match>
 			<extract>#"locale":"(?'lang'[\w_]+)"#</extract>
@@ -278,7 +278,14 @@
 		<flash width="355" height="300" src="http://togo.ebay.com/togo/togo.swf?2008013100">
 			<flashvars><![CDATA[
 				<xsl:text>base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=</xsl:text>
-				<xsl:value-of select="@itemid"/>
+				<xsl:choose>
+					<xsl:when test="@itemid">
+						<xsl:value-of select="@itemid"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@id"/>
+					</xsl:otherwise>
+				</xsl:choose>
 				<xsl:if test="@lang">
 					<xsl:text>&amp;lang=</xsl:text>
 					<xsl:value-of select="translate(@lang,'_','-')"/>

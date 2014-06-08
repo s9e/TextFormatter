@@ -328,7 +328,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153',
-				'<r><EBAY itemid="230993099153" lang="en_GB" url="http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153">http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153</EBAY></r>',
+				'<r><EBAY id="230993099153" lang="en_GB" url="http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153">http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153</EBAY></r>',
 				[],
 				function ($configurator)
 				{
@@ -1206,7 +1206,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701',
-				'<r><EBAY itemid="251053262701" url="http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701">http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701</EBAY></r>',
+				'<r><EBAY id="251053262701" url="http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701">http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701</EBAY></r>',
 				[],
 				function ($configurator)
 				{
@@ -1215,7 +1215,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ebay.com/itm/251053262701',
-				'<r><EBAY itemid="251053262701" url="http://www.ebay.com/itm/251053262701">http://www.ebay.com/itm/251053262701</EBAY></r>',
+				'<r><EBAY id="251053262701" url="http://www.ebay.com/itm/251053262701">http://www.ebay.com/itm/251053262701</EBAY></r>',
 				[],
 				function ($configurator)
 				{
@@ -1224,7 +1224,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item=171349018269',
-				'<r><EBAY itemid="171349018269" url="http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269">http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269</EBAY></r>',
+				'<r><EBAY id="171349018269" url="http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269">http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269</EBAY></r>',
 				[],
 				function ($configurator)
 				{
