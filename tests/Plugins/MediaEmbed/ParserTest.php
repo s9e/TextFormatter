@@ -277,8 +277,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
+				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
+				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
 				[],
 				function ($configurator)
 				{
