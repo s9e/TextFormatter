@@ -1755,6 +1755,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.viagame.com/channels/hearthstone-championship/404917',
+				'<r><VIAGAME id="404917" url="http://www.viagame.com/channels/hearthstone-championship/404917">http://www.viagame.com/channels/hearthstone-championship/404917</VIAGAME></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('viagame');
+				}
+			],
+			[
 				'http://vimeo.com/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],

@@ -893,6 +893,16 @@
 		<iframe width="575" height="324" src="http://cache.vevo.com/m/html/embed.html?video={@id}"/>
 	</site>
 
+	<site id="viagame">
+		<name>Viagame</name>
+		<homepage>http://vimeo.com/</homepage>
+		<example>http://www.viagame.com/channels/hearthstone-championship/405177</example>
+
+		<host>viagame.com</host>
+		<extract>!viagame\.com/channels/[^/]+/(?'id'[0-9]+)!</extract>
+		<iframe width="640" height="392" src="//www.viagame.com/embed/{@id}"></iframe>
+	</site>
+
 	<site id="vimeo">
 		<name>Vimeo</name>
 		<homepage>http://vimeo.com/</homepage>
