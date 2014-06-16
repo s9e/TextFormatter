@@ -11,6 +11,11 @@ $sites = simplexml_load_file(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/
 
 foreach ($sites->site as $site)
 {
+	if (isset($_SERVER['argv'][1]) && $site['id'] != $_SERVER['argv'][1])
+	{
+		continue;
+	}
+
 	$configurator->MediaEmbed->add($site['id']);
 }
 
