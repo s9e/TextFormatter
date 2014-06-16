@@ -972,7 +972,7 @@
 		<example>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</example>
 
 		<host>screen.yahoo.com</host>
-		<extract>!screen\.yahoo.com/(?:[-\w]+/)?(?'id'[-\w]+)\.html!</extract>
+		<extract>!screen\.yahoo\.com/(?:[-\w]+/)?(?'id'[-\w]+)\.html!</extract>
 		<iframe width="640" height="360" src="https://screen.yahoo.com/{@id}.html?format=embed"/>
 	</site>
 
