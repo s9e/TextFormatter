@@ -1106,6 +1106,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
+				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song" url="http://www.audiomack.com/song/random-2/buy-the-world-final-1">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
+			[
+				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
+				'<r><AUDIOMACK id="hz-global/double-a-side-vol3" mode="album" url="http://www.audiomack.com/album/hz-global/double-a-side-vol3">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
+			[
 				'http://blip.tv/play/AYKn_x0A',
 				'<r><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></r>',
 				[],
@@ -2075,6 +2093,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
+				'<iframe width="100%" allowfullscreen="" frameborder="0" scrolling="no" height="352" src="//www.audiomack.com/embed3-album/hz-global/double-a-side-vol3"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
+			[
+				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
+				'<iframe width="100%" allowfullscreen="" frameborder="0" scrolling="no" height="144" src="//www.audiomack.com/embed3/random-2/buy-the-world-final-1"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
 				}
 			],
 			[
