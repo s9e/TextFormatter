@@ -200,10 +200,6 @@ class SerializerTest extends Test
 				"(\$node->hasAttribute('songid')?40:250)"
 			],
 			[
-				"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)",
-				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
-			],
-			[
 				'120-78*boolean(@track_id|@track_num)',
 				"(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)"
 			],

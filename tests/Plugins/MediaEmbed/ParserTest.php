@@ -2396,7 +2396,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/live_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" src="//www.twitch.tv/widgets/live_embed_player.swf" allowfullscreen=""></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/live_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/live_embed_player.swf" flashvars="channel=minigolf2000&amp;auto_play=false"></object>',
 				[],
 				function ($configurator)
 				{
@@ -2404,8 +2404,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/minigolf2000/c/2475925',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;chapter_id=2475925&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" src="//www.twitch.tv/widgets/archive_embed_player.swf" allowfullscreen=""></object>',
+				'http://www.twitch.tv/amazhs/c/4493103',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=amazhs&amp;chapter_id=4493103&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=amazhs&amp;chapter_id=4493103&amp;auto_play=false"></object>',
 				[],
 				function ($configurator)
 				{
@@ -2414,7 +2414,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000/b/497929990',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" src="//www.twitch.tv/widgets/archive_embed_player.swf" allowfullscreen=""></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"></object>',
 				[],
 				function ($configurator)
 				{
