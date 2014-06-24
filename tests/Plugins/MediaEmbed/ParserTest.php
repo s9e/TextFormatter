@@ -627,8 +627,28 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://vk.com/video-7016284_163645555',
-				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vk.com/video-7016284_163645555" vid="163645555">http://vk.com/video-7016284_163645555</VK></r>',
+				'http://vkontakte.ru/video-7016284_163645555',
+				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vkontakte.ru/video-7016284_163645555" vid="163645555">http://vkontakte.ru/video-7016284_163645555</VK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
+				'http://vk.com/video226156999_168963041',
+				'<r><VK hash="9050a9cce6465c9e" oid="226156999" url="http://vk.com/video226156999_168963041" vid="168963041">http://vk.com/video226156999_168963041</VK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
+				'http://vk.com/newmusicvideos?z=video-13895667_161988074',
+				'<r><VK hash="de860a8e4fbe45c9" oid="-13895667" url="http://vk.com/newmusicvideos?z=video-13895667_161988074" vid="161988074">http://vk.com/newmusicvideos?z=video-13895667_161988074</VK></r>',
 				[],
 				function ($configurator)
 				{
