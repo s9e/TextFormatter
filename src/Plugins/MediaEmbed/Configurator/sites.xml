@@ -959,7 +959,7 @@
 
 		<host>vk.com</host>
 		<host>vkontakte.ru</host>
-		<extract>!vk(?:\.com|ontakte\.ru)/(?:\w+\?z=)?video(?'oid'-?[0-9]+)_(?'vid'[0-9]+)!</extract>
+		<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?[0-9]+)_(?'vid'[0-9]+)!</extract>
 		<extract>!vk(?:\.com|ontakte\.ru)/video_ext\.php\?oid=(?'oid'-?[0-9]+)&amp;id=(?'vid'[0-9]+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
 		<scrape url="http://vk.com/video{@oid}_{@vid}">
 			<match>!vk.*?video-?[0-9]+_[0-9]+!</match>
