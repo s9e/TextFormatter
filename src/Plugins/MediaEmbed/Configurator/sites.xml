@@ -461,6 +461,16 @@
 		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
+	<site id="googlesheets">
+		<name>Google Sheets</name>
+		<homepage>http://www.google.com/sheets/about/</homepage>
+		<example>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</example>
+
+		<host>docs.google.com</host>
+		<extract>!docs\.google\.com/spreadsheets/d/(?'id'\w+)!</extract>
+		<iframe width="100%" height="500" style="resize:both" src="https://docs.google.com/spreadsheets/d/{@id}?widget=true&amp;headers=false&amp;rm=minimal"/>
+	</site>
+
 	<site id="grooveshark">
 		<name>Grooveshark</name>
 		<homepage>http://grooveshark.com/</homepage>

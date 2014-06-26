@@ -1378,6 +1378,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA',
+				'<r><GOOGLESHEETS id="1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA" url="https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA">https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</GOOGLESHEETS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googlesheets');
+				}
+			],
+			[
 				'http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761',
 				'<r><GROOVESHARK playlistid="74854761" url="http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761">http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761</GROOVESHARK></r>',
 				[],
