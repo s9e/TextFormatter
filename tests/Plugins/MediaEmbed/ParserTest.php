@@ -1567,6 +1567,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/',
+				'<r><PREZI id="5ye8po_hmikp" url="http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('prezi');
+				}
+			],
+			[
+				'http://blog.prezi.com/latest/2014/2/7/10-most-common-rookie-mistakes-in-public-speaking.html/',
+				'<t>http://blog.prezi.com/latest/2014/2/7/10-most-common-rookie-mistakes-in-public-speaking.html/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('prezi');
+				}
+			],
+			[
+				'http://prezi.com/explore/staff-picks/',
+				'<t>http://prezi.com/explore/staff-picks/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('prezi');
+				}
+			],
+			[
 				'http://rd.io/x/QcD7oTdeWevg/',
 				'<r><RDIO id="QcD7oTdeWevg" url="http://rd.io/x/QcD7oTdeWevg/">http://rd.io/x/QcD7oTdeWevg/</RDIO></r>',
 				[],

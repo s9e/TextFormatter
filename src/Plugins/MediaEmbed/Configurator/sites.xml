@@ -638,6 +638,16 @@
 		<iframe width="300" height="100" src="http://www.podbean.com/media/player/audio/postId/{@id}"/>
 	</site>
 
+	<site id="prezi">
+		<name>Prezi</name>
+		<homepage>http://prezi.com/</homepage>
+		<example>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</example>
+
+		<host>prezi.com</host>
+		<extract>#//prezi\.com/(?!(?:a(?:bout|mbassadors)|c(?:o(?:llaborate|mmunity|ntact)|reate)|exp(?:erts|lore)|ip(?:ad|hone)|jobs|l(?:ear|ogi)n|m(?:ac|obility)|pr(?:es(?:s|ent)|icing)|recommend|support|user|windows|your)/)(?'id'\w+)/#</extract>
+		<iframe width="550" height="400" src="//prezi.com/embed/{@id}/"/>
+	</site>
+
 	<site id="rdio">
 		<name>Rdio</name>
 		<homepage>http://www.rdio.com/</homepage>

@@ -271,6 +271,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</td>
 	</tr>
 	<tr>
+		<td><code>prezi</code></td>
+		<td>Prezi</td>
+		<td>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</td>
+	</tr>
+	<tr>
 		<td><code>rdio</code></td>
 		<td>Rdio</td>
 		<td>http://rd.io/x/QcD7oTdeWevg/<br/>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</td>
