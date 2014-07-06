@@ -356,7 +356,7 @@
 				<xsl:value-of select="@id"/>
 			</xsl:attribute>
 			<xsl:if test="@mode='post'">
-				<xsl:attribute name="onload">var b=this;window.addEventListener('message',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')});b.contentWindow.postMessage('s9e:init','*')</xsl:attribute>
+				<xsl:attribute name="onload">window.addEventListener('message',function(a){/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;src==a.data.url&amp;&amp;(style.height=a.data.height+'px')});contentWindow.postMessage('s9e:init','*')</xsl:attribute>
 			</xsl:if>
 		</iframe>]]></template>
 	</site>
@@ -458,7 +458,7 @@
 
 		<host>github.com</host>
 		<extract>!gist\.github\.com/(?'id'(?:\w+/)?\d+(?:/[\da-f]+)?)!</extract>
-		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>]]></template>
+		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;src==a.data.url&amp;&amp;(style.height=a.data.height+'px')}});contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
 	<site id="googlesheets">
@@ -884,7 +884,6 @@
 		<host>twitter.com</host>
 		<extract>@https://twitter\.com/(?:#!/)?\w+/status(?:es)?/(?'id'\d+)@</extract>
 		<!--
-			var iframe = this;
 			window.addEventListener('message', function(e)
 			{
 				if (!/^https?:\/\/s9e\.github\.io$/.test(e.origin) || !e.data.url || !e.data.height)
@@ -892,14 +891,14 @@
 					return;
 				}
 
-				if (iframe.src == e.data.url)
+				if (src == e.data.url)
 				{
-					iframe.style.height = e.data.height + 'px';
+					style.height = e.data.height + 'px';
 				}
 			});
-			iframe.contentWindow.postMessage('s9e:init','*');
+			contentWindow.postMessage('s9e:init','*');
 		-->
-		<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var b=this;window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;b.src==a.data.url&amp;&amp;(b.style.height=a.data.height+'px')}});b.contentWindow.postMessage('s9e:init','*')"/>
+		<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;src==a.data.url&amp;&amp;(style.height=a.data.height+'px')}});contentWindow.postMessage('s9e:init','*')"/>
 	</site>
 
 	<site id="ustream">
