@@ -206,6 +206,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>
+		<td><code>googleplus</code></td>
+		<td>Google+</td>
+		<td>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW<br/>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</td>
+	</tr>
+	<tr>
 		<td><code>googlesheets</code></td>
 		<td>Google Sheets</td>
 		<td>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</td>

@@ -447,6 +447,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW',
+				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW">https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('googleplus');
+				}
+			],
+			[
 				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
 				'<r><GROOVESHARK songid="35292216" url="http://grooveshark.com/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></r>',
 				[],
@@ -1375,6 +1385,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
+				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW">https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googleplus');
 				}
 			],
 			[

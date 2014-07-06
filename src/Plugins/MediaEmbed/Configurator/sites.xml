@@ -461,6 +461,22 @@
 		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;src==a.data.url&amp;&amp;(style.height=a.data.height+'px')}});contentWindow.postMessage('s9e:init','*')"/>]]></template>
 	</site>
 
+	<site id="googleplus">
+		<name>Google+</name>
+		<homepage>https://plus.google.com/</homepage>
+		<source>https://developers.google.com/+/web/embedded-post/</source>
+		<example>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</example>
+		<example>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</example>
+
+		<host>plus.google.com</host>
+		<extract>!//plus\.google\.com/(?:\+\w+|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
+		<scrape>
+			<match>!//plus\.google\.com/\+[^/]+/posts/\w!</match>
+			<extract>!oid="?(?'oid'\d+)!</extract>
+		</scrape>
+		<iframe width="450" height="240" src="//s9e.github.io/iframe/googleplus.min.html#{@oid}/posts/{@pid}" onload="window.addEventListener('message',function(a){{/^https?:\/\/s9e\.github\.io$/.test(a.origin)&amp;&amp;a.data.url&amp;&amp;a.data.height&amp;&amp;src==a.data.url&amp;&amp;(style.height=a.data.height+'px')}});contentWindow.postMessage('s9e:init','*')"/>
+	</site>
+
 	<site id="googlesheets">
 		<name>Google Sheets</name>
 		<homepage>http://www.google.com/sheets/about/</homepage>
