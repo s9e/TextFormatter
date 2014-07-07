@@ -1469,6 +1469,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.izlesene.com/video/lily-allen-url-badman/7600704',
+				'<r><IZLESENE id="7600704" url="http://www.izlesene.com/video/lily-allen-url-badman/7600704">http://www.izlesene.com/video/lily-allen-url-badman/7600704</IZLESENE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('izlesene');
+				}
+			],
+			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
 				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></r>',
 				[],
