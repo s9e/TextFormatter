@@ -531,6 +531,16 @@
 		<iframe width="468" height="263" src="http://widgets.ign.com/video/embed/content.html?url={@id}"/>
 	</site>
 
+	<site id="imgur">
+		<name>imgur albums</name>
+		<homepage>http://imgur.com/</homepage>
+		<example>http://imgur.com/a/9UGCL</example>
+
+		<host>imgur.com</host>
+		<extract>!imgur\.com/a/(?'id'\w+)!</extract>
+		<iframe width="100%" height="550" src="//imgur.com/a/{@id}/embed"/>
+	</site>
+
 	<site id="indiegogo">
 		<name>Indiegogo</name>
 		<homepage>http://www.indiegogo.com/</homepage>

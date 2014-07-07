@@ -231,6 +231,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
 	</tr>
 	<tr>
+		<td><code>imgur</code></td>
+		<td>imgur albums</td>
+		<td>http://imgur.com/a/9UGCL</td>
+	</tr>
+	<tr>
 		<td><code>indiegogo</code></td>
 		<td>Indiegogo</td>
 		<td>http://www.indiegogo.com/projects/gameheart-redesigned</td>
