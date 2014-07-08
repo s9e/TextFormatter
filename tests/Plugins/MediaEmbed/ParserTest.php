@@ -337,6 +337,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://8tracks.com/fingerlickengood/just-nujabes',
+				'<r><EIGHTTRACKS id="2485118">http://8tracks.com/fingerlickengood/just-nujabes</EIGHTTRACKS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('eighttracks');
+				}
+			],
+			[
 				'http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-',
 				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
 				[],
@@ -1277,6 +1287,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('ebay');
+				}
+			],
+			[
+				'http://8tracks.com/midna/2242699',
+				'<r><EIGHTTRACKS id="2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('eighttracks');
 				}
 			],
 			[
