@@ -356,7 +356,7 @@
 				<xsl:value-of select="@id"/>
 			</xsl:attribute>
 			<xsl:if test="@mode='post'">
-				<xsl:attribute name="onload">var a=Math.random();window.addEventListener('message',function(b){b.data.id==a&amp;&amp;(style.height=b.data.height+'px')});contentWindow.postMessage('s9e:'+a,'*')</xsl:attribute>
+				<xsl:attribute name="onload">var a=Math.random();window.addEventListener('message',function(b){if(b.data.id==a)style.height=b.data.height+'px'});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))</xsl:attribute>
 			</xsl:if>
 		</iframe>]]></template>
 	</site>
@@ -458,7 +458,7 @@
 
 		<host>github.com</host>
 		<extract>!gist\.github\.com/(?'id'(?:\w+/)?\d+(?:/[\da-f]+)?)!</extract>
-		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var a=Math.random();window.addEventListener('message',function(b){{b.data.id==a&amp;&amp;(style.height=b.data.height+'px')}});contentWindow.postMessage('s9e:'+a,'*')"/>]]></template>
+		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>]]></template>
 	</site>
 
 	<site id="googleplus">
@@ -474,7 +474,7 @@
 			<match>!//plus\.google\.com/\+[^/]+/posts/\w!</match>
 			<extract>!oid="?(?'oid'\d+)!</extract>
 		</scrape>
-		<iframe width="450" height="240" src="//s9e.github.io/iframe/googleplus.min.html#{@oid}/posts/{@pid}" onload="var a=Math.random();window.addEventListener('message',function(b){{b.data.id==a&amp;&amp;(style.height=b.data.height+'px')}});contentWindow.postMessage('s9e:'+a,'*')"/>
+		<iframe width="450" height="240" src="//s9e.github.io/iframe/googleplus.min.html#{@oid}/posts/{@pid}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 	</site>
 
 	<site id="googlesheets">
@@ -929,9 +929,11 @@
 					style.height = e.data.height + 'px';
 				}
 			});
-			contentWindow.postMessage('s9e:' + id, '*');
+
+			var origin = src.substr(0, src.indexOf('/', 8));
+			contentWindow.postMessage('s9e:' + id, origin);
 		-->
-		<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{b.data.id==a&amp;&amp;(style.height=b.data.height+'px')}});contentWindow.postMessage('s9e:'+a,'*')"/>
+		<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 	</site>
 
 	<site id="ustream">
