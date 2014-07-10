@@ -343,9 +343,7 @@
 		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=deportes:2001302</example>
 
 		<host>espn.go.com</host>
-		<extract>#\?id=(?'cms'deportes|espn):(?'id'\d+)#</extract>
-		<extract>#\?v?id=(?'id'\d+)#</extract>
-		<extract>#(?'cms'deportes|espn(?!d))#</extract>
+		<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?id=|video\?vid=|clipDeportes\?id=(?:deportes:)?)(?'id'\d+)#</extract>
 		<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
 	</site>
 
