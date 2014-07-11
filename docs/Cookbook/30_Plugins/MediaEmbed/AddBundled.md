@@ -14,7 +14,7 @@ extract($configurator->finalize());
 
 $examples = [
 	'[media]http://www.dailymotion.com/video/x222z1[/media]',
-	'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
+	'https://www.facebook.com/video/video.php?v=10100658170103643',
 	'[youtube]-cEzsCAzTak[/youtube]'
 ];
 

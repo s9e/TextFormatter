@@ -1344,6 +1344,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
+				'<r><FACEBOOK id="10151471074398553" mode="post" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.facebook.com/photo.php?fbid=10152476416772631',
+				'<r><FACEBOOK id="10152476416772631" mode="photo" url="https://www.facebook.com/photo.php?fbid=10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
 				'<r><FUNNYORDIE id="bf313bd8b4" url="http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david">http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</FUNNYORDIE></r>',
 				[],
@@ -2280,7 +2298,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
+				'https://www.facebook.com/video/video.php?v=10100658170103643',
 				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>',
 				[],
 				function ($configurator)

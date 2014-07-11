@@ -27,7 +27,7 @@ extract($configurator->finalize());
 
 $examples = [
 	'[media]http://www.dailymotion.com/video/x222z1[/media]',
-	'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
+	'https://www.facebook.com/video/video.php?v=10100658170103643',
 	'[youtube]-cEzsCAzTak[/youtube]'
 ];
 
@@ -178,7 +178,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>facebook</code></td>
 		<td>Facebook</td>
-		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</td>
+		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553<br/>https://www.facebook.com/photo.php?fbid=10152476416772631</td>
 	</tr>
 	<tr>
 		<td><code>funnyordie</code></td>
