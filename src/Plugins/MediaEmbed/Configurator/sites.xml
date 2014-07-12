@@ -246,6 +246,16 @@
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
 	</site>
 
+	<site id="coub">
+		<name>Coub</name>
+		<homepage>http://coub.com/</homepage>
+		<example>http://coub.com/view/6veusoty</example>
+
+		<host>coub.com</host>
+		<extract>!coub\.com/view/(?'id'\w+)!</extract>
+		<iframe width="560" height="315" src="//coub.com/embed/{@id}"/>
+	</site>
+
 	<site id="dailymotion">
 		<name>Dailymotion</name>
 		<homepage>http://www.dailymotion.com/</homepage>

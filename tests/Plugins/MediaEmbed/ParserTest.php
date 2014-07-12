@@ -1245,6 +1245,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://coub.com/view/6veusoty',
+				'<r><COUB id="6veusoty" url="http://coub.com/view/6veusoty">http://coub.com/view/6veusoty</COUB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('coub');
+				}
+			],
+			[
 				'http://www.dailymotion.com/video/x222z1',
 				'<r><DAILYMOTION id="x222z1" url="http://www.dailymotion.com/video/x222z1">http://www.dailymotion.com/video/x222z1</DAILYMOTION></r>',
 				[],
