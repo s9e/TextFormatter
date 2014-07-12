@@ -1650,6 +1650,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://pastebin.com/9jEf44nc',
+				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pastebin');
+				}
+			],
+			[
+				'http://pastebin.com/raw.php?i=9jEf44nc',
+				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/raw.php?i=9jEf44nc">http://pastebin.com/raw.php?i=9jEf44nc</PASTEBIN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pastebin');
+				}
+			],
+			[
 				'http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/',
 				'<r><PREZI id="5ye8po_hmikp" url="http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
 				[],

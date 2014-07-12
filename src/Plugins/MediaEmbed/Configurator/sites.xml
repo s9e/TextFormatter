@@ -684,6 +684,16 @@
 		<iframe width="480" height="373" src="http://graphics8.nytimes.com/bcvideo/1.0/iframe/embed.html?videoId={@id}&amp;playerType=embed"/>
 	</site>
 
+	<site id="pastebin">
+		<name>Pastebin</name>
+		<homepage>http://pastebin.com/</homepage>
+		<example>http://pastebin.com/9jEf44nc</example>
+
+		<host>pastebin.com</host>
+		<extract>!pastebin\.com/(?:\w+\.php\?i=)?(?'id'\w+)!</extract>
+		<iframe width="100%" height="300" src="//pastebin.com/embed_iframe.php?i={@id}" scrolling="" style="resize:both"/>
+	</site>
+
 	<site id="podbean">
 		<name>Podbean</name>
 		<homepage>http://www.podbean.com/</homepage>
