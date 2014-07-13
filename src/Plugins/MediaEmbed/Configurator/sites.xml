@@ -663,7 +663,6 @@
 		<example>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</example>
 
 		<host>msnbc.com</host>
-		<extract></extract>
 		<scrape>
 			<match>@msnbc\.com/[-\w]+/watch/@</match>
 			<extract>@guid="?(?'id'\w+)@</extract>
