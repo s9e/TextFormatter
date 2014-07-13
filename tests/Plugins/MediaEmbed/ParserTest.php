@@ -547,6 +547,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
+				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('msnbc');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
