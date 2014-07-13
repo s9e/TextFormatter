@@ -1336,7 +1336,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
-				'<r><FACEBOOK id="10100658170103643" mode="photo" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
+				'<r><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1345,7 +1345,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10150451523596807',
-				'<r><FACEBOOK id="10150451523596807" mode="video" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
+				'<r><FACEBOOK id="10150451523596807" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1354,7 +1354,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<r><FACEBOOK id="10151471074398553" mode="post" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				'<r><FACEBOOK id="10151471074398553" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1363,7 +1363,25 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?fbid=10152476416772631',
-				'<r><FACEBOOK id="10152476416772631" mode="photo" url="https://www.facebook.com/photo.php?fbid=10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
+				'<r><FACEBOOK id="10152476416772631" url="https://www.facebook.com/photo.php?fbid=10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.facebook.com/pages/Bourne-Ultimatum/105742379466221',
+				'<t>https://www.facebook.com/pages/Bourne-Ultimatum/105742379466221</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://apps.facebook.com/concertsbybit/facebook/events/8362556/rsvp',
+				'<t>https://apps.facebook.com/concertsbybit/facebook/events/8362556/rsvp</t>',
 				[],
 				function ($configurator)
 				{
@@ -2326,7 +2344,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10100658170103643',
-				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>',
+				'<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#10100658170103643" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2335,7 +2353,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/facebook.min.html#10151471074398553" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))"></iframe>',
+				'<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#10151471074398553" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

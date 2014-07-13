@@ -360,29 +360,14 @@
 	<site id="facebook">
 		<name>Facebook</name>
 		<homepage>http://www.facebook.com/</homepage>
+		<example>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</example>
 		<example>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</example>
 		<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
-		<example>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</example>
 		<example>https://www.facebook.com/photo.php?fbid=10152476416772631</example>
 
-		<host>facebook.com</host>
-		<extract>!facebook\.com/(?'mode'photo|video)(?:/video)?\.php\?(?:fbid|v)=(?'id'\d+)!</extract>
-		<extract>!facebook\.com/[\w.]+/(?'mode'post)s/(?'id'\d+)!</extract>
-		<attributes>
-			<mode type="alnum"/>
-		</attributes>
-		<template><![CDATA[<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no">
-			<xsl:attribute name="src">
-				<xsl:choose>
-					<xsl:when test="@mode='video'">https://www.facebook.com/video/embed?video_id=</xsl:when>
-					<xsl:otherwise>//s9e.github.io/iframe/facebook.min.html#</xsl:otherwise>
-				</xsl:choose>
-				<xsl:value-of select="@id"/>
-			</xsl:attribute>
-			<xsl:if test="@mode!='video'">
-				<xsl:attribute name="onload">var a=Math.random();window.addEventListener('message',function(b){if(b.data.id==a)style.height=b.data.height+'px'});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))</xsl:attribute>
-			</xsl:if>
-		</iframe>]]></template>
+		<host>www.facebook.com</host>
+		<extract>@www\.facebook\.com/(?!pages/).*?(?:/|\?fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
+		<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 	</site>
 
 	<site id="funnyordie">

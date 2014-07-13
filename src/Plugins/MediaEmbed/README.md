@@ -41,7 +41,7 @@ foreach ($examples as $text)
 ```
 ```html
 <iframe width="560" height="315" src="//www.dailymotion.com/embed/video/x222z1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
-<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="https://www.facebook.com/video/embed?video_id=10100658170103643"></iframe>
+<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#10100658170103643" onload="var a=Math.random();window.addEventListener('message',function(b){if(b.data.id==a)style.height=b.data.height+'px'});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/-cEzsCAzTak?controls=2"></iframe>
 ```
 
@@ -183,7 +183,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>facebook</code></td>
 		<td>Facebook</td>
-		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553<br/>https://www.facebook.com/photo.php?fbid=10152476416772631</td>
+		<td>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553<br/>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/photo.php?fbid=10152476416772631</td>
 	</tr>
 	<tr>
 		<td><code>funnyordie</code></td>
