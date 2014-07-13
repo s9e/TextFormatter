@@ -293,18 +293,15 @@
 		<example>http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153</example>
 		<example>http://www.ebay.de/itm/Converse-Chucks-All-Star-OX-Klassiker-Gr-35-48-/320748648909</example>
 		<example>http://www.ebay.fr/itm/CONVERSE-CHUCK-TAYLOR-AS-CORE-OX-All-Star-Sneakers-Men-Women-Free-Shipping-/380728186640</example>
+		<example>http://www.ebay.at/itm/Tea-Matter-Teesieb-mit-Zwitscherton-Alessi-Rot-Schwarz-Stahl-glnzend-/251585352862</example>
 		<example>http://www.ebay.com/itm/261416432518</example>
 
+		<host>ebay.at</host>
+		<host>ebay.co.uk</host>
 		<host>ebay.com</host>
 		<host>ebay.de</host>
-		<host>ebay.co.uk</host>
-		<host>ebay.in</host>
-		<host>ebay.com.au</host>
-		<host>ebay.it</host>
 		<host>ebay.fr</host>
-		<host>ebay.es</host>
-		<host>ebay.ca</host>
-		<host>ebay.at</host>
+		<host>ebay.it</host>
 		<extract>#ebay.[\w.]+/itm/(?:[-\w]+/)?(?'id'\d+)#</extract>
 		<extract>#[?&amp;]item=(?'id'\d+)#</extract>
 		<scrape>
@@ -313,7 +310,7 @@
 		</scrape>
 		<flash width="355" height="300" src="http://togo.ebay.com/togo/togo.swf?2008013100">
 			<flashvars><![CDATA[
-				<xsl:text>base=http://togo.ebay.com/togo/&amp;mode=normal&amp;query=server&amp;itemid=</xsl:text>
+				<xsl:text>base=http://togo.ebay.com/togo/&amp;mode=normal&amp;itemid=</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@itemid">
 						<xsl:value-of select="@itemid"/>
