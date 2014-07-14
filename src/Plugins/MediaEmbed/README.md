@@ -356,6 +356,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
 	</tr>
 	<tr>
+		<td><code>theonion</code></td>
+		<td>The Onion</td>
+		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</td>
+	</tr>
+	<tr>
 		<td><code>traileraddict</code></td>
 		<td>Trailer Addict</td>
 		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>

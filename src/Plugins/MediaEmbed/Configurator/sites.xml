@@ -892,6 +892,19 @@
 		<iframe width="640" height="360" src="http://www.theatlantic.com/video/iframe/{@id}/"/>
 	</site>
 
+	<site id="theonion">
+		<name>The Onion</name>
+		<homepage>http://www.theonion.com/video/</homepage>
+		<example>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
+
+		<host>theonion.com</host>
+		<scrape>
+			<match>!theonion\.com/video/[-\w]+,\d+!</match>
+			<extract>!data-id="(?'id'\d+)!</extract>
+		</scrape>
+		<iframe width="560" height="315" src="http://www.theonion.com/video_embed/?id={@id}/"/>
+	</site>
+
 	<site id="traileraddict">
 		<name>Trailer Addict</name>
 		<homepage>http://www.traileraddict.com/</homepage>
