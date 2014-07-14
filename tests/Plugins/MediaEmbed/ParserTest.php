@@ -627,16 +627,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/',
-				'<r><THEONION id="2040" url="http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/">http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</THEONION></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('theonion');
-				}
-			],
-			[
 				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
 				[],
@@ -1884,6 +1874,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('theatlantic');
+				}
+			],
+			[
+				'http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/',
+				'<r><THEONION id="35998" url="http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/">http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</THEONION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('theonion');
 				}
 			],
 			[

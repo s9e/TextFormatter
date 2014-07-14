@@ -898,11 +898,8 @@
 		<example>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
 
 		<host>theonion.com</host>
-		<scrape>
-			<match>!theonion\.com/video/[-\w]+,\d+!</match>
-			<extract>!data-id="(?'id'\d+)!</extract>
-		</scrape>
-		<iframe width="560" height="315" src="http://www.theonion.com/video_embed/?id={@id}/"/>
+		<extract>!theonion\.com/video/[-\w]+,(?'id'\d+)!</extract>
+		<iframe width="560" height="315" src="http://www.theonion.com/video_embed/?id={@id}"/>
 	</site>
 
 	<site id="traileraddict">
