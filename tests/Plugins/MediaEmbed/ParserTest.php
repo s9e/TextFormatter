@@ -686,6 +686,36 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('vk');
 				}
 			],
+			[
+				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
+				'<r><WSHH id="63133" url="http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
+				'<r><WSHH id="63175" url="http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo',
+				'<r><WSHH id="71468" url="http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo">http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo</WSHH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
 		];
 	}
 
@@ -2030,17 +2060,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
-				'<r><WSHH id="wshhZ8F22UtJ8sLHdja0" url="http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('wshh');
-				}
-			],
-			[
-				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-				'<r><WSHH id="wshh2SXFFe7W14DqQx61" url="http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
+				'http://www.worldstarhiphop.com/featured/71630',
+				'<r><WSHH id="71630" url="http://www.worldstarhiphop.com/featured/71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -2649,24 +2670,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vine');
-				}
-			],
-			[
-				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="448" height="374" data="http://www.worldstarhiphop.com/videos/e/16711680/wshhZ8F22UtJ8sLHdja0"><param name="allowfullscreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.worldstarhiphop.com/videos/e/16711680/wshhZ8F22UtJ8sLHdja0" width="448" height="374" allowfullscreen=""></object>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('wshh');
-				}
-			],
-			[
-				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="448" height="374" data="http://www.worldstarhiphop.com/videos/e/16711680/wshh2SXFFe7W14DqQx61"><param name="allowfullscreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.worldstarhiphop.com/videos/e/16711680/wshh2SXFFe7W14DqQx61" width="448" height="374" allowfullscreen=""></object>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('wshh');
 				}
 			],
 			[
