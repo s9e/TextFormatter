@@ -345,9 +345,9 @@
 	<site id="espn">
 		<name>ESPN</name>
 		<homepage>http://espn.go.com/</homepage>
-		<example>http://espn.go.com/video/clip?id=10315344</example>
-		<example>http://m.espn.go.com/general/video?vid=10926479</example>
-		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=deportes:2001302</example>
+		<example>http://espn.go.com/video/clip?id=11216330</example>
+		<example>http://m.espn.go.com/general/video?vid=11216330</example>
+		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782</example>
 
 		<host>espn.go.com</host>
 		<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?id=|video\?vid=|clipDeportes\?id=(?:deportes:)?)(?'id'\d+)#</extract>
