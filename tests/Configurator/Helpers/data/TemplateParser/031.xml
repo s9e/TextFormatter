@@ -1,24 +1,21 @@
-<stylesheet outputMethod="xml">
-	<template>
-		<match priority="0">FOO</match>
-		<element name="div" id="1" empty="maybe">
-			<switch>
-				<case test="@foo">
-					<closeTag id="1"/>
-					<output type="literal">foo</output>
-				</case>
-				<case test="@bar">
-					<closeTag id="1"/>
-					<output type="literal">bar</output>
-				</case>
-				<case>
-					<attribute name="id">
-						<output type="literal">id</output>
-					</attribute>
-					<closeTag id="1"/>
-					<output type="xpath">@baz</output>
-				</case>
-			</switch>
-		</element>
-	</template>
-</stylesheet>
+<template outputMethod="xml">
+	<element name="div" id="1" empty="maybe">
+		<switch>
+			<case test="@foo">
+				<closeTag id="1"/>
+				<output type="literal">foo</output>
+			</case>
+			<case test="@bar">
+				<closeTag id="1"/>
+				<output type="literal">bar</output>
+			</case>
+			<case>
+				<attribute name="id">
+					<output type="literal">id</output>
+				</attribute>
+				<closeTag id="1"/>
+				<output type="xpath">@baz</output>
+			</case>
+		</switch>
+	</element>
+</template>

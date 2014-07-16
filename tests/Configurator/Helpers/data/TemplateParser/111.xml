@@ -1,12 +1,9 @@
-<stylesheet outputMethod="xml">
-	<template>
-		<match priority="0">FOO</match>
-		<element name="hr" id="1" void="yes">
-			<attribute name="id">
-				<output type="literal">foo</output>
-			</attribute>
-			<closeTag id="1"/>
+<template outputMethod="xml">
+	<element name="hr" id="1" void="yes">
+		<attribute name="id">
 			<output type="literal">foo</output>
-		</element>
-	</template>
-</stylesheet>
+		</attribute>
+		<closeTag id="1"/>
+		<output type="literal">foo</output>
+	</element>
+</template>

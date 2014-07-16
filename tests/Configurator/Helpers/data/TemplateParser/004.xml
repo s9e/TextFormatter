@@ -1,16 +1,6 @@
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="-0.25">html:*</match>
-		<element name="{local-name()}" id="1" void="maybe" empty="maybe">
-			<closeTag id="1"/>
-			<applyTemplates/>
-		</element>
-	</template>
-	<template>
-		<match priority="0">html:b</match>
-		<element name="b" id="2" empty="maybe">
-			<closeTag id="2"/>
-			<applyTemplates/>
-		</element>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<element name="{local-name()}" id="1" void="maybe" empty="maybe">
+		<closeTag id="1"/>
+		<applyTemplates/>
+	</element>
+</template>

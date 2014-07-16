@@ -1,28 +1,25 @@
 <?xml version="1.0"?>
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="0">QUOTE</match>
-		<switch>
-			<case test="$STYLE_ID=2">
-				<switch>
-					<case test="@author">
-						<output type="literal">xxx</output>
-					</case>
-					<case>
-						<output type="literal">yyy</output>
-					</case>
-				</switch>
-			</case>
-			<case>
-				<switch>
-					<case test="@author">
-						<output type="literal">aaa</output>
-					</case>
-					<case>
-						<output type="literal">bbb</output>
-					</case>
-				</switch>
-			</case>
-		</switch>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<switch>
+		<case test="$STYLE_ID=2">
+			<switch>
+				<case test="@author">
+					<output type="literal">xxx</output>
+				</case>
+				<case>
+					<output type="literal">yyy</output>
+				</case>
+			</switch>
+		</case>
+		<case>
+			<switch>
+				<case test="@author">
+					<output type="literal">aaa</output>
+				</case>
+				<case>
+					<output type="literal">bbb</output>
+				</case>
+			</switch>
+		</case>
+	</switch>
+</template>

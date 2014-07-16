@@ -1,18 +1,15 @@
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="0">IE</match>
-		<comment>
-			<output type="literal">[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</output>
-		</comment>
-		<comment>
-			<output type="literal">[if !IE]&gt;&lt;!</output>
-		</comment>
-		<element name="p" id="1">
-			<closeTag id="1"/>
-			<output type="literal">You are not using Internet Explorer.</output>
-		</element>
-		<comment>
-			<output type="literal">&lt;![endif]</output>
-		</comment>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<comment>
+		<output type="literal">[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</output>
+	</comment>
+	<comment>
+		<output type="literal">[if !IE]&gt;&lt;!</output>
+	</comment>
+	<element name="p" id="1">
+		<closeTag id="1"/>
+		<output type="literal">You are not using Internet Explorer.</output>
+	</element>
+	<comment>
+		<output type="literal">&lt;![endif]</output>
+	</comment>
+</template>

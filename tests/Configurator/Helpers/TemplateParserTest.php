@@ -15,9 +15,9 @@ class TemplateParserTest extends Test
 	* @testdox parse() tests
 	* @dataProvider getParseTests
 	*/
-	public function testParse($xsl, $expectedFile)
+	public function testParse($template, $outputMethod, $expectedFile)
 	{
-		$ir = TemplateParser::parse($xsl);
+		$ir = TemplateParser::parse($template, $outputMethod);
 
 		$this->assertInstanceOf('DOMDocument', $ir);
 		$this->assertXmlStringEqualsXmlFile($expectedFile, $ir->saveXML());
@@ -26,13 +26,18 @@ class TemplateParserTest extends Test
 	public function getParseTests()
 	{
 		$tests = [];
-		foreach (glob(__DIR__ . '/data/TemplateParser/*.xsl') as $filepath)
+		foreach (glob(__DIR__ . '/data/TemplateParser/*.template') as $filepath)
 		{
-			$dom = new DOMDocument;
-			$dom->preserveWhiteSpace = false;
-			$dom->load($filepath);
+			$template = file_get_contents($filepath);
 
-			$tests[] = [$dom->saveXML(), substr($filepath, 0, -3) . 'xml'];
+			// Remove inter-element whitespace, it's only there for readability
+			$template = preg_replace('(>\\n\\s*<)', '><', $template);
+
+			$parts = explode('.', $filepath);
+			$expectedFile = $parts[0] . '.xml';
+			$outputMethod = $parts[1];
+
+			$tests[] = [$template, $outputMethod, $expectedFile];
 		}
 
 		return $tests;
@@ -45,16 +50,7 @@ class TemplateParserTest extends Test
 	*/
 	public function testPI()
 	{
-		TemplateParser::parse(
-			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-				<xsl:output method="html" encoding="utf-8" />
-
-				<xsl:template match="FOO"><?pi ?></xsl:template>
-
-			</xsl:stylesheet>'
-		);
+		TemplateParser::parse('<?pi ?>', 'xml');
 	}
 
 	/**
@@ -64,16 +60,7 @@ class TemplateParserTest extends Test
 	*/
 	public function testUnsupportedXSL()
 	{
-		TemplateParser::parse(
-			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-				<xsl:output method="html" encoding="utf-8" />
-
-				<xsl:template match="FOO"><xsl:foo/></xsl:template>
-
-			</xsl:stylesheet>'
-		);
+		TemplateParser::parse('<xsl:foo/>', 'xml');
 	}
 
 	/**
@@ -83,16 +70,7 @@ class TemplateParserTest extends Test
 	*/
 	public function testUnsupportedCopy()
 	{
-		TemplateParser::parse(
-			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-				<xsl:output method="html" encoding="utf-8" />
-
-				<xsl:template match="FOO"><xsl:copy-of select="foo"/></xsl:template>
-
-			</xsl:stylesheet>'
-		);
+		TemplateParser::parse('<xsl:copy-of select="foo"/>', 'xml');
 	}
 
 	/**
@@ -102,15 +80,6 @@ class TemplateParserTest extends Test
 	*/
 	public function testUnsupportedNS()
 	{
-		TemplateParser::parse(
-			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-				<xsl:output method="html" encoding="utf-8" />
-
-				<xsl:template match="FOO"><foo:foo xmlns:foo="urn:foo"/></xsl:template>
-
-			</xsl:stylesheet>'
-		);
+		TemplateParser::parse('<foo:foo xmlns:foo="urn:foo"/>', 'xml');
 	}
 }

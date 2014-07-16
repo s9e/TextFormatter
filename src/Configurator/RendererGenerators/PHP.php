@@ -165,13 +165,8 @@ class PHP implements RendererGenerator
 		$templatesSource = '';
 		foreach ($groupedTemplates as $template => $conditions)
 		{
-			/**
-			* @todo temp hack
-			*/
-			$template = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '"><xsl:output method="' . $rendering->type . '"/><xsl:template match="X">' . $template . '</xsl:template></xsl:stylesheet>';
-
 			// Parse the template
-			$ir = TemplateParser::parse($template);
+			$ir = TemplateParser::parse($template, $rendering->type);
 
 			// Apply the empty-element options
 			if ($rendering->type === 'xhtml')
@@ -192,7 +187,7 @@ class PHP implements RendererGenerator
 			}
 
 			// Serialize the representation to PHP
-			$templateSource = $this->serializer->serializeChildren($ir->documentElement->firstChild);
+			$templateSource = $this->serializer->serializeChildren($ir->documentElement);
 			if (isset($this->optimizer))
 			{
 				$templateSource = $this->optimizer->optimize($templateSource);

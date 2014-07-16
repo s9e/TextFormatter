@@ -26,20 +26,24 @@ class TemplateParser
 	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 
 	/**
-	* Parse a stylesheet into an internal representation
+	* Parse a template into an internal representation
 	*
-	* @param  string      $xsl Original stylesheet
-	* @return DOMDocument      Internal representation
+	* @param  string      $template     Source template
+	* @param  string      $outputMethod Either "html" or "xml"
+	* @return DOMDocument               Internal representation
 	*/
-	public static function parse($xsl)
+	public static function parse($template, $outputMethod)
 	{
+		$xsl = '<xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
+
 		$dom = new DOMDocument;
 		$dom->loadXML($xsl);
 
 		$ir = new DOMDocument;
-		$ir->loadXML('<stylesheet/>');
-		self::parseChildren($ir->documentElement, $dom->documentElement);
+		$ir->loadXML('<template/>');
+		$ir->documentElement->setAttribute('outputMethod', $outputMethod);
 
+		self::parseChildren($ir->documentElement, $dom->documentElement);
 		self::normalize($ir);
 
 		return $ir;
@@ -316,145 +320,6 @@ class TemplateParser
 
 		// Parse this branch's content
 		self::parseChildren($case, $node);
-	}
-
-	/**
-	* Parse an <xsl:output/> node into the internal representation
-	*
-	* NOTE: this method expects the <xsl:output/> node to be the child of an <xsl:stylesheet/>
-	*
-	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMElement $node <xsl:output/> node
-	* @return void
-	*/
-	protected static function parseXslOutput(DOMElement $ir, DOMElement $node)
-	{
-		// Copy the output method
-		$ir->setAttribute('outputMethod', $node->getAttribute('method'));
-	}
-
-	/**
-	* Parse an <xsl:param/> node into the internal representation
-	*
-	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMElement $node <xsl:param/> node
-	* @return void
-	*/
-	protected static function parseXslParam(DOMElement $ir, DOMElement $node)
-	{
-		$param = self::appendElement($ir, 'param');
-		$param->setAttribute('name', $node->getAttribute('name'));
-
-		if ($node->hasAttribute('select'))
-		{
-			$param->setAttribute('select', $node->getAttribute('select'));
-		}
-	}
-
-	/**
-	* Parse an <xsl:template/> node into the internal representation
-	*
-	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMElement $node <xsl:template/> node
-	* @return void
-	*/
-	protected static function parseXslTemplate(DOMElement $ir, DOMElement $node)
-	{
-		// Append a <template/> node in the IR
-		$template = self::appendElement($ir, 'template');
-
-		// Parse the match expression
-		$match   = $node->getAttribute('match');
-		$pos     = 0;
-		$len     = strlen($match);
-		$lastPos = 0;
-
-		$inBrackets    = 0;
-		$inParentheses = 0;
-
-		$exprs = [];
-		$expr  = '';
-
-		do
-		{
-			$pos += strcspn($match, '\'"([|])', $pos);
-			if ($pos >= $len)
-			{
-				break;
-			}
-
-			switch ($match[$pos])
-			{
-				case '|':
-					if (!$inBrackets && !$inParentheses)
-					{
-						$exprs[] = substr($match, $lastPos, $pos - $lastPos);
-						$lastPos = 1 + $pos;
-					}
-					break;
-
-				case '"':
-				case "'":
-					$pos += 1 + strcspn($match, $match[$pos], 1 + $pos);
-					break;
-
-				case '[':
-					++$inBrackets;
-					break;
-
-				case ']':
-					--$inBrackets;
-					break;
-
-				case '(':
-					++$inParentheses;
-					break;
-
-				case ')':
-					--$inParentheses;
-					break;
-			}
-		}
-		while (++$pos < $len);
-
-		// Add the last expression
-		$exprs[] = substr($match, $lastPos);
-
-		// Sort the match alphabetically
-		sort($exprs);
-
-		// Append the match to the IR
-		foreach ($exprs as $expr)
-		{
-			$match = htmlspecialchars(trim($expr));
-
-			/**
-			* Compute this template's priority
-			*
-			* @link http://www.w3.org/TR/xslt#conflict
-			*/
-			if (preg_match('#^(?:\\w+:)?[-\\w]+$#', $match))
-			{
-				// QName such as "FOO" or "foo:BAR"
-				$priority = 0;
-			}
-			elseif (preg_match('#^\\w+:\\*#', $match))
-			{
-				// NCName:* such as "html:*"
-				$priority = -0.25;
-			}
-			else
-			{
-				// Default priority
-				$priority = 0.5;
-			}
-
-			// Append a <match/> element to the IR, with its priority
-			self::appendElement($template, 'match', $match)->setAttribute('priority', $priority);
-		}
-
-		// Parse this template's content
-		self::parseChildren($template, $node);
 	}
 
 	/**

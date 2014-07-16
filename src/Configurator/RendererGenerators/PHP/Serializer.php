@@ -809,15 +809,6 @@ class Serializer
 	}
 
 	/**
-	* Unused
-	* @todo Remove
-	*/
-	protected function serializeMatch()
-	{
-		return '';
-	}
-
-	/**
 	* Serialize an <output/> node
 	*
 	* @param  DOMElement $output <output/> node

@@ -1,6 +1,3 @@
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="0">HW</match>
-		<output type="literal">Hello World</output>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<output type="literal">Hello World</output>
+</template>

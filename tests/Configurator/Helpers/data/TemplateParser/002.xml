@@ -1,10 +1,6 @@
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="0">B</match>
-		<match priority="0">BOLD</match>
-		<element name="b" id="1" empty="maybe">
-			<closeTag id="1"/>
-			<applyTemplates/>
-		</element>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<element name="b" id="1" empty="maybe">
+		<closeTag id="1"/>
+		<applyTemplates/>
+	</element>
+</template>

@@ -1,16 +1,13 @@
-<stylesheet outputMethod="html">
-	<template>
-		<match priority="0">FOO</match>
-		<switch>
-			<case test="@a">
-				<output type="literal">A</output>
-			</case>
-			<case test="@b">
-				<output type="literal">B</output>
-			</case>
-			<case>
-				<output type="literal">C</output>
-			</case>
-		</switch>
-	</template>
-</stylesheet>
+<template outputMethod="html">
+	<switch>
+		<case test="@a">
+			<output type="literal">A</output>
+		</case>
+		<case test="@b">
+			<output type="literal">B</output>
+		</case>
+		<case>
+			<output type="literal">C</output>
+		</case>
+	</switch>
+</template>
