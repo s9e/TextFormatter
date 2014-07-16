@@ -1,10 +1,6 @@
-Immediate goals (April 2014)
-----------------------------
-- Finish up Litedown: forced line breaks, fenced code blocks, perhaps reference links
-
-
 Near-future goals (2014)
 ------------------------
+- Finish up Litedown: forced line breaks, fenced code blocks, perhaps reference links
 - Have a piece of utilities that converts a parsed text to BBCodes or Markdown
 - Move (and expand) to ReadTheDocs.org
 
