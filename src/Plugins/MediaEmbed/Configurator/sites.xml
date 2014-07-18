@@ -90,7 +90,7 @@
 		<name>Bandcamp</name>
 		<homepage>http://bandcamp.com/</homepage>
 		<example>http://proleter.bandcamp.com/album/curses-from-past-times-ep</example>
-		<example>http://proleter.bandcamp.com/track/april-showers</example>
+		<example>http://proleter.bandcamp.com/track/downtown-irony</example>
 		<example>http://therunons.bandcamp.com/track/still-feel</example>
 
 		<host>bandcamp.com</host>
@@ -104,26 +104,22 @@
 			<extract>!"track_num":(?'track_num'\d+)!</extract>
 			<extract>!/track=(?'track_id'\d+)!</extract>
 		</scrape>
-		<iframe width="400" height="{120-78*boolean(@track_id|@track_num)}">
+
+		<iframe width="400" height="400">
 			<src><![CDATA[
-				<xsl:text>//bandcamp.com/EmbeddedPlayer/</xsl:text>
+				<xsl:text>//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@album_id">
 						<xsl:text>album=</xsl:text>
 						<xsl:value-of select="@album_id"/>
-						<xsl:text>/size=</xsl:text>
-						<xsl:choose>
-							<xsl:when test="@track_num">
-								<xsl:text>small/t=</xsl:text>
-								<xsl:value-of select="@track_num"/>
-							</xsl:when>
-							<xsl:otherwise>medium</xsl:otherwise>
-						</xsl:choose>
+						<xsl:if test="@track_num">
+							<xsl:text>/t=</xsl:text>
+							<xsl:value-of select="@track_num"/>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>track=</xsl:text>
 						<xsl:value-of select="@track_id"/>
-						<xsl:text>/size=small</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 			]]></src>
@@ -507,8 +503,8 @@
 			<match>%grooveshark\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%</match>
 			<extract>%songID=(?'songid'[0-9]+)%</extract>
 		</scrape>
-		<flash width="250"
-		       height="{250-210*boolean(@songid)}"
+		<flash width="280"
+		       height="{280-240*boolean(@songid)}"
 		       src="//grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf"
 		       flashvars="playlistID={@playlistid}&amp;songID={@songid}"
 		/>
@@ -651,7 +647,7 @@
 			<match>@//i\.mixcloud\.com/\w+$@</match>
 			<extract>@link rel="canonical" href="https?://[^/]+/(?'id'[-\w]+/[^/&amp;]+)/@</extract>
 		</scrape>
-		<iframe width="300" height="300" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
+		<iframe width="400" height="400" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
 	</site>
 
 	<site id="msnbc">
@@ -726,7 +722,7 @@
 			<match>!rdio\.com/.*?(?:playlist|track)!</match>
 			<extract>!rd\.io/./(?'id'\w+)!</extract>
 		</scrape>
-		<iframe width="400" height="80" src="https://rd.io/i/{@id}"/>
+		<iframe width="400" height="400" src="https://rd.io/i/{@id}"/>
 	</site>
 
 	<site id="rutube">
@@ -775,7 +771,7 @@
 			<extract>@playlists/(?'playlist_id'\d+)@</extract>
 			<extract>@tracks/(?'track_id'\d+)@</extract>
 		</scrape>
-		<iframe width="560" height="166">
+		<iframe width="100%" height="166" style="max-width:900px">
 			<src><![CDATA[
 				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
 				<xsl:choose>
@@ -821,9 +817,9 @@
 		<host>play.spotify.com</host>
 		<extract>!(?'uri'spotify:(?:album|artist|user|track(?:set)?):[,:\w]+)!</extract>
 		<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)/[/\w]+)!</extract>
-		<iframe width="300" height="{380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))}">
+		<iframe width="400" height="480">
 			<src><![CDATA[
-				<xsl:text>https://embed.spotify.com/?uri=</xsl:text>
+				<xsl:text>https://embed.spotify.com/?view=coverart&amp;uri=</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@uri">
 						<xsl:value-of select="@uri"/>

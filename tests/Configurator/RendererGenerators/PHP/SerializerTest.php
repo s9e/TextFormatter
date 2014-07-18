@@ -196,16 +196,8 @@ class SerializerTest extends Test
 				"(\$node->hasAttribute('songid')?'songW':'w')"
 			],
 			[
-				'250-210*boolean(@songid)',
-				"(\$node->hasAttribute('songid')?40:250)"
-			],
-			[
-				'120-78*boolean(@track_id|@track_num)',
-				"(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)"
-			],
-			[
-				"380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))",
-				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'track/')===0?80:380)"
+				'280-240*boolean(@songid)',
+				"(\$node->hasAttribute('songid')?40:280)"
 			],
 			// Math
 			[

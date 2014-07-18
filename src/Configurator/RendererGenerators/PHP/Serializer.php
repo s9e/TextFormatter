@@ -23,20 +23,12 @@ class Serializer
 		"contains('upperlowerdecim',substring(@type,1,5))"
 			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
 
-		// MediaEmbed: Bandcamp
-		'120-78*boolean(@track_id|@track_num)'
-			=> "(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)",
-
 		// MediaEmbed: Grooveshark
 		"substring('songWw',6-5*boolean(@songid),5)"
 			=> "(\$node->hasAttribute('songid')?'songW':'w')",
 
-		"250-210*boolean(@songid)"
-			=> "(\$node->hasAttribute('songid')?40:250)",
-
-		// MediaEmbed: Spotify
-		"380-300*(contains(@uri,':track:')orstarts-with(@path,'track/'))"
-			=> "(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'track/')===0?80:380)"
+		"280-240*boolean(@songid)"
+			=> "(\$node->hasAttribute('songid')?40:280)"
 	];
 
 	/**

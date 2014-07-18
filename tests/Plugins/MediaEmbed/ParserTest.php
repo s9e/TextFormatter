@@ -734,7 +734,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<iframe width="400" height="120" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/album=1122163921/size=medium"></iframe>',
+				'<iframe width="400" height="400" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -744,7 +744,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/album=1122163921/size=small/t=7"></iframe>',
+				'<iframe width="400" height="400" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -754,7 +754,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://therunons.bandcamp.com/track/still-feel',
-				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/track=2146686782/size=small"></iframe>',
+				'<iframe width="400" height="400" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -825,7 +825,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="//grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=&amp;songID=35292216"><embed type="application/x-shockwave-flash" src="//grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="playlistID=&amp;songID=35292216"></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="280" height="40" data="//grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=&amp;songID=35292216"><embed type="application/x-shockwave-flash" src="//grooveshark.com/songWidget.swf" width="280" height="40" allowfullscreen="" flashvars="playlistID=&amp;songID=35292216"></object>',
 				[],
 				function ($configurator)
 				{
@@ -835,7 +835,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/51465673&amp;secret_token=s-UpqTm"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/51465673&amp;secret_token=s-UpqTm"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2429,7 +2429,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="250" data="//grooveshark.com/widget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=74854761&amp;songID="><embed type="application/x-shockwave-flash" src="//grooveshark.com/widget.swf" width="250" height="250" allowfullscreen="" flashvars="playlistID=74854761&amp;songID="></object>',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="280" height="280" data="//grooveshark.com/widget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=74854761&amp;songID="><embed type="application/x-shockwave-flash" src="//grooveshark.com/widget.swf" width="280" height="280" allowfullscreen="" flashvars="playlistID=74854761&amp;songID="></object>',
 				[],
 				function ($configurator)
 				{
@@ -2511,7 +2511,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2520,7 +2520,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/12345?secret_token=s-foobar&amp;secret_token=s-foobar"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/12345?secret_token=s-foobar&amp;secret_token=s-foobar"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2529,7 +2529,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2538,7 +2538,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2547,7 +2547,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/playlists/1919974"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/playlists/1919974"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2557,7 +2557,7 @@ class ParserTest extends Test
 			[
 				// http://xenforo.com/community/threads/s9e-media-bbcodes-pack.61883/page-16#post-741750
 				'[media=soundcloud]nruau/nruau-mix2[/media]',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/nruau/nruau-mix2"></iframe>',
+				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/nruau/nruau-mix2"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2566,7 +2566,7 @@ class ParserTest extends Test
 			],
 			[
 				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
-				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe>',
+				'<iframe width="400" height="480" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2575,7 +2575,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
-				'<iframe width="300" height="380" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe>',
+				'<iframe width="400" height="480" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2584,7 +2584,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
-				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe>',
+				'<iframe width="400" height="480" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe>',
 				[],
 				function ($configurator)
 				{
