@@ -2312,7 +2312,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
-				'<iframe width="100%" allowfullscreen="" frameborder="0" scrolling="no" height="352" src="//www.audiomack.com/embed3-album/hz-global/double-a-side-vol3"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="352" src="//www.audiomack.com/embed3-album/hz-global/double-a-side-vol3"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2321,7 +2321,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
-				'<iframe width="100%" allowfullscreen="" frameborder="0" scrolling="no" height="144" src="//www.audiomack.com/embed3/random-2/buy-the-world-final-1"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="144" src="//www.audiomack.com/embed3/random-2/buy-the-world-final-1"></iframe>',
 				[],
 				function ($configurator)
 				{

@@ -70,7 +70,7 @@
 
 		<host>audiomack.com</host>
 		<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
-		<iframe width="100%">
+		<iframe width="100%" style="max-width:900px">
 			<height><![CDATA[
 				<xsl:choose>
 					<xsl:when test="@mode='album'">352</xsl:when>
