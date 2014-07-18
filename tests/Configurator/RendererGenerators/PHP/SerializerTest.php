@@ -196,8 +196,8 @@ class SerializerTest extends Test
 				"(\$node->hasAttribute('songid')?'songW':'w')"
 			],
 			[
-				'280-240*boolean(@songid)',
-				"(\$node->hasAttribute('songid')?40:280)"
+				'400-360*boolean(@songid)',
+				"(\$node->hasAttribute('songid')?40:400)"
 			],
 			// Math
 			[

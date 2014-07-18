@@ -27,8 +27,8 @@ class Serializer
 		"substring('songWw',6-5*boolean(@songid),5)"
 			=> "(\$node->hasAttribute('songid')?'songW':'w')",
 
-		"280-240*boolean(@songid)"
-			=> "(\$node->hasAttribute('songid')?40:280)"
+		"400-360*boolean(@songid)"
+			=> "(\$node->hasAttribute('songid')?40:400)"
 	];
 
 	/**

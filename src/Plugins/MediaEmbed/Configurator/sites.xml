@@ -503,8 +503,8 @@
 			<match>%grooveshark\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%</match>
 			<extract>%songID=(?'songid'[0-9]+)%</extract>
 		</scrape>
-		<flash width="280"
-		       height="{280-240*boolean(@songid)}"
+		<flash width="400"
+		       height="{400-360*boolean(@songid)}"
 		       src="//grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf"
 		       flashvars="playlistID={@playlistid}&amp;songID={@songid}"
 		/>
