@@ -321,6 +321,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/<br/>http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
 	</tr>
 	<tr>
+		<td><code>scribd</code></td>
+		<td>Scribd</td>
+		<td>http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</td>
+	</tr>
+	<tr>
 		<td><code>slideshare</code></td>
 		<td>SlideShare</td>
 		<td>http://www.slideshare.net/Slideshare/how-23431564</td>

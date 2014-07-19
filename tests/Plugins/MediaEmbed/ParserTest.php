@@ -1771,6 +1771,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics',
+				'<r><SCRIBD id="233658242" url="http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics">http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</SCRIBD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('scribd');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
 				'<r><SLIDESHARE id="23431564" url="http://www.slideshare.net/Slideshare/how-23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
 				[],

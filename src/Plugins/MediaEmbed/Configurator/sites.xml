@@ -740,6 +740,16 @@
 		<iframe width="720" height="405" src="//rutube.ru/play/embed/{@id}"/>
 	</site>
 
+	<site id="scribd">
+		<name>Scribd</name>
+		<homepage>http://www.scribd.com/</homepage>
+		<example>http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</example>
+
+		<host>scribd.com</host>
+		<extract>!scribd\.com/doc/(?'id'\d+)!</extract>
+		<iframe width="500" height="500" style="resize:both" src="//www.scribd.com/embeds/{@id}/content?view_mode=slideshow&amp;show_recommendations=false"/>
+	</site>
+
 	<site id="slideshare">
 		<name>SlideShare</name>
 		<homepage>http://www.slideshare.net/</homepage>
