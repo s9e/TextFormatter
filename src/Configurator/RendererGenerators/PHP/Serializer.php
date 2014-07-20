@@ -194,10 +194,10 @@ class Serializer
 			// if the version of PCRE isn't ancient
 			if (version_compare(PCRE_VERSION, '8.13', '>='))
 			{
-				$patterns['mathadd'] = [
-					'(?<mathadd0>(?&attr)|(?&number)|(?&param))',
-					'\\+',
-					'(?<mathadd1>(?&attr)|(?&number)|(?&param))'
+				$patterns['math'] = [
+					'(?<math0>(?&attr)|(?&number)|(?&param))',
+					'(?<math1>[-+*])',
+					'(?<math2>(?&math)|(?&math0))'
 				];
 			}
 
@@ -489,19 +489,19 @@ class Serializer
 				return $php;
 			}
 
-			if (!empty($m['mathadd']))
+			if (!empty($m['math']))
 			{
-				if (!is_numeric($m['mathadd0']))
+				if (!is_numeric($m['math0']))
 				{
-					$m['mathadd0'] = $this->convertXPath($m['mathadd0']);
+					$m['math0'] = $this->convertXPath($m['math0']);
 				}
 
-				if (!is_numeric($m['mathadd1']))
+				if (!is_numeric($m['math2']))
 				{
-					$m['mathadd1'] = $this->convertXPath($m['mathadd1']);
+					$m['math2'] = $this->convertXPath($m['math2']);
 				}
 
-				return '(' . $m['mathadd0'] . '+' . $m['mathadd1'] . ')';
+				return $m['math0'] . $m['math1'] . $m['math2'];
 			}
 		}
 
