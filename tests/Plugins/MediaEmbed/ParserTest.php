@@ -2223,6 +2223,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" m="23" s="45" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=45s',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="45" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=45s</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
 				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" url="http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</YOUTUBE></r>',
 				[],
@@ -2793,6 +2811,15 @@ class ParserTest extends Test
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=1h23m45s',
 				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/wZZ7oFKsKzY?controls=2&amp;start=5025"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/wZZ7oFKsKzY?controls=2&amp;start=1425"></iframe>',
 				[],
 				function ($configurator)
 				{
