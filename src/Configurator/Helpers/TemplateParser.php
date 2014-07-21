@@ -461,6 +461,16 @@ class TemplateParser
 				$closeTag->setAttribute('set', '');
 			}
 		}
+
+		// Fill in output context
+		foreach ($ir->getElementsByTagName('output') as $output)
+		{
+			$escape = ($xpath->evaluate('boolean(ancestor::attribute)', $output))
+			        ? 'attribute'
+			        : 'text';
+
+			$output->setAttribute('escape', $escape);
+		}
 	}
 
 	/**

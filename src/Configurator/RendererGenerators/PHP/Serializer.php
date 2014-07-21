@@ -809,8 +809,7 @@ class Serializer
 	protected function serializeOutput(DOMElement $output)
 	{
 		$php        = '';
-		$xpath      = new DOMXPath($output->ownerDocument);
-		$escapeMode = ($xpath->evaluate('count(ancestor::attribute)', $output))
+		$escapeMode = ($output->getAttribute('escape') === 'attribute')
 		            ? ENT_COMPAT
 		            : ENT_NOQUOTES;
 

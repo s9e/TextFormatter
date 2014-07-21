@@ -1,7 +1,7 @@
 <template outputMethod="html">
 	<element name="div" id="1" empty="maybe">
 		<attribute name="id">
-			<output type="literal">foo</output>
+			<output escape="attribute" type="literal">foo</output>
 		</attribute>
 		<closeTag id="1"/>
 		<applyTemplates/>

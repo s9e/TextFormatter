@@ -3,7 +3,7 @@
 		<switch>
 			<case test="@foo">
 				<attribute name="title">
-					<output type="xpath">@bar</output>
+					<output escape="attribute" type="xpath">@bar</output>
 				</attribute>
 			</case>
 		</switch>

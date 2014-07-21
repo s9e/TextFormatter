@@ -3,7 +3,7 @@
 		<switch>
 			<case test="not(@author)">
 				<attribute name="class">
-					<output type="literal">uncited</output>
+					<output escape="attribute" type="literal">uncited</output>
 				</attribute>
 			</case>
 		</switch>
@@ -14,8 +14,8 @@
 				<case test="@author">
 					<element name="cite" id="3">
 						<closeTag id="3"/>
-						<output type="xpath">@author</output>
-						<output type="literal"> wrote:</output>
+						<output escape="text" type="xpath">@author</output>
+						<output escape="text" type="literal"> wrote:</output>
 					</element>
 				</case>
 			</switch>

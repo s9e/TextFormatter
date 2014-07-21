@@ -1,9 +1,9 @@
 <template outputMethod="html">
 	<element name="b" id="1" empty="maybe">
 		<attribute name="title">
-			<output type="literal">{foo}</output>
-			<output type="xpath">@bar</output>
-			<output type="literal">&lt;baz&gt;</output>
+			<output escape="attribute" type="literal">{foo}</output>
+			<output escape="attribute" type="xpath">@bar</output>
+			<output escape="attribute" type="literal">&lt;baz&gt;</output>
 		</attribute>
 		<closeTag id="1"/>
 		<applyTemplates/>

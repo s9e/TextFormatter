@@ -3,8 +3,8 @@
 	<element name="div" id="1">
 		<closeTag id="1"/>
 		<comment>
-			<output type="literal"> ... </output>
+			<output escape="text" type="literal"> ... </output>
 		</comment>
-		<output type="literal">foo</output>
+		<output escape="text" type="literal">foo</output>
 	</element>
 </template>

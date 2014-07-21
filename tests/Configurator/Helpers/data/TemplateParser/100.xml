@@ -1,7 +1,7 @@
 <template outputMethod="html">
 	<element name="hr" id="1" void="yes" empty="yes">
 		<attribute name="id">
-			<output type="literal">foo</output>
+			<output escape="attribute" type="literal">foo</output>
 		</attribute>
 		<closeTag id="1"/>
 	</element>

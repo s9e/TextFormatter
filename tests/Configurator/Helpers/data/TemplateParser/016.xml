@@ -1,12 +1,12 @@
 <template outputMethod="html">
 	<element name="a" id="1" empty="maybe">
 		<attribute name="href">
-			<output type="xpath">@href</output>
+			<output escape="attribute" type="xpath">@href</output>
 		</attribute>
 		<switch>
 			<case test="@title">
 				<attribute name="title">
-					<output type="xpath">@title</output>
+					<output escape="attribute" type="xpath">@title</output>
 				</attribute>
 			</case>
 		</switch>

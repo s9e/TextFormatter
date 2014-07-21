@@ -4,20 +4,20 @@
 		<case test="$STYLE_ID=2">
 			<switch>
 				<case test="@author">
-					<output type="literal">xxx</output>
+					<output escape="text" type="literal">xxx</output>
 				</case>
 				<case>
-					<output type="literal">yyy</output>
+					<output escape="text" type="literal">yyy</output>
 				</case>
 			</switch>
 		</case>
 		<case>
 			<switch>
 				<case test="@author">
-					<output type="literal">aaa</output>
+					<output escape="text" type="literal">aaa</output>
 				</case>
 				<case>
-					<output type="literal">bbb</output>
+					<output escape="text" type="literal">bbb</output>
 				</case>
 			</switch>
 		</case>

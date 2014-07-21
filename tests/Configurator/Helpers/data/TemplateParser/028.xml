@@ -3,15 +3,15 @@
 		<switch>
 			<case test="@foo">
 				<closeTag id="1" set=""/>
-				<output type="literal">foo</output>
+				<output escape="text" type="literal">foo</output>
 			</case>
 			<case test="@bar">
 				<closeTag id="1" set=""/>
-				<output type="literal">bar</output>
+				<output escape="text" type="literal">bar</output>
 			</case>
 			<case>
 				<attribute name="id">
-					<output type="literal">id</output>
+					<output escape="attribute" type="literal">id</output>
 				</attribute>
 			</case>
 		</switch>
