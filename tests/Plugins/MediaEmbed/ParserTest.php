@@ -774,7 +774,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="512" height="288" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -784,7 +784,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
-				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="512" height="288" src="//media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

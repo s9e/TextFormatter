@@ -214,7 +214,7 @@
 			<match>!thecolbertreport\.cc\.com/videos/!</match>
 			<extract>!(?'id'mgid:arc:video:colbertnation\.com:[-0-9a-f]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 	</site>
 
 	<site id="collegehumor">
@@ -239,7 +239,7 @@
 			<match>!c(?:c|omedycentral)\.com/video-clips/!</match>
 			<extract>!(?'id'mgid:arc:video:comedycentral\.com:[-\w]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 	</site>
 
 	<site id="coub">
@@ -279,7 +279,7 @@
 			<match>!thedailyshow\.c(?:c\.c)?om/(?:collection|extended-interviews|videos|watch)/!</match>
 			<extract>!(?'id'mgid:arc:(?:playlist|video):thedailyshow\.com:[-0-9a-f]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 	</site>
 
 	<site id="ebay">
@@ -398,7 +398,7 @@
 			<match>!gametrailers\.com/(?:full-episode|review|video)s/!</match>
 			<extract>!(?'id'mgid:arc:(?:episode|video):gametrailers\.com:[-\w]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 	</site>
 
 	<site id="getty">
