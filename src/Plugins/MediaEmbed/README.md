@@ -426,6 +426,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>https://screen.yahoo.com/mr-short-term-memory-000000263.html<br/>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</td>
 	</tr>
 	<tr>
+		<td><code>youku</code></td>
+		<td>Youku</td>
+		<td>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</td>
+	</tr>
+	<tr>
 		<td><code>youtube</code></td>
 		<td>YouTube</td>
 		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>

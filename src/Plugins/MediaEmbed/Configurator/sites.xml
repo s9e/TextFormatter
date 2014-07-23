@@ -1107,6 +1107,16 @@
 		<iframe width="640" height="360" src="https://screen.yahoo.com/{@id}.html?format=embed"/>
 	</site>
 
+	<site id="youku">
+		<name>Youku</name>
+		<homepage>http://www.youku.com/</homepage>
+		<example>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</example>
+
+		<host>youku.com</host>
+		<extract>!youku\.com/v_show/id_(?'id'\w+)!</extract>
+		<iframe width="512" height="328" src="http://player.youku.com/embed/{@id}"/>
+	</site>
+
 	<site id="youtube">
 		<name>YouTube</name>
 		<homepage>http://www.youtube.com/</homepage>
