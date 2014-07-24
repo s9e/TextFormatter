@@ -90,9 +90,9 @@ while (isset($node->nextSibling))
 	{
 		$closeParent[$m[1]][$elName] = 0;
 	}
-	elseif (preg_match('#^((?:[a-z]+(?:, | or )?)+) element$#', $text, $m))
+	elseif (preg_match('#^((?:[a-z]+(?:, |,? or )?)+) element$#', $text, $m))
 	{
-		foreach (preg_split('#, | or #', $m[1]) as $target)
+		foreach (preg_split('#, |,? or #', $m[1]) as $target)
 		{
 			$closeParent[$target][$elName] = 0;
 		}
@@ -238,11 +238,20 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					{
 						$elements[$elName]['allowChildCategory'][$m[1]][''] = 0;
 					}
+					elseif (preg_match('#^(phrasing content) or (\\w+) elements$#', $value, $m))
+					{
+						$elements[$elName]['allowChildCategory'][$m[1]][''] = 0;
+						$elements[$elName]['allowChildElement'][$m[2]][''] = 0;
+					}
+					elseif (preg_match('#^(phrasing content) \\(with zero or more (\\w+) elements descendants\\)$#', $value, $m))
+					{
+						$elements[$elName]['allowChildCategory'][$m[1]][''] = 0;
+						$elements[$elName]['allowDescendantElement'][$m[2]][''] = 0;
+					}
 					elseif (preg_match('#^a ([a-z]+) element followed by a ([a-z]+) element$#', $value, $m))
 					{
 						$elements[$elName]['allowChildElement'][$m[1]][''] = 0;
 						$elements[$elName]['allowChildElement'][$m[2]][''] = 0;
-						break;
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: empty$#', $value, $m))
 					{
