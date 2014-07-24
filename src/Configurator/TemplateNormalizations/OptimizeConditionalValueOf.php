@@ -34,7 +34,7 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 
 			// Ensure that the expressions match, and that they select one single attribute
 			if ($select !== $test
-			 || !preg_match('#^@\\w+$#D', $select))
+			 || !preg_match('#^@[-\\w]+$#D', $select))
 			{
 				continue;
 			}

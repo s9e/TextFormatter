@@ -15,6 +15,10 @@ class OptimizeConditionalValueOfTest extends AbstractTest
 				'<xsl:value-of select="@foo"/>'
 			],
 			[
+				'<xsl:if test="@data-foo"><xsl:value-of select="@data-foo"/></xsl:if>',
+				'<xsl:value-of select="@data-foo"/>'
+			],
+			[
 				'<div><xsl:attribute name="title"><xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></div>',
 				'<div><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></div>'
 			],
