@@ -341,12 +341,13 @@
 	<site id="espn">
 		<name>ESPN</name>
 		<homepage>http://espn.go.com/</homepage>
-		<example>http://espn.go.com/video/clip?id=11216330</example>
-		<example>http://m.espn.go.com/general/video?vid=11216330</example>
+		<example>http://espn.go.com/video/clip?id=11255783</example>
+		<example>http://m.espn.go.com/general/video?vid=11255783</example>
 		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782</example>
+		<example>http://espn.go.com/video/clip?id=espn:11195358</example>
 
 		<host>espn.go.com</host>
-		<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?id=|video\?vid=|clipDeportes\?id=(?:deportes:)?)(?'id'\d+)#</extract>
+		<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?|video\?v|clipDeportes\?)id=(?:\w+:)?(?'id'\d+)#</extract>
 		<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
 	</site>
 

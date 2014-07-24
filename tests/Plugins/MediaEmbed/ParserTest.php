@@ -1375,6 +1375,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://espn.go.com/video/clip?id=espn:11195358',
+				'<r><ESPN cms="espn" id="11195358" url="http://espn.go.com/video/clip?id=espn:11195358">http://espn.go.com/video/clip?id=espn:11195358</ESPN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
 				'<r><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
 				[],

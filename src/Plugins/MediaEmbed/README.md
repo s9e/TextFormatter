@@ -178,7 +178,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>espn</code></td>
 		<td>ESPN</td>
-		<td>http://espn.go.com/video/clip?id=11216330<br/>http://m.espn.go.com/general/video?vid=11216330<br/>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782</td>
+		<td>http://espn.go.com/video/clip?id=11255783<br/>http://m.espn.go.com/general/video?vid=11255783<br/>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782<br/>http://espn.go.com/video/clip?id=espn:11195358</td>
 	</tr>
 	<tr>
 		<td><code>facebook</code></td>
