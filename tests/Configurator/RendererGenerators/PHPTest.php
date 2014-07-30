@@ -1147,9 +1147,9 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><T3><s>[t3 bar="BAR"]</s>...<e>[/t3]</e></T3></r>',
-				'<b title="foo  {baz}">...</b>',
-				'<b title="foo  {baz}">...</b>',
+				'<r><T3 bar="BAR"><s>[t3 bar="BAR"]</s>...<e>[/t3]</e></T3></r>',
+				'<b title="foo BAR {baz}">...</b>',
+				'<b title="foo BAR {baz}">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T3')->template = '<b title="foo {@bar} {{baz}}"><xsl:apply-templates /></b>';
@@ -1200,9 +1200,9 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><T8>[t8]</T8>...[/t8]</r>',
-				'<b>xy</b>...[/t8]',
-				'<b>xy</b>...[/t8]',
+				'<r><T8><s>[t8]</s>...<e>[/t8]</e></T8></r>',
+				'<b>xy</b>',
+				'<b>xy</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T8')->template = '<b>x<xsl:value-of select="\'\'" />y</b>';
@@ -1218,27 +1218,27 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><T9><s>[t9 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t9]</e></T9></r>',
-				'<b data-a="">...</b>',
-				'<b data-a="">...</b>',
+				'<r><T9 a="&lt;&gt;\'&quot;&amp;"><s>[t9 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t9]</e></T9></r>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T9')->template = '<b data-a="{@a}"><xsl:apply-templates /></b>';
 				}
 			],
 			[
-				'<r><T10><s>[t10 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t10]</e></T10></r>',
-				'<b data-a="">...</b>',
-				'<b data-a="">...</b>',
+				'<r><T10 a="&lt;&gt;\'&quot;&amp;"><s>[t10 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t10]</e></T10></r>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T10')->template = '<b><xsl:attribute name="data-a"><xsl:value-of select="@a" /></xsl:attribute><xsl:apply-templates /></b>';
 				}
 			],
 			[
-				'<r><T11>[t11 a="&lt;&gt;\'\\"&amp;"]</T11>...[/t11]</r>',
-				'<b></b>...[/t11]',
-				'<b/>...[/t11]',
+				'<r><T11 a="&lt;&gt;\'&quot;&amp;"><s>[t11 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t11]</e></T11></r>',
+				'<b>&lt;&gt;\'"&amp;</b>',
+				'<b>&lt;&gt;\'"&amp;</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T11')->template = '<b><xsl:value-of select="@a" /></b>';
@@ -1281,18 +1281,18 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><T16><s>[t16 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t16]</e></T16></r>',
-				'<b data-a="">...</b>',
-				'<b data-a="">...</b>',
+				'<r><T16 a="&lt;&gt;\'&quot;&amp;"><s>[t16 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t16]</e></T16></r>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;">...</b>',
+				'<b data-a="&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T16')->template = '<b data-a="{@a}{@a}{@a}"><xsl:apply-templates /></b>';
 				}
 			],
 			[
-				'<r><T17>[t17 a="&lt;&gt;\'\\"&amp;"]</T17>...[/t17]</r>',
-				'<b></b>...[/t17]',
-				'<b/>...[/t17]',
+				'<r><T17 a="&lt;&gt;\'&quot;&amp;"><s>[t17 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t17]</e></T17></r>',
+				'<b>&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;</b>',
+				'<b>&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T17')->template = '<b><xsl:value-of select="@a" /><xsl:value-of select="@a" /><xsl:value-of select="@a" /></b>';
@@ -1308,18 +1308,18 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><LIST><s>[list]</s><i>[*]one[*]two</i><e>[/list]</e></LIST></r>',
-				'<ul></ul>',
-				'<ul/>',
+				'<r><LIST><s>[list]</s>[*]one[*]two<e>[/list]</e></LIST></r>',
+				'<ul>[*]one[*]two</ul>',
+				'<ul>[*]one[*]two</ul>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('LIST');
 				}
 			],
 			[
-				'<r><LIST type="decimal"><s>[list=1]</s><i>[*]one[*]two</i><e>[/list]</e></LIST></r>',
-				'<ol style="list-style-type:decimal"></ol>',
-				'<ol style="list-style-type:decimal"/>',
+				'<r><LIST type="decimal"><s>[list=1]</s>[*]one[*]two<e>[/list]</e></LIST></r>',
+				'<ol style="list-style-type:decimal">[*]one[*]two</ol>',
+				'<ol style="list-style-type:decimal">[*]one[*]two</ol>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('LIST');
