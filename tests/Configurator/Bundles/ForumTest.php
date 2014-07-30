@@ -25,6 +25,7 @@ class ForumTest extends Test
 		$this->assertTrue($configurator->BBCodes->exists('CODE'));
 		$this->assertTrue($configurator->BBCodes->exists('COLOR'));
 		$this->assertTrue($configurator->BBCodes->exists('EMAIL'));
+		$this->assertTrue($configurator->BBCodes->exists('FONT'));
 		$this->assertTrue($configurator->BBCodes->exists('I'));
 		$this->assertTrue($configurator->BBCodes->exists('LIST'));
 		$this->assertTrue($configurator->BBCodes->exists('*'));

@@ -22,6 +22,7 @@ class Forum extends Bundle
 		$configurator->BBCodes->addFromRepository('CODE');
 		$configurator->BBCodes->addFromRepository('COLOR');
 		$configurator->BBCodes->addFromRepository('EMAIL');
+		$configurator->BBCodes->addFromRepository('FONT');
 		$configurator->BBCodes->addFromRepository('I');
 		$configurator->BBCodes->addFromRepository('LIST');
 		$configurator->BBCodes->addFromRepository('*');
