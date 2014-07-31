@@ -843,7 +843,7 @@ class Serializer
 
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
-			if ($case->parentNode !== $switch)
+			if (!$case->parentNode->isSameNode($switch))
 			{
 				continue;
 			}
