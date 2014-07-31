@@ -116,6 +116,12 @@ function convertCustom($filepath, &$file)
 				"\$php[] = '		\$toks = array();';"
 			),
 		),
+		'PHPTest.php' => array(
+			array(
+				"'protected static \$bt13027555=[1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7];',",
+				"'protected static \$bt13027555=array(1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7);',"
+			),
+		),
 		'PHP/Serializer.php' => array(
 			array(
 				// mb_substr() doesn't like null as third parameter on PHP 5.3
