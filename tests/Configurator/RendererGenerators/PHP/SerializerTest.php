@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
+use DOMDocument;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Tests\Test;
 
@@ -357,6 +358,61 @@ class SerializerTest extends Test
 			[
 				"contains('upperlowerdecim',substring(@type,1,5))",
 				"strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
+			],
+		];
+	}
+
+	/**
+	* @testdox serialize() tests
+	* @dataProvider getSerializeTests
+	*/
+	public function testSerialize($xml, $expected)
+	{
+		$ir = new DOMDocument;
+		$ir->preserveWhiteSpace = false;
+		$ir->loadXML($xml);
+
+		$serializer = new Serializer;
+
+		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
+	}
+
+	public function getSerializeTests()
+	{
+		return [
+			[
+				'<template outputMethod="html">
+					<switch branch-key="@foo">
+						<case branch-value="1" test="@foo = 1">
+							<output escape="text" type="literal">1</output>
+						</case>
+						<case branch-value="2" test="@foo = 2">
+							<output escape="text" type="literal">2</output>
+						</case>
+						<case branch-value="3" test="@foo = 3">
+							<output escape="text" type="literal">3</output>
+						</case>
+						<case branch-value="4" test="4 = @foo">
+							<output escape="text" type="literal">4</output>
+						</case>
+						<case branch-value="5" test="5 = @foo">
+							<output escape="text" type="literal">5</output>
+						</case>
+						<case branch-value="6" test="@foo = 6">
+							<output escape="text" type="literal">6</output>
+						</case>
+						<case branch-value="7" test="@foo = 7">
+							<output escape="text" type="literal">7</output>
+						</case>
+						<case branch-value="8" test="@foo = 8">
+							<output escape="text" type="literal">8</output>
+						</case>
+						<case>
+							<output escape="text" type="literal">default</output>
+						</case>
+					</switch>
+				</template>',
+				"if(isset(self::\$bt13027555[\$node->getAttribute('foo')])){\$n=self::\$bt13027555[\$node->getAttribute('foo')];if(\$n<4){if(\$n===0){\$this->out.='1';}elseif(\$n===1){\$this->out.='2';}elseif(\$n===2){\$this->out.='3';}else{\$this->out.='4';}}elseif(\$n===4){\$this->out.='5';}elseif(\$n===5){\$this->out.='6';}elseif(\$n===6){\$this->out.='7';}else{\$this->out.='8';}}else{\$this->out.='default';}"
 			],
 		];
 	}

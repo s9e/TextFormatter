@@ -16,6 +16,11 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 class Serializer
 {
 	/**
+	* @var array Branch tables created during last serialization
+	*/
+	public $branchTables = [];
+
+	/**
 	* @var array Custom XPath representations as [xpath => php]
 	*/
 	protected $customXPath = [
@@ -597,12 +602,25 @@ class Serializer
 	}
 
 	/**
+	* Serialize the internal representation of a template into PHP
+	*
+	* @param  DOMElement $ir Internal representation
+	* @return string
+	*/
+	public function serialize(DOMElement $ir)
+	{
+		$this->branchTables = [];
+
+		return $this->serializeChildren($ir);
+	}
+
+	/**
 	* Serialize all the children of given node into PHP
 	*
 	* @param  DOMElement $ir Internal representation
 	* @return string
 	*/
-	public function serializeChildren(DOMElement $ir)
+	protected function serializeChildren(DOMElement $ir)
 	{
 		$php = '';
 		foreach ($ir->childNodes as $node)
@@ -801,6 +819,47 @@ class Serializer
 	}
 
 	/**
+	* Serialize a <switch/> node that has a branch-key attribute
+	*
+	* @param  DOMElement $switch <switch/> node
+	* @return string
+	*/
+	protected function serializeHash(DOMElement $switch)
+	{
+		$statements = [];
+		foreach ($switch->getElementsByTagName('case') as $case)
+		{
+			if (!$case->parentNode->isSameNode($switch))
+			{
+				continue;
+			}
+
+			if ($case->hasAttribute('branch-value'))
+			{
+				$statements[$case->getAttribute('branch-value')] = $this->serializeChildren($case);
+			}
+		}
+
+		list($branchTable, $php) = Quick::generateBranchTable('$n', $statements);
+
+		// The name of the branching table is based on its content
+		$varName = 'bt' . sprintf('%08X', crc32(serialize($branchTable)));
+		$expr = 'self::$' . $varName . '[' . $this->convertXPath($switch->getAttribute('branch-key')) . ']';
+		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
+
+		// Test whether the last case has a branch-value. If not, it's the default case
+		if (!$case->hasAttribute('branch-value'))
+		{
+			$php .= 'else{' . $this->serializeChildren($case) . '}';
+		}
+
+		// Save the branching table
+		$this->branchTables[$varName] = $branchTable;
+
+		return $php;
+	}
+
+	/**
 	* Serialize an <output/> node
 	*
 	* @param  DOMElement $output <output/> node
@@ -838,6 +897,14 @@ class Serializer
 	*/
 	protected function serializeSwitch(DOMElement $switch)
 	{
+		// Use a specialized branch table only if there are more than 7 elements because of the
+		// overhead of setting it up
+		if ($switch->hasAttribute('branch-key')
+		 && $switch->childNodes->length > 7)
+		{
+			return $this->serializeHash($switch);
+		}
+
 		$php  = '';
 		$else = '';
 

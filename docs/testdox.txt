@@ -2336,9 +2336,16 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
  [x] optimize() tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
+ [x] Conditionals
+ [x] Rendering
+ [x] Rendering strategy
+ [x] Source
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] convertXPath() tests
  [x] convertCondition() tests
+ [x] serialize() tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
@@ -2380,7 +2387,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Rendering of void and empty elements in HTML
  [x] Rendering of void and empty elements in XHTML
  [x] Tests from plugins
- [x] Merges simple templates together
+ [x] Creates a Quick renderer if $enableQuickRenderer is true
+ [x] Does not create a Quick renderer if $enableQuickRenderer is false
+ [x] Saves the branch tables from the serializer if applicable
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

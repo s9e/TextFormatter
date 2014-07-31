@@ -895,7 +895,7 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:text/>',
-				"if(\$nodeName==='X')",
+				"'X'",
 				"\$this->out.='';"
 			],
 			[
@@ -1535,18 +1535,53 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Merges simple templates together
+	* @testdox Creates a Quick renderer if $enableQuickRenderer is true
 	*/
-	public function testSimpleTemplates()
+	public function testQuickRenderer()
 	{
+		$this->configurator->rendering->engine->enableQuickRenderer = true;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
-		$this->configurator->tags->add('I')->template = '<i><xsl:apply-templates/></i>';
-		$this->configurator->tags->add('U')->template = '<u><xsl:apply-templates/></u>';
+
+		$renderer = $this->configurator->getRenderer();
+
+		$this->assertContains('renderQuick', $renderer->source);
+	}
+
+	/**
+	* @testdox Does not create a Quick renderer if $enableQuickRenderer is false
+	*/
+	public function testNoQuickRenderer()
+	{
+		$this->configurator->rendering->engine->enableQuickRenderer = false;
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
+
+		$renderer = $this->configurator->getRenderer();
+
+		$this->assertNotContains('renderQuick', $renderer->source);
+	}
+
+	/**
+	* @testdox Saves the branch tables from the serializer if applicable
+	*/
+	public function testBranchTables()
+	{
+		$this->configurator->rendering->engine->enableQuickRenderer = false;
+		$this->configurator->tags->add('X')->template = 
+			'<xsl:choose>
+				<xsl:when test="@foo=1">1</xsl:when>
+				<xsl:when test="@foo=2">2</xsl:when>
+				<xsl:when test="@foo=3">3</xsl:when>
+				<xsl:when test="@foo=4">4</xsl:when>
+				<xsl:when test="@foo=5">5</xsl:when>
+				<xsl:when test="@foo=6">6</xsl:when>
+				<xsl:when test="@foo=7">7</xsl:when>
+				<xsl:when test="@foo=8">8</xsl:when>
+			</xsl:choose>';
 
 		$renderer = $this->configurator->getRenderer();
 
 		$this->assertContains(
-			"if(\$nodeName==='B'||\$nodeName==='I'||\$nodeName==='U'||\$nodeName==='p'){",
+			'protected static $bt13027555=[1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7];',
 			$renderer->source
 		);
 	}

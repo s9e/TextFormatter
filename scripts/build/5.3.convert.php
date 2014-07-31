@@ -28,6 +28,11 @@ function fqn($file)
 	return array($namespace, $table);
 }
 
+function x($str)
+{
+	return var_export($str, true);
+}
+
 function convertCustom($filepath, &$file)
 {
 	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
@@ -139,6 +144,46 @@ function convertCustom($filepath, &$file)
 				"\"strtr(\\\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])\"",
 				"\"strtr(\\\$node->getAttribute('bar'),array('a'=>'A','b'=>'B','c'=>'','d'=>''))\""
 			)
+		),
+		'Quick.php' => array(
+			array(
+				'$php[] = \'		self::$attributes = [];\';',
+				'$php[] = \'		self::$attributes = array();\';'
+			),
+			array(
+				'$php[] = "			[\\$this, \'quick\'],";',
+				'$php[] = "			array(\\$this, \'quick\'),";'
+			),
+			array(
+				'$php[] = \'			$attributes = [];\';',
+				'$php[] = \'			$attributes = array();\';'
+			),
+			array(
+				'$head = "\\$attributes+=[\'" . implode("\'=>null,\'", $attrNames) . "\'=>null];" . $head;',
+				'$head = "\\$attributes+=array(\'" . implode("\'=>null,\'", $attrNames) . "\'=>null);" . $head;'
+			),
+			array(
+				"return '[' . implode(',', \$entries) . ']';",
+				"return 'array(' . implode(',', \$entries) . ')';"
+			)
+		),
+		'QuickTest.php' => array(
+			array(
+				x('$attributes+=[\'foo\'=>null];$html=htmlspecialchars($attributes[\'foo\'],0);'),
+				x('$attributes+=array(\'foo\'=>null);$html=htmlspecialchars($attributes[\'foo\'],0);')
+			),
+			array(
+				x('$attributes+=[\'foo\'=>null];$html=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}self::$attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$html=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}self::$attributes[]=$attributes;')
+			),
+			array(
+				'[[\'php\', "\\$attributes+=[\'content\'=>null];\\$html=\'<!--\'.htmlspecialchars(\\$attributes[\'content\'],0).\'-->\';"]]',
+				'[[\'php\', "\\$attributes+=array(\'content\'=>null);\\$html=\'<!--\'.htmlspecialchars(\\$attributes[\'content\'],0).\'-->\';"]]'
+			),
+			array(
+				'"\\$static=[\'foo:bar\'=>\'foobar\']"',
+				'"\\$static=array(\'foo:bar\'=>\'foobar\')"'
+			),
 		),
 		'RegexpBuilder.php' => array(
 			array(

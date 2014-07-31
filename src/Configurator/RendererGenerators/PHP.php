@@ -12,6 +12,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\Rendering;
 
@@ -39,6 +40,11 @@ class PHP implements RendererGenerator
 	* @var string Prefix used when generating a default class name
 	*/
 	public $defaultClassPrefix = 'Renderer_';
+
+	/**
+	* @var bool Whether to enable the Quick renderer
+	*/
+	public $enableQuickRenderer = false;
 
 	/**
 	* @var string If set, path to the file where the renderer will be saved
@@ -149,21 +155,29 @@ class PHP implements RendererGenerator
 
 		// Gather templates and optimize simple templates
 		$templates = $rendering->getTemplates();
-		TemplateHelper::replaceHomogeneousTemplates($templates);
 
 		// Group templates by content to deduplicate them
 		$groupedTemplates = [];
 		foreach ($templates as $tagName => $template)
 		{
-			$groupedTemplates[$template][] = '$nodeName===' . self::export($tagName);
+			$groupedTemplates[$template][] = $tagName;
 		}
 
 		// Record whether the template has a <xsl:apply-templates/> with a select attribute
 		$hasApplyTemplatesSelect = false;
 
+		// Assign a branch number to each unique template and record the value for each tag
+		$tagBranch   = 0;
+		$tagBranches = [];
+
+		// Store the compiled template for each branch
+		$compiledTemplates = [];
+
+		// Other branch tables
+		$branchTables = [];
+
 		// Parse each template and serialize it to PHP
-		$templatesSource = '';
-		foreach ($groupedTemplates as $template => $conditions)
+		foreach ($groupedTemplates as $template => $tagNames)
 		{
 			// Parse the template
 			$ir = TemplateParser::parse($template, $rendering->type);
@@ -187,18 +201,47 @@ class PHP implements RendererGenerator
 			}
 
 			// Serialize the representation to PHP
-			$templateSource = $this->serializer->serializeChildren($ir->documentElement);
+			$templateSource = $this->serializer->serialize($ir->documentElement);
 			if (isset($this->optimizer))
 			{
 				$templateSource = $this->optimizer->optimize($templateSource);
 			}
 
-			$templatesSource .= 'if(' . implode('||', $conditions) . '){' . $templateSource . '}else';
-		}
-		unset($groupedTemplates, $ir);
+			// Record the branch tables used in this template
+			$branchTables += $this->serializer->branchTables;
 
-		// Append the default handling of unknown tags
-		$templatesSource .= ' $this->at($node);';
+			// Record the source for this branch number and assign this number to each tag
+			$compiledTemplates[$tagBranch] = $templateSource;
+			foreach ($tagNames as $tagName)
+			{
+				$tagBranches[$tagName] = $tagBranch;
+			}
+			++$tagBranch;
+		}
+
+		// Unset the vars we don't need anymore
+		unset($groupedTemplates, $ir, $quickRender);
+
+		// Store the compiled template if we plan to create a Quick renderer
+		if ($this->enableQuickRenderer && $rendering->type === 'html')
+		{
+			$quickRender = [];
+			foreach ($tagBranches as $tagName => $tagBranch)
+			{
+				$quickRender[$tagName] = $compiledTemplates[$tagBranch];
+			}
+
+			$quickSource = Quick::getSource($quickRender);
+			unset($quickRender);
+		}
+		else
+		{
+			$quickSource = false;
+		}
+
+		// Coalesce all the compiled templates
+		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
+		unset($compiledTemplates);
 
 		// Test whether any templates needs an XPath engine
 		if ($hasApplyTemplatesSelect)
@@ -224,6 +267,12 @@ class PHP implements RendererGenerator
 		$php[] = '{';
 		$php[] = '	protected $htmlOutput=' . self::export($rendering->type === 'html') . ';';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
+		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
+
+		foreach ($branchTables as $varName => $branchTable)
+		{
+			$php[] = '	protected static $' . $varName . '=' . self::export($branchTable) . ';';
+		}
 
 		if ($needsXPath)
 		{
@@ -238,6 +287,23 @@ class PHP implements RendererGenerator
 		$php[] = '	}';
 		$php[] = '	public function renderRichText($xml)';
 		$php[] = '	{';
+
+		if ($quickSource !== false)
+		{
+			// Try the Quick renderer first and if anything happens just keep going with the normal
+			// rendering
+			$php[] = '		if (!isset(self::$quickRenderingTest) || !preg_match(self::$quickRenderingTest, $xml))';
+			$php[] = '		{';
+			$php[] = '			try';
+			$php[] = '			{';
+			$php[] = '				return $this->renderQuick($xml);';
+			$php[] = '			}';
+			$php[] = '			catch (\\Exception $e)';
+			$php[] = '			{';
+			$php[] = '			}';
+			$php[] = '		}';
+		}
+
 		$php[] = '		$dom = $this->loadXML($xml);';
 
 		if ($needsXPath)
@@ -283,7 +349,15 @@ class PHP implements RendererGenerator
 		}
 
 		$php[] = '			{';
-		$php[] = '				$nodeName = $node->nodeName;' . $templatesSource;
+		$php[] = '				if (!isset(self::$tagBranches[$node->nodeName]))';
+		$php[] = '				{';
+		$php[] = '					$this->at($node);';
+		$php[] = '				}';
+		$php[] = '				else';
+		$php[] = '				{';
+		$php[] = '					$tb = self::$tagBranches[$node->nodeName];';
+		$php[] = '					' . $templatesSource;
+		$php[] = '				}';
 		$php[] = '			}';
 		$php[] = '		}';
 		$php[] = '	}';
@@ -321,6 +395,12 @@ class PHP implements RendererGenerator
 			$php[] = '		}';
 			$php[] = '		return \'concat(\' . implode(\',\', $toks) . \')\';';
 			$php[] = '	}';
+		}
+
+		// Append the Quick renderer if applicable
+		if ($quickSource !== false)
+		{
+			$php[] = $quickSource;
 		}
 
 		// Close the class definition
