@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <template outputMethod="html">
-	<switch hash-key=".">
-		<case hash-value=":)" test=".=':)'">
+	<switch branch-key=".">
+		<case branch-value=":)" test=".=':)'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case hash-value=":(" test=".=':('">
+		<case branch-value=":(" test=".=':('">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case hash-value=":p" test=".=':p'">
+		<case branch-value=":p" test=".=':p'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case hash-value=";)" test=".=';)'">
+		<case branch-value=";)" test=".=';)'">
 			<output escape="text" type="literal">.</output>
 		</case>
 		<case>

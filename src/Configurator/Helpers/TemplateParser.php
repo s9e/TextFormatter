@@ -210,7 +210,7 @@ class TemplateParser
 			self::parseChildren($case, $when);
 		}
 
-		// If there are more than 3 tests, we analyze whether the switch works as a hash table
+		// If there are more than 3 tests, we analyze whether the switch works as a branch table
 		if (count($exprs) > 3)
 		{
 			// Match an equality between a variable and a literal or the concatenation of strings
@@ -270,10 +270,10 @@ class TemplateParser
 
 			if ($isHash)
 			{
-				$switch->setAttribute('hash-key', $key);
+				$switch->setAttribute('branch-key', $key);
 				foreach ($switch->childNodes as $i => $case)
 				{
-					$case->setAttribute('hash-value', $values[$i]);
+					$case->setAttribute('branch-value', $values[$i]);
 				}
 			}
 		}
