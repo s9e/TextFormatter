@@ -18,7 +18,13 @@ class Parser extends ParserBase
 	{
 		foreach ($matches as $m)
 		{
-			$this->parser->addSelfClosingTag($this->config['tagName'], $m[0][1], strlen($m[0][0]));
+			$this->parser->addTagPair(
+				$this->config['tagName'],
+				$m[0][1],
+				1,
+				$m[0][1] + strlen($m[0][0]),
+				0
+			);
 		}
 	}
 }

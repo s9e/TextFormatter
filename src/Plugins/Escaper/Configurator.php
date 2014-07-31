@@ -48,6 +48,7 @@ class Configurator extends ConfiguratorBase
 		// Create the tag
 		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->rules->ignoreTags();
-		$tag->template = '<xsl:value-of select="substring(.,2)"/>';
+		$tag->rules->noBrChild();
+		$tag->template = '<xsl:apply-templates/>';
 	}
 }
