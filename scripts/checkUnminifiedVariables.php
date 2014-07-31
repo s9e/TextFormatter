@@ -18,10 +18,16 @@ foreach (range('a', 't') as $c)
 
 // Browser stuff
 $knownVars['Math']      = 1;
+$knownVars['Object']    = 1;
+$knownVars['contentWindow'] = 1;
+$knownVars['data']      = 1;
 $knownVars['document']  = 1;
 $knownVars['punycode']  = 1;
+$knownVars['hljs']      = 1;
 $knownVars['prototype'] = 1;
 $knownVars['this']      = 1;
+$knownVars['src']       = 1;
+$knownVars['style']     = 1;
 $knownVars['url']       = 1;
 $knownVars['window']    = 1;
 
