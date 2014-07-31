@@ -1,0 +1,6 @@
+<xsl:choose>
+	<xsl:when test="@foo = 1">.</xsl:when>
+	<xsl:when test="@foo = 2">.</xsl:when>
+	<xsl:when test="@foo = 3">.</xsl:when>
+	<xsl:when test="4 = @foo">.</xsl:when>
+</xsl:choose>

@@ -1,0 +1,6 @@
+<xsl:choose>
+	<xsl:when test=".=':)'">.</xsl:when>
+	<xsl:when test=".=':('">.</xsl:when>
+	<xsl:when test=".=':p'">.</xsl:when>
+	<xsl:when test="@foo=';)'">.</xsl:when>
+</xsl:choose>

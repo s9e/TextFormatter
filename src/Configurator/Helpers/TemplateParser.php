@@ -189,6 +189,7 @@ class TemplateParser
 	{
 		$switch = self::appendElement($ir, 'switch');
 
+		$exprs = [];
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
 		{
 			// Only children of current node, exclude other descendants
@@ -199,10 +200,82 @@ class TemplateParser
 
 			// Create a <case/> element with the original test condition in @test
 			$case = self::appendElement($switch, 'case');
-			$case->setAttribute('test', $when->getAttribute('test'));
+			$expr = $when->getAttribute('test');
+			$case->setAttribute('test', $expr);
+
+			// Record the expression for analysis
+			$exprs[] = $expr;
 
 			// Parse this branch's content
 			self::parseChildren($case, $when);
+		}
+
+		// If there are more than 3 tests, we analyze whether the switch works as a hash table
+		if (count($exprs) > 3)
+		{
+			// Match an equality between a variable and a literal or the concatenation of strings
+			$regexp = '(^(?J)\\s*(?:'
+			        . '('
+			        . '(?<key>@[-\\w]+|$\\w+|\\.)'
+			        . '(?<eq>\\s*=\\s*)'
+			        . '(?:'
+			        . '(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)'
+			        . '|'
+			        . '(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\))'
+			        . ')'
+			        . ')|('
+			        . '(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&eq)(?<key>(?&key))'
+			        . ')'
+			        . ')\\s*$)';
+
+			$isHash = true;
+			$key    = null;
+			$values = [];
+			foreach ($exprs as $expr)
+			{
+				if (!preg_match($regexp, $expr, $m))
+				{
+					$isHash = false;
+					break;
+				}
+
+				if (isset($key) && $key !== $m['key'])
+				{
+					$isHash = false;
+					break;
+				}
+
+				$key = $m['key'];
+				if (!empty($m['concat']))
+				{
+					preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+
+					$value = '';
+					foreach ($strings[0] as $string)
+					{
+						$value .= substr($string, 1, -1);
+					}
+				}
+				else
+				{
+					$value = $m['literal'];
+					if ($value[0] === "'" || $value[0] === '"')
+					{
+						$value = substr($value, 1, -1);
+					}
+				}
+
+				$values[] = $value;
+			}
+
+			if ($isHash)
+			{
+				$switch->setAttribute('hash-key', $key);
+				foreach ($switch->childNodes as $i => $case)
+				{
+					$case->setAttribute('hash-value', $values[$i]);
+				}
+			}
 		}
 
 		// Add the default branch, which is presumed to be last

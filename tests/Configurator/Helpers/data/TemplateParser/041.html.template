@@ -1,0 +1,7 @@
+<xsl:choose>
+	<xsl:when test=".=':)'">.</xsl:when>
+	<xsl:when test=".=':('">.</xsl:when>
+	<xsl:when test=".=':p'">.</xsl:when>
+	<xsl:when test=".=';)'">.</xsl:when>
+	<xsl:otherwise>X</xsl:otherwise>
+</xsl:choose>
