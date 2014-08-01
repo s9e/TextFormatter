@@ -7,6 +7,7 @@ Forum bundle (BBCode)
 ---------------------
 
 .. code-block:: php
+
 	use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
 	$text = 'To-do list:
@@ -30,6 +31,7 @@ Forum bundle (BBCode)
 	assert(TextFormatter::unparse($xml) === $text);
 
 .. code-block:: html
+
 	To-do list:
 	<ul>
 	  <li> Say hello to the world <img src="/smile.png" alt=":)"></li>
@@ -43,6 +45,7 @@ Fatdown bundle (Markdown)
 -------------------------
 
 .. code-block:: php
+
 	use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
 
 	$text = 'To-do list:
@@ -65,6 +68,7 @@ Fatdown bundle (Markdown)
 	assert(TextFormatter::unparse($xml) === $text);
 
 .. code-block:: html
+
 	<p>To-do list:</p>
 
 	  <ul><li>Say hello to the world :)</li>
