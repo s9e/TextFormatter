@@ -51,9 +51,9 @@ abstract class TemplateHelper
 		}
 
 		// Try fixing unescaped ampersands and replacing HTML entities
-		$tmp = preg_replace('(&(?![A-Za-z0-9]+;|#x?\\d+;))', '&amp;', $template);
+		$tmp = preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template);
 		$tmp = preg_replace_callback(
-			'(&(?!quot|amp|apos|lt|gt)\\w+;)',
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
 			function ($m)
 			{
 				return html_entity_decode($m[0]);

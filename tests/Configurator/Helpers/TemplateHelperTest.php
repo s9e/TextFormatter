@@ -119,8 +119,22 @@ class TemplateHelperTest extends Test
 	*/
 	public function testLoadTemplateEntities()
 	{
-		$template = '<b title="&eacute;"><xsl:apply-templates/></b>';
-		$xml      = '<b title="é"><xsl:apply-templates/></b>';
+		$template = '<b title="&&eacute;;"><xsl:apply-templates/></b>';
+		$xml      = '<b title="&amp;é;"><xsl:apply-templates/></b>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
+	* @testdox loadTemplate() does not break numeric character references
+	*/
+	public function testLoadTemplateNumericCharacterReferences()
+	{
+		$template = '<b title="&&#x4C;&#x4f;&#76;;"><xsl:apply-templates/></b>';
+		$xml      = '<b title="&amp;LOL;"><xsl:apply-templates/></b>';
 
 		$dom = TemplateHelper::loadTemplate($template);
 		$this->assertInstanceOf('DOMDocument', $dom);

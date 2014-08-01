@@ -693,6 +693,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load '<ul><li>one<li>two</ul>'
  [x] loadTemplate() accepts unescaped ampersands
  [x] loadTemplate() converts HTML entities
+ [x] loadTemplate() does not break numeric character references
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
  [x] asXPath('foo') returns 'foo'
