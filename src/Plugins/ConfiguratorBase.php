@@ -217,11 +217,9 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	public function setRegexpLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 1]
-		]);
+		$limit = (int) $limit;
 
-		if (!$limit)
+		if ($limit < 1)
 		{
 			throw new InvalidArgumentException('regexpLimit must be a number greater than 0');
 		}

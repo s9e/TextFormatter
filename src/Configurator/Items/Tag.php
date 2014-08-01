@@ -179,11 +179,9 @@ class Tag implements ConfigProvider
 	*/
 	public function setNestingLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 0]
-		]);
+		$limit = (int) $limit;
 
-		if (!$limit)
+		if ($limit < 1)
 		{
 			throw new InvalidArgumentException('nestingLimit must be a number greater than 0');
 		}
@@ -211,11 +209,9 @@ class Tag implements ConfigProvider
 	*/
 	public function setTagLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 0]
-		]);
+		$limit = (int) $limit;
 
-		if (!$limit)
+		if ($limit < 1)
 		{
 			throw new InvalidArgumentException('tagLimit must be a number greater than 0');
 		}
