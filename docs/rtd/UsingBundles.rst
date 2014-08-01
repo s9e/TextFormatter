@@ -7,6 +7,7 @@ Forum bundle (BBCode)
 ---------------------
 
 .. code-block:: php
+	:prepend: <?php
 
 	use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
@@ -45,6 +46,7 @@ Fatdown bundle (Markdown)
 -------------------------
 
 .. code-block:: php
+	:prepend: <?php
 
 	use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
 
