@@ -7,7 +7,7 @@ Forum bundle (BBCode)
 ---------------------
 
 .. code-block:: php
-	:start-after: 1
+	:start-after: 2
 
 	<?php
 	use s9e\TextFormatter\Bundles\Forum as TextFormatter;
@@ -47,7 +47,7 @@ Fatdown bundle (Markdown)
 -------------------------
 
 .. code-block:: php
-	:start-after: 0
+	:lines: 3-
 
 	<?php
 	use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
