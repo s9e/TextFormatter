@@ -101,6 +101,34 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox loadTemplate() accepts unescaped ampersands
+	*/
+	public function testLoadTemplateAmpersands()
+	{
+		$template = '<a href="foo?bar=&baz="><xsl:apply-templates/></a>';
+		$xml      = '<a href="foo?bar=&amp;baz="><xsl:apply-templates/></a>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
+	* @testdox loadTemplate() converts HTML entities
+	*/
+	public function testLoadTemplateEntities()
+	{
+		$template = '<b title="&eacute;"><xsl:apply-templates/></b>';
+		$xml      = '<b title="é"><xsl:apply-templates/></b>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
 	* @testdox saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
 	*/
 	public function testSaveHTML()

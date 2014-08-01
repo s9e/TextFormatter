@@ -47,12 +47,31 @@ abstract class TemplateHelper
 
 		if ($success)
 		{
-			// Success!
 			return $dom;
 		}
 
-		// Couldn't load it as XML... if the template contains an XSL element, abort now, otherwise
-		// we'll reparse it as HTML
+		// Try fixing unescaped ampersands and replacing HTML entities
+		$tmp = preg_replace('(&(?![A-Za-z0-9]+;|#x?\\d+;))', '&amp;', $template);
+		$tmp = preg_replace_callback(
+			'(&(?!quot|amp|apos|lt|gt)\\w+;)',
+			function ($m)
+			{
+				return html_entity_decode($m[0]);
+			},
+			$tmp
+		);
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $tmp . '</xsl:template>';
+
+		$useErrors = libxml_use_internal_errors(true);
+		$success   = $dom->loadXML($xml);
+		libxml_use_internal_errors($useErrors);
+
+		if ($success)
+		{
+			return $dom;
+		}
+
+		// If the template contains an XSL element, abort now. Otherwise, try reparsing it as HTML
 		if (strpos($template, '<xsl:') !== false)
 		{
 			$error = libxml_get_last_error();
@@ -67,7 +86,7 @@ abstract class TemplateHelper
 		libxml_use_internal_errors($useErrors);
 
 		// Now dump the thing as XML and reload it with the proper namespace declaration
-		$xml = self::innerXML($dom->getElementsByTagName('div')->item(0));
+		$xml = self::innerXML($dom->documentElement->firstChild->firstChild);
 
 		return self::loadTemplate($xml);
 	}
