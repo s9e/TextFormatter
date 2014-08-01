@@ -7,8 +7,9 @@ Forum bundle (BBCode)
 ---------------------
 
 .. code-block:: php
-	:prepend: <?php
+	:start-after: 1
 
+	<?php
 	use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
 	$text = 'To-do list:
@@ -46,8 +47,9 @@ Fatdown bundle (Markdown)
 -------------------------
 
 .. code-block:: php
-	:prepend: <?php
+	:start-after: 0
 
+	<?php
 	use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
 
 	$text = 'To-do list:
