@@ -149,106 +149,7 @@ class Serializer
 
 		if (!isset($regexp))
 		{
-			$patterns = [
-				'attr'      => ['@', '(?<attrName>[-\\w]+)'],
-				'dot'       => '\\.',
-				'name'      => 'name\\(\\)',
-				'lname'     => 'local-name\\(\\)',
-				'param'     => ['\\$', '(?<paramName>\\w+)'],
-				'string'    => '"[^"]*"|\'[^\']*\'',
-				'number'    => ['-?', '\\d++'],
-				'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'],
-				'contains'  => [
-					'contains',
-					'\\(',
-					'(?<contains0>(?&value))',
-					',',
-					'(?<contains1>(?&value))',
-					'\\)'
-				],
-				'translate' => [
-					'translate',
-					'\\(',
-					'(?<translate0>(?&value))',
-					',',
-					'(?<translate1>(?&string))',
-					',',
-					'(?<translate2>(?&string))',
-					'\\)'
-				],
-				'substr'    => [
-					'substring',
-					'\\(',
-					'(?<substr0>(?&value))',
-					',',
-					'(?<substr1>(?&value))',
-					'(?:, (?<substr2>(?&value)))?',
-					'\\)'
-				],
-				'startswith'  => [
-					'starts-with',
-					'\\(',
-					'(?<startswith0>(?&value))',
-					',',
-					'(?<startswith1>(?&value))',
-					'\\)'
-				]
-			];
-
-			// Old versions of PCRE and/or PHP choke on long expressions, so we only add those
-			// if the version of PCRE isn't ancient
-			if (version_compare(PCRE_VERSION, '8.13', '>='))
-			{
-				$patterns['math'] = [
-					'(?<math0>(?&attr)|(?&number)|(?&param))',
-					'(?<math1>[-+*])',
-					'(?<math2>(?&math)|(?&math0))'
-				];
-			}
-
-			$exprs = [];
-
-			// Create a regexp that matches values, such as "@foo" or "42"
-			$valueExprs = [];
-			foreach ($patterns as $name => $pattern)
-			{
-				if (is_array($pattern))
-				{
-					$pattern = implode(' ', $pattern);
-				}
-
-				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
-			}
-			$exprs[] = '(?<value>' . implode('|', $valueExprs) . ')';
-
-			// Create a regexp that matches a comparison such as "@foo = 1"
-			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
-			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
-
-			// Match parenthesized expressions and some not() expressions on PCRE >= 8.13 only.
-			// Previous versions segfault because of the mutual references
-			$boolMatch = $parensMatch = '';
-			if (version_compare(PCRE_VERSION, '8.13', '>='))
-			{
-				$boolMatch   = '(?&bool)|';
-				$parensMatch = '|(?&parens)';
-
-				// Create a regexp that matches a parenthesized expression
-				// NOTE: could be expanded to support any expression
-				$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
-			}
-
-			// Create a regexp that matches boolean operations
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)' . $parensMatch . '))';
-
-			// Create a regexp that matches not() expressions
-			$exprs[] = '(?<not>not \\( (?<not0>' . $boolMatch . '(?&value)) \\))';
-
-			// Assemble the final regexp
-			$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
-
-			// Replace spaces with any amount of whitespace
-			$regexp = str_replace(' ', '\\s*', $regexp);
+			$regexp = $this->getXPathRegexp();
 		}
 
 		if (preg_match($regexp, $expr, $m))
@@ -517,7 +418,21 @@ class Serializer
 			$expr = 'string(' . $expr . ')';
 		}
 
-		// Parse the expression for variables
+		// Replace parameters in the expression
+		return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
+	}
+
+	/**
+	* Export an XPath expression as PHP with special consideration for XPath variables
+	*
+	* Will return PHP source representing the XPath expression, with special consideration for XPath
+	* variables which are returned as a method call to $this->getParamAsXPath()
+	*
+	* @param  string $expr XPath expression
+	* @return string       PHP representation of the expression
+	*/
+	protected function exportXPath($expr)
+	{
 		$phpTokens = [];
 		$pos = 0;
 		$len = strlen($expr);
@@ -559,7 +474,118 @@ class Serializer
 			}
 		}
 
-		return '$this->xpath->evaluate(' . implode('.', $phpTokens) . ',$node)';
+		return implode('.', $phpTokens);
+	}
+
+	/**
+	* Generate a regexp used to parse XPath expressions
+	*
+	* @return string
+	*/
+	protected function getXPathRegexp()
+	{
+		$patterns = [
+			'attr'      => ['@', '(?<attrName>[-\\w]+)'],
+			'dot'       => '\\.',
+			'name'      => 'name\\(\\)',
+			'lname'     => 'local-name\\(\\)',
+			'param'     => ['\\$', '(?<paramName>\\w+)'],
+			'string'    => '"[^"]*"|\'[^\']*\'',
+			'number'    => ['-?', '\\d++'],
+			'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'],
+			'contains'  => [
+				'contains',
+				'\\(',
+				'(?<contains0>(?&value))',
+				',',
+				'(?<contains1>(?&value))',
+				'\\)'
+			],
+			'translate' => [
+				'translate',
+				'\\(',
+				'(?<translate0>(?&value))',
+				',',
+				'(?<translate1>(?&string))',
+				',',
+				'(?<translate2>(?&string))',
+				'\\)'
+			],
+			'substr'    => [
+				'substring',
+				'\\(',
+				'(?<substr0>(?&value))',
+				',',
+				'(?<substr1>(?&value))',
+				'(?:, (?<substr2>(?&value)))?',
+				'\\)'
+			],
+			'startswith'  => [
+				'starts-with',
+				'\\(',
+				'(?<startswith0>(?&value))',
+				',',
+				'(?<startswith1>(?&value))',
+				'\\)'
+			]
+		];
+
+		// Old versions of PCRE and/or PHP choke on long expressions, so we only add those
+		// if the version of PCRE isn't ancient
+		if (version_compare(PCRE_VERSION, '8.13', '>='))
+		{
+			$patterns['math'] = [
+				'(?<math0>(?&attr)|(?&number)|(?&param))',
+				'(?<math1>[-+*])',
+				'(?<math2>(?&math)|(?&math0))'
+			];
+		}
+
+		$exprs = [];
+
+		// Create a regexp that matches values, such as "@foo" or "42"
+		$valueExprs = [];
+		foreach ($patterns as $name => $pattern)
+		{
+			if (is_array($pattern))
+			{
+				$pattern = implode(' ', $pattern);
+			}
+
+			$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
+		}
+		$exprs[] = '(?<value>' . implode('|', $valueExprs) . ')';
+
+		// Create a regexp that matches a comparison such as "@foo = 1"
+		// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
+		$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+
+		// Match parenthesized expressions and some not() expressions on PCRE >= 8.13 only.
+		// Previous versions segfault because of the mutual references
+		$boolMatch = $parensMatch = '';
+		if (version_compare(PCRE_VERSION, '8.13', '>='))
+		{
+			$boolMatch   = '(?&bool)|';
+			$parensMatch = '|(?&parens)';
+
+			// Create a regexp that matches a parenthesized expression
+			// NOTE: could be expanded to support any expression
+			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
+		}
+
+		// Create a regexp that matches boolean operations
+		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)' . $parensMatch . '))';
+
+		// Create a regexp that matches not() expressions
+		$exprs[] = '(?<not>not \\( (?<not0>' . $boolMatch . '(?&value)) \\))';
+
+		// Assemble the final regexp
+		$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
+
+		// Replace spaces with any amount of whitespace
+		$regexp = str_replace(' ', '\\s*', $regexp);
+
+		return $regexp;
 	}
 
 	/**
