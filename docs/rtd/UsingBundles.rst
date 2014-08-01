@@ -3,8 +3,8 @@ Getting started using predefined bundles
 
 The fastest way to start using s9e\TextFormatter is to use a preconfigured bundle. Below are two examples: the Forum bundle supports BBCodes and syntax commonly used in forums, and the Fatdown bundle supports most of Markdown plus automatic media embedding.
 
-Forum bundle
-------------
+Forum bundle (BBCode)
+---------------------
 
 .. code-block:: php
 	use s9e\TextFormatter\Bundles\Forum as TextFormatter;
@@ -39,8 +39,8 @@ Forum bundle
 	</ul>
 
 
-Fatdown bundle
---------------
+Fatdown bundle (Markdown)
+-------------------------
 
 .. code-block:: php
 	use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
