@@ -3,6 +3,8 @@
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
 use DOMDocument;
+use Exception;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Tests\Test;
 
@@ -374,6 +376,11 @@ class SerializerTest extends Test
 
 		$serializer = new Serializer;
 
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
 		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
 	}
 
@@ -413,6 +420,14 @@ class SerializerTest extends Test
 					</switch>
 				</template>',
 				"if(isset(self::\$bt13027555[\$node->getAttribute('foo')])){\$n=self::\$bt13027555[\$node->getAttribute('foo')];if(\$n<4){if(\$n===0){\$this->out.='1';}elseif(\$n===1){\$this->out.='2';}elseif(\$n===2){\$this->out.='3';}else{\$this->out.='4';}}elseif(\$n===4){\$this->out.='5';}elseif(\$n===5){\$this->out.='6';}elseif(\$n===6){\$this->out.='7';}else{\$this->out.='8';}}else{\$this->out.='default';}"
+			],
+			[
+				'<template><closeTag id="1"/></template>',
+				new RuntimeException
+			],
+			[
+				'<template><hash/></template>',
+				new RuntimeException
 			],
 		];
 	}

@@ -656,6 +656,12 @@ class Serializer
 		// Get the element that's being closed
 		$xpath   = new DOMXPath($closeTag->ownerDocument);
 		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
+
+		if (!($element instanceof DOMElement))
+		{
+			throw new RuntimeException;
+		}
+
 		$isVoid  = $element->getAttribute('void');
 		$isEmpty = $element->getAttribute('empty');
 
@@ -838,6 +844,11 @@ class Serializer
 			{
 				$statements[$case->getAttribute('branch-value')] = $this->serializeChildren($case);
 			}
+		}
+
+		if (!isset($case))
+		{
+			throw new RuntimeException;
 		}
 
 		list($branchTable, $php) = Quick::generateBranchTable('$n', $statements);
