@@ -222,7 +222,7 @@ class Tag implements ConfigProvider
 	/**
 	* Set the template associated with this tag
 	*
-	* @param  mixed    $template Either a string or an instance of Template
+	* @param  string|Template $template
 	* @return void
 	*/
 	public function setTemplate($template)

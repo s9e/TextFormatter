@@ -309,7 +309,7 @@ class Configurator extends ConfiguratorBase
 			$template = new UnsafeTemplate($template);
 		}
 
-		$tag->template = $template;
+		$tag->setTemplate($template);
 	}
 
 	/**
