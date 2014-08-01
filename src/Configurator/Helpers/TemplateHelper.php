@@ -56,7 +56,7 @@ abstract class TemplateHelper
 			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
 			function ($m)
 			{
-				return html_entity_decode($m[0]);
+				return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
 			},
 			$tmp
 		);
