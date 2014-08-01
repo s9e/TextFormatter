@@ -88,10 +88,10 @@ class Repository
 		}
 
 		// Clone the node so we don't end up modifying the node in the repository
-		$node = $node->cloneNode(true);
+		$clonedNode = $node->cloneNode(true);
 
 		// Replace all the <var> descendants if applicable
-		foreach ($xpath->query('.//var', $node) as $varNode)
+		foreach ($xpath->query('.//var', $clonedNode) as $varNode)
 		{
 			$varName = $varNode->getAttribute('name');
 
@@ -106,8 +106,8 @@ class Repository
 
 		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
-		$usage      = $node->getElementsByTagName('usage')->item(0)->textContent;
-		$template   = $node->getElementsByTagName('template')->item(0)->textContent;
+		$usage      = $xpath->evaluate('string(usage)', $clonedNode);
+		$template   = $xpath->evaluate('string(template)', $clonedNode);
 		$config     = $this->bbcodeMonkey->create($usage, $template);
 		$bbcode     = $config['bbcode'];
 		$bbcodeName = $config['bbcodeName'];

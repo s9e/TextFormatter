@@ -1975,6 +1975,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] Variables in <template/> are replaced
  [x] Multiple variables can be replaced
  [x] Variables that are not replaced are left intact
+ [x] Variables are only replaced for current invocation
  [x] Custom tagName is correctly set
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value

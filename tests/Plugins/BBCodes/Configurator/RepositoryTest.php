@@ -198,6 +198,36 @@ class RepositoryTest extends Test
 	}
 
 	/**
+	* @testdox Variables are only replaced for current invocation
+	*/
+	public function testVarsAreTemporary()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template>&lt;b&gt;<var name="text">foo</var>&lt;/b&gt;</template>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
+
+		$config = $repository->get('FOO', ['text' => 'bar']);
+		$this->assertSame(
+			'<b>bar</b>',
+			(string) $config['tag']->template
+		);
+
+		$config = $repository->get('FOO');
+		$this->assertSame(
+			'<b>foo</b>',
+			(string) $config['tag']->template
+		);
+	}
+
+	/**
 	* @testdox Custom tagName is correctly set
 	*/
 	public function testCustomTagName()
