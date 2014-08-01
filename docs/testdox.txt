@@ -1223,6 +1223,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalA
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
  [x] Works
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeNestedConditionals
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\PreserveSingleSpaces
  [x] Works
 

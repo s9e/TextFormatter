@@ -12,13 +12,14 @@ abstract class AbstractTest extends Test
 	* @testdox Works
 	* @dataProvider getData
 	*/
-	public function test($template, $expected)
+	public function test($template, $expected, $preserveWhiteSpace = null)
 	{
 		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $template
 		     . '</xsl:template>';
 
 		$dom = new DOMDocument;
+
 		$dom->loadXML($xml);
 
 		$className  = preg_replace(
@@ -34,6 +35,11 @@ abstract class AbstractTest extends Test
 			$expected,
 			TemplateHelper::saveTemplate($dom)
 		);
+	}
+
+	protected static function ws($template)
+	{
+		return preg_replace('(>\\n\\s*<)', '><', $template);
 	}
 
 	abstract public function getData();
