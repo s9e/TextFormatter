@@ -189,7 +189,6 @@ class TemplateParser
 	{
 		$switch = self::appendElement($ir, 'switch');
 
-		$exprs = [];
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
 		{
 			// Only children of current node, exclude other descendants
@@ -200,82 +199,10 @@ class TemplateParser
 
 			// Create a <case/> element with the original test condition in @test
 			$case = self::appendElement($switch, 'case');
-			$expr = $when->getAttribute('test');
-			$case->setAttribute('test', $expr);
-
-			// Record the expression for analysis
-			$exprs[] = $expr;
+			$case->setAttribute('test', $when->getAttribute('test'));
 
 			// Parse this branch's content
 			self::parseChildren($case, $when);
-		}
-
-		// If there are more than 3 tests, we analyze whether the switch works as a branch table
-		if (count($exprs) > 3)
-		{
-			// Match an equality between a variable and a literal or the concatenation of strings
-			$regexp = '(^(?J)\\s*(?:'
-			        . '('
-			        . '(?<key>@[-\\w]+|$\\w+|\\.)'
-			        . '(?<eq>\\s*=\\s*)'
-			        . '(?:'
-			        . '(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)'
-			        . '|'
-			        . '(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\))'
-			        . ')'
-			        . ')|('
-			        . '(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&eq)(?<key>(?&key))'
-			        . ')'
-			        . ')\\s*$)';
-
-			$isHash = true;
-			$key    = null;
-			$values = [];
-			foreach ($exprs as $expr)
-			{
-				if (!preg_match($regexp, $expr, $m))
-				{
-					$isHash = false;
-					break;
-				}
-
-				if (isset($key) && $key !== $m['key'])
-				{
-					$isHash = false;
-					break;
-				}
-
-				$key = $m['key'];
-				if (!empty($m['concat']))
-				{
-					preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
-
-					$value = '';
-					foreach ($strings[0] as $string)
-					{
-						$value .= substr($string, 1, -1);
-					}
-				}
-				else
-				{
-					$value = $m['literal'];
-					if ($value[0] === "'" || $value[0] === '"')
-					{
-						$value = substr($value, 1, -1);
-					}
-				}
-
-				$values[] = $value;
-			}
-
-			if ($isHash)
-			{
-				$switch->setAttribute('branch-key', $key);
-				foreach ($switch->childNodes as $i => $case)
-				{
-					$case->setAttribute('branch-value', $values[$i]);
-				}
-			}
 		}
 
 		// Add the default branch, which is presumed to be last
@@ -544,6 +471,9 @@ class TemplateParser
 
 			$output->setAttribute('escape', $escape);
 		}
+
+		// Mark branch tables
+		self::markBranchTables($ir);
 	}
 
 	/**
@@ -683,6 +613,94 @@ class TemplateParser
 		foreach ($xpath->query('//case[not(@test | node())]') as $case)
 		{
 			$case->parentNode->removeChild($case);
+		}
+	}
+
+	/**
+	* Mark switch elements that are used as branch tables
+	*
+	* If a switch is used for a series of equality tests against the same attribute or variable, the
+	* attribute/variable is stored within the switch as "branch-key" and each value it is compared
+	* against is stored in the case as "branch-value". It can be used to created optimized branch
+	* tables
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function markBranchTables(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+
+		// Match an equality between a variable and a literal or the concatenation of strings
+		$regexp = '(^(?J)\\s*(?:'
+		        . '('
+		        . '(?<key>@[-\\w]+|$\\w+|\\.)'
+		        . '(?<eq>\\s*=\\s*)'
+		        . '(?:'
+		        . '(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)'
+		        . '|'
+		        . '(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\))'
+		        . ')'
+		        . ')|('
+		        . '(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&eq)(?<key>(?&key))'
+		        . ')'
+		        . ')\\s*$)';
+
+		// Iterate over switch elements that have at least two case children with a test attribute
+		foreach ($xpath->query('//switch[case[2][@test]]') as $switch)
+		{
+			$key    = null;
+			$values = [];
+
+			foreach ($switch->childNodes as $i => $case)
+			{
+				if (!$case->hasAttribute('test'))
+				{
+					continue;
+				}
+
+				$expr = $case->getAttribute('test');
+
+				// Test whether the expression matches an equality
+				if (!preg_match($regexp, $expr, $m))
+				{
+					continue 2;
+				}
+
+				// Test whether it uses the same key
+				if (isset($key) && $key !== $m['key'])
+				{
+					continue 2;
+				}
+
+				$key = $m['key'];
+				if (!empty($m['concat']))
+				{
+					preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+
+					$value = '';
+					foreach ($strings[0] as $string)
+					{
+						$value .= substr($string, 1, -1);
+					}
+				}
+				else
+				{
+					$value = $m['literal'];
+					if ($value[0] === "'" || $value[0] === '"')
+					{
+						$value = substr($value, 1, -1);
+					}
+				}
+
+				$values[$i] = $value;
+			}
+
+			$switch->setAttribute('branch-key', $key);
+			foreach ($values as $i => $value)
+			{
+				$switch->childNodes->item($i)->setAttribute('branch-value', $value);
+			}
 		}
 	}
 
