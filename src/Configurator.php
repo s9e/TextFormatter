@@ -24,6 +24,9 @@ use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
+/**
+* @property UrlConfig $urlConfig Default URL config
+*/
 class Configurator implements ConfigProvider
 {
 	/**
