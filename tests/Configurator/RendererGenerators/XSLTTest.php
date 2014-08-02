@@ -167,4 +167,29 @@ class XSLTTest extends Test
 			$this->assertNotContains((string) $tag->template, $xsl);
 		}
 	}
+
+	/**
+	* @testdox Calls $optimizer->optimizeTemplate() for each template
+	*/
+	public function testOptimizerCalls()
+	{
+		$mock = $this->getMock('stdClass', ['optimizeTemplate']);
+		$mock->expects($this->at(0))
+		     ->method('optimizeTemplate')
+		     ->with('<b>X</b>')
+		     ->will($this->returnValue('<b>x</b>'));
+		$mock->expects($this->at(1))
+		     ->method('optimizeTemplate')
+		     ->with('<b>Y</b>')
+		     ->will($this->returnValue('<b>y</b>'));
+
+		$this->configurator->rendering->engine->optimizer = $mock;
+		$this->configurator->tags->add('X')->template = '<b>X</b>';
+		$this->configurator->tags->add('Y')->template = '<b>Y</b>';
+
+		$xsl = $this->getXSL();
+
+		$this->assertContains('<xsl:template match="X"><b>x</b></xsl:template>', $xsl);
+		$this->assertContains('<xsl:template match="Y"><b>y</b></xsl:template>', $xsl);
+	}
 }

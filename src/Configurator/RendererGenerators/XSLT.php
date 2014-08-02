@@ -9,11 +9,27 @@ namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
 use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class XSLT implements RendererGenerator
 {
+	/**
+	* @var Optimizer
+	*/
+	public $optimizer;
+
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->optimizer = new Optimizer;
+	}
+
 	/**
 	* {@inheritdoc}
 	*/
@@ -40,6 +56,7 @@ class XSLT implements RendererGenerator
 		// Group tags with identical templates together
 		foreach ($templates as $tagName => $template)
 		{
+			$template = $this->optimizer->optimizeTemplate($template);
 			$groupedTemplates[$template][] = $tagName;
 
 			// Record the tag's prefix if applicable

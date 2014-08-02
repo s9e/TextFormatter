@@ -2409,6 +2409,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] The path given to the constructor is canonicalized
  [x] The constructor throws an exception if the given path does not exist
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT\Optimizer
+ [x] optimizeTemplate() tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
  [x] Sets the output method to "xml" if the rendering type is "xhtml"
@@ -2421,6 +2424,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Includes a parameter's default value in the stylesheet
  [x] escapes a parameter's default value
  [x] Merges simple templates together
+ [x] Calls $optimizer->optimizeTemplate() for each template
 
 s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument

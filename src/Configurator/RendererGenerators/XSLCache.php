@@ -26,6 +26,7 @@ class XSLCache extends XSLT
 	*/
 	public function __construct($cacheDir)
 	{
+		parent::__construct();
 		$this->cacheDir = realpath($cacheDir);
 
 		if ($this->cacheDir === false)
