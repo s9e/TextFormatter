@@ -866,16 +866,12 @@ class Serializer
 				continue;
 			}
 
-			if ($case->hasAttribute('branch-value'))
-			{
-				$statements[$case->getAttribute('branch-value')] = $this->serializeChildren($case);
-			}
-
 			if ($case->hasAttribute('branch-values'))
 			{
+				$php = $this->serializeChildren($case);
 				foreach (json_decode($case->getAttribute('branch-values')) as $value)
 				{
-					$statements[$value] = $this->serializeChildren($case);
+					$statements[$value] = $php;
 				}
 			}
 		}
@@ -892,8 +888,8 @@ class Serializer
 		$expr = 'self::$' . $varName . '[' . $this->convertXPath($switch->getAttribute('branch-key')) . ']';
 		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
 
-		// Test whether the last case has a branch-value. If not, it's the default case
-		if (!$case->hasAttribute('branch-value') && !$case->hasAttribute('branch-values'))
+		// Test whether the last case has a branch-values. If not, it's the default case
+		if (!$case->hasAttribute('branch-values'))
 		{
 			$php .= 'else{' . $this->serializeChildren($case) . '}';
 		}

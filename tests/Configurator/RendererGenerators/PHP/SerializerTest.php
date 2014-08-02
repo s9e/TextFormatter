@@ -391,28 +391,28 @@ class SerializerTest extends Test
 			[
 				'<template outputMethod="html">
 					<switch branch-key="@foo">
-						<case branch-value="1" test="@foo = 1">
+						<case branch-values=\'["1"]\' test="@foo = 1">
 							<output escape="text" type="literal">1</output>
 						</case>
-						<case branch-value="2" test="@foo = 2">
+						<case branch-values=\'["2"]\' test="@foo = 2">
 							<output escape="text" type="literal">2</output>
 						</case>
-						<case branch-value="3" test="@foo = 3">
+						<case branch-values=\'["3"]\' test="@foo = 3">
 							<output escape="text" type="literal">3</output>
 						</case>
-						<case branch-value="4" test="4 = @foo">
+						<case branch-values=\'["4"]\' test="4 = @foo">
 							<output escape="text" type="literal">4</output>
 						</case>
-						<case branch-value="5" test="5 = @foo">
+						<case branch-values=\'["5"]\' test="5 = @foo">
 							<output escape="text" type="literal">5</output>
 						</case>
-						<case branch-value="6" test="@foo = 6">
+						<case branch-values=\'["6"]\' test="@foo = 6">
 							<output escape="text" type="literal">6</output>
 						</case>
-						<case branch-value="7" test="@foo = 7">
+						<case branch-values=\'["7"]\' test="@foo = 7">
 							<output escape="text" type="literal">7</output>
 						</case>
-						<case branch-value="8" test="@foo = 8">
+						<case branch-values=\'["8"]\' test="@foo = 8">
 							<output escape="text" type="literal">8</output>
 						</case>
 						<case>
@@ -434,25 +434,25 @@ class SerializerTest extends Test
 			[
 				'<template outputMethod="html">
 					<switch branch-key="@foo">
-						<case branch-value="1" test="@foo = 1">
+						<case branch-values=\'["1"]\' test="@foo = 1">
 							<output escape="text" type="literal">1</output>
 						</case>
-						<case branch-value="2" test="@foo = 2">
+						<case branch-values=\'["2"]\' test="@foo = 2">
 							<output escape="text" type="literal">2</output>
 						</case>
-						<case branch-value="3" test="@foo = 3">
+						<case branch-values=\'["3"]\' test="@foo = 3">
 							<output escape="text" type="literal">3</output>
 						</case>
-						<case branch-value="4" test="4 = @foo">
+						<case branch-values=\'["4"]\' test="4 = @foo">
 							<output escape="text" type="literal">4</output>
 						</case>
-						<case branch-value="5" test="5 = @foo">
+						<case branch-values=\'["5"]\' test="5 = @foo">
 							<output escape="text" type="literal">5</output>
 						</case>
-						<case branch-value="6" test="@foo = 6">
+						<case branch-values=\'["6"]\' test="@foo = 6">
 							<output escape="text" type="literal">6</output>
 						</case>
-						<case branch-value="7" test="@foo = 7">
+						<case branch-values=\'["7"]\' test="@foo = 7">
 							<output escape="text" type="literal">7</output>
 						</case>
 						<case branch-values=\'["8","44"]\' test="@foo = 8 or @foo = 44">

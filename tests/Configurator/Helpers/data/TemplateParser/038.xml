@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <template outputMethod="html">
 	<switch branch-key=".">
-		<case branch-value=":)" test=".=':)'">
+		<case branch-values='[":)"]' test=".=':)'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value=":(" test=".=':('">
+		<case branch-values='[":("]' test=".=':('">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value=":p" test=".=':p'">
+		<case branch-values='[":p"]' test=".=':p'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value=";)" test=".=';)'">
+		<case branch-values='[";)"]' test=".=';)'">
 			<output escape="text" type="literal">.</output>
 		</case>
 	</switch>

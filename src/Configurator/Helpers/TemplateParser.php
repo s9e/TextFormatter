@@ -681,9 +681,9 @@ class TemplateParser
 	* Mark switch elements that are used as branch tables
 	*
 	* If a switch is used for a series of equality tests against the same attribute or variable, the
-	* attribute/variable is stored within the switch as "branch-key" and each value it is compared
-	* against is stored in the case as "branch-value". It can be used to created optimized branch
-	* tables
+	* attribute/variable is stored within the switch as "branch-key" and the values it is compared
+	* against are stored JSON-encoded in the case as "branch-values". It can be used to create
+	* optimized branch tables
 	*
 	* @param  DOMDocument $ir
 	* @return void
@@ -732,16 +732,8 @@ class TemplateParser
 			$switch->setAttribute('branch-key', $key);
 			foreach ($branchValues as $i => $values)
 			{
-				$branchNode = $switch->childNodes->item($i);
-				if (count($values) === 1)
-				{
-					$branchNode->setAttribute('branch-value', end($values));
-				}
-				else
-				{
-					sort($values);
-					$branchNode->setAttribute('branch-values', json_encode($values));
-				}
+				sort($values);
+				$switch->childNodes->item($i)->setAttribute('branch-values', json_encode($values));
 			}
 		}
 	}

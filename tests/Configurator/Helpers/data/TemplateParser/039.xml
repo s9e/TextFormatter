@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <template outputMethod="html">
 	<switch branch-key="@foo">
-		<case branch-value="1" test="@foo = 1">
+		<case branch-values='["1"]' test="@foo = 1">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value="2" test="@foo = 2">
+		<case branch-values='["2"]' test="@foo = 2">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value="3" test="@foo = 3">
+		<case branch-values='["3"]' test="@foo = 3">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-value="4" test="4 = @foo">
+		<case branch-values='["4"]' test="4 = @foo">
 			<output escape="text" type="literal">.</output>
 		</case>
 	</switch>
