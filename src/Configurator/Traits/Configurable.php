@@ -48,14 +48,14 @@ trait Configurable
 	/**
 	* Magic setter
 	*
-	* Will call $this->setFoo($propValue) if it exsits, otherwise it will set $this->foo.
+	* Will call $this->setFoo($propValue) if it exists, otherwise it will set $this->foo.
 	* If $this->foo is a NormalizedCollection, we do not replace it, instead we clear() it then
 	* fill it back up. It will not overwrite an object with a different incompatible object (of a
 	* different, non-extending class) and it will throw an exception if the PHP type cannot match
 	* without incurring data loss.
 	*
 	* @param  string $propName
-	* @param  string $propValue
+	* @param  mixed  $propValue
 	* @return void
 	*/
 	public function __set($propName, $propValue)
