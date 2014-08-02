@@ -268,21 +268,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getTemplate() merges identical templates
-	*/
-	public function testGetTemplateMerge()
-	{
-		$plugin = $this->configurator->plugins->load('Emoticons');
-		$plugin->add(':)', '<img src="happy.png"/>');
-		$plugin->add(':-)', '<img src="happy.png"/>');
-
-		$this->assertContains(
-			'<xsl:when test=".=\':)\'or.=\':-)\'"><img src="happy.png"/></xsl:when>',
-			$plugin->getTemplate()
-		);
-	}
-
-	/**
 	* @testdox finalize() sets the tag's template
 	*/
 	public function testFinalize()

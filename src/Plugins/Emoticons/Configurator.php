@@ -182,14 +182,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function getTemplate()
 	{
-		// Group the codes by template in order to merge duplicate templates. Replace codes with
-		// their representation as a string (with quotes)
-		$templates = [];
-		foreach ($this->collection as $code => $template)
-		{
-			$templates[$template][] = htmlspecialchars(TemplateHelper::asXPath($code));
-		}
-
 		// Build the <xsl:choose> node
 		$xsl = '<xsl:choose>';
 
@@ -198,13 +190,16 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			$xsl .= '<xsl:when test="' . htmlspecialchars($this->notIfCondition) . '">'
 			      . '<xsl:value-of select="."/>'
-			      . '</xsl:when>';
+			      . '</xsl:when>'
+			      . '<xsl:otherwise>'
+			      . '<xsl:choose>';
 		}
 
-		// Iterate over codes, create an <xsl:when> for each group of codes
-		foreach ($templates as $template => $codes)
+		// Iterate over codes, create an <xsl:when> for each emote
+		$templates = [];
+		foreach ($this->collection as $code => $template)
 		{
-			$xsl .= '<xsl:when test=".=' . implode('or.=', $codes) . '">'
+			$xsl .= '<xsl:when test=".=' . htmlspecialchars(TemplateHelper::asXPath($code)) . '">'
 			      . $template
 			      . '</xsl:when>';
 		}
@@ -212,8 +207,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
 
-		// Now close everything and return
+		// Close the emote switch
 		$xsl .= '</xsl:choose>';
+
+		// Close the "notIf" condition if applicable
+		if (!empty($this->notIfCondition))
+		{
+			$xsl .= '</xsl:otherwise></xsl:choose>';
+		}
 
 		return $xsl;
 	}
