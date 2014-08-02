@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<template outputMethod="html">
+	<switch branch-key=".">
+		<case branch-values='["a","b"]' test=".='a'or.='b'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case branch-value="c" test=".='c'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case branch-value="d" test=".='d'">
+			<output escape="text" type="literal">.</output>
+		</case>
+	</switch>
+</template>

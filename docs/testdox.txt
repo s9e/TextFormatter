@@ -683,6 +683,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() throws an exception if it encounters an unsupported XSL element
  [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
  [x] parse() throws an exception if it encounters a non-XSL namespaced element
+ [x] Parse equality expr
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load 'foo'

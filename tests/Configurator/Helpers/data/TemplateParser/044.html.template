@@ -1,0 +1,5 @@
+<xsl:choose>
+	<xsl:when test=".='a'or.='b'">.</xsl:when>
+	<xsl:when test=".='c'">.</xsl:when>
+	<xsl:when test=".='d'">.</xsl:when>
+</xsl:choose>

@@ -870,6 +870,14 @@ class Serializer
 			{
 				$statements[$case->getAttribute('branch-value')] = $this->serializeChildren($case);
 			}
+
+			if ($case->hasAttribute('branch-values'))
+			{
+				foreach (json_decode($case->getAttribute('branch-values')) as $value)
+				{
+					$statements[$value] = $this->serializeChildren($case);
+				}
+			}
 		}
 
 		if (!isset($case))
@@ -885,7 +893,7 @@ class Serializer
 		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
 
 		// Test whether the last case has a branch-value. If not, it's the default case
-		if (!$case->hasAttribute('branch-value'))
+		if (!$case->hasAttribute('branch-value') && !$case->hasAttribute('branch-values'))
 		{
 			$php .= 'else{' . $this->serializeChildren($case) . '}';
 		}

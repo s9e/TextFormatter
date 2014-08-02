@@ -82,4 +82,50 @@ class TemplateParserTest extends Test
 	{
 		TemplateParser::parse('<foo:foo xmlns:foo="urn:foo"/>', 'xml');
 	}
+
+	/**
+	* @dataProvider getParseEqualityExprTests
+	*/
+	public function testParseEqualityExpr($expr, $expected)
+	{
+		$this->assertSame($expected, TemplateParser::parseEqualityExpr($expr));
+	}
+
+	public function getParseEqualityExprTests()
+	{
+		return [
+			[
+				'@foo != "bar"',
+				false
+			],
+			[
+				'@foo = "bar"',
+				['@foo' => ['bar']]
+			],
+			[
+				'@foo = "bar" or @foo = "baz"',
+				['@foo' => ['bar', 'baz']]
+			],
+			[
+				'"bar" = @foo or \'baz\' = @foo',
+				['@foo' => ['bar', 'baz']]
+			],
+			[
+				'$foo = "bar"',
+				['$foo' => ['bar']]
+			],
+			[
+				'.="bar"or.="baz"or.="quux"',
+				['.' => ['bar', 'baz', 'quux']]
+			],
+			[
+				'$foo = concat("bar", \'baz\')',
+				['$foo' => ['barbaz']]
+			],
+			[
+				'$a = "aa" or $b = "bb"',
+				['$a' => ['aa'], '$b' => ['bb']]
+			],
+		];
+	}
 }
