@@ -53,7 +53,7 @@ class XSLT extends Renderer
 	/**
 	* Serializer
 	*
-	* @return array List of properties to serialize
+	* @return string[] List of properties to serialize
 	*/
 	public function __sleep()
 	{
