@@ -133,7 +133,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	public function getJSParser()
 	{
 		$className = get_class($this);
-		if (substr($className, 0 , 26) === 's9e\\TextFormatter\\Plugins\\')
+		if (strpos($className, 's9e\\TextFormatter\\Plugins\\') === 0)
 		{
 			$p = explode('\\', $className);
 			$pluginName = $p[3];
