@@ -201,4 +201,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	{
 		return $closure();
 	}
+
+	protected static function ws($template)
+	{
+		return preg_replace('(>\\n\\s*<)', '><', trim($template));
+	}
 }

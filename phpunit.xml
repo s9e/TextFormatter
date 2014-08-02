@@ -115,6 +115,7 @@
 			<file>tests/Configurator/TemplateNormalizations/InlineTextElementsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineInferredValuesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/MinifyXPathExpressionsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/MergeIdenticalConditionalBranchesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/NormalizeAttributeNamesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/NormalizeElementNamesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/NormalizeUrlsTest.php</file>

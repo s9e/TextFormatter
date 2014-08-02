@@ -14,13 +14,7 @@ use s9e\TextFormatter\Tests\Test;
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick
 */
 class QuickTest extends Test
-{
-	protected static function ws($template)
-	{
-		return preg_replace('(>\\s+<)', '><', $template);
-	}
-
-	protected function getPHP($template, $renderingType)
+{	protected function getPHP($template, $renderingType)
 	{
 		$serializer = new Serializer;
 		$optimizer  = new Optimizer;

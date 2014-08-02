@@ -37,10 +37,5 @@ abstract class AbstractTest extends Test
 		);
 	}
 
-	protected static function ws($template)
-	{
-		return preg_replace('(>\\n\\s*<)', '><', $template);
-	}
-
 	abstract public function getData();
 }

@@ -28,6 +28,29 @@ class OptimizerTest extends Test
 				'<xsl:choose><xsl:when test="@a=1">a1</xsl:when><xsl:otherwise><xsl:choose><xsl:when test="@b=1">b1</xsl:when><xsl:otherwise>X</xsl:otherwise></xsl:choose></xsl:otherwise></xsl:choose>',
 				'<xsl:choose><xsl:when test="@a=1">a1</xsl:when><xsl:when test="@b=1">b1</xsl:when><xsl:otherwise>X</xsl:otherwise></xsl:choose>'
 			],
+			[
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="$NO_EMOTES"><xsl:value-of select="."/></xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test=".=\':)\'"><img src="happy.png"/></xsl:when>
+								<xsl:when test=".=\':D\'"><img src="happy.png"/></xsl:when>
+								<xsl:when test=".=\':(\'"><img src="sad.png"/></xsl:when>
+								<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>'
+				),
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="$NO_EMOTES"><xsl:value-of select="."/></xsl:when>
+						<xsl:when test=".=\':)\' or .=\':D\'"><img src="happy.png"/></xsl:when>
+						<xsl:when test=".=\':(\'"><img src="sad.png"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+					</xsl:choose>'
+				),
+			],
 		];
 	}
 }
