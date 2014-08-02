@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 
-use DOMXPath;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Optimizer

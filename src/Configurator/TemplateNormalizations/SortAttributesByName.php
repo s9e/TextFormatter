@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class SortAttributesByName extends TemplateNormalization
