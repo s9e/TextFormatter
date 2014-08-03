@@ -196,7 +196,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		// Iterate over codes, create an <xsl:when> for each emote
-		$templates = [];
 		foreach ($this->collection as $code => $template)
 		{
 			$xsl .= '<xsl:when test=".=' . htmlspecialchars(TemplateHelper::asXPath($code)) . '">'
