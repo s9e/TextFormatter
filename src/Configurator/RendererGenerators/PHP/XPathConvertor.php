@@ -120,7 +120,6 @@ class XPathConvertor
 		if (preg_match($regexp, $expr, $m))
 		{
 			$methodName = null;
-
 			foreach ($m as $k => $v)
 			{
 				if (is_numeric($k) || $v === '' || !method_exists($this, $k))
@@ -132,28 +131,21 @@ class XPathConvertor
 				break;
 			}
 
-			$args = [];
-			$i = 0;
-			while (isset($m[$methodName . $i]))
+			if (isset($methodName))
 			{
-				$args[] = $m[$methodName . $i];
-				++$i;
+				// Default argument is the whole matched string
+				$args = [$m[$methodName]];
+
+				// Overwrite the default arguments with the named captures
+				$i = 0;
+				while (isset($m[$methodName . $i]))
+				{
+					$args[$i] = $m[$methodName . $i];
+					++$i;
+				}
+
+				return call_user_func_array([$this, $methodName], $args);
 			}
-
-			if (empty($args))
-			{
-				$args[] = $m[$methodName];
-			}
-
-			if (!isset($methodName))
-			{
-				print_r($m);
-				var_dump($expr);exit;
-			}
-
-			return call_user_func_array([$this, $methodName], $args);
-
-			print_r($m);return '';
 		}
 
 		// If the condition does not seem to contain a relational expression, or start with a
