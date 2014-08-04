@@ -21,7 +21,7 @@ class Serializer
 	public $branchTables = [];
 
 	/**
-	* @var Convertor XPath-to-PHP convertor
+	* @var XPathConvertor XPath-to-PHP convertor
 	*/
 	public $convertor;
 
