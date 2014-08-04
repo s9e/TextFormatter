@@ -84,7 +84,9 @@ class Serializer
 	*/
 	public function convertCondition($expr)
 	{
-		return $this->convertor->convertCondition($expr, $this->useMultibyteStringFunctions);
+		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
+
+		return $this->convertor->convertCondition($expr);
 	}
 
 	/**
@@ -95,7 +97,9 @@ class Serializer
 	*/
 	public function convertXPath($expr)
 	{
-		return $this->convertor->convertXPath($expr, $this->useMultibyteStringFunctions);
+		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
+
+		return $this->convertor->convertXPath($expr);
 	}
 
 	/**

@@ -39,10 +39,9 @@ class XPathConvertor
 	* with the corresponding DOM method for performance reasons
 	*
 	* @param  string $expr XPath expression
-	* @param  bool   $useMultibyteStringFunctions Whether to use mbstring for string manipulation
 	* @return string       PHP code
 	*/
-	public function convertCondition($expr, $useMultibyteStringFunctions = null)
+	public function convertCondition($expr)
 	{
 		$expr = trim($expr);
 
@@ -85,25 +84,17 @@ class XPathConvertor
 
 		// XSL: <xsl:if test="@foo='bar'">
 		// PHP: if ($this->xpath->evaluate("@foo='bar'",$node))
-		return $this->convertXPath($expr, $useMultibyteStringFunctions);
+		return $this->convertXPath($expr);
 	}
 
 	/**
 	* Convert an XPath expression (used as value) into PHP code
 	*
 	* @param  string $expr XPath expression
-	* @param  bool   $useMultibyteStringFunctions Whether to use mbstring for string manipulation
 	* @return string       PHP code
 	*/
-	public function convertXPath($expr, $useMultibyteStringFunctions = null)
+	public function convertXPath($expr)
 	{
-		static $regexp;
-
-		if (isset($useMultibyteStringFunctions))
-		{
-			$this->useMultibyteStringFunctions = $useMultibyteStringFunctions;
-		}
-
 		$expr = trim($expr);
 
 		// Use the custom representation if applicable
@@ -112,12 +103,7 @@ class XPathConvertor
 			return $this->customXPath[$expr];
 		}
 
-		if (!isset($regexp))
-		{
-			$regexp = $this->getXPathRegexp();
-		}
-
-		if (preg_match($regexp, $expr, $m))
+		if (preg_match($this->getXPathRegexp(), $expr, $m))
 		{
 			$methodName = null;
 			foreach ($m as $k => $v)
@@ -473,6 +459,13 @@ class XPathConvertor
 	*/
 	protected function getXPathRegexp()
 	{
+		static $regexp;
+
+		if (isset($regexp))
+		{
+			return $regexp;
+		}
+
 		$patterns = [
 			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
 			'dot'       => '\\.',
