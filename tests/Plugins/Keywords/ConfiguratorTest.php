@@ -91,7 +91,7 @@ class ConfiguratorTest extends Test
 	{
 		for ($i = 0; $i < 7; ++$i)
 		{
-			$this->configurator->Keywords->add(str_repeat($i, 9000));
+			$this->configurator->Keywords->add(str_repeat($i, 8000));
 		}
 
 		$config = $this->configurator->Keywords->asConfig();
@@ -99,9 +99,9 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('regexps', $config);
 		$this->assertEquals(
 			[
-				'/\\b(?>' . str_repeat('0', 9000) . '|' . str_repeat('1', 9000) . '|' . str_repeat('2', 9000) . ')\\b/S',
-				'/\\b(?>' . str_repeat('3', 9000) . '|' . str_repeat('4', 9000) . '|' . str_repeat('5', 9000) . ')\\b/S',
-				'/\\b' . str_repeat('6', 9000) . '\\b/S'
+				'/\\b(?>' . str_repeat('0', 8000) . '|' . str_repeat('1', 8000) . '|' . str_repeat('2', 8000) . ')\\b/S',
+				'/\\b(?>' . str_repeat('3', 8000) . '|' . str_repeat('4', 8000) . '|' . str_repeat('5', 8000) . ')\\b/S',
+				'/\\b' . str_repeat('6', 8000) . '\\b/S'
 			],
 			$config['regexps']
 		);
