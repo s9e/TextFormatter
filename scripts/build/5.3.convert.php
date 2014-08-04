@@ -122,7 +122,7 @@ function convertCustom($filepath, &$file)
 				"'protected static \$bt13027555=array(1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7);',"
 			),
 		),
-		'PHP/Serializer.php' => array(
+		'PHP/XPathConvertor.php' => array(
 			array(
 				// mb_substr() doesn't like null as third parameter on PHP 5.3
 				"\$php .= 'null';",
@@ -137,7 +137,7 @@ function convertCustom($filepath, &$file)
 				"\$php .= ')';"
 			)
 		),
-		'PHP/SerializerTest.php' => array(
+		'PHP/XPathConvertorTest.php' => array(
 			array(
 				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
 				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')",'
