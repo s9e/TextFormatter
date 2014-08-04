@@ -189,14 +189,7 @@ class Optimizer
 								}
 
 								// Unindent what was the else's content
-								while (++$j < $i)
-								{
-									if ($tokens[$j][0] === T_WHITESPACE
-									 || $tokens[$j][0] === T_DOC_COMMENT)
-									{
-										$tokens[$j][1] = preg_replace("/^\t/m", '', $tokens[$j][1]);
-									}
-								}
+								$this->unindentBlock($tokens, $j, $i - 1);
 							}
 						}
 
@@ -572,5 +565,26 @@ class Optimizer
 				continue;
 			}
 		}
+	}
+
+	/**
+	* Remove one tab of indentation off a range of PHP tokens
+	*
+	* @param  array   &$tokens List of tokens
+	* @param  integer  $start  Index of the first token to unindent
+	* @param  integer  $end    Index of the last token to unindent
+	* @return void
+	*/
+	protected function unindentBlock(array &$tokens, $start, $end)
+	{
+		$i = $start;
+		do
+		{
+			if ($tokens[$i][0] === T_WHITESPACE || $tokens[$i][0] === T_DOC_COMMENT)
+			{
+				$tokens[$i][1] = preg_replace("/^\t/m", '', $tokens[$i][1]);
+			}
+		}
+		while (++$i <= $end);
 	}
 }
