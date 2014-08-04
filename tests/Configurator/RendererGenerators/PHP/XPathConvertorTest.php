@@ -336,7 +336,14 @@ class XPathConvertorTest extends Test
 			],
 			[
 				"not(contains(@id, 'bar'))",
-				"(strpos(\$node->getAttribute('id'),'bar')===false)"
+				"(strpos(\$node->getAttribute('id'),'bar')===false)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				"starts-with(@foo,'bar')",

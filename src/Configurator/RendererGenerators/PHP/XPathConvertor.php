@@ -483,17 +483,6 @@ class XPathConvertor
 				'(?<contains1>(?&value))',
 				'\\)'
 			],
-			'notcontains' => [
-				'not',
-				'\\(',
-				'contains',
-				'\\(',
-				'(?<notcontains0>(?&value))',
-				',',
-				'(?<notcontains1>(?&value))',
-				'\\)',
-				'\\)'
-			],
 			'translate' => [
 				'translate',
 				'\\(',
@@ -531,6 +520,18 @@ class XPathConvertor
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
 				'(?<math1>[-+*])',
 				'(?<math2>(?&math)|(?&math0))'
+			];
+
+			$patterns['notcontains'] = [
+				'not',
+				'\\(',
+				'contains',
+				'\\(',
+				'(?<notcontains0>(?&value))',
+				',',
+				'(?<notcontains1>(?&value))',
+				'\\)',
+				'\\)'
 			];
 		}
 
