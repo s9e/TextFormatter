@@ -843,7 +843,7 @@ class PHPTest extends Test
 	{
 		$this->runCodeTest(
 			'<xsl:value-of select="string-length(@foo)"/>',
-			'string-length',
+			null,
 			'mb_strlen',
 			function ($generator)
 			{
