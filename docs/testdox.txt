@@ -2343,21 +2343,21 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
- [x] optimize() tests
-
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
- [x] serialize() tests
-
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertXPath() tests
  [x] convertCondition() tests
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
+ [x] optimize() tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Conditionals
  [x] Rendering
  [x] Rendering strategy
  [x] Source
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
+ [x] serialize() tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
@@ -2380,7 +2380,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Throws an exception when encountering unsupported XSL elements
  [x] Throws an exception when encountering namespaced elements
  [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
- [x] Throws an exception on unterminated strings in XPath expressions
  [x] Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
  [x] Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
  [x] Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE

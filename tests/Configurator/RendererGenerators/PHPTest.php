@@ -275,17 +275,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Throws an exception on unterminated strings in XPath expressions
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unterminated string literal
-	*/
-	public function testUnterminatedStrings()
-	{
-		$this->configurator->tags->add('X')->template = '<xsl:value-of select="&quot;"/>';
-		$this->configurator->getRenderer();
-	}
-
-	/**
 	* @testdox Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
 	*/
 	public function testForceEmptyElementsTrue()

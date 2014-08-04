@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
+use Exception;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor;
 use s9e\TextFormatter\Tests\Test;
 
@@ -21,6 +23,11 @@ class XPathConvertorTest extends Test
 		if (isset($setup))
 		{
 			$setup($convertor);
+		}
+
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
 		}
 
 		$this->assertSame($expected, $convertor->convertXPath($original));
@@ -45,6 +52,10 @@ class XPathConvertorTest extends Test
 	public function getConvertXPathTests()
 	{
 		return [
+			[
+				'"',
+				new RuntimeException('Unterminated string literal')
+			],
 			[
 				'@bar',
 				"\$node->getAttribute('bar')"
