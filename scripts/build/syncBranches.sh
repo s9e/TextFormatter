@@ -8,7 +8,7 @@ msg="Synced to $(git rev-parse HEAD)"
 ignore=
 for file in $(ls -1A);
 do
-	if [[ "$file" != .git* && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "README.md" && "$file" != "src" && "$file" != ".travis.yml" ]]
+	if [[ "$file" != ".git" && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "README.md" && "$file" != "src" ]]
 	then
 		ignore="$ignore$file"$'\n'
 	fi
