@@ -2078,6 +2078,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vocaroo.com/i/s0dRy3rZ47bf',
+				'<r><VOCAROO id="s0dRy3rZ47bf" url="http://vocaroo.com/i/s0dRy3rZ47bf">http://vocaroo.com/i/s0dRy3rZ47bf</VOCAROO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vocaroo');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/featured/71630',
 				'<r><WSHH id="71630" url="http://www.worldstarhiphop.com/featured/71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
