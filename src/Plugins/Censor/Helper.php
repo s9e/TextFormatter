@@ -60,7 +60,7 @@ class Helper
 		$delim  = $this->regexp[0];
 		$pos    = strrpos($this->regexp, $delim);
 		$regexp = substr($this->regexp, 0, $pos)
-		        . '(?=[^<">]*(?><|$))'
+		        . '(?=[^<">]*(?=<|$))'
 		        . substr($this->regexp, $pos);
 
 		return preg_replace_callback(
