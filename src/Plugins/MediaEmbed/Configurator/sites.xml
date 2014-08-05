@@ -369,8 +369,8 @@
 		<homepage>http://www.foxnews.com/</homepage>
 		<example>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</example>
 
-		<host>foxnews.com</host>
-		<extract>!foxnews\.com/v/(?'id'\d+)!</extract>
+		<host>video.foxnews.com</host>
+		<extract>!video\.foxnews\.com/v/(?'id'\d+)!</extract>
 		<iframe width="560" height="315" src="//video.foxnews.com/v/video-embed.html?video_id={@id}"/>
 	</site>
 
