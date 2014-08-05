@@ -364,6 +364,16 @@
 		<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 	</site>
 
+	<site id="foxnews">
+		<name>Fox News</name>
+		<homepage>http://www.foxnews.com/</homepage>
+		<example>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</example>
+
+		<host>foxnews.com</host>
+		<extract>!foxnews\.com/v/(?'id'\d+)!</extract>
+		<iframe width="560" height="315" src="//video.foxnews.com/v/video-embed.html?video_id={@id}"/>
+	</site>
+
 	<site id="funnyordie">
 		<name>Funny or Die</name>
 		<homepage>http://www.funnyordie.com/</homepage>
