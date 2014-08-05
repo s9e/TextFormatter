@@ -371,6 +371,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</td>
 	</tr>
 	<tr>
+		<td><code>tinypic</code></td>
+		<td>TinyPic videos</td>
+		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8</td>
+	</tr>
+	<tr>
 		<td><code>traileraddict</code></td>
 		<td>Trailer Addict</td>
 		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>

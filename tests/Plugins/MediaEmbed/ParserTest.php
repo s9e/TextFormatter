@@ -1943,6 +1943,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://tinypic.com/player.php?v=29x86j9&s=8',
+				'<r><TINYPIC id="29x86j9" s="8" url="http://tinypic.com/player.php?v=29x86j9&amp;s=8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tinypic');
+				}
+			],
+			[
 				'http://www.traileraddict.com/tags/musical',
 				'<t>http://www.traileraddict.com/tags/musical</t>',
 				[],
