@@ -14,7 +14,8 @@ use s9e\TextFormatter\Tests\Test;
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick
 */
 class QuickTest extends Test
-{	protected function getPHP($template, $renderingType)
+{
+	protected function getPHP($template, $renderingType)
 	{
 		$serializer = new Serializer;
 		$optimizer  = new Optimizer;
