@@ -239,18 +239,54 @@ class QuickTest extends Test
 				'<ul style="list-style-type:square"><li>one</li><li>two</li><li>three</li></ul>'
 			],
 			[
-				[
-					'IMG' => '<img src="{@url}"/>'
-				],
+				['IMG' => '<img src="{@url}"/>'],
 				'<r><IMG url="foo.png">foo.png</IMG></r>',
 				'<img src="foo.png">'
 			],
 			[
-				[
-					'IMG' => '<img src="{@url}"/>'
-				],
+				['IMG' => '<img src="{@url}"/>'],
 				'<r><IMG url="foo.png"/></r>',
 				'<img src="foo.png">'
+			],
+			[
+				['X' => '<hr title="{@x}"/>'],
+				'<r><X x="&quot;\'&lt;&gt;&amp;"/></r>',
+				'<hr title="&quot;\'&lt;&gt;&amp;">'
+			],
+			[
+				['X' => '<xsl:value-of select="@x"/>'],
+				'<r><X x="\'&quot;&lt;&gt;&amp;"/></r>',
+				'\'"&lt;&gt;&amp;'
+			],
+			[
+				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
+				'<r><X x="&quot;&lt;&gt;"/></r>',
+				'x'
+			],
+			[
+				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
+				'<r><X x="&quot;&lt;&gt;"/></r>',
+				'x'
+			],
+			[
+				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
+				'<r><X x="1"/><X x="2"/></r>',
+				'x'
+			],
+			[
+				['X' => '<xsl:if test="11=@x">x</xsl:if>'],
+				'<r><X x="11"/><X x="2"/></r>',
+				'x'
+			],
+			[
+				['X' => '<hr title="{@x+200*@y}"/>'],
+				'<r><X x="10" y="3"/></r>',
+				'<hr title="610">'
+			],
+			[
+				['X' => '<hr title="{100+@x}"/>'],
+				'<r><X x="10" y="3"/></r>',
+				'<hr title="110">'
 			],
 		];
 	}
@@ -381,7 +417,7 @@ class QuickTest extends Test
 				'<xsl:value-of select="@foo"/>',
 				[[
 					'php',
-					'$attributes+=[\'foo\'=>null];$html=htmlspecialchars($attributes[\'foo\'],0);'
+					"\$attributes+=['foo'=>null];\$html=str_replace('&quot;','\"',\$attributes['foo']);"
 				]]
 			],
 			[
@@ -406,7 +442,7 @@ class QuickTest extends Test
 				[
 					[
 						'php',
-						'$html=\'<blockquote\';if(!isset($attributes[\'author\'])){$html.=\' class="uncited"\';}$html.=\'><div>\';if(isset($attributes[\'author\'])){$html.=\'<cite>\'.htmlspecialchars($attributes[\'author\'],0).\' wrote:</cite>\';}'
+						"\$html='<blockquote';if(!isset(\$attributes['author'])){\$html.=' class=\"uncited\"';}\$html.='><div>';if(isset(\$attributes['author'])){\$html.='<cite>'.str_replace('&quot;','\"',\$attributes['author']).' wrote:</cite>';}"
 					],
 					['static', '</div></blockquote>']
 				]
@@ -492,7 +528,7 @@ class QuickTest extends Test
 			],
 			[
 				'<xsl:comment><xsl:value-of select="@content"/></xsl:comment>',
-				[['php', "\$attributes+=['content'=>null];\$html='<!--'.htmlspecialchars(\$attributes['content'],0).'-->';"]]
+				[['php', "\$attributes+=['content'=>null];\$html='<!--'.str_replace('&quot;','\"',\$attributes['content']).'-->';"]]
 			],
 			[
 				self::ws(
@@ -513,8 +549,13 @@ class QuickTest extends Test
 	/**
 	* @dataProvider getSourceTests
 	*/
-	public function testSource($templates, $contains)
+	public function testSource($templates, $contains, $setup = null)
 	{
+		if (isset($setup))
+		{
+			$setup();
+		}
+
 		$compiledTemplates = [];
 		foreach ($templates as $tagName => $template)
 		{
@@ -556,6 +597,80 @@ class QuickTest extends Test
 					'X' => '<xsl:apply-templates/><xsl:apply-templates/>'
 				],
 				"public static \$quickRenderingTest='(<X[ />])';"
+			],
+			[
+				['X' => '<xsl:value-of select="@x"/>'],
+				"\$html=str_replace('&quot;','\"',\$attributes['x']);"
+			],
+			[
+				['X' => '<xsl:if test="@x"><hr title="{@x}"/></xsl:if>'],
+				"if(isset(\$attributes['x'])){\$html.='<hr title=\"'.\$attributes['x'].'\">';}"
+			],
+			[
+				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
+				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}"
+			],
+			[
+				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
+				"if('&quot;&lt;&gt;'===\$attributes['x']){\$html.='x';}"
+			],
+			[
+				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
+				"if(\$attributes['x']==1){\$html.='x';}"
+			],
+			[
+				['X' => '<xsl:if test="1=@x">x</xsl:if>'],
+				"if(1==\$attributes['x']){\$html.='x';}"
+			],
+			[
+				['X' => '<hr title="{@x+200*@y}"/>'],
+				"\$attributes['x']+200*\$attributes['y']"
+			],
+			[
+				['X' => '<hr title="{100+@x}"/>'],
+				"100+\$attributes['x']"
+			],
+			[
+				['X' => '<xsl:if test="@x1=@x2">x</xsl:if>'],
+				"if(\$attributes['x1']===\$attributes['x2']){\$html.='x';}"
+			],
+			[
+				['X' => '<xsl:if test="contains(@x,\'&quot;\')">x</xsl:if>'],
+				"(strpos(\$attributes['x'],'&quot;')!==false)"
+			],
+			[
+				['X' => '<xsl:if test="contains(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)"
+			],
+			[
+				['X' => '<xsl:if test="starts-with(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)"
+			],
+			[
+				['X' => '<xsl:if test="starts-with(@x,\'&quot;&lt;&gt;\')">x</xsl:if>'],
+				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)"
+			],
+			[
+				['X' => '<xsl:if test="not(contains(@x,\'&quot;\'))">x</xsl:if>'],
+				"(strpos(\$attributes['x'],'&quot;')===false)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
+			[
+				['X' => '<xsl:if test="not(contains(\'&quot;&lt;&gt;\',@x))">x</xsl:if>'],
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 		];
 	}

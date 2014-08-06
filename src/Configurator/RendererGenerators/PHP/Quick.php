@@ -16,13 +16,12 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 class Quick
 {
 	/**
-	* 
+	* Generate the Quick renderer's source
 	*
 	* @param  array  $compiledTemplates Array of tagName => compiled template
-	* @param  bool   $optimistic        Whether quick rendering should start optimistically
 	* @return string
 	*/
-	public static function getSource(array $compiledTemplates, $optimistic = false)
+	public static function getSource(array $compiledTemplates)
 	{
 		$map = [];
 		$tagNames = [];
@@ -201,7 +200,7 @@ class Quick
 			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]+))\', $m[0], $matches);';
 			$php[] = '			foreach ($matches[1] as $i => $attrName)';
 			$php[] = '			{';
-			$php[] = '				$attributes[$attrName] = htmlspecialchars_decode($matches[2][$i]);';
+			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
 			$php[] = '			}';
 			$php[] = '		}';
 			$php[] = '';
@@ -557,15 +556,100 @@ class Quick
 	*/
 	protected static function replacePHP(&$php)
 	{
+		if ($php === '')
+		{
+			return '';
+		}
+
 		$php = str_replace('$this->out', '$html', $php);
+
+		// Expression that matches a $node->getAttribute() call and captures its string argument
+		$getAttribute = "\\\$node->getAttribute\\(('[^']+')\\)";
+
+		// An attribute value escaped as ENT_NOQUOTES. We only need to unescape quotes
 		$php = preg_replace(
-			"(\\\$node->getAttribute\\(('[^']+')\\))",
+			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_NOQUOTES . '\\))',
+			"str_replace('&quot;','\"',\$attributes[\$1])",
+			$php
+		);
+
+		// An attribute value escaped as ENT_COMPAT can be used as-is
+		$php = preg_replace(
+			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_COMPAT . '\\))',
 			'$attributes[$1]',
+			$php
+		);
+
+		// A comparison between two attributes. No need to unescape
+		$php = preg_replace(
+			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')',
+			'$attributes[$1]$2$attributes[$3]',
+			$php
+		);
+
+		// A comparison between an attribute and a literal string. Rather than unescape the
+		// attribute value, we escape the literal. This applies to comparisons using XPath's
+		// contains() as well (translated to PHP's strpos())
+		$php = preg_replace_callback(
+			'(' . $getAttribute . "==='(.*?(?<!\\\\)(?:\\\\\\\\)*)')s",
+			function ($m)
+			{
+				return '$attributes[' . $m[1] . "]==='" . htmlspecialchars(stripslashes($m[2]), ENT_QUOTES) . "'";
+			},
+			$php
+		);
+		$php = preg_replace_callback(
+			"('(.*?(?<!\\\\)(?:\\\\\\\\)*)'===" . $getAttribute . ')s',
+			function ($m)
+			{
+				return "'" . htmlspecialchars(stripslashes($m[1]), ENT_QUOTES) . "'===\$attributes[" . $m[2] . ']';
+			},
+			$php
+		);
+		$php = preg_replace_callback(
+			'(strpos\\(' . $getAttribute . ",'(.*?(?<!\\\\)(?:\\\\\\\\)*)'\\)([!=]==(?:0|false)))s",
+			function ($m)
+			{
+				return 'strpos($attributes[' . $m[1] . "],'" . htmlspecialchars(stripslashes($m[2]), ENT_QUOTES) . "')" . $m[3];
+			},
+			$php
+		);
+		$php = preg_replace_callback(
+			"(strpos\\('(.*?(?<!\\\\)(?:\\\\\\\\)*)'," . $getAttribute . '\\)([!=]==(?:0|false)))s',
+			function ($m)
+			{
+				return "strpos('" . htmlspecialchars(stripslashes($m[1]), ENT_QUOTES) . "',\$attributes[" . $m[2] . '])' . $m[3];
+			},
+			$php
+		);
+
+		// An attribute value used in an arithmetic comparison or operation does not need to be
+		// unescaped. The same applies to empty() and isset()
+		$php = preg_replace(
+			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))',
+			'$attributes[$1]',
+			$php
+		);
+		$php = preg_replace(
+			'((?<!\\w)(\\d+(?:==|[-+*]))' . $getAttribute . ')',
+			'$1$attributes[$2]',
+			$php
+		);
+		$php = preg_replace(
+			"(empty\\(\\\$node->getAttribute\\(('[^']+')\\)\\))",
+			'empty($attributes[$1])',
 			$php
 		);
 		$php = preg_replace(
 			"(\\\$node->hasAttribute\\(('[^']+')\\))",
 			'isset($attributes[$1])',
+			$php
+		);
+
+		// In all other situations, unescape the attribute value before use
+		$php = preg_replace(
+			"(\\\$node->getAttribute\\(('[^']+')\\))",
+			'htmlspecialchars_decode($attributes[$1])',
 			$php
 		);
 
