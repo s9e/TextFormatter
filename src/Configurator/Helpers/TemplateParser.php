@@ -793,16 +793,11 @@ class TemplateParser
 			// Remove whitespace surrounding XPath expressions
 			$content = trim($content);
 
-			// Turn the output into a literal if it's a single string
-			if (preg_match('#^(?:"[^"]*"|\'[^\']*\')$#', $content))
+			// Turn the output into a literal if it's a single string or a number
+			if (preg_match('#^(?:"[^"]*"|\'[^\']*\'|0|[1-9][0-9]*)$#', $content))
 			{
 				$type    = 'literal';
-				$content = substr($content, 1, -1);
-			}
-			// ...or a number
-			elseif (preg_match('#^(?:0|[1-9][0-9]*)$#D', $content))
-			{
-				$type = 'literal';
+				$content = preg_replace('(^[\'"](.*)[\'"]$)s', '$1', $content);
 			}
 		}
 
