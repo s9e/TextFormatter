@@ -799,6 +799,11 @@ class TemplateParser
 				$type    = 'literal';
 				$content = substr($content, 1, -1);
 			}
+			// ...or a number
+			elseif (preg_match('#^(?:0|[1-9][0-9]*)$#D', $content))
+			{
+				$type = 'literal';
+			}
 		}
 
 		if ($type === 'literal' && $content === '')
