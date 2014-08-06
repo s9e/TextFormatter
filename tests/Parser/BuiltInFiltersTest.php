@@ -56,8 +56,13 @@ class BuiltInFiltersTest extends Test
 	* @testdox parseUrl() tests
 	* @dataProvider getParseUrlTests
 	*/
-	public function testParseUrl($url, $expected)
+	public function testParseUrl($url, $expected, $setup = null)
 	{
+		if (isset($setup))
+		{
+			$setup();
+		}
+
 		$default = [
 			'scheme'   => '',
 			'user'     => '',
@@ -232,7 +237,14 @@ class BuiltInFiltersTest extends Test
 				[
 					'scheme'   => 'http',
 					'host'     => 'www.xn--lyp-plada.com'
-				]
+				],
+				function ()
+				{
+					if (!function_exists('idn_to_ascii'))
+					{
+						$this->markTestSkipped('idn_to_ascii() is required.');
+					}
+				}
 			],
 			[
 				"http://evil\xEF\xBD\xA1example.com.\xEF\xBD\xA1./",
