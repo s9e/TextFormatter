@@ -383,7 +383,7 @@ class Serializer
 			if ($case->hasAttribute('branch-values'))
 			{
 				$php = $this->serializeChildren($case);
-				foreach (json_decode($case->getAttribute('branch-values')) as $value)
+				foreach (unserialize($case->getAttribute('branch-values')) as $value)
 				{
 					$statements[$value] = $php;
 				}

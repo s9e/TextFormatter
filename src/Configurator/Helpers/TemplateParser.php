@@ -733,7 +733,7 @@ class TemplateParser
 			foreach ($branchValues as $i => $values)
 			{
 				sort($values);
-				$switch->childNodes->item($i)->setAttribute('branch-values', json_encode($values));
+				$switch->childNodes->item($i)->setAttribute('branch-values', serialize($values));
 			}
 		}
 	}
