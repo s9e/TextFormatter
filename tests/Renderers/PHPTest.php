@@ -82,6 +82,11 @@ class PHPTest extends Test
 		$reflection = new ReflectionObject($renderer);
 		foreach ($reflection->getProperties() as $prop)
 		{
+			if ($prop->isStatic())
+			{
+				continue;
+			}
+
 			$this->assertAttributeNotInternalType(
 				'object',
 				$prop->getName(),
