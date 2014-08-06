@@ -113,8 +113,13 @@ class QuickTest extends Test
 	/**
 	* @dataProvider getRenderingTests
 	*/
-	public function testRendering($templates, $xml, $expected)
+	public function testRendering($templates, $xml, $expected, $setup = null)
 	{
+		if (isset($setup))
+		{
+			$setup();
+		}
+
 		$compiledTemplates = [];
 		foreach ($templates as $tagName => $template)
 		{
@@ -281,12 +286,26 @@ class QuickTest extends Test
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
 				'<r><X x="10" y="3"/></r>',
-				'<hr title="610">'
+				'<hr title="610">',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<hr title="{100+@x}"/>'],
 				'<r><X x="10" y="3"/></r>',
-				'<hr title="110">'
+				'<hr title="110">',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 		];
 	}
@@ -624,11 +643,25 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
-				"\$attributes['x']+200*\$attributes['y']"
+				"\$attributes['x']+200*\$attributes['y']",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<hr title="{100+@x}"/>'],
-				"100+\$attributes['x']"
+				"100+\$attributes['x']",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="@x1=@x2">x</xsl:if>'],
