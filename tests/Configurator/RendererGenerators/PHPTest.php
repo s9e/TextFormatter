@@ -1485,6 +1485,30 @@ class PHPTest extends Test
 		$this->assertSame($expected, $renderer->render($parser->parse($original)));
 	}
 
+	/**
+	* @testdox Tests from plugins (Quick renderer)
+	* @dataProvider getPluginsTests
+	* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick
+	*/
+	public function testPluginsQuick($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
+	{
+		$this->testPlugins(
+			$pluginName,
+			$original,
+			$expected,
+			$pluginOptions,
+			function ($configurator, $plugin) use ($setup)
+			{
+				$configurator->rendering->engine->enableQuickRenderer = true;
+
+				if (isset($setup))
+				{
+					$setup($configurator, $plugin);
+				}
+			}
+		);
+	}
+
 	public function getPluginsTests()
 	{
 		$pluginsDir = __DIR__ . '/../../Plugins';

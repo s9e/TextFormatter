@@ -2398,6 +2398,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Rendering of void and empty elements in HTML
  [x] Rendering of void and empty elements in XHTML
  [x] Tests from plugins
+ [x] Tests from plugins (Quick renderer)
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
  [x] Saves the branch tables from the serializer if applicable
