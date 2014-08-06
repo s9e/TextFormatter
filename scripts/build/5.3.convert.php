@@ -175,8 +175,8 @@ function convertCustom($filepath, &$file)
 		),
 		'QuickTest.php' => array(
 			array(
-				x("\$attributes+=['foo'=>null];\$html=str_replace('&quot;','\"',\$attributes['foo']);"),
-				x("\$attributes+=array('foo'=>null);\$html=str_replace('&quot;','\"',\$attributes['foo']);")
+				x('$attributes+=[\'foo\'=>null];$html=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
+				x('$attributes+=array(\'foo\'=>null);$html=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
 			),
 			array(
 				x('$attributes+=[\'foo\'=>null];$html=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}self::$attributes[]=$attributes;'),

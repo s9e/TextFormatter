@@ -417,7 +417,7 @@ class QuickTest extends Test
 				'<xsl:value-of select="@foo"/>',
 				[[
 					'php',
-					"\$attributes+=['foo'=>null];\$html=str_replace('&quot;','\"',\$attributes['foo']);"
+					'$attributes+=[\'foo\'=>null];$html=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'
 				]]
 			],
 			[
