@@ -198,10 +198,9 @@
 		<example>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</example>
 		<example>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
 
-		<host>edition.cnn.com</host>
-		<host>us.cnn.com</host>
+		<host>cnn.com</host>
 		<extract>!cnn\.com/video/data/2\.0/video/(?'id'.*\.cnn)!</extract>
-		<flash width="416" height="234" src="http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_embed_2x_container.swf?site=cnn&amp;profile=desktop&amp;context=embedwww&amp;videoId={@id}&amp;contentId={@id}"/>
+		<iframe width="560" height="315" src="http://edition.cnn.com/.element/widget/video/videoapi/html/embed.html#/video/{@id}"/>
 	</site>
 
 	<site id="colbertnation">
