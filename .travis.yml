@@ -1,9 +1,4 @@
 language: php
-php:
-  - 5.5
-  - 5.4
-  - 5.3.3
-  - hhvm
 env:
   matrix:
     - OPTIMIZE=1
@@ -14,6 +9,11 @@ matrix:
   include:
     - php: 5.5
       env: OPTIMIZE= COVERAGE=1
+php:
+  - 5.5
+  - 5.4
+  - 5.3.3
+  - hhvm
 branches:
   only:
     - master

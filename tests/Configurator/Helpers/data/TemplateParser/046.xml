@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<template outputMethod="html">
+	<output escape="text" type="literal">42</output>
+</template>
