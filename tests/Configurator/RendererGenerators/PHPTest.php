@@ -1488,6 +1488,7 @@ class PHPTest extends Test
 	/**
 	* @testdox Tests from plugins (Quick renderer)
 	* @dataProvider getPluginsTests
+	* @requires extension tokenizer
 	* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick
 	*/
 	public function testPluginsQuick($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
