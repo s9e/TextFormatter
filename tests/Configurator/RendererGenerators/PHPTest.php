@@ -1549,6 +1549,7 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension tokenizer
 	* @testdox Creates a Quick renderer if $enableQuickRenderer is true
 	*/
 	public function testQuickRenderer()
