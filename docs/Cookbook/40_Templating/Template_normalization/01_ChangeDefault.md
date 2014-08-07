@@ -18,15 +18,16 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 2	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineElements
 3	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
 4	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineTextElements
-5	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyXPathExpressions
-6	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeAttributeNames
-7	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
-8	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
-9	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
-10	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
-11	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
-12	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
-13	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
+5	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineXPathLiterals
+6	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyXPathExpressions
+7	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeAttributeNames
+8	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
+9	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
+10	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
+11	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+12	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
+13	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
+14	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
 ```
 
 ### Remove a normalization
