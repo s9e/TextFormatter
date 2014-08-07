@@ -6,10 +6,10 @@ use DOMDocument;
 use DOMXPath;
 use Exception;
 use RuntimeException;
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateHelper
@@ -194,112 +194,6 @@ class TemplateHelperTest extends Test
 	public function testAsXPathBothQuotes2()
 	{
 		$this->assertSame("concat('\"',\"'\")", TemplateHelper::asXPath('"\''));
-	}
-
-	/**
-	* @testdox parseAttributeValueTemplate() tests
-	* @dataProvider getAVT
-	*/
-	public function testParseAttributeValueTemplate($attrValue, $expected)
-	{
-		if ($expected instanceof Exception)
-		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
-		}
-
-		$this->assertSame(
-			$expected,
-			TemplateHelper::parseAttributeValueTemplate($attrValue)
-		);
-	}
-
-	public function getAVT()
-	{
-		return [
-			[
-				'',
-				[]
-			],
-			[
-				'foo',
-				[
-					['literal', 'foo']
-				]
-			],
-			[
-				'foo {@bar} baz',
-				[
-					['literal',    'foo '],
-					['expression', '@bar'],
-					['literal',    ' baz']
-				]
-			],
-			[
-				'foo {{@bar}} baz',
-				[
-					['literal', 'foo '],
-					['literal', '{'],
-					['literal', '@bar} baz']
-				]
-			],
-			[
-				'foo {@bar}{baz} quux',
-				[
-					['literal',    'foo '],
-					['expression', '@bar'],
-					['expression', 'baz'],
-					['literal',    ' quux']
-				]
-			],
-			[
-				'foo {"bar"} baz',
-				[
-					['literal',    'foo '],
-					['expression', '"bar"'],
-					['literal',    ' baz']
-				]
-			],
-			[
-				"foo {'bar'} baz",
-				[
-					['literal',    'foo '],
-					['expression', "'bar'"],
-					['literal',    ' baz']
-				]
-			],
-			[
-				'foo {"\'bar\'"} baz',
-				[
-					['literal',    'foo '],
-					['expression', '"\'bar\'"'],
-					['literal',    ' baz']
-				]
-			],
-			[
-				'foo {"{bar}"} baz',
-				[
-					['literal',    'foo '],
-					['expression', '"{bar}"'],
-					['literal',    ' baz']
-				]
-			],
-			[
-				'foo {"bar} baz',
-				new RuntimeException('Unterminated XPath expression')
-			],
-			[
-				'foo {bar',
-				new RuntimeException('Unterminated XPath expression')
-			],
-			[
-				'<foo> {"<bar>"} &amp;',
-				[
-					['literal',    '<foo> '],
-					['expression', '"<bar>"'],
-					['literal',    ' &amp;']
-				]
-			],
-		];
 	}
 
 	/**

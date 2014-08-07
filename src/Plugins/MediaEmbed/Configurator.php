@@ -11,11 +11,11 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
@@ -493,27 +493,27 @@ class Configurator extends ConfiguratorBase
 	protected function generateAttributes(array $attributes)
 	{
 		$xsl = '';
-		foreach ($attributes as $attrName => $attrValue)
+		foreach ($attributes as $attrName => $innerXML)
 		{
 			// If the value does not look like XSL, we reconstruct it as XSL
-			if (strpos($attrValue, '<') === false)
+			if (strpos($innerXML, '<') === false)
 			{
-				$tokens    = TemplateHelper::parseAttributeValueTemplate($attrValue);
-				$attrValue = '';
+				$tokens   = AVTHelper::parse($innerXML);
+				$innerXML = '';
 				foreach ($tokens as list($type, $content))
 				{
 					if ($type === 'literal')
 					{
-						$attrValue .= htmlspecialchars($content);
+						$innerXML .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
 					}
 					else
 					{
-						$attrValue .= '<xsl:value-of select="' . htmlspecialchars($content) . '"/>';
+						$innerXML .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_QUOTES, 'UTF-8') . '"/>';
 					}
 				}
 			}
 
-			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName) . '">' . $attrValue . '</xsl:attribute>';
+			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName, ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
 		}
 
 		return $xsl;

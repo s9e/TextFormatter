@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 use DOMElement;
 use DOMXPath;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 
 class Serializer
@@ -58,7 +58,7 @@ class Serializer
 	protected function convertAttributeValueTemplate($attrValue)
 	{
 		$phpExpressions = [];
-		foreach (TemplateHelper::parseAttributeValueTemplate($attrValue) as $token)
+		foreach (AVTHelper::parse($attrValue) as $token)
 		{
 			if ($token[0] === 'literal')
 			{

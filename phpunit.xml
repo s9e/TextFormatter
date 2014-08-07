@@ -50,6 +50,7 @@
 			<file>tests/Configurator/Collections/TemplateNormalizationListTest.php</file>
 			<file>tests/Configurator/Collections/TemplateParameterCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
+			<file>tests/Configurator/Helpers/AVTHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ContextSafenessTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateForensicsTest.php</file>

@@ -12,7 +12,7 @@ use DOMElement;
 use DOMNode;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
@@ -79,7 +79,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
 	{
 		// Parse the attribute value for XPath expressions and assess their safety
-		foreach (TemplateHelper::parseAttributeValueTemplate($attribute->value) as $token)
+		foreach (AVTHelper::parse($attribute->value) as $token)
 		{
 			if ($token[0] === 'expression')
 			{

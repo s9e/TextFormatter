@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineInferredValues extends TemplateNormalization
@@ -65,38 +65,20 @@ class InlineInferredValues extends TemplateNormalization
 			       . '/@*[contains(., "{' . $var . '}")]';
 			foreach ($xpath->query($query, $node) as $attribute)
 			{
-				$attrValue = '';
-				foreach (TemplateHelper::parseAttributeValueTemplate($attribute->value) as $token)
-				{
-					if ($token[0] === 'literal')
-					{
-						// Re-insert literals, don't forget to escape { and }
-						$attrValue .= preg_replace('([{}])', '$0$0', $token[1]);
-					}
-					elseif ($token[0] === 'expression')
+				AVTHelper::replace(
+					$attribute,
+					function ($token) use ($value, $var)
 					{
 						// Test whether this expression is the one we're looking for
-						if ($token[1] === $var)
+						if ($token[0] === 'expression' && $token[1] === $var)
 						{
-							// Replace the expression with the value, don't forget to escape { and }
-							$attrValue .= preg_replace('([{}])', '$0$0', $value);
+							// Replace the expression with the value (as a literal)
+							$token = ['literal', $value];
 						}
-						else
-						{
-							// Re-insert the expression as-is
-							$attrValue .= '{' . $token[1] . '}';
-						}
-					}
-					else
-					{
-						// This cannot actually happen, but if we can't interpret the token, we'll
-						// just abort
-						break 2;
-					}
-				}
 
-				// Replace the attribute's value with the new inlined version
-				$attribute->value = $attrValue;
+						return $token;
+					}
+				);
 			}
 		}
 	}

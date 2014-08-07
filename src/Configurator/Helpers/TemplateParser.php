@@ -779,7 +779,7 @@ class TemplateParser
 		// Reparse AVTs and add them as separate xpath/literal outputs
 		if ($type === 'avt')
 		{
-			foreach (TemplateHelper::parseAttributeValueTemplate($content) as $token)
+			foreach (AVTHelper::parse($content) as $token)
 			{
 				$type = ($token[0] === 'expression') ? 'xpath' : 'literal';
 				self::appendOutput($ir, $type, $token[1]);

@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 use s9e\TextFormatter\Parser\BuiltInFilters;
@@ -48,7 +49,7 @@ class NormalizeUrls extends TemplateNormalization
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
 		// Trim the URL and parse it
-		$tokens = TemplateHelper::parseAttributeValueTemplate(trim($attribute->value));
+		$tokens = AVTHelper::parse(trim($attribute->value));
 
 		$attrValue = '';
 		foreach ($tokens as list($type, $content))

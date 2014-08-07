@@ -130,98 +130,6 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Parse an attribute value template
-	*
-	* @link http://www.w3.org/TR/xslt#dt-attribute-value-template
-	*
-	* @param  string $attrValue Attribute value
-	* @return array             Array of tokens
-	*/
-	public static function parseAttributeValueTemplate($attrValue)
-	{
-		$tokens  = [];
-		$attrLen = strlen($attrValue);
-
-		$pos = 0;
-		while ($pos < $attrLen)
-		{
-			// Look for opening brackets
-			if ($attrValue[$pos] === '{')
-			{
-				// Two brackets = one literal bracket
-				if (substr($attrValue, $pos, 2) === '{{')
-				{
-					$tokens[] = ['literal', '{'];
-					$pos += 2;
-
-					continue;
-				}
-
-				// Move the cursor past the left bracket
-				++$pos;
-
-				// We're inside an inline XPath expression. We need to parse it in order to find
-				// where it ends
-				$expr = '';
-				while ($pos < $attrLen)
-				{
-					// Capture everything up to the next "interesting" char: ', " or }
-					$spn = strcspn($attrValue, '\'"}', $pos);
-					if ($spn)
-					{
-						$expr .= substr($attrValue, $pos, $spn);
-						$pos += $spn;
-					}
-
-					if ($pos >= $attrLen)
-					{
-						throw new RuntimeException('Unterminated XPath expression');
-					}
-
-					// Capture the character then move the cursor
-					$c = $attrValue[$pos];
-					++$pos;
-
-					if ($c === '}')
-					{
-						// Done with this expression
-						break;
-					}
-
-					// Look for the matching quote
-					$quotePos = strpos($attrValue, $c, $pos);
-					if ($quotePos === false)
-					{
-						throw new RuntimeException('Unterminated XPath expression');
-					}
-
-					// Capture the content of that string then move the cursor past it
-					$expr .= $c . substr($attrValue, $pos, $quotePos + 1 - $pos);
-					$pos = 1 + $quotePos;
-				}
-
-				$tokens[] = ['expression', $expr];
-			}
-
-			$spn = strcspn($attrValue, '{', $pos);
-			if ($spn)
-			{
-				// Capture this chunk of attribute value
-				$str = substr($attrValue, $pos, $spn);
-
-				// Unescape right brackets
-				$str = str_replace('}}', '}', $str);
-
-				// Add the value and move the cursor
-				$tokens[] = ['literal', $str];
-				$pos += $spn;
-			}
-		}
-
-		return $tokens;
-	}
-
-	/**
 	* Return the list of variables used in a given XPath expression
 	*
 	* @param  string $expr XPath expression
@@ -286,7 +194,7 @@ abstract class TemplateHelper
 		       . '/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			$tokens = self::parseAttributeValueTemplate($attribute->value);
+			$tokens = AVTHelper::parse($attribute->value);
 
 			foreach ($tokens as $token)
 			{
@@ -842,7 +750,7 @@ abstract class TemplateHelper
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			foreach (self::parseAttributeValueTemplate($attribute->value) as $token)
+			foreach (AVTHelper::parse($attribute->value) as $token)
 			{
 				if ($token[0] === 'expression')
 				{

@@ -37,6 +37,12 @@ function convertCustom($filepath, &$file)
 {
 	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
 	$replacements = array(
+		'AVTHelper.php' => array(
+			array(
+				'public static function replace(DOMAttr $attribute, callable $callback)',
+				'public static function replace(DOMAttr $attribute, $callback)'
+			)
+		),
 		'BBCodeMonkey.php' => array(
 			array(
 				'protected function isFilter($tokenId)',

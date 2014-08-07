@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
@@ -40,25 +41,18 @@ class MinifyXPathExpressions extends TemplateNormalization
 		       . '/@*[contains(., " ")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			// Parse this attribute's value
-			$tokens = TemplateHelper::parseAttributeValueTemplate($attribute->value);
-
-			// Rebuild the attribute value
-			$attrValue = '';
-			foreach ($tokens as $token)
-			{
-				if ($token[0] === 'literal')
+			AVTHelper::replace(
+				$attribute,
+				function ($token)
 				{
-					$attrValue .= preg_replace('([{}])', '$0$0', $token[1]);
-				}
-				else
-				{
-					$attrValue .= '{' . TemplateHelper::minifyXPath($token[1]) . '}';
-				}
-			}
+					if ($token[0] === 'expression')
+					{
+						$token[1] = TemplateHelper::minifyXPath($token[1]);
+					}
 
-			// Replace the attribute value
-			$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
+					return $token;
+				}
+			);
 		}
 	}
 }

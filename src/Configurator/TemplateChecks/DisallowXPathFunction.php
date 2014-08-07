@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
 
@@ -55,7 +55,7 @@ class DisallowXPathFunction extends TemplateCheck
 			else
 			{
 				// Attribute of an HTML (or otherwise) element -- Look for inline expressions
-				foreach (TemplateHelper::parseAttributeValueTemplate($attribute->value) as $token)
+				foreach (AVTHelper::parse($attribute->value) as $token)
 				{
 					if ($token[0] === 'expression')
 					{

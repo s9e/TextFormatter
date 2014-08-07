@@ -400,6 +400,11 @@ s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] setNode() sets the stored node
  [x] highlightNode() returns the template's source formatted and with the stored node highlighted
 
+s9e\TextFormatter\Tests\Configurator\Helpers\AVTHelper
+ [x] parse() tests
+ [x] serialize() tests
+ [x] replace() tests
+
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] filterVariants() filters the right variant
  [x] filterVariants() recurses into deep arrays
@@ -701,7 +706,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] asXPath("d'oh") returns "d'oh"
  [x] asXPath("'\"") returns concat("'",'"')
  [x] asXPath('"\'') returns concat('"',"'")
- [x] parseAttributeValueTemplate() tests
  [x] getParametersFromXSL() tests
  [x] getObjectParamsByRegexp() tests
  [x] getCSSNodes() tests
@@ -1202,7 +1206,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
- [x] normalize() ignores unknown tokens from TemplateHelper::parseAttributeValueTemplate()
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions
