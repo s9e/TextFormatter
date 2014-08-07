@@ -702,10 +702,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() does not break numeric character references
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
- [x] asXPath('foo') returns 'foo'
- [x] asXPath("d'oh") returns "d'oh"
- [x] asXPath("'\"") returns concat("'",'"')
- [x] asXPath('"\'') returns concat('"',"'")
  [x] getParametersFromXSL() tests
  [x] getObjectParamsByRegexp() tests
  [x] getCSSNodes() tests
@@ -714,9 +710,16 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
  [x] replaceTokens() tests
  [x] highlightNode() tests
- [x] minifyXPath() tests
  [x] getMetaElementsRegexp() tests
  [x] replaceHomogeneousTemplates() tests
+
+s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
+ [x] export('foo') returns 'foo'
+ [x] export("d'oh") returns "d'oh"
+ [x] export("'\"") returns concat("'",'"')
+ [x] export('"\'') returns concat('"',"'")
+ [x] getVariables() tests
+ [x] minify() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor

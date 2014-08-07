@@ -59,6 +59,7 @@
 			<file>tests/Configurator/Helpers/RulesHelperTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateParserTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateHelperTest.php</file>
+			<file>tests/Configurator/Helpers/XPathHelperTest.php</file>
 			<file>tests/Configurator/Items/AttributeTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributePreprocessorTest.php</file>

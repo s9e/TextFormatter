@@ -165,38 +165,6 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
-	* @testdox asXPath('foo') returns 'foo'
-	*/
-	public function testAsXPathSingleQuotes()
-	{
-		$this->assertSame("'foo'", TemplateHelper::asXPath('foo'));
-	}
-
-	/**
-	* @testdox asXPath("d'oh") returns "d'oh"
-	*/
-	public function testAsXPathDoubleQuotes()
-	{
-		$this->assertSame('"d\'oh"', TemplateHelper::asXPath("d'oh"));
-	}
-
-	/**
-	* @testdox asXPath("'\"") returns concat("'",'"')
-	*/
-	public function testAsXPathBothQuotes1()
-	{
-		$this->assertSame("concat(\"'\",'\"')", TemplateHelper::asXPath("'\""));
-	}
-
-	/**
-	* @testdox asXPath('"\'') returns concat('"',"'")
-	*/
-	public function testAsXPathBothQuotes2()
-	{
-		$this->assertSame("concat('\"',\"'\")", TemplateHelper::asXPath('"\''));
-	}
-
-	/**
 	* @testdox getParametersFromXSL() tests
 	* @dataProvider getParametersTests
 	*/
@@ -825,73 +793,6 @@ class TemplateHelperTest extends Test
 &lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;
 &lt;b&gt;foo&lt;/b&gt;'
 			],
-		];
-	}
-
-	/**
-	* @testdox minifyXPath() tests
-	* @dataProvider minifyXPathTests
-	*/
-	public function testMinifyXPath($original, $expected)
-	{
-		if ($expected instanceof Exception)
-		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
-		}
-
-		$this->assertSame(
-			$expected,
-			TemplateHelper::minifyXPath($original)
-		);
-	}
-
-	public function minifyXPathTests()
-	{
-		return [
-			[
-				'',
-				''
-			],
-			[
-				' @foo ',
-				'@foo'
-			],
-			[
-				'@ foo',
-				'@foo'
-			],
-			[
-				'concat(@foo, @bar, @baz)',
-				'concat(@foo,@bar,@baz)'
-			],
-			[
-				"concat(@foo, ' @bar ', @baz)",
-				"concat(@foo,' @bar ',@baz)"
-			],
-			[
-				'@foo = 2',
-				'@foo=2'
-			],
-			[
-				'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))',
-				'substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))'
-			],
-			[
-				'@foo - bar = 2',
-				'@foo -bar=2'
-			],
-			[
-				'@foo- - 1 = 2',
-				'@foo- -1=2'
-			],
-			[
-				' foo or _bar ',
-				'foo or _bar'
-			],
-			[
-				'foo = "bar',
-				new RuntimeException("Cannot parse XPath expression 'foo = \"bar'")
-			]
 		];
 	}
 

@@ -12,7 +12,7 @@ use Countable;
 use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
@@ -198,7 +198,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Iterate over codes, create an <xsl:when> for each emote
 		foreach ($this->collection as $code => $template)
 		{
-			$xsl .= '<xsl:when test=".=' . htmlspecialchars(TemplateHelper::asXPath($code)) . '">'
+			$xsl .= '<xsl:when test=".=' . htmlspecialchars(XPathHelper::export($code)) . '">'
 			      . $template
 			      . '</xsl:when>';
 		}

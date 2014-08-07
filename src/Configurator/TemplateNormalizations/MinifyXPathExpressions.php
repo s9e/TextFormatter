@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class MinifyXPathExpressions extends TemplateNormalization
@@ -32,7 +32,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 		{
 			$attribute->parentNode->setAttribute(
 				$attribute->nodeName,
-				TemplateHelper::minifyXPath($attribute->nodeValue)
+				XPathHelper::minify($attribute->nodeValue)
 			);
 		}
 
@@ -47,7 +47,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 				{
 					if ($token[0] === 'expression')
 					{
-						$token[1] = TemplateHelper::minifyXPath($token[1]);
+						$token[1] = XPathHelper::minify($token[1]);
 					}
 
 					return $token;
