@@ -1202,10 +1202,13 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineCDATA
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineElements
  [x] Works
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
  [x] Works
 
-s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineXPathLiterals
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions

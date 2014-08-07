@@ -67,6 +67,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('InlineElements');
 		$this->collection->append('InlineInferredValues');
 		$this->collection->append('InlineTextElements');
+		$this->collection->append('InlineXPathLiterals');
 		$this->collection->append('MinifyXPathExpressions');
 		$this->collection->append('NormalizeAttributeNames');
 		$this->collection->append('NormalizeElementNames');

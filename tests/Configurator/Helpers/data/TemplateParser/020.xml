@@ -1,1 +1,3 @@
-<template outputMethod="html"/>
+<template outputMethod="html">
+	<output escape="text" type="xpath">''</output>
+</template>
