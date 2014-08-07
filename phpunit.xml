@@ -160,6 +160,7 @@
 			<file>tests/Configurator/Bundles/F5Test.php</file>
 			<file>tests/Configurator/Bundles/FatdownTest.php</file>
 			<file>tests/Configurator/Bundles/ForumTest.php</file>
+			<file>tests/Configurator/Bundles/MediaPackTest.php</file>
 			<file>tests/Configurator/Bundles/S18Test.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
@@ -237,6 +238,7 @@
 			<file>tests/Bundles/F5Test.php</file>
 			<file>tests/Bundles/FatdownTest.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
+			<file>tests/Bundles/MediaPackTest.php</file>
 			<file>tests/Bundles/S18Test.php</file>
 			<file>tests/Bundles/S18/HelperTest.php</file>
 		</testsuite>
@@ -249,6 +251,7 @@
 				<file>src/Bundles/F5/Renderer.php</file>
 				<file>src/Bundles/Fatdown/Renderer.php</file>
 				<file>src/Bundles/Forum/Renderer.php</file>
+				<file>src/Bundles/MediaPack/Renderer.php</file>
 				<file>src/Bundles/S18/Renderer.php</file>
 			</exclude>
 		</whitelist>
