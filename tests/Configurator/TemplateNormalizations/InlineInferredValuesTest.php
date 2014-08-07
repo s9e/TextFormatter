@@ -20,6 +20,10 @@ class InlineInferredValuesTest extends AbstractTest
 				'<xsl:if test=".=\':)\'">:)</xsl:if>'
 			],
 			[
+				'<xsl:if test=".=\'x\'or.=\'y\'"><xsl:value-of select="."/></xsl:if>',
+				'<xsl:if test=".=\'x\'or.=\'y\'"><xsl:value-of select="."/></xsl:if>'
+			],
+			[
 				'<xsl:choose>
 					<xsl:when test=".=\':)\'"><img alt="{.}"/></xsl:when>
 					<xsl:when test=".=\':(\'"><img alt="{.}"/></xsl:when>

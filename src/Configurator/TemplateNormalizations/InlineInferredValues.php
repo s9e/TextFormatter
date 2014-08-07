@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineInferredValues extends TemplateNormalization
@@ -31,24 +32,18 @@ class InlineInferredValues extends TemplateNormalization
 		$xpath = new DOMXPath($dom);
 		$query = '//xsl:if | //xsl:when';
 
-		// Match an equality test between an attribute or . and a string or a number
-		$regexp = '#^(@[-\\w]+|\\.)=("[^"]*"|\'[^\']*\'|\\d+)$#';
-
 		foreach ($xpath->query($query) as $node)
 		{
-			if (!preg_match($regexp, $node->getAttribute('test'), $m))
+			$map = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
+
+			// Test whether the map has exactly one key and one value
+			if ($map === false || count($map) !== 1 || count($map[key($map)]) !== 1)
 			{
 				continue;
 			}
 
-			$var   = $m[1];
-			$value = $m[2];
-
-			// Remove the quotes around the value
-			if ($value[0] === '"' || $value[0] === "'")
-			{
-				$value = substr($value, 1, -1);
-			}
+			$var   = key($map);
+			$value = end($map[$var]);
 
 			// Get xsl:value-of descendants that match the condition
 			$query = './/xsl:value-of[@select="' . $var . '"]';
