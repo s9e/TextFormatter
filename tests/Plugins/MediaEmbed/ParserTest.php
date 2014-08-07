@@ -1555,6 +1555,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.imdb.com/video/epk/vi387296537/',
+				'<r><IMDB id="387296537" url="http://www.imdb.com/video/epk/vi387296537/">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imdb');
+				}
+			],
+			[
 				'https://imgur.com/a/9UGCL',
 				'<r><IMGUR id="9UGCL" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
 				[],
