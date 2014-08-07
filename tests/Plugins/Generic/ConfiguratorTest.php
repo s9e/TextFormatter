@@ -501,6 +501,7 @@ class ConfiguratorTest extends Test
 	* @expectedExceptionMessage Tried to create an attribute for an unused capture with no name. Please file a bug
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
+	* @group no-hhvm
 	*/
 	public function testUnknownToken()
 	{
