@@ -20,7 +20,7 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/Optimizer.php';
 $optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 
-function optimizeDir($dir, array $options = [])
+function optimizeDir($dir, array $options = array())
 {
 	foreach (glob($dir . '/*.php') as $filepath)
 	{
@@ -33,7 +33,7 @@ function optimizeDir($dir, array $options = [])
 	}
 }
 
-function optimizeFile($filepath, array $options = [])
+function optimizeFile($filepath, array $options = array())
 {
 	global $optimizer;
 
@@ -254,12 +254,12 @@ if (!defined('T_TRAIT'))
 //       Reflection.) Minifying the source does reduce the time spent parsing it, so it does make a
 //       difference without an opcode cache. However, those changes are too radical to be enabled
 //       by default
-$options = [
+$options = array(
 	'convertDocblock'  => true,
 	'removeComments'   => false,
 	'removeDocblock'   => false,
 	'removeLicense'    => false,
 	'removeWhitespace' => false
-];
+);
 
 optimizeDir(realpath(__DIR__ . '/../../src'), $options);

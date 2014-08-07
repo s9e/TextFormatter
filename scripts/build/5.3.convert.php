@@ -90,6 +90,12 @@ function convertCustom($filepath, &$file)
 				'public function buildTag($word)'
 			)
 		),
+		'InlineXPathLiterals.php' => array(
+			array(
+				'protected function getTextContent($expr)',
+				'public function getTextContent($expr)',
+			)
+		),
 		'JavaScript.php' => array(
 			array(
 				'$xsl = (new XSLT)->getXSL($this->configurator->rendering);',
