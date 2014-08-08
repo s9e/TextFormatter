@@ -198,9 +198,20 @@
 		<example>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</example>
 		<example>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
 
-		<host>cnn.com</host>
+		<host>edition.cnn.com</host>
+		<host>us.cnn.com</host>
 		<extract>!cnn\.com/video/data/2\.0/video/(?'id'.*\.cnn)!</extract>
 		<iframe width="560" height="315" src="http://edition.cnn.com/.element/widget/video/videoapi/html/embed.html#/video/{@id}"/>
+	</site>
+
+	<site id="cnnmoney">
+		<name>CNNMoney</name>
+		<homepage>http://money.cnn.com/video/</homepage>
+		<example>http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</example>
+
+		<host>money.cnn.com</host>
+		<extract>!money\.cnn\.com/video/(?'id'.*\.cnnmoney)!</extract>
+		<iframe width="560" height="360" src="http://money.cnn.com/.element/ssi/video/7.0/players/embed.player.html?videoid=video/{@id}&amp;width=560&amp;height=360"/>
 	</site>
 
 	<site id="colbertnation">
