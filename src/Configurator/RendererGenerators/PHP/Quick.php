@@ -580,6 +580,15 @@ class Quick
 			$php
 		);
 
+		// Character replacement can be performed directly on the escaped value provided that it is
+		// then escaped as ENT_COMPAT and that replacements do not interfere with the escaping of
+		// the characters &<>" or their representation &amp;&lt;&gt;&quot;
+		$php = preg_replace(
+			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . ENT_COMPAT . '\\))',
+			'strtr($attributes[$1],$2,$3)',
+			$php
+		);
+
 		// A comparison between two attributes. No need to unescape
 		$php = preg_replace(
 			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')',

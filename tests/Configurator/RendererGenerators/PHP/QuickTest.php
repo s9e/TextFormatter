@@ -308,6 +308,11 @@ class QuickTest extends Test
 					}
 				}
 			],
+			[
+				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
+				'<r><X x="&amp;amp;"/></r>',
+				'<hr title="&amp;Amp;">'
+			],
 		];
 	}
 
@@ -705,6 +710,19 @@ class QuickTest extends Test
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
 				}
+			],
+			[
+				['X' => "<hr title=\"{translate(@x,'_','-')}\"/>"],
+				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'"
+			],
+			[
+				['X' => "<hr title=\"{translate(@x,'ABC','abc')}\"/>"],
+				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'"
+			],
+			[
+				// Replacing "a" with "A" would mess up "&amp;"
+				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
+				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'"
 			],
 		];
 	}
