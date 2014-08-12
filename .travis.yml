@@ -1,19 +1,19 @@
 language: php
-php:
-  - 5.5
-  - 5.4
-  - 5.3.3
-  - hhvm
-env:
-  matrix:
-    - OPTIMIZE=1
 matrix:
   fast_finish: true
   allow_failures:
     - php: hhvm
   include:
     - php: 5.5
-      env: OPTIMIZE= COVERAGE=1
+      env: COVERAGE=1
+    - php: 5.3
+      env: OPTIMIZE=1
+    - php: 5.4
+      env: OPTIMIZE=1
+    - php: 5.5
+      env: OPTIMIZE=1
+    - php: hhvm
+      env: OPTIMIZE=1
 branches:
   only:
     - master
