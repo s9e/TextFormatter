@@ -70,11 +70,6 @@ class Configurator implements ConfigProvider
 	public $rulesGenerator;
 
 	/**
-	* @var Stylesheet Stylesheet object
-	*/
-	public $stylesheet;
-
-	/**
 	* @var TagCollection Tags repository
 	*/
 	public $tags;
