@@ -151,7 +151,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	/**
 	* Return the tag associated with this plugin, if applicable
 	*
-	* @return Tag
+	* @return \s9e\TextFormatter\Configurator\Items\Tag
 	*/
 	public function getTag()
 	{

@@ -16,7 +16,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	* Return a value from this collection
 	*
 	* @param  string $key
-	* @return ProgrammableCallback
+	* @return \s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*/
 	public function get($key)
 	{

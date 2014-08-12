@@ -177,9 +177,9 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Allow an attribute to be used in an HTML element
 	*
-	* @param  string    $elName   Name of the element
-	* @param  string    $attrName Name of the attribute
-	* @return Attribute
+	* @param  string $elName   Name of the element
+	* @param  string $attrName Name of the attribute
+	* @return \s9e\Configurator\Items\Attribute
 	*/
 	public function allowAttribute($elName, $attrName)
 	{
