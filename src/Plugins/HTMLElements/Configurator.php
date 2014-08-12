@@ -189,9 +189,9 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Allow an unsafe attribute to be used in an HTML element
 	*
-	* @param  string    $elName   Name of the element
-	* @param  string    $attrName Name of the attribute
-	* @return Attribute
+	* @param  string $elName   Name of the element
+	* @param  string $attrName Name of the attribute
+	* @return \s9e\Configurator\Items\Attribute
 	*/
 	public function allowUnsafeAttribute($elName, $attrName)
 	{
@@ -201,10 +201,10 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Allow a (potentially unsafe) attribute to be used in an HTML element
 	*
-	* @param  string    $elName   Name of the element
-	* @param  string    $attrName Name of the attribute
-	* @param  bool      $allowUnsafe
-	* @return Attribute
+	* @param  string $elName   Name of the element
+	* @param  string $attrName Name of the attribute
+	* @param  bool   $allowUnsafe
+	* @return \s9e\Configurator\Items\Attribute
 	*/
 	protected function allowAttributeWithSafety($elName, $attrName, $allowUnsafe)
 	{
