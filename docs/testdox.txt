@@ -2361,6 +2361,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertXPath() tests
  [x] convertCondition() tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer
+ [x] optimize() tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
  [x] optimize() tests
 
@@ -2404,8 +2407,10 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] XPath expressions are inlined as PHP whenever possible
  [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE
- [x] Calls the optimizer's optimize() and optimizeControlStructures() methods if applicable
+ [x] Calls the optimizer's optimize() method if applicable
  [x] Can run without an optimizer
+ [x] Calls the control structures optimizer's optimize() method if applicable
+ [x] Can run without a control structures optimizer
  [x] Code optimization tests
  [x] HTML rendering
  [x] XHTML rendering

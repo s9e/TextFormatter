@@ -842,14 +842,13 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Calls the optimizer's optimize() and optimizeControlStructures() methods if applicable
+	* @testdox Calls the optimizer's optimize() method if applicable
 	*/
 	public function testCallsOptimizer()
 	{
-		$mock = $this->getMock('stdClass', ['optimize', 'optimizeControlStructures']);
-		$mock->expects($this->atLeastOnce())->method('optimize');
+		$mock = $this->getMock('stdClass', ['optimize']);
 		$mock->expects($this->atLeastOnce())
-		     ->method('optimizeControlStructures')
+		     ->method('optimize')
 		     ->will($this->returnArgument(0));
 
 		$this->configurator->rendering->engine->optimizer = $mock;
@@ -862,6 +861,29 @@ class PHPTest extends Test
 	public function testNoOptimizer()
 	{
 		unset($this->configurator->rendering->engine->optimizer);
+		$this->configurator->getRenderer();
+	}
+
+	/**
+	* @testdox Calls the control structures optimizer's optimize() method if applicable
+	*/
+	public function testCallsControlStructuresOptimizer()
+	{
+		$mock = $this->getMock('stdClass', ['optimize']);
+		$mock->expects($this->once())
+		     ->method('optimize')
+		     ->will($this->returnArgument(0));
+
+		$this->configurator->rendering->engine->controlStructuresOptimizer = $mock;
+		$this->configurator->getRenderer();
+	}
+
+	/**
+	* @testdox Can run without a control structures optimizer
+	*/
+	public function testNoControlStructuresOptimizer()
+	{
+		unset($this->configurator->rendering->engine->controlStructuresOptimizer);
 		$this->configurator->getRenderer();
 	}
 

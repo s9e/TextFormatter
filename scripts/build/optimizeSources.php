@@ -17,8 +17,8 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 
 */
 
-include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/Optimizer.php';
-$optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
+include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/ControlStructuresOptimizer.php';
+$optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer;
 
 function optimizeDir($dir, array $options = array())
 {
@@ -81,7 +81,7 @@ function optimizeFile($filepath, array $options = array())
 		}
 	}
 
-	$new = $optimizer->optimizeControlStructures($old);
+	$new = $optimizer->optimize($old);
 	if ($new !== $old)
 	{
 		$changed = true;

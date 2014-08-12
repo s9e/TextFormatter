@@ -11,6 +11,7 @@ use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
@@ -35,6 +36,11 @@ class PHP implements RendererGenerator
 	* @var string Name of the class to be created. If null, a random name will be generated
 	*/
 	public $className;
+
+	/**
+	* @var ControlStructuresOptimizer Control structures optimizer
+	*/
+	public $controlStructuresOptimizer;
 
 	/**
 	* @var string Prefix used when generating a default class name
@@ -98,6 +104,7 @@ class PHP implements RendererGenerator
 
 		if (extension_loaded('tokenizer'))
 		{
+			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
 			$this->optimizer = new Optimizer;
 		}
 
@@ -410,9 +417,9 @@ class PHP implements RendererGenerator
 		$php = implode("\n", $php);
 
 		// Finally, optimize the control structures
-		if (isset($this->optimizer))
+		if (isset($this->controlStructuresOptimizer))
 		{
-			$php = $this->optimizer->optimizeControlStructures($php);
+			$php = $this->controlStructuresOptimizer->optimize($php);
 		}
 
 		// Generate a name for that class if necessary, and save it
