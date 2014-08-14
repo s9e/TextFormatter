@@ -4,6 +4,8 @@
 		<homepage>http://abcnews.go.com/</homepage>
 		<example>http://abcnews.go.com/WNN/video/dog-goes-wild-when-owner-leaves-22936610</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>abcnews.go.com</host>
 		<extract>!abcnews\.go\.com/[^/]+/video/[^/]+-(?'id'\d+)!</extract>
 		<iframe width="640" height="360" src="//abcnews.go.com/video/embed?id={@id}"/>
@@ -68,6 +70,8 @@
 		<example>http://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1</example>
 		<example>http://www.audiomack.com/album/chance-the-rapper/acid-rap</example>
 
+		<tags><tag>music</tag></tags>
+
 		<host>audiomack.com</host>
 		<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
 		<iframe width="100%" style="max-width:900px">
@@ -92,6 +96,8 @@
 		<example>http://proleter.bandcamp.com/album/curses-from-past-times-ep</example>
 		<example>http://proleter.bandcamp.com/track/downtown-irony</example>
 		<example>http://therunons.bandcamp.com/track/still-feel</example>
+
+		<tags><tag>music</tag></tags>
 
 		<host>bandcamp.com</host>
 		<scrape>
@@ -146,6 +152,8 @@
 		<homepage>http://www.break.com/</homepage>
 		<example>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</example>
 
+		<tags><tag>entertainment</tag></tags>
+
 		<host>break.com</host>
 		<extract>!break\.com/video/.*-(?'id'[0-9]+)$!</extract>
 		<iframe width="464" height="280" src="//break.com/embed/{@id}"/>
@@ -156,6 +164,8 @@
 		<homepage>http://www.cbsnews.com/video/</homepage>
 		<example>http://www.cbsnews.com/video/watch/?id=50156501n</example>
 		<example>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</example>
+
+		<tags><tag>news</tag></tags>
 
 		<host>cbsnews.com</host>
 		<extract>#cbsnews\.com/video/watch/\?id=(?'id'[0-9]+)#</extract>
@@ -187,6 +197,8 @@
 		<homepage>http://www.cnbc.com/</homepage>
 		<example>http://video.cnbc.com/gallery/?video=3000269279</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>video.cnbc.com</host>
 		<extract>!cnbc\.com/gallery/\?video=(?'id'\d+)!</extract>
 		<flash width="400" height="380" src="//plus.cnbc.com/rssvideosearch/action/player/id/{@id}/code/cnbcplayershare"/>
@@ -197,6 +209,8 @@
 		<homepage>http://edition.cnn.com/video/</homepage>
 		<example>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</example>
 		<example>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
+
+		<tags><tag>news</tag></tags>
 
 		<host>edition.cnn.com</host>
 		<host>us.cnn.com</host>
@@ -209,6 +223,8 @@
 		<homepage>http://money.cnn.com/video/</homepage>
 		<example>http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>money.cnn.com</host>
 		<extract>!money\.cnn\.com/video/(?'id'.*\.cnnmoney)!</extract>
 		<iframe width="560" height="360" src="http://money.cnn.com/.element/ssi/video/7.0/players/embed.player.html?videoid=video/{@id}&amp;width=560&amp;height=360"/>
@@ -218,6 +234,8 @@
 		<name>Colbert Nation</name>
 		<homepage>http://thecolbertreport.cc.com/</homepage>
 		<example>http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</example>
+
+		<tags><tag>entertainment</tag></tags>
 
 		<host>thecolbertreport.cc.com</host>
 		<scrape>
@@ -232,6 +250,8 @@
 		<homepage>http://www.collegehumor.com/</homepage>
 		<example>http://www.collegehumor.com/video/1181601/more-than-friends</example>
 
+		<tags><tag>entertainment</tag></tags>
+
 		<host>collegehumor.com</host>
 		<extract>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</extract>
 		<iframe width="600" height="369" src="//www.collegehumor.com/e/{@id}"/>
@@ -242,6 +262,8 @@
 		<homepage>http://www.comedycentral.com/funny-videos</homepage>
 		<example>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
 		<example>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
+
+		<tags><tag>entertainment</tag></tags>
 
 		<host>cc.com</host>
 		<host>comedycentral.com</host>
@@ -282,6 +304,8 @@
 		<example>http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</example>
 		<example>http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</example>
 		<example>http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</example>
+
+		<tags><tag>entertainment</tag></tags>
 
 		<host>thedailyshow.com</host>
 		<host>thedailyshow.cc.com</host>
@@ -339,6 +363,8 @@
 		<example>http://8tracks.com/fingerlickengood/just-nujabes</example>
 		<example>http://8tracks.com/midna/2242699</example>
 
+		<tags><tag>music</tag></tags>
+
 		<host>8tracks.com</host>
 		<extract>!8tracks\.com/[-\w]+/(?'id'\d+)(?=#|$)!</extract>
 		<scrape>
@@ -356,6 +382,8 @@
 		<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782</example>
 		<example>http://espn.go.com/video/clip?id=espn:11195358</example>
 
+		<tags><tag>sports</tag></tags>
+
 		<host>espn.go.com</host>
 		<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?|video\?v|clipDeportes\?)id=(?:\w+:)?(?'id'\d+)#</extract>
 		<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
@@ -369,6 +397,8 @@
 		<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
 		<example>https://www.facebook.com/photo.php?fbid=10152476416772631</example>
 
+		<tags><tag>social</tag></tags>
+
 		<host>www.facebook.com</host>
 		<extract>@www\.facebook\.com/(?!pages/).*?(?:/|\?fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
 		<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
@@ -378,6 +408,8 @@
 		<name>Fox News</name>
 		<homepage>http://www.foxnews.com/</homepage>
 		<example>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</example>
+
+		<tags><tag>news</tag></tags>
 
 		<host>video.foxnews.com</host>
 		<extract>!video\.foxnews\.com/v/(?'id'\d+)!</extract>
@@ -389,6 +421,8 @@
 		<homepage>http://www.funnyordie.com/</homepage>
 		<source>http://support.funnyordie.com/discussions/problems/918-embed-user-videos-widget</source>
 		<example>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
+
+		<tags><tag>entertainment</tag></tags>
 
 		<host>funnyordie.com</host>
 		<extract>!funnyordie\.com/videos/(?'id'[0-9a-f]+)!</extract>
@@ -402,6 +436,8 @@
 		<example>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</example>
 		<example>http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</example>
 
+		<tags><tag>gaming</tag></tags>
+
 		<host>gamespot.com</host>
 		<extract>!gamespot\.com.*?/(?:events|videos)/.*?-(?'id'\d+)/(?:[#?].*)?$!</extract>
 		<iframe width="640" height="400" src="//www.gamespot.com/videos/embed/{@id}/"/>
@@ -413,6 +449,8 @@
 		<example>http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</example>
 		<example>http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review</example>
 		<example>http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</example>
+
+		<tags><tag>gaming</tag></tags>
 
 		<host>gametrailers.com</host>
 		<scrape>
@@ -429,6 +467,8 @@
 		<example>http://www.gettyimages.com/detail/3232182</example>
 		<example>http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</example>
 		<example>http://www.gettyimages.co.uk/detail/3232182</example>
+
+		<tags><tag>images</tag></tags>
 
 		<host>gettyimages.be</host>
 		<host>gettyimages.cn</host>
@@ -463,6 +503,8 @@
 		<example>http://gfycat.com/SereneIllfatedCapybara</example>
 		<example>http://giant.gfycat.com/SereneIllfatedCapybara.gif</example>
 
+		<tags><tag>images</tag></tags>
+
 		<host>gfycat.com</host>
 		<extract>!gfycat\.com/(?'id'\w+)!</extract>
 		<scrape url="http://gfycat.com/{@id}">
@@ -491,6 +533,8 @@
 		<example>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</example>
 		<example>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</example>
 
+		<tags><tag>social</tag></tags>
+
 		<host>plus.google.com</host>
 		<extract>!//plus\.google\.com/(?:\+\w+|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
 		<scrape>
@@ -517,6 +561,8 @@
 		<example>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761</example>
 		<example>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</example>
 		<example>http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</example>
+
+		<tags><tag>music</tag></tags>
 
 		<host>grooveshark.com</host>
 		<extract>%grooveshark\.com(?:/#!?)?/playlist/[^/]+/(?'playlistid'[0-9]+)%</extract>
@@ -549,6 +595,8 @@
 		<homepage>http://www.ign.com/videos/</homepage>
 		<example>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</example>
 
+		<tags><tag>gaming</tag></tags>
+
 		<host>ign.com</host>
 		<extract>!(?'id'https?://.*?ign\.com/videos/.+)!</extract>
 		<iframe width="468" height="263" src="http://widgets.ign.com/video/embed/content.html?url={@id}"/>
@@ -560,6 +608,8 @@
 		<example>http://www.imdb.com/video/imdb/vi2482677785/</example>
 		<example>http://www.imdb.com/video/epk/vi387296537/</example>
 
+		<tags><tag>movies</tag></tags>
+
 		<host>imdb.com</host>
 		<extract>!imdb\.com/video/\w+/vi(?'id'\d+)!</extract>
 		<iframe width="560" height="315" src="http://www.imdb.com/video/imdb/vi{@id}/imdb/embed?autoplay=false&amp;width=560"/>
@@ -570,6 +620,8 @@
 		<homepage>http://imgur.com/</homepage>
 		<example>http://imgur.com/a/9UGCL</example>
 
+		<tags><tag>images</tag></tags>
+
 		<host>imgur.com</host>
 		<extract>!imgur\.com/a/(?'id'\w+)!</extract>
 		<iframe width="100%" height="550" src="//imgur.com/a/{@id}/embed"/>
@@ -579,6 +631,8 @@
 		<name>Indiegogo</name>
 		<homepage>http://www.indiegogo.com/</homepage>
 		<example>http://www.indiegogo.com/projects/gameheart-redesigned</example>
+
+		<tags><tag>fundraising</tag></tags>
 
 		<host>indiegogo.com</host>
 		<extract>!indiegogo\.com/projects/(?'id'[0-9]+)$!</extract>
@@ -594,6 +648,8 @@
 		<homepage>http://instagram.com/</homepage>
 		<source>http://help.instagram.com/513918941996087</source>
 		<example>http://instagram.com/p/gbGaIXBQbn/</example>
+
+		<tags><tag>social</tag></tags>
 
 		<host>instagram.com</host>
 		<extract>!instagram\.com/p/(?'id'[-_\w]+)!</extract>
@@ -621,6 +677,8 @@
 		<homepage>http://www.izlesene.com/</homepage>
 		<example>http://www.izlesene.com/video/lily-allen-url-badman/7600704</example>
 
+		<tags><tag>tr</tag></tags>
+
 		<host>izlesene.com</host>
 		<extract>!izlesene\.com/video/[-\w]+/(?'id'\d+)!</extract>
 		<iframe width="560" height="315" src="//www.izlesene.com/embedplayer/{@id}"/>
@@ -632,6 +690,8 @@
 		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1</example>
 		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</example>
 		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
+
+		<tags><tag>fundraising</tag></tags>
 
 		<host>kickstarter.com</host>
 		<extract>!kickstarter\.com/projects/(?'id'[^/]+/[^/?]+)(?:/widget/(?:(?'card'card)|(?'video'video)))?!</extract>
@@ -673,6 +733,8 @@
 		<example>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</example>
 		<example>http://i.mixcloud.com/CH9VU9</example>
 
+		<tags><tag>music</tag></tags>
+
 		<host>mixcloud.com</host>
 		<extract>@mixcloud\.com/(?!categories|tag)(?'id'[-\w]+/[^/&amp;]+)/@</extract>
 		<scrape>
@@ -687,6 +749,8 @@
 		<homepage>http://www.msnbc.com/watch</homepage>
 		<example>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>msnbc.com</host>
 		<scrape>
 			<match>@msnbc\.com/[-\w]+/watch/@</match>
@@ -700,6 +764,8 @@
 		<homepage>http://www.nytimes.com/video/</homepage>
 		<example>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</example>
 		<example>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</example>
+
+		<tags><tag>news</tag></tags>
 
 		<host>nytimes.com</host>
 		<extract>!nytimes\.com/video/[a-z]+/[a-z]+/(?'id'\d+)!</extract>
@@ -722,6 +788,8 @@
 		<homepage>http://www.podbean.com/</homepage>
 		<example>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</example>
 
+		<tags><tag>podcasts</tag></tags>
+
 		<host>podbean.com</host>
 		<extract>!podbean\.com/site/player/index/pid/\d+/eid/(?'id'\d+)!</extract>
 		<scrape>
@@ -736,6 +804,8 @@
 		<homepage>http://prezi.com/</homepage>
 		<example>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</example>
 
+		<tags><tag>presentations</tag></tags>
+
 		<host>prezi.com</host>
 		<extract>#//prezi\.com/(?!(?:a(?:bout|mbassadors)|c(?:o(?:llaborate|mmunity|ntact)|reate)|exp(?:erts|lore)|ip(?:ad|hone)|jobs|l(?:ear|ogi)n|m(?:ac|obility)|pr(?:es(?:s|ent)|icing)|recommend|support|user|windows|your)/)(?'id'\w+)/#</extract>
 		<iframe width="550" height="400" src="//prezi.com/embed/{@id}/"/>
@@ -746,6 +816,8 @@
 		<homepage>http://www.rdio.com/</homepage>
 		<example>http://rd.io/x/QcD7oTdeWevg/</example>
 		<example>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</example>
+
+		<tags><tag>music</tag></tags>
 
 		<host>rd.io</host>
 		<host>rdio.com</host>
@@ -763,6 +835,8 @@
 		<example>http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</example>
 		<example>http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</example>
 
+		<tags><tag>ru</tag></tags>
+
 		<host>rutube.ru</host>
 		<extract>!rutube\.ru/tracks/(?'id'[0-9]+)!</extract>
 		<scrape>
@@ -777,6 +851,8 @@
 		<homepage>http://www.scribd.com/</homepage>
 		<example>http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</example>
 
+		<tags><tag>presentations</tag></tags>
+
 		<host>scribd.com</host>
 		<extract>!scribd\.com/doc/(?'id'\d+)!</extract>
 		<iframe width="500" height="500" style="resize:both" src="//www.scribd.com/embeds/{@id}/content?view_mode=slideshow&amp;show_recommendations=false"/>
@@ -787,6 +863,8 @@
 		<homepage>http://www.slideshare.net/</homepage>
 		<source>http://help.slideshare.com/forums/67665-Embedding-Sharing</source>
 		<example>http://www.slideshare.net/Slideshare/how-23431564</example>
+
+		<tags><tag>presentations</tag></tags>
 
 		<host>slideshare.net</host>
 		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]{6,})$!</extract>
@@ -804,6 +882,8 @@
 		<example>http://api.soundcloud.com/tracks/98282116</example>
 		<example>https://soundcloud.com/andrewbird/three-white-horses</example>
 		<example>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</example>
+
+		<tags><tag>music</tag></tags>
 
 		<host>soundcloud.com</host>
 		<extract>@(?'id'https?://(?:(?:api\.soundcloud\.com/(?:playlist|track)s/\d+)|soundcloud\.com/[^/]+/(?:sets/)?[^/]+)(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?|^[^/]+/[^/]+$)@</extract>
@@ -854,6 +934,8 @@
 		<example>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</example>
 		<example>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</example>
 
+		<tags><tag>music</tag></tags>
+
 		<scheme>spotify</scheme>
 		<host>open.spotify.com</host>
 		<host>play.spotify.com</host>
@@ -891,6 +973,8 @@
 		<example>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</example>
 		<example>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</example>
 
+		<tags><tag>entertainment</tag></tags>
+
 		<host>teamcoco.com</host>
 		<extract>!teamcoco\.com/video/(?'id'\d+)!</extract>
 		<scrape>
@@ -906,6 +990,8 @@
 		<source>http://blog.ted.com/2011/04/01/now-you-can-embed-tedtalks-with-subtitles-enabled/</source>
 		<example>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</example>
 		<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
+
+		<tags><tag>presentations</tag></tags>
 
 		<host>ted.com</host>
 		<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"?]+)!i</extract>
@@ -925,6 +1011,8 @@
 		<homepage>http://www.theatlantic.com/video/</homepage>
 		<example>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>theatlantic.com</host>
 		<extract>!theatlantic\.com/video/index/(?'id'\d+)!</extract>
 		<iframe width="640" height="360" src="http://www.theatlantic.com/video/iframe/{@id}/"/>
@@ -934,6 +1022,8 @@
 		<name>The Onion</name>
 		<homepage>http://www.theonion.com/video/</homepage>
 		<example>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
+
+		<tags><tag>entertainment</tag></tags>
 
 		<host>theonion.com</host>
 		<extract>!theonion\.com/video/[-\w]+,(?'id'\d+)!</extract>
@@ -945,6 +1035,8 @@
 		<homepage>http://tinypic.com/</homepage>
 		<example>http://tinypic.com/player.php?v=29x86j9&amp;s=8</example>
 
+		<tags><tag>images</tag></tags>
+
 		<host>tinypic.com</host>
 		<extract>!tinypic\.com/player\.php\?v=(?'id'\w+)&amp;s=(?'s'\d+)!</extract>
 		<flash width="560" height="345" src="http://tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
@@ -954,6 +1046,8 @@
 		<name>Trailer Addict</name>
 		<homepage>http://www.traileraddict.com/</homepage>
 		<example>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</example>
+
+		<tags><tag>movies</tag></tags>
 
 		<host>traileraddict.com</host>
 		<scrape>
@@ -971,6 +1065,8 @@
 		<example>http://www.twitch.tv/amazhs/c/4493103</example>
 		<example>http://www.twitch.tv/minigolf2000/b/497929990</example>
 		<example>http://www.twitch.tv/m/57217</example>
+
+		<tags><tag>gaming</tag></tags>
 
 		<host>twitch.tv</host>
 		<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?#</extract>
@@ -1004,6 +1100,8 @@
 		<example>https://twitter.com/DerekTVShow/status/463372588690202624</example>
 		<example>https://twitter.com/#!/BarackObama/status/266031293945503744</example>
 
+		<tags><tag>social</tag></tags>
+
 		<host>twitter.com</host>
 		<extract>@https://twitter\.com/(?:#!/)?\w+/status(?:es)?/(?'id'\d+)@</extract>
 		<!--
@@ -1030,6 +1128,8 @@
 		<example>http://www.ustream.tv/baja1000tv</example>
 		<example>http://www.ustream.tv/recorded/40688256</example>
 
+		<tags><tag>gaming</tag></tags>
+
 		<host>ustream.tv</host>
 		<extract>!ustream\.tv/recorded/(?'vid'\d+)!</extract>
 		<scrape>
@@ -1053,6 +1153,8 @@
 		<example>http://www.vevo.com/watch/USUV71400682</example>
 		<example>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</example>
 
+		<tags><tag>music</tag></tags>
+
 		<host>vevo.com</host>
 		<extract>!vevo\.com/watch/([-\w/]+/)?(?'id'[A-Z0-9]+)!</extract>
 		<iframe width="575" height="324" src="http://cache.vevo.com/m/html/embed.html?video={@id}"/>
@@ -1062,6 +1164,8 @@
 		<name>Viagame</name>
 		<homepage>http://www.viagame.com/</homepage>
 		<example>http://www.viagame.com/channels/hearthstone-championship/405177</example>
+
+		<tags><tag>gaming</tag></tags>
 
 		<host>viagame.com</host>
 		<extract>!viagame\.com/channels/[^/]+/(?'id'[0-9]+)!</extract>
@@ -1108,6 +1212,8 @@
 		<example>http://vk.com/newmusicvideos?z=video-13895667_161988074</example>
 		<example>http://vk.com/video_ext.php?oid=121599878&amp;id=165723901&amp;hash=e06b0878046e1d32</example>
 
+		<tags><tag>ru</tag></tags>
+
 		<host>vk.com</host>
 		<host>vkontakte.ru</host>
 		<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?[0-9]+)_(?'vid'[0-9]+)!</extract>
@@ -1142,6 +1248,8 @@
 		<example>http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</example>
 		<example>http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</example>
 
+		<tags><tag>news</tag></tags>
+
 		<host>live.wsj.com</host>
 		<extract>@live\.wsj\.com/[^#]*#!(?'id'[-0-9A-F]{36})@</extract>
 		<extract>@live\.wsj\.com/video/[^/]+/(?'id'[-0-9A-F]{36})@</extract>
@@ -1154,6 +1262,8 @@
 		<example>https://screen.yahoo.com/mr-short-term-memory-000000263.html</example>
 		<example>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</example>
 
+		<tags><tag>movies</tag></tags>
+
 		<host>screen.yahoo.com</host>
 		<extract>!screen\.yahoo\.com/(?:[-\w]+/)?(?'id'[-\w]+)\.html!</extract>
 		<iframe width="640" height="360" src="https://screen.yahoo.com/{@id}.html?format=embed"/>
@@ -1163,6 +1273,8 @@
 		<name>Youku</name>
 		<homepage>http://www.youku.com/</homepage>
 		<example>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</example>
+
+		<tags><tag>cn</tag></tags>
 
 		<host>youku.com</host>
 		<extract>!youku\.com/v_show/id_(?'id'\w+)!</extract>
