@@ -155,7 +155,7 @@
 		<tags><tag>entertainment</tag></tags>
 
 		<host>break.com</host>
-		<extract>!break\.com/video/.*-(?'id'[0-9]+)$!</extract>
+		<extract>!break\.com/video/.*-(?'id'\d+)$!</extract>
 		<iframe width="464" height="280" src="//break.com/embed/{@id}"/>
 	</site>
 
@@ -168,7 +168,7 @@
 		<tags><tag>news</tag></tags>
 
 		<host>cbsnews.com</host>
-		<extract>#cbsnews\.com/video/watch/\?id=(?'id'[0-9]+)#</extract>
+		<extract>#cbsnews\.com/video/watch/\?id=(?'id'\d+)#</extract>
 		<scrape>
 			<match>#cbsnews\.com/videos/(?!watch/)#</match>
 			<extract>#"pid":"(?'pid'\w+)"#</extract>
@@ -253,7 +253,7 @@
 		<tags><tag>entertainment</tag></tags>
 
 		<host>collegehumor.com</host>
-		<extract>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</extract>
+		<extract>!collegehumor\.com/(?:video|embed)/(?'id'\d+)!</extract>
 		<iframe width="600" height="369" src="//www.collegehumor.com/e/{@id}"/>
 	</site>
 
@@ -565,10 +565,10 @@
 		<tags><tag>music</tag></tags>
 
 		<host>grooveshark.com</host>
-		<extract>%grooveshark\.com(?:/#!?)?/playlist/[^/]+/(?'playlistid'[0-9]+)%</extract>
+		<extract>%grooveshark\.com(?:/#!?)?/playlist/[^/]+/(?'playlistid'\d+)%</extract>
 		<scrape url="http://grooveshark.com/s/{@path}">
 			<match>%grooveshark\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%</match>
-			<extract>%songID=(?'songid'[0-9]+)%</extract>
+			<extract>%songID=(?'songid'\d+)%</extract>
 		</scrape>
 		<flash width="400"
 		       height="{400-360*boolean(@songid)}"
@@ -635,10 +635,10 @@
 		<tags><tag>fundraising</tag></tags>
 
 		<host>indiegogo.com</host>
-		<extract>!indiegogo\.com/projects/(?'id'[0-9]+)$!</extract>
+		<extract>!indiegogo\.com/projects/(?'id'\d+)$!</extract>
 		<scrape>
 			<match>!indiegogo\.com/projects/.!</match>
-			<extract>!indiegogo\.com/projects/(?'id'[0-9]+)/!</extract>
+			<extract>!indiegogo\.com/projects/(?'id'\d+)/!</extract>
 		</scrape>
 		<iframe width="224" height="486" src="//www.indiegogo.com/project/{@id}/widget"/>
 	</site>
@@ -723,7 +723,7 @@
 		<example>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</example>
 
 		<host>metacafe.com</host>
-		<extract>!metacafe\.com/watch/(?'id'[0-9]+)!</extract>
+		<extract>!metacafe\.com/watch/(?'id'\d+)!</extract>
 		<iframe width="560" height="315" src="//www.metacafe.com/embed/{@id}/"/>
 	</site>
 
@@ -838,10 +838,10 @@
 		<tags><tag>ru</tag></tags>
 
 		<host>rutube.ru</host>
-		<extract>!rutube\.ru/tracks/(?'id'[0-9]+)!</extract>
+		<extract>!rutube\.ru/tracks/(?'id'\d+)!</extract>
 		<scrape>
 			<match>!rutube\.ru/video/[0-9a-f]{32}!</match>
-			<extract>!rutube\.ru/play/embed/(?'id'[0-9]+)!</extract>
+			<extract>!rutube\.ru/play/embed/(?'id'\d+)!</extract>
 		</scrape>
 		<iframe width="720" height="405" src="//rutube.ru/play/embed/{@id}"/>
 	</site>
@@ -867,10 +867,10 @@
 		<tags><tag>presentations</tag></tags>
 
 		<host>slideshare.net</host>
-		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]{6,})$!</extract>
+		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'\d{6,})$!</extract>
 		<scrape>
 			<match>!slideshare\.net/[^/]+/\w!</match>
-			<extract>!"presentationId":(?'id'[0-9]+)!</extract>
+			<extract>!"presentationId":(?'id'\d+)!</extract>
 		</scrape>
 		<iframe width="427" height="356" src="//www.slideshare.net/slideshow/embed_code/{@id}"/>
 	</site>
@@ -1069,10 +1069,10 @@
 		<tags><tag>gaming</tag></tags>
 
 		<host>twitch.tv</host>
-		<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?#</extract>
+		<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+))?#</extract>
 		<scrape>
-			<match>!twitch\.tv/m/[0-9]+!</match>
-			<extract>!channel=(?'channel'\w+)&amp;.*?archive_id=(?'archive_id'[0-9]+)!</extract>
+			<match>!twitch\.tv/m/\d+!</match>
+			<extract>!channel=(?'channel'\w+)&amp;.*?archive_id=(?'archive_id'\d+)!</extract>
 		</scrape>
 		<flash width="620" height="378">
 			<src><![CDATA[
@@ -1168,7 +1168,7 @@
 		<tags><tag>gaming</tag></tags>
 
 		<host>viagame.com</host>
-		<extract>!viagame\.com/channels/[^/]+/(?'id'[0-9]+)!</extract>
+		<extract>!viagame\.com/channels/[^/]+/(?'id'\d+)!</extract>
 		<iframe width="640" height="392" src="//www.viagame.com/embed/{@id}"></iframe>
 	</site>
 
@@ -1180,7 +1180,7 @@
 		<example>http://vimeo.com/channels/staffpicks/67207222</example>
 
 		<host>vimeo.com</host>
-		<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</extract>
+		<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'\d+)!</extract>
 		<iframe width="560" height="315" src="//player.vimeo.com/video/{@id}"/>
 	</site>
 
@@ -1216,10 +1216,10 @@
 
 		<host>vk.com</host>
 		<host>vkontakte.ru</host>
-		<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?[0-9]+)_(?'vid'[0-9]+)!</extract>
-		<extract>!vk(?:\.com|ontakte\.ru)/video_ext\.php\?oid=(?'oid'-?[0-9]+)&amp;id=(?'vid'[0-9]+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
+		<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?\d+)_(?'vid'\d+)!</extract>
+		<extract>!vk(?:\.com|ontakte\.ru)/video_ext\.php\?oid=(?'oid'-?\d+)&amp;id=(?'vid'\d+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
 		<scrape url="http://vk.com/video{@oid}_{@vid}">
-			<match>!vk.*?video-?[0-9]+_[0-9]+!</match>
+			<match>!vk.*?video-?\d+_\d+!</match>
 			<extract>!embed_hash=(?'hash'[0-9a-f]+)!</extract>
 		</scrape>
 		<iframe width="607" height="360" src="//vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}&amp;hd=1"/>
