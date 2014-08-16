@@ -12,7 +12,7 @@ Built-in filters
 <dd>A well-formed email address. Uses ext/filter's FILTER_VALIDATE_EMAIL filter. The JavaScript version is much more lenient.</dd>
 
 <dt>#hashmap</dt>
-<dd>Requires a <code>map</code> option that is an associative array. At runtime, the attribute's value is replaced by the map's value of the same name. If no match is found, the original value is returned unless the <code>strict</code> option is set, in which case the attribute is invalidated. The map is case-sensitive. Also see <code>#map</code>.</dd>
+<dd>Requires an associative array that maps strings to their replacement. Case-sensitive. Preserves unknown values by default.</dd>
 
 <dt>#identifier</dt>
 <dd>A string of letters, numbers, dashes and underscores. Matches <code>/^[-0-9A-Za-z_]+$/</code>.</dd>
@@ -33,7 +33,7 @@ Built-in filters
 <dd>An integer value. Uses ext/filter's FILTER_VALIDATE_INT filter. Returns an integer, not a string.</dd>
 
 <dt>#map</dt>
-<dd>Requires a <code>map</code> option that is an associative array with regexps as keys. The map is processed in order, and the first regexp that matches replaces the value with its corresponding element. If no match is found, the original value is returned unless the <code>strict</code> option is set, in which case the attribute is invalidated.</dd>
+<dd>Requires an associative array that maps strings to their replacement. Case-insensitive by default. Preserves unknown values by default.</dd>
 
 <dt>#number</dt>
 <dd>A string made of digits. Matches <code>/^[0-9]+$/</code>. Note that unlike #int, "0123" is a valid number. Returns a string.</dd>
