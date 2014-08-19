@@ -23,9 +23,11 @@ fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites.xml` ]]
 then
+	./scripts/generateBundles.php
 	./scripts/patchExamples.php
 	./scripts/patchMediaEmbedReadme.php
 
+	git update-index --add "src/Bundles/"
 	git update-index --add "src/Plugins/MediaEmbed/README.md"
 fi
 
