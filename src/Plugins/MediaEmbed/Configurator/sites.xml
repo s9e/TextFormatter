@@ -548,9 +548,10 @@
 		<name>Google Sheets</name>
 		<homepage>http://www.google.com/sheets/about/</homepage>
 		<example>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</example>
+		<example>https://docs.google.com/spreadsheet/ccc?key=0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE&amp;usp=sharing</example>
 
 		<host>docs.google.com</host>
-		<extract>!docs\.google\.com/spreadsheets/d/(?'id'\w+)!</extract>
+		<extract>!docs\.google\.com/spreadsheets?/(?:ccc\?key=|d/)(?'id'\w+)!</extract>
 		<iframe width="100%" height="500" style="resize:both" src="https://docs.google.com/spreadsheets/d/{@id}?widget=true&amp;headers=false&amp;rm=minimal"/>
 	</site>
 
