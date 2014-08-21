@@ -287,6 +287,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://tosh.cc.com/video-clips/aet4lh/rc-car-crash',
+				'<r><COMEDYCENTRAL id="mgid:arc:video:tosh.comedycentral.com:3b516128-7054-4439-a01e-0aa9c0b020ac" url="http://tosh.cc.com/video-clips/aet4lh/rc-car-crash">http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</COMEDYCENTRAL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('comedycentral');
+				}
+			],
+			[
 				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
 				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" url="http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508">http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</DAILYSHOW></r>',
 				[],

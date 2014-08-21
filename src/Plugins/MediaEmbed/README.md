@@ -153,7 +153,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>comedycentral</code></td>
 		<td>Comedy Central</td>
-		<td>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</td>
+		<td>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</td>
 	</tr>
 	<tr>
 		<td><code>coub</code></td>

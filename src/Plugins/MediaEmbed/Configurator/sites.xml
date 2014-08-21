@@ -262,6 +262,7 @@
 		<homepage>http://www.comedycentral.com/funny-videos</homepage>
 		<example>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
 		<example>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
+		<example>http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</example>
 
 		<tags><tag>entertainment</tag></tags>
 
@@ -269,7 +270,7 @@
 		<host>comedycentral.com</host>
 		<scrape>
 			<match>!c(?:c|omedycentral)\.com/video-clips/!</match>
-			<extract>!(?'id'mgid:arc:video:comedycentral\.com:[-\w]+)!</extract>
+			<extract>!(?'id'mgid:arc:video:[.\w]+:[-\w]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 	</site>
