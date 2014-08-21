@@ -27,7 +27,8 @@ then
 	./scripts/patchExamples.php
 	./scripts/patchMediaEmbedReadme.php
 
-	git update-index --add "src/Bundles/"
+	git update-index --add src/Bundles/*.php
+	git update-index --add src/Bundles/*/Renderer.php
 	git update-index --add "src/Plugins/MediaEmbed/README.md"
 fi
 
