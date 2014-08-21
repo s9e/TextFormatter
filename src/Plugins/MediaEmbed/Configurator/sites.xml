@@ -552,7 +552,7 @@
 		<example>https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70</example>
 
 		<host>docs.google.com</host>
-		<extract>!docs\.google\.com/spreadsheets?/(?:ccc\?key=|d/)(?'id'\w+)[^#]*(?:#gid=(?'gid'\d+))?!</extract>
+		<extract>!docs\.google\.com/spreadsheet(?:/ccc\?key=|s/d/)(?'id'\w+)[^#]*(?:#gid=(?'gid'\d+))?!</extract>
 		<iframe width="100%" height="500" style="resize:both" src="https://docs.google.com/spreadsheets/d/{@id}?widget=true&amp;headers=false&amp;rm=minimal#gid={@gid}"/>
 	</site>
 
