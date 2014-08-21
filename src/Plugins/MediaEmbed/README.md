@@ -338,7 +338,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>scribd</code></td>
 		<td>Scribd</td>
-		<td>http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</td>
+		<td>http://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review?in_collection=5291376</td>
 	</tr>
 	<tr>
 		<td><code>slideshare</code></td>
