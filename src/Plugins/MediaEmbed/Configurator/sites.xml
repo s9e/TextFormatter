@@ -1229,6 +1229,21 @@
 		<iframe width="607" height="360" src="//vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}&amp;hd=1"/>
 	</site>
 
+	<site id="vube">
+		<name>Vube</name>
+		<homepage>http://vube.com/</homepage>
+		<example>http://vube.com/s/v7JeV6</example>
+		<example>http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s</example>
+
+		<host>vube.com</host>
+		<extract>!vube\.com/[^/]+/[^/]+/(?'id'\w+)!</extract>
+		<scrape>
+			<match>!vube\.com/s/\w+!</match>
+			<extract>!vube\.com/[^/]+/[^/]+/(?'id'\w+)!</extract>
+		</scrape>
+		<iframe width="640" height="435" src="//vube.com/embed/video/{@id}"/>
+	</site>
+
 	<site id="wshh">
 		<name>WorldStarHipHop</name>
 		<homepage>http://www.worldstarhiphop.com/</homepage>

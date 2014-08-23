@@ -697,6 +697,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vube.com/s/v7JeV6',
+				'<r><VUBE id="wovO34HWbY" url="http://vube.com/s/v7JeV6">http://vube.com/s/v7JeV6</VUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vube');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<r><WSHH id="63133" url="http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
@@ -2114,6 +2123,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
+				'http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s',
+				'<r><VUBE id="Y8NUZ69Tf7" url="http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s">http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s</VUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vube');
 				}
 			],
 			[
