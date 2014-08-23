@@ -13,6 +13,7 @@ use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -21,6 +22,14 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
 class Configurator extends ConfiguratorBase
 {
+	/**
+	* @var array List of filters that are explicitly allowed in attribute definitions
+	*/
+	public $allowedFilters = [
+		'hexdec',
+		'urldecode'
+	];
+
 	/**
 	* @var string String to be appended to the templates used to render media sites
 	*/
@@ -300,6 +309,11 @@ class Configurator extends ConfiguratorBase
 		{
 			$attribute = $tag->attributes->add($attrName);
 
+			if (isset($attrConfig['preFilter']))
+			{
+				$this->appendFilter($attribute, $attrConfig['preFilter']);
+			}
+
 			// Add a filter depending on the attribute's type or regexp
 			if (isset($attrConfig['type']))
 			{
@@ -320,6 +334,11 @@ class Configurator extends ConfiguratorBase
 			{
 				// Non-id attributes are marked as optional
 				$attribute->required = ($attrName === 'id');
+			}
+
+			if (isset($attrConfig['postFilter']))
+			{
+				$this->appendFilter($attribute, $attrConfig['postFilter']);
 			}
 
 			$hasRequiredAttribute |= $attribute->required;
@@ -389,6 +408,23 @@ class Configurator extends ConfiguratorBase
 	//==========================================================================
 	// Internal stuff
 	//==========================================================================
+
+	/**
+	* Append a filter to an attribute's filterChain
+	*
+	* @param  Attribute $attribute Target attribute
+	* @param  string    $filter    Filter's name
+	* @return void
+	*/
+	protected function appendFilter(Attribute $attribute, $filter)
+	{
+		if (!in_array($filter, $this->allowedFilters, true))
+		{
+			throw new RuntimeException("Filter '" . $filter . "' is not allowed");
+		}
+
+		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
+	}
 
 	/**
 	* Build a tag's template based on its flash config

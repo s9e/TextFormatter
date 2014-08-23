@@ -750,6 +750,104 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() processes the optional preFilter in attribute declarations
+	*/
+	public function testAddPreFilter()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => false],
+					'xx' => ['type' => 'number', 'preFilter' => 'hexdec']
+				]
+			]
+		);
+
+		$this->assertTrue(isset($tag->attributes['xx']));
+		$this->assertEquals(
+			[
+				$this->configurator->attributeFilters['hexdec'],
+				$this->configurator->attributeFilters['#number']
+			],
+			iterator_to_array($tag->attributes['xx']->filterChain)
+		);
+	}
+
+	/**
+	* @testdox add() throws a RuntimeException if the optional preFilter is not allowed
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Filter 'eval' is not allowed
+	*/
+	public function testAddPreFilterInvalid()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => false],
+					'xx' => ['type' => 'number', 'preFilter' => 'eval']
+				]
+			]
+		);
+	}
+
+	/**
+	* @testdox add() processes the optional postFilter in attribute declarations
+	*/
+	public function testAddPostFilter()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => false],
+					'xx' => ['type' => 'number', 'postFilter' => 'hexdec']
+				]
+			]
+		);
+
+		$this->assertTrue(isset($tag->attributes['xx']));
+		$this->assertEquals(
+			[
+				$this->configurator->attributeFilters['#number'],
+				$this->configurator->attributeFilters['hexdec']
+			],
+			iterator_to_array($tag->attributes['xx']->filterChain)
+		);
+	}
+
+	/**
+	* @testdox add() throws a RuntimeException if the optional postFilter is not allowed
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Filter 'eval' is not allowed
+	*/
+	public function testAddPostFilterInvalid()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!',
+				'attributes' => [
+					'id' => ['required' => false],
+					'xx' => ['type' => 'number', 'postFilter' => 'eval']
+				]
+			]
+		);
+	}
+
+	/**
 	* @testdox appendTemplate() sets a template to be appended to media sites' templates
 	*/
 	public function testAppend()
