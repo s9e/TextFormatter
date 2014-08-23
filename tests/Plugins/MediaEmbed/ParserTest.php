@@ -702,6 +702,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('vube');
 				}
 			],
