@@ -18,6 +18,8 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 	$cnt     = count($tokens);
 	$changed = false;
 
+	$constants = array();
+
 	while (++$i < $cnt)
 	{
 		if ($tokens[$i][0] !== T_CONST)
@@ -47,20 +49,49 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 			continue;
 		}
 
-		// Nuke all of the tokens used for the constant's value
+		// Collect and remove all of the tokens used for the constant's value
 		$i = $start;
+		$php = '';
 		do
 		{
+			$php .= (is_array($tokens[$i])) ? $tokens[$i][1] : $tokens[$i];
 			$tokens[$i] = '';
 		}
 		while (++$i < $end);
 
-		$className = 's9e\\TextFormatter' . strtr(substr($filepath, strlen(realpath(__DIR__ . '/../../src')), -4), '/', '\\');
+		// Save the last token's index and the constant's PHP representation
+		$constants[$constName] = [$end, $php];
+	}
 
-		// Replace the semicolon with the result of the operation
-		$tokens[$end] = var_export(constant($className . '::' . $constName), true) . ';';
-
+	if ($constants)
+	{
+		$values  = [];
 		$changed = true;
+
+		foreach ($constants as $constName => $constant)
+		{
+			list($i, $php) = $constant;
+
+			// Hardcode the constant resolution for the time being, since there are so few constants
+			// that use a scalar expression
+			$php = preg_replace_callback(
+				'(self::(\w+))',
+				function ($m) use ($values)
+				{
+					return $values[$m[1]];
+				},
+				$php
+			);
+
+			if (!preg_match('(^[ \\d<|]+$)', $php))
+			{
+				die('Cannot evaluate ' . $php . ' as constant ' . $constName);
+			}
+
+			$value = eval('return ' . $php . ';');
+			$values[$constName] = $value;
+			$tokens[$i] = var_export($value, true) . ';';
+		}
 	}
 
 	if ($changed)
