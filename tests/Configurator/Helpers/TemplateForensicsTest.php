@@ -553,12 +553,12 @@ class TemplateForensicsTest extends Test
 			[
 				'<span> allows elements',
 				'<span><xsl:apply-templates/></span>',
-				'allowsElements'
+				'allowsChildElements'
 			],
 			[
 				'<script> does not allow elements even if it has an <xsl:apply-templates/> child',
 				'<script><xsl:apply-templates/></script>',
-				'!allowsElements'
+				'!allowsChildElements'
 			],
 			[
 				'<script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child',

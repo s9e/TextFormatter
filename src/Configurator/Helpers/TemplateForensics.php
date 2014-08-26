@@ -39,7 +39,7 @@ class TemplateForensics
 	/**
 	* @var bool Whether elements are allowed as children
 	*/
-	protected $allowsElements = true;
+	protected $allowsChildElements = true;
 
 	/**
 	* @var bool Whether text nodes are allowed as children
@@ -187,7 +187,7 @@ class TemplateForensics
 		}
 
 		// Test whether the descendant contains any elements and we disallow elements
-		if (!$this->allowsElements && $descendant->hasElements)
+		if (!$this->allowsChildElements && $descendant->hasElements)
 		{
 			return false;
 		}
@@ -200,9 +200,9 @@ class TemplateForensics
 	*
 	* @return bool
 	*/
-	public function allowsElements()
+	public function allowsChildElements()
 	{
-		return $this->allowsElements;
+		return $this->allowsChildElements;
 	}
 
 	/**
@@ -426,7 +426,7 @@ class TemplateForensics
 			/**
 			* @var bool Whether this branch allows elements
 			*/
-			$allowsElements = true;
+			$allowsChildElements = true;
 
 			/**
 			* @var bool Whether this branch allows text nodes
@@ -499,7 +499,7 @@ class TemplateForensics
 				}
 
 				// Test whether this branch allows elements
-				$allowsElements = !$this->hasProperty($elName, 'to', $node);
+				$allowsChildElements = !$this->hasProperty($elName, 'to', $node);
 
 				// Test whether this branch allows text nodes
 				$allowsText = !$this->hasProperty($elName, 'nt', $node);
@@ -555,9 +555,9 @@ class TemplateForensics
 			}
 
 			// If any branch disallows elements, the template disallows elements
-			if (!$allowsElements)
+			if (!$allowsChildElements)
 			{
-				$this->allowsElements = false;
+				$this->allowsChildElements = false;
 			}
 
 			// If any branch disallows text, the template disallows text
