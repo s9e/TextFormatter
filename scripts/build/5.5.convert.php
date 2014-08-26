@@ -60,12 +60,12 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 		while (++$i < $end);
 
 		// Save the last token's index and the constant's PHP representation
-		$constants[$constName] = [$end, $php];
+		$constants[$constName] = array($end, $php);
 	}
 
 	if ($constants)
 	{
-		$values  = [];
+		$values  = array();
 		$changed = true;
 
 		foreach ($constants as $constName => $constant)
