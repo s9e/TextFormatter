@@ -11,7 +11,7 @@ do
 	fi
 done
 
-for version in 5.5 5.4 5.3
+for version in 5.6 5.5 5.4 5.3
 do
 	branch="release/php$version"
 	git branch -D $branch 2> /dev/null

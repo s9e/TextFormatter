@@ -17,16 +17,16 @@ class Parser
 	/**#@+
 	* Boolean rules bitfield
 	*/
-	const RULE_AUTO_CLOSE        =   1;
-	const RULE_AUTO_REOPEN       =   2;
-	const RULE_BREAK_PARAGRAPH   =   4;
-	const RULE_CREATE_PARAGRAPHS =   8;
-	const RULE_IGNORE_TAGS       =  16;
-	const RULE_IGNORE_TEXT       =  32;
-	const RULE_IS_TRANSPARENT    =  64;
-	const RULE_NO_BR_CHILD       = 128;
-	const RULE_NO_BR_DESCENDANT  = 256;
-	const RULE_TRIM_WHITESPACE   = 512;
+	const RULE_AUTO_CLOSE        = 1 << 0;
+	const RULE_AUTO_REOPEN       = 1 << 1;
+	const RULE_BREAK_PARAGRAPH   = 1 << 2;
+	const RULE_CREATE_PARAGRAPHS = 1 << 3;
+	const RULE_IGNORE_TAGS       = 1 << 4;
+	const RULE_IGNORE_TEXT       = 1 << 5;
+	const RULE_IS_TRANSPARENT    = 1 << 6;
+	const RULE_NO_BR_CHILD       = 1 << 7;
+	const RULE_NO_BR_DESCENDANT  = 1 << 8;
+	const RULE_TRIM_WHITESPACE   = 1 << 9;
 	/**#@-*/
 
 	/**
