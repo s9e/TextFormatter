@@ -35,9 +35,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r><X/>foo bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -47,9 +47,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r>foo<X/> bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -59,9 +59,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r>foo bar<X/></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -83,9 +83,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r>foo<X> </X>bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -123,9 +123,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('foo:X');
+					$configurator->tags->add('foo:X');
 				},
 				function ($parser)
 				{
@@ -135,10 +135,10 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('foo:X');
-					$constructor->tags->add('bar:X');
+					$configurator->tags->add('foo:X');
+					$configurator->tags->add('bar:X');
 				},
 				function ($parser)
 				{
@@ -148,9 +148,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r><X xx="&quot;xx&quot;" yy="&lt;&gt;"/>foo bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('X');
+					$tag = $configurator->tags->add('X');
 					$tag->attributes->add('xx');
 					$tag->attributes->add('yy');
 				},
@@ -165,9 +165,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r><X><i>foo</i></X> bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('X')->rules->ignoreText();
+					$tag = $configurator->tags->add('X')->rules->ignoreText();
 				},
 				function ($parser)
 				{
@@ -178,9 +178,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar baz',
 				'<r><X><i>foo</i></X><X> </X>bar<X><i> baz</i></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('X')->rules->ignoreText();
+					$tag = $configurator->tags->add('X')->rules->ignoreText();
 				},
 				function ($parser)
 				{
@@ -195,9 +195,9 @@ class OutputHandlingTest extends Test
 			[
 				'foo bar',
 				'<r><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('X');
+					$tag = $configurator->tags->add('X');
 					$tag->attributes->add('xx');
 					$tag->attributes->add('yy');
 				},
@@ -213,9 +213,9 @@ class OutputHandlingTest extends Test
 			[
 				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
 				"<r>xxx\n<DIV><s>[DIV]</s>\n...\n<e>[/DIV]</e></DIV>\nyyy</r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -226,9 +226,9 @@ class OutputHandlingTest extends Test
 			[
 				"xxx\n\n[DIV]\n\n...\n\n[/DIV]\n\nyyy",
 				"<r>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -253,10 +253,10 @@ yyy',
 				<e>[/UL]</e></UL>
 
 yyy</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('UL')->rules->ignoreSurroundingWhitespace();
-					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('UL')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('LI')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -271,33 +271,33 @@ yyy</r>',
 			[
 				'foo bar',
 				'<t><p>foo bar</p></t>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
+					$configurator->rootRules->createParagraphs();
 				}
 			],
 			[
 				"foo\nbar",
 				"<t><p>foo<br/>\nbar</p></t>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
+					$configurator->rootRules->createParagraphs();
 				}
 			],
 			[
 				"foo\n\nbar",
 				"<t><p>foo</p>\n\n<p>bar</p></t>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
+					$configurator->rootRules->createParagraphs();
 				}
 			],
 			[
 				"foo\n\n\n\n\nbar\n\n\n\n\nbaz",
 				"<t><p>foo</p>\n\n\n\n\n<p>bar</p>\n\n\n\n\n<p>baz</p></t>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
+					$configurator->rootRules->createParagraphs();
 				}
 			],
 			[
@@ -315,13 +315,13 @@ yyy</r>',
 </LI><e>[/UL]</e></UL>
 
 </r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('UL')->rules;
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('UL')->rules;
 					$rules->breakParagraph();
 					$rules->ignoreSurroundingWhitespace();
-					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('LI')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -350,13 +350,13 @@ xxx',
 </LI><e>[/UL]</e></UL>
 
 <p>xxx</p></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('UL')->rules;
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('UL')->rules;
 					$rules->breakParagraph();
 					$rules->ignoreSurroundingWhitespace();
-					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('LI')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -371,10 +371,10 @@ xxx',
 			[
 				'[b]...[/b]',
 				'<r><p><B><s>[b]</s>...<e>[/b]</e></B></p></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('B');
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('B');
 				},
 				function ($parser)
 				{
@@ -384,10 +384,10 @@ xxx',
 			[
 				"\n[b]...[/b]\n",
 				"<r>\n<p><B><s>[b]</s>...<e>[/b]</e></B></p>\n</r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('B');
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('B');
 				},
 				function ($parser)
 				{
@@ -397,10 +397,10 @@ xxx',
 			[
 				"x\n[b]...[/b]\ny",
 				"<r><p>x<br/>\n<B><s>[b]</s>...<e>[/b]</e></B><br/>\ny</p></r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('B');
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('B');
 				},
 				function ($parser)
 				{
@@ -410,10 +410,10 @@ xxx',
 			[
 				'[img]',
 				'<r><p><IMG>[img]</IMG></p></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$rules = $constructor->tags->add('IMG');
+					$configurator->rootRules->createParagraphs();
+					$rules = $configurator->tags->add('IMG');
 				},
 				function ($parser)
 				{
@@ -423,11 +423,11 @@ xxx',
 			[
 				"[x]\n\n\nxxx",
 				"<r><p><X>[x]</X>\n<Y>\n</Y><br/>\nxxx</p></r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$constructor->tags->add('X')->rules->ignoreSurroundingWhitespace();
-					$constructor->tags->add('Y')->rules->noBrDescendant();
+					$configurator->rootRules->createParagraphs();
+					$configurator->tags->add('X')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('Y')->rules->noBrDescendant();
 				},
 				function ($parser)
 				{
@@ -438,10 +438,10 @@ xxx',
 			[
 				"x\n\n\n\nx",
 				"<r><p><X>x</X></p>\n\n\n\n<p><X>x</X></p></r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$constructor->tags->add('X');
+					$configurator->rootRules->createParagraphs();
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -452,9 +452,9 @@ xxx',
 			[
 				'      ',
 				'<r>  <i>  </i>  </r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
+					$configurator->rootRules->createParagraphs();
 				},
 				function ($parser)
 				{
@@ -464,10 +464,10 @@ xxx',
 			[
 				"foo\n  \nQUOTE\n  \nbar",
 				"<r><p>foo</p>\n  \n<QUOTE>QUOTE</QUOTE>\n  \n<p>bar</p></r>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->createParagraphs();
-					$constructor->tags->add('QUOTE')->rules->breakParagraph();
+					$configurator->rootRules->createParagraphs();
+					$configurator->tags->add('QUOTE')->rules->breakParagraph();
 				},
 				function ($parser)
 				{
@@ -478,9 +478,9 @@ xxx',
 				// Test the attribute order
 				'X',
 				'<r><X bar="2" baz="3" foo="1">X</X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('X');
+					$tag = $configurator->tags->add('X');
 					$tag->attributes->add('foo');
 					$tag->attributes->add('bar');
 					$tag->attributes->add('baz');
