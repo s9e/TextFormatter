@@ -78,7 +78,7 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 				'(self::(\w+))',
 				function ($m) use ($values)
 				{
-					return $values[$m[1]];
+					return var_export($values[$m[1]], true);
 				},
 				$php
 			);
