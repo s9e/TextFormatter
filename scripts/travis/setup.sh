@@ -2,8 +2,8 @@
 
 cd $(dirname "$0")
 
-# Install Coveralls and XSLCache on 5.5 and disable XDebug on everything else
-if [ "$TRAVIS_PHP_VERSION" = "5.5" ]
+# Install Coveralls and XSLCache if we're saving code coverage and disable XDebug otherwise
+if [ -n "$COVERAGE" ]
 then
 	# We run this script detached in the background. It'll finish while tests are running
 	echo "Installing Composer dependencies"
