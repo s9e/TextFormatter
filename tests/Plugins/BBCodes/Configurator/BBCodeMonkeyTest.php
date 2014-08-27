@@ -1408,6 +1408,17 @@ class BBCodeMonkeyTest extends Test
 					])
 				]
 			],
+			[
+				'[B]
+					{TEXT}
+				[/B]',
+				'<b>{TEXT}</b>',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['template' => '<b><xsl:apply-templates/></b>'])
+				]
+			],
 		];
 	}
 

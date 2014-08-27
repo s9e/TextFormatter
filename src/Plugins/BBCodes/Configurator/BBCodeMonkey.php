@@ -204,7 +204,7 @@ class BBCodeMonkey
 			$usage
 		);
 
-		$regexp = '#^'
+		$regexp = '(^'
 		        // [BBCODE
 		        . '\\[(?<bbcodeName>\\S+?)'
 		        // ={TOKEN}
@@ -213,7 +213,7 @@ class BBCodeMonkey
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
 		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
-		        . '$#i';
+		        . '$)i';
 
 		if (!preg_match($regexp, trim($usage), $m))
 		{
