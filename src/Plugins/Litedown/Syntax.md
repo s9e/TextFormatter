@@ -42,6 +42,91 @@ If a list has any of its text content or list items separated with a blank line,
 
 A series of lines indented by at least 4 spaces or a tab, preceded with an empty line.
 
+### Headers
+
+Setext-style
+
+```md
+This is an H1
+=============
+
+This is an H2
+-------------
+```
+```html
+<h1>This is an H1</h1>
+
+<h2>This is an H2</h2>
+```
+
+Atx-style
+
+```md
+# This is an H1
+
+## This is an H2
+
+###### This is an H6
+```
+```html
+<h1>This is an H1</h1>
+
+<h2>This is an H2</h2>
+
+<h6>This is an H6</h6>
+```
+
+### Horizontal rules
+
+```
+* * *
+
+***
+
+*****
+
+- - -
+
+---------------------------------------
+```
+
+### Paragraphs and line breaks
+
+Paragraphs are automatically created. Newlines are ignored by default, line breaks can be forced by ending a line with two spaces.
+
+```md
+normal
+forced  
+another line
+```
+```html
+<p>normal
+forced  <br>
+another line</p>
+```
+
+Alternatively, automatic line breaks can be enabled globally with a `enabledAutoLineBreaks` rule as in the following example.
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->plugins->load('Litedown');
+
+// Enable automatic line breaks globally
+$configurator->rootRules->enableAutoLineBreaks();
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = "First line\n"
+      . "Second line";
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<p>First line<br>
+Second line</p>
+```
 
 ## Formatting elements
 

@@ -86,7 +86,6 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function setUp()
 	{
-		$this->configurator->rootRules->disableAutoLineBreaks();
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
 
 		foreach ($this->tags as $tagName => $tagConfig)

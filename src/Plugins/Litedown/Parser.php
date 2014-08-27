@@ -32,7 +32,7 @@ class Parser extends ParserBase
 		// Match block-level markup as well as forced line breaks
 		$this->matchBlockLevelMarkup();
 
-		// Inline code must be done first to avoid false positives
+		// Inline code must be done first to avoid false positives in other markup
 		$this->matchInlineCode();
 
 		// Images must be matched before links
@@ -43,6 +43,7 @@ class Parser extends ParserBase
 		$this->matchStrikethrough();
 		$this->matchSuperscript();
 		$this->matchEmphasis();
+		$this->matchForcedLineBreaks();
 
 		// Unset the text to free its memory
 		unset($this->text);
@@ -301,6 +302,9 @@ class Parser extends ParserBase
 				// Close the code block if applicable
 				if (isset($codeTag))
 				{
+					// Overwrite the whole block
+					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
+
 					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
 					$endTag->pairWith($codeTag);
 					$endTag->setSortPriority(-1);
@@ -506,6 +510,9 @@ class Parser extends ParserBase
 				// Horizontal rule
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = true;
+
+				// Overwrite the LF to prevent forced line breaks from matching
+				$this->overwrite($lfPos, 1);
 			}
 			elseif (isset($setextLines[$lfPos]) && $setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
 			{
@@ -517,6 +524,9 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagPos'],
 					$setextLines[$lfPos]['endTagLen']
 				);
+
+				// Overwrite the LF to prevent forced line breaks from matching
+				$this->overwrite($lfPos, 1);
 			}
 
 			if ($breakParagraph)
@@ -697,6 +707,21 @@ class Parser extends ParserBase
 					$emPos = $matchPos;
 				}
 			}
+		}
+	}
+
+	/**
+	* Match forced line breaks
+	*
+	* @return void
+	*/
+	protected function matchForcedLineBreaks()
+	{
+		$pos = strpos($this->text, "  \n");
+		while ($pos !== false)
+		{
+			$this->parser->addBrTag($pos + 2);
+			$pos = strpos($this->text, "  \n", $pos + 3);
 		}
 	}
 

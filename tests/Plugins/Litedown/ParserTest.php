@@ -21,6 +21,16 @@ class ParserTest extends Test
 	public function getParsingTests()
 	{
 		return self::fixTests([
+			[
+				// Ensure that automatic line breaks can be enabled
+				"First\nSecond",
+				"<t><p>First<br/>\nSecond</p></t>",
+				[],
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			],
 			// Paragraphs and quotes
 			[
 				'foo',
@@ -1060,7 +1070,90 @@ class ParserTest extends Test
 			[
 				'*\\\\*foo*',
 				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
-			]
+			],
+			[
+				'*\\\\*foo*',
+				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
+			],
+			// Forced line breaks
+			[
+				[
+					'first line  ',
+					'second line  ',
+					'third line'
+				],
+				[
+					'<t><p>first line  <br/>',
+					'second line  <br/>',
+					'third line</p></t>'
+				],
+			],
+			[
+				[
+					'first line  ',
+					'second line  '
+				],
+				[
+					'<t><p>first line  <br/>',
+					'second line</p>  </t>'
+				],
+			],
+			[
+				[
+					'> first line  ',
+					'> second line  ',
+					'',
+					'outside quote'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>first line  <br/>',
+					'<i>&gt; </i>second line</p>  </QUOTE>',
+					'',
+					'<p>outside quote</p></r>'
+				],
+			],
+			[
+				[
+					'    first line  ',
+					'    second line  ',
+					'',
+					'outside code'
+				],
+				[
+					'<r><i>    </i><CODE>first line  ',
+					'<i>    </i>second line  </CODE>',
+					'',
+					'<p>outside code</p></r>'
+				],
+			],
+			[
+				[
+					' * first item  ',
+					'   still the first item  ',
+					' * second item  ',
+					'',
+					'outside list'
+				],
+				[
+					'<r> <LIST><LI><s>* </s>first item  <br/>',
+					'   still the first item  </LI>',
+					' <LI><s>* </s>second item  </LI></LIST>',
+					'',
+					'<p>outside list</p></r>'
+				],
+			],
+			[
+				[
+					'foo  ',
+					'---  ',
+					'bar  '
+				],
+				[
+					'<r><H2>foo<e>  ',
+					'---  </e></H2>',
+					'<p>bar</p>  </r>'
+				]
+			],
 		]);
 	}
 
@@ -1188,9 +1281,18 @@ class ParserTest extends Test
 				$test[1] = implode("\n", $test[1]);
 			}
 
-			$test[] = [];
-			$test[] = function ($configurator)
+			if (!isset($test[2]))
 			{
+				$test[2] = [];
+			}
+
+			$callback = (isset($test[3])) ? $test[3] : null;
+			$test[3] = function ($configurator) use ($callback)
+			{
+				if (isset($callback))
+				{
+					$callback($configurator);
+				}
 				$configurator->addHTML5Rules();
 			};
 		}

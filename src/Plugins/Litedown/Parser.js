@@ -4,7 +4,7 @@ init();
 // Match block-level markup as well as forced line breaks
 matchBlockLevelMarkup();
 
-// Inline code must be done first to avoid false positives
+// Inline code must be done first to avoid false positives in other markup
 matchInlineCode();
 
 // Images must be matched before links
@@ -15,6 +15,7 @@ matchInlineLinks();
 matchStrikethrough();
 matchSuperscript();
 matchEmphasis();
+matchForcedLineBreaks();
 
 /**
 * Close a list at given offset
@@ -186,9 +187,23 @@ function matchBlockLevelMarkup()
 		minIndent,
 		quoteDepth;
 
-	var m, regexp = /^(?:(?=[-*+\d \t>`#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
-
+	// Capture all the lines at once so that we can overwrite newlines safely, without preventing
+	// further matches
+	var matches = [],
+		m,
+		regexp = /^(?:(?=[-*+\d \t>`#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
 	while (m = regexp.exec(text))
+	{
+		matches.push(m);
+
+		// Move regexp.lastIndex if the current match is empty
+		if (m['index'] === regexp['lastIndex'])
+		{
+			++regexp['lastIndex'];
+		}
+	}
+
+	matches.forEach(function(m)
 	{
 		var matchPos  = m['index'],
 			matchLen  = m[0].length;
@@ -286,6 +301,9 @@ function matchBlockLevelMarkup()
 			// Close the code block if applicable
 			if (codeTag)
 			{
+				// Overwrite the whole block
+				overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
+
 				endTag = addEndTag('CODE', textBoundary, 0);
 				endTag.pairWith(codeTag);
 				endTag.setSortPriority(-1);
@@ -489,6 +507,9 @@ function matchBlockLevelMarkup()
 			// Horizontal rule
 			addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
 			breakParagraph = true;
+
+			// Overwrite the LF to prevent forced line breaks from matching
+			overwrite(lfPos, 1);
 		}
 		else if (setextLines[lfPos] && setextLines[lfPos].quoteDepth === quoteDepth && !lineIsEmpty && !listsCnt && !codeTag)
 		{
@@ -500,6 +521,9 @@ function matchBlockLevelMarkup()
 				setextLines[lfPos].endTagPos,
 				setextLines[lfPos].endTagLen
 			);
+
+			// Overwrite the LF to prevent forced line breaks from matching
+			overwrite(lfPos, 1);
 		}
 
 		if (breakParagraph)
@@ -517,7 +541,7 @@ function matchBlockLevelMarkup()
 		{
 			addIgnoreTag(matchPos, ignoreLen).setSortPriority(1000);
 		}
-	}
+	});
 
 	boundaries.forEach(function(pos)
 	{
@@ -684,6 +708,19 @@ function matchEmphasisByCharacter(character, regexp)
 				emPos = matchPos;
 			}
 		}
+	}
+}
+
+/**
+* Match forced line break
+*/
+function matchForcedLineBreaks()
+{
+	var pos = text.indexOf("  \n");
+	while (pos !== -1)
+	{
+		addBrTag(pos + 2);
+		pos = text.indexOf("  \n", pos + 3);
 	}
 }
 
