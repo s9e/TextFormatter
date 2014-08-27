@@ -23,18 +23,17 @@ class Parser extends ParserBase
 		{
 			$url = $m[0][0];
 
-			// Remove trailing punctuation. We preserve right parentheses if there's a balanced
-			// number of parentheses in the URL, e.g.
+			// Remove trailing punctuation and right angle brackets. We preserve right parentheses
+			// if there's a balanced number of parentheses in the URL, e.g.
 			//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 			while (1)
 			{
 				// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
 				// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
 				// and parentheses, which are balanced separately
-				$url = preg_replace('#(?![-=/)])\\pP+$#Du', '', $url);
+				$url = preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
 
-				if (substr($url, -1) === ')'
-				 && substr_count($url, '(') < substr_count($url, ')'))
+				if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
 				{
 					$url = substr($url, 0, -1);
 					continue;

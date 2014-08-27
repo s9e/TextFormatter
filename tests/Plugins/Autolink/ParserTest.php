@@ -113,6 +113,10 @@ class ParserTest extends Test
 				'Link in brackets: [http://example.com/foo?a[]=1] --',
 				'<r>Link in brackets: [<URL url="http://example.com/foo?a%5B%5D=1">http://example.com/foo?a[]=1</URL>] --</r>'
 			],
+			[
+				'Link in angle brackets: <http://example.com/foo>',
+				'<r>Link in angle brackets: &lt;<URL url="http://example.com/foo">http://example.com/foo</URL>&gt;</r>'
+			],
 		];
 	}
 

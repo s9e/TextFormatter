@@ -5,8 +5,8 @@ matches.forEach(function(m)
 {
 	var url = m[0][0];
 
-	// Remove trailing punctuation. We preserve right parentheses if there's a balanced
-	// number of parentheses in the URL, e.g.
+	// Remove trailing punctuation and right angle brackets. We preserve right parentheses
+	// if there's a balanced number of parentheses in the URL, e.g.
 	//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 	while (1)
 	{
@@ -14,8 +14,7 @@ matches.forEach(function(m)
 		// properties, so we try to cover the most common usage
 		url = url.replace(/[\s!"',.<>?]+$/, '');
 
-		if (url.substr(-1) === ')'
-		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
+		if (url.substr(-1) === ')' && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);
 			continue;
