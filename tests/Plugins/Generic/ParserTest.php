@@ -25,9 +25,9 @@ class ParserTest extends Test
 				'Follow @twitter for more info',
 				'<r>Follow <GAC9F10E2 username="twitter">@twitter</GAC9F10E2> for more info</r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
@@ -37,9 +37,9 @@ class ParserTest extends Test
 				'Some *emphasis*.',
 				'<r>Some <G86655032><s>*</s>emphasis<e>*</e></G86655032>.</r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/\\*(.*?)\\*/',
 						'<em>$1</em>'
 					);
@@ -49,9 +49,9 @@ class ParserTest extends Test
 				'Markdown [link](http://example.com) style.',
 				'<r>Markdown <G792685FB _2="http://example.com"><s>[</s>link<e>](http://example.com)</e></G792685FB> style.</r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
 						'<a href="$2">$1</a>'
 					);
@@ -61,13 +61,13 @@ class ParserTest extends Test
 				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
 				'<r>Some <G86655032><s>*</s><G74E475F4><s>_</s>bold<e>_</e></G74E475F4> emphasis<e>*</e></G86655032> or <G74E475F4><s>_</s><G86655032><s>*</s>emphasised<e>*</e></G86655032> boldness<e>_</e></G74E475F4>.</r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/\\*(.*?)\\*/',
 						'<em>$1</em>'
 					);
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/_(.*?)_/',
 						'<b>$1</b>'
 					);
@@ -83,9 +83,9 @@ class ParserTest extends Test
 				'Follow @twitter for more info',
 				'Follow <a href="https://twitter.com/twitter">@twitter</a> for more info',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
@@ -95,9 +95,9 @@ class ParserTest extends Test
 				'Some *emphasis*.',
 				'Some <em>emphasis</em>.',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/\\*(.*?)\\*/',
 						'<em>$1</em>'
 					);
@@ -107,9 +107,9 @@ class ParserTest extends Test
 				'Markdown [link](http://example.com) style.',
 				'Markdown <a href="http://example.com">link</a> style.',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
 						'<a href="$2">$1</a>'
 					);
@@ -119,13 +119,13 @@ class ParserTest extends Test
 				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
 				'Some <em><b>bold</b> emphasis</em> or <b><em>emphasised</em> boldness</b>.',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/\\*(.*?)\\*/',
 						'<em>$1</em>'
 					);
-					$constructor->Generic->add(
+					$configurator->Generic->add(
 						'/_(.*?)_/',
 						'<b>$1</b>'
 					);

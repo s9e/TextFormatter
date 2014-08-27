@@ -27,9 +27,9 @@ class RulesHandlingTest extends Test
 			[
 				'xx',
 				'<r><X>x</X><X>x</X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->closeParent('X');
+					$configurator->tags->add('X')->rules->closeParent('X');
 				},
 				function ($parser)
 				{
@@ -40,10 +40,10 @@ class RulesHandlingTest extends Test
 			[
 				'xy',
 				'<r><X>x<Y>y</Y></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->closeParent('Y');
-					$constructor->tags->add('Y')->rules->closeParent('Y');
+					$configurator->tags->add('X')->rules->closeParent('Y');
+					$configurator->tags->add('Y')->rules->closeParent('Y');
 				},
 				function ($parser)
 				{
@@ -54,10 +54,10 @@ class RulesHandlingTest extends Test
 			[
 				'xyx',
 				'<r><X>x</X><Y>y</Y>x</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->closeParent('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->closeParent('X');
 				},
 				function ($parser)
 				{
@@ -69,10 +69,10 @@ class RulesHandlingTest extends Test
 			[
 				'xyx',
 				'<r><X>x</X><Y>y</Y>x</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->closeAncestor('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->closeAncestor('X');
 				},
 				function ($parser)
 				{
@@ -84,10 +84,10 @@ class RulesHandlingTest extends Test
 			[
 				'xxy',
 				'<r><X>x<X>x</X></X><Y>y</Y></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->closeAncestor('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->closeAncestor('X');
 				},
 				function ($parser)
 				{
@@ -99,10 +99,10 @@ class RulesHandlingTest extends Test
 			[
 				'xy',
 				'<r><X>x<Y>y</Y></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->closeAncestor('Y');
-					$constructor->tags->add('Y')->rules->closeAncestor('Y');
+					$configurator->tags->add('X')->rules->closeAncestor('Y');
+					$configurator->tags->add('Y')->rules->closeAncestor('Y');
 				},
 				function ($parser)
 				{
@@ -113,9 +113,9 @@ class RulesHandlingTest extends Test
 			[
 				'xx',
 				'<t>xx</t>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->requireAncestor('X');
+					$configurator->tags->add('X')->rules->requireAncestor('X');
 				},
 				function ($parser)
 				{
@@ -126,10 +126,10 @@ class RulesHandlingTest extends Test
 			[
 				'xy',
 				'<r><X>x<Y>y</Y></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->requireAncestor('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->requireAncestor('X');
 				},
 				function ($parser)
 				{
@@ -140,10 +140,10 @@ class RulesHandlingTest extends Test
 			[
 				'[b]..[div]..[/div]',
 				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('DIV')->rules->fosterParent('B');
+					$configurator->tags->add('B');
+					$configurator->tags->add('DIV')->rules->fosterParent('B');
 				},
 				function ($parser)
 				{
@@ -155,10 +155,10 @@ class RulesHandlingTest extends Test
 			[
 				'[b]..[div]..[/div]..[/b]',
 				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV><B>..<e>[/b]</e></B></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B')->rules->autoReopen();
-					$constructor->tags->add('DIV')->rules->fosterParent('B');
+					$configurator->tags->add('B')->rules->autoReopen();
+					$configurator->tags->add('DIV')->rules->fosterParent('B');
 				},
 				function ($parser)
 				{
@@ -171,10 +171,10 @@ class RulesHandlingTest extends Test
 			[
 				'[b]..[div].[/b].[/div]..[/b]',
 				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>.<e>[/b]</e></B>.<e>[/div]</e></DIV>..[/b]</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B')->rules->autoReopen();
-					$constructor->tags->add('DIV')->rules->fosterParent('B');
+					$configurator->tags->add('B')->rules->autoReopen();
+					$configurator->tags->add('DIV')->rules->fosterParent('B');
 				},
 				function ($parser)
 				{
@@ -188,9 +188,9 @@ class RulesHandlingTest extends Test
 			[
 				'[div][div]..[/div][/div]',
 				'<r><DIV><s>[div]</s></DIV><DIV><s>[div]</s>..<e>[/div]</e></DIV>[/div]</r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('DIV')->rules->fosterParent('DIV');
+					$configurator->tags->add('DIV')->rules->fosterParent('DIV');
 				},
 				function ($parser)
 				{
@@ -203,10 +203,10 @@ class RulesHandlingTest extends Test
 			[
 				'[X][Y]..',
 				'<r><X><s>[X]</s></X><Y><s>[Y]</s>..</Y></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->fosterParent('Y');
-					$constructor->tags->add('Y')->rules->fosterParent('X');
+					$configurator->tags->add('X')->rules->fosterParent('Y');
+					$configurator->tags->add('Y')->rules->fosterParent('X');
 				},
 				function ($parser)
 				{
@@ -218,10 +218,10 @@ class RulesHandlingTest extends Test
 			[
 				'[X][Y]..',
 				'<r><X><s>[X]</s></X><Y><s>[Y]</s></Y><X>..</X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->fosterParent('Y');
-					$constructor->tags->add('Y')->rules->fosterParent('X');
+					$configurator->tags->add('X')->rules->fosterParent('Y');
+					$configurator->tags->add('Y')->rules->fosterParent('X');
 				},
 				function ($parser)
 				{
@@ -235,10 +235,10 @@ class RulesHandlingTest extends Test
 			[
 				'[x].[z/].[/x]',
 				'<r><X><s>[x]</s>.</X><Z>[z/]</Z><X>.<e>[/x]</e></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Z')->rules->fosterParent('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Z')->rules->fosterParent('X');
 				},
 				function ($parser)
 				{
@@ -250,11 +250,11 @@ class RulesHandlingTest extends Test
 			[
 				'[x][y].[z/].[/y][/x]',
 				'<r><X><s>[x]</s><Y><s>[y]</s>.<Z>[z/]</Z>.<e>[/y]</e></Y><e>[/x]</e></X></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
-					$constructor->tags->add('Z')->rules->fosterParent('X');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z')->rules->fosterParent('X');
 				},
 				function ($parser)
 				{

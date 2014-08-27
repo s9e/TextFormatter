@@ -581,9 +581,9 @@ class TagProcessingTest extends Test
 			[
 				'xy',
 				'<t>xy</t>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->rootRules->noBrDescendant();
+					$configurator->rootRules->noBrDescendant();
 				},
 				function ($parser)
 				{
@@ -1124,10 +1124,10 @@ class TagProcessingTest extends Test
 			[
 				'[x][y]..[/y][/x]',
 				'<r><X><s>[x]</s></X><Y><s>[y]</s><X>..</X><e>[/y]</e></Y><i>[/x]</i></r>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->autoReopen();
-					$constructor->tags->add('Y')->rules
+					$configurator->tags->add('X')->rules->autoReopen();
+					$configurator->tags->add('Y')->rules
 						->closeParent('X')
 						->fosterParent('X');
 				},

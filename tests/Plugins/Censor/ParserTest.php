@@ -25,172 +25,172 @@ class ParserTest extends Test
 				'apple',
 				'<r><CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple');
+					$configurator->Censor->add('apple');
 				}
 			],
 			[
 				'apple',
 				'<r><FOO>apple</FOO></r>',
 				['tagName' => 'FOO'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple');
+					$configurator->Censor->add('apple');
 				}
 			],
 			[
 				'apple',
 				'<r><CENSOR replacement="orange">apple</CENSOR></r>',
 				['attrName' => 'replacement'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple', 'orange');
+					$configurator->Censor->add('apple', 'orange');
 				}
 			],
 			[
 				'You dirty 苹果',
 				'<r>You dirty <CENSOR with="orange">苹果</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('苹果', 'orange');
+					$configurator->Censor->add('苹果', 'orange');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('*pple');
+					$configurator->Censor->add('*pple');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('ap*e');
+					$configurator->Censor->add('ap*e');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('app*');
+					$configurator->Censor->add('app*');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('*apple*');
+					$configurator->Censor->add('*apple*');
 				}
 			],
 			[
 				'You dirty Pokéman',
 				'<r>You dirty <CENSOR>Pokéman</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('pok*man');
+					$configurator->Censor->add('pok*man');
 				}
 			],
 			[
 				'You dirty Pok3man',
 				'<r>You dirty <CENSOR>Pok3man</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('pok*man');
+					$configurator->Censor->add('pok*man');
 				}
 			],
 			[
 				'You dirty Pok3man',
 				'<r>You dirty <CENSOR>Pok3man</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('pok?man');
+					$configurator->Censor->add('pok?man');
 				}
 			],
 			[
 				'You dirty Pok#man',
 				'<r>You dirty <CENSOR>Pok#man</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('pok?man');
+					$configurator->Censor->add('pok?man');
 				}
 			],
 			[
 				'You dirty Pokéman',
 				'<r>You dirty <CENSOR with="digiman">Pokéman</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('pok?man', 'digiman');
+					$configurator->Censor->add('pok?man', 'digiman');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('?pple');
+					$configurator->Censor->add('?pple');
 				}
 			],
 			[
 				'You dirty pineapple',
 				'<t>You dirty pineapple</t>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('?pple');
+					$configurator->Censor->add('?pple');
 				}
 			],
 			[
 				'You dirty $0',
 				'<r>You dirty <CENSOR>$0</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('$0');
+					$configurator->Censor->add('$0');
 				}
 			],
 			[
 				'You dirty A P P L E',
 				'<r>You dirty <CENSOR>A P P L E</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('a p p l e');
+					$configurator->Censor->add('a p p l e');
 				}
 			],
 			[
 				'You dirty apple',
 				'<r>You dirty <CENSOR>apple</CENSOR></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('a p p l e');
+					$configurator->Censor->add('a p p l e');
 				}
 			],
 			[
 				"Don't be such a Scunthorpe problem, thorpy",
 				"<r>Don't be such a Scunthorpe problem, <CENSOR>thorpy</CENSOR></r>",
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('*thorp*');
-					$constructor->Censor->allow('scunthorpe');
+					$configurator->Censor->add('*thorp*');
+					$configurator->Censor->allow('scunthorpe');
 				}
 			],
 		];
@@ -203,36 +203,36 @@ class ParserTest extends Test
 				'You dirty apple',
 				'You dirty ****',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple');
+					$configurator->Censor->add('apple');
 				}
 			],
 			[
 				'You dirty apple',
 				'You dirty orange',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple', 'orange');
+					$configurator->Censor->add('apple', 'orange');
 				}
 			],
 			[
 				'You dirty apple',
 				'You dirty ****',
 				['tagName' => 'FOO'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple');
+					$configurator->Censor->add('apple');
 				}
 			],
 			[
 				'You dirty apple',
 				'You dirty orange',
 				['attrName' => 'replacement'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Censor->add('apple', 'orange');
+					$configurator->Censor->add('apple', 'orange');
 				}
 			],
 		];

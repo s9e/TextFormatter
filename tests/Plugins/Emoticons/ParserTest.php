@@ -25,48 +25,48 @@ class ParserTest extends Test
 				':)',
 				'<r><E>:)</E></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
+					$configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
 			],
 			[
 				':)',
 				'<r><EMOTE>:)</EMOTE></r>',
 				['tagName' => 'EMOTE'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
+					$configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
 			],
 			[
 				':)',
 				'<r><E>:)</E></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->notAfter = '\\w';
-					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+					$configurator->Emoticons->notAfter = '\\w';
+					$configurator->Emoticons->add(':)', '<img src="s.png"/>');
 				}
 			],
 			[
 				' :)',
 				'<r> <E>:)</E></r>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->notAfter = '\\w';
-					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+					$configurator->Emoticons->notAfter = '\\w';
+					$configurator->Emoticons->add(':)', '<img src="s.png"/>');
 				}
 			],
 			[
 				'x:)',
 				'<t>x:)</t>',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->notAfter = '\\w';
-					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+					$configurator->Emoticons->notAfter = '\\w';
+					$configurator->Emoticons->add(':)', '<img src="s.png"/>');
 				}
 			],
 		];
@@ -79,45 +79,45 @@ class ParserTest extends Test
 				':)',
 				'<img src="s.png" alt=":)">',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
+					$configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
 			],
 			[
 				':)',
 				'<img src="s.png" alt=":)">',
 				['tagName' => 'EMOTE'],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
+					$configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
 			],
 			[
 				":')",
 				'<img src="s.png">',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(":')", '<img src="s.png"/>');
+					$configurator->Emoticons->add(":')", '<img src="s.png"/>');
 				}
 			],
 			[
 				':")',
 				'<img src="s.png">',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add(':")', '<img src="s.png"/>');
+					$configurator->Emoticons->add(':")', '<img src="s.png"/>');
 				}
 			],
 			[
 				'\':")',
 				'<img src="s.png">',
 				[],
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->Emoticons->add('\':")', '<img src="s.png"/>');
+					$configurator->Emoticons->add('\':")', '<img src="s.png"/>');
 				}
 			],
 		];
