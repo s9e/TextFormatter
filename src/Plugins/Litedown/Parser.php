@@ -13,17 +13,154 @@ use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
 	/**
+	* @var bool Whether current text contains escape characters
+	*/
+	protected $hasEscapedChars;
+
+	/**
+	* @var string Text being parsed
+	*/
+	protected $text;
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
 	{
+		$this->init($text);
+
+		// Match block-level markup as well as forced line breaks
+		$this->matchBlockLevelMarkup();
+
+		// Inline code must be done first to avoid false positives
+		$this->matchInlineCode();
+
+		// Images must be matched before links
+		$this->matchImages();
+
+		// Do the rest of inline markup
+		$this->matchInlineLinks();
+		$this->matchStrikethrough();
+		$this->matchSuperscript();
+		$this->matchEmphasis();
+
+		// Unset the text to free its memory
+		unset($this->text);
+	}
+
+	/**
+	* Close a list at given offset
+	*
+	* @param  array   $list
+	* @param  integer $textBoundary
+	* @return void
+	*/
+	protected function closeList(array $list, $textBoundary)
+	{
+		$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
+		$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
+
+		if ($list['tight'])
+		{
+			foreach ($list['itemTags'] as $itemTag)
+			{
+				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
+			}
+		}
+	}
+
+	/**
+	* Decode a chunk of encoded text to be used as an attribute value
+	*
+	* Decodes escaped literals and removes slashes and 0x1A characters
+	*
+	* @param  string $str Encoded text
+	* @return string      Decoded text
+	*/
+	protected function decode($str)
+	{
+		$str = stripslashes(str_replace("\x1A", '', $str));
+
+		if ($this->hasEscapedChars)
+		{
+			$str = strtr(
+				$str,
+				[
+					"\x1B0" => '!',
+					"\x1B1" => '"',
+					"\x1B2" => ')',
+					"\x1B3" => '*',
+					"\x1B4" => '[',
+					"\x1B5" => '\\',
+					"\x1B6" => ']',
+					"\x1B7" => '^',
+					"\x1B8" => '_',
+					"\x1B9" => '`',
+					"\x1BA" => '~'
+				]
+			);
+		}
+
+		return $str;
+	}
+
+	/**
+	* Capture lines that contain a Setext-tyle header
+	*
+	* @return array
+	*/
+	protected function getSetextLines()
+	{
+		$setextLines = [];
+
+		if (strpos($this->text, '-') === false && strpos($this->text, '=') === false)
+		{
+			return $setextLines;
+		}
+
+		// Capture the any series of - or = alone on a line, optionally preceded with the
+		// angle brackets notation used in blockquotes
+		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
+		if (preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE))
+		{
+			foreach ($matches[0] as list($match, $matchPos))
+			{
+				// Compute the position of the end tag. We start on the LF character before the
+				// match and keep rewinding until we find a non-space character
+				$endTagPos = $matchPos - 1;
+				while ($endTagPos > 0 && $this->text[$endTagPos - 1] === ' ')
+				{
+					--$endTagPos;
+				}
+
+				// Store at the offset of the LF character
+				$setextLines[$matchPos - 1] = [
+					'endTagLen'  => $matchPos + strlen($match) - $endTagPos,
+					'endTagPos'  => $endTagPos,
+					'quoteDepth' => substr_count($match, '>'),
+					'tagName'    => ($match[0] === '=') ? 'H1' : 'H2'
+				];
+			}
+		}
+
+		return $setextLines;
+	}
+
+	/**
+	* Initialize this parser with given text
+	*
+	* @param  string $text Text to be parsed
+	* @return void
+	*/
+	protected function init($text)
+	{
 		if (strpos($text, '\\') === false || !preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
 		{
-			$hasEscapedChars = false;
+			$this->hasEscapedChars = false;
 		}
 		else
 		{
-			$hasEscapedChars = true;
+			$this->hasEscapedChars = true;
 
 			// Encode escaped literals that have a special meaning otherwise, so that we don't have
 			// to take them into account in regexps
@@ -49,6 +186,19 @@ class Parser extends ParserBase
 		// order to trigger the closure of all open blocks such as quotes and lists
 		$text .= "\n\n\x17";
 
+		$this->text = $text;
+	}
+
+	/**
+	* Match block-level markup, as well as forced line breaks and headers
+	*
+	* @return void
+	*/
+	protected function matchBlockLevelMarkup()
+	{
+		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
 		$boundaries   = [];
 		$codeIndent   = 4;
 		$codeTag      = null;
@@ -58,40 +208,8 @@ class Parser extends ParserBase
 		$newContext   = false;
 		$quotes       = [];
 		$quotesCnt    = 0;
-		$setextLines  = [];
+		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
-
-		// Capture the underlines used for Setext-style headers
-		if (strpos($text, '-') > 0 || strpos($text, '=') > 0)
-		{
-			// Capture the any series of - or = alone on a line, optionally preceded with the
-			// angle brackets notation used in blockquotes
-			$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
-			if (preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE))
-			{
-				foreach ($matches[0] as list($match, $matchPos))
-				{
-					// Compute the position of the end tag. We start on the LF character before the
-					// match and keep rewinding until we find a non-space character
-					$endTagPos = $matchPos - 1;
-					while ($endTagPos > 0 && $text[$endTagPos - 1] === ' ')
-					{
-						--$endTagPos;
-					}
-
-					// Store at the offset of the LF character
-					$setextLines[$matchPos - 1] = [
-						'endTagLen'  => $matchPos + strlen($match) - $endTagPos,
-						'endTagPos'  => $endTagPos,
-						'quoteDepth' => substr_count($match, '>'),
-						'tagName'    => ($match[0] === '=') ? 'H1' : 'H2'
-					];
-				}
-			}
-		}
-
-		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
-		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
 		{
@@ -103,7 +221,7 @@ class Parser extends ParserBase
 			$continuation = !$lineIsEmpty;
 
 			// Capture the position of the end of the line and determine whether the line is empty
-			$lfPos       = strpos($text, "\n", $matchPos);
+			$lfPos       = strpos($this->text, "\n", $matchPos);
 			$lineIsEmpty = ($lfPos === $matchPos + $matchLen && empty($m[3][0]) && empty($m[4][0]) && empty($m[5][0]));
 
 			// If the line is empty and it's the first empty line then we break current paragraph.
@@ -286,7 +404,7 @@ class Parser extends ParserBase
 					$itemTag = $this->parser->addStartTag('LI', $tagPos, $tagLen);
 
 					// Overwrite the markup
-					self::overwrite($text, $tagPos, $tagLen);
+					$this->overwrite($tagPos, $tagLen);
 
 					// If the list index is within current lists count it means this is not a new
 					// list and we have to close the last item. Otherwise, it's a new list that we
@@ -365,7 +483,7 @@ class Parser extends ParserBase
 					$endTagLen   = 0;
 
 					// Consume the leftmost whitespace and # characters as part of the end tag
-					while (strpos(" #\t", $text[$endTagPos - 1]) !== false)
+					while (strpos(" #\t", $this->text[$endTagPos - 1]) !== false)
 					{
 						--$endTagPos;
 						++$endTagLen;
@@ -420,364 +538,377 @@ class Parser extends ParserBase
 
 		foreach ($boundaries as $pos)
 		{
-			$text[$pos] = "\x17";
+			$this->text[$pos] = "\x17";
+		}
+	}
+
+	/**
+	* Match all forms of emphasis (emphasis and strong, using underscores or asterisks)
+	*
+	* @return void
+	*/
+	protected function matchEmphasis()
+	{
+		$this->matchEmphasisByCharacter('*', '/\\*+/');
+		$this->matchEmphasisByCharacter('_', '/_+/');
+	}
+
+	/**
+	* Match emphasis and strong applied using given character
+	*
+	* @param  string $character Markup character, either * or _
+	* @param  string $regexp    Regexp used to match the series of emphasis character
+	* @return void
+	*/
+	protected function matchEmphasisByCharacter($character, $regexp)
+	{
+		$pos = strpos($this->text, $character);
+		if ($pos === false)
+		{
+			return;
 		}
 
-		// Inline code
-		if (strpos($text, '`') !== false)
+		$buffered = 0;
+		$breakPos = strpos($this->text, "\x17", $pos);
+
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE, $pos);
+		foreach ($matches[0] as list($match, $matchPos))
 		{
-			preg_match_all(
-				'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
-				$text,
-				$matches,
-				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
-			);
+			$matchLen = strlen($match);
 
-			foreach ($matches as $m)
+			// Test whether we've just passed the limits of a block
+			if ($matchPos > $breakPos)
 			{
-				$matchLen = strlen($m[0][0]);
-				$matchPos = $m[0][1];
-				$tagLen   = strlen($m[1][0]);
-
-				$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
-
-				// Overwrite the markup
-				self::overwrite($text, $matchPos, $matchLen);
-			}
-		}
-
-		// Images
-		if (strpos($text, '![') !== false)
-		{
-			preg_match_all(
-				'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
-				$text,
-				$matches,
-				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
-			);
-
-			foreach ($matches as $m)
-			{
-				$matchPos    = $m[0][1];
-				$matchLen    = strlen($m[0][0]);
-				$contentLen  = strlen($m[1][0]);
-				$startTagPos = $matchPos;
-				$startTagLen = 2;
-				$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-				$endTagLen   = $matchLen - $startTagLen - $contentLen;
-
-				$startTag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-				$startTag->setAttribute('alt', self::decode($m[1][0], $hasEscapedChars));
-				$startTag->setAttribute('src', self::decode($m[2][0], $hasEscapedChars));
-
-				if (isset($m[3]))
-				{
-					$startTag->setAttribute('title', self::decode($m[3][0], $hasEscapedChars));
-				}
-
-				// Overwrite the markup
-				self::overwrite($text, $matchPos, $matchLen);
-			}
-		}
-
-		// Inline links
-		if (strpos($text, '[') !== false)
-		{
-			preg_match_all(
-				'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
-				$text,
-				$matches,
-				PREG_OFFSET_CAPTURE | PREG_SET_ORDER
-			);
-
-			foreach ($matches as $m)
-			{
-				$matchPos    = $m[0][1];
-				$matchLen    = strlen($m[0][0]);
-				$contentLen  = strlen($m[1][0]);
-				$startTagPos = $matchPos;
-				$startTagLen = 1;
-				$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-				$endTagLen   = $matchLen - $startTagLen - $contentLen;
-
-				// Split the URL from the title if applicable
-				$url   = $m[2][0];
-				$title = '';
-				if (preg_match('/^(.+?) "(.*?)"$/', $url, $m))
-				{
-					$url   = $m[1];
-					$title = $m[2];
-				}
-
-				$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-				$tag->setAttribute('url', self::decode($url, $hasEscapedChars));
-
-				if ($title !== '')
-				{
-					$tag->setAttribute('title', self::decode($title, $hasEscapedChars));
-				}
-
-				// Overwrite the markup without touching the link's text
-				self::overwrite($text, $startTagPos, $startTagLen);
-				self::overwrite($text, $endTagPos,   $endTagLen);
-			}
-		}
-
-		// Strikethrough
-		if (strpos($text, '~~') !== false)
-		{
-			preg_match_all(
-				'/~~[^\\x17]+?~~/',
-				$text,
-				$matches,
-				PREG_OFFSET_CAPTURE
-			);
-
-			foreach ($matches[0] as list($match, $matchPos))
-			{
-				$matchLen = strlen($match);
-
-				$this->parser->addTagPair('DEL', $matchPos, 2, $matchPos + $matchLen - 2, 2);
-
-				// Overwrite the markup
-				self::overwrite($text, $matchPos, $matchLen);
-			}
-		}
-
-		// Superscript
-		if (strpos($text, '^') !== false)
-		{
-			preg_match_all(
-				'/\\^[^\\x17\\s]++/',
-				$text,
-				$matches,
-				PREG_OFFSET_CAPTURE
-			);
-
-			foreach ($matches[0] as list($match, $matchPos))
-			{
-				$matchLen    = strlen($match);
-				$startTagPos = $matchPos;
-				$endTagPos   = $matchPos + $matchLen;
-
-				$parts = explode('^', $match);
-				unset($parts[0]);
-
-				foreach ($parts as $part)
-				{
-					$this->parser->addTagPair('SUP', $startTagPos, 1, $endTagPos, 0);
-					$startTagPos += 1 + strlen($part);
-				}
-			}
-		}
-
-		// Emphasis
-		foreach (['*' => '/\\*+/', '_' => '/_+/'] as $c => $regexp)
-		{
-			if (strpos($text, $c) === false)
-			{
-				continue;
+				// Reset the buffer then look for the next break
+				$buffered = 0;
+				$breakPos = strpos($this->text, "\x17", $matchPos);
 			}
 
-			$buffered = 0;
-			$breakPos = strpos($text, "\x17");
-
-			preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
-			foreach ($matches[0] as list($match, $matchPos))
+			if ($matchLen >= 3)
 			{
-				$matchLen = strlen($match);
+				// Number of characters left unconsumed
+				$remaining = $matchLen;
 
-				// Test whether we've just passed the limits of a block
-				if ($matchPos > $breakPos)
+				if ($buffered < 3)
 				{
-					// Reset the buffer then look for the next break
-					$buffered = 0;
-					$breakPos = strpos($text, "\x17", $matchPos);
-				}
-
-				if ($matchLen >= 3)
-				{
-					// Number of characters left unconsumed
-					$remaining = $matchLen;
-
-					if ($buffered < 3)
-					{
-						$strongEndPos = $emEndPos = $matchPos;
-					}
-					else
-					{
-						// Determine the order of strong's and em's end tags
-						if ($emPos < $strongPos)
-						{
-							// If em starts before strong, it must end after it
-							$strongEndPos = $matchPos;
-							$emEndPos     = $matchPos + 2;
-						}
-						else
-						{
-							// Make strong end after em
-							$strongEndPos = $matchPos + 1;
-							$emEndPos     = $matchPos;
-
-							// If the buffer holds three consecutive characters and the order of
-							// strong and em is not defined we push em inside of strong
-							if ($strongPos === $emPos)
-							{
-								$emPos += 2;
-							}
-						}
-					}
-
-					// 2 or 3 means a strong is buffered
-					// Strong uses the outer characters
-					if ($buffered & 2)
-					{
-						$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
-						$remaining -= 2;
-					}
-
-					// 1 or 3 means an em is buffered
-					// Em uses the inner characters
-					if ($buffered & 1)
-					{
-						$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
-						--$remaining;
-					}
-
-					if (!$remaining)
-					{
-						$buffered = 0;
-					}
-					else
-					{
-						$buffered = min($remaining, 3);
-
-						if ($buffered & 1)
-						{
-							$emPos = $matchPos + $matchLen - $buffered;
-						}
-
-						if ($buffered & 2)
-						{
-							$strongPos = $matchPos + $matchLen - $buffered;
-						}
-					}
-				}
-				elseif ($matchLen === 2)
-				{
-					if ($buffered === 3 && $strongPos === $emPos)
-					{
-						$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
-						$buffered = 1;
-					}
-					elseif ($buffered & 2)
-					{
-						$this->parser->addTagPair('STRONG', $strongPos, 2, $matchPos, 2);
-						$buffered -= 2;
-					}
-					else
-					{
-						$buffered += 2;
-						$strongPos = $matchPos;
-					}
+					$strongEndPos = $emEndPos = $matchPos;
 				}
 				else
 				{
-					// Ignore single underscores when they are between alphanumeric ASCII chars
-					if ($c === '_'
-					 && $matchPos > 0
-					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos - 1]) > 0
-					 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $text[$matchPos + 1]) > 0)
+					// Determine the order of strong's and em's end tags
+					if ($emPos < $strongPos)
 					{
-						 continue;
-					}
-
-					if ($buffered === 3 && $strongPos === $emPos)
-					{
-						$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
-						$buffered = 2;
-					}
-					elseif ($buffered & 1)
-					{
-						$this->parser->addTagPair('EM', $emPos, 1, $matchPos, 1);
-						--$buffered;
+						// If em starts before strong, it must end after it
+						$strongEndPos = $matchPos;
+						$emEndPos     = $matchPos + 2;
 					}
 					else
 					{
-						++$buffered;
-						$emPos = $matchPos;
+						// Make strong end after em
+						$strongEndPos = $matchPos + 1;
+						$emEndPos     = $matchPos;
+
+						// If the buffer holds three consecutive characters and the order of
+						// strong and em is not defined we push em inside of strong
+						if ($strongPos === $emPos)
+						{
+							$emPos += 2;
+						}
 					}
+				}
+
+				// 2 or 3 means a strong is buffered
+				// Strong uses the outer characters
+				if ($buffered & 2)
+				{
+					$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+					$remaining -= 2;
+				}
+
+				// 1 or 3 means an em is buffered
+				// Em uses the inner characters
+				if ($buffered & 1)
+				{
+					$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+					--$remaining;
+				}
+
+				if (!$remaining)
+				{
+					$buffered = 0;
+				}
+				else
+				{
+					$buffered = min($remaining, 3);
+
+					if ($buffered & 1)
+					{
+						$emPos = $matchPos + $matchLen - $buffered;
+					}
+
+					if ($buffered & 2)
+					{
+						$strongPos = $matchPos + $matchLen - $buffered;
+					}
+				}
+			}
+			elseif ($matchLen === 2)
+			{
+				if ($buffered === 3 && $strongPos === $emPos)
+				{
+					$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
+					$buffered = 1;
+				}
+				elseif ($buffered & 2)
+				{
+					$this->parser->addTagPair('STRONG', $strongPos, 2, $matchPos, 2);
+					$buffered -= 2;
+				}
+				else
+				{
+					$buffered += 2;
+					$strongPos = $matchPos;
+				}
+			}
+			else
+			{
+				// Ignore single underscores when they are between alphanumeric ASCII chars
+				if ($character === '_'
+				 && $matchPos > 0
+				 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos - 1]) > 0
+				 && strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos + 1]) > 0)
+				{
+					 continue;
+				}
+
+				if ($buffered === 3 && $strongPos === $emPos)
+				{
+					$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
+					$buffered = 2;
+				}
+				elseif ($buffered & 1)
+				{
+					$this->parser->addTagPair('EM', $emPos, 1, $matchPos, 1);
+					--$buffered;
+				}
+				else
+				{
+					++$buffered;
+					$emPos = $matchPos;
 				}
 			}
 		}
 	}
 
 	/**
-	* Close a list at given offset
+	* Match images markup
 	*
-	* @param  array   $list
-	* @param  integer $textBoundary
 	* @return void
 	*/
-	protected function closeList(array $list, $textBoundary)
+	protected function matchImages()
 	{
-		$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
-		$this->parser->addEndTag('LI',   $textBoundary, 0)->pairWith($list['itemTag']);
-
-		if ($list['tight'])
+		$pos = strpos($this->text, '![');
+		if ($pos === false)
 		{
-			foreach ($list['itemTags'] as $itemTag)
+			return;
+		}
+
+		preg_match_all(
+			'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
+			$pos
+		);
+
+		foreach ($matches as $m)
+		{
+			$matchPos    = $m[0][1];
+			$matchLen    = strlen($m[0][0]);
+			$contentLen  = strlen($m[1][0]);
+			$startTagPos = $matchPos;
+			$startTagLen = 2;
+			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
+			$endTagLen   = $matchLen - $startTagLen - $contentLen;
+
+			$startTag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+			$startTag->setAttribute('alt', $this->decode($m[1][0]));
+			$startTag->setAttribute('src', $this->decode($m[2][0]));
+
+			if (isset($m[3]))
 			{
-				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
+				$startTag->setAttribute('title', $this->decode($m[3][0]));
 			}
+
+			// Overwrite the markup
+			$this->overwrite($matchPos, $matchLen);
 		}
 	}
 
 	/**
-	* Decode a chunk of encoded text to be used as an attribute value
+	* Match inline code
 	*
-	* Decodes escaped literals and removes slashes and 0x1A characters
-	*
-	* @param  string $str      Encoded text
-	* @param  bool   $unescape Whether to unescape 0x1B sequences
-	* @return string           Decoded text
+	* @return void
 	*/
-	protected static function decode($str, $unescape)
+	protected function matchInlineCode()
 	{
-		$str = stripslashes(str_replace("\x1A", '', $str));
-
-		if ($unescape)
+		$pos = strpos($this->text, '`');
+		if ($pos === false)
 		{
-			$decode = [
-				"\x1B0" => '!',
-				"\x1B1" => '"',
-				"\x1B2" => ')',
-				"\x1B3" => '*',
-				"\x1B4" => '[',
-				"\x1B5" => '\\',
-				"\x1B6" => ']',
-				"\x1B7" => '^',
-				"\x1B8" => '_',
-				"\x1B9" => '`',
-				"\x1BA" => '~'
-			];
-
-			$str = strtr($str, $decode);
+			return;
 		}
 
-		return $str;
+		preg_match_all(
+			'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
+			$pos
+		);
+
+		foreach ($matches as $m)
+		{
+			$matchLen = strlen($m[0][0]);
+			$matchPos = $m[0][1];
+			$tagLen   = strlen($m[1][0]);
+
+			$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
+
+			// Overwrite the markup
+			$this->overwrite($matchPos, $matchLen);
+		}
+	}
+
+	/**
+	* Match inline links
+	*
+	* @return void
+	*/
+	protected function matchInlineLinks()
+	{
+		$pos = strpos($this->text, '[');
+		if ($pos === false)
+		{
+			return;
+		}
+
+		preg_match_all(
+			'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
+			$pos
+		);
+
+		foreach ($matches as $m)
+		{
+			$matchPos    = $m[0][1];
+			$matchLen    = strlen($m[0][0]);
+			$contentLen  = strlen($m[1][0]);
+			$startTagPos = $matchPos;
+			$startTagLen = 1;
+			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
+			$endTagLen   = $matchLen - $startTagLen - $contentLen;
+
+			// Split the URL from the title if applicable
+			$url   = $m[2][0];
+			$title = '';
+			if (preg_match('/^(.+?) "(.*?)"$/', $url, $m))
+			{
+				$url   = $m[1];
+				$title = $m[2];
+			}
+
+			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+			$tag->setAttribute('url', $this->decode($url));
+
+			if ($title !== '')
+			{
+				$tag->setAttribute('title', $this->decode($title));
+			}
+
+			// Overwrite the markup without touching the link's text
+			$this->overwrite($startTagPos, $startTagLen);
+			$this->overwrite($endTagPos,   $endTagLen);
+		}
+	}
+
+	/**
+	* Match strikethrough
+	*
+	* @return void
+	*/
+	protected function matchStrikethrough()
+	{
+		$pos = strpos($this->text, '~~');
+		if ($pos === false)
+		{
+			return;
+		}
+
+		preg_match_all(
+			'/~~[^\\x17]+?~~/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE,
+			$pos
+		);
+
+		foreach ($matches[0] as list($match, $matchPos))
+		{
+			$matchLen = strlen($match);
+
+			$this->parser->addTagPair('DEL', $matchPos, 2, $matchPos + $matchLen - 2, 2);
+		}
+	}
+
+	/**
+	* Match superscript
+	*
+	* @return void
+	*/
+	protected function matchSuperscript()
+	{
+		$pos = strpos($this->text, '^');
+		if ($pos === false)
+		{
+			return;
+		}
+
+		preg_match_all(
+			'/\\^[^\\x17\\s]++/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE,
+			$pos
+		);
+
+		foreach ($matches[0] as list($match, $matchPos))
+		{
+			$matchLen    = strlen($match);
+			$startTagPos = $matchPos;
+			$endTagPos   = $matchPos + $matchLen;
+
+			$parts = explode('^', $match);
+			unset($parts[0]);
+
+			foreach ($parts as $part)
+			{
+				$this->parser->addTagPair('SUP', $startTagPos, 1, $endTagPos, 0);
+				$startTagPos += 1 + strlen($part);
+			}
+		}
 	}
 
 	/**
 	* Overwrite part of the text with substitution characters ^Z (0x1A)
 	*
-	* @param  string  $text Original text
-	* @param  integer $pos  Start of the range
-	* @param  integer $len  Length of text to overwrite
+	* @param  integer $pos Start of the range
+	* @param  integer $len Length of text to overwrite
 	* @return void
 	*/
-	protected function overwrite(&$text, $pos, $len)
+	protected function overwrite($pos, $len)
 	{
-		$text = substr($text, 0, $pos) . str_repeat("\x1A", $len) . substr($text, $pos + $len);
+		$this->text = substr($this->text, 0, $pos) . str_repeat("\x1A", $len) . substr($this->text, $pos + $len);
 	}
 }
