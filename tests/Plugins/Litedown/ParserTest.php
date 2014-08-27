@@ -1130,14 +1130,14 @@ class ParserTest extends Test
 				[
 					' * first item  ',
 					'   still the first item  ',
-					' * second item  ',
+					' * second item',
 					'',
 					'outside list'
 				],
 				[
 					'<r> <LIST><LI><s>* </s>first item  <br/>',
 					'   still the first item  </LI>',
-					' <LI><s>* </s>second item  </LI></LIST>',
+					' <LI><s>* </s>second item</LI></LIST>',
 					'',
 					'<p>outside list</p></r>'
 				],
