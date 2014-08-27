@@ -11,7 +11,7 @@ foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 $knownVars = [];
 
 // 2-letters minified names
-foreach (range('a', 't') as $c)
+foreach (range('a', 'z') as $c)
 {
 	$knownVars[$c . 'a'] = 1;
 }
