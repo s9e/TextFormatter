@@ -380,7 +380,8 @@ class TagProcessingTest extends Test
 				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x<br/>\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
 				function ($configurator)
 				{
-					$configurator->tags->add('PRE')->rules->noBrChild();
+					$configurator->rootRules->enableAutoLineBreaks();
+					$configurator->tags->add('PRE')->rules->suspendAutoLineBreaks();
 					$configurator->tags->add('B');
 				},
 				function ($parser)
@@ -396,7 +397,8 @@ class TagProcessingTest extends Test
 				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
 				function ($configurator)
 				{
-					$configurator->tags->add('PRE')->rules->noBrDescendant();
+					$configurator->rootRules->enableAutoLineBreaks();
+					$configurator->tags->add('PRE')->rules->disableAutoLineBreaks();
 					$configurator->tags->add('B');
 				},
 				function ($parser)
@@ -583,7 +585,7 @@ class TagProcessingTest extends Test
 				'<t>xy</t>',
 				function ($configurator)
 				{
-					$configurator->rootRules->noBrDescendant();
+					$configurator->rootRules->preventLineBreaks();
 				},
 				function ($parser)
 				{
@@ -1094,12 +1096,13 @@ class TagProcessingTest extends Test
 				"<r><X><br/>\n</X><X>\n</X></r>",
 				function ($configurator)
 				{
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
 					$parser->addTagPair('X', 0, 0, 1, 0);
-					$parser->addTagPair('X', 1, 0, 2, 0)->setFlags(Parser::RULE_NO_BR_CHILD);
+					$parser->addTagPair('X', 1, 0, 2, 0)->setFlags(Parser::RULE_SUSPEND_AUTO_BR);
 				}
 			],
 			[
@@ -1137,6 +1140,68 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 3, 3);
 					$parser->addEndTag('Y', 8, 4);
 					$parser->addEndTag('X', 12, 4);
+				}
+			],
+			[
+				"foo\nbar",
+				"<t>foo\nbar</t>"
+			],
+			[
+				"foo\nbar",
+				"<t>foo<br/>\nbar</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			],
+			[
+				"foo\nbar",
+				"<t>foo\nbar</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->disableAutoLineBreaks();
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			],
+			[
+				// Automatic line breaks can be turned on and off repeatedly
+				"[Y]\n[N]\n[Y]\n[N]\n[/N]\n[/Y]\n[/N]\n[/Y]",
+				"<r><Y><s>[Y]</s><br/>\n<N><s>[N]</s>\n<Y><s>[Y]</s><br/>\n<N><s>[N]</s>\n<e>[/N]</e></N><br/>\n<e>[/Y]</e></Y>\n<e>[/N]</e></N><br/>\n<e>[/Y]</e></Y></r>",
+				function ($configurator)
+				{
+					$configurator->tags->add('Y')->rules->enableAutoLineBreaks();
+					$configurator->tags->add('N')->rules->disableAutoLineBreaks();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('Y', 0, 3);
+					$parser->addStartTag('N', 4, 3);
+					$parser->addStartTag('Y', 8, 3);
+					$parser->addStartTag('N', 12, 3);
+					$parser->addEndTag('N', 16, 4);
+					$parser->addEndTag('Y', 21, 4);
+					$parser->addEndTag('N', 26, 4);
+					$parser->addEndTag('Y', 31, 4);
+				}
+			],
+			[
+				// Automatic line breaks can be temporarily suspended in current context only
+				"[Y]\n[S]\n[X]\n[/X]\n[/S]\n[/Y]",
+				"<r><Y><s>[Y]</s><br/>\n<S><s>[S]</s>\n<X><s>[X]</s><br/>\n<e>[/X]</e></X>\n<e>[/S]</e></S><br/>\n<e>[/Y]</e></Y></r>",
+				function ($configurator)
+				{
+					$configurator->tags->add('Y')->rules->enableAutoLineBreaks();
+					$configurator->tags->add('S')->rules->suspendAutoLineBreaks();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('Y', 0, 3);
+					$parser->addStartTag('S', 4, 3);
+					$parser->addStartTag('X', 8, 3);
+					$parser->addEndTag('X', 12, 4);
+					$parser->addEndTag('S', 17, 4);
+					$parser->addEndTag('Y', 22, 4);
 				}
 			],
 		];

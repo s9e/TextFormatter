@@ -21,13 +21,25 @@ class Parser
 	const RULE_AUTO_REOPEN       = 1 << 1;
 	const RULE_BREAK_PARAGRAPH   = 1 << 2;
 	const RULE_CREATE_PARAGRAPHS = 1 << 3;
-	const RULE_IGNORE_TAGS       = 1 << 4;
-	const RULE_IGNORE_TEXT       = 1 << 5;
-	const RULE_IS_TRANSPARENT    = 1 << 6;
-	const RULE_NO_BR_CHILD       = 1 << 7;
-	const RULE_NO_BR_DESCENDANT  = 1 << 8;
-	const RULE_TRIM_WHITESPACE   = 1 << 9;
+	const RULE_DISABLE_AUTO_BR   = 1 << 4;
+	const RULE_ENABLE_AUTO_BR    = 1 << 5;
+	const RULE_IGNORE_TAGS       = 1 << 6;
+	const RULE_IGNORE_TEXT       = 1 << 7;
+	const RULE_IS_TRANSPARENT    = 1 << 8;
+	const RULE_PREVENT_BR        = 1 << 9;
+	const RULE_SUSPEND_AUTO_BR   = 1 << 10;
+	const RULE_TRIM_WHITESPACE   = 1 << 11;
 	/**#@-*/
+
+	/**
+	* Bitwise disjunction of rules related to automatic line breaks
+	*/
+	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
+
+	/**
+	* Bitwise disjunction of rules that are inherited by subcontexts
+	*/
+	const RULES_INHERITANCE = self::RULE_ENABLE_AUTO_BR;
 
 	/**
 	* All the characters that are considered whitespace
@@ -907,7 +919,7 @@ class Parser
 			);
 
 			// Format line breaks if applicable
-			if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
+			if (($this->context['flags'] & self::RULES_AUTO_LINEBREAKS) === self::RULE_ENABLE_AUTO_BR)
 			{
 				$catchupText = str_replace("\n", "<br/>\n", $catchupText);
 			}
@@ -1501,7 +1513,7 @@ class Parser
 		elseif ($this->currentTag->isBrTag())
 		{
 			// Output the tag if it's allowed, ignore it otherwise
-			if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
+			if (!($this->context['flags'] & self::RULE_PREVENT_BR))
 			{
 				$this->outputBrTag($this->currentTag);
 			}
@@ -1838,18 +1850,16 @@ class Parser
 		// Ensure that disallowed descendants are not allowed as children
 		$allowedChildren &= $allowedDescendants;
 
-		// Use this tag's flags except for noBrDescendant, which is inherited
+		// Use this tag's flags as a base for this context
 		$flags = $tagFlags;
 
-		if ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT)
-		{
-			$flags |= self::RULE_NO_BR_DESCENDANT;
-		}
+		// Add inherited rules
+		$flags |= $this->context['flags'] & self::RULES_INHERITANCE;
 
-		// noBrDescendant is replicated onto noBrChild
-		if ($flags & self::RULE_NO_BR_DESCENDANT)
+		// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
+		if ($flags & self::RULE_DISABLE_AUTO_BR)
 		{
-			$flags |= self::RULE_NO_BR_CHILD;
+			$flags &= ~self::RULE_ENABLE_AUTO_BR;
 		}
 
 		$this->context = [

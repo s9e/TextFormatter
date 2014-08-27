@@ -33,10 +33,16 @@ Generates a <code>closeParent</code> rule for tags that are renderered as "block
 Generates a <code>fosterParent</code> rule for tags that are renderered as "block" elements, targeting formatting elements. For example, <code>div</code> inside of <code>b</code>. Emulates HTML5's behaviour regarding misnested elements.
 </dd>
 
+<dt>DisableAutoLineBreaksIfNewLinesArePreserved</dt>
+<dd>
+<i>Purpose: convenience. Default: enabled.</i><br/>
+Generates a <code>disableAutoLineBreaks</code> rule for tags that render their content in an element that defaults to preserving new lines such as <code>pre</code>, or in an element that has a style attribute that preserves new lines such as <code>&lt;div style="white-space: pre"&gt;</code>.
+</dd>
+
 <dt>EnforceContentModels</dt>
 <dd>
 <i>Purpose: compliance. Default: enabled.</i><br/>
-Generates <code>denyChild</code>, <code>denyDescendant</code>, <code>noBrChild</code> and <code>noBrDescendant</code> rules to disallow tags in contexts where their HTML representation is not allowed.<br/>
+Generates <code>denyChild</code>, <code>denyDescendant</code>, <code>disableAutoLineBreaks</code>, <code>enableAutoLineBreaks</code> and <code>suspendAutoLineBreaks</code> rules to disallow tags in contexts where their HTML representation is not allowed.<br/>
 See <a href="http://www.w3.org/TR/html5/dom.html#content-models">HTML5 Content Models</a>.
 </dd>
 
@@ -69,12 +75,6 @@ Generates an <code>ignoreSurroundingWhitespace</code> rule for tags that render 
 <dd>
 <i>Purpose: convenience/compliance. Default: disabled.</i><br/>
 Generates <code>createParagraphs</code> rules for tags that render their content in a "block" element and <code>breakParagraph</code> for elements whose template automatically closes current paragraph as per HTML5's optional tags rules.
-</dd>
-
-<dt>NoBrIfNewLinesArePreserved</dt>
-<dd>
-<i>Purpose: convenience. Default: enabled.</i><br/>
-Generates a <code>noBrDescendant</code> rule for tags that render their content in an element that defaults to preserving new lines such as <code>pre</code>, or in an element that has a style attribute that preserves new lines such as <code>&lt;div style="white-space: pre"&gt;</code>.
 </dd>
 
 </dl>

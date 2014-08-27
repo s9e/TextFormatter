@@ -58,9 +58,6 @@ $configurator = new s9e\TextFormatter\Configurator;
 // Here we load the plugin using our custom regexp
 $configurator->plugins->load('Escaper', ['regexp' => '/\\\\(?=[[:ascii:]])\\W/s']);
 
-// We disable line breaks for cosmetic purposes, this is unrelated to escaping
-$configurator->rootRules->noBrDescendant();
-
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 

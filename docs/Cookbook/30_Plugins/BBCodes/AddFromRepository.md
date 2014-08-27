@@ -35,7 +35,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span style="font-size:5px">Smallest</span><br>
+<span style="font-size:5px">Smallest</span>
 <span style="font-size:40px">Biggest</span>
 ```
 

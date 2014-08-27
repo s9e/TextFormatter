@@ -34,8 +34,8 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://example.org/1">http://example.org/1</a><br>
-<a href="http://example.org/2">Second link</a><br>
-<a href="http://example.org/3">The third and last</a><br>
+<a href="http://example.org/1">http://example.org/1</a>
+<a href="http://example.org/2">Second link</a>
+<a href="http://example.org/3">The third and last</a>
 &lt;a href="http://example.org/4"&gt;This one will not be linkified&lt;/a&gt;
 ```

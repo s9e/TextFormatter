@@ -24,6 +24,6 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Emoticons surrounded with whitespace: <img src="happy.png" alt=":)" title="Happy"> <img src="sad.png" alt=":(" title="Sad"><br>
+Emoticons surrounded with whitespace: <img src="happy.png" alt=":)" title="Happy"> <img src="sad.png" alt=":(" title="Sad">
 Same without whitespace:              :):(
 ```

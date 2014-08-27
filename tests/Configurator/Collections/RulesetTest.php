@@ -578,6 +578,64 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox disableAutoLineBreaks() accepts a boolean
+	*/
+	public function testDisableAutoLineBreaksValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->disableAutoLineBreaks(true);
+	}
+
+	/**
+	* @testdox disableAutoLineBreaks() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage disableAutoLineBreaks() expects a boolean
+	*/
+	public function testDisableAutoLineBreaksInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->disableAutoLineBreaks('foo');
+	}
+
+	/**
+	* @testdox disableAutoLineBreaks() is chainable
+	*/
+	public function testDisableAutoLineBreaksChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->disableAutoLineBreaks());
+	}
+
+	/**
+	* @testdox enableAutoLineBreaks() accepts a boolean
+	*/
+	public function testEnableAutoLineBreaksValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->enableAutoLineBreaks(true);
+	}
+
+	/**
+	* @testdox enableAutoLineBreaks() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage enableAutoLineBreaks() expects a boolean
+	*/
+	public function testEnableAutoLineBreaksInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->enableAutoLineBreaks('foo');
+	}
+
+	/**
+	* @testdox enableAutoLineBreaks() is chainable
+	*/
+	public function testEnableAutoLineBreaksChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->enableAutoLineBreaks());
+	}
+
+	/**
 	* @testdox fosterParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -672,64 +730,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox noBrChild() accepts a boolean
-	*/
-	public function testNoBrChildValid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->noBrChild(true);
-	}
-
-	/**
-	* @testdox noBrChild() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage noBrChild() expects a boolean
-	*/
-	public function testNoBrChildInvalid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->noBrChild('foo');
-	}
-
-	/**
-	* @testdox noBrChild() is chainable
-	*/
-	public function testNoBrChildChainable()
-	{
-		$ruleset = new Ruleset;
-		$this->assertSame($ruleset, $ruleset->noBrChild());
-	}
-
-	/**
-	* @testdox noBrDescendant() accepts a boolean
-	*/
-	public function testNoBrDescendantValid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->noBrDescendant(true);
-	}
-
-	/**
-	* @testdox noBrDescendant() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage noBrDescendant() expects a boolean
-	*/
-	public function testNoBrDescendantInvalid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->noBrDescendant('foo');
-	}
-
-	/**
-	* @testdox noBrDescendant() is chainable
-	*/
-	public function testNoBrDescendantChainable()
-	{
-		$ruleset = new Ruleset;
-		$this->assertSame($ruleset, $ruleset->noBrDescendant());
-	}
-
-	/**
 	* @testdox ignoreSurroundingWhitespace() accepts a boolean
 	*/
 	public function testIgnoreSurroundingWhitespaceValid()
@@ -756,6 +756,35 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$this->assertSame($ruleset, $ruleset->ignoreSurroundingWhitespace());
+	}
+
+	/**
+	* @testdox preventLineBreaks() accepts a boolean
+	*/
+	public function testPreventLineBreaksValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->preventLineBreaks(true);
+	}
+
+	/**
+	* @testdox preventLineBreaks() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage preventLineBreaks() expects a boolean
+	*/
+	public function testPreventLineBreaksInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->preventLineBreaks('foo');
+	}
+
+	/**
+	* @testdox preventLineBreaks() is chainable
+	*/
+	public function testPreventLineBreaksChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->preventLineBreaks());
 	}
 
 	/**
@@ -828,6 +857,35 @@ class RulesetTest extends Test
 		$ruleset = new Ruleset;
 
 		$this->assertSame($ruleset, $ruleset->requireParent('B'));
+	}
+
+	/**
+	* @testdox suspendAutoLineBreaks() accepts a boolean
+	*/
+	public function testSuspendAutoLineBreaksValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->suspendAutoLineBreaks(true);
+	}
+
+	/**
+	* @testdox suspendAutoLineBreaks() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage suspendAutoLineBreaks() expects a boolean
+	*/
+	public function testSuspendAutoLineBreaksInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->suspendAutoLineBreaks('foo');
+	}
+
+	/**
+	* @testdox suspendAutoLineBreaks() is chainable
+	*/
+	public function testSuspendAutoLineBreaksChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->suspendAutoLineBreaks());
 	}
 
 	/**
@@ -1083,14 +1141,18 @@ class RulesetTest extends Test
 	public function testAsConfigBitfield()
 	{
 		$booleanRules = [
-			'autoClose'      => Parser::RULE_AUTO_CLOSE,
-			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
+			'autoClose'                   => Parser::RULE_AUTO_CLOSE,
+			'autoReopen'                  => Parser::RULE_AUTO_REOPEN,
+			'breakParagraph'              => Parser::RULE_BREAK_PARAGRAPH,
+			'createParagraphs'            => Parser::RULE_CREATE_PARAGRAPHS,
+			'disableAutoLineBreaks'       => Parser::RULE_DISABLE_AUTO_BR,
+			'enableAutoLineBreaks'        => Parser::RULE_ENABLE_AUTO_BR,
 			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
-			'ignoreTags'     => Parser::RULE_IGNORE_TAGS,
-			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
-			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
-			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT | Parser::RULE_NO_BR_CHILD
+			'ignoreTags'                  => Parser::RULE_IGNORE_TAGS,
+			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
+			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
+			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
+			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR
 		];
 
 		$ruleset = new Ruleset;
@@ -1118,18 +1180,5 @@ class RulesetTest extends Test
 		$config = $ruleset->asConfig();
 
 		$this->assertSame(Parser::RULE_AUTO_CLOSE | Parser::RULE_TRIM_WHITESPACE, $config['flags']);
-	}
-
-	/**
-	* @testdox asConfig() sets noBrChild's bit if noBrDescendant is set
-	*/
-	public function testAsConfigNoBrDescendantCascadesOnNoBrChild()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->noBrDescendant();
-
-		$config = $ruleset->asConfig();
-
-		$this->assertSame(Parser::RULE_NO_BR_CHILD | Parser::RULE_NO_BR_DESCENDANT, $config['flags']);
 	}
 }

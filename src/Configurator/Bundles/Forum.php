@@ -17,6 +17,8 @@ class Forum extends Bundle
 	*/
 	public function configure(Configurator $configurator)
 	{
+		$configurator->rootRules->enableAutoLineBreaks();
+
 		$configurator->BBCodes->addFromRepository('B');
 		$configurator->BBCodes->addFromRepository('CENTER');
 		$configurator->BBCodes->addFromRepository('CODE');

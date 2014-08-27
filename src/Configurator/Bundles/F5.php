@@ -207,6 +207,7 @@ class F5 extends Bundle
 		$configurator->Autoemail;
 		$configurator->Autolink;
 		$configurator->urlConfig->allowScheme('ftp');
+		$configurator->rootRules->enableAutoLineBreaks();
 		$configurator->rulesGenerator->append('ManageParagraphs');
 		$configurator->rendering->type = 'xhtml';
 		$configurator->rendering->parameters['SHOW_IMG'] = 1;

@@ -10,13 +10,13 @@ namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
-class NoBrIfNewLinesArePreserved implements BooleanRulesGenerator
+class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerator
 {
 	/**
 	* {@inheritdoc}
 	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->preservesNewLines()) ? ['noBrDescendant' => true] : [];
+		return ($src->preservesNewLines()) ? ['disableAutoLineBreaks' => true] : [];
 	}
 }

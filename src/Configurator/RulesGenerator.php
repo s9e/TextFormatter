@@ -66,12 +66,12 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection = new RulesGeneratorList;
 		$this->collection->append('AutoCloseIfVoid');
 		$this->collection->append('AutoReopenFormattingElements');
+		$this->collection->append('DisableAutoLineBreaksIfNewLinesArePreserved');
 		$this->collection->append('EnforceContentModels');
 		$this->collection->append('EnforceOptionalEndTags');
 		$this->collection->append('IgnoreTagsInCode');
 		$this->collection->append('IgnoreTextIfDisallowed');
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
-		$this->collection->append('NoBrIfNewLinesArePreserved');
 	}
 
 	/**

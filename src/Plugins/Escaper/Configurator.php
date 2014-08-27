@@ -47,8 +47,9 @@ class Configurator extends ConfiguratorBase
 
 		// Create the tag
 		$tag = $this->configurator->tags->add($this->tagName);
+		$tag->rules->disableAutoLineBreaks();
 		$tag->rules->ignoreTags();
-		$tag->rules->noBrChild();
+		$tag->rules->preventLineBreaks();
 		$tag->template = '<xsl:apply-templates/>';
 	}
 }

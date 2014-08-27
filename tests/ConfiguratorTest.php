@@ -520,10 +520,10 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAddHTML5RulesRootNoOverwrite()
 	{
-		$this->configurator->rootRules->noBrDescendant(false);
+		$this->configurator->rootRules->enableAutoLineBreaks(false);
 		$this->configurator->addHTML5Rules(['parentHTML' => '<pre>']);
 
-		$this->assertFalse($this->configurator->rootRules['noBrDescendant']);
+		$this->assertFalse($this->configurator->rootRules['enableAutoLineBreaks']);
 	}
 
 	/**
@@ -548,13 +548,13 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAddHTML5RulesTagsNoOverwrite()
 	{
-		$ul = $this->configurator->tags->add('PRE');
-		$ul->template = '<pre><xsl:apply-templates/></pre>';
-		$ul->rules->noBrDescendant(false);
+		$ul = $this->configurator->tags->add('ul');
+		$ul->template = '<ul><xsl:apply-templates/></ul>';
+		$ul->rules->preventLineBreaks(false);
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertFalse($ul->rules['noBrDescendant']);
+		$this->assertFalse($ul->rules['preventLineBreaks']);
 	}
 
 	/**

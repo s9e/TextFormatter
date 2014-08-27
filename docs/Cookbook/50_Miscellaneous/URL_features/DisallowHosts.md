@@ -20,8 +20,8 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-http://example.org<br>
-<a href="http://notexample.org">http://notexample.org</a><br>
+http://example.org
+<a href="http://notexample.org">http://notexample.org</a>
 http://www.example.org
 ```
 
@@ -45,8 +45,8 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-http://example.org<br>
-http://notexample.org<br>
+http://example.org
+http://notexample.org
 http://www.example.org
 ```
 

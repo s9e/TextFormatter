@@ -17,6 +17,8 @@ class S18 extends Bundle
 	*/
 	public function configure(Configurator $configurator)
 	{
+		$configurator->rootRules->enableAutoLineBreaks();
+
 		$configurator->urlConfig->allowScheme('ftp');
 		$configurator->urlConfig->allowScheme('ftps');
 		$configurator->rendering->parameters['L_CODE']        = 'Code';

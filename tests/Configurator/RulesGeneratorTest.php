@@ -112,10 +112,11 @@ class RulesGeneratorTest extends Test
 							'ignoreSurroundingWhitespace' => true
 						],
 						'OL' => [
-							'denyChild'  => ['OL'],
+							'denyChild'                   => ['OL'],
 							'ignoreSurroundingWhitespace' => true,
-							'ignoreText' => true,
-							'noBrChild'  => true
+							'ignoreText'                  => true,
+							'preventLineBreaks'           => true,
+							'suspendAutoLineBreaks'       => true
 						]
 					]
 				]

@@ -100,13 +100,13 @@
 			<file>tests/Configurator/RulesGenerators/AutoReopenFormattingElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/BlockElementsCloseFormattingElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/BlockElementsFosterFormattingElementsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/DisableAutoLineBreaksIfNewLinesArePreservedTest.php</file>
 			<file>tests/Configurator/RulesGenerators/EnforceContentModelsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/EnforceOptionalEndTagsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/IgnoreTagsInCodeTest.php</file>
 			<file>tests/Configurator/RulesGenerators/IgnoreTextIfDisallowedTest.php</file>
 			<file>tests/Configurator/RulesGenerators/IgnoreWhitespaceAroundBlockElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/ManageParagraphsTest.php</file>
-			<file>tests/Configurator/RulesGenerators/NoBrIfNewLinesArePreservedTest.php</file>
 			<file>tests/Configurator/RulesGeneratorTest.php</file>
 			<file>tests/Configurator/TemplateNormalizationTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>

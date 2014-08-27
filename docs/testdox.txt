@@ -301,6 +301,12 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag names
  [x] denyDescendant() is chainable
+ [x] disableAutoLineBreaks() accepts a boolean
+ [x] disableAutoLineBreaks() throws an exception if its argument is not a boolean
+ [x] disableAutoLineBreaks() is chainable
+ [x] enableAutoLineBreaks() accepts a boolean
+ [x] enableAutoLineBreaks() throws an exception if its argument is not a boolean
+ [x] enableAutoLineBreaks() is chainable
  [x] fosterParent() throws an exception on invalid tag name
  [x] fosterParent() normalizes tag names
  [x] fosterParent() is chainable
@@ -310,21 +316,21 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isTransparent() accepts a boolean
  [x] isTransparent() throws an exception if its argument is not a boolean
  [x] isTransparent() is chainable
- [x] noBrChild() accepts a boolean
- [x] noBrChild() throws an exception if its argument is not a boolean
- [x] noBrChild() is chainable
- [x] noBrDescendant() accepts a boolean
- [x] noBrDescendant() throws an exception if its argument is not a boolean
- [x] noBrDescendant() is chainable
  [x] ignoreSurroundingWhitespace() accepts a boolean
  [x] ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
  [x] ignoreSurroundingWhitespace() is chainable
+ [x] preventLineBreaks() accepts a boolean
+ [x] preventLineBreaks() throws an exception if its argument is not a boolean
+ [x] preventLineBreaks() is chainable
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag names
  [x] requireAncestor() is chainable
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag names
  [x] requireParent() is chainable
+ [x] suspendAutoLineBreaks() accepts a boolean
+ [x] suspendAutoLineBreaks() throws an exception if its argument is not a boolean
+ [x] suspendAutoLineBreaks() is chainable
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array
@@ -342,7 +348,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() uses target names as keys for requireAncestor
  [x] asConfig() packs boolean rules in a value named "flags"
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
- [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
 s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
  [x] add() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
@@ -509,6 +514,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <ruby> allows <rt> as a child
  [x] <ruby> allows <rtc> as a child
  [x] <ruby> does not allow <blockquote> as a child
+ [x] <ul> does not allow <br> as a child
+ [x] <ul> allows <br> as a descendant
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
@@ -1141,6 +1148,10 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsFosterFormatti
  [x] <div> does not have a fosterParent rule for <div>
  [x] <b> does not have a fosterParent rule for <b>
 
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewLinesArePreserved
+ [x] Does not generate a disableAutoLineBreaks rule for <ol>
+ [x] Generates a disableAutoLineBreaks rule for <pre>
+
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] <b> has a denyChild rule for <div>
  [x] <a> has a denyChild and a denyDescendant rule for <a>
@@ -1148,7 +1159,8 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] Generates an isTransparent rule for <a>
  [x] Generates an isTransparent rule for a template composed entirely of <xsl:apply-templates/>
  [x] Does not generate any boolean rules for <b>
- [x] Generates a noBrChild rule and a noBrDescendant rule for <style>
+ [x] Generates a disableAutoLineBreaks rule, a preventLineBreaks rule and a suspendAutoLineBreaks rule for <style>
+ [x] Generates a preventLineBreaks rule and a suspendAutoLineBreaks rule for <ul>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
  [x] <li> closes parent <li>
@@ -1174,10 +1186,6 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\ManageParagraphs
  [x] Does not generate any rules for <b>
  [x] Generates a breakParagraph and a createParagraphs rule for <blockquote>
  [x] Generates a breakParagraph rule but no createParagraphs rule for <p>
-
-s9e\TextFormatter\Tests\Configurator\RulesGenerators\NoBrIfNewLinesArePreserved
- [x] Does not generate a noBrDescendant rule for <ol>
- [x] Generates a noBrDescendant rule for <pre>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Implements ArrayAccess
@@ -1638,12 +1646,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.RULE_IGNORE_TEXT=1 if the root rules have a createParagraphs rule
  [x] HINT.RULE_IS_TRANSPARENT=0 by default
  [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
- [x] HINT.RULE_NO_BR_CHILD=0 by default
- [x] HINT.RULE_NO_BR_CHILD=1 if any tag has a noBrChild rule
- [x] HINT.RULE_NO_BR_CHILD=1 if the root rules have a createParagraphs rule
- [x] HINT.RULE_NO_BR_DESCENDANT=0 by default
- [x] HINT.RULE_NO_BR_DESCENDANT=1 if any tag has a noBrDescendant rule
- [x] HINT.RULE_NO_BR_DESCENDANT=1 if the root rules have a createParagraphs rule
  [x] HINT.RULE_TRIM_WHITESPACE=0 by default
  [x] HINT.RULE_TRIM_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
 

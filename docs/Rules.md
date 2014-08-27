@@ -82,6 +82,14 @@ Prevents tag X to be used as a child of this tag.</dd>
 <dd><i>Example:</i> <code>$tag->rules->denyDescendant('X');</code><br/>
 Prevents tag X to be used as a descendant of this tag.</dd>
 
+<dt>disableAutoLineBreaks</dt>
+<dd><i>Example:</i> <code>$tag->rules->disableAutoLineBreaks();</code><br/>
+Turns off the conversion of new lines in the scope of this tag. Conversion can be turned back on by descendants.</dd>
+
+<dt>enableAutoLineBreaks</dt>
+<dd><i>Example:</i> <code>$tag->rules->enableAutoLineBreaks();</code><br/>
+Turns on the conversion of new lines to <code>&lt;br/&gt;</code>. Conversion applies to descendants as well, unless selectively disabled or suspended.</dd>
+
 <dt>fosterParent</dt>
 <dd><i>Example:</i> <code>$tag->rules->fosterParent('X');</code><br/>
 Forces current parent X to be closed when this tag is encountered, and reopened as its child. If this tag is a self-closing tag, X is reopened as its next sibling.</dd>
@@ -102,13 +110,9 @@ Prevents plain text from being displayed as a child of this tag. Also disables l
 <dd><i>Example:</i> <code>$tag->rules->isTransparent();</code><br/>
 Indicates that this tag uses the <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#transparent-content-models">transparent content model</a> and their allow/deny rules are inherited from its parent.</dd>
 
-<dt>noBrChild</dt>
-<dd><i>Example:</i> <code>$tag->rules->noBrChild();</code><br/>
-Prevents newlines in child text nodes from being converted to <code>&lt;br/&gt;</code>.</dd>
-
-<dt>noBrDescendant</dt>
-<dd><i>Example:</i> <code>$tag->rules->noBrDescendant();</code><br/>
-Prevents newlines in descendant text nodes from being converted to <code>&lt;br/&gt;</code>. Useful for elements that preserves whitespace.</dd>
+<dt>preventLineBreaks</dt>
+<dd><i>Example:</i> <code>$tag->rules->preventLineBreaks();</code><br/>
+Prevent manual line breaks in this tag's context. Does not apply to descendants. Does not apply to automatic line breaks.</dd>
 
 <dt>requireParent</dt>
 <dd><i>Example:</i> <code>$tag->rules->requireParent('X');</code><br/>
@@ -117,5 +121,9 @@ Prevents this tag from being used unless it's as a child of X. If multiple requi
 <dt>requireAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->requireAncestor('X');</code><br/>
 Prevents this tag from being used unless it's as a descendant of X. If multiple requireAncestor rules are set, all of them must be satisfied.</dd>
+
+<dt>suspendAutoLineBreaks</dt>
+<dd><i>Example:</i> <code>$tag->rules->suspendAutoLineBreaks();</code><br/>
+Temporarily turns off the conversion of new lines into <code>br</code> elements in this tag's text. Does not apply to descendants.</dd>
 
 </dl>

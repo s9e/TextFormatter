@@ -21,8 +21,8 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://example.com">http://example.com</a><br>
-http://notexample.org<br>
+<a href="http://example.com">http://example.com</a>
+http://notexample.org
 <a href="http://www.example.org">http://www.example.org</a>
 ```
 
@@ -68,7 +68,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<img src="http://i.imgur.com/EMD4m1Q.png"><br>
-[img=http://notimgur.example.org/EMD4m1Q.png /]<br>
+<img src="http://i.imgur.com/EMD4m1Q.png">
+[img=http://notimgur.example.org/EMD4m1Q.png /]
 <a href="http://example.org">http://example.org</a>
 ```

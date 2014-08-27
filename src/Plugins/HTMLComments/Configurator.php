@@ -39,7 +39,6 @@ class Configurator extends ConfiguratorBase
 		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->attributes->add($this->attrName);
 		$tag->rules->ignoreTags();
-		$tag->rules->noBrDescendant();
 		$tag->template = '<xsl:comment><xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/></xsl:comment>';
 	}
 }

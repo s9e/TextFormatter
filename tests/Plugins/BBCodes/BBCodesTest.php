@@ -415,7 +415,11 @@ class BBCodesTest extends Test
 			],
 			[
 				"[NOPARSE]still converts new\nlines[/NOPARSE]",
-				"still converts new<br>\nlines"
+				"still converts new<br>\nlines",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
 			],
 			[
 				'[QUOTE]...text...[/QUOTE]',
@@ -445,7 +449,11 @@ class BBCodesTest extends Test
 
 					<blockquote class="uncited"><div>...text...</div></blockquote>
 
-				follow-up'
+				follow-up',
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
 			],
 			[
 				'my quote:
@@ -461,7 +469,11 @@ class BBCodesTest extends Test
 					<blockquote class="uncited"><div>...text...</div></blockquote>
 
 <br>
-				follow-up'
+				follow-up',
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
 			],
 			[
 				'[right]...[/right]',

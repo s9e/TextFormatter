@@ -44,12 +44,14 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 
 		if (!$src->allowsChild($this->br))
 		{
-			$rules['noBrChild'] = true;
+			$rules['preventLineBreaks'] = true;
+			$rules['suspendAutoLineBreaks'] = true;
 		}
 
 		if (!$src->allowsDescendant($this->br))
 		{
-			$rules['noBrDescendant'] = true;
+			$rules['disableAutoLineBreaks'] = true;
+			$rules['preventLineBreaks'] = true;
 		}
 
 		return $rules;

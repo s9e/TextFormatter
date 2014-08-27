@@ -125,7 +125,6 @@ class ParserTest extends Test
 	public function testParseCR()
 	{
 		$configurator = new Configurator;
-		$configurator->rootRules->noBrChild();
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
@@ -140,7 +139,6 @@ class ParserTest extends Test
 	public function testParseCRLF()
 	{
 		$configurator = new Configurator;
-		$configurator->rootRules->noBrChild();
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(
@@ -155,7 +153,6 @@ class ParserTest extends Test
 	public function testParseFiltersLowAscii()
 	{
 		$configurator = new Configurator;
-		$configurator->rootRules->noBrChild();
 		$parser       = $configurator->getParser();
 
 		$this->assertSame(

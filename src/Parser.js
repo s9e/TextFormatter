@@ -5,13 +5,25 @@
 /** @const */ var RULE_AUTO_REOPEN       = 1 << 1;
 /** @const */ var RULE_BREAK_PARAGRAPH   = 1 << 2;
 /** @const */ var RULE_CREATE_PARAGRAPHS = 1 << 3;
-/** @const */ var RULE_IGNORE_TAGS       = 1 << 4;
-/** @const */ var RULE_IGNORE_TEXT       = 1 << 5;
-/** @const */ var RULE_IS_TRANSPARENT    = 1 << 6;
-/** @const */ var RULE_NO_BR_CHILD       = 1 << 7;
-/** @const */ var RULE_NO_BR_DESCENDANT  = 1 << 8;
-/** @const */ var RULE_TRIM_WHITESPACE   = 1 << 9;
+/** @const */ var RULE_DISABLE_AUTO_BR   = 1 << 4;
+/** @const */ var RULE_ENABLE_AUTO_BR    = 1 << 5;
+/** @const */ var RULE_IGNORE_TAGS       = 1 << 6;
+/** @const */ var RULE_IGNORE_TEXT       = 1 << 7;
+/** @const */ var RULE_IS_TRANSPARENT    = 1 << 8;
+/** @const */ var RULE_PREVENT_BR        = 1 << 9;
+/** @const */ var RULE_SUSPEND_AUTO_BR   = 1 << 10;
+/** @const */ var RULE_TRIM_WHITESPACE   = 1 << 11;
 /**#@-*/
+
+/**
+* @const Bitwise disjunction of rules related to automatic line breaks
+*/
+var RULES_AUTO_LINEBREAKS = RULE_DISABLE_AUTO_BR | RULE_ENABLE_AUTO_BR | RULE_SUSPEND_AUTO_BR;
+
+/**
+* @const Bitwise disjunction of rules that are inherited by subcontexts
+*/
+var RULES_INHERITANCE = RULE_ENABLE_AUTO_BR;
 
 /**
 * @const All the characters that are considered whitespace
@@ -756,7 +768,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		);
 
 		// Format line breaks if applicable
-		if (!HINT.RULE_NO_BR_CHILD || !(context.flags & RULE_NO_BR_CHILD))
+		if (HINT.RULE_ENABLE_AUTO_BR && (context.flags & RULES_AUTO_LINEBREAKS) === RULE_ENABLE_AUTO_BR)
 		{
 			catchupText = catchupText.replace(/\n/g, "<br/>\n");
 		}
@@ -1374,7 +1386,7 @@ function processCurrentTag()
 	else if (currentTag.isBrTag())
 	{
 		// Output the tag if it's allowed, ignore it otherwise
-		if (!(context.flags & RULE_NO_BR_CHILD))
+		if (!HINT.RULE_PREVENT_BR || !(context.flags & RULE_PREVENT_BR))
 		{
 			outputBrTag(currentTag);
 		}
@@ -1726,18 +1738,16 @@ function pushContext(tag)
 		allowedDescendants
 	);
 
-	// Use this tag's flags except for noBrDescendant, which is inherited
+	// Use this tag's flags as a base for this context
 	var flags = tagFlags;
 
-	if (context.flags & RULE_NO_BR_DESCENDANT)
-	{
-		flags |= RULE_NO_BR_DESCENDANT;
-	}
+	// Add inherited rules
+	flags |= context.flags & RULES_INHERITANCE;
 
-	// noBrDescendant is replicated onto noBrChild
-	if (flags & RULE_NO_BR_DESCENDANT)
+	// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
+	if (flags & RULE_DISABLE_AUTO_BR)
 	{
-		flags |= RULE_NO_BR_CHILD;
+		flags &= ~RULE_ENABLE_AUTO_BR;
 	}
 
 	context = {

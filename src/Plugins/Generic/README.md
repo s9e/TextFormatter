@@ -120,6 +120,6 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Good link: <a href="http://example.org/">http://example.org/</a><br>
+Good link: <a href="http://example.org/">http://example.org/</a>
 Bad link:  &lt;javascript:alert(1)&gt;
 ```

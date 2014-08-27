@@ -77,13 +77,28 @@ class EnforceContentModelsTest extends AbstractTest
 	}
 
 	/**
-	* @testdox Generates a noBrChild rule and a noBrDescendant rule for <style>
+	* @testdox Generates a disableAutoLineBreaks rule, a preventLineBreaks rule and a suspendAutoLineBreaks rule for <style>
 	*/
-	public function testNoBrChildStyle()
+	public function testLineBreaksStyle()
 	{
 		$this->assertBooleanRules(
 			'<style><xsl:apply-templates/></style>',
-			['noBrChild' => true, 'noBrDescendant' => true]
+			[
+				'disableAutoLineBreaks' => true,
+				'preventLineBreaks'     => true,
+				'suspendAutoLineBreaks' => true
+			]
+		);
+	}
+
+	/**
+	* @testdox Generates a preventLineBreaks rule and a suspendAutoLineBreaks rule for <ul>
+	*/
+	public function testLineBreaksUl()
+	{
+		$this->assertBooleanRules(
+			'<ul><xsl:apply-templates/></ul>',
+			['preventLineBreaks' => true, 'suspendAutoLineBreaks' => true]
 		);
 	}
 }

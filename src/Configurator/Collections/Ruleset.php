@@ -87,24 +87,20 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
 
-		// If noBrDescendant is true, noBrChild should be true as well
-		if (!empty($config['noBrDescendant']))
-		{
-			$config['noBrChild'] = true;
-		}
-
 		// Pack boolean rules into a bitfield
 		$bitValues = [
-			'autoClose'        => Parser::RULE_AUTO_CLOSE,
-			'autoReopen'       => Parser::RULE_AUTO_REOPEN,
-			'breakParagraph'   => Parser::RULE_BREAK_PARAGRAPH,
-			'createParagraphs' => Parser::RULE_CREATE_PARAGRAPHS,
+			'autoClose'                   => Parser::RULE_AUTO_CLOSE,
+			'autoReopen'                  => Parser::RULE_AUTO_REOPEN,
+			'breakParagraph'              => Parser::RULE_BREAK_PARAGRAPH,
+			'createParagraphs'            => Parser::RULE_CREATE_PARAGRAPHS,
+			'disableAutoLineBreaks'       => Parser::RULE_DISABLE_AUTO_BR,
+			'enableAutoLineBreaks'        => Parser::RULE_ENABLE_AUTO_BR,
 			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
-			'ignoreTags'       => Parser::RULE_IGNORE_TAGS,
-			'ignoreText'       => Parser::RULE_IGNORE_TEXT,
-			'isTransparent'    => Parser::RULE_IS_TRANSPARENT,
-			'noBrChild'        => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant'   => Parser::RULE_NO_BR_DESCENDANT
+			'ignoreTags'                  => Parser::RULE_IGNORE_TAGS,
+			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
+			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
+			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
+			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR
 		];
 
 		$bitfield = 0;
@@ -392,6 +388,28 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add a disableAutoLineBreaks rule
+	*
+	* @param  bool $bool Whether or not automatic line breaks should be disabled
+	* @return self
+	*/
+	public function disableAutoLineBreaks($bool = true)
+	{
+		return $this->addBooleanRule('disableAutoLineBreaks', $bool);
+	}
+
+	/**
+	* Add a enableAutoLineBreaks rule
+	*
+	* @param  bool $bool Whether or not automatic line breaks should be enabled
+	* @return self
+	*/
+	public function enableAutoLineBreaks($bool = true)
+	{
+		return $this->addBooleanRule('enableAutoLineBreaks', $bool);
+	}
+
+	/**
 	* Add a fosterParent rule
 	*
 	* @param  string $tagName Name of the target tag
@@ -451,25 +469,14 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a noBrChild rule
+	* Add a preventLineBreaks rule
 	*
-	* @param  bool $bool Whether *not* to convert newlines to <br/> in child text nodes
+	* @param  bool $bool Whether or not manual line breaks should be ignored in this tag's context
 	* @return self
 	*/
-	public function noBrChild($bool = true)
+	public function preventLineBreaks($bool = true)
 	{
-		return $this->addBooleanRule('noBrChild', $bool);
-	}
-
-	/**
-	* Add a noBrDescendant rule
-	*
-	* @param  bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
-	* @return self
-	*/
-	public function noBrDescendant($bool = true)
-	{
-		return $this->addBooleanRule('noBrDescendant', $bool);
+		return $this->addBooleanRule('preventLineBreaks', $bool);
 	}
 
 	/**
@@ -492,5 +499,16 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function requireAncestor($tagName)
 	{
 		return $this->addTargetedRule('requireAncestor', $tagName);
+	}
+
+	/**
+	* Add a suspendAutoLineBreaks rule
+	*
+	* @param  bool $bool Whether or not automatic line breaks should be temporarily suspended
+	* @return self
+	*/
+	public function suspendAutoLineBreaks($bool = true)
+	{
+		return $this->addBooleanRule('suspendAutoLineBreaks', $bool);
 	}
 }

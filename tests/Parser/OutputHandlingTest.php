@@ -30,7 +30,11 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"Plain\ntext",
-				"<t>Plain<br/>\ntext</t>"
+				"<t>Plain<br/>\ntext</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
 			],
 			[
 				'foo bar',
@@ -215,6 +219,7 @@ class OutputHandlingTest extends Test
 				"<r>xxx\n<DIV><s>[DIV]</s>\n...\n<e>[/DIV]</e></DIV>\nyyy</r>",
 				function ($configurator)
 				{
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
@@ -228,6 +233,7 @@ class OutputHandlingTest extends Test
 				"<r>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</r>",
 				function ($configurator)
 				{
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
@@ -255,6 +261,7 @@ yyy',
 yyy</r>',
 				function ($configurator)
 				{
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('UL')->rules->ignoreSurroundingWhitespace();
 					$configurator->tags->add('LI')->rules->ignoreSurroundingWhitespace();
 				},
@@ -282,6 +289,7 @@ yyy</r>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 				}
 			],
 			[
@@ -290,6 +298,7 @@ yyy</r>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 				}
 			],
 			[
@@ -298,6 +307,7 @@ yyy</r>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 				}
 			],
 			[
@@ -318,6 +328,7 @@ yyy</r>',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$rules = $configurator->tags->add('UL')->rules;
 					$rules->breakParagraph();
 					$rules->ignoreSurroundingWhitespace();
@@ -353,6 +364,7 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$rules = $configurator->tags->add('UL')->rules;
 					$rules->breakParagraph();
 					$rules->ignoreSurroundingWhitespace();
@@ -387,6 +399,7 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$rules = $configurator->tags->add('B');
 				},
 				function ($parser)
@@ -400,6 +413,7 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$rules = $configurator->tags->add('B');
 				},
 				function ($parser)
@@ -426,8 +440,9 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('X')->rules->ignoreSurroundingWhitespace();
-					$configurator->tags->add('Y')->rules->noBrDescendant();
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -441,6 +456,7 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('X');
 				},
 				function ($parser)
@@ -467,6 +483,7 @@ xxx',
 				function ($configurator)
 				{
 					$configurator->rootRules->createParagraphs();
+					$configurator->rootRules->enableAutoLineBreaks();
 					$configurator->tags->add('QUOTE')->rules->breakParagraph();
 				},
 				function ($parser)
