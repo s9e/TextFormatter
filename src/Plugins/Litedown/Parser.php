@@ -504,6 +504,10 @@ class Parser extends ParserBase
 						$breakParagraph = true;
 					}
 				}
+				// Code fence
+				elseif ($m[5][0][0] === '`')
+				{
+				}
 			}
 			elseif (!empty($m[3][0]) && !$listsCnt)
 			{
