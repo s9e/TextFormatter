@@ -1,6 +1,6 @@
 ###### August 2014
 
-- Reworked the algorithm and rules defining automatic and manual line breaks. Enabled forced line breaks in Litedown.
+- Reworked the algorithm and rules defining automatic and manual line breaks. Enables forced line breaks in Litedown.
 
 ###### July 2014
 
