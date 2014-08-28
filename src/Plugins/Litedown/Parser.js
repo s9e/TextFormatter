@@ -119,7 +119,6 @@ function getSetextLines()
 	return setextLines;
 }
 
-
 /**
 * Initialize this parser
 */
