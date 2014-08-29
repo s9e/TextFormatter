@@ -152,8 +152,8 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$minifier->excludeDefaultExterns = true;
 
-		// Replace the Java interpreter with echo so that it outputs its own command line
-		$minifier->javaBin = 'echo';
+		// Replace the Java interpreter with a PHP script so that it outputs its own command line
+		$minifier->javaBin = 'php ' . escapeshellarg(__DIR__ . '/echo.php') . ' --';
 
 		$this->assertRegexp(
 			'#--externs \\S*externs.js --use_only_custom_externs#',

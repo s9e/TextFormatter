@@ -98,7 +98,7 @@ class ClosureCompilerApplication extends Minifier
 		$cmd = escapeshellcmd($this->javaBin)
 		     . ' -jar ' . escapeshellarg($this->closureCompilerBin)
 		     . ' --compilation_level ' . escapeshellarg($this->compilationLevel)
-		     . ' ' . $options
+		     . $options
 		     . ' --js ' . escapeshellarg($inFile)
 		     . ' --js_output_file ' . escapeshellarg($outFile);
 
