@@ -2,7 +2,7 @@
 
 ### Blockquotes
 
-A line that starts with a right angle bracket > (optionally followed by a space) is a blockquote. Blockquotes can be nested but they can't be used inside of lists.
+A line that starts with a right angle bracket `>` (optionally followed by a space) is a blockquote. Blockquotes can be nested but they can't be used inside of lists.
 
 ```md
 > > Deep blockquote
@@ -78,6 +78,8 @@ Atx-style
 
 ### Horizontal rules
 
+Each of those creates an horizontal rule.
+
 ```
 * * *
 
@@ -132,7 +134,7 @@ Second line</p>
 
 ### Emphasis
 
-A pair of `*` or `_` marks emphasis (`<em>`) while a pair of `**` or `__` marks strong emphasis (`<strong>`). One exception: a single `_` between two ASCII alphanumerical character is kept as-is.
+A pair of `*` or `_` marks emphasis (`<em>`) while a pair of `**` or `__` marks strong emphasis (`<strong>`). One exception: a single `_` between two ASCII alphanumerical characters is kept as-is.
 
 ```md
 un*frigging*believable
@@ -167,6 +169,19 @@ Any text between two `~~` markers.
 ```
 ```html
 <p>90s haircuts are <del>cool</del> <del>lame</del> cool again.</p>
+```
+
+### Superscript
+
+```md
+E=mc^2
+
+foo^bar^baz
+```
+```html
+<p>E=mc<sup>2</sup></p>
+
+<p>foo<sup>bar<sup>baz</sup></sup></p>
 ```
 
 ### Inline code
