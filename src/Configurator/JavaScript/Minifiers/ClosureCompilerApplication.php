@@ -89,12 +89,33 @@ class ClosureCompilerApplication extends Minifier
 			$options .= ' --externs ' . __DIR__ . '/../externs.js --use_only_custom_externs';
 		}
 
+		$crc     = crc32($src);
+		$inFile  = sys_get_temp_dir() . '/' . $crc . '.js';
+		$outFile = sys_get_temp_dir() . '/' . $crc . '.min.js';
+
+		file_put_contents($inFile, $src);
+
 		$cmd = escapeshellcmd($this->javaBin)
 		     . ' -jar ' . escapeshellarg($this->closureCompilerBin)
 		     . ' --compilation_level ' . escapeshellarg($this->compilationLevel)
 		     . ' ' . $options
-		     . ' --js -';
+		     . ' --js ' . escapeshellarg($inFile)
+		     . ' --js_output_file ' . escapeshellarg($outFile);
 
-		return trim(shell_exec('echo ' . escapeshellarg($src) . ' | ' . $cmd));
+		exec($cmd, $output, $return);
+		unlink($inFile);
+
+		if (isset($outFile))
+		{
+			$src = trim(file_get_contents($outFile));
+			unlink($outFile);
+		}
+
+		if ($return)
+		{
+			throw new RuntimeException('An error occured during minification');
+		}
+
+		return $src;
 	}
 }
