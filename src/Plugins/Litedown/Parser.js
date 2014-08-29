@@ -1,3 +1,5 @@
+var hasEscapedChars, startTagLen, startTagPos, endTagPos, endTagLen;
+
 // Unlike the PHP parser, init() must not take an argument
 init();
 

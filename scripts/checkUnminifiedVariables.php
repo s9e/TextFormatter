@@ -1,11 +1,23 @@
 #!/usr/bin/php
 <?php
 
+$regexps = [
+	// varName.foo() or varName= or varName,
+	'/\\w{2,}+(?=\\.\\w+[(=,])/S',
+	// varName= preceeded by any of ; ( ) { }
+	'/(?<=[;(){}])(?<!&amp;)\\w{2,}+(?==)/S'
+];
+
 $usedVars = [];
 foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 {
-	preg_match_all('/\\w{2,}+(?=\\.\\w+[(=,])/S', file_get_contents($filepath), $m);
-	$usedVars += array_flip($m[0]);
+	$file = file_get_contents($filepath);
+
+	foreach ($regexps as $regexp)
+	{
+		preg_match_all($regexp, $file, $m);
+		$usedVars += array_flip($m[0]);
+	}
 }
 
 $knownVars = [];
@@ -15,23 +27,29 @@ foreach (range('a', 'z') as $c)
 {
 	$knownVars[$c . 'a'] = 1;
 }
+foreach (range('A', 'Z') as $c)
+{
+	$knownVars[$c . 'a'] = 1;
+}
+$knownVars['kb'] = 1;
 
 // Browser stuff
-$knownVars['Math']      = 1;
-$knownVars['Object']    = 1;
+$knownVars['Math']          = 1;
+$knownVars['Object']        = 1;
 $knownVars['contentWindow'] = 1;
-$knownVars['data']      = 1;
-$knownVars['document']  = 1;
-$knownVars['punycode']  = 1;
-$knownVars['hljs']      = 1;
-$knownVars['prototype'] = 1;
-$knownVars['this']      = 1;
-$knownVars['src']       = 1;
-$knownVars['style']     = 1;
-$knownVars['url']       = 1;
-$knownVars['window']    = 1;
+$knownVars['data']          = 1;
+$knownVars['document']      = 1;
+$knownVars['hljs']          = 1;
+$knownVars['prototype']     = 1;
+$knownVars['punycode']      = 1;
+$knownVars['src']           = 1;
+$knownVars['style']         = 1;
+$knownVars['this']          = 1;
+$knownVars['url']           = 1;
+$knownVars['window']        = 1;
 
 // Known false positives
+$knownVars['id']  = 1;
 $knownVars['pok'] = 1;
 
 $unknownVars = array_diff_key($usedVars, $knownVars);
