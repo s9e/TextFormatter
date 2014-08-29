@@ -30,7 +30,6 @@ class Fatdown extends Bundle
 		$htmlAliases = [
 			'a'      => ['URL', 'href' => 'url'],
 			'hr'     => 'HR',
-			'img'    => 'IMG',
 			'em'     => 'EM',
 			's'      => 'S',
 			'strong' => 'STRONG',
@@ -63,7 +62,11 @@ class Fatdown extends Bundle
 			'del',
 			'div' => ['class'],
 			'i',
+			'img' => ['alt', 'height', 'src', 'title', 'width'],
 			'ins',
+			'li',
+			'ol',
+			'pre',
 			'rb',
 			'rp',
 			'rt',
@@ -80,7 +83,8 @@ class Fatdown extends Bundle
 			'th' => ['colspan', 'rowspan', 'scope'],
 			'thead',
 			'tr',
-			'u'
+			'u',
+			'ul'
 		];
 		foreach ($htmlElements as $k => $v)
 		{
