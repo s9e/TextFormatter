@@ -105,7 +105,7 @@ class ClosureCompilerApplication extends Minifier
 		exec($cmd, $output, $return);
 		unlink($inFile);
 
-		if (isset($outFile))
+		if (file_exists($outFile))
 		{
 			$src = trim(file_get_contents($outFile));
 			unlink($outFile);
