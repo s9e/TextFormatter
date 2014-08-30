@@ -17,7 +17,7 @@ class ConfiguratorTest extends Test
 	{
 		$config = $this->configurator->plugins->load('Escaper')->asConfig();
 		$regexp = $config['regexp'];
-		$chars  = '!#()*+-.:@[\\]^_`{}';
+		$chars  = '!#()*+-.:<>@[\\]^_`{}';
 
 		$i = 32;
 		do
