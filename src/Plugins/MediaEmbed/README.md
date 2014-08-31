@@ -226,6 +226,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>
+		<td><code>gofundme</code></td>
+		<td>GoFundMe</td>
+		<td>http://www.gofundme.com/2p37ao</td>
+	</tr>
+	<tr>
 		<td><code>googleplus</code></td>
 		<td>Google+</td>
 		<td>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW<br/>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</td>

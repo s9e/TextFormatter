@@ -527,6 +527,18 @@
 		<template><![CDATA[<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#{@id}" frameborder="0" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>]]></template>
 	</site>
 
+	<site id="gofundme">
+		<name>GoFundMe</name>
+		<homepage>http://www.gofundme.com/</homepage>
+		<example>http://www.gofundme.com/2p37ao</example>
+
+		<tags><tag>fundraising</tag></tags>
+
+		<host>gofundme.com</host>
+		<extract>@gofundme\.com/(?'id'\w+)(?![^#?])@</extract>
+		<flash width="258" height="338" src="//funds.gofundme.com/Widgetflex.swf" flashvars="page={@id}"/>
+	</site>
+
 	<site id="googleplus">
 		<name>Google+</name>
 		<homepage>https://plus.google.com/</homepage>

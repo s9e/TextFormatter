@@ -1559,6 +1559,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.gofundme.com/2p37ao',
+				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao">http://www.gofundme.com/2p37ao</GOFUNDME></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gofundme');
+				}
+			],
+			[
+				'http://www.gofundme.com/2p37ao#',
+				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao">http://www.gofundme.com/2p37ao#</GOFUNDME></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gofundme');
+				}
+			],
+			[
+				'http://www.gofundme.com/2p37ao?pc=trend',
+				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao?pc=trend">http://www.gofundme.com/2p37ao?pc=trend</GOFUNDME></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gofundme');
+				}
+			],
+			[
+				'http://www.gofundme.com/tour/',
+				'<t>http://www.gofundme.com/tour/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gofundme');
+				}
+			],
+			[
 				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
 				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW">https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
 				[],
