@@ -34,7 +34,10 @@ class Parser
 	/**
 	* Bitwise disjunction of rules related to automatic line breaks
 	*/
-	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
+//	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
+
+	// https://bugs.php.net/bug.php?id=67880
+	const RULES_AUTO_LINEBREAKS = 1072;
 
 	/**
 	* Bitwise disjunction of rules that are inherited by subcontexts
