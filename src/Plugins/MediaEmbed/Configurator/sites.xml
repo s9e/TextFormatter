@@ -64,6 +64,18 @@
 		</iframe>
 	</site>
 
+	<site id="audioboo">
+		<name>Audioboo</name>
+		<homepage>https://audioboo.fm/</homepage>
+		<example>http://audioboo.fm/boos/2439994-deadline-day-update</example>
+
+		<tags><tag>podcasts</tag></tags>
+
+		<host>audioboo.fm</host>
+		<extract>!audioboo\.fm/boos/(?'id'\d+)!</extract>
+		<iframe width="100%" height="150" src="//audioboo.fm/boos/{@id}/embed/v2" style="max-width:700px"/>
+	</site>
+
 	<site id="audiomack">
 		<name>Audiomack</name>
 		<homepage>http://www.audiomack.com/</homepage>

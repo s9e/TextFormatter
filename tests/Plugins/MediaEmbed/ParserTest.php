@@ -1206,6 +1206,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://audioboo.fm/boos/2439994-deadline-day-update',
+				'<r><AUDIOBOO id="2439994" url="http://audioboo.fm/boos/2439994-deadline-day-update">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audioboo');
+				}
+			],
+			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
 				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song" url="http://www.audiomack.com/song/random-2/buy-the-world-final-1">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
 				[],
