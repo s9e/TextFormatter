@@ -848,6 +848,23 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid site ID
+	*/
+	public function testAddInvalidId()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'../youtube',
+			[
+				'host'       => 'youtube.com',
+				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template'   => 'YouTube!'
+			]
+		);
+	}
+
+	/**
 	* @testdox appendTemplate() sets a template to be appended to media sites' templates
 	*/
 	public function testAppend()

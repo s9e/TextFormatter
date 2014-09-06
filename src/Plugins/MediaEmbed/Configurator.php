@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
@@ -180,8 +181,8 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function add($siteId, array $siteConfig = null)
 	{
-		// Normalize the site ID to lowercase
-		$siteId = strtolower($siteId);
+		// Normalize the site ID
+		$siteId = $this->normalizeId($siteId);
 
 		if (!isset($siteConfig))
 		{
@@ -603,5 +604,23 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $config;
+	}
+
+	/**
+	* Validate and normalize a site ID
+	*
+	* @param  string $siteId
+	* @return string
+	*/
+	protected function normalizeId($siteId)
+	{
+		$siteId = strtolower($siteId);
+
+		if (!preg_match('(^[a-z0-9]+$)', $siteId))
+		{
+			throw new InvalidArgumentException('Invalid site ID');
+		}
+
+		return $siteId;
 	}
 }
