@@ -1,0 +1,10 @@
+<site name="Instagram" homepage="http://instagram.com/">
+	<source>http://help.instagram.com/513918941996087</source>
+	<example>http://instagram.com/p/gbGaIXBQbn/</example>
+
+	<tags><tag>social</tag></tags>
+
+	<host>instagram.com</host>
+	<extract>!instagram\.com/p/(?'id'[-_\w]+)!</extract>
+	<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
+</site>

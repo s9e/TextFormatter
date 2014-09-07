@@ -11,7 +11,7 @@ then
 	git update-index --add "docs/Cookbook/README.md"
 fi
 
-if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites.xml` ]]
+if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 then
 	./scripts/generateBundles.php
 	./scripts/patchExamples.php

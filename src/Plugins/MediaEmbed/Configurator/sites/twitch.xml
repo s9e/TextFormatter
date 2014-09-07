@@ -1,0 +1,33 @@
+<site name="Twitch" homepage="http://www.twitch.tv/">
+	<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
+	<example>http://www.twitch.tv/minigolf2000</example>
+	<example>http://www.twitch.tv/amazhs/c/4493103</example>
+	<example>http://www.twitch.tv/minigolf2000/b/497929990</example>
+	<example>http://www.twitch.tv/m/57217</example>
+
+	<tags><tag>gaming</tag></tags>
+
+	<host>twitch.tv</host>
+	<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+))?#</extract>
+	<scrape>
+		<match>!twitch\.tv/m/\d+!</match>
+		<extract>!channel=(?'channel'\w+)&amp;.*?archive_id=(?'archive_id'\d+)!</extract>
+	</scrape>
+	<flash width="620" height="378">
+		<src><![CDATA[
+			<xsl:text>//www.twitch.tv/widgets/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@archive_id or @chapter_id">arch</xsl:when>
+				<xsl:otherwise>l</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>ive_embed_player.swf</xsl:text>
+		]]></src>
+		<flashvars><![CDATA[
+			<xsl:text>channel=</xsl:text>
+			<xsl:value-of select="@channel"/>
+			<xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if>
+			<xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if>
+			<xsl:text>&amp;auto_play=false</xsl:text>
+		]]></flashvars>
+	</flash>
+</site>

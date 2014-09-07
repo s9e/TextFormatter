@@ -1,0 +1,9 @@
+<site name="Vimeo" homepage="http://vimeo.com/">
+	<source>http://developer.vimeo.com/player/embedding</source>
+	<example>http://vimeo.com/67207222</example>
+	<example>http://vimeo.com/channels/staffpicks/67207222</example>
+
+	<host>vimeo.com</host>
+	<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'\d+)!</extract>
+	<iframe width="560" height="315" src="//player.vimeo.com/video/{@id}"/>
+</site>

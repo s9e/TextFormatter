@@ -1,0 +1,12 @@
+<site name="Vube" homepage="http://vube.com/">
+	<example>http://vube.com/s/v7JeV6</example>
+	<example>http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s</example>
+
+	<host>vube.com</host>
+	<extract>!vube\.com/[^/]+/[^/]+/(?'id'\w+)!</extract>
+	<scrape>
+		<match>!vube\.com/s/\w+!</match>
+		<extract>!vube\.com/[^/]+/[^/]+/(?'id'\w+)!</extract>
+	</scrape>
+	<iframe width="640" height="435" src="//vube.com/embed/video/{@id}"/>
+</site>

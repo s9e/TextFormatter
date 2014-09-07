@@ -7,37 +7,40 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
-$sites = simplexml_load_file(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites.xml');
-
-foreach ($sites->site as $site)
+foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
 {
-	if (isset($_SERVER['argv'][1]) && $site['id'] != $_SERVER['argv'][1])
+	$siteId = basename($siteFile, '.xml');
+
+	if (isset($_SERVER['argv'][1]) && $siteId != $_SERVER['argv'][1])
 	{
 		continue;
 	}
 
-	$configurator->MediaEmbed->add($site['id']);
+	$configurator->MediaEmbed->add($siteId);
 }
 
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
 $siteHtml = [];
-foreach ($sites->site as $site)
+foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
 {
-	if (isset($_SERVER['argv'][1]) && $site['id'] != $_SERVER['argv'][1])
+	$siteId = basename($siteFile, '.xml');
+
+	if (isset($_SERVER['argv'][1]) && $siteId != $_SERVER['argv'][1])
 	{
 		continue;
 	}
 
+	$site = simplexml_load_file($siteFile);
 	foreach ($site->example as $example)
 	{
-		$text = '[media=' . $site['id'] . ']' . $example . '[/media]';
+		$text = '[media=' . $siteId . ']' . $example . '[/media]';
 
 		$xml  = $parser->parse($text);
 		$html = $renderer->render($xml);
 
-		$siteHtml[(string) $site->name][$html] = 1;
+		$siteHtml[(string) $site['name']][$html] = 1;
 	}
 }
 

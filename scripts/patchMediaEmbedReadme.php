@@ -5,8 +5,6 @@ include __DIR__ . '/../src/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 
-$sites = simplexml_load_file(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites.xml');
-
 $html = [];
 $html[] = '<table>';
 $html[] = '	<tr>';
@@ -15,11 +13,15 @@ $html[] = '		<th>Site</th>';
 $html[] = '		<th>Example URLs</th>';
 $html[] = '	</tr>';
 
-foreach ($sites->site as $site)
+$sitesDir = __DIR__ . '/../src/Plugins/MediaEmbed/sites';
+foreach (glob($sitesDir . '/*.xml') as $siteFile)
 {
+	$site   = simplexml_load_file($siteFile);
+	$siteId = basename($siteFile, '.xml');
+
 	$html[] = '	<tr>';
-	$html[] = '		<td><code>' . $site['id'] . '</code></td>';
-	$html[] = '		<td>' . $site->name . '</td>';
+	$html[] = '		<td><code>' . $siteId . '</code></td>';
+	$html[] = '		<td>' . $site['name'] . '</td>';
 	$html[] = '		<td>' . implode('<br/>', (array) $site->example) . '</td>';
 	$html[] = '	</tr>';
 }

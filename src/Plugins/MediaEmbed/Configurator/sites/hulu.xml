@@ -1,0 +1,10 @@
+<site name="Hulu" homepage="http://www.hulu.com/">
+	<example>http://www.hulu.com/watch/484180</example>
+
+	<host>hulu.com</host>
+	<scrape>
+		<match>!hulu\.com/watch/!</match>
+		<extract>!eid=(?'id'[-\w]+)!</extract>
+	</scrape>
+	<iframe width="640" height="360" src="https://secure.hulu.com/embed/{@id}"/>
+</site>

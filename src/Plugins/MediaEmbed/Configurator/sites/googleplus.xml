@@ -1,0 +1,15 @@
+<site name="Google+" homepage="https://plus.google.com/">
+	<source>https://developers.google.com/+/web/embedded-post/</source>
+	<example>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</example>
+	<example>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</example>
+
+	<tags><tag>social</tag></tags>
+
+	<host>plus.google.com</host>
+	<extract>!//plus\.google\.com/(?:\+\w+|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
+	<scrape>
+		<match>!//plus\.google\.com/\+[^/]+/posts/\w!</match>
+		<extract>!oid="?(?'oid'\d+)!</extract>
+	</scrape>
+	<iframe width="450" height="240" src="//s9e.github.io/iframe/googleplus.min.html#{@oid}/posts/{@pid}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+</site>

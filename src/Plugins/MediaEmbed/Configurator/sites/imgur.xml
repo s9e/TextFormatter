@@ -1,0 +1,9 @@
+<site name="imgur albums" homepage="http://imgur.com/">
+	<example>http://imgur.com/a/9UGCL</example>
+
+	<tags><tag>images</tag></tags>
+
+	<host>imgur.com</host>
+	<extract>!imgur\.com/a/(?'id'\w+)!</extract>
+	<iframe width="100%" height="550" src="//imgur.com/a/{@id}/embed"/>
+</site>

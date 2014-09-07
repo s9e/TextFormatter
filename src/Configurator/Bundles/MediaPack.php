@@ -26,12 +26,10 @@ class MediaPack extends Bundle
 			$configurator->plugins->load('MediaEmbed', $pluginOptions);
 		}
 
-		$dom = new DOMDocument;
-		$dom->load(__DIR__ . '/../../Plugins/MediaEmbed/Configurator/sites.xml');
-
-		foreach ($dom->getElementsByTagName('site') as $site)
+		foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
 		{
-			$configurator->MediaEmbed->add($site->getAttribute('id'));
+			$siteId = basename($siteFile, '.xml');
+			$configurator->MediaEmbed->add($siteId);
 		}
 	}
 }

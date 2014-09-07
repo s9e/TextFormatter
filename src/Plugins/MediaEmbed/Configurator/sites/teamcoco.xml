@@ -1,0 +1,14 @@
+<site name="Team Coco" homepage="http://teamcoco.com/">
+	<example>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</example>
+	<example>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</example>
+
+	<tags><tag>entertainment</tag></tags>
+
+	<host>teamcoco.com</host>
+	<extract>!teamcoco\.com/video/(?'id'\d+)!</extract>
+	<scrape>
+		<match>!teamcoco\.com/video/.!</match>
+		<extract>!teamcoco\.com/embed/v/(?'id'\d+)!</extract>
+	</scrape>
+	<iframe width="640" height="415" src="//teamcoco.com/embed/v/{@id}"/>
+</site>

@@ -1,0 +1,9 @@
+<site name="The Atlantic Video" homepage="http://www.theatlantic.com/video/">
+	<example>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</example>
+
+	<tags><tag>news</tag></tags>
+
+	<host>theatlantic.com</host>
+	<extract>!theatlantic\.com/video/index/(?'id'\d+)!</extract>
+	<iframe width="640" height="360" src="http://www.theatlantic.com/video/iframe/{@id}/"/>
+</site>

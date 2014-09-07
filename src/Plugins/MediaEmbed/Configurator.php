@@ -57,9 +57,9 @@ class Configurator extends ConfiguratorBase
 	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
 
 	/**
-	* @var DOMXPath XPath engine pointing to the document containing the predefined sites
+	* @var string Path to the directory that contains the sites definitions
 	*/
-	protected $sites;
+	public $sitesDir;
 
 	/**
 	* {@inheritdoc}
@@ -93,12 +93,9 @@ class Configurator extends ConfiguratorBase
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 		}
 
-		if (!isset($this->sites))
+		if (!isset($this->sitesDir))
 		{
-			$dom = new DOMDocument;
-			$dom->load(__DIR__ . '/Configurator/sites.xml');
-
-			$this->sites = new DOMXPath($dom);
+			$this->sitesDir = __DIR__ . '/Configurator/sites';
 		}
 	}
 
@@ -184,19 +181,18 @@ class Configurator extends ConfiguratorBase
 		// Normalize the site ID
 		$siteId = $this->normalizeId($siteId);
 
+		// If there's no value, look into the default site definitions
 		if (!isset($siteConfig))
 		{
-			// If there's no value, look for a match in the predefined sites document
-			$query = '//site[@id="' . htmlspecialchars($siteId) . '"]';
-			$node  = $this->sites->query($query)->item(0);
+			$filepath = $this->sitesDir . '/' . $siteId . '.xml';
 
-			if (!$node)
+			if (!file_exists($filepath))
 			{
 				throw new RuntimeException("Unknown media site '" . $siteId . "'");
 			}
 
 			// Extract the site info from the node and put it into an array
-			$siteConfig = $this->getElementConfig($node);
+			$siteConfig = $this->getConfigFromXmlFile($filepath);
 		}
 
 		// Add this site to the list
@@ -554,6 +550,23 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $xsl;
+	}
+
+	/**
+	* Extract a site's config from its XML file
+	*
+	* @param  string $filepath Path to the XML file
+	* @return mixed
+	*/
+	protected function getConfigFromXmlFile($filepath)
+	{
+		$dom = new DOMDocument;
+		if (!$dom->load($filepath))
+		{
+			throw new RuntimeException('Invalid XML');
+		}
+
+		return $this->getElementConfig($dom->documentElement);
 	}
 
 	/**

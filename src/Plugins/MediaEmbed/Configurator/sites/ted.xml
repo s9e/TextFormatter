@@ -1,0 +1,19 @@
+<site name="TED Talks" homepage="http://www.ted.com/">
+	<source>http://blog.ted.com/2011/04/01/now-you-can-embed-tedtalks-with-subtitles-enabled/</source>
+	<example>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</example>
+	<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
+
+	<tags><tag>presentations</tag></tags>
+
+	<host>ted.com</host>
+	<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"?]+)!i</extract>
+	<iframe width="560" height="315">
+		<src><![CDATA[
+			<xsl:text>http://embed.ted.com/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="not(contains(@id, '.html'))">
+				<xsl:text>.html</xsl:text>
+			</xsl:if>
+		]]></src>
+	</iframe>
+</site>

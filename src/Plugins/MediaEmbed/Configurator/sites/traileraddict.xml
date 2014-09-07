@@ -1,0 +1,12 @@
+<site name="Trailer Addict" homepage="http://www.traileraddict.com/">
+	<example>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</example>
+
+	<tags><tag>movies</tag></tags>
+
+	<host>traileraddict.com</host>
+	<scrape>
+		<match>@traileraddict\.com/(?!tags/)[^/]+/.@</match>
+		<extract>@v\.traileraddict\.com/(?'id'\d+)@</extract>
+	</scrape>
+	<iframe width="560" height="315" src="//v.traileraddict.com/{@id}"/>
+</site>

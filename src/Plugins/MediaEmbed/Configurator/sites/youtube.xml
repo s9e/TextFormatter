@@ -1,0 +1,39 @@
+<site name="YouTube" homepage="http://www.youtube.com/">
+	<source>http://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
+	<example>http://www.youtube.com/watch?v=-cEzsCAzTak</example>
+	<example>http://youtu.be/-cEzsCAzTak</example>
+	<example>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
+	<example>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
+
+	<host>youtube.com</host>
+	<host>youtu.be</host>
+	<extract>!youtube\.com/(?:watch.*?v=|v/)(?'id'[-\w]+)!</extract>
+	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
+	<extract>![#&amp;?]t=(?:(?:(?'h'\d+)h)?(?'m'\d+)m(?'s'\d+)|(?'t'\d+))!</extract>
+	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
+	<iframe width="560" height="315">
+		<src><![CDATA[
+			<xsl:text>//www.youtube.com/embed/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>?controls=2</xsl:text>
+			<xsl:if test="@list">
+				<xsl:text>&amp;list=</xsl:text>
+				<xsl:value-of select="@list"/>
+			</xsl:if>
+			<xsl:if test="@t or @m">
+				<xsl:text>&amp;start=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="@t">
+						<xsl:value-of select="@t"/>
+					</xsl:when>
+					<xsl:when test="@h">
+						<xsl:value-of select="@h * 3600 + @m * 60 + @s"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@m * 60 + @s"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		]]></src>
+	</iframe>
+</site>

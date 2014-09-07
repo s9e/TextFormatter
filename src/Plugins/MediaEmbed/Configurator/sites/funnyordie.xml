@@ -1,0 +1,10 @@
+<site name="Funny or Die" homepage="http://www.funnyordie.com/">
+	<source>http://support.funnyordie.com/discussions/problems/918-embed-user-videos-widget</source>
+	<example>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
+
+	<tags><tag>entertainment</tag></tags>
+
+	<host>funnyordie.com</host>
+	<extract>!funnyordie\.com/videos/(?'id'[0-9a-f]+)!</extract>
+	<iframe width="640" height="360" src="http://www.funnyordie.com/embed/{@id}"/>
+</site>

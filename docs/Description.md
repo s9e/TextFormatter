@@ -247,6 +247,6 @@
 	* Creates a `[media]` BBCode for embedded content
 		* Creates a site-specific BBCode (e.g. `[youtube]`) for every available site
 	* Optionally replaces URLs in plain text with embedded content
-	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites.xml)
+	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites/)
 	* Flexible syntax
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)

@@ -1,0 +1,16 @@
+<site name="Grooveshark" homepage="http://grooveshark.com/">
+	<example>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761</example>
+	<example>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761</example>
+	<example>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</example>
+	<example>http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</example>
+
+	<tags><tag>music</tag></tags>
+
+	<host>grooveshark.com</host>
+	<extract>%grooveshark\.com(?:/#!?)?/playlist/[^/]+/(?'playlistid'\d+)%</extract>
+	<scrape url="http://grooveshark.com/s/{@path}">
+		<match>%grooveshark\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%</match>
+		<extract>%songID=(?'songid'\d+)%</extract>
+	</scrape>
+	<flash width="400" height="{400-360*boolean(@songid)}" src="//grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf" flashvars="playlistID={@playlistid}&amp;songID={@songid}"/>
+</site>

@@ -1,0 +1,30 @@
+<site name="CBS News Video" homepage="http://www.cbsnews.com/video/">
+	<example>http://www.cbsnews.com/video/watch/?id=50156501n</example>
+	<example>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</example>
+
+	<tags><tag>news</tag></tags>
+
+	<host>cbsnews.com</host>
+	<extract>#cbsnews\.com/video/watch/\?id=(?'id'\d+)#</extract>
+	<scrape>
+		<match>#cbsnews\.com/videos/(?!watch/)#</match>
+		<extract>#"pid":"(?'pid'\w+)"#</extract>
+	</scrape>
+	<attributes>
+		<id required="false"/>
+	</attributes>
+	<flash width="425" height="279">
+		<src><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@pid">http://www.cbsnews.com/common/video/cbsnews_player.swf</xsl:when>
+				<xsl:otherwise>http://i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+		<flashvars><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@pid">pType=embed&amp;si=254&amp;pid=<xsl:value-of select="@pid"/></xsl:when>
+				<xsl:otherwise>si=254&amp;contentValue=<xsl:value-of select="@id"/></xsl:otherwise>
+			</xsl:choose>
+		]]></flashvars>
+	</flash>
+</site>

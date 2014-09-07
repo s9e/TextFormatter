@@ -1,0 +1,14 @@
+<site name="Gfycat" homepage="http://gfycat.com/">
+	<example>http://gfycat.com/SereneIllfatedCapybara</example>
+	<example>http://giant.gfycat.com/SereneIllfatedCapybara.gif</example>
+
+	<tags><tag>images</tag></tags>
+
+	<host>gfycat.com</host>
+	<extract>!gfycat\.com/(?'id'\w+)!</extract>
+	<scrape url="http://gfycat.com/{@id}">
+		<extract>!gfyHeight[ ="]+(?'height'\d+)!</extract>
+		<extract>!gfyWidth[ ="]+(?'width'\d+)!</extract>
+	</scrape>
+	<iframe width="{@width}" height="{@height}" src="//gfycat.com/iframe/{@id}"/>
+</site>

@@ -865,6 +865,23 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() throws a RuntimeException if the default XML config is malformed
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Invalid XML
+	*/
+	public function testAddInvalidXML()
+	{
+		$id = uniqid('x');
+		$filepath = sys_get_temp_dir() . '/' . $id . '.xml';
+		self::$tmpFiles[] = $filepath;
+
+		$this->configurator->MediaEmbed->sitesDir = sys_get_temp_dir();
+		file_put_contents($filepath, '<invalid>');
+
+		$tag = @$this->configurator->MediaEmbed->add($id);
+	}
+
+	/**
 	* @testdox appendTemplate() sets a template to be appended to media sites' templates
 	*/
 	public function testAppend()
