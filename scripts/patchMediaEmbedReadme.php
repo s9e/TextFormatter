@@ -3,8 +3,6 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$configurator = new s9e\TextFormatter\Configurator;
-
 $html = [];
 $html[] = '<table>';
 $html[] = '	<tr>';
@@ -13,8 +11,8 @@ $html[] = '		<th>Site</th>';
 $html[] = '		<th>Example URLs</th>';
 $html[] = '	</tr>';
 
-$sitesDir = __DIR__ . '/../src/Plugins/MediaEmbed/sites';
-foreach (glob($sitesDir . '/*.xml') as $siteFile)
+$configurator = new s9e\TextFormatter\Configurator;
+foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
 {
 	$site   = simplexml_load_file($siteFile);
 	$siteId = basename($siteFile, '.xml');
