@@ -158,7 +158,7 @@
 * Configuration can run thousands of lines of code across dozens of files but parsing only runs a few hundreds of lines across a few files and rendering only runs a few dozens of lines across a couple of files. Complexity is pushed towards configuration and parsing to keep rendering simple and fast
 * The goal is to run configuration in less than a second, parsing in less than 100 ms and rendering in less than 10 ms
 	* In actuality it's closer to 100 ms/10 ms/1 ms depending on content and hardware
-* The source code in the release branches is automatically optimized for speed. The codebase is modified to produce better opcodes and some files are merged. The code used in [development looks nice](https://github.com/s9e/TextFormatter/blob/master/src/Parser.php), the code run in production and testing [doesn't look as nice](https://github.com/s9e/TextFormatter/blob/release/php5.5/src/Parser.php) but runs faster
+* The source code in the release branches is automatically optimized for speed. The codebase is modified to produce slightly better opcodes. The code used in [development looks nice](https://github.com/s9e/TextFormatter/blob/master/src/Parser.php), the code run in production and testing [doesn't look as nice](https://github.com/s9e/TextFormatter/blob/release/php5.6/src/Parser.php) but runs slightly faster
 
 ## Plugins
 
