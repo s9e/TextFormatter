@@ -816,15 +816,20 @@ class Quick
 		// Sort them alphabetically
 		sort($attrNames);
 
-		// Create a subpattern that matches any unknown attribute definition
-		$filler = '(?> (?!' . RegexpBuilder::fromList($attrNames) . '=)[^=]+="[^"]*")*';
+		// Keep a copy of the attribute names to be used in the fillter subpattern
+		$remainingAttributes = array_combine($attrNames, $attrNames);
 
 		// Prepare the final regexp
 		$regexp = '(^\\S*';
 		$index  = 0;
 		foreach ($attrNames as $attrName)
 		{
-			$regexp .= $filler . '(';
+			// Add a subpattern that matches (and skips) any attribute definition that is not one of
+			// the remaining attributes we're trying to match
+			$regexp .= '(?> (?!' . RegexpBuilder::fromList($remainingAttributes) . '=)[^=]+="[^"]*")*';
+			unset($remainingAttributes[$attrName]);
+
+			$regexp .= '(';
 
 			if (isset($copiedAttributes[$attrName]))
 			{

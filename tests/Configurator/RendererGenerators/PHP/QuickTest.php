@@ -382,7 +382,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="[^"]*")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
+							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="[^"]*")?(?> (?!url=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
 							'<a href="$2"$1>'
 						]
 					],
@@ -395,7 +395,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="([^"]*)")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
+							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="([^"]*)")?(?> (?!url=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
 							'<a data-title="$2|$2" href="$3"$1>'
 						]
 					],
@@ -432,7 +432,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> height="([^"]*)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> url="([^"]*)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> width="([^"]*)")?.*)s',
+							'(^\\S*(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> height="([^"]*)")?(?> (?!(?>url|width)=)[^=]+="[^"]*")*(?> url="([^"]*)")?(?> (?!width=)[^=]+="[^"]*")*(?> width="([^"]*)")?.*)s',
 							'<object width="$3" height="$1"><param name="movie" value="$2"></object>'
 						]
 					]
