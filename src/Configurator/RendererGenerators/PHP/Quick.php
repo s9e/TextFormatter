@@ -820,7 +820,7 @@ class Quick
 		$remainingAttributes = array_combine($attrNames, $attrNames);
 
 		// Prepare the final regexp
-		$regexp = '(^\\S*';
+		$regexp = '(^[^ ]+';
 		$index  = 0;
 		foreach ($attrNames as $attrName)
 		{
