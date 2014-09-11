@@ -731,6 +731,14 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<xsl:if test="@x">x</xsl:if>';
 				}
 			],
+			[
+				'<r><X x="" y="" z=""></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<div><xsl:copy-of select="@z"/></div>';
+				}
+			],
 		];
 	}
 
