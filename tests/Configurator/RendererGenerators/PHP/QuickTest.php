@@ -369,7 +369,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!url=)[^=]+="[^"]*")*(?> url="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!url=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
 							'<a href="$1">'
 						]
 					],
@@ -382,7 +382,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="[^"]+")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="[^"]*")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
 							'<a href="$2"$1>'
 						]
 					],
@@ -395,7 +395,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="([^"]+)")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="([^"]*)")?(?> (?!(?>title|url)=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s',
 							'<a data-title="$2|$2" href="$3"$1>'
 						]
 					],
@@ -408,7 +408,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!foo=)[^=]+="[^"]*")*(?> foo="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!foo=)[^=]+="[^"]*")*(?> foo="([^"]*)")?.*)s',
 							'<hr title="1${1}1">'
 						]
 					]
@@ -420,7 +420,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!title=)[^=]+="[^"]*")*(?> title="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!title=)[^=]+="[^"]*")*(?> title="([^"]*)")?.*)s',
 							'<hr title="$1\\\\1\\x\\$1$x">'
 						]
 					]
@@ -432,7 +432,7 @@ class QuickTest extends Test
 					[
 						'dynamic',
 						[
-							'(^\\S*(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> height="([^"]+)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> url="([^"]+)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> width="([^"]+)")?.*)s',
+							'(^\\S*(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> height="([^"]*)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> url="([^"]*)")?(?> (?!(?>height|url|width)=)[^=]+="[^"]*")*(?> width="([^"]*)")?.*)s',
 							'<object width="$3" height="$1"><param name="movie" value="$2"></object>'
 						]
 					]

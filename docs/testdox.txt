@@ -2412,6 +2412,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
  [x] Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
  [x] Matches the reference rendering in edge cases
+ [x] Matches the reference rendering in edge cases (quick renderer)
  [x] XPath expressions are inlined as PHP whenever possible
  [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE

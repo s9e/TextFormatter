@@ -197,7 +197,7 @@ class Quick
 			$php[] = '		if ($id[0] !== \'/\')';
 			$php[] = '		{';
 			$php[] = '			$attributes = [];';
-			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]+))\', $m[0], $matches);';
+			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]*))\', $m[0], $matches);';
 			$php[] = '			foreach ($matches[1] as $i => $attrName)';
 			$php[] = '			{';
 			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
@@ -844,7 +844,7 @@ class Quick
 				self::replacePlaceholder($rendering, $usedAttributes[$attrName], ++$index);
 			}
 
-			$regexp .= '[^"]+';
+			$regexp .= '[^"]*';
 
 			if (isset($usedAttributes[$attrName]))
 			{

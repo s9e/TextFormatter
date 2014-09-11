@@ -352,11 +352,27 @@ class PHPTest extends Test
 	*/
 	public function testEdgeCases($xml, $configuratorSetup, $rendererSetup = null)
 	{
+		$this->runTestEdgeCase($xml, $configuratorSetup, $rendererSetup, false);
+	}
+
+	/**
+	* @requires extension xsl
+	* @testdox Matches the reference rendering in edge cases (quick renderer)
+	* @dataProvider getEdgeCases
+	*/
+	public function testEdgeCasesQuick($xml, $configuratorSetup, $rendererSetup = null)
+	{
+		$this->runTestEdgeCase($xml, $configuratorSetup, $rendererSetup, true);
+	}
+
+	protected function runTestEdgeCase($xml, $configuratorSetup, $rendererSetup, $enableQuickRenderer)
+	{
 		call_user_func($configuratorSetup, $this->configurator, $this);
 
 		$xsltRenderer = $this->configurator->getRenderer();
 
 		$this->configurator->rendering->engine = 'PHP';
+		$this->configurator->rendering->engine->enableQuickRenderer = $enableQuickRenderer;
 		$phpRenderer  = $this->configurator->getRenderer();
 
 		if ($rendererSetup)
@@ -706,6 +722,13 @@ class PHPTest extends Test
 				{
 					$configurator->tags->add('X')->template
 						= '<hr><xsl:copy-of select="@*"/></hr>';
+				}
+			],
+			[
+				'<r><X x=""></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:if test="@x">x</xsl:if>';
 				}
 			],
 		];
