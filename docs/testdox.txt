@@ -635,6 +635,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['x?x', 'xbbx'], ["specialChars" => ["?" => "\\w"]]) returns 'x(?:\\w|bb)x'
  [x] fromList(['x*x', 'xb-bx'], ["specialChars" => ["*" => "\\w*"]]) returns 'x(?:\\w*|b-b)x'
  [x] fromList(['x*x', 'xb-bx'], ["specialChars" => ["*" => "\\w+"]]) returns 'x(?:\\w+|b-b)x'
+ [x] fromList([':X', ':D', ':P', ':P']) returns ':[DPX]'
+ [x] fromList([':X', ':D', ':P', ':p'], ["caseInsensitive" => true]) returns ':[dpx]'
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser

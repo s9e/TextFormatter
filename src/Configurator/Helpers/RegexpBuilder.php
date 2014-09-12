@@ -32,6 +32,24 @@ abstract class RegexpBuilder
 			'useLookahead'    => false
 		];
 
+		// Normalize ASCII if the regexp is meant to be case-insensitive
+		if ($options['caseInsensitive'])
+		{
+			foreach ($words as &$word)
+			{
+				$word = strtr(
+					$word,
+					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+					'abcdefghijklmnopqrstuvwxyz'
+				);
+			}
+			unset($word);
+		}
+
+		// Deduplicate words in advance because some routines such as mergeChains() make assumptions
+		// based on the size of some chains without deduplicating them first
+		$words = array_unique($words);
+
 		// Sort the words in order to produce the same regexp regardless of the words' order
 		sort($words);
 
@@ -62,15 +80,6 @@ abstract class RegexpBuilder
 
 		foreach ($words as $word)
 		{
-			if ($options['caseInsensitive'])
-			{
-				$word = strtr(
-					$word,
-					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-					'abcdefghijklmnopqrstuvwxyz'
-				);
-			}
-
 			if (preg_match_all('#.#us', $word, $matches) === false)
 			{
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
