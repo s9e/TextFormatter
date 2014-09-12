@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 class ControlStructuresOptimizer
 {
 	/**
-	* @var integer Number of braces encountered in current sources
+	* @var integer Number of braces encountered in current source
 	*/
 	protected $braces;
 
