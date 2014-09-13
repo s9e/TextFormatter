@@ -16,11 +16,9 @@ $configurator->BBCodes->addCustom(
 $configurator->Emoticons->set(':lol:', '<img src="/path/to/lol.png" alt="LOL"/>');
 $configurator->Emoticons->set(':mad:', '<img src="/path/to/mad.png" alt="Mad"/>');
 
-// Also, we want the output to be XHTML, not HTML
-$configurator->rendering->type = 'xhtml';
-
-// OPTIONAL: we use the PHP renderer instead of the default XSL renderer.
-//           It will create a new class file in the /tmp directory
+// OPTIONAL: we use the PHP renderer instead of the default XSL renderer. The following code will
+//           create a new class file in the /tmp directory. Instead of /tmp you should choose a
+//           writable directory that persists between requests.
 $configurator->rendering->setEngine('PHP', '/tmp');
 
 // Save the bundle to /tmp/Bundle.php
@@ -34,5 +32,5 @@ $html = My\Bundle::render($xml);
 echo $html;
 ```
 ```html
-<span style="font-size:200px"><i>Hello</i></span> <img src="/path/to/lol.png" alt="LOL"/>
+<span style="font-size:200px"><i>Hello</i></span> <img src="/path/to/lol.png" alt="LOL">
 ```
