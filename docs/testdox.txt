@@ -2371,6 +2371,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertXPath() tests
  [x] convertCondition() tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\BranchOutputOptimizer
+ [x] optimize() tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer
  [x] optimize() tests
 

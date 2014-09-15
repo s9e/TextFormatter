@@ -217,6 +217,7 @@
 			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertorTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/BranchOutputOptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/ControlStructuresOptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/OptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/QuickTest.php</file>
