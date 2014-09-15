@@ -100,8 +100,6 @@ class BranchOutputOptimizer
 	protected function captureOutputExpression()
 	{
 		$parens = 0;
-		$startIndex = $this->i;
-
 		$php = '';
 		do
 		{
