@@ -627,6 +627,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.sportsnet.ca/soccer/west-ham-2-hull-2/',
+				'<r><SPORTSNET id="3786409870001" url="http://www.sportsnet.ca/soccer/west-ham-2-hull-2/">http://www.sportsnet.ca/soccer/west-ham-2-hull-2/</SPORTSNET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('sportsnet');
+				}
+			],
+			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
 				'<r><TEAMCOCO id="73784" url="http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',
 				[],

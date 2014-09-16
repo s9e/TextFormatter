@@ -361,6 +361,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://api.soundcloud.com/tracks/98282116<br/>https://soundcloud.com/andrewbird/three-white-horses<br/>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</td>
 	</tr>
 	<tr>
+		<td><code>sportsnet</code></td>
+		<td>Sportsnet</td>
+		<td>http://www.sportsnet.ca/soccer/west-ham-2-hull-2/</td>
+	</tr>
+	<tr>
 		<td><code>spotify</code></td>
 		<td>Spotify</td>
 		<td>spotify:track:5JunxkcjfCYcY7xJ29tLai<br/>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<br/>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
