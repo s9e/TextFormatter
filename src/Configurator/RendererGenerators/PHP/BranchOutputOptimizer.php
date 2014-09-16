@@ -69,17 +69,8 @@ class BranchOutputOptimizer
 	protected function captureOutput()
 	{
 		$expressions = [];
-
-		while ($this->tokens[$this->i    ][0] === T_VARIABLE
-		    && $this->tokens[$this->i    ][1] === '$this'
-		    && $this->tokens[$this->i + 1][0] === T_OBJECT_OPERATOR
-		    && $this->tokens[$this->i + 2][0] === T_STRING
-		    && $this->tokens[$this->i + 2][1] === 'out'
-		    && $this->tokens[$this->i + 3][0] === T_CONCAT_EQUAL)
+		while ($this->skipOutputAssignment())
 		{
-			// Move past the concat assignment
-			$this->i += 4;
-
 			do
 			{
 				$expressions[] = $this->captureOutputExpression();
@@ -123,6 +114,28 @@ class BranchOutputOptimizer
 			$php .= $this->serializeToken($this->tokens[$this->i]);
 		}
 		while (++$this->i < $this->cnt);
+
+		return $php;
+	}
+
+	/**
+	* Capture the source of a control structure from its keyword to its opening brace
+	*
+	* Ends after the brace, but the brace itself is not returned
+	*
+	* @return string
+	*/
+	protected function captureStructure()
+	{
+		$php = '';
+		do
+		{
+			$php .= $this->serializeToken($this->tokens[$this->i]);
+		}
+		while ($this->tokens[++$this->i] !== '{');
+
+		// Move past the {
+		++$this->i;
 
 		return $php;
 	}
@@ -246,7 +259,6 @@ class BranchOutputOptimizer
 	protected function optimizeBranchesOutput(array &$branches, $which)
 	{
 		$expressions = [];
-
 		while (isset($branches[0][$which][0]))
 		{
 			$expr = $branches[0][$which][0];
@@ -289,16 +301,8 @@ class BranchOutputOptimizer
 	*/
 	protected function parseBranch()
 	{
-		// Record the control structure up to the opening brace (excluded)
-		$structure = '';
-		do
-		{
-			$structure .= $this->serializeToken($this->tokens[$this->i]);
-		}
-		while ($this->tokens[++$this->i] !== '{');
-
-		// Move past the {
-		++$this->i;
+		// Record the control structure
+		$structure = $this->captureStructure();
 
 		// Record the output expressions at the start of this branch
 		$head = $this->captureOutput();
@@ -306,7 +310,6 @@ class BranchOutputOptimizer
 		$tail = [];
 
 		$braces = 0;
-
 		do
 		{
 			$tail = $this->mergeOutput($tail, array_reverse($this->captureOutput()));
@@ -317,15 +320,6 @@ class BranchOutputOptimizer
 
 			$body .= $this->serializeOutput(array_reverse($tail));
 			$tail  = [];
-
-			if ($this->tokens[$this->i] === '{')
-			{
-				++$braces;
-			}
-			elseif ($this->tokens[$this->i] === '}')
-			{
-				--$braces;
-			}
 
 			if ($this->tokens[$this->i][0] === T_IF)
 			{
@@ -349,6 +343,15 @@ class BranchOutputOptimizer
 			else
 			{
 				$body .= $this->serializeToken($this->tokens[$this->i]);
+
+				if ($this->tokens[$this->i] === '{')
+				{
+					++$braces;
+				}
+				elseif ($this->tokens[$this->i] === '}')
+				{
+					--$braces;
+				}
 			}
 		}
 		while (++$this->i < $this->cnt);
@@ -437,5 +440,28 @@ class BranchOutputOptimizer
 	protected function serializeToken($token)
 	{
 		return (is_array($token)) ? $token[1] : $token;
+	}
+
+	/**
+	* Attempt to move past output assignment at current index
+	*
+	* @return bool Whether if an output assignment was skipped
+	*/
+	protected function skipOutputAssignment()
+	{
+		if ($this->tokens[$this->i    ][0] !== T_VARIABLE
+		 || $this->tokens[$this->i    ][1] !== '$this'
+		 || $this->tokens[$this->i + 1][0] !== T_OBJECT_OPERATOR
+		 || $this->tokens[$this->i + 2][0] !== T_STRING
+		 || $this->tokens[$this->i + 2][1] !== 'out'
+		 || $this->tokens[$this->i + 3][0] !== T_CONCAT_EQUAL)
+		{
+			 return false;
+		}
+
+		// Move past the concat assignment
+		$this->i += 4;
+
+		return true;
 	}
 }
