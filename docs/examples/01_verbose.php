@@ -72,5 +72,5 @@ echo $html, "\n";
 
 // Outputs:
 //
-// Hello, <i>world</i> ☺<br>
+// Hello, <i>world</i> ☺
 // Find more examples in the <a href="https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook">Cookbook</a>.
