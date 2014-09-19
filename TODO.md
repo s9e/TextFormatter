@@ -1,14 +1,14 @@
 Near-future goals (2014)
 ------------------------
-- Finish up Litedown: ~~forced line breaks~~, fenced code blocks, perhaps reference links
+- Extend Litedown: ~~forced line breaks~~, fenced code blocks, perhaps reference links
 - Have a piece of utilities that converts a parsed text to BBCodes or Markdown
-- Move (and expand) to ReadTheDocs.org
 
 
 Long-term goals (?)
 -------------------
 - RTE
 - Slowly convince every forum, blog and wiki software, open source and otherwise, to use s9e\TextFormatter 
+- Move (and expand) to ReadTheDocs.org, maybe. Someday.
 
 
 Random stuff that may never happen

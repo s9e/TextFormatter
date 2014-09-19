@@ -1,3 +1,7 @@
+###### September 2014
+
+- Added Emoji plugin.
+
 ###### August 2014
 
 - Reworked the algorithm and rules defining automatic and manual line breaks. Enables forced line breaks in Litedown.
