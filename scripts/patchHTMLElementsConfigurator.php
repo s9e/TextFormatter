@@ -23,8 +23,6 @@ function loadPage($url)
 
 $page = loadPage('http://www.w3.org/html/wg/drafts/html/master/index.html');
 
-$query = '/html/body/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
-
 $table = $page->getElementById('attributes-1')->nextSibling;
 while ($table->nodeName !== 'table')
 {
