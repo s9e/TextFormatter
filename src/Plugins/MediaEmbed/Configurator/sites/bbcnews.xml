@@ -1,0 +1,12 @@
+<site name="BBC News" homepage="http://www.bbc.com/news/video_and_audio/">
+	<example>http://www.bbc.com/news/science-environment-29232523</example>
+
+	<tags><tag>news</tag></tags>
+
+	<host>bbc.com</host>
+	<scrape>
+		<match>!bbc\.com/news/\w+!</match>
+		<extract>!meta name="twitter:player".*?playlist=(?'playlist'[-/\w]+)(?:&amp;poster=(?'poster'[-/.\w]+))?(?:&amp;ad_site=(?'ad_site'[/\w]+))?!</extract>
+	</scrape>
+	<iframe width="560" height="315" src="https://ssl.bbc.co.uk/wwscripts/embed_player#playlist={@playlist}&amp;poster={@poster}&amp;ad_site={@ad_site}&amp;ad_keyword=&amp;source=twitter"/>
+</site>
