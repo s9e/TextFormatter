@@ -97,6 +97,16 @@ class ControlStructuresOptimizer
 	}
 
 	/**
+	* Test whether current block ends with an if or elseif control structure
+	*
+	* @return bool
+	*/
+	protected function blockEndsWithIf()
+	{
+		return in_array($this->context['lastBlock'], [T_IF, T_ELSEIF], true);
+	}
+
+	/**
 	* Test whether the token at current index is a control structure
 	*
 	* @return bool
@@ -108,6 +118,43 @@ class ControlStructuresOptimizer
 			[T_ELSE, T_ELSEIF, T_FOR, T_FOREACH, T_IF, T_WHILE],
 			true
 		);
+	}
+
+	/**
+	* Test whether current block is followed by an elseif/else structure
+	*
+	* @return void
+	*/
+	protected function isFollowedByElse()
+	{
+		if ($this->i > $this->cnt - 4)
+		{
+			// It doesn't have room for another block
+			return false;
+		}
+
+		// Compute the index of the next non-whitespace token
+		$k = $this->i + 1;
+
+		if ($this->tokens[$k][0] === T_WHITESPACE)
+		{
+			++$k;
+		}
+
+		return in_array($this->tokens[$k][0], [T_ELSEIF, T_ELSE], true);
+	}
+
+	/**
+	* Test whether braces must be preserved in current context
+	*
+	* @return bool
+	*/
+	protected function mustPreserveBraces()
+	{
+		// If current block ends with if/elseif and is followed by elseif/else, we must preserve
+		// its braces to prevent it from merging with the outer elseif/else. IOW, we must preserve
+		// the braces if "if{if{}}else" would become "if{if else}"
+		return ($this->blockEndsWithIf() && $this->isFollowedByElse());
 	}
 
 	/**
@@ -181,30 +228,7 @@ class ControlStructuresOptimizer
 	*/
 	protected function processEndOfBlock()
 	{
-		// Test whether we should avoid removing the braces because it's followed by an else/elseif
-		// that would become part of an inner if/elseif
-		if (in_array($this->context['lastBlock'], [T_IF, T_ELSEIF], true))
-		{
-			if ($this->i < $this->cnt - 3)
-			{
-				// Compute the index of the next non-whitespace token
-				$k = $this->i + 1;
-
-				if ($this->tokens[$k][0] === T_WHITESPACE)
-				{
-					++$k;
-				}
-
-				if ($this->tokens[$k][0] === T_ELSE || $this->tokens[$k][0] === T_ELSEIF)
-				{
-					// Artificially bump the number of statements to prevent the braces from being
-					// removed
-					$this->context['statements'] = 2;
-				}
-			}
-		}
-
-		if ($this->context['statements'] < 2)
+		if ($this->context['statements'] < 2 && !$this->mustPreserveBraces())
 		{
 			$this->removeBracesInCurrentContext();
 		}
