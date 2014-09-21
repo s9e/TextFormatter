@@ -157,81 +157,123 @@ class Parser extends ParserBase
 
 		foreach ($scrapeConfig as $scrape)
 		{
-			list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
+			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+		}
 
-			// Test whether this scrape would help fill any attribute
-			$skip = true;
-			foreach ($attrNames as $attrName)
+		return true;
+	}
+
+	//==============================================================================================
+	// Internals
+	//==============================================================================================
+
+	/**
+	* Replace {@var} tokens in given URL
+	*
+	* @param  string   $url  Original URL
+	* @param  string[] $vars Replacements
+	* @return string         Modified URL
+	*/
+	protected static function replaceTokens($url, array $vars)
+	{
+		return preg_replace_callback(
+			'#\\{@(\\w+)\\}#',
+			function ($m) use ($vars)
 			{
-				if (!$tag->hasAttribute($attrName))
+				return (isset($vars[$m[1]])) ? $vars[$m[1]] : '';
+			},
+			$url
+		);
+	}
+
+	/**
+	* Scrape the content of an URL to extract some data
+	*
+	* @param  string $url      Original URL
+	* @param  Tag    $tag      Source tag
+	* @param  array  $scrape   Array of scrape directives
+	* @param  string $cacheDir Path to the cache directory
+	* @return void
+	*/
+	protected static function scrapeEntry($url, Tag $tag, array $scrape, $cacheDir)
+	{
+		list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
+
+		if (!self::tagIsMissingAnyAttribute($tag, $attrNames))
+		{
+			return;
+		}
+
+		// Test whether this URL matches any regexp
+		$vars    = [];
+		$matched = false;
+		foreach ((array) $matchRegexps as $matchRegexp)
+		{
+			if (preg_match($matchRegexp, $url, $m))
+			{
+				$vars   += $m;
+				$matched = true;
+			}
+		}
+		if (!$matched)
+		{
+			return;
+		}
+
+		// Add the tag's attributes to the named captures from the "match" regexp
+		$vars += $tag->getAttributes();
+
+		$scrapeUrl = (isset($scrape[3])) ? self::replaceTokens($scrape[3], $vars) : $url;
+		self::scrapeUrl($scrapeUrl, $tag, (array) $extractRegexps, $cacheDir);
+	}
+
+	/**
+	* Scrape a URL to help fill a tag's attributes
+	*
+	* @param  string      $url      URL to scrape
+	* @param  Tag         $tag      Tag to fill
+	* @param  string[]    $regexps  Regexps used to extract content from the page
+	* @param  string|null $cacheDir Path to the cache directory
+	* @return void
+	*/
+	protected static function scrapeUrl($url, Tag $tag, array $regexps, $cacheDir)
+	{
+		$content = self::wget($url, $cacheDir);
+
+		// Execute the extract regexps and fill any missing attribute
+		foreach ($regexps as $regexp)
+		{
+			if (preg_match($regexp, $content, $m))
+			{
+				foreach ($m as $k => $v)
 				{
-					$skip = false;
-					break;
-				}
-			}
-			if ($skip)
-			{
-				continue;
-			}
-
-			// Test whether this URL matches any regexp
-			$vars = [];
-			$skip = true;
-			foreach ((array) $matchRegexps as $matchRegexp)
-			{
-				if (preg_match($matchRegexp, $url, $m))
-				{
-					$vars += $m;
-					$skip = false;
-				}
-			}
-			if ($skip)
-			{
-				continue;
-			}
-
-			// Generate the URL used for scraping. Use the one stored in the config if applicable,
-			// or look into the tag otherwise
-			if (isset($scrape[3]))
-			{
-				// Add the tag's attributes to the named captures from the "match" regexp
-				$vars += $tag->getAttributes();
-
-				// Replace {@var} tokens in the URL
-				$scrapeUrl = preg_replace_callback(
-					'#\\{@(\\w+)\\}#',
-					function ($m) use ($vars)
+					if (!is_numeric($k) && !$tag->hasAttribute($k))
 					{
-						return (isset($vars[$m[1]])) ? $vars[$m[1]] : '';
-					},
-					$scrape[3]
-				);
-			}
-			else
-			{
-				// Use the same URL for scraping
-				$scrapeUrl = $url;
-			}
-
-			$content = self::wget($scrapeUrl, $cacheDir);
-
-			// Execute the extract regexps and fill any missing attribute
-			foreach ((array) $extractRegexps as $extractRegexp)
-			{
-				if (preg_match($extractRegexp, $content, $m))
-				{
-					foreach ($attrNames as $attrName)
-					{
-						if (isset($m[$attrName]) && !$tag->hasAttribute($attrName))
-						{
-							$tag->setAttribute($attrName, $m[$attrName]);
-						}
+						$tag->setAttribute($k, $v);
 					}
 				}
 			}
 		}
+	}
 
-		return true;
+	/**
+	* Test whether a tag is missing any of given attributes
+	*
+	* @param  Tag      $tag
+	* @param  string[] $attrNames
+	* @return bool
+	*/
+	protected static function tagIsMissingAnyAttribute(Tag $tag, array $attrNames)
+	{
+		foreach ($attrNames as $attrName)
+		{
+			if (!$tag->hasAttribute($attrName))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
