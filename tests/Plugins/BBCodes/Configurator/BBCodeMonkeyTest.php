@@ -1188,7 +1188,11 @@ class BBCodeMonkeyTest extends Test
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag([
-						'rules'    => ['autoReopen' => false],
+						'rules'    => [
+							'autoReopen' => false,
+							'defaultChildRule' => 'allow',
+							'defaultDescendantRule' => 'allow'
+						],
 						'template' => ''
 					])
 				]
@@ -1200,7 +1204,11 @@ class BBCodeMonkeyTest extends Test
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag([
-						'rules'    => ['autoReopen' => true],
+						'rules'    => [
+							'autoReopen' => true,
+							'defaultChildRule' => 'allow',
+							'defaultDescendantRule' => 'allow'
+						],
 						'template' => ''
 					])
 				]
@@ -1212,7 +1220,11 @@ class BBCodeMonkeyTest extends Test
 					'bbcodeName' => 'X',
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag([
-						'rules'    => ['closeParent' => ['X', 'Y']],
+						'rules'    => [
+							'closeParent' => ['X', 'Y'],
+							'defaultChildRule' => 'allow',
+							'defaultDescendantRule' => 'allow'
+						],
 						'template' => ''
 					])
 				]
@@ -1224,7 +1236,11 @@ class BBCodeMonkeyTest extends Test
 					'bbcodeName' => 'X',
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag([
-						'rules'    => ['closeParent' => ['X', 'Y']],
+						'rules'    => [
+							'closeParent' => ['X', 'Y'],
+							'defaultChildRule' => 'allow',
+							'defaultDescendantRule' => 'allow'
+						],
 						'template' => ''
 					])
 				]

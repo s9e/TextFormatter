@@ -21,6 +21,17 @@ use s9e\TextFormatter\Parser;
 */
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->defaultChildRule('allow');
+		$this->defaultDescendantRule('allow');
+	}
+
 	//==========================================================================
 	// ArrayAccess methods
 	//==========================================================================
@@ -171,6 +182,11 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function remove($type, $tagName = null)
 	{
+		if (preg_match('(^default(?:Child|Descendant)Rule)', $type))
+		{
+			throw new RuntimeException('Cannot remove ' . $type);
+		}
+
 		if (isset($tagName))
 		{
 			$tagName = TagName::normalize($tagName);

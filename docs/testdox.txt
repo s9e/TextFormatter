@@ -261,6 +261,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] clear() removes all rules
  [x] remove('allowChild') removes only 'allowChild' rules
  [x] remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
+ [x] remove('defaultChildRule') throws an exception
+ [x] remove('defaultDescendantRule') throws an exception
  [x] remove('denyChild', 'IMG') unsets the denyChild list in the ruleset if there is no denyChild rules left
  [x] remove('denyChild', 'IMG') rearranges keys to remove gaps
  [x] remove('denyChild', 'img') normalizes tag names
