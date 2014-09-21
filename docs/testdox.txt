@@ -728,6 +728,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] export("'\"") returns concat("'",'"')
  [x] export('"\'') returns concat('"',"'")
  [x] getVariables() tests
+ [x] isExpressionNumeric() tests
  [x] minify() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute

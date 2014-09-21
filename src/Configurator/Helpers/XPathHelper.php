@@ -73,6 +73,22 @@ abstract class XPathHelper
 	}
 
 	/**
+	* Determine whether given XPath expression definitely evaluates to a number
+	*
+	* @param  string $expr XPath expression
+	* @return bool         Whether given XPath expression definitely evaluates to a number
+	*/
+	public static function isExpressionNumeric($expr)
+	{
+		if (preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*[-+]\\s*(?1))++$)', $expr))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	* Remove extraneous space in a given XPath expression
 	*
 	* @param  string $expr Original XPath expression

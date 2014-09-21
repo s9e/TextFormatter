@@ -81,6 +81,29 @@ class XPathHelperTest extends Test
 	}
 
 	/**
+	* @testdox isExpressionNumeric() tests
+	* @dataProvider getIsExpressionNumericTests
+	*/
+	public function testIsExpressionNumeric($expected, $expr)
+	{
+		$this->assertSame($expected, XPathHelper::isExpressionNumeric($expr));
+	}
+
+	public function getIsExpressionNumericTests()
+	{
+		return [
+			[false, '@foo'],
+			[true,  '1+@foo'],
+			[true,  '@foo+1'],
+			[true,  '1-@foo'],
+			[false, '@foo-1'],
+			[true,  '@foo + @bar'],
+			[true,  '$foo + $bar'],
+			[true,  '$foo + 0'],
+		];
+	}
+
+	/**
 	* @testdox minify() tests
 	* @dataProvider getMinifyTests
 	*/
