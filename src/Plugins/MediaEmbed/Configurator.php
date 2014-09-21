@@ -153,11 +153,7 @@ class Configurator extends ConfiguratorBase
 		$regexp = preg_replace('(^\\(\\?:)', '(?>', $regexp);
 
 		// Build the final regexp
-		$regexp = '#\\b'
-		        . $regexp
-		        . '[^["\'\\s]+'
-		        . '(?!\\S)'
-		        . '#S';
+		$regexp = '#\\b' . $regexp . '[^["\'\\s]+' . '(?!\\S)' . '#S';
 
 		return [
 			'quickMatch' => ($hasSchemes) ? ':' : '://',
@@ -184,15 +180,7 @@ class Configurator extends ConfiguratorBase
 		// If there's no value, look into the default site definitions
 		if (!isset($siteConfig))
 		{
-			$filepath = $this->sitesDir . '/' . $siteId . '.xml';
-
-			if (!file_exists($filepath))
-			{
-				throw new RuntimeException("Unknown media site '" . $siteId . "'");
-			}
-
-			// Extract the site info from the node and put it into an array
-			$siteConfig = $this->getConfigFromXmlFile($filepath);
+			$siteConfig = $this->getDefaultSite($siteId);
 		}
 
 		// Add this site to the list
@@ -567,6 +555,25 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $this->getElementConfig($dom->documentElement);
+	}
+
+	/**
+	* Get the default config for given site
+	*
+	* @param  string $siteId Site'd ID, e.g. "youtube"
+	* @return array          Site's config
+	*/
+	protected function getDefaultSite($siteId)
+	{
+		$filepath = $this->sitesDir . '/' . $siteId . '.xml';
+
+		if (!file_exists($filepath))
+		{
+			throw new RuntimeException("Unknown media site '" . $siteId . "'");
+		}
+
+		// Extract the site info from the node and put it into an array
+		return $this->getConfigFromXmlFile($filepath);
 	}
 
 	/**
