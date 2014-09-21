@@ -374,4 +374,15 @@ class DisallowUnsafeDynamicJSTest extends Test
 			throw $e;
 		}
 	}
+
+	/**
+	* @testdox Allowed: <b onclick="this.style.width={0+@foo}">...</b>
+	*/
+	public function testAllowedNumeric()
+	{
+		$node = $this->loadTemplate('<b onclick="this.style.width={0+@foo}">...</b>');
+
+		$check = new DisallowUnsafeDynamicJS;
+		$check->check($node, new Tag);
+	}
 }

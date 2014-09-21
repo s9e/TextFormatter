@@ -179,6 +179,12 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 			return;
 		}
 
+		// Test whether the expression is safe as per the concrete implementation
+		if ($this->isExpressionSafe($expr))
+		{
+			return;
+		}
+
 		// Test whether the expression contains one single attribute
 		if (!preg_match('/^@(\\w+)$/', $expr, $m))
 		{
@@ -237,5 +243,16 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	protected function checkSelectNode(DOMAttr $select, Tag $tag)
 	{
 		$this->checkExpression($select, $select->value, $tag);
+	}
+
+	/**
+	* Test whether given expression is safe in context
+	*
+	* @param  string $expr XPath expression
+	* @return bool         Whether the expression is safe in context
+	*/
+	protected function isExpressionSafe($expr)
+	{
+		return false;
 	}
 }

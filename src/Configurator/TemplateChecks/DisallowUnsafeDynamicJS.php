@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
 use DOMElement;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 
@@ -19,6 +20,14 @@ class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 	protected function getNodes(DOMElement $template)
 	{
 		return TemplateHelper::getJSNodes($template->ownerDocument);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function isExpressionSafe($expr)
+	{
+		return XPathHelper::isExpressionNumeric($expr);
 	}
 
 	/**

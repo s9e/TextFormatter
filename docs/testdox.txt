@@ -1377,6 +1377,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS
  [x] Disallowed if unfiltered: <b><xsl:attribute name="style"><xsl:value-of select="."/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="style"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
+ [x] Allowed: <b style="width:{0+@foo}px">...</b>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
  [x] Allowed: <script>.important { alert(1) }</script>
@@ -1394,6 +1395,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
  [x] Disallowed if unfiltered: <b><xsl:attribute name="onclick"><xsl:value-of select="."/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute>...</b>
  [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
+ [x] Allowed: <b onclick="this.style.width={0+@foo}">...</b>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
  [x] Allowed: <a href="http://example.org">...</a>

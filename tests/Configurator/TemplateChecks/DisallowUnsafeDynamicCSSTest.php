@@ -374,4 +374,15 @@ class DisallowUnsafeDynamicCSSTest extends Test
 			throw $e;
 		}
 	}
+
+	/**
+	* @testdox Allowed: <b style="width:{0+@foo}px">...</b>
+	*/
+	public function testAllowedNumeric()
+	{
+		$node = $this->loadTemplate('<b style="width:{0+@foo}px">...</b>');
+
+		$check = new DisallowUnsafeDynamicCSS;
+		$check->check($node, new Tag);
+	}
 }
