@@ -52,20 +52,25 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	}
 
 	/**
-	* Test whether a node's context can be safely assessed
+	* Test whether a tag attribute is safe
 	*
-	* @param  DOMNode $node Source node
+	* @param  DOMNode $node     Context node
+	* @param  Tag     $tag      Source tag
+	* @param  string  $attrName Name of the attribute
 	* @return void
 	*/
-	protected function checkContext(DOMNode $node)
+	protected function checkAttribute(DOMNode $node, Tag $tag, $attrName)
 	{
-		// Test whether we know in what context this node is used. An <xsl:for-each/> ancestor would // change this node's context
-		$xpath     = new DOMXPath($node->ownerDocument);
-		$ancestors = $xpath->query('ancestor::xsl:for-each', $node);
-
-		if ($ancestors->length)
+		// Test whether the attribute exists
+		if (!isset($tag->attributes[$attrName]))
 		{
-			throw new UnsafeTemplateException("Cannot assess context due to '" . $ancestors->item(0)->nodeName . "'", $node);
+			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
+		}
+
+		// Test whether the attribute is safe to be used in this content type
+		if (!$this->isSafe($tag->attributes[$attrName]))
+		{
+			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 		}
 	}
 
@@ -85,6 +90,24 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 			{
 				$this->checkExpression($attribute, $token[1], $tag);
 			}
+		}
+	}
+
+	/**
+	* Test whether a node's context can be safely assessed
+	*
+	* @param  DOMNode $node Source node
+	* @return void
+	*/
+	protected function checkContext(DOMNode $node)
+	{
+		// Test whether we know in what context this node is used. An <xsl:for-each/> ancestor would // change this node's context
+		$xpath     = new DOMXPath($node->ownerDocument);
+		$ancestors = $xpath->query('ancestor::xsl:for-each', $node);
+
+		if ($ancestors->length)
+		{
+			throw new UnsafeTemplateException("Cannot assess context due to '" . $ancestors->item(0)->nodeName . "'", $node);
 		}
 	}
 
@@ -148,31 +171,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		// Consider stylesheet parameters safe but test local variables/params
 		if (preg_match('/^\\$(\\w+)$/', $expr, $m))
 		{
-			$xpath = new DOMXPath($node->ownerDocument);
-			$qname = $m[1];
-
-			// Test whether this variable comes from a previous xsl:param or xsl:variable element
-			foreach (['xsl:param', 'xsl:variable'] as $nodeName)
-			{
-				$query = 'ancestor-or-self::*/'
-				       . 'preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
-
-				foreach ($xpath->query($query, $node) as $varNode)
-				{
-					// Intercept the UnsafeTemplateException and change the node to the one we're
-					// really checking before rethrowing it
-					try
-					{
-						$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
-					}
-					catch (UnsafeTemplateException $e)
-					{
-						$e->setNode($node);
-
-						throw $e;
-					}
-				}
-			}
+			$this->checkVariable($node, $tag, $m[1]);
 
 			// Either this expression came from a variable that is considered safe, or it's a
 			// stylesheet parameters, which are considered safe by default
@@ -186,24 +185,14 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 
 		// Test whether the expression contains one single attribute
-		if (!preg_match('/^@(\\w+)$/', $expr, $m))
+		if (preg_match('/^@(\\w+)$/', $expr, $m))
 		{
-			throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
+			$this->checkAttribute($node, $tag, $m[1]);
+
+			return;
 		}
 
-		$attrName = $m[1];
-
-		// Test whether the attribute exists
-		if (!isset($tag->attributes[$attrName]))
-		{
-			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
-		}
-
-		// Test whether the attribute is safe to be used in this content type
-		if (!$this->isSafe($tag->attributes[$attrName]))
-		{
-			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
-		}
+		throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
 	}
 
 	/**
@@ -229,6 +218,42 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 			else
 			{
 				$this->checkElementNode($node, $tag);
+			}
+		}
+	}
+
+	/**
+	* Check whether a variable is safe in context
+	*
+	* @param  DOMNode $node  Context node
+	* @param  Tag     $tag   Source tag
+	* @param  string  $qname Name of the variable
+	* @return void
+	*/
+	protected function checkVariable(DOMNode $node, $tag, $qname)
+	{
+		$xpath = new DOMXPath($node->ownerDocument);
+
+		// Test whether this variable comes from a previous xsl:param or xsl:variable element
+		foreach (['xsl:param', 'xsl:variable'] as $nodeName)
+		{
+			$query = 'ancestor-or-self::*/'
+				   . 'preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
+
+			foreach ($xpath->query($query, $node) as $varNode)
+			{
+				// Intercept the UnsafeTemplateException and change the node to the one we're
+				// really checking before rethrowing it
+				try
+				{
+					$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
+				}
+				catch (UnsafeTemplateException $e)
+				{
+					$e->setNode($node);
+
+					throw $e;
+				}
 			}
 		}
 	}
