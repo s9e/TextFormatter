@@ -122,39 +122,19 @@ class ControlStructuresOptimizer
 
 		// Count this control structure in this context's statements unless it's an elseif/else
 		// in which case it's already been counted as part of the if
-		if ($this->tokens[$this->i][0] !== T_ELSE && $this->tokens[$this->i][0] !== T_ELSEIF)
+		if (!in_array($this->tokens[$this->i][0], [T_ELSE, T_ELSEIF], true))
 		{
 			++$this->context['statements'];
 		}
 
+		// If the control structure is anything but an "else", skip its condition to reach the first
+		// brace or statement
 		if ($this->tokens[$this->i][0] !== T_ELSE)
 		{
-			// Move to the next '(' token
-			while (++$this->i < $this->cnt && $this->tokens[$this->i] !== '(');
-
-			$parens = 0;
-			while (++$this->i < $this->cnt)
-			{
-				if ($this->tokens[$this->i] === ')')
-				{
-					if ($parens)
-					{
-						--$parens;
-					}
-					else
-					{
-						break;
-					}
-				}
-				elseif ($this->tokens[$this->i] === '(')
-				{
-					++$parens;
-				}
-			}
+			$this->skipCondition();
 		}
 
-		// Skip whitespace
-		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === T_WHITESPACE);
+		$this->skipWhitespace();
 
 		// Abort if this control structure does not use braces
 		if ($this->tokens[$this->i] !== '{')
@@ -203,7 +183,7 @@ class ControlStructuresOptimizer
 	{
 		// Test whether we should avoid removing the braces because it's followed by an else/elseif
 		// that would become part of an inner if/elseif
-		if ($this->context['lastBlock'] === T_IF || $this->context['lastBlock'] === T_ELSEIF)
+		if (in_array($this->context['lastBlock'], [T_IF, T_ELSEIF], true))
 		{
 			if ($this->i < $this->cnt - 3)
 			{
@@ -318,6 +298,58 @@ class ControlStructuresOptimizer
 		$this->cnt     = count($this->tokens);
 		$this->braces  = 0;
 		$this->changed = false;
+	}
+	/**
+	* Skip the condition of a control structure
+	*
+	* @return void
+	*/
+	protected function skipCondition()
+	{
+		// Reach the opening parenthesis
+		$this->skipToString('(');
+
+		// Iterate through tokens until we have a match for every left parenthesis
+		$parens = 0;
+		while (++$this->i < $this->cnt)
+		{
+			if ($this->tokens[$this->i] === ')')
+			{
+				if ($parens)
+				{
+					--$parens;
+				}
+				else
+				{
+					break;
+				}
+			}
+			elseif ($this->tokens[$this->i] === '(')
+			{
+				++$parens;
+			}
+		}
+	}
+
+	/**
+	* Move the internal cursor until it reaches given string
+	*
+	* @param  string $str String to reach
+	* @return void
+	*/
+	protected function skipToString($str)
+	{
+		while (++$this->i < $this->cnt && $this->tokens[$this->i] !== $str);
+	}
+
+	/**
+	* Skip all whitespace
+	*
+	* @return void
+	*/
+	protected function skipWhitespace()
+	{
+		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === T_WHITESPACE);
 	}
 
 	/**
