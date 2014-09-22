@@ -20,8 +20,11 @@ class Tag
 	const END_TAG = 2;
 
 	/**
-	* Tag type: self-closing tag -- meant to equal START_TAG | END_TAG
+	* Tag type: self-closing tag
 	*/
+//	const SELF_CLOSING_TAG = self::START_TAG | self::END_TAG;
+
+	// https://bugs.php.net/bug.php?id=67880
 	const SELF_CLOSING_TAG = 3;
 
 	/**
