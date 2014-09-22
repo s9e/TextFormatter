@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,21 +17,21 @@ class Parser
 	/**#@+
 	* Boolean rules bitfield
 	*/
-	const RULE_AUTO_CLOSE        = 1 << 0;
-	const RULE_AUTO_REOPEN       = 1 << 1;
-	const RULE_BREAK_PARAGRAPH   = 1 << 2;
-	const RULE_CREATE_PARAGRAPHS = 1 << 3;
-	const RULE_DISABLE_AUTO_BR   = 1 << 4;
-	const RULE_ENABLE_AUTO_BR    = 1 << 5;
-	const RULE_IGNORE_TAGS       = 1 << 6;
-	const RULE_IGNORE_TEXT       = 1 << 7;
-	const RULE_IS_TRANSPARENT    = 1 << 8;
-	const RULE_PREVENT_BR        = 1 << 9;
-	const RULE_SUSPEND_AUTO_BR   = 1 << 10;
-	const RULE_TRIM_WHITESPACE   = 1 << 11;
+	const RULE_AUTO_CLOSE        = 1;
+	const RULE_AUTO_REOPEN       = 2;
+	const RULE_BREAK_PARAGRAPH   = 4;
+	const RULE_CREATE_PARAGRAPHS = 8;
+	const RULE_DISABLE_AUTO_BR   = 16;
+	const RULE_ENABLE_AUTO_BR    = 32;
+	const RULE_IGNORE_TAGS       = 64;
+	const RULE_IGNORE_TEXT       = 128;
+	const RULE_IS_TRANSPARENT    = 256;
+	const RULE_PREVENT_BR        = 512;
+	const RULE_SUSPEND_AUTO_BR   = 1024;
+	const RULE_TRIM_WHITESPACE   = 2048;
 	/**#@-*/
 
-	/**
+	/*
 	* Bitwise disjunction of rules related to automatic line breaks
 	*/
 //	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
@@ -39,133 +39,133 @@ class Parser
 	// https://bugs.php.net/bug.php?id=67880
 	const RULES_AUTO_LINEBREAKS = 1072;
 
-	/**
+	/*
 	* Bitwise disjunction of rules that are inherited by subcontexts
 	*/
-	const RULES_INHERITANCE = self::RULE_ENABLE_AUTO_BR;
+	const RULES_INHERITANCE = 32;
 
-	/**
+	/*
 	* All the characters that are considered whitespace
 	*/
 	const WHITESPACE = " \n\t";
 
-	/**
+	/*
 	* @var array Number of open tags for each tag name
 	*/
 	protected $cntOpen;
 
-	/**
+	/*
 	* @var array Number of times each tag has been used
 	*/
 	protected $cntTotal;
 
-	/**
+	/*
 	* @var array Current context
 	*/
 	protected $context;
 
-	/**
+	/*
 	* @var integer How hard the parser has worked on fixing bad markup so far
 	*/
 	protected $currentFixingCost;
 
-	/**
+	/*
 	* @var Tag Current tag being processed
 	*/
 	protected $currentTag;
 
-	/**
+	/*
 	* @var bool Whether the output contains "rich" tags, IOW any tag that is not <p> or <br/>
 	*/
 	protected $isRich;
 
-	/**
+	/*
 	* @var Logger This parser's logger
 	*/
 	protected $logger;
 
-	/**
+	/*
 	* @var integer How hard the parser should work on fixing bad markup
 	*/
 	public $maxFixingCost = 1000;
 
-	/**
+	/*
 	* @var array Associative array of namespace prefixes in use in document (prefixes used as key)
 	*/
 	protected $namespaces;
 
-	/**
+	/*
 	* @var array Stack of open tags (instances of Tag)
 	*/
 	protected $openTags;
 
-	/**
+	/*
 	* @var string This parser's output
 	*/
 	protected $output;
 
-	/**
+	/*
 	* @var integer Position of the cursor in the original text
 	*/
 	protected $pos;
 
-	/**
+	/*
 	* @var array Array of callbacks, using plugin names as keys
 	*/
 	protected $pluginParsers = [];
 
-	/**
+	/*
 	* @var array Associative array of [pluginName => pluginConfig]
 	*/
 	protected $pluginsConfig;
 
-	/**
+	/*
 	* @var array Variables registered for use in filters
 	*/
 	public $registeredVars = [];
 
-	/**
+	/*
 	* @var array Root context, used at the root of the document
 	*/
 	protected $rootContext;
 
-	/**
+	/*
 	* @var array Tags' config
 	*/
 	protected $tagsConfig;
 
-	/**
+	/*
 	* @var array Tag storage
 	*/
 	protected $tagStack;
 
-	/**
+	/*
 	* @var bool Whether the tags in the stack are sorted
 	*/
 	protected $tagStackIsSorted;
 
-	/**
+	/*
 	* @var string Text being parsed
 	*/
 	protected $text;
 
-	/**
+	/*
 	* @var integer Length of the text being parsed
 	*/
 	protected $textLen;
 
-	/**
+	/*
 	* @var integer Counter incremented everytime the parser is reset. Used to as a canary to detect
 	*              whether the parser was reset during execution
 	*/
 	protected $uid = 0;
 
-	/**
+	/*
 	* @var integer Position before which we output text verbatim, without paragraphs or linebreaks
 	*/
 	protected $wsPos;
 
-	/**
+	/*
 	* Constructor
 	*/
 	public function __construct(array $config)
@@ -178,7 +178,7 @@ class Parser
 		$this->__wakeup();
 	}
 
-	/**
+	/*
 	* Serializer
 	*
 	* Returns the properties that need to persist through serialization.
@@ -193,7 +193,7 @@ class Parser
 		return ['pluginsConfig', 'registeredVars', 'rootContext', 'tagsConfig'];
 	}
 
-	/**
+	/*
 	* Unserializer
 	*
 	* @return void
@@ -203,7 +203,7 @@ class Parser
 		$this->logger = new Logger;
 	}
 
-	/**
+	/*
 	* Reset the parser for a new parsing
 	*
 	* @param  string $text Text to be parsed
@@ -212,28 +212,28 @@ class Parser
 	protected function reset($text)
 	{
 		// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
-		$text = preg_replace('/\\r\\n?/', "\n", $text);
-		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
+		$text = \preg_replace('/\\r\\n?/', "\n", $text);
+		$text = \preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 
 		// Clear the logs
 		$this->logger->clear();
 
 		// Initialize the rest
 		$this->currentFixingCost = 0;
-		$this->isRich     = false;
+		$this->isRich     = \false;
 		$this->namespaces = [];
 		$this->output     = '';
 		$this->text       = $text;
-		$this->textLen    = strlen($text);
+		$this->textLen    = \strlen($text);
 		$this->tagStack   = [];
-		$this->tagStackIsSorted = true;
+		$this->tagStackIsSorted = \true;
 		$this->wsPos      = 0;
 
 		// Bump the UID
 		++$this->uid;
 	}
 
-	/**
+	/*
 	* Set a tag's option
 	*
 	* This method ensures that the tag's config is a value and not a reference, to prevent
@@ -262,7 +262,7 @@ class Parser
 	// Public API
 	//==========================================================================
 
-	/**
+	/*
 	* Disable a tag
 	*
 	* @param  string $tagName Name of the tag
@@ -270,10 +270,10 @@ class Parser
 	*/
 	public function disableTag($tagName)
 	{
-		$this->setTagOption($tagName, 'isDisabled', true);
+		$this->setTagOption($tagName, 'isDisabled', \true);
 	}
 
-	/**
+	/*
 	* Enable a tag
 	*
 	* @param  string $tagName Name of the tag
@@ -282,12 +282,10 @@ class Parser
 	public function enableTag($tagName)
 	{
 		if (isset($this->tagsConfig[$tagName]))
-		{
 			unset($this->tagsConfig[$tagName]['isDisabled']);
-		}
 	}
 
-	/**
+	/*
 	* Get this parser's Logger instance
 	*
 	* @return Logger
@@ -297,7 +295,7 @@ class Parser
 		return $this->logger;
 	}
 
-	/**
+	/*
 	* Return the last text parsed
 	*
 	* This method returns the normalized text, which may be slightly different from the original
@@ -314,7 +312,7 @@ class Parser
 		return $this->text;
 	}
 
-	/**
+	/*
 	* Parse a text
 	*
 	* @param  string $text Text to parse
@@ -332,14 +330,12 @@ class Parser
 
 		// Check the uid in case a plugin or a filter reset the parser mid-execution
 		if ($this->uid !== $uid)
-		{
 			throw new RuntimeException('The parser has been reset during execution');
-		}
 
 		return $this->output;
 	}
 
-	/**
+	/*
 	* Change a tag's tagLimit
 	*
 	* NOTE: the default tagLimit should generally be set during configuration instead
@@ -353,7 +349,7 @@ class Parser
 		$this->setTagOption($tagName, 'tagLimit', $tagLimit);
 	}
 
-	/**
+	/*
 	* Change a tag's nestingLimit
 	*
 	* NOTE: the default nestingLimit should generally be set during configuration instead
@@ -371,7 +367,7 @@ class Parser
 	// Filter processing
 	//==========================================================================
 
-	/**
+	/*
 	* Execute all the attribute preprocessors of given tag
 	*
 	* @private
@@ -383,43 +379,34 @@ class Parser
 	public static function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
-		{
-			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp))
+			foreach ($tagConfig['attributePreprocessors'] as $_2698889989)
 			{
+				list($attrName, $regexp) = $_2698889989;
 				if (!$tag->hasAttribute($attrName))
-				{
 					continue;
-				}
 
 				$attrValue = $tag->getAttribute($attrName);
 
 				// If the regexp matches, we add the captured attributes
-				if (preg_match($regexp, $attrValue, $m))
-				{
+				if (\preg_match($regexp, $attrValue, $m))
 					// Set the target attributes
 					foreach ($m as $targetName => $targetValue)
 					{
 						// Skip numeric captures and empty captures
-						if (is_numeric($targetName) || $targetValue === '')
-						{
+						if (\is_numeric($targetName) || $targetValue === '')
 							continue;
-						}
 
 						// Attribute preprocessors cannot overwrite other attributes but they can
 						// overwrite themselves
 						if ($targetName === $attrName || !$tag->hasAttribute($targetName))
-						{
 							$tag->setAttribute($targetName, $targetValue);
-						}
 					}
-				}
 			}
-		}
 
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* Execute a filter
 	*
 	* @see s9e\TextFormatter\Configurator\Items\ProgrammableCallback
@@ -435,33 +422,23 @@ class Parser
 
 		$args = [];
 		foreach ($params as $k => $v)
-		{
-			if (is_numeric($k))
-			{
+			if (\is_numeric($k))
 				// By-value param
 				$args[] = $v;
-			}
 			elseif (isset($vars[$k]))
-			{
 				// By-name param using a supplied var
 				$args[] = $vars[$k];
-			}
 			elseif (isset($vars['registeredVars'][$k]))
-			{
 				// By-name param using a registered var
 				$args[] = $vars['registeredVars'][$k];
-			}
 			else
-			{
 				// Unknown param
-				$args[] = null;
-			}
-		}
+				$args[] = \null;
 
-		return call_user_func_array($callback, $args);
+		return \call_user_func_array($callback, $args);
 	}
 
-	/**
+	/*
 	* Filter the attributes of given tag
 	*
 	* @private
@@ -478,14 +455,12 @@ class Parser
 		{
 			$tag->setAttributes([]);
 
-			return true;
+			return \true;
 		}
 
 		// Generate values for attributes with a generator set
 		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
-		{
 			if (isset($attrConfig['generator']))
-			{
 				$tag->setAttribute(
 					$attrName,
 					self::executeFilter(
@@ -497,8 +472,6 @@ class Parser
 						]
 					)
 				);
-			}
-		}
 
 		// Filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
@@ -514,9 +487,7 @@ class Parser
 
 			// Test whether this attribute has a filterChain
 			if (!isset($attrConfig['filterChain']))
-			{
 				continue;
-			}
 
 			// Record the name of the attribute being filtered into the logger
 			$logger->setAttribute($attrName);
@@ -533,7 +504,7 @@ class Parser
 					]
 				);
 
-				if ($attrValue === false)
+				if ($attrValue === \false)
 				{
 					$tag->removeAttribute($attrName);
 					break;
@@ -541,10 +512,8 @@ class Parser
 			}
 
 			// Update the attribute value if it's valid
-			if ($attrValue !== false)
-			{
+			if ($attrValue !== \false)
 				$tag->setAttribute($attrName, $attrValue);
-			}
 
 			// Remove the attribute's name from the logger
 			$logger->unsetAttribute();
@@ -552,28 +521,20 @@ class Parser
 
 		// Iterate over the attribute definitions to handle missing attributes
 		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
-		{
 			// Test whether this attribute is missing
 			if (!$tag->hasAttribute($attrName))
-			{
 				if (isset($attrConfig['defaultValue']))
-				{
 					// Use the attribute's default value
 					$tag->setAttribute($attrName, $attrConfig['defaultValue']);
-				}
 				elseif (!empty($attrConfig['required']))
-				{
 					// This attribute is missing, has no default value and is required, which means
 					// the attribute set is invalid
-					return false;
-				}
-			}
-		}
+					return \false;
 
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* Execute given tag's filterChain
 	*
 	* @param  Tag  $tag Tag to filter
@@ -583,7 +544,7 @@ class Parser
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
-		$isValid   = true;
+		$isValid   = \true;
 
 		if (!empty($tagConfig['filterChain']))
 		{
@@ -602,13 +563,11 @@ class Parser
 			];
 
 			foreach ($tagConfig['filterChain'] as $filter)
-			{
 				if (!self::executeFilter($filter, $vars))
 				{
-					$isValid = false;
+					$isValid = \false;
 					break;
 				}
-			}
 
 			// Remove the tag from the logger
 			$this->logger->unsetTag();
@@ -621,7 +580,7 @@ class Parser
 	// Output handling
 	//==========================================================================
 
-	/**
+	/*
 	* Finalize the output by appending the rest of the unprocessed text and create the root node
 	*
 	* @return void
@@ -629,12 +588,12 @@ class Parser
 	protected function finalizeOutput()
 	{
 		// Output the rest of the text and close the last paragraph
-		$this->outputText($this->textLen, 0, true);
+		$this->outputText($this->textLen, 0, \true);
 
 		// Remove empty tag pairs, e.g. <I><U></U></I> as well as empty paragraphs
 		do
 		{
-			$this->output = preg_replace(
+			$this->output = \preg_replace(
 				'#<([\\w:]+)[^>]*></\\1>#',
 				'',
 				$this->output,
@@ -645,25 +604,21 @@ class Parser
 		while ($cnt);
 
 		// Merge consecutive <i> tags
-		if (strpos($this->output, '</i><i>') !== false)
-		{
-			$this->output = str_replace('</i><i>', '', $this->output);
-		}
+		if (\strpos($this->output, '</i><i>') !== \false)
+			$this->output = \str_replace('</i><i>', '', $this->output);
 
 		// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
 		$tagName = ($this->isRich) ? 'r' : 't';
 
 		// Prepare the root node with all the namespace declarations
 		$tmp = '<' . $tagName;
-		foreach (array_keys($this->namespaces) as $prefix)
-		{
+		foreach (\array_keys($this->namespaces) as $prefix)
 			$tmp .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
-		}
 
 		$this->output = $tmp . '>' . $this->output . '</' . $tagName . '>';
 	}
 
-	/**
+	/*
 	* Append a tag to the output
 	*
 	* @param  Tag  $tag Tag to append
@@ -671,7 +626,7 @@ class Parser
 	*/
 	protected function outputTag(Tag $tag)
 	{
-		$this->isRich = true;
+		$this->isRich = \true;
 
 		$tagName  = $tag->getName();
 		$tagPos   = $tag->getPos();
@@ -684,32 +639,26 @@ class Parser
 			$skipAfter  = ($tag->isEndTag())   ? 2 : 1;
 		}
 		else
-		{
 			$skipBefore = $skipAfter = 0;
-		}
 
 		// Current paragraph must end before the tag if:
 		//  - the tag is a start (or self-closing) tag and it breaks paragraphs, or
 		//  - the tag is an end tag (but not self-closing)
-		$closeParagraph = false;
+		$closeParagraph = \false;
 		if ($tag->isStartTag())
 		{
 			if ($tagFlags & self::RULE_BREAK_PARAGRAPH)
-			{
-				$closeParagraph = true;
-			}
+				$closeParagraph = \true;
 		}
 		else
-		{
-			$closeParagraph = true;
-		}
+			$closeParagraph = \true;
 
 		// Let the cursor catch up with this tag's position
 		$this->outputText($tagPos, $skipBefore, $closeParagraph);
 
 		// Capture the text consumed by the tag
 		$tagText = ($tagLen)
-		         ? htmlspecialchars(substr($this->text, $tagPos, $tagLen), ENT_NOQUOTES, 'UTF-8')
+		         ? \htmlspecialchars(\substr($this->text, $tagPos, $tagLen), \ENT_NOQUOTES, 'UTF-8')
 		         : '';
 
 		// Output current tag
@@ -717,16 +666,12 @@ class Parser
 		{
 			// Handle paragraphs before opening the tag
 			if (!($tagFlags & self::RULE_BREAK_PARAGRAPH))
-			{
 				$this->outputParagraphStart($tagPos);
-			}
 
 			// Record this tag's namespace, if applicable
-			$colonPos = strpos($tagName, ':');
+			$colonPos = \strpos($tagName, ':');
 			if ($colonPos)
-			{
-				$this->namespaces[substr($tagName, 0, $colonPos)] = 0;
-			}
+				$this->namespaces[\substr($tagName, 0, $colonPos)] = 0;
 
 			// Open the start tag and add its attributes, but don't close the tag
 			$this->output .= '<' . $tagName;
@@ -734,39 +679,25 @@ class Parser
 			// We output the attributes in lexical order. Helps canonicalizing the output and could
 			// prove useful someday
 			$attributes = $tag->getAttributes();
-			ksort($attributes);
+			\ksort($attributes);
 
 			foreach ($attributes as $attrName => $attrValue)
-			{
-				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8') . '"';
-			}
+				$this->output .= ' ' . $attrName . '="' . \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8') . '"';
 
 			if ($tag->isSelfClosingTag())
-			{
 				if ($tagLen)
-				{
 					$this->output .= '>' . $tagText . '</' . $tagName . '>';
-				}
 				else
-				{
 					$this->output .= '/>';
-				}
-			}
 			elseif ($tagLen)
-			{
 				$this->output .= '><s>' . $tagText . '</s>';
-			}
 			else
-			{
 				$this->output .= '>';
-			}
 		}
 		else
 		{
 			if ($tagLen)
-			{
 				$this->output .= '<e>' . $tagText . '</e>';
-			}
 
 			$this->output .= '</' . $tagName . '>';
 		}
@@ -786,7 +717,7 @@ class Parser
 		}
 	}
 
-	/**
+	/*
 	* Output the text between the cursor's position (included) and given position (not included)
 	*
 	* @param  integer $catchupPos     Position we're catching up to
@@ -797,25 +728,17 @@ class Parser
 	protected function outputText($catchupPos, $maxLines, $closeParagraph)
 	{
 		if ($closeParagraph)
-		{
 			if (!($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS))
-			{
-				$closeParagraph = false;
-			}
+				$closeParagraph = \false;
 			else
-			{
 				// Ignore any number of lines at the end if we're closing a paragraph
 				$maxLines = -1;
-			}
-		}
 
 		if ($this->pos >= $catchupPos)
 		{
 			// We're already there, close the paragraph if applicable and return
 			if ($closeParagraph)
-			{
 				$this->outputParagraphEnd();
-			}
 
 			return;
 		}
@@ -823,17 +746,15 @@ class Parser
 		// Skip over previously identified whitespace if applicable
 		if ($this->wsPos > $this->pos)
 		{
-			$skipPos       = min($catchupPos, $this->wsPos);
-			$this->output .= substr($this->text, $this->pos, $skipPos - $this->pos);
+			$skipPos       = \min($catchupPos, $this->wsPos);
+			$this->output .= \substr($this->text, $this->pos, $skipPos - $this->pos);
 			$this->pos     = $skipPos;
 
 			if ($this->pos >= $catchupPos)
 			{
 				// Skipped everything. Close the paragraph if applicable and return
 				if ($closeParagraph)
-				{
 					$this->outputParagraphEnd();
-				}
 
 				return;
 			}
@@ -843,22 +764,18 @@ class Parser
 		if ($this->context['flags'] & self::RULE_IGNORE_TEXT)
 		{
 			$catchupLen  = $catchupPos - $this->pos;
-			$catchupText = substr($this->text, $this->pos, $catchupLen);
+			$catchupText = \substr($this->text, $this->pos, $catchupLen);
 
 			// If the catchup text is not entirely composed of whitespace, we put it inside ignore
 			// tags
-			if (strspn($catchupText, " \n\t") < $catchupLen)
-			{
+			if (\strspn($catchupText, " \n\t") < $catchupLen)
 				$catchupText = '<i>' . $catchupText . '</i>';
-			}
 
 			$this->output .= $catchupText;
 			$this->pos = $catchupPos;
 
 			if ($closeParagraph)
-			{
 				$this->outputParagraphEnd();
-			}
 
 			return;
 		}
@@ -871,15 +788,11 @@ class Parser
 		while ($maxLines && --$ignorePos >= $this->pos)
 		{
 			$c = $this->text[$ignorePos];
-			if (strpos(self::WHITESPACE, $c) === false)
-			{
+			if (\strpos(self::WHITESPACE, $c) === \false)
 				break;
-			}
 
 			if ($c === "\n")
-			{
 				--$maxLines;
-			}
 
 			++$ignoreLen;
 		}
@@ -895,58 +808,50 @@ class Parser
 				$this->outputWhitespace($catchupPos);
 
 				if ($catchupPos > $this->pos)
-				{
 					$this->outputParagraphStart($catchupPos);
-				}
 			}
 
 			// Look for a paragraph break in this text
-			$pbPos = strpos($this->text, "\n\n", $this->pos);
+			$pbPos = \strpos($this->text, "\n\n", $this->pos);
 
-			while ($pbPos !== false && $pbPos < $catchupPos)
+			while ($pbPos !== \false && $pbPos < $catchupPos)
 			{
-				$this->outputText($pbPos, 0, true);
+				$this->outputText($pbPos, 0, \true);
 				$this->outputParagraphStart($catchupPos);
 
-				$pbPos = strpos($this->text, "\n\n", $this->pos);
+				$pbPos = \strpos($this->text, "\n\n", $this->pos);
 			}
 		}
 
 		// Capture, escape and output the text
 		if ($catchupPos > $this->pos)
 		{
-			$catchupText = htmlspecialchars(
-				substr($this->text, $this->pos, $catchupPos - $this->pos),
-				ENT_NOQUOTES,
+			$catchupText = \htmlspecialchars(
+				\substr($this->text, $this->pos, $catchupPos - $this->pos),
+				\ENT_NOQUOTES,
 				'UTF-8'
 			);
 
 			// Format line breaks if applicable
 			if (($this->context['flags'] & self::RULES_AUTO_LINEBREAKS) === self::RULE_ENABLE_AUTO_BR)
-			{
-				$catchupText = str_replace("\n", "<br/>\n", $catchupText);
-			}
+				$catchupText = \str_replace("\n", "<br/>\n", $catchupText);
 
 			$this->output .= $catchupText;
 		}
 
 		// Close the paragraph if applicable
 		if ($closeParagraph)
-		{
 			$this->outputParagraphEnd();
-		}
 
 		// Add the ignored text if applicable
 		if ($ignoreLen)
-		{
-			$this->output .= substr($this->text, $catchupPos, $ignoreLen);
-		}
+			$this->output .= \substr($this->text, $catchupPos, $ignoreLen);
 
 		// Move the cursor past the text
 		$this->pos = $catchupPos + $ignoreLen;
 	}
 
-	/**
+	/*
 	* Output a linebreak tag
 	*
 	* @param  Tag  $tag
@@ -954,11 +859,11 @@ class Parser
 	*/
 	protected function outputBrTag(Tag $tag)
 	{
-		$this->outputText($tag->getPos(), 0, false);
+		$this->outputText($tag->getPos(), 0, \false);
 		$this->output .= '<br/>';
 	}
 
-	/**
+	/*
 	* Output an ignore tag
 	*
 	* @param  Tag  $tag
@@ -970,18 +875,18 @@ class Parser
 		$tagLen = $tag->getLen();
 
 		// Capture the text to ignore
-		$ignoreText = substr($this->text, $tagPos, $tagLen);
+		$ignoreText = \substr($this->text, $tagPos, $tagLen);
 
 		// Catch up with the tag's position then output the tag
-		$this->outputText($tagPos, 0, false);
-		$this->output .= '<i>' . htmlspecialchars($ignoreText, ENT_NOQUOTES, 'UTF-8') . '</i>';
-		$this->isRich = true;
+		$this->outputText($tagPos, 0, \false);
+		$this->output .= '<i>' . \htmlspecialchars($ignoreText, \ENT_NOQUOTES, 'UTF-8') . '</i>';
+		$this->isRich = \true;
 
 		// Move the cursor past this tag
 		$this->pos = $tagPos + $tagLen;
 	}
 
-	/**
+	/*
 	* Start a paragraph between current position and given position, if applicable
 	*
 	* @param  integer $maxPos Rightmost position at which the paragraph can be opened
@@ -992,9 +897,7 @@ class Parser
 		// Do nothing if we're already in a paragraph, or if we don't use paragraphs
 		if ($this->context['inParagraph']
 		 || !($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS))
-		{
 			return;
-		}
 
 		// Output the whitespace between $this->pos and $maxPos if applicable
 		$this->outputWhitespace($maxPos);
@@ -1003,11 +906,11 @@ class Parser
 		if ($this->pos < $this->textLen)
 		{
 			$this->output .= '<p>';
-			$this->context['inParagraph'] = true;
+			$this->context['inParagraph'] = \true;
 		}
 	}
 
-	/**
+	/*
 	* Close current paragraph at current position if applicable
 	*
 	* @return void
@@ -1016,15 +919,13 @@ class Parser
 	{
 		// Do nothing if we're not in a paragraph
 		if (!$this->context['inParagraph'])
-		{
 			return;
-		}
 
 		$this->output .= '</p>';
-		$this->context['inParagraph'] = false;
+		$this->context['inParagraph'] = \false;
 	}
 
-	/**
+	/*
 	* Skip as much whitespace after current position as possible
 	*
 	* @param  integer $maxPos Rightmost character to be skipped
@@ -1034,11 +935,11 @@ class Parser
 	{
 		if ($maxPos > $this->pos)
 		{
-			$spn = strspn($this->text, self::WHITESPACE, $this->pos, $maxPos - $this->pos);
+			$spn = \strspn($this->text, self::WHITESPACE, $this->pos, $maxPos - $this->pos);
 
 			if ($spn)
 			{
-				$this->output .= substr($this->text, $this->pos, $spn);
+				$this->output .= \substr($this->text, $this->pos, $spn);
 				$this->pos += $spn;
 			}
 		}
@@ -1048,7 +949,7 @@ class Parser
 	// Plugins handling
 	//==========================================================================
 
-	/**
+	/*
 	* Disable a plugin
 	*
 	* @param  string $pluginName Name of the plugin
@@ -1063,12 +964,12 @@ class Parser
 			unset($this->pluginsConfig[$pluginName]);
 
 			// Update the value and replace the plugin's config
-			$pluginConfig['isDisabled'] = true;
+			$pluginConfig['isDisabled'] = \true;
 			$this->pluginsConfig[$pluginName] = $pluginConfig;
 		}
 	}
 
-	/**
+	/*
 	* Enable a plugin
 	*
 	* @param  string $pluginName Name of the plugin
@@ -1077,12 +978,10 @@ class Parser
 	public function enablePlugin($pluginName)
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
-		{
-			$this->pluginsConfig[$pluginName]['isDisabled'] = false;
-		}
+			$this->pluginsConfig[$pluginName]['isDisabled'] = \false;
 	}
 
-	/**
+	/*
 	* Execute all the plugins
 	*
 	* @return void
@@ -1092,40 +991,32 @@ class Parser
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			if (!empty($pluginConfig['isDisabled']))
-			{
 				continue;
-			}
 
 			if (isset($pluginConfig['quickMatch'])
-			 && strpos($this->text, $pluginConfig['quickMatch']) === false)
-			{
+			 && \strpos($this->text, $pluginConfig['quickMatch']) === \false)
 				continue;
-			}
 
 			$matches = [];
 
 			if (isset($pluginConfig['regexp']))
 			{
-				$cnt = preg_match_all(
+				$cnt = \preg_match_all(
 					$pluginConfig['regexp'],
 					$this->text,
 					$matches,
-					PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+					\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 				);
 
 				if (!$cnt)
-				{
 					continue;
-				}
 
 				if ($cnt > $pluginConfig['regexpLimit'])
 				{
 					if ($pluginConfig['regexpLimitAction'] === 'abort')
-					{
 						throw new RuntimeException($pluginName . ' limit exceeded');
-					}
 
-					$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
+					$matches = \array_slice($matches, 0, $pluginConfig['regexpLimit']);
 
 					$msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed';
 					$context = [
@@ -1134,9 +1025,7 @@ class Parser
 					];
 
 					if ($pluginConfig['regexpLimitAction'] === 'warn')
-					{
 						$this->logger->warn($msg, $context);
-					}
 				}
 			}
 
@@ -1155,11 +1044,11 @@ class Parser
 			}
 
 			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
-			call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
+			\call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
 		}
 	}
 
-	/**
+	/*
 	* Register a parser
 	*
 	* Can be used to add a new parser with no plugin config, or pre-generate a parser for an
@@ -1171,16 +1060,12 @@ class Parser
 	*/
 	public function registerParser($pluginName, $parser)
 	{
-		if (!is_callable($parser))
-		{
+		if (!\is_callable($parser))
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
-		}
 
 		// Create an empty config for this plugin to ensure it is executed
 		if (!isset($this->pluginsConfig[$pluginName]))
-		{
 			$this->pluginsConfig[$pluginName] = [];
-		}
 
 		$this->pluginParsers[$pluginName] = $parser;
 	}
@@ -1189,7 +1074,7 @@ class Parser
 	// Rules handling
 	//==========================================================================
 
-	/**
+	/*
 	* Apply closeAncestor rules associated with given tag
 	*
 	* @param  Tag  $tag Tag
@@ -1204,7 +1089,7 @@ class Parser
 
 			if (!empty($tagConfig['rules']['closeAncestor']))
 			{
-				$i = count($this->openTags);
+				$i = \count($this->openTags);
 
 				while (--$i >= 0)
 				{
@@ -1219,16 +1104,16 @@ class Parser
 						// ...then we add a new end tag for it
 						$this->addMagicEndTag($ancestor, $tag->getPos());
 
-						return true;
+						return \true;
 					}
 				}
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Apply closeParent rules associated with given tag
 	*
 	* @param  Tag  $tag Tag
@@ -1243,7 +1128,7 @@ class Parser
 
 			if (!empty($tagConfig['rules']['closeParent']))
 			{
-				$parent     = end($this->openTags);
+				$parent     = \end($this->openTags);
 				$parentName = $parent->getName();
 
 				if (isset($tagConfig['rules']['closeParent'][$parentName]))
@@ -1254,15 +1139,15 @@ class Parser
 					// ...then we add a new end tag for it
 					$this->addMagicEndTag($parent, $tag->getPos());
 
-					return true;
+					return \true;
 				}
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Apply fosterParent rules associated with given tag
 	*
 	* NOTE: this rule has the potential for creating an unbounded loop, either if a tag tries to
@@ -1284,7 +1169,7 @@ class Parser
 
 			if (!empty($tagConfig['rules']['fosterParent']))
 			{
-				$parent     = end($this->openTags);
+				$parent     = \end($this->openTags);
 				$parentName = $parent->getName();
 
 				if (isset($tagConfig['rules']['fosterParent'][$parentName]))
@@ -1305,15 +1190,15 @@ class Parser
 					// And finally close its parent
 					$this->addMagicEndTag($parent, $tag->getPos());
 
-					return true;
+					return \true;
 				}
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Apply requireAncestor rules associated with given tag
 	*
 	* @param  Tag  $tag Tag
@@ -1327,29 +1212,25 @@ class Parser
 		if (isset($tagConfig['rules']['requireAncestor']))
 		{
 			foreach ($tagConfig['rules']['requireAncestor'] as $ancestorName)
-			{
 				if (!empty($this->cntOpen[$ancestorName]))
-				{
-					return false;
-				}
-			}
+					return \false;
 
 			$this->logger->err('Tag requires an ancestor', [
-				'requireAncestor' => implode(',', $tagConfig['rules']['requireAncestor']),
+				'requireAncestor' => \implode(',', $tagConfig['rules']['requireAncestor']),
 				'tag'             => $tag
 			]);
 
-			return true;
+			return \true;
 		}
 
-		return false;
+		return \false;
 	}
 
 	//==========================================================================
 	// Tag processing
 	//==========================================================================
 
-	/**
+	/*
 	* Create and add an end tag for given start tag at given position
 	*
 	* @param  Tag     $startTag Start tag
@@ -1362,15 +1243,13 @@ class Parser
 
 		// Adjust the end tag's position if whitespace is to be minimized
 		if ($startTag->getFlags() & self::RULE_TRIM_WHITESPACE)
-		{
 			$tagPos = $this->getMagicPos($tagPos);
-		}
 
 		// Add a 0-width end tag that is paired with the given start tag
 		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
 	}
 
-	/**
+	/*
 	* Compute the position of a magic end tag, adjusted for whitespace
 	*
 	* @param  integer $tagPos Rightmost possible position for the tag
@@ -1380,15 +1259,13 @@ class Parser
 	{
 		// Back up from given position to the cursor's position until we find a character that
 		// is not whitespace
-		while ($tagPos > $this->pos && strpos(self::WHITESPACE, $this->text[$tagPos - 1]) !== false)
-		{
+		while ($tagPos > $this->pos && \strpos(self::WHITESPACE, $this->text[$tagPos - 1]) !== \false)
 			--$tagPos;
-		}
 
 		return $tagPos;
 	}
 
-	/**
+	/*
 	* Process all tags in the stack
 	*
 	* @return void
@@ -1404,10 +1281,10 @@ class Parser
 
 		// Initialize the root context
 		$this->context = $this->rootContext;
-		$this->context['inParagraph'] = false;
+		$this->context['inParagraph'] = \false;
 
 		// Initialize the count tables
-		foreach (array_keys($this->tagsConfig) as $tagName)
+		foreach (\array_keys($this->tagsConfig) as $tagName)
 		{
 			$this->cntOpen[$tagName]  = 0;
 			$this->cntTotal[$tagName] = 0;
@@ -1419,34 +1296,26 @@ class Parser
 			while (!empty($this->tagStack))
 			{
 				if (!$this->tagStackIsSorted)
-				{
 					$this->sortTags();
-				}
 
-				$this->currentTag = array_pop($this->tagStack);
+				$this->currentTag = \array_pop($this->tagStack);
 
 				// Skip current tag if tags are disabled and current tag would not close the last
 				// open tag and is not a special tag such as a line/paragraph break or an ignore tag
 				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
-				{
-					if (!$this->currentTag->canClose(end($this->openTags))
+					if (!$this->currentTag->canClose(\end($this->openTags))
 					 && !$this->currentTag->isSystemTag())
-					{
 						continue;
-					}
-				}
 
 				$this->processCurrentTag();
 			}
 
 			// Close tags that were left open
 			foreach ($this->openTags as $startTag)
-			{
 				// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
 				//       the stack is processed in LIFO order, it means that tags get closed in
 				//       the correct order, from descendants to ancestors
 				$this->addMagicEndTag($startTag, $this->textLen);
-			}
 		}
 		while (!empty($this->tagStack));
 
@@ -1454,7 +1323,7 @@ class Parser
 		$this->finalizeOutput();
 	}
 
-	/**
+	/*
 	* Process current tag
 	*
 	* @return void
@@ -1462,9 +1331,7 @@ class Parser
 	protected function processCurrentTag()
 	{
 		if ($this->currentTag->isInvalid())
-		{
 			return;
-		}
 
 		$tagPos = $this->currentTag->getPos();
 		$tagLen = $this->currentTag->getLen();
@@ -1475,14 +1342,14 @@ class Parser
 			// Test whether this tag is paired with a start tag and this tag is still open
 			$startTag = $this->currentTag->getStartTag();
 
-			if ($startTag && in_array($startTag, $this->openTags, true))
+			if ($startTag && \in_array($startTag, $this->openTags, \true))
 			{
 				// Create an end tag that matches current tag's start tag, which consumes as much of
 				// the same text as current tag and is paired with the same start tag
 				$this->addEndTag(
 					$startTag->getName(),
 					$this->pos,
-					max(0, $tagPos + $tagLen - $this->pos)
+					\max(0, $tagPos + $tagLen - $this->pos)
 				)->pairWith($startTag);
 
 				// Note that current tag is not invalidated, it's merely replaced
@@ -1510,32 +1377,22 @@ class Parser
 		}
 
 		if ($this->currentTag->isIgnoreTag())
-		{
 			$this->outputIgnoreTag($this->currentTag);
-		}
 		elseif ($this->currentTag->isBrTag())
 		{
 			// Output the tag if it's allowed, ignore it otherwise
 			if (!($this->context['flags'] & self::RULE_PREVENT_BR))
-			{
 				$this->outputBrTag($this->currentTag);
-			}
 		}
 		elseif ($this->currentTag->isParagraphBreak())
-		{
-			$this->outputText($this->currentTag->getPos(), 0, true);
-		}
+			$this->outputText($this->currentTag->getPos(), 0, \true);
 		elseif ($this->currentTag->isStartTag())
-		{
 			$this->processStartTag($this->currentTag);
-		}
 		else
-		{
 			$this->processEndTag($this->currentTag);
-		}
 	}
 
-	/**
+	/*
 	* Process given start tag (including self-closing tags) at current position
 	*
 	* @param  Tag  $tag Start tag (including self-closing)
@@ -1580,10 +1437,8 @@ class Parser
 		}
 
 		if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
-		{
 			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 			return;
-		}
 
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit'])
 		{
@@ -1638,7 +1493,7 @@ class Parser
 		$this->pushContext($tag);
 	}
 
-	/**
+	/*
 	* Process given end tag at current position
 	*
 	* @param  Tag  $tag end tag
@@ -1649,31 +1504,25 @@ class Parser
 		$tagName = $tag->getName();
 
 		if (empty($this->cntOpen[$tagName]))
-		{
 			// This is an end tag with no start tag
 			return;
-		}
 
-		/**
+		/*
 		* @var array List of tags need to be closed before given tag
 		*/
 		$closeTags = [];
 
 		// Iterate through all open tags from last to first to find a match for our tag
-		$i = count($this->openTags);
+		$i = \count($this->openTags);
 		while (--$i >= 0)
 		{
 			$openTag = $this->openTags[$i];
 
 			if ($tag->canClose($openTag))
-			{
 				break;
-			}
 
 			if (++$this->currentFixingCost > $this->maxFixingCost)
-			{
 				throw new RuntimeException('Fixing cost exceeded');
-			}
 
 			$closeTags[] = $openTag;
 		}
@@ -1698,23 +1547,15 @@ class Parser
 
 			// Test whether this tag should be reopened automatically
 			if ($keepReopening)
-			{
 				if ($openTag->getFlags() & self::RULE_AUTO_REOPEN)
-				{
 					$reopenTags[] = $openTag;
-				}
 				else
-				{
-					$keepReopening = false;
-				}
-			}
+					$keepReopening = \false;
 
 			// Find the earliest position we can close this open tag
 			$tagPos = $tag->getPos();
 			if ($openTag->getFlags() & self::RULE_TRIM_WHITESPACE)
-			{
 				$tagPos = $this->getMagicPos($tagPos);
-			}
 
 			// Output an end tag to close this start tag, then update the context
 			$endTag = new Tag(Tag::END_TAG, $openTagName, $tagPos, 0);
@@ -1732,12 +1573,12 @@ class Parser
 		// reopened by removing those that would immediately be closed
 		if ($closeTags && $this->currentFixingCost < $this->maxFixingCost)
 		{
-			/**
+			/*
 			* @var integer Rightmost position of the portion of text to ignore
 			*/
 			$ignorePos = $this->pos;
 
-			$i = count($this->tagStack);
+			$i = \count($this->tagStack);
 			while (--$i >= 0 && ++$this->currentFixingCost < $this->maxFixingCost)
 			{
 				$upcomingTag = $this->tagStack[$i];
@@ -1746,43 +1587,35 @@ class Parser
 				// strictly an end tag (not a start tag or a self-closing tag)
 				if ($upcomingTag->getPos() > $ignorePos
 				 || $upcomingTag->isStartTag())
-				{
 					break;
-				}
 
 				// Test whether this tag would close any of the tags we're about to reopen
-				$j = count($closeTags);
+				$j = \count($closeTags);
 
 				while (--$j >= 0 && ++$this->currentFixingCost < $this->maxFixingCost)
-				{
 					if ($upcomingTag->canClose($closeTags[$j]))
 					{
 						// Remove the tag from the lists and reset the keys
-						array_splice($closeTags, $j, 1);
+						\array_splice($closeTags, $j, 1);
 
 						if (isset($reopenTags[$j]))
-						{
-							array_splice($reopenTags, $j, 1);
-						}
+							\array_splice($reopenTags, $j, 1);
 
 						// Extend the ignored text to cover this tag
-						$ignorePos = max(
+						$ignorePos = \max(
 							$ignorePos,
 							$upcomingTag->getPos() + $upcomingTag->getLen()
 						);
 
 						break;
 					}
-				}
 			}
 
 			if ($ignorePos > $this->pos)
-			{
-				/**
+				/*
 				* @todo have a method that takes (pos,len) rather than a Tag
 				*/
 				$this->outputIgnoreTag(new Tag(Tag::SELF_CLOSING_TAG, 'i', $this->pos, $ignorePos - $this->pos));
-			}
 		}
 
 		// Re-add tags that need to be reopened, at current cursor position
@@ -1793,25 +1626,23 @@ class Parser
 			// Re-pair the new tag
 			$endTag = $startTag->getEndTag();
 			if ($endTag)
-			{
 				$newTag->pairWith($endTag);
-			}
 		}
 	}
 
-	/**
+	/*
 	* Update counters and replace current context with its parent context
 	*
 	* @return void
 	*/
 	protected function popContext()
 	{
-		$tag = array_pop($this->openTags);
+		$tag = \array_pop($this->openTags);
 		--$this->cntOpen[$tag->getName()];
 		$this->context = $this->context['parentContext'];
 	}
 
-	/**
+	/*
 	* Update counters and replace current context with a new context based on given tag
 	*
 	* If given tag is a self-closing tag, the context won't change
@@ -1830,9 +1661,7 @@ class Parser
 		// If this is a self-closing tag, we don't need to do anything else; The context remains the
 		// same
 		if ($tag->isSelfClosingTag())
-		{
 			return;
-		}
 
 		++$this->cntOpen[$tagName];
 		$this->openTags[] = $tag;
@@ -1842,9 +1671,7 @@ class Parser
 		// If the tag is transparent, we restrict its allowed children to the same set as its
 		// parent, minus this tag's own disallowed children
 		if ($tagFlags & self::RULE_IS_TRANSPARENT)
-		{
 			$allowedChildren &= $this->context['allowedChildren'];
-		}
 
 		// The allowedDescendants bitfield is restricted by this tag's
 		$allowedDescendants = $this->context['allowedDescendants']
@@ -1861,20 +1688,18 @@ class Parser
 
 		// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
 		if ($flags & self::RULE_DISABLE_AUTO_BR)
-		{
 			$flags &= ~self::RULE_ENABLE_AUTO_BR;
-		}
 
 		$this->context = [
 			'allowedChildren'    => $allowedChildren,
 			'allowedDescendants' => $allowedDescendants,
 			'flags'              => $flags,
-			'inParagraph'        => false,
+			'inParagraph'        => \false,
 			'parentContext'      => $this->context
 		];
 	}
 
-	/**
+	/*
 	* Return whether given tag is allowed in current context
 	*
 	* @param  string $tagName
@@ -1884,14 +1709,14 @@ class Parser
 	{
 		$n = $this->tagsConfig[$tagName]['bitNumber'];
 
-		return (bool) (ord($this->context['allowedChildren'][$n >> 3]) & (1 << ($n & 7)));
+		return (bool) (\ord($this->context['allowedChildren'][$n >> 3]) & (1 << ($n & 7)));
 	}
 
 	//==========================================================================
 	// Tag stack
 	//==========================================================================
 
-	/**
+	/*
 	* Add a start tag
 	*
 	* @param  string  $name Name of the tag
@@ -1904,7 +1729,7 @@ class Parser
 		return $this->addTag(Tag::START_TAG, $name, $pos, $len);
 	}
 
-	/**
+	/*
 	* Add an end tag
 	*
 	* @param  string  $name Name of the tag
@@ -1917,7 +1742,7 @@ class Parser
 		return $this->addTag(Tag::END_TAG, $name, $pos, $len);
 	}
 
-	/**
+	/*
 	* Add a self-closing tag
 	*
 	* @param  string  $name Name of the tag
@@ -1930,7 +1755,7 @@ class Parser
 		return $this->addTag(Tag::SELF_CLOSING_TAG, $name, $pos, $len);
 	}
 
-	/**
+	/*
 	* Add a 0-width "br" tag to force a line break at given position
 	*
 	* @param  integer $pos  Position of the tag in the text
@@ -1941,7 +1766,7 @@ class Parser
 		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0);
 	}
 
-	/**
+	/*
 	* Add an "ignore" tag
 	*
 	* @param  integer $pos  Position of the tag in the text
@@ -1953,7 +1778,7 @@ class Parser
 		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, $len);
 	}
 
-	/**
+	/*
 	* Add a paragraph break at given position
 	*
 	* Uses a zero-width tag that is actually never output in the result
@@ -1966,7 +1791,7 @@ class Parser
 		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0);
 	}
 
-	/**
+	/*
 	* Add a copy of given tag at given position and length
 	*
 	* @param  Tag     $tag Original tag
@@ -1983,7 +1808,7 @@ class Parser
 		return $copy;
 	}
 
-	/**
+	/*
 	* Add a tag
 	*
 	* @param  integer $type Tag's type
@@ -1999,16 +1824,12 @@ class Parser
 
 		// Set this tag's rules bitfield
 		if (isset($this->tagsConfig[$name]))
-		{
 			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
-		}
 
 		// Invalidate this tag if it's an unknown tag, a disabled tag, if either of its length or
 		// position is negative or if it's out of bounds
 		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
-		{
 			$tag->invalidate();
-		}
 		elseif (!empty($this->tagsConfig[$name]['isDisabled']))
 		{
 			$this->logger->warn(
@@ -2021,9 +1842,7 @@ class Parser
 			$tag->invalidate();
 		}
 		elseif ($len < 0 || $pos < 0 || $pos + $len > $this->textLen)
-		{
 			$tag->invalidate();
-		}
 		else
 		{
 			// If the stack is sorted we check whether this tag should be stored at a lower offset
@@ -2033,10 +1852,8 @@ class Parser
 			// positions are the same
 			if ($this->tagStackIsSorted
 			 && !empty($this->tagStack)
-			 && $tag->getPos() >= end($this->tagStack)->getPos())
-			{
-				$this->tagStackIsSorted = false;
-			}
+			 && $tag->getPos() >= \end($this->tagStack)->getPos())
+				$this->tagStackIsSorted = \false;
 
 			$this->tagStack[] = $tag;
 		}
@@ -2044,7 +1861,7 @@ class Parser
 		return $tag;
 	}
 
-	/**
+	/*
 	* Add a pair of tags
 	*
 	* @param  string  $name     Name of the tags
@@ -2062,18 +1879,18 @@ class Parser
 		return $tag;
 	}
 
-	/**
+	/*
 	* Sort tags by position and precedence
 	*
 	* @return void
 	*/
 	protected function sortTags()
 	{
-		usort($this->tagStack, __CLASS__ . '::compareTags');
-		$this->tagStackIsSorted = true;
+		\usort($this->tagStack, __CLASS__ . '::compareTags');
+		$this->tagStackIsSorted = \true;
 	}
 
-	/**
+	/*
 	* sortTags() callback
 	*
 	* Tags are stored as a stack, in LIFO order. We sort tags by position _descending_ so that they
@@ -2090,17 +1907,13 @@ class Parser
 
 		// First we order by pos descending
 		if ($aPos !== $bPos)
-		{
 			return $bPos - $aPos;
-		}
 
 		// If the tags start at the same position, we'll use their sortPriority if applicable. Tags
 		// with a lower value get sorted last, which means they'll be processed first. IOW, -10 is
 		// processed before 10
 		if ($a->getSortPriority() !== $b->getSortPriority())
-		{
 			return $b->getSortPriority() - $a->getSortPriority();
-		}
 
 		// If the tags start at the same position and have the same priority, we'll sort them
 		// according to their length, with special considerations for  zero-width tags

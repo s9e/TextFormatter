@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowCopy extends TemplateCheck
 {
-	/**
+	/*
 	* Check for <xsl:copy/> elements
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -27,8 +27,6 @@ class DisallowCopy extends TemplateCheck
 		$node  = $nodes->item(0);
 
 		if ($node)
-		{
 			throw new UnsafeTemplateException("Cannot assess the safety of an '" . $node->nodeName . "' element", $node);
-		}
 	}
 }

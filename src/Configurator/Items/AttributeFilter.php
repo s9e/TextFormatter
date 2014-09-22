@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ class AttributeFilter extends Filter
 {
 	use TemplateSafeness;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  callable $callback
@@ -28,7 +28,7 @@ class AttributeFilter extends Filter
 		$this->addParameterByName('attrValue');
 	}
 
-	/**
+	/*
 	* Return whether this filter makes a value safe to be used in JavaScript
 	*
 	* @return bool
@@ -45,10 +45,8 @@ class AttributeFilter extends Filter
 			'rawurlencode'
 		];
 
-		if (in_array($this->callback, $safeCallbacks, true))
-		{
-			return true;
-		}
+		if (\in_array($this->callback, $safeCallbacks, \true))
+			return \true;
 
 		return $this->isSafe('InJS');
 	}

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,12 +11,12 @@ use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Optimizer
 {
-	/**
+	/*
 	* @var TemplateNormalizer
 	*/
 	public $normalizer;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @return void
@@ -29,7 +29,7 @@ class Optimizer
 		$this->normalizer->append('OptimizeNestedConditionals');
 	}
 
-	/**
+	/*
 	* Optimize a single template
 	*
 	* @param  string $template Original template

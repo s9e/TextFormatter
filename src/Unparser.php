@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use DOMDocument;
 
 abstract class Unparser
 {
-	/**
+	/*
 	* Strip the formatting of an intermediate representation and return plain text
 	*
 	* This will remove start tags and end tags but will keep the text content of everything else
@@ -25,19 +25,15 @@ abstract class Unparser
 		$dom->loadXML($xml);
 
 		foreach ($dom->getElementsByTagName('s') as $tag)
-		{
 			$tag->parentNode->removeChild($tag);
-		}
 
 		foreach ($dom->getElementsByTagName('e') as $tag)
-		{
 			$tag->parentNode->removeChild($tag);
-		}
 
 		return $dom->documentElement->textContent;
 	}
 
-	/**
+	/*
 	* Transform an intermediate representation back to its original form
 	*
 	* @param  string $xml Intermediate representation
@@ -45,6 +41,6 @@ abstract class Unparser
 	*/
 	public static function unparse($xml)
 	{
-		return htmlspecialchars_decode(strip_tags($xml), ENT_QUOTES);
+		return \htmlspecialchars_decode(\strip_tags($xml), \ENT_QUOTES);
 	}
 }

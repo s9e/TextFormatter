@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -9,12 +9,12 @@ namespace s9e\TextFormatter\Configurator\Traits;
 
 trait TemplateSafeness
 {
-	/**
+	/*
 	* @var array Contexts in which this object is considered safe to be used
 	*/
 	protected $markedSafe = [];
 
-	/**
+	/*
 	* Return whether this object is safe to be used in given context
 	*
 	* @param  string $context Either 'AsURL', 'InCSS' or 'InJS'
@@ -26,7 +26,7 @@ trait TemplateSafeness
 		return !empty($this->markedSafe[$context]);
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used as a URL
 	*
 	* @return bool
@@ -36,7 +36,7 @@ trait TemplateSafeness
 		return $this->isSafe('AsURL');
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used in CSS
 	*
 	* @return bool
@@ -46,7 +46,7 @@ trait TemplateSafeness
 		return $this->isSafe('InCSS');
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used in JavaScript
 	*
 	* @return bool
@@ -56,43 +56,43 @@ trait TemplateSafeness
 		return $this->isSafe('InJS');
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used as a URL
 	*
 	* @return self
 	*/
 	public function markAsSafeAsURL()
 	{
-		$this->markedSafe['AsURL'] = true;
+		$this->markedSafe['AsURL'] = \true;
 
 		return $this;
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used in CSS
 	*
 	* @return self
 	*/
 	public function markAsSafeInCSS()
 	{
-		$this->markedSafe['InCSS'] = true;
+		$this->markedSafe['InCSS'] = \true;
 
 		return $this;
 	}
 
-	/**
+	/*
 	* Return whether this object is safe to be used in JavaScript
 	*
 	* @return self
 	*/
 	public function markAsSafeInJS()
 	{
-		$this->markedSafe['InJS'] = true;
+		$this->markedSafe['InJS'] = \true;
 
 		return $this;
 	}
 
-	/**
+	/*
 	* Reset the "marked safe" statuses
 	*
 	* @return self

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class IgnoreTagsInCode implements BooleanRulesGenerator
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function generateBooleanRules(TemplateForensics $src)
@@ -21,9 +21,7 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 		$xpath = new DOMXPath($src->getDOM());
 
 		if ($xpath->evaluate('count(//code//xsl:apply-templates)'))
-		{
-			return ['ignoreTags' => true];
-		}
+			return ['ignoreTags' => \true];
 
 		return [];
 	}

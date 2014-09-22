@@ -1,7 +1,0 @@
-<b>
-	<xsl:attribute name="title">
-		<xsl:if test="@foo">foo</xsl:if>
-		<xsl:if test="@bar">bar</xsl:if>
-	</xsl:attribute>
-	<xsl:apply-templates/>
-</b>

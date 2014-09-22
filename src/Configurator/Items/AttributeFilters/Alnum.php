@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Alnum extends AttributeFilter
 {
-	/**
+	/*
 	* Constructor
 	*
 	* @return void
@@ -24,19 +24,19 @@ class Alnum extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterAlnum');
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeInCSS()
 	{
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeAsURL()
 	{
-		return true;
+		return \true;
 	}
 }

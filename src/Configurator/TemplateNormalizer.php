@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license'); The MIT License
@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-/**
+/*
 * @method mixed   add(mixed $value)
 * @method mixed   append(mixed $value)
 * @method array   asConfig()
@@ -46,12 +46,12 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var TemplateNormalizationList Collection of TemplateNormalization instances
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Will load the default normalization rules
@@ -79,7 +79,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveInterElementWhitespace');
 	}
 
-	/**
+	/*
 	* Normalize a tag's templates
 	*
 	* @param  Tag  $tag Tag whose templates will be normalized
@@ -88,12 +88,10 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	public function normalizeTag(Tag $tag)
 	{
 		if (isset($tag->template) && !$tag->template->isNormalized())
-		{
 			$tag->template->normalize($this);
-		}
 	}
 
-	/**
+	/*
 	* Normalize a template
 	*
 	* @param  string $template Original template
@@ -116,9 +114,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 			foreach ($this->collection as $k => $normalization)
 			{
 				if (isset($applied[$k]) && !empty($normalization->onlyOnce))
-				{
 					continue;
-				}
 
 				$normalization->normalize($dom->documentElement);
 				$applied[$k] = 1;

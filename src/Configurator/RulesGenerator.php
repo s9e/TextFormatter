@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,7 +17,7 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-/**
+/*
 * @method mixed   add(mixed $value)
 * @method mixed   append(mixed $value)
 * @method array   asConfig()
@@ -49,12 +49,12 @@ class RulesGenerator implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var RulesGeneratorList Collection of objects
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Will load the default rule generators
@@ -74,7 +74,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
 	}
 
-	/**
+	/*
 	* Generate rules for given tag collection
 	*
 	* Possible options:
@@ -127,7 +127,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return $rules;
 	}
 
-	/**
+	/*
 	* Generate a TemplateForensics instance for the root element
 	*
 	* @param  string            $html Root HTML, e.g. "<div>"
@@ -144,9 +144,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		// Grab the deepest node
 		$node = $body;
 		while ($node->firstChild)
-		{
 			$node = $node->firstChild;
-		}
 
 		// Now append an <xsl:apply-templates/> node to make the markup look like a normal template
 		$node->appendChild($dom->createElementNS(
@@ -158,7 +156,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return new TemplateForensics($dom->saveXML($body));
 	}
 
-	/**
+	/*
 	* Generate and return rules based on a set of TemplateForensics
 	*
 	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
@@ -173,14 +171,12 @@ class RulesGenerator implements ArrayAccess, Iterator
 		];
 
 		foreach ($templateForensics as $tagName => $src)
-		{
 			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
-		}
 
 		return $rules;
 	}
 
-	/**
+	/*
 	* Generate a set of rules for a single TemplateForensics instance
 	*
 	* @param  TemplateForensics $src     Source of the rules
@@ -194,23 +190,13 @@ class RulesGenerator implements ArrayAccess, Iterator
 		foreach ($this->collection as $rulesGenerator)
 		{
 			if ($rulesGenerator instanceof BooleanRulesGenerator)
-			{
 				foreach ($rulesGenerator->generateBooleanRules($src) as $ruleName => $bool)
-				{
 					$rules[$ruleName] = $bool;
-				}
-			}
 
 			if ($rulesGenerator instanceof TargetedRulesGenerator)
-			{
 				foreach ($targets as $tagName => $trg)
-				{
 					foreach ($rulesGenerator->generateTargetedRules($src, $trg) as $ruleName)
-					{
 						$rules[$ruleName][] = $tagName;
-					}
-				}
-			}
 		}
 
 		return $rules;

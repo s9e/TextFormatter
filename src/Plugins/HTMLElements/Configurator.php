@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -20,14 +20,14 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var array 2D array using HTML element names as keys, each value being an associative array
 	*            using HTML attribute names as keys and their alias as values. A special empty entry
 	*            is used to store the HTML element's alias
 	*/
 	protected $aliases = [];
 
-	/**
+	/*
 	* @var array  Default filter of a few known attributes
 	*
 	* It doesn't make much sense to try to declare every known HTML attribute here. Validation is
@@ -49,23 +49,23 @@ class Configurator extends ConfiguratorBase
 		'src'        => '#url'
 	];
 
-	/**
+	/*
 	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
 	*             this array
 	*/
 	protected $elements = [];
 
-	/**
+	/*
 	* @var string Namespace prefix of the tags produced by this plugin's parser
 	*/
 	protected $prefix = 'html';
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected $quickMatch = '<';
 
-	/**
+	/*
 	* @var array  Blacklist of elements that are considered unsafe
 	*/
 	protected $unsafeElements = [
@@ -78,7 +78,7 @@ class Configurator extends ConfiguratorBase
 		'script'
 	];
 
-	/**
+	/*
 	* @var array  Blacklist of attributes that are considered unsafe, in addition of any attribute
 	*             whose name starts with "on" such as "onmouseover"
 	*/
@@ -87,7 +87,7 @@ class Configurator extends ConfiguratorBase
 		'target'
 	];
 
-	/**
+	/*
 	* Alias the HTML attribute of given HTML element to a given attribute name
 	*
 	* NOTE: will *not* create the target attribute
@@ -105,7 +105,7 @@ class Configurator extends ConfiguratorBase
 		$this->aliases[$elName][$attrName] = AttributeName::normalize($alias);
 	}
 
-	/**
+	/*
 	* Alias an HTML element to a given tag name
 	*
 	* NOTE: will *not* create the target tag
@@ -121,7 +121,7 @@ class Configurator extends ConfiguratorBase
 		$this->aliases[$elName][''] = TagName::normalize($tagName);
 	}
 
-	/**
+	/*
 	* Allow an HTML element to be used
 	*
 	* @param  string $elName Name of the element
@@ -129,10 +129,10 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowElement($elName)
 	{
-		return $this->allowElementWithSafety($elName, false);
+		return $this->allowElementWithSafety($elName, \false);
 	}
 
-	/**
+	/*
 	* Allow an unsafe HTML element to be used
 	*
 	* @param  string $elName Name of the element
@@ -140,10 +140,10 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowUnsafeElement($elName)
 	{
-		return $this->allowElementWithSafety($elName, true);
+		return $this->allowElementWithSafety($elName, \true);
 	}
 
-	/**
+	/*
 	* Allow a (potentially unsafe) HTML element to be used
 	*
 	* @param  string $elName      Name of the element
@@ -155,10 +155,8 @@ class Configurator extends ConfiguratorBase
 		$elName  = $this->normalizeElementName($elName);
 		$tagName = $this->prefix . ':' . $elName;
 
-		if (!$allowUnsafe && in_array($elName, $this->unsafeElements))
-		{
+		if (!$allowUnsafe && \in_array($elName, $this->unsafeElements))
 			throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeElement() to bypass this security measure');
-		}
 
 		// Retrieve or create the tag
 		$tag = ($this->configurator->tags->exists($tagName))
@@ -174,7 +172,7 @@ class Configurator extends ConfiguratorBase
 		return $tag;
 	}
 
-	/**
+	/*
 	* Allow an attribute to be used in an HTML element
 	*
 	* @param  string $elName   Name of the element
@@ -183,10 +181,10 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowAttribute($elName, $attrName)
 	{
-		return $this->allowAttributeWithSafety($elName, $attrName, false);
+		return $this->allowAttributeWithSafety($elName, $attrName, \false);
 	}
 
-	/**
+	/*
 	* Allow an unsafe attribute to be used in an HTML element
 	*
 	* @param  string $elName   Name of the element
@@ -195,10 +193,10 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function allowUnsafeAttribute($elName, $attrName)
 	{
-		return $this->allowAttributeWithSafety($elName, $attrName, true);
+		return $this->allowAttributeWithSafety($elName, $attrName, \true);
 	}
 
-	/**
+	/*
 	* Allow a (potentially unsafe) attribute to be used in an HTML element
 	*
 	* @param  string $elName   Name of the element
@@ -213,24 +211,18 @@ class Configurator extends ConfiguratorBase
 		$tagName  = $this->prefix . ':' . $elName;
 
 		if (!isset($this->elements[$elName]))
-		{
 			throw new RuntimeException("Element '" . $elName . "' has not been allowed");
-		}
 
 		if (!$allowUnsafe)
-		{
-			if (substr($attrName, 0, 2) === 'on'
-			 || in_array($attrName, $this->unsafeAttributes))
-			{
+			if (\substr($attrName, 0, 2) === 'on'
+			 || \in_array($attrName, $this->unsafeAttributes))
 				throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
-			}
-		}
 
 		$tag = $this->configurator->tags->get($tagName);
 		if (!isset($tag->attributes[$attrName]))
 		{
 			$attribute = $tag->attributes->add($attrName);
-			$attribute->required = false;
+			$attribute->required = \false;
 
 			if (isset($this->attributeFilters[$attrName]))
 			{
@@ -247,7 +239,7 @@ class Configurator extends ConfiguratorBase
 		return $tag->attributes[$attrName];
 	}
 
-	/**
+	/*
 	* Validate and normalize an element name
 	*
 	* Accepts any name that would be valid, regardless of whether this element exists in HTML5.
@@ -261,15 +253,13 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function normalizeElementName($elName)
 	{
-		if (!preg_match('#^[a-z][a-z0-9]*$#Di', $elName))
-		{
+		if (!\preg_match('#^[a-z][a-z0-9]*$#Di', $elName))
 			throw new InvalidArgumentException ("Invalid element name '" . $elName . "'");
-		}
 
-		return strtolower($elName);
+		return \strtolower($elName);
 	}
 
-	/**
+	/*
 	* Validate and normalize an attribute name
 	*
 	* More restrictive than the specs but allows all HTML5 attributes and more.
@@ -279,15 +269,13 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function normalizeAttributeName($attrName)
 	{
-		if (!preg_match('#^[a-z][-\\w]*$#Di', $attrName))
-		{
+		if (!\preg_match('#^[a-z][-\\w]*$#Di', $attrName))
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
-		}
 
-		return strtolower($attrName);
+		return \strtolower($attrName);
 	}
 
-	/**
+	/*
 	* Rebuild a tag's template
 	*
 	* @param  Tag    $tag         Source tag
@@ -299,20 +287,16 @@ class Configurator extends ConfiguratorBase
 	{
 		$template = '<' . $elName . '>';
 		foreach ($tag->attributes as $attrName => $attribute)
-		{
 			$template .= '<xsl:copy-of select="@' . $attrName . '"/>';
-		}
 		$template .= '<xsl:apply-templates/></' . $elName . '>';
 
 		if ($allowUnsafe)
-		{
 			$template = new UnsafeTemplate($template);
-		}
 
 		$tag->setTemplate($template);
 	}
 
-	/**
+	/*
 	* Generate this plugin's config
 	*
 	* @return array
@@ -320,19 +304,17 @@ class Configurator extends ConfiguratorBase
 	public function asConfig()
 	{
 		if (empty($this->elements) && empty($this->aliases))
-		{
-			return false;
-		}
+			return \false;
 
-		/**
+		/*
 		* Regexp used to match an attributes definition (name + value if applicable)
 		*
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = RegexpBuilder::fromList(array_merge(
-			array_keys($this->aliases),
-			array_keys($this->elements)
+		$tagRegexp  = RegexpBuilder::fromList(\array_merge(
+			\array_keys($this->aliases),
+			\array_keys($this->elements)
 		));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
@@ -351,9 +333,7 @@ class Configurator extends ConfiguratorBase
 			// Preserve the aliases array's keys in JavaScript
 			$jsAliases = new Dictionary;
 			foreach ($this->aliases as $elName => $aliases)
-			{
 				$jsAliases[$elName] = new Dictionary($aliases);
-			}
 
 			$config['aliases'] = new Variant($this->aliases, ['JS' => $jsAliases]);
 		}

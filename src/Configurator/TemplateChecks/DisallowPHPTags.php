@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowPHPTags extends TemplateCheck
 {
-	/**
+	/*
 	* Prevent PHP tags from appearing in the stylesheet or in renderings
 	*
 	* Targets <?php tags as well as <script language="php">. Cannot target short tags or ASP tags.
@@ -54,9 +54,7 @@ class DisallowPHPTags extends TemplateCheck
 			$nodes = $xpath->query($query); 
 
 			if ($nodes->length)
-			{
 				throw new UnsafeTemplateException($error, $nodes->item(0));
-			}
 		}
 	}
 }

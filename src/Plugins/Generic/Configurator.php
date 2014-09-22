@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -21,17 +21,17 @@ use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/**
+/*
 * NOTE: does not support duplicate named captures
 */
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var array Array of [tagName => [regexp, passthroughIdx]]
 	*/
 	protected $collection = [];
 
-	/**
+	/*
 	* Add a generic replacement
 	*
 	* @param  string $regexp   Regexp to be used by the parser
@@ -40,22 +40,20 @@ class Configurator extends ConfiguratorBase
 	*                          automatically generated based on the regexp
 	* @return string           The name of the tag created to represent this replacement
 	*/
-	public function add($regexp, $template, $tagName = null)
+	public function add($regexp, $template, $tagName = \null)
 	{
-		$valid = false;
+		$valid = \false;
 
 		try
 		{
-			$valid = @preg_match_all($regexp, '', $m);
+			$valid = @\preg_match_all($regexp, '', $m);
 		}
 		catch (Exception $e)
 		{
 		}
 
-		if ($valid === false)
-		{
+		if ($valid === \false)
 			throw new InvalidArgumentException('Invalid regexp');
-		}
 
 		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. We check that
 		// the captures are not preceded with an odd number of backslashes (even number is fine)
@@ -65,11 +63,11 @@ class Configurator extends ConfiguratorBase
 
 		// Collect all the captures used in the replacement
 		$captures = [];
-		preg_match_all($capturesRegexp, $template, $matches);
+		\preg_match_all($capturesRegexp, $template, $matches);
 		foreach ($matches[0] as $match)
 		{
-			$idx = trim($match, '\\${}');
-			$captures[$idx] = false;
+			$idx = \trim($match, '\\${}');
+			$captures[$idx] = \false;
 		}
 
 		// Load the template as a DOMDocument so we can inspect it
@@ -82,13 +80,13 @@ class Configurator extends ConfiguratorBase
 		$passthrough = [];
 		foreach ($xpath->query('//text()') as $node)
 		{
-			preg_match_all($capturesRegexp, $node->textContent, $matches);
+			\preg_match_all($capturesRegexp, $node->textContent, $matches);
 			foreach ($matches[0] as $match)
 			{
-				$idx = trim($match, '\\${}');
+				$idx = \trim($match, '\\${}');
 
 				// The value is false until we confirm that the subpattern is a match-all such as .*
-				$passthrough[$idx] = false;
+				$passthrough[$idx] = \false;
 			}
 		}
 
@@ -98,22 +96,18 @@ class Configurator extends ConfiguratorBase
 		$urlCaptures = [];
 		$nodes       = TemplateHelper::getURLNodes($dom);
 		foreach ($nodes as $node)
-		{
 			// We only bother with literal attributes, and we only collect captures at the start
 			// of an URL attribute
 			if ($node instanceof DOMAttr
-			 && preg_match('#^\\s*' . $captureSubpattern . '#', $node->value, $m))
+			 && \preg_match('#^\\s*' . $captureSubpattern . '#', $node->value, $m))
 			{
-				$idx = preg_replace('#\\D+#', '', $m[0]);
+				$idx = \preg_replace('#\\D+#', '', $m[0]);
 				$urlCaptures[$idx] = $idx;
 			}
-		}
 
 		// Generate a tag name based on the regexp
 		if (!isset($tagName))
-		{
-			$tagName = sprintf('G%08X', crc32($regexp));
-		}
+			$tagName = \sprintf('G%08X', \crc32($regexp));
 
 		// Create the tag that will represent the regexp but don't add it right now
 		$tag = new Tag;
@@ -132,9 +126,7 @@ class Configurator extends ConfiguratorBase
 		foreach ($regexpInfo['tokens'] as $token)
 		{
 			if ($token['type'] !== 'capturingSubpatternStart')
-			{
 				continue;
-			}
 
 			++$idx;
 
@@ -144,17 +136,13 @@ class Configurator extends ConfiguratorBase
 				// If the subpattern does not have a name and is not used in the template, we just
 				// ignore it
 				if (!isset($captures[$idx]))
-				{
 					continue;
-				}
 
 				// If the subpattern does not have a name and it's used in a text node in the
 				// template and it can match anything (e.g. ".*?"), it can be a passthrough to be
 				// replaced with an <xsl:apply-templates/> element
-				if (isset($passthrough[$idx]) && preg_match('#^\\.[*+]\\??$#D', $token['content']))
-				{
-					$passthrough[$idx] = true;
-				}
+				if (isset($passthrough[$idx]) && \preg_match('#^\\.[*+]\\??$#D', $token['content']))
+					$passthrough[$idx] = \true;
 			}
 
 			// This subpattern either has a name or it's used in the template so it will create an
@@ -165,18 +153,16 @@ class Configurator extends ConfiguratorBase
 
 		// Remove any passthrough whose value isn't true. We can only have one passthrough, so if
 		// there are more than one left, we ignore them all
-		$passthrough    = array_filter($passthrough);
+		$passthrough    = \array_filter($passthrough);
 		$passthroughIdx = 0;
-		if (count($passthrough) === 1)
+		if (\count($passthrough) === 1)
 		{
-			$passthroughIdx = key($passthrough);
+			$passthroughIdx = \key($passthrough);
 
 			// The capture used as passthrough should not create an attribute, unless it needs to be
 			// filtered as a URL
 			if (!isset($urlCaptures[$passthroughIdx]))
-			{
 				unset($attributes[$passthroughIdx]);
-			}
 		}
 
 		// Subpatterns used in the template will be given a name if they don't have one already.
@@ -187,10 +173,8 @@ class Configurator extends ConfiguratorBase
 		foreach ($attributes as $idx => $token)
 		{
 			if (isset($token['name']))
-			{
 				// Named subpatterns create an attribute of the same name
 				$attrName = $token['name'];
-			}
 			elseif (isset($captures[$idx]))
 			{
 				// If this capture is in use, create an attribute named after the capture's index
@@ -200,18 +184,14 @@ class Configurator extends ConfiguratorBase
 				$newNamedSubpatterns[$attrName] = $token['pos'];
 			}
 			else
-			{
 				throw new LogicException('Tried to create an attribute for an unused capture with no name. Please file a bug');
-			}
 
 			if (isset($tag->attributes[$attrName]))
-			{
 				throw new RuntimeException('Duplicate named subpatterns are not allowed');
-			}
 
 			// Create the attribute and ensure it's required
 			$attribute = $tag->attributes->add($attrName);
-			$attribute->required = true;
+			$attribute->required = \true;
 
 			// Create the regexp for the attribute
 			$endToken = $regexpInfo['tokens'][$token['endToken']];
@@ -219,9 +199,9 @@ class Configurator extends ConfiguratorBase
 			$rpos = $endToken['pos'] + $endToken['len'];
 
 			$attrRegexp = $regexpInfo['delimiter']
-			            . '^' . substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'
+			            . '^' . \substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'
 			            . $regexpInfo['delimiter']
-			            . str_replace('D', '', $regexpInfo['modifiers'])
+			            . \str_replace('D', '', $regexpInfo['modifiers'])
 			            . 'D';
 
 			// Create a #regexp filter and append it to this attribute's filterChain
@@ -244,13 +224,11 @@ class Configurator extends ConfiguratorBase
 		// subpattern's position plus 2, to account for the delimiter at the start of the regexp and
 		// the opening parenthesis of the subpattern. Also, we need to process them in reverse order
 		// so that replacements don't effect the position of subsequent subpatterns
-		foreach (array_reverse($newNamedSubpatterns) as $attrName => $pos)
-		{
-			$regexp = substr_replace($regexp, '?<' . $attrName . '>', 2 + $pos, 0);
-		}
+		foreach (\array_reverse($newNamedSubpatterns) as $attrName => $pos)
+			$regexp = \substr_replace($regexp, '?<' . $attrName . '>', 2 + $pos, 0);
 
 		// Remove captures with that have not created an attribute from the list
-		$captures = array_filter($captures);
+		$captures = \array_filter($captures);
 
 		// Replace numeric references in the template with the value of the corresponding attribute
 		// values or passthrough
@@ -259,33 +237,25 @@ class Configurator extends ConfiguratorBase
 			$capturesRegexp,
 			function ($m, $node) use ($captures, $passthroughIdx)
 			{
-				$idx  = (int) trim($m[0], '\\${}');
+				$idx  = (int) \trim($m[0], '\\${}');
 
 				// $0 copies the whole textContent
 				if ($idx === 0)
-				{
 					return ['expression', '.'];
-				}
 
 				// Passthrough capture, does not include start/end tags
 				if ($idx === $passthroughIdx)
-				{
 					// We only use it as a passthrough if it's inside a text node or there's no
 					// corresponding attribute for it. It means that a capture that has been
 					// identified as a URL will be replaced with a passthrough in text, and with the
 					// filtered value in attributes
 					if (!isset($captures[$idx])
 					 || $node instanceof DOMText)
-					{
-						return ['passthrough', false];
-					}
-				}
+						return ['passthrough', \false];
 
 				// Normal capture, replaced by the equivalent expression
 				if (isset($captures[$idx]))
-				{
 					return ['expression', '@' . $captures[$idx]];
-				}
 
 				// Non-existent captures are simply ignored, similarly to preg_replace()
 				return ['literal', ''];
@@ -298,7 +268,7 @@ class Configurator extends ConfiguratorBase
 			'#\\\\+[0-9${\\\\]#',
 			function ($m)
 			{
-				return ['literal', stripslashes($m[0])];
+				return ['literal', \stripslashes($m[0])];
 			}
 		);
 
@@ -320,20 +290,19 @@ class Configurator extends ConfiguratorBase
 		return $tagName;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
-		{
-			return false;
-		}
+		if (!\count($this->collection))
+			return \false;
 
 		$generics   = [];
 		$jsGenerics = [];
-		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
+		foreach ($this->collection as $tagName => $_2321574420)
 		{
+			list($regexp, $passthroughIdx) = $_2321574420;
 			$generics[] = [$tagName, $regexp, $passthroughIdx];
 
 			$jsRegexp = RegexpConvertor::toJS($regexp);

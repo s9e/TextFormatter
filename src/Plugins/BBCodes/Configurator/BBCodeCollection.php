@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class BBCodeCollection extends NormalizedCollection
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function normalizeKey($key)
@@ -21,7 +21,7 @@ class BBCodeCollection extends NormalizedCollection
 		return BBCode::normalizeName($key);
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function normalizeValue($value)
@@ -31,7 +31,7 @@ class BBCodeCollection extends NormalizedCollection
 		     : new BBCode($value);
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*
 	* This method will remove redundant info such as the BBCode's tagName or defaultAttribute values
@@ -47,17 +47,13 @@ class BBCodeCollection extends NormalizedCollection
 			if (isset($bbcode['tagName'])
 			 && TagName::isValid($bbcodeName)
 			 && TagName::normalize($bbcodeName) === $bbcode['tagName'])
-			{
 				unset($bbcode['tagName']);
-			}
 
 			// Remove the defaultAttribute name if it's the same name as the BBCode
 			if (isset($bbcode['defaultAttribute'])
 			 && AttributeName::isValid($bbcodeName)
 			 && AttributeName::normalize($bbcodeName) === $bbcode['defaultAttribute'])
-			{
 				unset($bbcode['defaultAttribute']);
-			}
 		}
 		unset($bbcode);
 

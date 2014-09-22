@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,7 +17,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
-/**
+/*
 * @property AttributeCollection $attributes This tag's attributes
 * @property AttributePreprocessorCollection $attributePreprocessors This tag's attribute parsers
 * @property TagFilterChain $filterChain This tag's filter chain
@@ -30,48 +30,48 @@ class Tag implements ConfigProvider
 {
 	use Configurable;
 
-	/**
+	/*
 	* @var AttributeCollection This tag's attributes
 	*/
 	protected $attributes;
 
-	/**
+	/*
 	* @var AttributePreprocessorCollection This tag's attribute parsers
 	*/
 	protected $attributePreprocessors;
 
-	/**
+	/*
 	* @var TagFilterChain This tag's filter chain
 	*/
 	protected $filterChain;
 
-	/**
+	/*
 	* @var integer Maximum nesting level for this tag
 	*/
 	protected $nestingLimit = 10;
 
-	/**
+	/*
 	* @var Ruleset Rules associated with this tag
 	*/
 	protected $rules;
 
-	/**
+	/*
 	* @var integer Maximum number of this tag per message
 	*/
 	protected $tagLimit = 1000;
 
-	/**
+	/*
 	* @var Template Template associated with this tag
 	*/
 	protected $template;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  array $options This tag's options
 	* @return void
 	*/
-	public function __construct(array $options = null)
+	public function __construct(array $options = \null)
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
@@ -93,21 +93,19 @@ class Tag implements ConfigProvider
 		{
 			// Sort the options by name so that attributes are set before the template, which is
 			// necessary to evaluate whether the template is safe
-			ksort($options);
+			\ksort($options);
 
 			foreach ($options as $optionName => $optionValue)
-			{
 				$this->__set($optionName, $optionValue);
-			}
 		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		$vars = get_object_vars($this);
+		$vars = \get_object_vars($this);
 
 		// Remove properties that are not needed during parsing
 		unset($vars['defaultChildRule']);
@@ -116,7 +114,7 @@ class Tag implements ConfigProvider
 
 		// If there are no attribute preprocessors defined, we can remove the step from this tag's
 		// filterChain
-		if (!count($this->attributePreprocessors))
+		if (!\count($this->attributePreprocessors))
 		{
 			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
 
@@ -124,14 +122,10 @@ class Tag implements ConfigProvider
 			$filterChain = clone $vars['filterChain'];
 
 			// Process the chain in reverse order so that we don't skip indices
-			$i = count($filterChain);
+			$i = \count($filterChain);
 			while (--$i >= 0)
-			{
 				if ($filterChain[$i]->getCallback() === $callback)
-				{
 					unset($filterChain[$i]);
-				}
-			}
 
 			$vars['filterChain'] = $filterChain;
 		}
@@ -139,7 +133,7 @@ class Tag implements ConfigProvider
 		return ConfigHelper::toArray($vars);
 	}
 
-	/**
+	/*
 	* Return this tag's template
 	*
 	* @return Template
@@ -149,7 +143,7 @@ class Tag implements ConfigProvider
 		return $this->template;
 	}
 
-	/**
+	/*
 	* Test whether this tag has a template
 	*
 	* @return bool
@@ -159,7 +153,7 @@ class Tag implements ConfigProvider
 		return isset($this->template);
 	}
 
-	/**
+	/*
 	* Set this tag's attribute preprocessors
 	*
 	* @param  array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
@@ -171,7 +165,7 @@ class Tag implements ConfigProvider
 		$this->attributePreprocessors->merge($attributePreprocessors);
 	}
 
-	/**
+	/*
 	* Set this tag's nestingLimit
 	*
 	* @param  integer $limit
@@ -182,14 +176,12 @@ class Tag implements ConfigProvider
 		$limit = (int) $limit;
 
 		if ($limit < 1)
-		{
 			throw new InvalidArgumentException('nestingLimit must be a number greater than 0');
-		}
 
 		$this->nestingLimit = $limit;
 	}
 
-	/**
+	/*
 	* Set this tag's rules
 	*
 	* @param  array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
@@ -201,7 +193,7 @@ class Tag implements ConfigProvider
 		$this->rules->merge($rules);
 	}
 
-	/**
+	/*
 	* Set this tag's tagLimit
 	*
 	* @param  integer $limit
@@ -212,14 +204,12 @@ class Tag implements ConfigProvider
 		$limit = (int) $limit;
 
 		if ($limit < 1)
-		{
 			throw new InvalidArgumentException('tagLimit must be a number greater than 0');
-		}
 
 		$this->tagLimit = $limit;
 	}
 
-	/**
+	/*
 	* Set the template associated with this tag
 	*
 	* @param  string|Template $template
@@ -228,14 +218,12 @@ class Tag implements ConfigProvider
 	public function setTemplate($template)
 	{
 		if (!($template instanceof Template))
-		{
 			$template = new Template($template);
-		}
 
 		$this->template = $template;
 	}
 
-	/**
+	/*
 	* Unset this tag's template
 	*
 	* @return void

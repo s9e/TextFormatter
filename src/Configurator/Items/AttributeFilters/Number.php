@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Number extends AttributeFilter
 {
-	/**
+	/*
 	* Constructor
 	*
 	* @return void
@@ -24,27 +24,27 @@ class Number extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterNumber');
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeInCSS()
 	{
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeInJS()
 	{
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeAsURL()
 	{
-		return true;
+		return \true;
 	}
 }

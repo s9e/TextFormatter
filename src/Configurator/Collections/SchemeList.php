@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class SchemeList extends NormalizedList
 {
-	/**
+	/*
 	* Return this scheme list as a regexp
 	*
 	* @return Regexp
@@ -25,7 +25,7 @@ class SchemeList extends NormalizedList
 		return $regexp->asConfig();
 	}
 
-	/**
+	/*
 	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
 	*
 	* @link http://tools.ietf.org/html/rfc3986#section-3.1
@@ -35,11 +35,9 @@ class SchemeList extends NormalizedList
 	*/
 	public function normalizeValue($scheme)
 	{
-		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
-		{
+		if (!\preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
 			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
-		}
 
-		return strtolower($scheme);
+		return \strtolower($scheme);
 	}
 }
