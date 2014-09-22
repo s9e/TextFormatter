@@ -21,10 +21,10 @@ abstract class RulesHelper
 	*/
 	public static function getBitfields(TagCollection $tags, Ruleset $rootRules)
 	{
-		$rules = ['*root*' => $rootRules];
+		$rules = ['*root*' => iterator_to_array($rootRules)];
 		foreach ($tags as $tagName => $tag)
 		{
-			$rules[$tagName] = $tag->rules;
+			$rules[$tagName] = iterator_to_array($tag->rules);
 		}
 
 		// Create a matrix that contains all of the tags and whether every other tag is allowed as
@@ -103,119 +103,102 @@ abstract class RulesHelper
 	}
 
 	/**
+	* Initialize a matrix of settings
+	*
+	* @param  array $rules Rules for each tag
+	* @return array        Multidimensional array of [tagName => [scope => [targetName => setting]]]
+	*/
+	protected static function initMatrix(array $rules)
+	{
+		$matrix   = [];
+		$tagNames = array_keys($rules);
+
+		foreach ($rules as $tagName => $tagRules)
+		{
+			if ($tagRules['defaultDescendantRule'] === 'allow')
+			{
+				$childValue      = (int) ($tagRules['defaultChildRule'] === 'allow');
+				$descendantValue = 1;
+			}
+			else
+			{
+				$childValue      = 0;
+				$descendantValue = 0;
+			}
+
+			$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, $childValue);
+			$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, $descendantValue);
+		}
+
+		return $matrix;
+	}
+
+	/**
+	* Apply given rule from each applicable tag
+	*
+	* For each tag, if the rule has any target we set the corresponding value for each target in the
+	* matrix
+	*
+	* @param  array  &$matrix   Settings matrix
+	* @param  array   $rules    Rules for each tag
+	* @param  string  $ruleName Rule name
+	* @param  string  $key      Key in the matrix
+	* @param  integer $value    Value to be set
+	* @return void
+	*/
+	protected static function applyTargetedRule(array &$matrix, $rules, $ruleName, $key, $value)
+	{
+		foreach ($rules as $tagName => $tagRules)
+		{
+			if (!isset($tagRules[$ruleName]))
+			{
+				continue;
+			}
+
+			foreach ($tagRules[$ruleName] as $targetName)
+			{
+				$matrix[$tagName][$key][$targetName] = $value;
+			}
+		}
+	}
+
+	/**
 	* @param  array $rules
 	* @return array
 	*/
 	protected static function unrollRules(array $rules)
 	{
-		$matrix = [];
+		// Initialize the matrix with default values
+		$matrix = self::initMatrix($rules);
 
-		// Keep a list of tag names for easy access
+		// Convert ignoreTags and requireParent to denyDescendant and denyChild rules
 		$tagNames = array_keys($rules);
-
-		// First we seed the list with default values
-		foreach ($rules as $tagName => $tagRules)
-		{
-			if (isset($tagRules['defaultChildRule']))
-			{
-				$defaultChildValue = (int) ($tagRules['defaultChildRule'] === 'allow');
-			}
-			else
-			{
-				$defaultChildValue = 1;
-			}
-
-			if (isset($tagRules['defaultDescendantRule']))
-			{
-				$defaultDescendantValue = (int) ($tagRules['defaultDescendantRule'] === 'allow');
-			}
-			else
-			{
-				$defaultDescendantValue = 1;
-			}
-
-			foreach ($tagNames as $targetName)
-			{
-				$matrix[$tagName]['allowedChildren'][$targetName]    = $defaultChildValue;
-				$matrix[$tagName]['allowedDescendants'][$targetName] = $defaultDescendantValue;
-			}
-		}
-
-		// Then we apply "allow" rules to grant usage, overwriting the default settings
-		foreach ($rules as $tagName => $tagRules)
-		{
-			if (isset($tagRules['allowChild']))
-			{
-				foreach ($tagRules['allowChild'] as $targetName)
-				{
-					$matrix[$tagName]['allowedChildren'][$targetName] = 1;
-				}
-			}
-
-			if (isset($tagRules['allowDescendant']))
-			{
-				foreach ($tagRules['allowDescendant'] as $targetName)
-				{
-					$matrix[$tagName]['allowedDescendants'][$targetName] = 1;
-				}
-			}
-		}
-
-		// Then we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
 		foreach ($rules as $tagName => $tagRules)
 		{
 			if (!empty($tagRules['ignoreTags']))
 			{
-				$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, 0);
-				$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, 0);
-
-				continue;
+				$rules[$tagName]['denyDescendant'] = $tagNames;
 			}
 
-			if (isset($tagRules['denyChild']))
+			if (!empty($tagRules['requireParent']))
 			{
-				foreach ($tagRules['denyChild'] as $targetName)
+				$denyParents = array_diff($tagNames, $tagRules['requireParent']);
+				foreach ($denyParents as $parentName)
 				{
-					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
-				}
-			}
-
-			if (isset($tagRules['denyDescendant']))
-			{
-				foreach ($tagRules['denyDescendant'] as $targetName)
-				{
-					$matrix[$tagName]['allowedDescendants'][$targetName] = 0;
-
-					// Carry the rule to children as well
-					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
-				}
-			}
-
-			if (isset($tagRules['requireParent']))
-			{
-				// Every parent that isn't in the "requireParent" list will explicitely deny the
-				// child tag
-				foreach ($tagNames as $parentName)
-				{
-					if (!in_array($parentName, $tagRules['requireParent'], true))
-					{
-						$matrix[$parentName]['allowedChildren'][$tagName] = 0;
-					}
+					$rules[$parentName]['denyChild'][] = $tagName;
 				}
 			}
 		}
 
-		// We still need to ensure that denied descendants override allowed children
-		foreach ($matrix as $tagName => $tagMatrix)
-		{
-			foreach ($tagMatrix['allowedDescendants'] as $targetName => $isAllowed)
-			{
-				if (!$isAllowed)
-				{
-					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
-				}
-			}
-		}
+		// Apply "allow" rules to grant usage, overwriting the default settings
+		self::applyTargetedRule($matrix, $rules, 'allowChild',      'allowedChildren',    1);
+		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedChildren',    1);
+		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedDescendants', 1);
+
+		// Apply "deny" rules to remove usage
+		self::applyTargetedRule($matrix, $rules, 'denyChild',      'allowedChildren',    0);
+		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedChildren',    0);
+		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedDescendants', 0);
 
 		return $matrix;
 	}

@@ -685,8 +685,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] allowDescendant does not override denyChild
  [x] denyDescendant overrides defaultDescendantRule('allow')
  [x] denyDescendant overrides allowDescendant
- [x] ignoreTags (true) overrides everything
- [x] ignoreTags (false) has no effect
+ [x] ignoreTags(true) overrides everything
+ [x] ignoreTags(false) has no effect
  [x] Tags with a requireParent rule are not allowed at the root
  [x] Tags that aren't allowed anywhere are omitted from the return array
  [x] Tags that are allowed in a closed dependency loop are omitted from the return array

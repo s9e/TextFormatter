@@ -386,7 +386,7 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox ignoreTags (true) overrides everything
+	* @testdox ignoreTags(true) overrides everything
 	*/
 	public function testIgnoreTagsPositive()
 	{
@@ -418,7 +418,7 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox ignoreTags (false) has no effect
+	* @testdox ignoreTags(false) has no effect
 	*/
 	public function testIgnoreTagsNegative()
 	{
