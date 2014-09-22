@@ -123,7 +123,7 @@ class ControlStructuresOptimizer
 	/**
 	* Test whether current block is followed by an elseif/else structure
 	*
-	* @return void
+	* @return bool
 	*/
 	protected function isFollowedByElse()
 	{

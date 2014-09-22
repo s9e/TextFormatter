@@ -112,7 +112,7 @@ class Optimizer
 	/**
 	* Test whether the cursor is at the beginning of an output assignment
 	*
-	* @return void
+	* @return bool
 	*/
 	protected function isOutputAssignment()
 	{
@@ -125,7 +125,7 @@ class Optimizer
 	/**
 	* Test whether the cursor is immediately after the output variable
 	*
-	* @return void
+	* @return bool
 	*/
 	protected function isPrecededByOutputVar()
 	{
@@ -189,8 +189,8 @@ class Optimizer
 		// Replace the first comma of the first call with a concatenator operator
 		$this->tokens[$startIndex] = '.';
 
-		// Move the cursor back to the first comma then advance it and delete
-		// everything up till the parenthesis of the second call, included
+		// Move the cursor back to the first comma then advance it and delete everything up to the
+		// parenthesis of the second call, included
 		$this->i = $startIndex;
 		while (++$this->i <= $endIndex)
 		{
