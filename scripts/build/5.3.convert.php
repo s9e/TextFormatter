@@ -300,7 +300,7 @@ function convertFile($filepath)
 
 	if ($file !== $oldFile)
 	{
-		echo "Replacing $filepath\n";
+		echo "\r\x1B[KReplacing $filepath ";
 		file_put_contents($filepath, $file);
 	}
 }
@@ -542,6 +542,7 @@ function convertClosureBinding($filepath, &$file)
 
 convertDir(realpath(__DIR__ . '/../../src'));
 convertDir(realpath(__DIR__ . '/../../tests'));
+echo "\n";
 
 // Remove traits files
 array_map('unlink', glob(__DIR__ . '/../../src/Configurator/Traits/*'));

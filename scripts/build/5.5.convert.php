@@ -102,7 +102,7 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 			$php .= (is_array($token)) ? $token[1] : $token;
 		}
 
-		echo "Replacing $filepath\n";
+		echo "\r\x1B[KReplacing $filepath ";
 		file_put_contents($filepath, $php);
 	}
 }
@@ -116,7 +116,7 @@ function convertFile($filepath)
 
 	if ($file !== $oldFile)
 	{
-		echo "Replacing $filepath\n";
+		echo "\r\x1B[KReplacing $filepath ";
 		file_put_contents($filepath, $file);
 	}
 }
@@ -136,3 +136,4 @@ function convertDir($dir)
 
 include_once __DIR__ . '/../../src/autoloader.php';
 convertDir(realpath(__DIR__ . '/../../src'));
+echo "\n";

@@ -228,7 +228,7 @@ function optimizeFile($filepath, array $options = array())
 	if ($changed)
 	{
 		file_put_contents($filepath, rebuild($tokens));
-		echo "Optimized $filepath\n";
+		echo "\x1B[KOptimized $filepath\r";
 	}
 }
 
@@ -263,3 +263,4 @@ $options = array(
 );
 
 optimizeDir(realpath(__DIR__ . '/../../src'), $options);
+echo "\n";
