@@ -135,6 +135,102 @@ class Optimizer
 	}
 
 	/**
+	* Merge concatenated htmlspecialchars() calls together
+	*
+	* Must be called when the cursor is at the concatenation operator
+	*
+	* @return bool Whether calls were merged
+	*/
+	protected function mergeConcatenatedHtmlSpecialChars()
+	{
+		if ($this->tokens[$this->i + 1]    !== [T_STRING, 'htmlspecialchars']
+		 || $this->tokens[$this->i + 2]    !== '('
+		 || $this->tokens[$this->i - 1]    !== ')'
+		 || $this->tokens[$this->i - 2][0] !== T_LNUMBER
+		 || $this->tokens[$this->i - 3]    !== ',')
+		{
+			 return false;
+		}
+
+		// Save the escape mode of the first call
+		$escapeMode = $this->tokens[$this->i - 2][1];
+
+		// Save the index of the comma that comes after the first argument of the first call
+		$startIndex = $this->i - 3;
+
+		// Save the index of the parenthesis that follows the second htmlspecialchars
+		$endIndex = $this->i + 2;
+
+		// Move the cursor to the first comma of the second call
+		$this->i = $endIndex;
+		$parens = 0;
+		while (++$this->i < $this->cnt)
+		{
+			if ($this->tokens[$this->i] === ',' && !$parens)
+			{
+				break;
+			}
+
+			if ($this->tokens[$this->i] === '(')
+			{
+				++$parens;
+			}
+			elseif ($this->tokens[$this->i] === ')')
+			{
+				--$parens;
+			}
+		}
+
+		if ($this->tokens[$this->i + 1] !== [T_LNUMBER, $escapeMode])
+		{
+			return false;
+		}
+
+		// Replace the first comma of the first call with a concatenator operator
+		$this->tokens[$startIndex] = '.';
+
+		// Move the cursor back to the first comma then advance it and delete
+		// everything up till the parenthesis of the second call, included
+		$this->i = $startIndex;
+		while (++$this->i <= $endIndex)
+		{
+			unset($this->tokens[$this->i]);
+		}
+
+		return true;
+	}
+
+	/**
+	* Merge concatenated strings together
+	*
+	* Must be called when the cursor is at the concatenation operator
+	*
+	* @return bool Whether strings were merged
+	*/
+	protected function mergeConcatenatedStrings()
+	{
+		if ($this->tokens[$this->i - 1][0]    !== T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i + 1][0]    !== T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i - 1][1][0] !== $this->tokens[$this->i + 1][1][0])
+		{
+			return false;
+		}
+
+		// Merge both strings into the right string
+		$this->tokens[$this->i + 1][1] = substr($this->tokens[$this->i - 1][1], 0, -1)
+		                               . substr($this->tokens[$this->i + 1][1], 1);
+
+		// Unset the tokens that have been optimized away
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[$this->i]);
+
+		// Advance the cursor
+		++$this->i;
+
+		return true;
+	}
+
+	/**
 	* Optimize T_CONCAT_EQUAL assignments in an array of PHP tokens
 	*
 	* Will only optimize $this->out.= assignments
@@ -144,11 +240,7 @@ class Optimizer
 	protected function optimizeOutConcatEqual()
 	{
 		// Start at offset 4 to skip the first four tokens: <?php $this->out.=
-		// We adjust the max value to account for the number of tokens ahead of the .= necessary to
-		// apply this optimization, which is 8 (therefore the offset is one less)
-		// 'foo';$this->out.='bar';
 		$this->i = 3;
-		$max     = $this->cnt - 9;
 
 		while ($this->skipTo([T_CONCAT_EQUAL, '.=']))
 		{
@@ -192,78 +284,7 @@ class Optimizer
 		$this->i = 1;
 		while ($this->skipTo('.'))
 		{
-			// Merge concatenated strings
-			if ($this->tokens[$this->i - 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $this->tokens[$this->i + 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $this->tokens[$this->i - 1][1][0] === $this->tokens[$this->i + 1][1][0])
-			{
-				// Merge both strings into the right string
-				$this->tokens[$this->i + 1][1] = substr($this->tokens[$this->i - 1][1], 0, -1)
-				                         . substr($this->tokens[$this->i + 1][1], 1);
-
-				// Unset the tokens that have been optimized away
-				unset($this->tokens[$this->i - 1]);
-				unset($this->tokens[$this->i]);
-
-				// Advance the cursor
-				++$this->i;
-
-				continue;
-			}
-
-			// Merge htmlspecialchars() calls
-			if ($this->tokens[$this->i + 1][0] === T_STRING
-			 && $this->tokens[$this->i + 1][1] === 'htmlspecialchars'
-			 && $this->tokens[$this->i + 2]    === '('
-			 && $this->tokens[$this->i - 1]    === ')'
-			 && $this->tokens[$this->i - 2][0] === T_LNUMBER
-			 && $this->tokens[$this->i - 3]    === ',')
-			{
-				// Save the escape mode of the first call
-				$escapeMode = $this->tokens[$this->i - 2][1];
-
-				// Save the index of the comma that comes after the first argument of the first call
-				$startIndex = $this->i - 3;
-
-				// Save the index of the parenthesis that follows the second htmlspecialchars
-				$endIndex = $this->i + 2;
-
-				// Move the cursor to the first comma of the second call
-				$this->i = $endIndex;
-				$parens = 0;
-				while (++$this->i < $this->cnt)
-				{
-					if ($this->tokens[$this->i] === ',' && !$parens)
-					{
-						break;
-					}
-
-					if ($this->tokens[$this->i] === '(')
-					{
-						++$parens;
-					}
-					elseif ($this->tokens[$this->i] === ')')
-					{
-						--$parens;
-					}
-				}
-
-				if ($this->tokens[$this->i + 1] === [T_LNUMBER, $escapeMode])
-				{
-					// Replace the first comma of the first call with a concatenator operator
-					$this->tokens[$startIndex] = '.';
-
-					// Move the cursor back to the first comma then advance it and delete
-					// everything up till the parenthesis of the second call, included
-					$this->i = $startIndex;
-					while (++$this->i <= $endIndex)
-					{
-						unset($this->tokens[$this->i]);
-					}
-
-					continue;
-				}
-			}
+			$this->mergeConcatenatedStrings() || $this->mergeConcatenatedHtmlSpecialChars();
 		}
 	}
 
