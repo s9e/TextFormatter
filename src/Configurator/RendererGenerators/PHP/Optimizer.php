@@ -299,69 +299,86 @@ class Optimizer
 	*/
 	protected function optimizeHtmlspecialchars()
 	{
-		$i   = 0;
-		$max = $this->cnt - 7;
+		$this->i = 0;
 
-		while (++$i <= $max)
+		while ($this->skipPast([T_STRING, 'htmlspecialchars']))
 		{
-			// Skip this token if it's not the first of the "htmlspecialchars(" sequence
-			if ($this->tokens[$i    ] !== [T_STRING, 'htmlspecialchars']
-			 || $this->tokens[$i + 1] !== '(')
+			if ($this->tokens[$this->i] === '(')
 			{
-				continue;
-			}
-
-			// Test whether a constant string is being escaped
-			if ($this->tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
-			 && $this->tokens[$i + 3]    === ','
-			 && $this->tokens[$i + 4][0] === T_LNUMBER
-			 && $this->tokens[$i + 5]    === ')')
-			{
-				// Escape the content of the T_CONSTANT_ENCAPSED_STRING token
-				$this->tokens[$i + 2][1] = var_export(
-					htmlspecialchars(
-						stripslashes(substr($this->tokens[$i + 2][1], 1, -1)),
-						$this->tokens[$i + 4][1]
-					),
-					true
-				);
-
-				// Remove the htmlspecialchars() call, except for the T_CONSTANT_ENCAPSED_STRING
-				// token
-				unset($this->tokens[$i]);
-				unset($this->tokens[$i + 1]);
-				unset($this->tokens[$i + 3]);
-				unset($this->tokens[$i + 4]);
-				unset($this->tokens[$i + 5]);
-
-				// Move the cursor past the call
-				$i += 5;
-
-				continue;
-			}
-
-			// Test whether a variable is being escaped
-			if ($this->tokens[$i + 2]    === [T_VARIABLE,        '$node']
-			 && $this->tokens[$i + 3]    === [T_OBJECT_OPERATOR, '->']
-			 && ($this->tokens[$i + 4]   === [T_STRING,          'localName']
-			  || $this->tokens[$i + 4]   === [T_STRING,          'nodeName'])
-			 && $this->tokens[$i + 5]    === ','
-			 && $this->tokens[$i + 6][0] === T_LNUMBER
-			 && $this->tokens[$i + 7]    === ')')
-			{
-				// Remove the htmlspecialchars() call, except for its first argument
-				unset($this->tokens[$i]);
-				unset($this->tokens[$i + 1]);
-				unset($this->tokens[$i + 5]);
-				unset($this->tokens[$i + 6]);
-				unset($this->tokens[$i + 7]);
-
-				// Move the cursor past the call
-				$i += 7;
-
-				continue;
+				++$this->i;
+				$this->replaceHtmlspecialcharsLiteral() || $this->removeHtmlspecialcharsSafeVar();
 			}
 		}
+	}
+
+	/**
+	* Remove htmlspecialchars() calls on variables that are known to be safe
+	*
+	* Must be called when the cursor is at the first argument of the call
+	*
+	* @return bool Whether the call was removed
+	*/
+	protected function removeHtmlspecialcharsSafeVar()
+	{
+		if ($this->tokens[$this->i    ]    !== [T_VARIABLE,        '$node']
+		 || $this->tokens[$this->i + 1]    !== [T_OBJECT_OPERATOR, '->']
+		 || ($this->tokens[$this->i + 2]   !== [T_STRING,          'localName']
+		  && $this->tokens[$this->i + 2]   !== [T_STRING,          'nodeName'])
+		 || $this->tokens[$this->i + 3]    !== ','
+		 || $this->tokens[$this->i + 4][0] !== T_LNUMBER
+		 || $this->tokens[$this->i + 5]    !== ')')
+		{
+			 return false;
+		}
+
+		// Remove the htmlspecialchars() call, except for its first argument
+		unset($this->tokens[$this->i - 2]);
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[$this->i + 3]);
+		unset($this->tokens[$this->i + 4]);
+		unset($this->tokens[$this->i + 5]);
+
+		// Move the cursor past the call
+		$this->i += 6;
+
+		return true;
+	}
+
+	/**
+	* Precompute the result of a htmlspecialchars() call on a string literal
+	*
+	* Must be called when the cursor is at the first argument of the call
+	*
+	* @return bool Whether the call was replaced
+	*/
+	protected function replaceHtmlspecialcharsLiteral()
+	{
+		// Test whether a constant string is being escaped
+		if ($this->tokens[$this->i    ][0] !== T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i + 1]    !== ','
+		 || $this->tokens[$this->i + 2][0] !== T_LNUMBER
+		 || $this->tokens[$this->i + 3]    !== ')')
+		{
+			return false;
+		}
+
+		// Escape the content of the T_CONSTANT_ENCAPSED_STRING token
+		$this->tokens[$this->i][1] = var_export(
+			htmlspecialchars(
+				stripslashes(substr($this->tokens[$this->i][1], 1, -1)),
+				$this->tokens[$this->i + 2][1]
+			),
+			true
+		);
+
+		// Remove the htmlspecialchars() call, except for the T_CONSTANT_ENCAPSED_STRING token
+		unset($this->tokens[$this->i - 2]);
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[++$this->i]);
+		unset($this->tokens[++$this->i]);
+		unset($this->tokens[++$this->i]);
+
+		return true;
 	}
 
 	/**
