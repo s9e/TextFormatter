@@ -29,13 +29,25 @@ matches.forEach(function(m)
 			? addTagPair(tagName, pos, len, pos + len, 0)
 			: addStartTag(tagName, pos, len);
 
+	captureAttributes(tag, elName, m[3][0]);
+});
+
+/**
+* Capture all attributes in given string
+*
+* @param  {!Tag}    tag    Target tag
+* @param  {!string} elName Name of the HTML element
+* @param  {!string} str    String containing the attribute declarations
+*/
+function captureAttributes(tag, elName, str)
+{
 	// Capture attributes
 	var attrRegexp = /[a-z][-a-z0-9]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
 		attrName,
 		attrValue,
 		attrMatch;
 
-	while (attrMatch = attrRegexp.exec(m[3][0]))
+	while (attrMatch = attrRegexp.exec(str))
 	{
 		pos = attrMatch[0].indexOf('=');
 
@@ -70,4 +82,4 @@ matches.forEach(function(m)
 
 		tag.setAttribute(attrName, html_entity_decode(attrValue));
 	}
-});
+}

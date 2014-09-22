@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\HTMLElements;
 
+use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
@@ -46,50 +47,61 @@ class Parser extends ParserBase
 			     ? $this->parser->addTagPair($tagName, $pos, $len, $pos + $len, 0)
 			     : $this->parser->addStartTag($tagName, $pos, $len);
 
-			// Capture attributes
-			preg_match_all(
-				'/[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
-				$m[3][0],
-				$attrMatches,
-				PREG_SET_ORDER
-			);
+			$this->captureAttributes($tag, $elName, $m[3][0]);
+		}
+	}
 
-			foreach ($attrMatches as $attrMatch)
+	/**
+	* Capture all attributes in given string
+	*
+	* @param  Tag    $tag    Target tag
+	* @param  string $elName Name of the HTML element
+	* @param  string $str    String containing the attribute declarations
+	* @return void
+	*/
+	protected function captureAttributes(Tag $tag, $elName, $str)
+	{
+		preg_match_all(
+			'/[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
+			$str,
+			$attrMatches,
+			PREG_SET_ORDER
+		);
+
+		foreach ($attrMatches as $attrMatch)
+		{
+			$pos = strpos($attrMatch[0], '=');
+
+			/**
+			* If there's no equal sign, it's a boolean attribute and we generate a value equal
+			* to the attribute's name, lowercased
+			*
+			* @link http://www.w3.org/html/wg/drafts/html/master/single-page.html#boolean-attributes
+			*/
+			if ($pos === false)
 			{
-				$pos = strpos($attrMatch[0], '=');
-
-				/**
-				* If there's no equal sign, it's a boolean attribute and we generate a value equal
-				* to the attribute's name, lowercased
-				*
-				* @link http://www.w3.org/html/wg/drafts/html/master/single-page.html#boolean-attributes
-				*/
-				if ($pos === false)
-				{
-					$pos = strlen($attrMatch[0]);
-					$attrMatch[0] .= '=' . strtolower($attrMatch[0]);
-				}
-
-				// Normalize the attribute name, remove the whitespace around its value to account
-				// for cases like <b title = "foo"/>
-				$attrName  = strtolower(trim(substr($attrMatch[0], 0, $pos)));
-				$attrValue = trim(substr($attrMatch[0], 1 + $pos));
-
-				// Use the attribute's alias if applicable
-				if (isset($this->config['aliases'][$elName][$attrName]))
-				{
-					$attrName = $this->config['aliases'][$elName][$attrName];
-				}
-
-				// Remove quotes around the value
-				if ($attrValue[0] === '"'
-				 || $attrValue[0] === "'")
-				{
-					$attrValue = substr($attrValue, 1, -1);
-				}
-
-				$tag->setAttribute($attrName, html_entity_decode($attrValue, ENT_QUOTES, 'UTF-8'));
+				$pos = strlen($attrMatch[0]);
+				$attrMatch[0] .= '=' . strtolower($attrMatch[0]);
 			}
+
+			// Normalize the attribute name, remove the whitespace around its value to account
+			// for cases like <b title = "foo"/>
+			$attrName  = strtolower(trim(substr($attrMatch[0], 0, $pos)));
+			$attrValue = trim(substr($attrMatch[0], 1 + $pos));
+
+			// Use the attribute's alias if applicable
+			if (isset($this->config['aliases'][$elName][$attrName]))
+			{
+				$attrName = $this->config['aliases'][$elName][$attrName];
+			}
+
+			// Remove quotes around the value
+			if ($attrValue[0] === '"' || $attrValue[0] === "'")
+			{
+				$attrValue = substr($attrValue, 1, -1);
+			}
+
+			$tag->setAttribute($attrName, html_entity_decode($attrValue, ENT_QUOTES, 'UTF-8'));
 		}
 	}
 }
