@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -19,17 +19,17 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 		$tagName  = $this->config['tagName'];
 
-		$hasSingleQuote = (strpos($text, "'") !== false);
-		$hasDoubleQuote = (strpos($text, '"') !== false);
+		$hasSingleQuote = (\strpos($text, "'") !== \false);
+		$hasDoubleQuote = (\strpos($text, '"') !== \false);
 
 		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
 		if ($hasSingleQuote)
 		{
-			preg_match_all(
+			\preg_match_all(
 				"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
 				$text,
 				$matches,
-				PREG_OFFSET_CAPTURE
+				\PREG_OFFSET_CAPTURE
 			);
 			foreach ($matches[0] as $m)
 			{
@@ -45,20 +45,20 @@ class Parser extends ParserBase
 		//  - apostrophe ’ if it's followed by an "s" as in 80's
 		//  - prime ′ and double prime ″
 		//  - multiply sign × if it's followed by an optional space and another digit
-		if ($hasSingleQuote || $hasDoubleQuote || strpos($text, 'x') !== false)
+		if ($hasSingleQuote || $hasDoubleQuote || \strpos($text, 'x') !== \false)
 		{
-			preg_match_all(
+			\preg_match_all(
 				'/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
 				$text,
 				$matches,
-				PREG_OFFSET_CAPTURE
+				\PREG_OFFSET_CAPTURE
 			);
 			foreach ($matches[0] as $m)
 			{
 				// Test for a multiply sign at the end
-				if (substr($m[0], -1) === 'x')
+				if (\substr($m[0], -1) === 'x')
 				{
-					$pos = $m[1] + strlen($m[0]) - 1;
+					$pos = $m[1] + \strlen($m[0]) - 1;
 					$chr = "\xC3\x97";
 
 					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $chr);
@@ -70,16 +70,12 @@ class Parser extends ParserBase
 				{
 					$pos = 1 + $m[1];
 
-					if (substr($m[0], 1, 2) === "'s")
-					{
+					if (\substr($m[0], 1, 2) === "'s")
 						// 80's -- use an apostrophe
 						$chr = "\xE2\x80\x99";
-					}
 					else
-					{
 						// 12' or 12" -- use a prime
 						$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
-					}
 
 					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $chr);
 				}
@@ -89,24 +85,20 @@ class Parser extends ParserBase
 		// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
 		$replacements = [];
 		if ($hasSingleQuote)
-		{
 			$replacements[] = [
 				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS", "\xE2\x80\x98", "\xE2\x80\x99"
 			];
-		}
 		if ($hasDoubleQuote)
-		{
 			$replacements[] = [
 				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS', "\xE2\x80\x9C", "\xE2\x80\x9D"
 			];
-		}
 		foreach ($replacements as list($regexp, $leftQuote, $rightQuote))
 		{
-			preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
+			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
 			foreach ($matches[0] as $m)
 			{
 				$left  = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
-				$right = $this->parser->addSelfClosingTag($tagName, $m[1] + strlen($m[0]) - 1, 1);
+				$right = $this->parser->addSelfClosingTag($tagName, $m[1] + \strlen($m[0]) - 1, 1);
 
 				$left->setAttribute($attrName, $leftQuote);
 				$right->setAttribute($attrName, $rightQuote);
@@ -118,14 +110,14 @@ class Parser extends ParserBase
 		}
 
 		// Do en dash –, em dash — and ellipsis …
-		if (strpos($text, '...') !== false
-		 || strpos($text, '--')  !== false)
+		if (\strpos($text, '...') !== \false
+		 || \strpos($text, '--')  !== \false)
 		{
-			preg_match_all(
+			\preg_match_all(
 				'/---?|\\.\\.\\./S',
 				$text,
 				$matches,
-				PREG_OFFSET_CAPTURE
+				\PREG_OFFSET_CAPTURE
 			);
 			$chrs = [
 				'--'  => "\xE2\x80\x93",
@@ -135,7 +127,7 @@ class Parser extends ParserBase
 			foreach ($matches[0] as $m)
 			{
 				$pos = $m[1];
-				$len = strlen($m[0]);
+				$len = \strlen($m[0]);
 				$chr = $chrs[$m[0]];
 
 				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);
@@ -143,13 +135,13 @@ class Parser extends ParserBase
 		}
 
 		// Do symbols ©, ® and ™
-		if (strpos($text, '(') !== false)
+		if (\strpos($text, '(') !== \false)
 		{
-			preg_match_all(
+			\preg_match_all(
 				'/\\((?>c|r|tm)\\)/i',
 				$text,
 				$matches,
-				PREG_OFFSET_CAPTURE
+				\PREG_OFFSET_CAPTURE
 			);
 			$chrs = [
 				'(c)'  => "\xC2\xA9",
@@ -159,8 +151,8 @@ class Parser extends ParserBase
 			foreach ($matches[0] as $m)
 			{
 				$pos = $m[1];
-				$len = strlen($m[0]);
-				$chr = $chrs[strtr($m[0], 'CMRT', 'cmrt')];
+				$len = \strlen($m[0]);
+				$chr = $chrs[\strtr($m[0], 'CMRT', 'cmrt')];
 
 				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);
 			}

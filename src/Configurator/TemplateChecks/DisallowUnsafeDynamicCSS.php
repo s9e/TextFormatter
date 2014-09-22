@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Items\Attribute;
 
 class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function getNodes(DOMElement $template)
@@ -22,7 +22,7 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 		return TemplateHelper::getCSSNodes($template->ownerDocument);
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function isExpressionSafe($expr)
@@ -30,7 +30,7 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 		return XPathHelper::isExpressionNumeric($expr);
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function isSafe(Attribute $attribute)

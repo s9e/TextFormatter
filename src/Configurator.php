@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -24,67 +24,67 @@ use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
-/**
+/*
 * @property UrlConfig $urlConfig Default URL config
 */
 class Configurator implements ConfigProvider
 {
-	/**
+	/*
 	* @var AttributeFilterCollection Dynamically-populated collection of AttributeFilter instances
 	*/
 	public $attributeFilters;
 
-	/**
+	/*
 	* @var BundleGenerator Default bundle generator
 	*/
 	public $bundleGenerator;
 
-	/**
+	/*
 	* @var JavaScript JavaScript manipulation object
 	*/
 	public $javascript;
 
-	/**
+	/*
 	* @var PluginCollection Loaded plugins
 	*/
 	public $plugins;
 
-	/**
+	/*
 	* @var array Array of variables that are available to the filters during parsing
 	*/
 	public $registeredVars;
 
-	/**
+	/*
 	* @var Rendering Rendering configuration
 	*/
 	public $rendering;
 
-	/**
+	/*
 	* @var Ruleset Rules that apply at the root of the text
 	*/
 	public $rootRules;
 
-	/**
+	/*
 	* @var RulesGenerator Generator used by $this->getRenderer()
 	*/
 	public $rulesGenerator;
 
-	/**
+	/*
 	* @var TagCollection Tags repository
 	*/
 	public $tags;
 
-	/**
+	/*
 	* @var TemplateChecker Default template checker
 	*/
 	public $templateChecker;
 
-	/**
+	/*
 	* @var TemplateNormalizer Default template normalizer
 	*/
 	public $templateNormalizer;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Prepares the collections that hold tags and filters, the UrlConfig object as well as the
@@ -109,7 +109,7 @@ class Configurator implements ConfigProvider
 	// Magic methods
 	//==========================================================================
 
-	/**
+	/*
 	* Magic __get automatically loads plugins, returns registered vars
 	*
 	* @param  string $k Property name
@@ -117,22 +117,18 @@ class Configurator implements ConfigProvider
 	*/
 	public function __get($k)
 	{
-		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
-		{
+		if (\preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 			return (isset($this->plugins[$k]))
 			     ? $this->plugins[$k]
 			     : $this->plugins->load($k);
-		}
 
 		if (isset($this->registeredVars[$k]))
-		{
 			return $this->registeredVars[$k];
-		}
 
 		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
 	}
 
-	/**
+	/*
 	* Magic __isset checks existence in the plugins collection and registered vars
 	*
 	* @param  string $k Property name
@@ -140,15 +136,13 @@ class Configurator implements ConfigProvider
 	*/
 	public function __isset($k)
 	{
-		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
-		{
+		if (\preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 			return isset($this->plugins[$k]);
-		}
 
 		return isset($this->registeredVars[$k]);
 	}
 
-	/**
+	/*
 	* Magic __set adds to the plugins collection, registers vars
 	*
 	* @param  string $k Property name
@@ -157,17 +151,13 @@ class Configurator implements ConfigProvider
 	*/
 	public function __set($k, $v)
 	{
-		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
-		{
+		if (\preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 			$this->plugins[$k] = $v;
-		}
 		else
-		{
 			$this->registeredVars[$k] = $v;
-		}
 	}
 
-	/**
+	/*
 	* Magic __set removes plugins from the plugins collection, unregisters vars
 	*
 	* @param  string $k Property name
@@ -175,21 +165,17 @@ class Configurator implements ConfigProvider
 	*/
 	public function __unset($k)
 	{
-		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
-		{
+		if (\preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 			unset($this->plugins[$k]);
-		}
 		else
-		{
 			unset($this->registeredVars[$k]);
-		}
 	}
 
 	//==========================================================================
 	// API
 	//==========================================================================
 
-	/**
+	/*
 	* Finalize this configuration and return all the relevant objects
 	*
 	* Options: (also see addHTMLRules() options)
@@ -210,17 +196,15 @@ class Configurator implements ConfigProvider
 
 		// Add default options
 		$options += [
-			'addHTML5Rules'  => true,
-			'optimizeConfig' => true,
-			'returnParser'   => true,
-			'returnRenderer' => true
+			'addHTML5Rules'  => \true,
+			'optimizeConfig' => \true,
+			'returnParser'   => \true,
+			'returnRenderer' => \true
 		];
 
 		// Add the HTML5 rules if applicable
 		if ($options['addHTML5Rules'])
-		{
 			$this->addHTML5Rules($options);
-		}
 
 		// Create a renderer as needed
 		if ($options['returnRenderer'])
@@ -230,9 +214,7 @@ class Configurator implements ConfigProvider
 
 			// Execute the renderer callback if applicable
 			if (isset($options['finalizeRenderer']))
-			{
 				$options['finalizeRenderer']($renderer);
-			}
 
 			$return['renderer'] = $renderer;
 		}
@@ -244,18 +226,14 @@ class Configurator implements ConfigProvider
 			ConfigHelper::filterVariants($config);
 
 			if ($options['optimizeConfig'])
-			{
 				ConfigHelper::optimizeArray($config);
-			}
 
 			// Create a parser
 			$parser = new Parser($config);
 
 			// Execute the parser callback if applicable
 			if (isset($options['finalizeParser']))
-			{
 				$options['finalizeParser']($parser);
-			}
 
 			$return['parser'] = $parser;
 		}
@@ -263,7 +241,7 @@ class Configurator implements ConfigProvider
 		return $return;
 	}
 
-	/**
+	/*
 	* Return an instance of Parser based on the current config
 	*
 	* @return \s9e\TextFormatter\Parser
@@ -279,7 +257,7 @@ class Configurator implements ConfigProvider
 		return new Parser($config);
 	}
 
-	/**
+	/*
 	* Return an instance of Renderer based on the current config
 	*
 	* @return \s9e\TextFormatter\Renderer
@@ -289,7 +267,7 @@ class Configurator implements ConfigProvider
 		return $this->rendering->getRenderer();
 	}
 
-	/**
+	/*
 	* Load a bundle into this configuration
 	*
 	* @param  string $bundleName Name of the bundle
@@ -297,10 +275,8 @@ class Configurator implements ConfigProvider
 	*/
 	public function loadBundle($bundleName)
 	{
-		if (!preg_match('#^[A-Z][A-Za-z0-9]+$#D', $bundleName))
-		{
+		if (!\preg_match('#^[A-Z][A-Za-z0-9]+$#D', $bundleName))
 			throw new InvalidArgumentException("Invalid bundle name '" . $bundleName . "'");
-		}
 
 		$className = __CLASS__ . '\\Bundles\\' . $bundleName;
 
@@ -308,7 +284,7 @@ class Configurator implements ConfigProvider
 		$bundle->configure($this);
 	}
 
-	/**
+	/*
 	* Create and save a bundle based on this configuration
 	*
 	* @param  string $className Name of the bundle class
@@ -320,10 +296,10 @@ class Configurator implements ConfigProvider
 	{
 		$file = "<?php\n\n" . $this->bundleGenerator->generate($className, $options);
 
-		return (file_put_contents($filepath, $file) !== false);
+		return (\file_put_contents($filepath, $file) !== \false);
 	}
 
-	/**
+	/*
 	* Add the rules that are generated based on HTML5 specs
 	*
 	* @see s9e\TextFormatter\ConfigBuilder\RulesGenerator
@@ -341,24 +317,20 @@ class Configurator implements ConfigProvider
 
 		// Normalize the tags' templates
 		foreach ($this->tags as $tag)
-		{
 			$this->templateNormalizer->normalizeTag($tag);
-		}
 
 		// Get the rules
 		$rules = $this->rulesGenerator->getRules($this->tags, $options);
 
 		// Add the rules pertaining to the root
-		$this->rootRules->merge($rules['root'], false);
+		$this->rootRules->merge($rules['root'], \false);
 
 		// Add the rules pertaining to each tag
 		foreach ($rules['tags'] as $tagName => $tagRules)
-		{
-			$this->tags[$tagName]->rules->merge($tagRules, false);
-		}
+			$this->tags[$tagName]->rules->merge($tagRules, \false);
 	}
 
-	/**
+	/*
 	* Generate and return the complete config array
 	*
 	* @return array
@@ -369,7 +341,7 @@ class Configurator implements ConfigProvider
 		$this->plugins->finalize();
 
 		// Remove properties that shouldn't be turned into config arrays
-		$properties = get_object_vars($this);
+		$properties = \get_object_vars($this);
 		unset($properties['attributeFilters']);
 		unset($properties['bundleGenerator']);
 		unset($properties['javascript']);
@@ -395,13 +367,11 @@ class Configurator implements ConfigProvider
 		];
 
 		// Remove unused tags
-		$config['tags'] = array_intersect_key($config['tags'], $bitfields['tags']);
+		$config['tags'] = \array_intersect_key($config['tags'], $bitfields['tags']);
 
 		// Add the bitfield information to each tag
 		foreach ($bitfields['tags'] as $tagName => $tagBitfields)
-		{
 			$config['tags'][$tagName] += $tagBitfields;
-		}
 
 		// Remove unused entries
 		unset($config['rootRules']);

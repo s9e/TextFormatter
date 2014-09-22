@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -19,7 +19,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
-	/**
+	/*
 	* Get the nodes targeted by this check
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -27,7 +27,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	*/
 	abstract protected function getNodes(DOMElement $template);
 
-	/**
+	/*
 	* Return whether an attribute is considered safe
 	*
 	* @param  Attribute $attribute Attribute
@@ -35,7 +35,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	*/
 	abstract protected function isSafe(Attribute $attribute);
 
-	/**
+	/*
 	* Look for improperly-filtered dynamic content
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -45,13 +45,11 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	public function check(DOMElement $template, Tag $tag)
 	{
 		foreach ($this->getNodes($template) as $node)
-		{
 			// Test this node's safety
 			$this->checkNode($node, $tag);
-		}
 	}
 
-	/**
+	/*
 	* Test whether a tag attribute is safe
 	*
 	* @param  DOMNode $node     Context node
@@ -63,18 +61,14 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		// Test whether the attribute exists
 		if (!isset($tag->attributes[$attrName]))
-		{
 			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
-		}
 
 		// Test whether the attribute is safe to be used in this content type
 		if (!$this->isSafe($tag->attributes[$attrName]))
-		{
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
-		}
 	}
 
-	/**
+	/*
 	* Test whether an attribute node is safe
 	*
 	* @param  DOMAttr $attribute Attribute node
@@ -85,15 +79,11 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		// Parse the attribute value for XPath expressions and assess their safety
 		foreach (AVTHelper::parse($attribute->value) as $token)
-		{
 			if ($token[0] === 'expression')
-			{
 				$this->checkExpression($attribute, $token[1], $tag);
-			}
-		}
 	}
 
-	/**
+	/*
 	* Test whether a node's context can be safely assessed
 	*
 	* @param  DOMNode $node Source node
@@ -106,12 +96,10 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		$ancestors = $xpath->query('ancestor::xsl:for-each', $node);
 
 		if ($ancestors->length)
-		{
 			throw new UnsafeTemplateException("Cannot assess context due to '" . $ancestors->item(0)->nodeName . "'", $node);
-		}
 	}
 
-	/**
+	/*
 	* Test whether an <xsl:copy-of/> node is safe
 	*
 	* @param  DOMElement $node <xsl:copy-of/> node
@@ -123,7 +111,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		$this->checkSelectNode($node->getAttributeNode('select'), $tag);
 	}
 
-	/**
+	/*
 	* Test whether an element node is safe
 	*
 	* @param  DOMElement $element Element
@@ -144,19 +132,15 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		// Test the select expression of <xsl:value-of/> nodes
 		$query = './/xsl:value-of' . $predicate;
 		foreach ($xpath->query($query, $element) as $valueOf)
-		{
 			$this->checkSelectNode($valueOf->getAttributeNode('select'), $tag);
-		}
 
 		// Reject all <xsl:apply-templates/> nodes
 		$query = './/xsl:apply-templates' . $predicate;
 		foreach ($xpath->query($query, $element) as $applyTemplates)
-		{
 			throw new UnsafeTemplateException('Cannot allow unfiltered data in this context', $applyTemplates);
-		}
 	}
 
-	/**
+	/*
 	* Test the safety of an XPath expression
 	*
 	* @param  DOMNode $node Source node
@@ -169,7 +153,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		$this->checkContext($node);
 
 		// Consider stylesheet parameters safe but test local variables/params
-		if (preg_match('/^\\$(\\w+)$/', $expr, $m))
+		if (\preg_match('/^\\$(\\w+)$/', $expr, $m))
 		{
 			$this->checkVariable($node, $tag, $m[1]);
 
@@ -180,12 +164,10 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 
 		// Test whether the expression is safe as per the concrete implementation
 		if ($this->isExpressionSafe($expr))
-		{
 			return;
-		}
 
 		// Test whether the expression contains one single attribute
-		if (preg_match('/^@(\\w+)$/', $expr, $m))
+		if (\preg_match('/^@(\\w+)$/', $expr, $m))
 		{
 			$this->checkAttribute($node, $tag, $m[1]);
 
@@ -195,7 +177,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
 	}
 
-	/**
+	/*
 	* Test whether a node is safe
 	*
 	* @param  DOMNode $node Source node
@@ -205,24 +187,16 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	protected function checkNode(DOMNode $node, Tag $tag)
 	{
 		if ($node instanceof DOMAttr)
-		{
 			$this->checkAttributeNode($node, $tag);
-		}
 		elseif ($node instanceof DOMElement)
-		{
 			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
 			 && $node->localName    === 'copy-of')
-			{
 				$this->checkCopyOfNode($node, $tag);
-			}
 			else
-			{
 				$this->checkElementNode($node, $tag);
-			}
-		}
 	}
 
-	/**
+	/*
 	* Check whether a variable is safe in context
 	*
 	* @param  DOMNode $node  Context node
@@ -258,7 +232,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 	}
 
-	/**
+	/*
 	* Test whether a select attribute of a node is safe
 	*
 	* @param  DOMAttr $select Select attribute node
@@ -270,7 +244,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		$this->checkExpression($select, $select->value, $tag);
 	}
 
-	/**
+	/*
 	* Test whether given expression is safe in context
 	*
 	* @param  string $expr XPath expression
@@ -278,6 +252,6 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	*/
 	protected function isExpressionSafe($expr)
 	{
-		return false;
+		return \false;
 	}
 }

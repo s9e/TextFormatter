@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/**
+/*
 * @method mixed   add(string $key)
 * @method array   asConfig()
 * @method void    clear()
@@ -41,32 +41,32 @@ class Configurator extends ConfiguratorBase
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var string Name of the attribute used by this plugin
 	*/
 	protected $attrName = 'value';
 
-	/**
+	/*
 	* @var bool Whether keywords are case-sensitive
 	*/
-	public $caseSensitive = true;
+	public $caseSensitive = \true;
 
-	/**
+	/*
 	* @var \s9e\TextFormatter\Configurator\Collections\NormalizedCollection List of [keyword => value]
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* @var boolean Whether to capture only the first occurence of each keyword
 	*/
-	public $onlyFirst = false;
+	public $onlyFirst = \false;
 
-	/**
+	/*
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'KEYWORD';
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function setUp()
@@ -76,15 +76,13 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->tags->add($this->tagName)->attributes->add($this->attrName);
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
-		{
-			return false;
-		}
+		if (!\count($this->collection))
+			return \false;
 
 		$config = [
 			'attrName' => $this->attrName,
@@ -92,14 +90,12 @@ class Configurator extends ConfiguratorBase
 		];
 
 		if (!empty($this->onlyFirst))
-		{
 			$config['onlyFirst'] = $this->onlyFirst;
-		}
 
 		// Sort keywords in order to keep keywords that start with the same characters together. We
 		// also remove duplicates that would otherwise skew the length computation done below
-		$keywords = array_unique(iterator_to_array($this->collection));
-		sort($keywords);
+		$keywords = \array_unique(\iterator_to_array($this->collection));
+		\sort($keywords);
 
 		// Group keywords by chunks of ~30KB to remain below PCRE's limit
 		$groups   = [];
@@ -108,7 +104,7 @@ class Configurator extends ConfiguratorBase
 		foreach ($keywords as $keyword)
 		{
 			// NOTE: the value 4 is a guesstimate for the cost of each alternation
-			$keywordLen  = 4 + strlen($keyword);
+			$keywordLen  = 4 + \strlen($keyword);
 			$groupLen   += $keywordLen;
 
 			if ($groupLen > 30000)
@@ -130,16 +126,12 @@ class Configurator extends ConfiguratorBase
 			$regexp = '/\\b' . $regexp . '\\b/S';
 
 			if (!$this->caseSensitive)
-			{
 				$regexp .= 'i';
-			}
 
-			if (preg_match('/[^[:ascii:]]/', $regexp))
-			{
+			if (\preg_match('/[^[:ascii:]]/', $regexp))
 				$regexp .= 'u';
-			}
 
-			$config['regexps'][] = new Regexp($regexp, true);
+			$config['regexps'][] = new Regexp($regexp, \true);
 		}
 
 		return $config;

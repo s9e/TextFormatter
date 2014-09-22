@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineAttributes extends TemplateNormalization
 {
-	/**
+	/*
 	* Inline the attribute declarations of a template
 	*
 	* Will replace
@@ -36,27 +36,17 @@ class InlineAttributes extends TemplateNormalization
 			$value = '';
 
 			foreach ($attribute->childNodes as $childNode)
-			{
 				if ($childNode instanceof DOMText)
-				{
-					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
-				}
+					$value .= \preg_replace('([{}])', '$0$0', $childNode->textContent);
 				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'value-of')
-				{
 					$value .= '{' . $childNode->getAttribute('select') . '}';
-				}
 				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'text')
-				{
-					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
-				}
+					$value .= \preg_replace('([{}])', '$0$0', $childNode->textContent);
 				else
-				{
 					// Can't inline this attribute, move on to the next one
 					continue 2;
-				}
-			}
 
 			try
 			{

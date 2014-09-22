@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class RemoveComments extends TemplateNormalization
 {
-	/**
+	/*
 	* Remove all comments
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -24,8 +24,6 @@ class RemoveComments extends TemplateNormalization
 		$xpath = new DOMXPath($template->ownerDocument);
 
 		foreach ($xpath->query('//comment()') as $comment)
-		{
 			$comment->parentNode->removeChild($comment);
-		}
 	}
 }

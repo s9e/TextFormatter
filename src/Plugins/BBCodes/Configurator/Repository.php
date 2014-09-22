@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,17 +15,17 @@ use RuntimeException;
 
 class Repository
 {
-	/**
+	/*
 	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
 	*/
 	protected $bbcodeMonkey;
 
-	/**
+	/*
 	* @var DOMDocument Repository document
 	*/
 	protected $dom;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  mixed        $value        Either a DOMDocument or the path to a repository's XML file
@@ -36,22 +36,18 @@ class Repository
 	{
 		if (!($value instanceof DOMDocument))
 		{
-			if (!file_exists($value))
-			{
+			if (!\file_exists($value))
 				throw new InvalidArgumentException('Not a DOMDocument or the path to a repository file');
-			}
 
 			$dom = new DOMDocument;
-			$dom->preserveWhiteSpace = false;
+			$dom->preserveWhiteSpace = \false;
 
-			$useErrors = libxml_use_internal_errors(true);
+			$useErrors = \libxml_use_internal_errors(\true);
 			$success = $dom->load($value);
-			libxml_use_internal_errors($useErrors);
+			\libxml_use_internal_errors($useErrors);
 
 			if (!$success)
-			{
 				throw new InvalidArgumentException('Invalid repository file');
-			}
 
 			$value = $dom;
 		}
@@ -60,7 +56,7 @@ class Repository
 		$this->dom = $value;
 	}
 
-	/**
+	/*
 	* Get a BBCode and its associated tag from this repository
 	*
 	* @param  string $name Name of the entry in the repository
@@ -70,7 +66,7 @@ class Repository
 	public function get($name, array $vars = [])
 	{
 		// Everything before # should be a BBCode name
-		$name = preg_replace_callback(
+		$name = \preg_replace_callback(
 			'/^[^#]+/',
 			function ($m)
 			{
@@ -80,15 +76,13 @@ class Repository
 		);
 
 		$xpath = new DOMXPath($this->dom);
-		$node  = $xpath->query('//bbcode[@name="' . htmlspecialchars($name) . '"]')->item(0);
+		$node  = $xpath->query('//bbcode[@name="' . \htmlspecialchars($name) . '"]')->item(0);
 
 		if (!($node instanceof DOMElement))
-		{
 			throw new RuntimeException("Could not find '" . $name . "' in repository");
-		}
 
 		// Clone the node so we don't end up modifying the node in the repository
-		$clonedNode = $node->cloneNode(true);
+		$clonedNode = $node->cloneNode(\true);
 
 		// Replace all the <var> descendants if applicable
 		foreach ($xpath->query('.//var', $clonedNode) as $varNode)
@@ -96,12 +90,10 @@ class Repository
 			$varName = $varNode->getAttribute('name');
 
 			if (isset($vars[$varName]))
-			{
 				$varNode->parentNode->replaceChild(
 					$this->dom->createTextNode($vars[$varName]),
 					$varNode
 				);
-			}
 		}
 
 		// Now we can parse the BBCode usage and prepare the template.
@@ -115,9 +107,7 @@ class Repository
 
 		// Set the optional tag name
 		if ($node->hasAttribute('tagName'))
-		{
 			$bbcode->tagName = $node->getAttribute('tagName');
-		}
 
 		// Set the rules
 		foreach ($xpath->query('rules/*', $node) as $ruleNode)
@@ -126,21 +116,15 @@ class Repository
 			$args       = [];
 
 			if ($ruleNode->textContent)
-			{
 				$args[] = $ruleNode->textContent;
-			}
 
-			call_user_func_array([$tag->rules, $methodName], $args);
+			\call_user_func_array([$tag->rules, $methodName], $args);
 		}
 
 		// Set predefined attributes
 		foreach ($node->getElementsByTagName('predefinedAttributes') as $predefinedAttributes)
-		{
 			foreach ($predefinedAttributes->attributes as $attribute)
-			{
 				$bbcode->predefinedAttributes->set($attribute->name, $attribute->value);
-			}
-		}
 
 		return [
 			'bbcode'     => $bbcode,

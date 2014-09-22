@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class F5 extends Bundle
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function configure(Configurator $configurator)
@@ -164,9 +164,7 @@ class F5 extends Bundle
 
 		// Add the default BBCodes
 		foreach ($bbcodes as list($definition, $template))
-		{
 			$configurator->BBCodes->addCustom($definition, $template);
-		}
 
 		// Add some default limits
 		$configurator->tags['QUOTE']->nestingLimit = 3;
@@ -197,12 +195,10 @@ class F5 extends Bundle
 		$configurator->Emoticons->notBefore = '\\pL\\pN';
 
 		foreach ($emoticons as $code => $filename)
-		{
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$BASE_URL}img/smilies/' . $filename . '.png" width="15" height="15" alt="' . $filename . '"/>'
 			);
-		}
 
 		$configurator->Autoemail;
 		$configurator->Autolink;

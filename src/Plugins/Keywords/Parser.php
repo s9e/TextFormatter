@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -25,21 +25,19 @@ class Parser extends ParserBase
 
 		foreach ($regexps as $regexp)
 		{
-			preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
+			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
 
 			foreach ($matches[0] as list($value, $pos))
 			{
 				if ($onlyFirst)
 				{
 					if (isset($keywords[$value]))
-					{
 						continue;
-					}
 
 					$keywords[$value] = 1;
 				}
 
-				$this->parser->addSelfClosingTag($tagName, $pos, strlen($value))
+				$this->parser->addSelfClosingTag($tagName, $pos, \strlen($value))
 				             ->setAttribute($attrName, $value);
 			}
 		}

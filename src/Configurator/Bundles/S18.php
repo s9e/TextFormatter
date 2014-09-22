@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class S18 extends Bundle
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function configure(Configurator $configurator)
@@ -66,12 +66,10 @@ class S18 extends Bundle
 			['O:-)', 'angel.gif',       'Angel'      ]
 		];
 		foreach ($smileys as list($code, $filename, $title))
-		{
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$SMILEYS_PATH}' . $filename . '" alt="' . $code . '" title="' . $title . '" class="smiley"/>'
 			);
-		}
 
 		// Default BBCodes
 		$bbcodes = [
@@ -348,9 +346,7 @@ class S18 extends Bundle
 
 		// Add the default BBCodes
 		foreach ($bbcodes as list($definition, $template))
-		{
 			$configurator->BBCodes->addCustom($definition, $template);
-		}
 
 		// Create [php] as an alias for [code=php]
 		$bbcode = $configurator->BBCodes->add('php');
@@ -363,7 +359,7 @@ class S18 extends Bundle
 
 		// Allow some HTML
 		$configurator->HTMLElements->allowElement('a');
-		$configurator->HTMLElements->allowAttribute('a', 'href')->required = true;
+		$configurator->HTMLElements->allowAttribute('a', 'href')->required = \true;
 		$configurator->HTMLElements->allowElement('b');
 		$configurator->HTMLElements->allowElement('blockquote');
 		$configurator->HTMLElements->allowElement('br');
@@ -374,7 +370,7 @@ class S18 extends Bundle
 		$configurator->HTMLElements->allowElement('img');
 		$configurator->HTMLElements->allowAttribute('img', 'alt');
 		$configurator->HTMLElements->allowAttribute('img', 'height');
-		$configurator->HTMLElements->allowAttribute('img', 'src')->required = true;
+		$configurator->HTMLElements->allowAttribute('img', 'src')->required = \true;
 		$configurator->HTMLElements->allowAttribute('img', 'width');
 		$configurator->HTMLElements->allowElement('ins');
 		$configurator->HTMLElements->allowElement('pre');
@@ -389,20 +385,16 @@ class S18 extends Bundle
 		// Allow the HTML elements as descendants to [html] and make them require an [html] ancestor
 		// while preventing any other tag from appearing in [html]
 		foreach ($configurator->tags as $tagName => $tag)
-		{
-			if (substr($tagName, 0, 5) === 'html:')
+			if (\substr($tagName, 0, 5) === 'html:')
 			{
 				$tag->rules->requireAncestor('html');
 				$htmlTag->rules->allowDescendant($tagName);
 			}
 			else
-			{
 				$htmlTag->rules->denyDescendant($tagName);
-			}
-		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public static function getOptions()

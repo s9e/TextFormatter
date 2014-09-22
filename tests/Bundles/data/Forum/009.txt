@@ -1,8 +1,0 @@
-[list]
-	[*]one
-
-	[*]two
-
-	[*]three
-
-[/list]

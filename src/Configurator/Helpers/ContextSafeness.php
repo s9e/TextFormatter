@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 abstract class ContextSafeness
 {
-	/**
+	/*
 	* Get the list of UTF-8 characters that are disallowed as a URL
 	*
 	* ":" is disallowed to prevent the URL to have a scheme.
@@ -21,7 +21,7 @@ abstract class ContextSafeness
 		return [':'];
 	}
 
-	/**
+	/*
 	* Get the list of UTF-8 characters that are disallowed in CSS
 	*
 	* - "(" and ")" are disallowed to prevent executing CSS functions or proprietary extensions that
@@ -38,7 +38,7 @@ abstract class ContextSafeness
 		return ['(', ')', ':', '\\', '"', "'", ';', '{', '}'];
 	}
 
-	/**
+	/*
 	* Get the list of UTF-8 characters that are disallowed in JS
 	*
 	* Allowing *any* input inside of a JavaScript context is a risky proposition. The use cases are

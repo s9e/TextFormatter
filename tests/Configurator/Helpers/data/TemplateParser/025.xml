@@ -1,6 +1,0 @@
-<template outputMethod="xml">
-	<element name="b" id="1" empty="maybe">
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
-</template>

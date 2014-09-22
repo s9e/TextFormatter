@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var array Default tags
 	*/
 	protected $tags = [
@@ -20,7 +20,7 @@ class Configurator extends ConfiguratorBase
 			'attributes' => [
 				'lang' => [
 					'filterChain' => ['#simpletext'],
-					'required'    => false
+					'required'    => \false
 				]
 			],
 			'template' =>
@@ -41,9 +41,9 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => [
 			'attributes' => [
-				'alt'   => ['required' => false],
+				'alt'   => ['required' => \false],
 				'src'   => ['filterChain' => ['#url']],
-				'title' => ['required' => false]
+				'title' => ['required' => \false]
 			],
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
@@ -52,7 +52,7 @@ class Configurator extends ConfiguratorBase
 			'attributes' => [
 				'type' => [
 					'filterChain' => ['#simpletext'],
-					'required'    => false
+					'required'    => \false
 				]
 			],
 			'template' =>
@@ -71,7 +71,7 @@ class Configurator extends ConfiguratorBase
 		'URL'    => [
 			'attributes' => [
 				'title' => [
-					'required' => false
+					'required' => \false
 				],
 				'url'   => [
 					'filterChain' => ['#url']
@@ -81,7 +81,7 @@ class Configurator extends ConfiguratorBase
 		]
 	];
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function setUp()
@@ -92,33 +92,23 @@ class Configurator extends ConfiguratorBase
 		{
 			// Skip this tag if it already exists
 			if (isset($this->configurator->tags[$tagName]))
-			{
 				continue;
-			}
 
 			// If the tag's config is a single string, it's really its default template
-			if (is_string($tagConfig))
-			{
+			if (\is_string($tagConfig))
 				$tagConfig = ['template' => $tagConfig];
-			}
 
 			// Replace default filters in the definition
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
-				{
 					if (isset($attributeConfig['filterChain']))
 					{
 						foreach ($attributeConfig['filterChain'] as &$filter)
-						{
-							if (is_string($filter) && $filter[0] === '#')
-							{
+							if (\is_string($filter) && $filter[0] === '#')
 								$filter = $this->configurator->attributeFilters[$filter];
-							}
-						}
 						unset($filter);
 					}
-				}
 				unset($attributeConfig);
 			}
 
@@ -127,7 +117,7 @@ class Configurator extends ConfiguratorBase
 		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()

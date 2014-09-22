@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,18 +14,18 @@ use RuntimeException;
 
 class TemplateParser
 {
-	/**
+	/*
 	* XSL namespace
 	*/
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
-	/**
+	/*
 	* @var string Regexp that matches the names of all void elements
 	* @link http://www.w3.org/TR/html-markup/syntax.html#void-elements
 	*/
 	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 
-	/**
+	/*
 	* Parse a template into an internal representation
 	*
 	* @param  string      $template     Source template
@@ -49,7 +49,7 @@ class TemplateParser
 		return $ir;
 	}
 
-	/**
+	/*
 	* Parse an XPath expression that is composed entirely of equality tests between a variable part
 	* and a constant part
 	*
@@ -74,12 +74,10 @@ class TemplateParser
 		// Match a string that is entirely composed of equality checks separated with "or"
 		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
 
-		if (!preg_match($regexp, $expr))
-		{
-			return false;
-		}
+		if (!\preg_match($regexp, $expr))
+			return \false;
 
-		preg_match_all("((?J)$eq)", $expr, $matches, PREG_SET_ORDER);
+		\preg_match_all("((?J)$eq)", $expr, $matches, \PREG_SET_ORDER);
 
 		$map = [];
 		foreach ($matches as $m)
@@ -87,21 +85,17 @@ class TemplateParser
 			$key = $m['key'];
 			if (!empty($m['concat']))
 			{
-				preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+				\preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
 
 				$value = '';
 				foreach ($strings[0] as $string)
-				{
-					$value .= substr($string, 1, -1);
-				}
+					$value .= \substr($string, 1, -1);
 			}
 			else
 			{
 				$value = $m['literal'];
 				if ($value[0] === "'" || $value[0] === '"')
-				{
-					$value = substr($value, 1, -1);
-				}
+					$value = \substr($value, 1, -1);
 			}
 
 			$map[$key][] = $value;
@@ -114,7 +108,7 @@ class TemplateParser
 	// General parsing
 	//==========================================================================
 
-	/**
+	/*
 	* Parse all the children of a given element
 	*
 	* @param  DOMElement $ir     Node in the internal representation that represents the parent node
@@ -127,15 +121,15 @@ class TemplateParser
 		{
 			switch ($child->nodeType)
 			{
-				case XML_COMMENT_NODE:
+				case \XML_COMMENT_NODE:
 					// Do nothing
 					break;
 
-				case XML_TEXT_NODE:
+				case \XML_TEXT_NODE:
 					self::appendOutput($ir, 'literal', $child->textContent);
 					break;
 
-				case XML_ELEMENT_NODE:
+				case \XML_ELEMENT_NODE:
 					self::parseNode($ir, $child);
 					break;
 
@@ -145,7 +139,7 @@ class TemplateParser
 		}
 	}
 
-	/**
+	/*
 	* Parse a given node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -157,21 +151,17 @@ class TemplateParser
 		// XSL elements are parsed by the corresponding parseXsl* method
 		if ($node->namespaceURI === self::XMLNS_XSL)
 		{
-			$methodName = 'parseXsl' . str_replace(' ', '', ucwords(str_replace('-', ' ', $node->localName)));
+			$methodName = 'parseXsl' . \str_replace(' ', '', \ucwords(\str_replace('-', ' ', $node->localName)));
 
-			if (!method_exists(__CLASS__, $methodName))
-			{
+			if (!\method_exists(__CLASS__, $methodName))
 				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
-			}
 
 			return self::$methodName($ir, $node);
 		}
 
 		// Namespaced elements are not supported
-		if (!is_null($node->namespaceURI))
-		{
+		if (!\is_null($node->namespaceURI))
 			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
-		}
 
 		// Create an <element/> with a name attribute equal to given node's name
 		$element = self::appendElement($ir, 'element');
@@ -195,7 +185,7 @@ class TemplateParser
 	// XSL parsing
 	//==========================================================================
 
-	/**
+	/*
 	* Parse an <xsl:apply-templates/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -207,15 +197,13 @@ class TemplateParser
 		$applyTemplates = self::appendElement($ir, 'applyTemplates');
 
 		if ($node->hasAttribute('select'))
-		{
 			$applyTemplates->setAttribute(
 				'select',
 				$node->getAttribute('select')
 			);
-		}
 	}
 
-	/**
+	/*
 	* Parse an <xsl:attribute/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -238,7 +226,7 @@ class TemplateParser
 		}
 	}
 
-	/**
+	/*
 	* Parse an <xsl:choose/> node and its <xsl:when/> and <xsl:otherwise/> children into the
 	* internal representation
 	*
@@ -254,9 +242,7 @@ class TemplateParser
 		{
 			// Only children of current node, exclude other descendants
 			if ($when->parentNode !== $node)
-			{
 				continue;
-			}
 
 			// Create a <case/> element with the original test condition in @test
 			$case = self::appendElement($switch, 'case');
@@ -271,9 +257,7 @@ class TemplateParser
 		{
 			// Only children of current node, exclude other descendants
 			if ($otherwise->parentNode !== $node)
-			{
 				continue;
-			}
 
 			$case = self::appendElement($switch, 'case');
 
@@ -285,7 +269,7 @@ class TemplateParser
 		}
 	}
 
-	/**
+	/*
 	* Parse an <xsl:comment/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -300,7 +284,7 @@ class TemplateParser
 		self::parseChildren($comment, $node);
 	}
 
-	/**
+	/*
 	* Parse an <xsl:copy-of/> node into the internal representation
 	*
 	* NOTE: only attributes are supported
@@ -314,7 +298,7 @@ class TemplateParser
 		$expr = $node->getAttribute('select');
 
 		// <xsl:copy-of select="@foo"/>
-		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
+		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			// Create a switch element in the IR
 			$switch = self::appendElement($ir, 'switch');
@@ -342,7 +326,7 @@ class TemplateParser
 		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
 	}
 
-	/**
+	/*
 	* Parse an <xsl:element/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -365,7 +349,7 @@ class TemplateParser
 		}
 	}
 
-	/**
+	/*
 	* Parse an <xsl:if/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -383,7 +367,7 @@ class TemplateParser
 		self::parseChildren($case, $node);
 	}
 
-	/**
+	/*
 	* Parse an <xsl:text/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -395,7 +379,7 @@ class TemplateParser
 		self::appendOutput($ir, 'literal', $node->textContent);
 	}
 
-	/**
+	/*
 	* Parse an <xsl:value-of/> node into the internal representation
 	*
 	* @param  DOMElement $ir   Node in the internal representation that represents the node's parent
@@ -411,7 +395,7 @@ class TemplateParser
 	// IR optimization
 	//==========================================================================
 
-	/**
+	/*
 	* Normalize an IR
 	*
 	* @param  DOMDocument $ir
@@ -423,16 +407,12 @@ class TemplateParser
 
 		// Add an empty default <case/> to <switch/> nodes that don't have one
 		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
-		{
 			self::appendElement($switch, 'case');
-		}
 
 		// Add an id attribute to <element/> nodes
 		$id = 0;
 		foreach ($ir->getElementsByTagName('element') as $element)
-		{
 			$element->setAttribute('id', ++$id);
-		}
 
 		// Add <closeTag/> elements to the internal representation, everywhere an open start tag
 		// should be closed
@@ -465,10 +445,8 @@ class TemplateParser
 
 			// Append a <closeTag/> to <element/> nodes to ensure that empty elements get closed
 			if ($node->nodeName === 'element')
-			{
 				self::appendElement($node, 'closeTag')
 					->setAttribute('id', $node->getAttribute('id'));
-			}
 		}
 
 		// Mark void elements and elements with no content
@@ -477,24 +455,18 @@ class TemplateParser
 			$elName = $element->getAttribute('name');
 
 			// Test whether this element is (maybe) void
-			if (strpos($elName, '{') !== false)
-			{
+			if (\strpos($elName, '{') !== \false)
 				// Dynamic element names must be checked at runtime
 				$element->setAttribute('void', 'maybe');
-			}
-			elseif (preg_match(self::$voidRegexp, $elName))
-			{
+			elseif (\preg_match(self::$voidRegexp, $elName))
 				// Static element names can be checked right now
 				$element->setAttribute('void', 'yes');
-			}
 
 			// Find whether this element is empty
 			$isEmpty = self::isEmpty($element);
 
 			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
-			{
 				$element->setAttribute('empty', $isEmpty);
-			}
 		}
 
 		// Optimize the IR
@@ -537,7 +509,7 @@ class TemplateParser
 		self::markBranchTables($ir);
 	}
 
-	/**
+	/*
 	* Optimize an IR
 	*
 	* @param  DOMDocument $ir
@@ -569,12 +541,8 @@ class TemplateParser
 				$closeTag = $switch->nextSibling;
 
 				foreach ($switch->childNodes as $case)
-				{
 					if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
-					{
 						$case->appendChild($closeTag->cloneNode());
-					}
-				}
 			}
 
 			// If there's a <closeTag/> at the beginning of every <case/>, clone it and insert it
@@ -583,14 +551,10 @@ class TemplateParser
 			foreach ($xpath->query($query) as $switch)
 			{
 				foreach ($switch->childNodes as $case)
-				{
 					if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-					{
 						// This case is either empty or does not start with a <closeTag/> so we skip
 						// to the next <switch/>
 						continue 2;
-					}
-				}
 
 				// Insert the first child of the last <case/>, which should be the same <closeTag/>
 				// as every other <case/>
@@ -604,15 +568,9 @@ class TemplateParser
 			// end of every <case/>
 			$query = '//switch[name(following-sibling::*) = "closeTag"]';
 			foreach ($xpath->query($query) as $switch)
-			{
 				foreach ($switch->childNodes as $case)
-				{
 					while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
-					{
 						$case->removeChild($case->lastChild);
-					}
-				}
-			}
 
 			// Finally, for each <closeTag/> remove duplicate <closeTag/> nodes that are either
 			// siblings or descendants of a sibling
@@ -623,14 +581,11 @@ class TemplateParser
 				$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
 
 				foreach ($xpath->query($query, $closeTag) as $dupe)
-				{
 					$dupe->parentNode->removeChild($dupe);
-				}
 			}
 
 			// In HTML mode, a void element cannot have any content
 			if ($outputMethod === 'html')
-			{
 				// For each void element, we find whichever <closeTag/> elements closes it and
 				// remove everything after
 				foreach ($xpath->query('//element[@void="yes"]') as $element)
@@ -639,11 +594,8 @@ class TemplateParser
 					$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
 
 					foreach ($xpath->query($query, $element) as $node)
-					{
 						$node->parentNode->removeChild($node);
-					}
 				}
-			}
 
 			$xml = $ir->saveXML();
 		}
@@ -653,31 +605,25 @@ class TemplateParser
 		// the switch
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
 		foreach ($xpath->query($query) as $closeTag)
-		{
 			$closeTag->parentNode->removeChild($closeTag);
-		}
 
 		// Coalesce consecutive literal outputs
 		foreach ($xpath->query('//output[@type="literal"]') as $output)
-		{
 			while ($output->nextSibling
 				&& $output->nextSibling->nodeName === 'output'
 				&& $output->nextSibling->getAttribute('type') === 'literal')
 			{
 				$output->nodeValue
-					= htmlspecialchars($output->nodeValue . $output->nextSibling->textContent);
+					= \htmlspecialchars($output->nodeValue . $output->nextSibling->textContent);
 				$output->parentNode->removeChild($output->nextSibling);
 			}
-		}
 
 		// Remove empty default cases (no @test and no descendants)
 		foreach ($xpath->query('//case[not(@test | node())]') as $case)
-		{
 			$case->parentNode->removeChild($case);
-		}
 	}
 
-	/**
+	/*
 	* Mark switch elements that are used as branch tables
 	*
 	* If a switch is used for a series of equality tests against the same attribute or variable, the
@@ -695,45 +641,37 @@ class TemplateParser
 		// Iterate over switch elements that have at least two case children with a test attribute
 		foreach ($xpath->query('//switch[case[2][@test]]') as $switch)
 		{
-			$key = null;
+			$key = \null;
 			$branchValues = [];
 
 			foreach ($switch->childNodes as $i => $case)
 			{
 				if (!$case->hasAttribute('test'))
-				{
 					continue;
-				}
 
 				$map = self::parseEqualityExpr($case->getAttribute('test'));
 
 				// Test whether the expression matches an equality
-				if ($map === false)
-				{
+				if ($map === \false)
 					continue 2;
-				}
 
 				// Abort if there's more than 1 variable used
-				if (count($map) !== 1)
-				{
+				if (\count($map) !== 1)
 					continue 2;
-				}
 
 				// Test whether it uses the same key
-				if (isset($key) && $key !== key($map))
-				{
+				if (isset($key) && $key !== \key($map))
 					continue 2;
-				}
 
-				$key = key($map);
-				$branchValues[$i] = end($map);
+				$key = \key($map);
+				$branchValues[$i] = \end($map);
 			}
 
 			$switch->setAttribute('branch-key', $key);
 			foreach ($branchValues as $i => $values)
 			{
-				sort($values);
-				$switch->childNodes->item($i)->setAttribute('branch-values', serialize($values));
+				\sort($values);
+				$switch->childNodes->item($i)->setAttribute('branch-values', \serialize($values));
 			}
 		}
 	}
@@ -742,7 +680,7 @@ class TemplateParser
 	// Misc
 	//==========================================================================
 
-	/**
+	/*
 	* Create and append an element to given node in the IR
 	*
 	* @param  DOMElement $parentNode Parent node of the element
@@ -753,20 +691,16 @@ class TemplateParser
 	protected static function appendElement(DOMElement $parentNode, $name, $value = '')
 	{
 		if ($value === '')
-		{
 			$element = $parentNode->ownerDocument->createElement($name);
-		}
 		else
-		{
 			$element = $parentNode->ownerDocument->createElement($name, $value);
-		}
 
 		$parentNode->appendChild($element);
 
 		return $element;
 	}
 
-	/**
+	/*
 	* Append an <output/> element to given node in the IR
 	*
 	* @param  DOMElement $ir      Parent node
@@ -789,22 +723,18 @@ class TemplateParser
 		}
 
 		if ($type === 'xpath')
-		{
 			// Remove whitespace surrounding XPath expressions
-			$content = trim($content);
-		}
+			$content = \trim($content);
 
 		if ($type === 'literal' && $content === '')
-		{
 			// Don't add empty literals
 			return;
-		}
 
-		self::appendElement($ir, 'output', htmlspecialchars($content))
+		self::appendElement($ir, 'output', \htmlspecialchars($content))
 			->setAttribute('type', $type);
 	}
 
-	/**
+	/*
 	* Test whether given element will be empty at runtime (no content, no children)
 	*
 	* @param  DOMElement $ir Element in the IR
@@ -816,30 +746,22 @@ class TemplateParser
 
 		// Comments and elements count as not-empty and literal output is sure to output something
 		if ($xpath->evaluate('count(comment | element | output[@type="literal"])', $ir))
-		{
 			return 'no';
-		}
 
 		// Test all branches of a <switch/>
 		// NOTE: this assumes that <switch/> are normalized to always have a default <case/>
 		$cases = [];
 		foreach ($xpath->query('switch/case', $ir) as $case)
-		{
 			$cases[self::isEmpty($case)] = 1;
-		}
 
 		if (isset($cases['maybe']))
-		{
 			return 'maybe';
-		}
 
 		if (isset($cases['no']))
 		{
 			// If all the cases are not-empty, the element is not-empty
 			if (!isset($cases['yes']))
-			{
 				return 'no';
-			}
 
 			// Some 'yes' and some 'no', the element is a 'maybe'
 			return 'maybe';
@@ -847,10 +769,8 @@ class TemplateParser
 
 		// Test for <apply-templates/> or XPath output
 		if ($xpath->evaluate('count(applyTemplates | output[@type="xpath"])', $ir))
-		{
 			// We can't know in advance whether those will produce output
 			return 'maybe';
-		}
 
 		return 'yes';
 	}

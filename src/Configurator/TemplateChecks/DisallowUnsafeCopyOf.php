@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowUnsafeCopyOf extends TemplateCheck
 {
-	/**
+	/*
 	* Check for unsafe <xsl:copy-of/> elements
 	*
 	* Any select expression that is not a single attribute is considered unsafe
@@ -31,10 +31,8 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 		{
 			$expr = $node->getAttribute('select');
 
-			if (!preg_match('#^@[-\\w]*$#D', $expr))
-			{
+			if (!\preg_match('#^@[-\\w]*$#D', $expr))
 				throw new UnsafeTemplateException("Cannot assess the safety of '" . $node->nodeName . "' select expression '" . $expr . "'", $node);
-			}
 		}
 	}
 }

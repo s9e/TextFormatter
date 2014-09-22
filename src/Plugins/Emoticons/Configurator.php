@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -19,7 +19,7 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
 
-/**
+/*
 * @method mixed   add(string $key)
 * @method array   asConfig()
 * @method void    clear()
@@ -47,32 +47,32 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var EmoticonCollection
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* @var string PCRE subpattern used in a negative lookbehind assertion before the emoticons
 	*/
 	public $notAfter = '';
 
-	/**
+	/*
 	* @var string PCRE subpattern used in a negative lookahead assertion after the emoticons
 	*/
 	public $notBefore = '';
 
-	/**
+	/*
 	* @var string XPath expression that, if true, forces emoticons to be rendered as text
 	*/
 	public $notIfCondition;
 
-	/**
+	/*
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';
 
-	/**
+	/*
 	* Plugin's setup
 	*
 	* Will create the tag used by this plugin
@@ -82,12 +82,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->collection = new EmoticonCollection;
 
 		if (!$this->configurator->tags->exists($this->tagName))
-		{
 			$this->configurator->tags->add($this->tagName);
-		}
 	}
 
-	/**
+	/*
 	* Create the template used for emoticons
 	*
 	* @return void
@@ -97,49 +95,39 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$tag = $this->getTag();
 
 		if (!isset($tag->template))
-		{
 			$tag->template = $this->getTemplate();
-		}
 	}
 
-	/**
+	/*
 	* @return array
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
-		{
-			return false;
-		}
+		if (!\count($this->collection))
+			return \false;
 
 		// Grab the emoticons from the collection
-		$codes = array_keys(iterator_to_array($this->collection));
+		$codes = \array_keys(\iterator_to_array($this->collection));
 
 		// Build the regexp used to match emoticons
 		$regexp = '/';
 
 		if ($this->notAfter !== '')
-		{
 			$regexp .= '(?<!' . $this->notAfter . ')';
-		}
 
 		$regexp .= RegexpBuilder::fromList($codes);
 
 		if ($this->notBefore !== '')
-		{
 			$regexp .= '(?!' . $this->notBefore . ')';
-		}
 
 		$regexp .= '/S';
 
 		// Set the Unicode mode if Unicode properties are used
-		if (preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
-		{
+		if (\preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
 			$regexp .= 'u';
-		}
 
 		// Force the regexp to use atomic grouping for performance
-		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
 		// Prepare the config array
 		$config = [
@@ -154,9 +142,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			// Skip the first assertion by skipping the first N characters, where N equals the
 			// length of $this->notAfter plus 1 for the first "/" and 5 for "(?<!)"
-			$lpos = 6 + strlen($this->notAfter);
-			$rpos = strrpos($regexp, '/');
-			$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/');
+			$lpos = 6 + \strlen($this->notAfter);
+			$rpos = \strrpos($regexp, '/');
+			$jsRegexp = RegexpConvertor::toJS('/' . \substr($regexp, $lpos, $rpos - $lpos) . '/');
 			$jsRegexp->flags .= 'g';
 
 			$config['regexp'] = new Variant($regexp);
@@ -167,15 +155,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		// Try to find a quickMatch if none is set
-		if ($this->quickMatch === false)
-		{
+		if ($this->quickMatch === \false)
 			$config['quickMatch'] = ConfigHelper::generateQuickMatchFromList($codes);
-		}
 
 		return $config;
 	}
 
-	/**
+	/*
 	* Generate the dynamic template that renders all emoticons
 	*
 	* @return string
@@ -187,21 +173,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// First, test whether the emoticon should be rendered as text if applicable
 		if (!empty($this->notIfCondition))
-		{
-			$xsl .= '<xsl:when test="' . htmlspecialchars($this->notIfCondition) . '">'
+			$xsl .= '<xsl:when test="' . \htmlspecialchars($this->notIfCondition) . '">'
 			      . '<xsl:value-of select="."/>'
 			      . '</xsl:when>'
 			      . '<xsl:otherwise>'
 			      . '<xsl:choose>';
-		}
 
 		// Iterate over codes, create an <xsl:when> for each emote
 		foreach ($this->collection as $code => $template)
-		{
-			$xsl .= '<xsl:when test=".=' . htmlspecialchars(XPathHelper::export($code)) . '">'
+			$xsl .= '<xsl:when test=".=' . \htmlspecialchars(XPathHelper::export($code)) . '">'
 			      . $template
 			      . '</xsl:when>';
-		}
 
 		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
@@ -211,9 +193,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// Close the "notIf" condition if applicable
 		if (!empty($this->notIfCondition))
-		{
 			$xsl .= '</xsl:otherwise></xsl:choose>';
-		}
 
 		return $xsl;
 	}

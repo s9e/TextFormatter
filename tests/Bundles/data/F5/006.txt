@@ -1,2 +1,0 @@
-[forum=1]Test forum[/forum]
-[forum]1[/forum]

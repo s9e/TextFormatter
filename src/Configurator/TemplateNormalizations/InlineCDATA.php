@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineCDATA extends TemplateNormalization
 {
-	/**
+	/*
 	* Replace CDATA sections with text literals
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -25,14 +25,10 @@ class InlineCDATA extends TemplateNormalization
 		$xpath = new DOMXPath($dom);
 
 		foreach ($xpath->query('//text()') as $textNode)
-		{
-			if ($textNode->nodeType === XML_CDATA_SECTION_NODE)
-			{
+			if ($textNode->nodeType === \XML_CDATA_SECTION_NODE)
 				$textNode->parentNode->replaceChild(
 					$dom->createTextNode($textNode->textContent),
 					$textNode
 				);
-			}
-		}
 	}
 }

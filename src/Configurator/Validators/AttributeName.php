@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\Validators;
 
 use InvalidArgumentException;
 
-/**
+/*
 * Attribute name rules:
 *  - must start with a letter or an underscore
 *  - can only contain letters, numbers, underscores and dashes
@@ -18,7 +18,7 @@ use InvalidArgumentException;
 */
 abstract class AttributeName
 {
-	/**
+	/*
 	* Return whether a string is a valid attribute name
 	*
 	* @param  string $name
@@ -26,10 +26,10 @@ abstract class AttributeName
 	*/
 	public static function isValid($name)
 	{
-		return (bool) preg_match('#^(?!xmlns$)[a-z_][-a-z_0-9]*$#Di', $name);
+		return (bool) \preg_match('#^(?!xmlns$)[a-z_][-a-z_0-9]*$#Di', $name);
 	}
 
-	/**
+	/*
 	* Normalize a tag name
 	*
 	* @throws InvalidArgumentException if the original name is not valid
@@ -40,10 +40,8 @@ abstract class AttributeName
 	public static function normalize($name)
 	{
 		if (!static::isValid($name))
-		{
 			throw new InvalidArgumentException("Invalid attribute name '" . $name . "'");
-		}
 
-		return strtolower($name);
+		return \strtolower($name);
 	}
 }

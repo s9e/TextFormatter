@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -31,11 +31,11 @@ class Parser extends ParserBase
 				// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
 				// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
 				// and parentheses, which are balanced separately
-				$url = preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
+				$url = \preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
 
-				if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
+				if (\substr($url, -1) === ')' && \substr_count($url, '(') < \substr_count($url, ')'))
 				{
-					$url = substr($url, 0, -1);
+					$url = \substr($url, 0, -1);
 					continue;
 				}
 				break;
@@ -46,7 +46,7 @@ class Parser extends ParserBase
 			$startTag->setAttribute($attrName, $url);
 
 			// Create a zero-width end tag right after the URL
-			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + strlen($url), 0);
+			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + \strlen($url), 0);
 
 			// Pair the tags together
 			$startTag->pairWith($endTag);

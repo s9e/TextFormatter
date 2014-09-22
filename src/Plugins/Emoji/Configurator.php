@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,22 +13,22 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var string Name of the attribute used by this plugin
 	*/
 	protected $attrName = 'seq';
 
-	/**
+	/*
 	* @var string Regexp used to match Emoji and shortcodes
 	*/
 	protected $regexp = '/(?=[#0-9:\\xC2\\xE2\\xE3\\xF0])(?>:[-+_a-z]+(?=:)|(?>[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2(?>\\x80\\xBC|[\\x81-\\xAD].)|\\xE3[\\x80\\x8A].|\\xF0\\x9F(?>[\\x80\\x83\\x85\\x86].|\\x87.\\xF0\\x9F\\x87.|[\\x88-\\x9B].))(?>\\xEF\\xB8\\x8F)?)/s';
 
-	/**
+	/*
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E1';
 
-	/**
+	/*
 	* Plugin's setup
 	*
 	* Will create the tag used by this plugin
@@ -36,9 +36,7 @@ class Configurator extends ConfiguratorBase
 	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
-		{
 			return;
-		}
 
 		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->attributes->add($this->attrName)->filterChain->append(
@@ -48,7 +46,7 @@ class Configurator extends ConfiguratorBase
 	}
 
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()

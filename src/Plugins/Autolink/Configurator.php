@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,22 +12,22 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var string Name of attribute that stores the link's URL
 	*/
 	protected $attrName = 'url';
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected $quickMatch = '://';
 
-	/**
+	/*
 	* @var string Name of the tag used to represent links
 	*/
 	protected $tagName = 'URL';
 
-	/**
+	/*
 	* Creates the tag used by this plugin
 	*
 	* @return void
@@ -35,9 +35,7 @@ class Configurator extends ConfiguratorBase
 	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
-		{
 			return;
-		}
 
 		// Create a tag
 		$tag = $this->configurator->tags->add($this->tagName);
@@ -51,7 +49,7 @@ class Configurator extends ConfiguratorBase
 			= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
