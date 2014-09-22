@@ -156,6 +156,26 @@ class ParserTest extends Test
 					$configurator->HTMLElements->aliasAttribute('span', 'title', 'data-title');
 				}
 			],
+			[
+				'<img alt="">',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img alt=""><s>&lt;img alt=""&gt;</s></html:img></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->HTMLElements->allowElement('img');
+					$configurator->HTMLElements->allowAttribute('img', 'alt');
+				}
+			],
+			[
+				'<img data-crc32="123">',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img data-crc32="123"><s>&lt;img data-crc32="123"&gt;</s></html:img></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->HTMLElements->allowElement('img');
+					$configurator->HTMLElements->allowAttribute('img', 'data-crc32');
+				}
+			],
 		];
 	}
 

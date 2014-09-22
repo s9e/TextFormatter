@@ -30,7 +30,7 @@ matches.forEach(function(m)
 			: addStartTag(tagName, pos, len);
 
 	// Capture attributes
-	var attrRegexp = /[a-z][-a-z]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
+	var attrRegexp = /[a-z][-a-z0-9]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
 		attrName,
 		attrValue,
 		attrMatch;

@@ -329,7 +329,7 @@ class Configurator extends ConfiguratorBase
 		*
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
-		$attrRegexp = '[a-z][-a-z]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
+		$attrRegexp = '[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
 		$tagRegexp  = RegexpBuilder::fromList(array_merge(
 			array_keys($this->aliases),
 			array_keys($this->elements)
