@@ -1,5 +1,5 @@
 <?php
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,7 +14,7 @@ use s9e\TextFormatter\Renderer as AbstractRenderer;
 
 abstract class Helper
 {
-	/**
+	/*
 	* Format timestamps inside of an XML representation
 	*
 	* NOTE: has no effect if SMF is not loaded
@@ -24,17 +24,17 @@ abstract class Helper
 	*/
 	public static function applyTimeformat($xml)
 	{
-		if (substr($xml, 0, 2) === '<r')
+		if (\substr($xml, 0, 2) === '<r')
 		{
-			$xml = preg_replace_callback(
+			$xml = \preg_replace_callback(
 				'/(<(?:QUOT|TIM)E [^>]*?\\b(?:dat|tim)e=")(\\d+)(?=")/',
 				function ($m)
 				{
-					$datetime = (function_exists('timeformat'))
-					          ? timeformat($m[2])
-					          : strftime('%B %d, %Y, %I:%M:%S %p', $m[2]);
+					$datetime = (\function_exists('timeformat'))
+					          ? \timeformat($m[2])
+					          : \strftime('%B %d, %Y, %I:%M:%S %p', $m[2]);
 
-					return $m[1] . htmlspecialchars($datetime, ENT_COMPAT);
+					return $m[1] . \htmlspecialchars($datetime, \ENT_COMPAT);
 				},
 				$xml
 			);
@@ -43,7 +43,7 @@ abstract class Helper
 		return $xml;
 	}
 
-	/**
+	/*
 	* Configure the given parser to current SMF environment
 	*
 	* NOTE: has no effect if SMF is not loaded
@@ -54,9 +54,7 @@ abstract class Helper
 	public static function configureParser(Parser $parser)
 	{
 		if (!isset($GLOBALS['modSettings']))
-		{
 			return;
-		}
 
 		$modSettings = $GLOBALS['modSettings'];
 
@@ -67,28 +65,18 @@ abstract class Helper
 			'HTMLElements' => 'enablePostHTML'
 		];
 		foreach ($plugins as $pluginName => $settingName)
-		{
 			if (empty($modSettings[$settingName]))
-			{
 				$parser->disablePlugin($pluginName);
-			}
-		}
 
 		if (!empty($modSettings['disabledBBC']))
-		{
-			foreach (explode(',', strtoupper($modSettings['disabledBBC'])) as $bbcodeName)
-			{
+			foreach (\explode(',', \strtoupper($modSettings['disabledBBC'])) as $bbcodeName)
 				$parser->disableTag($bbcodeName);
-			}
-		}
 
 		if (empty($modSettings['enableEmbeddedFlash']))
-		{
 			$parser->disableTag('FLASH');
-		}
 	}
 
-	/**
+	/*
 	* Configure the given renderer to current SMF environment
 	*
 	* NOTE: has no effect if SMF is not loaded
@@ -100,38 +88,28 @@ abstract class Helper
 	{
 		$params = [];
 
-		if (function_exists('isBrowser'))
+		if (\function_exists('isBrowser'))
 		{
-			$params['IS_GECKO'] = isBrowser('gecko');
-			$params['IS_IE']    = isBrowser('ie');
-			$params['IS_OPERA'] = isBrowser('opera');
+			$params['IS_GECKO'] = \isBrowser('gecko');
+			$params['IS_IE']    = \isBrowser('ie');
+			$params['IS_OPERA'] = \isBrowser('opera');
 		}
 
 		foreach (['code', 'code_select', 'quote', 'quote_from', 'search_on'] as $key)
-		{
 			if (isset($GLOBALS['txt'][$key]))
-			{
-				$params['L_' . strtoupper($key)] = $GLOBALS['txt'][$key];
-			}
-		}
+				$params['L_' . \strtoupper($key)] = $GLOBALS['txt'][$key];
 
 		if (isset($GLOBALS['scripturl']))
-		{
 			$params['SCRIPT_URL'] = $GLOBALS['scripturl'];
-		}
 
 		if (isset($GLOBALS['modSettings'], $GLOBALS['user_info']['smiley_set']))
-		{
 			$params['SMILEYS_PATH'] = $GLOBALS['modSettings']['smileys_url'] . '/' . $GLOBALS['user_info']['smiley_set'] . '/';
-		}
 
 		if ($params)
-		{
 			$renderer->setParameters($params);
-		}
 	}
 
-	/**
+	/*
 	* Prepend the http:// scheme in front of a URL if it's not already present and it doesn't start
 	* with a #, and validate as a URL if it doesn't start with #
 	*
@@ -143,10 +121,8 @@ abstract class Helper
 	public static function filterIurl($url, array $urlConfig, Logger $logger)
 	{
 		// Anchor links are returned as-is
-		if (substr($url, 0, 1) === '#')
-		{
+		if (\substr($url, 0, 1) === '#')
 			return $url;
-		}
 
 		// Prepend http:// if applicable
 		$url = self::prependHttp($url);
@@ -155,7 +131,7 @@ abstract class Helper
 		return BuiltInFilters::filterUrl($url, $urlConfig, $logger);
 	}
 
-	/**
+	/*
 	* Prepend the ftp:// scheme in front of a URL if it's not already present
 	*
 	* @param  string $url Original URL
@@ -163,16 +139,14 @@ abstract class Helper
 	*/
 	public static function prependFtp($url)
 	{
-		if (substr($url, 0, 6) !== 'ftp://'
-		 && substr($url, 0, 7) !== 'ftps://')
-		{
+		if (\substr($url, 0, 6) !== 'ftp://'
+		 && \substr($url, 0, 7) !== 'ftps://')
 			 return 'ftp://' . $url;
-		}
 
 		return $url;
 	}
 
-	/**
+	/*
 	* Prepend the http:// scheme in front of a URL if it's not already present
 	*
 	* @param  string $url Original URL
@@ -180,11 +154,9 @@ abstract class Helper
 	*/
 	public static function prependHttp($url)
 	{
-		if (substr($url, 0, 7) !== 'http://'
-		 && substr($url, 0, 8) !== 'https://')
-		{
+		if (\substr($url, 0, 7) !== 'http://'
+		 && \substr($url, 0, 8) !== 'https://')
 			 return 'http://' . $url;
-		}
 
 		return $url;
 	}

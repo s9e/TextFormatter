@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowAttributeSets extends TemplateCheck
 {
-	/**
+	/*
 	* Test whether the template contains an <xsl:attribute-set/>
 	*
 	* Templates are checked outside of their stylesheet, which means we don't have access to the
@@ -32,8 +32,6 @@ class DisallowAttributeSets extends TemplateCheck
 		$nodes = $xpath->query('//@use-attribute-sets');
 
 		if ($nodes->length)
-		{
 			throw new UnsafeTemplateException('Cannot assess the safety of attribute sets', $nodes->item(0));
-		}
 	}
 }

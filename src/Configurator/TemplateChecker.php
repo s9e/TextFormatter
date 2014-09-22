@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -18,7 +18,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
 use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-/**
+/*
 * @method mixed   add(mixed $value)
 * @method mixed   append(mixed $value)
 * @method array   asConfig()
@@ -50,17 +50,17 @@ class TemplateChecker implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var TemplateCheckList Collection of TemplateCheck instances
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* @var bool Whether checks are currently disabled
 	*/
-	protected $disabled = false;
+	protected $disabled = \false;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Will load the default checks
@@ -83,10 +83,10 @@ class TemplateChecker implements ArrayAccess, Iterator
 		$this->collection->append('DisallowUnsafeDynamicURL');
 		$this->collection->append(new DisallowElementNS('http://icl.com/saxon', 'output'));
 		$this->collection->append(new DisallowXPathFunction('document'));
-		$this->collection->append(new RestrictFlashScriptAccess('sameDomain', true));
+		$this->collection->append(new RestrictFlashScriptAccess('sameDomain', \true));
 	}
 
-	/**
+	/*
 	* Check a given tag's templates for disallowed content
 	*
 	* @param  Tag  $tag Tag whose templates will be checked
@@ -101,51 +101,45 @@ class TemplateChecker implements ArrayAccess, Iterator
 		}
 	}
 
-	/**
+	/*
 	* Check a given template for disallowed content
 	*
 	* @param  string $template Template
 	* @param  Tag    $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function checkTemplate($template, Tag $tag = null)
+	public function checkTemplate($template, Tag $tag = \null)
 	{
 		if ($this->disabled)
-		{
 			return;
-		}
 
 		if (!isset($tag))
-		{
 			$tag = new Tag;
-		}
 
 		// Load the template into a DOMDocument
 		$dom = TemplateHelper::loadTemplate($template);
 
 		foreach ($this->collection as $check)
-		{
 			$check->check($dom->documentElement, $tag);
-		}
 	}
 
-	/**
+	/*
 	* Disable all checks
 	*
 	* @return void
 	*/
 	public function disable()
 	{
-		$this->disabled = true;
+		$this->disabled = \true;
 	}
 
-	/**
+	/*
 	* Enable all checks
 	*
 	* @return void
 	*/
 	public function enable()
 	{
-		$this->disabled = false;
+		$this->disabled = \false;
 	}
 }

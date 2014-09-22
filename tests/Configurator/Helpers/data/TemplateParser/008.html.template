@@ -1,3 +1,0 @@
-<b title="{@bar}">
-	<xsl:apply-templates/>
-</b>

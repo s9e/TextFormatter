@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,12 +12,12 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class ManageParagraphs implements BooleanRulesGenerator
 {
-	/**
+	/*
 	* @var TemplateForensics
 	*/
 	protected $p;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Prepares the TemplateForensics for <p/>
@@ -29,7 +29,7 @@ class ManageParagraphs implements BooleanRulesGenerator
 		$this->p = new TemplateForensics('<p><xsl:apply-templates/></p>');
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function generateBooleanRules(TemplateForensics $src)
@@ -37,14 +37,10 @@ class ManageParagraphs implements BooleanRulesGenerator
 		$rules = [];
 
 		if ($src->allowsChild($this->p) && $src->isBlock() && !$this->p->closesParent($src))
-		{
-			$rules['createParagraphs'] = true;
-		}
+			$rules['createParagraphs'] = \true;
 
 		if ($src->closesParent($this->p))
-		{
-			$rules['breakParagraph'] = true;
-		}
+			$rules['breakParagraph'] = \true;
 
 		return $rules;
 	}

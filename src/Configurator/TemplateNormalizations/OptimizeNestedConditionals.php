@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class OptimizeNestedConditionals extends TemplateNormalization
 {
-	/**
+	/*
 	* Optimize xsl:choose elements by integrating the content of another xsl:choose element located
 	* in their xsl:otherwise part
 	*
@@ -36,9 +36,7 @@ class OptimizeNestedConditionals extends TemplateNormalization
 			$outerChoose = $otherwise->parentNode;
 
 			while ($innerChoose->firstChild)
-			{
 				$outerChoose->appendChild($innerChoose->removeChild($innerChoose->firstChild));
-			}
 
 			$outerChoose->removeChild($otherwise);
 		}

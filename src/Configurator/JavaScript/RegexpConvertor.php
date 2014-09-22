@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -10,12 +10,12 @@ namespace s9e\TextFormatter\Configurator\JavaScript;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 
-/**
+/*
 * @todo create a method that replaces capturing subpatterns with non-capturing subpatterns, and perhaps even no subpattern at all. Unless backreferences are used
 */
 abstract class RegexpConvertor
 {
-	/**
+	/*
 	* Convert a PCRE regexp to a JavaScript regexp
 	*
 	* @param  string $regexp PCRE regexp
@@ -24,7 +24,7 @@ abstract class RegexpConvertor
 	public static function toJS($regexp)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
-		$dotAll     = (strpos($regexpInfo['modifiers'], 's') !== false);
+		$dotAll     = (\strpos($regexpInfo['modifiers'], 's') !== \false);
 
 		$regexp = '';
 		$pos = 0;
@@ -35,8 +35,8 @@ abstract class RegexpConvertor
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
 			$regexp .= self::unfoldUnicodeProperties(
-				substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
-				false,
+				\substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
+				\false,
 				$dotAll
 			);
 
@@ -55,26 +55,24 @@ abstract class RegexpConvertor
 
 				case 'nonCapturingSubpatternStart':
 					if (!empty($tok['options']))
-					{
 						throw new RuntimeException('Subpattern options are not supported');
-					}
 
 					$regexp .= '(?:';
 					break;
 
 				case 'capturingSubpatternEnd':
 				case 'nonCapturingSubpatternEnd':
-					$regexp .= ')' . substr($tok['quantifiers'], 0, 1);
+					$regexp .= ')' . \substr($tok['quantifiers'], 0, 1);
 					break;
 
 				case 'characterClass':
 					$regexp .= '[';
 					$regexp .= self::unfoldUnicodeProperties(
 						$tok['content'],
-						true,
-						false
+						\true,
+						\false
 					);
-					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
+					$regexp .= ']' . \substr($tok['quantifiers'], 0, 1);
 					break;
 
 				case 'lookaheadAssertionStart':
@@ -104,18 +102,16 @@ abstract class RegexpConvertor
 		}
 
 		$regexp .= self::unfoldUnicodeProperties(
-			substr($regexpInfo['regexp'], $pos),
-			false,
+			\substr($regexpInfo['regexp'], $pos),
+			\false,
 			$dotAll
 		);
 
 		if ($regexpInfo['delimiter'] !== '/')
-		{
-			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
-		}
+			$regexp = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
 
 		// Escape line terminators
-		$regexp = preg_replace_callback(
+		$regexp = \preg_replace_callback(
 			"/(\\\\*)([\\r\\n]|\xE2\x80\xA8|\xE2\x80\xA9)/",
 			function ($m)
 			{
@@ -127,17 +123,15 @@ abstract class RegexpConvertor
 				];
 
 				// Ensure we have an even number of backslashes
-				if (strlen($m[1]) & 1)
-				{
+				if (\strlen($m[1]) & 1)
 					$m[1] .= '\\';
-				}
 
 				return $m[1] . $table[$m[2]];
 			},
 			$regexp
 		);
 
-		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
+		$modifiers = \preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
 
 		$regexp = new RegExp($regexp, $modifiers);
 		$regexp->map = $map;
@@ -145,7 +139,7 @@ abstract class RegexpConvertor
 		return $regexp;
 	}
 
-	/**
+	/*
 	* Replace Unicode properties in a string
 	*
 	* NOTE: does not support \X
@@ -162,26 +156,24 @@ abstract class RegexpConvertor
 		$unicodeProps = self::$unicodeProps;
 
 		$propNames = [];
-		foreach (array_keys($unicodeProps) as $propName)
+		foreach (\array_keys($unicodeProps) as $propName)
 		{
 			$propNames[] = $propName;
-			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
-			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
+			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
+			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
 		}
 
-		$str = preg_replace_callback(
-			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . implode('|', $propNames) . ')#',
+		$str = \preg_replace_callback(
+			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . \implode('|', $propNames) . ')#',
 			function ($m) use ($inCharacterClass, $unicodeProps)
 			{
-				$propName = preg_replace('#[\\{\\}]#', '', $m[2]);
+				$propName = \preg_replace('#[\\{\\}]#', '', $m[2]);
 
 				if ($propName[1] === '^')
-				{
-					/**
+					/*
 					* Replace p^L with PL
 					*/
-					$propName = (($propName[0] === 'p') ? 'P' : 'p') . substr($propName, 2);
-				}
+					$propName = (($propName[0] === 'p') ? 'P' : 'p') . \substr($propName, 2);
 
 				return (($inCharacterClass) ? '' : '[')
 				     . $unicodeProps[$propName]
@@ -191,18 +183,16 @@ abstract class RegexpConvertor
 		);
 
 		if ($dotAll)
-		{
-			$str = preg_replace(
+			$str = \preg_replace(
 				'#(?<!\\\\)((?:\\\\\\\\)*+)\\.#',
 				'$1[\\s\\S]',
 				$str
 			);
-		}
 
 		return $str;
 	}
 
-	/**
+	/*
 	* Ranges to be used in JavaScript regexps in place of PCRE's Unicode properties
 	*/
 	protected static $unicodeProps = [

@@ -1,2 +1,0 @@
-[table] [tr][td]text[/td][td]or more[/td][/tr] [tr][td]BB[/td][td]Code[/td][/tr]
-[/table]

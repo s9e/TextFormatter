@@ -1,4 +1,0 @@
-<a href="{@href}">
-	<xsl:copy-of select="@title"/>
-	<xsl:apply-templates/>
-</a>

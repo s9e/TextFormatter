@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,26 +13,24 @@ use RuntimeException;
 
 class NormalizedCollection extends Collection implements ArrayAccess
 {
-	/**
+	/*
 	* @var string Action to take when add() is called with a key that already exists
 	*/
 	protected $onDuplicateAction = 'error';
 
-	/**
+	/*
 	* Query and set the action to take when add() is called with a key that already exists
 	*
 	* @param  string|null $action If specified: either "error", "ignore" or "replace"
 	* @return string              Old action
 	*/
-	public function onDuplicate($action = null)
+	public function onDuplicate($action = \null)
 	{
 		// Save the old action so it can be returned
 		$old = $this->onDuplicateAction;
 
-		if (func_num_args() && $action !== 'error' && $action !== 'ignore' && $action !== 'replace')
-		{
+		if (\func_num_args() && $action !== 'error' && $action !== 'ignore' && $action !== 'replace')
 			throw new InvalidArgumentException("Invalid onDuplicate action '" . $action . "'. Expected: 'error', 'ignore' or 'replace'");
-		}
 
 		$this->onDuplicateAction = $action;
 
@@ -43,7 +41,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	// Overridable methods
 	//==========================================================================
 
-	/**
+	/*
 	* Normalize an item's key
 	*
 	* This method can be overridden to implement keys normalization or implement constraints
@@ -56,7 +54,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		return $key;
 	}
 
-	/**
+	/*
 	* Normalize a value for storage
 	*
 	* This method can be overridden to implement value normalization
@@ -73,7 +71,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	// Items access/manipulation
 	//==========================================================================
 
-	/**
+	/*
 	* Add an item to this collection
 	*
 	* NOTE: relies on exists() to check the key for invalid values and on set() to normalize it
@@ -82,27 +80,21 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	* @param  mixed  $value Item's value
 	* @return mixed         Normalized value
 	*/
-	public function add($key, $value = null)
+	public function add($key, $value = \null)
 	{
 		// Test whether this key is already in use
 		if ($this->exists($key))
-		{
 			// If the action is "ignore" we return the old value, if it's "error" we throw an
 			// exception. Otherwise, we keep going and replace the value
 			if ($this->onDuplicateAction === 'ignore')
-			{
 				return $this->get($key);
-			}
 			elseif ($this->onDuplicateAction === 'error')
-			{
 				throw new RuntimeException("Item '" . $key . "' already exists");
-			}
-		}
 
 		return $this->set($key, $value);
 	}
 
-	/**
+	/*
 	* Test whether a given value is present in this collection
 	*
 	* @param  mixed $value Original value
@@ -110,10 +102,10 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*/
 	public function contains($value)
 	{
-		return in_array($this->normalizeValue($value), $this->items);
+		return \in_array($this->normalizeValue($value), $this->items);
 	}
 
-	/**
+	/*
 	* Delete an item from this collection
 	*
 	* @param  string $key Item's key
@@ -126,7 +118,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		unset($this->items[$key]);
 	}
 
-	/**
+	/*
 	* Test whether an item of given key exists
 	*
 	* @param  string $key Item's key
@@ -136,10 +128,10 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	{
 		$key = $this->normalizeKey($key);
 
-		return array_key_exists($key, $this->items);
+		return \array_key_exists($key, $this->items);
 	}
 
-	/**
+	/*
 	* Return a value from this collection
 	*
 	* @param  string $key Item's key
@@ -148,16 +140,14 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	public function get($key)
 	{
 		if (!$this->exists($key))
-		{
 			throw new RuntimeException("Item '" . $key . "' does not exist");
-		}
 
 		$key = $this->normalizeKey($key);
 
 		return $this->items[$key];
 	}
 
-	/**
+	/*
 	* Find the index of a given value
 	*
 	* Will return the first key associated with the given value, or FALSE if the value is not found
@@ -167,10 +157,10 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*/
 	public function indexOf($value)
 	{
-		return array_search($this->normalizeValue($value), $this->items);
+		return \array_search($this->normalizeValue($value), $this->items);
 	}
 
-	/**
+	/*
 	* Set and overwrite a value in this collection
 	*
 	* @param  string $key   Item's key
@@ -190,7 +180,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	// ArrayAccess stuff
 	//==========================================================================
 
-	/**
+	/*
 	* @param  string|integer $offset
 	* @return bool
 	*/
@@ -199,7 +189,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		return $this->exists($offset);
 	}
 
-	/**
+	/*
 	* @param  string|integer $offset
 	* @return mixed
 	*/
@@ -208,7 +198,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		return $this->get($offset);
 	}
 
-	/**
+	/*
 	* @param  string|integer $offset
 	* @param  mixed          $value
 	* @return void
@@ -218,7 +208,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		$this->set($offset, $value);
 	}
 
-	/**
+	/*
 	* @param  string|integer $offset
 	* @return void
 	*/

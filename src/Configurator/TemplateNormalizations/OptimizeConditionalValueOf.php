@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class OptimizeConditionalValueOf extends TemplateNormalization
 {
-	/**
+	/*
 	* Remove unnecessary <xsl:if> tests around <xsl:value-of>
 	*
 	* NOTE: should be performed before attributes are inlined for maximum effect
@@ -34,10 +34,8 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 
 			// Ensure that the expressions match, and that they select one single attribute
 			if ($select !== $test
-			 || !preg_match('#^@[-\\w]+$#D', $select))
-			{
+			 || !\preg_match('#^@[-\\w]+$#D', $select))
 				continue;
-			}
 
 			// Replace the <xsl:if/> node with the <xsl:value-of/> node
 			$if->parentNode->replaceChild(

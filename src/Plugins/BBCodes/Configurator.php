@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -24,7 +24,7 @@ use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/**
+/*
 * @method mixed   add(string $key)
 * @method array   asConfig()
 * @method void    clear()
@@ -52,27 +52,27 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 {
 	use CollectionProxy;
 
-	/**
+	/*
 	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
 	*/
 	public $bbcodeMonkey;
 
-	/**
+	/*
 	* @var BBCodeCollection BBCode collection
 	*/
 	public $collection;
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected $quickMatch = '[';
 
-	/**
+	/*
 	* @var RepositoryCollection BBCode repositories
 	*/
 	public $repositories;
 
-	/**
+	/*
 	* Plugin setup
 	*
 	* @return void
@@ -85,7 +85,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
-	/**
+	/*
 	* Add a BBCode using their human-readable representation
 	*
 	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
@@ -100,19 +100,15 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$config = $this->bbcodeMonkey->create($usage, $template);
 
 		if (isset($options['tagName']))
-		{
 			$config['bbcode']->tagName = $options['tagName'];
-		}
 
 		if (isset($options['rules']))
-		{
 			$config['tag']->rules->merge($options['rules']);
-		}
 
 		return $this->addFromConfig($config);
 	}
 
-	/**
+	/*
 	* Add a BBCode from a repository
 	*
 	* @param  string $name       Name of the entry in the repository
@@ -126,9 +122,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!($repository instanceof Repository))
 		{
 			if (!$this->repositories->exists($repository))
-			{
 				throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
-			}
 
 			$repository = $this->repositories->get($repository);
 		}
@@ -136,7 +130,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($repository->get($name, $vars));
 	}
 
-	/**
+	/*
 	* Add a BBCode and its tag based on the return config from BBCodeMonkey
 	*
 	* @param  array  $config BBCodeMonkey::create()'s return array
@@ -150,19 +144,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// If the BBCode doesn't specify a tag name, it's the same as the BBCode
 		if (!isset($bbcode->tagName))
-		{
 			$bbcode->tagName = $bbcodeName;
-		}
 
 		if ($this->collection->exists($bbcodeName))
-		{
 			throw new RuntimeException("BBCode '" . $bbcodeName . "' already exists");
-		}
 
 		if ($this->configurator->tags->exists($bbcode->tagName))
-		{
 			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
-		}
 
 		// Normalize this tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -177,19 +165,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $bbcode;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
-		{
-			return false;
-		}
+		if (!\count($this->collection))
+			return \false;
 
 		// Build the regexp that matches all the BBCode names
 		$regexp = RegexpBuilder::fromList(
-			array_keys(iterator_to_array($this->collection)),
+			\array_keys(\iterator_to_array($this->collection)),
 			['delim' => '#']
 		);
 
@@ -204,10 +190,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$endToken = $tokens[0]['endToken'];
 			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
 
-			if ($endPos === strlen($regexp))
-			{
-				$regexp = substr($regexp, 3, -1);
-			}
+			if ($endPos === \strlen($regexp))
+				$regexp = \substr($regexp, 3, -1);
 		}
 
 		// Create the BBCodes config, with its JavaScript variant
@@ -218,11 +202,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
 		{
 			if (isset($bbcodeConfig['predefinedAttributes']))
-			{
 				// Ensure that attribute names are preserved
 				$bbcodeConfig['predefinedAttributes']
 					= new Dictionary($bbcodeConfig['predefinedAttributes']);
-			}
 
 			$jsConfig[$bbcodeName] = $bbcodeConfig;
 		}

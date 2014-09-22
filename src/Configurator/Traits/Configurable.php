@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,12 +13,12 @@ use Traversable;
 use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 
-/**
+/*
 * Provides magic __get, __set, __isset and __unset implementations
 */
 trait Configurable
 {
-	/**
+	/*
 	* Magic getter
 	*
 	* Will return $this->foo if it exists, then $this->getFoo() or will throw an exception if
@@ -29,23 +29,19 @@ trait Configurable
 	*/
 	public function __get($propName)
 	{
-		$methodName = 'get' . ucfirst($propName);
+		$methodName = 'get' . \ucfirst($propName);
 
 		// Look for a getter, e.g. getDefaultTemplate()
-		if (method_exists($this, $methodName))
-		{
+		if (\method_exists($this, $methodName))
 			return $this->$methodName();
-		}
 
-		if (!property_exists($this, $propName))
-		{
+		if (!\property_exists($this, $propName))
 			throw new RuntimeException("Property '" . $propName . "' does not exist");
-		}
 
 		return $this->$propName;
 	}
 
-	/**
+	/*
 	* Magic setter
 	*
 	* Will call $this->setFoo($propValue) if it exists, otherwise it will set $this->foo.
@@ -60,10 +56,10 @@ trait Configurable
 	*/
 	public function __set($propName, $propValue)
 	{
-		$methodName = 'set' . ucfirst($propName);
+		$methodName = 'set' . \ucfirst($propName);
 
 		// Look for a setter, e.g. setDefaultChildRule()
-		if (method_exists($this, $methodName))
+		if (\method_exists($this, $methodName))
 		{
 			$this->$methodName($propValue);
 
@@ -82,73 +78,63 @@ trait Configurable
 		// iteratively set new values
 		if ($this->$propName instanceof NormalizedCollection)
 		{
-			if (!is_array($propValue)
+			if (!\is_array($propValue)
 			 && !($propValue instanceof Traversable))
-			{
 				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
-			}
 
 			$this->$propName->clear();
 
 			foreach ($propValue as $k => $v)
-			{
 				$this->$propName->set($k, $v);
-			}
 
 			return;
 		}
 
 		// If this property is an object, test whether they are compatible. Otherwise, test if PHP
 		// types are compatible
-		if (is_object($this->$propName))
+		if (\is_object($this->$propName))
 		{
 			if (!($propValue instanceof $this->$propName))
-			{
-				throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of class '" . get_class($this->$propName) . "' with instance of '" . get_class($propValue) . "'");
-			}
+				throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of class '" . \get_class($this->$propName) . "' with instance of '" . \get_class($propValue) . "'");
 		}
 		else
 		{
 			// Test whether the PHP types are compatible
-			$oldType = gettype($this->$propName);
-			$newType = gettype($propValue);
+			$oldType = \gettype($this->$propName);
+			$newType = \gettype($propValue);
 
 			// If the property is a boolean, we'll accept "true" and "false" as strings
 			if ($oldType === 'boolean')
-			{
 				if ($propValue === 'false')
 				{
 					$newType   = 'boolean';
-					$propValue = false;
+					$propValue = \false;
 				}
 				elseif ($propValue === 'true')
 				{
 					$newType   = 'boolean';
-					$propValue = true;
+					$propValue = \true;
 				}
-			}
 
 			if ($oldType !== $newType)
 			{
 				// Test whether the PHP type roundtrip is lossless
 				$tmp = $propValue;
-				settype($tmp, $oldType);
-				settype($tmp, $newType);
+				\settype($tmp, $oldType);
+				\settype($tmp, $newType);
 
 				if ($tmp !== $propValue)
-				{
 					throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of type " . $oldType . ' with value of type ' . $newType);
-				}
 
 				// Finally, set the new value to the correct type
-				settype($propValue, $oldType);
+				\settype($propValue, $oldType);
 			}
 		}
 
 		$this->$propName = $propValue;
 	}
 
-	/**
+	/*
 	* Test whether a property is set
 	*
 	* @param  string $propName
@@ -156,17 +142,15 @@ trait Configurable
 	*/
 	public function __isset($propName)
 	{
-		$methodName = 'isset' . ucfirst($propName);
+		$methodName = 'isset' . \ucfirst($propName);
 
-		if (method_exists($this, $methodName))
-		{
+		if (\method_exists($this, $methodName))
 			return $this->$methodName();
-		}
 
 		return isset($this->$propName);
 	}
 
-	/**
+	/*
 	* Unset a property, if the class supports it
 	*
 	* @param  string $propName
@@ -174,9 +158,9 @@ trait Configurable
 	*/
 	public function __unset($propName)
 	{
-		$methodName = 'unset' . ucfirst($propName);
+		$methodName = 'unset' . \ucfirst($propName);
 
-		if (method_exists($this, $methodName))
+		if (\method_exists($this, $methodName))
 		{
 			$this->$methodName();
 
@@ -184,9 +168,7 @@ trait Configurable
 		}
 
 		if (!isset($this->$propName))
-		{
 			return;
-		}
 
 		if ($this->$propName instanceof Collection)
 		{

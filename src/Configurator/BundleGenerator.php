@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,22 +12,22 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 class BundleGenerator
 {
-	/**
+	/*
 	* @var Configurator Configurator this instance belongs to
 	*/
 	protected $configurator;
 
-	/**
+	/*
 	* @var callback Callback used to serialize the objects
 	*/
 	public $serializer = 'serialize';
 
-	/**
+	/*
 	* @var string Callback used to unserialize the serialized objects (must be a string)
 	*/
 	public $unserializer = 'unserialize';
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  Configurator $configurator Configurator
@@ -38,7 +38,7 @@ class BundleGenerator
 		$this->configurator = $configurator;
 	}
 
-	/**
+	/*
 	* Create and return the source of a bundle based on given Configurator instance
 	*
 	* Options:
@@ -52,7 +52,7 @@ class BundleGenerator
 	public function generate($className, array $options = [])
 	{
 		// Add default options
-		$options += ['autoInclude' => true];
+		$options += ['autoInclude' => \true];
 
 		// Get the parser and renderer
 		$objects  = $this->configurator->finalize($options);
@@ -61,7 +61,7 @@ class BundleGenerator
 
 		// Split the bundle's class name and its namespace
 		$namespace = '';
-		if (preg_match('#(.*)\\\\([^\\\\]+)$#', $className, $m))
+		if (\preg_match('#(.*)\\\\([^\\\\]+)$#', $className, $m))
 		{
 			$namespace = $m[1];
 			$className = $m[2];
@@ -111,16 +111,14 @@ class BundleGenerator
 				=> 'Callback executed after unparse(), receives the original text as argument'
 		];
 		foreach ($events as $eventName => $eventDesc)
-		{
 			if (isset($options[$eventName]))
 			{
 				$php[] = '	/**';
 				$php[] = '	* @var ' . $eventDesc;
 				$php[] = '	*/';
-				$php[] = '	public static $' . $eventName . ' = ' . var_export($options[$eventName], true) . ';';
+				$php[] = '	public static $' . $eventName . ' = ' . \var_export($options[$eventName], \true) . ';';
 				$php[] = '';
 			}
-		}
 
 		$php[] = '	/**';
 		$php[] = '	* Return a new instance of s9e\\TextFormatter\\Parser';
@@ -138,9 +136,7 @@ class BundleGenerator
 			$php[] = '		return $parser;';
 		}
 		else
-		{
 			$php[] = '		return ' . $this->exportObject($parser) . ';';
-		}
 
 		$php[] = '	}';
 		$php[] = '';
@@ -157,13 +153,13 @@ class BundleGenerator
 		 && $this->configurator->rendering->engine instanceof PHP
 		 && isset($this->configurator->rendering->engine->lastFilepath))
 		{
-			$className = get_class($renderer);
-			$filepath  = realpath($this->configurator->rendering->engine->lastFilepath);
+			$className = \get_class($renderer);
+			$filepath  = \realpath($this->configurator->rendering->engine->lastFilepath);
 
-			$php[] = '		if (!class_exists(' . var_export($className, true) . ', false)';
-			$php[] = '		 && file_exists(' . var_export($filepath, true) . '))';
+			$php[] = '		if (!class_exists(' . \var_export($className, \true) . ', false)';
+			$php[] = '		 && file_exists(' . \var_export($filepath, \true) . '))';
 			$php[] = '		{';
-			$php[] = '			include ' . var_export($filepath, true) . ';';
+			$php[] = '			include ' . \var_export($filepath, \true) . ';';
 			$php[] = '		}';
 			$php[] = '';
 		}
@@ -176,17 +172,15 @@ class BundleGenerator
 			$php[] = '		return $renderer;';
 		}
 		else
-		{
 			$php[] = '		return ' . $this->exportObject($renderer) . ';';
-		}
 
 		$php[] = '	}';
 		$php[] = '}';
 
-		return implode("\n", $php);
+		return \implode("\n", $php);
 	}
 
-	/**
+	/*
 	* Export a given callback as PHP code
 	*
 	* @param  string   $namespace Namespace in which the callback is execute
@@ -196,33 +190,25 @@ class BundleGenerator
 	*/
 	protected function exportCallback($namespace, callable $callback, $argument)
 	{
-		if (is_array($callback) && is_string($callback[0]))
-		{
+		if (\is_array($callback) && \is_string($callback[0]))
 			// Replace ['foo', 'bar'] with 'foo::bar'
 			$callback = $callback[0] . '::' . $callback[1];
-		}
 
-		if (!is_string($callback))
-		{
-			return 'call_user_func(' . var_export($callback, true) . ', ' . $argument . ')';
-		}
+		if (!\is_string($callback))
+			return 'call_user_func(' . \var_export($callback, \true) . ', ' . $argument . ')';
 
 		// Ensure that the callback starts with a \
 		if ($callback[0] !== '\\')
-		{
 			$callback = '\\' . $callback;
-		}
 
 		// Replace \foo\bar::baz() with bar::baz() if we're in namespace foo
-		if (substr($callback, 0, 2 + strlen($namespace)) === '\\' . $namespace . '\\')
-		{
-			$callback = substr($callback, 2 + strlen($namespace));
-		}
+		if (\substr($callback, 0, 2 + \strlen($namespace)) === '\\' . $namespace . '\\')
+			$callback = \substr($callback, 2 + \strlen($namespace));
 
 		return $callback . '(' . $argument . ')';
 	}
 
-	/**
+	/*
 	* Serialize and export a given object as PHP code
 	*
 	* @param  string $obj Original object
@@ -231,21 +217,19 @@ class BundleGenerator
 	protected function exportObject($obj)
 	{
 		// Serialize the object
-		$str = call_user_func($this->serializer, $obj);
+		$str = \call_user_func($this->serializer, $obj);
 
 		// Escape control characters, bytes >= 0x7f and characters \ $ and "
-		$str = preg_replace_callback(
+		$str = \preg_replace_callback(
 			'#[\\x00-\\x1F\\x7F-\xFF\\\\$"]#',
 			function ($m)
 			{
 				$c = $m[0];
 
 				if ($c === '"' || $c === '\\' || $c === '$')
-				{
 					return '\\' . $c;
-				}
 
-				return '\\' . substr('00' . decoct(ord($c)), -3);
+				return '\\' . \substr('00' . \decoct(\ord($c)), -3);
 			},
 			$str
 		);

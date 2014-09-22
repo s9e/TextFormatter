@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,14 +13,14 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Range extends AttributeFilter
 {
-	/**
+	/*
 	* Constructor
 	*
 	* @param  integer $min Minimum value for this range
 	* @param  integer $max Maximum value for this range
 	* @return void
 	*/
-	public function __construct($min = null, $max = null)
+	public function __construct($min = \null, $max = \null)
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRange');
 
@@ -32,30 +32,24 @@ class Range extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterRange');
 
 		if (isset($min))
-		{
 			$this->setRange($min, $max);
-		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
 		if (!isset($this->vars['min']))
-		{
 			throw new RuntimeException("Range filter is missing a 'min' value");
-		}
 
 		if (!isset($this->vars['max']))
-		{
 			throw new RuntimeException("Range filter is missing a 'max' value");
-		}
 
 		return parent::asConfig();
 	}
 
-	/**
+	/*
 	* Set the allowed range of values
 	*
 	* @param  integer $min Minimum value
@@ -64,49 +58,43 @@ class Range extends AttributeFilter
 	*/
 	public function setRange($min, $max)
 	{
-		$min = filter_var($min, FILTER_VALIDATE_INT);
-		$max = filter_var($max, FILTER_VALIDATE_INT);
+		$min = \filter_var($min, \FILTER_VALIDATE_INT);
+		$max = \filter_var($max, \FILTER_VALIDATE_INT);
 
-		if ($min === false)
-		{
+		if ($min === \false)
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be an integer');
-		}
 
-		if ($max === false)
-		{
+		if ($max === \false)
 			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be an integer');
-		}
 
 		if ($min > $max)
-		{
 			throw new InvalidArgumentException('Invalid range: min (' . $min . ') > max (' . $max . ')');
-		}
 
 		$this->vars['min'] = $min;
 		$this->vars['max'] = $max;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeInCSS()
 	{
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeInJS()
 	{
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function isSafeAsURL()
 	{
-		return true;
+		return \true;
 	}
 }

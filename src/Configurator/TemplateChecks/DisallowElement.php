@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,12 +15,12 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowElement extends TemplateCheck
 {
-	/**
+	/*
 	* @var string Local name of the disallowed element
 	*/
 	public $elName;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  string $elName Local name of the disallowed element
@@ -29,10 +29,10 @@ class DisallowElement extends TemplateCheck
 	public function __construct($elName)
 	{
 		// NOTE: the default template normalization rules force elements' names to be lowercase
-		$this->elName = strtolower($elName);
+		$this->elName = \strtolower($elName);
 	}
 
-	/**
+	/*
 	* Test for the presence of an element of given name
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -49,8 +49,6 @@ class DisallowElement extends TemplateCheck
 
 		$node = $xpath->query($query)->item(0);
 		if ($node)
-		{
 			throw new UnsafeTemplateException("Element '" . $this->elName . "' is disallowed", $node);
-		}
 	}
 }

@@ -1,2 +1,0 @@
-[post=1]Test post[/post]
-[post]1[/post]
