@@ -150,30 +150,16 @@ class Optimizer
 		$this->i = 3;
 		$max     = $this->cnt - 9;
 
-		while (++$this->i <= $max)
+		while ($this->skipTo([T_CONCAT_EQUAL, '.=']))
 		{
-			if ($this->tokens[$this->i][0] !== T_CONCAT_EQUAL)
-			{
-				continue;
-			}
-
 			// Test whether this T_CONCAT_EQUAL is preceded with $this->out
 			if (!$this->isPrecededByOutputVar())
 			{
 				 continue;
 			}
 
-			do
+			while ($this->skipPast(';'))
 			{
-				// Move the cursor to next semicolon
-				$this->skipTo(';');
-
-				// Move the cursor past the semicolon
-				if (++$this->i >= $this->cnt)
-				{
-					return;
-				}
-
 				// Test whether the assignment is followed by another $this->out.= assignment
 				if (!$this->isOutputAssignment())
 				{
@@ -184,13 +170,11 @@ class Optimizer
 				$this->tokens[$this->i - 1] = '.';
 
 				// Remove the following $this->out.= assignment and move the cursor past it
-				unset($this->tokens[$this->i]);
-				unset($this->tokens[$this->i + 1]);
-				unset($this->tokens[$this->i + 2]);
-				unset($this->tokens[$this->i + 3]);
-				$this->i += 3;
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
 			}
-			while ($this->i <= $max);
 		}
 	}
 
@@ -205,82 +189,76 @@ class Optimizer
 	*/
 	protected function optimizeConcatenations()
 	{
-		$i = 1;
-		while (++$i < $this->cnt)
+		$this->i = 1;
+		while ($this->skipTo('.'))
 		{
-			if ($this->tokens[$i] !== '.')
-			{
-				continue;
-			}
-
 			// Merge concatenated strings
-			if ($this->tokens[$i - 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $this->tokens[$i + 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $this->tokens[$i - 1][1][0] === $this->tokens[$i + 1][1][0])
+			if ($this->tokens[$this->i - 1][0]    === T_CONSTANT_ENCAPSED_STRING
+			 && $this->tokens[$this->i + 1][0]    === T_CONSTANT_ENCAPSED_STRING
+			 && $this->tokens[$this->i - 1][1][0] === $this->tokens[$this->i + 1][1][0])
 			{
 				// Merge both strings into the right string
-				$this->tokens[$i + 1][1] = substr($this->tokens[$i - 1][1], 0, -1)
-				                         . substr($this->tokens[$i + 1][1], 1);
+				$this->tokens[$this->i + 1][1] = substr($this->tokens[$this->i - 1][1], 0, -1)
+				                         . substr($this->tokens[$this->i + 1][1], 1);
 
 				// Unset the tokens that have been optimized away
-				unset($this->tokens[$i - 1]);
-				unset($this->tokens[$i]);
+				unset($this->tokens[$this->i - 1]);
+				unset($this->tokens[$this->i]);
 
 				// Advance the cursor
-				++$i;
+				++$this->i;
 
 				continue;
 			}
 
 			// Merge htmlspecialchars() calls
-			if ($this->tokens[$i + 1][0] === T_STRING
-			 && $this->tokens[$i + 1][1] === 'htmlspecialchars'
-			 && $this->tokens[$i + 2]    === '('
-			 && $this->tokens[$i - 1]    === ')'
-			 && $this->tokens[$i - 2][0] === T_LNUMBER
-			 && $this->tokens[$i - 3]    === ',')
+			if ($this->tokens[$this->i + 1][0] === T_STRING
+			 && $this->tokens[$this->i + 1][1] === 'htmlspecialchars'
+			 && $this->tokens[$this->i + 2]    === '('
+			 && $this->tokens[$this->i - 1]    === ')'
+			 && $this->tokens[$this->i - 2][0] === T_LNUMBER
+			 && $this->tokens[$this->i - 3]    === ',')
 			{
 				// Save the escape mode of the first call
-				$escapeMode = $this->tokens[$i - 2][1];
+				$escapeMode = $this->tokens[$this->i - 2][1];
 
 				// Save the index of the comma that comes after the first argument of the first call
-				$startIndex = $i - 3;
+				$startIndex = $this->i - 3;
 
 				// Save the index of the parenthesis that follows the second htmlspecialchars
-				$endIndex = $i + 2;
+				$endIndex = $this->i + 2;
 
 				// Move the cursor to the first comma of the second call
-				$i = $endIndex;
+				$this->i = $endIndex;
 				$parens = 0;
-				while (++$i < $this->cnt)
+				while (++$this->i < $this->cnt)
 				{
-					if ($this->tokens[$i] === ',' && !$parens)
+					if ($this->tokens[$this->i] === ',' && !$parens)
 					{
 						break;
 					}
 
-					if ($this->tokens[$i] === '(')
+					if ($this->tokens[$this->i] === '(')
 					{
 						++$parens;
 					}
-					elseif ($this->tokens[$i] === ')')
+					elseif ($this->tokens[$this->i] === ')')
 					{
 						--$parens;
 					}
 				}
 
-				if ($this->tokens[$i + 1][0] === T_LNUMBER
-				 && $this->tokens[$i + 1][1] === $escapeMode)
+				if ($this->tokens[$this->i + 1] === [T_LNUMBER, $escapeMode])
 				{
 					// Replace the first comma of the first call with a concatenator operator
 					$this->tokens[$startIndex] = '.';
 
 					// Move the cursor back to the first comma then advance it and delete
 					// everything up till the parenthesis of the second call, included
-					$i = $startIndex;
-					while (++$i <= $endIndex)
+					$this->i = $startIndex;
+					while (++$this->i <= $endIndex)
 					{
-						unset($this->tokens[$i]);
+						unset($this->tokens[$this->i]);
 					}
 
 					continue;
@@ -366,13 +344,32 @@ class Optimizer
 	}
 
 	/**
+	* Move the cursor past given token
+	*
+	* @param  array|string $token Target token
+	* @return bool                Whether a matching token was found and the cursor is within bounds
+	*/
+	protected function skipPast($token)
+	{
+		return ($this->skipTo($token) && ++$this->i < $this->cnt);
+	}
+
+	/**
 	* Move the cursor until it reaches given token
 	*
-	* @param  array $token Target token
-	* @return void
+	* @param  array|string $token Target token
+	* @return bool                Whether a matching token was found
 	*/
 	protected function skipTo($token)
 	{
-		while (++$this->i < $this->cnt && $this->tokens[$this->i] !== $token);
+		while (++$this->i < $this->cnt)
+		{
+			if ($this->tokens[$this->i] === $token)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
