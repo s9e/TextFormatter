@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -9,32 +9,32 @@ namespace s9e\TextFormatter\Plugins\Censor;
 
 class Helper
 {
-	/**
+	/*
 	* @var string Regexp matching whitelisted words
 	*/
 	public $allowed;
 
-	/**
+	/*
 	* @var string Name of attribute used for the replacement
 	*/
 	public $attrName;
 
-	/**
+	/*
 	* @var string Default string used to replace censored words
 	*/
 	public $defaultReplacement = '****';
 
-	/**
+	/*
 	* @var array Array of [regexp => replacement]
 	*/
-	public $replacements = [];
+	public $replacements = array();
 
-	/**
+	/*
 	* @var string Name of the tag used to mark censored words
 	*/
 	public $tagName;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  array $config Helper's config
@@ -43,12 +43,10 @@ class Helper
 	public function __construct(array $config)
 	{
 		foreach ($config as $k => $v)
-		{
 			$this->$k = $v;
-		}
 	}
 
-	/**
+	/*
 	* Censor text nodes inside of HTML code
 	*
 	* @param  string $text Original HTML
@@ -56,37 +54,36 @@ class Helper
 	*/
 	public function censorHtml($text)
 	{
+		$_this = $this;
+
 		// Modify the original regexp so that it only matches text nodes
 		$delim  = $this->regexp[0];
-		$pos    = strrpos($this->regexp, $delim);
-		$regexp = substr($this->regexp, 0, $pos)
+		$pos    = \strrpos($this->regexp, $delim);
+		$regexp = \substr($this->regexp, 0, $pos)
 		        . '(?=[^<">]*(?=<|$))'
-		        . substr($this->regexp, $pos);
+		        . \substr($this->regexp, $pos);
 
-		return preg_replace_callback(
+		return \preg_replace_callback(
 			$regexp,
-			function ($m)
+			function ($m) use ($_this)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-				{
+				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
 					return $m[0];
-				}
 
-				foreach ($this->replacements as list($regexp, $replacement))
+				foreach ($_this->replacements as $_3673356096)
 				{
-					if (preg_match($regexp, $m[0]))
-					{
-						return htmlspecialchars($replacement);
-					}
+					list($regexp, $replacement) = $_3673356096;
+					if (\preg_match($regexp, $m[0]))
+						return \htmlspecialchars($replacement);
 				}
 
-				return htmlspecialchars($this->defaultReplacement);
+				return \htmlspecialchars($_this->defaultReplacement);
 			},
 			$text
 		);
 	}
 
-	/**
+	/*
 	* Censor given plain text
 	*
 	* @param  string $text Original text
@@ -94,30 +91,29 @@ class Helper
 	*/
 	public function censorText($text)
 	{
-		return preg_replace_callback(
+		$_this = $this;
+
+		return \preg_replace_callback(
 			$this->regexp,
-			function ($m)
+			function ($m) use ($_this)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-				{
+				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
 					return $m[0];
-				}
 
-				foreach ($this->replacements as list($regexp, $replacement))
+				foreach ($_this->replacements as $_3673356096)
 				{
-					if (preg_match($regexp, $m[0]))
-					{
+					list($regexp, $replacement) = $_3673356096;
+					if (\preg_match($regexp, $m[0]))
 						return $replacement;
-					}
 				}
 
-				return $this->defaultReplacement;
+				return $_this->defaultReplacement;
 			},
 			$text
 		);
 	}
 
-	/**
+	/*
 	* Update an intermediate representation to match a different list of words
 	*
 	* Will remove tags from words that are not censored anymore and will match new censored words in
@@ -135,21 +131,21 @@ class Helper
 	*/
 	public function reparse($xml)
 	{
+		$_this = $this;
+
 		// Test whether any words are already censored
-		if (strpos($xml, '</' . $this->tagName . '>') !== false)
+		if (\strpos($xml, '</' . $this->tagName . '>') !== \false)
 		{
 			// Match all the tags used by this plugin and test whether their content matches the new
 			// regexp. If so, preserve the tag. If not, remove the tag (preserve its content)
-			$xml = preg_replace_callback(
+			$xml = \preg_replace_callback(
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
-				function ($m)
+				function ($m) use ($_this)
 				{
-					if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-					{
+					if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
 						return $m[1];
-					}
 
-					return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];
+					return (\preg_match($_this->regexp, $m[1])) ? $_this->buildTag($m[1]) : $m[1];
 				},
 				$xml
 			);
@@ -158,21 +154,19 @@ class Helper
 		// Modify the original regexp so that it only matches text nodes, and only outside of the
 		// tags used by this plugin
 		$delim  = $this->regexp[0];
-		$pos    = strrpos($this->regexp, $delim);
-		$regexp = substr($this->regexp, 0, $pos)
+		$pos    = \strrpos($this->regexp, $delim);
+		$regexp = \substr($this->regexp, 0, $pos)
 		        . '(?=[^<">]*<(?!\\/(?-i)' . $this->tagName . '>))'
-		        . substr($this->regexp, $pos);
+		        . \substr($this->regexp, $pos);
 
-		$xml = preg_replace_callback(
+		$xml = \preg_replace_callback(
 			$regexp,
-			function ($m)
+			function ($m) use ($_this)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-				{
+				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
 					return $m[0];
-				}
 
-				return $this->buildTag($m[0]);
+				return $_this->buildTag($m[0]);
 			},
 			$xml,
 			-1,
@@ -183,27 +177,28 @@ class Helper
 		if ($cnt && $xml[1] === 't')
 		{
 			$xml[1] = 'r';
-			$xml[strlen($xml) - 2] = 'r';
+			$xml[\strlen($xml) - 2] = 'r';
 		}
 
 		return $xml;
 	}
 
-	/**
+	/*
 	* Build and return the censor tag that matches given word
 	*
 	* @param  string $word Word to censor
 	* @return string       Censor tag, complete with its replacement attribute
 	*/
-	protected function buildTag($word)
+	public function buildTag($word)
 	{
 		$startTag = '<' . $this->tagName;
 
-		foreach ($this->replacements as list($regexp, $replacement))
+		foreach ($this->replacements as $_37478556)
 		{
-			if (preg_match($regexp, $word))
+			list($regexp, $replacement) = $_37478556;
+			if (\preg_match($regexp, $word))
 			{
-				$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_QUOTES) . '"';
+				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
 
 				break;
 			}

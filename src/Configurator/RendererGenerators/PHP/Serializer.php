@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,27 +15,27 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 
 class Serializer
 {
-	/**
+	/*
 	* @var array Branch tables created during last serialization
 	*/
-	public $branchTables = [];
+	public $branchTables = array();
 
-	/**
+	/*
 	* @var XPathConvertor XPath-to-PHP convertor
 	*/
 	public $convertor;
 
-	/**
+	/*
 	* @var string Output method
 	*/
 	public $outputMethod = 'html';
 
-	/**
+	/*
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
-	public $useMultibyteStringFunctions = false;
+	public $useMultibyteStringFunctions = \false;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @return void
@@ -45,7 +45,7 @@ class Serializer
 		$this->convertor = new XPathConvertor;
 	}
 
-	/**
+	/*
 	* Convert an attribute value template into PHP
 	*
 	* NOTE: escaping must be performed by the caller
@@ -57,23 +57,17 @@ class Serializer
 	*/
 	protected function convertAttributeValueTemplate($attrValue)
 	{
-		$phpExpressions = [];
+		$phpExpressions = array();
 		foreach (AVTHelper::parse($attrValue) as $token)
-		{
 			if ($token[0] === 'literal')
-			{
-				$phpExpressions[] = var_export($token[1], true);
-			}
+				$phpExpressions[] = \var_export($token[1], \true);
 			else
-			{
 				$phpExpressions[] = $this->convertXPath($token[1]);
-			}
-		}
 
-		return implode('.', $phpExpressions);
+		return \implode('.', $phpExpressions);
 	}
 
-	/**
+	/*
 	* Convert an XPath expression (used in a condition) into PHP code
 	*
 	* This method is similar to convertXPath() but it selectively replaces some simple conditions
@@ -89,7 +83,7 @@ class Serializer
 		return $this->convertor->convertCondition($expr);
 	}
 
-	/**
+	/*
 	* Convert an XPath expression (used as value) into PHP code
 	*
 	* @param  string $expr XPath expression
@@ -102,7 +96,7 @@ class Serializer
 		return $this->convertor->convertXPath($expr);
 	}
 
-	/**
+	/*
 	* Serialize an <applyTemplates/> node
 	*
 	* @param  DOMElement $applyTemplates <applyTemplates/> node
@@ -112,15 +106,13 @@ class Serializer
 	{
 		$php = '$this->at($node';
 		if ($applyTemplates->hasAttribute('select'))
-		{
-			$php .= ',' . var_export($applyTemplates->getAttribute('select'), true);
-		}
+			$php .= ',' . \var_export($applyTemplates->getAttribute('select'), \true);
 		$php .= ');';
 
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize an <attribute/> node
 	*
 	* @param  DOMElement $attribute <attribute/> node
@@ -134,14 +126,14 @@ class Serializer
 		$phpAttrName = $this->convertAttributeValueTemplate($attrName);
 
 		// NOTE: the attribute name is escaped by default to account for dynamically-generated names
-		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . ENT_QUOTES . ')';
+		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . \ENT_QUOTES . ')';
 
 		return "\$this->out.=' '." . $phpAttrName . ".'=\"';"
 		     . $this->serializeChildren($attribute)
 		     . "\$this->out.='\"';";
 	}
 
-	/**
+	/*
 	* Serialize the internal representation of a template into PHP
 	*
 	* @param  DOMElement $ir Internal representation
@@ -149,12 +141,12 @@ class Serializer
 	*/
 	public function serialize(DOMElement $ir)
 	{
-		$this->branchTables = [];
+		$this->branchTables = array();
 
 		return $this->serializeChildren($ir);
 	}
 
-	/**
+	/*
 	* Serialize all the children of given node into PHP
 	*
 	* @param  DOMElement $ir Internal representation
@@ -165,14 +157,14 @@ class Serializer
 		$php = '';
 		foreach ($ir->childNodes as $node)
 		{
-			$methodName = 'serialize' . ucfirst($node->localName);
+			$methodName = 'serialize' . \ucfirst($node->localName);
 			$php .= $this->$methodName($node);
 		}
 
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize a <closeTag/> node
 	*
 	* @param  DOMElement $closeTag <closeTag/> node
@@ -184,23 +176,17 @@ class Serializer
 		$id  = $closeTag->getAttribute('id');
 
 		if ($closeTag->hasAttribute('check'))
-		{
 			$php .= 'if(!isset($t' . $id . ')){';
-		}
 
 		if ($closeTag->hasAttribute('set'))
-		{
 			$php .= '$t' . $id . '=1;';
-		}
 
 		// Get the element that's being closed
 		$xpath   = new DOMXPath($closeTag->ownerDocument);
 		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
 
 		if (!($element instanceof DOMElement))
-		{
 			throw new RuntimeException;
-		}
 
 		$isVoid  = $element->getAttribute('void');
 		$isEmpty = $element->getAttribute('empty');
@@ -210,42 +196,31 @@ class Serializer
 			$php .= "\$this->out.='>';";
 
 			if ($isVoid === 'maybe')
-			{
 				// Check at runtime whether this element is not void
 				$php .= 'if(!$v' . $id . '){';
-			}
 		}
+		// In XML mode, we only care about whether this element is empty
+		elseif ($isEmpty === 'yes')
+			// Definitely empty, use a self-closing tag
+			$php .= "\$this->out.='/>';";
 		else
 		{
-			// In XML mode, we only care about whether this element is empty
-			if ($isEmpty === 'yes')
-			{
-				// Definitely empty, use a self-closing tag
-				$php .= "\$this->out.='/>';";
-			}
-			else
-			{
-				// Since it's not definitely empty, we'll close this start tag normally
-				$php .= "\$this->out.='>';";
+			// Since it's not definitely empty, we'll close this start tag normally
+			$php .= "\$this->out.='>';";
 
-				if ($isEmpty === 'maybe')
-				{
-					// Maybe empty, record the length of the output and if it doesn't grow we'll
-					// change the start tag into a self-closing tag
-					$php .= '$l' . $id . '=strlen($this->out);';
-				}
-			}
+			if ($isEmpty === 'maybe')
+				// Maybe empty, record the length of the output and if it doesn't grow we'll
+				// change the start tag into a self-closing tag
+				$php .= '$l' . $id . '=strlen($this->out);';
 		}
 
 		if ($closeTag->hasAttribute('check'))
-		{
 			$php .= '}';
-		}
 
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize a <comment/> node
 	*
 	* @param  DOMElement $comment <comment/> node
@@ -258,7 +233,7 @@ class Serializer
 		     . "\$this->out.='-->';";
 	}
 
-	/**
+	/*
 	* Serialize a <copyOfAttributes/> node
 	*
 	* @param  DOMElement $copyOfAttributes <copyOfAttributes/> node
@@ -271,12 +246,12 @@ class Serializer
 		     . "\$this->out.=' ';"
 		     . "\$this->out.=\$attribute->name;"
 		     . "\$this->out.='=\"';"
-		     . "\$this->out.=htmlspecialchars(\$attribute->value," . ENT_COMPAT . ");"
+		     . "\$this->out.=htmlspecialchars(\$attribute->value," . \ENT_COMPAT . ");"
 		     . "\$this->out.='\"';"
 		     . '}';
 	}
 
-	/**
+	/*
 	* Serialize an <element/> node
 	*
 	* @param  DOMElement $element <element/> node
@@ -291,13 +266,13 @@ class Serializer
 		$isEmpty = $element->getAttribute('empty');
 
 		// Test whether this element name is dynamic
-		$isDynamic = (bool) (strpos($elName, '{') !== false);
+		$isDynamic = (bool) (\strpos($elName, '{') !== \false);
 
 		// PHP representation of this element's name
 		$phpElName = $this->convertAttributeValueTemplate($elName);
 
 		// NOTE: the element name is escaped by default to account for dynamically-generated names
-		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . ENT_QUOTES . ')';
+		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . \ENT_QUOTES . ')';
 
 		// If the element name is dynamic, we cache its name for convenience and performance
 		if ($isDynamic)
@@ -313,9 +288,7 @@ class Serializer
 
 		// Test whether this element is void if we need this information
 		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
-		{
-			$php .= '$v' . $id . '=preg_match(' . var_export(TemplateParser::$voidRegexp, true) . ',' . $phpElName . ');';
-		}
+			$php .= '$v' . $id . '=preg_match(' . \var_export(TemplateParser::$voidRegexp, \true) . ',' . $phpElName . ');';
 
 		// Open the start tag
 		$php .= "\$this->out.='<'." . $phpElName . ';';
@@ -330,9 +303,7 @@ class Serializer
 			// If this element is definitely empty, it has already been closed with a self-closing
 			// tag in serializeCloseTag()
 			if ($isEmpty === 'yes')
-			{
 				return $php;
-			}
 
 			// If this element may be empty, we need to check at runtime whether we turn its start
 			// tag into a self-closing tag or append an end tag
@@ -350,21 +321,17 @@ class Serializer
 
 		// Close that element, unless we're in HTML mode and we know it's void
 		if ($this->outputMethod !== 'html' || $isVoid !== 'yes')
-		{
 			$php .= "\$this->out.='</'." . $phpElName . ".'>';";
-		}
 
 		// If this element was maybe void, serializeCloseTag() has put its content within an if
 		// block. We need to close that block
 		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
-		{
 			$php .= '}';
-		}
 
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize a <switch/> node that has a branch-key attribute
 	*
 	* @param  DOMElement $switch <switch/> node
@@ -372,41 +339,33 @@ class Serializer
 	*/
 	protected function serializeHash(DOMElement $switch)
 	{
-		$statements = [];
+		$statements = array();
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
 			if (!$case->parentNode->isSameNode($switch))
-			{
 				continue;
-			}
 
 			if ($case->hasAttribute('branch-values'))
 			{
 				$php = $this->serializeChildren($case);
-				foreach (unserialize($case->getAttribute('branch-values')) as $value)
-				{
+				foreach (\unserialize($case->getAttribute('branch-values')) as $value)
 					$statements[$value] = $php;
-				}
 			}
 		}
 
 		if (!isset($case))
-		{
 			throw new RuntimeException;
-		}
 
 		list($branchTable, $php) = Quick::generateBranchTable('$n', $statements);
 
 		// The name of the branching table is based on its content
-		$varName = 'bt' . sprintf('%08X', crc32(serialize($branchTable)));
+		$varName = 'bt' . \sprintf('%08X', \crc32(\serialize($branchTable)));
 		$expr = 'self::$' . $varName . '[' . $this->convertXPath($switch->getAttribute('branch-key')) . ']';
 		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
 
 		// Test whether the last case has a branch-values. If not, it's the default case
 		if (!$case->hasAttribute('branch-values'))
-		{
 			$php .= 'else{' . $this->serializeChildren($case) . '}';
-		}
 
 		// Save the branching table
 		$this->branchTables[$varName] = $branchTable;
@@ -414,7 +373,7 @@ class Serializer
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize an <output/> node
 	*
 	* @param  DOMElement $output <output/> node
@@ -424,8 +383,8 @@ class Serializer
 	{
 		$php        = '';
 		$escapeMode = ($output->getAttribute('escape') === 'attribute')
-		            ? ENT_COMPAT
-		            : ENT_NOQUOTES;
+		            ? \ENT_COMPAT
+		            : \ENT_NOQUOTES;
 
 		if ($output->getAttribute('type') === 'xpath')
 		{
@@ -437,14 +396,14 @@ class Serializer
 		{
 			// Literal
 			$php .= '$this->out.=';
-			$php .= var_export(htmlspecialchars($output->textContent, $escapeMode), true);
+			$php .= \var_export(\htmlspecialchars($output->textContent, $escapeMode), \true);
 			$php .= ';';
 		}
 
 		return $php;
 	}
 
-	/**
+	/*
 	* Serialize a <switch/> node
 	*
 	* @param  DOMElement $switch <switch/> node
@@ -456,9 +415,7 @@ class Serializer
 		// overhead of setting it up
 		if ($switch->hasAttribute('branch-key')
 		 && $switch->childNodes->length > 7)
-		{
 			return $this->serializeHash($switch);
-		}
 
 		$php  = '';
 		$else = '';
@@ -466,18 +423,12 @@ class Serializer
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
 			if (!$case->parentNode->isSameNode($switch))
-			{
 				continue;
-			}
 
 			if ($case->hasAttribute('test'))
-			{
 				$php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
-			}
 			else
-			{
 				$php .= 'else';
-			}
 
 			$else = 'else';
 

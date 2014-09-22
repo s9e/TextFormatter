@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,11 +12,11 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? ['closeParent'] : [];
+		return ($src->isBlock() && $trg->isFormattingElement()) ? array('closeParent') : array();
 	}
 }

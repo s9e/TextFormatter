@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,61 +11,57 @@ use RuntimeException;
 
 abstract class RegexpBuilder
 {
-	/**
+	/*
 	* Create a regexp pattern that matches a list of words
 	*
 	* @param  array  $words   Words to sort (must be UTF-8)
 	* @param  array  $options
 	* @return string
 	*/
-	public static function fromList(array $words, array $options = [])
+	public static function fromList(array $words, array $options = array())
 	{
 		if (empty($words))
-		{
 			return '';
-		}
 
-		$options += [
+		$options += array(
 			'delimiter'       => '/',
-			'caseInsensitive' => false,
-			'specialChars'    => [],
-			'useLookahead'    => false
-		];
+			'caseInsensitive' => \false,
+			'specialChars'    => array(),
+			'useLookahead'    => \false
+		);
 
 		// Normalize ASCII if the regexp is meant to be case-insensitive
 		if ($options['caseInsensitive'])
 		{
 			foreach ($words as &$word)
-			{
-				$word = strtr(
+				$word = \strtr(
 					$word,
 					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 					'abcdefghijklmnopqrstuvwxyz'
 				);
-			}
 			unset($word);
 		}
 
 		// Deduplicate words in advance because some routines such as mergeChains() make assumptions
 		// based on the size of some chains without deduplicating them first
-		$words = array_unique($words);
+		$words = \array_unique($words);
 
 		// Sort the words in order to produce the same regexp regardless of the words' order
-		sort($words);
+		\sort($words);
 
 		// Used to store the first character of each word so that we can generate the lookahead
 		// assertion
-		$initials = [];
+		$initials = array();
 
 		// Used to store the escaped representation of each character, e.g. "a"=>"a", "."=>"\\."
 		// Also used to give a special meaning to some characters, e.g. "*" => ".*?"
 		$esc  = $options['specialChars'];
-		$esc += [$options['delimiter'] => '\\' . $options['delimiter']];
+		$esc += array($options['delimiter'] => '\\' . $options['delimiter']);
 
 		// preg_quote() errs on the safe side when escaping characters that could have a special
 		// meaning in some situations. Since we're building the regexp in a controlled environment,
 		// we don't have to escape those characters.
-		$esc += [
+		$esc += array(
 			'!' => '!',
 			'-' => '-',
 			':' => ':',
@@ -73,31 +69,25 @@ abstract class RegexpBuilder
 			'=' => '=',
 			'>' => '>',
 			'}' => '}'
-		];
+		);
 
 		// List of words, split by character
-		$splitWords = [];
+		$splitWords = array();
 
 		foreach ($words as $word)
 		{
-			if (preg_match_all('#.#us', $word, $matches) === false)
-			{
+			if (\preg_match_all('#.#us', $word, $matches) === \false || !\preg_match('/^(?:[[:ascii:]]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3})*$/D', $word))
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
-			}
 
-			$splitWord = [];
+			$splitWord = array();
 			foreach ($matches[0] as $pos => $c)
 			{
 				if (!isset($esc[$c]))
-				{
-					$esc[$c] = preg_quote($c);
-				}
+					$esc[$c] = \preg_quote($c);
 
 				if ($pos === 0)
-				{
 					// Store the initial for later
 					$initials[] = $esc[$c];
-				}
 
 				$splitWord[] = $esc[$c];
 			}
@@ -105,33 +95,29 @@ abstract class RegexpBuilder
 			$splitWords[] = $splitWord;
 		}
 
-		$regexp = self::assemble([self::mergeChains($splitWords)]);
+		$regexp = self::assemble(array(self::mergeChains($splitWords)));
 
 		if ($options['useLookahead']
-		 && count($initials) > 1
+		 && \count($initials) > 1
 		 && $regexp[0] !== '[')
 		{
-			$useLookahead = true;
+			$useLookahead = \true;
 
 			foreach ($initials as $initial)
-			{
 				if (!self::canBeUsedInCharacterClass($initial))
 				{
-					$useLookahead = false;
+					$useLookahead = \false;
 					break;
 				}
-			}
 
 			if ($useLookahead)
-			{
 				$regexp = '(?=' . self::generateCharacterClass($initials) . ')' . $regexp;
-			}
 		}
 
 		return $regexp;
 	}
 
-	/**
+	/*
 	* Merge a 2D array of split words into a 1D array of expressions
 	*
 	* Each element in the passed array is called a "chain". It starts as an array where each element
@@ -155,20 +141,16 @@ abstract class RegexpBuilder
 	{
 		// If there's only one chain, there's nothing to merge
 		if (!isset($chains[1]))
-		{
 			return $chains[0];
-		}
 
 		// The merged chain starts with the chains' common prefix
 		$mergedChain = self::removeLongestCommonPrefix($chains);
 
 		if (!isset($chains[0][0])
-		 && !array_filter($chains))
-		{
+		 && !\array_filter($chains))
 			// The chains are empty, either they were already empty or they were identical and their
 			// content was removed as their prefix. Nothing left to merge
 			return $mergedChain;
-		}
 
 		// Remove the longest common suffix and save it for later
 		$suffix = self::removeLongestCommonSuffix($chains);
@@ -182,91 +164,81 @@ abstract class RegexpBuilder
 
 		// Whether one of the chain has been completely optimized away by prefix/suffix removal.
 		// Signals that the middle part of the regexp is optional, e.g. (prefix)(foo)?(suffix)
-		$endOfChain = false;
+		$endOfChain = \false;
 
 		// Whether these chains need to be remerged
-		$remerge = false;
+		$remerge = \false;
 
 		// Here we group chains by their first atom (head of chain)
-		$groups = [];
+		$groups = array();
 		foreach ($chains as $chain)
 		{
 			if (!isset($chain[0]))
 			{
-				$endOfChain = true;
+				$endOfChain = \true;
 				continue;
 			}
 
 			$head = $chain[0];
 
 			if (isset($groups[$head]))
-			{
 				// More than one chain in a group means that we need to remerge
-				$remerge = true;
-			}
+				$remerge = \true;
 
 			$groups[$head][] = $chain;
 		}
 
 		// See if we can replace single characters with a character class
-		$characterClass = [];
+		$characterClass = array();
 		foreach ($groups as $head => $groupChains)
 		{
 			$head = (string) $head;
 
-			if ($groupChains === [[$head]]
+			if ($groupChains === array(array($head))
 			 && self::canBeUsedInCharacterClass($head))
-			{
 				// The whole chain is composed of exactly one token, a token that can be used in a
 				// character class
 				$characterClass[$head] = $head;
-			}
 		}
 
 		// Sort the characters and reset their keys
-		sort($characterClass);
+		\sort($characterClass);
 
 		// Test whether there is more than 1 character in the character class
 		if (isset($characterClass[1]))
 		{
 			// Remove each of those characters from the groups
 			foreach ($characterClass as $char)
-			{
 				unset($groups[$char]);
-			}
 
 			// Create a new group for this character class
 			$head = self::generateCharacterClass($characterClass);
-			$groups[$head][] = [$head];
+			$groups[$head][] = array($head);
 
 			// Ensure that the character class is first in the alternation. Not only it looks nice
 			// and might be more performant, it's also how assemble() does it, so normalizing it
 			// might help with generating identical regexps (or subpatterns that would then be
 			// optimized away as a prefix/suffix)
-			$groups = [$head => $groups[$head]]
+			$groups = array($head => $groups[$head])
 			        + $groups;
 		}
 
 		if ($remerge)
 		{
 			// Merge all chains sharing the same head together
-			$mergedChains = [];
+			$mergedChains = array();
 			foreach ($groups as $head => $groupChains)
-			{
 				$mergedChains[] = self::mergeChains($groupChains);
-			}
 
 			// Merge the tails of all chains if applicable. Helps with [ab][xy] (two chains with
 			// identical tails)
 			self::mergeTails($mergedChains);
 
 			// Now merge all chains together and append it to our merged chain
-			$regexp = implode('', self::mergeChains($mergedChains));
+			$regexp = \implode('', self::mergeChains($mergedChains));
 
 			if ($endOfChain)
-			{
 				$regexp = self::makeRegexpOptional($regexp);
-			}
 
 			$mergedChain[] = $regexp;
 		}
@@ -278,14 +250,12 @@ abstract class RegexpBuilder
 
 		// Add the common suffix
 		foreach ($suffix as $atom)
-		{
 			$mergedChain[] = $atom;
-		}
 
 		return $mergedChain;
 	}
 
-	/**
+	/*
 	* Merge the tails of an array of chains wherever applicable
 	*
 	* This method optimizes (a[xy]|b[xy]|c) into ([ab][xy]|c). The expression [xy] is not a suffix
@@ -304,45 +274,39 @@ abstract class RegexpBuilder
 		self::mergeTailsAltern($chains);
 
 		// Don't forget to reset the keys
-		$chains = array_values($chains);
+		$chains = \array_values($chains);
 	}
 
-	/**
+	/*
 	* Merge the tails of an array of chains if their head can become a character class
 	*
 	* @param array &$chains
 	*/
 	protected static function mergeTailsCC(array &$chains)
 	{
-		$groups = [];
+		$groups = array();
 
 		foreach ($chains as $k => $chain)
-		{
 			if (isset($chain[1])
 			 && !isset($chain[2])
 			 && self::canBeUsedInCharacterClass($chain[0]))
-			{
 				$groups[$chain[1]][$k] = $chain;
-			}
-		}
 
 		foreach ($groups as $groupChains)
 		{
-			if (count($groupChains) < 2)
-			{
+			if (\count($groupChains) < 2)
 				// Only 1 element, skip this group
 				continue;
-			}
 
 			// Remove this group's chains from the original list
-			$chains = array_diff_key($chains, $groupChains);
+			$chains = \array_diff_key($chains, $groupChains);
 
 			// Merge this group's chains and add the result to the list
-			$chains[] = self::mergeChains(array_values($groupChains));
+			$chains[] = self::mergeChains(\array_values($groupChains));
 		}
 	}
 
-	/**
+	/*
 	* Merge the tails of an array of chains if it makes the end result shorter
 	*
 	* This kind of merging used to be specifically avoided due to performance concerns but some
@@ -355,48 +319,40 @@ abstract class RegexpBuilder
 	*/
 	protected static function mergeTailsAltern(array &$chains)
 	{
-		$groups = [];
+		$groups = array();
 		foreach ($chains as $k => $chain)
-		{
 			if (!empty($chain))
 			{
-				$tail = array_slice($chain, -1);
+				$tail = \array_slice($chain, -1);
 				$groups[$tail[0]][$k] = $chain;
 			}
-		}
 
 		foreach ($groups as $tail => $groupChains)
 		{
-			if (count($groupChains) < 2)
-			{
+			if (\count($groupChains) < 2)
 				// Only 1 element, skip this group
 				continue;
-			}
 
 			// Create a single chain for this group
-			$mergedChain = self::mergeChains(array_values($groupChains));
+			$mergedChain = self::mergeChains(\array_values($groupChains));
 
 			// Test whether the merged chain is shorter than the sum of its components
 			$oldLen = 0;
 			foreach ($groupChains as $groupChain)
-			{
-				$oldLen += array_sum(array_map('strlen', $groupChain));
-			}
+				$oldLen += \array_sum(\array_map('strlen', $groupChain));
 
-			if ($oldLen <= array_sum(array_map('strlen', $mergedChain)))
-			{
+			if ($oldLen <= \array_sum(\array_map('strlen', $mergedChain)))
 				continue;
-			}
 
 			// Remove this group's chains from the original list
-			$chains = array_diff_key($chains, $groupChains);
+			$chains = \array_diff_key($chains, $groupChains);
 
 			// Merge this group's chains and add the result to the list
 			$chains[] = $mergedChain;
 		}
 	}
 
-	/**
+	/*
 	* Remove the longest common prefix from an array of chains
 	*
 	* @param  array &$chains
@@ -410,15 +366,13 @@ abstract class RegexpBuilder
 		while (1)
 		{
 			// $c will be used to store the character we're matching against
-			$c = null;
+			$c = \null;
 
 			foreach ($chains as $chain)
 			{
 				if (!isset($chain[$pLen]))
-				{
 					// Reached the end of a word
 					break 2;
-				}
 
 				if (!isset($c))
 				{
@@ -427,10 +381,8 @@ abstract class RegexpBuilder
 				}
 
 				if ($chain[$pLen] !== $c)
-				{
 					// Does not match -- don't increment sLen and break out of the loop
 					break 2;
-				}
 			}
 
 			// We have confirmed that all the words share a same prefix of at least ($pLen + 1)
@@ -438,24 +390,20 @@ abstract class RegexpBuilder
 		}
 
 		if (!$pLen)
-		{
-			return [];
-		}
+			return array();
 
 		// Store prefix
-		$prefix = array_slice($chains[0], 0, $pLen);
+		$prefix = \array_slice($chains[0], 0, $pLen);
 
 		// Remove prefix from each word
 		foreach ($chains as &$chain)
-		{
-			$chain = array_slice($chain, $pLen);
-		}
+			$chain = \array_slice($chain, $pLen);
 		unset($chain);
 
 		return $prefix;
 	}
 
-	/**
+	/*
 	* Remove the longest common suffix from an array of chains
 	*
 	* NOTE: this method is meant to be called after removeLongestCommonPrefix(). If it's not, then
@@ -467,17 +415,15 @@ abstract class RegexpBuilder
 	protected static function removeLongestCommonSuffix(array &$chains)
 	{
 		// Cache the length of every word
-		$chainsLen = array_map('count', $chains);
+		$chainsLen = \array_map('count', $chains);
 
 		// Length of the longest possible suffix
-		$maxLen = min($chainsLen);
+		$maxLen = \min($chainsLen);
 
 		// If all the words are the same length, the longest suffix is 1 less than the length of the
 		// words because we've already extracted the longest prefix
-		if (max($chainsLen) === $maxLen)
-		{
+		if (\max($chainsLen) === $maxLen)
 			--$maxLen;
-		}
 
 		// Length of longest common suffix
 		$sLen = 0;
@@ -486,7 +432,7 @@ abstract class RegexpBuilder
 		while ($sLen < $maxLen)
 		{
 			// $c will be used to store the character we're matching against
-			$c = null;
+			$c = \null;
 
 			foreach ($chains as $k => $chain)
 			{
@@ -499,10 +445,8 @@ abstract class RegexpBuilder
 				}
 
 				if ($chain[$pos] !== $c)
-				{
 					// Does not match -- don't increment sLen and break out of the loop
 					break 2;
-				}
 			}
 
 			// We have confirmed that all the words share a same suffix of at least ($sLen + 1)
@@ -510,24 +454,20 @@ abstract class RegexpBuilder
 		}
 
 		if (!$sLen)
-		{
-			return [];
-		}
+			return array();
 
 		// Store suffix
-		$suffix = array_slice($chains[0], -$sLen);
+		$suffix = \array_slice($chains[0], -$sLen);
 
 		// Remove suffix from each word
 		foreach ($chains as &$chain)
-		{
-			$chain = array_slice($chain, 0, -$sLen);
-		}
+			$chain = \array_slice($chain, 0, -$sLen);
 		unset($chain);
 
 		return $suffix;
 	}
 
-	/**
+	/*
 	* Assemble an array of chains into one expression
 	*
 	* @param  array  $chains
@@ -535,34 +475,30 @@ abstract class RegexpBuilder
 	*/
 	protected static function assemble(array $chains)
 	{
-		$endOfChain = false;
+		$endOfChain = \false;
 
-		$regexps        = [];
-		$characterClass = [];
+		$regexps        = array();
+		$characterClass = array();
 
 		foreach ($chains as $chain)
 		{
 			if (empty($chain))
 			{
-				$endOfChain = true;
+				$endOfChain = \true;
 				continue;
 			}
 
 			if (!isset($chain[1])
 			 && self::canBeUsedInCharacterClass($chain[0]))
-			{
 				$characterClass[$chain[0]] = $chain[0];
-			}
 			else
-			{
-				$regexps[] = implode('', $chain);
-			}
+				$regexps[] = \implode('', $chain);
 		}
 
 		if (!empty($characterClass))
 		{
 			// Sort the characters and reset their keys
-			sort($characterClass);
+			\sort($characterClass);
 
 			// Use a character class if there are more than 1 characters in it
 			$regexp = (isset($characterClass[1]))
@@ -570,37 +506,31 @@ abstract class RegexpBuilder
 					: $characterClass[0];
 
 			// Prepend the character class to the list of regexps
-			array_unshift($regexps, $regexp);
+			\array_unshift($regexps, $regexp);
 		}
 
 		if (empty($regexps))
-		{
 			return '';
-		}
 
 		if (isset($regexps[1]))
 		{
 			// There are several branches, coalesce them
-			$regexp = implode('|', $regexps);
+			$regexp = \implode('|', $regexps);
 
 			// Put the expression in a subpattern
 			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
 		}
 		else
-		{
 			$regexp = $regexps[0];
-		}
 
 		// If we've reached the end of a chain, it means that the branches are optional
 		if ($endOfChain)
-		{
 			$regexp = self::makeRegexpOptional($regexp);
-		}
 
 		return $regexp;
 	}
 
-	/**
+	/*
 	* Make an entire regexp optional through the use of the ? quantifier
 	*
 	* @param  string $regexp
@@ -609,57 +539,45 @@ abstract class RegexpBuilder
 	protected static function makeRegexpOptional($regexp)
 	{
 		// .+ and .+? become .* and .*?
-		if (preg_match('#^\\.\\+\\??$#', $regexp))
-		{
-			return str_replace('+', '*', $regexp);
-		}
+		if (\preg_match('#^\\.\\+\\??$#', $regexp))
+			return \str_replace('+', '*', $regexp);
 
 		// Special case: xx? becomes x?x?, \w\w? becomes \w?\w?
 		// It covers only the most common case of repetition, it's not a panacea
-		if (preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
-		{
+		if (\preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
 			return $m[1] . '?' . $m[2];
-		}
 
 		// Optional assertions are a no-op
-		if (preg_match('#^(?:[$^]|\\\\[bBAZzGQEK])$#', $regexp))
-		{
+		if (\preg_match('#^(?:[$^]|\\\\[bBAZzGQEK])$#', $regexp))
 			return '';
-		}
 
 		// One single character, optionally escaped
-		if (preg_match('#^\\\\?.$#Dus', $regexp))
-		{
-			$isAtomic = true;
-		}
+		if (\preg_match('#^\\\\?.$#Dus', $regexp))
+			$isAtomic = \true;
 		// At least two characters, but it's not a subpattern or a character class
-		elseif (preg_match('#^[^[(].#s', $regexp))
-		{
-			$isAtomic = false;
-		}
+		elseif (\preg_match('#^[^[(].#s', $regexp))
+			$isAtomic = \false;
 		else
 		{
 			$def    = RegexpParser::parse('#' . $regexp . '#');
 			$tokens = $def['tokens'];
 
-			switch (count($tokens))
+			switch (\count($tokens))
 			{
 				// One character class
 				case 1:
 					$startPos = $tokens[0]['pos'];
 					$len      = $tokens[0]['len'];
 
-					$isAtomic = (bool) ($startPos === 0 && $len === strlen($regexp));
+					$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
 
 					// If the regexp is [..]+ it becomes [..]* (to which a ? will be appended)
 					if ($isAtomic && $tokens[0]['type'] === 'characterClass')
 					{
-						$regexp = rtrim($regexp, '+*?');
+						$regexp = \rtrim($regexp, '+*?');
 
 						if (!empty($tokens[0]['quantifiers']) && $tokens[0]['quantifiers'] !== '?')
-						{
 							$regexp .= '*';
-						}
 					}
 					break;
 
@@ -671,7 +589,7 @@ abstract class RegexpBuilder
 						$startPos = $tokens[0]['pos'];
 						$len      = $tokens[1]['pos'] + $tokens[1]['len'];
 
-						$isAtomic = (bool) ($startPos === 0 && $len === strlen($regexp));
+						$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
 
 						// If the tokens are not a non-capturing subpattern, we let it fall through
 						break;
@@ -679,21 +597,19 @@ abstract class RegexpBuilder
 					// no break; here
 
 				default:
-					$isAtomic = false;
+					$isAtomic = \false;
 			}
 		}
 
 		if (!$isAtomic)
-		{
 			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
-		}
 
 		$regexp .= '?';
 
 		return $regexp;
 	}
 
-	/**
+	/*
 	* Generate a character class from an array of characters
 	*
 	* @param  array  $chars
@@ -702,28 +618,24 @@ abstract class RegexpBuilder
 	protected static function generateCharacterClass(array $chars)
 	{
 		// Flip for convenience
-		$chars = array_flip($chars);
+		$chars = \array_flip($chars);
 
 		// Those characters do not need to be escaped inside of a character class.
-		$unescape = str_split('$()*+.?[{|^', 1);
+		$unescape = \str_split('$()*+.?[{|^', 1);
 
 		foreach ($unescape as $c)
-		{
 			if (isset($chars['\\' . $c]))
 			{
 				unset($chars['\\' . $c]);
 				$chars[$c] = 1;
 			}
-		}
 
 		// Sort characters so that class with the same content produce the same representation
-		ksort($chars);
+		\ksort($chars);
 
 		// "-" should be the first character of the class to avoid ambiguity
 		if (isset($chars['-']))
-		{
-			$chars = ['-' => 1] + $chars;
-		}
+			$chars = array('-' => 1) + $chars;
 
 		// Ensure that ^ is at the end of the class to prevent it from negating the class
 		if (isset($chars['^']))
@@ -732,10 +644,10 @@ abstract class RegexpBuilder
 			$chars['^'] = 1;
 		}
 
-		return '[' . implode('', array_keys($chars)) . ']';
+		return '[' . \implode('', \array_keys($chars)) . ']';
 	}
 
-	/**
+	/*
 	* Test whether a given expression (usually one character) can be used in a character class
 	*
 	* @param  string $char
@@ -743,39 +655,31 @@ abstract class RegexpBuilder
 	*/
 	protected static function canBeUsedInCharacterClass($char)
 	{
-		/**
+		/*
 		* Encoded non-printable characters and generic character classes are allowed
 		* @link http://docs.php.net/manual/en/regexp.reference.escape.php
 		*/
-		if (preg_match('#^\\\\[aefnrtdDhHsSvVwW]$#D', $char))
-		{
-			return true;
-		}
+		if (\preg_match('#^\\\\[aefnrtdDhHsSvVwW]$#D', $char))
+			return \true;
 
 		// Escaped literals are allowed (escaped sequences excluded)
-		if (preg_match('#^\\\\[^A-Za-z0-9]$#Dus', $char))
-		{
-			return true;
-		}
+		if (\preg_match('#^\\\\[^A-Za-z0-9]$#Dus', $char))
+			return \true;
 
 		// More than 1 character => cannot be used in a character class
-		if (preg_match('#..#Dus', $char))
-		{
-			return false;
-		}
+		if (\preg_match('#..#Dus', $char))
+			return \false;
 
 		// Special characters such as $ or ^ are rejected, but we need to check for characters that
 		// get escaped by preg_quote() even though it's not necessary, such as ! or =
-		if (preg_quote($char) !== $char
-		 && !preg_match('#^[-!:<=>}]$#D', $char))
-		{
-			return false;
-		}
+		if (\preg_quote($char) !== $char
+		 && !\preg_match('#^[-!:<=>}]$#D', $char))
+			return \false;
 
-		return true;
+		return \true;
 	}
 
-	/**
+	/*
 	* Remove chains that overlap with dot chains
 	*
 	* Will remove chains that are made redundant by the use of the dot metacharacter, e.g.
@@ -786,11 +690,11 @@ abstract class RegexpBuilder
 	*/
 	protected static function optimizeDotChains(array &$chains)
 	{
-		/**
+		/*
 		* @var array List of valid atoms that should be matched by a dot but happen to be
 		*            represented by more than one character
 		*/
-		$validAtoms = [
+		$validAtoms = array(
 			// Escape sequences
 			'\\d' => 1, '\\D' => 1, '\\h' => 1, '\\H' => 1,
 			'\\s' => 1, '\\S' => 1, '\\v' => 1, '\\V' => 1,
@@ -800,15 +704,15 @@ abstract class RegexpBuilder
 			'\\^' => 1, '\\$' => 1, '\\.' => 1, '\\?' => 1,
 			'\\[' => 1, '\\]' => 1, '\\(' => 1, '\\)' => 1,
 			'\\+' => 1, '\\*' => 1, '\\\\' => 1
-		];
+		);
 
 		// First we replace chains such as ["a",".?","b"] with ["a",".","b"] and ["a","b"]
 		do
 		{
-			$hasMoreDots = false;
+			$hasMoreDots = \false;
 			foreach ($chains as $k1 => $dotChain)
 			{
-				$dotKeys = array_keys($dotChain, '.?', true);
+				$dotKeys = \array_keys($dotChain, '.?', \true);
 
 				if (!empty($dotKeys))
 				{
@@ -817,13 +721,11 @@ abstract class RegexpBuilder
 					$chains[$k1] = $dotChain;
 
 					// Create a new chain without the atom
-					array_splice($dotChain, $dotKeys[0], 1);
+					\array_splice($dotChain, $dotKeys[0], 1);
 					$chains[] = $dotChain;
 
 					if (isset($dotKeys[1]))
-					{
-						$hasMoreDots = true;
-					}
+						$hasMoreDots = \true;
 				}
 			}
 		}
@@ -831,49 +733,39 @@ abstract class RegexpBuilder
 
 		foreach ($chains as $k1 => $dotChain)
 		{
-			$dotKeys = array_keys($dotChain, '.', true);
+			$dotKeys = \array_keys($dotChain, '.', \true);
 
 			if (empty($dotKeys))
-			{
 				continue;
-			}
 
 			foreach ($chains as $k2 => $tmpChain)
 			{
 				if ($k2 === $k1)
-				{
 					continue;
-				}
 
 				foreach ($dotKeys as $dotKey)
 				{
 					if (!isset($tmpChain[$dotKey]))
-					{
 						// The chain is too short to match, skip this chain
 						continue 2;
-					}
 
 					// Skip if the dot is neither a literal nor a valid atom
-					if (!preg_match('#^.$#Du', preg_quote($tmpChain[$dotKey]))
+					if (!\preg_match('#^.$#Du', \preg_quote($tmpChain[$dotKey]))
 					 && !isset($validAtoms[$tmpChain[$dotKey]]))
-					{
 						continue 2;
-					}
 
 					// Replace the atom with a dot
 					$tmpChain[$dotKey] = '.';
 				}
 
 				if ($tmpChain === $dotChain)
-				{
 					// The chain matches our dot chain, which means we can remove it
 					unset($chains[$k2]);
-				}
 			}
 		}
 	}
 
-	/**
+	/*
 	* Remove chains that overlap with chains that contain a catchall expression such as .*
 	*
 	* NOTE: cannot handle possessive expressions such as .++ because we don't know whether that
@@ -888,106 +780,88 @@ abstract class RegexpBuilder
 		// instead of (?:.*|.+) we will emit (?:.*). Zero-or-more trumps one-or-more and greedy
 		// trumps non-greedy. In some cases, (?:.+|.*?) might be preferable to (?:.*?) but it does
 		// not seem like a common enough case to warrant the extra logic
-		$precedence = [
+		$precedence = array(
 			'.*'  => 3,
 			'.*?' => 2,
 			'.+'  => 1,
 			'.+?' => 0
-		];
+		);
 
-		$tails = [];
+		$tails = array();
 
 		foreach ($chains as $k => $chain)
 		{
 			if (!isset($chain[0]))
-			{
 				continue;
-			}
 
 			$head = $chain[0];
 
 			// Test whether the head is a catchall expression by looking up its precedence
 			if (!isset($precedence[$head]))
-			{
 				continue;
-			}
 
-			$tail = implode('', array_slice($chain, 1));
+			$tail = \implode('', \array_slice($chain, 1));
 			if (!isset($tails[$tail])
 			 || $precedence[$head] > $tails[$tail]['precedence'])
-			{
-				$tails[$tail] = [
+				$tails[$tail] = array(
 					'key'        => $k,
 					'precedence' => $precedence[$head]
-				];
-			}
+				);
 		}
 
-		$catchallChains = [];
+		$catchallChains = array();
 		foreach ($tails as $tail => $info)
-		{
 			$catchallChains[$info['key']] = $chains[$info['key']];
-		}
 
 		foreach ($catchallChains as $k1 => $catchallChain)
 		{
 			$headExpr = $catchallChain[0];
-			$tailExpr = false;
-			$match    = array_slice($catchallChain, 1);
+			$tailExpr = \false;
+			$match    = \array_slice($catchallChain, 1);
 
 			// Test whether the catchall chain has another catchall expression at the end
 			if (isset($catchallChain[1])
-			 && isset($precedence[end($catchallChain)]))
-			{
+			 && isset($precedence[\end($catchallChain)]))
 				// Remove the catchall expression from the end
-				$tailExpr = array_pop($match);
-			}
+				$tailExpr = \array_pop($match);
 
-			$matchCnt = count($match);
+			$matchCnt = \count($match);
 
 			foreach ($chains as $k2 => $chain)
 			{
 				if ($k2 === $k1)
-				{
 					continue;
-				}
 
-				/**
+				/*
 				* @var integer Offset of the first atom we're trying to match the tail against
 				*/
 				$start = 0;
 
-				/**
+				/*
 				* @var integer
 				*/
-				$end = count($chain);
+				$end = \count($chain);
 
 				// If the catchall at the start of the chain must match at least one character, we
 				// ensure the chain has at least one character at its beginning
 				if ($headExpr[1] === '+')
 				{
-					$found = false;
+					$found = \false;
 
 					foreach ($chain as $start => $atom)
-					{
 						if (self::matchesAtLeastOneCharacter($atom))
 						{
-							$found = true;
+							$found = \true;
 							break;
 						}
-					}
 
 					if (!$found)
-					{
 						continue;
-					}
 				}
 
 				// Test whether the catchall chain has another catchall expression at the end
-				if ($tailExpr === false)
-				{
+				if ($tailExpr === \false)
 					$end = $start;
-				}
 				else
 				{
 					// If the expression must match at least one character, we ensure that the
@@ -995,21 +869,17 @@ abstract class RegexpBuilder
 					// isn't used twice (e.g. used by two consecutive .+ expressions)
 					if ($tailExpr[1] === '+')
 					{
-						$found = false;
+						$found = \false;
 
 						while (--$end > $start)
-						{
 							if (self::matchesAtLeastOneCharacter($chain[$end]))
 							{
-								$found = true;
+								$found = \true;
 								break;
 							}
-						}
 
 						if (!$found)
-						{
 							continue;
-						}
 					}
 
 					// Now, $start should point to the first atom we're trying to match the catchall
@@ -1021,7 +891,7 @@ abstract class RegexpBuilder
 
 				while ($start <= $end)
 				{
-					if (array_slice($chain, $start, $matchCnt) === $match)
+					if (\array_slice($chain, $start, $matchCnt) === $match)
 					{
 						unset($chains[$k2]);
 						break;
@@ -1033,7 +903,7 @@ abstract class RegexpBuilder
 		}
 	}
 
-	/**
+	/*
 	* Test whether a given expression can never match an empty space
 	*
 	* Only basic checks are performed and it only returns true if we're certain the expression
@@ -1045,36 +915,28 @@ abstract class RegexpBuilder
 	*/
 	protected static function matchesAtLeastOneCharacter($expr)
 	{
-		if (preg_match('#^[$*?^]$#', $expr))
-		{
-			return false;
-		}
+		if (\preg_match('#^[$*?^]$#', $expr))
+			return \false;
 
 		// A single character should be fine
-		if (preg_match('#^.$#u', $expr))
-		{
-			return true;
-		}
+		if (\preg_match('#^.$#u', $expr))
+			return \true;
 
 		// Matches anything that starts with ".+", "a+", etc...
-		if (preg_match('#^.\\+#u', $expr))
-		{
-			return true;
-		}
+		if (\preg_match('#^.\\+#u', $expr))
+			return \true;
 
 		// Matches anything that starts with "\d", "\+", "\d+", etc... We avoid matching back
 		// references as we can't be sure they matched at least one character themselves
-		if (preg_match('#^\\\\[^bBAZzGQEK1-9](?![*?])#', $expr))
-		{
-			return true;
-		}
+		if (\preg_match('#^\\\\[^bBAZzGQEK1-9](?![*?])#', $expr))
+			return \true;
 
 		// Anything else is either too complicated and too circumstancial to investigate further so
 		// we'll just return false
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Test whether given expression can be safely used with atomic grouping
 	*
 	* @param  string $expr
@@ -1082,35 +944,27 @@ abstract class RegexpBuilder
 	*/
 	protected static function canUseAtomicGrouping($expr)
 	{
-		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\.#', $expr))
-		{
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\.#', $expr))
 			// An unescaped dot should disable atomic grouping. Technically, we could still allow it
 			// depending on what comes next in the regexp but it's a lot of work for something very
 			// situational
-			return false;
-		}
+			return \false;
 
-		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*[+*]#', $expr))
-		{
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*[+*]#', $expr))
 			// A quantifier disables atomic grouping. Again, this could be enabled depending on the
 			// context
-			return false;
-		}
+			return \false;
 
-		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\(?(?<!\\()\\?#', $expr))
-		{
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\(?(?<!\\()\\?#', $expr))
 			// An unescaped ? is a quantifier, unless it's preceded by an unescaped (
-			return false;
-		}
+			return \false;
 
-		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\\\[a-z0-9]#', $expr))
-		{
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\\\[a-z0-9]#', $expr))
 			// Escape sequences disable atomic grouping because they might overlap with another
 			// branch
-			return false;
-		}
+			return \false;
 
 		// The regexp looks harmless enough to enable atomic grouping
-		return true;
+		return \true;
 	}
 }

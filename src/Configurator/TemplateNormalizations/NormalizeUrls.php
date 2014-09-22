@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,7 +17,7 @@ use s9e\TextFormatter\Parser\BuiltInFilters;
 
 class NormalizeUrls extends TemplateNormalization
 {
-	/**
+	/*
 	* Normalize URLs
 	*
 	* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
@@ -28,19 +28,13 @@ class NormalizeUrls extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		foreach (TemplateHelper::getURLNodes($template->ownerDocument) as $node)
-		{
 			if ($node instanceof DOMAttr)
-			{
 				$this->normalizeAttribute($node);
-			}
 			elseif ($node instanceof DOMElement)
-			{
 				$this->normalizeElement($node);
-			}
-		}
 	}
 
-	/**
+	/*
 	* Normalize the value of an attribute
 	*
 	* @param  DOMAttr $attribute
@@ -49,29 +43,26 @@ class NormalizeUrls extends TemplateNormalization
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
 		// Trim the URL and parse it
-		$tokens = AVTHelper::parse(trim($attribute->value));
+		$tokens = AVTHelper::parse(\trim($attribute->value));
 
 		$attrValue = '';
-		foreach ($tokens as list($type, $content))
+		foreach ($tokens as $_4138972761)
 		{
+			list($type, $content) = $_4138972761;
 			if ($type === 'literal')
-			{
 				$attrValue .= BuiltInFilters::sanitizeUrl($content);
-			}
 			else
-			{
 				$attrValue .= '{' . $content . '}';
-			}
 		}
 
 		// Unescape brackets in the host part
 		$attrValue = $this->unescapeBrackets($attrValue);
 
 		// Update the attribute's value
-		$attribute->value = htmlspecialchars($attrValue);
+		$attribute->value = \htmlspecialchars($attrValue);
 	}
 
-	/**
+	/*
 	* Normalize value of the text nodes, descendants of an element
 	*
 	* @param  DOMElement $element
@@ -87,20 +78,16 @@ class NormalizeUrls extends TemplateNormalization
 			$value = BuiltInFilters::sanitizeUrl($node->textContent);
 
 			if (!$i)
-			{
-				$value = $this->unescapeBrackets(ltrim($value));
-			}
+				$value = $this->unescapeBrackets(\ltrim($value));
 
 			$node->nodeValue = $value;
 		}
 
 		if (isset($node))
-		{
-			$node->textContent = rtrim($node->textContent);
-		}
+			$node->textContent = \rtrim($node->textContent);
 	}
 
-	/**
+	/*
 	* Unescape brackets in the host part of a URL if it looks like an IPv6 address
 	*
 	* @param  string $url
@@ -108,6 +95,6 @@ class NormalizeUrls extends TemplateNormalization
 	*/
 	protected function unescapeBrackets($url)
 	{
-		return preg_replace('#^(\\w+://)%5B([-\\w:._%]+)%5D#i', '$1[$2]', $url);
+		return \preg_replace('#^(\\w+://)%5B([-\\w:._%]+)%5D#i', '$1[$2]', $url);
 	}
 }

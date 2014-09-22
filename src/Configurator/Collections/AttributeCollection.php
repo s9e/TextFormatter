@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributeCollection extends NormalizedCollection
 {
-	/**
+	/*
 	* Normalize a key as an attribute name
 	*
 	* @param  string $key
@@ -23,7 +23,7 @@ class AttributeCollection extends NormalizedCollection
 		return AttributeName::normalize($key);
 	}
 
-	/**
+	/*
 	* Normalize a value to an instance of Attribute
 	*
 	* @param  array|null|Attribute $value

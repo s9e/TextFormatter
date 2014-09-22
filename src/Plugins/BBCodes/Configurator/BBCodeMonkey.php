@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -19,18 +19,18 @@ use s9e\TextFormatter\Configurator\Items\Template;
 
 class BBCodeMonkey
 {
-	/**
+	/*
 	* Expression that matches a regexp such as /foo/i
 	*/
 	const REGEXP = '(.).*?(?<!\\\\)(?>\\\\\\\\)*+\\g{-1}[DSUisu]*';
 
-	/**
+	/*
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	public $allowedFilters = [
+	public $allowedFilters = array(
 		'addslashes',
 		'dechex',
 		'intval',
@@ -50,19 +50,19 @@ class BBCodeMonkey
 		'ucfirst',
 		'ucwords',
 		'urlencode'
-	];
+	);
 
-	/**
+	/*
 	* @var Configurator Instance of Configurator;
 	*/
 	protected $configurator;
 
-	/**
+	/*
 	* @var array Regexps used in the named subpatterns generated automatically for composite
 	*            attributes. For instance, "foo={NUMBER},{NUMBER}" will be transformed into
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
 	*/
-	public $tokenRegexp = [
+	public $tokenRegexp = array(
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
@@ -74,17 +74,17 @@ class BBCodeMonkey
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
 		'UINT'       => '0|[1-9]\\d*'
-	];
+	);
 
-	/**
+	/*
 	* @var array List of token types that are used to represent raw, unfiltered content
 	*/
-	public $unfilteredTokens = [
+	public $unfilteredTokens = array(
 		'ANYTHING',
 		'TEXT'
-	];
+	);
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  Configurator $configurator Instance of Configurator
@@ -95,7 +95,7 @@ class BBCodeMonkey
 		$this->configurator = $configurator;
 	}
 
-	/**
+	/*
 	* Create a BBCode and its underlying tag and template(s) based on its reference usage
 	*
 	* @param  string          $usage    BBCode usage, e.g. [B]{TEXT}[/b]
@@ -105,60 +105,52 @@ class BBCodeMonkey
 	*/
 	public function create($usage, $template)
 	{
+		$_this = $this;
+
 		// Parse the BBCode usage
 		$config = $this->parse($usage);
 
 		// Create a template object for manipulation
 		if (!($template instanceof Template))
-		{
 			$template = new Template($template);
-		}
 
 		// Replace the passthrough token in the BBCode's template
 		$template->replaceTokens(
 			'#\\{(?:[A-Z]+[A-Z_0-9]*|@[-\\w]+)\\}#',
-			function ($m) use ($config)
+			function ($m) use ($config, $_this)
 			{
-				$tokenId = substr($m[0], 1, -1);
+				$tokenId = \substr($m[0], 1, -1);
 
 				// Acknowledge {@foo} as an XPath expression even outside of attribute value
 				// templates
 				if ($tokenId[0] === '@')
-				{
-					return ['expression', $tokenId];
-				}
+					return array('expression', $tokenId);
 
 				// Test whether this is a known token
 				if (isset($config['tokens'][$tokenId]))
-				{
 					// Replace with the corresponding attribute
-					return ['expression', '@' . $config['tokens'][$tokenId]];
-				}
+					return array('expression', '@' . $config['tokens'][$tokenId]);
 
 				// Test whether the token is used as passthrough
 				if ($tokenId === $config['passthroughToken'])
-				{
 					// Use substring() to exclude the <st/> and <et/> children
-					return ['passthrough', false];
-				}
+					return array('passthrough', \false);
 
 				// Undefined token. If it's the name of a filter, consider it's an error
-				if ($this->isFilter($tokenId))
-				{
+				if ($_this->isFilter($tokenId))
 					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
-				}
 
 				// Use the token's name as parameter name
-				return ['expression', '$' . $tokenId];
+				return array('expression', '$' . $tokenId);
 			}
 		);
 
 		// Prepare the return array
-		$return = [
+		$return = array(
 			'bbcode'     => $config['bbcode'],
 			'bbcodeName' => $config['bbcodeName'],
 			'tag'        => $config['tag']
-		];
+		);
 
 		// Set the template for this BBCode's tag
 		$return['tag']->template = $template;
@@ -166,7 +158,7 @@ class BBCodeMonkey
 		return $return;
 	}
 
-	/**
+	/*
 	* Create a BBCode based on its reference usage
 	*
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
@@ -178,28 +170,28 @@ class BBCodeMonkey
 		$bbcode = new BBCode;
 
 		// This is the config we will return
-		$config = [
+		$config = array(
 			'tag'              => $tag,
 			'bbcode'           => $bbcode,
-			'passthroughToken' => null
-		];
+			'passthroughToken' => \null
+		);
 
 		// Encode maps to avoid special characters to interfere with definitions
-		$usage = preg_replace_callback(
+		$usage = \preg_replace_callback(
 			'#(\\{(?>HASH)?MAP=)([^:]+:[^,;}]+(?>,[^:]+:[^,;}]+)*)(?=[;}])#',
 			function ($m)
 			{
-				return $m[1] . base64_encode($m[2]);
+				return $m[1] . \base64_encode($m[2]);
 			},
 			$usage
 		);
 
 		// Encode regexps to avoid special characters to interfere with definitions
-		$usage = preg_replace_callback(
+		$usage = \preg_replace_callback(
 			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . '(?:,' . self::REGEXP . ')*)#',
 			function ($m)
 			{
-				return $m[1] . base64_encode($m[2]);
+				return $m[1] . \base64_encode($m[2]);
 			},
 			$usage
 		);
@@ -215,23 +207,19 @@ class BBCodeMonkey
 		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
 		        . '$)i';
 
-		if (!preg_match($regexp, trim($usage), $m))
-		{
+		if (!\preg_match($regexp, \trim($usage), $m))
 			throw new InvalidArgumentException('Cannot interpret the BBCode definition');
-		}
 
 		// Save the BBCode's name
 		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
 
 		// Prepare the attributes definition, e.g. "foo={BAR}"
-		$definitions = preg_split('#\\s+#', trim($m['attributes']), -1, PREG_SPLIT_NO_EMPTY);
+		$definitions = \preg_split('#\\s+#', \trim($m['attributes']), -1, \PREG_SPLIT_NO_EMPTY);
 
 		// If there's a default attribute, we prepend it to the list using the BBCode's name as
 		// attribute name
 		if (!empty($m['defaultAttribute']))
-		{
-			array_unshift($definitions, $m['bbcodeName'] . $m['defaultAttribute']);
-		}
+			\array_unshift($definitions, $m['bbcodeName'] . $m['defaultAttribute']);
 
 		// Append the content token to the attributes list under the name "content" if it's anything
 		// but raw {TEXT} (or other unfiltered tokens)
@@ -239,10 +227,8 @@ class BBCodeMonkey
 		{
 			$regexp = '#^\\{' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*\\}$#D';
 
-			if (preg_match($regexp, $m['content']))
-			{
-				$config['passthroughToken'] = substr($m['content'], 1, -1);
-			}
+			if (\preg_match($regexp, $m['content']))
+				$config['passthroughToken'] = \substr($m['content'], 1, -1);
 			else
 			{
 				$definitions[] = 'content=' . $m['content'];
@@ -251,19 +237,19 @@ class BBCodeMonkey
 		}
 
 		// Separate the attribute definitions from the BBCode options
-		$attributeDefinitions = [];
+		$attributeDefinitions = array();
 		foreach ($definitions as $definition)
 		{
-			$pos   = strpos($definition, '=');
-			$name  = substr($definition, 0, $pos);
-			$value = substr($definition, 1 + $pos);
+			$pos   = \strpos($definition, '=');
+			$name  = \substr($definition, 0, $pos);
+			$value = \substr($definition, 1 + $pos);
 
 			// Decode base64-encoded tokens
-			$value = preg_replace_callback(
+			$value = \preg_replace_callback(
 				'#(\\{(?>HASHMAP|MAP|PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
 				function ($m)
 				{
-					return $m[1] . base64_decode($m[2]);
+					return $m[1] . \base64_decode($m[2]);
 				},
 				$value
 			);
@@ -272,42 +258,34 @@ class BBCodeMonkey
 			// otherwise it's an attribute definition
 			if ($name[0] === '$')
 			{
-				$optionName = substr($name, 1);
+				$optionName = \substr($name, 1);
 
 				if ($value === 'true')
-				{
-					$value = true;
-				}
+					$value = \true;
 				elseif ($value === 'false')
-				{
-					$value = false;
-				}
+					$value = \false;
 
 				$bbcode->$optionName = $value;
 			}
 			elseif ($name[0] === '#')
 			{
-				$ruleName = substr($name, 1);
+				$ruleName = \substr($name, 1);
 
 				// Supports #denyChild=foo,bar
-				foreach (explode(',', $value) as $value)
+				foreach (\explode(',', $value) as $value)
 				{
 					if ($value === 'true')
-					{
-						$value = true;
-					}
+						$value = \true;
 					elseif ($value === 'false')
-					{
-						$value = false;
-					}
+						$value = \false;
 
 					$tag->rules->$ruleName($value);
 				}
 			}
 			else
 			{
-				$attrName = strtolower(trim($name));
-				$attributeDefinitions[] = [$attrName, $value];
+				$attrName = \strtolower(\trim($name));
+				$attributeDefinitions[] = array($attrName, $value);
 			}
 		}
 
@@ -317,17 +295,15 @@ class BBCodeMonkey
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
 		if (isset($tokens[$config['passthroughToken']]))
-		{
-			$config['passthroughToken'] = null;
-		}
+			$config['passthroughToken'] = \null;
 
 		// Add the list of known (and only the known) tokens to the config
-		$config['tokens'] = array_filter($tokens);
+		$config['tokens'] = \array_filter($tokens);
 
 		return $config;
 	}
 
-	/**
+	/*
 	* Parse a string of attribute definitions and add the attributes/options to the tag/BBCode
 	*
 	* Attributes come in two forms. Most commonly, in the form of a single token, e.g.
@@ -359,33 +335,30 @@ class BBCodeMonkey
 	*/
 	protected function addAttributes(array $definitions, BBCode $bbcode, Tag $tag)
 	{
-		/**
+		/*
 		* @var array List of composites' tokens. Each element is composed of an attribute name, the
 		*            composite's definition and an array of tokens
 		*/
-		$composites = [];
+		$composites = array();
 
-		/**
+		/*
 		* @var array Map of [tokenId => attrName]. If the same token is used in multiple attributes
 		*            it is set to FALSE
 		*/
-		$table = [];
+		$table = array();
 
-		foreach ($definitions as list($attrName, $definition))
+		foreach ($definitions as $_3899968967)
 		{
+			list($attrName, $definition) = $_3899968967;
 			// The first attribute defined is set as default
 			if (!isset($bbcode->defaultAttribute))
-			{
 				$bbcode->defaultAttribute = $attrName;
-			}
 
 			// Parse the tokens in that definition
 			$tokens = self::parseTokens($definition);
 
 			if (empty($tokens))
-			{
 				throw new RuntimeException('No valid tokens found in ' . $attrName . "'s definition " . $definition);
-			}
 
 			// Test whether this attribute has one single all-encompassing token
 			if ($tokens[0]['content'] === $definition)
@@ -393,24 +366,16 @@ class BBCodeMonkey
 				$token = $tokens[0];
 
 				if ($token['type'] === 'PARSE')
-				{
 					foreach ($token['regexps'] as $regexp)
-					{
 						$tag->attributePreprocessors->add($attrName, $regexp);
-					}
-				}
 				elseif (isset($tag->attributes[$attrName]))
-				{
 					throw new RuntimeException("Attribute '" . $attrName . "' is declared twice");
-				}
 				else
 				{
 					// Remove the "useContent" option and add the attribute's name to the list of
 					// attributes to use this BBCode's content
 					if (!empty($token['options']['useContent']))
-					{
 						$bbcode->contentAttributes[] = $attrName;
-					}
 					unset($token['options']['useContent']);
 
 					// Add the attribute
@@ -419,22 +384,21 @@ class BBCodeMonkey
 					// Record the token ID if applicable
 					$tokenId = $token['id'];
 					$table[$tokenId] = (isset($table[$tokenId]))
-					                 ? false
+					                 ? \false
 					                 : $attrName;
 				}
 			}
 			else
-			{
-				$composites[] = [$attrName, $definition, $tokens];
-			}
+				$composites[] = array($attrName, $definition, $tokens);
 		}
 
-		foreach ($composites as list($attrName, $definition, $tokens))
+		foreach ($composites as $_763687072)
 		{
+			list($attrName, $definition, $tokens) = $_763687072;
 			$regexp  = '/^';
 			$lastPos = 0;
 
-			$usedTokens = [];
+			$usedTokens = array();
 
 			foreach ($tokens as $token)
 			{
@@ -442,18 +406,14 @@ class BBCodeMonkey
 				$tokenType = $token['type'];
 
 				if ($tokenType === 'PARSE')
-				{
 					// Disallow {PARSE} tokens because attribute preprocessors cannot feed into
 					// other attribute preprocessors
 					throw new RuntimeException('{PARSE} tokens can only be used has the sole content of an attribute');
-				}
 
 				// Ensure that tokens are only used once per definition so we don't have multiple
 				// subpatterns using the same name
 				if (isset($usedTokens[$tokenId]))
-				{
 					throw new RuntimeException('Token {' . $tokenId . '} used multiple times in attribute ' . $attrName . "'s definition");
-				}
 				$usedTokens[$tokenId] = 1;
 
 				// Find the attribute name associated with this token, or create an attribute
@@ -462,10 +422,8 @@ class BBCodeMonkey
 				{
 					$matchName = $table[$tokenId];
 
-					if ($matchName === false)
-					{
+					if ($matchName === \false)
 						throw new RuntimeException('Token {' . $tokenId . "} used in attribute '" . $attrName . "' is ambiguous");
-					}
 				}
 				else
 				{
@@ -484,9 +442,9 @@ class BBCodeMonkey
 					$attribute = $tag->attributes->add($matchName);
 
 					// Append the corresponding filter if applicable
-					if (!in_array($tokenType, $this->unfilteredTokens, true))
+					if (!\in_array($tokenType, $this->unfilteredTokens, \true))
 					{
-						$filter = $this->configurator->attributeFilters->get('#' . strtolower($tokenType));
+						$filter = $this->configurator->attributeFilters->get('#' . \strtolower($tokenType));
 						$attribute->filterChain->append($filter);
 					}
 
@@ -495,7 +453,7 @@ class BBCodeMonkey
 				}
 
 				// Append the literal text between the last position and current position
-				$regexp .= preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$regexp .= \preg_quote(\substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
 
 				// Grab the expression that corresponds to the token type, or use a catch-all
 				// expression otherwise
@@ -508,11 +466,11 @@ class BBCodeMonkey
 				$regexp .= '(?<' . $matchName . '>' . $expr . ')';
 
 				// Update the last position
-				$lastPos = $token['pos'] + strlen($token['content']);
+				$lastPos = $token['pos'] + \strlen($token['content']);
 			}
 
 			// Append the literal text that follows the last token and finish the regexp
-			$regexp .= preg_quote(substr($definition, $lastPos), '/') . '$/D';
+			$regexp .= \preg_quote(\substr($definition, $lastPos), '/') . '$/D';
 
 			// Add the attribute preprocessor to the config
 			$tag->attributePreprocessors->add($attrName, $regexp);
@@ -521,26 +479,20 @@ class BBCodeMonkey
 		// Now create attributes generated from attribute preprocessors. For instance, preprocessor
 		// #(?<width>\\d+),(?<height>\\d+)# will generate two attributes named "width" and height
 		// with a regexp filter "#^(?:\\d+)$#D", unless they were explicitly defined otherwise
-		$newAttributes = [];
+		$newAttributes = array();
 		foreach ($tag->attributePreprocessors as $attributePreprocessor)
-		{
 			foreach ($attributePreprocessor->getAttributes() as $attrName => $regexp)
 			{
 				if (isset($tag->attributes[$attrName]))
-				{
 					// This attribute was already explicitly defined, nothing else to add
 					continue;
-				}
 
 				if (isset($newAttributes[$attrName])
 				 && $newAttributes[$attrName] !== $regexp)
-				{
 					throw new RuntimeException("Ambiguous attribute '" . $attrName . "' created using different regexps needs to be explicitly defined");
-				}
 
 				$newAttributes[$attrName] = $regexp;
 			}
-		}
 
 		foreach ($newAttributes as $attrName => $regexp)
 		{
@@ -553,7 +505,7 @@ class BBCodeMonkey
 		return $table;
 	}
 
-	/**
+	/*
 	* Parse and return all the tokens contained in a definition
 	*
 	* @param  string $definition
@@ -561,83 +513,75 @@ class BBCodeMonkey
 	*/
 	protected static function parseTokens($definition)
 	{
-		$tokenTypes = [
+		$tokenTypes = array(
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'map'    => '(?:HASH)?MAP[0-9]*=(?<map>.+?)',
 			'parse'  => 'PARSE=(?<regexps>' . self::REGEXP . '(?:,' . self::REGEXP . ')*)',
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . self::REGEXP . ')',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
-		];
+		);
 
 		// Capture the content of every token in that attribute's definition. Usually there will
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
 		// attributes such as [FLASH={NUMBER},{NUMBER}]
-		preg_match_all(
-			'#\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
+		\preg_match_all(
+			'#\\{(' . \implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
-			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+			\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 		);
 
-		$tokens = [];
+		$tokens = array();
 		foreach ($matches as $m)
 		{
 			if (isset($m['other'][0])
-			 && preg_match('#^(?:CHOICE|HASHMAP|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
-			{
+			 && \preg_match('#^(?:CHOICE|HASHMAP|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
 				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
-			}
 
-			$token = [
+			$token = array(
 				'pos'     => $m[0][1],
 				'content' => $m[0][0],
-				'options' => []
-			];
+				'options' => array()
+			);
 
 			// Get this token's type by looking at the start of the match
 			$head = $m[1][0];
-			$pos  = strpos($head, '=');
+			$pos  = \strpos($head, '=');
 
-			if ($pos === false)
-			{
+			if ($pos === \false)
 				// {FOO}
 				$token['id'] = $head;
-			}
 			else
 			{
 				// {FOO=...}
-				$token['id'] = substr($head, 0, $pos);
+				$token['id'] = \substr($head, 0, $pos);
 
 				// Copy the content of named subpatterns into the token's config
 				foreach ($m as $k => $v)
-				{
-					if (!is_numeric($k) && $k !== 'options' && $v[1] !== -1)
-					{
+					if (!\is_numeric($k) && $k !== 'options' && $v[1] !== -1)
 						$token[$k] = $v[0];
-					}
-				}
 			}
 
 			// The token's type is its id minus the number, e.g. NUMBER1 => NUMBER
-			$token['type'] = rtrim($token['id'], '0123456789');
+			$token['type'] = \rtrim($token['id'], '0123456789');
 
 			// Parse the options
 			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
-			foreach (preg_split('#;+#', $options, -1, PREG_SPLIT_NO_EMPTY) as $pair)
+			foreach (\preg_split('#;+#', $options, -1, \PREG_SPLIT_NO_EMPTY) as $pair)
 			{
-				$pos = strpos($pair, '=');
+				$pos = \strpos($pair, '=');
 
-				if ($pos === false)
+				if ($pos === \false)
 				{
 					// Options with no value are set to true, e.g. {FOO;useContent}
 					$k = $pair;
-					$v = true;
+					$v = \true;
 				}
 				else
 				{
-					$k = substr($pair, 0, $pos);
-					$v = substr($pair, 1 + $pos);
+					$k = \substr($pair, 0, $pos);
+					$v = \substr($pair, 1 + $pos);
 				}
 
 				$token['options'][$k] = $v;
@@ -648,14 +592,12 @@ class BBCodeMonkey
 			{
 				// Match all occurences of a would-be regexp followed by a comma or the end of the
 				// string
-				preg_match_all('#' . self::REGEXP . '(?:,|$)#', $token['regexps'], $m);
+				\preg_match_all('#' . self::REGEXP . '(?:,|$)#', $token['regexps'], $m);
 
-				$regexps = [];
+				$regexps = array();
 				foreach ($m[0] as $regexp)
-				{
 					// remove the potential comma at the end
-					$regexps[] = rtrim($regexp, ',');
-				}
+					$regexps[] = \rtrim($regexp, ',');
 
 				$token['regexps'] = $regexps;
 			}
@@ -666,7 +608,7 @@ class BBCodeMonkey
 		return $tokens;
 	}
 
-	/**
+	/*
 	* Generate an attribute based on a token
 	*
 	* @param  array     $token Token this attribute is based on
@@ -702,7 +644,7 @@ class BBCodeMonkey
 		{
 			$filter = $this->configurator->attributeFilters->get('#choice');
 			$attribute->filterChain->append($filter)->setValues(
-				explode(',', $token['choices']),
+				\explode(',', $token['choices']),
 				!empty($token['options']['caseSensitive'])
 			);
 			unset($token['options']['caseSensitive']);
@@ -710,17 +652,15 @@ class BBCodeMonkey
 		elseif ($token['type'] === 'HASHMAP' || $token['type'] === 'MAP')
 		{
 			// Build the map from the string
-			$map = [];
-			foreach (explode(',', $token['map']) as $pair)
+			$map = array();
+			foreach (\explode(',', $token['map']) as $pair)
 			{
-				$pos = strpos($pair, ':');
+				$pos = \strpos($pair, ':');
 
-				if ($pos === false)
-				{
+				if ($pos === \false)
 					throw new RuntimeException("Invalid map assignment '" . $pair . "'");
-				}
 
-				$map[substr($pair, 0, $pos)] = substr($pair, 1 + $pos);
+				$map[\substr($pair, 0, $pos)] = \substr($pair, 1 + $pos);
 			}
 
 			// Create the filter then append it to the attribute
@@ -746,7 +686,7 @@ class BBCodeMonkey
 			unset($token['options']['caseSensitive']);
 			unset($token['options']['strict']);
 		}
-		elseif (!in_array($token['type'], $this->unfilteredTokens, true))
+		elseif (!\in_array($token['type'], $this->unfilteredTokens, \true))
 		{
 			$filter = $this->configurator->attributeFilters->get('#' . $token['type']);
 			$attribute->filterChain->append($filter);
@@ -761,24 +701,18 @@ class BBCodeMonkey
 		// Set the "required" option if "required" or "optional" is set, then remove
 		// the "optional" option
 		if (isset($token['options']['required']))
-		{
 			$token['options']['required'] = (bool) $token['options']['required'];
-		}
 		elseif (isset($token['options']['optional']))
-		{
 			$token['options']['required'] = !$token['options']['optional'];
-		}
 		unset($token['options']['optional']);
 
 		foreach ($token['options'] as $k => $v)
-		{
 			$attribute->$k = $v;
-		}
 
 		return $attribute;
 	}
 
-	/**
+	/*
 	* Append a list of filters to an attribute's filterChain
 	*
 	* @param  Attribute $attribute
@@ -787,46 +721,40 @@ class BBCodeMonkey
 	*/
 	protected function appendFilters(Attribute $attribute, $filters)
 	{
-		foreach (preg_split('#\\s*,\\s*#', $filters) as $filterName)
+		foreach (\preg_split('#\\s*,\\s*#', $filters) as $filterName)
 		{
-			if (substr($filterName, 0, 1) !== '#'
-			 && !in_array($filterName, $this->allowedFilters, true))
-			{
+			if (\substr($filterName, 0, 1) !== '#'
+			 && !\in_array($filterName, $this->allowedFilters, \true))
 				throw new RuntimeException("Filter '" . $filterName . "' is not allowed");
-			}
 
 			$filter = $this->configurator->attributeFilters->get($filterName);
 			$attribute->filterChain->append($filter);
 		}
 	}
 
-	/**
+	/*
 	* Test whether a token's name is the name of a filter
 	*
 	* @param  string $tokenId Token ID, e.g. "TEXT1"
 	* @return bool
 	*/
-	protected function isFilter($tokenId)
+	public function isFilter($tokenId)
 	{
-		$filterName = rtrim($tokenId, '0123456789');
+		$filterName = \rtrim($tokenId, '0123456789');
 
-		if (in_array($filterName, $this->unfilteredTokens, true))
-		{
-			return true;
-		}
+		if (\in_array($filterName, $this->unfilteredTokens, \true))
+			return \true;
 
 		// Try to load the filter
 		try
 		{
 			if ($this->configurator->attributeFilters->get('#' . $filterName))
-			{
-				return true;
-			}
+				return \true;
 		}
 		catch (Exception $e)
 		{
 		}
 
-		return false;
+		return \false;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,7 +17,7 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-/**
+/*
 * @method mixed   add(mixed $value)
 * @method mixed   append(mixed $value)
 * @method array   asConfig()
@@ -47,14 +47,121 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 */
 class RulesGenerator implements ArrayAccess, Iterator
 {
-	use CollectionProxy;
+	/*
+	* Forward all unknown method calls to $this->collection
+	*
+	* @param  string $methodName
+	* @param  array  $args
+	* @return mixed
+	*/
+	public function __call($methodName, $args)
+	{
+		return \call_user_func_array(array($this->collection, $methodName), $args);
+	}
 
-	/**
+	//==========================================================================
+	// ArrayAccess
+	//==========================================================================
+
+	/*
+	* @param  string|integer $offset
+	* @return bool
+	*/
+	public function offsetExists($offset)
+	{
+		return isset($this->collection[$offset]);
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @return mixed
+	*/
+	public function offsetGet($offset)
+	{
+		return $this->collection[$offset];
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @param  mixed          $value
+	* @return void
+	*/
+	public function offsetSet($offset, $value)
+	{
+		$this->collection[$offset] = $value;
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @return void
+	*/
+	public function offsetUnset($offset)
+	{
+		unset($this->collection[$offset]);
+	}
+
+	//==========================================================================
+	// Countable
+	//==========================================================================
+
+	/*
+	* @return integer
+	*/
+	public function count()
+	{
+		return \count($this->collection);
+	}
+
+	//==========================================================================
+	// Iterator
+	//==========================================================================
+
+	/*
+	* @return mixed
+	*/
+	public function current()
+	{
+		return $this->collection->current();
+	}
+
+	/*
+	* @return string|integer
+	*/
+	public function key()
+	{
+		return $this->collection->key();
+	}
+
+	/*
+	* @return mixed
+	*/
+	public function next()
+	{
+		return $this->collection->next();
+	}
+
+	/*
+	* @return void
+	*/
+	public function rewind()
+	{
+		$this->collection->rewind();
+	}
+
+	/*
+	* @return boolean
+	*/
+	public function valid()
+	{
+		return $this->collection->valid();
+	}
+
+	/*
 	* @var RulesGeneratorList Collection of objects
 	*/
 	protected $collection;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Will load the default rule generators
@@ -74,7 +181,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
 	}
 
-	/**
+	/*
 	* Generate rules for given tag collection
 	*
 	* Possible options:
@@ -85,7 +192,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 	* @param  array         $options Array of option settings
 	* @return array
 	*/
-	public function getRules(TagCollection $tags, array $options = [])
+	public function getRules(TagCollection $tags, array $options = array())
 	{
 		// Unless specified otherwise, we consider that the renderered text will be displayed as
 		// the child of a <div> element
@@ -98,7 +205,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$rootForensics = $this->generateRootForensics($parentHTML);
 
 		// Study the tags
-		$templateForensics = [];
+		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
 			// Use the tag's template if applicable or XSLT's implicit default otherwise
@@ -127,7 +234,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return $rules;
 	}
 
-	/**
+	/*
 	* Generate a TemplateForensics instance for the root element
 	*
 	* @param  string            $html Root HTML, e.g. "<div>"
@@ -144,9 +251,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		// Grab the deepest node
 		$node = $body;
 		while ($node->firstChild)
-		{
 			$node = $node->firstChild;
-		}
 
 		// Now append an <xsl:apply-templates/> node to make the markup look like a normal template
 		$node->appendChild($dom->createElementNS(
@@ -158,7 +263,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return new TemplateForensics($dom->saveXML($body));
 	}
 
-	/**
+	/*
 	* Generate and return rules based on a set of TemplateForensics
 	*
 	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
@@ -167,20 +272,18 @@ class RulesGenerator implements ArrayAccess, Iterator
 	*/
 	protected function generateRulesets(array $templateForensics, TemplateForensics $rootForensics)
 	{
-		$rules = [
+		$rules = array(
 			'root' => $this->generateRuleset($rootForensics, $templateForensics),
-			'tags' => []
-		];
+			'tags' => array()
+		);
 
 		foreach ($templateForensics as $tagName => $src)
-		{
 			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
-		}
 
 		return $rules;
 	}
 
-	/**
+	/*
 	* Generate a set of rules for a single TemplateForensics instance
 	*
 	* @param  TemplateForensics $src     Source of the rules
@@ -189,28 +292,18 @@ class RulesGenerator implements ArrayAccess, Iterator
 	*/
 	protected function generateRuleset(TemplateForensics $src, array $targets)
 	{
-		$rules = [];
+		$rules = array();
 
 		foreach ($this->collection as $rulesGenerator)
 		{
 			if ($rulesGenerator instanceof BooleanRulesGenerator)
-			{
 				foreach ($rulesGenerator->generateBooleanRules($src) as $ruleName => $bool)
-				{
 					$rules[$ruleName] = $bool;
-				}
-			}
 
 			if ($rulesGenerator instanceof TargetedRulesGenerator)
-			{
 				foreach ($targets as $tagName => $trg)
-				{
 					foreach ($rulesGenerator->generateTargetedRules($src, $trg) as $ruleName)
-					{
 						$rules[$ruleName][] = $tagName;
-					}
-				}
-			}
 		}
 
 		return $rules;

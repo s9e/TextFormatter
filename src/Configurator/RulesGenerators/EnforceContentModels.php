@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,12 +13,12 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
 {
-	/**
+	/*
 	* @var TemplateForensics
 	*/
 	protected $br;
 
-	/**
+	/*
 	* Constructor
 	*
 	* Prepares the TemplateForensics for <br/>
@@ -30,49 +30,43 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 		$this->br = new TemplateForensics('<br/>');
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		$rules = [];
+		$rules = array();
 
 		if ($src->isTransparent())
-		{
-			$rules['isTransparent'] = true;
-		}
+			$rules['isTransparent'] = \true;
 
 		if (!$src->allowsChild($this->br))
 		{
-			$rules['preventLineBreaks'] = true;
-			$rules['suspendAutoLineBreaks'] = true;
+			$rules['preventLineBreaks'] = \true;
+			$rules['suspendAutoLineBreaks'] = \true;
 		}
 
 		if (!$src->allowsDescendant($this->br))
 		{
-			$rules['disableAutoLineBreaks'] = true;
-			$rules['preventLineBreaks'] = true;
+			$rules['disableAutoLineBreaks'] = \true;
+			$rules['preventLineBreaks'] = \true;
 		}
 
 		return $rules;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		$rules = [];
+		$rules = array();
 
 		if (!$src->allowsChild($trg))
-		{
 			$rules[] = 'denyChild';
-		}
 
 		if (!$src->allowsDescendant($trg))
-		{
 			$rules[] = 'denyDescendant';
-		}
 
 		return $rules;
 	}

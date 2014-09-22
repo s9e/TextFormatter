@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,19 +11,20 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
 	{
-		foreach ($this->config['generics'] as list($tagName, $regexp, $passthroughIdx))
+		foreach ($this->config['generics'] as $_3390458856)
 		{
-			preg_match_all($regexp, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+			list($tagName, $regexp, $passthroughIdx) = $_3390458856;
+			\preg_match_all($regexp, $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
 
 			foreach ($matches as $m)
 			{
 				$startTagPos = $m[0][1];
-				$matchLen    = strlen($m[0][0]);
+				$matchLen    = \strlen($m[0][0]);
 
 				if ($passthroughIdx && isset($m[$passthroughIdx]) && $m[$passthroughIdx][0] !== '')
 				{
@@ -32,7 +33,7 @@ class Parser extends ParserBase
 					// know its length. Everything before is considered part of the start tag, and
 					// everything after is considered part of the end tag
 					$contentPos  = $m[$passthroughIdx][1];
-					$contentLen  = strlen($m[$passthroughIdx][0]);
+					$contentLen  = \strlen($m[$passthroughIdx][0]);
 					$startTagLen = $contentPos - $startTagPos;
 					$endTagPos   = $contentPos + $contentLen;
 					$endTagLen   = $matchLen - ($startTagLen + $contentLen);
@@ -46,17 +47,11 @@ class Parser extends ParserBase
 					);
 				}
 				else
-				{
 					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
-				}
 
 				foreach ($m as $k => $v)
-				{
-					if (!is_numeric($k))
-					{
+					if (!\is_numeric($k))
 						$tag->setAttribute($k, $v[0]);
-					}
-				}
 			}
 		}
 	}

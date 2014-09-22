@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineElements extends TemplateNormalization
 {
-	/**
+	/*
 	* Inline the elements declarations of a template
 	*
 	* Will replace
@@ -51,9 +51,7 @@ class InlineElements extends TemplateNormalization
 
 			// One by one and in order, we move the nodes from the old element to the new one
 			while ($element->firstChild)
-			{
 				$newElement->appendChild($element->removeChild($element->firstChild));
-			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributePreprocessorCollection extends Collection
 {
-	/**
+	/*
 	* Add an attribute preprocessor
 	*
 	* @param  string $attrName Original name
@@ -26,90 +26,80 @@ class AttributePreprocessorCollection extends Collection
 	{
 		$attrName = AttributeName::normalize($attrName);
 
-		$k = serialize([$attrName, $regexp]);
+		$k = \serialize(array($attrName, $regexp));
 		$this->items[$k] = new AttributePreprocessor($regexp);
 
 		return $this->items[$k];
 	}
 
-	/**
+	/*
 	* @return string Name of the attribute the attribute processor uses as source
 	*/
 	public function key()
 	{
-		list($attrName) = unserialize(key($this->items));
+		list($attrName) = \unserialize(\key($this->items));
 
 		return $attrName;
 	}
 
-	/**
+	/*
 	* Merge a set of attribute preprocessors into this collection
 	*
 	* @param array|AttributePreprocessorCollection $attributePreprocessors Instance of AttributePreprocessorCollection or 2D array of [[attrName,regexp|AttributePreprocessor]]
 	*/
 	public function merge($attributePreprocessors)
 	{
-		$error = false;
+		$error = \false;
 
 		if ($attributePreprocessors instanceof AttributePreprocessorCollection)
-		{
 			foreach ($attributePreprocessors as $attrName => $attributePreprocessor)
-			{
 				$this->add($attrName, $attributePreprocessor->getRegexp());
-			}
-		}
-		elseif (is_array($attributePreprocessors))
+		elseif (\is_array($attributePreprocessors))
 		{
 			// This should be a list where each element is a [attrName,regexp] pair, or
 			// [attrName,AttributePreprocessor]
 			foreach ($attributePreprocessors as $values)
 			{
-				if (!is_array($values))
+				if (!\is_array($values))
 				{
-					$error = true;
+					$error = \true;
 					break;
 				}
 
 				list($attrName, $value) = $values;
 
 				if ($value instanceof AttributePreprocessor)
-				{
 					$value = $value->getRegexp();
-				}
 
 				$this->add($attrName, $value);
 			}
 		}
 		else
-		{
-			$error = true;
-		}
+			$error = \true;
 
 		if ($error)
-		{
 			throw new InvalidArgumentException('merge() expects an instance of AttributePreprocessorCollection or a 2D array where each element is a [attribute name, regexp] pair');
-		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		$config = [];
+		$config = array();
 
 		foreach ($this->items as $k => $ap)
 		{
-			list($attrName, $regexp) = unserialize($k);
+			list($attrName, $regexp) = \unserialize($k);
 
 			// Create a JavaScript regexp for the JS variant
 			$jsRegexp = RegexpConvertor::toJS($regexp);
 
 			$config[] = new Variant(
-				[$attrName, $regexp],
-				[
-					'JS' => [$attrName, $jsRegexp, $jsRegexp->map]
-				]
+				array($attrName, $regexp),
+				array(
+					'JS' => array($attrName, $jsRegexp, $jsRegexp->map)
+				)
 			);
 		}
 

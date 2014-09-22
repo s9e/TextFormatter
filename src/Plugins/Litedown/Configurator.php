@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,25 +11,25 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
+	/*
 	* @var array Default tags
 	*/
-	protected $tags = [
+	protected $tags = array(
 		'C'      => '<code><xsl:apply-templates /></code>',
-		'CODE'   => [
-			'attributes' => [
-				'lang' => [
-					'filterChain' => ['#simpletext'],
-					'required'    => false
-				]
-			],
+		'CODE'   => array(
+			'attributes' => array(
+				'lang' => array(
+					'filterChain' => array('#simpletext'),
+					'required'    => \false
+				)
+			),
 			'template' =>
 				'<pre>
 					<code class="{@lang}">
 						<xsl:apply-templates />
 					</code>
 				</pre>'
-		],
+		),
 		'DEL'    => '<del><xsl:apply-templates/></del>',
 		'EM'     => '<em><xsl:apply-templates/></em>',
 		'H1'     => '<h1><xsl:apply-templates/></h1>',
@@ -39,22 +39,22 @@ class Configurator extends ConfiguratorBase
 		'H5'     => '<h5><xsl:apply-templates/></h5>',
 		'H6'     => '<h6><xsl:apply-templates/></h6>',
 		'HR'     => '<hr/>',
-		'IMG'    => [
-			'attributes' => [
-				'alt'   => ['required' => false],
-				'src'   => ['filterChain' => ['#url']],
-				'title' => ['required' => false]
-			],
+		'IMG'    => array(
+			'attributes' => array(
+				'alt'   => array('required' => \false),
+				'src'   => array('filterChain' => array('#url')),
+				'title' => array('required' => \false)
+			),
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
-		],
+		),
 		'LI'     => '<li><xsl:apply-templates/></li>',
-		'LIST'   => [
-			'attributes' => [
-				'type' => [
-					'filterChain' => ['#simpletext'],
-					'required'    => false
-				]
-			],
+		'LIST'   => array(
+			'attributes' => array(
+				'type' => array(
+					'filterChain' => array('#simpletext'),
+					'required'    => \false
+				)
+			),
 			'template' =>
 				'<xsl:choose>
 					<xsl:when test="not(@type)">
@@ -64,24 +64,24 @@ class Configurator extends ConfiguratorBase
 						<ol><xsl:apply-templates/></ol>
 					</xsl:otherwise>
 				</xsl:choose>'
-		],
+		),
 		'QUOTE'  => '<blockquote><xsl:apply-templates/></blockquote>',
 		'STRONG' => '<strong><xsl:apply-templates/></strong>',
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
-		'URL'    => [
-			'attributes' => [
-				'title' => [
-					'required' => false
-				],
-				'url'   => [
-					'filterChain' => ['#url']
-				]
-			],
+		'URL'    => array(
+			'attributes' => array(
+				'title' => array(
+					'required' => \false
+				),
+				'url'   => array(
+					'filterChain' => array('#url')
+				)
+			),
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
-		]
-	];
+		)
+	);
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected function setUp()
@@ -92,33 +92,23 @@ class Configurator extends ConfiguratorBase
 		{
 			// Skip this tag if it already exists
 			if (isset($this->configurator->tags[$tagName]))
-			{
 				continue;
-			}
 
 			// If the tag's config is a single string, it's really its default template
-			if (is_string($tagConfig))
-			{
-				$tagConfig = ['template' => $tagConfig];
-			}
+			if (\is_string($tagConfig))
+				$tagConfig = array('template' => $tagConfig);
 
 			// Replace default filters in the definition
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
-				{
 					if (isset($attributeConfig['filterChain']))
 					{
 						foreach ($attributeConfig['filterChain'] as &$filter)
-						{
-							if (is_string($filter) && $filter[0] === '#')
-							{
+							if (\is_string($filter) && $filter[0] === '#')
 								$filter = $this->configurator->attributeFilters[$filter];
-							}
-						}
 						unset($filter);
 					}
-				}
 				unset($attributeConfig);
 			}
 
@@ -127,11 +117,11 @@ class Configurator extends ConfiguratorBase
 		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		return [];
+		return array();
 	}
 }

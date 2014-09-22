@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -14,14 +14,14 @@ use s9e\TextFormatter\Configurator\Items\Variant;
 
 abstract class ConfigHelper
 {
-	/**
+	/*
 	* Recursively filter a config array to replace variants with the desired value
 	*
 	* @param  array|Traversable &$config  Config array
 	* @param  string             $variant Preferred variant
 	* @return void
 	*/
-	public static function filterVariants(&$config, $variant = null)
+	public static function filterVariants(&$config, $variant = \null)
 	{
 		foreach ($config as $name => $value)
 		{
@@ -33,7 +33,7 @@ abstract class ConfigHelper
 
 				// A null value indicates that the value is not supposed to exist for given variant.
 				// This is different from having no specific value for given variant
-				if ($value === null)
+				if ($value === \null)
 				{
 					unset($config[$name]);
 
@@ -41,16 +41,14 @@ abstract class ConfigHelper
 				}
 			}
 
-			if (is_array($value) || $value instanceof Traversable)
-			{
+			if (\is_array($value) || $value instanceof Traversable)
 				self::filterVariants($value, $variant);
-			}
 
 			$config[$name] = $value;
 		}
 	}
 
-	/**
+	/*
 	* Generate a quickMatch string from a list of strings
 	*
 	* This is basically a LCS implementation, tuned for small strings and fast failure
@@ -62,8 +60,8 @@ abstract class ConfigHelper
 	{
 		foreach ($strings as $string)
 		{
-			$stringLen  = strlen($string);
-			$substrings = [];
+			$stringLen  = \strlen($string);
+			$substrings = array();
 
 			for ($len = $stringLen; $len; --$len)
 			{
@@ -71,36 +69,30 @@ abstract class ConfigHelper
 
 				do
 				{
-					$substrings[substr($string, $pos, $len)] = 1;
+					$substrings[\substr($string, $pos, $len)] = 1;
 				}
 				while (--$pos >= 0);
 			}
 
 			if (isset($goodStrings))
 			{
-				$goodStrings = array_intersect_key($goodStrings, $substrings);
+				$goodStrings = \array_intersect_key($goodStrings, $substrings);
 
 				if (empty($goodStrings))
-				{
 					break;
-				}
 			}
 			else
-			{
 				$goodStrings = $substrings;
-			}
 		}
 
 		if (empty($goodStrings))
-		{
-			return false;
-		}
+			return \false;
 
 		// The strings are stored by length descending, so we return the first in the list
-		return strval(key($goodStrings));
+		return \strval(\key($goodStrings));
 	}
 
-	/**
+	/*
 	* Optimize the size of a deep array by deduplicating identical structures
 	*
 	* This method is meant to be used on a config array which is only read and never modified
@@ -109,18 +101,15 @@ abstract class ConfigHelper
 	* @param  array &$cache
 	* @return array
 	*/
-	public static function optimizeArray(array &$config, array &$cache = [])
+	public static function optimizeArray(array &$config, array &$cache = array())
 	{
 		foreach ($config as $k => &$v)
 		{
-			if (!is_array($v))
-			{
+			if (!\is_array($v))
 				continue;
-			}
 
 			// Iterate over the cache to look for a matching structure
 			foreach ($cache as &$cachedArray)
-			{
 				if ($cachedArray == $v)
 				{
 					// Replace the entry in $config with a reference to the cached value
@@ -129,7 +118,6 @@ abstract class ConfigHelper
 					// Skip to the next element
 					continue 2;
 				}
-			}
 			unset($cachedArray);
 
 			// Record this value in the cache
@@ -141,7 +129,7 @@ abstract class ConfigHelper
 		unset($v);
 	}
 
-	/**
+	/*
 	* Convert a structure to a (possibly multidimensional) array
 	*
 	* @param  mixed $value
@@ -149,44 +137,35 @@ abstract class ConfigHelper
 	* @param  bool  $keepNull  Whether to keep NULL values instead of removing them
 	* @return array
 	*/
-	public static function toArray($value, $keepEmpty = false, $keepNull = false)
+	public static function toArray($value, $keepEmpty = \false, $keepNull = \false)
 	{
-		$array = [];
+		$array = array();
 
 		foreach ($value as $k => $v)
 		{
 			if ($v instanceof ConfigProvider)
-			{
 				$v = $v->asConfig();
-			}
-			elseif ($v instanceof Traversable || is_array($v))
-			{
+			elseif ($v instanceof Traversable || \is_array($v))
 				$v = self::toArray($v, $keepEmpty, $keepNull);
-			}
-			elseif (is_scalar($v) || is_null($v))
-			{
+			elseif (\is_scalar($v) || \is_null($v))
 				// Do nothing
-			}
+;
 			else
 			{
-				$type = (is_object($v))
-				      ? 'an instance of ' . get_class($v)
-				      : 'a ' . gettype($v);
+				$type = (\is_object($v))
+				      ? 'an instance of ' . \get_class($v)
+				      : 'a ' . \gettype($v);
 
 				throw new RuntimeException('Cannot convert ' . $type . ' to array');
 			}
 
 			if (!isset($v) && !$keepNull)
-			{
 				// We don't record NULL values
 				continue;
-			}
 
-			if (!$keepEmpty && $v === [])
-			{
+			if (!$keepEmpty && $v === array())
 				// We don't record empty structures
 				continue;
-			}
 
 			$array[$k] = $v;
 		}

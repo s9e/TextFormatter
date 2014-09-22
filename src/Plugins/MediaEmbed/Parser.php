@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -22,7 +22,7 @@ class Parser extends ParserBase
 		{
 			$url = $m[0][0];
 			$pos = $m[0][1];
-			$len = strlen($url);
+			$len = \strlen($url);
 
 			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
 			$tag->setAttribute('url', $url);
@@ -32,7 +32,7 @@ class Parser extends ParserBase
 		}
 	}
 
-	/**
+	/*
 	* Filter a MEDIA tag
 	*
 	* This will always invalidate the original tag, and possibly replace it with the tag that
@@ -55,20 +55,16 @@ class Parser extends ParserBase
 			// [media=youtube id=xxxx]xxxx[/media]
 			if (!$tag->hasAttribute('id')
 			 && $tag->hasAttribute('url')
-			 && strpos($tag->getAttribute('url'), '://') === false)
-			{
+			 && \strpos($tag->getAttribute('url'), '://') === \false)
 				$tag->setAttribute('id', $tag->getAttribute('url'));
-			}
 		}
 		elseif ($tag->hasAttribute('url'))
 		{
 			// Capture the scheme and (if applicable) host of the URL
-			$p = parse_url($tag->getAttribute('url'));
+			$p = \parse_url($tag->getAttribute('url'));
 
 			if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
-			{
 				$tagName = $sites[$p['scheme'] . ':'];
-			}
 			elseif (isset($p['host']))
 			{
 				$host = $p['host'];
@@ -83,13 +79,11 @@ class Parser extends ParserBase
 						break;
 					}
 
-					$pos = strpos($host, '.');
-					if ($pos === false)
-					{
+					$pos = \strpos($host, '.');
+					if ($pos === \false)
 						break;
-					}
 
-					$host = substr($host, 1 + $pos);
+					$host = \substr($host, 1 + $pos);
 				}
 				while ($host > '');
 			}
@@ -104,15 +98,15 @@ class Parser extends ParserBase
 			$rpos = $endTag->getPos() + $endTag->getLen();
 
 			// Create a new tag and copy this tag's attributes and priority
-			$newTag = $tagStack->addSelfClosingTag(strtoupper($tagName), $lpos, $rpos - $lpos);
+			$newTag = $tagStack->addSelfClosingTag(\strtoupper($tagName), $lpos, $rpos - $lpos);
 			$newTag->setAttributes($tag->getAttributes());
 			$newTag->setSortPriority($tag->getSortPriority());
 		}
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Test whether a given tag has at least one non-default attribute
 	*
 	* @param  Tag  $tag The original tag
@@ -121,17 +115,13 @@ class Parser extends ParserBase
 	public static function hasNonDefaultAttribute(Tag $tag)
 	{
 		foreach ($tag->getAttributes() as $attrName => $void)
-		{
 			if ($attrName !== 'url')
-			{
-				return true;
-			}
-		}
+				return \true;
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Scrape the content of an URL to extract some data
 	*
 	* @param  Tag    $tag          Source tag
@@ -139,35 +129,29 @@ class Parser extends ParserBase
 	* @param  string $cacheDir     Path to the cache directory
 	* @return bool                 Unconditionally TRUE
 	*/
-	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = null)
+	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = \null)
 	{
 		if (!$tag->hasAttribute('url'))
-		{
-			return true;
-		}
+			return \true;
 
 		$url = $tag->getAttribute('url');
 
 		// Ensure that the URL actually looks like a URL
-		if (!preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
-		{
+		if (!\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
 			// A bad URL means we don't scrape, but it doesn't necessarily invalidate the tag
-			return true;
-		}
+			return \true;
 
 		foreach ($scrapeConfig as $scrape)
-		{
 			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
-		}
 
-		return true;
+		return \true;
 	}
 
 	//==============================================================================================
 	// Internals
 	//==============================================================================================
 
-	/**
+	/*
 	* Replace {@var} tokens in given URL
 	*
 	* @param  string   $url  Original URL
@@ -176,7 +160,7 @@ class Parser extends ParserBase
 	*/
 	protected static function replaceTokens($url, array $vars)
 	{
-		return preg_replace_callback(
+		return \preg_replace_callback(
 			'#\\{@(\\w+)\\}#',
 			function ($m) use ($vars)
 			{
@@ -186,7 +170,7 @@ class Parser extends ParserBase
 		);
 	}
 
-	/**
+	/*
 	* Scrape the content of an URL to extract some data
 	*
 	* @param  string $url      Original URL
@@ -200,25 +184,19 @@ class Parser extends ParserBase
 		list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
 
 		if (!self::tagIsMissingAnyAttribute($tag, $attrNames))
-		{
 			return;
-		}
 
 		// Test whether this URL matches any regexp
-		$vars    = [];
-		$matched = false;
+		$vars    = array();
+		$matched = \false;
 		foreach ((array) $matchRegexps as $matchRegexp)
-		{
-			if (preg_match($matchRegexp, $url, $m))
+			if (\preg_match($matchRegexp, $url, $m))
 			{
 				$vars   += $m;
-				$matched = true;
+				$matched = \true;
 			}
-		}
 		if (!$matched)
-		{
 			return;
-		}
 
 		// Add the tag's attributes to the named captures from the "match" regexp
 		$vars += $tag->getAttributes();
@@ -227,7 +205,7 @@ class Parser extends ParserBase
 		self::scrapeUrl($scrapeUrl, $tag, (array) $extractRegexps, $cacheDir);
 	}
 
-	/**
+	/*
 	* Scrape a URL to help fill a tag's attributes
 	*
 	* @param  string      $url      URL to scrape
@@ -242,21 +220,13 @@ class Parser extends ParserBase
 
 		// Execute the extract regexps and fill any missing attribute
 		foreach ($regexps as $regexp)
-		{
-			if (preg_match($regexp, $content, $m))
-			{
+			if (\preg_match($regexp, $content, $m))
 				foreach ($m as $k => $v)
-				{
-					if (!is_numeric($k) && !$tag->hasAttribute($k))
-					{
+					if (!\is_numeric($k) && !$tag->hasAttribute($k))
 						$tag->setAttribute($k, $v);
-					}
-				}
-			}
-		}
 	}
 
-	/**
+	/*
 	* Test whether a tag is missing any of given attributes
 	*
 	* @param  Tag      $tag
@@ -266,17 +236,13 @@ class Parser extends ParserBase
 	protected static function tagIsMissingAnyAttribute(Tag $tag, array $attrNames)
 	{
 		foreach ($attrNames as $attrName)
-		{
 			if (!$tag->hasAttribute($attrName))
-			{
-				return true;
-			}
-		}
+				return \true;
 
-		return false;
+		return \false;
 	}
 
-	/**
+	/*
 	* Retrieve external content (possibly from the cache)
 	*
 	* If the cache directory exists, the external content will be saved into it. Cached content is
@@ -286,35 +252,31 @@ class Parser extends ParserBase
 	* @param  string $cacheDir Path to the cache directory
 	* @return string           External content
 	*/
-	protected static function wget($url, $cacheDir = null)
+	protected static function wget($url, $cacheDir = \null)
 	{
-		$prefix = $suffix = $context = null;
-		if (extension_loaded('zlib'))
+		$prefix = $suffix = $context = \null;
+		if (\extension_loaded('zlib'))
 		{
 			$prefix  = 'compress.zlib://';
 			$suffix  = '.gz';
-			$context = stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']]);
+			$context = \stream_context_create(array('http' => array('header' => 'Accept-Encoding: gzip')));
 		}
 
 		// Return the content from the cache if applicable
-		if (isset($cacheDir) && file_exists($cacheDir))
+		if (isset($cacheDir) && \file_exists($cacheDir))
 		{
-			$cacheFile = $cacheDir . '/http.' . crc32($url) . $suffix;
+			$cacheFile = $cacheDir . '/http.' . \crc32($url) . $suffix;
 
-			if (file_exists($cacheFile))
-			{
-				return file_get_contents($prefix . $cacheFile);
-			}
+			if (\file_exists($cacheFile))
+				return \file_get_contents($prefix . $cacheFile);
 		}
 
 		// Retrieve the external content from the source
-		$content = file_get_contents($prefix . $url, false, $context);
+		$content = \file_get_contents($prefix . $url, \false, $context);
 
 		// Save to the cache if applicable
-		if (isset($cacheFile) && $content !== false)
-		{
-			file_put_contents($prefix . $cacheFile, $content);
-		}
+		if (isset($cacheFile) && $content !== \false)
+			\file_put_contents($prefix . $cacheFile, $content);
 
 		return $content;
 	}

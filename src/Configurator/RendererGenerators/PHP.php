@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,103 +17,103 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\Rendering;
 
-/**
+/*
 * @see docs/DifferencesInRendering.md
 */
 class PHP implements RendererGenerator
 {
-	/**
+	/*
 	* XSL namespace
 	*/
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
-	/**
+	/*
 	* @var string Directory where the renderer's source is automatically saved if set, and if filepath is not set
 	*/
 	public $cacheDir;
 
-	/**
+	/*
 	* @var string Name of the class to be created. If null, a random name will be generated
 	*/
 	public $className;
 
-	/**
+	/*
 	* @var ControlStructuresOptimizer Control structures optimizer
 	*/
 	public $controlStructuresOptimizer;
 
-	/**
+	/*
 	* @var string Prefix used when generating a default class name
 	*/
 	public $defaultClassPrefix = 'Renderer_';
 
-	/**
+	/*
 	* @var bool Whether to enable the Quick renderer
 	*/
-	public $enableQuickRenderer = false;
+	public $enableQuickRenderer = \false;
 
-	/**
+	/*
 	* @var string If set, path to the file where the renderer will be saved
 	*/
 	public $filepath;
 
-	/**
+	/*
 	* @var bool Whether to force non-void, empty elements to use the empty-element tag syntax in XML mode
 	*/
-	public $forceEmptyElements = true;
+	public $forceEmptyElements = \true;
 
-	/**
+	/*
 	* @var string Name of the last class generated
 	*/
 	public $lastClassName;
 
-	/**
+	/*
 	* @var string Path to the last file saved
 	*/
 	public $lastFilepath;
 
-	/**
+	/*
 	* @var Optimizer Optimizer
 	*/
 	public $optimizer;
 
-	/**
+	/*
 	* @var Serializer Serializer
 	*/
 	public $serializer;
 
-	/**
+	/*
 	* @var bool Whether to use the empty-element tag syntax with non-void elements in XML mode
 	*/
-	public $useEmptyElements = true;
+	public $useEmptyElements = \true;
 
-	/**
+	/*
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
 	public $useMultibyteStringFunctions;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  string $cacheDir If set, path to the directory where the renderer will be saved
 	* @return void
 	*/
-	public function __construct($cacheDir = null)
+	public function __construct($cacheDir = \null)
 	{
-		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : sys_get_temp_dir();
+		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : \sys_get_temp_dir();
 
-		if (extension_loaded('tokenizer'))
+		if (\extension_loaded('tokenizer'))
 		{
 			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
 			$this->optimizer = new Optimizer;
 		}
 
-		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
+		$this->useMultibyteStringFunctions = \extension_loaded('mbstring');
 
 		$this->serializer = new Serializer;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function getRenderer(Rendering $rendering)
@@ -123,22 +123,16 @@ class PHP implements RendererGenerator
 
 		// Save the file if applicable
 		if (isset($this->filepath))
-		{
 			$filepath = $this->filepath;
-		}
 		else
-		{
-			$filepath = $this->cacheDir . '/' . str_replace('\\', '_', $this->lastClassName) . '.php';
-		}
+			$filepath = $this->cacheDir . '/' . \str_replace('\\', '_', $this->lastClassName) . '.php';
 
-		file_put_contents($filepath, "<?php\n" . $php);
-		$this->lastFilepath = realpath($filepath);
+		\file_put_contents($filepath, "<?php\n" . $php);
+		$this->lastFilepath = \realpath($filepath);
 
 		// Execute the source to create the class if it doesn't exist
-		if (!class_exists($this->lastClassName, false))
-		{
+		if (!\class_exists($this->lastClassName, \false))
 			include $filepath;
-		}
 
 		// Create an instance and copy the source into the instance
 		$renderer = new $this->lastClassName;
@@ -147,7 +141,7 @@ class PHP implements RendererGenerator
 		return $renderer;
 	}
 
-	/**
+	/*
 	* Generate the source for a PHP class that renders an intermediate representation according to
 	* given rendering configuration
 	*
@@ -164,24 +158,22 @@ class PHP implements RendererGenerator
 		$templates = $rendering->getTemplates();
 
 		// Group templates by content to deduplicate them
-		$groupedTemplates = [];
+		$groupedTemplates = array();
 		foreach ($templates as $tagName => $template)
-		{
 			$groupedTemplates[$template][] = $tagName;
-		}
 
 		// Record whether the template has a <xsl:apply-templates/> with a select attribute
-		$hasApplyTemplatesSelect = false;
+		$hasApplyTemplatesSelect = \false;
 
 		// Assign a branch number to each unique template and record the value for each tag
 		$tagBranch   = 0;
-		$tagBranches = [];
+		$tagBranches = array();
 
 		// Store the compiled template for each branch
-		$compiledTemplates = [];
+		$compiledTemplates = array();
 
 		// Other branch tables
-		$branchTables = [];
+		$branchTables = array();
 
 		// Parse each template and serialize it to PHP
 		foreach ($groupedTemplates as $template => $tagNames)
@@ -191,28 +183,18 @@ class PHP implements RendererGenerator
 
 			// Apply the empty-element options
 			if ($rendering->type === 'xhtml')
-			{
 				$this->fixEmptyElements($ir->documentElement);
-			}
 
 			// Test whether this template uses an <xsl:apply-templates/> element with a select
 			if (!$hasApplyTemplatesSelect)
-			{
 				foreach ($ir->getElementsByTagName('applyTemplates') as $applyTemplates)
-				{
 					if ($applyTemplates->hasAttribute('select'))
-					{
-						$hasApplyTemplatesSelect = true;
-					}
-				}
-			}
+						$hasApplyTemplatesSelect = \true;
 
 			// Serialize the representation to PHP
 			$templateSource = $this->serializer->serialize($ir->documentElement);
 			if (isset($this->optimizer))
-			{
 				$templateSource = $this->optimizer->optimize($templateSource);
-			}
 
 			// Record the branch tables used in this template
 			$branchTables += $this->serializer->branchTables;
@@ -220,9 +202,7 @@ class PHP implements RendererGenerator
 			// Record the source for this branch number and assign this number to each tag
 			$compiledTemplates[$tagBranch] = $templateSource;
 			foreach ($tagNames as $tagName)
-			{
 				$tagBranches[$tagName] = $tagBranch;
-			}
 			++$tagBranch;
 		}
 
@@ -232,19 +212,15 @@ class PHP implements RendererGenerator
 		// Store the compiled template if we plan to create a Quick renderer
 		if ($this->enableQuickRenderer && $rendering->type === 'html')
 		{
-			$quickRender = [];
+			$quickRender = array();
 			foreach ($tagBranches as $tagName => $tagBranch)
-			{
 				$quickRender[$tagName] = $compiledTemplates[$tagBranch];
-			}
 
 			$quickSource = Quick::getSource($quickRender);
 			unset($quickRender);
 		}
 		else
-		{
-			$quickSource = false;
-		}
+			$quickSource = \false;
 
 		// Coalesce all the compiled templates
 		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
@@ -252,24 +228,16 @@ class PHP implements RendererGenerator
 
 		// Test whether any templates needs an XPath engine
 		if ($hasApplyTemplatesSelect)
-		{
-			$needsXPath = true;
-		}
-		elseif (strpos($templatesSource, '$this->getParamAsXPath') !== false)
-		{
-			$needsXPath = true;
-		}
-		elseif (strpos($templatesSource, '$this->xpath') !== false)
-		{
-			$needsXPath = true;
-		}
+			$needsXPath = \true;
+		elseif (\strpos($templatesSource, '$this->getParamAsXPath') !== \false)
+			$needsXPath = \true;
+		elseif (\strpos($templatesSource, '$this->xpath') !== \false)
+			$needsXPath = \true;
 		else
-		{
-			$needsXPath = false;
-		}
+			$needsXPath = \false;
 
 		// Start the code right after the class name, we'll prepend the header when we're done
-		$php = [];
+		$php = array();
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
 		$php[] = '{';
 		$php[] = '	protected $htmlOutput=' . self::export($rendering->type === 'html') . ';';
@@ -277,14 +245,10 @@ class PHP implements RendererGenerator
 		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
 
 		foreach ($branchTables as $varName => $branchTable)
-		{
 			$php[] = '	protected static $' . $varName . '=' . self::export($branchTable) . ';';
-		}
 
 		if ($needsXPath)
-		{
 			$php[] = '	protected $xpath;';
-		}
 
 		$php[] = '	public function __sleep()';
 		$php[] = '	{';
@@ -295,7 +259,7 @@ class PHP implements RendererGenerator
 		$php[] = '	public function renderRichText($xml)';
 		$php[] = '	{';
 
-		if ($quickSource !== false)
+		if ($quickSource !== \false)
 		{
 			// Try the Quick renderer first and if anything happens just keep going with the normal
 			// rendering
@@ -314,46 +278,34 @@ class PHP implements RendererGenerator
 		$php[] = '		$dom = $this->loadXML($xml);';
 
 		if ($needsXPath)
-		{
 			$php[] = '		$this->xpath = new \\DOMXPath($dom);';
-		}
 
 		$php[] = "		\$this->out = '';";
 		$php[] = '		$this->at($dom->documentElement);';
 
 		if ($needsXPath)
-		{
 			$php[] = '		$this->xpath = null;';
-		}
 
 		$php[] = '		return $this->out;';
 		$php[] = '	}';
 
 		if ($hasApplyTemplatesSelect)
-		{
 			$php[] = '	protected function at(\\DOMNode $root, $xpath = null)';
-		}
 		else
-		{
 			$php[] = '	protected function at(\\DOMNode $root)';
-		}
 
 		$php[] = '	{';
 		$php[] = '		if ($root->nodeType === 3)';
 		$php[] = '		{';
-		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');';
+		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . \ENT_NOQUOTES . ');';
 		$php[] = '		}';
 		$php[] = '		else';
 		$php[] = '		{';
 
 		if ($hasApplyTemplatesSelect)
-		{
 			$php[] = '			foreach (isset($xpath) ? $this->xpath->query($xpath, $root) : $root->childNodes as $node)';
-		}
 		else
-		{
 			$php[] = '			foreach ($root->childNodes as $node)';
-		}
 
 		$php[] = '			{';
 		$php[] = '				if (!isset(self::$tagBranches[$node->nodeName]))';
@@ -370,7 +322,7 @@ class PHP implements RendererGenerator
 		$php[] = '	}';
 
 		// Add the getParamAsXPath() method if necessary
-		if (strpos($templatesSource, '$this->getParamAsXPath') !== false)
+		if (\strpos($templatesSource, '$this->getParamAsXPath') !== \false)
 		{
 			$php[] = '	protected function getParamAsXPath($k)';
 			$php[] = '	{';
@@ -387,7 +339,7 @@ class PHP implements RendererGenerator
 			$php[] = '		{';
 			$php[] = '			return "\\"$str\\"";';
 			$php[] = '		}';
-			$php[] = '		$toks = [];';
+			$php[] = '		$toks = array();';
 			$php[] = '		$c = \'"\';';
 			$php[] = '		$pos = 0;';
 			$php[] = '		while ($pos < strlen($str))';
@@ -405,27 +357,23 @@ class PHP implements RendererGenerator
 		}
 
 		// Append the Quick renderer if applicable
-		if ($quickSource !== false)
-		{
+		if ($quickSource !== \false)
 			$php[] = $quickSource;
-		}
 
 		// Close the class definition
 		$php[] = '}';
 
 		// Assemble the source
-		$php = implode("\n", $php);
+		$php = \implode("\n", $php);
 
 		// Finally, optimize the control structures
 		if (isset($this->controlStructuresOptimizer))
-		{
 			$php = $this->controlStructuresOptimizer->optimize($php);
-		}
 
 		// Generate a name for that class if necessary, and save it
 		$className = (isset($this->className))
 		           ? $this->className
-		           : $this->defaultClassPrefix . sha1($php);
+		           : $this->defaultClassPrefix . \sha1($php);
 		$this->lastClassName = $className;
 
 		// Prepare the header
@@ -436,11 +384,11 @@ class PHP implements RendererGenerator
 		        . "*/\n\n";
 
 		// Declare the namespace and class name
-		$pos = strrpos($className, '\\');
-		if ($pos !== false)
+		$pos = \strrpos($className, '\\');
+		if ($pos !== \false)
 		{
-			$header .= 'namespace ' . substr($className, 0, $pos) . ";\n\n";
-			$className = substr($className, 1 + $pos);
+			$header .= 'namespace ' . \substr($className, 0, $pos) . ";\n\n";
+			$className = \substr($className, 1 + $pos);
 		}
 
 		// Prepend the header and the class name
@@ -449,7 +397,7 @@ class PHP implements RendererGenerator
 		return $php;
 	}
 
-	/**
+	/*
 	* Export given value as PHP code
 	*
 	* @param  mixed  $value Original value
@@ -457,21 +405,19 @@ class PHP implements RendererGenerator
 	*/
 	protected static function export($value)
 	{
-		if (is_array($value))
+		if (\is_array($value))
 		{
-			$pairs = [];
+			$pairs = array();
 			foreach ($value as $k => $v)
-			{
-				$pairs[] = var_export($k, true) . '=>' . var_export($v, true);
-			}
+				$pairs[] = \var_export($k, \true) . '=>' . \var_export($v, \true);
 
-			return '[' . implode(',', $pairs) . ']';
+			return 'array(' . \implode(',', $pairs) . ')';
 		}
 
-		return var_export($value, true);
+		return \var_export($value, \true);
 	}
 
-	/**
+	/*
 	* Change the IR to respect the empty-element options
 	*
 	* @param  DOMElement $ir
@@ -485,18 +431,12 @@ class PHP implements RendererGenerator
 			$isVoid  = $element->getAttribute('void');
 
 			if ($isVoid || $isEmpty === 'no')
-			{
 				continue;
-			}
 
 			if (!$this->useEmptyElements)
-			{
 				$element->setAttribute('empty', 'no');
-			}
 			elseif ($isEmpty === 'maybe' && !$this->forceEmptyElements)
-			{
 				$element->setAttribute('empty', 'no');
-			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class Fatdown extends Bundle
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function configure(Configurator $configurator)
@@ -27,42 +27,36 @@ class Fatdown extends Bundle
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 
-		$htmlAliases = [
-			'a'      => ['URL', 'href' => 'url'],
+		$htmlAliases = array(
+			'a'      => array('URL', 'href' => 'url'),
 			'hr'     => 'HR',
 			'em'     => 'EM',
 			's'      => 'S',
 			'strong' => 'STRONG',
 			'sub'    => 'SUB',
 			'sup'    => 'SUP'
-		];
+		);
 		foreach ($htmlAliases as $elName => $alias)
-		{
-			if (is_array($alias))
+			if (\is_array($alias))
 			{
 				$configurator->HTMLElements->aliasElement($elName, $alias[0]);
 				unset($alias[0]);
 
 				foreach ($alias as $attrName => $alias)
-				{
 					$configurator->HTMLElements->aliasAttribute($elName, $attrName, $alias);
-				}
 			}
 			else
-			{
 				$configurator->HTMLElements->aliasElement($elName, $alias);
-			}
-		}
 
-		$htmlElements = [
-			'abbr' => ['title'],
+		$htmlElements = array(
+			'abbr' => array('title'),
 			'b',
 			'br',
 			'code',
 			'del',
-			'div' => ['class'],
+			'div' => array('class'),
 			'i',
-			'img' => ['alt', 'height', 'src', 'title', 'width'],
+			'img' => array('alt', 'height', 'src', 'title', 'width'),
 			'ins',
 			'li',
 			'ol',
@@ -72,26 +66,26 @@ class Fatdown extends Bundle
 			'rt',
 			'rtc',
 			'ruby',
-			'span' => ['class'],
+			'span' => array('class'),
 			'strong',
 			'sub',
 			'sup',
 			'table',
 			'tbody',
-			'td' => ['colspan', 'rowspan'],
+			'td' => array('colspan', 'rowspan'),
 			'tfoot',
-			'th' => ['colspan', 'rowspan', 'scope'],
+			'th' => array('colspan', 'rowspan', 'scope'),
 			'thead',
 			'tr',
 			'u',
 			'ul'
-		];
+		);
 		foreach ($htmlElements as $k => $v)
 		{
-			if (is_numeric($k))
+			if (\is_numeric($k))
 			{
 				$elName    = $v;
-				$attrNames = [];
+				$attrNames = array();
 			}
 			else
 			{
@@ -101,13 +95,11 @@ class Fatdown extends Bundle
 
 			$configurator->HTMLElements->allowElement($elName);
 			foreach ($attrNames as $attrName)
-			{
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
-			}
 		}
 
-		$configurator->plugins->load('MediaEmbed', ['createBBCodes' => false]);
-		$sites = [
+		$configurator->plugins->load('MediaEmbed', array('createBBCodes' => \false));
+		$sites = array(
 			'bandcamp',
 			'dailymotion',
 			'facebook',
@@ -119,10 +111,8 @@ class Fatdown extends Bundle
 			'vimeo',
 			'vine',
 			'youtube'
-		];
+		);
 		foreach ($sites as $site)
-		{
 			$configurator->MediaEmbed->add($site);
-		}
 	}
 }

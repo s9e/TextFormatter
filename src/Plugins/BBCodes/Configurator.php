@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -24,7 +24,7 @@ use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/**
+/*
 * @method mixed   add(string $key)
 * @method array   asConfig()
 * @method void    clear()
@@ -50,29 +50,136 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 */
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
-	use CollectionProxy;
+	/*
+	* Forward all unknown method calls to $this->collection
+	*
+	* @param  string $methodName
+	* @param  array  $args
+	* @return mixed
+	*/
+	public function __call($methodName, $args)
+	{
+		return \call_user_func_array(array($this->collection, $methodName), $args);
+	}
 
-	/**
+	//==========================================================================
+	// ArrayAccess
+	//==========================================================================
+
+	/*
+	* @param  string|integer $offset
+	* @return bool
+	*/
+	public function offsetExists($offset)
+	{
+		return isset($this->collection[$offset]);
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @return mixed
+	*/
+	public function offsetGet($offset)
+	{
+		return $this->collection[$offset];
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @param  mixed          $value
+	* @return void
+	*/
+	public function offsetSet($offset, $value)
+	{
+		$this->collection[$offset] = $value;
+	}
+
+	/*
+	* @param  string|integer $offset
+	* @return void
+	*/
+	public function offsetUnset($offset)
+	{
+		unset($this->collection[$offset]);
+	}
+
+	//==========================================================================
+	// Countable
+	//==========================================================================
+
+	/*
+	* @return integer
+	*/
+	public function count()
+	{
+		return \count($this->collection);
+	}
+
+	//==========================================================================
+	// Iterator
+	//==========================================================================
+
+	/*
+	* @return mixed
+	*/
+	public function current()
+	{
+		return $this->collection->current();
+	}
+
+	/*
+	* @return string|integer
+	*/
+	public function key()
+	{
+		return $this->collection->key();
+	}
+
+	/*
+	* @return mixed
+	*/
+	public function next()
+	{
+		return $this->collection->next();
+	}
+
+	/*
+	* @return void
+	*/
+	public function rewind()
+	{
+		$this->collection->rewind();
+	}
+
+	/*
+	* @return boolean
+	*/
+	public function valid()
+	{
+		return $this->collection->valid();
+	}
+
+	/*
 	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
 	*/
 	public $bbcodeMonkey;
 
-	/**
+	/*
 	* @var BBCodeCollection BBCode collection
 	*/
 	public $collection;
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	protected $quickMatch = '[';
 
-	/**
+	/*
 	* @var RepositoryCollection BBCode repositories
 	*/
 	public $repositories;
 
-	/**
+	/*
 	* Plugin setup
 	*
 	* @return void
@@ -85,7 +192,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
-	/**
+	/*
 	* Add a BBCode using their human-readable representation
 	*
 	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
@@ -95,24 +202,20 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	* @param  array  $options  Supported: 'tagName' and 'rules'
 	* @return BBCode           Newly-created BBCode
 	*/
-	public function addCustom($usage, $template, array $options = [])
+	public function addCustom($usage, $template, array $options = array())
 	{
 		$config = $this->bbcodeMonkey->create($usage, $template);
 
 		if (isset($options['tagName']))
-		{
 			$config['bbcode']->tagName = $options['tagName'];
-		}
 
 		if (isset($options['rules']))
-		{
 			$config['tag']->rules->merge($options['rules']);
-		}
 
 		return $this->addFromConfig($config);
 	}
 
-	/**
+	/*
 	* Add a BBCode from a repository
 	*
 	* @param  string $name       Name of the entry in the repository
@@ -120,15 +223,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	* @param  array  $vars       Variables that will replace default values in the tag definition
 	* @return BBCode             Newly-created BBCode
 	*/
-	public function addFromRepository($name, $repository = 'default', array $vars = [])
+	public function addFromRepository($name, $repository = 'default', array $vars = array())
 	{
 		// Load the Repository if necessary
 		if (!($repository instanceof Repository))
 		{
 			if (!$this->repositories->exists($repository))
-			{
 				throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
-			}
 
 			$repository = $this->repositories->get($repository);
 		}
@@ -136,7 +237,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($repository->get($name, $vars));
 	}
 
-	/**
+	/*
 	* Add a BBCode and its tag based on the return config from BBCodeMonkey
 	*
 	* @param  array  $config BBCodeMonkey::create()'s return array
@@ -150,19 +251,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// If the BBCode doesn't specify a tag name, it's the same as the BBCode
 		if (!isset($bbcode->tagName))
-		{
 			$bbcode->tagName = $bbcodeName;
-		}
 
 		if ($this->collection->exists($bbcodeName))
-		{
 			throw new RuntimeException("BBCode '" . $bbcodeName . "' already exists");
-		}
 
 		if ($this->configurator->tags->exists($bbcode->tagName))
-		{
 			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
-		}
 
 		// Normalize this tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -177,20 +272,18 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $bbcode;
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		if (!count($this->collection))
-		{
-			return false;
-		}
+		if (!\count($this->collection))
+			return \false;
 
 		// Build the regexp that matches all the BBCode names
 		$regexp = RegexpBuilder::fromList(
-			array_keys(iterator_to_array($this->collection)),
-			['delim' => '#']
+			\array_keys(\iterator_to_array($this->collection)),
+			array('delim' => '#')
 		);
 
 		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern.
@@ -204,10 +297,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$endToken = $tokens[0]['endToken'];
 			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
 
-			if ($endPos === strlen($regexp))
-			{
-				$regexp = substr($regexp, 3, -1);
-			}
+			if ($endPos === \strlen($regexp))
+				$regexp = \substr($regexp, 3, -1);
 		}
 
 		// Create the BBCodes config, with its JavaScript variant
@@ -218,11 +309,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
 		{
 			if (isset($bbcodeConfig['predefinedAttributes']))
-			{
 				// Ensure that attribute names are preserved
 				$bbcodeConfig['predefinedAttributes']
 					= new Dictionary($bbcodeConfig['predefinedAttributes']);
-			}
 
 			$jsConfig[$bbcodeName] = $bbcodeConfig;
 		}
@@ -230,10 +319,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Add the JavaScript config as a variant
 		$bbcodesConfig->set('JS', $jsConfig);
 
-		return [
+		return array(
 			'bbcodes'    => $bbcodesConfig,
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
-		];
+		);
 	}
 }

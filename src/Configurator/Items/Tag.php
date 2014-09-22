@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -8,8 +8,12 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
+use RuntimeException;
+use Traversable;
 use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -17,7 +21,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
-/**
+/*
 * @property AttributeCollection $attributes This tag's attributes
 * @property AttributePreprocessorCollection $attributePreprocessors This tag's attribute parsers
 * @property TagFilterChain $filterChain This tag's filter chain
@@ -28,50 +32,210 @@ use s9e\TextFormatter\Configurator\Traits\Configurable;
 */
 class Tag implements ConfigProvider
 {
-	use Configurable;
+	/*
+	* Magic getter
+	*
+	* Will return $this->foo if it exists, then $this->getFoo() or will throw an exception if
+	* neither exists
+	*
+	* @param  string $propName
+	* @return mixed
+	*/
+	public function __get($propName)
+	{
+		$methodName = 'get' . \ucfirst($propName);
 
-	/**
+		// Look for a getter, e.g. getDefaultTemplate()
+		if (\method_exists($this, $methodName))
+			return $this->$methodName();
+
+		if (!\property_exists($this, $propName))
+			throw new RuntimeException("Property '" . $propName . "' does not exist");
+
+		return $this->$propName;
+	}
+
+	/*
+	* Magic setter
+	*
+	* Will call $this->setFoo($propValue) if it exists, otherwise it will set $this->foo.
+	* If $this->foo is a NormalizedCollection, we do not replace it, instead we clear() it then
+	* fill it back up. It will not overwrite an object with a different incompatible object (of a
+	* different, non-extending class) and it will throw an exception if the PHP type cannot match
+	* without incurring data loss.
+	*
+	* @param  string $propName
+	* @param  mixed  $propValue
+	* @return void
+	*/
+	public function __set($propName, $propValue)
+	{
+		$methodName = 'set' . \ucfirst($propName);
+
+		// Look for a setter, e.g. setDefaultChildRule()
+		if (\method_exists($this, $methodName))
+		{
+			$this->$methodName($propValue);
+
+			return;
+		}
+
+		// If the property isn't already set, we just create/set it
+		if (!isset($this->$propName))
+		{
+			$this->$propName = $propValue;
+
+			return;
+		}
+
+		// If we're trying to replace a NormalizedCollection, instead we clear it then
+		// iteratively set new values
+		if ($this->$propName instanceof NormalizedCollection)
+		{
+			if (!\is_array($propValue)
+			 && !($propValue instanceof Traversable))
+				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
+
+			$this->$propName->clear();
+
+			foreach ($propValue as $k => $v)
+				$this->$propName->set($k, $v);
+
+			return;
+		}
+
+		// If this property is an object, test whether they are compatible. Otherwise, test if PHP
+		// types are compatible
+		if (\is_object($this->$propName))
+		{
+			if (!($propValue instanceof $this->$propName))
+				throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of class '" . \get_class($this->$propName) . "' with instance of '" . \get_class($propValue) . "'");
+		}
+		else
+		{
+			// Test whether the PHP types are compatible
+			$oldType = \gettype($this->$propName);
+			$newType = \gettype($propValue);
+
+			// If the property is a boolean, we'll accept "true" and "false" as strings
+			if ($oldType === 'boolean')
+				if ($propValue === 'false')
+				{
+					$newType   = 'boolean';
+					$propValue = \false;
+				}
+				elseif ($propValue === 'true')
+				{
+					$newType   = 'boolean';
+					$propValue = \true;
+				}
+
+			if ($oldType !== $newType)
+			{
+				// Test whether the PHP type roundtrip is lossless
+				$tmp = $propValue;
+				\settype($tmp, $oldType);
+				\settype($tmp, $newType);
+
+				if ($tmp !== $propValue)
+					throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of type " . $oldType . ' with value of type ' . $newType);
+
+				// Finally, set the new value to the correct type
+				\settype($propValue, $oldType);
+			}
+		}
+
+		$this->$propName = $propValue;
+	}
+
+	/*
+	* Test whether a property is set
+	*
+	* @param  string $propName
+	* @return bool
+	*/
+	public function __isset($propName)
+	{
+		$methodName = 'isset' . \ucfirst($propName);
+
+		if (\method_exists($this, $methodName))
+			return $this->$methodName();
+
+		return isset($this->$propName);
+	}
+
+	/*
+	* Unset a property, if the class supports it
+	*
+	* @param  string $propName
+	* @return void
+	*/
+	public function __unset($propName)
+	{
+		$methodName = 'unset' . \ucfirst($propName);
+
+		if (\method_exists($this, $methodName))
+		{
+			$this->$methodName();
+
+			return;
+		}
+
+		if (!isset($this->$propName))
+			return;
+
+		if ($this->$propName instanceof Collection)
+		{
+			$this->$propName->clear();
+
+			return;
+		}
+
+		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
+	}
+
+	/*
 	* @var AttributeCollection This tag's attributes
 	*/
 	protected $attributes;
 
-	/**
+	/*
 	* @var AttributePreprocessorCollection This tag's attribute parsers
 	*/
 	protected $attributePreprocessors;
 
-	/**
+	/*
 	* @var TagFilterChain This tag's filter chain
 	*/
 	protected $filterChain;
 
-	/**
+	/*
 	* @var integer Maximum nesting level for this tag
 	*/
 	protected $nestingLimit = 10;
 
-	/**
+	/*
 	* @var Ruleset Rules associated with this tag
 	*/
 	protected $rules;
 
-	/**
+	/*
 	* @var integer Maximum number of this tag per message
 	*/
 	protected $tagLimit = 1000;
 
-	/**
+	/*
 	* @var Template Template associated with this tag
 	*/
 	protected $template;
 
-	/**
+	/*
 	* Constructor
 	*
 	* @param  array $options This tag's options
 	* @return void
 	*/
-	public function __construct(array $options = null)
+	public function __construct(array $options = \null)
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
@@ -93,21 +257,19 @@ class Tag implements ConfigProvider
 		{
 			// Sort the options by name so that attributes are set before the template, which is
 			// necessary to evaluate whether the template is safe
-			ksort($options);
+			\ksort($options);
 
 			foreach ($options as $optionName => $optionValue)
-			{
 				$this->__set($optionName, $optionValue);
-			}
 		}
 	}
 
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		$vars = get_object_vars($this);
+		$vars = \get_object_vars($this);
 
 		// Remove properties that are not needed during parsing
 		unset($vars['defaultChildRule']);
@@ -116,7 +278,7 @@ class Tag implements ConfigProvider
 
 		// If there are no attribute preprocessors defined, we can remove the step from this tag's
 		// filterChain
-		if (!count($this->attributePreprocessors))
+		if (!\count($this->attributePreprocessors))
 		{
 			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
 
@@ -124,14 +286,10 @@ class Tag implements ConfigProvider
 			$filterChain = clone $vars['filterChain'];
 
 			// Process the chain in reverse order so that we don't skip indices
-			$i = count($filterChain);
+			$i = \count($filterChain);
 			while (--$i >= 0)
-			{
 				if ($filterChain[$i]->getCallback() === $callback)
-				{
 					unset($filterChain[$i]);
-				}
-			}
 
 			$vars['filterChain'] = $filterChain;
 		}
@@ -139,7 +297,7 @@ class Tag implements ConfigProvider
 		return ConfigHelper::toArray($vars);
 	}
 
-	/**
+	/*
 	* Return this tag's template
 	*
 	* @return Template
@@ -149,7 +307,7 @@ class Tag implements ConfigProvider
 		return $this->template;
 	}
 
-	/**
+	/*
 	* Test whether this tag has a template
 	*
 	* @return bool
@@ -159,7 +317,7 @@ class Tag implements ConfigProvider
 		return isset($this->template);
 	}
 
-	/**
+	/*
 	* Set this tag's attribute preprocessors
 	*
 	* @param  array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
@@ -171,7 +329,7 @@ class Tag implements ConfigProvider
 		$this->attributePreprocessors->merge($attributePreprocessors);
 	}
 
-	/**
+	/*
 	* Set this tag's nestingLimit
 	*
 	* @param  integer $limit
@@ -182,14 +340,12 @@ class Tag implements ConfigProvider
 		$limit = (int) $limit;
 
 		if ($limit < 1)
-		{
 			throw new InvalidArgumentException('nestingLimit must be a number greater than 0');
-		}
 
 		$this->nestingLimit = $limit;
 	}
 
-	/**
+	/*
 	* Set this tag's rules
 	*
 	* @param  array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
@@ -201,7 +357,7 @@ class Tag implements ConfigProvider
 		$this->rules->merge($rules);
 	}
 
-	/**
+	/*
 	* Set this tag's tagLimit
 	*
 	* @param  integer $limit
@@ -212,14 +368,12 @@ class Tag implements ConfigProvider
 		$limit = (int) $limit;
 
 		if ($limit < 1)
-		{
 			throw new InvalidArgumentException('tagLimit must be a number greater than 0');
-		}
 
 		$this->tagLimit = $limit;
 	}
 
-	/**
+	/*
 	* Set the template associated with this tag
 	*
 	* @param  string|Template $template
@@ -228,14 +382,12 @@ class Tag implements ConfigProvider
 	public function setTemplate($template)
 	{
 		if (!($template instanceof Template))
-		{
 			$template = new Template($template);
-		}
 
 		$this->template = $template;
 	}
 
-	/**
+	/*
 	* Unset this tag's template
 	*
 	* @return void

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class Forum extends Bundle
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function configure(Configurator $configurator)
@@ -29,27 +29,27 @@ class Forum extends Bundle
 		$configurator->BBCodes->addFromRepository('LIST');
 		$configurator->BBCodes->addFromRepository('*');
 		$configurator->BBCodes->add('LI');
-		$configurator->BBCodes->addFromRepository('QUOTE', 'default', [
+		$configurator->BBCodes->addFromRepository('QUOTE', 'default', array(
 			'authorStr' => '<xsl:value-of select="@author"/> <xsl:value-of select="$L_WROTE"/>'
-		]);
+		));
 		$configurator->BBCodes->addFromRepository('S');
 		$configurator->BBCodes->addFromRepository('SIZE');
-		$configurator->BBCodes->addFromRepository('SPOILER', 'default', [
+		$configurator->BBCodes->addFromRepository('SPOILER', 'default', array(
 			'hideStr'    => '{L_HIDE}',
 			'showStr'    => '{L_SHOW}',
 			'spoilerStr' => '{L_SPOILER}',
-		]);
+		));
 		$configurator->BBCodes->addFromRepository('U');
 		$configurator->BBCodes->addFromRepository('URL');
 
-		$configurator->rendering->parameters = [
+		$configurator->rendering->parameters = array(
 			'L_WROTE'   => 'wrote:',
 			'L_HIDE'    => 'Hide',
 			'L_SHOW'    => 'Show',
 			'L_SPOILER' => 'Spoiler'
-		];
+		);
 
-		$emoticons = [
+		$emoticons = array(
 			':)'  => 'smile',
 			':-)' => 'smile',
 			';)'  => 'wink',
@@ -69,15 +69,13 @@ class Forum extends Bundle
 			':-|' => 'neutral',
 			':o'  => 'shock',
 			':lol:' => 'laugh'
-		];
+		);
 
 		foreach ($emoticons as $code => $filename)
-		{
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$EMOTICONS_PATH}/' . $filename . '.png" alt="' . $code . '"/>'
 			);
-		}
 
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');

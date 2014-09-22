@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -17,67 +17,61 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 abstract class ConfiguratorBase implements ConfigProvider
 {
-	/**
+	/*
 	* @var Configurator
 	*/
 	protected $configurator;
 
-	/**
+	/*
 	* @var mixed Ignored if FALSE. Otherwise, this plugin's parser will only be executed if this
 	*            string is present in the original text
 	*/
-	protected $quickMatch = false;
+	protected $quickMatch = \false;
 
-	/**
+	/*
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
 	*              regexp
 	*/
 	protected $regexpLimit = 10000;
 
-	/**
+	/*
 	* @var string  What to do if the number of matches exceeds the limit. Values can be: "ignore"
 	*              (ignore matches past limit), "warn" (same as "ignore" but also log a warning) and
 	*              "abort" (abort parsing)
 	*/
 	protected $regexpLimitAction = 'warn';
 
-	/**
+	/*
 	* @param Configurator $configurator
 	* @param array        $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	final public function __construct(Configurator $configurator, array $overrideProps = [])
+	final public function __construct(Configurator $configurator, array $overrideProps = array())
 	{
 		$this->configurator = $configurator;
 
 		foreach ($overrideProps as $k => $v)
 		{
-			$methodName = 'set' . ucfirst($k);
+			$methodName = 'set' . \ucfirst($k);
 
-			if (method_exists($this, $methodName))
-			{
+			if (\method_exists($this, $methodName))
 				$this->$methodName($v);
-			}
-			elseif (property_exists($this, $k))
-			{
+			elseif (\property_exists($this, $k))
 				$this->$k = $v;
-			}
 			else
-			{
 				throw new RuntimeException("Unknown property '" . $k . "'");
-			}
 		}
 
 		$this->setUp();
 	}
 
-	/**
+	/*
 	* Executed by this plugin's constructor
 	*/
 	protected function setUp()
 	{
 	}
 
-	/**
+	/*
 	* Finalize this plugin's configuration
 	*
 	* Executed by the configurator whenever the tags' config must be in a usable state:
@@ -91,18 +85,18 @@ abstract class ConfiguratorBase implements ConfigProvider
 	{
 	}
 
-	/**
+	/*
 	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
 	public function asConfig()
 	{
-		$properties = get_object_vars($this);
+		$properties = \get_object_vars($this);
 		unset($properties['configurator']);
 
 		return ConfigHelper::toArray($properties);
 	}
 
-	/**
+	/*
 	* Return a list of base properties meant to be added to asConfig()'s return
 	*
 	* NOTE: this final method exists so that the plugin's configuration can always specify those
@@ -114,15 +108,15 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	final public function getBaseProperties()
 	{
-		return [
-			'className'         => preg_replace('/Configurator$/', 'Parser', get_class($this)),
+		return array(
+			'className'         => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
 			'quickMatch'        => $this->quickMatch,
 			'regexpLimit'       => $this->regexpLimit,
 			'regexpLimitAction' => $this->regexpLimitAction
-		];
+		);
 	}
 
-	/**
+	/*
 	* Return this plugin's JavaScript parser
 	*
 	* This is the base implementation, meant to be overridden by custom plugins. By default it
@@ -132,23 +126,21 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	public function getJSParser()
 	{
-		$className = get_class($this);
-		if (strpos($className, 's9e\\TextFormatter\\Plugins\\') === 0)
+		$className = \get_class($this);
+		if (\strpos($className, 's9e\\TextFormatter\\Plugins\\') === 0)
 		{
-			$p = explode('\\', $className);
+			$p = \explode('\\', $className);
 			$pluginName = $p[3];
 
 			$filepath = __DIR__ . '/' . $pluginName . '/Parser.js';
-			if (file_exists($filepath))
-			{
-				return file_get_contents($filepath);
-			}
+			if (\file_exists($filepath))
+				return \file_get_contents($filepath);
 		}
 
-		return null;
+		return \null;
 	}
 
-	/**
+	/*
 	* Return the tag associated with this plugin, if applicable
 	*
 	* @return \s9e\TextFormatter\Configurator\Items\Tag
@@ -156,9 +148,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	public function getTag()
 	{
 		if (!isset($this->tagName))
-		{
 			throw new RuntimeException('No tag associated with this plugin');
-		}
 
 		return $this->configurator->tags[$this->tagName];
 	}
@@ -167,17 +157,17 @@ abstract class ConfiguratorBase implements ConfigProvider
 	// Setters
 	//==========================================================================
 
-	/**
+	/*
 	* Disable quickMatch
 	*
 	* @return void
 	*/
 	public function disableQuickMatch()
 	{
-		$this->quickMatch = false;
+		$this->quickMatch = \false;
 	}
 
-	/**
+	/*
 	* Set $this->attrName with given attribute name, normalized
 	*
 	* @param  string $attrName New attribute name
@@ -185,15 +175,13 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	protected function setAttrName($attrName)
 	{
-		if (!property_exists($this, 'attrName'))
-		{
+		if (!\property_exists($this, 'attrName'))
 			throw new RuntimeException("Unknown property 'attrName'");
-		}
 
 		$this->attrName = AttributeName::normalize($attrName);
 	}
 
-	/**
+	/*
 	* Set the quickMatch string
 	*
 	* @param  string $quickMatch
@@ -201,15 +189,13 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	public function setQuickMatch($quickMatch)
 	{
-		if (!is_string($quickMatch))
-		{
+		if (!\is_string($quickMatch))
 			throw new InvalidArgumentException('quickMatch must be a string');
-		}
 
 		$this->quickMatch = $quickMatch;
 	}
 
-	/**
+	/*
 	* Set the maximum number of regexp matches
 	*
 	* @param  integer $limit
@@ -220,14 +206,12 @@ abstract class ConfiguratorBase implements ConfigProvider
 		$limit = (int) $limit;
 
 		if ($limit < 1)
-		{
 			throw new InvalidArgumentException('regexpLimit must be a number greater than 0');
-		}
 
 		$this->regexpLimit = $limit;
 	}
 
-	/**
+	/*
 	* Set the action to perform when the regexp limit is broken
 	*
 	* @param  string $action
@@ -238,14 +222,12 @@ abstract class ConfiguratorBase implements ConfigProvider
 		if ($action !== 'ignore'
 		 && $action !== 'warn'
 		 && $action !== 'abort')
-		{
 			throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
-		}
 
 		$this->regexpLimitAction = $action;
 	}
 
-	/**
+	/*
 	* Set $this->tagName with given tag name, normalized
 	*
 	* @param  string $tagName New tag name
@@ -253,10 +235,8 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	protected function setTagName($tagName)
 	{
-		if (!property_exists($this, 'tagName'))
-		{
+		if (!\property_exists($this, 'tagName'))
 			throw new RuntimeException("Unknown property 'tagName'");
-		}
 
 		$this->tagName = TagName::normalize($tagName);
 	}

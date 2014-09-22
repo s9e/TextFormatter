@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -26,7 +26,7 @@ class Parser extends ParserBase
 			$startTag->setAttribute($attrName, $m[0][0]);
 
 			// Create a zero-width end tag right after the address
-			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + strlen($m[0][0]), 0);
+			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + \strlen($m[0][0]), 0);
 
 			// Pair the tags together
 			$startTag->pairWith($endTag);

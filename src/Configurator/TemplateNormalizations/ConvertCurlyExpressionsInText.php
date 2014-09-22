@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -13,7 +13,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class ConvertCurlyExpressionsInText extends TemplateNormalization
 {
-	/**
+	/*
 	* Convert simple expressions in curly brackets in text into xsl:value-of elements
 	*
 	* Will replace
@@ -36,15 +36,13 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 
 			// Skip XSL elements
 			if ($parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
-			{
 				continue;
-			}
 
-			preg_match_all(
+			\preg_match_all(
 				'#\\{([$@][-\\w]+)\\}#',
 				$node->textContent,
 				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 			);
 
 			$lastPos = 0;
@@ -54,15 +52,13 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 
 				// Catch up to current position
 				if ($pos > $lastPos)
-				{
 					$parentNode->insertBefore(
 						$dom->createTextNode(
-							substr($node->textContent, $lastPos, $pos - $lastPos)
+							\substr($node->textContent, $lastPos, $pos - $lastPos)
 						),
 						$node
 					);
-				}
-				$lastPos = $pos + strlen($m[0][0]);
+				$lastPos = $pos + \strlen($m[0][0]);
 
 				// Add the xsl:value-of element
 				$parentNode
@@ -77,11 +73,9 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 			}
 
 			// Append the rest of the text
-			$text = substr($node->textContent, $lastPos);
+			$text = \substr($node->textContent, $lastPos);
 			if ($text > '')
-			{
 				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			}
 
 			// Now remove the old text node
 			$parentNode->removeChild($node);

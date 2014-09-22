@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class MinifyXPathExpressions extends TemplateNormalization
 {
-	/**
+	/*
 	* Remove extraneous space in XPath expressions used in XSL elements
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -29,12 +29,10 @@ class MinifyXPathExpressions extends TemplateNormalization
 		// a space
 		$query = '//xsl:*/@*[contains(., " ")][contains("matchselectest", name())]';
 		foreach ($xpath->query($query) as $attribute)
-		{
 			$attribute->parentNode->setAttribute(
 				$attribute->nodeName,
 				XPathHelper::minify($attribute->nodeValue)
 			);
-		}
 
 		// Get all the attributes of non-XSL elements, whose value contains a space
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
@@ -46,9 +44,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 				function ($token)
 				{
 					if ($token[0] === 'expression')
-					{
 						$token[1] = XPathHelper::minify($token[1]);
-					}
 
 					return $token;
 				}

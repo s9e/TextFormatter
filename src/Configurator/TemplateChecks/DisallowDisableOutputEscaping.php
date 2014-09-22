@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowDisableOutputEscaping extends TemplateCheck
 {
-	/**
+	/*
 	* Check a template for any tag using @disable-output-escaping
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -28,8 +28,6 @@ class DisallowDisableOutputEscaping extends TemplateCheck
 		$node  = $xpath->query('//@disable-output-escaping')->item(0);
 
 		if ($node)
-		{
 			throw new UnsafeTemplateException("The template contains a 'disable-output-escaping' attribute", $node);
-		}
 	}
 }

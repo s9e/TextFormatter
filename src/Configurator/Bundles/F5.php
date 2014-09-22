@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -12,49 +12,49 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class F5 extends Bundle
 {
-	/**
+	/*
 	* {@inheritdoc}
 	*/
 	public function configure(Configurator $configurator)
 	{
-		$bbcodes = [
-			[
+		$bbcodes = array(
+			array(
 				'[b]{TEXT}[/b]',
 				'<strong>{TEXT}</strong>'
-			],
-			[
+			),
+			array(
 				'[i]{TEXT}[/i]',
 				'<em>{TEXT}</em>'
-			],
-			[
+			),
+			array(
 				'[u]{TEXT}[/u]',
 				'<span class="bbu">{TEXT}</span>'
-			],
-			[
+			),
+			array(
 				'[s]{TEXT}[/s]',
 				'<span class="bbs">{TEXT}</span>'
-			],
-			[
+			),
+			array(
 				'[del]{TEXT}[/del]',
 				'<del>{TEXT}</del>'
-			],
-			[
+			),
+			array(
 				'[ins]{TEXT}[/ins]',
 				'<ins>{TEXT}</ins>'
-			],
-			[
+			),
+			array(
 				'[em]{TEXT}[/em]',
 				'<em>{TEXT}</em>'
-			],
-			[
+			),
+			array(
 				'[color={COLOR}]{TEXT}[/color]',
 				'<span style="color: {COLOR}">{TEXT}</span>'
-			],
-			[
+			),
+			array(
 				'[h]{TEXT}[/h]',
 				'<h5>{TEXT}</h5>'
-			],
-			[
+			),
+			array(
 				'[url={URL;useContent}]{TEXT}[/url]',
 				'<a href="{URL}" rel="nofollow">
 					<xsl:choose>
@@ -66,12 +66,12 @@ class F5 extends Bundle
 						<xsl:otherwise>{TEXT}</xsl:otherwise>
 					</xsl:choose>
 				</a>'
-			],
-			[
+			),
+			array(
 				'[email={EMAIL;useContent}]{TEXT}[/email]',
 				'<a href="mailto:{EMAIL}">{TEXT}</a>'
-			],
-			[
+			),
+			array(
 				'[topic id={UINT;useContent}]{TEXT}[/topic]',
 				'<a href="{$BASE_URL}viewtopic.php?id={UINT}">
 					<xsl:choose>
@@ -79,8 +79,8 @@ class F5 extends Bundle
 						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 					</xsl:choose>
 				</a>'
-			],
-			[
+			),
+			array(
 				'[post id={UINT;useContent}]{TEXT}[/post]',
 				'<a href="{$BASE_URL}viewtopic.php?pid={UINT}#{UINT}">
 					<xsl:choose>
@@ -88,8 +88,8 @@ class F5 extends Bundle
 						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 					</xsl:choose>
 				</a>'
-			],
-			[
+			),
+			array(
 				'[forum id={UINT;useContent}]{TEXT}[/forum]',
 				'<a href="{$BASE_URL}viewforum.php?id={UINT}">
 					<xsl:choose>
@@ -97,8 +97,8 @@ class F5 extends Bundle
 						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 					</xsl:choose>
 				</a>'
-			],
-			[
+			),
+			array(
 				'[user id={UINT;useContent}]{TEXT}[/user]',
 				'<a href="{$BASE_URL}profile.php?id={UINT}">
 					<xsl:choose>
@@ -106,8 +106,8 @@ class F5 extends Bundle
 						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 					</xsl:choose>
 				</a>'
-			],
-			[
+			),
+			array(
 				'[img alt={TEXT;optional}]{URL}[/img]',
 				'<xsl:choose>
 					<xsl:when test="$IS_SIGNATURE and $SHOW_IMG_SIG">
@@ -120,15 +120,15 @@ class F5 extends Bundle
 						<xsl:apply-templates/>
 					</xsl:otherwise>
 				</xsl:choose>'
-			],
-			[
+			),
+			array(
 				'[quote author={TEXT1;optional}]{TEXT2}[/quote]',
 				'<div class="quotebox">
 					<xsl:if test="@author"><cite>{TEXT1} {L_WROTE}</cite></xsl:if>
 					<blockquote><div>{TEXT2}</div></blockquote>
 				</div>'
-			],
-			[
+			),
+			array(
 				'[code]{TEXT}[/code]',
 				'<div class="codebox">
 					<pre>
@@ -138,8 +138,8 @@ class F5 extends Bundle
 						<code>{TEXT}</code>
 					</pre>
 				</div>'
-			],
-			[
+			),
+			array(
 				'[list type={CHOICE=1,a;optional}]{ANYTHING}[/list]',
 				'<xsl:choose>
 					<xsl:when test="@type=\'1\'">
@@ -152,19 +152,20 @@ class F5 extends Bundle
 						<ul><xsl:apply-templates/></ul>
 					</xsl:otherwise>
 				</xsl:choose>'
-			],
-			[
+			),
+			array(
 				'[* $tagName=LI]{TEXT}[/*]',
 				'<li>{TEXT}</li>'
-			],
-		];
+			),
+		);
 
 		// Alias COLOUR to COLOR
 		$configurator->BBCodes->add('COLOUR')->tagName = 'COLOR';
 
 		// Add the default BBCodes
-		foreach ($bbcodes as list($definition, $template))
+		foreach ($bbcodes as $_69183664)
 		{
+			list($definition, $template) = $_69183664;
 			$configurator->BBCodes->addCustom($definition, $template);
 		}
 
@@ -172,7 +173,7 @@ class F5 extends Bundle
 		$configurator->tags['QUOTE']->nestingLimit = 3;
 		$configurator->tags['LIST']->nestingLimit  = 5;
 
-		$emoticons = [
+		$emoticons = array(
 			':)' => 'smile',
 			'=)' => 'smile',
 			':|' => 'neutral',
@@ -191,18 +192,16 @@ class F5 extends Bundle
 			':mad:' => 'mad',
 			':rolleyes:' => 'roll',
 			':cool:' => 'cool'
-		];
+		);
 
 		$configurator->Emoticons->notAfter  = '\\S';
 		$configurator->Emoticons->notBefore = '\\pL\\pN';
 
 		foreach ($emoticons as $code => $filename)
-		{
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$BASE_URL}img/smilies/' . $filename . '.png" width="15" height="15" alt="' . $filename . '"/>'
 			);
-		}
 
 		$configurator->Autoemail;
 		$configurator->Autolink;

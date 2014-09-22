@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2014 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
@@ -9,37 +9,37 @@ namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 class ControlStructuresOptimizer
 {
-	/**
+	/*
 	* @var integer Number of braces encountered in current source
 	*/
 	protected $braces;
 
-	/**
+	/*
 	* @var integer Number of tokens
 	*/
 	protected $cnt;
 
-	/**
+	/*
 	* @var array Current context
 	*/
 	protected $context;
 
-	/**
+	/*
 	* @var integer Current token index
 	*/
 	protected $i;
 
-	/**
+	/*
 	* @var boolean Whether the tokens have been changed
 	*/
 	protected $changed;
 
-	/**
+	/*
 	* @var array Tokens from current source
 	*/
 	protected $tokens;
 
-	/**
+	/*
 	* Optimize the control structures of a script
 	*
 	* Removes brackets in control structures wherever possible. Prevents the generation of EXT_STMT
@@ -53,29 +53,19 @@ class ControlStructuresOptimizer
 		$this->reset($php);
 
 		while (++$this->i < $this->cnt)
-		{
 			if ($this->tokens[$this->i] === ';')
-			{
 				++$this->context['statements'];
-			}
 			elseif ($this->tokens[$this->i] === '{')
-			{
 				++$this->braces;
-			}
 			elseif ($this->tokens[$this->i] === '}')
 			{
 				if ($this->context['braces'] === $this->braces)
-				{
 					$this->processEndOfBlock();
-				}
 
 				--$this->braces;
 			}
 			elseif ($this->isControlStructure())
-			{
 				$this->processControlStructure();
-			}
-		}
 
 		// Rebuild the source
 		if ($this->changed)
@@ -85,9 +75,7 @@ class ControlStructuresOptimizer
 
 			$php = '';
 			foreach ($this->tokens as $token)
-			{
-				$php .= (is_string($token)) ? $token : $token[1];
-			}
+				$php .= (\is_string($token)) ? $token : $token[1];
 		}
 
 		// Free the memory taken up by the tokens
@@ -96,31 +84,31 @@ class ControlStructuresOptimizer
 		return $php;
 	}
 
-	/**
+	/*
 	* Test whether current block ends with an if or elseif control structure
 	*
 	* @return bool
 	*/
 	protected function blockEndsWithIf()
 	{
-		return in_array($this->context['lastBlock'], [T_IF, T_ELSEIF], true);
+		return \in_array($this->context['lastBlock'], array(\T_IF, \T_ELSEIF), \true);
 	}
 
-	/**
+	/*
 	* Test whether the token at current index is a control structure
 	*
 	* @return bool
 	*/
 	protected function isControlStructure()
 	{
-		return in_array(
+		return \in_array(
 			$this->tokens[$this->i][0],
-			[T_ELSE, T_ELSEIF, T_FOR, T_FOREACH, T_IF, T_WHILE],
-			true
+			array(\T_ELSE, \T_ELSEIF, \T_FOR, \T_FOREACH, \T_IF, \T_WHILE),
+			\true
 		);
 	}
 
-	/**
+	/*
 	* Test whether current block is followed by an elseif/else structure
 	*
 	* @return bool
@@ -128,23 +116,19 @@ class ControlStructuresOptimizer
 	protected function isFollowedByElse()
 	{
 		if ($this->i > $this->cnt - 4)
-		{
 			// It doesn't have room for another block
-			return false;
-		}
+			return \false;
 
 		// Compute the index of the next non-whitespace token
 		$k = $this->i + 1;
 
-		if ($this->tokens[$k][0] === T_WHITESPACE)
-		{
+		if ($this->tokens[$k][0] === \T_WHITESPACE)
 			++$k;
-		}
 
-		return in_array($this->tokens[$k][0], [T_ELSEIF, T_ELSE], true);
+		return \in_array($this->tokens[$k][0], array(\T_ELSEIF, \T_ELSE), \true);
 	}
 
-	/**
+	/*
 	* Test whether braces must be preserved in current context
 	*
 	* @return bool
@@ -157,7 +141,7 @@ class ControlStructuresOptimizer
 		return ($this->blockEndsWithIf() && $this->isFollowedByElse());
 	}
 
-	/**
+	/*
 	* Process the control structure starting at current index
 	*
 	* @return void
@@ -169,17 +153,13 @@ class ControlStructuresOptimizer
 
 		// Count this control structure in this context's statements unless it's an elseif/else
 		// in which case it's already been counted as part of the if
-		if (!in_array($this->tokens[$this->i][0], [T_ELSE, T_ELSEIF], true))
-		{
+		if (!\in_array($this->tokens[$this->i][0], array(\T_ELSE, \T_ELSEIF), \true))
 			++$this->context['statements'];
-		}
 
 		// If the control structure is anything but an "else", skip its condition to reach the first
 		// brace or statement
-		if ($this->tokens[$this->i][0] !== T_ELSE)
-		{
+		if ($this->tokens[$this->i][0] !== \T_ELSE)
 			$this->skipCondition();
-		}
 
 		$this->skipWhitespace();
 
@@ -195,33 +175,31 @@ class ControlStructuresOptimizer
 		++$this->braces;
 
 		// Replacement for the first brace
-		$replacement = [T_WHITESPACE, ''];
+		$replacement = array(\T_WHITESPACE, '');
 
 		// Add a space after "else" if the brace is removed and it's not followed by whitespace or a
 		// variable
-		if ($this->tokens[$savedIndex][0]  === T_ELSE
-		 && $this->tokens[$this->i + 1][0] !== T_VARIABLE
-		 && $this->tokens[$this->i + 1][0] !== T_WHITESPACE)
-		{
-			$replacement = [T_WHITESPACE, ' '];
-		}
+		if ($this->tokens[$savedIndex][0]  === \T_ELSE
+		 && $this->tokens[$this->i + 1][0] !== \T_VARIABLE
+		 && $this->tokens[$this->i + 1][0] !== \T_WHITESPACE)
+			$replacement = array(\T_WHITESPACE, ' ');
 
 		// Record the token of the control structure (T_IF, T_WHILE, etc...) in the current context
 		$this->context['lastBlock'] = $this->tokens[$savedIndex][0];
 
 		// Create a new context
-		$this->context = [
+		$this->context = array(
 			'braces'      => $this->braces,
 			'index'       => $this->i,
-			'lastBlock'   => null,
+			'lastBlock'   => \null,
 			'parent'      => $this->context,
 			'replacement' => $replacement,
 			'savedIndex'  => $savedIndex,
 			'statements'  => 0
-		];
+		);
 	}
 
-	/**
+	/*
 	* Process the block ending at current index
 	*
 	* @return void
@@ -229,9 +207,7 @@ class ControlStructuresOptimizer
 	protected function processEndOfBlock()
 	{
 		if ($this->context['statements'] < 2 && !$this->mustPreserveBraces())
-		{
 			$this->removeBracesInCurrentContext();
-		}
 
 		$this->context = $this->context['parent'];
 
@@ -239,7 +215,7 @@ class ControlStructuresOptimizer
 		$this->context['parent']['lastBlock'] = $this->context['lastBlock'];
 	}
 
-	/**
+	/*
 	* Remove the braces surrounding current context
 	*
 	* @return void
@@ -251,54 +227,46 @@ class ControlStructuresOptimizer
 
 		// Remove the second brace or replace it with a semicolon if there are no statements in this
 		// block
-		$this->tokens[$this->i] = ($this->context['statements']) ? [T_WHITESPACE, ''] : ';';
+		$this->tokens[$this->i] = ($this->context['statements']) ? array(\T_WHITESPACE, '') : ';';
 
 		// Remove the whitespace before braces. This is mainly cosmetic
-		foreach ([$this->context['index'] - 1, $this->i - 1] as $tokenIndex)
-		{
-			if ($this->tokens[$tokenIndex][0] === T_WHITESPACE)
-			{
+		foreach (array($this->context['index'] - 1, $this->i - 1) as $tokenIndex)
+			if ($this->tokens[$tokenIndex][0] === \T_WHITESPACE)
 				$this->tokens[$tokenIndex][1] = '';
-			}
-		}
 
 		// Test whether the current block followed an else statement then test whether this
 		// else was followed by an if
-		if ($this->tokens[$this->context['savedIndex']][0] === T_ELSE)
+		if ($this->tokens[$this->context['savedIndex']][0] === \T_ELSE)
 		{
 			$j = 1 + $this->context['savedIndex'];
 
-			while ($this->tokens[$j][0] === T_WHITESPACE
-			    || $this->tokens[$j][0] === T_COMMENT
-			    || $this->tokens[$j][0] === T_DOC_COMMENT)
-			{
+			while ($this->tokens[$j][0] === \T_WHITESPACE
+			    || $this->tokens[$j][0] === \T_COMMENT
+			    || $this->tokens[$j][0] === \T_DOC_COMMENT)
 				++$j;
-			}
 
-			if ($this->tokens[$j][0] === T_IF)
+			if ($this->tokens[$j][0] === \T_IF)
 			{
 				// Replace if with elseif
-				$this->tokens[$j] = [T_ELSEIF, 'elseif'];
+				$this->tokens[$j] = array(\T_ELSEIF, 'elseif');
 
 				// Remove the original else
 				$j = $this->context['savedIndex'];
-				$this->tokens[$j] = [T_WHITESPACE, ''];
+				$this->tokens[$j] = array(\T_WHITESPACE, '');
 
 				// Remove any whitespace before the original else
-				if ($this->tokens[$j - 1][0] === T_WHITESPACE)
-				{
+				if ($this->tokens[$j - 1][0] === \T_WHITESPACE)
 					$this->tokens[$j - 1][1] = '';
-				}
 
 				// Unindent what was the else's content
 				$this->unindentBlock($j, $this->i - 1);
 			}
 		}
 
-		$this->changed = true;
+		$this->changed = \true;
 	}
 
-	/**
+	/*
 	* Reset the internal state of this optimizer
 	*
 	* @param  string $php PHP source
@@ -306,24 +274,24 @@ class ControlStructuresOptimizer
 	*/
 	protected function reset($php)
 	{
-		$this->tokens = token_get_all('<?php ' . $php);
+		$this->tokens = \token_get_all('<?php ' . $php);
 
 		// Root context
-		$this->context = [
+		$this->context = array(
 			'braces'      => 0,
 			'index'       => -1,
-			'parent'      => [],
-			'preventElse' => false,
+			'parent'      => array(),
+			'preventElse' => \false,
 			'savedIndex'  => 0,
 			'statements'  => 0
-		];
+		);
 
 		$this->i       = 0;
-		$this->cnt     = count($this->tokens);
+		$this->cnt     = \count($this->tokens);
 		$this->braces  = 0;
-		$this->changed = false;
+		$this->changed = \false;
 	}
-	/**
+	/*
 	* Skip the condition of a control structure
 	*
 	* @return void
@@ -336,26 +304,16 @@ class ControlStructuresOptimizer
 		// Iterate through tokens until we have a match for every left parenthesis
 		$parens = 0;
 		while (++$this->i < $this->cnt)
-		{
 			if ($this->tokens[$this->i] === ')')
-			{
 				if ($parens)
-				{
 					--$parens;
-				}
 				else
-				{
 					break;
-				}
-			}
 			elseif ($this->tokens[$this->i] === '(')
-			{
 				++$parens;
-			}
-		}
 	}
 
-	/**
+	/*
 	* Move the internal cursor until it reaches given string
 	*
 	* @param  string $str String to reach
@@ -366,17 +324,17 @@ class ControlStructuresOptimizer
 		while (++$this->i < $this->cnt && $this->tokens[$this->i] !== $str);
 	}
 
-	/**
+	/*
 	* Skip all whitespace
 	*
 	* @return void
 	*/
 	protected function skipWhitespace()
 	{
-		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === T_WHITESPACE);
+		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === \T_WHITESPACE);
 	}
 
-	/**
+	/*
 	* Remove one tab of indentation off a range of PHP tokens
 	*
 	* @param  integer $start  Index of the first token to unindent
@@ -388,10 +346,8 @@ class ControlStructuresOptimizer
 		$this->i = $start;
 		do
 		{
-			if ($this->tokens[$this->i][0] === T_WHITESPACE || $this->tokens[$this->i][0] === T_DOC_COMMENT)
-			{
-				$this->tokens[$this->i][1] = preg_replace("/^\t/m", '', $this->tokens[$this->i][1]);
-			}
+			if ($this->tokens[$this->i][0] === \T_WHITESPACE || $this->tokens[$this->i][0] === \T_DOC_COMMENT)
+				$this->tokens[$this->i][1] = \preg_replace("/^\t/m", '', $this->tokens[$this->i][1]);
 		}
 		while (++$this->i <= $end);
 	}
