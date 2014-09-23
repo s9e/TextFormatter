@@ -33,42 +33,43 @@ class InlineAttributes extends TemplateNormalization
 
 		foreach ($xpath->query($query) as $attribute)
 		{
-			$value = '';
-
-			foreach ($attribute->childNodes as $childNode)
-			{
-				if ($childNode instanceof DOMText)
-				{
-					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
-				}
-				elseif ($childNode->namespaceURI === self::XMLNS_XSL
-				     && $childNode->localName === 'value-of')
-				{
-					$value .= '{' . $childNode->getAttribute('select') . '}';
-				}
-				elseif ($childNode->namespaceURI === self::XMLNS_XSL
-				     && $childNode->localName === 'text')
-				{
-					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
-				}
-				else
-				{
-					// Can't inline this attribute, move on to the next one
-					continue 2;
-				}
-			}
-
-			try
-			{
-				$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);
-			}
-			catch (DOMException $e)
-			{
-				// Ignore this attribute and keep going if an exception got thrown
-				continue;
-			}
-
-			$attribute->parentNode->removeChild($attribute);
+			$this->inlineAttribute($attribute);
 		}
+	}
+
+	/**
+	* Inline the content of an xsl:attribute element
+	*
+	* @param  DOMElement $attribute xsl:attribute element
+	* @return void
+	*/
+	protected function inlineAttribute(DOMElement $attribute)
+	{
+		$value = '';
+		foreach ($attribute->childNodes as $childNode)
+		{
+			if ($childNode instanceof DOMText)
+			{
+				$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
+			}
+			elseif ($childNode->namespaceURI === self::XMLNS_XSL
+			     && $childNode->localName    === 'value-of')
+			{
+				$value .= '{' . $childNode->getAttribute('select') . '}';
+			}
+			elseif ($childNode->namespaceURI === self::XMLNS_XSL
+			     && $childNode->localName    === 'text')
+			{
+				$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
+			}
+			else
+			{
+				// Can't inline this attribute
+				return;
+			}
+		}
+
+		$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);
+		$attribute->parentNode->removeChild($attribute);
 	}
 }

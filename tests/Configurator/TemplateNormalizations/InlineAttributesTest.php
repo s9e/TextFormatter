@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
+use DOMException;
+
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 */
@@ -16,9 +18,9 @@ class InlineAttributesTest extends AbstractTest
 				'<div class="{@foo}"><xsl:apply-templates/></div>'
 			],
 			[
-				// <xsl:attribute/> with an invalid name is ignored
+				// <xsl:attribute/> with an invalid name results in an exception
 				'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>',
-				'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>'
+				new DOMException
 			],
 			[
 				// <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined

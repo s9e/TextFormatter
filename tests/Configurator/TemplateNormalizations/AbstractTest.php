@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
 use DOMDocument;
+use Exception;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Tests\Test;
 
@@ -14,12 +15,16 @@ abstract class AbstractTest extends Test
 	*/
 	public function test($template, $expected, $preserveWhiteSpace = null)
 	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
 		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $template
 		     . '</xsl:template>';
 
 		$dom = new DOMDocument;
-
 		$dom->loadXML($xml);
 
 		$className  = preg_replace(
