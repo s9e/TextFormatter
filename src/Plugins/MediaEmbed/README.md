@@ -321,6 +321,16 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</td>
 	</tr>
 	<tr>
+		<td><code>natgeochannel</code></td>
+		<td>National Geographic Channel</td>
+		<td>http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/<br/>http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</td>
+	</tr>
+	<tr>
+		<td><code>natgeovideo</code></td>
+		<td>National Geographic Video</td>
+		<td>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
+	</tr>
+	<tr>
 		<td><code>nytimes</code></td>
 		<td>The New York Times Video</td>
 		<td>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</td>

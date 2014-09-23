@@ -577,6 +577,17 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
+				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4" url="http://video.nationalgeographic.com/video/weirdest-superb-lyrebird">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('natgeochannel');
+					$configurator->MediaEmbed->add('natgeovideo');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
@@ -1856,6 +1867,26 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('mixcloud');
+				}
+			],
+			[
+				'http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/',
+				'<r><NATGEOCHANNEL id="channel/brain-games/videos/jason-silva-on-intuition" url="http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/">http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</NATGEOCHANNEL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('natgeochannel');
+					$configurator->MediaEmbed->add('natgeovideo');
+				}
+			],
+			[
+				'http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/',
+				'<r><NATGEOCHANNEL id="wild/urban-jungle/videos/leopard-in-the-city" url="http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/">http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</NATGEOCHANNEL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('natgeochannel');
+					$configurator->MediaEmbed->add('natgeovideo');
 				}
 			],
 			[

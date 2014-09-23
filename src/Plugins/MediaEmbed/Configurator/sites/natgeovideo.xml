@@ -1,0 +1,12 @@
+<site name="National Geographic Video" homepage="http://video.nationalgeographic.com/">
+	<example>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</example>
+
+	<tags><tag>documentary</tag></tags>
+
+	<host>video.nationalgeographic.com</host>
+	<scrape>
+		<match>@video\.nationalgeographic\.com/video/\w@</match>
+		<extract>@guid="(?'id'[-\w]+)"@</extract>
+	</scrape>
+	<iframe width="560" height="315" src="//player.d.nationalgeographic.com/players/ngsvideo/share/?guid={@id}"/>
+</site>
