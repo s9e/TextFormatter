@@ -328,7 +328,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>natgeovideo</code></td>
 		<td>National Geographic Video</td>
-		<td>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
+		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
 	</tr>
 	<tr>
 		<td><code>nytimes</code></td>

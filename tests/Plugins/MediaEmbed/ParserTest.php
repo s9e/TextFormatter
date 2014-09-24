@@ -577,6 +577,17 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://video.nationalgeographic.com/tv/changing-earth',
+				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO" url="http://video.nationalgeographic.com/tv/changing-earth">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('natgeochannel');
+					$configurator->MediaEmbed->add('natgeovideo');
+				}
+			],
+			[
 				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
 				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4" url="http://video.nationalgeographic.com/video/weirdest-superb-lyrebird">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
 				[],
