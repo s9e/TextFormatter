@@ -416,6 +416,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8</td>
 	</tr>
 	<tr>
+		<td><code>tmz</code></td>
+		<td>TMZ</td>
+		<td>http://www.tmz.com/videos/0_2pr9x3rb/</td>
+	</tr>
+	<tr>
 		<td><code>traileraddict</code></td>
 		<td>Trailer Addict</td>
 		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>

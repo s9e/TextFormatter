@@ -2145,6 +2145,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.tmz.com/videos/0_2pr9x3rb/',
+				'<r><TMZ id="0_2pr9x3rb" url="http://www.tmz.com/videos/0_2pr9x3rb/">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tmz');
+				}
+			],
+			[
 				'http://www.traileraddict.com/tags/musical',
 				'<t>http://www.traileraddict.com/tags/musical</t>',
 				[],
