@@ -195,7 +195,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/21112125" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
+http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites
 ```
 
 ### Specify a different URL for scraping
@@ -237,5 +237,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="songID=35292216"><embed type="application/x-shockwave-flash" src="http://grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="songID=35292216"></object>
+http://grooveshark.com/#!/s/Soul+Below/4zGL7i
 ```

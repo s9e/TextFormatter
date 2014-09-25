@@ -1249,11 +1249,20 @@ class ParserTest extends Test
 			],
 			[
 				'http://audioboo.fm/boos/2439994-deadline-day-update',
-				'<r><AUDIOBOO id="2439994" url="http://audioboo.fm/boos/2439994-deadline-day-update">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOO></r>',
+				'<r><AUDIOBOOM id="2439994" url="http://audioboo.fm/boos/2439994-deadline-day-update">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOOM></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->MediaEmbed->add('audioboo');
+					$configurator->MediaEmbed->add('audioboom');
+				}
+			],
+			[
+				'http://audioboom.com/boos/2493448-robert-patrick',
+				'<r><AUDIOBOOM id="2493448" url="http://audioboom.com/boos/2493448-robert-patrick">http://audioboom.com/boos/2493448-robert-patrick</AUDIOBOOM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audioboom');
 				}
 			],
 			[
