@@ -101,9 +101,9 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.amazon.ca/gp/product/B00GQT1LNO/<br/>http://www.amazon.co.jp/gp/product/B003AKZ6I8/<br/>http://www.amazon.co.uk/gp/product/B00BET0NR6/<br/>http://www.amazon.com/dp/B002MUC0ZY<br/>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/<br/>http://www.amazon.com/gp/product/B0094H8H7I<br/>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/<br/>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/<br/>http://www.amazon.it/gp/product/B00JGOMIP6/</td>
 	</tr>
 	<tr>
-		<td><code>audioboo</code></td>
-		<td>Audioboo</td>
-		<td>http://audioboo.fm/boos/2439994-deadline-day-update</td>
+		<td><code>audioboom</code></td>
+		<td>audioBoom</td>
+		<td>http://audioboo.fm/boos/2439994-deadline-day-update<br/>http://audioboom.com/boos/2493448-robert-patrick</td>
 	</tr>
 	<tr>
 		<td><code>audiomack</code></td>
@@ -321,6 +321,16 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</td>
 	</tr>
 	<tr>
+		<td><code>natgeochannel</code></td>
+		<td>National Geographic Channel</td>
+		<td>http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/<br/>http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</td>
+	</tr>
+	<tr>
+		<td><code>natgeovideo</code></td>
+		<td>National Geographic Video</td>
+		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
+	</tr>
+	<tr>
 		<td><code>nytimes</code></td>
 		<td>The New York Times Video</td>
 		<td>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</td>
@@ -404,6 +414,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td><code>tinypic</code></td>
 		<td>TinyPic videos</td>
 		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8</td>
+	</tr>
+	<tr>
+		<td><code>tmz</code></td>
+		<td>TMZ</td>
+		<td>http://www.tmz.com/videos/0_2pr9x3rb/</td>
 	</tr>
 	<tr>
 		<td><code>traileraddict</code></td>
