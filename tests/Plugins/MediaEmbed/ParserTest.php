@@ -1584,6 +1584,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/permalink.php?story_fbid=10152253595081467&id=58617016466',
+				'<r><FACEBOOK id="10152253595081467" url="https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466">https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/',
 				'<r><FOXNEWS id="3592758613001" url="http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/">http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</FOXNEWS></r>',
 				[],
