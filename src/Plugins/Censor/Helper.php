@@ -17,12 +17,17 @@ class Helper
 	/**
 	* @var string Name of attribute used for the replacement
 	*/
-	public $attrName;
+	public $attrName = 'with';
 
 	/**
 	* @var string Default string used to replace censored words
 	*/
 	public $defaultReplacement = '****';
+
+	/**
+	* @var string Regexp matching blacklisted words
+	*/
+	public $regexp = '/(?!)/';
 
 	/**
 	* @var array Array of [regexp => replacement]
@@ -32,7 +37,7 @@ class Helper
 	/**
 	* @var string Name of the tag used to mark censored words
 	*/
-	public $tagName;
+	public $tagName = 'CENSOR';
 
 	/**
 	* Constructor
