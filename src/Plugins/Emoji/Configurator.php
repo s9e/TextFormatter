@@ -42,7 +42,6 @@ class Configurator extends ConfiguratorBase
 		$tag->template = '<img alt="{.}" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/{@seq}.png"/>';
 	}
 
-
 	/**
 	* {@inheritdoc}
 	*/
