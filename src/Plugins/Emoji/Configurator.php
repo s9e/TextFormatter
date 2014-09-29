@@ -19,11 +19,6 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'seq';
 
 	/*
-	* @var string Regexp used to match Emoji and shortcodes
-	*/
-	protected $regexp = '/(?=[#0-9:\\xC2\\xE2\\xE3\\xF0])(?>:[-+_a-z]+(?=:)|(?>[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2(?>\\x80\\xBC|[\\x81-\\xAD].)|\\xE3[\\x80\\x8A].|\\xF0\\x9F(?>[\\x80\\x83\\x85\\x86].|\\x87.\\xF0\\x9F\\x87.|[\\x88-\\x9B].))(?>\\xEF\\xB8\\x8F)?)/s';
-
-	/*
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E1';
@@ -44,7 +39,6 @@ class Configurator extends ConfiguratorBase
 		);
 		$tag->template = '<img alt="{.}" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/{@seq}.png"/>';
 	}
-
 
 	/*
 	* {@inheritdoc}
