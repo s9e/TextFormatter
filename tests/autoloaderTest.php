@@ -20,7 +20,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	*/
 	public function testConfigurator()
 	{
-		include __DIR__ . '/bootstrap.php';
+		include_once __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Configurator');
 	}
 
@@ -32,7 +32,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	*/
 	public function testParserTag()
 	{
-		include __DIR__ . '/bootstrap.php';
+		include_once __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Parser\\Logger');
 	}
 
@@ -44,7 +44,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	*/
 	public function testEmoticonsParserTag()
 	{
-		include __DIR__ . '/bootstrap.php';
+		include_once __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Plugins\\Emoticons\\Parser');
 	}
 
