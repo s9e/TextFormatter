@@ -75,7 +75,7 @@ class NormalizeUrls extends TemplateNormalization
 
 		foreach ($xpath->query($query, $element) as $i => $node)
 		{
-			$value = BuiltInFilters::sanitizeUrl($node->textContent);
+			$value = BuiltInFilters::sanitizeUrl($node->nodeValue);
 
 			if (!$i)
 				$value = $this->unescapeBrackets(\ltrim($value));
@@ -84,7 +84,7 @@ class NormalizeUrls extends TemplateNormalization
 		}
 
 		if (isset($node))
-			$node->textContent = \rtrim($node->textContent);
+			$node->nodeValue = \rtrim($node->nodeValue);
 	}
 
 	/*
