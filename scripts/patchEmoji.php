@@ -1,14 +1,16 @@
 #!/usr/bin/php
 <?php
 
+use Emojione\Emojione;
+
 const FE0F = "\xEF\xB8\x8F";
 
 include __DIR__ . '/../src/autoloader.php';
 
-$filepath = sys_get_temp_dir() . '/Emojione.class.php';
+$filepath = sys_get_temp_dir() . '/Emojione.php';
 if (!file_exists($filepath))
 {
-	copy('https://raw.githubusercontent.com/Ranks/emojione/master/lib/php/Emojione.class.php', $filepath);
+	copy('https://github.com/Ranks/emojione/raw/master/lib/php/src/Emojione.php', $filepath);
 }
 include $filepath;
 
