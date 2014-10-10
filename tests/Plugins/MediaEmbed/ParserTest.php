@@ -517,6 +517,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://imgur.com/a/9UGCL',
+				'<r><IMGUR id="9UGCL" type="album" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://i.imgur.com/u7Yo0Vy.gifv',
+				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.gifv" width="915">http://i.imgur.com/u7Yo0Vy.gifv</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
 				[],
@@ -903,6 +923,26 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('grooveshark');
+				}
+			],
+			[
+				'https://imgur.com/a/9UGCL',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//imgur.com/a/9UGCL/embed"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://i.imgur.com/u7Yo0Vy.gifv',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
 				}
 			],
 			[
@@ -1789,15 +1829,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('imdb');
-				}
-			],
-			[
-				'https://imgur.com/a/9UGCL',
-				'<r><IMGUR id="9UGCL" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('imgur');
 				}
 			],
 			[
