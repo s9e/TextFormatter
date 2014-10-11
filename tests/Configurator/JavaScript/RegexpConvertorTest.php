@@ -398,7 +398,7 @@ class RegexpConvertorTest extends Test
 	* @expectedExceptionMessage Unknown token type 'unknown' encountered while parsing regexp
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
-	* @group no-hhvm
+	* @group runs-in-separate-process
 	*/
 	public function testUnknownToken()
 	{

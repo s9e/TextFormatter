@@ -9,7 +9,7 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Bundles\S18\Helper
-* @group no-hhvm
+* @group runs-in-separate-process
 */
 class HelperTest extends Test
 {
