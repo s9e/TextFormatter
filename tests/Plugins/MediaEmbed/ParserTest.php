@@ -2014,6 +2014,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.nytimes.com/video/magazine/100000003166834/small-plates.html',
+				'<r><NYTIMES id="100000003166834" url="http://www.nytimes.com/video/magazine/100000003166834/small-plates.html">http://www.nytimes.com/video/magazine/100000003166834/small-plates.html</NYTIMES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
 				'http://pastebin.com/9jEf44nc',
 				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
 				[],
