@@ -2348,6 +2348,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://videomega.tv/?ref=aPRKXgQdaD',
+				'<r><VIDEOMEGA id="aPRKXgQdaD" url="http://videomega.tv/?ref=aPRKXgQdaD">http://videomega.tv/?ref=aPRKXgQdaD</VIDEOMEGA></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('videomega');
+				}
+			],
+			[
 				'http://vimeo.com/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],
