@@ -451,6 +451,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.viagame.com/channels/hearthstone-championship/405177</td>
 	</tr>
 	<tr>
+		<td><code>videomega</code></td>
+		<td>Videomega</td>
+		<td>http://videomega.tv/?ref=aPRKXgQdaD</td>
+	</tr>
+	<tr>
 		<td><code>vidme</code></td>
 		<td>vidme</td>
 		<td>https://vid.me/8Vr</td>
