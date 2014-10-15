@@ -2,7 +2,7 @@
 * @param  {!string} str
 * @return {!string}
 */
-function rawurldecode(str)
+function rawurlencode(str)
 {
 	return encodeURIComponent(str).replace(
 		/[!'()*]/g,
