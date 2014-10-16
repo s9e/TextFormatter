@@ -41,8 +41,35 @@ class DisallowXPathFunction extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
+		// Regexp that matches the function call
+		$regexp = '#(?!<\\pL)' . preg_quote($this->funcName, '#') . '\\s*\\(#iu';
+
+		// Allow whitespace around colons (NOTE: colons are unnecessarily escaped by preg_quote())
+		$regexp = str_replace('\\:', '\\s*:\\s*', $regexp);
+
+		foreach ($this->getExpressions($template) as $expr => $node)
+		{
+			// Remove string literals from the expression
+			$expr = preg_replace('#([\'"]).*?\\1#s', '', $expr);
+
+			// Test whether the expression contains a document() call
+			if (preg_match($regexp, $expr))
+			{
+				throw new UnsafeTemplateException('An XPath expression uses the ' . $this->funcName . '() function', $node);
+			}
+		}
+	}
+
+	/**
+	* Get all the potential XPath expressions used in given template
+	*
+	* @param  DOMElement $template <xsl:template/> node
+	* @return array                XPath expression as key, reference node as value
+	*/
+	protected function getExpressions(DOMElement $template)
+	{
 		$xpath = new DOMXPath($template->ownerDocument);
-		$check = [];
+		$exprs = [];
 
 		foreach ($xpath->query('//@*') as $attribute)
 		{
@@ -50,7 +77,8 @@ class DisallowXPathFunction extends TemplateCheck
 			{
 				// Attribute of an XSL element. May or may not use XPath, but it shouldn't produce
 				// false-positives
-				$check[] = [$attribute, $attribute->value];
+				$expr = $attribute->value;
+				$exprs[$expr] = $attribute;
 			}
 			else
 			{
@@ -59,28 +87,12 @@ class DisallowXPathFunction extends TemplateCheck
 				{
 					if ($token[0] === 'expression')
 					{
-						$check[] = [$attribute, $token[1]];
+						$exprs[$token[1]] = $attribute;
 					}
 				}
 			}
 		}
 
-		// Regexp that matches the function call
-		$regexp = '#(?!<\\pL)' . preg_quote($this->funcName, '#') . '\\s*\\(#iu';
-
-		// Allow whitespace around colons (NOTE: colons are unnecessarily escaped by preg_quote())
-		$regexp = str_replace('\\:', '\\s*:\\s*', $regexp);
-
-		foreach ($check as list($attribute, $expr))
-		{
-			// Remove string literals from the expression
-			$expr = preg_replace('#([\'"]).*?\\1#s', '', $expr);
-
-			// Test whether the expression contains a document() call
-			if (preg_match($regexp, $expr))
-			{
-				throw new UnsafeTemplateException('An XPath expression uses the ' . $this->funcName . '() function', $attribute);
-			}
-		}
+		return $exprs;
 	}
 }
