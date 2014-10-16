@@ -31,7 +31,14 @@
 					<xsl:otherwise>com</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text>/itm/</xsl:text>
-				<xsl:value-of select="@id"/>
+				<xsl:choose>
+					<xsl:when test="@itemid">
+						<xsl:value-of select="@itemid"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@id"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			<xsl:text>eBay item #</xsl:text>
 			<xsl:choose>
