@@ -103,6 +103,6 @@ To-do list:
 		<li> Say hello to the world <img src="/path/to/happy.png" alt=":)" title="Happy"></li>
 		<li> Go to <a href="http://example.com">http://example.com</a></li>
 		<li> Try to trip the parser with <b>mis<i>nes</i></b><i>ted<u> tags</u></i></li>
-		<li> Watch this video: <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/QH2-TGUlwu4?controls=2"></iframe></li>
+		<li> Watch this video: <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/QH2-TGUlwu4"></iframe></li>
 	</ul>
 ```
