@@ -1,6 +1,7 @@
 <site name="imgur albums and GIFV" homepage="http://imgur.com/">
 	<example>http://imgur.com/a/9UGCL</example>
 	<example>http://i.imgur.com/u7Yo0Vy.gifv</example>
+	<example>http://i.imgur.com/UO1UrIx.mp4</example>
 
 	<tags><tag>images</tag></tags>
 
@@ -10,13 +11,13 @@
 
 	<host>imgur.com</host>
 	<extract>!imgur\.com/a/(?'id'\w+)!</extract>
-	<extract>!imgur\.com/(?'id'\w+)\.(?'type'gifv)!</extract>
+	<extract>!imgur\.com/(?'id'\w+)\.(?'type'gifv|mp4)!</extract>
 	<scrape>
 		<match>!imgur\.com/a/\w!</match>
 		<extract>!&lt;a class="(?'type'album)-embed-link!</extract>
 	</scrape>
-	<scrape>
-		<match>!imgur\.com/\w+\.gifv!</match>
+	<scrape url="http://i.imgur.com/{@id}.gifv">
+		<match>!imgur\.com/\w+\.(?:gifv|mp4)!</match>
 		<extract>!width:\s*(?'width'\d+)!</extract>
 		<extract>!height:\s*(?'height'\d+)!</extract>
 	</scrape>
@@ -24,19 +25,19 @@
 	<iframe>
 		<width><![CDATA[
 			<xsl:choose>
-				<xsl:when test="@type='gifv' and @width"><xsl:value-of select="@width"/></xsl:when>
+				<xsl:when test="(@type='gifv' or @type='mp4') and @width"><xsl:value-of select="@width"/></xsl:when>
 				<xsl:otherwise>100%</xsl:otherwise>
 			</xsl:choose>
 		]]></width>
 		<height><![CDATA[
 			<xsl:choose>
-				<xsl:when test="@type='gifv' and @height"><xsl:value-of select="@height"/></xsl:when>
+				<xsl:when test="(@type='gifv' or @type='mp4') and @height"><xsl:value-of select="@height"/></xsl:when>
 				<xsl:otherwise>550</xsl:otherwise>
 			</xsl:choose>
 		]]></height>
 		<src><![CDATA[
 			<xsl:choose>
-				<xsl:when test="@type='gifv'">//i.imgur.com/<xsl:value-of select="@id"/>.gifv#embed</xsl:when>
+				<xsl:when test="@type='gifv' or @type='mp4'">//i.imgur.com/<xsl:value-of select="@id"/>.gifv#embed</xsl:when>
 				<xsl:otherwise>//imgur.com/a/<xsl:value-of select="@id"/>/embed</xsl:otherwise>
 			</xsl:choose>
 		]]></src>

@@ -537,6 +537,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://i.imgur.com/u7Yo0Vy.mp4',
+				'<r><IMGUR height="389" id="u7Yo0Vy" type="mp4" url="http://i.imgur.com/u7Yo0Vy.mp4" width="915">http://i.imgur.com/u7Yo0Vy.mp4</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
 				[],
@@ -967,6 +977,16 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.gifv',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://i.imgur.com/u7Yo0Vy.mp4',
 				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed"></iframe>',
 				[],
 				function ($configurator)
