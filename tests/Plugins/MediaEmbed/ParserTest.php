@@ -538,7 +538,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.mp4',
-				'<r><IMGUR height="389" id="u7Yo0Vy" type="mp4" url="http://i.imgur.com/u7Yo0Vy.mp4" width="915">http://i.imgur.com/u7Yo0Vy.mp4</IMGUR></r>',
+				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.mp4" width="915">http://i.imgur.com/u7Yo0Vy.mp4</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
