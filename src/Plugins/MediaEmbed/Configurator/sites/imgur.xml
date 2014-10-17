@@ -1,6 +1,7 @@
 <site name="imgur albums and GIFV" homepage="http://imgur.com/">
 	<example>http://imgur.com/a/9UGCL</example>
 	<example>http://i.imgur.com/u7Yo0Vy.gifv</example>
+	<example>http://i.imgur.com/UO1UrIx.mp4</example>
 
 	<tags><tag>images</tag></tags>
 
@@ -10,15 +11,16 @@
 
 	<host>imgur.com</host>
 	<extract>!imgur\.com/a/(?'id'\w+)!</extract>
-	<extract>!imgur\.com/(?'id'\w+)\.(?'type'gifv)!</extract>
+	<extract>!imgur\.com/(?'id'\w+)\.(?:gifv|mp4)!</extract>
 	<scrape>
 		<match>!imgur\.com/a/\w!</match>
 		<extract>!&lt;a class="(?'type'album)-embed-link!</extract>
 	</scrape>
-	<scrape>
-		<match>!imgur\.com/\w+\.gifv!</match>
+	<scrape url="http://i.imgur.com/{@id}.gifv">
+		<match>!imgur\.com/\w+\.(?:gifv|mp4)!</match>
 		<extract>!width:\s*(?'width'\d+)!</extract>
 		<extract>!height:\s*(?'height'\d+)!</extract>
+		<extract>!(?'type'gifv)!</extract>
 	</scrape>
 
 	<iframe>
