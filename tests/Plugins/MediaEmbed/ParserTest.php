@@ -357,8 +357,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://8tracks.com/fingerlickengood/just-nujabes',
-				'<r><EIGHTTRACKS id="2485118">http://8tracks.com/fingerlickengood/just-nujabes</EIGHTTRACKS></r>',
+				'http://8tracks.com/lovinq/headphones-in-world-out',
+				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
 				[],
 				function ($configurator)
 				{
