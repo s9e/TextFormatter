@@ -61,8 +61,8 @@ class Configurator extends ConfiguratorBase
 		$jsRegexp  .= '(?:';
 
 		// Shortcodes
-		$phpRegexp .= ':[-+_a-z]+(?=:)';
-		$jsRegexp  .= ':[-+_a-z]+(?=:)';
+		$phpRegexp .= ':[-+_a-z0-9]+(?=:)';
+		$jsRegexp  .= ':[-+_a-z0-9]+(?=:)';
 
 		// Start the Emoji alternation
 		$phpRegexp .= '|(?>';

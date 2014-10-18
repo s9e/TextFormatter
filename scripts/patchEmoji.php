@@ -1,77 +1,44 @@
 #!/usr/bin/php
 <?php
 
-use Emojione\Emojione;
-
 const FE0F = "\xEF\xB8\x8F";
 
-include __DIR__ . '/../src/autoloader.php';
-
-$filepath = sys_get_temp_dir() . '/Emojione.php';
+$filepath = sys_get_temp_dir() . '/emoji.json';
 if (!file_exists($filepath))
 {
-	copy('https://github.com/Ranks/emojione/raw/master/lib/php/src/Emojione.php', $filepath);
-}
-include $filepath;
-
-foreach (Emojione::$unicode_replace as $variant => $shortcode)
-{
-	if (strpos($variant, FE0F) === false)
-	{
-		continue;
-	}
-
-	$original = str_replace(FE0F, '', $variant);
-
-	if (!isset(Emojione::$unicode_replace[$original]))
-	{
-		echo 'Unknown variant ', bin2hex($variant), "\n";
-	}
-	elseif (Emojione::$unicode_replace[$original] !== $shortcode)
-	{
-		echo 'Variant ', bin2hex($variant), ' (', $shortcode, ' does not match ', bin2hex($original), '(', Emojione::$unicode_replace[$original], ")\n";
-	}
+	copy('https://github.com/Ranks/emojione/raw/master/emoji.json', $filepath);
 }
 
+$all = [];
 $map = [];
-$variants = [];
+foreach (json_decode(file_get_contents($filepath), true) as $shortname => $info)
+{
+	$seq  = $info['unicode'];
+	$utf8 = seqToUtf8($seq);
+
+	$all[$utf8] = $seq;
+	$all[$info['shortname']] = $seq;
+
+	if (isset($info['alternates']))
+	{
+		foreach ($info['alternates'] as $alternate)
+		{
+			$all[$alternate] = $seq;
+		}
+	}
+}
+
 $allText = '';
 $allHtml = '';
-
-foreach (Emojione::$unicode_replace as $utf8 => $shortcode)
+$i = 0;
+foreach ($all as $match => $seq)
 {
-	if (!preg_match('(^:[-+\\w]+:$)', $shortcode))
-	{
-		die("Unexpected shortcode $shortcode\n");
-	}
+	$html = '<img alt="' . $match . '" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/' . $seq . '.png">';
 
-	if (!isset(Emojione::$shortcode_replace[$shortcode]))
-	{
-		die("Missing Emojione shortcode $shortcode\n");
-	}
-
-	$html = '<img alt="' . $utf8 . '" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/' . strtoupper(Emojione::$shortcode_replace[$shortcode]) . '.png">';
-
-	$allText .= $utf8;
+	$allText .= $match;
 	$allHtml .= $html;
 
-	$utf8 = str_replace(FE0F, '', $utf8);
-
-	$hex = [];
-	preg_match_all('(.)us', $utf8, $m);
-	foreach ($m[0] as $str)
-	{
-		$hex[] = sprintf('%04X', cp($str));
-	}
-
-	$imgName = implode('-', $hex);
-
-	if ($imgName !== strtoupper(Emojione::$shortcode_replace[$shortcode]))
-	{
-		echo "$shortcode $imgName does not match ", Emojione::$shortcode_replace[$shortcode], "\n";
-	}
-
-	$map[$shortcode] = $map[$utf8] = $imgName;
+	$map[str_replace(FE0F, '', $match)] = $seq;
 }
 ksort($map);
 
@@ -162,4 +129,40 @@ function cp($str)
 	}
 
 	return $cp;
+}
+
+function seqToUtf8($seq)
+{
+	$seq = str_replace('-FE0F', '', $seq);
+	$str = '';
+	foreach (explode('-', $seq) as $cp)
+	{
+		$str .= utf8(hexdec($cp));
+	}
+
+	return $str;
+}
+
+function utf8($cp)
+{
+		if ($cp < 0x80)
+		{
+			return chr($cp);
+		}
+		if ($cp < 0x800)
+		{
+			return chr(0b11000000 | ($cp >> 6))
+			     . chr(0b10000000 | ($cp & 0b111111));
+		}
+		if ($cp < 0x10000)
+		{
+			return chr(0b11100000 | ($cp  >> 12))
+			     . chr(0b10000000 | (($cp >> 6) & 0b111111))
+			     . chr(0b10000000 | ($cp        & 0b111111));
+		}
+
+		return chr(0b11110000 | ($cp  >> 18))
+		     . chr(0b10000000 | (($cp >> 12) & 0b111111))
+		     . chr(0b10000000 | (($cp >> 6)  & 0b111111))
+		     . chr(0b10000000 | ($cp         & 0b111111));
 }
