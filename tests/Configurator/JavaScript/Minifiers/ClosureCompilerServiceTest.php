@@ -13,11 +13,6 @@ class ClosureCompilerServiceTest extends Test
 {
 	public function setUp()
 	{
-		if (defined('HHVM_VERSION') && version_compare(HHVM_VERSION, '3.1.0-dev', '<'))
-		{
-			$this->fail('HHVM does not set context on stream wrappers and dies with a fatal error. See https://github.com/facebook/hhvm/issues/1991');
-		}
-
 		stream_wrapper_unregister('http');
 		stream_wrapper_register('http', __NAMESPACE__ . '\\ClosureCompilerServiceProxy');
 	}

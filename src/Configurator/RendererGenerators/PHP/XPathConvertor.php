@@ -555,10 +555,9 @@ class XPathConvertor
 		$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
 		// Match parenthesized expressions and some not() expressions on PCRE >= 8.13 only.
-		// Previous versions segfault because of the mutual references. HHVM segfaults for unknown
-		// reasons
+		// Previous versions segfault because of the mutual references
 		$boolMatch = $parensMatch = '';
-		if (version_compare(PCRE_VERSION, '8.13', '>=') && !defined('HHVM_VERSION'))
+		if (version_compare(PCRE_VERSION, '8.13', '>='))
 		{
 			$boolMatch   = '(?&bool)|';
 			$parensMatch = '|(?&parens)';

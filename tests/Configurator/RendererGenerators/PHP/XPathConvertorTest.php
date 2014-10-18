@@ -320,12 +320,6 @@ class XPathConvertorTest extends Test
 						// Not exactly sure of the oldest version that doesn't segault
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
-
-					if (defined('HHVM_VERSION'))
-					{
-						// https://github.com/facebook/hhvm/issues/3348
-						$this->markTestSkipped('This optimization is disabled on HHVM');
-					}
 				}
 			],
 			[
@@ -349,12 +343,6 @@ class XPathConvertorTest extends Test
 					{
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
-
-					if (defined('HHVM_VERSION'))
-					{
-						// https://github.com/facebook/hhvm/issues/3348
-						$this->markTestSkipped('This optimization is disabled on HHVM');
-					}
 				}
 			],
 			[
@@ -370,12 +358,6 @@ class XPathConvertorTest extends Test
 					{
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
-
-					if (defined('HHVM_VERSION'))
-					{
-						// https://github.com/facebook/hhvm/issues/3348
-						$this->markTestSkipped('This optimization is disabled on HHVM');
-					}
 				}
 			],
 			[
@@ -386,12 +368,6 @@ class XPathConvertorTest extends Test
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-
-					if (defined('HHVM_VERSION'))
-					{
-						// https://github.com/facebook/hhvm/issues/3348
-						$this->markTestSkipped('This optimization is disabled on HHVM');
 					}
 				}
 			],
