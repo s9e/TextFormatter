@@ -936,7 +936,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
-				'(<iframe width="594" height="448" src="//embed.gettyimages.com/embed/3232182\?et=[-\\w]{22}&amp;sig=[-\\w]{43}=" allowfullscreen="" frameborder="0" scrolling="no"></iframe>)',
+				'(<iframe width="594" height="448" src="//embed.gettyimages.com/embed/3232182\?et=[-\\w]{22}&amp;similar=on&amp;sig=[-\\w]{43}=" allowfullscreen="" frameborder="0" scrolling="no"></iframe>)',
 				[],
 				function ($configurator)
 				{
