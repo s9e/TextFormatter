@@ -587,6 +587,30 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://video.khl.ru/events/233677',
+				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+" url="http://video.khl.ru/events/233677">http://video.khl.ru/events/233677</KHL></r>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('khl');
+				},
+				null,
+				'assertRegexp'
+			],
+			[
+				'http://video.khl.ru/quotes/251237',
+				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+" url="http://video.khl.ru/quotes/251237">http://video.khl.ru/quotes/251237</KHL></r>)',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('khl');
+				},
+				null,
+				'assertRegexp'
+			],
+			[
 				'http://i.mixcloud.com/CH9VU9',
 				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
 				[],
