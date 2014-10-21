@@ -5,7 +5,6 @@
 	<tags><tag>.ru</tag><tag>sports</tag></tags>
 
 	<host>video.khl.ru</host>
-	<extract></extract>
 	<scrape>
 		<match>!video\.khl\.ru/(?:event|quote)s/\d!</match>
 		<extract>!//video\.khl\.ru/iframe/feed/start/(?'id'[\w/]+)!</extract>
