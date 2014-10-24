@@ -261,6 +261,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.hulu.com/watch/484180</td>
 	</tr>
 	<tr>
+		<td><code>humortvnl</code></td>
+		<td>HumorTV</td>
+		<td>http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</td>
+	</tr>
+	<tr>
 		<td><code>ign</code></td>
 		<td>IGN</td>
 		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
