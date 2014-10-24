@@ -929,6 +929,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
+				'<iframe width="560" height="315" src="http://www.dumpert.nl/embed/6622577/4652b140/" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('dumpert');
+				}
+			],
+			[
 				'http://www.ebay.at/itm/Tea-Matter-Teesieb-mit-Zwitscherton-Alessi-Rot-Schwarz-Stahl-glnzend-/251585352862',
 				'<a href="http://www.ebay.at/itm/251585352862">eBay item #251585352862</a>',
 				[],
