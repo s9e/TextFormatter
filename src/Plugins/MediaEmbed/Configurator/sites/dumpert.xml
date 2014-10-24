@@ -4,6 +4,9 @@
 	<tags><tag>.nl</tag><tag>entertainment</tag></tags>
 
 	<host>dumpert.nl</host>
-	<extract>!dumpert\.nl/mediabase/(?'id'\d+/\w+)!</extract>
-	<iframe width="560" height="315" src="http://www.dumpert.nl/embed/{@id}"/>
+	<scrape>
+		<match>!dumpert\.nl/mediabase/\d+/\w+!</match>
+		<extract>!data-itemid="(?'id'\w+)!</extract>
+	</scrape>
+	<iframe width="560" height="315" src="http://www.dumpert.nl/embed/{translate(@id,'_','/')}/"/>
 </site>
