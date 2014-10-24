@@ -1555,6 +1555,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
+				'<r><DUMPERT id="6622577/4652b140" url="http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html">http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</DUMPERT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dumpert');
+				}
+			],
+			[
 				'http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701',
 				'<r><EBAY id="251053262701" url="http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701">http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701</EBAY></r>',
 				[],
