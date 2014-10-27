@@ -181,6 +181,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-<br/>http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508<br/>http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</td>
 	</tr>
 	<tr>
+		<td><code>dumpert</code></td>
+		<td>dumpert</td>
+		<td>http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</td>
+	</tr>
+	<tr>
 		<td><code>ebay</code></td>
 		<td>eBay</td>
 		<td>http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701<br/>http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153<br/>http://www.ebay.de/itm/Converse-Chucks-All-Star-OX-Klassiker-Gr-35-48-/320748648909<br/>http://www.ebay.fr/itm/CONVERSE-CHUCK-TAYLOR-AS-CORE-OX-All-Star-Sneakers-Men-Women-Free-Shipping-/380728186640<br/>http://www.ebay.at/itm/Tea-Matter-Teesieb-mit-Zwitscherton-Alessi-Rot-Schwarz-Stahl-glnzend-/251585352862<br/>http://www.ebay.com/itm/261416432518</td>
@@ -261,6 +266,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.hulu.com/watch/484180</td>
 	</tr>
 	<tr>
+		<td><code>humortvnl</code></td>
+		<td>HumorTV</td>
+		<td>http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</td>
+	</tr>
+	<tr>
 		<td><code>ign</code></td>
 		<td>IGN</td>
 		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
@@ -294,6 +304,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td><code>izlesene</code></td>
 		<td>İzlesene</td>
 		<td>http://www.izlesene.com/video/lily-allen-url-badman/7600704</td>
+	</tr>
+	<tr>
+		<td><code>khl</code></td>
+		<td>Kontinental Hockey League (КХЛ)</td>
+		<td>http://video.khl.ru/events/233677<br/>http://video.khl.ru/quotes/251237</td>
 	</tr>
 	<tr>
 		<td><code>kickstarter</code></td>
@@ -433,7 +448,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>twitter</code></td>
 		<td>Twitter (via custom iframe)</td>
-		<td>https://twitter.com/BarackObama/statuses/266031293945503744<br/>https://twitter.com/DerekTVShow/status/463372588690202624<br/>https://twitter.com/#!/BarackObama/status/266031293945503744</td>
+		<td>https://twitter.com/IJasonAlexander/statuses/526635414338023424<br/>https://mobile.twitter.com/DerekTVShow/status/463372588690202624<br/>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</td>
 	</tr>
 	<tr>
 		<td><code>ustream</code></td>
