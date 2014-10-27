@@ -2433,6 +2433,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://mobile.twitter.com/DerekTVShow/status/463372588690202624',
+				'<r><TWITTER id="463372588690202624" url="https://mobile.twitter.com/DerekTVShow/status/463372588690202624">https://mobile.twitter.com/DerekTVShow/status/463372588690202624</TWITTER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitter');
+				}
+			],
+			[
 				'http://www.vevo.com/watch/USUV71400682',
 				'<r><VEVO id="USUV71400682" url="http://www.vevo.com/watch/USUV71400682">http://www.vevo.com/watch/USUV71400682</VEVO></r>',
 				[],
