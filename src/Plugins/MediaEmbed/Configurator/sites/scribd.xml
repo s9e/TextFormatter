@@ -1,7 +1,7 @@
 <site name="Scribd" homepage="http://www.scribd.com/">
 	<example>http://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review?in_collection=5291376</example>
 
-	<tags><tag>documents</tag></tags>
+	<tags><tag>documents</tag><tag>presentations</tag></tags>
 
 	<host>scribd.com</host>
 	<extract>!scribd\.com/doc/(?'id'\d+)!</extract>

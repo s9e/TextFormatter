@@ -2,7 +2,7 @@
 	<example>http://video.nationalgeographic.com/tv/changing-earth</example>
 	<example>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</example>
 
-	<tags><tag>documentary</tag></tags>
+	<tags><tag>documentaries</tag></tags>
 
 	<host>video.nationalgeographic.com</host>
 	<scrape>

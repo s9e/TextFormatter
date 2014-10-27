@@ -1,7 +1,7 @@
 <site name="Youku" homepage="http://www.youku.com/">
 	<example>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</example>
 
-	<tags><tag>cn</tag></tags>
+	<tags><tag>.cn</tag></tags>
 
 	<host>youku.com</host>
 	<extract>!youku\.com/v_show/id_(?'id'\w+)!</extract>
