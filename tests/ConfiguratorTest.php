@@ -36,14 +36,36 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->javascript is an instance of JavaScript
+	* @testdox $configurator->javascript unset by default
+	*/
+	public function testJavaScriptDefault()
+	{
+		$this->assertFalse(isset($this->configurator->javascript));
+	}
+
+	/**
+	* @testdox $configurator->enableJavaScript() creates an instance of JavaScript stored in $configurator->javascript
 	*/
 	public function testJavaScriptInstance()
 	{
+		$this->configurator->enableJavaScript();
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\JavaScript',
 			$this->configurator->javascript
 		);
+	}
+
+	/**
+	* @testdox $configurator->enableJavaScript() does not overwrite the current instance of the JavaScript object
+	*/
+	public function testJavaScriptInstancePreserved()
+	{
+		$this->configurator->enableJavaScript();
+		$old = $this->configurator->javascript;
+		$this->configurator->enableJavaScript();
+		$new = $this->configurator->javascript;
+
+		$this->assertSame($old, $new);
 	}
 
 	/**

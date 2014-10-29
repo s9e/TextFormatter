@@ -119,7 +119,9 @@ s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->bundleGenerator is an instance of BundleGenerator
- [x] $configurator->javascript is an instance of JavaScript
+ [x] $configurator->javascript unset by default
+ [x] $configurator->enableJavaScript() creates an instance of JavaScript stored in $configurator->javascript
+ [x] $configurator->enableJavaScript() does not overwrite the current instance of the JavaScript object
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->registeredVars is a publicly accessible array
  [x] $configurator->rendering is an instance of Rendering

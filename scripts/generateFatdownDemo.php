@@ -4,6 +4,7 @@
 include __DIR__ . '/../src/autoloader.php';
 
 $configurator = s9e\TextFormatter\Configurator\Bundles\Fatdown::getConfigurator();
+$configurator->enableJavaScript();
 
 $configurator->javascript
 	->setMinifier('ClosureCompilerService')

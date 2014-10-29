@@ -4,6 +4,7 @@
 include __DIR__ . '/../src/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
+$configurator->enableJavaScript();
 
 $configurator->BBCodes->addFromRepository('B');
 $configurator->BBCodes->addFromRepository('I');

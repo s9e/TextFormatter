@@ -104,6 +104,8 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function assertJSParsing($original, $expected, $assertMethod = 'assertSame')
 	{
+		$this->configurator->enableJavaScript();
+
 		// Minify and cache the parser if we have a cache dir and we're not on Travis
 		$cacheDir = __DIR__ . '/.cache';
 		if (empty($_SERVER['TRAVIS']) && file_exists($cacheDir))

@@ -94,7 +94,6 @@ class Configurator implements ConfigProvider
 	{
 		$this->attributeFilters   = new AttributeFilterCollection;
 		$this->bundleGenerator    = new BundleGenerator($this);
-		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->registeredVars     = ['urlConfig' => new UrlConfig];
 		$this->rendering          = new Rendering($this);
@@ -188,6 +187,19 @@ class Configurator implements ConfigProvider
 	//==========================================================================
 	// API
 	//==========================================================================
+
+	/**
+	* Enable the creation of a JavaScript parser
+	*
+	* @return void
+	*/
+	public function enableJavaScript()
+	{
+		if (!isset($this->javascript))
+		{
+			$this->javascript = new JavaScript($this);
+		}
+	}
 
 	/**
 	* Finalize this configuration and return all the relevant objects

@@ -22,6 +22,11 @@ use s9e\TextFormatter\Tests\Test;
 */
 class JavaScriptTest extends Test
 {
+	public function setUp()
+	{
+		$this->configurator->enableJavaScript();
+	}
+
 	/**
 	* @testdox getMinifier() returns an instance of Noop by default
 	*/
@@ -100,6 +105,7 @@ class JavaScriptTest extends Test
 		     ->method('get')
 		     ->will($this->returnValue('/**/'));
 
+		$this->configurator->enableJavaScript();
 		$this->configurator->javascript->setMinifier($mock);
 
 		$this->assertSame('/**/', $this->configurator->javascript->getParser());
