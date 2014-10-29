@@ -305,12 +305,19 @@ class Configurator extends ConfiguratorBase
 			list($regexp, $passthroughIdx) = $_2321574420;
 			$generics[] = [$tagName, $regexp, $passthroughIdx];
 
-			$jsRegexp = RegexpConvertor::toJS($regexp);
-			$jsRegexp->flags .= 'g';
+			if (isset($this->configurator->javascript))
+			{
+				$jsRegexp = RegexpConvertor::toJS($regexp);
+				$jsRegexp->flags .= 'g';
 
-			$jsGenerics[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
+				$jsGenerics[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
+			}
 		}
 
-		return ['generics' => new Variant($generics, ['JS' => $jsGenerics])];
+		$variant = new Variant($generics);
+		if (isset($this->configurator->javascript))
+			$variant->set('JS', $jsGenerics);
+
+		return ['generics' => $variant];
 	}
 }
