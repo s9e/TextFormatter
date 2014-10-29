@@ -2219,7 +2219,8 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() throws a LogicException on unexpected captures
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
- [x] asConfig() creates a JavaScript variant of generics
+ [x] asConfig() does not creates a JavaScript variant by default
+ [x] asConfig() creates a JavaScript variant of generics if JavaScript is enabled
  [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser

@@ -566,7 +566,26 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant of generics
+	* @testdox asConfig() does not creates a JavaScript variant by default
+	*/
+	public function testAsConfigNoJSVariant()
+	{
+		$plugin = $this->configurator->plugins->load('Generic');
+		$plugin->add('/(?<foo>[0-9]+)/', '');
+		$plugin->add('/(?<bar>[a-z]+)/', '');
+
+		$config = $plugin->asConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['generics']
+		);
+
+		$this->assertFalse($config['generics']->has('JS'));
+	}
+
+	/**
+	* @testdox asConfig() creates a JavaScript variant of generics if JavaScript is enabled
 	*/
 	public function testAsConfigVariant()
 	{
@@ -574,6 +593,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('/(?<foo>[0-9]+)/', '');
 		$plugin->add('/(?<bar>[a-z]+)/', '');
 
+		$this->configurator->enableJavaScript();
 		$config = $plugin->asConfig();
 
 		$this->assertInstanceOf(
@@ -595,6 +615,7 @@ class ConfiguratorTest extends Test
 		$regexp = new RegExp('([0-9]+)', 'g');
 		$regexp->map = ['', 'foo'];
 
+		$this->configurator->enableJavaScript();
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config, 'JS');
 
