@@ -94,7 +94,6 @@ class Configurator implements ConfigProvider
 	{
 		$this->attributeFilters   = new AttributeFilterCollection;
 		$this->bundleGenerator    = new BundleGenerator($this);
-		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->registeredVars     = array('urlConfig' => new UrlConfig);
 		$this->rendering          = new Rendering($this);
@@ -176,6 +175,17 @@ class Configurator implements ConfigProvider
 	//==========================================================================
 
 	/*
+	* Enable the creation of a JavaScript parser
+	*
+	* @return void
+	*/
+	public function enableJavaScript()
+	{
+		if (!isset($this->javascript))
+			$this->javascript = new JavaScript($this);
+	}
+
+	/*
 	* Finalize this configuration and return all the relevant objects
 	*
 	* Options: (also see addHTMLRules() options)
@@ -198,6 +208,7 @@ class Configurator implements ConfigProvider
 		$options += array(
 			'addHTML5Rules'  => \true,
 			'optimizeConfig' => \true,
+			'returnJS'       => isset($this->javascript),
 			'returnParser'   => \true,
 			'returnRenderer' => \true
 		);
@@ -219,23 +230,36 @@ class Configurator implements ConfigProvider
 			$return['renderer'] = $renderer;
 		}
 
-		if ($options['returnParser'])
+		if ($options['returnJS'] || $options['returnParser'])
 		{
-			// Prepare the parser's config
 			$config = $this->asConfig();
-			ConfigHelper::filterVariants($config);
 
-			if ($options['optimizeConfig'])
-				ConfigHelper::optimizeArray($config);
+			if ($options['returnJS'])
+			{
+				// Copy the config before replacing variants with their JS value
+				$jsConfig = $config;
+				ConfigHelper::filterVariants($jsConfig, 'JS');
 
-			// Create a parser
-			$parser = new Parser($config);
+				$return['js'] = $this->javascript->getParser($jsConfig);
+			}
 
-			// Execute the parser callback if applicable
-			if (isset($options['finalizeParser']))
-				\call_user_func($options['finalizeParser'], $parser);
+			if ($options['returnParser'])
+			{
+				// Remove JS-specific data from the config
+				ConfigHelper::filterVariants($config);
 
-			$return['parser'] = $parser;
+				if ($options['optimizeConfig'])
+					ConfigHelper::optimizeArray($config);
+
+				// Create a parser
+				$parser = new Parser($config);
+
+				// Execute the parser callback if applicable
+				if (isset($options['finalizeParser']))
+					\call_user_func($options['finalizeParser'], $parser);
+
+				$return['parser'] = $parser;
+			}
 		}
 
 		return $return;
