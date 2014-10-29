@@ -224,6 +224,7 @@ class Configurator implements ConfigProvider
 		$options += [
 			'addHTML5Rules'  => true,
 			'optimizeConfig' => true,
+			'returnJS'       => isset($this->javascript),
 			'returnParser'   => true,
 			'returnRenderer' => true
 		];
@@ -249,27 +250,40 @@ class Configurator implements ConfigProvider
 			$return['renderer'] = $renderer;
 		}
 
-		if ($options['returnParser'])
+		if ($options['returnJS'] || $options['returnParser'])
 		{
-			// Prepare the parser's config
 			$config = $this->asConfig();
-			ConfigHelper::filterVariants($config);
 
-			if ($options['optimizeConfig'])
+			if ($options['returnJS'])
 			{
-				ConfigHelper::optimizeArray($config);
+				// Copy the config before replacing variants with their JS value
+				$jsConfig = $config;
+				ConfigHelper::filterVariants($jsConfig, 'JS');
+
+				$return['js'] = $this->javascript->getParser($jsConfig);
 			}
 
-			// Create a parser
-			$parser = new Parser($config);
-
-			// Execute the parser callback if applicable
-			if (isset($options['finalizeParser']))
+			if ($options['returnParser'])
 			{
-				$options['finalizeParser']($parser);
-			}
+				// Remove JS-specific data from the config
+				ConfigHelper::filterVariants($config);
 
-			$return['parser'] = $parser;
+				if ($options['optimizeConfig'])
+				{
+					ConfigHelper::optimizeArray($config);
+				}
+
+				// Create a parser
+				$parser = new Parser($config);
+
+				// Execute the parser callback if applicable
+				if (isset($options['finalizeParser']))
+				{
+					$options['finalizeParser']($parser);
+				}
+
+				$return['parser'] = $parser;
+			}
 		}
 
 		return $return;

@@ -175,6 +175,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
  [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
+ [x] finalize() does not return a JS parser by default
+ [x] finalize() returns a JS parser if JavaScript was enabled
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute

@@ -37,15 +37,16 @@ $configurator->FancyPants;
 $configurator->MediaEmbed->add('youtube');
 $configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="http://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
-$configurator->addHTML5Rules();
-
 $configurator->javascript
 	->setMinifier('ClosureCompilerService')
 	->cacheDir = __DIR__ . '/../tests/.cache';
 
 $configurator->javascript->exportMethods = ['disablePlugin', 'enablePlugin', 'preview'];
 
-$js = $configurator->javascript->getParser();
+extract($configurator->finalize([
+	'returnParser'   => false,
+	'returnRenderer' => false
+]));
 
 ob_start();
 ?><!DOCTYPE html>

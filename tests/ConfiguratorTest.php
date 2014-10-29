@@ -781,6 +781,27 @@ class ConfiguratorTest extends Test
 			strlen(serialize($return2['parser']))
 		);
 	}
+
+	/**
+	* @testdox finalize() does not return a JS parser by default
+	*/
+	public function testFinalizeDefaultNoJS()
+	{
+		$return = $this->configurator->finalize();
+
+		$this->assertArrayNotHasKey('js', $return);
+	}
+
+	/**
+	* @testdox finalize() returns a JS parser if JavaScript was enabled
+	*/
+	public function testFinalizeJSEnabled()
+	{
+		$this->configurator->enableJavaScript();
+		$return = $this->configurator->finalize();
+
+		$this->assertArrayHasKey('js', $return);
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
