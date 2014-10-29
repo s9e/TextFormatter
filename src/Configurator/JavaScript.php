@@ -86,66 +86,20 @@ class JavaScript
 	/*
 	* Get a JavaScript parser
 	*
-	* @return string
+	* @param  array  $config Config array returned by the configurator
+	* @return string         JavaScript parser
 	*/
-	public function getParser()
+	public function getParser(array $config = \null)
 	{
-		// Load the sources
-		$files = [
-			'Parser/utils.js',
-			'Parser/BuiltInFilters.js',
-			// If getLogger() is not exported we use a dummy Logger that can be optimized away
-			'Parser/' . (\in_array('getLogger', $this->exportMethods) ? '' : 'Null') . 'Logger.js',
-			'Parser/Tag.js',
-			'Parser.js'
-		];
-
-		// Append render.js if we export the preview method
-		if (\in_array('preview', $this->exportMethods, \true))
-			$files[] = 'render.js';
-
-		// Get the stylesheet used for rendering
-		$xsl = (new XSLT)->getXSL($this->configurator->rendering);
-
-		// Reset this instance's callbacks
-		$this->callbacks = [];
-
 		// Store the parser's config
-		$this->config = $this->configurator->asConfig();
+		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
 
-		// Start with the generated HINTs
-		$src = $this->getHints($xsl);
-
-		// Append the parser's source
-		foreach ($files as $filename)
-		{
-			if ($filename === 'render.js')
-				// Insert the stylesheet if we include the renderer
-				$src .= '/** @const */ var xsl=' . \json_encode($xsl) . ";\n";
-
-			$filepath = __DIR__ . '/../' . $filename;
-			$src .= \file_get_contents($filepath) . "\n";
-		}
+		// Get parser's source
+		$src = $this->getSource();
 
 		// Inject the parser config
-		$config = [
-			'plugins'        => $this->getPluginsConfig(),
-			'registeredVars' => $this->getRegisteredVarsConfig(),
-			'rootContext'    => $this->getRootContext(),
-			'tagsConfig'     => $this->getTagsConfig()
-		];
-		$src = \preg_replace_callback(
-			'/(\\nvar (' . \implode('|', \array_keys($config)) . '))(;)/',
-			function ($m) use ($config)
-			{
-				return $m[1] . '=' . $config[$m[2]] . $m[3];
-			},
-			$src
-		);
-
-		// Append the callbacks from filters and generators
-		$src .= "\n" . \implode("\n", $this->callbacks) . "\n";
+		$this->injectConfig($src);
 
 		// Export the public API
 		if (!empty($this->exportMethods))
@@ -228,8 +182,7 @@ class JavaScript
 	/*
 	* Generate a HINT object that contains informations about the configuration
 	*
-	* @param  string $xsl XSL stylesheet used for rendering
-	* @return string      JavaScript Code
+	* @return string JavaScript Code
 	*/
 	protected function getHints($xsl)
 	{
@@ -415,6 +368,45 @@ class JavaScript
 	}
 
 	/*
+	* Return the parser's source
+	*
+	* @return string
+	*/
+	protected function getSource()
+	{
+		$files = [
+			'Parser/utils.js',
+			'Parser/BuiltInFilters.js',
+			// If getLogger() is not exported we use a dummy Logger that can be optimized away
+			'Parser/' . (\in_array('getLogger', $this->exportMethods) ? '' : 'Null') . 'Logger.js',
+			'Parser/Tag.js',
+			'Parser.js'
+		];
+
+		// Append render.js if we export the preview method
+		if (\in_array('preview', $this->exportMethods, \true))
+			$files[] = 'render.js';
+
+		// Get the stylesheet used for rendering
+		$xsl = (new XSLT)->getXSL($this->configurator->rendering);
+
+		// Start with the generated HINTs
+		$src = $this->getHints($xsl);
+
+		foreach ($files as $filename)
+		{
+			if ($filename === 'render.js')
+				// Insert the stylesheet if we include the renderer
+				$src .= '/** @const */ var xsl=' . \json_encode($xsl) . ";\n";
+
+			$filepath = __DIR__ . '/../' . $filename;
+			$src .= \file_get_contents($filepath) . "\n";
+		}
+
+		return $src;
+	}
+
+	/*
 	* Generate a JavaScript representation of the tags' config
 	*
 	* @return Code JavaScript source code
@@ -504,6 +496,36 @@ class JavaScript
 		$src .= ($isArray) ? ']' : '}';
 
 		return $src;
+	}
+
+	/*
+	* Inject the parser config into given source
+	*
+	* @param  string &$src Parser's source, by reference
+	* @return void
+	*/
+	protected function injectConfig(&$src)
+	{
+		// Reset this instance's callbacks
+		$this->callbacks = [];
+
+		$config = [
+			'plugins'        => $this->getPluginsConfig(),
+			'registeredVars' => $this->getRegisteredVarsConfig(),
+			'rootContext'    => $this->getRootContext(),
+			'tagsConfig'     => $this->getTagsConfig()
+		];
+		$src = \preg_replace_callback(
+			'/(\\nvar (' . \implode('|', \array_keys($config)) . '))(;)/',
+			function ($m) use ($config)
+			{
+				return $m[1] . '=' . $config[$m[2]] . $m[3];
+			},
+			$src
+		);
+
+		// Append the callbacks from filters and generators
+		$src .= "\n" . \implode("\n", $this->callbacks) . "\n";
 	}
 
 	/*
