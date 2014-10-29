@@ -88,9 +88,10 @@ class JavaScript
 	/**
 	* Get a JavaScript parser
 	*
-	* @return string
+	* @param  array  $config Config array returned by the configurator
+	* @return string         JavaScript parser
 	*/
-	public function getParser()
+	public function getParser(array $config = null)
 	{
 		// Load the sources
 		$files = [
@@ -115,7 +116,7 @@ class JavaScript
 		$this->callbacks = [];
 
 		// Store the parser's config
-		$this->config = $this->configurator->asConfig();
+		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
 
 		// Start with the generated HINTs

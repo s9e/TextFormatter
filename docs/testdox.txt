@@ -1600,6 +1600,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] setMinifier() accepts an object that implements Minifier
  [x] setMinifier() returns the new instance
  [x] getParser() calls the minifier and returns its result
+ [x] getParser() optionally accepts a config array as argument
  [x] A plugin's quickMatch value is preserved if it's valid UTF-8
  [x] A plugin's quickMatch value is discarded if it contains no valid UTF-8
  [x] If a plugin's quickMatch value contains bad UTF-8, only the first consecutive valid characters are kept
