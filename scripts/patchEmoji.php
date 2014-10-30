@@ -46,25 +46,7 @@ ksort($map);
 $arr = [];
 foreach ($map as $k => $v)
 {
-	if (preg_match('([^ -\\x7E])', $k))
-	{
-		$k = preg_replace_callback(
-			'([^ -\\x7E])',
-			function ($m)
-			{
-				return '\\x' . strtoupper(dechex(ord($m[0])));
-			},
-			$k
-		);
-
-		$k = '"' . $k . '"';
-	}
-	else
-	{
-		$k = var_export($k, true);
-	}
-
-	$arr[] = $k . '=>' . var_export($v, true);
+	$arr[] = var_export($k, true) . '=>' . var_export($v, true);
 }
 $php = '[' . implode(',', $arr) . ']';
 
