@@ -622,7 +622,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
-				'<r><MAILRU id="corp/auto/testdrive/34.html" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
+				'<r><MAILRU id="corp/auto/testdrive/34" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
 				[],
 				function ($configurator)
 				{
