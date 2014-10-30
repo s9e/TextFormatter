@@ -621,6 +621,16 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
+				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
+				'<r><MAILRU id="corp/auto/testdrive/34.html" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('mailru');
+				}
+			],
+			[
 				'http://i.mixcloud.com/CH9VU9',
 				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
 				[],
