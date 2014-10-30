@@ -11,10 +11,6 @@ $externs = [
 		'function isNaN(',
 		'function parseInt(',
 
-		// Object
-		'function Object(',
-		'Object.prototype.toString',
-
 		// Array object
 		'function Array(',
 		'Array.prototype.forEach',
@@ -116,7 +112,7 @@ $out  = '';
 foreach ($externs as $filename => $names)
 {
 	$file = file_get_contents(
-		'compress.zlib://http://closure-compiler.googlecode.com/git/externs/' . $filename,
+		'compress.zlib://https://github.com/google/closure-compiler/raw/master/externs/' . $filename,
 		false,
 		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
@@ -154,7 +150,7 @@ $out = str_replace($annotations, '', $out);
 
 // Prepend some legalese to be on the safe side
 $out = '/*
- * Copyright 2008 Google Inc.
+ * Copyright 2008 The Closure Compiler Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,7 +166,7 @@ $out = '/*
  */
 
 // This file was auto-generated.
-// See http://code.google.com/p/closure-compiler/source/browse/trunk/externs/ for the original source.
+// See https://github.com/google/closure-compiler/raw/master/externs/ for the original source.
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 ' . $out;

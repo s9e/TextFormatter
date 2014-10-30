@@ -192,7 +192,7 @@ class ClosureCompilerServiceTest extends Test
 	/**
 	* @testdox Throws an exception in case of a compilation error
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Parse error. missing ; before statement
+	* @expectedExceptionMessage Parse error. Semi-colon expected
 	*/
 	public function testCompilationError()
 	{
