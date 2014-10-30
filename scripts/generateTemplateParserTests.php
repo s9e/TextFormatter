@@ -8,7 +8,7 @@ $void  = ['Y' => 'hr', 'M' => '{local-name()}', 'N' => 'div'];
 $empty = [
 	'Y' => ['', ''],
 	'M' => ['<xsl:apply-templates/>', '<applyTemplates/>'],
-	'N' => ['foo', '<output type="literal">foo</output>']
+	'N' => ['foo', '<output escape="text" type="literal">foo</output>']
 ];
 
 $voidAttr = [
@@ -38,7 +38,7 @@ foreach ($modes as $iMode => $mode)
 				'<template outputMethod="' . $mode . '">
 					<element name="' . $elName . '" id="1"' . $voidAttr[$iVoid] . $emptyAttr[$iEmpty] . '>
 						<attribute name="id">
-							<output type="literal">foo</output>
+							<output escape="attribute" type="literal">foo</output>
 						</attribute>
 						<closeTag id="1"/>';
 
