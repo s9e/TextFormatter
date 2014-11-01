@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2008 The Closure Compiler Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 // This file was auto-generated.
-// See http://code.google.com/p/closure-compiler/source/browse/trunk/externs/ for the original source.
+// See https://github.com/google/closure-compiler/raw/master/externs/ for the original source.
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 /**
@@ -50,21 +50,10 @@ function isNaN(num) {}
 function parseInt(num, base) {}
 /**
  * @constructor
- * @param {*=} opt_value
- * @nosideeffects
- */
-function Object(opt_value) {}
-/**
- * @this {*}
- * @return {string}
- * @nosideeffects
- */
-Object.prototype.toString = function() {};
-/**
- * @constructor
  * @param {...*} var_args
- * @return {!Array}
+ * @return {!Array.<?>}
  * @nosideeffects
+ * @template T
  */
 function Array(var_args) {}
 /**
