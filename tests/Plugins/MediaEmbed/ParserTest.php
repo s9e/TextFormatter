@@ -1838,6 +1838,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://globalnews.ca/video/1647385/mark-channels-his-70s-look/',
+				'<r><GLOBALNEWS id="1647385" url="http://globalnews.ca/video/1647385/mark-channels-his-70s-look/">http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</GLOBALNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('globalnews');
+				}
+			],
+			[
 				'http://www.gofundme.com/2p37ao',
 				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao">http://www.gofundme.com/2p37ao</GOFUNDME></r>',
 				[],
