@@ -2,16 +2,22 @@
 <?php
 
 $externs = [
+	'contrib/nodejs/punycode.js' => [
+		'var punycode',
+		'punycode.toASCII'
+	],
+	'deprecated.js' => [
+		'function XSLTProcessor('
+	],
 	'es3.js' => [
 		'var undefined',
 
-		// functions
+		'function decodeURIComponent(',
 		'function encodeURIComponent(',
 		'function escape(',
 		'function isNaN(',
 		'function parseInt(',
 
-		// Array object
 		'function Array(',
 		'Array.prototype.forEach',
 		'Array.prototype.indexOf',
@@ -25,28 +31,28 @@ $externs = [
 		'Array.prototype.sort',
 		'Array.prototype.splice',
 
-		// Date object
 		'function Date(',
 		'Date.parse',
 
-		// Math object
+		'function Function(',
+
 		'var Math',
 		'Math.floor',
 		'Math.max',
 		'Math.min',
 		'Math.random',
 
-		// Number object
 		'function Number(',
 		'Number.prototype.toString',
 
-		// Regexp object
+		'function Object(',
+		'Object.prototype.toString',
+
 		'function RegExp(',
 		'RegExp.prototype.exec',
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
 
-		// String object
 		'function String(',
 		'String.fromCharCode',
 		'String.prototype.charAt',
@@ -66,6 +72,9 @@ $externs = [
 	'gecko_xml.js' => [
 		'function DOMParser(',
 		'DOMParser.prototype.parseFromString'
+	],
+	'ie_dom.js' => [
+		'var window'
 	],
 	'w3c_dom1.js' => [
 		'function Document(',
@@ -94,6 +103,12 @@ $externs = [
 		'NodeList.prototype.length',
 
 		'function Element(',
+
+		'function Window(',
+	],
+	'w3c_dom2.js' => [
+		'function HTMLDocument(',
+		'function HTMLElement',
 	],
 	'w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
@@ -104,6 +119,9 @@ $externs = [
 		'Node.prototype.isEqualNode',
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
+	],
+	'window.js' => [
+		'var document;'
 	]
 ];
 
@@ -111,8 +129,14 @@ $out  = '';
 
 foreach ($externs as $filename => $names)
 {
+	if (strpos($filename, 'contrib/') === false)
+	{
+		$filename = 'externs/' . $filename;
+	}
+
 	$file = file_get_contents(
-		'compress.zlib://https://github.com/google/closure-compiler/raw/master/externs/' . $filename,
+//		'compress.zlib://https://github.com/google/closure-compiler/raw/master/' . $filename,
+		'/tmp/closure-compiler-master/' . $filename,
 		false,
 		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
@@ -120,7 +144,7 @@ foreach ($externs as $filename => $names)
 	// Concat multiline definitions
 	$file = preg_replace('#, *\n#', ', ', $file);
 
-	preg_match_all('#/\\*\\*.*?\\*/\\n([^\\n]+)#s', $file, $m);
+	preg_match_all('#/\\*\\*.*?\\*/\\s*(\\w[^\\n]+)#s', $file, $m);
 
 	foreach ($names as $name)
 	{
