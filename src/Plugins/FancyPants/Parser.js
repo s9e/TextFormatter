@@ -74,7 +74,7 @@ function parseDoubleQuotePairs()
 * Parse pairs of quotes
 *
 * @param {!string} q          ASCII quote character 
-* @param {!string} regexp     Regexp used to identify quote pairs
+* @param {!RegExp} regexp     Regexp used to identify quote pairs
 * @param {!string} leftQuote  Fancy replacement for left quote
 * @param {!string} rightQuote Fancy replacement for right quote
 */
