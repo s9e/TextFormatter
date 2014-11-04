@@ -135,8 +135,7 @@ foreach ($externs as $filename => $names)
 	}
 
 	$file = file_get_contents(
-//		'compress.zlib://https://github.com/google/closure-compiler/raw/master/' . $filename,
-		'/tmp/closure-compiler-master/' . $filename,
+		'compress.zlib://https://github.com/google/closure-compiler/raw/master/' . $filename,
 		false,
 		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
