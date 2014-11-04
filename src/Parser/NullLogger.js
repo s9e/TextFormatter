@@ -1,1 +1,1 @@
-function Logger(){}Logger.prototype={add:function(){},clear:function(){},setAttribute:function(){},setTag:function(){},unsetAttribute:function(){},unsetTag:function(){},debug:function(){},err:function(){},info:function(){},warn:function(){}}
+/**@constructor*/function Logger(){}Logger.prototype={add:function(){},clear:function(){},setAttribute:function(){},setTag:function(){},unsetAttribute:function(){},unsetTag:function(){},debug:function(){},err:function(){},info:function(){},warn:function(){}}

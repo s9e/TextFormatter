@@ -6,7 +6,7 @@ $js  = file_get_contents($dir . '/Logger.js');
 
 preg_match_all('/Logger\\.prototype\\.(\\w+) = function/', $js, $m);
 
-$js = 'function Logger(){}Logger.prototype={' . implode(':function(){},', $m[1]) . ':function(){}}';
+$js = '/**@constructor*/function Logger(){}Logger.prototype={' . implode(':function(){},', $m[1]) . ':function(){}}';
 
 file_put_contents($dir . '/NullLogger.js', $js);
 
