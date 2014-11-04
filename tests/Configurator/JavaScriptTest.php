@@ -447,14 +447,12 @@ class JavaScriptTest extends Test
 				'"foo"'
 			],
 			[
-				// NOTE: false/true are converted to 0/1 as encode() is meant to be used for
-				// configuration settings and in that case any true-ish value will do
 				false,
-				'0'
+				'!1'
 			],
 			[
 				true,
-				'1'
+				'!0'
 			],
 			[
 				[1, 2],

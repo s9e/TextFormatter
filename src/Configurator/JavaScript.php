@@ -273,7 +273,7 @@ class JavaScript
 			if (substr($constName, 0, 5) === 'RULE_')
 			{
 				// This will set HINT.RULE_AUTO_CLOSE and others
-				$hints[$constName] = (bool) ($flags & $constValue);
+				$hints[$constName] = ($flags & $constValue) ? 1 : 0;
 			}
 		}
 
@@ -494,8 +494,8 @@ class JavaScript
 		{
 			if (is_bool($value))
 			{
-				// Represent true/false as 1/0
-				$value = (int) $value;
+				// Represent true/false as !0/!1
+				return ($value) ? '!0' : '!1';
 			}
 
 			return json_encode($value);
