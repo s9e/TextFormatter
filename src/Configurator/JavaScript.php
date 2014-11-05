@@ -245,7 +245,7 @@ class JavaScript
 		foreach ($parser->getConstants() as $constName => $constValue)
 			if (\substr($constName, 0, 5) === 'RULE_')
 				// This will set HINT.RULE_AUTO_CLOSE and others
-				$hints[$constName] = (bool) ($flags & $constValue);
+				$hints[$constName] = ($flags & $constValue) ? 1 : 0;
 
 		// Build the source. Note that Closure Compiler seems to require that each of HINT's
 		// properties be declared as a const
@@ -450,8 +450,8 @@ class JavaScript
 		if (\is_scalar($value))
 		{
 			if (\is_bool($value))
-				// Represent true/false as 1/0
-				$value = (int) $value;
+				// Represent true/false as !0/!1
+				return ($value) ? '!0' : '!1';
 
 			return \json_encode($value);
 		}

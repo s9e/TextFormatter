@@ -241,6 +241,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>
+		<td><code>globalnews</code></td>
+		<td>Global News</td>
+		<td>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</td>
+	</tr>
+	<tr>
 		<td><code>gofundme</code></td>
 		<td>GoFundMe</td>
 		<td>http://www.gofundme.com/2p37ao</td>

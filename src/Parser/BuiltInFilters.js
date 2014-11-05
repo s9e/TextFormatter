@@ -487,7 +487,7 @@ var BuiltInFilters =
 		// Test whether host has non-ASCII characters and punycode it if possible
 		if (/[^\x00-\x7F]/.test(parts.host) && punycode)
 		{
-			parts.host = punycode['toASCII'](parts.host);
+			parts.host = punycode.toASCII(parts.host);
 		}
 
 		return parts;
