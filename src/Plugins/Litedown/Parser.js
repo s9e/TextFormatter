@@ -747,12 +747,12 @@ function matchImages()
 			endTagLen   = matchLen - startTagLen - contentLen;
 
 		var startTag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		startTag.setAttribute('alt', decode(m[1], hasEscapedChars));
-		startTag.setAttribute('src', decode(m[2], hasEscapedChars));
+		startTag.setAttribute('alt', decode(m[1]));
+		startTag.setAttribute('src', decode(m[2]));
 
 		if (m[3] > '')
 		{
-			startTag.setAttribute('title', decode(m[3], hasEscapedChars));
+			startTag.setAttribute('title', decode(m[3]));
 		}
 
 		// Overwrite the markup
@@ -815,11 +815,11 @@ function matchInlineLinks()
 		}
 
 		var tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
-		tag.setAttribute('url', decode(url, hasEscapedChars));
+		tag.setAttribute('url', decode(url));
 
 		if (title !== '')
 		{
-			tag.setAttribute('title', decode(title, hasEscapedChars));
+			tag.setAttribute('title', decode(title));
 		}
 
 		// Overwrite the markup without touching the link's text
