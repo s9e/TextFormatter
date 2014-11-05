@@ -19,10 +19,40 @@
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 /**
+ * @fileoverview Definitions for node's punycode module.
+ */
+
+/**
+ * @const
+ */
+var punycode = {};
+/**
+ * @param {string} domain
+ * @return {string}
+ */
+punycode.toASCII;
+/**
+ * @fileoverview JavaScript Built-Ins that are not
+ * @externs
+ */
+
+// Do we need an opera.js?
+var opera;
+Window.prototype.opera;
+Window.prototype.opera.postError;
+
+/** @constructor */ function XSLTProcessor() {}
+/**
  * @type {undefined}
  * @const
  */
 var undefined;
+/**
+ * @param {string} uri
+ * @return {string}
+ * @nosideeffects
+ */
+function decodeURIComponent(uri) {}
 /**
  * @param {string} uri
  * @return {string}
@@ -155,6 +185,13 @@ function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,     
  */
 Date.parse = function(date) {};
 /**
+ * @constructor
+ * @param {...*} var_args
+ * @nosideeffects
+ * @throws {Error}
+ */
+function Function(var_args) {}
+/**
  * @const
  */
 var Math = {};
@@ -196,6 +233,19 @@ function Number(opt_value) {}
  * @override
  */
 Number.prototype.toString = function(opt_radix) {};
+/**
+ * @constructor
+ * @param {*=} opt_value
+ * @return {!Object}
+ * @nosideeffects
+ */
+function Object(opt_value) {}
+/**
+ * @this {*}
+ * @return {string}
+ * @nosideeffects
+ */
+Object.prototype.toString = function() {};
 /**
  * @constructor
  * @param {*=} opt_pattern
@@ -315,6 +365,10 @@ function DOMParser() {}
  */
 DOMParser.prototype.parseFromString = function(src, type) {};
 /**
+ * @type {!Window}
+ */
+var window;
+/**
  * @constructor
  * @extends {Node}
  */
@@ -326,9 +380,10 @@ function Document() {}
 Document.prototype.createDocumentFragment = function() {};
 /**
  * @param {string} tagName
+ * @param {string=} opt_typeExtension
  * @return {!Element}
  */
-Document.prototype.createElement = function(tagName) {};
+Document.prototype.createElement = function(tagName, opt_typeExtension) {};
 /**
  * @constructor
  * @extends {Node}
@@ -412,6 +467,20 @@ NodeList.prototype.length;
  */
 function Element() {}
 /**
+ * @constructor
+ */
+function Window() {}
+/**
+ * @constructor
+ * @extends {Document}
+ */
+function HTMLDocument() {}
+/**
+ * @constructor
+ * @extends {Element}
+ */
+function HTMLElement() {}
+/**
  * @param {string} namespaceURI
  * @param {string} localName
  * @return {string}
@@ -453,3 +522,8 @@ Node.prototype.namespaceURI;
  * @implicitCast
  */
 Node.prototype.textContent;
+/**
+ * @type {!HTMLDocument}
+ * @const
+ */
+var document;
