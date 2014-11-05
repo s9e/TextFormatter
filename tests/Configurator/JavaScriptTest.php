@@ -267,11 +267,7 @@ class JavaScriptTest extends Test
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertContains(
-			'filterChain:[c6FF7A507]',
-			$js
-		);
-		$this->assertContains(
-			'function c6FF7A507(attrValue,attrName){return (function(){return false;})(attrValue);}',
+			'filterChain:[returnFalse]',
 			$js
 		);
 	}

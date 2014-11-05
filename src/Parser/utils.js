@@ -41,3 +41,11 @@ function htmlspecialchars_noquotes(str)
 	};
 	return str.replace(/[<>&]/g, function(c) { return t[c]; });
 }
+
+/**
+* @return {!bool}
+*/
+function returnFalse()
+{
+	return false;
+}

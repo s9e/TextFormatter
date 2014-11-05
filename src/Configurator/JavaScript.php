@@ -667,10 +667,6 @@ class JavaScript
 		$callback = $callbackConfig['callback'];
 		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
 
-		// Prepare the code for this callback. If we don't have a JavaScript implementation of this
-		// filter, we make it return FALSE unconditionally
-		$jsCallback = '(function(){return false;})';
-
 		if (isset($callbackConfig['js']))
 		{
 			// Use the JavaScript source code that was set in the callback. Put it in parentheses to
@@ -690,6 +686,12 @@ class JavaScript
 				// Parser::filterAttributes => filterAttributes
 				$jsCallback = substr($callback, 26);
 			}
+		}
+
+		// If there's no JS callback available, return FALSE unconditionally
+		if (!isset($jsCallback))
+		{
+			return new Code('returnFalse');
 		}
 
 		// List of arguments (and their type) for each type of callbacks. MUST be kept in sync with
