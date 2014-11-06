@@ -10,7 +10,7 @@ instance, strpos() looks better than \strpos() but used in a namespace they prod
 opcodes: DO_FCALL_BY_NAME and DO_FCALL respectively. The latter is simpler than the former but their
 performance is nearly identical so it doesn't warrant making it a rule to systematically use FQNs
 for functions in the master codebase. The release/* branches, however, are not maintained by hand
-and are not meant to be read by anyone. In this setting, it makes sense to uglify the code a little
+and are not meant to be read by anyone. In this context, it makes sense to uglify the code a little
 if it ends up making it better.
 
 This script is called by scripts/travis/setup.sh so that tests are run on the "optimized" codebase.
@@ -282,13 +282,13 @@ if (!defined('T_TRAIT'))
 // NOTE: none of those make any measurable difference with an opcode cache except for a slight
 //       reduction in size when removing docblocks (which are cached by opcode caches because of
 //       Reflection.) Minifying the source does reduce the time spent parsing it, so it does make a
-//       difference without an opcode cache. However, those changes are too radical to be enabled
-//       by default
+//       difference without an opcode cache. It also makes the released code smaller and faster to
+//       upload to a webserver.
 $options = array(
 	'convertDocblock'     => true,
 	'foldGlobalConstants' => true,
-	'removeComments'      => false,
-	'removeDocblock'      => false,
+	'removeComments'      => true,
+	'removeDocblock'      => true,
 	'removeLicense'       => false,
 	'removeWhitespace'    => false
 );
