@@ -11,11 +11,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Alnum extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterAlnum');
@@ -24,17 +19,11 @@ class Alnum extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterAlnum');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeAsURL()
 	{
 		return \true;

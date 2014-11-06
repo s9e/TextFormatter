@@ -11,27 +11,14 @@ use Exception;
 
 abstract class Minifier
 {
-	/*
-	* @var string Directory in which minified sources are cached
-	*/
 	public $cacheDir;
 
-	/*
-	* @var bool If TRUE, don't interrupt get() if an exception is thrown. Instead, return the original source
-	*/
 	public $keepGoing = \false;
 
-	/*
-	* Minify given JavaScript source and cache the result if applicable
-	*
-	* @param  string $src JavaScript source
-	* @return string      Minified source
-	*/
 	public function get($src)
 	{
 		try
 		{
-			// Check the cache for a hit, if applicable
 			if (isset($this->cacheDir))
 			{
 				$differentiator = $this->getCacheDifferentiator();
@@ -46,10 +33,8 @@ abstract class Minifier
 				}
 			}
 
-			// Minify the source
 			$src = $this->minify($src);
 
-			// Cache the result if applicable
 			if (isset($cacheFile))
 				\file_put_contents($cacheFile, $src);
 		}
@@ -62,21 +47,10 @@ abstract class Minifier
 		return $src;
 	}
 
-	/*
-	* Return a value that uniquely identify this minifier's configuration
-	*
-	* @return mixed Any value, or FALSE to disable caching
-	*/
 	public function getCacheDifferentiator()
 	{
 		return \false;
 	}
 
-	/*
-	* Minify given JavaScript source
-	*
-	* @param  string $src JavaScript source
-	* @return string      Minified source
-	*/
 	abstract public function minify($src);
 }

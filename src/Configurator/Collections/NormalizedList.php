@@ -11,26 +11,11 @@ use InvalidArgumentException;
 
 class NormalizedList extends NormalizedCollection
 {
-	/*
-	* Add (append) a value to this list
-	*
-	* Alias for append(). Overrides NormalizedCollection::add()
-	*
-	* @param  mixed $value Original value
-	* @param  null  $void  Unused
-	* @return mixed        Normalized value
-	*/
 	public function add($value, $void = \null)
 	{
 		return $this->append($value);
 	}
 
-	/*
-	* Append a value to this list
-	*
-	* @param  mixed $value Original value
-	* @return mixed        Normalized value
-	*/
 	public function append($value)
 	{
 		$value = $this->normalizeValue($value);
@@ -40,52 +25,28 @@ class NormalizedList extends NormalizedCollection
 		return $value;
 	}
 
-	/*
-	* Delete a value from this list and remove gaps in keys
-	*
-	* NOTE: parent::offsetUnset() maps to $this->delete() so this method covers both usages
-	*
-	* @param  string $key
-	* @return void
-	*/
 	public function delete($key)
 	{
 		parent::delete($key);
 
-		// Reindex the array to eliminate any gaps
 		$this->items = \array_values($this->items);
 	}
 
-	/*
-	* Insert a value at an arbitrary 0-based position
-	*
-	* @param  integer $offset
-	* @param  mixed   $value
-	* @return mixed           Normalized value
-	*/
 	public function insert($offset, $value)
 	{
 		$offset = $this->normalizeKey($offset);
 		$value  = $this->normalizeValue($value);
 
-		// Insert the value at given offset. We put the value into an array so that array_splice()
-		// won't insert it as multiple elements if it happens to be an array
 		\array_splice($this->items, $offset, 0, array($value));
 
 		return $value;
 	}
 
-	/*
-	* Ensure that the key is a valid offset, ranging from 0 to count($this->items)
-	*
-	* @param  mixed   $key
-	* @return integer
-	*/
 	public function normalizeKey($key)
 	{
 		$normalizedKey = \filter_var(
 			$key,
-			\FILTER_VALIDATE_INT,
+			257,
 			array(
 				'options' => array(
 					'min_range' => 0,
@@ -100,30 +61,14 @@ class NormalizedList extends NormalizedCollection
 		return $normalizedKey;
 	}
 
-	/*
-	* Custom offsetSet() implementation to allow assignment with a null offset to append to the
-	* chain
-	*
-	* @param  mixed $offset
-	* @param  mixed $value
-	* @return void
-	*/
 	public function offsetSet($offset, $value)
 	{
 		if ($offset === \null)
-			// $list[] = 'foo' maps to $list->append('foo')
 			$this->append($value);
 		else
-			// Use the default implementation
 			parent::offsetSet($offset, $value);
 	}
 
-	/*
-	* Prepend a value to this list
-	*
-	* @param  mixed $value
-	* @return mixed        Normalized value
-	*/
 	public function prepend($value)
 	{
 		$value = $this->normalizeValue($value);
@@ -133,12 +78,6 @@ class NormalizedList extends NormalizedCollection
 		return $value;
 	}
 
-	/*
-	* Remove all items matching given value
-	*
-	* @param  mixed   $value Original value
-	* @return integer        Number of items removed
-	*/
 	public function remove($value)
 	{
 		$keys = \array_keys($this->items, $this->normalizeValue($value));

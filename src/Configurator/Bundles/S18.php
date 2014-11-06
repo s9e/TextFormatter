@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class S18 extends Bundle
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function configure(Configurator $configurator)
 	{
 		$configurator->rootRules->enableAutoLineBreaks();
@@ -27,20 +24,17 @@ class S18 extends Bundle
 		$configurator->rendering->parameters['L_QUOTE_FROM']  = 'Quote from';
 		$configurator->rendering->parameters['L_SEARCH_ON']   = 'on';
 
-		// Allow the methods that prepend http:// or ftp:// to an URL to be used on attributes
 		$prependFtp  = 's9e\\TextFormatter\\Bundles\\S18\\Helper::prependFtp';
 		$prependHttp = 's9e\\TextFormatter\\Bundles\\S18\\Helper::prependHttp';
 		$configurator->BBCodes->bbcodeMonkey->allowedFilters[] = $prependFtp;
 		$configurator->BBCodes->bbcodeMonkey->allowedFilters[] = $prependHttp;
 
-		// Register the filter for {IURL} tokens
 		$configurator->attributeFilters
 			->add('#iurl', 's9e\\TextFormatter\\Bundles\\S18\\Helper::filterIurl')
 			->addParameterByName('urlConfig')
 			->addParameterByName('logger')
 			->markAsSafeAsURL();
 
-		// Add the default smileys
 		$smileys = array(
 			array(':)',   'smiley.gif',      'Smiley'     ),
 			array(';)',   'wink.gif',        'Wink'       ),
@@ -74,7 +68,6 @@ class S18 extends Bundle
 			);
 		}
 
-		// Default BBCodes
 		$bbcodes = array(
 			array(
 				'[abbr={TEXT1}]{TEXT2}[/abbr]',
@@ -347,23 +340,19 @@ class S18 extends Bundle
 			),
 		);
 
-		// Add the default BBCodes
 		foreach ($bbcodes as $_69183664)
 		{
 			list($definition, $template) = $_69183664;
 			$configurator->BBCodes->addCustom($definition, $template);
 		}
 
-		// Create [php] as an alias for [code=php]
 		$bbcode = $configurator->BBCodes->add('php');
 		$bbcode->tagName = 'CODE';
 		$bbcode->predefinedAttributes['lang'] = 'php';
 
-		// Load the plugins after BBCodes so that they use the [url] and [email] BBCodes
 		$configurator->Autoemail;
 		$configurator->Autolink;
 
-		// Allow some HTML
 		$configurator->HTMLElements->allowElement('a');
 		$configurator->HTMLElements->allowAttribute('a', 'href')->required = \true;
 		$configurator->HTMLElements->allowElement('b');
@@ -383,13 +372,10 @@ class S18 extends Bundle
 		$configurator->HTMLElements->allowElement('s');
 		$configurator->HTMLElements->allowElement('u');
 
-		// Prevent other tags to appear in [html]
 		$htmlTag = $configurator->tags['HTML'];
 		$htmlTag->rules->defaultChildRule = 'deny';
 		$htmlTag->rules->defaultDescendantRule = 'deny';
 
-		// Allow the HTML elements as descendants to [html] and make them require an [html] ancestor
-		// while preventing any other tag from appearing in [html]
 		foreach ($configurator->tags as $tagName => $tag)
 			if (\substr($tagName, 0, 5) === 'html:')
 			{
@@ -400,9 +386,6 @@ class S18 extends Bundle
 				$htmlTag->rules->denyDescendant($tagName);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public static function getOptions()
 	{
 		return array(

@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class AutoCloseIfVoid implements BooleanRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->isVoid()) ? array('autoClose' => \true) : array();

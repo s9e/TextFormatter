@@ -9,11 +9,5 @@ namespace s9e\TextFormatter\Configurator;
 
 interface RendererGenerator
 {
-	/*
-	* Generate and return a renderer
-	*
-	* @param  Rendering $rendering Rendering configuration
-	* @return Renderer             Instance of Renderer
-	*/
 	public function getRenderer(Rendering $rendering);
 }

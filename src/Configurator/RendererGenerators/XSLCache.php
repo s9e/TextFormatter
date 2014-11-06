@@ -13,17 +13,8 @@ use s9e\TextFormatter\Renderers\XSLCache as XSLCacheRenderer;
 
 class XSLCache extends XSLT
 {
-	/*
-	* @var string Path to the directory in which the stylesheet files will be saved
-	*/
 	protected $cacheDir;
 
-	/*
-	* Constructor
-	*
-	* @param  string $cacheDir Path to the directory in which the stylesheet files will be saved
-	* @return void
-	*/
 	public function __construct($cacheDir)
 	{
 		parent::__construct();
@@ -33,9 +24,6 @@ class XSLCache extends XSLT
 			throw new InvalidArgumentException("Path '" . $cacheDir . "' is invalid");
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function getRenderer(Rendering $rendering)
 	{
 		$xsl = $this->getXSL($rendering);

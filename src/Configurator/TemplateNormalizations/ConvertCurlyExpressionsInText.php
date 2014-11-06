@@ -13,17 +13,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class ConvertCurlyExpressionsInText extends TemplateNormalization
 {
-	/*
-	* Convert simple expressions in curly brackets in text into xsl:value-of elements
-	*
-	* Will replace
-	*     <span>{$FOO}{@bar}</span>
-	* with
-	*     <span><xsl:value-of value="$FOO"/><xsl:value-of value="@bar"/></span>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;
@@ -34,7 +23,6 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 		{
 			$parentNode = $node->parentNode;
 
-			// Skip XSL elements
 			if ($parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
 				continue;
 
@@ -42,7 +30,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 				'#\\{([$@][-\\w]+)\\}#',
 				$node->textContent,
 				$matches,
-				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
+				2 | 256
 			);
 
 			$lastPos = 0;
@@ -50,7 +38,6 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 			{
 				$pos = $m[0][1];
 
-				// Catch up to current position
 				if ($pos > $lastPos)
 					$parentNode->insertBefore(
 						$dom->createTextNode(
@@ -60,7 +47,6 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 					);
 				$lastPos = $pos + \strlen($m[0][0]);
 
-				// Add the xsl:value-of element
 				$parentNode
 					->insertBefore(
 						$dom->createElementNS(
@@ -72,12 +58,10 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 					->setAttribute('select', $m[1][0]);
 			}
 
-			// Append the rest of the text
 			$text = \substr($node->textContent, $lastPos);
 			if ($text > '')
 				$parentNode->insertBefore($dom->createTextNode($text), $node);
 
-			// Now remove the old text node
 			$parentNode->removeChild($node);
 		}
 	}

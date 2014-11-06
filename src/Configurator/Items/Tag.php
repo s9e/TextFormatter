@@ -21,31 +21,12 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
-/*
-* @property AttributeCollection $attributes This tag's attributes
-* @property AttributePreprocessorCollection $attributePreprocessors This tag's attribute parsers
-* @property TagFilterChain $filterChain This tag's filter chain
-* @property integer $nestingLimit Maximum nesting level for this tag
-* @property Ruleset $rules Rules associated with this tag
-* @property integer $tagLimit Maximum number of this tag per message
-* @property Template $template Template associated with this tag
-*/
 class Tag implements ConfigProvider
 {
-	/*
-	* Magic getter
-	*
-	* Will return $this->foo if it exists, then $this->getFoo() or will throw an exception if
-	* neither exists
-	*
-	* @param  string $propName
-	* @return mixed
-	*/
 	public function __get($propName)
 	{
 		$methodName = 'get' . \ucfirst($propName);
 
-		// Look for a getter, e.g. getDefaultTemplate()
 		if (\method_exists($this, $methodName))
 			return $this->$methodName();
 
@@ -55,24 +36,10 @@ class Tag implements ConfigProvider
 		return $this->$propName;
 	}
 
-	/*
-	* Magic setter
-	*
-	* Will call $this->setFoo($propValue) if it exists, otherwise it will set $this->foo.
-	* If $this->foo is a NormalizedCollection, we do not replace it, instead we clear() it then
-	* fill it back up. It will not overwrite an object with a different incompatible object (of a
-	* different, non-extending class) and it will throw an exception if the PHP type cannot match
-	* without incurring data loss.
-	*
-	* @param  string $propName
-	* @param  mixed  $propValue
-	* @return void
-	*/
 	public function __set($propName, $propValue)
 	{
 		$methodName = 'set' . \ucfirst($propName);
 
-		// Look for a setter, e.g. setDefaultChildRule()
 		if (\method_exists($this, $methodName))
 		{
 			$this->$methodName($propValue);
@@ -80,7 +47,6 @@ class Tag implements ConfigProvider
 			return;
 		}
 
-		// If the property isn't already set, we just create/set it
 		if (!isset($this->$propName))
 		{
 			$this->$propName = $propValue;
@@ -88,8 +54,6 @@ class Tag implements ConfigProvider
 			return;
 		}
 
-		// If we're trying to replace a NormalizedCollection, instead we clear it then
-		// iteratively set new values
 		if ($this->$propName instanceof NormalizedCollection)
 		{
 			if (!\is_array($propValue)
@@ -104,8 +68,6 @@ class Tag implements ConfigProvider
 			return;
 		}
 
-		// If this property is an object, test whether they are compatible. Otherwise, test if PHP
-		// types are compatible
 		if (\is_object($this->$propName))
 		{
 			if (!($propValue instanceof $this->$propName))
@@ -113,11 +75,9 @@ class Tag implements ConfigProvider
 		}
 		else
 		{
-			// Test whether the PHP types are compatible
 			$oldType = \gettype($this->$propName);
 			$newType = \gettype($propValue);
 
-			// If the property is a boolean, we'll accept "true" and "false" as strings
 			if ($oldType === 'boolean')
 				if ($propValue === 'false')
 				{
@@ -132,7 +92,6 @@ class Tag implements ConfigProvider
 
 			if ($oldType !== $newType)
 			{
-				// Test whether the PHP type roundtrip is lossless
 				$tmp = $propValue;
 				\settype($tmp, $oldType);
 				\settype($tmp, $newType);
@@ -140,7 +99,6 @@ class Tag implements ConfigProvider
 				if ($tmp !== $propValue)
 					throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of type " . $oldType . ' with value of type ' . $newType);
 
-				// Finally, set the new value to the correct type
 				\settype($propValue, $oldType);
 			}
 		}
@@ -148,12 +106,6 @@ class Tag implements ConfigProvider
 		$this->$propName = $propValue;
 	}
 
-	/*
-	* Test whether a property is set
-	*
-	* @param  string $propName
-	* @return bool
-	*/
 	public function __isset($propName)
 	{
 		$methodName = 'isset' . \ucfirst($propName);
@@ -164,12 +116,6 @@ class Tag implements ConfigProvider
 		return isset($this->$propName);
 	}
 
-	/*
-	* Unset a property, if the class supports it
-	*
-	* @param  string $propName
-	* @return void
-	*/
 	public function __unset($propName)
 	{
 		$methodName = 'unset' . \ucfirst($propName);
@@ -194,47 +140,20 @@ class Tag implements ConfigProvider
 		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 
-	/*
-	* @var AttributeCollection This tag's attributes
-	*/
 	protected $attributes;
 
-	/*
-	* @var AttributePreprocessorCollection This tag's attribute parsers
-	*/
 	protected $attributePreprocessors;
 
-	/*
-	* @var TagFilterChain This tag's filter chain
-	*/
 	protected $filterChain;
 
-	/*
-	* @var integer Maximum nesting level for this tag
-	*/
 	protected $nestingLimit = 10;
 
-	/*
-	* @var Ruleset Rules associated with this tag
-	*/
 	protected $rules;
 
-	/*
-	* @var integer Maximum number of this tag per message
-	*/
 	protected $tagLimit = 1000;
 
-	/*
-	* @var Template Template associated with this tag
-	*/
 	protected $template;
 
-	/*
-	* Constructor
-	*
-	* @param  array $options This tag's options
-	* @return void
-	*/
 	public function __construct(array $options = \null)
 	{
 		$this->attributes             = new AttributeCollection;
@@ -242,7 +161,6 @@ class Tag implements ConfigProvider
 		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
 
-		// Start the filterChain with the default processing
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
 		                  ->addParameterByName('tag')
 		                  ->addParameterByName('tagConfig');
@@ -255,8 +173,6 @@ class Tag implements ConfigProvider
 
 		if (isset($options))
 		{
-			// Sort the options by name so that attributes are set before the template, which is
-			// necessary to evaluate whether the template is safe
 			\ksort($options);
 
 			foreach ($options as $optionName => $optionValue)
@@ -264,28 +180,20 @@ class Tag implements ConfigProvider
 		}
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$vars = \get_object_vars($this);
 
-		// Remove properties that are not needed during parsing
 		unset($vars['defaultChildRule']);
 		unset($vars['defaultDescendantRule']);
 		unset($vars['template']);
 
-		// If there are no attribute preprocessors defined, we can remove the step from this tag's
-		// filterChain
 		if (!\count($this->attributePreprocessors))
 		{
 			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
 
-			// We operate on a copy of the filterChain, without modifying the original
 			$filterChain = clone $vars['filterChain'];
 
-			// Process the chain in reverse order so that we don't skip indices
 			$i = \count($filterChain);
 			while (--$i >= 0)
 				if ($filterChain[$i]->getCallback() === $callback)
@@ -297,44 +205,22 @@ class Tag implements ConfigProvider
 		return ConfigHelper::toArray($vars);
 	}
 
-	/*
-	* Return this tag's template
-	*
-	* @return Template
-	*/
 	public function getTemplate()
 	{
 		return $this->template;
 	}
 
-	/*
-	* Test whether this tag has a template
-	*
-	* @return bool
-	*/
 	public function issetTemplate()
 	{
 		return isset($this->template);
 	}
 
-	/*
-	* Set this tag's attribute preprocessors
-	*
-	* @param  array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
-	* @return void
-	*/
 	public function setAttributePreprocessors($attributePreprocessors)
 	{
 		$this->attributePreprocessors->clear();
 		$this->attributePreprocessors->merge($attributePreprocessors);
 	}
 
-	/*
-	* Set this tag's nestingLimit
-	*
-	* @param  integer $limit
-	* @return void
-	*/
 	public function setNestingLimit($limit)
 	{
 		$limit = (int) $limit;
@@ -345,24 +231,12 @@ class Tag implements ConfigProvider
 		$this->nestingLimit = $limit;
 	}
 
-	/*
-	* Set this tag's rules
-	*
-	* @param  array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
-	* @return void
-	*/
 	public function setRules($rules)
 	{
 		$this->rules->clear();
 		$this->rules->merge($rules);
 	}
 
-	/*
-	* Set this tag's tagLimit
-	*
-	* @param  integer $limit
-	* @return void
-	*/
 	public function setTagLimit($limit)
 	{
 		$limit = (int) $limit;
@@ -373,12 +247,6 @@ class Tag implements ConfigProvider
 		$this->tagLimit = $limit;
 	}
 
-	/*
-	* Set the template associated with this tag
-	*
-	* @param  string|Template $template
-	* @return void
-	*/
 	public function setTemplate($template)
 	{
 		if (!($template instanceof Template))
@@ -387,11 +255,6 @@ class Tag implements ConfigProvider
 		$this->template = $template;
 	}
 
-	/*
-	* Unset this tag's template
-	*
-	* @return void
-	*/
 	public function unsetTemplate()
 	{
 		unset($this->template);

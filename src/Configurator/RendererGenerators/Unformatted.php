@@ -13,9 +13,6 @@ use s9e\TextFormatter\Renderers\Unformatted as UnformattedRenderer;
 
 class Unformatted implements RendererGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function getRenderer(Rendering $rendering)
 	{
 		$htmlOutput = (bool) ($rendering->type === 'html');

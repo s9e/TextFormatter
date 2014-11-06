@@ -12,23 +12,11 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class TagCollection extends NormalizedCollection
 {
-	/*
-	* Normalize a tag name used as a key in this colelction
-	*
-	* @param  string $key Original name
-	* @return string      Normalized name
-	*/
 	public function normalizeKey($key)
 	{
 		return TagName::normalize($key);
 	}
 
-	/*
-	* Normalize a value to an instance of Tag
-	*
-	* @param  array|null|Tag $value
-	* @return Tag
-	*/
 	public function normalizeValue($value)
 	{
 		return ($value instanceof Tag)

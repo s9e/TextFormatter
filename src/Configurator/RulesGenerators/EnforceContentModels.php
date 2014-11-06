@@ -13,26 +13,13 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
 {
-	/*
-	* @var TemplateForensics
-	*/
 	protected $br;
 
-	/*
-	* Constructor
-	*
-	* Prepares the TemplateForensics for <br/>
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->br = new TemplateForensics('<br/>');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$rules = array();
@@ -55,9 +42,6 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 		return $rules;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		$rules = array();

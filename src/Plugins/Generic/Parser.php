@@ -11,15 +11,12 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function parse($text, array $matches)
 	{
 		foreach ($this->config['generics'] as $_3390458856)
 		{
 			list($tagName, $regexp, $passthroughIdx) = $_3390458856;
-			\preg_match_all($regexp, $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+			\preg_match_all($regexp, $text, $matches, 2 | 256);
 
 			foreach ($matches as $m)
 			{
@@ -28,10 +25,6 @@ class Parser extends ParserBase
 
 				if ($passthroughIdx && isset($m[$passthroughIdx]) && $m[$passthroughIdx][0] !== '')
 				{
-					// Compute the position and length of the start tag, end tag, and the content in
-					// between. PREG_OFFSET_CAPTURE gives us the position of the content, and we
-					// know its length. Everything before is considered part of the start tag, and
-					// everything after is considered part of the end tag
 					$contentPos  = $m[$passthroughIdx][1];
 					$contentLen  = \strlen($m[$passthroughIdx][0]);
 					$startTagLen = $contentPos - $startTagPos;

@@ -11,9 +11,6 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/*
-	* @var array Default tags
-	*/
 	protected $tags = array(
 		'C'      => '<code><xsl:apply-templates /></code>',
 		'CODE'   => array(
@@ -81,24 +78,18 @@ class Configurator extends ConfiguratorBase
 		)
 	);
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected function setUp()
 	{
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
 
 		foreach ($this->tags as $tagName => $tagConfig)
 		{
-			// Skip this tag if it already exists
 			if (isset($this->configurator->tags[$tagName]))
 				continue;
 
-			// If the tag's config is a single string, it's really its default template
 			if (\is_string($tagConfig))
 				$tagConfig = array('template' => $tagConfig);
 
-			// Replace default filters in the definition
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
@@ -112,14 +103,10 @@ class Configurator extends ConfiguratorBase
 				unset($attributeConfig);
 			}
 
-			// Add this tag
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		return array();

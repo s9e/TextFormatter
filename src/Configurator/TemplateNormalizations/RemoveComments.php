@@ -13,12 +13,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class RemoveComments extends TemplateNormalization
 {
-	/*
-	* Remove all comments
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);

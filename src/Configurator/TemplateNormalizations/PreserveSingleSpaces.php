@@ -13,19 +13,11 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class PreserveSingleSpaces extends TemplateNormalization
 {
-	/*
-	* Removes all inter-element whitespace except for single space characters
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
 
-		// Query all text nodes that are made of a single space and not inside of an xsl:text
-		// element
 		$query = '//text()[. = " "][not(parent::xsl:text)]';
 		foreach ($xpath->query($query) as $textNode)
 			$textNode->parentNode->replaceChild(

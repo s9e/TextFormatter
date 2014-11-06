@@ -11,16 +11,8 @@ use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Optimizer
 {
-	/*
-	* @var TemplateNormalizer
-	*/
 	public $normalizer;
 
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->normalizer = new TemplateNormalizer;
@@ -29,12 +21,6 @@ class Optimizer
 		$this->normalizer->append('OptimizeNestedConditionals');
 	}
 
-	/*
-	* Optimize a single template
-	*
-	* @param  string $template Original template
-	* @return string           Optimized template
-	*/
 	public function optimizeTemplate($template)
 	{
 		return $this->normalizer->normalizeTemplate($template);

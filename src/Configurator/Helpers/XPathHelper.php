@@ -11,25 +11,14 @@ use RuntimeException;
 
 abstract class XPathHelper
 {
-	/*
-	* Export a literal as an XPath expression
-	*
-	* @param  string $str Literal, e.g. "foo"
-	* @return string      XPath expression, e.g. "'foo'"
-	*/
 	public static function export($str)
 	{
-		// foo becomes 'foo'
 		if (\strpos($str, "'") === \false)
 			return "'" . $str . "'";
 
-		// d'oh becomes "d'oh"
 		if (\strpos($str, '"') === \false)
 			return '"' . $str . '"';
 
-		// This string contains both ' and ". XPath 1.0 doesn't have a mechanism to escape quotes,
-		// so we have to get creative and use concat() to join chunks in single quotes and chunks
-		// in double quotes
 		$toks = array();
 		$c = '"';
 		$pos = 0;
@@ -47,33 +36,18 @@ abstract class XPathHelper
 		return 'concat(' . \implode(',', $toks) . ')';
 	}
 
-	/*
-	* Return the list of variables used in a given XPath expression
-	*
-	* @param  string $expr XPath expression
-	* @return array        Alphabetically sorted list of unique variable names
-	*/
 	public static function getVariables($expr)
 	{
-		// First, remove strings' contents to prevent false-positives
 		$expr = \preg_replace('/(["\']).*?\\1/s', '$1$1', $expr);
 
-		// Capture all the variable names
 		\preg_match_all('/\\$(\\w+)/', $expr, $matches);
 
-		// Dedupe and sort names
 		$varNames = \array_unique($matches[1]);
 		\sort($varNames);
 
 		return $varNames;
 	}
 
-	/*
-	* Determine whether given XPath expression definitely evaluates to a number
-	*
-	* @param  string $expr XPath expression
-	* @return bool         Whether given XPath expression definitely evaluates to a number
-	*/
 	public static function isExpressionNumeric($expr)
 	{
 		if (\preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*[-+]\\s*(?1))++$)', $expr))
@@ -82,18 +56,11 @@ abstract class XPathHelper
 		return \false;
 	}
 
-	/*
-	* Remove extraneous space in a given XPath expression
-	*
-	* @param  string $expr Original XPath expression
-	* @return string       Minified XPath expression
-	*/
 	public static function minify($expr)
 	{
 		$old     = $expr;
 		$strings = array();
 
-		// Trim the surrounding whitespace then temporarily remove literal strings
 		$expr = \preg_replace_callback(
 			'/(?:"[^"]*"|\'[^\']*\')/',
 			function ($m) use (&$strings)
@@ -109,20 +76,15 @@ abstract class XPathHelper
 		if (\preg_match('/[\'"]/', $expr))
 			throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
 
-		// Normalize whitespace to a single space
 		$expr = \preg_replace('/\\s+/', ' ', $expr);
 
-		// Remove the space between a non-word character and a word character
 		$expr = \preg_replace('/([-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
 		$expr = \preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
 
-		// Remove the space between two non-word characters as long as they're not two -
 		$expr = \preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
 
-		// Remove the space between a - and a word character, as long as there's a space before -
 		$expr = \preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
 
-		// Restore the literals
 		$expr = \strtr($expr, $strings);
 
 		return $expr;

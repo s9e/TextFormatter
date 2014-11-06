@@ -14,14 +14,6 @@ use s9e\TextFormatter\Renderer as AbstractRenderer;
 
 abstract class Helper
 {
-	/*
-	* Format timestamps inside of an XML representation
-	*
-	* NOTE: has no effect if SMF is not loaded
-	*
-	* @param  string $xml XML representation of a parsed text
-	* @return string      XML representation, with human-readable dates
-	*/
 	public static function applyTimeformat($xml)
 	{
 		if (\substr($xml, 0, 2) === '<r')
@@ -34,7 +26,7 @@ abstract class Helper
 					          ? \timeformat($m[2])
 					          : \strftime('%B %d, %Y, %I:%M:%S %p', $m[2]);
 
-					return $m[1] . \htmlspecialchars($datetime, \ENT_COMPAT);
+					return $m[1] . \htmlspecialchars($datetime, 2);
 				},
 				$xml
 			);
@@ -43,14 +35,6 @@ abstract class Helper
 		return $xml;
 	}
 
-	/*
-	* Configure the given parser to current SMF environment
-	*
-	* NOTE: has no effect if SMF is not loaded
-	*
-	* @param  Parser $parser
-	* @return void
-	*/
 	public static function configureParser(Parser $parser)
 	{
 		if (!isset($GLOBALS['modSettings']))
@@ -76,14 +60,6 @@ abstract class Helper
 			$parser->disableTag('FLASH');
 	}
 
-	/*
-	* Configure the given renderer to current SMF environment
-	*
-	* NOTE: has no effect if SMF is not loaded
-	*
-	* @param  Renderer $renderer
-	* @return void
-	*/
 	public static function configureRenderer(AbstractRenderer $renderer)
 	{
 		$params = array();
@@ -109,34 +85,16 @@ abstract class Helper
 			$renderer->setParameters($params);
 	}
 
-	/*
-	* Prepend the http:// scheme in front of a URL if it's not already present and it doesn't start
-	* with a #, and validate as a URL if it doesn't start with #
-	*
-	* @param  string $url       Original URL
-	* @param  array  $urlConfig Config used by the URL filter
-	* @param  Logger $logger    Default logger
-	* @return mixed             Original value if valid, FALSE otherwise
-	*/
 	public static function filterIurl($url, array $urlConfig, Logger $logger)
 	{
-		// Anchor links are returned as-is
 		if (\substr($url, 0, 1) === '#')
 			return $url;
 
-		// Prepend http:// if applicable
 		$url = self::prependHttp($url);
 
-		// Validate as a URL
 		return BuiltInFilters::filterUrl($url, $urlConfig, $logger);
 	}
 
-	/*
-	* Prepend the ftp:// scheme in front of a URL if it's not already present
-	*
-	* @param  string $url Original URL
-	* @return string      URL that starts with ftp:// or ftps://
-	*/
 	public static function prependFtp($url)
 	{
 		if (\substr($url, 0, 6) !== 'ftp://'
@@ -146,12 +104,6 @@ abstract class Helper
 		return $url;
 	}
 
-	/*
-	* Prepend the http:// scheme in front of a URL if it's not already present
-	*
-	* @param  string $url Original URL
-	* @return string      URL that starts with http:// or https://
-	*/
 	public static function prependHttp($url)
 	{
 		if (\substr($url, 0, 7) !== 'http://'

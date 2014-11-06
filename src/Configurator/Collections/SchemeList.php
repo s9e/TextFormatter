@@ -13,11 +13,6 @@ use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class SchemeList extends NormalizedList
 {
-	/*
-	* Return this scheme list as a regexp
-	*
-	* @return Regexp
-	*/
 	public function asConfig()
 	{
 		$regexp = new Regexp('/^' . RegexpBuilder::fromList($this->items) . '$/Di');
@@ -25,14 +20,6 @@ class SchemeList extends NormalizedList
 		return $regexp->asConfig();
 	}
 
-	/*
-	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
-	*
-	* @link http://tools.ietf.org/html/rfc3986#section-3.1
-	*
-	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
-	* @return string
-	*/
 	public function normalizeValue($scheme)
 	{
 		if (!\preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))

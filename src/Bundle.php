@@ -7,29 +7,14 @@
 */
 namespace s9e\TextFormatter;
 
-/*
-* @method Parser   getParser()
-* @method Renderer getRenderer()
-*/
 abstract class Bundle
 {
-	/*
-	* Reset the cached parser and renderer
-	*
-	* @return void
-	*/
 	public static function reset()
 	{
 		static::$parser   = \null;
 		static::$renderer = \null;
 	}
 
-	/*
-	* Parse given text using a singleton instance of the bundled Parser
-	*
-	* @param  string $text Original text
-	* @return string       Intermediate representation
-	*/
 	public static function parse($text)
 	{
 		if (!isset(static::$parser))
@@ -46,13 +31,6 @@ abstract class Bundle
 		return $xml;
 	}
 
-	/*
-	* Render an intermediate representation using a singleton instance of the bundled Renderer
-	*
-	* @param  string $xml    Intermediate representation
-	* @param  array  $params Stylesheet parameters
-	* @return string         Rendered result
-	*/
 	public static function render($xml, array $params = array())
 	{
 		if (!isset(static::$renderer))
@@ -72,13 +50,6 @@ abstract class Bundle
 		return $output;
 	}
 
-	/*
-	* Render an array of intermediate representations using a singleton instance of the bundled Renderer
-	*
-	* @param  array $arr    Array of XML strings
-	* @param  array $params Stylesheet parameters
-	* @return array         Array of render results (same keys, same order)
-	*/
 	public static function renderMulti(array $arr, array $params = array())
 	{
 		if (!isset(static::$renderer))
@@ -106,12 +77,6 @@ abstract class Bundle
 		return $arr;
 	}
 
-	/*
-	* Transform an intermediate representation back to its original form
-	*
-	* @param  string $xml Intermediate representation
-	* @return string      Original text
-	*/
 	public static function unparse($xml)
 	{
 		if (isset(static::$beforeUnparse))

@@ -13,14 +13,10 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class MediaPack extends Bundle
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function configure(Configurator $configurator)
 	{
 		if (!isset($configurator->MediaEmbed))
 		{
-			// Only create BBCodes if the BBCodes plugin is already loaded
 			$pluginOptions = array('createBBCodes' => isset($configurator->BBCodes));
 
 			$configurator->plugins->load('MediaEmbed', $pluginOptions);

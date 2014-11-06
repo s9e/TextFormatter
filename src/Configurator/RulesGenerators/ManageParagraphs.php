@@ -12,26 +12,13 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class ManageParagraphs implements BooleanRulesGenerator
 {
-	/*
-	* @var TemplateForensics
-	*/
 	protected $p;
 
-	/*
-	* Constructor
-	*
-	* Prepares the TemplateForensics for <p/>
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->p = new TemplateForensics('<p><xsl:apply-templates/></p>');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$rules = array();

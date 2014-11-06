@@ -18,27 +18,12 @@ use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
-/*
-* @property RendererGenerator $engine
-* @property TemplateParameterCollection $parameters Parameters used by the renderer
-* @property string $type Output method, either "html" or "xhtml"
-*/
 class Rendering
 {
-	/*
-	* Magic getter
-	*
-	* Will return $this->foo if it exists, then $this->getFoo() or will throw an exception if
-	* neither exists
-	*
-	* @param  string $propName
-	* @return mixed
-	*/
 	public function __get($propName)
 	{
 		$methodName = 'get' . \ucfirst($propName);
 
-		// Look for a getter, e.g. getDefaultTemplate()
 		if (\method_exists($this, $methodName))
 			return $this->$methodName();
 
@@ -48,24 +33,10 @@ class Rendering
 		return $this->$propName;
 	}
 
-	/*
-	* Magic setter
-	*
-	* Will call $this->setFoo($propValue) if it exists, otherwise it will set $this->foo.
-	* If $this->foo is a NormalizedCollection, we do not replace it, instead we clear() it then
-	* fill it back up. It will not overwrite an object with a different incompatible object (of a
-	* different, non-extending class) and it will throw an exception if the PHP type cannot match
-	* without incurring data loss.
-	*
-	* @param  string $propName
-	* @param  mixed  $propValue
-	* @return void
-	*/
 	public function __set($propName, $propValue)
 	{
 		$methodName = 'set' . \ucfirst($propName);
 
-		// Look for a setter, e.g. setDefaultChildRule()
 		if (\method_exists($this, $methodName))
 		{
 			$this->$methodName($propValue);
@@ -73,7 +44,6 @@ class Rendering
 			return;
 		}
 
-		// If the property isn't already set, we just create/set it
 		if (!isset($this->$propName))
 		{
 			$this->$propName = $propValue;
@@ -81,8 +51,6 @@ class Rendering
 			return;
 		}
 
-		// If we're trying to replace a NormalizedCollection, instead we clear it then
-		// iteratively set new values
 		if ($this->$propName instanceof NormalizedCollection)
 		{
 			if (!\is_array($propValue)
@@ -97,8 +65,6 @@ class Rendering
 			return;
 		}
 
-		// If this property is an object, test whether they are compatible. Otherwise, test if PHP
-		// types are compatible
 		if (\is_object($this->$propName))
 		{
 			if (!($propValue instanceof $this->$propName))
@@ -106,11 +72,9 @@ class Rendering
 		}
 		else
 		{
-			// Test whether the PHP types are compatible
 			$oldType = \gettype($this->$propName);
 			$newType = \gettype($propValue);
 
-			// If the property is a boolean, we'll accept "true" and "false" as strings
 			if ($oldType === 'boolean')
 				if ($propValue === 'false')
 				{
@@ -125,7 +89,6 @@ class Rendering
 
 			if ($oldType !== $newType)
 			{
-				// Test whether the PHP type roundtrip is lossless
 				$tmp = $propValue;
 				\settype($tmp, $oldType);
 				\settype($tmp, $newType);
@@ -133,7 +96,6 @@ class Rendering
 				if ($tmp !== $propValue)
 					throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of type " . $oldType . ' with value of type ' . $newType);
 
-				// Finally, set the new value to the correct type
 				\settype($propValue, $oldType);
 			}
 		}
@@ -141,12 +103,6 @@ class Rendering
 		$this->$propName = $propValue;
 	}
 
-	/*
-	* Test whether a property is set
-	*
-	* @param  string $propName
-	* @return bool
-	*/
 	public function __isset($propName)
 	{
 		$methodName = 'isset' . \ucfirst($propName);
@@ -157,12 +113,6 @@ class Rendering
 		return isset($this->$propName);
 	}
 
-	/*
-	* Unset a property, if the class supports it
-	*
-	* @param  string $propName
-	* @return void
-	*/
 	public function __unset($propName)
 	{
 		$methodName = 'unset' . \ucfirst($propName);
@@ -187,32 +137,14 @@ class Rendering
 		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 
-	/*
-	* @var Configurator
-	*/
 	protected $configurator;
 
-	/*
-	* @var RendererGenerator
-	*/
 	protected $engine;
 
-	/*
-	* @var TemplateParameterCollection Parameters used by the renderer
-	*/
 	protected $parameters;
 
-	/*
-	* @var string Output method, either "html" or "xhtml"
-	*/
 	protected $type = 'html';
 
-	/*
-	* Constructor
-	*
-	* @param  Configurator $configurator
-	* @return void
-	*/
 	public function __construct(Configurator $configurator)
 	{
 		$this->configurator = $configurator;
@@ -221,45 +153,26 @@ class Rendering
 		$this->setEngine('XSLT');
 	}
 
-	/*
-	* Get all the parameters defined and/or used in all the templates
-	*
-	* @return array Associative array of parameters names and their default value
-	*/
 	public function getAllParameters()
 	{
-		// Collect parameters used in template
 		$params = array();
 		foreach ($this->configurator->tags as $tag)
 			if (isset($tag->template))
 				foreach ($tag->template->getParameters() as $paramName)
 					$params[$paramName] = '';
 
-		// Merge defined parameters and those collected from templates. Defined parameters take
-		// precedence
 		$params = \iterator_to_array($this->parameters) + $params;
 
-		// Sort parameters by name for consistency
 		\ksort($params);
 
 		return $params;
 	}
 
-	/*
-	* Return an instance of Renderer based on the current config
-	*
-	* @return Renderer
-	*/
 	public function getRenderer()
 	{
 		return $this->engine->getRenderer($this);
 	}
 
-	/*
-	* Get the templates defined in all the targs
-	*
-	* @return array Associative array of template names and content
-	*/
 	public function getTemplates()
 	{
 		$templates = array(
@@ -279,14 +192,6 @@ class Rendering
 		return $templates;
 	}
 
-	/*
-	* Set the RendererGenerator instance used
-	*
-	* NOTE: extra parameters are passed to the RendererGenerator's constructor
-	*
-	* @param  string|RendererGenerator $engine Engine name or instance of RendererGenerator
-	* @return RendererGenerator                Instance of RendererGenerator
-	*/
 	public function setEngine($engine)
 	{
 		if (!($engine instanceof RendererGenerator))
@@ -302,12 +207,6 @@ class Rendering
 		return $engine;
 	}
 
-	/*
-	* Set the output type
-	*
-	* @param  string $type Either "html" or "xhtml"
-	* @return void
-	*/
 	protected function setType($type)
 	{
 		$type = \strtolower($type);

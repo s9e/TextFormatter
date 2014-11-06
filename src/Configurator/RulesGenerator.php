@@ -17,157 +17,65 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-/*
-* @method mixed   add(mixed $value)
-* @method mixed   append(mixed $value)
-* @method array   asConfig()
-* @method void    clear()
-* @method bool    contains(mixed $value)
-* @method integer count()
-* @method mixed   current()
-* @method void    delete(string $key)
-* @method bool    exists(string $key)
-* @method mixed   get(string $key)
-* @method mixed   indexOf(mixed $value)
-* @method mixed   insert(integer $offset)
-* @method integer|string key()
-* @method mixed   next()
-* @method integer normalizeKey()
-* @method BooleanRulesGenerator|TargetedRulesGenerator normalizeValue(string|BooleanRulesGenerator|TargetedRulesGenerator $generator)
-* @method bool    offsetExists(string|integer $offset)
-* @method mixed   offsetGet(string|integer $offset)
-* @method void    offsetSet(mixed $offset, mixed $value)
-* @method void    offsetUnset(string|integer $offset)
-* @method string  onDuplicate(string|null $action)
-* @method mixed   prepend(mixed $value)
-* @method integer remove()
-* @method void    rewind()
-* @method mixed   set(string $key)
-* @method bool    valid()
-*/
 class RulesGenerator implements ArrayAccess, Iterator
 {
-	/*
-	* Forward all unknown method calls to $this->collection
-	*
-	* @param  string $methodName
-	* @param  array  $args
-	* @return mixed
-	*/
 	public function __call($methodName, $args)
 	{
 		return \call_user_func_array(array($this->collection, $methodName), $args);
 	}
 
-	//==========================================================================
-	// ArrayAccess
-	//==========================================================================
-
-	/*
-	* @param  string|integer $offset
-	* @return bool
-	*/
 	public function offsetExists($offset)
 	{
 		return isset($this->collection[$offset]);
 	}
 
-	/*
-	* @param  string|integer $offset
-	* @return mixed
-	*/
 	public function offsetGet($offset)
 	{
 		return $this->collection[$offset];
 	}
 
-	/*
-	* @param  string|integer $offset
-	* @param  mixed          $value
-	* @return void
-	*/
 	public function offsetSet($offset, $value)
 	{
 		$this->collection[$offset] = $value;
 	}
 
-	/*
-	* @param  string|integer $offset
-	* @return void
-	*/
 	public function offsetUnset($offset)
 	{
 		unset($this->collection[$offset]);
 	}
 
-	//==========================================================================
-	// Countable
-	//==========================================================================
-
-	/*
-	* @return integer
-	*/
 	public function count()
 	{
 		return \count($this->collection);
 	}
 
-	//==========================================================================
-	// Iterator
-	//==========================================================================
-
-	/*
-	* @return mixed
-	*/
 	public function current()
 	{
 		return $this->collection->current();
 	}
 
-	/*
-	* @return string|integer
-	*/
 	public function key()
 	{
 		return $this->collection->key();
 	}
 
-	/*
-	* @return mixed
-	*/
 	public function next()
 	{
 		return $this->collection->next();
 	}
 
-	/*
-	* @return void
-	*/
 	public function rewind()
 	{
 		$this->collection->rewind();
 	}
 
-	/*
-	* @return boolean
-	*/
 	public function valid()
 	{
 		return $this->collection->valid();
 	}
 
-	/*
-	* @var RulesGeneratorList Collection of objects
-	*/
 	protected $collection;
 
-	/*
-	* Constructor
-	*
-	* Will load the default rule generators
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->collection = new RulesGeneratorList;
@@ -181,34 +89,17 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
 	}
 
-	/*
-	* Generate rules for given tag collection
-	*
-	* Possible options:
-	*
-	*  parentHTML: HTML leading to the start of the rendered text. Defaults to "<div>"
-	*
-	* @param  TagCollection $tags    Tags collection
-	* @param  array         $options Array of option settings
-	* @return array
-	*/
 	public function getRules(TagCollection $tags, array $options = array())
 	{
-		// Unless specified otherwise, we consider that the renderered text will be displayed as
-		// the child of a <div> element
 		$parentHTML = (isset($options['parentHTML']))
 		            ? $options['parentHTML']
 		            : '<div>';
 
-		// Create a proxy for the parent markup so that we can determine which tags are allowed at
-		// the root of the text (IOW, with no parent) or even disabled altogether
 		$rootForensics = $this->generateRootForensics($parentHTML);
 
-		// Study the tags
 		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
-			// Use the tag's template if applicable or XSLT's implicit default otherwise
 			$template = (isset($tag->template))
 			          ? $tag->template
 			          : '<xsl:apply-templates/>';
@@ -216,10 +107,8 @@ class RulesGenerator implements ArrayAccess, Iterator
 			$templateForensics[$tagName] = new TemplateForensics($template);
 		}
 
-		// Generate a full set of rules
 		$rules = $this->generateRulesets($templateForensics, $rootForensics);
 
-		// Remove root rules that wouldn't be applied anyway
 		unset($rules['root']['autoClose']);
 		unset($rules['root']['autoReopen']);
 		unset($rules['root']['breakParagraph']);
@@ -234,42 +123,25 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return $rules;
 	}
 
-	/*
-	* Generate a TemplateForensics instance for the root element
-	*
-	* @param  string            $html Root HTML, e.g. "<div>"
-	* @return TemplateForensics
-	*/
 	protected function generateRootForensics($html)
 	{
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
 
-		// Get the document's <body> element
 		$body = $dom->getElementsByTagName('body')->item(0);
 
-		// Grab the deepest node
 		$node = $body;
 		while ($node->firstChild)
 			$node = $node->firstChild;
 
-		// Now append an <xsl:apply-templates/> node to make the markup look like a normal template
 		$node->appendChild($dom->createElementNS(
 			'http://www.w3.org/1999/XSL/Transform',
 			'xsl:apply-templates'
 		));
 
-		// Finally create and return a new TemplateForensics instance
 		return new TemplateForensics($dom->saveXML($body));
 	}
 
-	/*
-	* Generate and return rules based on a set of TemplateForensics
-	*
-	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
-	* @param  TemplateForensics $rootForensics     TemplateForensics for the root of the text
-	* @return array
-	*/
 	protected function generateRulesets(array $templateForensics, TemplateForensics $rootForensics)
 	{
 		$rules = array(
@@ -283,13 +155,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 		return $rules;
 	}
 
-	/*
-	* Generate a set of rules for a single TemplateForensics instance
-	*
-	* @param  TemplateForensics $src     Source of the rules
-	* @param  array             $targets Array of [tagName => TemplateForensics]
-	* @return array
-	*/
 	protected function generateRuleset(TemplateForensics $src, array $targets)
 	{
 		$rules = array();

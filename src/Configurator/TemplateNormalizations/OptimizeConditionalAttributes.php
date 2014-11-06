@@ -13,21 +13,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class OptimizeConditionalAttributes extends TemplateNormalization
 {
-	/*
-	* Optimize conditional attributes
-	*
-	* Will replace conditional attributes with a <xsl:copy-of/>, e.g.
-	*	<xsl:if test="@foo">
-	*		<xsl:attribute name="foo">
-	*			<xsl:value-of select="@foo" />
-	*		</xsl:attribute>
-	*	</xsl:if>
-	* into
-	*	<xsl:copy-of select="@foo"/>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;

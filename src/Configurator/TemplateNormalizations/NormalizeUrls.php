@@ -17,14 +17,6 @@ use s9e\TextFormatter\Parser\BuiltInFilters;
 
 class NormalizeUrls extends TemplateNormalization
 {
-	/*
-	* Normalize URLs
-	*
-	* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		foreach (TemplateHelper::getURLNodes($template->ownerDocument) as $node)
@@ -34,15 +26,8 @@ class NormalizeUrls extends TemplateNormalization
 				$this->normalizeElement($node);
 	}
 
-	/*
-	* Normalize the value of an attribute
-	*
-	* @param  DOMAttr $attribute
-	* @return void
-	*/
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		// Trim the URL and parse it
 		$tokens = AVTHelper::parse(\trim($attribute->value));
 
 		$attrValue = '';
@@ -55,19 +40,11 @@ class NormalizeUrls extends TemplateNormalization
 				$attrValue .= '{' . $content . '}';
 		}
 
-		// Unescape brackets in the host part
 		$attrValue = $this->unescapeBrackets($attrValue);
 
-		// Update the attribute's value
 		$attribute->value = \htmlspecialchars($attrValue);
 	}
 
-	/*
-	* Normalize value of the text nodes, descendants of an element
-	*
-	* @param  DOMElement $element
-	* @return void
-	*/
 	protected function normalizeElement(DOMElement $element)
 	{
 		$xpath = new DOMXPath($element->ownerDocument);
@@ -87,12 +64,6 @@ class NormalizeUrls extends TemplateNormalization
 			$node->nodeValue = \rtrim($node->nodeValue);
 	}
 
-	/*
-	* Unescape brackets in the host part of a URL if it looks like an IPv6 address
-	*
-	* @param  string $url
-	* @return string
-	*/
 	protected function unescapeBrackets($url)
 	{
 		return \preg_replace('#^(\\w+://)%5B([-\\w:._%]+)%5D#i', '$1[$2]', $url);

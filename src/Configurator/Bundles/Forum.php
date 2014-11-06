@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class Forum extends Bundle
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function configure(Configurator $configurator)
 	{
 		$configurator->rootRules->enableAutoLineBreaks();

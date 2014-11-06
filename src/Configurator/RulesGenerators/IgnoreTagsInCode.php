@@ -13,9 +13,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class IgnoreTagsInCode implements BooleanRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$xpath = new DOMXPath($src->getDOM());

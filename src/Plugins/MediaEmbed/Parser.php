@@ -13,9 +13,6 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function parse($text, array $matches)
 	{
 		foreach ($matches as $m)
@@ -27,32 +24,16 @@ class Parser extends ParserBase
 			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
 			$tag->setAttribute('url', $url);
 
-			// Give that tag priority over other tags such as Autolink's
 			$tag->setSortPriority(-10);
 		}
 	}
 
-	/*
-	* Filter a MEDIA tag
-	*
-	* This will always invalidate the original tag, and possibly replace it with the tag that
-	* corresponds to the media site
-	*
-	* @param  Tag      $tag      The original tag
-	* @param  TagStack $tagStack Parser instance, so that we can add the new tag to the stack
-	* @param  array    $sites    Map of [host => siteId]
-	* @return bool               Unconditionally FALSE
-	*/
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
 		if ($tag->hasAttribute('media'))
 		{
-			// [media=youtube]xxxxxxx[/media]
 			$tagName = $tag->getAttribute('media');
 
-			// If this tag doesn't have an id attribute and the url attribute doesn't really look
-			// like an URL, copy the value of the url attribute, so that the tag acts like
-			// [media=youtube id=xxxx]xxxx[/media]
 			if (!$tag->hasAttribute('id')
 			 && $tag->hasAttribute('url')
 			 && \strpos($tag->getAttribute('url'), '://') === \false)
@@ -60,7 +41,6 @@ class Parser extends ParserBase
 		}
 		elseif ($tag->hasAttribute('url'))
 		{
-			// Capture the scheme and (if applicable) host of the URL
 			$p = \parse_url($tag->getAttribute('url'));
 
 			if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
@@ -69,8 +49,6 @@ class Parser extends ParserBase
 			{
 				$host = $p['host'];
 
-				// Start with the full host then pop domain labels off the start until we get a
-				// match
 				do
 				{
 					if (isset($sites[$host]))
@@ -93,11 +71,9 @@ class Parser extends ParserBase
 		{
 			$endTag = $tag->getEndTag() ?: $tag;
 
-			// Compute the boundaries of our new tag
 			$lpos = $tag->getPos();
 			$rpos = $endTag->getPos() + $endTag->getLen();
 
-			// Create a new tag and copy this tag's attributes and priority
 			$newTag = $tagStack->addSelfClosingTag(\strtoupper($tagName), $lpos, $rpos - $lpos);
 			$newTag->setAttributes($tag->getAttributes());
 			$newTag->setSortPriority($tag->getSortPriority());
@@ -106,12 +82,6 @@ class Parser extends ParserBase
 		return \false;
 	}
 
-	/*
-	* Test whether a given tag has at least one non-default attribute
-	*
-	* @param  Tag  $tag The original tag
-	* @return bool      Whether the tag contains an attribute not named "url"
-	*/
 	public static function hasNonDefaultAttribute(Tag $tag)
 	{
 		foreach ($tag->getAttributes() as $attrName => $void)
@@ -121,14 +91,6 @@ class Parser extends ParserBase
 		return \false;
 	}
 
-	/*
-	* Scrape the content of an URL to extract some data
-	*
-	* @param  Tag    $tag          Source tag
-	* @param  array  $scrapeConfig Array of scrape directives
-	* @param  string $cacheDir     Path to the cache directory
-	* @return bool                 Unconditionally TRUE
-	*/
 	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = \null)
 	{
 		if (!$tag->hasAttribute('url'))
@@ -136,9 +98,7 @@ class Parser extends ParserBase
 
 		$url = $tag->getAttribute('url');
 
-		// Ensure that the URL actually looks like a URL
 		if (!\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
-			// A bad URL means we don't scrape, but it doesn't necessarily invalidate the tag
 			return \true;
 
 		foreach ($scrapeConfig as $scrape)
@@ -147,17 +107,6 @@ class Parser extends ParserBase
 		return \true;
 	}
 
-	//==============================================================================================
-	// Internals
-	//==============================================================================================
-
-	/*
-	* Replace {@var} tokens in given URL
-	*
-	* @param  string   $url  Original URL
-	* @param  string[] $vars Replacements
-	* @return string         Modified URL
-	*/
 	protected static function replaceTokens($url, array $vars)
 	{
 		return \preg_replace_callback(
@@ -170,15 +119,6 @@ class Parser extends ParserBase
 		);
 	}
 
-	/*
-	* Scrape the content of an URL to extract some data
-	*
-	* @param  string $url      Original URL
-	* @param  Tag    $tag      Source tag
-	* @param  array  $scrape   Array of scrape directives
-	* @param  string $cacheDir Path to the cache directory
-	* @return void
-	*/
 	protected static function scrapeEntry($url, Tag $tag, array $scrape, $cacheDir)
 	{
 		list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
@@ -186,7 +126,6 @@ class Parser extends ParserBase
 		if (!self::tagIsMissingAnyAttribute($tag, $attrNames))
 			return;
 
-		// Test whether this URL matches any regexp
 		$vars    = array();
 		$matched = \false;
 		foreach ((array) $matchRegexps as $matchRegexp)
@@ -198,27 +137,16 @@ class Parser extends ParserBase
 		if (!$matched)
 			return;
 
-		// Add the tag's attributes to the named captures from the "match" regexp
 		$vars += $tag->getAttributes();
 
 		$scrapeUrl = (isset($scrape[3])) ? self::replaceTokens($scrape[3], $vars) : $url;
 		self::scrapeUrl($scrapeUrl, $tag, (array) $extractRegexps, $cacheDir);
 	}
 
-	/*
-	* Scrape a URL to help fill a tag's attributes
-	*
-	* @param  string      $url      URL to scrape
-	* @param  Tag         $tag      Tag to fill
-	* @param  string[]    $regexps  Regexps used to extract content from the page
-	* @param  string|null $cacheDir Path to the cache directory
-	* @return void
-	*/
 	protected static function scrapeUrl($url, Tag $tag, array $regexps, $cacheDir)
 	{
 		$content = self::wget($url, $cacheDir);
 
-		// Execute the extract regexps and fill any missing attribute
 		foreach ($regexps as $regexp)
 			if (\preg_match($regexp, $content, $m))
 				foreach ($m as $k => $v)
@@ -226,13 +154,6 @@ class Parser extends ParserBase
 						$tag->setAttribute($k, $v);
 	}
 
-	/*
-	* Test whether a tag is missing any of given attributes
-	*
-	* @param  Tag      $tag
-	* @param  string[] $attrNames
-	* @return bool
-	*/
 	protected static function tagIsMissingAnyAttribute(Tag $tag, array $attrNames)
 	{
 		foreach ($attrNames as $attrName)
@@ -242,16 +163,6 @@ class Parser extends ParserBase
 		return \false;
 	}
 
-	/*
-	* Retrieve external content (possibly from the cache)
-	*
-	* If the cache directory exists, the external content will be saved into it. Cached content is
-	* never pruned
-	*
-	* @param  string $url      URL
-	* @param  string $cacheDir Path to the cache directory
-	* @return string           External content
-	*/
 	protected static function wget($url, $cacheDir = \null)
 	{
 		$prefix = $suffix = $context = \null;
@@ -262,7 +173,6 @@ class Parser extends ParserBase
 			$context = \stream_context_create(array('http' => array('header' => 'Accept-Encoding: gzip')));
 		}
 
-		// Return the content from the cache if applicable
 		if (isset($cacheDir) && \file_exists($cacheDir))
 		{
 			$cacheFile = $cacheDir . '/http.' . \crc32($url) . $suffix;
@@ -271,10 +181,8 @@ class Parser extends ParserBase
 				return \file_get_contents($prefix . $cacheFile);
 		}
 
-		// Retrieve the external content from the source
 		$content = \file_get_contents($prefix . $url, \false, $context);
 
-		// Save to the cache if applicable
 		if (isset($cacheFile) && $content !== \false)
 			\file_put_contents($prefix . $cacheFile, $content);
 

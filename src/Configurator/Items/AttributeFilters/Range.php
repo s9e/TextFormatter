@@ -13,13 +13,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Range extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @param  integer $min Minimum value for this range
-	* @param  integer $max Maximum value for this range
-	* @return void
-	*/
 	public function __construct($min = \null, $max = \null)
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRange');
@@ -35,9 +28,6 @@ class Range extends AttributeFilter
 			$this->setRange($min, $max);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		if (!isset($this->vars['min']))
@@ -49,17 +39,10 @@ class Range extends AttributeFilter
 		return parent::asConfig();
 	}
 
-	/*
-	* Set the allowed range of values
-	*
-	* @param  integer $min Minimum value
-	* @param  integer $max Maximum value
-	* @return void
-	*/
 	public function setRange($min, $max)
 	{
-		$min = \filter_var($min, \FILTER_VALIDATE_INT);
-		$max = \filter_var($max, \FILTER_VALIDATE_INT);
+		$min = \filter_var($min, 257);
+		$max = \filter_var($max, 257);
 
 		if ($min === \false)
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be an integer');
@@ -74,25 +57,16 @@ class Range extends AttributeFilter
 		$this->vars['max'] = $max;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInJS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeAsURL()
 	{
 		return \true;

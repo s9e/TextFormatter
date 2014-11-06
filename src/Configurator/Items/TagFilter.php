@@ -9,17 +9,10 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 class TagFilter extends Filter
 {
-	/*
-	* Constructor
-	*
-	* @param  callable $callback
-	* @return void
-	*/
 	public function __construct($callback)
 	{
 		parent::__construct($callback);
 
-		// Set the default signature
 		$this->resetParameters();
 		$this->addParameterByName('tag');
 	}

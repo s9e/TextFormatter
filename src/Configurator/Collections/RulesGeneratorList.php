@@ -13,12 +13,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class RulesGeneratorList extends NormalizedList
 {
-	/*
-	* Normalize the value to an object
-	*
-	* @param  string|BooleanRulesGenerator|TargetedRulesGenerator $generator Either a string, or an instance of a rules generator
-	* @return BooleanRulesGenerator|TargetedRulesGenerator
-	*/
 	public function normalizeValue($generator)
 	{
 		if (\is_string($generator))
