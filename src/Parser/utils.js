@@ -24,7 +24,7 @@ function htmlspecialchars_compat(str)
 		'>' : '&gt;',
 		'&' : '&amp;',
 		'"' : '&quot;'
-	}
+	};
 	return str.replace(/[<>&"]/g, function(c) { return t[c]; });
 }
 
@@ -38,6 +38,14 @@ function htmlspecialchars_noquotes(str)
 		'<' : '&lt;',
 		'>' : '&gt;',
 		'&' : '&amp;'
-	}
+	};
 	return str.replace(/[<>&]/g, function(c) { return t[c]; });
+}
+
+/**
+* @return {!bool}
+*/
+function returnFalse()
+{
+	return false;
 }
