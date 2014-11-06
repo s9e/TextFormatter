@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->isBlock()) ? ['ignoreSurroundingWhitespace' => \true] : [];

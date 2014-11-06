@@ -11,11 +11,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Color extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterColor');
@@ -24,9 +19,6 @@ class Color extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterColor');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;

@@ -11,11 +11,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Int extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt');
@@ -24,25 +19,16 @@ class Int extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterInt');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInJS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeAsURL()
 	{
 		return \true;

@@ -12,28 +12,13 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class Custom extends TemplateNormalization
 {
-	/*
-	* @var callback Normalization callback
-	*/
 	protected $callback;
 
-	/*
-	* Constructor
-	*
-	* @param  callback $callback Normalization callback
-	* @return void
-	*/
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;
 	}
 
-	/*
-	* Call the user-supplied callback
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		\call_user_func($this->callback, $template);

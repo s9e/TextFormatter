@@ -20,22 +20,8 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/*
-	* @var array 2D array using HTML element names as keys, each value being an associative array
-	*            using HTML attribute names as keys and their alias as values. A special empty entry
-	*            is used to store the HTML element's alias
-	*/
 	protected $aliases = [];
 
-	/*
-	* @var array  Default filter of a few known attributes
-	*
-	* It doesn't make much sense to try to declare every known HTML attribute here. Validation is
-	* not the purpose of this plugin. It does make sense however to declare URL attributes as such,
-	* so that they are subject to our constraints (disallowed hosts, etc...)
-	*
-	* @see scripts/patchHTMLElementConfigurator.php
-	*/
 	protected $attributeFilters = [
 		'action'     => '#url',
 		'cite'       => '#url',
@@ -49,25 +35,12 @@ class Configurator extends ConfiguratorBase
 		'src'        => '#url'
 	];
 
-	/*
-	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
-	*             this array
-	*/
 	protected $elements = [];
 
-	/*
-	* @var string Namespace prefix of the tags produced by this plugin's parser
-	*/
 	protected $prefix = 'html';
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected $quickMatch = '<';
 
-	/*
-	* @var array  Blacklist of elements that are considered unsafe
-	*/
 	protected $unsafeElements = [
 		'base',
 		'embed',
@@ -78,25 +51,11 @@ class Configurator extends ConfiguratorBase
 		'script'
 	];
 
-	/*
-	* @var array  Blacklist of attributes that are considered unsafe, in addition of any attribute
-	*             whose name starts with "on" such as "onmouseover"
-	*/
 	protected $unsafeAttributes = [
 		'style',
 		'target'
 	];
 
-	/*
-	* Alias the HTML attribute of given HTML element to a given attribute name
-	*
-	* NOTE: will *not* create the target attribute
-	*
-	* @param  string $elName   Name of the HTML element
-	* @param  string $attrName Name of the HTML attribute
-	* @param  string $alias    Alias
-	* @return void
-	*/
 	public function aliasAttribute($elName, $attrName, $alias)
 	{
 		$elName   = $this->normalizeElementName($elName);
@@ -105,15 +64,6 @@ class Configurator extends ConfiguratorBase
 		$this->aliases[$elName][$attrName] = AttributeName::normalize($alias);
 	}
 
-	/*
-	* Alias an HTML element to a given tag name
-	*
-	* NOTE: will *not* create the target tag
-	*
-	* @param  string $elName  Name of the HTML element
-	* @param  string $tagName Name of the tag
-	* @return void
-	*/
 	public function aliasElement($elName, $tagName)
 	{
 		$elName = $this->normalizeElementName($elName);
@@ -121,35 +71,16 @@ class Configurator extends ConfiguratorBase
 		$this->aliases[$elName][''] = TagName::normalize($tagName);
 	}
 
-	/*
-	* Allow an HTML element to be used
-	*
-	* @param  string $elName Name of the element
-	* @return Tag            Tag that represents this element
-	*/
 	public function allowElement($elName)
 	{
 		return $this->allowElementWithSafety($elName, \false);
 	}
 
-	/*
-	* Allow an unsafe HTML element to be used
-	*
-	* @param  string $elName Name of the element
-	* @return Tag            Tag that represents this element
-	*/
 	public function allowUnsafeElement($elName)
 	{
 		return $this->allowElementWithSafety($elName, \true);
 	}
 
-	/*
-	* Allow a (potentially unsafe) HTML element to be used
-	*
-	* @param  string $elName      Name of the element
-	* @param  bool   $allowUnsafe Whether to allow unsafe elements
-	* @return Tag                 Tag that represents this element
-	*/
 	protected function allowElementWithSafety($elName, $allowUnsafe)
 	{
 		$elName  = $this->normalizeElementName($elName);
@@ -158,52 +89,27 @@ class Configurator extends ConfiguratorBase
 		if (!$allowUnsafe && \in_array($elName, $this->unsafeElements))
 			throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeElement() to bypass this security measure');
 
-		// Retrieve or create the tag
 		$tag = ($this->configurator->tags->exists($tagName))
 		     ? $this->configurator->tags->get($tagName)
 		     : $this->configurator->tags->add($tagName);
 
-		// Rebuild this tag's template
 		$this->rebuildTemplate($tag, $elName, $allowUnsafe);
 
-		// Record the element name
 		$this->elements[$elName] = 1;
 
 		return $tag;
 	}
 
-	/*
-	* Allow an attribute to be used in an HTML element
-	*
-	* @param  string $elName   Name of the element
-	* @param  string $attrName Name of the attribute
-	* @return \s9e\Configurator\Items\Attribute
-	*/
 	public function allowAttribute($elName, $attrName)
 	{
 		return $this->allowAttributeWithSafety($elName, $attrName, \false);
 	}
 
-	/*
-	* Allow an unsafe attribute to be used in an HTML element
-	*
-	* @param  string $elName   Name of the element
-	* @param  string $attrName Name of the attribute
-	* @return \s9e\Configurator\Items\Attribute
-	*/
 	public function allowUnsafeAttribute($elName, $attrName)
 	{
 		return $this->allowAttributeWithSafety($elName, $attrName, \true);
 	}
 
-	/*
-	* Allow a (potentially unsafe) attribute to be used in an HTML element
-	*
-	* @param  string $elName   Name of the element
-	* @param  string $attrName Name of the attribute
-	* @param  bool   $allowUnsafe
-	* @return \s9e\Configurator\Items\Attribute
-	*/
 	protected function allowAttributeWithSafety($elName, $attrName, $allowUnsafe)
 	{
 		$elName   = $this->normalizeElementName($elName);
@@ -233,24 +139,11 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
-		// Rebuild this tag's template
 		$this->rebuildTemplate($tag, $elName, $allowUnsafe);
 
 		return $tag->attributes[$attrName];
 	}
 
-	/*
-	* Validate and normalize an element name
-	*
-	* Accepts any name that would be valid, regardless of whether this element exists in HTML5.
-	* Might be slightly off as the HTML5 specs don't seem to require it to start with a letter but
-	* our implementation does.
-	*
-	* @link http://dev.w3.org/html5/spec/syntax.html#syntax-tag-name
-	*
-	* @param  string $elName Original element name
-	* @return string         Normalized element name, in lowercase
-	*/
 	protected function normalizeElementName($elName)
 	{
 		if (!\preg_match('#^[a-z][a-z0-9]*$#Di', $elName))
@@ -259,14 +152,6 @@ class Configurator extends ConfiguratorBase
 		return \strtolower($elName);
 	}
 
-	/*
-	* Validate and normalize an attribute name
-	*
-	* More restrictive than the specs but allows all HTML5 attributes and more.
-	*
-	* @param  string $attrName Original attribute name
-	* @return string           Normalized attribute name, in lowercase
-	*/
 	protected function normalizeAttributeName($attrName)
 	{
 		if (!\preg_match('#^[a-z][-\\w]*$#Di', $attrName))
@@ -275,14 +160,6 @@ class Configurator extends ConfiguratorBase
 		return \strtolower($attrName);
 	}
 
-	/*
-	* Rebuild a tag's template
-	*
-	* @param  Tag    $tag         Source tag
-	* @param  string $elName      Name of the HTML element created by the template
-	* @param  bool   $allowUnsafe Whether to allow unsafe markup
-	* @return void
-	*/
 	protected function rebuildTemplate(Tag $tag, $elName, $allowUnsafe)
 	{
 		$template = '<' . $elName . '>';
@@ -296,21 +173,11 @@ class Configurator extends ConfiguratorBase
 		$tag->setTemplate($template);
 	}
 
-	/*
-	* Generate this plugin's config
-	*
-	* @return array
-	*/
 	public function asConfig()
 	{
 		if (empty($this->elements) && empty($this->aliases))
 			return \false;
 
-		/*
-		* Regexp used to match an attributes definition (name + value if applicable)
-		*
-		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
-		*/
 		$attrRegexp = '[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
 		$tagRegexp  = RegexpBuilder::fromList(\array_merge(
 			\array_keys($this->aliases),
@@ -330,7 +197,6 @@ class Configurator extends ConfiguratorBase
 
 		if (!empty($this->aliases))
 		{
-			// Preserve the aliases array's keys in JavaScript
 			$jsAliases = new Dictionary;
 			foreach ($this->aliases as $elName => $aliases)
 				$jsAliases[$elName] = new Dictionary($aliases);

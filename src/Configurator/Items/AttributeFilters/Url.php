@@ -11,11 +11,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Url extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
@@ -27,25 +22,16 @@ class Url extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterUrl');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInJS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeAsURL()
 	{
 		return \true;

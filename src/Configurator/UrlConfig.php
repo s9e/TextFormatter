@@ -14,26 +14,12 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 
 class UrlConfig implements ConfigProvider
 {
-	/*
-	* @var SchemeList List of allowed schemes
-	*/
 	protected $allowedSchemes;
 
-	/*
-	* @var HostnameList List of disallowed hosts
-	*/
 	protected $disallowedHosts;
 
-	/*
-	* @var HostnameList List of allowed hosts
-	*/
 	protected $restrictedHosts;
 
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->disallowedHosts = new HostnameList;
@@ -44,20 +30,11 @@ class UrlConfig implements ConfigProvider
 		$this->allowedSchemes[] = 'https';
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		return ConfigHelper::toArray(\get_object_vars($this));
 	}
 
-	/*
-	* Allow a URL scheme
-	*
-	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
-	* @return void
-	*/
 	public function allowScheme($scheme)
 	{
 		if (\strtolower($scheme) === 'javascript')
@@ -66,13 +43,6 @@ class UrlConfig implements ConfigProvider
 		$this->allowedSchemes[] = $scheme;
 	}
 
-	/*
-	* Disallow a hostname (or hostname mask) from being used in URLs
-	*
-	* @param  string $host            Hostname or hostmask
-	* @param  bool   $matchSubdomains Whether to match subdomains of given host
-	* @return void
-	*/
 	public function disallowHost($host, $matchSubdomains = \true)
 	{
 		$this->disallowedHosts[] = $host;
@@ -81,36 +51,16 @@ class UrlConfig implements ConfigProvider
 			$this->disallowedHosts[] = '*.' . $host;
 	}
 
-	/*
-	* Remove a scheme from the list of allowed URL schemes
-	*
-	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
-	* @return void
-	*/
 	public function disallowScheme($scheme)
 	{
 		$this->allowedSchemes->remove($scheme);
 	}
 
-	/*
-	* Return the list of allowed URL schemes
-	*
-	* @return array
-	*/
 	public function getAllowedSchemes()
 	{
 		return \iterator_to_array($this->allowedSchemes);
 	}
 
-	/*
-	* Allow a hostname (or hostname mask) to being used in URLs while disallowing everything else
-	*
-	* Can be called multiple times to restricts URLs to a set of given hostnames
-	*
-	* @param  string $host            Hostname or hostmask
-	* @param  bool   $matchSubdomains Whether to match subdomains of given host
-	* @return void
-	*/
 	public function restrictHost($host, $matchSubdomains = \true)
 	{
 		$this->restrictedHosts[] = $host;

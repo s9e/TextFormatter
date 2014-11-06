@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class EnforceOptionalEndTags implements TargetedRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		return ($src->closesParent($trg)) ? ['closeParent'] : [];

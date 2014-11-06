@@ -11,19 +11,8 @@ use s9e\TextFormatter\Configurator;
 
 abstract class Bundle
 {
-	/*
-	* Configure a Configurator instance with this bundle's settings
-	*
-	* @param  Configurator $configurator
-	* @return void
-	*/
 	abstract public function configure(Configurator $configurator);
 
-	/*
-	* Create and return a configured instance of Configurator
-	*
-	* @return Configurator
-	*/
 	public static function getConfigurator()
 	{
 		$configurator = new Configurator;
@@ -34,13 +23,6 @@ abstract class Bundle
 		return $configurator;
 	}
 
-	/*
-	* Return extra options to be passed to the bundle generator
-	*
-	* Used by scripts/generateBundles.php
-	*
-	* @return array
-	*/
 	public static function getOptions()
 	{
 		return [];

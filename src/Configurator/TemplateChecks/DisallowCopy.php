@@ -14,13 +14,6 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowCopy extends TemplateCheck
 {
-	/*
-	* Check for <xsl:copy/> elements
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag        $tag      Tag this template belongs to
-	* @return void
-	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
 		$nodes = $template->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', 'copy');

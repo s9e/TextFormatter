@@ -15,13 +15,6 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowDisableOutputEscaping extends TemplateCheck
 {
-	/*
-	* Check a template for any tag using @disable-output-escaping
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag        $tag      Tag this template belongs to
-	* @return void
-	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);

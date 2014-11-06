@@ -15,13 +15,6 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributePreprocessorCollection extends Collection
 {
-	/*
-	* Add an attribute preprocessor
-	*
-	* @param  string $attrName Original name
-	* @param  string $regexp   Preprocessor's regexp
-	* @return AttributePreprocessor
-	*/
 	public function add($attrName, $regexp)
 	{
 		$attrName = AttributeName::normalize($attrName);
@@ -32,9 +25,6 @@ class AttributePreprocessorCollection extends Collection
 		return $this->items[$k];
 	}
 
-	/*
-	* @return string Name of the attribute the attribute processor uses as source
-	*/
 	public function key()
 	{
 		list($attrName) = \unserialize(\key($this->items));
@@ -42,11 +32,6 @@ class AttributePreprocessorCollection extends Collection
 		return $attrName;
 	}
 
-	/*
-	* Merge a set of attribute preprocessors into this collection
-	*
-	* @param array|AttributePreprocessorCollection $attributePreprocessors Instance of AttributePreprocessorCollection or 2D array of [[attrName,regexp|AttributePreprocessor]]
-	*/
 	public function merge($attributePreprocessors)
 	{
 		$error = \false;
@@ -56,8 +41,6 @@ class AttributePreprocessorCollection extends Collection
 				$this->add($attrName, $attributePreprocessor->getRegexp());
 		elseif (\is_array($attributePreprocessors))
 		{
-			// This should be a list where each element is a [attrName,regexp] pair, or
-			// [attrName,AttributePreprocessor]
 			foreach ($attributePreprocessors as $values)
 			{
 				if (!\is_array($values))
@@ -81,9 +64,6 @@ class AttributePreprocessorCollection extends Collection
 			throw new InvalidArgumentException('merge() expects an instance of AttributePreprocessorCollection or a 2D array where each element is a [attribute name, regexp] pair');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$config = [];
@@ -92,7 +72,6 @@ class AttributePreprocessorCollection extends Collection
 		{
 			list($attrName, $regexp) = \unserialize($k);
 
-			// Create a JavaScript regexp for the JS variant
 			$jsRegexp = RegexpConvertor::toJS($regexp);
 
 			$config[] = new Variant(

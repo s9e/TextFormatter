@@ -12,14 +12,8 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 
 class AttributePreprocessor
 {
-	/*
-	* @var string
-	*/
 	protected $regexp;
 
-	/*
-	* @param string $regexp
-	*/
 	public function __construct($regexp)
 	{
 		if (@\preg_match($regexp, '') === \false)
@@ -28,17 +22,11 @@ class AttributePreprocessor
 		$this->regexp = $regexp;
 	}
 
-	/*
-	* Return all the attributes created by the preprocessor along with the regexp that matches them
-	*
-	* @return array Array of [attribute name => regexp]
-	*/
 	public function getAttributes()
 	{
 		$attributes = [];
 		$regexpInfo = RegexpParser::parse($this->regexp);
 
-		// Ensure that we use the D modifier
 		if (\strpos($regexpInfo['modifiers'], 'D') === \false)
 			$regexpInfo['modifiers'] .= 'D';
 
@@ -64,11 +52,6 @@ class AttributePreprocessor
 		return $attributes;
 	}
 
-	/*
-	* Return the regexp this preprocessor is based on
-	*
-	* @return string
-	*/
 	public function getRegexp()
 	{
 		return $this->regexp;

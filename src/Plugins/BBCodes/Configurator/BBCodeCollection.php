@@ -13,17 +13,11 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class BBCodeCollection extends NormalizedCollection
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function normalizeKey($key)
 	{
 		return BBCode::normalizeName($key);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function normalizeValue($value)
 	{
 		return ($value instanceof BBCode)
@@ -31,25 +25,17 @@ class BBCodeCollection extends NormalizedCollection
 		     : new BBCode($value);
 	}
 
-	/*
-	* {@inheritdoc}
-	*
-	* This method will remove redundant info such as the BBCode's tagName or defaultAttribute values
-	* if they are the same as their default values
-	*/
 	public function asConfig()
 	{
 		$config = parent::asConfig();
 
 		foreach ($config as $bbcodeName => &$bbcode)
 		{
-			// Remove the tag name if it's the same name as the BBCode
 			if (isset($bbcode['tagName'])
 			 && TagName::isValid($bbcodeName)
 			 && TagName::normalize($bbcodeName) === $bbcode['tagName'])
 				unset($bbcode['tagName']);
 
-			// Remove the defaultAttribute name if it's the same name as the BBCode
 			if (isset($bbcode['defaultAttribute'])
 			 && AttributeName::isValid($bbcodeName)
 			 && AttributeName::normalize($bbcodeName) === $bbcode['defaultAttribute'])

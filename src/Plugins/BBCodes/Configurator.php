@@ -24,59 +24,18 @@ use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/*
-* @method mixed   add(string $key)
-* @method array   asConfig()
-* @method void    clear()
-* @method bool    contains(mixed $value)
-* @method integer count()
-* @method mixed   current()
-* @method void    delete(string $key)
-* @method bool    exists(string $key)
-* @method mixed   get(string $key)
-* @method mixed   indexOf(mixed $value)
-* @method integer|string key()
-* @method mixed   next()
-* @method string  normalizeKey(string $key)
-* @method mixed   normalizeValue(mixed $value)
-* @method bool    offsetExists(string|integer $offset)
-* @method mixed   offsetGet(string|integer $offset)
-* @method void    offsetSet(string|integer $offset)
-* @method void    offsetUnset(string|integer $offset)
-* @method string  onDuplicate(string|null $action)
-* @method void    rewind()
-* @method mixed   set(string $key)
-* @method bool    valid()
-*/
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
 
-	/*
-	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
-	*/
 	public $bbcodeMonkey;
 
-	/*
-	* @var BBCodeCollection BBCode collection
-	*/
 	public $collection;
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected $quickMatch = '[';
 
-	/*
-	* @var RepositoryCollection BBCode repositories
-	*/
 	public $repositories;
 
-	/*
-	* Plugin setup
-	*
-	* @return void
-	*/
 	protected function setUp()
 	{
 		$this->bbcodeMonkey = new BBCodeMonkey($this->configurator);
@@ -85,16 +44,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
-	/*
-	* Add a BBCode using their human-readable representation
-	*
-	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
-	*
-	* @param  string $usage    BBCode's usage
-	* @param  string|\s9e\TextFormatter\Configurator\Items\Template $template BBCode's template
-	* @param  array  $options  Supported: 'tagName' and 'rules'
-	* @return BBCode           Newly-created BBCode
-	*/
 	public function addCustom($usage, $template, array $options = [])
 	{
 		$config = $this->bbcodeMonkey->create($usage, $template);
@@ -108,17 +57,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($config);
 	}
 
-	/*
-	* Add a BBCode from a repository
-	*
-	* @param  string $name       Name of the entry in the repository
-	* @param  mixed  $repository Name of the repository to use as source, or instance of Repository
-	* @param  array  $vars       Variables that will replace default values in the tag definition
-	* @return BBCode             Newly-created BBCode
-	*/
 	public function addFromRepository($name, $repository = 'default', array $vars = [])
 	{
-		// Load the Repository if necessary
 		if (!($repository instanceof Repository))
 		{
 			if (!$this->repositories->exists($repository))
@@ -130,19 +70,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($repository->get($name, $vars));
 	}
 
-	/*
-	* Add a BBCode and its tag based on the return config from BBCodeMonkey
-	*
-	* @param  array  $config BBCodeMonkey::create()'s return array
-	* @return BBCode
-	*/
 	protected function addFromConfig(array $config)
 	{
 		$bbcodeName = $config['bbcodeName'];
 		$bbcode     = $config['bbcode'];
 		$tag        = $config['tag'];
 
-		// If the BBCode doesn't specify a tag name, it's the same as the BBCode
 		if (!isset($bbcode->tagName))
 			$bbcode->tagName = $bbcodeName;
 
@@ -152,41 +85,30 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if ($this->configurator->tags->exists($bbcode->tagName))
 			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
 
-		// Normalize this tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 
-		// Test whether this BBCode/tag is safe before adding it
 		$this->configurator->templateChecker->checkTag($tag);
 
-		// Add our BBCode then its tag
 		$this->collection->add($bbcodeName, $bbcode);
 		$this->configurator->tags->add($bbcode->tagName, $tag);
 
 		return $bbcode;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		if (!\count($this->collection))
 			return \false;
 
-		// Build the regexp that matches all the BBCode names
 		$regexp = RegexpBuilder::fromList(
 			\array_keys(\iterator_to_array($this->collection)),
 			['delim' => '#']
 		);
 
-		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern.
-		// For that, we need to reparse the regexp
 		$def    = RegexpParser::parse('#' . $regexp . '#');
 		$tokens = $def['tokens'];
 		if (isset($tokens[0]['endToken']) && $tokens[0]['pos'] === 0)
 		{
-			// Here, we test that the whole regexp is covered by one subpattern, e.g.
-			// (?:AA(?:XXX|YYY)) not (?:AA|BB)XXX or (?:AA|BB)(?:XXX|YYY)
 			$endToken = $tokens[0]['endToken'];
 			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
 
@@ -194,22 +116,18 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				$regexp = \substr($regexp, 3, -1);
 		}
 
-		// Create the BBCodes config, with its JavaScript variant
 		$bbcodesConfig = new Variant($this->collection->asConfig());
 
-		// Create the JavaScript config. Ensure that BBCode names are preserved
 		$jsConfig = new Dictionary;
 		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
 		{
 			if (isset($bbcodeConfig['predefinedAttributes']))
-				// Ensure that attribute names are preserved
 				$bbcodeConfig['predefinedAttributes']
 					= new Dictionary($bbcodeConfig['predefinedAttributes']);
 
 			$jsConfig[$bbcodeName] = $bbcodeConfig;
 		}
 
-		// Add the JavaScript config as a variant
 		$bbcodesConfig->set('JS', $jsConfig);
 
 		return [

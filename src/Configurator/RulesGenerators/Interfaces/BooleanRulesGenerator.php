@@ -11,11 +11,5 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 
 interface BooleanRulesGenerator
 {
-	/*
-	* Generate boolean rules that apply to given template forensics
-	*
-	* @param  TemplateForensics $src Source template forensics
-	* @return array                  Array of boolean rules as [ruleName => bool]
-	*/
 	public function generateBooleanRules(TemplateForensics $src);
 }

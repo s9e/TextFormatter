@@ -14,78 +14,43 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 
 class Collection implements ConfigProvider, Countable, Iterator
 {
-	/*
-	* @var array Items that this collection holds
-	*/
 	protected $items = [];
 
-	/*
-	* Empty this collection
-	*/
 	public function clear()
 	{
 		$this->items = [];
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		return ConfigHelper::toArray($this->items, \true);
 	}
 
-	//==========================================================================
-	// Countable stuff
-	//==========================================================================
-
-	/*
-	* @return integer
-	*/
 	public function count()
 	{
 		return \count($this->items);
 	}
 
-	//==========================================================================
-	// Iterator stuff
-	//==========================================================================
-
-	/*
-	* @return mixed
-	*/
 	public function current()
 	{
 		return \current($this->items);
 	}
 
-	/*
-	* @return integer|string
-	*/
 	public function key()
 	{
 		return \key($this->items);
 	}
 
-	/*
-	* @return mixed
-	*/
 	public function next()
 	{
 		return \next($this->items);
 	}
 
-	/*
-	* @return void
-	*/
 	public function rewind()
 	{
 		\reset($this->items);
 	}
 
-	/*
-	* @return bool
-	*/
 	public function valid()
 	{
 		return (\key($this->items) !== \null);

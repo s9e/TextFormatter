@@ -12,14 +12,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class SortAttributesByName extends TemplateNormalization
 {
-	/*
-	* Sort attributes by name in lexical order
-	*
-	* Only applies to inline attributes, not attributes created with xsl:attribute
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		foreach ($template->getElementsByTagName('*') as $element)

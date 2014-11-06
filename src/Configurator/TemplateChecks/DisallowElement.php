@@ -15,30 +15,13 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowElement extends TemplateCheck
 {
-	/*
-	* @var string Local name of the disallowed element
-	*/
 	public $elName;
 
-	/*
-	* Constructor
-	*
-	* @param  string $elName Local name of the disallowed element
-	* @return void
-	*/
 	public function __construct($elName)
 	{
-		// NOTE: the default template normalization rules force elements' names to be lowercase
 		$this->elName = \strtolower($elName);
 	}
 
-	/*
-	* Test for the presence of an element of given name
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag        $tag      Tag this template belongs to
-	* @return void
-	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
