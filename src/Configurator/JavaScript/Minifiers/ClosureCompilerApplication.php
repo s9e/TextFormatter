@@ -12,37 +12,16 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 
 class ClosureCompilerApplication extends Minifier
 {
-	/*
-	* @var string Path to the Closure Compiler application
-	*/
 	public $closureCompilerBin;
 
-	/*
-	* @var string Closure Compiler's compilation level
-	*/
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 
-	/*
-	* @var bool Whether to exclude Closure Compiler's default externs
-	*/
 	public $excludeDefaultExterns = \true;
 
-	/*
-	* @var string Path to java interpreter
-	*/
 	public $javaBin = 'java';
 
-	/*
-	* @var string Extra options to be passed to the Closure Compiler application
-	*/
 	public $options = '--use_types_for_optimization';
 
-	/*
-	* Constructor
-	*
-	* @param  string $filepath Path to the Closure Compiler .jar
-	* @return void
-	*/
 	public function __construct($filepath)
 	{
 		if (!\file_exists($filepath))
@@ -51,9 +30,6 @@ class ClosureCompilerApplication extends Minifier
 		$this->closureCompilerBin = $filepath;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function getCacheDifferentiator()
 	{
 		$key = [
@@ -69,17 +45,10 @@ class ClosureCompilerApplication extends Minifier
 		return $key;
 	}
 
-	/*
-	* Compile given JavaScript source via the Closure Compiler application
-	*
-	* @param  string $src JavaScript source
-	* @return string      Compiled source
-	*/
 	public function minify($src)
 	{
 		$options = ($this->options) ? ' ' . $this->options : '';
 
-		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 			$options .= ' --externs ' . __DIR__ . '/../externs.js --use_only_custom_externs';
 

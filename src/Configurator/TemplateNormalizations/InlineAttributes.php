@@ -15,17 +15,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineAttributes extends TemplateNormalization
 {
-	/*
-	* Inline the attribute declarations of a template
-	*
-	* Will replace
-	*     <a><xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>...</a>
-	* with
-	*     <a href="{@url}">...</a>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
@@ -35,12 +24,6 @@ class InlineAttributes extends TemplateNormalization
 			$this->inlineAttribute($attribute);
 	}
 
-	/*
-	* Inline the content of an xsl:attribute element
-	*
-	* @param  DOMElement $attribute xsl:attribute element
-	* @return void
-	*/
 	protected function inlineAttribute(DOMElement $attribute)
 	{
 		$value = '';
@@ -54,7 +37,6 @@ class InlineAttributes extends TemplateNormalization
 			     && $childNode->localName    === 'text')
 				$value .= \preg_replace('([{}])', '$0$0', $childNode->textContent);
 			else
-				// Can't inline this attribute
 				return;
 
 		$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);

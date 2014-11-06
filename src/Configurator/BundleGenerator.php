@@ -12,54 +12,25 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 class BundleGenerator
 {
-	/*
-	* @var Configurator Configurator this instance belongs to
-	*/
 	protected $configurator;
 
-	/*
-	* @var callback Callback used to serialize the objects
-	*/
 	public $serializer = 'serialize';
 
-	/*
-	* @var string Callback used to unserialize the serialized objects (must be a string)
-	*/
 	public $unserializer = 'unserialize';
 
-	/*
-	* Constructor
-	*
-	* @param  Configurator $configurator Configurator
-	* @return void
-	*/
 	public function __construct(Configurator $configurator)
 	{
 		$this->configurator = $configurator;
 	}
 
-	/*
-	* Create and return the source of a bundle based on given Configurator instance
-	*
-	* Options:
-	*
-	*  - autoInclude: automatically load the source of the PHP renderer (default: true)
-	*
-	* @param  string $className Name of the bundle class
-	* @param  array  $options   Associative array of optional settings
-	* @return string            PHP source for the bundle
-	*/
 	public function generate($className, array $options = [])
 	{
-		// Add default options
 		$options += ['autoInclude' => \true];
 
-		// Get the parser and renderer
 		$objects  = $this->configurator->finalize($options);
 		$parser   = $objects['parser'];
 		$renderer = $objects['renderer'];
 
-		// Split the bundle's class name and its namespace
 		$namespace = '';
 		if (\preg_match('#(.*)\\\\([^\\\\]+)$#', $className, $m))
 		{
@@ -67,7 +38,6 @@ class BundleGenerator
 			$className = $m[2];
 		}
 
-		// Start with the standard header
 		$php = [];
 		$php[] = '/**';
 		$php[] = '* @package   s9e\TextFormatter';
@@ -81,7 +51,6 @@ class BundleGenerator
 			$php[] = '';
 		}
 
-		// Generate and append the bundle class
 		$php[] = 'abstract class ' . $className . ' extends \\s9e\\TextFormatter\\Bundle';
 		$php[] = '{';
 		$php[] = '	/**';
@@ -95,7 +64,6 @@ class BundleGenerator
 		$php[] = '	public static $renderer;';
 		$php[] = '';
 
-		// Add the event callbacks if applicable
 		$events = [
 			'beforeParse'
 				=> 'Callback executed before parse(), receives the original text as argument',
@@ -148,7 +116,6 @@ class BundleGenerator
 		$php[] = '	public static function getRenderer()';
 		$php[] = '	{';
 
-		// If this is a PHP renderer and we know where it's saved, automatically load it as needed
 		if (!empty($options['autoInclude'])
 		 && $this->configurator->rendering->engine instanceof PHP
 		 && isset($this->configurator->rendering->engine->lastFilepath))
@@ -180,46 +147,27 @@ class BundleGenerator
 		return \implode("\n", $php);
 	}
 
-	/*
-	* Export a given callback as PHP code
-	*
-	* @param  string   $namespace Namespace in which the callback is execute
-	* @param  callable $callback  Original callback
-	* @param  string   $argument  Callback's argument (as PHP code)
-	* @return string              PHP code
-	*/
 	protected function exportCallback($namespace, callable $callback, $argument)
 	{
 		if (\is_array($callback) && \is_string($callback[0]))
-			// Replace ['foo', 'bar'] with 'foo::bar'
 			$callback = $callback[0] . '::' . $callback[1];
 
 		if (!\is_string($callback))
 			return 'call_user_func(' . \var_export($callback, \true) . ', ' . $argument . ')';
 
-		// Ensure that the callback starts with a \
 		if ($callback[0] !== '\\')
 			$callback = '\\' . $callback;
 
-		// Replace \foo\bar::baz() with bar::baz() if we're in namespace foo
 		if (\substr($callback, 0, 2 + \strlen($namespace)) === '\\' . $namespace . '\\')
 			$callback = \substr($callback, 2 + \strlen($namespace));
 
 		return $callback . '(' . $argument . ')';
 	}
 
-	/*
-	* Serialize and export a given object as PHP code
-	*
-	* @param  string $obj Original object
-	* @return string      PHP code
-	*/
 	protected function exportObject($obj)
 	{
-		// Serialize the object
 		$str = \call_user_func($this->serializer, $obj);
 
-		// Escape control characters, bytes >= 0x7f and characters \ $ and "
 		$str = \preg_replace_callback(
 			'#[\\x00-\\x1F\\x7F-\xFF\\\\$"]#',
 			function ($m)

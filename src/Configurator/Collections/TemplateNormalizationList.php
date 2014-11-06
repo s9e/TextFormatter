@@ -12,12 +12,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
 
 class TemplateNormalizationList extends NormalizedList
 {
-	/*
-	* Normalize the value to an instance of TemplateNormalization
-	*
-	* @param  mixed                 $value Either a string, or an instance of TemplateNormalization
-	* @return TemplateNormalization        An instance of TemplateNormalization
-	*/
 	public function normalizeValue($value)
 	{
 		if ($value instanceof TemplateNormalization)

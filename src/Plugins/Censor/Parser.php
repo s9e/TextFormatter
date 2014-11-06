@@ -11,9 +11,6 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function parse($text, array $matches)
 	{
 		$tagName  = $this->config['tagName'];

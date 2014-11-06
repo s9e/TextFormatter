@@ -12,12 +12,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class AttributeFilterChain extends NormalizedList
 {
-	/*
-	* Normalize a value into an AttributeFilter instance
-	*
-	* @param  mixed           $value Either a valid callback or an instance of AttributeFilter
-	* @return AttributeFilter        Normalized filter
-	*/
 	public function normalizeValue($value)
 	{
 		if ($value instanceof AttributeFilter)

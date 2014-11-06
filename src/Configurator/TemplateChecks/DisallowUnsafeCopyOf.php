@@ -14,15 +14,6 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowUnsafeCopyOf extends TemplateCheck
 {
-	/*
-	* Check for unsafe <xsl:copy-of/> elements
-	*
-	* Any select expression that is not a single attribute is considered unsafe
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag        $tag      Tag this template belongs to
-	* @return void
-	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
 		$nodes = $template->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', 'copy-of');

@@ -14,12 +14,6 @@ use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
 class InlineXPathLiterals extends TemplateNormalization
 {
-	/*
-	* Replace xsl:value nodes that contain a literal with a Text node
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
@@ -44,7 +38,6 @@ class InlineXPathLiterals extends TemplateNormalization
 					{
 						$textContent = $this->getTextContent($token[1]);
 						if ($textContent !== \false)
-							// Turn this token into a literal
 							$token = ['literal', $textContent];
 					}
 
@@ -54,12 +47,6 @@ class InlineXPathLiterals extends TemplateNormalization
 		}
 	}
 
-	/*
-	* Return the textContent value of an XPath expression
-	*
-	* @param  string      $expr XPath expression
-	* @return string|bool       Text value, or FALSE if not a literal
-	*/
 	protected function getTextContent($expr)
 	{
 		$expr = \trim($expr);
@@ -68,19 +55,11 @@ class InlineXPathLiterals extends TemplateNormalization
 			return \substr($expr, 1, -1);
 
 		if (\preg_match('(^0*([0-9]+)$)', $expr, $m))
-			// NOTE: we specifically ignore leading zeros
 			return $m[1];
 
 		return \false;
 	}
 
-	/*
-	* Replace an xsl:value-of element with a text node
-	*
-	* @param  DOMElement $valueOf
-	* @param  string     $textContent
-	* @return void
-	*/
 	protected function replaceElement(DOMElement $valueOf, $textContent)
 	{
 		$valueOf->parentNode->replaceChild(

@@ -13,12 +13,6 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class InlineTextElements extends TemplateNormalization
 {
-	/*
-	* Replace <xsl:text/> nodes with a Text node, except for nodes whose content is only whitespace
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;
@@ -26,16 +20,12 @@ class InlineTextElements extends TemplateNormalization
 
 		foreach ($xpath->query('//xsl:text') as $node)
 		{
-			// If this node's content is whitespace, ensure it's preceded or followed by a text node
 			if (\trim($node->textContent) === '')
-				if ($node->previousSibling && $node->previousSibling->nodeType === \XML_TEXT_NODE)
-					// This node is preceded by a text node
-;
-				elseif ($node->nextSibling && $node->nextSibling->nodeType === \XML_TEXT_NODE)
-					// This node is followed by a text node
-;
+				if ($node->previousSibling && $node->previousSibling->nodeType === 3)
+					;
+				elseif ($node->nextSibling && $node->nextSibling->nodeType === 3)
+					;
 				else
-					// This would become inter-element whitespace, therefore we can't inline
 					continue;
 
 			$node->parentNode->replaceChild(

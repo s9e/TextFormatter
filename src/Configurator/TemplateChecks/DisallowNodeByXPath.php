@@ -15,29 +15,13 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class DisallowNodeByXPath extends TemplateCheck
 {
-	/*
-	* @var string XPath query used for locating nodes
-	*/
 	public $query;
 
-	/*
-	* Constructor
-	*
-	* @param  string $query XPath query used for locating nodes
-	* @return void
-	*/
 	public function __construct($query)
 	{
 		$this->query = $query;
 	}
 
-	/*
-	* Test for the presence of an element of given name
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @param  Tag        $tag      Tag this template belongs to
-	* @return void
-	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);

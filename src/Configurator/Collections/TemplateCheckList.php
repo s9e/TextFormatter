@@ -11,12 +11,6 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class TemplateCheckList extends NormalizedList
 {
-	/*
-	* Normalize the value to an instance of TemplateCheck
-	*
-	* @param  mixed         $check Either a string, or an instance of TemplateCheck
-	* @return TemplateCheck        An instance of TemplateCheck
-	*/
 	public function normalizeValue($check)
 	{
 		if (!($check instanceof TemplateCheck))

@@ -11,23 +11,11 @@ use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
 
 class TemplateParameterCollection extends NormalizedCollection
 {
-	/*
-	* Normalize a parameter name
-	*
-	* @param  string $key
-	* @return string
-	*/
 	public function normalizeKey($key)
 	{
 		return TemplateParameterName::normalize($key);
 	}
 
-	/*
-	* Normalize a parameter value
-	*
-	* @param  mixed  $value
-	* @return string
-	*/
 	public function normalizeValue($value)
 	{
 		return (string) $value;

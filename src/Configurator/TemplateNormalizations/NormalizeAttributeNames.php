@@ -13,17 +13,10 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class NormalizeAttributeNames extends TemplateNormalization
 {
-	/*
-	* Lowercase attribute names
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 
-		// Normalize elements' attributes
 		foreach ($xpath->query('.//@*', $template) as $attribute)
 		{
 			$attrName = self::lowercase($attribute->localName);
@@ -35,7 +28,6 @@ class NormalizeAttributeNames extends TemplateNormalization
 			}
 		}
 
-		// Normalize <xsl:attribute/> names
 		foreach ($xpath->query('//xsl:attribute[not(contains(@name, "{"))]') as $attribute)
 		{
 			$attrName = self::lowercase($attribute->getAttribute('name'));

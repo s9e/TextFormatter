@@ -12,35 +12,18 @@ use s9e\TextFormatter\Renderer;
 
 class XSLT extends Renderer
 {
-	/*
-	* @var XSLTProcessor The lazy-loaded XSLTProcessor instance used by this renderer
-	*/
 	protected $proc;
 
-	/*
-	* @var bool Whether parameters need to be reloaded
-	*/
 	protected $reloadParams = \false;
 
-	/*
-	* @var string The stylesheet used by this renderer
-	*/
 	protected $stylesheet;
 
-	/*
-	* Constructor
-	*
-	* @param  string $stylesheet The stylesheet used to render intermediate representations
-	* @return void
-	*/
 	public function __construct($stylesheet)
 	{
 		$this->stylesheet = $stylesheet;
 
-		// Test whether we output HTML or XML
 		$this->htmlOutput = (\strpos($this->stylesheet, '<xsl:output method="html') !== \false);
 
-		// Capture the parameters' values from the stylesheet
 		\preg_match_all('#<xsl:param name="([^"]+)"(?>/>|>([^<]+))#', $stylesheet, $matches);
 		foreach ($matches[1] as $k => $paramName)
 			$this->params[$paramName] = (isset($matches[2][$k]))
@@ -48,11 +31,6 @@ class XSLT extends Renderer
 			                          : '';
 	}
 
-	/*
-	* Serializer
-	*
-	* @return string[] List of properties to serialize
-	*/
 	public function __sleep()
 	{
 		$props = \get_object_vars($this);
@@ -64,13 +42,6 @@ class XSLT extends Renderer
 		return \array_keys($props);
 	}
 
-	/*
-	* Unserialize helper
-	*
-	* Will reload parameters if they were changed between generation and serialization
-	*
-	* @return void
-	*/
 	public function __wakeup()
 	{
 		if (!empty($this->reloadParams))
@@ -80,14 +51,8 @@ class XSLT extends Renderer
 		}
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function setParameter($paramName, $paramValue)
 	{
-		/*
-		* @link https://bugs.php.net/64137
-		*/
 		if (\strpos($paramValue, '"') !== \false
 		 && \strpos($paramValue, "'") !== \false)
 			$paramValue = \str_replace('"', "\xEF\xBC\x82", $paramValue);
@@ -103,38 +68,23 @@ class XSLT extends Renderer
 		}
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected function renderRichText($xml)
 	{
-		// Load the intermediate representation
 		$dom = $this->loadXML($xml);
 
-		// Load the stylesheet
 		$this->load();
 
-		// Perform the transformation and cast it as a string because it may return NULL if the
-		// transformation didn't output anything
 		$output = (string) $this->proc->transformToXml($dom);
 
-		// XSLTProcessor does not correctly identify <embed> as a void element. We fix it by
-		// removing </embed> end tags
 		if ($this->htmlOutput)
 			$output = \str_replace('</embed>', '', $output);
 
-		// Remove the \n that XSL adds at the end of the output, if applicable
 		if (\substr($output, -1) === "\n")
 			$output = \substr($output, 0, -1);
 
 		return $output;
 	}
 
-	/*
-	* Create an XSLTProcessor and load the stylesheet
-	*
-	* @return void
-	*/
 	protected function load()
 	{
 		if (!isset($this->proc))

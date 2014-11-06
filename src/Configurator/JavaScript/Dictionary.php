@@ -9,9 +9,6 @@ namespace s9e\TextFormatter\Configurator\JavaScript;
 
 use ArrayObject;
 
-/*
-* This class's sole purpose is to identify arrays that need their keys to be preserved in JavaScript
-*/
 class Dictionary extends ArrayObject
 {
 }

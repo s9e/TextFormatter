@@ -12,12 +12,6 @@ use s9e\TextFormatter\Configurator\Items\TagFilter;
 
 class TagFilterChain extends NormalizedList
 {
-	/*
-	* Normalize a value into an TagFilter instance
-	*
-	* @param  mixed     $value Either a valid callback or an instance of TagFilter
-	* @return TagFilter        Normalized filter
-	*/
 	public function normalizeValue($value)
 	{
 		if ($value instanceof TagFilter)

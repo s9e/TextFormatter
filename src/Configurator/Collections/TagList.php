@@ -9,25 +9,13 @@ namespace s9e\TextFormatter\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
-/*
-* Hosts a list of tag names. The config array it returns contains the names, deduplicated and sorted
-*/
 class TagList extends NormalizedList
 {
-	/*
-	* Normalize a value to a tag name
-	*
-	* @param  string $value
-	* @return string
-	*/
 	public function normalizeValue($attrName)
 	{
 		return TagName::normalize($attrName);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$list = \array_unique($this->items);

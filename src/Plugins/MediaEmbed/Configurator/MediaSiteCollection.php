@@ -14,9 +14,6 @@ use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 class MediaSiteCollection extends ArrayObject implements ConfigProvider
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$map = [];
@@ -31,7 +28,6 @@ class MediaSiteCollection extends ArrayObject implements ConfigProvider
 					$map[$scheme . ':'] = $siteId;
 		}
 
-		// Create a JS variant as a dictionary to preserve the keys (which hold the hosts)
 		$config = new Variant($map, ['JS' => new Dictionary($map)]);
 
 		return $config;

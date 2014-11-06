@@ -12,11 +12,6 @@ use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class HostnameList extends NormalizedList
 {
-	/*
-	* Return this hostname list as a regexp's config
-	*
-	* @return \s9e\TextFormatter\Configurator\Items\Variant|null An instance of Variant that represents a regexp, or NULL if the collection is empty
-	*/
 	public function asConfig()
 	{
 		if (empty($this->items))
@@ -27,11 +22,6 @@ class HostnameList extends NormalizedList
 		return $regexp->asConfig();
 	}
 
-	/*
-	* Return a regexp that matches the list of hostnames
-	*
-	* @return string
-	*/
 	public function getRegexp()
 	{
 		$hosts = [];
@@ -41,7 +31,6 @@ class HostnameList extends NormalizedList
 		$regexp = RegexpBuilder::fromList(
 			$hosts,
 			[
-				// Asterisks * are turned into a catch-all expression, while ^ and $ are preserved
 				'specialChars' => [
 					'*' => '.*',
 					'^' => '^',
@@ -53,29 +42,19 @@ class HostnameList extends NormalizedList
 		return '/' . $regexp . '/DSis';
 	}
 
-	/*
-	* Normalize a hostmask to a regular expression
-	*
-	* @param  string $host Hostname or hostmask
-	* @return string
-	*/
 	protected function normalizeHostmask($host)
 	{
 		if (\preg_match('#[\\x80-\xff]#', $host) && \function_exists('idn_to_ascii'))
 			$host = \idn_to_ascii($host);
 
 		if (\substr($host, 0, 1) === '*')
-			// *.example.com => /\.example\.com$/
 			$host = \ltrim($host, '*');
 		else
-			// example.com => /^example\.com$/
 			$host = '^' . $host;
 
 		if (\substr($host, -1) === '*')
-			// example.* => /^example\./
 			$host = \rtrim($host, '*');
 		else
-			// example.com => /^example\.com$/
 			$host .= '$';
 
 		return $host;

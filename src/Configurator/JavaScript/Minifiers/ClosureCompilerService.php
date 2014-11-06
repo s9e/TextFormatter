@@ -12,39 +12,19 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 
 class ClosureCompilerService extends Minifier
 {
-	/*
-	* @var string Closure Compiler's compilation level
-	*/
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 
-	/*
-	* @var bool Whether to exclude Closure Compiler's default externs
-	*/
 	public $excludeDefaultExterns = \true;
 
-	/*
-	* @var string Externs used for compilation
-	*/
 	public $externs;
 
-	/*
-	* @var string Closure Compiler Service's URL
-	*/
 	public $url = 'http://closure-compiler.appspot.com/compile';
 
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		$this->externs = \file_get_contents(__DIR__ . '/../externs.js');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function getCacheDifferentiator()
 	{
 		$key = [$this->compilationLevel, $this->excludeDefaultExterns];
@@ -55,12 +35,6 @@ class ClosureCompilerService extends Minifier
 		return $key;
 	}
 
-	/*
-	* Compile given JavaScript source via the Closure Compiler Service
-	*
-	* @param  string $src JavaScript source
-	* @return string      Compiled source
-	*/
 	public function minify($src)
 	{
 		$params = [
@@ -70,14 +44,12 @@ class ClosureCompilerService extends Minifier
 			'output_info'       => 'compiled_code'
 		];
 
-		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 		{
 			$params['exclude_default_externs'] = 'true';
 			$params['js_externs'] = $this->externs;
 		}
 
-		// Got to add dupe variables by hand
 		$content = \http_build_query($params) . '&output_info=errors';
 
 		$response = \file_get_contents(

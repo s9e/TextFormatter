@@ -19,57 +19,18 @@ use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-/*
-* @method mixed   add(string $key)
-* @method array   asConfig()
-* @method void    clear()
-* @method bool    contains(mixed $value)
-* @method integer count()
-* @method mixed   current()
-* @method void    delete(string $key)
-* @method bool    exists(string $key)
-* @method mixed   get(string $key)
-* @method mixed   indexOf(mixed $value)
-* @method integer|string key()
-* @method mixed   next()
-* @method string  normalizeKey(string $key)
-* @method mixed   normalizeValue(mixed $value)
-* @method bool    offsetExists(string|integer $offset)
-* @method mixed   offsetGet(string|integer $offset)
-* @method void    offsetSet(string|integer $offset)
-* @method void    offsetUnset(string|integer $offset)
-* @method string  onDuplicate(string|null $action)
-* @method void    rewind()
-* @method mixed   set(string $key)
-* @method bool    valid()
-*/
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
 
-	/*
-	* @var array List of whitelisted words as [word => true]
-	*/
 	protected $allowed = [];
 
-	/*
-	* @var string Name of attribute used for the replacement
-	*/
 	protected $attrName = 'with';
 
-	/*
-	* @var NormalizedCollection List of [word => replacement]
-	*/
 	protected $collection;
 
-	/*
-	* @var string Default string used to replace censored words
-	*/
 	protected $defaultReplacement = '****';
 
-	/*
-	* @var array Options passed to the RegexpBuilder
-	*/
 	protected $regexpOptions = [
 		'caseInsensitive' => \true,
 		'specialChars'    => [
@@ -79,16 +40,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		]
 	];
 
-	/*
-	* @var string Name of the tag used to mark censored words
-	*/
 	protected $tagName = 'CENSOR';
 
-	/*
-	* Plugin's setup
-	*
-	* Will initialize its collection and create the plugin's tag if it does not exist
-	*/
 	protected function setUp()
 	{
 		$this->collection = new NormalizedCollection;
@@ -97,17 +50,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (isset($this->configurator->tags[$this->tagName]))
 			return;
 
-		// Create a tag
 		$tag = $this->configurator->tags->add($this->tagName);
 
-		// Create the attribute and make it optional
 		$tag->attributes->add($this->attrName)->required = \false;
 
-		// Ensure that censored content can't ever be used by other tags
 		$tag->rules->ignoreTags();
 
-		// Create a template that renders censored words either as their custom replacement or as
-		// the default replacement
 		$tag->template =
 			'<xsl:choose>
 				<xsl:when test="@' . $this->attrName . '">
@@ -117,28 +65,16 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			</xsl:choose>';
 	}
 
-	/*
-	* Add a word to the list of uncensored words
-	*
-	* @param  string $word Word to exclude from the censored list
-	* @return void
-	*/
 	public function allow($word)
 	{
 		$this->allowed[$word] = \true;
 	}
 
-	/*
-	* Return an instance of s9e\TextFormatter\Plugins\Censor\Helper
-	*
-	* @return Helper
-	*/
 	public function getHelper()
 	{
 		$config = $this->asConfig();
 
 		if ($config === \false)
-			// Use a dummy config with a regexp that doesn't match anything
 			$config = [
 				'attrName' => $this->attrName,
 				'regexp'   => '/(?!)/',
@@ -150,9 +86,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return new Helper($config);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$words = \array_diff_key(\iterator_to_array($this->collection), $this->allowed);
@@ -160,14 +93,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (empty($words))
 			return \false;
 
-		// Create the config
 		$config = [
 			'attrName' => $this->attrName,
 			'regexp'   => $this->getWordsRegexp(\array_keys($words)),
 			'tagName'  => $this->tagName
 		];
 
-		// Add custom replacements
 		$replacementWords = [];
 		foreach ($words as $word => $replacement)
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
@@ -177,7 +108,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
 
-			// Create a regexp with a JavaScript variant for each group of words
 			$variant = new Variant($regexp);
 
 			$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
@@ -186,32 +116,20 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$config['replacements'][] = [$variant, $replacement];
 		}
 
-		// Add the whitelist
 		if ($this->allowed)
 			$config['allowed'] = $this->getWordsRegexp(\array_keys($this->allowed));
 
 		return $config;
 	}
 
-	/*
-	* Generate a regexp that matches the given list of words
-	*
-	* @param  array   $words List of words
-	* @return Variant        Regexp in a Variant container, with a JS variant
-	*/
 	protected function getWordsRegexp(array $words)
 	{
 		$regexp = RegexpBuilder::fromList($words, $this->regexpOptions);
 
-		// Force atomic grouping for performance. Theorically it could prevent some matches but in
-		// practice it shouldn't happen
 		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
-		// Create a variant for the return value
 		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
 
-		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
-		// we'll accept any non-whitespace, non-common punctuation
 		$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
 
