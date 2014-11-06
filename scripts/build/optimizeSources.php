@@ -123,6 +123,7 @@ function optimizeFile($filepath, array $options = array())
 	unset($token);
 
 	// PREG_SET_ORDER => \PREG_SET_ORDER
+	// PREG_SET_ORDER => 2
 	foreach ($tokens as $i => &$token)
 	{
 		if ($token[0] !== T_STRING || !defined($token[1]))
@@ -150,8 +151,37 @@ function optimizeFile($filepath, array $options = array())
 			continue;
 		}
 
-		$token[1] = '\\' . $token[1];
-		$changed  = true;
+		if (!empty($options['foldGlobalConstants'])
+		 && $token[1] !== 'false'
+		 && $token[1] !== 'null'
+		 && $token[1] !== 'true'
+		 && strpos($token[1], 'VERSION') === false)
+		{
+			$value = constant($token[1]);
+
+			if (is_integer($value))
+			{
+				$token = array(T_LNUMBER, $value);
+			}
+			elseif (is_float($value))
+			{
+				$token = array(T_DNUMBER, $value);
+			}
+			elseif (is_string($value))
+			{
+				$token = array(T_CONSTANT_ENCAPSED_STRING, var_export($value, true));
+			}
+			else
+			{
+				$token = array(T_STRING, var_export($value, true));
+			}
+		}
+		else
+		{
+			$token[1] = '\\' . $token[1];
+		}
+
+		$changed = true;
 	}
 	unset($token);
 
@@ -181,7 +211,7 @@ function optimizeFile($filepath, array $options = array())
 				$tokens[$i + 1][1] = '';
 			}
 
-			$token[1] = '';
+			$token    = array(T_WHITESPACE, '');
 			$changed  = true;
 		}
 		unset($token);
@@ -255,11 +285,12 @@ if (!defined('T_TRAIT'))
 //       difference without an opcode cache. However, those changes are too radical to be enabled
 //       by default
 $options = array(
-	'convertDocblock'  => true,
-	'removeComments'   => false,
-	'removeDocblock'   => false,
-	'removeLicense'    => false,
-	'removeWhitespace' => false
+	'convertDocblock'     => true,
+	'foldGlobalConstants' => true,
+	'removeComments'      => false,
+	'removeDocblock'      => false,
+	'removeLicense'       => false,
+	'removeWhitespace'    => false
 );
 
 optimizeDir(realpath(__DIR__ . '/../../src'), $options);
