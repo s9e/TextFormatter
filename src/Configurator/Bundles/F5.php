@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\Bundle;
 
 class F5 extends Bundle
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function configure(Configurator $configurator)
 	{
 		$bbcodes = [
@@ -159,14 +156,11 @@ class F5 extends Bundle
 			],
 		];
 
-		// Alias COLOUR to COLOR
 		$configurator->BBCodes->add('COLOUR')->tagName = 'COLOR';
 
-		// Add the default BBCodes
 		foreach ($bbcodes as list($definition, $template))
 			$configurator->BBCodes->addCustom($definition, $template);
 
-		// Add some default limits
 		$configurator->tags['QUOTE']->nestingLimit = 3;
 		$configurator->tags['LIST']->nestingLimit  = 5;
 

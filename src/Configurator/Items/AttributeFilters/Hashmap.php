@@ -14,13 +14,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Hashmap extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @param  array $map    Associative array in the form [key => value]
-	* @param  bool  $strict Whether this map is strict (values with no match are invalid)
-	* @return void
-	*/
 	public function __construct(array $map = \null, $strict = \false)
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterHashmap');
@@ -35,9 +28,6 @@ class Hashmap extends AttributeFilter
 			$this->setMap($map, $strict);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		if (!isset($this->vars['map']))
@@ -46,41 +36,27 @@ class Hashmap extends AttributeFilter
 		return parent::asConfig();
 	}
 
-	/*
-	* Set the content of this map
-	*
-	* @param  array $map    Associative array in the form [word => replacement]
-	* @param  bool  $strict Whether this map is strict (values with no match are invalid)
-	* @return void
-	*/
 	public function setMap(array $map, $strict = \false)
 	{
 		if (!\is_bool($strict))
 			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be a boolean');
 
-		// If the map is not strict, we can optimize away the values that are identical to their key
 		if (!$strict)
 			foreach ($map as $k => $v)
 				if ($k === $v)
 					unset($map[$k]);
 
-		// Sort the map so it looks tidy
 		\ksort($map);
 
-		// Record this filter's variables
 		$this->vars['map']    = $map;
 		$this->vars['strict'] = $strict;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		if (!isset($this->vars['map']) || empty($this->vars['strict']))
 			return \false;
 
-		// Test each value against the list of disallowed characters
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
 		foreach ($this->vars['map'] as $value)
 			foreach ($disallowedChars as $char)
@@ -90,15 +66,11 @@ class Hashmap extends AttributeFilter
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInJS()
 	{
 		if (!isset($this->vars['map']) || empty($this->vars['strict']))
 			return \false;
 
-		// Test each value against the list of disallowed characters
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
 		foreach ($this->vars['map'] as $value)
 			foreach ($disallowedChars as $char)

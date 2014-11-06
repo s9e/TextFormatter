@@ -13,18 +13,11 @@ use s9e\TextFormatter\Configurator\TemplateNormalization;
 
 class NormalizeElementNames extends TemplateNormalization
 {
-	/*
-	* Lowercase element names
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
 	public function normalize(DOMElement $template)
 	{
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
 
-		// Normalize elements' names
 		foreach ($xpath->query('//*[namespace-uri() != "' . self::XMLNS_XSL . '"]') as $element)
 		{
 			$elName = self::lowercase($element->localName);
@@ -32,16 +25,13 @@ class NormalizeElementNames extends TemplateNormalization
 			if ($elName === $element->localName)
 				continue;
 
-			// Create a new element with the correct name
 			$newElement = (\is_null($element->namespaceURI))
 			            ? $dom->createElement($elName)
 			            : $dom->createElementNS($element->namespaceURI, $elName);
 
-			// Move every child to the new element
 			while ($element->firstChild)
 				$newElement->appendChild($element->removeChild($element->firstChild));
 
-			// Copy attributes to the new node
 			foreach ($element->attributes as $attribute)
 				$newElement->setAttributeNS(
 					$attribute->namespaceURI,
@@ -49,11 +39,9 @@ class NormalizeElementNames extends TemplateNormalization
 					$attribute->value
 				);
 
-			// Replace the old element with the new one
 			$element->parentNode->replaceChild($newElement, $element);
 		}
 
-		// Normalize <xsl:element/> names
 		foreach ($xpath->query('//xsl:element[not(contains(@name, "{"))]') as $element)
 		{
 			$elName = self::lowercase($element->getAttribute('name'));

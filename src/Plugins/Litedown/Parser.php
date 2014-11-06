@@ -12,50 +12,29 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/*
-	* @var bool Whether current text contains escape characters
-	*/
 	protected $hasEscapedChars;
 
-	/*
-	* @var string Text being parsed
-	*/
 	protected $text;
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function parse($text, array $matches)
 	{
 		$this->init($text);
 
-		// Match block-level markup as well as forced line breaks
 		$this->matchBlockLevelMarkup();
 
-		// Inline code must be done first to avoid false positives in other markup
 		$this->matchInlineCode();
 
-		// Images must be matched before links
 		$this->matchImages();
 
-		// Do the rest of inline markup
 		$this->matchInlineLinks();
 		$this->matchStrikethrough();
 		$this->matchSuperscript();
 		$this->matchEmphasis();
 		$this->matchForcedLineBreaks();
 
-		// Unset the text to free its memory
 		unset($this->text);
 	}
 
-	/*
-	* Close a list at given offset
-	*
-	* @param  array   $list
-	* @param  integer $textBoundary
-	* @return void
-	*/
 	protected function closeList(array $list, $textBoundary)
 	{
 		$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
@@ -66,14 +45,6 @@ class Parser extends ParserBase
 				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 	}
 
-	/*
-	* Decode a chunk of encoded text to be used as an attribute value
-	*
-	* Decodes escaped literals and removes slashes and 0x1A characters
-	*
-	* @param  string $str Encoded text
-	* @return string      Decoded text
-	*/
 	protected function decode($str)
 	{
 		$str = \stripslashes(\str_replace("\x1A", '', $str));
@@ -99,11 +70,6 @@ class Parser extends ParserBase
 		return $str;
 	}
 
-	/*
-	* Capture lines that contain a Setext-tyle header
-	*
-	* @return array
-	*/
 	protected function getSetextLines()
 	{
 		$setextLines = [];
@@ -111,19 +77,14 @@ class Parser extends ParserBase
 		if (\strpos($this->text, '-') === \false && \strpos($this->text, '=') === \false)
 			return $setextLines;
 
-		// Capture the any series of - or = alone on a line, optionally preceded with the
-		// angle brackets notation used in blockquotes
 		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
-		if (\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE))
+		if (\preg_match_all($regexp, $this->text, $matches, 256))
 			foreach ($matches[0] as list($match, $matchPos))
 			{
-				// Compute the position of the end tag. We start on the LF character before the
-				// match and keep rewinding until we find a non-space character
 				$endTagPos = $matchPos - 1;
 				while ($endTagPos > 0 && $this->text[$endTagPos - 1] === ' ')
 					--$endTagPos;
 
-				// Store at the offset of the LF character
 				$setextLines[$matchPos - 1] = [
 					'endTagLen'  => $matchPos + \strlen($match) - $endTagPos,
 					'endTagPos'  => $endTagPos,
@@ -135,12 +96,6 @@ class Parser extends ParserBase
 		return $setextLines;
 	}
 
-	/*
-	* Initialize this parser with given text
-	*
-	* @param  string $text Text to be parsed
-	* @return void
-	*/
 	protected function init($text)
 	{
 		if (\strpos($text, '\\') === \false || !\preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
@@ -149,8 +104,6 @@ class Parser extends ParserBase
 		{
 			$this->hasEscapedChars = \true;
 
-			// Encode escaped literals that have a special meaning otherwise, so that we don't have
-			// to take them into account in regexps
 			$text = \strtr(
 				$text,
 				[
@@ -169,18 +122,11 @@ class Parser extends ParserBase
 			);
 		}
 
-		// We append a couple of lines and a non-whitespace character at the end of the text in
-		// order to trigger the closure of all open blocks such as quotes and lists
 		$text .= "\n\n\x17";
 
 		$this->text = $text;
 	}
 
-	/*
-	* Match block-level markup, as well as forced line breaks and headers
-	*
-	* @return void
-	*/
 	protected function matchBlockLevelMarkup()
 	{
 		$boundaries   = [];
@@ -196,7 +142,7 @@ class Parser extends ParserBase
 		$textBoundary = 0;
 
 		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
-		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
+		\preg_match_all($regexp, $this->text, $matches, 256 | 2);
 
 		foreach ($matches as $m)
 		{
@@ -204,17 +150,13 @@ class Parser extends ParserBase
 			$matchLen  = \strlen($m[0][0]);
 			$ignoreLen = 0;
 
-			// If the last line was empty then this is not a continuation, and vice-versa
 			$continuation = !$lineIsEmpty;
 
-			// Capture the position of the end of the line and determine whether the line is empty
 			$lfPos       = \strpos($this->text, "\n", $matchPos);
 			$lineIsEmpty = ($lfPos === $matchPos + $matchLen && empty($m[3][0]) && empty($m[4][0]) && empty($m[5][0]));
 
-			// If the line is empty and it's the first empty line then we break current paragraph.
 			$breakParagraph = ($lineIsEmpty && $continuation);
 
-			// Count quote marks
 			if (!empty($m[1][0]))
 			{
 				$quoteDepth = \substr_count($m[1][0], '>');
@@ -223,7 +165,6 @@ class Parser extends ParserBase
 			else
 				$quoteDepth = 0;
 
-			// Close supernumerary quotes
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
 			{
 				$newContext = \true;
@@ -236,7 +177,6 @@ class Parser extends ParserBase
 				while ($quoteDepth < --$quotesCnt);
 			}
 
-			// Open new quotes
 			if ($quoteDepth > $quotesCnt && !$lineIsEmpty)
 			{
 				$newContext = \true;
@@ -251,7 +191,6 @@ class Parser extends ParserBase
 				while ($quoteDepth > ++$quotesCnt);
 			}
 
-			// Compute the width of the indentation
 			$indentWidth = 0;
 			$indentPos   = 0;
 			if (!empty($m[2][0]))
@@ -269,7 +208,6 @@ class Parser extends ParserBase
 				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
 			}
 
-			// Test whether we're out of a code block
 			if ($indentWidth < $codeIndent && isset($codeTag) && !$lineIsEmpty)
 				$newContext = \true;
 
@@ -277,10 +215,8 @@ class Parser extends ParserBase
 			{
 				$newContext = \false;
 
-				// Close the code block if applicable
 				if (isset($codeTag))
 				{
-					// Overwrite the whole block
 					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
 
 					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
@@ -289,13 +225,11 @@ class Parser extends ParserBase
 					$codeTag = \null;
 				}
 
-				// Close all the lists
 				foreach ($lists as $list)
 					$this->closeList($list, $textBoundary);
 				$lists    = [];
 				$listsCnt = 0;
 
-				// Mark the block boundary
 				if ($matchPos)
 					$boundaries[] = $matchPos - 1;
 			}
@@ -304,14 +238,11 @@ class Parser extends ParserBase
 			{
 				if (isset($codeTag) || !$continuation)
 				{
-					// Adjust the amount of text being ignored
 					$ignoreLen += $indentPos;
 
 					if (!isset($codeTag))
-						// Create code block
 						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
 
-					// Clear the captures to prevent any further processing
 					$m = [];
 				}
 			}
@@ -320,37 +251,27 @@ class Parser extends ParserBase
 				$hasListItem = !empty($m[4][0]);
 
 				if (!$indentWidth && !$continuation && !$hasListItem && !$lineIsEmpty)
-					// Start of a new paragraph
 					$listIndex = -1;
 				elseif ($continuation && !$hasListItem)
-					// Continuation of current list item or paragraph
 					$listIndex = $listsCnt - 1;
 				elseif (!$listsCnt)
-					// We're not inside of a list already, we can start one if there's a list item
-					// and it's not in continuation of a paragraph
 					if (!$continuation && $hasListItem)
-						// Start of a new list
 						$listIndex = 0;
 					else
-						// We're in a normal paragraph
 						$listIndex = -1;
 				else
 				{
-					// We're inside of a list but we need to compute the depth
 					$listIndex = 0;
 					while ($listIndex < $listsCnt && $indentWidth > $lists[$listIndex]['maxIndent'])
 						++$listIndex;
 				}
 
-				// Close deeper lists
 				while ($listIndex < $listsCnt - 1)
 				{
 					$this->closeList(\array_pop($lists), $textBoundary);
 					--$listsCnt;
 				}
 
-				// If there's no list item at current index, we'll need to either create one or
-				// drop down to previous index, in which case we have to adjust maxIndent
 				if ($listIndex === $listsCnt && !$hasListItem)
 					--$listIndex;
 
@@ -358,25 +279,18 @@ class Parser extends ParserBase
 				{
 					$breakParagraph = \true;
 
-					// Compute the position and amount of text consumed by the item tag
 					$tagPos = $matchPos + $ignoreLen + $indentPos;
 					$tagLen = \strlen($m[4][0]);
 
-					// Create a LI tag that consumes its markup
 					$itemTag = $this->parser->addStartTag('LI', $tagPos, $tagLen);
 
-					// Overwrite the markup
 					$this->overwrite($tagPos, $tagLen);
 
-					// If the list index is within current lists count it means this is not a new
-					// list and we have to close the last item. Otherwise, it's a new list that we
-					// have to create
 					if ($listIndex < $listsCnt)
 					{
 						$this->parser->addEndTag('LI', $textBoundary, 0)
 						             ->pairWith($lists[$listIndex]['itemTag']);
 
-						// Record the item in the list
 						$lists[$listIndex]['itemTag']    = $itemTag;
 						$lists[$listIndex]['itemTags'][] = $itemTag;
 					}
@@ -395,14 +309,11 @@ class Parser extends ParserBase
 							$maxIndent = $indentWidth;
 						}
 
-						// Create a 0-width LIST tag right before the item tag LI
 						$listTag = $this->parser->addStartTag('LIST', $tagPos, 0);
 
-						// Test whether the list item ends with a dot, as in "1."
 						if (\strpos($m[4][0], '.') !== \false)
 							$listTag->setAttribute('type', 'decimal');
 
-						// Record the new list depth
 						$lists[] = [
 							'listTag'   => $listTag,
 							'itemTag'   => $itemTag,
@@ -414,12 +325,9 @@ class Parser extends ParserBase
 					}
 				}
 
-				// If we're in a list, on a non-empty line preceded with a blank line...
 				if ($listsCnt && !$continuation && !$lineIsEmpty)
-					// ...and this is not the first item of the list...
 					if (\count($lists[0]['itemTags']) > 1 || !$hasListItem)
 					{
-						// ...every list that is currently open becomes loose
 						foreach ($lists as &$list)
 							$list['tight'] = \false;
 						unset($list);
@@ -430,7 +338,6 @@ class Parser extends ParserBase
 
 			if (isset($m[5]))
 			{
-				// Headers
 				if ($m[5][0][0] === '#')
 				{
 					$startTagLen = \strlen($m[5][0]);
@@ -438,7 +345,6 @@ class Parser extends ParserBase
 					$endTagPos   = $lfPos;
 					$endTagLen   = 0;
 
-					// Consume the leftmost whitespace and # characters as part of the end tag
 					while (\strpos(" #\t", $this->text[$endTagPos - 1]) !== \false)
 					{
 						--$endTagPos;
@@ -447,28 +353,23 @@ class Parser extends ParserBase
 
 					$this->parser->addTagPair('H' . \strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 
-					// Mark the start and the end of the header as boundaries
 					$boundaries[] = $startTagPos;
 					$boundaries[] = $endTagPos;
 
 					if ($continuation)
 						$breakParagraph = \true;
 				}
-				// Code fence
 				elseif ($m[5][0][0] === '`');
 			}
 			elseif (!empty($m[3][0]) && !$listsCnt)
 			{
-				// Horizontal rule
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = \true;
 
-				// Overwrite the LF to prevent forced line breaks from matching
 				$this->overwrite($lfPos, 1);
 			}
 			elseif (isset($setextLines[$lfPos]) && $setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
 			{
-				// Setext-style header
 				$this->parser->addTagPair(
 					$setextLines[$lfPos]['tagName'],
 					$matchPos + $ignoreLen,
@@ -477,7 +378,6 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagLen']
 				);
 
-				// Overwrite the LF to prevent forced line breaks from matching
 				$this->overwrite($lfPos, 1);
 			}
 
@@ -498,24 +398,12 @@ class Parser extends ParserBase
 			$this->text[$pos] = "\x17";
 	}
 
-	/*
-	* Match all forms of emphasis (emphasis and strong, using underscores or asterisks)
-	*
-	* @return void
-	*/
 	protected function matchEmphasis()
 	{
 		$this->matchEmphasisByCharacter('*', '/\\*+/');
 		$this->matchEmphasisByCharacter('_', '/_+/');
 	}
 
-	/*
-	* Match emphasis and strong applied using given character
-	*
-	* @param  string $character Markup character, either * or _
-	* @param  string $regexp    Regexp used to match the series of emphasis character
-	* @return void
-	*/
 	protected function matchEmphasisByCharacter($character, $regexp)
 	{
 		$pos = \strpos($this->text, $character);
@@ -525,55 +413,43 @@ class Parser extends ParserBase
 		$buffered = 0;
 		$breakPos = \strpos($this->text, "\x17", $pos);
 
-		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
+		\preg_match_all($regexp, $this->text, $matches, 256, $pos);
 		foreach ($matches[0] as list($match, $matchPos))
 		{
 			$matchLen = \strlen($match);
 
-			// Test whether we've just passed the limits of a block
 			if ($matchPos > $breakPos)
 			{
-				// Reset the buffer then look for the next break
 				$buffered = 0;
 				$breakPos = \strpos($this->text, "\x17", $matchPos);
 			}
 
 			if ($matchLen >= 3)
 			{
-				// Number of characters left unconsumed
 				$remaining = $matchLen;
 
 				if ($buffered < 3)
 					$strongEndPos = $emEndPos = $matchPos;
-				// Determine the order of strong's and em's end tags
 				elseif ($emPos < $strongPos)
 				{
-					// If em starts before strong, it must end after it
 					$strongEndPos = $matchPos;
 					$emEndPos     = $matchPos + 2;
 				}
 				else
 				{
-					// Make strong end after em
 					$strongEndPos = $matchPos + 1;
 					$emEndPos     = $matchPos;
 
-					// If the buffer holds three consecutive characters and the order of
-					// strong and em is not defined we push em inside of strong
 					if ($strongPos === $emPos)
 						$emPos += 2;
 				}
 
-				// 2 or 3 means a strong is buffered
-				// Strong uses the outer characters
 				if ($buffered & 2)
 				{
 					$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
 					$remaining -= 2;
 				}
 
-				// 1 or 3 means an em is buffered
-				// Em uses the inner characters
 				if ($buffered & 1)
 				{
 					$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
@@ -611,7 +487,6 @@ class Parser extends ParserBase
 				}
 			else
 			{
-				// Ignore single underscores when they are between alphanumeric ASCII chars
 				if ($character === '_'
 				 && $matchPos > 0
 				 && \strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos - 1]) > 0
@@ -637,11 +512,6 @@ class Parser extends ParserBase
 		}
 	}
 
-	/*
-	* Match forced line breaks
-	*
-	* @return void
-	*/
 	protected function matchForcedLineBreaks()
 	{
 		$pos = \strpos($this->text, "  \n");
@@ -652,11 +522,6 @@ class Parser extends ParserBase
 		}
 	}
 
-	/*
-	* Match images markup
-	*
-	* @return void
-	*/
 	protected function matchImages()
 	{
 		$pos = \strpos($this->text, '![');
@@ -667,7 +532,7 @@ class Parser extends ParserBase
 			'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
+			256 | 2,
 			$pos
 		);
 
@@ -688,16 +553,10 @@ class Parser extends ParserBase
 			if (isset($m[3]))
 				$startTag->setAttribute('title', $this->decode($m[3][0]));
 
-			// Overwrite the markup
 			$this->overwrite($matchPos, $matchLen);
 		}
 	}
 
-	/*
-	* Match inline code
-	*
-	* @return void
-	*/
 	protected function matchInlineCode()
 	{
 		$pos = \strpos($this->text, '`');
@@ -708,7 +567,7 @@ class Parser extends ParserBase
 			'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
+			256 | 2,
 			$pos
 		);
 
@@ -720,16 +579,10 @@ class Parser extends ParserBase
 
 			$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
 
-			// Overwrite the markup
 			$this->overwrite($matchPos, $matchLen);
 		}
 	}
 
-	/*
-	* Match inline links
-	*
-	* @return void
-	*/
 	protected function matchInlineLinks()
 	{
 		$pos = \strpos($this->text, '[');
@@ -740,7 +593,7 @@ class Parser extends ParserBase
 			'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
+			256 | 2,
 			$pos
 		);
 
@@ -754,7 +607,6 @@ class Parser extends ParserBase
 			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
 			$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
-			// Split the URL from the title if applicable
 			$url   = $m[2][0];
 			$title = '';
 			if (\preg_match('/^(.+?) "(.*?)"$/', $url, $m))
@@ -769,17 +621,11 @@ class Parser extends ParserBase
 			if ($title !== '')
 				$tag->setAttribute('title', $this->decode($title));
 
-			// Overwrite the markup without touching the link's text
 			$this->overwrite($startTagPos, $startTagLen);
 			$this->overwrite($endTagPos,   $endTagLen);
 		}
 	}
 
-	/*
-	* Match strikethrough
-	*
-	* @return void
-	*/
 	protected function matchStrikethrough()
 	{
 		$pos = \strpos($this->text, '~~');
@@ -790,7 +636,7 @@ class Parser extends ParserBase
 			'/~~[^\\x17]+?~~/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE,
+			256,
 			$pos
 		);
 
@@ -802,11 +648,6 @@ class Parser extends ParserBase
 		}
 	}
 
-	/*
-	* Match superscript
-	*
-	* @return void
-	*/
 	protected function matchSuperscript()
 	{
 		$pos = \strpos($this->text, '^');
@@ -817,7 +658,7 @@ class Parser extends ParserBase
 			'/\\^[^\\x17\\s]++/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE,
+			256,
 			$pos
 		);
 
@@ -838,13 +679,6 @@ class Parser extends ParserBase
 		}
 	}
 
-	/*
-	* Overwrite part of the text with substitution characters ^Z (0x1A)
-	*
-	* @param  integer $pos Start of the range
-	* @param  integer $len Length of text to overwrite
-	* @return void
-	*/
 	protected function overwrite($pos, $len)
 	{
 		$this->text = \substr($this->text, 0, $pos) . \str_repeat("\x1A", $len) . \substr($this->text, $pos + $len);

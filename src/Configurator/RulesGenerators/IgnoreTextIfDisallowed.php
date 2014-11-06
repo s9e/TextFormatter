@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenera
 
 class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->allowsText()) ? [] : ['ignoreText' => \true];

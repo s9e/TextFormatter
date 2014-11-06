@@ -14,25 +14,16 @@ use s9e\TextFormatter\Configurator\Items\Attribute;
 
 class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 {
-	/*
-	* {@inheritdoc}
-	*/
 	protected function getNodes(DOMElement $template)
 	{
 		return TemplateHelper::getJSNodes($template->ownerDocument);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected function isExpressionSafe($expr)
 	{
 		return XPathHelper::isExpressionNumeric($expr);
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	protected function isSafe(Attribute $attribute)
 	{
 		return $attribute->isSafeInJS();

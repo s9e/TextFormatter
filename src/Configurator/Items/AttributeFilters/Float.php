@@ -11,11 +11,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
 class Float extends AttributeFilter
 {
-	/*
-	* Constructor
-	*
-	* @return void
-	*/
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat');
@@ -24,25 +19,16 @@ class Float extends AttributeFilter
 		$this->setJS('BuiltInFilters.filterFloat');
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInCSS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeInJS()
 	{
 		return \true;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function isSafeAsURL()
 	{
 		return \true;

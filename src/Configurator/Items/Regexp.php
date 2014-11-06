@@ -14,22 +14,10 @@ use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class Regexp implements ConfigProvider
 {
-	/*
-	* @var bool Whether this regexp should become a JavaScript RegExp object with global flag
-	*/
 	protected $isGlobal;
 
-	/*
-	* @var string PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
-	*/
 	protected $regexp;
 
-	/*
-	* Constructor
-	*
-	* @param  string $regexp PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
-	* @return void
-	*/
 	public function __construct($regexp, $isGlobal = \false)
 	{
 		if (@\preg_match($regexp, '') === \false)
@@ -39,19 +27,11 @@ class Regexp implements ConfigProvider
 		$this->isGlobal = $isGlobal;
 	}
 
-	/*
-	* Return this regexp as a string
-	*
-	* @return string
-	*/
 	public function __toString()
 	{
 		return $this->regexp;
 	}
 
-	/*
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		$variant = new Variant($this->regexp);
@@ -66,11 +46,6 @@ class Regexp implements ConfigProvider
 		return $variant;
 	}
 
-	/*
-	* Return this regexp as a JavaScript RegExp
-	*
-	* @return RegExp
-	*/
 	public function toJS()
 	{
 		$obj = RegexpConvertor::toJS($this->regexp);

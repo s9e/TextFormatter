@@ -12,9 +12,6 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 
 class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		return ($src->isBlock() && $trg->isFormattingElement()) ? ['fosterParent'] : [];

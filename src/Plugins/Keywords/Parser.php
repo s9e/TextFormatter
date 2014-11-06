@@ -11,9 +11,6 @@ use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
-	/*
-	* {@inheritdoc}
-	*/
 	public function parse($text, array $matches)
 	{
 		$regexps  = $this->config['regexps'];
@@ -25,7 +22,7 @@ class Parser extends ParserBase
 
 		foreach ($regexps as $regexp)
 		{
-			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
+			\preg_match_all($regexp, $text, $matches, 256);
 
 			foreach ($matches[0] as list($value, $pos))
 			{

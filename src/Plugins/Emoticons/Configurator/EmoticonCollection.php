@@ -12,14 +12,6 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 class EmoticonCollection extends NormalizedCollection
 {
-	/*
-	* Normalize an emoticon's template
-	*
-	* NOTE: this allows the HTML syntax to be used for individual emoticons
-	*
-	* @param  string $value Emoticon's original markup
-	* @return string        Normalized template
-	*/
 	public function normalizeValue($value)
 	{
 		return TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($value));

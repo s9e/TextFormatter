@@ -12,13 +12,6 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 class Choice extends Regexp
 {
-	/*
-	* Constructor
-	*
-	* @param  array $values        List of allowed values
-	* @param  bool  $caseSensitive Whether the choice is case-sensitive
-	* @return void
-	*/
 	public function __construct(array $values = \null, $caseSensitive = \false)
 	{
 		parent::__construct();
@@ -27,31 +20,20 @@ class Choice extends Regexp
 			$this->setValues($values, $caseSensitive);
 	}
 
-	/*
-	* Set the list of allowed values
-	*
-	* @param  array $values        List of allowed values
-	* @param  bool  $caseSensitive Whether the choice is case-sensitive
-	* @return void
-	*/
 	public function setValues(array $values, $caseSensitive = \false)
 	{
 		if (!\is_bool($caseSensitive))
 			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be a boolean');
 
-		// Create a regexp based on the list of allowed values
 		$regexp = RegexpBuilder::fromList($values, ['delimiter' => '/']);
 		$regexp = '/^' . $regexp . '$/D';
 
-		// Add the case-insensitive flag if applicable
 		if (!$caseSensitive)
 			$regexp .= 'i';
 
-		// Add the Unicode flag if the regexp isn't purely ASCII
 		if (!\preg_match('#^[[:ascii:]]*$#D', $regexp))
 			$regexp .= 'u';
 
-		// Set the regexp associated with this list of values
 		$this->setRegexp($regexp);
 	}
 }
