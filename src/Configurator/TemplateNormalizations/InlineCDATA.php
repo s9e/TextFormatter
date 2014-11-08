@@ -19,7 +19,7 @@ class InlineCDATA extends TemplateNormalization
 		$xpath = new DOMXPath($dom);
 
 		foreach ($xpath->query('//text()') as $textNode)
-			if ($textNode->nodeType === 4)
+			if ($textNode->nodeType === \XML_CDATA_SECTION_NODE)
 				$textNode->parentNode->replaceChild(
 					$dom->createTextNode($textNode->textContent),
 					$textNode

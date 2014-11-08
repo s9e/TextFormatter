@@ -329,13 +329,13 @@ class Configurator extends ConfiguratorBase
 				{
 					list($type, $content) = $_3134889776;
 					if ($type === 'literal')
-						$innerXML .= \htmlspecialchars($content, 0, 'UTF-8');
+						$innerXML .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
 					else
-						$innerXML .= '<xsl:value-of select="' . \htmlspecialchars($content, 3, 'UTF-8') . '"/>';
+						$innerXML .= '<xsl:value-of select="' . \htmlspecialchars($content, \ENT_QUOTES, 'UTF-8') . '"/>';
 				}
 			}
 
-			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, 3, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
+			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, \ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
 		}
 
 		return $xsl;
@@ -369,7 +369,7 @@ class Configurator extends ConfiguratorBase
 		$childNodes = [];
 		foreach ($element->childNodes as $childNode)
 		{
-			if ($childNode->nodeType !== 1)
+			if ($childNode->nodeType !== \XML_ELEMENT_NODE)
 				continue;
 
 			if (!$childNode->attributes->length && $childNode->childNodes->length === 1)

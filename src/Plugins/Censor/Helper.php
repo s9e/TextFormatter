@@ -132,7 +132,7 @@ class Helper
 			list($regexp, $replacement) = $_37478556;
 			if (\preg_match($regexp, $word))
 			{
-				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, 3) . '"';
+				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
 
 				break;
 			}

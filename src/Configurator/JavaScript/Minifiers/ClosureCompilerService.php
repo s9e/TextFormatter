@@ -73,12 +73,12 @@ class ClosureCompilerService extends Minifier
 		if (\is_null($response))
 		{
 			$msgs = array(
-					0 => 'No error',
-					1 => 'Maximum stack depth exceeded',
-					2 => 'State mismatch (invalid or malformed JSON)',
-					3 => 'Control character error, possibly incorrectly encoded',
-					4 => 'Syntax error',
-					5 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+					\JSON_ERROR_NONE => 'No error',
+					\JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+					\JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
+					\JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
+					\JSON_ERROR_SYNTAX => 'Syntax error',
+					\JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
 				);
 				throw new RuntimeException('Closure Compiler service returned invalid JSON: ' . (isset($msgs[\json_last_error()]) ? $msgs[\json_last_error()] : 'Unknown error'));
 		}

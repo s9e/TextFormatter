@@ -78,7 +78,7 @@ class Parser extends ParserBase
 			return $setextLines;
 
 		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
-		if (\preg_match_all($regexp, $this->text, $matches, 256))
+		if (\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE))
 			foreach ($matches[0] as $_4117811821)
 			{
 				list($match, $matchPos) = $_4117811821;
@@ -143,7 +143,7 @@ class Parser extends ParserBase
 		$textBoundary = 0;
 
 		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
-		\preg_match_all($regexp, $this->text, $matches, 256 | 2);
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 
 		foreach ($matches as $m)
 		{
@@ -414,7 +414,7 @@ class Parser extends ParserBase
 		$buffered = 0;
 		$breakPos = \strpos($this->text, "\x17", $pos);
 
-		\preg_match_all($regexp, $this->text, $matches, 256, $pos);
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
 		foreach ($matches[0] as $_1258507557)
 		{
 			list($match, $matchPos) = $_1258507557;
@@ -534,7 +534,7 @@ class Parser extends ParserBase
 			'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
 			$this->text,
 			$matches,
-			256 | 2,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
 			$pos
 		);
 
@@ -569,7 +569,7 @@ class Parser extends ParserBase
 			'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
 			$this->text,
 			$matches,
-			256 | 2,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
 			$pos
 		);
 
@@ -595,7 +595,7 @@ class Parser extends ParserBase
 			'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
 			$this->text,
 			$matches,
-			256 | 2,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
 			$pos
 		);
 
@@ -638,7 +638,7 @@ class Parser extends ParserBase
 			'/~~[^\\x17]+?~~/',
 			$this->text,
 			$matches,
-			256,
+			\PREG_OFFSET_CAPTURE,
 			$pos
 		);
 
@@ -661,7 +661,7 @@ class Parser extends ParserBase
 			'/\\^[^\\x17\\s]++/',
 			$this->text,
 			$matches,
-			256,
+			\PREG_OFFSET_CAPTURE,
 			$pos
 		);
 

@@ -41,8 +41,8 @@ class Range extends AttributeFilter
 
 	public function setRange($min, $max)
 	{
-		$min = \filter_var($min, 257);
-		$max = \filter_var($max, 257);
+		$min = \filter_var($min, \FILTER_VALIDATE_INT);
+		$max = \filter_var($max, \FILTER_VALIDATE_INT);
 
 		if ($min === \false)
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be an integer');

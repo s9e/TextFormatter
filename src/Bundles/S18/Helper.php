@@ -26,7 +26,7 @@ abstract class Helper
 					          ? \timeformat($m[2])
 					          : \strftime('%B %d, %Y, %I:%M:%S %p', $m[2]);
 
-					return $m[1] . \htmlspecialchars($datetime, 2);
+					return $m[1] . \htmlspecialchars($datetime, \ENT_COMPAT);
 				},
 				$xml
 			);
