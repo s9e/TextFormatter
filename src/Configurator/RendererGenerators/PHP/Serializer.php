@@ -148,7 +148,9 @@ class Serializer
 
 	protected function serializeCopyOfAttributes(DOMElement $copyOfAttributes)
 	{
-		return 'foreach($node->attributes as $attribute){$this->out.=\' \';$this->out.=$attribute->name;$this->out.=\'="\';$this->out.=htmlspecialchars($attribute->value,' . \ENT_COMPAT . ');$this->out.=\'"\';}';
+		return 'foreach($node->attributes as $attribute){'
+		     . "\$this->out.=' ';\$this->out.=\$attribute->name;\$this->out.='=\"';\$this->out.=htmlspecialchars(\$attribute->value," . \ENT_COMPAT . ");\$this->out.='\"';"
+		     . '}';
 	}
 
 	protected function serializeElement(DOMElement $element)
