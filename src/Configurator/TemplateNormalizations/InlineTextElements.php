@@ -21,9 +21,9 @@ class InlineTextElements extends TemplateNormalization
 		foreach ($xpath->query('//xsl:text') as $node)
 		{
 			if (\trim($node->textContent) === '')
-				if ($node->previousSibling && $node->previousSibling->nodeType === 3)
+				if ($node->previousSibling && $node->previousSibling->nodeType === \XML_TEXT_NODE)
 					;
-				elseif ($node->nextSibling && $node->nextSibling->nodeType === 3)
+				elseif ($node->nextSibling && $node->nextSibling->nodeType === \XML_TEXT_NODE)
 					;
 				else
 					continue;

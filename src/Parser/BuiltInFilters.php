@@ -11,14 +11,14 @@ class BuiltInFilters
 {
 	public static function filterAlnum($attrValue)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => '/^[0-9A-Za-z]+$/D']
 		]);
 	}
 
 	public static function filterColor($attrValue)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => [
 				'regexp' => '/^(?>#[0-9a-f]{3,6}|rgb\\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\\)|[a-z]+)$/Di'
 			]
@@ -27,12 +27,12 @@ class BuiltInFilters
 
 	public static function filterEmail($attrValue)
 	{
-		return \filter_var($attrValue, 274);
+		return \filter_var($attrValue, \FILTER_VALIDATE_EMAIL);
 	}
 
 	public static function filterFloat($attrValue)
 	{
-		return \filter_var($attrValue, 259);
+		return \filter_var($attrValue, \FILTER_VALIDATE_FLOAT);
 	}
 
 	public static function filterHashmap($attrValue, array $map, $strict)
@@ -45,19 +45,19 @@ class BuiltInFilters
 
 	public static function filterIdentifier($attrValue)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => '/^[-0-9A-Za-z_]+$/D']
 		]);
 	}
 
 	public static function filterInt($attrValue)
 	{
-		return \filter_var($attrValue, 257);
+		return \filter_var($attrValue, \FILTER_VALIDATE_INT);
 	}
 
 	public static function filterIp($attrValue)
 	{
-		return \filter_var($attrValue, 275);
+		return \filter_var($attrValue, \FILTER_VALIDATE_IP);
 	}
 
 	public static function filterIpport($attrValue)
@@ -87,12 +87,12 @@ class BuiltInFilters
 
 	public static function filterIpv4($attrValue)
 	{
-		return \filter_var($attrValue, 275, 1048576);
+		return \filter_var($attrValue, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
 	}
 
 	public static function filterIpv6($attrValue)
 	{
-		return \filter_var($attrValue, 275, 2097152);
+		return \filter_var($attrValue, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6);
 	}
 
 	public static function filterMap($attrValue, array $map)
@@ -106,14 +106,14 @@ class BuiltInFilters
 
 	public static function filterNumber($attrValue)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => '/^[0-9]+$/D']
 		]);
 	}
 
 	public static function filterRange($attrValue, $min, $max, Logger $logger = \null)
 	{
-		$attrValue = \filter_var($attrValue, 257);
+		$attrValue = \filter_var($attrValue, \FILTER_VALIDATE_INT);
 
 		if ($attrValue === \false)
 			return \false;
@@ -153,21 +153,21 @@ class BuiltInFilters
 
 	public static function filterRegexp($attrValue, $regexp)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => $regexp]
 		]);
 	}
 
 	public static function filterSimpletext($attrValue)
 	{
-		return \filter_var($attrValue, 272, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => '/^[- +,.0-9A-Za-z_]+$/D']
 		]);
 	}
 
 	public static function filterUint($attrValue)
 	{
-		return \filter_var($attrValue, 257, [
+		return \filter_var($attrValue, \FILTER_VALIDATE_INT, [
 			'options' => ['min_range' => 0]
 		]);
 	}

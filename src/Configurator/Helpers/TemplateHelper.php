@@ -40,7 +40,7 @@ abstract class TemplateHelper
 			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
 			function ($m)
 			{
-				return \html_entity_decode($m[0], 0, 'UTF-8');
+				return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
 			},
 			$tmp
 		);
@@ -200,7 +200,7 @@ abstract class TemplateHelper
 		$nodes = [];
 
 		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
-			if ($attribute->nodeType === 2)
+			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
 			{
 				if (\strtolower($attribute->parentNode->localName) === 'embed')
 					$nodes[] = $attribute;
@@ -279,7 +279,7 @@ abstract class TemplateHelper
 				$attribute->value
 			);
 
-			$attribute->value = \htmlspecialchars($attrValue, 2, 'UTF-8');
+			$attribute->value = \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8');
 		}
 
 		foreach ($xpath->query('//text()') as $node)
@@ -288,7 +288,7 @@ abstract class TemplateHelper
 				$regexp,
 				$node->textContent,
 				$matches,
-				2 | 256
+				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 			);
 
 			if (empty($matches))

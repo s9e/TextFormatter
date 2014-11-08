@@ -150,7 +150,7 @@ class BBCodeMonkey
 
 		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
 
-		$definitions = \preg_split('#\\s+#', \trim($m['attributes']), -1, 1);
+		$definitions = \preg_split('#\\s+#', \trim($m['attributes']), -1, \PREG_SPLIT_NO_EMPTY);
 
 		if (!empty($m['defaultAttribute']))
 			\array_unshift($definitions, $m['bbcodeName'] . $m['defaultAttribute']);
@@ -371,7 +371,7 @@ class BBCodeMonkey
 			'#\\{(' . \implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
-			2 | 256
+			\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 		);
 
 		$tokens = [];
@@ -404,7 +404,7 @@ class BBCodeMonkey
 			$token['type'] = \rtrim($token['id'], '0123456789');
 
 			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
-			foreach (\preg_split('#;+#', $options, -1, 1) as $pair)
+			foreach (\preg_split('#;+#', $options, -1, \PREG_SPLIT_NO_EMPTY) as $pair)
 			{
 				$pos = \strpos($pair, '=');
 
