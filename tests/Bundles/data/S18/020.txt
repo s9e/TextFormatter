@@ -1,0 +1,1 @@
+[img width=30]http://example.org/image.png[/img]

@@ -1,0 +1,8 @@
+<template outputMethod="html">
+	<element name="{local-name()}" id="1" void="maybe" empty="yes">
+		<attribute name="id">
+			<output escape="attribute" type="literal">foo</output>
+		</attribute>
+		<closeTag id="1"/>
+	</element>
+</template>

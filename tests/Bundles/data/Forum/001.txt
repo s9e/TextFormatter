@@ -1,0 +1,6 @@
+[b]bold[/b]
+[i]italic[/i]
+[u]underline[/u]
+[s]strikethrough[/s]
+[color=red]red ink[/color]
+[size=16]bigger[/size]

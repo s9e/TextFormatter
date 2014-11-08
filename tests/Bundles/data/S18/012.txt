@@ -1,0 +1,1 @@
+[flash=200,200]http://example.org/file.swf[/flash]

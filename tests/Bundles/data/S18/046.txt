@@ -1,0 +1,1 @@
+[url=http://example.org]text or more BB Code[/url], [url]example.org[/url]

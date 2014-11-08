@@ -1,0 +1,2 @@
+[topic=1]Test topic[/topic]
+[topic]1[/topic]

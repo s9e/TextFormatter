@@ -1,0 +1,3 @@
+[code]if (node.attributes[i].nodeValue != null)
+str += ' ' + node.attributes[i].nodeName + '="' + node.attributes[i].nodeValue + '"';
+[/code]

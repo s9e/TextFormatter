@@ -1,0 +1,4 @@
+<div>
+	<xsl:comment> ... </xsl:comment>
+	<xsl:text>foo</xsl:text>
+</div>

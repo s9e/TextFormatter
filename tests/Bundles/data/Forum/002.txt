@@ -1,0 +1,3 @@
+[url=http://example.org]example[/url]
+[url]http://example.org[/url]
+http://example.org

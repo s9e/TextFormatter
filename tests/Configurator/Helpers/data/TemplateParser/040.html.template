@@ -1,0 +1,6 @@
+<xsl:choose>
+	<xsl:when test=".=&quot;'&quot;">.</xsl:when>
+	<xsl:when test=".='&quot;'">.</xsl:when>
+	<xsl:when test=".=concat('&quot;', &quot;'&quot;, '&quot;')">.</xsl:when>
+	<xsl:when test=".=''">.</xsl:when>
+</xsl:choose>

@@ -1,0 +1,3 @@
+[quote="John Doe"][quote="Foo"]second quote[/quote]first quote[/quote]
+
+I concur.
