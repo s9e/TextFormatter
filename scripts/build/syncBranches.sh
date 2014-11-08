@@ -5,7 +5,8 @@ cd $(dirname $(dirname $(dirname "$0")))
 git checkout master
 msg="Synced to $(git rev-parse HEAD)"
 
-ignore=
+# Record the files that are non-essentials and should be ignored, starting with all the README.md
+ignore=$(find src -type f -name "*.md")
 for file in $(ls -1A);
 do
 	if [[ "$file" != ".git" && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "src" ]]
@@ -31,7 +32,7 @@ do
 
 	for file in $ignore;
 	do
-		if [ -a "$file" ]
+		if [ -e "$file" ]
 		then
 			git rm -rfq --cached "$file" 2> /dev/null
 		fi
