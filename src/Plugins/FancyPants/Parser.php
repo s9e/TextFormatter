@@ -46,7 +46,7 @@ class Parser extends ParserBase
 			'/---?|\\.\\.\\./S',
 			$this->text,
 			$matches,
-			256
+			\PREG_OFFSET_CAPTURE
 		);
 		$chrs = [
 			'--'  => "\xE2\x80\x93",
@@ -74,7 +74,7 @@ class Parser extends ParserBase
 
 	protected function parseQuotePairs($regexp, $leftQuote, $rightQuote)
 	{
-		\preg_match_all($regexp, $this->text, $matches, 256);
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
 			$left  = $this->parser->addSelfClosingTag($this->config['tagName'], $m[1], 1);
@@ -102,7 +102,7 @@ class Parser extends ParserBase
 			"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
 			$this->text,
 			$matches,
-			256
+			\PREG_OFFSET_CAPTURE
 		);
 
 		foreach ($matches[0] as $m)
@@ -120,7 +120,7 @@ class Parser extends ParserBase
 			'/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
 			$this->text,
 			$matches,
-			256
+			\PREG_OFFSET_CAPTURE
 		);
 
 		foreach ($matches[0] as $m)
@@ -154,7 +154,7 @@ class Parser extends ParserBase
 			'/\\((?>c|r|tm)\\)/i',
 			$this->text,
 			$matches,
-			256
+			\PREG_OFFSET_CAPTURE
 		);
 		$chrs = [
 			'(c)'  => "\xC2\xA9",

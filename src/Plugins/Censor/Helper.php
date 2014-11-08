@@ -124,7 +124,7 @@ class Helper
 		foreach ($this->replacements as list($regexp, $replacement))
 			if (\preg_match($regexp, $word))
 			{
-				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, 3) . '"';
+				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
 
 				break;
 			}

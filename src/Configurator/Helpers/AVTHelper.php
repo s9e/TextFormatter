@@ -83,7 +83,7 @@ abstract class AVTHelper
 		foreach ($tokens as $k => $token)
 			$tokens[$k] = $callback($token);
 
-		$attribute->value = \htmlspecialchars(self::serialize($tokens), 0, 'UTF-8');
+		$attribute->value = \htmlspecialchars(self::serialize($tokens), \ENT_NOQUOTES, 'UTF-8');
 	}
 
 	public static function serialize(array $tokens)

@@ -30,7 +30,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 				'#\\{([$@][-\\w]+)\\}#',
 				$node->textContent,
 				$matches,
-				2 | 256
+				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 			);
 
 			$lastPos = 0;

@@ -46,7 +46,7 @@ class Parser extends ParserBase
 			'/[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
 			$str,
 			$attrMatches,
-			2
+			\PREG_SET_ORDER
 		);
 
 		foreach ($attrMatches as $attrMatch)
@@ -68,7 +68,7 @@ class Parser extends ParserBase
 			if ($attrValue[0] === '"' || $attrValue[0] === "'")
 				$attrValue = \substr($attrValue, 1, -1);
 
-			$tag->setAttribute($attrName, \html_entity_decode($attrValue, 3, 'UTF-8'));
+			$tag->setAttribute($attrName, \html_entity_decode($attrValue, \ENT_QUOTES, 'UTF-8'));
 		}
 	}
 }

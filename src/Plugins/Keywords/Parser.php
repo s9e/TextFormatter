@@ -22,7 +22,7 @@ class Parser extends ParserBase
 
 		foreach ($regexps as $regexp)
 		{
-			\preg_match_all($regexp, $text, $matches, 256);
+			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
 
 			foreach ($matches[0] as list($value, $pos))
 			{

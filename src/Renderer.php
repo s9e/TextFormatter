@@ -19,7 +19,7 @@ abstract class Renderer
 
 	protected function loadXML($xml)
 	{
-		$flags = (\LIBXML_VERSION >= 20700) ? 65536 | 524288 : 0;
+		$flags = (\LIBXML_VERSION >= 20700) ? \LIBXML_COMPACT | \LIBXML_PARSEHUGE : 0;
 
 		$dom = new DOMDocument;
 		$dom->loadXML($xml, $flags);

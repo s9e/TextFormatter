@@ -280,13 +280,13 @@ class Quick
 		$i = 0;
 		do
 		{
-			if ($tokens[$i    ][0] === 312
+			if ($tokens[$i    ][0] === \T_VARIABLE
 			 && $tokens[$i    ][1] === '$this'
-			 && $tokens[$i + 1][0] === 363
-			 && $tokens[$i + 2][0] === 310
+			 && $tokens[$i + 1][0] === \T_OBJECT_OPERATOR
+			 && $tokens[$i + 2][0] === \T_STRING
 			 && $tokens[$i + 2][1] === 'at'
 			 && $tokens[$i + 3]    === '('
-			 && $tokens[$i + 4][0] === 312
+			 && $tokens[$i + 4][0] === \T_VARIABLE
 			 && $tokens[$i + 4][1] === '$node'
 			 && $tokens[$i + 5]    === ')'
 			 && $tokens[$i + 6]    === ';')
@@ -320,10 +320,10 @@ class Quick
 
 					$j = $i;
 
-					while ($tokens[++$j][0] === 379);
+					while ($tokens[++$j][0] === \T_WHITESPACE);
 
-					if ($tokens[$j][0] !== 305
-					 && $tokens[$j][0] !== 306)
+					if ($tokens[$j][0] !== \T_ELSEIF
+					 && $tokens[$j][0] !== \T_ELSE)
 					{
 						$passthroughs = self::getBranchesPassthrough($branch['branches']);
 
@@ -353,9 +353,9 @@ class Quick
 			if ($branch['passthrough'])
 				continue;
 
-			if ($tokens[$i][0] === 304
-			 || $tokens[$i][0] === 305
-			 || $tokens[$i][0] === 306)
+			if ($tokens[$i][0] === \T_IF
+			 || $tokens[$i][0] === \T_ELSEIF
+			 || $tokens[$i][0] === \T_ELSE)
 			{
 				$branch[$key] = \substr($branch[$key], 0, -\strlen($tokens[$i][1]));
 
@@ -441,19 +441,19 @@ class Quick
 		$getAttribute = "\\\$node->getAttribute\\(('[^']+')\\)";
 
 		$php = \preg_replace(
-			'(htmlspecialchars\\(' . $getAttribute . ',' . 0 . '\\))',
+			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_NOQUOTES . '\\))',
 			"str_replace('&quot;','\"',\$attributes[\$1])",
 			$php
 		);
 
 		$php = \preg_replace(
-			'(htmlspecialchars\\(' . $getAttribute . ',' . 2 . '\\))',
+			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_COMPAT . '\\))',
 			'$attributes[$1]',
 			$php
 		);
 
 		$php = \preg_replace(
-			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . 2 . '\\))',
+			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . \ENT_COMPAT . '\\))',
 			'strtr($attributes[$1],$2,$3)',
 			$php
 		);
@@ -468,7 +468,7 @@ class Quick
 			'(' . $getAttribute . "==='(.*?(?<!\\\\)(?:\\\\\\\\)*)')s",
 			function ($m)
 			{
-				return '$attributes[' . $m[1] . "]==='" . \htmlspecialchars(\stripslashes($m[2]), 3) . "'";
+				return '$attributes[' . $m[1] . "]==='" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "'";
 			},
 			$php
 		);
@@ -476,7 +476,7 @@ class Quick
 			"('(.*?(?<!\\\\)(?:\\\\\\\\)*)'===" . $getAttribute . ')s',
 			function ($m)
 			{
-				return "'" . \htmlspecialchars(\stripslashes($m[1]), 3) . "'===\$attributes[" . $m[2] . ']';
+				return "'" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "'===\$attributes[" . $m[2] . ']';
 			},
 			$php
 		);
@@ -484,7 +484,7 @@ class Quick
 			'(strpos\\(' . $getAttribute . ",'(.*?(?<!\\\\)(?:\\\\\\\\)*)'\\)([!=]==(?:0|false)))s",
 			function ($m)
 			{
-				return 'strpos($attributes[' . $m[1] . "],'" . \htmlspecialchars(\stripslashes($m[2]), 3) . "')" . $m[3];
+				return 'strpos($attributes[' . $m[1] . "],'" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "')" . $m[3];
 			},
 			$php
 		);
@@ -492,7 +492,7 @@ class Quick
 			"(strpos\\('(.*?(?<!\\\\)(?:\\\\\\\\)*)'," . $getAttribute . '\\)([!=]==(?:0|false)))s',
 			function ($m)
 			{
-				return "strpos('" . \htmlspecialchars(\stripslashes($m[1]), 3) . "',\$attributes[" . $m[2] . '])' . $m[3];
+				return "strpos('" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "',\$attributes[" . $m[2] . '])' . $m[3];
 			},
 			$php
 		);
