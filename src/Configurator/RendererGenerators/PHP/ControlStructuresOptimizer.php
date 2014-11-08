@@ -294,7 +294,7 @@ class ControlStructuresOptimizer
 				$this->unindentBlock($j, $this->i - 1);
 
 				// Ensure that the brace after the now-removed "else" was not replaced with a space
-				$this->tokens[$this->context['index']] = '';
+				$this->tokens[$this->context['index']] = [T_WHITESPACE, ''];
 			}
 		}
 
