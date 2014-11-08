@@ -40,47 +40,6 @@ function optimizeFile($filepath, array $options = array())
 	$old     = file_get_contents($filepath);
 	$changed = false;
 
-	// Inline traits in the main Parser class
-	if (strpos($filepath, 'src/Parser.php'))
-	{
-		// Replace "use" statements with the content of the trait
-		$old = preg_replace_callback(
-			'/^	use Parser\\\\(\\w+);/m',
-			function ($m) use ($filepath)
-			{
-				$traitName = $m[1];
-
-				// Capture the trait's content
-				$traitFilepath = dirname($filepath) . '/Parser/' . $traitName . '.php';
-				preg_match('#\\n{\\n(.*)\\n}$#s', file_get_contents($traitFilepath), $m);
-
-				// Remove the trait's file
-				unlink($traitFilepath);
-
-				// Fix the test's code coverage annotation
-				$testFilepath  = __DIR__ . '/../../tests/Parser/' . $traitName . 'Test.php';
-				file_put_contents(
-					$testFilepath,
-					str_replace(
-						'@covers s9e\\TextFormatter\\Parser\\' . $traitName,
-						'@covers s9e\\TextFormatter\\Parser',
-						file_get_contents($testFilepath)
-					)
-				);
-
-				return $m[1] . "\n";
-			},
-			$old
-		);
-
-		// Traits live in the s9e\TextFormatter\Parser namespace whereas the Parser lives in the
-		// s9e\TextFormatter namespace so we need to add a use statement for Tag
-		if (strpos($old, 'use s9e\TextFormatter\Parser\Tag;') === false)
-		{
-			$old = str_replace("\nclass", "use s9e\\TextFormatter\\Parser\\Tag;\n\nclass", $old);
-		}
-	}
-
 	$new = $optimizer->optimize($old);
 	if ($new !== $old)
 	{
