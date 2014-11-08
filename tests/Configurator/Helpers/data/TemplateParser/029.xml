@@ -1,0 +1,13 @@
+<template outputMethod="xml">
+	<element name="div" id="1" empty="maybe">
+		<closeTag id="1"/>
+		<switch>
+			<case test="@foo">
+				<output escape="text" type="literal">foo</output>
+			</case>
+			<case test="@bar">
+				<output escape="text" type="literal">bar</output>
+			</case>
+		</switch>
+	</element>
+</template>

@@ -1,0 +1,5 @@
+[list=A]
+	[*]one
+	[*]two
+	[*]three
+[/list]

@@ -1,0 +1,5 @@
+<xsl:choose>
+	<xsl:when test="@a">A</xsl:when>
+	<xsl:when test="@b">B</xsl:when>
+	<xsl:otherwise>C</xsl:otherwise>
+</xsl:choose>

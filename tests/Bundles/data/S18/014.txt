@@ -1,0 +1,1 @@
+[ftp=ftp://example.org]text or more BB Code[/ftp], [ftp]ftp://example.org[/ftp], [ftp]example.org[/ftp]

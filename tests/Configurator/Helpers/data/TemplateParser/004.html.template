@@ -1,0 +1,3 @@
+<xsl:element name="{local-name()}">
+	<xsl:apply-templates/>
+</xsl:element>

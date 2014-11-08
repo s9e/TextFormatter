@@ -1,0 +1,4 @@
+<xsl:comment>[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</xsl:comment>
+<xsl:comment>[if !IE]&gt;&lt;!</xsl:comment>
+<p>You are not using Internet Explorer.</p>
+<xsl:comment>&lt;![endif]</xsl:comment>

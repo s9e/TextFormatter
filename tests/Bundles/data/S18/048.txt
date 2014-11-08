@@ -1,0 +1,2 @@
+[quote]Hello :)[/quote]
+[code]Hello :)[/code]

@@ -1,0 +1,6 @@
+<!-- Ensure that empty cases are not improperly removed -->
+<xsl:choose>
+	<xsl:when test="@a">A</xsl:when>
+	<xsl:when test="@b"></xsl:when>
+	<xsl:otherwise>C</xsl:otherwise>
+</xsl:choose>

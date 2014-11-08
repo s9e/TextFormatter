@@ -1,0 +1,2 @@
+foo@example.org
+[email]foo@example.org[/email]
