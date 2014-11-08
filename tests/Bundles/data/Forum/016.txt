@@ -1,3 +1,0 @@
-[code]echo 'Hello world';[/code]
-
-Text

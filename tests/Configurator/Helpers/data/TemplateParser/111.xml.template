@@ -1,1 +1,0 @@
-<xsl:element name="hr"><xsl:attribute name="id">foo</xsl:attribute>foo</xsl:element>
