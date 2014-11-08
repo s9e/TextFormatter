@@ -11,7 +11,7 @@ for file in $(ls -1A);
 do
 	if [[ "$file" != ".git" && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "src" ]]
 	then
-		ignore=$'\n'"$ignore$file"
+		ignore="$ignore"$'\n'"$file"
 	fi
 done
 
