@@ -1,5 +1,0 @@
-[html]<b>[i]xxx[/i]</b> :)[/html]
-
-....
-
-<b>[i]xxx[/i]</b> :)

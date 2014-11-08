@@ -1,5 +1,0 @@
-[list=1]
-	[*]one
-	[*]two
-	[*]three
-[/list]
