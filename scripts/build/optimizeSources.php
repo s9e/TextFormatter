@@ -155,7 +155,8 @@ function optimizeFile($filepath, array $options = array())
 		 && $token[1] !== 'false'
 		 && $token[1] !== 'null'
 		 && $token[1] !== 'true'
-		 && strpos($token[1], 'VERSION') === false)
+		 && strpos($token[1], 'VERSION') === false
+		 && substr($token[1], 0, 2) !== 'T_')
 		{
 			$value = constant($token[1]);
 
@@ -286,7 +287,7 @@ if (!defined('T_TRAIT'))
 //       upload to a webserver.
 $options = array(
 	'convertDocblock'     => true,
-	'foldGlobalConstants' => true,
+	'foldGlobalConstants' => false,
 	'removeComments'      => true,
 	'removeDocblock'      => true,
 	'removeLicense'       => false,
