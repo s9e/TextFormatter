@@ -194,6 +194,10 @@ class ControlStructuresOptimizerTest extends Test
 					*/
 					baz();'
 			],
+			[
+				'if($foo){}else{if($foo){bar();}}',
+				'if($foo);elseif($foo)bar();'
+			],
 		];
 	}
 }
