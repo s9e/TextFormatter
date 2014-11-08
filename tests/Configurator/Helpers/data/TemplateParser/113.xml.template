@@ -1,0 +1,1 @@
+<xsl:element name="{local-name()}"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>

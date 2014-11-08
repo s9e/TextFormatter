@@ -1,0 +1,2 @@
+[email]myname@example.com[/email]
+[email=myname@example.com]My email address[/email]

@@ -1,0 +1,5 @@
+[code]echo 'Hello world';[/code]
+
+Text
+
+[code=php]echo 'Hello world';[/code]

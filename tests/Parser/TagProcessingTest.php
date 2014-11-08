@@ -1,0 +1,1209 @@
+<?php
+
+namespace s9e\TextFormatter\Tests\Parser;
+
+use RuntimeException;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\Tag;
+use s9e\TextFormatter\Plugins\ParserBase;
+use s9e\TextFormatter\Tests\Test;
+
+/**
+* @covers s9e\TextFormatter\Parser
+*/
+class TagProcessingTest extends Test
+{
+	/**
+	* @testdox Works
+	* @dataProvider getData
+	*/
+	public function test($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
+	{
+		$this->assertParsing($original, $expected, $setup, $callback, $expectedLogs);
+	}
+
+	public function getData()
+	{
+		return array(
+			array(
+				'foo bar',
+				'<r><X><Y>foo</Y> <Z>bar</Z></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addSelfClosingTag('Y', 0, 3);
+					$parser->addSelfClosingTag('Z', 4, 3);
+					$parser->addEndTag('X', 7, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<r>foo <X>bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 4, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<t>foo bar</t>',
+				null,
+				function ($parser)
+				{
+					$parser->addStartTag('X', 4, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>fo<Y>o</Y></X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0);
+					$parser->addEndTag('Y', 4, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>fo<Y>o</Y></X><Y> b</Y>ar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0);
+					$parser->addEndTag('Y', 5, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$tag = $configurator->tags->add('Y');
+					$tag->attributes->add('attr')->required = false;
+					$tag->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0)->setAttribute('attr', 'foo');
+					$parser->addEndTag('Y', 5, 0);
+				}
+			),
+			array(
+				'x [b][i]...[/b][/i] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><i>[/i]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addEndTag('B', 11, 4);
+					$parser->addEndTag('I', 15, 4);
+				}
+			),
+			array(
+				'x [b][i]...[/b]![/i] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s>...</I><e>[/b]</e></B><I>!<e>[/i]</e></I> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addEndTag('B', 11, 4);
+					$parser->addEndTag('I', 16, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/u][/i] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('U', 18, 4);
+					$parser->addEndTag('I', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/u][/i] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/u][/i]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I');
+					$configurator->tags->add('U');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('U', 18, 4);
+					$parser->addEndTag('I', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i][/u] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i][/u]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i][/u] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B>[/i][/u] y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					// Set maxFixingCost to 2 so that it allows [u] and [i] to be closed, without
+					// spending any efforts on reopening them
+					$parser->maxFixingCost = 2;
+
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i]u[/u] y',
+				'<r>x <B><s>[b]</s><I><s>[i]</s><U><s>[u]</s>...</U></I><e>[/b]</e></B><i>[/i]</i><U>u<e>[/u]</e></U> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 23, 4);
+				}
+			),
+			array(
+				'x [i][b][u]...[/b][/i][/u] y',
+				'<r>x <I><s>[i]</s><B><s>[b]</s><U><s>[u]</s>...</U><e>[/b]</e></B><e>[/i]</e></I><i>[/u]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B')->rules->autoReopen();
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('I', 2, 3);
+					$parser->addStartTag('B', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
+				'foo bar',
+				'<r>foo <X>bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 4, 0);
+					$parser->addEndTag('Y', 5, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>foo</X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
+			array(
+				'fooo bar',
+				'<r><X>f<X>oo</X>o</X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->nestingLimit = 2;
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addStartTag('X', 1, 0);
+					$parser->addSelfClosingTag('X', 2, 1);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addEndTag('X', 4, 0);
+				},
+				array(
+					array(
+						'err',
+						'Nesting limit exceeded',
+						array(
+							'tag'          => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
+							'tagName'      => 'X',
+							'nestingLimit' => 2
+						)
+					)
+				)
+			),
+			array(
+				'foo bar',
+				'<r><X>f</X><X>o</X>o bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->tagLimit = 2;
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+					$parser->addSelfClosingTag('X', 2, 1);
+				},
+				array(
+					array(
+						'err',
+						'Tag limit exceeded',
+						array(
+							'tag'      => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
+							'tagName'  => 'X',
+							'tagLimit' => 2
+						)
+					)
+				)
+			),
+			array(
+				'foo bar',
+				'<r><X>foo</X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addSelfClosingTag('Y', 1, 1)
+					       ->cascadeInvalidationTo($parser->addSelfClosingTag('Y', 5, 1));
+				}
+			),
+			array(
+				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
+				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x<br/>\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+					$configurator->tags->add('PRE')->rules->suspendAutoLineBreaks();
+					$configurator->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('PRE', 0, 5);
+					$parser->addEndTag('PRE', 21, 6);
+					$parser->addStartTag('B', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+				}
+			),
+			array(
+				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
+				"<r><PRE><s>[pre]</s>foo<B><s>[b]</s>x\ny<e>[/b]</e></B>bar<e>[/pre]</e></PRE>a<br/>\nb</r>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+					$configurator->tags->add('PRE')->rules->disableAutoLineBreaks();
+					$configurator->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('PRE', 0, 5);
+					$parser->addEndTag('PRE', 21, 6);
+					$parser->addStartTag('B', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>foo</X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addIgnoreTag(2, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>foo</X><i> b</i>ar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addIgnoreTag(2, 3);
+				}
+			),
+			array(
+				'foo bar',
+				'<r>foo <X>bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 4, 3);
+				}
+			),
+			array(
+				'foo bar',
+				'<t>foo bar</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 4, 4);
+				}
+			),
+			array(
+				'foo bar',
+				'<r><X>foo bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 7);
+				}
+			),
+			array(
+				'foo bar',
+				'<t>foo bar</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 8);
+				}
+			),
+			array(
+				'*foo* bar',
+				'<r><X><s>*</s>foo<e>*</e></X> bar</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 4, 1));
+				}
+			),
+			array(
+				'*foo* bar',
+				'<r><X><s>*</s>foo* bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 99, 1));
+				}
+			),
+			array(
+				'*foo* bar',
+				'<r><X><s>*</s>foo* bar</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 99, 1));
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'*_foo* bar_',
+				'<r><X><s>*</s><Y><s>_</s>foo</Y><e>*</e></X><Y> bar<e>_</e></Y></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 5, 1));
+					$parser->addStartTag('Y', 1, 1)
+					       ->pairWith($parser->addEndTag('Y', 10, 1));
+					$parser->addEndTag('Y', 6, 1);
+				}
+			),
+			array(
+				'**x**x***',
+				'<r><X><s>**</s>x<Y><s>**</s>x<e>**</e></Y><e>*</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 2)
+					       ->pairWith($parser->addEndTag('X', 7, 2));
+					$parser->addStartTag('Y', 3, 2)
+					       ->pairWith($parser->addEndTag('Y', 6, 2));
+				}
+			),
+			array(
+				'**x[**]x',
+				'<r><X><s>**</s>x<Y>[**]</Y></X>x</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 2)
+					       ->pairWith($parser->addEndTag('X', 4, 2));
+					$parser->addSelfClosingTag('Y', 3, 4);
+				}
+			),
+			array(
+				'xy',
+				'<t>x<br/>y</t>',
+				null,
+				function ($parser)
+				{
+					$parser->addBrTag(1);
+				}
+			),
+			array(
+				'xy',
+				'<t>xy</t>',
+				function ($configurator)
+				{
+					$configurator->rootRules->preventLineBreaks();
+				},
+				function ($parser)
+				{
+					$parser->addBrTag(1);
+				}
+			),
+			array(
+				'xx',
+				'<r><X>x</X><X>x</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->closeParent('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addStartTag('X', 1, 0);
+				}
+			),
+			array(
+				'xx [hr] yy',
+				'<r>xx <HR>[hr]</HR> yy</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('HR')->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('HR', 3, 4);
+				}
+			),
+			array(
+				'xx [img=foo.png] yy',
+				'<r>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('IMG');
+					$tag->attributes->add('src');
+					$tag->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('IMG', 3, 13)->setAttribute('src', 'foo.png');
+				}
+			),
+			array(
+				'xx [img]foo.png[/img] yy',
+				'<r>xx <IMG src="foo.png"><s>[img]</s>foo.png<e>[/img]</e></IMG> yy</r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('IMG');
+					$tag->attributes->add('src');
+					$tag->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$tag = $parser->addStartTag('IMG', 3, 5);
+					$tag->setAttribute('src', 'foo.png');
+
+					$tag->pairWith($parser->addEndTag('IMG', 15, 6));
+				}
+			),
+			array(
+				'XYX',
+				'<r><X><s>X</s><Y>Y</Y><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyChild('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<r><X><s>X</s><Y><s>Y</s><Z>Z</Z><e>Y</e></Y><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyChild('Z');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<r><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyChild('Z');
+					$configurator->tags->add('Y')->rules->isTransparent();
+					$configurator->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyDescendant('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<r><X><s>X</s><Y><s>Y</s>Z<e>Y</e></Y><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyDescendant('Z');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
+				function ($configurator)
+				{
+					$rules = $configurator->tags->add('X')->rules;
+					$rules->isTransparent();
+					$rules->denyChild('Y');
+
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYYYYX',
+				new RuntimeException('Fixing cost exceeded'),
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->maxFixingCost = 0;
+
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addStartTag('Y', 2, 1);
+					$parser->addStartTag('Y', 3, 1);
+					$parser->addStartTag('Y', 4, 1);
+					$parser->addEndTag('X', 5, 1);
+				}
+			),
+			array(
+				'XYYYYX',
+				'<r><X><s>X</s><Y><s>Y</s><Y>Y</Y><Y>Y</Y><e>Y</e></Y><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					// Ensuring that we can still parse well-formed text if we disallow any fixing
+					$parser->maxFixingCost = 0;
+
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Y', 2, 1);
+					$parser->addSelfClosingTag('Y', 3, 1);
+					$parser->addEndTag('Y', 4, 1);
+					$parser->addEndTag('X', 5, 1);
+				}
+			),
+			array(
+				'..',
+				'<r><X>.</X><X>.</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					// NOTE: the tags are added in order of position, but the stack still needs to
+					//       be sorted following the right tiebreakers. This is what we're testing
+					$parser->addEndTag('X', 2, 0);
+					$parser->addEndTag('X', 1, 0);
+					$parser->addStartTag('X', 1, 0);
+					$parser->addStartTag('X', 0, 0);
+				}
+			),
+			array(
+				'...',
+				'<r><X>.</X><X>.</X><X>.</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->filterChain->append(
+						function ($tag, $parser)
+						{
+							if ($tag->getPos() === 0)
+							{
+								$parser->addSelfClosingTag('X', 2, 1);
+							}
+
+							return true;
+						}
+					)->addParameterByName('parser');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
+			array(
+				'...',
+				'<r><X>.</X><X>.</X><X>.</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->filterChain->append(
+						function ($tag, $parser)
+						{
+							if ($tag->getPos() === 0)
+							{
+								$parser->addSelfClosingTag('X', 1, 1);
+							}
+
+							return true;
+						}
+					)->addParameterByName('parser');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 2, 1);
+				}
+			),
+			array(
+				'[UL]
+					[*] foo
+					[*] bar
+				[/UL]',
+				'<r><UL><s>[UL]</s>
+					<LI><s>[*]</s> foo</LI>
+					<LI><s>[*]</s> bar</LI>
+				<e>[/UL]</e></UL></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('UL');
+					$rules = $configurator->tags->add('LI')->rules;
+					$rules->closeAncestor('LI');
+					$rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 0, 4);
+					$parser->addStartTag('LI', 10, 3);
+					$parser->addStartTag('LI', 23, 3);
+					$parser->addEndTag('UL', 35, 5);
+				}
+			),
+			array(
+				'[UL]
+					[*] foo
+					[*] bar
+				[/UL]',
+				'<r><UL><s>[UL]</s>
+					<LI><s>[*]</s> foo</LI>
+					<LI><s>[*]</s> bar</LI>
+				<e>[/UL]</e></UL></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('UL');
+					$rules = $configurator->tags->add('LI')->rules;
+					$rules->closeParent('LI');
+					$rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 0, 4);
+					$parser->addStartTag('LI', 10, 3);
+					$parser->addStartTag('LI', 23, 3);
+					$parser->addEndTag('UL', 35, 5);
+				}
+			),
+			array(
+				'XX',
+				'<r>X<X>X</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->filterChain->append(
+						function ($tag)
+						{
+							return (bool) $tag->getPos();
+						}
+					);
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<r><X><s>X</s>Y<e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyChild('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				},
+				array(
+					array(
+						'warn',
+						'Tag is not allowed in this context',
+						array(
+							'tagName' => 'Y',
+							'tag'     => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'Y', 1, 1);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
+						)
+					)
+				)
+			),
+			array(
+				'X',
+				'<t>X</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->requireAncestor('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+				}
+			),
+			array(
+				'.X.',
+				'<r><NOPARSE><s>.</s>X<e>.</e></NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 1, 2, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
+			array(
+				'.X.',
+				'<r><NOPARSE><s>.</s>X<e>.</e></NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X')->rules->closeParent('NOPARSE');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 1, 2, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
+			array(
+				'X.X.X',
+				'<r><X><s>X</s><NOPARSE><s>.</s>X<e>.</e></NOPARSE><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 1, 1, 3, 1);
+					$parser->addStartTag('X', 0, 1);
+					$parser->addEndTag('X', 2, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'.X.',
+				'<r><NOPARSE>.<i>X</i>.</NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 3, 0);
+					$parser->addIgnoreTag(1, 1);
+				}
+			),
+			array(
+				'.XX.',
+				'<r><NOPARSE><p>.X</p><p>X.</p></NOPARSE></r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('NOPARSE');
+					$tag->rules->createParagraphs();
+					$tag->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 4, 0);
+					$parser->addParagraphBreak(2);
+				}
+			),
+			array(
+				'.X.',
+				'<r><NOPARSE>.<br/>X.</NOPARSE></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 0, 3, 0);
+					$parser->addBrTag(1);
+				}
+			),
+			array(
+				'foobar',
+				'<t><p>foo</p><p>bar</p></t>',
+				function ($configurator)
+				{
+					$configurator->rootRules->createParagraphs();
+				},
+				function ($parser)
+				{
+					$parser->addParagraphBreak(3);
+				}
+			),
+			array(
+				'foo|bar',
+				'<r><p>foo</p><i>|</i><p>bar</p></r>',
+				function ($configurator)
+				{
+					$configurator->rootRules->createParagraphs();
+				},
+				function ($parser)
+				{
+					$parser->addParagraphBreak(3);
+					$parser->addIgnoreTag(3, 1);
+				}
+			),
+			array(
+				"\n\n",
+				"<r><X><br/>\n</X><X>\n</X></r>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('X', 0, 0, 1, 0);
+					$parser->addTagPair('X', 1, 0, 2, 0)->setFlags(Parser::RULE_SUSPEND_AUTO_BR);
+				}
+			),
+			array(
+				'xxx',
+				"<r><T8>x<T8>x</T8>x</T8></r>",
+				function ($configurator)
+				{
+					// Create 9 tags with different rules so that they don't occupy the same bit in
+					// the allowed tags bitfields
+					for ($i = 0; $i <= 8; ++$i)
+					{
+						$j = ($i + 1) % 9;
+						$configurator->tags->add('T' . $i)->rules->denyChild('T' . $j);
+					}
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('T8', 0, 0, 3, 0);
+					$parser->addSelfClosingTag('T8', 1, 1);
+				}
+			),
+			array(
+				'[x][y]..[/y][/x]',
+				'<r><X><s>[x]</s></X><Y><s>[y]</s><X>..</X><e>[/y]</e></Y><i>[/x]</i></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->autoReopen();
+					$configurator->tags->add('Y')->rules
+						->closeParent('X')
+						->fosterParent('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 3);
+					$parser->addStartTag('Y', 3, 3);
+					$parser->addEndTag('Y', 8, 4);
+					$parser->addEndTag('X', 12, 4);
+				}
+			),
+			array(
+				"foo\nbar",
+				"<t>foo\nbar</t>"
+			),
+			array(
+				"foo\nbar",
+				"<t>foo<br/>\nbar</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			),
+			array(
+				"foo\nbar",
+				"<t>foo\nbar</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->disableAutoLineBreaks();
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			),
+			array(
+				// Automatic line breaks can be turned on and off repeatedly
+				"[Y]\n[N]\n[Y]\n[N]\n[/N]\n[/Y]\n[/N]\n[/Y]",
+				"<r><Y><s>[Y]</s><br/>\n<N><s>[N]</s>\n<Y><s>[Y]</s><br/>\n<N><s>[N]</s>\n<e>[/N]</e></N><br/>\n<e>[/Y]</e></Y>\n<e>[/N]</e></N><br/>\n<e>[/Y]</e></Y></r>",
+				function ($configurator)
+				{
+					$configurator->tags->add('Y')->rules->enableAutoLineBreaks();
+					$configurator->tags->add('N')->rules->disableAutoLineBreaks();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('Y', 0, 3);
+					$parser->addStartTag('N', 4, 3);
+					$parser->addStartTag('Y', 8, 3);
+					$parser->addStartTag('N', 12, 3);
+					$parser->addEndTag('N', 16, 4);
+					$parser->addEndTag('Y', 21, 4);
+					$parser->addEndTag('N', 26, 4);
+					$parser->addEndTag('Y', 31, 4);
+				}
+			),
+			array(
+				// Automatic line breaks can be temporarily suspended in current context only
+				"[Y]\n[S]\n[X]\n[/X]\n[/S]\n[/Y]",
+				"<r><Y><s>[Y]</s><br/>\n<S><s>[S]</s>\n<X><s>[X]</s><br/>\n<e>[/X]</e></X>\n<e>[/S]</e></S><br/>\n<e>[/Y]</e></Y></r>",
+				function ($configurator)
+				{
+					$configurator->tags->add('Y')->rules->enableAutoLineBreaks();
+					$configurator->tags->add('S')->rules->suspendAutoLineBreaks();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('Y', 0, 3);
+					$parser->addStartTag('S', 4, 3);
+					$parser->addStartTag('X', 8, 3);
+					$parser->addEndTag('X', 12, 4);
+					$parser->addEndTag('S', 17, 4);
+					$parser->addEndTag('Y', 22, 4);
+				}
+			),
+		);
+	}
+}
