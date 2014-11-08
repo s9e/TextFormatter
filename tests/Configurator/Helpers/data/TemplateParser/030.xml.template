@@ -1,7 +1,0 @@
-<xsl:element name="div">
-	<xsl:choose>
-		<xsl:when test="@foo"><xsl:attribute name="id">foo</xsl:attribute></xsl:when>
-		<xsl:when test="@bar"><xsl:attribute name="id">bar</xsl:attribute></xsl:when>
-		<xsl:otherwise><xsl:attribute name="id">baz</xsl:attribute></xsl:otherwise>
-	</xsl:choose>
-</xsl:element>

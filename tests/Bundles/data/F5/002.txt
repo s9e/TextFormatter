@@ -1,2 +1,0 @@
-[url=http://example.org/fluxbb/]My FluxBB Forum[/url]
-[url]http://example.org/fluxbb/[/url]

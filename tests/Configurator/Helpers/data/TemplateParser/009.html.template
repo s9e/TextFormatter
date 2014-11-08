@@ -1,3 +1,0 @@
-<b title="{{foo}}{@bar}&lt;baz&gt;">
-	<xsl:apply-templates/>
-</b>

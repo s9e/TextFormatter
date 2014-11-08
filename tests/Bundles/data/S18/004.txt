@@ -1,1 +1,0 @@
-Here is some text in the default direction and [bdo=rtl]Here is some right-to-left text[/bdo]
