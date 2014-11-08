@@ -58,9 +58,7 @@ class ClosureCompilerService extends Minifier
 			\stream_context_create([
 				'http' => [
 					'method'  => 'POST',
-					'header'  => "Connection: close\r\n"
-					           . "Content-length: " . \strlen($content) . "\r\n"
-					           . "Content-type: application/x-www-form-urlencoded",
+					'header'  => "Connection: close\r\nContent-length: " . \strlen($content) . "\r\nContent-type: application/x-www-form-urlencoded",
 					'content' => $content
 				]
 			])

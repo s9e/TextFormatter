@@ -26,9 +26,7 @@ class DisallowElement extends TemplateCheck
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query
-			= '//*[translate(local-name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]'
-			. '|'
-			. '//xsl:element[translate(@name,"ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]';
+			= '//*[translate(local-name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]|//xsl:element[translate(@name,"ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]';
 
 		$node = $xpath->query($query)->item(0);
 		if ($node)

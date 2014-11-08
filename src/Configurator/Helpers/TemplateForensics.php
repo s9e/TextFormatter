@@ -167,8 +167,7 @@ class TemplateForensics
 
 	protected function analyseRootNodes()
 	{
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]'
-		       . '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
 
 		foreach ($this->xpath->query($query) as $node)
 		{
@@ -190,10 +189,8 @@ class TemplateForensics
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
 
 		$query = '//text()[normalize-space() != ""]' . $predicate
-		       . '|'
-		       . '//xsl:text[normalize-space() != ""]' . $predicate
-		       . '|'
-		       . '//xsl:value-of' . $predicate;
+		       . '|//xsl:text[normalize-space() != ""]' . $predicate
+		       . '|//xsl:value-of' . $predicate;
 
 		if ($this->evaluate($query, $this->dom->documentElement))
 			$this->hasRootText = \true;

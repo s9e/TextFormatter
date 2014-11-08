@@ -26,8 +26,7 @@ class InlineXPathLiterals extends TemplateNormalization
 				$this->replaceElement($valueOf, $textContent);
 		}
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., "{")]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			AVTHelper::replace(

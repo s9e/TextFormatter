@@ -37,17 +37,7 @@ class TemplateParser
 
 	public static function parseEqualityExpr($expr)
 	{
-		$eq = '(?<equality>'
-		    . '(?<key>@[-\\w]+|\\$\\w+|\\.)'
-		    . '(?<operator>\\s*=\\s*)'
-		    . '(?:'
-		    . '(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)'
-		    . '|'
-		    . '(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\))'
-		    . ')'
-		    . '|'
-		    . '(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key))'
-		    . ')';
+		$eq = '(?<equality>(?<key>@[-\\w]+|\\$\\w+|\\.)(?<operator>\\s*=\\s*)(?:(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)|(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\)))|(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key)))';
 
 		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
 
@@ -265,13 +255,7 @@ class TemplateParser
 		foreach ($ir->getElementsByTagName('element') as $element)
 			$element->setAttribute('id', ++$id);
 
-		$query = '//applyTemplates[not(ancestor::attribute)]'
-		       . '|'
-		       . '//comment'
-		       . '|'
-		       . '//element'
-		       . '|'
-		       . '//output[not(ancestor::attribute)]';
+		$query = '//applyTemplates[not(ancestor::attribute)]|//comment|//element|//output[not(ancestor::attribute)]';
 
 		foreach ($xpath->query($query) as $node)
 		{
@@ -317,9 +301,7 @@ class TemplateParser
 		{
 			$id = $closeTag->getAttribute('id');
 
-			$query = 'ancestor::switch/'
-			       . 'following-sibling::*/'
-			       . 'descendant-or-self::closeTag[@id = "' . $id . '"]';
+			$query = 'ancestor::switch/following-sibling::*/descendant-or-self::closeTag[@id = "' . $id . '"]';
 
 			foreach ($xpath->query($query, $closeTag) as $following)
 			{

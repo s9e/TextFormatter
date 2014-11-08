@@ -455,8 +455,7 @@ class JavaScript
 			]
 		];
 
-		$js = '(' . \implode(',', \array_keys($arguments[$callbackType])) . '){'
-		    . 'return ' . $jsCallback . '(';
+		$js = '(' . \implode(',', \array_keys($arguments[$callbackType])) . '){return ' . $jsCallback . '(';
 
 		$sep = '';
 		foreach ($params as $k => $v)
