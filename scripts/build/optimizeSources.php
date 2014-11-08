@@ -156,7 +156,8 @@ function optimizeFile($filepath, array $options = array())
 		 && $token[1] !== 'null'
 		 && $token[1] !== 'true'
 		 && strpos($token[1], 'VERSION') === false
-		 && substr($token[1], 0, 2) !== 'T_')
+		 && substr($token[1], 0, 2) !== 'T_'
+		 && substr($token[1], 0, 2) !== '__')
 		{
 			$value = constant($token[1]);
 
