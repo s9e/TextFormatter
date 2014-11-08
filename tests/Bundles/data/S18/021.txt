@@ -1,1 +1,0 @@
-[iurl]http://example.org[/iurl], [iurl]#foo[/iurl], [iurl]example.org[/iurl]

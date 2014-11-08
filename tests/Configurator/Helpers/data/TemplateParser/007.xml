@@ -1,9 +1,0 @@
-<template outputMethod="html">
-	<element name="b" id="1" empty="maybe">
-		<attribute name="title">
-			<output escape="attribute" type="literal">foo</output>
-		</attribute>
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
-</template>

@@ -1,4 +1,0 @@
-<template outputMethod="html">
-	<output escape="text" type="xpath">'Hello '</output>
-	<output escape="text" type="literal">World</output>
-</template>

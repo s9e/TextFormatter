@@ -1,1 +1,0 @@
-<xsl:element name="div"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>

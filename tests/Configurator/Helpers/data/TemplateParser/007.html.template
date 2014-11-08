@@ -1,3 +1,0 @@
-<b title="foo">
-	<xsl:apply-templates/>
-</b>
