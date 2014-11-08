@@ -116,8 +116,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 
 		foreach (['xsl:param', 'xsl:variable'] as $nodeName)
 		{
-			$query = 'ancestor-or-self::*/'
-				   . 'preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
+			$query = 'ancestor-or-self::*/preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
 
 			foreach ($xpath->query($query, $node) as $varNode)
 			{

@@ -45,8 +45,7 @@ class XSLT implements RendererGenerator
 				$prefixes[\substr($tagName, 0, $pos)] = 1;
 		}
 
-		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
-		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
+		$xsl = '<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 
 		$prefixes = \array_keys($prefixes);
 		\sort($prefixes);
