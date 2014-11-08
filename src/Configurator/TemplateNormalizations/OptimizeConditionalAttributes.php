@@ -17,10 +17,7 @@ class OptimizeConditionalAttributes extends TemplateNormalization
 	{
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
-		$query = '//xsl:if'
-		       . "[starts-with(@test, '@')]"
-		       . '[count(descendant::node()) = 2]'
-		       . '[xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
+		$query = '//xsl:if[starts-with(@test, \'@\')][count(descendant::node()) = 2][xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
 
 		foreach ($xpath->query($query) as $if)
 		{

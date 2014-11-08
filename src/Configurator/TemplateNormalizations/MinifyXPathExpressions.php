@@ -26,8 +26,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 				XPathHelper::minify($attribute->nodeValue)
 			);
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., " ")]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., " ")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			AVTHelper::replace(

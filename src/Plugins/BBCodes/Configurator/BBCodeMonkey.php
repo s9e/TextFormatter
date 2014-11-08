@@ -144,8 +144,7 @@ class BBCodeMonkey
 		        . '\\[(?<bbcodeName>\\S+?)'
 		        . '(?<defaultAttribute>=\\S+?)?'
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
-		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
-		        . '$)i';
+		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))$)i';
 
 		if (!\preg_match($regexp, \trim($usage), $m))
 			throw new InvalidArgumentException('Cannot interpret the BBCode definition');

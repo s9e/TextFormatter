@@ -94,11 +94,9 @@ abstract class TemplateHelper
 	{
 		$paramNames = array();
 
-		$xsl = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '">'
-		     . '<xsl:template>'
+		$xsl = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '"><xsl:template>'
 		     . $xsl
-		     . '</xsl:template>'
-		     . '</xsl:stylesheet>';
+		     . '</xsl:template></xsl:stylesheet>';
 
 		$dom = new DOMDocument;
 		$dom->loadXML($xsl);
@@ -109,15 +107,13 @@ abstract class TemplateHelper
 		foreach ($xpath->query($query) as $attribute)
 			foreach (XPathHelper::getVariables($attribute->value) as $varName)
 			{
-				$varQuery = 'ancestor-or-self::*/'
-				          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
+				$varQuery = 'ancestor-or-self::*/preceding-sibling::xsl:variable[@name="' . $varName . '"]';
 
 				if (!$xpath->query($varQuery, $attribute)->length)
 					$paramNames[] = $varName;
 			}
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., "{")]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			$tokens = AVTHelper::parse($attribute->value);
@@ -129,8 +125,7 @@ abstract class TemplateHelper
 
 				foreach (XPathHelper::getVariables($token[1]) as $varName)
 				{
-					$varQuery = 'ancestor-or-self::*/'
-					          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
+					$varQuery = 'ancestor-or-self::*/preceding-sibling::xsl:variable[@name="' . $varName . '"]';
 
 					if (!$xpath->query($varQuery, $attribute)->length)
 						$paramNames[] = $varName;
@@ -453,9 +448,7 @@ abstract class TemplateHelper
 		if (\is_string($chars) && $chars !== '')
 			$expr = 'translate(' . $expr . ",'" . $chars . "','" . \strtolower($chars) . "')";
 
-		$template = '<xsl:element name="{' . $expr . '}">'
-		          . '<xsl:apply-templates/>'
-		          . '</xsl:element>';
+		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
 
 		foreach ($tagNames as $tagName)
 			$templates[$tagName] = $template;

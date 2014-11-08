@@ -157,11 +157,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$xsl = '<xsl:choose>';
 
 		if (!empty($this->notIfCondition))
-			$xsl .= '<xsl:when test="' . \htmlspecialchars($this->notIfCondition) . '">'
-			      . '<xsl:value-of select="."/>'
-			      . '</xsl:when>'
-			      . '<xsl:otherwise>'
-			      . '<xsl:choose>';
+			$xsl .= '<xsl:when test="' . \htmlspecialchars($this->notIfCondition) . '"><xsl:value-of select="."/></xsl:when><xsl:otherwise><xsl:choose>';
 
 		foreach ($this->collection as $code => $template)
 			$xsl .= '<xsl:when test=".=' . \htmlspecialchars(XPathHelper::export($code)) . '">'

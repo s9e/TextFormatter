@@ -100,11 +100,7 @@ class Regexp extends AttributeFilter
 			'[0-9]+'
 		);
 
-		$regexp = '(^(?<delim>.)\\^(?:'
-		        . '(?<expr>' . \implode('|', \array_map('preg_quote', $safeExpressions)) . ')'
-		        . '|'
-		        . '\\((?:\\?[:>])?(?&expr)\\)'
-		        . ')\\$(?&delim)(?=.*D)[Dis]*$)D';
+		$regexp = '(^(?<delim>.)\\^(?:(?<expr>' . \implode('|', \array_map('preg_quote', $safeExpressions)) . ')|\\((?:\\?[:>])?(?&expr)\\))\\$(?&delim)(?=.*D)[Dis]*$)D';
 
 		return (bool) \preg_match($regexp, $this->vars['regexp']);
 	}

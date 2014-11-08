@@ -101,7 +101,7 @@ class Configurator extends ConfiguratorBase
 
 		$regexp = \preg_replace('(^\\(\\?:)', '(?>', $regexp);
 
-		$regexp = '#\\b' . $regexp . '[^["\'\\s]+' . '(?!\\S)' . '#S';
+		$regexp = '#\\b' . $regexp . '[^["\'\\s]+(?!\\S)#S';
 
 		return array(
 			'quickMatch' => ($hasSchemes) ? ':' : '://',
