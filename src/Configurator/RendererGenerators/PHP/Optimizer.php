@@ -70,25 +70,25 @@ class Optimizer
 
 	protected function isOutputAssignment()
 	{
-		return ($this->tokens[$this->i    ] === array(312,        '$this')
-		     && $this->tokens[$this->i + 1] === array(363, '->')
-		     && $this->tokens[$this->i + 2] === array(310,          'out')
-		     && $this->tokens[$this->i + 3] === array(275,    '.='));
+		return ($this->tokens[$this->i    ] === array(\T_VARIABLE,        '$this')
+		     && $this->tokens[$this->i + 1] === array(\T_OBJECT_OPERATOR, '->')
+		     && $this->tokens[$this->i + 2] === array(\T_STRING,          'out')
+		     && $this->tokens[$this->i + 3] === array(\T_CONCAT_EQUAL,    '.='));
 	}
 
 	protected function isPrecededByOutputVar()
 	{
-		return ($this->tokens[$this->i - 1] === array(310,          'out')
-		     && $this->tokens[$this->i - 2] === array(363, '->')
-		     && $this->tokens[$this->i - 3] === array(312,        '$this'));
+		return ($this->tokens[$this->i - 1] === array(\T_STRING,          'out')
+		     && $this->tokens[$this->i - 2] === array(\T_OBJECT_OPERATOR, '->')
+		     && $this->tokens[$this->i - 3] === array(\T_VARIABLE,        '$this'));
 	}
 
 	protected function mergeConcatenatedHtmlSpecialChars()
 	{
-		if ($this->tokens[$this->i + 1]    !== array(310, 'htmlspecialchars')
+		if ($this->tokens[$this->i + 1]    !== array(\T_STRING, 'htmlspecialchars')
 		 || $this->tokens[$this->i + 2]    !== '('
 		 || $this->tokens[$this->i - 1]    !== ')'
-		 || $this->tokens[$this->i - 2][0] !== 308
+		 || $this->tokens[$this->i - 2][0] !== \T_LNUMBER
 		 || $this->tokens[$this->i - 3]    !== ',')
 			 return \false;
 
@@ -111,7 +111,7 @@ class Optimizer
 				--$parens;
 		}
 
-		if ($this->tokens[$this->i + 1] !== array(308, $escapeMode))
+		if ($this->tokens[$this->i + 1] !== array(\T_LNUMBER, $escapeMode))
 			return \false;
 
 		$this->tokens[$startIndex] = '.';
@@ -125,8 +125,8 @@ class Optimizer
 
 	protected function mergeConcatenatedStrings()
 	{
-		if ($this->tokens[$this->i - 1][0]    !== 318
-		 || $this->tokens[$this->i + 1][0]    !== 318
+		if ($this->tokens[$this->i - 1][0]    !== \T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i + 1][0]    !== \T_CONSTANT_ENCAPSED_STRING
 		 || $this->tokens[$this->i - 1][1][0] !== $this->tokens[$this->i + 1][1][0])
 			return \false;
 
@@ -145,7 +145,7 @@ class Optimizer
 	{
 		$this->i = 3;
 
-		while ($this->skipTo(array(275, '.=')))
+		while ($this->skipTo(array(\T_CONCAT_EQUAL, '.=')))
 		{
 			if (!$this->isPrecededByOutputVar())
 				 continue;
@@ -176,7 +176,7 @@ class Optimizer
 	{
 		$this->i = 0;
 
-		while ($this->skipPast(array(310, 'htmlspecialchars')))
+		while ($this->skipPast(array(\T_STRING, 'htmlspecialchars')))
 			if ($this->tokens[$this->i] === '(')
 			{
 				++$this->i;
@@ -186,12 +186,12 @@ class Optimizer
 
 	protected function removeHtmlspecialcharsSafeVar()
 	{
-		if ($this->tokens[$this->i    ]    !== array(312,        '$node')
-		 || $this->tokens[$this->i + 1]    !== array(363, '->')
-		 || ($this->tokens[$this->i + 2]   !== array(310,          'localName')
-		  && $this->tokens[$this->i + 2]   !== array(310,          'nodeName'))
+		if ($this->tokens[$this->i    ]    !== array(\T_VARIABLE,        '$node')
+		 || $this->tokens[$this->i + 1]    !== array(\T_OBJECT_OPERATOR, '->')
+		 || ($this->tokens[$this->i + 2]   !== array(\T_STRING,          'localName')
+		  && $this->tokens[$this->i + 2]   !== array(\T_STRING,          'nodeName'))
 		 || $this->tokens[$this->i + 3]    !== ','
-		 || $this->tokens[$this->i + 4][0] !== 308
+		 || $this->tokens[$this->i + 4][0] !== \T_LNUMBER
 		 || $this->tokens[$this->i + 5]    !== ')')
 			 return \false;
 
@@ -208,9 +208,9 @@ class Optimizer
 
 	protected function replaceHtmlspecialcharsLiteral()
 	{
-		if ($this->tokens[$this->i    ][0] !== 318
+		if ($this->tokens[$this->i    ][0] !== \T_CONSTANT_ENCAPSED_STRING
 		 || $this->tokens[$this->i + 1]    !== ','
-		 || $this->tokens[$this->i + 2][0] !== 308
+		 || $this->tokens[$this->i + 2][0] !== \T_LNUMBER
 		 || $this->tokens[$this->i + 3]    !== ')')
 			return \false;
 

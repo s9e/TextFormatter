@@ -19,7 +19,7 @@ class Parser extends ParserBase
 		foreach ($matches as $m)
 		{
 			$entity = $m[0][0];
-			$chr    = \html_entity_decode($entity, 3, 'UTF-8');
+			$chr    = \html_entity_decode($entity, \ENT_QUOTES, 'UTF-8');
 
 			if ($chr === $entity)
 				continue;

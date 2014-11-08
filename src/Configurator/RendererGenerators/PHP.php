@@ -211,7 +211,7 @@ class PHP implements RendererGenerator
 		$php[] = '	{';
 		$php[] = '		if ($root->nodeType === 3)';
 		$php[] = '		{';
-		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . 0 . ');';
+		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . \ENT_NOQUOTES . ');';
 		$php[] = '		}';
 		$php[] = '		else';
 		$php[] = '		{';

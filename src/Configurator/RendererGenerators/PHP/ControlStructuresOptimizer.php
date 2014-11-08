@@ -56,14 +56,14 @@ class ControlStructuresOptimizer
 
 	protected function blockEndsWithIf()
 	{
-		return \in_array($this->context['lastBlock'], array(304, 305), \true);
+		return \in_array($this->context['lastBlock'], array(\T_IF, \T_ELSEIF), \true);
 	}
 
 	protected function isControlStructure()
 	{
 		return \in_array(
 			$this->tokens[$this->i][0],
-			array(306, 305, 323, 325, 304, 321),
+			array(\T_ELSE, \T_ELSEIF, \T_FOR, \T_FOREACH, \T_IF, \T_WHILE),
 			\true
 		);
 	}
@@ -75,10 +75,10 @@ class ControlStructuresOptimizer
 
 		$k = $this->i + 1;
 
-		if ($this->tokens[$k][0] === 379)
+		if ($this->tokens[$k][0] === \T_WHITESPACE)
 			++$k;
 
-		return \in_array($this->tokens[$k][0], array(305, 306), \true);
+		return \in_array($this->tokens[$k][0], array(\T_ELSEIF, \T_ELSE), \true);
 	}
 
 	protected function mustPreserveBraces()
@@ -90,10 +90,10 @@ class ControlStructuresOptimizer
 	{
 		$savedIndex = $this->i;
 
-		if (!\in_array($this->tokens[$this->i][0], array(306, 305), \true))
+		if (!\in_array($this->tokens[$this->i][0], array(\T_ELSE, \T_ELSEIF), \true))
 			++$this->context['statements'];
 
-		if ($this->tokens[$this->i][0] !== 306)
+		if ($this->tokens[$this->i][0] !== \T_ELSE)
 			$this->skipCondition();
 
 		$this->skipWhitespace();
@@ -107,12 +107,12 @@ class ControlStructuresOptimizer
 
 		++$this->braces;
 
-		$replacement = array(379, '');
+		$replacement = array(\T_WHITESPACE, '');
 
-		if ($this->tokens[$savedIndex][0]  === 306
-		 && $this->tokens[$this->i + 1][0] !== 312
-		 && $this->tokens[$this->i + 1][0] !== 379)
-			$replacement = array(379, ' ');
+		if ($this->tokens[$savedIndex][0]  === \T_ELSE
+		 && $this->tokens[$this->i + 1][0] !== \T_VARIABLE
+		 && $this->tokens[$this->i + 1][0] !== \T_WHITESPACE)
+			$replacement = array(\T_WHITESPACE, ' ');
 
 		$this->context['lastBlock'] = $this->tokens[$savedIndex][0];
 
@@ -141,29 +141,29 @@ class ControlStructuresOptimizer
 	{
 		$this->tokens[$this->context['index']] = $this->context['replacement'];
 
-		$this->tokens[$this->i] = ($this->context['statements']) ? array(379, '') : ';';
+		$this->tokens[$this->i] = ($this->context['statements']) ? array(\T_WHITESPACE, '') : ';';
 
 		foreach (array($this->context['index'] - 1, $this->i - 1) as $tokenIndex)
-			if ($this->tokens[$tokenIndex][0] === 379)
+			if ($this->tokens[$tokenIndex][0] === \T_WHITESPACE)
 				$this->tokens[$tokenIndex][1] = '';
 
-		if ($this->tokens[$this->context['savedIndex']][0] === 306)
+		if ($this->tokens[$this->context['savedIndex']][0] === \T_ELSE)
 		{
 			$j = 1 + $this->context['savedIndex'];
 
-			while ($this->tokens[$j][0] === 379
-			    || $this->tokens[$j][0] === 374
-			    || $this->tokens[$j][0] === 375)
+			while ($this->tokens[$j][0] === \T_WHITESPACE
+			    || $this->tokens[$j][0] === \T_COMMENT
+			    || $this->tokens[$j][0] === \T_DOC_COMMENT)
 				++$j;
 
-			if ($this->tokens[$j][0] === 304)
+			if ($this->tokens[$j][0] === \T_IF)
 			{
-				$this->tokens[$j] = array(305, 'elseif');
+				$this->tokens[$j] = array(\T_ELSEIF, 'elseif');
 
 				$j = $this->context['savedIndex'];
-				$this->tokens[$j] = array(379, '');
+				$this->tokens[$j] = array(\T_WHITESPACE, '');
 
-				if ($this->tokens[$j - 1][0] === 379)
+				if ($this->tokens[$j - 1][0] === \T_WHITESPACE)
 					$this->tokens[$j - 1][1] = '';
 
 				$this->unindentBlock($j, $this->i - 1);
@@ -213,7 +213,7 @@ class ControlStructuresOptimizer
 
 	protected function skipWhitespace()
 	{
-		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === 379);
+		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === \T_WHITESPACE);
 	}
 
 	protected function unindentBlock($start, $end)
@@ -221,7 +221,7 @@ class ControlStructuresOptimizer
 		$this->i = $start;
 		do
 		{
-			if ($this->tokens[$this->i][0] === 379 || $this->tokens[$this->i][0] === 375)
+			if ($this->tokens[$this->i][0] === \T_WHITESPACE || $this->tokens[$this->i][0] === \T_DOC_COMMENT)
 				$this->tokens[$this->i][1] = \preg_replace("/^\t/m", '', $this->tokens[$this->i][1]);
 		}
 		while (++$this->i <= $end);

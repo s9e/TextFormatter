@@ -46,7 +46,7 @@ class NormalizedList extends NormalizedCollection
 	{
 		$normalizedKey = \filter_var(
 			$key,
-			257,
+			\FILTER_VALIDATE_INT,
 			array(
 				'options' => array(
 					'min_range' => 0,

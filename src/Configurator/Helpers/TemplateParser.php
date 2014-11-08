@@ -54,7 +54,7 @@ class TemplateParser
 		if (!\preg_match($regexp, $expr))
 			return \false;
 
-		\preg_match_all("((?J)$eq)", $expr, $matches, 2);
+		\preg_match_all("((?J)$eq)", $expr, $matches, \PREG_SET_ORDER);
 
 		$map = array();
 		foreach ($matches as $m)
@@ -87,14 +87,14 @@ class TemplateParser
 		{
 			switch ($child->nodeType)
 			{
-				case 8:
+				case \XML_COMMENT_NODE:
 					break;
 
-				case 3:
+				case \XML_TEXT_NODE:
 					self::appendOutput($ir, 'literal', $child->textContent);
 					break;
 
-				case 1:
+				case \XML_ELEMENT_NODE:
 					self::parseNode($ir, $child);
 					break;
 

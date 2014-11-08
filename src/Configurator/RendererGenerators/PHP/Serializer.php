@@ -70,7 +70,7 @@ class Serializer
 
 		$phpAttrName = $this->convertAttributeValueTemplate($attrName);
 
-		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . 3 . ')';
+		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . \ENT_QUOTES . ')';
 
 		return "\$this->out.=' '." . $phpAttrName . ".'=\"';"
 		     . $this->serializeChildren($attribute)
@@ -153,7 +153,7 @@ class Serializer
 		     . "\$this->out.=' ';"
 		     . "\$this->out.=\$attribute->name;"
 		     . "\$this->out.='=\"';"
-		     . "\$this->out.=htmlspecialchars(\$attribute->value," . 2 . ");"
+		     . "\$this->out.=htmlspecialchars(\$attribute->value," . \ENT_COMPAT . ");"
 		     . "\$this->out.='\"';"
 		     . '}';
 	}
@@ -170,7 +170,7 @@ class Serializer
 
 		$phpElName = $this->convertAttributeValueTemplate($elName);
 
-		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . 3 . ')';
+		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . \ENT_QUOTES . ')';
 
 		if ($isDynamic)
 		{
@@ -251,8 +251,8 @@ class Serializer
 	{
 		$php        = '';
 		$escapeMode = ($output->getAttribute('escape') === 'attribute')
-		            ? 2
-		            : 0;
+		            ? \ENT_COMPAT
+		            : \ENT_NOQUOTES;
 
 		if ($output->getAttribute('type') === 'xpath')
 		{

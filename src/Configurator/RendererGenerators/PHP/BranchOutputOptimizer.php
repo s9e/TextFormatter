@@ -23,7 +23,7 @@ class BranchOutputOptimizer
 
 		$php = '';
 		while (++$this->i < $this->cnt)
-			if ($this->tokens[$this->i][0] === 304)
+			if ($this->tokens[$this->i][0] === \T_IF)
 				$php .= $this->serializeIfBlock($this->parseIfBlock());
 			else
 				$php .= $this->serializeToken($this->tokens[$this->i]);
@@ -86,7 +86,7 @@ class BranchOutputOptimizer
 
 	protected function isBranchToken()
 	{
-		return \in_array($this->tokens[$this->i][0], array(306, 305, 304), \true);
+		return \in_array($this->tokens[$this->i][0], array(\T_ELSE, \T_ELSEIF, \T_IF), \true);
 	}
 
 	protected function mergeIfBranches(array $branches)
@@ -189,7 +189,7 @@ class BranchOutputOptimizer
 			$body .= $this->serializeOutput(\array_reverse($tail));
 			$tail  = array();
 
-			if ($this->tokens[$this->i][0] === 304)
+			if ($this->tokens[$this->i][0] === \T_IF)
 			{
 				$child = $this->parseIfBlock();
 
@@ -266,12 +266,12 @@ class BranchOutputOptimizer
 
 	protected function skipOutputAssignment()
 	{
-		if ($this->tokens[$this->i    ][0] !== 312
+		if ($this->tokens[$this->i    ][0] !== \T_VARIABLE
 		 || $this->tokens[$this->i    ][1] !== '$this'
-		 || $this->tokens[$this->i + 1][0] !== 363
-		 || $this->tokens[$this->i + 2][0] !== 310
+		 || $this->tokens[$this->i + 1][0] !== \T_OBJECT_OPERATOR
+		 || $this->tokens[$this->i + 2][0] !== \T_STRING
 		 || $this->tokens[$this->i + 2][1] !== 'out'
-		 || $this->tokens[$this->i + 3][0] !== 275)
+		 || $this->tokens[$this->i + 3][0] !== \T_CONCAT_EQUAL)
 			 return \false;
 
 		$this->i += 4;

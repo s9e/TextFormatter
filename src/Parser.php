@@ -381,7 +381,7 @@ class Parser
 		$this->outputText($tagPos, $skipBefore, $closeParagraph);
 
 		$tagText = ($tagLen)
-		         ? \htmlspecialchars(\substr($this->text, $tagPos, $tagLen), 0, 'UTF-8')
+		         ? \htmlspecialchars(\substr($this->text, $tagPos, $tagLen), \ENT_NOQUOTES, 'UTF-8')
 		         : '';
 
 		if ($tag->isStartTag())
@@ -399,7 +399,7 @@ class Parser
 			\ksort($attributes);
 
 			foreach ($attributes as $attrName => $attrValue)
-				$this->output .= ' ' . $attrName . '="' . \htmlspecialchars($attrValue, 2, 'UTF-8') . '"';
+				$this->output .= ' ' . $attrName . '="' . \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8') . '"';
 
 			if ($tag->isSelfClosingTag())
 				if ($tagLen)
@@ -520,7 +520,7 @@ class Parser
 		{
 			$catchupText = \htmlspecialchars(
 				\substr($this->text, $this->pos, $catchupPos - $this->pos),
-				0,
+				\ENT_NOQUOTES,
 				'UTF-8'
 			);
 
@@ -553,7 +553,7 @@ class Parser
 		$ignoreText = \substr($this->text, $tagPos, $tagLen);
 
 		$this->outputText($tagPos, 0, \false);
-		$this->output .= '<i>' . \htmlspecialchars($ignoreText, 0, 'UTF-8') . '</i>';
+		$this->output .= '<i>' . \htmlspecialchars($ignoreText, \ENT_NOQUOTES, 'UTF-8') . '</i>';
 		$this->isRich = \true;
 
 		$this->pos = $tagPos + $tagLen;
@@ -634,7 +634,7 @@ class Parser
 					$pluginConfig['regexp'],
 					$this->text,
 					$matches,
-					2 | 256
+					\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
 				);
 
 				if (!$cnt)

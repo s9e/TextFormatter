@@ -17,7 +17,7 @@ class Custom extends TemplateNormalization
 	public function __construct($callback)
 	{
 		if (!\is_callable($callback))
-			\trigger_error("Argument 1 passed to " . __METHOD__ . "() must be callable, " . \gettype($callback) . " given", 256);
+			\trigger_error("Argument 1 passed to " . __METHOD__ . "() must be callable, " . \gettype($callback) . " given", \E_USER_ERROR);
 
 		$this->callback = $callback;
 	}

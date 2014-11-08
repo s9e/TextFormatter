@@ -16,7 +16,7 @@ class Parser extends ParserBase
 		foreach ($this->config['generics'] as $_3390458856)
 		{
 			list($tagName, $regexp, $passthroughIdx) = $_3390458856;
-			\preg_match_all($regexp, $text, $matches, 2 | 256);
+			\preg_match_all($regexp, $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
 
 			foreach ($matches as $m)
 			{
