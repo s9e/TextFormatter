@@ -1,0 +1,14 @@
+<xsl:choose>
+	<xsl:when test="$STYLE_ID=2">
+		<xsl:choose>
+			<xsl:when test="@author">xxx</xsl:when>
+			<xsl:otherwise>yyy</xsl:otherwise>
+		</xsl:choose>
+	</xsl:when>
+	<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="@author">aaa</xsl:when>
+			<xsl:otherwise>bbb</xsl:otherwise>
+		</xsl:choose>
+	</xsl:otherwise>
+</xsl:choose>

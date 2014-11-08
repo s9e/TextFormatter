@@ -1,0 +1,11 @@
+<blockquote>
+	<xsl:if test="not(@author)">
+		<xsl:attribute name="class">uncited</xsl:attribute>
+	</xsl:if>
+	<div>
+		<xsl:if test="@author">
+			<cite><xsl:value-of select="@author"/> wrote:</cite>
+		</xsl:if>
+		<xsl:apply-templates />
+	</div>
+</blockquote>

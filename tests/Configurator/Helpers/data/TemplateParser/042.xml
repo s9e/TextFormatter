@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<template outputMethod="html">
+	<switch>
+		<case test=".=':)'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test=".=':('">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test=".=':p'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test="@foo=';)'">
+			<output escape="text" type="literal">.</output>
+		</case>
+	</switch>
+</template>

@@ -1,0 +1,1 @@
+[shadow=red,left]Hello[/shadow]

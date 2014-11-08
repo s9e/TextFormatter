@@ -1,0 +1,1 @@
+[img=FluxBB bbcode test]http://example.org/test.png[/img]

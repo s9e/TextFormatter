@@ -1,0 +1,1 @@
+[white][shadow=black,right]text or more BB Code[/shadow][/white]

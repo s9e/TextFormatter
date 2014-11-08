@@ -1,0 +1,2 @@
+[user=2]Test user[/user]
+[user]2[/user]

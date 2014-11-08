@@ -1,0 +1,8 @@
+<b>
+	<xsl:if test="@foo">
+		<xsl:attribute name="title">
+			<xsl:value-of select="@bar"/>
+		</xsl:attribute>
+	</xsl:if>
+	<xsl:apply-templates/>
+</b>

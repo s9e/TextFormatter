@@ -1,0 +1,1 @@
+[glow=orange,2]text or more BB Code[/glow]
