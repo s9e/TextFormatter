@@ -167,6 +167,8 @@ class ControlStructuresOptimizer
 					$this->tokens[$j - 1][1] = '';
 
 				$this->unindentBlock($j, $this->i - 1);
+
+				$this->tokens[$this->context['index']] = '';
 			}
 		}
 
