@@ -48,6 +48,40 @@ function optimizeFile($filepath, array $options = array())
 
 	$tokens = token_get_all($new);
 
+	foreach ($tokens as $i => &$token)
+	{
+		if ($token[0] !== '.')
+		{
+			continue;
+		}
+
+		if ($tokens[$i - 2][0] === T_CONSTANT_ENCAPSED_STRING
+		 && $tokens[$i - 1][0] === T_WHITESPACE
+		 && $tokens[$i + 1][0] === T_WHITESPACE
+		 && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING)
+		{
+			$left  = $tokens[$i - 2][1];
+			$right = $tokens[$i + 2][1];
+
+			if ($left[0] === $right[0])
+			{
+				$tokens[$i + 2][1] = substr($left, 0, -1) . substr($right, 1);
+				$changed = true;
+
+				unset($tokens[$i - 2]);
+				unset($tokens[$i - 1]);
+				unset($tokens[$i]);
+				unset($tokens[$i + 1]);
+			}
+		}
+	}
+	unset($token);
+
+	if ($changed)
+	{
+		$tokens = array_values($tokens);
+	}
+
 	// strpos() => \strpos()
 	foreach ($tokens as $i => &$token)
 	{
