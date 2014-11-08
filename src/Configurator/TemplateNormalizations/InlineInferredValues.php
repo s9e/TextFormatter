@@ -38,8 +38,7 @@ class InlineInferredValues extends TemplateNormalization
 					$valueOf
 				);
 
-			$query = './/*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-			       . '/@*[contains(., "{' . $var . '}")]';
+			$query = './/*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{' . $var . '}")]';
 			foreach ($xpath->query($query, $node) as $attribute)
 			{
 				AVTHelper::replace(
