@@ -194,6 +194,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] PHP string callbacks are normalized to an instance of AttributeFilter
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
  [x] Instances of AttributeFilter are added as-is
+ [x] containsCallback('strtolower') positive
+ [x] containsCallback('strtolower') negative
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
  [x] Filter names that start with # are normalized to lowercase
@@ -385,6 +387,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] PHP string callbacks are normalized to an instance of TagFilter
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
+ [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') positive
+ [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') negative
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagList
  [x] Tag names are normalized for storage

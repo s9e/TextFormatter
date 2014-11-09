@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class AttributeFilterChain extends NormalizedList
+class AttributeFilterChain extends FilterChain
 {
 	/**
 	* Normalize a value into an AttributeFilter instance

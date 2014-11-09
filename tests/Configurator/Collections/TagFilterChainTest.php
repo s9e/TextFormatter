@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator\Items\TagFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Collections\FilterChain
 * @covers s9e\TextFormatter\Configurator\Collections\TagFilterChain
 */
 class TagFilterChainTest extends Test
@@ -96,5 +97,33 @@ class TagFilterChainTest extends Test
 			$filter,
 			$filterChain->append($filter)
 		);
+	}
+
+	/**
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') positive
+	*/
+	public function testContainsCallbackTrue()
+	{
+		$filterChain = new TagFilterChain;
+		$filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
+		            ->addParameterByName('tag')
+		            ->addParameterByName('tagConfig')
+		            ->addParameterByName('registeredVars')
+		            ->addParameterByName('logger');
+
+		$this->assertTrue($filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
+	}
+
+	/**
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') negative
+	*/
+	public function testContainsCallbackFalse()
+	{
+		$filterChain = new TagFilterChain;
+		$filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
+		            ->addParameterByName('tag')
+		            ->addParameterByName('tagConfig');
+
+		$this->assertFalse($filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
 	}
 }

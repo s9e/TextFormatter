@@ -55,6 +55,12 @@ function convertCustom($filepath, &$file)
 				'protected function exportCallback($namespace, $callback, $argument)'
 			)
 		),
+		'Censor/Helper.php' => array(
+			array(
+				'protected function buildTag($word)',
+				'public function buildTag($word)'
+			)
+		),
 		'Configurator.php' => array(
 			array(
 				'$options[\'finalizeParser\']($parser);',
@@ -84,10 +90,10 @@ function convertCustom($filepath, &$file)
 				)
 			)
 		),
-		'Censor/Helper.php' => array(
+		'FilterChain.php' => array(
 			array(
-				'protected function buildTag($word)',
-				'public function buildTag($word)'
+				'$callback = (new ProgrammableCallback($callback))->getCallback();',
+				'$pc=new ProgrammableCallback($callback);$callback = $pc->getCallback();'
 			)
 		),
 		'InlineXPathLiterals.php' => array(
