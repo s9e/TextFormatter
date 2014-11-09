@@ -204,6 +204,24 @@ class AbstractDynamicContentCheckTest extends Test
 	}
 
 	/**
+	* @testdox Attributes are not safe if the tag's filterChain does not contain the default attribute filter
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
+	*/
+	public function testMisfilteredAttribute()
+	{
+		$node = $this->loadTemplate('<b><xsl:value-of select="@foo"/></b>');
+
+		$tag = new Tag;
+		$tag->attributes->add('foo')->defaultValue = 1;
+		$tag->filterChain->clear();
+		$tag->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes');
+
+		$check = new DummyContentCheck;
+		$check->check($node, $tag);
+	}
+
+	/**
 	* @testdox Attributes can be safe with the tag's default filterChain
 	*/
 	public function testFilteredAttribute()

@@ -20,9 +20,27 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
 	/**
-	* @var string Callback used by tags to filter attributes
+	* @var TagFilter Callback used by tags to filter attributes
 	*/
-	protected $tagFilterCallback = 's9e\\TextFormatter\\Parser::filterAttributes';
+	protected $tagFilter;
+
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		// Prepare a copy of the default tag filter used to filter attributes
+		$tag = new Tag;
+		foreach ($tag->filterChain as $filter)
+		{
+			if ($filter->getCallback() === 's9e\\TextFormatter\\Parser::filterAttributes')
+			{
+				$this->tagFilter = $filter;
+			}
+		}
+	}
 
 	/**
 	* Get the nodes targeted by this check
@@ -73,7 +91,8 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 
 		// Test whether the attribute is safe to be used in this content type
-		if (!$tag->filterChain->containsCallback($this->tagFilterCallback)
+		if (!isset($this->tagFilter)
+		 || !$tag->filterChain->contains($this->tagFilter)
 		 || !$this->isSafe($tag->attributes[$attrName]))
 		{
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);

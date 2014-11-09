@@ -1292,6 +1292,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Local parameters pointing to an unknown attribute are unsafe
  [x] Local parameters pointing to a safe attribute are safe
  [x] Attributes are not safe if the tag's filterChain is cleared
+ [x] Attributes are not safe if the tag's filterChain does not contain the default attribute filter
  [x] Attributes can be safe with the tag's default filterChain
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
