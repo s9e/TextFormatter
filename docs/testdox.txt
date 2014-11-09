@@ -1291,6 +1291,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Variables pointing to a stylesheet parameter of the same name are safe
  [x] Local parameters pointing to an unknown attribute are unsafe
  [x] Local parameters pointing to a safe attribute are safe
+ [x] Attributes are not safe if the tag's filterChain is cleared
+ [x] Attributes can be safe with the tag's default filterChain
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
  [x] Disallowed: <b use-attribute-sets="foo"/>

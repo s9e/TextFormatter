@@ -20,6 +20,11 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
 	/**
+	* @var string Callback used by tags to filter attributes
+	*/
+	protected $tagFilterCallback = 's9e\\TextFormatter\\Parser::filterAttributes';
+
+	/**
 	* Get the nodes targeted by this check
 	*
 	* @param  DOMElement $template <xsl:template/> node
@@ -68,7 +73,8 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 
 		// Test whether the attribute is safe to be used in this content type
-		if (!$this->isSafe($tag->attributes[$attrName]))
+		if (!$tag->filterChain->containsCallback($this->tagFilterCallback)
+		 || !$this->isSafe($tag->attributes[$attrName]))
 		{
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 		}
