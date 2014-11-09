@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Items\TagFilter;
 
-class TagFilterChain extends FilterChain
+class TagFilterChain extends NormalizedList
 {
 	/**
 	* Normalize a value into an TagFilter instance

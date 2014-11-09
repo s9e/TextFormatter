@@ -8,7 +8,6 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\AttributeFilterChain
-* @covers s9e\TextFormatter\Configurator\Collections\FilterChain
 */
 class AttributeFilterChainTest extends Test
 {
@@ -97,27 +96,5 @@ class AttributeFilterChainTest extends Test
 			$filter,
 			$filterChain->append($filter)
 		);
-	}
-
-	/**
-	* @testdox containsCallback('strtolower') positive
-	*/
-	public function testContainsCallbackTrue()
-	{
-		$filterChain = new AttributeFilterChain;
-		$filterChain->append('strtolower')->addParameterByName('foo');
-
-		$this->assertTrue($filterChain->containsCallback('strtolower'));
-	}
-
-	/**
-	* @testdox containsCallback('strtolower') negative
-	*/
-	public function testContainsCallbackFalse()
-	{
-		$filterChain = new AttributeFilterChain;
-		$filterChain->append('strtolower')->addParameterByName('foo');
-
-		$this->assertFalse($filterChain->containsCallback('strtoupper'));
 	}
 }
