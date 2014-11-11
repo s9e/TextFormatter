@@ -25,7 +25,16 @@ function htmlspecialchars_compat(str)
 		'&' : '&amp;',
 		'"' : '&quot;'
 	};
-	return str.replace(/[<>&"]/g, function(c) { return t[c]; });
+	return str.replace(
+		/[<>&"]/g,
+		/**
+		* @param {!string} c
+		*/
+		function(c)
+		{
+			return t[c];
+		}
+	);
 }
 
 /**
@@ -39,7 +48,16 @@ function htmlspecialchars_noquotes(str)
 		'>' : '&gt;',
 		'&' : '&amp;'
 	};
-	return str.replace(/[<>&]/g, function(c) { return t[c]; });
+	return str.replace(
+		/[<>&]/g,
+		/**
+		* @param {!string} c
+		*/
+		function(c)
+		{
+			return t[c];
+		}
+	);
 }
 
 /**
