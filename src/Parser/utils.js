@@ -43,7 +43,7 @@ function htmlspecialchars_noquotes(str)
 }
 
 /**
-* @return {!bool}
+* @return {!boolean}
 */
 function returnFalse()
 {
