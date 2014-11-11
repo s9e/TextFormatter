@@ -359,7 +359,18 @@ class JavaScript
 				$globalConfig['regexp'] = $regexp;
 			}
 
-			$globalConfig['parser'] = new Code('function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $globalConfig['parser'] . '}');
+			$globalConfig['parser'] = new Code(
+				'/**
+				* @param {!string} text
+				* @param {!Array.<Array>} matches
+				*/
+				function(text, matches)
+				{
+					/** @const */
+					var config=' . self::encode($localConfig) . ';
+					' . $globalConfig['parser'] . '
+				}'
+			);
 
 			$plugins[$pluginName] = $globalConfig;
 		}
