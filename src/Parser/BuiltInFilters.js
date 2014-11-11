@@ -167,7 +167,7 @@ var BuiltInFilters =
 			}
 		}
 
-		return true;
+		return attrValue;
 	},
 
 	/**
