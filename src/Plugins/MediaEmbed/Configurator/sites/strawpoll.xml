@@ -1,6 +1,8 @@
 <site name="Straw Poll" homepage="http://strawpoll.me/">
 	<example>http://strawpoll.me/738091</example>
 
+	<tags><tag>misc</tag></tags>
+
 	<host>strawpoll.me</host>
 	<extract>!strawpoll\.me/(?'id'\d+)!</extract>
 	<iframe width="600" height="310" src="http://strawpoll.me/embed_1/{@id}"/>

@@ -19,6 +19,16 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
+	protected $tagFilter;
+
+	public function __construct()
+	{
+		$tag = new Tag;
+		foreach ($tag->filterChain as $filter)
+			if ($filter->getCallback() === 's9e\\TextFormatter\\Parser::filterAttributes')
+				$this->tagFilter = $filter;
+	}
+
 	abstract protected function getNodes(DOMElement $template);
 
 	abstract protected function isSafe(Attribute $attribute);
@@ -34,7 +44,9 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		if (!isset($tag->attributes[$attrName]))
 			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
 
-		if (!$this->isSafe($tag->attributes[$attrName]))
+		if (!isset($this->tagFilter)
+		 || !$tag->filterChain->contains($this->tagFilter)
+		 || !$this->isSafe($tag->attributes[$attrName]))
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 	}
 

@@ -9,6 +9,8 @@
 	<example>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
 	<example>http://www.amazon.it/gp/product/B00JGOMIP6/</example>
 
+	<tags><tag>misc</tag></tags>
+
 	<host>amazon.ca</host>
 	<host>amazon.co.uk</host>
 	<host>amazon.co.jp</host>

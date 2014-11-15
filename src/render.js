@@ -18,19 +18,19 @@ function preview(text, target)
 {
 	var xml = parse(text),
 		DOM = loadXML(xml),
-		targetDoc = target.ownerDocument,
-		frag;
+		targetDoc = target.ownerDocument;
 
 	// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
-	frag = targetDoc.importNode(xslt['transformToFragment'](DOM, targetDoc), true);
+	var resultFragment = targetDoc.importNode(xslt['transformToFragment'](DOM, targetDoc), true);
 
 	// Apply post-processing
 	if (HINT.postProcessing)
 	{
-		var nodes = frag['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
+		var nodes = resultFragment['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{
+			/** @type {!string} */
 			var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
 
 			if (!postProcessFunctions[code])
@@ -90,14 +90,14 @@ function preview(text, target)
 		}
 
 		// Clone the new nodes
-		var frag = targetDoc.createDocumentFragment(),
+		var newNodesFragment = targetDoc.createDocumentFragment(),
 			i = left;
 
 		while (i < (newCnt - right))
 		{
 			newNode = newNodes[i].cloneNode(true);
 
-			frag.appendChild(newNode);
+			newNodesFragment.appendChild(newNode);
 			++i;
 		}
 
@@ -111,11 +111,11 @@ function preview(text, target)
 		// If we haven't skipped any nodes to the right, we can just append the fragment
 		if (!right)
 		{
-			oldEl.appendChild(frag);
+			oldEl.appendChild(newNodesFragment);
 		}
 		else
 		{
-			oldEl.insertBefore(frag, oldEl.childNodes[left]);
+			oldEl.insertBefore(newNodesFragment, oldEl.childNodes[left]);
 		}
 	}
 
@@ -197,7 +197,7 @@ function preview(text, target)
 		}
 	}
 
-	refreshElementContent(target, frag);
+	refreshElementContent(target, resultFragment);
 }
 
 /**
