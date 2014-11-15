@@ -73,6 +73,7 @@ matches.forEach(function(m)
 
 	while (rpos < textLen)
 	{
+		/** @type {!string} */
 		var c = text.charAt(rpos);
 
 		if (c === ' ')

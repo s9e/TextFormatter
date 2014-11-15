@@ -6,6 +6,8 @@
 	<example>http://www.ebay.at/itm/Tea-Matter-Teesieb-mit-Zwitscherton-Alessi-Rot-Schwarz-Stahl-glnzend-/251585352862</example>
 	<example>http://www.ebay.com/itm/261416432518</example>
 
+	<tags><tag>misc</tag></tags>
+
 	<host>ebay.at</host>
 	<host>ebay.co.uk</host>
 	<host>ebay.com</host>
