@@ -2,8 +2,6 @@
 	<example>https://archive.org/details/BillGate99</example>
 	<example>https://archive.org/details/DFTS2014-05-30</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>archive.org</host>
 	<scrape>
 		<match>!archive\.org/details/!</match>

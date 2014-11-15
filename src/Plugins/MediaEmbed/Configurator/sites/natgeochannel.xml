@@ -2,8 +2,6 @@
 	<example>http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</example>
 	<example>http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>channel.nationalgeographic.com</host>
 	<extract>@channel\.nationalgeographic\.com/(?'id'[-/\w]+/videos/[-\w]+)@</extract>
 	<iframe width="560" height="315" src="//channel.nationalgeographic.com/{@id}/embed/"/>

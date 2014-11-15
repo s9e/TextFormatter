@@ -3,8 +3,6 @@
 	<example>http://vimeo.com/67207222</example>
 	<example>http://vimeo.com/channels/staffpicks/67207222</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>vimeo.com</host>
 	<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'\d+)!</extract>
 	<iframe width="560" height="315" src="//player.vimeo.com/video/{@id}"/>
