@@ -3,8 +3,6 @@
 	<example>http://www.dailymotion.com/video/x222z1</example>
 	<example>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>dailymotion.com</host>
 	<extract>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</extract>
 	<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/{@id}"/>

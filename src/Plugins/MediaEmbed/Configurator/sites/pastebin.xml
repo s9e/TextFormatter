@@ -1,8 +1,6 @@
 <site name="Pastebin" homepage="http://pastebin.com/">
 	<example>http://pastebin.com/9jEf44nc</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>pastebin.com</host>
 	<extract>!pastebin\.com/(?:\w+\.php\?i=)?(?'id'\w+)!</extract>
 	<iframe width="100%" height="300" src="//pastebin.com/embed_iframe.php?i={@id}" scrolling="" style="resize:both"/>

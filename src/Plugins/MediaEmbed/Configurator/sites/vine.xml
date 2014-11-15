@@ -1,8 +1,6 @@
 <site name="Vine" homepage="https://vine.co/">
 	<example>https://vine.co/v/bYwPIluIipH</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>vine.co</host>
 	<extract>!vine\.co/v/(?'id'[^/]+)!</extract>
 	<template><![CDATA[<iframe width="480" height="480" src="https://vine.co/v/{@id}/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"/><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"/>]]></template>

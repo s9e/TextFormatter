@@ -1,8 +1,6 @@
 <site name="LiveLeak" homepage="http://www.liveleak.com/">
 	<example>http://www.liveleak.com/view?i=3dd_1366238099</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>liveleak.com</host>
 	<extract>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</extract>
 	<iframe width="640" height="360" src="http://www.liveleak.com/ll_embed?i={@id}"/>
