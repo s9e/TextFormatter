@@ -53,7 +53,7 @@ function parseDashesAndEllipses()
 	var m, regexp = /---?|\.\.\./g;
 	while (m = regexp.exec(text))
 	{
-		var pos = m['index'],
+		var pos = +m['index'],
 			len = m[0].length,
 			chr = chrs[m[0]];
 
@@ -83,8 +83,8 @@ function parseQuotePairs(q, regexp, leftQuote, rightQuote)
 	var m;
 	while (m = regexp.exec(text))
 	{
-		var left  = addSelfClosingTag(config.tagName, m['index'] + m[0].indexOf(q), 1),
-			right = addSelfClosingTag(config.tagName, m['index'] + m[0].length - 1, 1);
+		var left  = addSelfClosingTag(config.tagName, +m['index'] + m[0].indexOf(q), 1),
+			right = addSelfClosingTag(config.tagName, +m['index'] + m[0].length - 1, 1);
 
 		left.setAttribute(config.attrName, leftQuote);
 		right.setAttribute(config.attrName, rightQuote);
@@ -114,7 +114,7 @@ function parseSingleQuotes(text)
 
 	while (m = regexp.exec(text))
 	{
-		var tag = addSelfClosingTag(config.tagName, m['index'] + m[0].indexOf("'"), 1);
+		var tag = addSelfClosingTag(config.tagName, +m['index'] + m[0].indexOf("'"), 1);
 		tag.setAttribute(config.attrName, "\u2019");
 
 		// Give this tag a worse priority than default so that quote pairs take precedence
@@ -133,7 +133,7 @@ function parseSymbolsAfterDigits(text)
 	while (m = regexp.exec(text))
 	{
 		// Test for a multiply sign at the end
-		var pos = m['index'] + m[0].length - 1;
+		var pos = +m['index'] + m[0].length - 1;
 		if (m[0].charAt(pos) === 'x')
 		{
 			addSelfClosingTag(config.tagName, pos, 1).setAttribute(config.attrName, "\u00d7");
@@ -143,7 +143,7 @@ function parseSymbolsAfterDigits(text)
 		var c = m[0].charAt(1);
 		if (c === "'" || c === '"')
 		{
-			pos = 1 + m['index'];
+			pos = +m['index'] + 1;
 
 			var chr;
 			if (m[0].substr(1, 2) === "'s")
@@ -177,7 +177,7 @@ function parseSymbolsInParentheses()
 	var m, regexp = /\((?:c|r|tm)\)/gi;
 	while (m = regexp.exec(text))
 	{
-		var pos = m['index'],
+		var pos = +m['index'],
 			len = m[0].length,
 			chr = chrs[m[0].toLowerCase()];
 

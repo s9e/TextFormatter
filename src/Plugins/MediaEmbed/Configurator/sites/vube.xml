@@ -2,6 +2,8 @@
 	<example>http://vube.com/s/v7JeV6</example>
 	<example>http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s</example>
 
+	<tags><tag>misc</tag></tags>
+
 	<host>vube.com</host>
 	<extract>!vube\.com/[^/]+/[^/]+/(?'id'\w+)!</extract>
 	<scrape>
