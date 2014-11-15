@@ -1,8 +1,6 @@
 <site name="MediaCrush" homepage="https://mediacru.sh/">
 	<example>https://mediacru.sh/vKUNeYFRuzDC</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>mediacru.sh</host>
 	<extract>!mediacru\.sh/(?'id'\w+)!</extract>
 	<scrape url="https://mediacru.sh/api/{@id}">

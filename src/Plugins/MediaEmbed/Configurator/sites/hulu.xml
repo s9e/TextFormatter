@@ -1,8 +1,6 @@
 <site name="Hulu" homepage="http://www.hulu.com/">
 	<example>http://www.hulu.com/watch/484180</example>
 
-	<tags><tag>misc</tag></tags>
-
 	<host>hulu.com</host>
 	<scrape>
 		<match>!hulu\.com/watch/!</match>
