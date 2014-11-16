@@ -2397,6 +2397,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertXPath() tests
  [x] convertCondition() tests
+ [x] Covering test for resolveConstantMathExpression()
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\BranchOutputOptimizer
  [x] optimize() tests

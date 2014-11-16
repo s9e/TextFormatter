@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
 use Exception;
+use ReflectionMethod;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor;
 use s9e\TextFormatter\Tests\Test;
@@ -255,6 +256,51 @@ class XPathConvertorTest extends Test
 					}
 				}
 			],
+			// Constant math
+			[
+				'12+34',
+				'46',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
+			[
+				'44-11',
+				'33',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
+			[
+				'7*9',
+				'63',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
+			[
+				'10div2',
+				'5',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
 		];
 	}
 
@@ -388,5 +434,17 @@ class XPathConvertorTest extends Test
 				"strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
 			],
 		];
+	}
+
+	/**
+	* @testdox Covering test for resolveConstantMathExpression()
+	* @expectedException LogicException
+	*/
+	public function testResolveConstantMathExpressionException()
+	{
+		$className = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\PHP\\XPathConvertor';
+		$method = new ReflectionMethod($className, 'resolveConstantMathExpression');
+		$method->setAccessible(true);
+		$method->invoke(new XPathConvertor, 1, '**', 2);
 	}
 }
