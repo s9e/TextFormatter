@@ -387,7 +387,13 @@ class XPathConvertor
 	{
 		if (is_numeric($expr1) && is_numeric($expr2))
 		{
-			return (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
+			$result = (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
+
+			// Protect against scientific notation
+			if (preg_match('(^[.0-9]+$)D', $result))
+			{
+				return $result;
+			}
 		}
 
 		if (!is_numeric($expr1))

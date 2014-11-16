@@ -301,6 +301,17 @@ class XPathConvertorTest extends Test
 					}
 				}
 			],
+			[
+				'1div100000',
+				'1/100000',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
 		];
 	}
 
