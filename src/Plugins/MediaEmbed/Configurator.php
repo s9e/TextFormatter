@@ -390,6 +390,18 @@ class Configurator extends ConfiguratorBase
 		return $tag;
 	}
 
+	/**
+	* Set a string to be appended to the templates used to render media sites
+	*
+	* @param  string $template
+	* @return void
+	*/
+	public function appendTemplate($template = '')
+	{
+		$this->appendTemplate
+			= $this->configurator->templateNormalizer->normalizeTemplate($template);
+	}
+
 	//==========================================================================
 	// Internal stuff
 	//==========================================================================
@@ -491,18 +503,6 @@ class Configurator extends ConfiguratorBase
 	protected function buildTemplate(array $siteConfig)
 	{
 		return $siteConfig['template'];
-	}
-
-	/**
-	* Set a string to be appended to the templates used to render media sites
-	*
-	* @param  string $template
-	* @return void
-	*/
-	public function appendTemplate($template = '')
-	{
-		$this->appendTemplate
-			= $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
 	/**
