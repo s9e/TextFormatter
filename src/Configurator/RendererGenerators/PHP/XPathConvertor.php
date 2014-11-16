@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
+use LogicException;
 use RuntimeException;
 
 class XPathConvertor
@@ -276,13 +277,41 @@ class XPathConvertor
 
 	protected function math($expr1, $operator, $expr2)
 	{
+		if (\is_numeric($expr1) && \is_numeric($expr2))
+		{
+			$result = (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
+
+			if (\preg_match('(^[.0-9]+$)D', $result))
+				return $result;
+		}
+
 		if (!\is_numeric($expr1))
 			$expr1 = $this->convertXPath($expr1);
 
 		if (!\is_numeric($expr2))
 			$expr2 = $this->convertXPath($expr2);
 
+		if ($operator === 'div')
+			$operator = '/';
+
 		return $expr1 . $operator . $expr2;
+	}
+
+	protected function resolveConstantMathExpression($expr1, $operator, $expr2)
+	{
+		if ($operator === '+')
+			return $expr1 + $expr2;
+
+		if ($operator === '-')
+			return $expr1 - $expr2;
+
+		if ($operator === '*')
+			return $expr1 * $expr2;
+
+		if ($operator === 'div')
+			return $expr1 / $expr2;
+
+		throw new LogicException;
 	}
 
 	protected function exportXPath($expr)
@@ -381,7 +410,7 @@ class XPathConvertor
 		{
 			$patterns['math'] = array(
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
-				'(?<math1>[-+*])',
+				'(?<math1>[-+*]|div)',
 				'(?<math2>(?&math)|(?&math0))'
 			);
 
