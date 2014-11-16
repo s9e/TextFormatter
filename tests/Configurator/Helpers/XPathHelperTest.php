@@ -100,6 +100,13 @@ class XPathHelperTest extends Test
 			[true,  '@foo + @bar'],
 			[true,  '$foo + $bar'],
 			[true,  '$foo + 0'],
+			[true,  '$foo * 3'],
+			[true,  '@x * 3'],
+			[true,  '@x div @y'],
+			[true,  '@height*100div@width'],
+			[true,  '(@height+100)*@width'],
+			[false, 'foo(@height+100)'],
+			[false, 'foo ( @height + 100 )'],
 		];
 	}
 
