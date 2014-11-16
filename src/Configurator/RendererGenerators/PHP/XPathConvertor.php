@@ -394,6 +394,11 @@ class XPathConvertor
 			$expr2 = $this->convertXPath($expr2);
 		}
 
+		if ($operator === 'div')
+		{
+			$operator = '/';
+		}
+
 		return $expr1 . $operator . $expr2;
 	}
 
@@ -518,7 +523,7 @@ class XPathConvertor
 		{
 			$patterns['math'] = [
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
-				'(?<math1>[-+*])',
+				'(?<math1>[-+*]|div)',
 				'(?<math2>(?&math)|(?&math0))'
 			];
 

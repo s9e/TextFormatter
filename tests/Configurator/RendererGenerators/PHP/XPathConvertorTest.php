@@ -244,6 +244,17 @@ class XPathConvertorTest extends Test
 					}
 				}
 			],
+			[
+				'@x div@y',
+				"\$node->getAttribute('x')/\$node->getAttribute('y')",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
+			],
 		];
 	}
 
