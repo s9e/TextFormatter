@@ -249,6 +249,12 @@ class Configurator extends ConfiguratorBase
 		return $tag;
 	}
 
+	public function appendTemplate($template = '')
+	{
+		$this->appendTemplate
+			= $this->configurator->templateNormalizer->normalizeTemplate($template);
+	}
+
 	protected function appendFilter(Attribute $attribute, $filter)
 	{
 		if (!\in_array($filter, $this->allowedFilters, \true))
@@ -308,12 +314,6 @@ class Configurator extends ConfiguratorBase
 	protected function buildTemplate(array $siteConfig)
 	{
 		return $siteConfig['template'];
-	}
-
-	public function appendTemplate($template = '')
-	{
-		$this->appendTemplate
-			= $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
 	protected function generateAttributes(array $attributes)

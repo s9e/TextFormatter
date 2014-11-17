@@ -50,7 +50,11 @@ abstract class XPathHelper
 
 	public static function isExpressionNumeric($expr)
 	{
-		if (\preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*[-+]\\s*(?1))++$)', $expr))
+		$expr = \trim($expr);
+		$expr = \strrev(\preg_replace('(\\((?!\\s*\\w))', '', \strrev($expr)));
+		$expr = \str_replace(')', '', $expr);
+
+		if (\preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++$)', $expr))
 			return \true;
 
 		return \false;
