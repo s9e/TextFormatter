@@ -58,7 +58,7 @@ class Regexp extends AttributeFilter
 
 			$captureStart = '(?>\\((?:\\?:)?)*';
 
-			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)\\w+\\??:#i';
+			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
 			if (\preg_match($regexp, $regexpInfo['regexp'])
 			 && \strpos($regexpInfo['modifiers'], 'm') === \false)
 				return \true;
