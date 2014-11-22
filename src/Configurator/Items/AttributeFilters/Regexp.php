@@ -90,7 +90,7 @@ class Regexp extends AttributeFilter
 
 			// Regexps that start with a fixed scheme are considered safe. As a special case, we
 			// allow the scheme part to end with a single ? to allow the regexp "https?"
-			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)\\w+\\??:#i';
+			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
 			if (preg_match($regexp, $regexpInfo['regexp'])
 			 && strpos($regexpInfo['modifiers'], 'm') === false)
 			{
