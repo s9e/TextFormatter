@@ -2481,6 +2481,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vbox7.com/play:a87a6894c5',
+				'<r><VBOX7 id="a87a6894c5" url="http://vbox7.com/play:a87a6894c5">http://vbox7.com/play:a87a6894c5</VBOX7></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vbox7');
+				}
+			],
+			[
 				'http://www.vevo.com/watch/USUV71400682',
 				'<r><VEVO id="USUV71400682" url="http://www.vevo.com/watch/USUV71400682">http://www.vevo.com/watch/USUV71400682</VEVO></r>',
 				[],
