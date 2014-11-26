@@ -11,7 +11,7 @@
 	<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+))?#</extract>
 	<scrape>
 		<match>!twitch\.tv/m/\d+!</match>
-		<extract>!channel=(?'channel'\w+)&amp;.*?archive_id=(?'archive_id'\d+)!</extract>
+		<extract>!channel=(?'channel'\w+).*?videoId=a(?'archive_id'\d+)!</extract>
 	</scrape>
 	<flash width="620" height="378">
 		<src><![CDATA[
