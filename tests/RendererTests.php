@@ -285,7 +285,21 @@ trait RendererTests
 	}
 
 	/**
+	* @testdox DTDs in the XML representation cause an exception to be thrown
+	* @expectedException InvalidArgumentException DTD
+	*/
+	public function testDTD()
+	{
+		$xml = '<?xml version="1.0" encoding="UTF-8"?>'
+		     . '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY foo "FOO">]>'
+		     . '<r>x&foo;y</r>';
+
+		$this->configurator->getRenderer()->render($xml);
+	}
+
+	/**
 	* @testdox Is not vulnerable to XXE
+	* @expectedException InvalidArgumentException DTD
 	*/
 	public function testXXE()
 	{
@@ -293,9 +307,6 @@ trait RendererTests
 		     . '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
 		     . '<r>x&xxe;y</r>';
 
-		$this->assertSame(
-			'xy',
-			$this->configurator->getRenderer()->render($xml)
-		);
+		$this->configurator->getRenderer()->render($xml);
 	}
 }

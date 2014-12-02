@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter;
 
 use DOMDocument;
+use InvalidArgumentException;
 
 abstract class Renderer
 {
@@ -34,6 +35,8 @@ abstract class Renderer
 	*/
 	protected function loadXML($xml)
 	{
+		$this->preventDTD($xml);
+
 		// Activate small nodes allocation and relax LibXML's hardcoded limits if applicable. Limits
 		// on tags can be set during configuration
 		$flags = (LIBXML_VERSION >= 20700) ? LIBXML_COMPACT | LIBXML_PARSEHUGE : 0;
@@ -176,6 +179,20 @@ abstract class Renderer
 		foreach ($params as $paramName => $paramValue)
 		{
 			$this->setParameter($paramName, $paramValue);
+		}
+	}
+
+	/**
+	* Test for the presence of a DTD declaration and throw an exception if found
+	*
+	* @param  string $xml XML
+	* @return void
+	*/
+	protected function preventDTD($xml)
+	{
+		if (strpos($xml, '<!') !== false && preg_match('(<!(?!\\[CDATA\\[))', $xml))
+		{
+			throw new InvalidArgumentException('DTDs are not allowed');
 		}
 	}
 }
