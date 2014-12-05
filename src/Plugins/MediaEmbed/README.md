@@ -353,7 +353,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>msnbc</code></td>
 		<td>MSNBC</td>
-		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</td>
+		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725<br/>http://on.msnbc.com/1qkH62o</td>
 	</tr>
 	<tr>
 		<td><code>natgeochannel</code></td>

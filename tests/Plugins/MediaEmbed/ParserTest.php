@@ -671,6 +671,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://on.msnbc.com/1qkH62o',
+				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://on.msnbc.com/1qkH62o">http://on.msnbc.com/1qkH62o</MSNBC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('msnbc');
+				}
+			],
+			[
 				'http://video.nationalgeographic.com/tv/changing-earth',
 				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO" url="http://video.nationalgeographic.com/tv/changing-earth">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
 				[],
