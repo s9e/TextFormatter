@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter;
 
 use DOMDocument;
+use InvalidArgumentException;
 
 abstract class Renderer
 {
@@ -19,6 +20,8 @@ abstract class Renderer
 
 	protected function loadXML($xml)
 	{
+		$this->preventDTD($xml);
+
 		$flags = (\LIBXML_VERSION >= 20700) ? \LIBXML_COMPACT | \LIBXML_PARSEHUGE : 0;
 
 		$dom = new DOMDocument;
@@ -92,5 +95,11 @@ abstract class Renderer
 	{
 		foreach ($params as $paramName => $paramValue)
 			$this->setParameter($paramName, $paramValue);
+	}
+
+	protected function preventDTD($xml)
+	{
+		if (\strpos($xml, '<!') !== \false && \preg_match('(<!(?!\\[CDATA\\[))', $xml))
+			throw new InvalidArgumentException('DTDs are not allowed');
 	}
 }
