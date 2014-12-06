@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
-* @method mixed   add(string $key)
+* @method mixed   add(string $key, mixed $value)
 * @method array   asConfig()
 * @method void    clear()
 * @method bool    contains(mixed $value)
@@ -30,11 +30,11 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 * @method mixed   normalizeValue(mixed $value)
 * @method bool    offsetExists(string|integer $offset)
 * @method mixed   offsetGet(string|integer $offset)
-* @method void    offsetSet(string|integer $offset)
+* @method void    offsetSet(string|integer $offset, mixed $value)
 * @method void    offsetUnset(string|integer $offset)
 * @method string  onDuplicate(string|null $action)
 * @method void    rewind()
-* @method mixed   set(string $key)
+* @method mixed   set(string $key, mixed $value)
 * @method bool    valid()
 */
 class Configurator extends ConfiguratorBase

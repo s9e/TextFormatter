@@ -19,7 +19,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
 /**
-* @method mixed   add(mixed $value)
+* @method mixed   add(mixed $value, null $void)
 * @method mixed   append(mixed $value)
 * @method array   asConfig()
 * @method void    clear()
@@ -30,20 +30,20 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 * @method bool    exists(string $key)
 * @method mixed   get(string $key)
 * @method mixed   indexOf(mixed $value)
-* @method mixed   insert(integer $offset)
+* @method mixed   insert(integer $offset, mixed $value)
 * @method integer|string key()
 * @method mixed   next()
-* @method integer normalizeKey()
-* @method TemplateCheck normalizeValue()
+* @method integer normalizeKey(mixed $key)
+* @method TemplateCheck normalizeValue(mixed $check)
 * @method bool    offsetExists(string|integer $offset)
 * @method mixed   offsetGet(string|integer $offset)
 * @method void    offsetSet(mixed $offset, mixed $value)
 * @method void    offsetUnset(string|integer $offset)
 * @method string  onDuplicate(string|null $action)
 * @method mixed   prepend(mixed $value)
-* @method integer remove()
+* @method integer remove(mixed $value)
 * @method void    rewind()
-* @method mixed   set(string $key)
+* @method mixed   set(string $key, mixed $value)
 * @method bool    valid()
 */
 class TemplateChecker implements ArrayAccess, Iterator

@@ -35,9 +35,9 @@ function getMethodAnnotations($className)
 			continue;
 		}
 
-		$returnType = (preg_match('/@return\\s*(\\S+)/', $doc, $m)) ? $m[1] : 'void';
+		$returnType = (preg_match('(@return\\s*(\\S+))', $doc, $m)) ? $m[1] : 'void';
 
-		preg_match_all('/@param\\s+(\\S+)\\s(\\S+)/', $doc, $matches, PREG_SET_ORDER);
+		preg_match_all('(@param\\s+(\\S+)\\s+(\\S+))', $doc, $matches, PREG_SET_ORDER);
 		$args = [];
 		foreach ($matches as $m)
 		{
