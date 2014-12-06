@@ -357,16 +357,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153',
-				'<r><EBAY id="230993099153" lang="en_GB" url="http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153">http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153</EBAY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
 				'http://8tracks.com/lovinq/headphones-in-world-out',
 				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
 				[],
@@ -979,46 +969,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.ebay.at/itm/Tea-Matter-Teesieb-mit-Zwitscherton-Alessi-Rot-Schwarz-Stahl-glnzend-/251585352862',
-				'<a href="http://www.ebay.at/itm/251585352862">eBay item #251585352862</a>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
-				'http://www.ebay.co.uk/itm/Converse-Classic-Chuck-Taylor-Low-Trainer-Sneaker-All-Star-OX-NEW-sizes-Shoes-/230993099153',
-				'<a href="http://www.ebay.co.uk/itm/230993099153">eBay item #230993099153</a>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
-				'http://www.ebay.de/itm/Converse-Chucks-All-Star-OX-Klassiker-Gr-35-48-/320748648909',
-				'<a href="http://www.ebay.de/itm/320748648909">eBay item #320748648909</a>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
-				'http://www.ebay.fr/itm/CONVERSE-CHUCK-TAYLOR-AS-CORE-OX-All-Star-Sneakers-Men-Women-Free-Shipping-/380728186640',
-				'<a href="http://www.ebay.fr/itm/380728186640">eBay item #380728186640</a>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
 				'http://www.gettyimages.com/detail/3232182',
 				'(<iframe width="594" height="448" src="//embed.gettyimages.com/embed/3232182\?et=[-\\w]{22}&amp;similar=on&amp;sig=[-\\w]{43}=" allowfullscreen="" frameborder="0" scrolling="no"></iframe>)',
 				[],
@@ -1612,33 +1562,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dailymotion');
-				}
-			],
-			[
-				'http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701',
-				'<r><EBAY id="251053262701" url="http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701">http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701</EBAY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
-				'http://www.ebay.com/itm/251053262701',
-				'<r><EBAY id="251053262701" url="http://www.ebay.com/itm/251053262701">http://www.ebay.com/itm/251053262701</EBAY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('ebay');
-				}
-			],
-			[
-				'http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&item=171349018269',
-				'<r><EBAY id="171349018269" url="http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269">http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=171349018269</EBAY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('ebay');
 				}
 			],
 			[
@@ -2937,15 +2860,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dailymotion');
-				}
-			],
-			[
-				'http://www.ebay.com/itm/Converse-All-Star-Chuck-Taylor-Black-Hi-Canvas-M9160-Men-/251053262701',
-				'<a href="http://www.ebay.com/itm/251053262701">eBay item #251053262701</a>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('ebay');
 				}
 			],
 			[
