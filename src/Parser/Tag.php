@@ -22,10 +22,7 @@ class Tag
 	/**
 	* Tag type: self-closing tag
 	*/
-//	const SELF_CLOSING_TAG = self::START_TAG | self::END_TAG;
-
-	// https://bugs.php.net/bug.php?id=67880
-	const SELF_CLOSING_TAG = 3;
+	const SELF_CLOSING_TAG = self::START_TAG | self::END_TAG;
 
 	/**
 	* @var array Dictionary of attributes
