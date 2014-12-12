@@ -14,23 +14,24 @@ use s9e\TextFormatter\Parser\Tag;
 
 class Parser
 {
-	const RULE_AUTO_CLOSE        = 1 << 0;
-	const RULE_AUTO_REOPEN       = 1 << 1;
-	const RULE_BREAK_PARAGRAPH   = 1 << 2;
-	const RULE_CREATE_PARAGRAPHS = 1 << 3;
-	const RULE_DISABLE_AUTO_BR   = 1 << 4;
-	const RULE_ENABLE_AUTO_BR    = 1 << 5;
-	const RULE_IGNORE_TAGS       = 1 << 6;
-	const RULE_IGNORE_TEXT       = 1 << 7;
-	const RULE_IS_TRANSPARENT    = 1 << 8;
-	const RULE_PREVENT_BR        = 1 << 9;
-	const RULE_SUSPEND_AUTO_BR   = 1 << 10;
-	const RULE_TRIM_WHITESPACE   = 1 << 11;
-	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
+	const RULE_AUTO_CLOSE        = 1;
+	const RULE_AUTO_REOPEN       = 2;
+	const RULE_BREAK_PARAGRAPH   = 4;
+	const RULE_CREATE_PARAGRAPHS = 8;
+	const RULE_DISABLE_AUTO_BR   = 16;
+	const RULE_ENABLE_AUTO_BR    = 32;
+	const RULE_IGNORE_TAGS       = 64;
+	const RULE_IGNORE_TEXT       = 128;
+	const RULE_IS_TRANSPARENT    = 256;
+	const RULE_PREVENT_BR        = 512;
+	const RULE_SUSPEND_AUTO_BR   = 1024;
+	const RULE_TRIM_WHITESPACE   = 2048;
+	const RULES_AUTO_LINEBREAKS = 1072;
 
-	const RULES_INHERITANCE = self::RULE_ENABLE_AUTO_BR;
+	const RULES_INHERITANCE = 32;
 
-	const WHITESPACE = " \n\t";
+	const WHITESPACE = ' 
+	';
 
 	protected $cntOpen;
 
