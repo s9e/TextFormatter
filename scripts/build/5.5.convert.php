@@ -43,12 +43,6 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 		// Save the position of the semicolon
 		$end = $i;
 
-		if ($start === $end - 1)
-		{
-			// If there's only one token we skip this constant
-			continue;
-		}
-
 		// Collect and remove all of the tokens used for the constant's value
 		$i = $start;
 		$php = '';
@@ -83,7 +77,7 @@ function convertScalarExpressionsInConstants($filepath, &$file)
 				$php
 			);
 
-			if (!preg_match('(^[ \\d<|]+$)', $php))
+			if (!preg_match('(^(?:[ \\d<|]+|[\'"][^\'"]*[\'"]+)$)', $php))
 			{
 				die('Cannot evaluate ' . $php . ' as constant ' . $constName);
 			}
