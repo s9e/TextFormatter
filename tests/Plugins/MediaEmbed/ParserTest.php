@@ -2576,6 +2576,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3',
+				'<r><XBOXCLIPS id="e3a2d685-3e9f-454f-89bf-54ddea8f29b3" url="http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3" user="dizturbd">http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</XBOXCLIPS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('xboxclips');
+				}
+			],
+			[
 				'https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html',
 				'<r><YAHOOSCREEN id="church-chat-satan-000000502" url="https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
 				[],
