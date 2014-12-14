@@ -5,7 +5,7 @@
 	<tags><tag>sports</tag></tags>
 
 	<host>espndeportes.com</host>
-	<extract>!espndeportes\.com/videohub/video/clipDeportes\?id=(?'id'\d+)!</extract>
+	<extract>!espndeportes\.com/videohub/video/clipDeportes\?id=(?:deportes:)?(?'id'\d+)!</extract>
 	<scrape>
 		<match>!espndeportes\.com/\?id=\w+&amp;topId=\d+!</match>
 		<extract>!espn\.mem\.video\((?'id'\d+)!</extract>

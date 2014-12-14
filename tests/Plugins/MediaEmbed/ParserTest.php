@@ -1629,6 +1629,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.espndeportes.com/videohub/video/clipDeportes?id=deportes:2253960',
+				'<r><ESPNDEPORTES id="2253960" url="http://www.espndeportes.com/videohub/video/clipDeportes?id=deportes:2253960">http://www.espndeportes.com/videohub/video/clipDeportes?id=deportes:2253960</ESPNDEPORTES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espndeportes');
+				}
+			],
+			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
 				'<r><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
 				[],
