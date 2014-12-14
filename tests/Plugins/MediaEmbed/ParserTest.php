@@ -367,6 +367,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.espndeportes.com/?id=FrontPage_3888&topId=2252893',
+				'<r><ESPNDEPORTES id="2253616" url="http://www.espndeportes.com/?id=FrontPage_3888&amp;topId=2252893">http://www.espndeportes.com/?id=FrontPage_3888&amp;topId=2252893</ESPNDEPORTES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('espndeportes');
+				}
+			],
+			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
 				'<r><FLICKR height="640" id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/" width="427">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
 				[],
@@ -1607,6 +1617,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
+				'http://www.espndeportes.com/videohub/video/clipDeportes?id=2250940',
+				'<r><ESPNDEPORTES id="2250940" url="http://www.espndeportes.com/videohub/video/clipDeportes?id=2250940">http://www.espndeportes.com/videohub/video/clipDeportes?id=2250940</ESPNDEPORTES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espndeportes');
 				}
 			],
 			[
