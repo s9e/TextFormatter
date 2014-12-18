@@ -2406,6 +2406,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.twitch.tv/playstation/v/3589809',
+				'<r><TWITCH channel="playstation" url="http://www.twitch.tv/playstation/v/3589809" video_id="3589809">http://www.twitch.tv/playstation/v/3589809</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
 				'<r><TWITTER id="266031293945503744" url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWITTER></r>',
 				[],
@@ -3165,6 +3174,15 @@ class ParserTest extends Test
 			[
 				'http://www.twitch.tv/minigolf2000/b/497929990',
 				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"></object>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'http://www.twitch.tv/playstation/v/3589809',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=playstation&amp;videoId=v3589809&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=playstation&amp;videoId=v3589809&amp;auto_play=false"></object>',
 				[],
 				function ($configurator)
 				{
