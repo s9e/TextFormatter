@@ -541,6 +541,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</td>
 	</tr>
 	<tr>
+		<td><code>xboxdvr</code></td>
+		<td>Xbox DVR</td>
+		<td>http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc</td>
+	</tr>
+	<tr>
 		<td><code>yahooscreen</code></td>
 		<td>Yahoo! Screen</td>
 		<td>https://screen.yahoo.com/mr-short-term-memory-000000263.html<br/>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</td>
