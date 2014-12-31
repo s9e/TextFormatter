@@ -2,6 +2,9 @@
 
 cd $(dirname "$0")
 
+echo "Disabling Zend GC"
+echo "zend.enable_gc=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
 # Install Coveralls and XSLCache if we're saving code coverage and disable XDebug otherwise
 if [ -n "$COVERAGE" ]
 then
