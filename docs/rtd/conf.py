@@ -45,7 +45,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 's9e\\TextFormatter'
-copyright = '2010-2014, s9e'
+copyright = '2010-2015, s9e'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
