@@ -1809,6 +1809,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gist.github.com/s9e/0ee8433f5a9a779d08ef',
+				'<r><GIST id="s9e/0ee8433f5a9a779d08ef" url="https://gist.github.com/s9e/0ee8433f5a9a779d08ef">https://gist.github.com/s9e/0ee8433f5a9a779d08ef</GIST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
 				'http://globalnews.ca/video/1647385/mark-channels-his-70s-look/',
 				'<r><GLOBALNEWS id="1647385" url="http://globalnews.ca/video/1647385/mark-channels-his-70s-look/">http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</GLOBALNEWS></r>',
 				[],
