@@ -17,7 +17,7 @@ class TagList extends NormalizedList
 	/**
 	* Normalize a value to a tag name
 	*
-	* @param  string $value
+	* @param  string $attrName
 	* @return string
 	*/
 	public function normalizeValue($attrName)

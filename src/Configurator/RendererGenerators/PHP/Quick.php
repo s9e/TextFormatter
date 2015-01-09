@@ -218,7 +218,7 @@ class Quick
 	/**
 	* Export an array as PHP
 	*
-	* @param  array  $array
+	* @param  array  $arr
 	* @return string
 	*/
 	protected static function export(array $arr)
