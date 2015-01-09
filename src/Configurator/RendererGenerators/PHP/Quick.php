@@ -915,8 +915,8 @@ class Quick
 	/**
 	* Generate a series of conditionals
 	*
-	* @param  $expr       string Expression tested for equality
-	* @param  $statements array  List of PHP statements
+	* @param  string $expr       Expression tested for equality
+	* @param  array  $statements List of PHP statements
 	* @return string
 	*/
 	public static function generateConditionals($expr, array $statements)
