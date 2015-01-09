@@ -558,7 +558,7 @@ class Quick
 	{
 		if ($php === '')
 		{
-			return '';
+			return;
 		}
 
 		$php = str_replace('$this->out', '$html', $php);
@@ -958,9 +958,9 @@ class Quick
 	/**
 	* Generate a branch table (with its source) for an array of PHP statements
 	*
-	* @param  array $expr       PHP expression used to determine the branch
-	* @param  array $statements Map of [value => statement]
-	* @return array             Two elements: first is the branch table, second is the source
+	* @param  string $expr       PHP expression used to determine the branch
+	* @param  array  $statements Map of [value => statement]
+	* @return array              Two elements: first is the branch table, second is the source
 	*/
 	public static function generateBranchTable($expr, array $statements)
 	{
