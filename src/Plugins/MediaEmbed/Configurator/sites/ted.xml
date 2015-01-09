@@ -9,7 +9,7 @@
 	<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"?]+)!i</extract>
 	<iframe width="560" height="315">
 		<src><![CDATA[
-			<xsl:text>http://embed.ted.com/</xsl:text>
+			<xsl:text>//embed.ted.com/</xsl:text>
 			<xsl:value-of select="@id"/>
 			<xsl:if test="not(contains(@id, '.html'))">
 				<xsl:text>.html</xsl:text>
