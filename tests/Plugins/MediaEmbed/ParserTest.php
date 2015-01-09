@@ -3155,7 +3155,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="http://embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe>',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3164,7 +3164,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk',
-				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="http://embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe>',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe>',
 				[],
 				function ($configurator)
 				{
