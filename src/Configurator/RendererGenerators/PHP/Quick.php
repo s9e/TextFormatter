@@ -9,9 +9,6 @@ namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 
 class Quick
 {
@@ -435,7 +432,7 @@ class Quick
 	protected static function replacePHP(&$php)
 	{
 		if ($php === '')
-			return '';
+			return;
 
 		$php = \str_replace('$this->out', '$html', $php);
 
