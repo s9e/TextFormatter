@@ -1575,6 +1575,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://games.dailymotion.com/live/x15gjhi',
+				'<r><DAILYMOTION id="x15gjhi" url="http://games.dailymotion.com/live/x15gjhi">http://games.dailymotion.com/live/x15gjhi</DAILYMOTION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
 				'http://8tracks.com/midna/2242699',
 				'<r><EIGHTTRACKS id="2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
 				[],
