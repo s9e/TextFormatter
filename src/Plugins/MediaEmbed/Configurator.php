@@ -326,6 +326,11 @@ class Configurator extends ConfiguratorBase
 				$this->appendFilter($attribute, $attrConfig['postFilter']);
 			}
 
+			if (isset($attrConfig['defaultValue']))
+			{
+				$attribute->defaultValue = $attrConfig['defaultValue'];
+			}
+
 			$hasRequiredAttribute |= $attribute->required;
 		}
 

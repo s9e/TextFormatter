@@ -2371,6 +2371,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() throws a RuntimeException if the optional preFilter is not allowed
  [x] add() processes the optional postFilter in attribute declarations
  [x] add() throws a RuntimeException if the optional postFilter is not allowed
+ [x] add() processes the optional defaultValue in attribute declarations
  [x] add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
  [x] add() throws a RuntimeException if the default XML config is malformed
  [x] appendTemplate() sets a template to be appended to media sites' templates

@@ -487,6 +487,19 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://gfycat.com/Test',
+				'<r><GFYCAT height="315" id="Test" url="http://gfycat.com/Test" width="560">http://gfycat.com/Test</GFYCAT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gfycat');
+
+					// Save an empty cache file that corresponds to this URL
+					file_put_contents($configurator->registeredVars['cacheDir'] . '/http.3872667632.gz', gzencode(''));
+				}
+			],
+			[
 				'http://giant.gfycat.com/SereneIllfatedCapybara.gif',
 				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://giant.gfycat.com/SereneIllfatedCapybara.gif" width="600">http://giant.gfycat.com/SereneIllfatedCapybara.gif</GFYCAT></r>',
 				[],

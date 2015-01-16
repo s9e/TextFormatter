@@ -848,6 +848,28 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() processes the optional defaultValue in attribute declarations
+	*/
+	public function testAddDefaultValue()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'localhost',
+			[
+				'host'       => 'localhost',
+				'extract'    => "!localhost/(?'id'\\d+)!",
+				'template'   => '',
+				'attributes' => [
+					'id' => ['required' => false],
+					'height' => ['type' => 'number', 'defaultValue' => 123]
+				]
+			]
+		);
+
+		$this->assertTrue(isset($tag->attributes['height']->defaultValue));
+		$this->assertEquals(123, $tag->attributes['height']->defaultValue);
+	}
+
+	/**
 	* @testdox add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid site ID
