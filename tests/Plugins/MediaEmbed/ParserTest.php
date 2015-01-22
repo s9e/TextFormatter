@@ -515,7 +515,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					// NOTE: we force this test to run without the cache on Travis to ensure we hit
+					//       the no-cache code path
+					if (empty($_SERVER['TRAVIS']))
+					{
+						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					}
 					$configurator->MediaEmbed->add('googleplus');
 				}
 			],
