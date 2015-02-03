@@ -403,8 +403,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function appendTemplate($template = '')
 	{
-		$this->appendTemplate
-			= $this->configurator->templateNormalizer->normalizeTemplate($template);
+		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
 	//==========================================================================
