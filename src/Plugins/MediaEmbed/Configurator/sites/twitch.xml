@@ -14,22 +14,24 @@
 		<match>!twitch\.tv/m/\d+!</match>
 		<extract>!channel=(?'channel'\w+).*?videoId=a(?'archive_id'\d+)!</extract>
 	</scrape>
-	<flash width="620" height="378">
+	<iframe width="620" height="378">
 		<src><![CDATA[
-			<xsl:text>//www.twitch.tv/widgets/</xsl:text>
-			<xsl:choose>
-				<xsl:when test="@archive_id or @chapter_id or @video_id">arch</xsl:when>
-				<xsl:otherwise>l</xsl:otherwise>
-			</xsl:choose>
-			<xsl:text>ive_embed_player.swf</xsl:text>
-		]]></src>
-		<flashvars><![CDATA[
-			<xsl:text>channel=</xsl:text>
+			<xsl:text>//s9e.github.io/iframe/twitch.min.html#channel=</xsl:text>
 			<xsl:value-of select="@channel"/>
-			<xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if>
-			<xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if>
-			<xsl:if test="@video_id">&amp;videoId=v<xsl:value-of select="@video_id"/></xsl:if>
-			<xsl:text>&amp;auto_play=false</xsl:text>
-		]]></flashvars>
-	</flash>
+			<xsl:choose>
+				<xsl:when test="@archive_id">
+					<xsl:text>&amp;videoId=a</xsl:text>
+					<xsl:value-of select="@archive_id"/>
+				</xsl:when>
+				<xsl:when test="@chapter_id">
+					<xsl:text>&amp;videoId=c</xsl:text>
+					<xsl:value-of select="@chapter_id"/>
+				</xsl:when>
+				<xsl:when test="@video_id">
+					<xsl:text>&amp;videoId=v</xsl:text>
+					<xsl:value-of select="@video_id"/>
+				</xsl:when>
+			</xsl:choose>
+		]]></src>
+	</iframe>
 </site>

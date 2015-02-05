@@ -3200,7 +3200,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/live_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/live_embed_player.swf" flashvars="channel=minigolf2000&amp;auto_play=false"></object>',
+				'<iframe width="620" height="378" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3209,7 +3209,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/amazhs/c/4493103',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=amazhs&amp;chapter_id=4493103&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=amazhs&amp;chapter_id=4493103&amp;auto_play=false"></object>',
+				'<iframe width="620" height="378" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/twitch.min.html#channel=amazhs&amp;videoId=c4493103"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3218,7 +3218,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000/b/497929990',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=minigolf2000&amp;archive_id=497929990&amp;auto_play=false"></object>',
+				'<iframe width="620" height="378" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000&amp;videoId=a497929990"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3227,7 +3227,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/playstation/v/3589809',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="//www.twitch.tv/widgets/archive_embed_player.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="channel=playstation&amp;videoId=v3589809&amp;auto_play=false"><embed type="application/x-shockwave-flash" width="620" height="378" allowfullscreen="" src="//www.twitch.tv/widgets/archive_embed_player.swf" flashvars="channel=playstation&amp;videoId=v3589809&amp;auto_play=false"></object>',
+				'<iframe width="620" height="378" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/twitch.min.html#channel=playstation&amp;videoId=v3589809"></iframe>',
 				[],
 				function ($configurator)
 				{
