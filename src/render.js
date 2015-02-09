@@ -1,62 +1,86 @@
-var xslt;
-if (typeof DOMParser !== 'undefined' && typeof XSLTProcessor !== 'undefined')
-{
-	var xslt = new XSLTProcessor;
-	xslt['importStylesheet'](loadXML(xsl));
-
+var MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
+var xslt = {
 	/**
-	* @param {!string} xml
+	* @param {!string} xsl
 	*/
-	function loadXML(xml)
+	init: function(xsl)
 	{
-		return (new DOMParser).parseFromString(xml, 'text/xml');
-	}
-
-	/**
-	* @param {!string} xml
-	* @param {!HTMLDocument} targetDoc
-	*/
-	function transformToFragment(xml, targetDoc)
-	{
-		// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
-		return targetDoc.importNode(xslt['transformToFragment'](loadXML(xml), targetDoc), true)
-	}
-}
-else
-{
-	var xslt = loadXML(xsl);
-
-	/**
-	* @param {!string} xml
-	*/
-	function loadXML(xml)
-	{
-		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
-		obj.async = false;
-		obj.validateOnParse = false;
-		obj.loadXML(xml);
-
-		return obj;
-	}
-
-	/**
-	* @param {!string} xml
-	* @param {!HTMLDocument} targetDoc
-	*/
-	function transformToFragment(xml, targetDoc)
-	{
-		var div = targetDoc.createElement('div'),
-			fragment = targetDoc.createDocumentFragment();
-
-		div.innerHTML = loadXML(xml).transformNode(xslt);
-		while (div.firstChild)
+		var stylesheet = xslt.loadXML(xsl, 'MSXML2.FreeThreadedDOMDocument.6.0');
+		if (MSXML)
 		{
-			fragment.appendChild(div.removeChild(div.firstChild));
+			var generator = new ActiveXObject("MSXML2.XSLTemplate.6.0");
+			generator['stylesheet'] = stylesheet;
+			xslt.proc = generator['createProcessor']();
+		}
+		else
+		{
+			xslt.proc = new XSLTProcessor;
+			xslt.proc['importStylesheet'](stylesheet);
+		}
+	},
+
+	/**
+	* @param {!string} xml
+	* @param {string} type
+	*/
+	loadXML: function(xml, type)
+	{
+		if (MSXML)
+		{
+			var dom = new ActiveXObject(type);
+			dom['async'] = false;
+			dom['validateOnParse'] = false;
+			dom['loadXML'](xml);
+
+			return dom;
 		}
 
-		return fragment;
+		return (new DOMParser).parseFromString(xml, 'text/xml');
+	},
+
+	/**
+	* @param {!string} paramName  Parameter name
+	* @param {!string} paramValue Parameter's value
+	*/
+	setParameter: function(paramName, paramValue)
+	{
+		if (MSXML)
+		{
+			xslt.proc['addParameter'](paramName, paramValue, '');
+		}
+		else
+		{
+			xslt.proc['setParameter'](null, paramName, paramValue);
+		}
+	},
+
+	/**
+	* @param {!string} xml
+	* @param {!HTMLDocument} targetDoc
+	*/
+	transformToFragment: function(xml, targetDoc)
+	{
+		if (MSXML)
+		{
+			var div = targetDoc.createElement('div'),
+				fragment = targetDoc.createDocumentFragment();
+
+			xslt.proc['input'] = xslt.loadXML(xml, 'MSXML2.DOMDocument.6.0');
+			xslt.proc['transform']();
+			div.innerHTML = xslt.proc['output'];
+			while (div.firstChild)
+			{
+				fragment.appendChild(div.removeChild(div.firstChild));
+			}
+
+			return fragment;
+		}
+
+		// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
+		return targetDoc.importNode(xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc), true)
 	}
 }
+xslt.init(xsl);
 
 var postProcessFunctions = {};
 
@@ -69,7 +93,7 @@ var postProcessFunctions = {};
 function preview(text, target)
 {
 	var targetDoc = target.ownerDocument,
-		resultFragment = transformToFragment(parse(text), targetDoc);
+		resultFragment = xslt.transformToFragment(parse(text), targetDoc);
 
 	// Apply post-processing
 	if (HINT.postProcessing)
@@ -256,5 +280,5 @@ function preview(text, target)
 */
 function setParameter(paramName, paramValue)
 {
-	xslt['setParameter'](null, paramName, paramValue);
+	xslt.setParameter(paramName, paramValue);
 }

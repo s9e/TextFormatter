@@ -91,6 +91,7 @@ $externs = [
 		'Node.prototype.appendChild',
 		'Node.prototype.childNodes',
 		'Node.prototype.cloneNode',
+		'Node.prototype.firstChild',
 		'Node.prototype.insertBefore',
 		'Node.prototype.nodeName',
 		'Node.prototype.nodeType',
