@@ -382,6 +382,7 @@ Document.prototype.createDocumentFragment = function() {};
  * @param {string} tagName
  * @param {string=} opt_typeExtension
  * @return {!Element}
+ * @nosideeffects
  */
 Document.prototype.createElement = function(tagName, opt_typeExtension) {};
 /**
@@ -422,6 +423,10 @@ Node.prototype.childNodes;
  * @nosideeffects
  */
 Node.prototype.cloneNode = function(deep) {};
+/**
+ * @type {Node}
+ */
+Node.prototype.firstChild;
 /**
  * @param {Node} newChild
  * @param {Node} refChild
