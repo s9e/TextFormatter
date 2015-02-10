@@ -1,10 +1,86 @@
-function loadXML(xml)
-{
-	return new DOMParser().parseFromString(xml, 'text/xml');
-}
+var MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
+var xslt = {
+	/**
+	* @param {!string} xsl
+	*/
+	init: function(xsl)
+	{
+		var stylesheet = xslt.loadXML(xsl, 'MSXML2.FreeThreadedDOMDocument.6.0');
+		if (MSXML)
+		{
+			var generator = new ActiveXObject("MSXML2.XSLTemplate.6.0");
+			generator['stylesheet'] = stylesheet;
+			xslt.proc = generator['createProcessor']();
+		}
+		else
+		{
+			xslt.proc = new XSLTProcessor;
+			xslt.proc['importStylesheet'](stylesheet);
+		}
+	},
 
-var xslt = new XSLTProcessor;
-xslt['importStylesheet'](loadXML(xsl));
+	/**
+	* @param {!string} xml
+	* @param {string} type
+	*/
+	loadXML: function(xml, type)
+	{
+		if (MSXML)
+		{
+			var dom = new ActiveXObject(type);
+			dom['async'] = false;
+			dom['validateOnParse'] = false;
+			dom['loadXML'](xml);
+
+			return dom;
+		}
+
+		return (new DOMParser).parseFromString(xml, 'text/xml');
+	},
+
+	/**
+	* @param {!string} paramName  Parameter name
+	* @param {!string} paramValue Parameter's value
+	*/
+	setParameter: function(paramName, paramValue)
+	{
+		if (MSXML)
+		{
+			xslt.proc['addParameter'](paramName, paramValue, '');
+		}
+		else
+		{
+			xslt.proc['setParameter'](null, paramName, paramValue);
+		}
+	},
+
+	/**
+	* @param {!string} xml
+	* @param {!HTMLDocument} targetDoc
+	*/
+	transformToFragment: function(xml, targetDoc)
+	{
+		if (MSXML)
+		{
+			var div = targetDoc.createElement('div'),
+				fragment = targetDoc.createDocumentFragment();
+
+			xslt.proc['input'] = xslt.loadXML(xml, 'MSXML2.DOMDocument.6.0');
+			xslt.proc['transform']();
+			div.innerHTML = xslt.proc['output'];
+			while (div.firstChild)
+			{
+				fragment.appendChild(div.removeChild(div.firstChild));
+			}
+
+			return fragment;
+		}
+
+		// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
+		return targetDoc.importNode(xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc), true)
+	}
+}
+xslt.init(xsl);
 
 var postProcessFunctions = {};
 
@@ -16,12 +92,8 @@ var postProcessFunctions = {};
 */
 function preview(text, target)
 {
-	var xml = parse(text),
-		DOM = loadXML(xml),
-		targetDoc = target.ownerDocument;
-
-	// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
-	var resultFragment = targetDoc.importNode(xslt['transformToFragment'](DOM, targetDoc), true);
+	var targetDoc = target.ownerDocument,
+		resultFragment = xslt.transformToFragment(parse(text), targetDoc);
 
 	// Apply post-processing
 	if (HINT.postProcessing)
@@ -208,5 +280,5 @@ function preview(text, target)
 */
 function setParameter(paramName, paramValue)
 {
-	xslt['setParameter'](null, paramName, paramValue);
+	xslt.setParameter(paramName, paramValue);
 }
