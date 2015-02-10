@@ -8,7 +8,7 @@
 	<extract>!teamcoco\.com/video/(?'id'\d+)!</extract>
 	<scrape>
 		<match>!teamcoco\.com/video/.!</match>
-		<extract>!teamcoco\.com/embed/v/(?'id'\d+)!</extract>
+		<extract>!"id":(?'id'\d+)!</extract>
 	</scrape>
 	<iframe width="640" height="415" src="//teamcoco.com/embed/v/{@id}"/>
 </site>
