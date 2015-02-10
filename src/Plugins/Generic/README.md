@@ -113,7 +113,8 @@ $configurator->Generic->add(
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = "Good link: <http://example.org/>\nBad link:  <javascript:alert(1)>";
+$text = "Good link: <http://example.org/>\n"
+      . "Bad link:  <javascript:alert(1)>";
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
