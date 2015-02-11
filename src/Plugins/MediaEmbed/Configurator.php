@@ -267,12 +267,16 @@ class Configurator extends ConfiguratorBase
 
 	protected function buildFlash(array $siteConfig)
 	{
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes([
+		$attributes = [
 			'width'  => $siteConfig['flash']['width'],
 			'height' => $siteConfig['flash']['height'],
 			'data'   => $siteConfig['flash']['src']
-		]);
+		];
+		if (isset($siteConfig['flash']['base']))
+			$attributes['base'] = $siteConfig['flash']['base'];
+
+		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
+		$template .= $this->generateAttributes($attributes);
 		$template .= '<param name="allowfullscreen" value="true"/>';
 		if (isset($siteConfig['flash']['flashvars']))
 		{
@@ -283,16 +287,13 @@ class Configurator extends ConfiguratorBase
 			$template .= '</param>';
 		}
 		$template .= '<embed type="application/x-shockwave-flash">';
-		$template .= $this->generateAttributes([
-			'src'    => $siteConfig['flash']['src'],
-			'width'  => $siteConfig['flash']['width'],
-			'height' => $siteConfig['flash']['height'],
-			'allowfullscreen' => ''
-		]);
+
+		$attributes['src'] = $attributes['data'];
+		$attributes['allowfullscreen'] = '';
+		unset($attributes['data']);
 		if (isset($siteConfig['flash']['flashvars']))
-			$template .= $this->generateAttributes([
-				'flashvars' => $siteConfig['flash']['flashvars']
-			]);
+			$attributes['flashvars'] = $siteConfig['flash']['flashvars'];
+		$template .= $this->generateAttributes($attributes);
 		$template .= '</embed></object>';
 
 		return $template;
