@@ -2363,6 +2363,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() sets the tag's default template to the object defined in the "flash" element if available
  [x] add() treats flash attributes as attribute value templates
  [x] add() sets flashvars if applicable
+ [x] add() sets the Flash base attribute if applicable
  [x] add() checks the tag's safety before adding it
  [x] add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
  [x] add() does not test for non-default attributes if the tag has a required attribute

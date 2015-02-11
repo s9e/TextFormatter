@@ -584,7 +584,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}
@@ -608,7 +608,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="{@width}" height="{@height}" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="{@width}" height="{@height}" src="foo" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}
@@ -633,7 +633,32 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
+			$tag->template
+		);
+	}
+
+	/**
+	* @testdox add() sets the Flash base attribute if applicable
+	*/
+	public function testAddFlashBase()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'    => 'foo.invalid',
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'flash'   => [
+					'width'  => 123,
+					'height' => 456,
+					'src'    => 'foo',
+					'base'   => 'http://localhost/'
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo" base="http://localhost/"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" base="http://localhost/" src="foo" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}

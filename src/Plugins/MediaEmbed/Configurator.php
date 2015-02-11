@@ -435,15 +435,22 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function buildFlash(array $siteConfig)
 	{
+		// Gather the attributes for the object element
+		$attributes = [
+			'width'  => $siteConfig['flash']['width'],
+			'height' => $siteConfig['flash']['height'],
+			'data'   => $siteConfig['flash']['src']
+		];
+		if (isset($siteConfig['flash']['base']))
+		{
+			$attributes['base'] = $siteConfig['flash']['base'];
+		}
+
 		/**
 		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
 		*/
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes([
-			'width'  => $siteConfig['flash']['width'],
-			'height' => $siteConfig['flash']['height'],
-			'data'   => $siteConfig['flash']['src']
-		]);
+		$template .= $this->generateAttributes($attributes);
 		$template .= '<param name="allowfullscreen" value="true"/>';
 		if (isset($siteConfig['flash']['flashvars']))
 		{
@@ -457,18 +464,16 @@ class Configurator extends ConfiguratorBase
 			$template .= '</param>';
 		}
 		$template .= '<embed type="application/x-shockwave-flash">';
-		$template .= $this->generateAttributes([
-			'src'    => $siteConfig['flash']['src'],
-			'width'  => $siteConfig['flash']['width'],
-			'height' => $siteConfig['flash']['height'],
-			'allowfullscreen' => ''
-		]);
+
+		// Update the attributes for the embed element
+		$attributes['src'] = $attributes['data'];
+		$attributes['allowfullscreen'] = '';
+		unset($attributes['data']);
 		if (isset($siteConfig['flash']['flashvars']))
 		{
-			$template .= $this->generateAttributes([
-				'flashvars' => $siteConfig['flash']['flashvars']
-			]);
+			$attributes['flashvars'] = $siteConfig['flash']['flashvars'];
 		}
+		$template .= $this->generateAttributes($attributes);
 		$template .= '</embed></object>';
 
 		return $template;
