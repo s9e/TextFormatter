@@ -1,0 +1,10 @@
+<site name="Zippyshare audio files" homepage="http://www.zippyshare.com/">
+	<example>http://www51.zippyshare.com/v/94505619/file.html</example>
+
+	<host>zippyshare.com</host>
+	<scrape>
+		<match>!/v/!</match>
+		<extract>!file=(?'file'\w+)&amp;amp;server=(?'server'\d+)!</extract>
+	</scrape>
+	<flash width="100%" height="80" src="//api.zippyshare.com/api/player.swf" flashvars="file={@file}&amp;server={@server}&amp;autostart=false"/>
+</site>
