@@ -371,6 +371,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
 	</tr>
 	<tr>
+		<td><code>npr</code></td>
+		<td>NPR</td>
+		<td>http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</td>
+	</tr>
+	<tr>
 		<td><code>nytimes</code></td>
 		<td>The New York Times Video</td>
 		<td>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</td>
@@ -564,5 +569,10 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td><code>youtube</code></td>
 		<td>YouTube</td>
 		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>
+	</tr>
+	<tr>
+		<td><code>zippyshare</code></td>
+		<td>Zippyshare audio files</td>
+		<td>http://www51.zippyshare.com/v/94505619/file.html</td>
 	</tr>
 </table>

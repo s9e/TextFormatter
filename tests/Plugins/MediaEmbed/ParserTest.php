@@ -721,6 +721,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
+				'<r><NPR i="385396431" m="385396432" url="http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world">http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('npr');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
@@ -908,6 +918,16 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://www51.zippyshare.com/v/94505619/file.html',
+				'<r><ZIPPYSHARE file="94505619" server="51" url="http://www51.zippyshare.com/v/94505619/file.html">http://www51.zippyshare.com/v/94505619/file.html</ZIPPYSHARE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('zippyshare');
 				}
 			],
 		];

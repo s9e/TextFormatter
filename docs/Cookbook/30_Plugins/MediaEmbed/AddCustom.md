@@ -110,7 +110,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" data="http://www.dailymotion.com/swf/x222z1"><param name="allowfullscreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/x222z1" width="560" height="315" allowfullscreen=""></object>
+<object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" data="http://www.dailymotion.com/swf/x222z1"><param name="allowfullscreen" value="true"><embed type="application/x-shockwave-flash" width="560" height="315" src="http://www.dailymotion.com/swf/x222z1" allowfullscreen=""></object>
 ```
 
 ### How to configure a custom `template`
@@ -237,5 +237,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="songID=35292216"><embed type="application/x-shockwave-flash" src="http://grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="songID=35292216"></object>
+<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="songID=35292216"><embed type="application/x-shockwave-flash" width="250" height="40" src="http://grooveshark.com/songWidget.swf" allowfullscreen="" flashvars="songID=35292216"></object>
 ```
