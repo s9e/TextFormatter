@@ -445,6 +445,10 @@ class Configurator extends ConfiguratorBase
 		{
 			$attributes['base'] = $siteConfig['flash']['base'];
 		}
+		if (isset($siteConfig['flash']['style']))
+		{
+			$attributes['style'] = $siteConfig['flash']['style'];
+		}
 
 		/**
 		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element

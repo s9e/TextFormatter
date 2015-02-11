@@ -664,6 +664,31 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() sets the style attribute on objects if applicable
+	*/
+	public function testAddFlashStyle()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'    => 'foo.invalid',
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'flash'   => [
+					'width'  => '100%',
+					'height' => 456,
+					'src'    => 'foo',
+					'style'  => 'max-width:900px'
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" data="foo" style="max-width:900px"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" style="max-width:900px" src="foo" allowfullscreen=""/></object>',
+			$tag->template
+		);
+	}
+
+	/**
 	* @testdox add() checks the tag's safety before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage disable-output-escaping
