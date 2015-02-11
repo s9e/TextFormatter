@@ -274,6 +274,8 @@ class Configurator extends ConfiguratorBase
 		);
 		if (isset($siteConfig['flash']['base']))
 			$attributes['base'] = $siteConfig['flash']['base'];
+		if (isset($siteConfig['flash']['style']))
+			$attributes['style'] = $siteConfig['flash']['style'];
 
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
 		$template .= $this->generateAttributes($attributes);
