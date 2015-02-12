@@ -10,7 +10,7 @@ first. Parsing and rendering plain text is a special case that uses code optimiz
 general, whether it's blogs or forums a majority of user content is plain text with no HTML, BBCodes
 or emoticons. Finally, we measure the time taken by render() and renderMulti() to render 10 texts.
 Running renderMulti() on an array of parsed texts should be more performant than rendering each text
-individually with render(). (Updated: not anymore when the Quick renderer is involved)
+individually with render(). (Update: not anymore when the Quick renderer is involved)
 
 All times are expressed in microseconds. (1/1,000,000th of a second)
 
