@@ -3038,7 +3038,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305',
-				'<iframe style="width:100%" src="//s9e.github.io/iframe/gist.min.html#s9e/6806305" frameborder="0" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))"></iframe>',
+				'<iframe width="100%" height="180" src="//s9e.github.io/iframe/gist.min.html#s9e/6806305" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3074,7 +3074,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<iframe width="220" height="380" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="220" height="380" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3083,7 +3083,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<iframe width="480" height="360" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="480" height="360" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html"></iframe>',
 				[],
 				function ($configurator)
 				{
