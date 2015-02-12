@@ -1,4 +1,4 @@
-<site name="Pastebin" homepage="http://pastebin.com/">
+<site name="Pastebin" homepage="http://pastebin.com/" unresponsive="1">
 	<example>http://pastebin.com/9jEf44nc</example>
 
 	<host>pastebin.com</host>
