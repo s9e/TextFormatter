@@ -20,6 +20,11 @@ class AttributeFilterChain extends NormalizedList
 	*/
 	public function normalizeValue($value)
 	{
+		if (is_string($value) && preg_match('(^#\\w+$)', $value))
+		{
+			$value = AttributeFilterCollection::getDefaultFilter(substr($value, 1));
+		}
+
 		if ($value instanceof AttributeFilter)
 		{
 			return $value;
@@ -27,7 +32,7 @@ class AttributeFilterChain extends NormalizedList
 
 		if (!is_callable($value))
 		{
-			throw new InvalidArgumentException('Filter ' . var_export($value, true) . ' is neither callable nor an instance of AttributeFilter');
+			throw new InvalidArgumentException("Filter '" . print_r($value, true) . "' is neither callable nor an instance of AttributeFilter");
 		}
 
 		return new AttributeFilter($value);

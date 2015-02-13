@@ -26,15 +26,7 @@ class AttributeFilterCollection extends NormalizedCollection
 		{
 			if ($key[0] === '#')
 			{
-				$filterName = ucfirst(substr($key, 1));
-				$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
-
-				if (!class_exists($className))
-				{
-					throw new InvalidArgumentException("Unknown attribute filter '" . $key . "'");
-				}
-
-				$this->set($key, new $className);
+				$this->set($key, self::getDefaultFilter(substr($key, 1)));
 			}
 			else
 			{
@@ -49,6 +41,25 @@ class AttributeFilterCollection extends NormalizedCollection
 		$filter = clone $filter;
 
 		return $filter;
+	}
+
+	/**
+	* Get an instance of the default filter for given name
+	*
+	* @param  string          $filterName Filter name, e.g. "int" or "color"
+	* @return AttributeFilter
+	*/
+	public static function getDefaultFilter($filterName)
+	{
+		$filterName = ucfirst(strtolower($filterName));
+		$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
+
+		if (!class_exists($className))
+		{
+			throw new InvalidArgumentException("Unknown attribute filter '" . $filterName . "'");
+		}
+
+		return new $className;
 	}
 
 	/**

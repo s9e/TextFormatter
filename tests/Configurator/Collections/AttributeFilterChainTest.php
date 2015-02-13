@@ -85,6 +85,19 @@ class AttributeFilterChainTest extends Test
 	}
 
 	/**
+	* @testdox Default filters such as "#int" are normalized to an instance of the corresponding AttributeFilter
+	*/
+	public function testDefaultFilter()
+	{
+		$filterChain = new AttributeFilterChain;
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Int',
+			$filterChain->append('#int')
+		);
+	}
+
+	/**
 	* @testdox Instances of AttributeFilter are added as-is
 	*/
 	public function testAttributeFilterInstance()

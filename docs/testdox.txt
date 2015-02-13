@@ -193,6 +193,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] PHP string callbacks are normalized to an instance of AttributeFilter
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
+ [x] Default filters such as "#int" are normalized to an instance of the corresponding AttributeFilter
  [x] Instances of AttributeFilter are added as-is
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
