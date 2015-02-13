@@ -1,5 +1,7 @@
-<site name="Zippyshare audio files" homepage="http://www.zippyshare.com/">
+<site name="Zippyshare audio files" homepage="http://www.zippyshare.com/" unresponsive="1">
 	<example>http://www51.zippyshare.com/v/94505619/file.html</example>
+
+	<tags><tag>file sharing</tag></tags>
 
 	<host>zippyshare.com</host>
 	<scrape>

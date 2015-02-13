@@ -1,4 +1,4 @@
-<site name="Amazon Product" homepage="http://affiliate-program.amazon.com/">
+<site name="Amazon Product" homepage="http://affiliate-program.amazon.com/" unresponsive="1">
 	<example>http://www.amazon.ca/gp/product/B00GQT1LNO/</example>
 	<example>http://www.amazon.co.jp/gp/product/B003AKZ6I8/</example>
 	<example>http://www.amazon.co.uk/gp/product/B00BET0NR6/</example>
