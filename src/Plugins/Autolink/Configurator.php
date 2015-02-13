@@ -14,7 +14,7 @@ class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'url';
 
-	protected $quickMatch = '://';
+	protected $matchWww = \false;
 
 	protected $tagName = 'URL';
 
@@ -28,20 +28,23 @@ class Configurator extends ConfiguratorBase
 		$filter = $this->configurator->attributeFilters->get('#url');
 		$tag->attributes->add($this->attrName)->filterChain->append($filter);
 
-		$tag->template
-			= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
+		$tag->template = '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 
 	public function asConfig()
 	{
-		$schemeRegexp
-			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
+		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
+		if ($this->matchWww)
+			$anchor = '(?:' . $anchor . '|www\.)';
 
-		return [
+		$config = [
 			'attrName'   => $this->attrName,
-			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#' . $schemeRegexp . '://\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
+			'regexp'     => '#' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		];
+		if (!$this->matchWww)
+			$config['quickMatch'] = '://';
+
+		return $config;
 	}
 }

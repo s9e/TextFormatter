@@ -1,4 +1,4 @@
-<site name="Google+" homepage="https://plus.google.com/">
+<site name="Google+" homepage="https://plus.google.com/" unresponsive="1">
 	<source>https://developers.google.com/+/web/embedded-post/</source>
 	<example>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</example>
 	<example>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</example>

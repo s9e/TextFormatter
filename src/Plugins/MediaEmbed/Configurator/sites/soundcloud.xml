@@ -1,4 +1,4 @@
-<site name="SoundCloud" homepage="https://soundcloud.com/">
+<site name="SoundCloud" homepage="https://soundcloud.com/" unresponsive="1">
 	<source>https://soundcloud.com/pages/widgets</source>
 	<example>http://api.soundcloud.com/tracks/98282116</example>
 	<example>https://soundcloud.com/andrewbird/three-white-horses</example>
