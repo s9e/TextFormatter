@@ -117,6 +117,21 @@ class ParserTest extends Test
 				'Link in angle brackets: <http://example.com/foo>',
 				'<r>Link in angle brackets: &lt;<URL url="http://example.com/foo">http://example.com/foo</URL>&gt;</r>'
 			],
+			[
+				'WWW address: www.example.org',
+				'<r>WWW address: <URL url="http://www.example.org">www.example.org</URL></r>',
+				['matchWww' => true]
+			],
+			[
+				'WWW ADDRESS: WWW.EXAMPLE.ORG',
+				'<r>WWW ADDRESS: <URL url="http://WWW.EXAMPLE.ORG">WWW.EXAMPLE.ORG</URL></r>',
+				['matchWww' => true]
+			],
+			[
+				'WWW address: www.example.org ...',
+				'<r>WWW address: <URL url="http://www.example.org">www.example.org</URL> ...</r>',
+				['matchWww' => true]
+			],
 		];
 	}
 

@@ -55,13 +55,24 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Has a quickMatch
+	* @testdox Has a quickMatch if matchWww is disabled
 	*/
 	public function testConfigQuickMatch()
 	{
 		$this->assertArrayHasKey(
 			'quickMatch',
 			$this->configurator->plugins->load('Autolink')->asConfig()
+		);
+	}
+
+	/**
+	* @testdox Does not have a quickMatch if matchWww is enabled
+	*/
+	public function testConfigNoQuickMatch()
+	{
+		$this->assertArrayNotHasKey(
+			'quickMatch',
+			$this->configurator->plugins->load('Autolink', ['matchWww' => true])->asConfig()
 		);
 	}
 

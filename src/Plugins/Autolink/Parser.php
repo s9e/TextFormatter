@@ -41,12 +41,18 @@ class Parser extends ParserBase
 				break;
 			}
 
+			// Create a zero-width end tag right after the URL
+			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + strlen($url), 0);
+
+			// If the URL starts with "www." we prepend "http://"
+			if ($url[3] === '.')
+			{
+				$url = 'http://' . $url;
+			}
+
 			// Create a zero-width start tag right before the URL
 			$startTag = $this->parser->addStartTag($tagName, $m[0][1], 0);
 			$startTag->setAttribute($attrName, $url);
-
-			// Create a zero-width end tag right after the URL
-			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + strlen($url), 0);
 
 			// Pair the tags together
 			$startTag->pairWith($endTag);

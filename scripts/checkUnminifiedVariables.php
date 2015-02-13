@@ -51,6 +51,7 @@ $knownVars['window']        = 1;
 // Known false positives
 $knownVars['id']  = 1;
 $knownVars['pok'] = 1;
+$knownVars['wb']  = 1;
 
 $unknownVars = array_diff_key($usedVars, $knownVars);
 if ($unknownVars)

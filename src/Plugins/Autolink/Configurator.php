@@ -18,9 +18,9 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'url';
 
 	/**
-	* {@inheritdoc}
+	* @var bool Whether to match strings that start with "www."
 	*/
-	protected $quickMatch = '://';
+	protected $matchWww = false;
 
 	/**
 	* @var string Name of the tag used to represent links
@@ -55,13 +55,22 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		$schemeRegexp = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
+		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
+		if ($this->matchWww)
+		{
+			$anchor = '(?:' . $anchor . '|www\.)';
+		}
 
-		return [
+		$config = [
 			'attrName'   => $this->attrName,
-			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#' . $schemeRegexp . '://\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
+			'regexp'     => '#' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		];
+		if (!$this->matchWww)
+		{
+			$config['quickMatch'] = '://';
+		}
+
+		return $config;
 	}
 }
