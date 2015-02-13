@@ -659,16 +659,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://mediacru.sh/vKUNeYFRuzDC',
-				'<r><MEDIACRUSH height="720" id="vKUNeYFRuzDC" url="https://mediacru.sh/vKUNeYFRuzDC" width="1280">https://mediacru.sh/vKUNeYFRuzDC</MEDIACRUSH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('mediacrush');
-				}
-			],
-			[
 				'http://i.mixcloud.com/CH9VU9',
 				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
 				[],

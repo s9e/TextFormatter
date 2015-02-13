@@ -336,11 +336,6 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://my.mail.ru/corp/auto/video/testdrive/34.html<br/>http://my.mail.ru/mail/classolo/video/28/29.html<br/>http://my.mail.ru/inbox/madasafish1969/video/_myvideo/1986.html<br/>http://my.mail.ru/mail/you4videos/video/_myvideo/1121.html</td>
 	</tr>
 	<tr>
-		<td><code>mediacrush</code></td>
-		<td>MediaCrush</td>
-		<td>https://mediacru.sh/vKUNeYFRuzDC</td>
-	</tr>
-	<tr>
 		<td><code>medium</code></td>
 		<td>Medium</td>
 		<td>https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</td>
