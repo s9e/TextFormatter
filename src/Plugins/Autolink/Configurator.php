@@ -47,8 +47,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append($filter);
 
 		// Set the default template
-		$tag->template
-			= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
+		$tag->template = '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 
 	/**
@@ -56,8 +55,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		$schemeRegexp
-			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
+		$schemeRegexp = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
 
 		return [
 			'attrName'   => $this->attrName,
