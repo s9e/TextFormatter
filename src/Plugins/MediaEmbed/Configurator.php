@@ -202,61 +202,7 @@ class Configurator extends ConfiguratorBase
 		// Process the "scrape" directives
 		if (isset($siteConfig['scrape']))
 		{
-			// Ensure that the array is multidimensional
-			if (!isset($siteConfig['scrape'][0]))
-			{
-				$siteConfig['scrape'] = [$siteConfig['scrape']];
-			}
-
-			$scrapeConfig = [];
-			foreach ($siteConfig['scrape'] as $scrape)
-			{
-				// Collect the names of the attributes filled by this scrape. At runtime, we will
-				// not scrape the content of the link if all of the attributes already have a value
-				$attrNames = [];
-				foreach ((array) $scrape['extract'] as $extractRegexp)
-				{
-					// Use an attribute preprocessor so we can reuse its routines
-					$attributePreprocessor = new AttributePreprocessor($extractRegexp);
-
-					foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
-					{
-						$attrNames[] = $attrName;
-						$attributes[$attrName]['regexp'] = $attrRegexp;
-					}
-				}
-
-				// Deduplicate and sort the attribute names so that they look tidy
-				$attrNames = array_unique($attrNames);
-				sort($attrNames);
-
-				// Prepare the scrape config and add the URL if applicable
-				if (!isset($scrape['match']))
-				{
-					// No "match" regexp means that all URLs should be scraped. We do need an entry
-					// so we use a regexp that matches anything
-					$scrape['match'] = '//';
-				}
-				$entry = [$scrape['match'], $scrape['extract'], $attrNames];
-				if (isset($scrape['url']))
-				{
-					$entry[] = $scrape['url'];
-				}
-
-				// Add this scrape to the config
-				$scrapeConfig[] = $entry;
-			}
-
-			// Add the scrape filter to this tag, execute it right before attributes are filtered,
-			// which should be after attribute preprocessors are run. The offset is hardcoded here
-			// for convenience (and because we know the filterChain is in its default state) and
-			// since scraping is impossible in JavaScript without a PHP proxy, we just make it
-			// return true in order to keep the tag valid
-			$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
-			                 ->addParameterByName('scrapeConfig')
-			                 ->addParameterByName('cacheDir')
-			                 ->setVar('scrapeConfig', $scrapeConfig)
-			                 ->setJS('function(){return true;}');
+			$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
 		}
 
 		// Add each "extract" as an attribute preprocessor
@@ -350,8 +296,8 @@ class Configurator extends ConfiguratorBase
 		if (!$hasRequiredAttribute)
 		{
 			$tag->filterChain
-			    ->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
-			    ->setJS(file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
+				->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
+				->setJS(file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
 		}
 
 		// Create a template for this media site based on the preferred rendering method
@@ -407,8 +353,76 @@ class Configurator extends ConfiguratorBase
 	}
 
 	//==========================================================================
-	// Internal stuff
+	// Internal methods
 	//==========================================================================
+
+	/**
+	* Add the defined scrapes to given tag
+	*
+	* @param  array $scrapes Scraping definitions
+	* @return array          Attributes created from scraped data
+	*/
+	protected function addScrapes(Tag $tag, array $scrapes)
+	{
+		// Ensure that the array is multidimensional
+		if (!isset($scrapes[0]))
+		{
+			$scrapes = [$scrapes];
+		}
+
+		$attributes   = [];
+		$scrapeConfig = [];
+		foreach ($scrapes as $scrape)
+		{
+			// Collect the names of the attributes filled by this scrape. At runtime, we will
+			// not scrape the content of the link if all of the attributes already have a value
+			$attrNames = [];
+			foreach ((array) $scrape['extract'] as $extractRegexp)
+			{
+				// Use an attribute preprocessor so we can reuse its routines
+				$attributePreprocessor = new AttributePreprocessor($extractRegexp);
+
+				foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
+				{
+					$attrNames[] = $attrName;
+					$attributes[$attrName]['regexp'] = $attrRegexp;
+				}
+			}
+
+			// Deduplicate and sort the attribute names so that they look tidy
+			$attrNames = array_unique($attrNames);
+			sort($attrNames);
+
+			// Prepare the scrape config and add the URL if applicable
+			if (!isset($scrape['match']))
+			{
+				// No "match" regexp means that all URLs should be scraped. We do need an entry
+				// so we use a regexp that matches anything
+				$scrape['match'] = '//';
+			}
+			$entry = [$scrape['match'], $scrape['extract'], $attrNames];
+			if (isset($scrape['url']))
+			{
+				$entry[] = $scrape['url'];
+			}
+
+			// Add this scrape to the config
+			$scrapeConfig[] = $entry;
+		}
+
+		// Add the scrape filter to this tag, execute it right before attributes are filtered,
+		// which should be after attribute preprocessors are run. The offset is hardcoded here
+		// for convenience (and because we know the filterChain is in its default state) and
+		// since scraping is impossible in JavaScript without a PHP proxy, we just make it
+		// return true in order to keep the tag valid
+		$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
+						 ->addParameterByName('scrapeConfig')
+						 ->addParameterByName('cacheDir')
+						 ->setVar('scrapeConfig', $scrapeConfig)
+						 ->setJS('function(){return true;}');
+
+		return $attributes;
+	}
 
 	/**
 	* Append a filter to an attribute's filterChain
