@@ -2094,6 +2094,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() does not replace HTML attribute names
  [x] censorHtml() does not replace HTML attribute values
  [x] censorHtml() does not replace HTML entities
+ [x] censorHtml() does not replace HTML numeric entities
  [x] censorHtml() ignores words on the allowed list
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements
@@ -2107,6 +2108,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] reparse() does not replace tag names
  [x] reparse() does not replace attribute names
  [x] reparse() does not replace attribute values
+ [x] reparse() does not replace XML entities
  [x] reparse() does not erroneously alter tags whose name resembles Censor's tag name
  [x] reparse() ignores words on the allowed list
  [x] reparse() uncensors words on the allowed list

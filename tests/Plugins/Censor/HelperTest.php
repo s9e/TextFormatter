@@ -102,6 +102,19 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() does not replace HTML numeric entities
+	*/
+	public function testCensorHtmlNumericEntities()
+	{
+		$this->configurator->Censor->add('*x*', 'xxx') ;
+
+		$this->assertSame(
+			' xxx &#x11; xxx ',
+			$this->configurator->Censor->getHelper()->censorHtml(' x11 &#x11; x11 ')
+		);
+	}
+
+	/**
 	* @testdox censorHtml() ignores words on the allowed list
 	*/
 	public function testCensorHtmlAllowed()
@@ -286,6 +299,21 @@ class HelperTest extends Test
 
 		$this->assertSame(
 			'<r>foo <FOO bar="bar"><CENSOR>bar</CENSOR></FOO> baz</r>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
+	* @testdox reparse() does not replace XML entities
+	*/
+	public function testReparseXMLEntities()
+	{
+		$this->configurator->Censor->add('*m*', 'xxx');
+
+		$xml = '<r>&amp; amp;</r>';
+
+		$this->assertSame(
+			'<r>&amp; <CENSOR with="xxx">amp</CENSOR>;</r>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
