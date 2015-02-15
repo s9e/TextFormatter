@@ -64,7 +64,9 @@ class Helper
 		// Modify the original regexp so that it only matches text nodes
 		$delim  = $this->regexp[0];
 		$pos    = strrpos($this->regexp, $delim);
-		$regexp = substr($this->regexp, 0, $pos)
+		$regexp = $delim
+		        . '(?<!&)'
+		        . substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*(?=<|$))'
 		        . substr($this->regexp, $pos);
 

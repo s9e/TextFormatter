@@ -89,6 +89,19 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() does not replace HTML entities
+	*/
+	public function testCensorHtmlEntities()
+	{
+		$this->configurator->Censor->add('*m*', 'xxx') ;
+
+		$this->assertSame(
+			' xxx &amp; xxx ',
+			$this->configurator->Censor->getHelper()->censorHtml(' imp &amp; amp ')
+		);
+	}
+
+	/**
 	* @testdox censorHtml() ignores words on the allowed list
 	*/
 	public function testCensorHtmlAllowed()

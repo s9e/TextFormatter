@@ -221,7 +221,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
 		// Create a variant for the return value
-		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
+		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/Siu');
 
 		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
 		// we'll accept any non-whitespace, non-common punctuation

@@ -2093,6 +2093,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() does not replace HTML tag names
  [x] censorHtml() does not replace HTML attribute names
  [x] censorHtml() does not replace HTML attribute values
+ [x] censorHtml() does not replace HTML entities
  [x] censorHtml() ignores words on the allowed list
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements
