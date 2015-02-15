@@ -184,7 +184,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		if (!count($this->collection))
 		{
-			return false;
+			return;
 		}
 
 		// Build the regexp that matches all the BBCode names

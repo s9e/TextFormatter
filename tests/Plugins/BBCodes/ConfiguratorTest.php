@@ -314,12 +314,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns FALSE if no BBCodes were created
+	* @testdox asConfig() returns NULL if no BBCodes were created
 	*/
 	public function testFalseConfig()
 	{
 		$plugin = $this->configurator->plugins->load('BBCodes');
-		$this->assertFalse($plugin->asConfig());
+		$this->assertNull($plugin->asConfig());
 	}
 
 	/**

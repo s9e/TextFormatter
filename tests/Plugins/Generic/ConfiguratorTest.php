@@ -534,12 +534,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns FALSE if no replacements were set
+	* @testdox asConfig() returns NULL if no replacements were set
 	*/
-	public function testFalseConfig()
+	public function testNullConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Generic');
-		$this->assertFalse($plugin->asConfig());
+		$this->assertNull($plugin->asConfig());
 	}
 
 	/**

@@ -138,8 +138,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public function getHelper()
 	{
 		$config = $this->asConfig();
-
-		if ($config === false)
+		if (isset($config))
+		{
+			ConfigHelper::filterVariants($config);
+		}
+		else
 		{
 			// Use a dummy config with a regexp that doesn't match anything
 			$config = [
@@ -147,10 +150,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				'regexp'   => '/(?!)/',
 				'tagName'  => $this->tagName
 			];
-		}
-		else
-		{
-			ConfigHelper::filterVariants($config);
 		}
 
 		return new Helper($config);
@@ -165,7 +164,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		if (empty($words))
 		{
-			return false;
+			return;
 		}
 
 		// Create the config

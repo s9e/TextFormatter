@@ -327,7 +327,7 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!count($this->collection))
 		{
-			return false;
+			return;
 		}
 
 		$generics   = [];

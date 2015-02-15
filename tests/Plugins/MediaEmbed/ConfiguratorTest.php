@@ -986,15 +986,15 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns false if no site was added
+	* @testdox asConfig() returns NULL if no site was added
 	*/
-	public function testAsConfigFalseNoSite()
+	public function testAsConfigNullNoSite()
 	{
 		$plugin = $this->configurator->plugins->load('MediaEmbed');
 
 		$config = $plugin->asConfig();
 
-		$this->assertFalse($config);
+		$this->assertNull($config);
 	}
 
 	/**
@@ -1012,16 +1012,16 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns false if captureURLs is false
+	* @testdox asConfig() returns NULL if captureURLs is false
 	*/
-	public function testAsConfigFalseNoCapture()
+	public function testAsConfigNullNoCapture()
 	{
 		$plugin = $this->configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 		$plugin->add('youtube');
 
 		$config = $plugin->asConfig();
 
-		$this->assertFalse($config);
+		$this->assertNull($config);
 	}
 
 	/**

@@ -92,7 +92,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
-	* @return array|bool This plugin's config, or FALSE to disable this plugin
+	* @return array|null This plugin's config, or NULL to disable this plugin
 	*/
 	public function asConfig()
 	{

@@ -38,11 +38,11 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns FALSE if no keyword was added
+	* @testdox asConfig() returns NULL if no keyword was added
 	*/
 	public function testConfigFalse()
 	{
-		$this->assertFalse($this->configurator->Keywords->asConfig());
+		$this->assertNull($this->configurator->Keywords->asConfig());
 	}
 
 	/**

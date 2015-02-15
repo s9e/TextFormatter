@@ -246,7 +246,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] Throws an exception if the value is neither an instance of or the name of a class that implements ConfiguratorBase
  [x] Throws an exception if the plugin name is not entirely composed of letters, numbers and underscores
  [x] Throws an exception if the plugin name does not start with an uppercase letter
- [x] asConfig() does not return an entry for plugins whose asConfig() returns FALSE
+ [x] asConfig() does not return an entry for plugins whose asConfig() returns NULL
  [x] asConfig() returns an entry for plugins whose asConfig() returns an empty array
  [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
  [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
@@ -2046,7 +2046,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addCustom() checks that the tag is safe before adding it
  [x] addCustom() accepts a custom "tagName" in options
  [x] addCustom() accepts custom "rules" in options
- [x] asConfig() returns FALSE if no BBCodes were created
+ [x] asConfig() returns NULL if no BBCodes were created
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
@@ -2069,7 +2069,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
- [x] asConfig() returns FALSE if no words were added
+ [x] asConfig() returns NULL if no words were added
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
@@ -2084,7 +2084,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] add() does not throw an exception on duplicates
  [x] asConfig() does not return an entry for "allowed" by default
  [x] asConfig() returns an entry for "allowed" if any word was allowed with allow()
- [x] asConfig() returns false if all censored words are also on the allowed list
+ [x] asConfig() returns NULL if all censored words are also on the allowed list
 
 s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() censors text nodes in HTML
@@ -2137,7 +2137,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Emoticons can contain single quotes
  [x] Emoticons can contain double quotes
  [x] Emoticons can contain both quotes at once
- [x] asConfig() returns FALSE if no emoticons were set
+ [x] asConfig() returns NULL if no emoticons were set
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] asConfig() generates a quickMatch if applicable
@@ -2222,7 +2222,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() checks the safeness of the tag
  [x] add() checks the safeness of the tag before adding it to the configurator's collection
  [x] add() throws a LogicException on unexpected captures
- [x] asConfig() returns FALSE if no replacements were set
+ [x] asConfig() returns NULL if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
  [x] asConfig() does not creates a JavaScript variant by default
  [x] asConfig() creates a JavaScript variant of generics if JavaScript is enabled
@@ -2270,7 +2270,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('*invalid*') throws an exception
  [x] allowAttribute('span', 'data-title') allows the 'data-title' attribute on 'span' elements
  [x] allowAttribute('b', '*invalid*') throws an exception
- [x] asConfig() returns FALSE if no elements were allowed
+ [x] asConfig() returns NULL if no elements were allowed
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] asConfig() preserves aliased elements' keys in a JS variant
@@ -2300,7 +2300,7 @@ s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
  [x] Automatically creates a "KEYWORD" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
- [x] asConfig() returns FALSE if no keyword was added
+ [x] asConfig() returns NULL if no keyword was added
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
  [x] The config array contains an array of regexps
@@ -2380,9 +2380,9 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() throws a RuntimeException if the default XML config is malformed
  [x] appendTemplate() sets a template to be appended to media sites' templates
  [x] appendTemplate() accepts HTML
- [x] asConfig() returns false if no site was added
+ [x] asConfig() returns NULL if no site was added
  [x] asConfig() returns a an array containing a "regexp" element by default, if any site was added
- [x] asConfig() returns false if captureURLs is false
+ [x] asConfig() returns NULL if captureURLs is false
  [x] asConfig() creates a regexp if a site has a "host"
  [x] asConfig() creates a regexp if a site has a "scheme"
  [x] asConfig() creates a regexp if a site has both "host" and "scheme"

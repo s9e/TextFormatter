@@ -61,12 +61,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns FALSE if no words were added
+	* @testdox asConfig() returns NULL if no words were added
 	*/
 	public function testFalseConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
-		$this->assertFalse($plugin->asConfig());
+		$this->assertNull($plugin->asConfig());
 	}
 
 	/**
@@ -271,12 +271,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns false if all censored words are also on the allowed list
+	* @testdox asConfig() returns NULL if all censored words are also on the allowed list
 	*/
 	public function testAsConfigAllowedAll()
 	{
 		$this->configurator->Censor->add('foo');
 		$this->configurator->Censor->allow('foo');
-		$this->assertFalse($this->configurator->Censor->asConfig());
+		$this->assertNull($this->configurator->Censor->asConfig());
 	}
 }

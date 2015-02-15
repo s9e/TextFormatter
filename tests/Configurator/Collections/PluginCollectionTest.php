@@ -93,12 +93,12 @@ class PluginCollectionTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() does not return an entry for plugins whose asConfig() returns FALSE
+	* @testdox asConfig() does not return an entry for plugins whose asConfig() returns NULL
 	*/
 	public function testAsConfigRemoveFalse()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(false);
+		$plugin->setConfig(null);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->plugins->asConfig();

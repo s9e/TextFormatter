@@ -315,13 +315,13 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Generate this plugin's config
 	*
-	* @return array
+	* @return array|null
 	*/
 	public function asConfig()
 	{
 		if (empty($this->elements) && empty($this->aliases))
 		{
-			return false;
+			return;
 		}
 
 		/**

@@ -109,7 +109,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		if (!count($this->collection))
 		{
-			return false;
+			return;
 		}
 
 		// Grab the emoticons from the collection

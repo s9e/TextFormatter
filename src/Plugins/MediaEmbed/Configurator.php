@@ -106,7 +106,7 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!$this->captureURLs)
 		{
-			return false;
+			return;
 		}
 
 		// Unicode char used as a placeholder for the regular expression that marks the beginning of
@@ -137,7 +137,7 @@ class Configurator extends ConfiguratorBase
 
 		if (empty($patterns))
 		{
-			return false;
+			return;
 		}
 
 		// Merge all the patterns

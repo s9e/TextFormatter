@@ -15,7 +15,7 @@ interface ConfigProvider
 	* NOTE: if this method was named getConfig() it could interfere with magic getters from
 	*       the Configurable trait
 	*
-	* @return array|\s9e\TextFormatter\Configurator\Items\Variant|false
+	* @return array|\s9e\TextFormatter\Configurator\Items\Variant|null
 	*/
 	public function asConfig();
 }
