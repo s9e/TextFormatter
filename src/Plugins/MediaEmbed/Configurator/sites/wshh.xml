@@ -3,6 +3,8 @@
 	<example>http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</example>
 	<example>http://www.worldstarhiphop.com/featured/71630</example>
 
+	<tags><tag>videos</tag></tags>
+
 	<host>worldstarhiphop.com</host>
 	<extract>!worldstarhiphop\.com/featured/(?'id'\d+)!</extract>
 	<scrape>
