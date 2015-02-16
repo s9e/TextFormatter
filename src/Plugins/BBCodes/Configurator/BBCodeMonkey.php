@@ -212,7 +212,7 @@ class BBCodeMonkey
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
-		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
+		        . '\\s*(?:/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
 		        . '$)i';
 
 		if (!preg_match($regexp, trim($usage), $m))
