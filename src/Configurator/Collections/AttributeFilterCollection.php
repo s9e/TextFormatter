@@ -18,15 +18,7 @@ class AttributeFilterCollection extends NormalizedCollection
 
 		if (!$this->exists($key))
 			if ($key[0] === '#')
-			{
-				$filterName = \ucfirst(\substr($key, 1));
-				$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
-
-				if (!\class_exists($className))
-					throw new InvalidArgumentException("Unknown attribute filter '" . $key . "'");
-
-				$this->set($key, new $className);
-			}
+				$this->set($key, self::getDefaultFilter(\substr($key, 1)));
 			else
 				$this->set($key, new AttributeFilter($key));
 
@@ -35,6 +27,17 @@ class AttributeFilterCollection extends NormalizedCollection
 		$filter = clone $filter;
 
 		return $filter;
+	}
+
+	public static function getDefaultFilter($filterName)
+	{
+		$filterName = \ucfirst(\strtolower($filterName));
+		$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
+
+		if (!\class_exists($className))
+			throw new InvalidArgumentException("Unknown attribute filter '" . $filterName . "'");
+
+		return new $className;
 	}
 
 	public function normalizeKey($key)

@@ -151,7 +151,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public function asConfig()
 	{
 		if (!\count($this->collection))
-			return \false;
+			return;
 
 		$regexp = RegexpBuilder::fromList(
 			\array_keys(\iterator_to_array($this->collection)),

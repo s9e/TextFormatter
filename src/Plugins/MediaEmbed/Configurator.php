@@ -68,7 +68,7 @@ class Configurator extends ConfiguratorBase
 	public function asConfig()
 	{
 		if (!$this->captureURLs)
-			return \false;
+			return;
 
 		$char = "\xEE\x80\x80";
 
@@ -89,7 +89,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		if (empty($patterns))
-			return \false;
+			return;
 
 		$regexp = RegexpBuilder::fromList(
 			$patterns,
@@ -128,43 +128,7 @@ class Configurator extends ConfiguratorBase
 		);
 
 		if (isset($siteConfig['scrape']))
-		{
-			if (!isset($siteConfig['scrape'][0]))
-				$siteConfig['scrape'] = array($siteConfig['scrape']);
-
-			$scrapeConfig = array();
-			foreach ($siteConfig['scrape'] as $scrape)
-			{
-				$attrNames = array();
-				foreach ((array) $scrape['extract'] as $extractRegexp)
-				{
-					$attributePreprocessor = new AttributePreprocessor($extractRegexp);
-
-					foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
-					{
-						$attrNames[] = $attrName;
-						$attributes[$attrName]['regexp'] = $attrRegexp;
-					}
-				}
-
-				$attrNames = \array_unique($attrNames);
-				\sort($attrNames);
-
-				if (!isset($scrape['match']))
-					$scrape['match'] = '//';
-				$entry = array($scrape['match'], $scrape['extract'], $attrNames);
-				if (isset($scrape['url']))
-					$entry[] = $scrape['url'];
-
-				$scrapeConfig[] = $entry;
-			}
-
-			$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
-			                 ->addParameterByName('scrapeConfig')
-			                 ->addParameterByName('cacheDir')
-			                 ->setVar('scrapeConfig', $scrapeConfig)
-			                 ->setJS('function(){return true;}');
-		}
+			$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
 
 		if (isset($siteConfig['extract']))
 			foreach ((array) $siteConfig['extract'] as $regexp)
@@ -219,8 +183,8 @@ class Configurator extends ConfiguratorBase
 
 		if (!$hasRequiredAttribute)
 			$tag->filterChain
-			    ->append(array(__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'))
-			    ->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
+				->append(array(__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'))
+				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
 
 		foreach ($this->preferredRenderingMethods as $renderingMethod)
 		{
@@ -255,6 +219,48 @@ class Configurator extends ConfiguratorBase
 	public function appendTemplate($template = '')
 	{
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
+	}
+
+	protected function addScrapes(Tag $tag, array $scrapes)
+	{
+		if (!isset($scrapes[0]))
+			$scrapes = array($scrapes);
+
+		$attributes   = array();
+		$scrapeConfig = array();
+		foreach ($scrapes as $scrape)
+		{
+			$attrNames = array();
+			foreach ((array) $scrape['extract'] as $extractRegexp)
+			{
+				$attributePreprocessor = new AttributePreprocessor($extractRegexp);
+
+				foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
+				{
+					$attrNames[] = $attrName;
+					$attributes[$attrName]['regexp'] = $attrRegexp;
+				}
+			}
+
+			$attrNames = \array_unique($attrNames);
+			\sort($attrNames);
+
+			if (!isset($scrape['match']))
+				$scrape['match'] = '//';
+			$entry = array($scrape['match'], $scrape['extract'], $attrNames);
+			if (isset($scrape['url']))
+				$entry[] = $scrape['url'];
+
+			$scrapeConfig[] = $entry;
+		}
+
+		$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
+						 ->addParameterByName('scrapeConfig')
+						 ->addParameterByName('cacheDir')
+						 ->setVar('scrapeConfig', $scrapeConfig)
+						 ->setJS('function(){return true;}');
+
+		return $attributes;
 	}
 
 	protected function appendFilter(Attribute $attribute, $filter)

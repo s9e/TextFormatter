@@ -213,7 +213,7 @@ class Configurator extends ConfiguratorBase
 	public function asConfig()
 	{
 		if (!\count($this->collection))
-			return \false;
+			return;
 
 		$generics   = array();
 		$jsGenerics = array();

@@ -90,7 +90,7 @@ class Configurator extends ConfiguratorBase
 	public function asConfig()
 	{
 		if (!\count($this->collection))
-			return \false;
+			return;
 
 		$config = array(
 			'attrName' => $this->attrName,

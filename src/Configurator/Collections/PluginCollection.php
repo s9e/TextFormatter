@@ -68,7 +68,7 @@ class PluginCollection extends NormalizedCollection
 
 		foreach ($plugins as $pluginName => &$pluginConfig)
 		{
-			if ($pluginConfig === \false)
+			if (!isset($pluginConfig))
 			{
 				unset($plugins[$pluginName]);
 

@@ -126,15 +126,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public function getHelper()
 	{
 		$config = $this->asConfig();
-
-		if ($config === \false)
+		if (isset($config))
+			ConfigHelper::filterVariants($config);
+		else
 			$config = array(
 				'attrName' => $this->attrName,
 				'regexp'   => '/(?!)/',
 				'tagName'  => $this->tagName
 			);
-		else
-			ConfigHelper::filterVariants($config);
 
 		return new Helper($config);
 	}
@@ -144,7 +143,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$words = \array_diff_key(\iterator_to_array($this->collection), $this->allowed);
 
 		if (empty($words))
-			return \false;
+			return;
 
 		$config = array(
 			'attrName' => $this->attrName,
@@ -181,7 +180,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
-		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
+		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/Siu');
 
 		$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
