@@ -71,7 +71,7 @@ abstract class Minifier
 	/**
 	* Return a value that uniquely identify this minifier's configuration
 	*
-	* @return mixed Any value, or FALSE to disable caching
+	* @return integer|string|false Any value, or FALSE to disable caching
 	*/
 	public function getCacheDifferentiator()
 	{

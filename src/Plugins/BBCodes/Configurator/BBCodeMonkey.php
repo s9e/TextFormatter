@@ -825,6 +825,7 @@ class BBCodeMonkey
 		}
 		catch (Exception $e)
 		{
+			// Nothing to do here
 		}
 
 		return false;

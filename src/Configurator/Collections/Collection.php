@@ -28,7 +28,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	}
 
 	/**
-	* {@inheritdoc}
+	* @return mixed
 	*/
 	public function asConfig()
 	{

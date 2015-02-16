@@ -12,8 +12,8 @@ interface RendererGenerator
 	/**
 	* Generate and return a renderer
 	*
-	* @param  Rendering $rendering Rendering configuration
-	* @return Renderer             Instance of Renderer
+	* @param  Rendering                   $rendering Rendering configuration
+	* @return \s9e\TextFormatter\Renderer            Instance of Renderer
 	*/
 	public function getRenderer(Rendering $rendering);
 }

@@ -230,6 +230,7 @@ class PHP implements RendererGenerator
 		unset($groupedTemplates, $ir, $quickRender);
 
 		// Store the compiled template if we plan to create a Quick renderer
+		$quickSource = false;
 		if ($this->enableQuickRenderer && $rendering->type === 'html')
 		{
 			$quickRender = [];
@@ -240,10 +241,6 @@ class PHP implements RendererGenerator
 
 			$quickSource = Quick::getSource($quickRender);
 			unset($quickRender);
-		}
-		else
-		{
-			$quickSource = false;
 		}
 
 		// Coalesce all the compiled templates

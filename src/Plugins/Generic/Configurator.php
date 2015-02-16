@@ -50,6 +50,7 @@ class Configurator extends ConfiguratorBase
 		}
 		catch (Exception $e)
 		{
+			// Nothing to do here
 		}
 
 		if ($valid === false)
