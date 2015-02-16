@@ -31,7 +31,9 @@ class Helper
 	{
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
-		$regexp = \substr($this->regexp, 0, $pos)
+		$regexp = $delim
+		        . '(?<!&)(?<!&#)'
+		        . \substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*(?=<|$))'
 		        . \substr($this->regexp, $pos);
 
@@ -90,7 +92,9 @@ class Helper
 
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
-		$regexp = \substr($this->regexp, 0, $pos)
+		$regexp = $delim
+		        . '(?<!&)'
+		        . \substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*<(?!\\/(?-i)' . $this->tagName . '>))'
 		        . \substr($this->regexp, $pos);
 
