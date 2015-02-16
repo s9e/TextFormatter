@@ -129,6 +129,7 @@ class PHP implements RendererGenerator
 
 		unset($groupedTemplates, $ir, $quickRender);
 
+		$quickSource = \false;
 		if ($this->enableQuickRenderer && $rendering->type === 'html')
 		{
 			$quickRender = array();
@@ -138,8 +139,6 @@ class PHP implements RendererGenerator
 			$quickSource = Quick::getSource($quickRender);
 			unset($quickRender);
 		}
-		else
-			$quickSource = \false;
 
 		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
 		unset($compiledTemplates);
