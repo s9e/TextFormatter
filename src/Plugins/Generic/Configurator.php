@@ -35,7 +35,7 @@ class Configurator extends ConfiguratorBase
 		}
 		catch (Exception $e)
 		{
-		}
+			}
 
 		if ($valid === \false)
 			throw new InvalidArgumentException('Invalid regexp');

@@ -560,7 +560,7 @@ class BBCodeMonkey
 		}
 		catch (Exception $e)
 		{
-		}
+			}
 
 		return \false;
 	}
