@@ -1,6 +1,8 @@
 <site name="Metacafe" homepage="http://www.metacafe.com/">
 	<example>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</example>
 
+	<tags><tag>videos</tag></tags>
+
 	<host>metacafe.com</host>
 	<extract>!metacafe\.com/watch/(?'id'\d+)!</extract>
 	<iframe width="560" height="315" src="//www.metacafe.com/embed/{@id}/"/>

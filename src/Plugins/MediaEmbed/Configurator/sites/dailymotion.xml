@@ -4,6 +4,8 @@
 	<example>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</example>
 	<example>http://games.dailymotion.com/live/x15gjhi</example>
 
+	<tags><tag>videos</tag></tags>
+
 	<host>dailymotion.com</host>
 	<extract>!dailymotion\.com/(?:live/|user/[^#]+#video=|video/)(?'id'[A-Za-z0-9]+)!</extract>
 	<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/{@id}"/>

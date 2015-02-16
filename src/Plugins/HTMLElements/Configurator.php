@@ -176,7 +176,7 @@ class Configurator extends ConfiguratorBase
 	public function asConfig()
 	{
 		if (empty($this->elements) && empty($this->aliases))
-			return \false;
+			return;
 
 		$attrRegexp = '[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
 		$tagRegexp  = RegexpBuilder::fromList(\array_merge(
