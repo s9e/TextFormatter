@@ -1553,6 +1553,10 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] allowScheme('<invalid>') throws an exception
  [x] allowScheme('javascript') throws an exception
  [x] allowScheme('javaScript') throws an exception
+ [x] asConfig() does not return a value for disallowedSubstrings if there are no disallowed substrings
+ [x] asConfig() returns a regexp in disallowedSubstrings if there are disallowed substrings
+ [x] asConfig() returns a Unicode regexp in disallowedSubstrings if there are disallowed substrings with Unicode characters
+ [x] disallowSubstring() accepts asterisks as joker
 
 s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] normalize() throws an InvalidArgumentException if the name is invalid

@@ -11,6 +11,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 class UrlConfig implements ConfigProvider
 {
@@ -23,6 +24,11 @@ class UrlConfig implements ConfigProvider
 	* @var HostnameList List of disallowed hosts
 	*/
 	protected $disallowedHosts;
+
+	/**
+	* @var string[] List of disallowed substrings
+	*/
+	protected $disallowedSubstrings = [];
 
 	/**
 	* @var HostnameList List of allowed hosts
@@ -49,7 +55,22 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		return ConfigHelper::toArray(get_object_vars($this));
+		$vars = get_object_vars($this);
+		if (empty($vars['disallowedSubstrings']))
+		{
+			unset($vars['disallowedSubstrings']);
+		}
+		else
+		{
+			$regexp = '#' . RegexpBuilder::fromList($vars['disallowedSubstrings'], ['specialChars' => ['*' => '.*?']]) . '#i';
+			if (preg_match('([^[:ascii:]])', $regexp))
+			{
+				$regexp .= 'u';
+			}
+			$vars['disallowedSubstrings'] = $regexp;
+		}
+
+		return ConfigHelper::toArray($vars);
 	}
 
 	/**
@@ -94,6 +115,17 @@ class UrlConfig implements ConfigProvider
 	public function disallowScheme($scheme)
 	{
 		$this->allowedSchemes->remove($scheme);
+	}
+
+	/**
+	* Disallow given substring in URLs
+	*
+	* @param  string $str Substring to disallow. Asterisks can be used to match any number of characters
+	* @return void
+	*/
+	public function disallowSubstring($str)
+	{
+		$this->disallowedSubstrings[] = $str;
 	}
 
 	/**

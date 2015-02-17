@@ -767,6 +767,63 @@ class BuiltInFiltersTest extends Test
 				'http://example.org/Pok%c3%a9mon%c2%ae',
 				'http://example.org/Pok%C3%A9mon%C2%AE',
 			],
+			[
+				new Url,
+				'http://example.org/foo/',
+				false,
+				[
+					[
+						'err',
+						'Disallowed URL',
+						[
+							'attrValue'           => 'http://example.org/foo/',
+							'disallowedSubstring' => 'foo'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowSubstring('foo');
+				}
+			],
+			[
+				new Url,
+				'http://example.org/%66%6F%6F/',
+				false,
+				[
+					[
+						'err',
+						'Disallowed URL',
+						[
+							'attrValue'           => 'http://example.org/%66%6F%6F/',
+							'disallowedSubstring' => 'foo'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowSubstring('foo');
+				}
+			],
+			[
+				new Url,
+				'http://example.org/foo/',
+				false,
+				[
+					[
+						'err',
+						'Disallowed URL',
+						[
+							'attrValue'           => 'http://example.org/foo/',
+							'disallowedSubstring' => 'example'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowSubstring('ex*e');
+				}
+			],
 			[new Identifier, '123abcABC', '123abcABC'],
 			[new Identifier, '-_-', '-_-'],
 			[new Identifier, 'a b', false],
