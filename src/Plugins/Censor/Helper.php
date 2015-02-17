@@ -56,10 +56,10 @@ class Helper
 	/**
 	* Censor text nodes inside of HTML code
 	*
-	* @param  string $text Original HTML
+	* @param  string $html Original HTML
 	* @return string       Censored HTML
 	*/
-	public function censorHtml($text)
+	public function censorHtml($html)
 	{
 		// Modify the original regexp so that it only matches text nodes
 		$delim  = $this->regexp[0];
@@ -89,7 +89,7 @@ class Helper
 
 				return htmlspecialchars($this->defaultReplacement);
 			},
-			$text
+			$html
 		);
 	}
 
