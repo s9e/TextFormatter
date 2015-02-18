@@ -27,14 +27,14 @@ class Helper
 			$this->$k = $v;
 	}
 
-	public function censorHtml($text)
+	public function censorHtml($html)
 	{
 		$_this = $this;
 
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
 		$regexp = $delim
-		        . '(?<!&)(?<!&#)'
+		        . '(?<!&#)(?<!&)'
 		        . \substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*(?=<|$))'
 		        . \substr($this->regexp, $pos);
@@ -43,19 +43,9 @@ class Helper
 			$regexp,
 			function ($m) use ($_this)
 			{
-				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
-					return $m[0];
-
-				foreach ($_this->replacements as $_3673356096)
-				{
-					list($regexp, $replacement) = $_3673356096;
-					if (\preg_match($regexp, $m[0]))
-						return \htmlspecialchars($replacement);
-				}
-
-				return \htmlspecialchars($_this->defaultReplacement);
+				return \htmlspecialchars($_this->getReplacement($m[0]));
 			},
-			$text
+			$html
 		);
 	}
 
@@ -67,20 +57,15 @@ class Helper
 			$this->regexp,
 			function ($m) use ($_this)
 			{
-				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
-					return $m[0];
-
-				foreach ($_this->replacements as $_3673356096)
-				{
-					list($regexp, $replacement) = $_3673356096;
-					if (\preg_match($regexp, $m[0]))
-						return $replacement;
-				}
-
-				return $_this->defaultReplacement;
+				return $_this->getReplacement($m[0]);
 			},
 			$text
 		);
+	}
+
+	public function isCensored($word)
+	{
+		return (\preg_match($this->regexp, $word) && !$this->isAllowed($word));
 	}
 
 	public function reparse($xml)
@@ -93,10 +78,7 @@ class Helper
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
 				function ($m) use ($_this)
 				{
-					if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
-						return $m[1];
-
-					return (\preg_match($_this->regexp, $m[1])) ? $_this->buildTag($m[1]) : $m[1];
+					return ($_this->isCensored($m[1])) ? $_this->buildTag($m[1]) : $m[1];
 				},
 				$xml
 			);
@@ -114,7 +96,7 @@ class Helper
 			$regexp,
 			function ($m) use ($_this)
 			{
-				if (isset($_this->allowed) && \preg_match($_this->allowed, $m[0]))
+				if ($_this->isAllowed($m[0]))
 					return $m[0];
 
 				return $_this->buildTag($m[0]);
@@ -136,18 +118,30 @@ class Helper
 	public function buildTag($word)
 	{
 		$startTag = '<' . $this->tagName;
+		$replacement = $this->getReplacement($word);
+		if ($replacement !== $this->defaultReplacement)
+			$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
+
+		return $startTag . '>' . $word . '</' . $this->tagName . '>';
+	}
+
+	public function getReplacement($word)
+	{
+		if ($this->isAllowed($word))
+			return $word;
 
 		foreach ($this->replacements as $_37478556)
 		{
 			list($regexp, $replacement) = $_37478556;
 			if (\preg_match($regexp, $word))
-			{
-				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
-
-				break;
-			}
+				return $replacement;
 		}
 
-		return $startTag . '>' . $word . '</' . $this->tagName . '>';
+		return $this->defaultReplacement;
+	}
+
+	public function isAllowed($word)
+	{
+		return (isset($this->allowed) && \preg_match($this->allowed, $word));
 	}
 }
