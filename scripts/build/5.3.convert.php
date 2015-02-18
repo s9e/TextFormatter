@@ -92,6 +92,10 @@ function convertCustom($filepath, &$file)
 			array(
 				'protected function getReplacement($word)',
 				'public function getReplacement($word)'
+			),
+			array(
+				'protected function isAllowed($word)',
+				'public function isAllowed($word)'
 			)
 		),
 		'InlineXPathLiterals.php' => array(
