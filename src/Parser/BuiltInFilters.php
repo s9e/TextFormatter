@@ -174,6 +174,18 @@ class BuiltInFilters
 
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = \null)
 	{
+		if (isset($urlConfig['disallowedSubstrings'])
+		 && \preg_match($urlConfig['disallowedSubstrings'], \urldecode($attrValue), $m))
+		{
+			if (isset($logger))
+				$logger->err(
+					'Disallowed URL',
+					['attrValue' => $attrValue, 'disallowedSubstring' => $m[0]]
+				);
+
+			return \false;
+		}
+
 		$p = self::parseUrl(\trim($attrValue));
 
 		$url = '';

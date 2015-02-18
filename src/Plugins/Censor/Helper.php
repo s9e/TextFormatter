@@ -27,12 +27,12 @@ class Helper
 			$this->$k = $v;
 	}
 
-	public function censorHtml($text)
+	public function censorHtml($html)
 	{
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
 		$regexp = $delim
-		        . '(?<!&)(?<!&#)'
+		        . '(?<!&#)(?<!&)'
 		        . \substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*(?=<|$))'
 		        . \substr($this->regexp, $pos);
@@ -41,16 +41,9 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && \preg_match($this->allowed, $m[0]))
-					return $m[0];
-
-				foreach ($this->replacements as list($regexp, $replacement))
-					if (\preg_match($regexp, $m[0]))
-						return \htmlspecialchars($replacement);
-
-				return \htmlspecialchars($this->defaultReplacement);
+				return \htmlspecialchars($this->getReplacement($m[0]));
 			},
-			$text
+			$html
 		);
 	}
 
@@ -60,17 +53,15 @@ class Helper
 			$this->regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && \preg_match($this->allowed, $m[0]))
-					return $m[0];
-
-				foreach ($this->replacements as list($regexp, $replacement))
-					if (\preg_match($regexp, $m[0]))
-						return $replacement;
-
-				return $this->defaultReplacement;
+				return $this->getReplacement($m[0]);
 			},
 			$text
 		);
+	}
+
+	public function isCensored($word)
+	{
+		return (\preg_match($this->regexp, $word) && !$this->isAllowed($word));
 	}
 
 	public function reparse($xml)
@@ -81,10 +72,7 @@ class Helper
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
 				function ($m)
 				{
-					if (isset($this->allowed) && \preg_match($this->allowed, $m[0]))
-						return $m[1];
-
-					return (\preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];
+					return ($this->isCensored($m[1])) ? $this->buildTag($m[1]) : $m[1];
 				},
 				$xml
 			);
@@ -102,7 +90,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && \preg_match($this->allowed, $m[0]))
+				if ($this->isAllowed($m[0]))
 					return $m[0];
 
 				return $this->buildTag($m[0]);
@@ -124,15 +112,27 @@ class Helper
 	protected function buildTag($word)
 	{
 		$startTag = '<' . $this->tagName;
+		$replacement = $this->getReplacement($word);
+		if ($replacement !== $this->defaultReplacement)
+			$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
+
+		return $startTag . '>' . $word . '</' . $this->tagName . '>';
+	}
+
+	protected function getReplacement($word)
+	{
+		if ($this->isAllowed($word))
+			return $word;
 
 		foreach ($this->replacements as list($regexp, $replacement))
 			if (\preg_match($regexp, $word))
-			{
-				$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
+				return $replacement;
 
-				break;
-			}
+		return $this->defaultReplacement;
+	}
 
-		return $startTag . '>' . $word . '</' . $this->tagName . '>';
+	protected function isAllowed($word)
+	{
+		return (isset($this->allowed) && \preg_match($this->allowed, $word));
 	}
 }
