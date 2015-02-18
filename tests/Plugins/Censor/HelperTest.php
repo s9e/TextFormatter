@@ -364,4 +364,32 @@ class HelperTest extends Test
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
+
+	/**
+	* @testdox isCensored('word') returns TRUE if '*or*' is censored
+	*/
+	public function testIsCensoredTrue()
+	{
+		$this->configurator->Censor->add('*or*') ;
+		$this->assertTrue($this->configurator->Censor->getHelper()->isCensored('word'));
+	}
+
+	/**
+	* @testdox isCensored('word') returns FALSE if '*xx*' is censored
+	*/
+	public function testIsCensoredFalse()
+	{
+		$this->configurator->Censor->add('*xx*') ;
+		$this->assertFalse($this->configurator->Censor->getHelper()->isCensored('word'));
+	}
+
+	/**
+	* @testdox isCensored('word') returns FALSE if '*or*' is censored and 'word' is allowed
+	*/
+	public function testIsCensoredAllowed()
+	{
+		$this->configurator->Censor->add('*or*') ;
+		$this->configurator->Censor->allow('word') ;
+		$this->assertFalse($this->configurator->Censor->getHelper()->isCensored('word'));
+	}
 }

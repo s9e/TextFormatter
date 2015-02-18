@@ -99,6 +99,17 @@ class Helper
 	}
 
 	/**
+	* Test whether given word is censored
+	*
+	* @param  string $word
+	* @return bool
+	*/
+	public function isCensored($word)
+	{
+		return (preg_match($this->regexp, $word) && !$this->isAllowed($word));
+	}
+
+	/**
 	* Update an intermediate representation to match a different list of words
 	*
 	* Will remove tags from words that are not censored anymore and will match new censored words in
@@ -125,12 +136,7 @@ class Helper
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
 				function ($m)
 				{
-					if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-					{
-						return $m[1];
-					}
-
-					return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];
+					return ($this->isCensored($m[1])) ? $this->buildTag($m[1]) : $m[1];
 				},
 				$xml
 			);
@@ -150,7 +156,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
+				if ($this->isAllowed($m[0]))
 				{
 					return $m[0];
 				}
@@ -181,15 +187,10 @@ class Helper
 	protected function buildTag($word)
 	{
 		$startTag = '<' . $this->tagName;
-
-		foreach ($this->replacements as list($regexp, $replacement))
+		$replacement = $this->getReplacement($word);
+		if ($replacement !== $this->defaultReplacement)
 		{
-			if (preg_match($regexp, $word))
-			{
-				$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_QUOTES) . '"';
-
-				break;
-			}
+			$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_QUOTES) . '"';
 		}
 
 		return $startTag . '>' . $word . '</' . $this->tagName . '>';
@@ -203,7 +204,7 @@ class Helper
 	*/
 	protected function getReplacement($word)
 	{
-		if (isset($this->allowed) && preg_match($this->allowed, $word))
+		if ($this->isAllowed($word))
 		{
 			return $word;
 		}
@@ -217,5 +218,16 @@ class Helper
 		}
 
 		return $this->defaultReplacement;
+	}
+
+	/**
+	* Test whether given word is allowed (whitelisted)
+	*
+	* @param  string $word
+	* @return bool
+	*/
+	protected function isAllowed($word)
+	{
+		return (isset($this->allowed) && preg_match($this->allowed, $word));
 	}
 }
