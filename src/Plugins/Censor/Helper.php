@@ -65,7 +65,7 @@ class Helper
 		$delim  = $this->regexp[0];
 		$pos    = strrpos($this->regexp, $delim);
 		$regexp = $delim
-		        . '(?<!&)(?<!&#)'
+		        . '(?<!&#)(?<!&)'
 		        . substr($this->regexp, 1, $pos - 1)
 		        . '(?=[^<">]*(?=<|$))'
 		        . substr($this->regexp, $pos);
@@ -74,20 +74,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-				{
-					return $m[0];
-				}
-
-				foreach ($this->replacements as list($regexp, $replacement))
-				{
-					if (preg_match($regexp, $m[0]))
-					{
-						return htmlspecialchars($replacement);
-					}
-				}
-
-				return htmlspecialchars($this->defaultReplacement);
+				return htmlspecialchars($this->getReplacement($m[0]));
 			},
 			$html
 		);
@@ -105,20 +92,7 @@ class Helper
 			$this->regexp,
 			function ($m)
 			{
-				if (isset($this->allowed) && preg_match($this->allowed, $m[0]))
-				{
-					return $m[0];
-				}
-
-				foreach ($this->replacements as list($regexp, $replacement))
-				{
-					if (preg_match($regexp, $m[0]))
-					{
-						return $replacement;
-					}
-				}
-
-				return $this->defaultReplacement;
+				return $this->getReplacement($m[0]);
 			},
 			$text
 		);
@@ -219,5 +193,29 @@ class Helper
 		}
 
 		return $startTag . '>' . $word . '</' . $this->tagName . '>';
+	}
+
+	/**
+	* Get the replacement for given word
+	*
+	* @param  string $word Original word
+	* @return string       Replacement if the word is censored, or the original word otherwise
+	*/
+	protected function getReplacement($word)
+	{
+		if (isset($this->allowed) && preg_match($this->allowed, $word))
+		{
+			return $word;
+		}
+
+		foreach ($this->replacements as list($regexp, $replacement))
+		{
+			if (preg_match($regexp, $word))
+			{
+				return $replacement;
+			}
+		}
+
+		return $this->defaultReplacement;
 	}
 }
