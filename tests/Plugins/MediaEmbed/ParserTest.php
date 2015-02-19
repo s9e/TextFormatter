@@ -781,8 +781,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.sportsnet.ca/soccer/west-ham-2-hull-2/',
-				'<r><SPORTSNET id="3786409870001" url="http://www.sportsnet.ca/soccer/west-ham-2-hull-2/">http://www.sportsnet.ca/soccer/west-ham-2-hull-2/</SPORTSNET></r>',
+				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
+				'<r><SPORTSNET id="4066554578001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>',
 				[],
 				function ($configurator)
 				{
