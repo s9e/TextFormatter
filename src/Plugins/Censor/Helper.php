@@ -27,21 +27,25 @@ class Helper
 			$this->$k = $v;
 	}
 
-	public function censorHtml($html)
+	public function censorHtml($html, $censorAttributes = \false)
 	{
+		$attributesExpr = '';
+		if ($censorAttributes)
+			$attributesExpr = '|"(?> [-\\w]+="[^"]*")*\\/?>';
+
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
 		        . \substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*(?=<|$))'
+		        . '(?=[^<">]*(?=<|$' . $attributesExpr . '))'
 		        . \substr($this->regexp, $pos);
 
 		return \preg_replace_callback(
 			$regexp,
 			function ($m)
 			{
-				return \htmlspecialchars($this->getReplacement($m[0]));
+				return \htmlspecialchars($this->getReplacement($m[0]), \ENT_QUOTES);
 			},
 			$html
 		);
