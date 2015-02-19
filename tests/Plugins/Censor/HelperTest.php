@@ -76,15 +76,30 @@ class HelperTest extends Test
 	}
 
 	/**
-	* @testdox censorHtml() does not replace HTML attribute values
+	* @testdox censorHtml() does not replace HTML attribute values by default
 	*/
-	public function testCensorHtmlAttributeValues()
+	public function testCensorHtmlAttributeValuesDefault()
 	{
 		$this->configurator->Censor->add('title') ;
+		$html = '<span title="title">title</span>';
 
 		$this->assertSame(
 			'<span title="title">****</span>',
-			$this->configurator->Censor->getHelper()->censorHtml('<span title="title">title</span>')
+			$this->configurator->Censor->getHelper()->censorHtml($html)
+		);
+	}
+
+	/**
+	* @testdox censorHtml() replaces HTML attribute values if its second argument is true
+	*/
+	public function testCensorHtmlAttributeValuesTrue()
+	{
+		$this->configurator->Censor->add('title') ;
+		$html = '<span title="title">title</span>';
+
+		$this->assertSame(
+			'<span title="****">****</span>',
+			$this->configurator->Censor->getHelper()->censorHtml($html, true)
 		);
 	}
 

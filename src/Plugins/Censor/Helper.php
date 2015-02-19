@@ -56,25 +56,35 @@ class Helper
 	/**
 	* Censor text nodes inside of HTML code
 	*
-	* @param  string $html Original HTML
-	* @return string       Censored HTML
+	* NOTE: will only recognize attributes that are enclosed in double quotes
+	*
+	* @param  string $html             Original HTML
+	* @param  bool   $censorAttributes Whether to censor the content of attributes
+	* @return string                   Censored HTML
 	*/
-	public function censorHtml($html)
+	public function censorHtml($html, $censorAttributes = false)
 	{
-		// Modify the original regexp so that it only matches text nodes
+		$attributesExpr = '';
+		if ($censorAttributes)
+		{
+			$attributesExpr = '|"(?> [-\\w]+="[^"]*")*\\/?>';
+		}
+
+		// Modify the original regexp so that it only matches text nodes and optionally attribute
+		// values
 		$delim  = $this->regexp[0];
 		$pos    = strrpos($this->regexp, $delim);
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
 		        . substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*(?=<|$))'
+		        . '(?=[^<">]*(?=<|$' . $attributesExpr . '))'
 		        . substr($this->regexp, $pos);
 
 		return preg_replace_callback(
 			$regexp,
 			function ($m)
 			{
-				return htmlspecialchars($this->getReplacement($m[0]));
+				return htmlspecialchars($this->getReplacement($m[0]), ENT_QUOTES);
 			},
 			$html
 		);
