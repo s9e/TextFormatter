@@ -431,6 +431,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://strawpoll.me/738091</td>
 	</tr>
 	<tr>
+		<td><code>streamable</code></td>
+		<td>Streamable</td>
+		<td>http://streamable.com/e4d</td>
+	</tr>
+	<tr>
 		<td><code>teamcoco</code></td>
 		<td>Team Coco</td>
 		<td>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode<br/>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</td>

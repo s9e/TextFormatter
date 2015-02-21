@@ -2371,6 +2371,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://streamable.com/e4d',
+				'<r><STREAMABLE id="e4d" url="http://streamable.com/e4d">http://streamable.com/e4d</STREAMABLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('streamable');
+				}
+			],
+			[
 				'http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien',
 				'<r><TEAMCOCO id="73784" url="http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien">http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</TEAMCOCO></r>',
 				[],
