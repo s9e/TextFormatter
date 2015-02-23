@@ -1,0 +1,22 @@
+<site name="Livestream" homepage="http://new.livestream.com/">
+	<example>http://new.livestream.com/jbtvlive/musicmarathon</example>
+	<example>http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>livestream.com</host>
+	<extract>!/videos/(?'video_id'\d+)!</extract>
+	<scrape>
+		<extract>!accounts/(?'account_id'\d+)/events/(?'event_id'\d+)!</extract>
+	</scrape>
+	<iframe width="640" height="360">
+		<src><![CDATA[
+			<xsl:text>//new.livestream.com/accounts/</xsl:text>
+			<xsl:value-of select="@account_id"/>
+			<xsl:text>/events/</xsl:text>
+			<xsl:value-of select="@event_id"/>
+			<xsl:if test="@video_id">/videos/<xsl:value-of select="@video_id"/></xsl:if>
+			<xsl:text>/player?autoPlay=false&amp;mute=true</xsl:text>
+		]]></src>
+	</iframe>
+</site>
