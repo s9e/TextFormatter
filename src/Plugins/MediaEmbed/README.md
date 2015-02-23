@@ -331,6 +331,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.liveleak.com/view?i=3dd_1366238099</td>
 	</tr>
 	<tr>
+		<td><code>livestream</code></td>
+		<td>Livestream</td>
+		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437</td>
+	</tr>
+	<tr>
 		<td><code>mailru</code></td>
 		<td>Mail.Ru</td>
 		<td>http://my.mail.ru/corp/auto/video/testdrive/34.html<br/>http://my.mail.ru/mail/classolo/video/28/29.html<br/>http://my.mail.ru/inbox/madasafish1969/video/_myvideo/1986.html<br/>http://my.mail.ru/mail/you4videos/video/_myvideo/1121.html</td>

@@ -649,6 +649,16 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
+				'http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437',
+				'<r><LIVESTREAM account_id="12014794" event_id="3788876" url="http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437" video_id="77576437">http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437</LIVESTREAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('livestream');
+				}
+			],
+			[
 				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
 				'<r><MAILRU id="corp/auto/testdrive/34" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
 				[],
