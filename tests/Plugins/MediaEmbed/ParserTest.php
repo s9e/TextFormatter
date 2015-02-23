@@ -2081,6 +2081,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://new.livestream.com/accounts/9999999999/events/9999999999',
+				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999" url="http://new.livestream.com/accounts/9999999999/events/9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('livestream');
+				}
+			],
+			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
 				'<r><MEDIUM id="e7e2cf9b8a95" url="https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</MEDIUM></r>',
 				[],
