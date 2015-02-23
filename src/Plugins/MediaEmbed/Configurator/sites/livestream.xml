@@ -16,7 +16,7 @@
 			<xsl:text>/events/</xsl:text>
 			<xsl:value-of select="@event_id"/>
 			<xsl:if test="@video_id">/videos/<xsl:value-of select="@video_id"/></xsl:if>
-			<xsl:text>/player?autoPlay=false&amp;mute=true</xsl:text>
+			<xsl:text>/player?autoPlay=false</xsl:text>
 		]]></src>
 	</iframe>
 </site>
