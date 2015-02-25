@@ -5,7 +5,6 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>livestream.com</host>
-	<match>//</match>
 	<extract>!livestream\.com/accounts/(?'account_id'\d+)/events/(?'event_id'\d+)!</extract>
 	<extract>!/videos/(?'video_id'\d+)!</extract>
 	<scrape>
