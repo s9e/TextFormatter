@@ -2404,7 +2404,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute
  [x] The [MEDIA] tag transfers its priority to the tag it creates
  [x] Abstract tests (not tied to bundled sites)
- [ ] Scraping tests
+ [x] Scraping tests
  [x] Scraping+rendering tests
  [x] Parsing tests
  [x] Parsing tests (JavaScript)

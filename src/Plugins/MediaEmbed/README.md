@@ -536,11 +536,6 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://vocaroo.com/i/s0dRy3rZ47bf</td>
 	</tr>
 	<tr>
-		<td><code>vube</code></td>
-		<td>Vube</td>
-		<td>http://vube.com/s/v7JeV6<br/>http://vube.com/William+Wei/best-drummer-ever-hd/Y8NUZ69Tf7?t=s</td>
-	</tr>
-	<tr>
 		<td><code>wshh</code></td>
 		<td>WorldStarHipHop</td>
 		<td>http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>http://www.worldstarhiphop.com/featured/71630</td>
