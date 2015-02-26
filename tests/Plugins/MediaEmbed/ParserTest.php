@@ -792,13 +792,15 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
-				'<r><SPORTSNET id="4069860654001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>',
+				'(<r><SPORTSNET id="4\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('sportsnet');
-				}
+				},
+				null,
+				'assertRegexp'
 			],
 			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
