@@ -545,6 +545,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.hudl.com/v/CVmja',
+				'<r><HUDL athlete="2122944" highlight="206727383" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('hudl');
+				}
+			],
+			[
 				'http://www.hulu.com/watch/484180',
 				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA" url="http://www.hulu.com/watch/484180">http://www.hulu.com/watch/484180</HULU></r>',
 				[],
@@ -1953,6 +1963,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('grooveshark');
+				}
+			],
+			[
+				'http://www.hudl.com/athlete/2067184/highlights/163744377',
+				'<r><HUDL athlete="2067184" highlight="163744377" url="http://www.hudl.com/athlete/2067184/highlights/163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('hudl');
 				}
 			],
 			[

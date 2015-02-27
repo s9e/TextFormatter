@@ -271,6 +271,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5<br/>http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</td>
 	</tr>
 	<tr>
+		<td><code>hudl</code></td>
+		<td>Hudl</td>
+		<td>http://www.hudl.com/athlete/2067184/highlights/163744377<br/>http://www.hudl.com/v/CVmja</td>
+	</tr>
+	<tr>
 		<td><code>hulu</code></td>
 		<td>Hulu</td>
 		<td>http://www.hulu.com/watch/484180</td>
