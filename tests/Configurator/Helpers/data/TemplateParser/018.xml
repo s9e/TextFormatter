@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element empty="maybe"  id="1" name="b">
 		<attribute name="title">
 			<switch>

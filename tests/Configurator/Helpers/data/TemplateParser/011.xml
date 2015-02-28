@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element name="b" id="1" empty="maybe">
 		<closeTag id="1"/>
 		<applyTemplates select="I"/>

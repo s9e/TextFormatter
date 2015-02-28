@@ -21,34 +21,4 @@ class UnformattedTest extends Test
 			$generator->getRenderer($this->configurator->rendering)
 		);
 	}
-
-	/**
-	* @testdox Configures the renderer for HTML output if applicable
-	*/
-	public function testOutputHTML()
-	{
-		$this->configurator->rendering->type = 'html';
-		$generator = new Unformatted;
-
-		$this->assertAttributeSame(
-			true,
-			'htmlOutput',
-			$generator->getRenderer($this->configurator->rendering)
-		);
-	}
-
-	/**
-	* @testdox Configures the renderer for XML output if applicable
-	*/
-	public function testOutputXML()
-	{
-		$this->configurator->rendering->type = 'xhtml';
-		$generator = new Unformatted;
-
-		$this->assertAttributeSame(
-			false,
-			'htmlOutput',
-			$generator->getRenderer($this->configurator->rendering)
-		);
-	}
 }

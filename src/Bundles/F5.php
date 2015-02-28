@@ -36,6 +36,6 @@ abstract class F5 extends \s9e\TextFormatter\Bundle
 	*/
 	public static function getRenderer()
 	{
-		return unserialize("O:37:\"s9e\\TextFormatter\\Bundles\\F5\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:0;s:9:\"\000*\000params\";a:5:{s:8:\"BASE_URL\";s:0:\"\";s:12:\"IS_SIGNATURE\";s:0:\"\";s:7:\"L_WROTE\";s:6:\"wrote:\";s:8:\"SHOW_IMG\";s:1:\"1\";s:12:\"SHOW_IMG_SIG\";s:0:\"\";}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
+		return unserialize("O:37:\"s9e\\TextFormatter\\Bundles\\F5\\Renderer\":2:{s:9:\"\000*\000params\";a:5:{s:8:\"BASE_URL\";s:0:\"\";s:12:\"IS_SIGNATURE\";s:0:\"\";s:7:\"L_WROTE\";s:6:\"wrote:\";s:8:\"SHOW_IMG\";s:1:\"1\";s:12:\"SHOW_IMG_SIG\";s:0:\"\";}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
 	}
 }

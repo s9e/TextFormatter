@@ -58,11 +58,6 @@ class PHP implements RendererGenerator
 	public $filepath;
 
 	/**
-	* @var bool Whether to force non-void, empty elements to use the empty-element tag syntax in XML mode
-	*/
-	public $forceEmptyElements = true;
-
-	/**
 	* @var string Name of the last class generated
 	*/
 	public $lastClassName;
@@ -81,11 +76,6 @@ class PHP implements RendererGenerator
 	* @var Serializer Serializer
 	*/
 	public $serializer;
-
-	/**
-	* @var bool Whether to use the empty-element tag syntax with non-void elements in XML mode
-	*/
-	public $useEmptyElements = true;
 
 	/**
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
@@ -157,7 +147,6 @@ class PHP implements RendererGenerator
 	public function generate(Rendering $rendering)
 	{
 		// Copy some options to the serializer
-		$this->serializer->outputMethod                = $rendering->type;
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
 		// Gather templates and optimize simple templates
@@ -187,13 +176,7 @@ class PHP implements RendererGenerator
 		foreach ($groupedTemplates as $template => $tagNames)
 		{
 			// Parse the template
-			$ir = TemplateParser::parse($template, $rendering->type);
-
-			// Apply the empty-element options
-			if ($rendering->type === 'xhtml')
-			{
-				$this->fixEmptyElements($ir->documentElement);
-			}
+			$ir = TemplateParser::parse($template);
 
 			// Test whether this template uses an <xsl:apply-templates/> element with a select
 			if (!$hasApplyTemplatesSelect)
@@ -231,7 +214,7 @@ class PHP implements RendererGenerator
 
 		// Store the compiled template if we plan to create a Quick renderer
 		$quickSource = false;
-		if ($this->enableQuickRenderer && $rendering->type === 'html')
+		if ($this->enableQuickRenderer)
 		{
 			$quickRender = [];
 			foreach ($tagBranches as $tagName => $tagBranch)
@@ -269,7 +252,6 @@ class PHP implements RendererGenerator
 		$php = [];
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
 		$php[] = '{';
-		$php[] = '	protected $htmlOutput=' . self::export($rendering->type === 'html') . ';';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
 		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
 
@@ -466,34 +448,5 @@ class PHP implements RendererGenerator
 		}
 
 		return var_export($value, true);
-	}
-
-	/**
-	* Change the IR to respect the empty-element options
-	*
-	* @param  DOMElement $ir
-	* @return void
-	*/
-	protected function fixEmptyElements(DOMElement $ir)
-	{
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			$isEmpty = $element->getAttribute('empty');
-			$isVoid  = $element->getAttribute('void');
-
-			if ($isVoid || $isEmpty === 'no')
-			{
-				continue;
-			}
-
-			if (!$this->useEmptyElements)
-			{
-				$element->setAttribute('empty', 'no');
-			}
-			elseif ($isEmpty === 'maybe' && !$this->forceEmptyElements)
-			{
-				$element->setAttribute('empty', 'no');
-			}
-		}
 	}
 }

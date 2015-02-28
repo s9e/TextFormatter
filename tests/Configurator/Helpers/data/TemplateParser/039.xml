@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
-<template outputMethod="html">
-	<switch branch-key="@foo">
-		<case branch-values='a:1:{i:0;s:1:"1";}' test="@foo = 1">
+<template>
+	<switch>
+		<case test="@foo='a'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-values='a:1:{i:0;s:1:"2";}' test="@foo = 2">
+		<case test=".='c'">
 			<output escape="text" type="literal">.</output>
 		</case>
-		<case branch-values='a:1:{i:0;s:1:"3";}' test="@foo = 3">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case branch-values='a:1:{i:0;s:1:"4";}' test="4 = @foo">
+		<case test=".='d'">
 			<output escape="text" type="literal">.</output>
 		</case>
 	</switch>

@@ -57,38 +57,6 @@ class XSLTTest extends Test
 	}
 
 	/**
-	* @testdox Renders multi-line text in HTML after un/serialization
-	*/
-	public function testUnserializedMultiLineTextHTML()
-	{
-		$xml = '<t>One<br/>two</t>';
-
-		$this->configurator->rendering->type = 'html';
-		$renderer = unserialize(serialize($this->configurator->getRenderer()));
-
-		$this->assertSame(
-			'One<br>two',
-			$renderer->render($xml)
-		);
-	}
-
-	/**
-	* @testdox Renders multi-line text in XHTML after un/serialization
-	*/
-	public function testUnserializedMultiLineTextXHTML()
-	{
-		$xml = '<t>One<br/>two</t>';
-
-		$this->configurator->rendering->type = 'xhtml';
-		$renderer = unserialize(serialize($this->configurator->getRenderer()));
-
-		$this->assertSame(
-			'One<br/>two',
-			$renderer->render($xml)
-		);
-	}
-
-	/**
 	* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
 	*/
 	public function testSetParameterBothQuotes()

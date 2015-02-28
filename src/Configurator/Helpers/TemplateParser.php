@@ -29,10 +29,9 @@ class TemplateParser
 	* Parse a template into an internal representation
 	*
 	* @param  string      $template     Source template
-	* @param  string      $outputMethod Either "html" or "xml"
 	* @return DOMDocument               Internal representation
 	*/
-	public static function parse($template, $outputMethod)
+	public static function parse($template)
 	{
 		$xsl = '<xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
 
@@ -41,7 +40,6 @@ class TemplateParser
 
 		$ir = new DOMDocument;
 		$ir->loadXML('<template/>');
-		$ir->documentElement->setAttribute('outputMethod', $outputMethod);
 
 		self::parseChildren($ir->documentElement, $dom->documentElement);
 		self::normalize($ir);
@@ -547,9 +545,6 @@ class TemplateParser
 	{
 		$xpath = new DOMXPath($ir);
 
-		// Save the output method
-		$outputMethod = $ir->documentElement->getAttribute('outputMethod');
-
 		// Get a snapshot of current internal representation
 		$xml = $ir->saveXML();
 
@@ -628,20 +623,16 @@ class TemplateParser
 				}
 			}
 
-			// In HTML mode, a void element cannot have any content
-			if ($outputMethod === 'html')
+			// For each void element, we find whichever <closeTag/> elements closes it and
+			// remove everything after
+			foreach ($xpath->query('//element[@void="yes"]') as $element)
 			{
-				// For each void element, we find whichever <closeTag/> elements closes it and
-				// remove everything after
-				foreach ($xpath->query('//element[@void="yes"]') as $element)
-				{
-					$id    = $element->getAttribute('id');
-					$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
+				$id    = $element->getAttribute('id');
+				$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
 
-					foreach ($xpath->query($query, $element) as $node)
-					{
-						$node->parentNode->removeChild($node);
-					}
+				foreach ($xpath->query($query, $element) as $node)
+				{
+					$node->parentNode->removeChild($node);
 				}
 			}
 

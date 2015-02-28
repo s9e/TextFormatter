@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element name="a" id="1" empty="maybe">
 		<attribute name="href">
 			<output escape="attribute" type="xpath">@href</output>

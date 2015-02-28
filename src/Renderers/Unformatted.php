@@ -21,25 +21,10 @@ class Unformatted extends Renderer
 	public $metaElementsRegexp = '((?!))';
 
 	/**
-	* Constructor
-	*
-	* @param  bool Whether this renderer's stylesheet produces HTML (as opposed to XHTML)
-	* @return void
-	*/
-	public function __construct($htmlOutput = true)
-	{
-		$this->htmlOutput = $htmlOutput;
-	}
-
-	/**
 	* {@inheritdoc}
 	*/
 	protected function renderRichText($xml)
 	{
-		return str_replace(
-			"\n",
-			($this->htmlOutput) ? "<br>\n" : "<br/>\n",
-			strip_tags($xml)
-		);
+		return str_replace("\n", "<br>\n", strip_tags($xml));
 	}
 }

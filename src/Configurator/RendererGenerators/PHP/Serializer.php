@@ -26,11 +26,6 @@ class Serializer
 	public $convertor;
 
 	/**
-	* @var string Output method
-	*/
-	public $outputMethod = 'html';
-
-	/**
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
 	public $useMultibyteStringFunctions = false;
@@ -202,39 +197,11 @@ class Serializer
 			throw new RuntimeException;
 		}
 
-		$isVoid  = $element->getAttribute('void');
-		$isEmpty = $element->getAttribute('empty');
-
-		if ($this->outputMethod === 'html')
+		$php .= "\$this->out.='>';";
+		if ($element->getAttribute('void') === 'maybe')
 		{
-			$php .= "\$this->out.='>';";
-
-			if ($isVoid === 'maybe')
-			{
-				// Check at runtime whether this element is not void
-				$php .= 'if(!$v' . $id . '){';
-			}
-		}
-		else
-		{
-			// In XML mode, we only care about whether this element is empty
-			if ($isEmpty === 'yes')
-			{
-				// Definitely empty, use a self-closing tag
-				$php .= "\$this->out.='/>';";
-			}
-			else
-			{
-				// Since it's not definitely empty, we'll close this start tag normally
-				$php .= "\$this->out.='>';";
-
-				if ($isEmpty === 'maybe')
-				{
-					// Maybe empty, record the length of the output and if it doesn't grow we'll
-					// change the start tag into a self-closing tag
-					$php .= '$l' . $id . '=strlen($this->out);';
-				}
-			}
+			// Check at runtime whether this element is not void
+			$php .= 'if(!$v' . $id . '){';
 		}
 
 		if ($closeTag->hasAttribute('check'))
@@ -312,7 +279,7 @@ class Serializer
 		}
 
 		// Test whether this element is void if we need this information
-		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		if ($isVoid === 'maybe')
 		{
 			$php .= '$v' . $id . '=preg_match(' . var_export(TemplateParser::$voidRegexp, true) . ',' . $phpElName . ');';
 		}
@@ -323,40 +290,15 @@ class Serializer
 		// Serialize this element's content
 		$php .= $this->serializeChildren($element);
 
-		// If we're in XHTML mode and the element is or may be empty, we may not need to close it at
-		// all
-		if ($this->outputMethod === 'xhtml')
-		{
-			// If this element is definitely empty, it has already been closed with a self-closing
-			// tag in serializeCloseTag()
-			if ($isEmpty === 'yes')
-			{
-				return $php;
-			}
-
-			// If this element may be empty, we need to check at runtime whether we turn its start
-			// tag into a self-closing tag or append an end tag
-			if ($isEmpty === 'maybe')
-			{
-				$php .= 'if($l' . $id . '===strlen($this->out)){';
-				$php .= "\$this->out=substr(\$this->out,0,-1).'/>';";
-				$php .= '}else{';
-				$php .= "\$this->out.='</'." . $phpElName . ".'>';";
-				$php .= '}';
-
-				return $php;
-			}
-		}
-
-		// Close that element, unless we're in HTML mode and we know it's void
-		if ($this->outputMethod !== 'html' || $isVoid !== 'yes')
+		// Close that element unless we know it's void
+		if ($isVoid !== 'yes')
 		{
 			$php .= "\$this->out.='</'." . $phpElName . ".'>';";
 		}
 
 		// If this element was maybe void, serializeCloseTag() has put its content within an if
 		// block. We need to close that block
-		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		if ($isVoid === 'maybe')
 		{
 			$php .= '}';
 		}

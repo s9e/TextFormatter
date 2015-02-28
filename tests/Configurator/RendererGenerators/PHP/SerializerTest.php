@@ -38,7 +38,7 @@ class SerializerTest extends Test
 	{
 		return [
 			[
-				'<template outputMethod="html">
+				'<template>
 					<switch branch-key="@foo">
 						<case branch-values=\'a:1:{i:0;s:1:"1";}\' test="@foo = 1">
 							<output escape="text" type="literal">1</output>
@@ -81,7 +81,7 @@ class SerializerTest extends Test
 				new RuntimeException
 			],
 			[
-				'<template outputMethod="html">
+				'<template>
 					<switch branch-key="@foo">
 						<case branch-values=\'a:1:{i:0;s:1:"1";}\' test="@foo = 1">
 							<output escape="text" type="literal">1</output>

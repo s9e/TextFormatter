@@ -1,22 +1,10 @@
-<template outputMethod="xml">
-	<element name="div" id="1" empty="yes">
-		<switch>
-			<case test="@foo">
-				<attribute name="id">
-					<output escape="attribute" type="literal">foo</output>
-				</attribute>
-			</case>
-			<case test="@bar">
-				<attribute name="id">
-					<output escape="attribute" type="literal">bar</output>
-				</attribute>
-			</case>
-			<case>
-				<attribute name="id">
-					<output escape="attribute" type="literal">baz</output>
-				</attribute>
-			</case>
-		</switch>
+<?xml version="1.0"?>
+<template>
+	<element name="div" id="1">
 		<closeTag id="1"/>
+		<comment>
+			<output escape="text" type="literal"> ... </output>
+		</comment>
+		<output escape="text" type="literal">foo</output>
 	</element>
 </template>

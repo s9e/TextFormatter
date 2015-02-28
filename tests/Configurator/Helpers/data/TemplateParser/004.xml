@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element name="{local-name()}" id="1" void="maybe" empty="maybe">
 		<closeTag id="1"/>
 		<applyTemplates/>

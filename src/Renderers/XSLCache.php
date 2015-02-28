@@ -46,9 +46,6 @@ class XSLCache extends Renderer
 		// Load the stylesheet for inspection
 		$stylesheet = file_get_contents($this->filepath);
 
-		// Test whether we output HTML or XML
-		$this->htmlOutput = (strpos($stylesheet, '<xsl:output method="html') !== false);
-
 		// Capture the parameters' values from the stylesheet
 		preg_match_all('#<xsl:param name="([^"]+)"(?>/>|>([^<]+))#', $stylesheet, $matches);
 		foreach ($matches[1] as $k => $paramName)
@@ -147,10 +144,7 @@ class XSLCache extends Renderer
 
 		// XSLTProcessor does not correctly identify <embed> as a void element. We fix it by
 		// removing </embed> end tags
-		if ($this->htmlOutput)
-		{
-			$output = str_replace('</embed>', '', $output);
-		}
+		$output = str_replace('</embed>', '', $output);
 
 		// Remove the \n that XSL adds at the end of the output, if applicable
 		if (substr($output, -1) === "\n")

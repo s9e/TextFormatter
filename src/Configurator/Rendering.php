@@ -17,7 +17,6 @@ use s9e\TextFormatter\Configurator\Traits\Configurable;
 /**
 * @property RendererGenerator $engine
 * @property TemplateParameterCollection $parameters Parameters used by the renderer
-* @property string $type Output method, either "html" or "xhtml"
 */
 class Rendering
 {
@@ -37,11 +36,6 @@ class Rendering
 	* @var TemplateParameterCollection Parameters used by the renderer
 	*/
 	protected $parameters;
-
-	/**
-	* @var string Output method, either "html" or "xhtml"
-	*/
-	protected $type = 'html';
 
 	/**
 	* Constructor
@@ -146,23 +140,5 @@ class Rendering
 		$this->engine = $engine;
 
 		return $engine;
-	}
-
-	/**
-	* Set the output type
-	*
-	* @param  string $type Either "html" or "xhtml"
-	* @return void
-	*/
-	protected function setType($type)
-	{
-		$type = strtolower($type);
-
-		if ($type !== 'html' && $type !== 'xhtml')
-		{
-			throw new RuntimeException('Only HTML and XHTML rendering is supported');
-		}
-
-		$this->type = $type;
 	}
 }

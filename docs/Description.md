@@ -89,8 +89,7 @@
 
 		* Automatic escaping of HTML entities
 		* Supports conditionals and user-set parameters (template variables)
-		* Can render as HTML or XHTML
-		* Cannot produce malformed HTML or XHTML
+		* Cannot produce malformed HTML
 			* ...unless you purposely disable some of the template checks and manually disable the escaping
 
 	* Is extensible

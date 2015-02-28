@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<switch>
 		<case test="@a">
 			<output escape="text" type="literal">A</output>

@@ -217,17 +217,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->HTMLElements->allowElement('br');
-					$configurator->rendering->type = 'html';
-				}
-			],
-			[
-				'Break: <br/> :)',
-				'Break: <br/> :)',
-				[],
-				function ($configurator)
-				{
-					$configurator->HTMLElements->allowElement('br');
-					$configurator->rendering->type = 'xhtml';
 				}
 			],
 			[
@@ -237,17 +226,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->HTMLElements->allowElement('div');
-					$configurator->rendering->type = 'html';
-				}
-			],
-			[
-				'Div: <div/> :)',
-				'Div: <div/> :)',
-				[],
-				function ($configurator)
-				{
-					$configurator->HTMLElements->allowElement('div');
-					$configurator->rendering->type = 'xhtml';
 				}
 			],
 		];

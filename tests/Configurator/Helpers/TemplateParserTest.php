@@ -15,9 +15,9 @@ class TemplateParserTest extends Test
 	* @testdox parse() tests
 	* @dataProvider getParseTests
 	*/
-	public function testParse($template, $outputMethod, $expectedFile)
+	public function testParse($template, $expectedFile)
 	{
-		$ir = TemplateParser::parse($template, $outputMethod);
+		$ir = TemplateParser::parse($template);
 
 		$this->assertInstanceOf('DOMDocument', $ir);
 		$this->assertXmlStringEqualsXmlFile($expectedFile, $ir->saveXML());
@@ -33,11 +33,9 @@ class TemplateParserTest extends Test
 			// Remove inter-element whitespace, it's only there for readability
 			$template = preg_replace('(>\\n\\s*<)', '><', $template);
 
-			$parts = explode('.', $filepath);
-			$expectedFile = $parts[0] . '.xml';
-			$outputMethod = $parts[1];
+			$expectedFile = substr($filepath, 0, -8) . 'xml';
 
-			$tests[] = [$template, $outputMethod, $expectedFile];
+			$tests[] = [$template, $expectedFile];
 		}
 
 		return $tests;

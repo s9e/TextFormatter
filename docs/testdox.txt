@@ -1124,10 +1124,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
 s9e\TextFormatter\Tests\Configurator\Rendering
- [x] The default rendering type is "html"
- [x] The rendering type can be set to "xhtml"
- [x] The rendering type is normalized to lowercase
- [x] An exception is thrown if the rendering type is set to an invalid value
  [x] Default engine is XSLT
  [x] setEngine('PHP') sets the engine to a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
  [x] setEngine('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
@@ -2454,12 +2450,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Throws an exception when encountering unsupported XSL elements
  [x] Throws an exception when encountering namespaced elements
  [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
- [x] Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
- [x] Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
- [x] Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE
- [x] Empty elements use the empty-elements tag syntax in XML mode by default
- [x] Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
- [x] Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
  [x] Matches the reference rendering in edge cases
  [x] Matches the reference rendering in edge cases (quick renderer)
  [x] XPath expressions are inlined as PHP whenever possible
@@ -2471,9 +2461,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Can run without a control structures optimizer
  [x] Code optimization tests
  [x] HTML rendering
- [x] XHTML rendering
  [x] Rendering of void and empty elements in HTML
- [x] Rendering of void and empty elements in XHTML
  [x] Tests from plugins
  [x] Tests from plugins (Quick renderer)
  [x] Creates a Quick renderer if $enableQuickRenderer is true
@@ -2482,8 +2470,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer
- [x] Configures the renderer for HTML output if applicable
- [x] Configures the renderer for XML output if applicable
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer
@@ -2495,8 +2481,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT\Optimizer
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
- [x] Sets the output method to "xml" if the rendering type is "xhtml"
- [x] Sets the stylesheet's output to omit the XML declaration if rendering type is "xhtml"
  [x] Merges duplicate templates
  [x] Represents empty templates with a self-closing element
  [x] Generates the namespace declarations necessary for prefixed tags
@@ -2514,18 +2498,14 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
  [x] Preserves other properties during serialization
- [x] Renders multi-line text in HTML after un/serialization
- [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
  [x] Renders plain text
- [x] Renders multi-line text in HTML
- [x] Renders multi-line text in XHTML
+ [x] Renders multi-line text
  [x] Renders rich text
  [x] renderMulti() renders multiple messages at once
  [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text in HTML
- [x] renderMulti() renders multi-line text in XHTML
+ [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2541,18 +2521,14 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
  [x] Preserves other properties during serialization
- [x] Renders multi-line text in HTML after un/serialization
- [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
  [x] Renders plain text
- [x] Renders multi-line text in HTML
- [x] Renders multi-line text in XHTML
+ [x] Renders multi-line text
  [x] Renders rich text
  [x] renderMulti() renders multiple messages at once
  [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text in HTML
- [x] renderMulti() renders multi-line text in XHTML
+ [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2570,13 +2546,11 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Custom properties are preserved during serialization
  [x] Internal objects and resources are unset after rendering
  [x] Renders plain text
- [x] Renders multi-line text in HTML
- [x] Renders multi-line text in XHTML
+ [x] Renders multi-line text
  [x] Renders rich text
  [x] renderMulti() renders multiple messages at once
  [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text in HTML
- [x] renderMulti() renders multi-line text in XHTML
+ [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2591,7 +2565,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
  [x] Converts newlines to <br>
- [x] Converts newlines to <br/> if output is set to xml
  [x] Keeps HTML's special characters escaped
  [x] setParameter() doesn't do anything
 

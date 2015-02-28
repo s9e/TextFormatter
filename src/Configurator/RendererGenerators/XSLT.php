@@ -90,12 +90,7 @@ class XSLT implements RendererGenerator
 		}
 
 		// Start the stylesheet with the boilerplate stuff
-		$outputMethod = ($rendering->type === 'html') ? 'html' : 'xml';
-		$xsl .= '><xsl:output method="' . $outputMethod . '" encoding="utf-8" indent="no"';
-		if ($outputMethod === 'xml')
-		{
-			$xsl .= ' omit-xml-declaration="yes"';
-		}
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';
 		$xsl .= '/>';
 
 		// Add stylesheet parameters

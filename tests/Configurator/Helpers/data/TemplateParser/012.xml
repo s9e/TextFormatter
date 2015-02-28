@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element name="blockquote" id="1">
 		<switch>
 			<case test="not(@author)">

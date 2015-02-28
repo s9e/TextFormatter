@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
-<template outputMethod="html">
-	<element name="div" id="1">
-		<closeTag id="1"/>
-		<comment>
-			<output escape="text" type="literal"> ... </output>
-		</comment>
-		<output escape="text" type="literal">foo</output>
-	</element>
+<template>
+	<switch>
+		<case test=".=':)'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test=".=':('">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test=".=':p'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case test="@foo=';)'">
+			<output escape="text" type="literal">.</output>
+		</case>
+	</switch>
 </template>

@@ -11,42 +11,6 @@ use s9e\TextFormatter\Tests\Test;
 class RenderingTest extends Test
 {
 	/**
-	* @testdox The default rendering type is "html"
-	*/
-	public function testTypeDefault()
-	{
-		$this->assertSame('html', $this->configurator->rendering->type);
-	}
-
-	/**
-	* @testdox The rendering type can be set to "xhtml"
-	*/
-	public function testTypeXHTML()
-	{
-		$this->configurator->rendering->type = 'xhtml';
-		$this->assertSame('xhtml', $this->configurator->rendering->type);
-	}
-
-	/**
-	* @testdox The rendering type is normalized to lowercase
-	*/
-	public function testTypeNormalized()
-	{
-		$this->configurator->rendering->type = 'XHTML';
-		$this->assertSame('xhtml', $this->configurator->rendering->type);
-	}
-
-	/**
-	* @testdox An exception is thrown if the rendering type is set to an invalid value
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Only HTML and XHTML rendering is supported
-	*/
-	public function testTypeInvalid()
-	{
-		$this->configurator->rendering->type = 'text';
-	}
-
-	/**
 	* @testdox Default engine is XSLT
 	*/
 	public function testDefaultEngineXSLT()

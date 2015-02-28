@@ -38,21 +38,6 @@ class UnformattedTest extends Test
 	}
 
 	/**
-	* @testdox Converts newlines to <br/> if output is set to xml
-	*/
-	public function testNl2brXHTML()
-	{
-		$this->configurator->rendering->engine = 'Unformatted';
-		$this->configurator->rendering->type = 'xhtml';
-		$renderer = $this->configurator->getRenderer();
-
-		$this->assertSame(
-			"a<br/>\nb",
-			$renderer->render("<r>a\nb</r>")
-		);
-	}
-
-	/**
 	* @testdox Keeps HTML's special characters escaped
 	*/
 	public function testSpecialChars()

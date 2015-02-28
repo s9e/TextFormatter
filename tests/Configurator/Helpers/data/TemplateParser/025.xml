@@ -1,6 +1,16 @@
-<template outputMethod="xml">
-	<element name="b" id="1" empty="maybe">
-		<closeTag id="1"/>
-		<applyTemplates/>
+<template>
+	<element name="div" id="1" empty="maybe">
+		<switch>
+			<case test="@a">
+				<attribute name="title">
+					<output escape="attribute" type="literal">foo</output>
+				</attribute>
+			</case>
+			<case>
+				<closeTag id="1" set=""/>
+				<output escape="text" type="literal">foo</output>
+			</case>
+		</switch>
+		<closeTag id="1" check=""/>
 	</element>
 </template>

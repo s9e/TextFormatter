@@ -13,11 +13,6 @@ use InvalidArgumentException;
 abstract class Renderer
 {
 	/**
-	* @var bool Whether the output must be HTML (otherwise it is assumed it is XHTML)
-	*/
-	protected $htmlOutput = true;
-
-	/**
 	* @var string Regexp that matches meta elements to be removed
 	*/
 	public $metaElementsRegexp = '(<[eis]>[^<]*</[eis]>)';
@@ -118,11 +113,8 @@ abstract class Renderer
 		// Remove the <t> and </t> tags
 		$html = substr($xml, 3, -4);
 
-		// Replace all <br/> with <br> if we output HTML
-		if ($this->htmlOutput)
-		{
-			$html = str_replace('<br/>', '<br>', $html);
-		}
+		// Replace all <br/> with <br>
+		$html = str_replace('<br/>', '<br>', $html);
 
 		return $html;
 	}

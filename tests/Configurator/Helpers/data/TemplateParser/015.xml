@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<comment>
 		<output escape="text" type="literal">[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</output>
 	</comment>

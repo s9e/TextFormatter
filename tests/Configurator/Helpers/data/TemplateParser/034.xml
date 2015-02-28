@@ -1,9 +1,17 @@
 <?xml version="1.0"?>
-<template outputMethod="html">
-	<element name="hr" id="1" void="yes" empty="yes">
-		<attribute name="title">
-			<output escape="attribute" type="literal">{foo&amp;bar}</output>
-		</attribute>
-		<closeTag id="1"/>
-	</element>
+<template>
+	<switch branch-key=".">
+		<case branch-values="a:1:{i:0;s:1:&quot;'&quot;;}" test=".=&quot;'&quot;">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case branch-values="a:1:{i:0;s:1:&quot;&quot;&quot;;}" test=".='&quot;'">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case branch-values="a:1:{i:0;s:3:&quot;&quot;'&quot;&quot;;}" test=".=concat('&quot;', &quot;'&quot;, '&quot;')">
+			<output escape="text" type="literal">.</output>
+		</case>
+		<case branch-values='a:1:{i:0;s:0:"";}' test=".=''">
+			<output escape="text" type="literal">.</output>
+		</case>
+	</switch>
 </template>

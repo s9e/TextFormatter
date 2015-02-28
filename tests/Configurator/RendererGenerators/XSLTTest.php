@@ -29,26 +29,6 @@ class XSLTTest extends Test
 	}
 
 	/**
-	* @testdox Sets the output method to "xml" if the rendering type is "xhtml"
-	*/
-	public function testOutputMethodXML()
-	{
-		$this->configurator->rendering->type = 'xhtml';
-
-		$this->assertContains(' method="xml"', $this->getXSL());
-	}
-
-	/**
-	* @testdox Sets the stylesheet's output to omit the XML declaration if rendering type is "xhtml"
-	*/
-	public function testOutputMethodProlog()
-	{
-		$this->configurator->rendering->type = 'xhtml';
-
-		$this->assertContains(' omit-xml-declaration="yes"', $this->getXSL());
-	}
-
-	/**
 	* @testdox Merges duplicate templates
 	*/
 	public function testMergesDuplicateTemplates()

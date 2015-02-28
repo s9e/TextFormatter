@@ -21,31 +21,14 @@ trait RendererTests
 	}
 
 	/**
-	* @testdox Renders multi-line text in HTML
+	* @testdox Renders multi-line text
 	*/
 	public function testMultiLineTextHTML()
 	{
 		$xml = '<t>One<br/>two</t>';
 
-		$this->configurator->rendering->type = 'html';
-
 		$this->assertSame(
 			'One<br>two',
-			$this->configurator->getRenderer()->render($xml)
-		);
-	}
-
-	/**
-	* @testdox Renders multi-line text in XHTML
-	*/
-	public function testMultiLineTextXHTML()
-	{
-		$xml = '<t>One<br/>two</t>';
-
-		$this->configurator->rendering->type = 'xhtml';
-
-		$this->assertSame(
-			'One<br/>two',
 			$this->configurator->getRenderer()->render($xml)
 		);
 	}
@@ -124,30 +107,12 @@ trait RendererTests
 	}
 
 	/**
-	* @testdox renderMulti() renders multi-line text in HTML
+	* @testdox renderMulti() renders multi-line text
 	*/
 	public function testMultiMultiPlainTextHTML()
 	{
-		$this->configurator->rendering->type = 'html';
-
 		$parsed   = ['<t>One<br/>two</t>'];
 		$expected = ['One<br>two'];
-
-		$this->assertSame(
-			$expected,
-			$this->configurator->getRenderer()->renderMulti($parsed)
-		);
-	}
-
-	/**
-	* @testdox renderMulti() renders multi-line text in XHTML
-	*/
-	public function testMultiMultiPlainTextXHTML()
-	{
-		$this->configurator->rendering->type = 'xhtml';
-
-		$parsed   = ['<t>One<br/>two</t>'];
-		$expected = ['One<br/>two'];
 
 		$this->assertSame(
 			$expected,

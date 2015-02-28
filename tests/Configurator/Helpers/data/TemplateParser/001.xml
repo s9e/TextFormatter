@@ -1,4 +1,4 @@
-<template outputMethod="html">
+<template>
 	<element name="br" id="1" void="yes" empty="yes">
 		<closeTag id="1"/>
 	</element>

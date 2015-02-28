@@ -275,77 +275,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
-	*/
-	public function testForceEmptyElementsTrue()
-	{
-		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$this->configurator->rendering->type = 'xhtml';
-
-		$this->assertSame('<div/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
-	* @testdox Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
-	*/
-	public function testForceEmptyElementsFalse()
-	{
-		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$this->configurator->rendering->type = 'xhtml';
-		$this->configurator->rendering->engine->forceEmptyElements = false;
-
-		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
-	* @testdox Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE
-	*/
-	public function testForceEmptyElementsTrueUseEmptyElementsFalse()
-	{
-		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$this->configurator->rendering->type = 'xhtml';
-		$this->configurator->rendering->engine->forceEmptyElements = true;
-		$this->configurator->rendering->engine->useEmptyElements   = false;
-
-		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
-	* @testdox Empty elements use the empty-elements tag syntax in XML mode by default
-	*/
-	public function testUseEmptyElementsTrue()
-	{
-		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$this->configurator->rendering->type = 'xhtml';
-
-		$this->assertSame('<div/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
-	* @testdox Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
-	*/
-	public function testUseEmptyElementsFalse()
-	{
-		$this->configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
-		$this->configurator->rendering->type = 'xhtml';
-		$this->configurator->rendering->engine->useEmptyElements = false;
-
-		$this->assertSame('<div></div>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
-	* @testdox Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
-	*/
-	public function testUseEmptyElementsFalseVoidTrue()
-	{
-		$this->configurator->tags->add('X')->template = '<hr></hr>';
-		$this->configurator->rendering->type = 'xhtml';
-		$this->configurator->rendering->engine->useEmptyElements = false;
-
-		$this->assertSame('<hr/>', $this->configurator->getRenderer()->render('<r><X/></r>'));
-	}
-
-	/**
 	* @requires extension xsl
 	* @testdox Matches the reference rendering in edge cases
 	* @dataProvider getEdgeCases
@@ -1016,14 +945,12 @@ class PHPTest extends Test
 	* @testdox HTML rendering
 	* @dataProvider getConformanceTests
 	*/
-	public function testHTML($xml, $html, $xhtml, $setup = null, $rendererSetup = null)
+	public function testHTML($xml, $html, $setup = null, $rendererSetup = null)
 	{
 		if (isset($setup))
 		{
 			$setup($this->configurator);
 		}
-
-		$this->configurator->rendering->type = 'html';
 
 		extract($this->configurator->finalize(['returnParser' => false]));
 
@@ -1035,45 +962,19 @@ class PHPTest extends Test
 		$this->assertSame($html, $renderer->render($xml));
 	}
 
-	/**
-	* @testdox XHTML rendering
-	* @dataProvider getConformanceTests
-	*/
-	public function testXHTML($xml, $html, $xhtml, $setup = null, $rendererSetup = null)
-	{
-		if (isset($setup))
-		{
-			$setup($this->configurator);
-		}
-
-		$this->configurator->rendering->type = 'xhtml';
-
-		extract($this->configurator->finalize(['returnParser' => false]));
-
-		if (isset($rendererSetup))
-		{
-			$rendererSetup($renderer);
-		}
-
-		$this->assertSame($xhtml, $renderer->render($xml));
-	}
-
 	public function getConformanceTests()
 	{
 		return [
 			[
 				'<t>Plain text</t>',
-				'Plain text',
 				'Plain text'
 			],
 			[
 				"<t>Multi<br/>\nline</t>",
-				"Multi<br>\nline",
-				"Multi<br/>\nline"
+				"Multi<br>\nline"
 			],
 			[
 				'<r>x <B><s>[b]</s>bold<e>[/b]</e></B> y</r>',
-				'x <b>bold</b> y',
 				'x <b>bold</b> y',
 				function ($configurator)
 				{
@@ -1082,7 +983,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r>x <T1>[t1/]</T1> y</r>',
-				'x <b foo="FOO"><i>!</i><i>?</i></b> y',
 				'x <b foo="FOO"><i>!</i><i>?</i></b> y',
 				function ($configurator)
 				{
@@ -1111,7 +1011,6 @@ class PHPTest extends Test
 			[
 				'<r>x <URL url="http://google.com"><s>[url="http://google.com"]</s>google<e>[/url]</e></URL> y</r>',
 				'x <a href="http://google.com">google</a> y',
-				'x <a href="http://google.com">google</a> y',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('URL');
@@ -1119,7 +1018,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><B><s>[b]</s>...<e>[/b]</e></B><T2><s>[t2]</s><B><s>[b]</s>...<e>[/b]</e></B><I><s>[i]</s>...<e>[/i]</e></I><e>[/t2]</e></T2></r>',
-				'<b>...</b><b><i>...</i></b>',
 				'<b>...</b><b><i>...</i></b>',
 				function ($configurator)
 				{
@@ -1131,7 +1029,6 @@ class PHPTest extends Test
 			[
 				'<r>x <HR>[hr/]</HR> y</r>',
 				'x <hr> y',
-				'x <hr/> y',
 				function ($configurator)
 				{
 					$configurator->tags->add('HR')->template = '<hr/>';
@@ -1143,11 +1040,6 @@ class PHPTest extends Test
 ....
 <e>[/quote]</e></QUOTE>
 !!!!		</r>',
-				'<blockquote><div><cite>foo wrote:</cite>
-	<blockquote><div><cite>bar wrote:</cite>...</div></blockquote>
-....
-</div></blockquote>
-!!!!		',
 				'<blockquote><div><cite>foo wrote:</cite>
 	<blockquote><div><cite>bar wrote:</cite>...</div></blockquote>
 ....
@@ -1169,11 +1061,6 @@ class PHPTest extends Test
 ....
 </div></blockquote>
 !!!!		',
-				'<blockquote><div><cite>foo wrote:</cite>
-	<blockquote class="uncited"><div>...</div></blockquote>
-....
-</div></blockquote>
-!!!!		',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('QUOTE');
@@ -1181,7 +1068,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r>x <B>[b/]</B> y</r>',
-				'x <b>[b/]</b> y',
 				'x <b>[b/]</b> y',
 				function ($configurator)
 				{
@@ -1191,7 +1077,6 @@ class PHPTest extends Test
 			[
 				'<r><T3 bar="BAR"><s>[t3 bar="BAR"]</s>...<e>[/t3]</e></T3></r>',
 				'<b title="foo BAR {baz}">...</b>',
-				'<b title="foo BAR {baz}">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T3')->template = '<b title="foo {@bar} {{baz}}"><xsl:apply-templates /></b>';
@@ -1199,7 +1084,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T4><s>[t4]</s>...<e>[/t4]</e></T4></r>',
-				'<b title="foo [t4] {baz}">...</b>',
 				'<b title="foo [t4] {baz}">...</b>',
 				function ($configurator)
 				{
@@ -1213,7 +1097,6 @@ class PHPTest extends Test
 			[
 				'<r><T5><s>[t5]</s>...<e>[/t5]</e></T5></r>',
 				'<b title="foo [t5]...[/t5] {baz}">...</b>',
-				'<b title="foo [t5]...[/t5] {baz}">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T5')->template = '<b title="foo {.} {{baz}}"><xsl:apply-templates /></b>';
@@ -1226,7 +1109,6 @@ class PHPTest extends Test
 			[
 				'<r><T6><s>[t6]</s>...<e>[/t6]</e></T6></r>',
 				'<b title="">...</b>',
-				'<b title="">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T6')->template = '<b title=""><xsl:apply-templates /></b>';
@@ -1234,7 +1116,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T7><s>[t7]</s>...<e>[/t7]</e></T7></r>',
-				'<b title="}}}">...</b>',
 				'<b title="}}}">...</b>',
 				function ($configurator)
 				{
@@ -1244,7 +1125,6 @@ class PHPTest extends Test
 			[
 				'<r><T8><s>[t8]</s>...<e>[/t8]</e></T8></r>',
 				'<b>xy</b>',
-				'<b>xy</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T8')->template = '<b>x<xsl:value-of select="\'\'" />y</b>';
@@ -1252,7 +1132,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><B><s>[b]</s>&lt;&gt;\'"&amp;<e>[/b]</e></B></r>',
-				'<b>&lt;&gt;\'"&amp;</b>',
 				'<b>&lt;&gt;\'"&amp;</b>',
 				function ($configurator)
 				{
@@ -1262,7 +1141,6 @@ class PHPTest extends Test
 			[
 				'<r><T9 a="&lt;&gt;\'&quot;&amp;"><s>[t9 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t9]</e></T9></r>',
 				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
-				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T9')->template = '<b data-a="{@a}"><xsl:apply-templates /></b>';
@@ -1270,7 +1148,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T10 a="&lt;&gt;\'&quot;&amp;"><s>[t10 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t10]</e></T10></r>',
-				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
 				'<b data-a="&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
@@ -1280,7 +1157,6 @@ class PHPTest extends Test
 			[
 				'<r><T11 a="&lt;&gt;\'&quot;&amp;"><s>[t11 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t11]</e></T11></r>',
 				'<b>&lt;&gt;\'"&amp;</b>',
-				'<b>&lt;&gt;\'"&amp;</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T11')->template = '<b><xsl:value-of select="@a" /></b>';
@@ -1288,7 +1164,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T12><s>[t12]</s>...<e>[/t12]</e></T12></r>',
-				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
 				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
 				function ($configurator)
 				{
@@ -1298,7 +1173,6 @@ class PHPTest extends Test
 			[
 				'<r><T13><s>[t13]</s>...<e>[/t13]</e></T13></r>',
 				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
-				'<b data-a="&quot;\'&lt;&gt;&amp;">...</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T13')->template = '<b><xsl:attribute name="data-a">&quot;\'&lt;&gt;&amp;</xsl:attribute><xsl:apply-templates /></b>';
@@ -1306,7 +1180,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T14>[t14/]</T14></r>',
-				'<b>"\'&lt;&gt;&amp;</b>',
 				'<b>"\'&lt;&gt;&amp;</b>',
 				function ($configurator)
 				{
@@ -1316,7 +1189,6 @@ class PHPTest extends Test
 			[
 				'<r><T15>[t15/]</T15></r>',
 				'<b>"\'&lt;&gt;&amp;</b>',
-				'<b>"\'&lt;&gt;&amp;</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T15')->template = '<b><xsl:value-of select="concat(\'&quot;\',&quot;\'&lt;&gt;&amp;&quot;)" /></b>';
@@ -1324,7 +1196,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><T16 a="&lt;&gt;\'&quot;&amp;"><s>[t16 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t16]</e></T16></r>',
-				'<b data-a="&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;">...</b>',
 				'<b data-a="&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;&lt;&gt;\'&quot;&amp;">...</b>',
 				function ($configurator)
 				{
@@ -1334,7 +1205,6 @@ class PHPTest extends Test
 			[
 				'<r><T17 a="&lt;&gt;\'&quot;&amp;"><s>[t17 a="&lt;&gt;\'\\"&amp;"]</s>...<e>[/t17]</e></T17></r>',
 				'<b>&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;</b>',
-				'<b>&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;&lt;&gt;\'"&amp;</b>',
 				function ($configurator)
 				{
 					$configurator->tags->add('T17')->template = '<b><xsl:value-of select="@a" /><xsl:value-of select="@a" /><xsl:value-of select="@a" /></b>';
@@ -1343,7 +1213,6 @@ class PHPTest extends Test
 			[
 				'<r>x <IMG src="http://example.com/foo.png"><s>[img]</s>http://example.com/foo.png<e>[/img]</e></IMG> y</r>',
 				'x <img src="http://example.com/foo.png" title="" alt=""> y',
-				'x <img src="http://example.com/foo.png" title="" alt=""/> y',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('IMG');
@@ -1351,7 +1220,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r><LIST><s>[list]</s>[*]one[*]two<e>[/list]</e></LIST></r>',
-				'<ul>[*]one[*]two</ul>',
 				'<ul>[*]one[*]two</ul>',
 				function ($configurator)
 				{
@@ -1361,7 +1229,6 @@ class PHPTest extends Test
 			[
 				'<r><LIST type="decimal"><s>[list=1]</s>[*]one[*]two<e>[/list]</e></LIST></r>',
 				'<ol style="list-style-type:decimal">[*]one[*]two</ol>',
-				'<ol style="list-style-type:decimal">[*]one[*]two</ol>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('LIST');
@@ -1369,7 +1236,6 @@ class PHPTest extends Test
 			],
 			[
 				'<r>x <T18><s>[T18]</s> ... <e>[/T18]</e></T18> y</r>',
-				'x <!-- ... --> y',
 				'x <!-- ... --> y',
 				function ($configurator)
 				{
@@ -1383,24 +1249,11 @@ class PHPTest extends Test
 	* @dataProvider getVoidTests
 	* @testdox Rendering of void and empty elements in HTML
 	*/
-	public function testVoidHTML($xml, $template, $html, $xhtml)
+	public function testVoidHTML($xml, $template, $html)
 	{
-		$this->configurator->rendering->type = 'html';
 		$this->configurator->tags->add('FOO')->template = new UnsafeTemplate($template);
 		extract($this->configurator->finalize(['returnParser' => false]));
 		$this->assertSame($html, $renderer->render($xml));
-	}
-
-	/**
-	* @dataProvider getVoidTests
-	* @testdox Rendering of void and empty elements in XHTML
-	*/
-	public function testVoidXHTML($xml, $template, $html, $xhtml)
-	{
-		$this->configurator->rendering->type = 'xhtml';
-		$this->configurator->tags->add('FOO')->template = new UnsafeTemplate($template);
-		extract($this->configurator->finalize(['returnParser' => false]));
-		$this->assertSame($xhtml, $renderer->render($xml));
 	}
 
 	public function getVoidTests($type)
@@ -1409,97 +1262,81 @@ class PHPTest extends Test
 			[
 				'<r><FOO/></r>',
 				'<hr id="foo"/>',
-				'<hr id="foo">',
-				'<hr id="foo"/>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO/></r>',
 				'<hr id="foo">foo</hr>',
-				'<hr id="foo">',
-				'<hr id="foo">foo</hr>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO/></r>',
 				'<hr id="foo"><xsl:apply-templates/></hr>',
-				'<hr id="foo">',
-				'<hr id="foo"/>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO/></r>',
 				'<hr id="foo"><xsl:value-of select="@name"/></hr>',
-				'<hr id="foo">',
-				'<hr id="foo"/>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO/></r>',
 				'<div id="foo"/>',
-				'<div id="foo"></div>',
-				'<div id="foo"/>'
+				'<div id="foo"></div>'
 			],
 			[
 				'<r><FOO/></r>',
-				'<div id="foo">foo</div>',
 				'<div id="foo">foo</div>',
 				'<div id="foo">foo</div>'
 			],
 			[
 				'<r><FOO/></r>',
 				'<div id="foo"><xsl:apply-templates/></div>',
-				'<div id="foo"></div>',
-				'<div id="foo"/>'
+				'<div id="foo"></div>'
 			],
 			[
 				'<r><FOO/></r>',
 				'<div id="foo"><xsl:value-of select="@name"/></div>',
-				'<div id="foo"></div>',
-				'<div id="foo"/>'
+				'<div id="foo"></div>'
 			],
 			[
 				'<r><FOO name="hr"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
-				'<hr id="foo">',
-				'<hr id="foo"/>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO name="hr"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute>foo</xsl:element>',
-				'<hr id="foo">',
-				'<hr id="foo">foo</hr>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO name="hr"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>',
-				'<hr id="foo">',
-				'<hr id="foo"/>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO name="hr"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:value-of select="@name"/></xsl:element>',
-				'<hr id="foo">',
-				'<hr id="foo">hr</hr>'
+				'<hr id="foo">'
 			],
 			[
 				'<r><FOO name="div"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
-				'<div id="foo"></div>',
-				'<div id="foo"/>'
+				'<div id="foo"></div>'
 			],
 			[
 				'<r><FOO name="div"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute>foo</xsl:element>',
-				'<div id="foo">foo</div>',
 				'<div id="foo">foo</div>'
 			],
 			[
 				'<r><FOO name="div"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>',
-				'<div id="foo"></div>',
-				'<div id="foo"/>'
+				'<div id="foo"></div>'
 			],
 			[
 				'<r><FOO name="div"/></r>',
 				'<xsl:element name="{@name}"><xsl:attribute name="id">foo</xsl:attribute><xsl:value-of select="@name"/></xsl:element>',
-				'<div id="foo">div</div>',
 				'<div id="foo">div</div>'
 			]
 		];
