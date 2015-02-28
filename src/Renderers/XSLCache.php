@@ -23,6 +23,11 @@ class XSLCache extends XSLT
 	protected $filepath;
 
 	/**
+	* @var XSLTCache The lazy-loaded XSLCache instance used by this renderer
+	*/
+	protected $proc;
+
+	/**
 	* Constructor
 	*
 	* @param  string $filepath Path to the stylesheet used by this renderer
