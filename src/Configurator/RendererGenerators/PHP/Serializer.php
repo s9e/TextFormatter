@@ -255,7 +255,6 @@ class Serializer
 		$elName  = $element->getAttribute('name');
 		$id      = $element->getAttribute('id');
 		$isVoid  = $element->getAttribute('void');
-		$isEmpty = $element->getAttribute('empty');
 
 		// Test whether this element name is dynamic
 		$isDynamic = (bool) (strpos($elName, '{') !== false);
