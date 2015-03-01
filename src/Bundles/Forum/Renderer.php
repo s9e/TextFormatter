@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Bundles\Forum;
 
 class Renderer extends \s9e\TextFormatter\Renderer
 {
-	protected $htmlOutput=\true;
 	protected $params=['EMOTICONS_PATH'=>'','L_HIDE'=>'Hide','L_SHOW'=>'Show','L_SPOILER'=>'Spoiler','L_WROTE'=>'wrote:'];
 	protected static $tagBranches=['B'=>0,'BANDCAMP'=>1,'CENTER'=>2,'CODE'=>3,'COLOR'=>4,'DAILYMOTION'=>5,'E'=>6,'EMAIL'=>7,'FACEBOOK'=>8,'FONT'=>9,'GROOVESHARK'=>10,'I'=>11,'INDIEGOGO'=>12,'INSTAGRAM'=>13,'KICKSTARTER'=>14,'LI'=>15,'LIST'=>16,'LIVELEAK'=>17,'QUOTE'=>18,'S'=>19,'SIZE'=>20,'SOUNDCLOUD'=>21,'SPOILER'=>22,'TWITCH'=>23,'U'=>24,'URL'=>25,'VIMEO'=>26,'VINE'=>27,'WSHH'=>28,'YOUTUBE'=>29,'br'=>30,'e'=>31,'i'=>31,'s'=>31,'p'=>32];
 	protected static $bt9C97241C=[':('=>0,':)'=>1,':-('=>2,':-)'=>3,':-*'=>4,':-?'=>5,':-D'=>6,':-P'=>7,':-p'=>8,':-|'=>9,':?'=>10,':D'=>11,':P'=>12,':lol:'=>13,':o'=>14,':p'=>15,':|'=>16,';)'=>17,';-)'=>18];

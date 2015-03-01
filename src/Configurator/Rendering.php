@@ -24,8 +24,6 @@ class Rendering
 
 	protected $parameters;
 
-	protected $type = 'html';
-
 	public function __construct(Configurator $configurator)
 	{
 		$this->configurator = $configurator;
@@ -86,15 +84,5 @@ class Rendering
 		$this->engine = $engine;
 
 		return $engine;
-	}
-
-	protected function setType($type)
-	{
-		$type = \strtolower($type);
-
-		if ($type !== 'html' && $type !== 'xhtml')
-			throw new RuntimeException('Only HTML and XHTML rendering is supported');
-
-		$this->type = $type;
 	}
 }

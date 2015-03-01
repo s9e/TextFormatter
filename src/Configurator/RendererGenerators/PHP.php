@@ -33,8 +33,6 @@ class PHP implements RendererGenerator
 
 	public $filepath;
 
-	public $forceEmptyElements = \true;
-
 	public $lastClassName;
 
 	public $lastFilepath;
@@ -42,8 +40,6 @@ class PHP implements RendererGenerator
 	public $optimizer;
 
 	public $serializer;
-
-	public $useEmptyElements = \true;
 
 	public $useMultibyteStringFunctions;
 
@@ -85,7 +81,6 @@ class PHP implements RendererGenerator
 
 	public function generate(Rendering $rendering)
 	{
-		$this->serializer->outputMethod                = $rendering->type;
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
 		$templates = $rendering->getTemplates();
@@ -105,10 +100,7 @@ class PHP implements RendererGenerator
 
 		foreach ($groupedTemplates as $template => $tagNames)
 		{
-			$ir = TemplateParser::parse($template, $rendering->type);
-
-			if ($rendering->type === 'xhtml')
-				$this->fixEmptyElements($ir->documentElement);
+			$ir = TemplateParser::parse($template);
 
 			if (!$hasApplyTemplatesSelect)
 				foreach ($ir->getElementsByTagName('applyTemplates') as $applyTemplates)
@@ -130,7 +122,7 @@ class PHP implements RendererGenerator
 		unset($groupedTemplates, $ir, $quickRender);
 
 		$quickSource = \false;
-		if ($this->enableQuickRenderer && $rendering->type === 'html')
+		if ($this->enableQuickRenderer)
 		{
 			$quickRender = [];
 			foreach ($tagBranches as $tagName => $tagBranch)
@@ -155,7 +147,6 @@ class PHP implements RendererGenerator
 		$php = [];
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
 		$php[] = '{';
-		$php[] = '	protected $htmlOutput=' . self::export($rendering->type === 'html') . ';';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
 		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
 
@@ -309,22 +300,5 @@ class PHP implements RendererGenerator
 		}
 
 		return \var_export($value, \true);
-	}
-
-	protected function fixEmptyElements(DOMElement $ir)
-	{
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			$isEmpty = $element->getAttribute('empty');
-			$isVoid  = $element->getAttribute('void');
-
-			if ($isVoid || $isEmpty === 'no')
-				continue;
-
-			if (!$this->useEmptyElements)
-				$element->setAttribute('empty', 'no');
-			elseif ($isEmpty === 'maybe' && !$this->forceEmptyElements)
-				$element->setAttribute('empty', 'no');
-		}
 	}
 }

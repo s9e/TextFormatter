@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Bundles\S18;
 
 class Renderer extends \s9e\TextFormatter\Renderer
 {
-	protected $htmlOutput=\true;
 	protected $params=['IS_GECKO'=>'','IS_IE'=>'','IS_OPERA'=>'','L_CODE'=>'Code','L_CODE_SELECT'=>'[Select]','L_QUOTE'=>'Quote','L_QUOTE_FROM'=>'Quote from','L_SEARCH_ON'=>'on','SCRIPT_URL'=>'','SMILEYS_PATH'=>''];
 	protected static $tagBranches=['ABBR'=>0,'ACRONYM'=>1,'ANCHOR'=>2,'B'=>3,'BDO'=>4,'BLACK'=>5,'BLUE'=>6,'BR'=>7,'br'=>7,'CENTER'=>8,'CODE'=>9,'COLOR'=>10,'E'=>11,'EMAIL'=>12,'FLASH'=>13,'FONT'=>14,'FTP'=>15,'GLOW'=>16,'GREEN'=>17,'HR'=>18,'HTML'=>19,'NOBBC'=>19,'I'=>20,'html:em'=>20,'IMG'=>21,'IURL'=>22,'LEFT'=>23,'LI'=>24,'LIST'=>25,'LTR'=>26,'ME'=>27,'MOVE'=>28,'PRE'=>29,'html:pre'=>29,'QUOTE'=>30,'RED'=>31,'RIGHT'=>32,'RTL'=>33,'S'=>34,'html:del'=>34,'SHADOW'=>35,'SIZE'=>36,'SUB'=>37,'SUP'=>38,'TABLE'=>39,'TD'=>40,'TIME'=>41,'TR'=>42,'TT'=>43,'U'=>44,'URL'=>45,'WHITE'=>46,'e'=>47,'i'=>47,'s'=>47,'html:a'=>48,'html:b'=>49,'html:blockquote'=>50,'html:br'=>51,'html:hr'=>52,'html:i'=>53,'html:img'=>54,'html:ins'=>55,'html:s'=>56,'html:u'=>57,'p'=>58];
 	protected static $btEB55FB2E=['8)'=>0,':\'['=>1,':)'=>2,':))'=>3,':-*'=>4,':-X'=>5,':-['=>6,':-\\'=>7,'::)'=>8,':D'=>9,':P'=>10,':['=>11,':o'=>12,';)'=>13,';D'=>14,'>:D'=>15,'>:['=>16,'???'=>17,'C:-)'=>18,'O0'=>19,'O:-)'=>20,'^-^'=>21];

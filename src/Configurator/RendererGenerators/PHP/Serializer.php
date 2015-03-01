@@ -19,8 +19,6 @@ class Serializer
 
 	public $convertor;
 
-	public $outputMethod = 'html';
-
 	public $useMultibyteStringFunctions = \false;
 
 	public function __construct()
@@ -113,25 +111,9 @@ class Serializer
 		if (!($element instanceof DOMElement))
 			throw new RuntimeException;
 
-		$isVoid  = $element->getAttribute('void');
-		$isEmpty = $element->getAttribute('empty');
-
-		if ($this->outputMethod === 'html')
-		{
-			$php .= "\$this->out.='>';";
-
-			if ($isVoid === 'maybe')
-				$php .= 'if(!$v' . $id . '){';
-		}
-		elseif ($isEmpty === 'yes')
-			$php .= "\$this->out.='/>';";
-		else
-		{
-			$php .= "\$this->out.='>';";
-
-			if ($isEmpty === 'maybe')
-				$php .= '$l' . $id . '=strlen($this->out);';
-		}
+		$php .= "\$this->out.='>';";
+		if ($element->getAttribute('void') === 'maybe')
+			$php .= 'if(!$v' . $id . '){';
 
 		if ($closeTag->hasAttribute('check'))
 			$php .= '}';
@@ -159,7 +141,6 @@ class Serializer
 		$elName  = $element->getAttribute('name');
 		$id      = $element->getAttribute('id');
 		$isVoid  = $element->getAttribute('void');
-		$isEmpty = $element->getAttribute('empty');
 
 		$isDynamic = (bool) (\strpos($elName, '{') !== \false);
 
@@ -176,34 +157,17 @@ class Serializer
 			$phpElName = $varName;
 		}
 
-		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		if ($isVoid === 'maybe')
 			$php .= '$v' . $id . '=preg_match(' . \var_export(TemplateParser::$voidRegexp, \true) . ',' . $phpElName . ');';
 
 		$php .= "\$this->out.='<'." . $phpElName . ';';
 
 		$php .= $this->serializeChildren($element);
 
-		if ($this->outputMethod === 'xhtml')
-		{
-			if ($isEmpty === 'yes')
-				return $php;
-
-			if ($isEmpty === 'maybe')
-			{
-				$php .= 'if($l' . $id . '===strlen($this->out)){';
-				$php .= "\$this->out=substr(\$this->out,0,-1).'/>';";
-				$php .= '}else{';
-				$php .= "\$this->out.='</'." . $phpElName . ".'>';";
-				$php .= '}';
-
-				return $php;
-			}
-		}
-
-		if ($this->outputMethod !== 'html' || $isVoid !== 'yes')
+		if ($isVoid !== 'yes')
 			$php .= "\$this->out.='</'." . $phpElName . ".'>';";
 
-		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		if ($isVoid === 'maybe')
 			$php .= '}';
 
 		return $php;

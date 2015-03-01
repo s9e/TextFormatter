@@ -15,8 +15,6 @@ class Unformatted implements RendererGenerator
 {
 	public function getRenderer(Rendering $rendering)
 	{
-		$htmlOutput = (bool) ($rendering->type === 'html');
-
-		return new UnformattedRenderer($htmlOutput);
+		return new UnformattedRenderer;
 	}
 }

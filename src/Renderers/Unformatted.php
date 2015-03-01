@@ -13,17 +13,8 @@ class Unformatted extends Renderer
 {
 	public $metaElementsRegexp = '((?!))';
 
-	public function __construct($htmlOutput = \true)
-	{
-		$this->htmlOutput = $htmlOutput;
-	}
-
 	protected function renderRichText($xml)
 	{
-		return \str_replace(
-			"\n",
-			($this->htmlOutput) ? "<br>\n" : "<br/>\n",
-			\strip_tags($xml)
-		);
+		return \str_replace("\n", "<br>\n", \strip_tags($xml));
 	}
 }
