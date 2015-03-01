@@ -756,12 +756,9 @@ class JavaScript
 		foreach ($this->config['tags'] as $tagConfig)
 		{
 			// Test which rules are in use
-			foreach ($tagConfig['rules'] as $k => $v)
+			foreach (array_intersect_key($tagConfig['rules'], $this->hints) as $k => $v)
 			{
-				if (isset($this->hints[$k]))
-				{
-					$this->hints[$k] = 1;
-				}
+				$this->hints[$k] = 1;
 			}
 			$flags |= $tagConfig['rules']['flags'];
 		}
