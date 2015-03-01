@@ -55,9 +55,19 @@ class JavaScript
 	];
 
 	/**
+	* @var array Associative array of [hint name => 1 or 0]
+	*/
+	protected $hints;
+
+	/**
 	* @var Minifier Instance of Minifier used to minify the JavaScript parser
 	*/
 	protected $minifier;
+
+	/**
+	* @var string Stylesheet used for rendering
+	*/
+	protected $xsl;
 
 	/**
 	* Constructor
@@ -192,9 +202,9 @@ class JavaScript
 	*
 	* @return string JavaScript Code
 	*/
-	protected function getHints($xsl)
+	protected function getHints()
 	{
-		$hints = [
+		$this->hints = [
 			'attributeGenerator'      => 0,
 			'attributeDefaultValue'   => 0,
 			'closeAncestor'           => 0,
@@ -207,80 +217,15 @@ class JavaScript
 			'requireAncestor'         => 0
 		];
 
-		// Test for post-processing in templates. Theorically allows for false positives and
-		// false negatives, but not in any realistic setting
-		if (strpos($xsl, 'data-s9e-livepreview-postprocess') === false)
-		{
-			$hints['postProcessing'] = 0;
-		}
-
-		// Test each plugin's regexpLimitAction
-		foreach ($this->config['plugins'] as $pluginConfig)
-		{
-			if (isset($pluginConfig['regexpLimitAction']))
-			{
-				$hintName = 'regexpLimitAction' . ucfirst($pluginConfig['regexpLimitAction']);
-				if (isset($hints[$hintName]))
-				{
-					$hints[$hintName] = 1;
-				}
-			}
-		}
-
-		$flags = 0;
-		foreach ($this->config['tags'] as $tagConfig)
-		{
-			// Testing which rules are in use. First we aggregate the flags set on all the tags and
-			// test for the presence of other rules at the tag level
-			foreach ($tagConfig['rules'] as $k => $v)
-			{
-				if ($k === 'flags')
-				{
-					$flags |= $v;
-				}
-				elseif (isset($hints[$k]))
-				{
-					// This will set HINT.closeAncestor and others
-					$hints[$k] = 1;
-				}
-			}
-
-			// Test the presence of an attribute generator, and an attribute's defaultValue
-			if (!empty($tagConfig['attributes']))
-			{
-				foreach ($tagConfig['attributes'] as $attrConfig)
-				{
-					if (isset($attrConfig['generator']))
-					{
-						$hints['attributeGenerator'] = 1;
-					}
-
-					if (isset($attrConfig['defaultValue']))
-					{
-						$hints['attributeDefaultValue'] = 1;
-					}
-				}
-			}
-		}
-
-		// Add the flags from the root context
-		$flags |= $this->config['rootContext']['flags'];
-
-		// Iterate over Parser::RULE_* constants and test which flags are set
-		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
-		foreach ($parser->getConstants() as $constName => $constValue)
-		{
-			if (substr($constName, 0, 5) === 'RULE_')
-			{
-				// This will set HINT.RULE_AUTO_CLOSE and others
-				$hints[$constName] = ($flags & $constValue) ? 1 : 0;
-			}
-		}
+		$this->setPluginHints();
+		$this->setRenderingHints();
+		$this->setRulesHints();
+		$this->setTagsHints();
 
 		// Build the source. Note that Closure Compiler seems to require that each of HINT's
 		// properties be declared as a const
 		$js = "/** @const */ var HINT={};\n";
-		foreach ($hints as $hintName => $hintValue)
+		foreach ($this->hints as $hintName => $hintValue)
 		{
 			$js .= '/** @const */ HINT.' . $hintName . '=' . self::encode($hintValue) . ";\n";
 		}
@@ -439,17 +384,17 @@ class JavaScript
 		}
 
 		// Get the stylesheet used for rendering
-		$xsl = (new XSLT)->getXSL($this->configurator->rendering);
+		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
 
 		// Start with the generated HINTs
-		$src = $this->getHints($xsl);
+		$src = $this->getHints();
 
 		foreach ($files as $filename)
 		{
 			if ($filename === 'render.js')
 			{
 				// Insert the stylesheet if we include the renderer
-				$src .= '/** @const */ var xsl=' . json_encode($xsl) . ";\n";
+				$src .= '/** @const */ var xsl=' . json_encode($this->xsl) . ";\n";
 			}
 
 			$filepath = __DIR__ . '/../' . $filename;
@@ -777,5 +722,103 @@ class JavaScript
 		$this->callbacks[$funcName] = $js;
 
 		return new Code($funcName);
+	}
+
+	/**
+	* Set hints related to plugins config
+	*
+	* @return void
+	*/
+	protected function setPluginHints()
+	{
+		// Test each plugin's regexpLimitAction
+		foreach ($this->config['plugins'] as $pluginConfig)
+		{
+			if (isset($pluginConfig['regexpLimitAction']))
+			{
+				$hintName = 'regexpLimitAction' . ucfirst($pluginConfig['regexpLimitAction']);
+				if (isset($this->hints[$hintName]))
+				{
+					$this->hints[$hintName] = 1;
+				}
+			}
+		}
+	}
+
+	/**
+	* Set hints related to rules
+	*
+	* @return void
+	*/
+	protected function setRulesHints()
+	{
+		$flags = 0;
+		foreach ($this->config['tags'] as $tagConfig)
+		{
+			// Test which rules are in use
+			foreach ($tagConfig['rules'] as $k => $v)
+			{
+				if (isset($this->hints[$k]))
+				{
+					$this->hints[$k] = 1;
+				}
+			}
+			$flags |= $tagConfig['rules']['flags'];
+		}
+		$flags |= $this->config['rootContext']['flags'];
+
+		// Iterate over Parser::RULE_* constants and test which flags are set
+		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
+		foreach ($parser->getConstants() as $constName => $constValue)
+		{
+			if (substr($constName, 0, 5) === 'RULE_')
+			{
+				// This will set HINT.RULE_AUTO_CLOSE and others
+				$this->hints[$constName] = ($flags & $constValue) ? 1 : 0;
+			}
+		}
+	}
+
+	/**
+	* Set hints related to tags config
+	*
+	* @return void
+	*/
+	protected function setTagsHints()
+	{
+		foreach ($this->config['tags'] as $tagConfig)
+		{
+			// Test the presence of an attribute generator, and an attribute's defaultValue
+			if (!empty($tagConfig['attributes']))
+			{
+				foreach ($tagConfig['attributes'] as $attrConfig)
+				{
+					if (isset($attrConfig['generator']))
+					{
+						$this->hints['attributeGenerator'] = 1;
+					}
+
+					if (isset($attrConfig['defaultValue']))
+					{
+						$this->hints['attributeDefaultValue'] = 1;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	* Set hints related to rendering
+	*
+	* @return void
+	*/
+	protected function setRenderingHints()
+	{
+		// Test for post-processing in templates. Theorically allows for false positives and
+		// false negatives, but not in any realistic setting
+		if (strpos($this->xsl, 'data-s9e-livepreview-postprocess') === false)
+		{
+			$this->hints['postProcessing'] = 0;
+		}
 	}
 }
