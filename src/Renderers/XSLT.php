@@ -22,8 +22,6 @@ class XSLT extends Renderer
 	{
 		$this->stylesheet = $stylesheet;
 
-		$this->htmlOutput = (\strpos($this->stylesheet, '<xsl:output method="html') !== \false);
-
 		\preg_match_all('#<xsl:param name="([^"]+)"(?>/>|>([^<]+))#', $stylesheet, $matches);
 		foreach ($matches[1] as $k => $paramName)
 			$this->params[$paramName] = (isset($matches[2][$k]))
@@ -76,8 +74,7 @@ class XSLT extends Renderer
 
 		$output = (string) $this->proc->transformToXml($dom);
 
-		if ($this->htmlOutput)
-			$output = \str_replace('</embed>', '', $output);
+		$output = \str_replace('</embed>', '', $output);
 
 		if (\substr($output, -1) === "\n")
 			$output = \substr($output, 0, -1);

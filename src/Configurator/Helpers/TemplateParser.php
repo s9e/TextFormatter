@@ -18,7 +18,7 @@ class TemplateParser
 
 	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 
-	public static function parse($template, $outputMethod)
+	public static function parse($template)
 	{
 		$xsl = '<xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
 
@@ -27,7 +27,6 @@ class TemplateParser
 
 		$ir = new DOMDocument;
 		$ir->loadXML('<template/>');
-		$ir->documentElement->setAttribute('outputMethod', $outputMethod);
 
 		self::parseChildren($ir->documentElement, $dom->documentElement);
 		self::normalize($ir);
@@ -327,8 +326,6 @@ class TemplateParser
 	{
 		$xpath = new DOMXPath($ir);
 
-		$outputMethod = $ir->documentElement->getAttribute('outputMethod');
-
 		$xml = $ir->saveXML();
 
 		$remainingLoops = 10;
@@ -376,15 +373,14 @@ class TemplateParser
 					$dupe->parentNode->removeChild($dupe);
 			}
 
-			if ($outputMethod === 'html')
-				foreach ($xpath->query('//element[@void="yes"]') as $element)
-				{
-					$id    = $element->getAttribute('id');
-					$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
+			foreach ($xpath->query('//element[@void="yes"]') as $element)
+			{
+				$id    = $element->getAttribute('id');
+				$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
 
-					foreach ($xpath->query($query, $element) as $node)
-						$node->parentNode->removeChild($node);
-				}
+				foreach ($xpath->query($query, $element) as $node)
+					$node->parentNode->removeChild($node);
+			}
 
 			$xml = $ir->saveXML();
 		}
