@@ -106,8 +106,8 @@ function convertCustom($filepath, &$file)
 		),
 		'JavaScript.php' => array(
 			array(
-				'$xsl = (new XSLT)->getXSL($this->configurator->rendering);',
-				"\$rendererGenerator = new XSLT;\n\t\t\$xsl = \$rendererGenerator->getXSL(\$this->configurator->rendering);"
+				'$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);',
+				"\$rendererGenerator = new XSLT;\n\t\t\$this->xsl = \$rendererGenerator->getXSL(\$this->configurator->rendering);"
 			)
 		),
 		'Logger.php' => array(
