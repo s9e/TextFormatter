@@ -299,21 +299,6 @@ var BuiltInFilters =
 	*/
 	filterUrl: function(attrValue, urlConfig, logger)
 	{
-		var m;
-		if (urlConfig.disallowedSubstrings
-		 && (m = urlConfig.disallowedSubstrings.exec(decodeURIComponent(attrValue))))
-		{
-			if (logger)
-			{
-				logger.err(
-					'Disallowed URL',
-					{'attrValue': attrValue, 'disallowedSubstring': m[0]}
-				);
-			}
-
-			return false;
-		}
-
 		/**
 		* Trim the URL to conform with HTML5 then parse it
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href

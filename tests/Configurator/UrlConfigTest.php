@@ -303,48 +303,4 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->allowScheme('javaScript');
 	}
-
-	/**
-	* @testdox asConfig() does not return a value for disallowedSubstrings if there are no disallowed substrings
-	*/
-	public function testNoDisallowedSubstrings()
-	{
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayNotHasKey('disallowedSubstrings', $urlConfig);
-	}
-
-	/**
-	* @testdox asConfig() returns a regexp in disallowedSubstrings if there are disallowed substrings
-	*/
-	public function testDisallowedSubstrings()
-	{
-		$this->urlConfig->disallowSubstring('foo');
-		$this->urlConfig->disallowSubstring('bar');
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayHasKey('disallowedSubstrings', $urlConfig);
-		$this->assertSame('#(?>bar|foo)#i', $urlConfig['disallowedSubstrings']);
-	}
-
-	/**
-	* @testdox asConfig() returns a Unicode regexp in disallowedSubstrings if there are disallowed substrings with Unicode characters
-	*/
-	public function testDisallowedSubstringsUnicode()
-	{
-		$this->urlConfig->disallowSubstring('föö');
-		$this->urlConfig->disallowSubstring('bar');
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayHasKey('disallowedSubstrings', $urlConfig);
-		$this->assertSame('#(?>bar|föö)#iu', $urlConfig['disallowedSubstrings']);
-	}
-
-	/**
-	* @testdox disallowSubstring() accepts asterisks as joker
-	*/
-	public function testDisallowSubstringJoker()
-	{
-		$this->urlConfig->disallowSubstring('x*x');
-		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayHasKey('disallowedSubstrings', $urlConfig);
-		$this->assertSame('#x.*?x#i', $urlConfig['disallowedSubstrings']);
-	}
 }

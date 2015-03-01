@@ -309,20 +309,6 @@ class BuiltInFilters
 	*/
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = null)
 	{
-		if (isset($urlConfig['disallowedSubstrings'])
-		 && preg_match($urlConfig['disallowedSubstrings'], urldecode($attrValue), $m))
-		{
-			if (isset($logger))
-			{
-				$logger->err(
-					'Disallowed URL',
-					['attrValue' => $attrValue, 'disallowedSubstring' => $m[0]]
-				);
-			}
-
-			return false;
-		}
-
 		/**
 		* Trim the URL to conform with HTML5 then parse it
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
