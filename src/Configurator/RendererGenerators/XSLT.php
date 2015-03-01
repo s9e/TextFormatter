@@ -55,10 +55,7 @@ class XSLT implements RendererGenerator
 		if ($prefixes)
 			$xsl .= ' exclude-result-prefixes="' . \implode(' ', $prefixes) . '"';
 
-		$outputMethod = ($rendering->type === 'html') ? 'html' : 'xml';
-		$xsl .= '><xsl:output method="' . $outputMethod . '" encoding="utf-8" indent="no"';
-		if ($outputMethod === 'xml')
-			$xsl .= ' omit-xml-declaration="yes"';
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';
 		$xsl .= '/>';
 
 		foreach ($rendering->getAllParameters() as $paramName => $paramValue)

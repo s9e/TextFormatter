@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Bundles\Fatdown;
 
 class Renderer extends \s9e\TextFormatter\Renderer
 {
-	protected $htmlOutput=\true;
 	protected $params=array();
 	protected static $tagBranches=array('BANDCAMP'=>0,'C'=>1,'html:code'=>1,'CODE'=>2,'DAILYMOTION'=>3,'DEL'=>4,'html:del'=>4,'EM'=>5,'EMAIL'=>6,'ESC'=>7,'FACEBOOK'=>8,'FP'=>9,'HE'=>9,'GROOVESHARK'=>10,'H1'=>11,'H2'=>12,'H3'=>13,'H4'=>14,'H5'=>15,'H6'=>16,'HC'=>17,'HR'=>18,'IMG'=>19,'LI'=>20,'html:li'=>20,'LIST'=>21,'LIVELEAK'=>22,'QUOTE'=>23,'SOUNDCLOUD'=>24,'SPOTIFY'=>25,'STRONG'=>26,'html:strong'=>26,'SUP'=>27,'html:sup'=>27,'TWITCH'=>28,'URL'=>29,'VIMEO'=>30,'VINE'=>31,'YOUTUBE'=>32,'br'=>33,'e'=>34,'i'=>34,'s'=>34,'html:abbr'=>35,'html:b'=>36,'html:br'=>37,'html:div'=>38,'html:i'=>39,'html:img'=>40,'html:ins'=>41,'html:ol'=>42,'html:pre'=>43,'html:rb'=>44,'html:rp'=>45,'html:rt'=>46,'html:rtc'=>47,'html:ruby'=>48,'html:span'=>49,'html:sub'=>50,'html:table'=>51,'html:tbody'=>52,'html:td'=>53,'html:tfoot'=>54,'html:th'=>55,'html:thead'=>56,'html:tr'=>57,'html:u'=>58,'html:ul'=>59,'p'=>60);
 	public function __sleep()

@@ -20,6 +20,6 @@ abstract class Fatdown extends \s9e\TextFormatter\Bundle
 
 	public static function getRenderer()
 	{
-		return \unserialize("O:42:\"s9e\\TextFormatter\\Bundles\\Fatdown\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:1;s:9:\"\000*\000params\";a:0:{}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
+		return \unserialize("O:42:\"s9e\\TextFormatter\\Bundles\\Fatdown\\Renderer\":2:{s:9:\"\000*\000params\";a:0:{}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
 	}
 }

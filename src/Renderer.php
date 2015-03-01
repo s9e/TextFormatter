@@ -12,8 +12,6 @@ use InvalidArgumentException;
 
 abstract class Renderer
 {
-	protected $htmlOutput = \true;
-
 	public $metaElementsRegexp = '(<[eis]>[^<]*</[eis]>)';
 
 	protected $params = array();
@@ -68,8 +66,7 @@ abstract class Renderer
 	{
 		$html = \substr($xml, 3, -4);
 
-		if ($this->htmlOutput)
-			$html = \str_replace('<br/>', '<br>', $html);
+		$html = \str_replace('<br/>', '<br>', $html);
 
 		return $html;
 	}
