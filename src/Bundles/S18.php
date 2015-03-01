@@ -25,7 +25,7 @@ abstract class S18 extends \s9e\TextFormatter\Bundle
 
 	public static function getRenderer()
 	{
-		$renderer = \unserialize("O:38:\"s9e\\TextFormatter\\Bundles\\S18\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:1;s:9:\"\000*\000params\";a:10:{s:8:\"IS_GECKO\";s:0:\"\";s:5:\"IS_IE\";s:0:\"\";s:8:\"IS_OPERA\";s:0:\"\";s:6:\"L_CODE\";s:4:\"Code\";s:13:\"L_CODE_SELECT\";s:8:\"[Select]\";s:7:\"L_QUOTE\";s:5:\"Quote\";s:12:\"L_QUOTE_FROM\";s:10:\"Quote from\";s:11:\"L_SEARCH_ON\";s:2:\"on\";s:10:\"SCRIPT_URL\";s:0:\"\";s:12:\"SMILEYS_PATH\";s:0:\"\";}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
+		$renderer = \unserialize("O:38:\"s9e\\TextFormatter\\Bundles\\S18\\Renderer\":2:{s:9:\"\000*\000params\";a:10:{s:8:\"IS_GECKO\";s:0:\"\";s:5:\"IS_IE\";s:0:\"\";s:8:\"IS_OPERA\";s:0:\"\";s:6:\"L_CODE\";s:4:\"Code\";s:13:\"L_CODE_SELECT\";s:8:\"[Select]\";s:7:\"L_QUOTE\";s:5:\"Quote\";s:12:\"L_QUOTE_FROM\";s:10:\"Quote from\";s:11:\"L_SEARCH_ON\";s:2:\"on\";s:10:\"SCRIPT_URL\";s:0:\"\";s:12:\"SMILEYS_PATH\";s:0:\"\";}s:18:\"metaElementsRegexp\";s:22:\"(<[eis]>[^<]*</[eis]>)\";}");
 		S18\Helper::configureRenderer($renderer);
 
 		return $renderer;
