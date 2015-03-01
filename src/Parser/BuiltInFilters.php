@@ -315,29 +315,84 @@ class BuiltInFilters
 		*/
 		$p = self::parseUrl(trim($attrValue));
 
-		// This is the reconstructed URL
-		$url = '';
-
-		// Start with the scheme
-		if ($p['scheme'] !== '')
+		$error = self::validateUrl($urlConfig, $p);
+		if (!empty($error))
 		{
-			if (!preg_match($urlConfig['allowedSchemes'], $p['scheme']))
+			if (isset($logger))
 			{
-				if (isset($logger))
-				{
-					$logger->err(
-						'URL scheme is not allowed',
-						['attrValue' => $attrValue, 'scheme' => $p['scheme']]
-					);
-				}
-
-				return false;
+				$p['attrValue'] = $attrValue;
+				$logger->err($error, $p);
 			}
 
-			$url .= $p['scheme'] . ':';
+			return false;
 		}
 
-		// Add the host if applicable
+		return self::rebuildUrl($p);
+	}
+
+	/**
+	* Parse a URL and return its components
+	*
+	* Similar to PHP's own parse_url() except that all parts are always returned
+	*
+	* @param  string $url Original URL
+	* @return array
+	*/
+	public static function parseUrl($url)
+	{
+		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
+
+		// NOTE: this regexp always matches because of the last three captures
+		preg_match($regexp, $url, $m);
+
+		$p = [
+			'scheme'   => (isset($m[1])) ? $m[1] : '',
+			'user'     => (isset($m[2])) ? $m[2] : '',
+			'pass'     => (isset($m[3])) ? $m[3] : '',
+			'host'     => (isset($m[4])) ? $m[4] : '',
+			'port'     => (isset($m[5])) ? $m[5] : '',
+			'path'     => (isset($m[6])) ? $m[6] : '',
+			'query'    => (isset($m[7])) ? $m[7] : '',
+			'fragment' => (isset($m[8])) ? $m[8] : ''
+		];
+
+		/**
+		* @link http://tools.ietf.org/html/rfc3986#section-3.1
+		*
+		* 'An implementation should accept uppercase letters as equivalent to lowercase in
+		* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
+		* should only produce lowercase scheme names for consistency.'
+		*/
+		$p['scheme'] = strtolower($p['scheme']);
+
+		/**
+		* Normalize the domain label separators and remove trailing dots
+		* @link http://url.spec.whatwg.org/#domain-label-separators
+		*/
+		$p['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $p['host']), '.');
+
+		// Test whether host has non-ASCII characters and punycode it if possible
+		if (preg_match('#[^[:ascii:]]#', $p['host']) && function_exists('idn_to_ascii'))
+		{
+			$p['host'] = idn_to_ascii($p['host']);
+		}
+
+		return $p;
+	}
+
+	/**
+	* Rebuild a parsed URL
+	*
+	* @param  array  $p Parsed URL
+	* @return string
+	*/
+	protected static function rebuildUrl(array $p)
+	{
+		$url = '';
+		if ($p['scheme'] !== '')
+		{
+			$url .= $p['scheme'] . ':';
+		}
 		if ($p['host'] === '')
 		{
 			// Allow the file: scheme to not have a host and ensure it starts with slashes
@@ -345,52 +400,10 @@ class BuiltInFilters
 			{
 				$url .= '//';
 			}
-			// Reject malformed URLs such as http:///example.org but allow schemeless paths
-			elseif ($p['scheme'] !== '')
-			{
-				return false;
-			}
 		}
 		else
 		{
 			$url .= '//';
-
-			/**
-			* Test whether the host is valid
-			* @link http://tools.ietf.org/html/rfc1035#section-2.3.1
-			*/
-			$regexp = '/^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i';
-			if (!preg_match($regexp, $p['host']))
-			{
-				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
-				if (!self::filterIpv4($p['host'])
-				 && !self::filterIpv6(preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
-				{
-					if (isset($logger))
-					{
-						$logger->err(
-							'URL host is invalid',
-							['attrValue' => $attrValue, 'host' => $p['host']]
-						);
-					}
-
-					return false;
-				}
-			}
-
-			if ((isset($urlConfig['disallowedHosts']) && preg_match($urlConfig['disallowedHosts'], $p['host']))
-			 || (isset($urlConfig['restrictedHosts']) && !preg_match($urlConfig['restrictedHosts'], $p['host'])))
-			{
-				if (isset($logger))
-				{
-					$logger->err(
-						'URL host is not allowed',
-						['attrValue' => $attrValue, 'host' => $p['host']]
-					);
-				}
-
-				return false;
-			}
 
 			// Add the credentials if applicable
 			if ($p['user'] !== '')
@@ -457,56 +470,6 @@ class BuiltInFilters
 	}
 
 	/**
-	* Parse a URL and return its components
-	*
-	* Similar to PHP's own parse_url() except that all parts are always returned
-	*
-	* @param  string $url Original URL
-	* @return array
-	*/
-	public static function parseUrl($url)
-	{
-		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
-
-		// NOTE: this regexp always matches because of the last three captures
-		preg_match($regexp, $url, $m);
-
-		$parts = [
-			'scheme'   => (isset($m[1])) ? $m[1] : '',
-			'user'     => (isset($m[2])) ? $m[2] : '',
-			'pass'     => (isset($m[3])) ? $m[3] : '',
-			'host'     => (isset($m[4])) ? $m[4] : '',
-			'port'     => (isset($m[5])) ? $m[5] : '',
-			'path'     => (isset($m[6])) ? $m[6] : '',
-			'query'    => (isset($m[7])) ? $m[7] : '',
-			'fragment' => (isset($m[8])) ? $m[8] : ''
-		];
-
-		/**
-		* @link http://tools.ietf.org/html/rfc3986#section-3.1
-		*
-		* 'An implementation should accept uppercase letters as equivalent to lowercase in
-		* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
-		* should only produce lowercase scheme names for consistency.'
-		*/
-		$parts['scheme'] = strtolower($parts['scheme']);
-
-		/**
-		* Normalize the domain label separators and remove trailing dots
-		* @link http://url.spec.whatwg.org/#domain-label-separators
-		*/
-		$parts['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $parts['host']), '.');
-
-		// Test whether host has non-ASCII characters and punycode it if possible
-		if (preg_match('#[^[:ascii:]]#', $parts['host']) && function_exists('idn_to_ascii'))
-		{
-			$parts['host'] = idn_to_ascii($parts['host']);
-		}
-
-		return $parts;
-	}
-
-	/**
 	* Sanitize a URL for safe use regardless of context
 	*
 	* This method URL-encodes some sensitive characters in case someone would want to use the URL in
@@ -541,5 +504,52 @@ class BuiltInFilters
 			},
 			$url
 		);
+	}
+
+	/**
+	* Validate a parsed URL
+	*
+	* @param  array      $urlConfig URL config
+	* @param  array      $p         Parsed URL
+	* @return string|null           Error message if invalid, or NULL
+	*/
+	protected static function validateUrl(array $urlConfig, array $p)
+	{
+		if ($p['scheme'] !== '' && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
+		{
+			return 'URL scheme is not allowed';
+		}
+
+		if ($p['host'] === '')
+		{
+			// Reject malformed URLs such as http:///example.org but allow schemeless paths
+			if ($p['scheme'] !== 'file' && $p['scheme'] !== '')
+			{
+				return 'Missing host';
+			}
+		}
+		else
+		{
+			/**
+			* Test whether the host is valid
+			* @link http://tools.ietf.org/html/rfc1035#section-2.3.1
+			*/
+			$regexp = '/^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i';
+			if (!preg_match($regexp, $p['host']))
+			{
+				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
+				if (!self::filterIpv4($p['host'])
+				 && !self::filterIpv6(preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
+				{
+					return 'URL host is invalid';
+				}
+			}
+
+			if ((isset($urlConfig['disallowedHosts']) && preg_match($urlConfig['disallowedHosts'], $p['host']))
+			 || (isset($urlConfig['restrictedHosts']) && !preg_match($urlConfig['restrictedHosts'], $p['host'])))
+			{
+				return 'URL host is not allowed';
+			}
+		}
 	}
 }

@@ -442,7 +442,17 @@ class BuiltInFiltersTest extends Test
 					[
 						'err',
 						'URL scheme is not allowed',
-						['attrValue' => 'javascript:alert()', 'scheme' => 'javascript']
+						[
+							'scheme'    => 'javascript',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => 'alert()',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'javascript:alert()'
+						]
 					]
 				]
 			],
@@ -477,8 +487,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL scheme is not allowed',
 						[
-							'attrValue' => 'ftp://example.com',
-							'scheme'    => 'ftp'
+							'scheme'    => 'ftp',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'ftp://example.com'
 						]
 					]
 				]
@@ -502,8 +519,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://evil.example.com',
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://evil.example.com'
 						]
 					]
 				],
@@ -521,8 +545,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => '//evil.example.com',
-							'host'      => 'evil.example.com'
+							'scheme'    => '',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => '//evil.example.com'
 						]
 					]
 				],
@@ -540,8 +571,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => "http://evil\xE3\x80\x82example.com",
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => "http://evil\xE3\x80\x82example.com"
 						]
 					]
 				],
@@ -559,8 +597,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => "http://evil\xEF\xBC\x8Eexample.com",
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => "http://evil\xEF\xBC\x8Eexample.com"
 						]
 					]
 				],
@@ -578,8 +623,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => "http://evil\xEF\xBD\xA1example.com",
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => "http://evil\xEF\xBD\xA1example.com"
 						]
 					]
 				],
@@ -597,8 +649,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => "http://evil.example.com.",
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => "http://evil.example.com."
 						]
 					]
 				],
@@ -616,8 +675,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => "http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => "http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1"
 						]
 					]
 				],
@@ -635,8 +701,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is invalid',
 						[
-							'attrValue' => 'http://evil.ex%41mple.com',
-							'host'      => 'evil.ex%41mple.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.ex%41mple.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://evil.ex%41mple.com'
 						]
 					]
 				],
@@ -654,8 +727,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://www.pаypal.com',
-							'host'      => 'www.xn--pypal-4ve.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'www.xn--pypal-4ve.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://www.pаypal.com'
 						]
 					]
 				],
@@ -710,8 +790,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://evil.example.com',
-							'host'      => 'evil.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'evil.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://evil.example.com'
 						]
 					]
 				],
@@ -729,8 +816,15 @@ class BuiltInFiltersTest extends Test
 						'err',
 						'URL host is not allowed',
 						[
-							'attrValue' => 'http://example.org.example.com',
-							'host'      => 'example.org.example.com'
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'example.org.example.com',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://example.org.example.com'
 						]
 					]
 				],
@@ -739,9 +833,72 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->restrictHost('example.org');
 				}
 			],
-			[new Url, 'http:', false],
-			[new Url, 'http:?foo', false],
-			[new Url, 'http:#foo', false],
+			[
+				new Url,
+				'http:',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http:'
+						]
+					]
+				]
+			],
+			[
+				new Url,
+				'http:?foo',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => '',
+							'query'     => 'foo',
+							'fragment'  => '',
+							'attrValue' => 'http:?foo'
+						]
+					]
+				]
+			],
+			[
+				new Url,
+				'http:#foo',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => 'foo',
+							'attrValue' => 'http:#foo'
+						]
+					]
+				]
+			],
 			[
 				new Url,
 				'file:///foo.txt',
