@@ -41,7 +41,11 @@ class JavaScript
 		'setTagLimit'
 	);
 
+	protected $hints;
+
 	protected $minifier;
+
+	protected $xsl;
 
 	public function __construct(Configurator $configurator)
 	{
@@ -118,9 +122,9 @@ class JavaScript
 		return $code;
 	}
 
-	protected function getHints($xsl)
+	protected function getHints()
 	{
-		$hints = array(
+		$this->hints = array(
 			'attributeGenerator'      => 0,
 			'attributeDefaultValue'   => 0,
 			'closeAncestor'           => 0,
@@ -133,46 +137,13 @@ class JavaScript
 			'requireAncestor'         => 0
 		);
 
-		if (\strpos($xsl, 'data-s9e-livepreview-postprocess') === \false)
-			$hints['postProcessing'] = 0;
-
-		foreach ($this->config['plugins'] as $pluginConfig)
-			if (isset($pluginConfig['regexpLimitAction']))
-			{
-				$hintName = 'regexpLimitAction' . \ucfirst($pluginConfig['regexpLimitAction']);
-				if (isset($hints[$hintName]))
-					$hints[$hintName] = 1;
-			}
-
-		$flags = 0;
-		foreach ($this->config['tags'] as $tagConfig)
-		{
-			foreach ($tagConfig['rules'] as $k => $v)
-				if ($k === 'flags')
-					$flags |= $v;
-				elseif (isset($hints[$k]))
-					$hints[$k] = 1;
-
-			if (!empty($tagConfig['attributes']))
-				foreach ($tagConfig['attributes'] as $attrConfig)
-				{
-					if (isset($attrConfig['generator']))
-						$hints['attributeGenerator'] = 1;
-
-					if (isset($attrConfig['defaultValue']))
-						$hints['attributeDefaultValue'] = 1;
-				}
-		}
-
-		$flags |= $this->config['rootContext']['flags'];
-
-		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
-		foreach ($parser->getConstants() as $constName => $constValue)
-			if (\substr($constName, 0, 5) === 'RULE_')
-				$hints[$constName] = ($flags & $constValue) ? 1 : 0;
+		$this->setPluginHints();
+		$this->setRenderingHints();
+		$this->setRulesHints();
+		$this->setTagsHints();
 
 		$js = "/** @const */ var HINT={};\n";
-		foreach ($hints as $hintName => $hintValue)
+		foreach ($this->hints as $hintName => $hintValue)
 			$js .= '/** @const */ HINT.' . $hintName . '=' . self::encode($hintValue) . ";\n";
 
 		return $js;
@@ -284,14 +255,14 @@ class JavaScript
 			$files[] = 'render.js';
 
 		$rendererGenerator = new XSLT;
-		$xsl = $rendererGenerator->getXSL($this->configurator->rendering);
+		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
 
-		$src = $this->getHints($xsl);
+		$src = $this->getHints();
 
 		foreach ($files as $filename)
 		{
 			if ($filename === 'render.js')
-				$src .= '/** @const */ var xsl=' . \json_encode($xsl) . ";\n";
+				$src .= '/** @const */ var xsl=' . \json_encode($this->xsl) . ";\n";
 
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= \file_get_contents($filepath) . "\n";
@@ -503,5 +474,53 @@ class JavaScript
 		$this->callbacks[$funcName] = $js;
 
 		return new Code($funcName);
+	}
+
+	protected function setPluginHints()
+	{
+		foreach ($this->config['plugins'] as $pluginConfig)
+			if (isset($pluginConfig['regexpLimitAction']))
+			{
+				$hintName = 'regexpLimitAction' . \ucfirst($pluginConfig['regexpLimitAction']);
+				if (isset($this->hints[$hintName]))
+					$this->hints[$hintName] = 1;
+			}
+	}
+
+	protected function setRulesHints()
+	{
+		$flags = 0;
+		foreach ($this->config['tags'] as $tagConfig)
+		{
+			foreach (\array_intersect_key($tagConfig['rules'], $this->hints) as $k => $v)
+				$this->hints[$k] = 1;
+			$flags |= $tagConfig['rules']['flags'];
+		}
+		$flags |= $this->config['rootContext']['flags'];
+
+		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
+		foreach ($parser->getConstants() as $constName => $constValue)
+			if (\substr($constName, 0, 5) === 'RULE_')
+				$this->hints[$constName] = ($flags & $constValue) ? 1 : 0;
+	}
+
+	protected function setTagsHints()
+	{
+		foreach ($this->config['tags'] as $tagConfig)
+			if (!empty($tagConfig['attributes']))
+				foreach ($tagConfig['attributes'] as $attrConfig)
+				{
+					if (isset($attrConfig['generator']))
+						$this->hints['attributeGenerator'] = 1;
+
+					if (isset($attrConfig['defaultValue']))
+						$this->hints['attributeDefaultValue'] = 1;
+				}
+	}
+
+	protected function setRenderingHints()
+	{
+		if (\strpos($this->xsl, 'data-s9e-livepreview-postprocess') === \false)
+			$this->hints['postProcessing'] = 0;
 	}
 }
