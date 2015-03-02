@@ -68,13 +68,6 @@ class PluginCollection extends NormalizedCollection
 
 		foreach ($plugins as $pluginName => &$pluginConfig)
 		{
-			if (!isset($pluginConfig))
-			{
-				unset($plugins[$pluginName]);
-
-				continue;
-			}
-
 			$plugin = $this->get($pluginName);
 
 			$pluginConfig += $plugin->getBaseProperties();
