@@ -110,6 +110,38 @@ class Optimizer
 	}
 
 	/**
+	* Test whether current token is between two htmlspecialchars() calls
+	*
+	* @return bool
+	*/
+	protected function isBetweenHtmlspecialcharCalls()
+	{
+		return ($this->tokens[$this->i + 1]    === [T_STRING, 'htmlspecialchars']
+		     && $this->tokens[$this->i + 2]    === '('
+		     && $this->tokens[$this->i - 1]    === ')'
+		     && $this->tokens[$this->i - 2][0] === T_LNUMBER
+		     && $this->tokens[$this->i - 3]    === ',');
+	}
+
+	/**
+	* Test whether current token is at the beginning of an htmlspecialchars()-safe var
+	*
+	* Tests whether current var is either $node->localName or $node->nodeName
+	*
+	* @return bool
+	*/
+	protected function isHtmlspecialcharSafeVar()
+	{
+		return ($this->tokens[$this->i    ]    === [T_VARIABLE,        '$node']
+		     && $this->tokens[$this->i + 1]    === [T_OBJECT_OPERATOR, '->']
+		     && ($this->tokens[$this->i + 2]   === [T_STRING,          'localName']
+		      || $this->tokens[$this->i + 2]   === [T_STRING,          'nodeName'])
+		     && $this->tokens[$this->i + 3]    === ','
+		     && $this->tokens[$this->i + 4][0] === T_LNUMBER
+		     && $this->tokens[$this->i + 5]    === ')');
+	}
+
+	/**
 	* Test whether the cursor is at the beginning of an output assignment
 	*
 	* @return bool
@@ -143,11 +175,7 @@ class Optimizer
 	*/
 	protected function mergeConcatenatedHtmlSpecialChars()
 	{
-		if ($this->tokens[$this->i + 1]    !== [T_STRING, 'htmlspecialchars']
-		 || $this->tokens[$this->i + 2]    !== '('
-		 || $this->tokens[$this->i - 1]    !== ')'
-		 || $this->tokens[$this->i - 2][0] !== T_LNUMBER
-		 || $this->tokens[$this->i - 3]    !== ',')
+		if (!$this->isBetweenHtmlspecialcharCalls())
 		{
 			 return false;
 		}
@@ -320,13 +348,7 @@ class Optimizer
 	*/
 	protected function removeHtmlspecialcharsSafeVar()
 	{
-		if ($this->tokens[$this->i    ]    !== [T_VARIABLE,        '$node']
-		 || $this->tokens[$this->i + 1]    !== [T_OBJECT_OPERATOR, '->']
-		 || ($this->tokens[$this->i + 2]   !== [T_STRING,          'localName']
-		  && $this->tokens[$this->i + 2]   !== [T_STRING,          'nodeName'])
-		 || $this->tokens[$this->i + 3]    !== ','
-		 || $this->tokens[$this->i + 4][0] !== T_LNUMBER
-		 || $this->tokens[$this->i + 5]    !== ')')
+		if (!$this->isHtmlspecialcharSafeVar())
 		{
 			 return false;
 		}
