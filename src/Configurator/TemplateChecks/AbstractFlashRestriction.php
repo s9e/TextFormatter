@@ -50,6 +50,11 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	protected $settings;
 
 	/**
+	* @var DOMElement <xsl:template/> node
+	*/
+	protected $template;
+
+	/**
 	* Constructor
 	*
 	* @param  string $maxSetting    Max setting allowed
@@ -72,26 +77,21 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$this->checkEmbed($template);
-		$this->checkObject($template);
+		$this->template = $template;
+		$this->checkEmbeds();
+		$this->checkObjects();
 	}
 
 	/**
 	* Check embed elements in given template
 	*
-	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	protected function checkEmbed(DOMElement $template)
+	protected function checkEmbeds()
 	{
 		$settingName = strtolower($this->settingName);
-		foreach ($template->ownerDocument->getElementsByTagName('embed') as $embed)
+		foreach ($this->getElements('embed') as $embed)
 		{
-			if ($this->onlyIfDynamic && !$this->isDynamic($embed))
-			{
-				continue;
-			}
-
 			// Test <xsl:attribute/> descendants
 			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
 			foreach ($nodes as $attribute)
@@ -108,7 +108,6 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 			foreach ($embed->attributes as $attribute)
 			{
 				$attrName = strtolower($attribute->name);
-
 				if ($attrName === $settingName)
 				{
 					$this->checkSetting($attribute, $attribute->value);
@@ -125,13 +124,12 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	/**
 	* Check object elements in given template
 	*
-	* @param  DOMElement $template <xsl:template/> node
 	* @return void
 	*/
-	protected function checkObject(DOMElement $template)
+	protected function checkObjects()
 	{
 		$settingName = strtolower($this->settingName);
-		foreach ($template->getElementsByTagName('object') as $object)
+		foreach ($this->getElements('object') as $object)
 		{
 			if ($this->onlyIfDynamic && !$this->isDynamic($object))
 			{
@@ -140,10 +138,9 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 			// Test the element's <param/> descendants
 			$useDefault = true;
-			foreach ($template->getElementsByTagName('param') as $param)
+			foreach ($object->getElementsByTagName('param') as $param)
 			{
 				$paramName = strtolower($param->getAttribute('name'));
-
 				if ($paramName === $settingName)
 				{
 					$this->checkSetting($param, $param->getAttribute('value'));
@@ -230,5 +227,25 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 		}
 
 		return false;
+	}
+
+	/**
+	* Get all elements the restriction applies to
+	*
+	* @param  string       $tagName Element's name
+	* @return DOMElement[]
+	*/
+	protected function getElements($tagName)
+	{
+		$nodes = [];
+		foreach ($this->template->ownerDocument->getElementsByTagName($tagName) as $node)
+		{
+			if (!$this->onlyIfDynamic || $this->isDynamic($node))
+			{
+				$nodes[] = $node;
+			}
+		}
+
+		return $nodes;
 	}
 }
