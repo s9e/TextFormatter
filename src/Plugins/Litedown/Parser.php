@@ -50,22 +50,7 @@ class Parser extends ParserBase
 		$str = \stripslashes(\str_replace("\x1A", '', $str));
 
 		if ($this->hasEscapedChars)
-			$str = \strtr(
-				$str,
-				array(
-					"\x1B0" => '!',
-					"\x1B1" => '"',
-					"\x1B2" => ')',
-					"\x1B3" => '*',
-					"\x1B4" => '[',
-					"\x1B5" => '\\',
-					"\x1B6" => ']',
-					"\x1B7" => '^',
-					"\x1B8" => '_',
-					"\x1B9" => '`',
-					"\x1BA" => '~'
-				)
-			);
+			$str = \strtr($str, array("\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')', "\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\', "\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_', "\x1B9" => '`', "\x1BA" => '~'));
 
 		return $str;
 	}
@@ -105,22 +90,7 @@ class Parser extends ParserBase
 		{
 			$this->hasEscapedChars = \true;
 
-			$text = \strtr(
-				$text,
-				array(
-					'\\!'  => "\x1B0",
-					'\\"'  => "\x1B1",
-					'\\)'  => "\x1B2",
-					'\\*'  => "\x1B3",
-					'\\['  => "\x1B4",
-					'\\\\' => "\x1B5",
-					'\\]'  => "\x1B6",
-					'\\^'  => "\x1B7",
-					'\\_'  => "\x1B8",
-					'\\`'  => "\x1B9",
-					'\\~'  => "\x1BA"
-				)
-			);
+			$text = \strtr($text, array('\\!' => "\x1B0", '\\"' => "\x1B1", '\\)' => "\x1B2", '\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5", '\\]' => "\x1B6", '\\^' => "\x1B7", '\\_' => "\x1B8", '\\`' => "\x1B9", '\\~' => "\x1BA"));
 		}
 
 		$text .= "\n\n\x17";

@@ -68,6 +68,26 @@ class Optimizer
 		return $php;
 	}
 
+	protected function isBetweenHtmlspecialcharCalls()
+	{
+		return ($this->tokens[$this->i + 1]    === array(\T_STRING, 'htmlspecialchars')
+		     && $this->tokens[$this->i + 2]    === '('
+		     && $this->tokens[$this->i - 1]    === ')'
+		     && $this->tokens[$this->i - 2][0] === \T_LNUMBER
+		     && $this->tokens[$this->i - 3]    === ',');
+	}
+
+	protected function isHtmlspecialcharSafeVar()
+	{
+		return ($this->tokens[$this->i    ]    === array(\T_VARIABLE,        '$node')
+		     && $this->tokens[$this->i + 1]    === array(\T_OBJECT_OPERATOR, '->')
+		     && ($this->tokens[$this->i + 2]   === array(\T_STRING,          'localName')
+		      || $this->tokens[$this->i + 2]   === array(\T_STRING,          'nodeName'))
+		     && $this->tokens[$this->i + 3]    === ','
+		     && $this->tokens[$this->i + 4][0] === \T_LNUMBER
+		     && $this->tokens[$this->i + 5]    === ')');
+	}
+
 	protected function isOutputAssignment()
 	{
 		return ($this->tokens[$this->i    ] === array(\T_VARIABLE,        '$this')
@@ -85,11 +105,7 @@ class Optimizer
 
 	protected function mergeConcatenatedHtmlSpecialChars()
 	{
-		if ($this->tokens[$this->i + 1]    !== array(\T_STRING, 'htmlspecialchars')
-		 || $this->tokens[$this->i + 2]    !== '('
-		 || $this->tokens[$this->i - 1]    !== ')'
-		 || $this->tokens[$this->i - 2][0] !== \T_LNUMBER
-		 || $this->tokens[$this->i - 3]    !== ',')
+		if (!$this->isBetweenHtmlspecialcharCalls())
 			 return \false;
 
 		$escapeMode = $this->tokens[$this->i - 2][1];
@@ -186,13 +202,7 @@ class Optimizer
 
 	protected function removeHtmlspecialcharsSafeVar()
 	{
-		if ($this->tokens[$this->i    ]    !== array(\T_VARIABLE,        '$node')
-		 || $this->tokens[$this->i + 1]    !== array(\T_OBJECT_OPERATOR, '->')
-		 || ($this->tokens[$this->i + 2]   !== array(\T_STRING,          'localName')
-		  && $this->tokens[$this->i + 2]   !== array(\T_STRING,          'nodeName'))
-		 || $this->tokens[$this->i + 3]    !== ','
-		 || $this->tokens[$this->i + 4][0] !== \T_LNUMBER
-		 || $this->tokens[$this->i + 5]    !== ')')
+		if (!$this->isHtmlspecialcharSafeVar())
 			 return \false;
 
 		unset($this->tokens[$this->i - 2]);

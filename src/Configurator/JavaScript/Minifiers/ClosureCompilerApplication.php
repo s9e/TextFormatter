@@ -74,7 +74,7 @@ class ClosureCompilerApplication extends Minifier
 			\unlink($outFile);
 		}
 
-		if ($return)
+		if (!empty($return))
 			throw new RuntimeException('An error occured during minification');
 
 		return $src;

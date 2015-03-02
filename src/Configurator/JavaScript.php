@@ -90,7 +90,7 @@ class JavaScript
 			$className = __NAMESPACE__ . '\\JavaScript\\Minifiers\\' . $minifier;
 
 			$args = \array_slice(\func_get_args(), 1);
-			if ($args)
+			if (!empty($args))
 			{
 				$reflection = new ReflectionClass($className);
 				$minifier   = $reflection->newInstanceArgs($args);
@@ -104,7 +104,7 @@ class JavaScript
 		return $minifier;
 	}
 
-	static protected function convertBitfield($bitfield)
+	protected static function convertBitfield($bitfield)
 	{
 		$hex = array();
 

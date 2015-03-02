@@ -53,7 +53,7 @@ abstract class RegexpParser
 					$pos += \strlen($m[0]);
 					break;
 
-				case '(';
+				case '(':
 					if (\preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
 					{
 						$ret['tokens'][] = array(

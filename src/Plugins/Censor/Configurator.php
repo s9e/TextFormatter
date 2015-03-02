@@ -168,7 +168,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$config['replacements'][] = array($variant, $replacement);
 		}
 
-		if ($this->allowed)
+		if (!empty($this->allowed))
 			$config['allowed'] = $this->getWordsRegexp(\array_keys($this->allowed));
 
 		return $config;

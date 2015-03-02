@@ -36,32 +36,6 @@ abstract class Renderer
 			return $this->renderRichText(\preg_replace($this->metaElementsRegexp, '', $xml));
 	}
 
-	public function renderMulti(array $arr)
-	{
-		$keys   = array();
-		$render = array();
-
-		foreach ($arr as $k => $xml)
-			if (\substr($xml, 0, 3) === '<t>')
-				$arr[$k] = $this->renderPlainText($xml);
-			else
-			{
-				$keys[]   = $k;
-				$render[] = $xml;
-			}
-
-		if (!empty($render))
-		{
-			$uid = \sha1(\uniqid(\mt_rand(), \true));
-			$xml = '<m>' . \implode($uid, $render) . '</m>';
-
-			foreach (\explode($uid, $this->renderRichText($xml)) as $i => $html)
-				$arr[$keys[$i]] = $html;
-		}
-
-		return $arr;
-	}
-
 	protected function renderPlainText($xml)
 	{
 		$html = \substr($xml, 3, -4);

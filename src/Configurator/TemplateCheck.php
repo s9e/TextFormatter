@@ -12,5 +12,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class TemplateCheck
 {
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+
 	abstract public function check(DOMElement $template, Tag $tag);
 }

@@ -23,7 +23,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 		{
 			$parentNode = $node->parentNode;
 
-			if ($parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
+			if ($parentNode->namespaceURI === self::XMLNS_XSL)
 				continue;
 
 			\preg_match_all(
@@ -48,13 +48,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 				$lastPos = $pos + \strlen($m[0][0]);
 
 				$parentNode
-					->insertBefore(
-						$dom->createElementNS(
-							'http://www.w3.org/1999/XSL/Transform',
-							'xsl:value-of'
-						),
-						$node
-					)
+					->insertBefore($dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'), $node)
 					->setAttribute('select', $m[1][0]);
 			}
 

@@ -26,6 +26,8 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 	protected $settings;
 
+	protected $template;
+
 	public function __construct($maxSetting, $onlyIfDynamic = \false)
 	{
 		$this->maxSetting    = $maxSetting;
@@ -34,63 +36,56 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$dom         = $template->ownerDocument;
-		$settingName = \strtolower($this->settingName);
+		$this->template = $template;
+		$this->checkEmbeds();
+		$this->checkObjects();
+	}
 
-		foreach ($dom->getElementsByTagName('embed') as $embed)
+	protected function checkEmbeds()
+	{
+		$settingName = \strtolower($this->settingName);
+		foreach ($this->getElements('embed') as $embed)
 		{
-			if ($this->onlyIfDynamic && !$this->isDynamic($embed))
-				continue;
+			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
+			foreach ($nodes as $attribute)
+			{
+				$attrName = \strtolower($attribute->getAttribute('name'));
+				if ($attrName === $settingName)
+					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
+			}
 
 			$useDefault  = \true;
-
 			foreach ($embed->attributes as $attribute)
 			{
 				$attrName = \strtolower($attribute->name);
-
 				if ($attrName === $settingName)
 				{
 					$this->checkSetting($attribute, $attribute->value);
 					$useDefault = \false;
 				}
 			}
-
 			if ($useDefault)
 				$this->checkSetting($embed, $this->defaultSetting);
-
-			$nodes = $embed->getElementsByTagNameNS(
-				'http://www.w3.org/1999/XSL/Transform',
-				'attribute'
-			);
-
-			foreach ($nodes as $attribute)
-			{
-				$attrName = \strtolower($attribute->getAttribute('name'));
-
-				if ($attrName === $settingName)
-					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
-			}
 		}
+	}
 
-		foreach ($template->getElementsByTagName('object') as $object)
+	protected function checkObjects()
+	{
+		$settingName = \strtolower($this->settingName);
+		foreach ($this->getElements('object') as $object)
 		{
 			if ($this->onlyIfDynamic && !$this->isDynamic($object))
 				continue;
 
 			$useDefault = \true;
-
-			foreach ($template->getElementsByTagName('param') as $param)
+			foreach ($object->getElementsByTagName('param') as $param)
 			{
 				$paramName = \strtolower($param->getAttribute('name'));
-
 				if ($paramName === $settingName)
 				{
 					$this->checkSetting($param, $param->getAttribute('value'));
 
-					$nodes = $param->getElementsByTagNameNS(
-						'http://www.w3.org/1999/XSL/Transform',
-						'attribute'
-					);
+					$nodes = $param->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
 					foreach ($nodes as $attribute)
 						if (\strtolower($attribute->getAttribute('name')) === 'value')
 							throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
@@ -99,10 +94,8 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 						$useDefault = \false;
 				}
 			}
-
 			if ($useDefault)
-				if (!$this->onlyIfDynamic || $this->isDynamic($object))
-					$this->checkSetting($object, $this->defaultSetting);
+				$this->checkSetting($object, $this->defaultSetting);
 		}
 	}
 
@@ -125,7 +118,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 	protected function isDynamic(DOMElement $node)
 	{
-		if ($node->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', '*')->length)
+		if ($node->getElementsByTagNameNS(self::XMLNS_XSL, '*')->length)
 			return \true;
 
 		$xpath = new DOMXPath($node->ownerDocument);
@@ -136,5 +129,15 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 				return \true;
 
 		return \false;
+	}
+
+	protected function getElements($tagName)
+	{
+		$nodes = array();
+		foreach ($this->template->ownerDocument->getElementsByTagName($tagName) as $node)
+			if (!$this->onlyIfDynamic || $this->isDynamic($node))
+				$nodes[] = $node;
+
+		return $nodes;
 	}
 }

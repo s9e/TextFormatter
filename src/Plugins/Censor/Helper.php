@@ -110,7 +110,7 @@ class Helper
 			$cnt
 		);
 
-		if ($cnt && $xml[1] === 't')
+		if ($cnt > 0 && $xml[1] === 't')
 		{
 			$xml[1] = 'r';
 			$xml[\strlen($xml) - 2] = 'r';
