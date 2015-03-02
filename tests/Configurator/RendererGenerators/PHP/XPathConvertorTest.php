@@ -439,6 +439,10 @@ class XPathConvertorTest extends Test
 					}
 				}
 			],
+			[
+				'ancestor::foo',
+				"\$this->xpath->evaluate('boolean(ancestor::foo)',\$node)"
+			],
 			// Custom representations
 			[
 				"contains('upperlowerdecim',substring(@type,1,5))",
