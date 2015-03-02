@@ -44,8 +44,6 @@ abstract class RulesHelper
 			}
 
 			$k = '';
-
-			// Look into each matrix whether current tag is allowed as child/descendant
 			foreach ($matrix as $tagMatrix)
 			{
 				$k .= $tagMatrix['allowedChildren'][$tagName];
