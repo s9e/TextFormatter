@@ -2080,7 +2080,7 @@ class Parser
 	* @param  Tag     $b Second tag to compare
 	* @return integer
 	*/
-	static protected function compareTags(Tag $a, Tag $b)
+	protected static function compareTags(Tag $a, Tag $b)
 	{
 		$aPos = $a->getPos();
 		$bPos = $b->getPos();

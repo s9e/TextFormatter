@@ -177,7 +177,7 @@ class JavaScript
 	* @param  string $bitfield Raw bytes
 	* @return Code             JavaScript code
 	*/
-	static protected function convertBitfield($bitfield)
+	protected static function convertBitfield($bitfield)
 	{
 		$hex = [];
 
