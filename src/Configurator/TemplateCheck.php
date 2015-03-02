@@ -16,6 +16,11 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 abstract class TemplateCheck
 {
 	/**
+	* XSL namespace
+	*/
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+
+	/**
 	* Check a template for infractions to this check and throw any relevant Exception
 	*
 	* @param  DOMElement $template <xsl:template/> node

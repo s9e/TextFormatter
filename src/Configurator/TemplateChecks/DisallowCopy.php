@@ -23,7 +23,7 @@ class DisallowCopy extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$nodes = $template->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', 'copy');
+		$nodes = $template->getElementsByTagNameNS(self::XMLNS_XSL, 'copy');
 		$node  = $nodes->item(0);
 
 		if ($node)

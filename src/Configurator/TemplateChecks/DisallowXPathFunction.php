@@ -73,7 +73,7 @@ class DisallowXPathFunction extends TemplateCheck
 
 		foreach ($xpath->query('//@*') as $attribute)
 		{
-			if ($attribute->parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
+			if ($attribute->parentNode->namespaceURI === self::XMLNS_XSL)
 			{
 				// Attribute of an XSL element. May or may not use XPath, but it shouldn't produce
 				// false-positives

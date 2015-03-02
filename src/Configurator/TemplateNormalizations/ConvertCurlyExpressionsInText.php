@@ -35,7 +35,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 			$parentNode = $node->parentNode;
 
 			// Skip XSL elements
-			if ($parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
+			if ($parentNode->namespaceURI === self::XMLNS_XSL)
 			{
 				continue;
 			}
@@ -66,13 +66,7 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 
 				// Add the xsl:value-of element
 				$parentNode
-					->insertBefore(
-						$dom->createElementNS(
-							'http://www.w3.org/1999/XSL/Transform',
-							'xsl:value-of'
-						),
-						$node
-					)
+					->insertBefore($dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'), $node)
 					->setAttribute('select', $m[1][0]);
 			}
 

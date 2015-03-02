@@ -25,7 +25,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$nodes = $template->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', 'copy-of');
+		$nodes = $template->getElementsByTagNameNS(self::XMLNS_XSL, 'copy-of');
 
 		foreach ($nodes as $node)
 		{

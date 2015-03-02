@@ -23,11 +23,7 @@ class DisallowDynamicAttributeNames extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$nodes = $template->getElementsByTagNameNS(
-			'http://www.w3.org/1999/XSL/Transform',
-			'attribute'
-		);
-
+		$nodes = $template->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
 		foreach ($nodes as $node)
 		{
 			if (strpos($node->getAttribute('name'), '{') !== false)

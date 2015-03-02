@@ -103,10 +103,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 			}
 
 			// Test <xsl:attribute/> descendants
-			$nodes = $embed->getElementsByTagNameNS(
-				'http://www.w3.org/1999/XSL/Transform',
-				'attribute'
-			);
+			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
 
 			foreach ($nodes as $attribute)
 			{
@@ -139,10 +136,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 					$this->checkSetting($param, $param->getAttribute('value'));
 
 					// Test for a dynamic "value" attribute
-					$nodes = $param->getElementsByTagNameNS(
-						'http://www.w3.org/1999/XSL/Transform',
-						'attribute'
-					);
+					$nodes = $param->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
 					foreach ($nodes as $attribute)
 					{
 						if (strtolower($attribute->getAttribute('name')) === 'value')
@@ -208,7 +202,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	*/
 	protected function isDynamic(DOMElement $node)
 	{
-		if ($node->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', '*')->length)
+		if ($node->getElementsByTagNameNS(self::XMLNS_XSL, '*')->length)
 		{
 			return true;
 		}
