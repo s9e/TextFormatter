@@ -15,12 +15,12 @@ abstract class S18 extends \s9e\TextFormatter\Bundle
 	public static $parser;
 
 	/**
-	* @var s9e\TextFormatter\Renderer Singleton instance used by render() and renderMulti()
+	* @var s9e\TextFormatter\Renderer Singleton instance used by render()
 	*/
 	public static $renderer;
 
 	/**
-	* @var Callback executed before render() and on each entry before renderMulti(), receives the parsed text as argument
+	* @var Callback executed before render(), receives the parsed text as argument
 	*/
 	public static $beforeRender = 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat';
 

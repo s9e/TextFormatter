@@ -217,141 +217,6 @@ class BundleTest extends Test
 	}
 
 	/**
-	* @testdox renderMulti() creates a renderer, renders the input and returns the result
-	*/
-	public function testRenderMulti()
-	{
-		$xml  = '<t>Hello world</t>';
-		$html = 'Hello world';
-
-		$mock = $this->getMock('stdClass', ['renderMulti', 'setParameters']);
-		$mock->expects($this->once())
-		     ->method('renderMulti')
-		     ->with([$xml])
-		     ->will($this->returnValue([$html]));
-
-		DummyBundle::$_renderer = $mock;
-
-		$this->assertSame([$html], DummyBundle::renderMulti([$xml]));
-		$this->assertSame(DummyBundle::$calls, ['getParser' => 0, 'getRenderer' => 1]);
-	}
-
-	/**
-	* @testdox renderMulti() reuses the same renderer on consecutive calls
-	*/
-	public function testRenderMultiSingleton()
-	{
-		$xml  = '<t>Hello world</t>';
-		$html = 'Hello world';
-
-		$mock = $this->getMock('stdClass', ['renderMulti', 'setParameters']);
-		$mock->expects($this->exactly(2))
-		     ->method('renderMulti')
-		     ->with([$xml])
-		     ->will($this->returnValue([$html]));
-
-		DummyBundle::$_renderer = $mock;
-
-		$this->assertSame([$html], DummyBundle::renderMulti([$xml]));
-		$this->assertSame([$html], DummyBundle::renderMulti([$xml]));
-		$this->assertSame(DummyBundle::$calls, ['getParser' => 0, 'getRenderer' => 1]);
-	}
-
-	/**
-	* @testdox renderMulti() calls setParameters() with its second argument
-	*/
-	public function testRenderMultiParameters()
-	{
-		$xml    = '<t>Hello world</t>';
-		$html   = 'Hello world';
-		$params = ['foo' => 'bar'];
-
-		$mock = $this->getMock('stdClass', ['renderMulti', 'setParameters']);
-		$mock->expects($this->once())
-		     ->method('renderMulti')
-		     ->with([$xml])
-		     ->will($this->returnValue([$html]));
-		$mock->expects($this->once())
-		     ->method('setParameters')
-		     ->with($params);
-
-		DummyBundle::$_renderer = $mock;
-
-		$this->assertSame([$html], DummyBundle::renderMulti([$xml], $params));
-		$this->assertSame(DummyBundle::$calls, ['getParser' => 0, 'getRenderer' => 1]);
-	}
-
-	/**
-	* @testdox renderMulti() executes static::$beforeRender on every entry before calling the renderer's renderMulti() method
-	*/
-	public function testBeforeRenderMulti()
-	{
-		$mock = $this->getMock('stdClass', ['renderMulti']);
-		$mock->expects($this->once())
-		     ->method('renderMulti')
-		     ->with(['<t>beforeRender0</t>', '<t>beforeRender1</t>'])
-		     ->will($this->returnValue(['x0x', 'x1x']));
-		DummyBundle::$_renderer = $mock;
-
-		$mock = $this->getMock('stdClass', ['foo']);
-		$mock->expects($this->at(0))
-		     ->method('foo')
-		     ->with('<t>0</t>')
-		     ->will($this->returnValue('<t>beforeRender0</t>'));
-		$mock->expects($this->at(1))
-		     ->method('foo')
-		     ->with('<t>1</t>')
-		     ->will($this->returnValue('<t>beforeRender1</t>'));
-		DummyBundle::$beforeRender = [$mock, 'foo'];
-
-		$this->assertSame(
-			[
-				'x0x',
-				'x1x'
-			],
-			DummyBundle::renderMulti([
-				'<t>0</t>',
-				'<t>1</t>'
-			])
-		);
-	}
-
-	/**
-	* @testdox renderMulti() executes static::$afterRender on every entry after calling the renderer's renderMulti() method
-	*/
-	public function testAfterRenderMulti()
-	{
-		$mock = $this->getMock('stdClass', ['renderMulti']);
-		$mock->expects($this->once())
-		     ->method('renderMulti')
-		     ->with(['<t>0</t>', '<t>1</t>'])
-		     ->will($this->returnValue(['x0x', 'x1x']));
-		DummyBundle::$_renderer = $mock;
-
-		$mock = $this->getMock('stdClass', ['foo']);
-		$mock->expects($this->at(0))
-		     ->method('foo')
-		     ->with('x0x')
-		     ->will($this->returnValue('afterRender0'));
-		$mock->expects($this->at(1))
-		     ->method('foo')
-		     ->with('x1x')
-		     ->will($this->returnValue('afterRender1'));
-		DummyBundle::$afterRender = [$mock, 'foo'];
-
-		$this->assertSame(
-			[
-				'afterRender0',
-				'afterRender1'
-			],
-			DummyBundle::renderMulti([
-				'<t>0</t>',
-				'<t>1</t>'
-			])
-		);
-	}
-
-	/**
 	* @testdox unparse() takes the XML representation and returns the original text
 	*/
 	public function testUnparse()
@@ -427,10 +292,9 @@ class DummyBundle extends Bundle
 	{
 		self::$calls = ['getParser' => 0, 'getRenderer' => 0];
 
-		$mock = $test->getMock('stdClass', ['parse', 'render', 'renderMulti', 'setParameters']);
+		$mock = $test->getMock('stdClass', ['parse', 'render', 'setParameters']);
 		$mock->expects($test->never())->method('parse');
 		$mock->expects($test->never())->method('render');
-		$mock->expects($test->never())->method('renderMulti');
 		$mock->expects($test->never())->method('setParameters');
 
 		static::$parser    = null;

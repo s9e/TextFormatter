@@ -15,7 +15,7 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	public static $parser;
 
 	/**
-	* @var s9e\TextFormatter\Renderer Singleton instance used by render() and renderMulti()
+	* @var s9e\TextFormatter\Renderer Singleton instance used by render()
 	*/
 	public static $renderer;
 

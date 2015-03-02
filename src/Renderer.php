@@ -61,48 +61,6 @@ abstract class Renderer
 	}
 
 	/**
-	* Render an array of intermediate representations
-	*
-	* @param  array $arr Array of XML strings
-	* @return array      Array of render results (same keys, same order)
-	*/
-	public function renderMulti(array $arr)
-	{
-		$keys   = [];
-		$render = [];
-
-		// First replace intermediate representations of plain text
-		foreach ($arr as $k => $xml)
-		{
-			if (substr($xml, 0, 3) === '<t>')
-			{
-				$arr[$k] = $this->renderPlainText($xml);
-			}
-			else
-			{
-				// Collect the keys and content of intermediate representations of rich text
-				$keys[]   = $k;
-				$render[] = $xml;
-			}
-		}
-
-		// Render the rich text representations, if any
-		if (!empty($render))
-		{
-			$uid = sha1(uniqid(mt_rand(), true));
-			$xml = '<m>' . implode($uid, $render) . '</m>';
-
-			foreach (explode($uid, $this->renderRichText($xml)) as $i => $html)
-			{
-				// Replace the IR with its rendering
-				$arr[$keys[$i]] = $html;
-			}
-		}
-
-		return $arr;
-	}
-
-	/**
 	* Render an intermediate representation of plain text
 	*
 	* @param  string $xml Intermediate representation

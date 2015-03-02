@@ -87,48 +87,6 @@ abstract class Bundle
 	}
 
 	/**
-	* Render an array of intermediate representations using a singleton instance of the bundled Renderer
-	*
-	* @param  array $arr    Array of XML strings
-	* @param  array $params Stylesheet parameters
-	* @return array         Array of render results (same keys, same order)
-	*/
-	public static function renderMulti(array $arr, array $params = [])
-	{
-		if (!isset(static::$renderer))
-		{
-			static::$renderer = static::getRenderer();
-		}
-
-		if (!empty($params))
-		{
-			static::$renderer->setParameters($params);
-		}
-
-		if (isset(static::$beforeRender))
-		{
-			foreach ($arr as &$xml)
-			{
-				$xml = call_user_func(static::$beforeRender, $xml);
-			}
-			unset($xml);
-		}
-
-		$arr = static::$renderer->renderMulti($arr);
-
-		if (isset(static::$afterRender))
-		{
-			foreach ($arr as &$output)
-			{
-				$output = call_user_func(static::$afterRender, $output);
-			}
-			unset($output);
-		}
-
-		return $arr;
-	}
-
-	/**
 	* Transform an intermediate representation back to its original form
 	*
 	* @param  string $xml Intermediate representation

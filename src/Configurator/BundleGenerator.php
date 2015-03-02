@@ -90,7 +90,7 @@ class BundleGenerator
 		$php[] = '	public static $parser;';
 		$php[] = '';
 		$php[] = '	/**';
-		$php[] = '	* @var s9e\\TextFormatter\\Renderer Singleton instance used by render() and renderMulti()';
+		$php[] = '	* @var s9e\\TextFormatter\\Renderer Singleton instance used by render()';
 		$php[] = '	*/';
 		$php[] = '	public static $renderer;';
 		$php[] = '';
@@ -102,9 +102,9 @@ class BundleGenerator
 			'afterParse'
 				=> 'Callback executed after parse(), receives the parsed text as argument',
 			'beforeRender'
-				=> 'Callback executed before render() and on each entry before renderMulti(), receives the parsed text as argument',
+				=> 'Callback executed before render(), receives the parsed text as argument',
 			'afterRender'
-				=> 'Callback executed after render() and on each entry before renderMulti(), receives the output as argument',
+				=> 'Callback executed after render(), receives the output as argument',
 			'beforeUnparse'
 				=> 'Callback executed before unparse(), receives the parsed text as argument',
 			'afterUnparse'

@@ -2499,9 +2499,6 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] renderMulti() renders multiple messages at once
- [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2522,9 +2519,6 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] renderMulti() renders multiple messages at once
- [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2544,9 +2538,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] renderMulti() renders multiple messages at once
- [x] renderMulti() preserves keys and order
- [x] renderMulti() renders multi-line text
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -2585,11 +2576,6 @@ s9e\TextFormatter\Tests\Bundle
  [x] render() calls setParameters() with its second argument
  [x] render() executes static::$beforeRender before calling the renderer's render() method
  [x] render() executes static::$afterRender after calling the renderer's render() method
- [x] renderMulti() creates a renderer, renders the input and returns the result
- [x] renderMulti() reuses the same renderer on consecutive calls
- [x] renderMulti() calls setParameters() with its second argument
- [x] renderMulti() executes static::$beforeRender on every entry before calling the renderer's renderMulti() method
- [x] renderMulti() executes static::$afterRender on every entry after calling the renderer's renderMulti() method
  [x] unparse() takes the XML representation and returns the original text
  [x] unparse() executes static::$beforeUnparse before calling the parser's unparse() method
  [x] unparse() executes static::$afterUnparse after calling the parser's unparse() method
