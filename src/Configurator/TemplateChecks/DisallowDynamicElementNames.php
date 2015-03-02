@@ -16,11 +16,7 @@ class DisallowDynamicElementNames extends TemplateCheck
 {
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$nodes = $template->getElementsByTagNameNS(
-			'http://www.w3.org/1999/XSL/Transform',
-			'element'
-		);
-
+		$nodes = $template->getElementsByTagNameNS(self::XMLNS_XSL, 'element');
 		foreach ($nodes as $node)
 			if (\strpos($node->getAttribute('name'), '{') !== \false)
 				throw new UnsafeTemplateException('Dynamic <xsl:element/> names are disallowed', $node);

@@ -29,7 +29,6 @@ abstract class RulesHelper
 				continue;
 
 			$k = '';
-
 			foreach ($matrix as $tagMatrix)
 			{
 				$k .= $tagMatrix['allowedChildren'][$tagName];
@@ -158,7 +157,7 @@ abstract class RulesHelper
 			$parentTags  = \array_intersect_key($parentTags, $matrix);
 			$usableTags += $parentTags;
 		}
-		while ($parentTags);
+		while (!empty($parentTags));
 
 		$matrix = \array_intersect_key($matrix, $usableTags);
 		unset($usableTags['*root*']);
