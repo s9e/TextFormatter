@@ -345,16 +345,12 @@ class BuiltInFilters
 		// NOTE: this regexp always matches because of the last three captures
 		preg_match($regexp, $url, $m);
 
-		$p = [
-			'scheme'   => (isset($m[1])) ? $m[1] : '',
-			'user'     => (isset($m[2])) ? $m[2] : '',
-			'pass'     => (isset($m[3])) ? $m[3] : '',
-			'host'     => (isset($m[4])) ? $m[4] : '',
-			'port'     => (isset($m[5])) ? $m[5] : '',
-			'path'     => (isset($m[6])) ? $m[6] : '',
-			'query'    => (isset($m[7])) ? $m[7] : '',
-			'fragment' => (isset($m[8])) ? $m[8] : ''
-		];
+		$parts  = [];
+		$tokens = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'];
+		foreach ($tokens as $i => $name)
+		{
+			$parts[$name] = (isset($m[$i + 1])) ? $m[$i + 1] : '';
+		}
 
 		/**
 		* @link http://tools.ietf.org/html/rfc3986#section-3.1
@@ -363,21 +359,21 @@ class BuiltInFilters
 		* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
 		* should only produce lowercase scheme names for consistency.'
 		*/
-		$p['scheme'] = strtolower($p['scheme']);
+		$parts['scheme'] = strtolower($parts['scheme']);
 
 		/**
 		* Normalize the domain label separators and remove trailing dots
 		* @link http://url.spec.whatwg.org/#domain-label-separators
 		*/
-		$p['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $p['host']), '.');
+		$parts['host'] = rtrim(preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $parts['host']), '.');
 
 		// Test whether host has non-ASCII characters and punycode it if possible
-		if (preg_match('#[^[:ascii:]]#', $p['host']) && function_exists('idn_to_ascii'))
+		if (preg_match('#[^[:ascii:]]#', $parts['host']) && function_exists('idn_to_ascii'))
 		{
-			$p['host'] = idn_to_ascii($p['host']);
+			$parts['host'] = idn_to_ascii($parts['host']);
 		}
 
-		return $p;
+		return $parts;
 	}
 
 	/**
