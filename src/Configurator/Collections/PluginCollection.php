@@ -118,14 +118,6 @@ class PluginCollection extends NormalizedCollection
 		// Adjust plugins' default properties
 		foreach ($plugins as $pluginName => &$pluginConfig)
 		{
-			// Remove unused plugins
-			if (!isset($pluginConfig))
-			{
-				unset($plugins[$pluginName]);
-
-				continue;
-			}
-
 			$plugin = $this->get($pluginName);
 
 			// Add base properties

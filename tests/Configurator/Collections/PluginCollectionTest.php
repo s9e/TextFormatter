@@ -95,7 +95,7 @@ class PluginCollectionTest extends Test
 	/**
 	* @testdox asConfig() does not return an entry for plugins whose asConfig() returns NULL
 	*/
-	public function testAsConfigRemoveFalse()
+	public function testAsConfigRemoveNull()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$plugin->setConfig(null);
