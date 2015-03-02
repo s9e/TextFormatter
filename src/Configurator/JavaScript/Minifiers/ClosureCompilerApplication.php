@@ -102,7 +102,7 @@ class ClosureCompilerApplication extends Minifier
 		     . ' --js ' . escapeshellarg($inFile)
 		     . ' --js_output_file ' . escapeshellarg($outFile);
 
-		exec($cmd, $output, $return);
+		exec($cmd . ' 2>/dev/null', $output, $return);
 		unlink($inFile);
 
 		if (file_exists($outFile))

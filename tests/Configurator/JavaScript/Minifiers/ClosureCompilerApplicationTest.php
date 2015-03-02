@@ -144,6 +144,26 @@ class ClosureCompilerApplicationTest extends Test
 	}
 
 	/**
+	* @testdox minify() throws an exception if an error occurs during minification
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage An error occured during minification
+	* @group slow
+	*/
+	public function testMinifyError()
+	{
+		$closureCompilerBin = $this->getClosureCompilerBin();
+		if (!file_exists($closureCompilerBin))
+		{
+			$this->markTestSkipped($closureCompilerBin . ' does not exist');
+		}
+
+		$minifier = new ClosureCompilerApplication($closureCompilerBin);
+		$minifier->compilationLevel = 'WHITESPACE_ONLY';
+		$minifier->options = '--use_only_custom_externs';
+		$minifier->minify('%error%');
+	}
+
+	/**
 	* @testdox Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
 	*/
 	public function testReplacesExterns()
