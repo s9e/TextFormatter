@@ -147,7 +147,7 @@ class JavaScript
 
 			// Pass the extra argument to the constructor, if applicable
 			$args = array_slice(func_get_args(), 1);
-			if ($args)
+			if (!empty($args))
 			{
 				$reflection = new ReflectionClass($className);
 				$minifier   = $reflection->newInstanceArgs($args);

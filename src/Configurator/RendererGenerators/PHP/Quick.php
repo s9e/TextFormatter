@@ -69,7 +69,7 @@ class Quick
 			$php[] = '	private static $quickBranches=' . self::export($quickBranches) . ';';
 		}
 
-		if ($unsupported)
+		if (!empty($unsupported))
 		{
 			$regexp = '(<' . RegexpBuilder::fromList($unsupported, ['useLookahead' => true]) . '[ />])';
 			$php[] = '	public static $quickRenderingTest=' . var_export($regexp, true) . ';';
@@ -176,7 +176,7 @@ class Quick
 			$php[] = '		{';
 		}
 
-		if ($unsupported)
+		if (!empty($unsupported))
 		{
 			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . ')';
 			$php[] = '			if (preg_match(' . var_export($regexp, true) . ', $id))';
@@ -532,7 +532,7 @@ class Quick
 			$head = str_replace('$node->textContent', '$textContent', $head);
 		}
 
-		if ($attrNames)
+		if (!empty($attrNames))
 		{
 			ksort($attrNames);
 			$head = "\$attributes+=['" . implode("'=>null,'", $attrNames) . "'=>null];" . $head;

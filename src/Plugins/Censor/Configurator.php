@@ -198,7 +198,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		// Add the whitelist
-		if ($this->allowed)
+		if (!empty($this->allowed))
 		{
 			$config['allowed'] = $this->getWordsRegexp(array_keys($this->allowed));
 		}

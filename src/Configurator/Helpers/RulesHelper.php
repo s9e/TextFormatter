@@ -230,7 +230,7 @@ abstract class RulesHelper
 			$parentTags  = array_intersect_key($parentTags, $matrix);
 			$usableTags += $parentTags;
 		}
-		while ($parentTags);
+		while (!empty($parentTags));
 
 		// Remove unusable tags from the matrix
 		$matrix = array_intersect_key($matrix, $usableTags);

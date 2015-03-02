@@ -258,7 +258,7 @@ class Parser extends ParserBase
 
 				// Test whether we need to look for this tag's end tag
 				$endTag = null;
-				if ($contentAttributes || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
+				if (!empty($contentAttributes) || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
 				{
 					// Find the position of its end tag
 					$match     = '[/' . $bbcodeName . $bbcodeId . ']';

@@ -66,7 +66,7 @@ abstract class Bundle
 			static::$renderer = static::getRenderer();
 		}
 
-		if ($params)
+		if (!empty($params))
 		{
 			static::$renderer->setParameters($params);
 		}
@@ -100,7 +100,7 @@ abstract class Bundle
 			static::$renderer = static::getRenderer();
 		}
 
-		if ($params)
+		if (!empty($params))
 		{
 			static::$renderer->setParameters($params);
 		}

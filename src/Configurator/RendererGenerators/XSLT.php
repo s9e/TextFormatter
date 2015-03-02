@@ -84,7 +84,7 @@ class XSLT implements RendererGenerator
 		*
 		* @link http://lenzconsulting.com/namespaces-in-xslt/#exclude-result-prefixes
 		*/
-		if ($prefixes)
+		if (!empty($prefixes))
 		{
 			$xsl .= ' exclude-result-prefixes="' . implode(' ', $prefixes) . '"';
 		}

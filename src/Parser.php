@@ -639,7 +639,7 @@ class Parser
 				$cnt
 			);
 		}
-		while ($cnt);
+		while ($cnt > 0);
 
 		// Merge consecutive <i> tags
 		if (strpos($this->output, '</i><i>') !== false)
@@ -1727,7 +1727,7 @@ class Parser
 		// If our fixing budget allows it, peek at upcoming tags and remove end tags that would
 		// close tags that are already being closed now. Also, filter our list of tags being
 		// reopened by removing those that would immediately be closed
-		if ($closeTags && $this->currentFixingCost < $this->maxFixingCost)
+		if (!empty($closeTags) && $this->currentFixingCost < $this->maxFixingCost)
 		{
 			/**
 			* @var integer Rightmost position of the portion of text to ignore
