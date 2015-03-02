@@ -11,15 +11,12 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 class UrlConfig implements ConfigProvider
 {
 	protected $allowedSchemes;
 
 	protected $disallowedHosts;
-
-	protected $disallowedSubstrings = [];
 
 	protected $restrictedHosts;
 
@@ -35,18 +32,7 @@ class UrlConfig implements ConfigProvider
 
 	public function asConfig()
 	{
-		$vars = \get_object_vars($this);
-		if (empty($vars['disallowedSubstrings']))
-			unset($vars['disallowedSubstrings']);
-		else
-		{
-			$regexp = '#' . RegexpBuilder::fromList($vars['disallowedSubstrings'], ['specialChars' => ['*' => '.*?']]) . '#i';
-			if (\preg_match('([^[:ascii:]])', $regexp))
-				$regexp .= 'u';
-			$vars['disallowedSubstrings'] = $regexp;
-		}
-
-		return ConfigHelper::toArray($vars);
+		return ConfigHelper::toArray(\get_object_vars($this));
 	}
 
 	public function allowScheme($scheme)
@@ -68,11 +54,6 @@ class UrlConfig implements ConfigProvider
 	public function disallowScheme($scheme)
 	{
 		$this->allowedSchemes->remove($scheme);
-	}
-
-	public function disallowSubstring($str)
-	{
-		$this->disallowedSubstrings[] = $str;
 	}
 
 	public function getAllowedSchemes()
