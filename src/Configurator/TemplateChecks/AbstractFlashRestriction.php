@@ -72,20 +72,39 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$dom         = $template->ownerDocument;
-		$settingName = strtolower($this->settingName);
+		$this->checkEmbed($template);
+		$this->checkObject($template);
+	}
 
-		// Test <embed/> elements
-		foreach ($dom->getElementsByTagName('embed') as $embed)
+	/**
+	* Check embed elements in given template
+	*
+	* @param  DOMElement $template <xsl:template/> node
+	* @return void
+	*/
+	protected function checkEmbed(DOMElement $template)
+	{
+		$settingName = strtolower($this->settingName);
+		foreach ($template->ownerDocument->getElementsByTagName('embed') as $embed)
 		{
 			if ($this->onlyIfDynamic && !$this->isDynamic($embed))
 			{
 				continue;
 			}
 
-			$useDefault  = true;
+			// Test <xsl:attribute/> descendants
+			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
+			foreach ($nodes as $attribute)
+			{
+				$attrName = strtolower($attribute->getAttribute('name'));
+				if ($attrName === $settingName)
+				{
+					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
+				}
+			}
 
 			// Test the element's attributes
+			$useDefault  = true;
 			foreach ($embed->attributes as $attribute)
 			{
 				$attrName = strtolower($attribute->name);
@@ -96,27 +115,22 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 					$useDefault = false;
 				}
 			}
-
 			if ($useDefault)
 			{
 				$this->checkSetting($embed, $this->defaultSetting);
 			}
-
-			// Test <xsl:attribute/> descendants
-			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
-
-			foreach ($nodes as $attribute)
-			{
-				$attrName = strtolower($attribute->getAttribute('name'));
-
-				if ($attrName === $settingName)
-				{
-					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
-				}
-			}
 		}
+	}
 
-		// Test <object/> elements
+	/**
+	* Check object elements in given template
+	*
+	* @param  DOMElement $template <xsl:template/> node
+	* @return void
+	*/
+	protected function checkObject(DOMElement $template)
+	{
+		$settingName = strtolower($this->settingName);
 		foreach ($template->getElementsByTagName('object') as $object)
 		{
 			if ($this->onlyIfDynamic && !$this->isDynamic($object))
@@ -124,9 +138,8 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 				continue;
 			}
 
-			$useDefault = true;
-
 			// Test the element's <param/> descendants
+			$useDefault = true;
 			foreach ($template->getElementsByTagName('param') as $param)
 			{
 				$paramName = strtolower($param->getAttribute('name'));
@@ -154,13 +167,9 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 					}
 				}
 			}
-
 			if ($useDefault)
 			{
-				if (!$this->onlyIfDynamic || $this->isDynamic($object))
-				{
-					$this->checkSetting($object, $this->defaultSetting);
-				}
+				$this->checkSetting($object, $this->defaultSetting);
 			}
 		}
 	}
