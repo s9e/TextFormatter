@@ -164,7 +164,7 @@ class Parser extends ParserBase
 							$contentAttributes[] = $attrName;
 
 				$endTag = \null;
-				if ($contentAttributes || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
+				if (!empty($contentAttributes) || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
 				{
 					$match     = '[/' . $bbcodeName . $bbcodeId . ']';
 					$endTagPos = \stripos($text, $match, $rpos);

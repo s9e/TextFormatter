@@ -115,7 +115,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		if ($node instanceof DOMAttr)
 			$this->checkAttributeNode($node, $tag);
 		elseif ($node instanceof DOMElement)
-			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+			if ($node->namespaceURI === self::XMLNS_XSL
 			 && $node->localName    === 'copy-of')
 				$this->checkCopyOfNode($node, $tag);
 			else

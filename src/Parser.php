@@ -337,7 +337,7 @@ class Parser
 				$cnt
 			);
 		}
-		while ($cnt);
+		while ($cnt > 0);
 
 		if (\strpos($this->output, '</i><i>') !== \false)
 			$this->output = \str_replace('</i><i>', '', $this->output);
@@ -1048,7 +1048,7 @@ class Parser
 		$this->outputTag($tag);
 		$this->popContext();
 
-		if ($closeTags && $this->currentFixingCost < $this->maxFixingCost)
+		if (!empty($closeTags) && $this->currentFixingCost < $this->maxFixingCost)
 		{
 			$ignorePos = $this->pos;
 
@@ -1236,7 +1236,7 @@ class Parser
 		$this->tagStackIsSorted = \true;
 	}
 
-	static protected function compareTags(Tag $a, Tag $b)
+	protected static function compareTags(Tag $a, Tag $b)
 	{
 		$aPos = $a->getPos();
 		$bPos = $b->getPos();
