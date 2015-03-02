@@ -52,7 +52,7 @@ class XSLT implements RendererGenerator
 		foreach ($prefixes as $prefix)
 			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
 
-		if ($prefixes)
+		if (!empty($prefixes))
 			$xsl .= ' exclude-result-prefixes="' . \implode(' ', $prefixes) . '"';
 
 		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';

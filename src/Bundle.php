@@ -36,7 +36,7 @@ abstract class Bundle
 		if (!isset(static::$renderer))
 			static::$renderer = static::getRenderer();
 
-		if ($params)
+		if (!empty($params))
 			static::$renderer->setParameters($params);
 
 		if (isset(static::$beforeRender))
@@ -48,33 +48,6 @@ abstract class Bundle
 			$output = \call_user_func(static::$afterRender, $output);
 
 		return $output;
-	}
-
-	public static function renderMulti(array $arr, array $params = [])
-	{
-		if (!isset(static::$renderer))
-			static::$renderer = static::getRenderer();
-
-		if ($params)
-			static::$renderer->setParameters($params);
-
-		if (isset(static::$beforeRender))
-		{
-			foreach ($arr as &$xml)
-				$xml = \call_user_func(static::$beforeRender, $xml);
-			unset($xml);
-		}
-
-		$arr = static::$renderer->renderMulti($arr);
-
-		if (isset(static::$afterRender))
-		{
-			foreach ($arr as &$output)
-				$output = \call_user_func(static::$afterRender, $output);
-			unset($output);
-		}
-
-		return $arr;
 	}
 
 	public static function unparse($xml)
