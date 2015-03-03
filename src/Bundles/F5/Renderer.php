@@ -126,7 +126,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 		if (!isset(self::$quickBranches[$id]))
 		{
-			if (\preg_match('(^/?(?>CODE|FORUM|IMG|POST|TOPIC|U(?>RL|SER)))', $id))
+			if (\preg_match('(^/?(?>CODE|FORUM|IMG|POST|TOPIC|U(?>RL|SER))$)', $id))
 				throw new \RuntimeException;
 			return '';
 		}
