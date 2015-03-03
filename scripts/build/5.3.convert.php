@@ -181,8 +181,8 @@ function convertCustom($filepath, &$file)
 				'$php[] = "			array(\\$this, \'quick\'),";'
 			),
 			array(
-				'$php[] = \'			$attributes = [];\';',
-				'$php[] = \'			$attributes = array();\';'
+				'$php[] = \'		$attributes = [];\';',
+				'$php[] = \'		$attributes = array();\';'
 			),
 			array(
 				'$head = "\\$attributes+=[\'" . implode("\'=>null,\'", $attrNames) . "\'=>null];" . $head;',
