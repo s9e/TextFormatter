@@ -171,7 +171,7 @@ class Quick
 		{
 			$php[] = '		}';
 			$php[] = '';
-			$php[] = '		$attributes = [];';
+			$php[] = '		$attributes = array();';
 			$php[] = '		if (strpos($m[0], \'="\') !== false)';
 			$php[] = '		{';
 			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]*))\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
