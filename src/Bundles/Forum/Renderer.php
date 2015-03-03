@@ -125,7 +125,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 		if (!isset(self::$quickBranches[$id]))
 		{
-			if (preg_match('(^/?CODE)', $id))
+			if (preg_match('(^/?CODE$)', $id))
 				throw new \RuntimeException;
 			return '';
 		}

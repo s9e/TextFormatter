@@ -177,7 +177,7 @@ class Quick
 
 		if (!empty($unsupported))
 		{
-			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . ')';
+			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . '$)';
 			$php[] = '			if (preg_match(' . var_export($regexp, true) . ', $id))';
 			$php[] = '			{';
 			$php[] = '				throw new \\RuntimeException;';

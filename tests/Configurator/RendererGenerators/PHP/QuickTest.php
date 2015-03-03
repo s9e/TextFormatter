@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
-use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
@@ -322,6 +321,11 @@ class QuickTest extends Test
 				['X' => '<xsl:value-of select="@foo"/>'],
 				'<r><X> foo="BAR" </X></r>',
 				''
+			],
+			[
+				['X' => '<xsl:value-of select="count(@*)"/>'],
+				'<r>x<XY>y</XY>z</r>',
+				'xyz'
 			],
 		];
 	}
