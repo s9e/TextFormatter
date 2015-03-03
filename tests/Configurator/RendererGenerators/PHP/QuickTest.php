@@ -320,7 +320,7 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:value-of select="@foo"/>'],
-				'<r><X>foo="BAR"</X></r>',
+				'<r><X> foo="BAR" </X></r>',
 				''
 			],
 		];
