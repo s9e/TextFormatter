@@ -109,7 +109,6 @@ class Quick
 		$php[] = '			if (substr($m[0], -2, 1) === \'/\')';
 		$php[] = '			{';
 		$php[] = '				$m[0] = substr($m[0], 0, -2) . \'></\' . $id . \'>\';';
-		$php[] = '				$m[1] = $id;';
 		$php[] = '				unset($m[2]);';
 		$php[] = '';
 		$php[] = '				return $this->quick($m);';
@@ -172,10 +171,10 @@ class Quick
 		{
 			$php[] = '		}';
 			$php[] = '';
-			$php[] = '		if ($id[0] !== \'/\')';
+			$php[] = '		$attributes = [];';
+			$php[] = '		if (strpos($m[0], \'="\') !== false)';
 			$php[] = '		{';
-			$php[] = '			$attributes = array();';
-			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]*))\', $m[0], $matches);';
+			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]*))\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
 			$php[] = '			foreach ($matches[1] as $i => $attrName)';
 			$php[] = '			{';
 			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
