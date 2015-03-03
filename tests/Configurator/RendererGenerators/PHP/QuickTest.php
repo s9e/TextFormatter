@@ -313,6 +313,16 @@ class QuickTest extends Test
 				'<r><X x="&amp;amp;"/></r>',
 				'<hr title="&amp;Amp;">'
 			],
+			[
+				['X' => '<xsl:value-of select="@foo"/>'],
+				'<r><X foo="FOO">foo="BAR"</X></r>',
+				'FOO'
+			],
+			[
+				['X' => '<xsl:value-of select="@foo"/>'],
+				'<r><X>foo="BAR"</X></r>',
+				''
+			],
 		];
 	}
 

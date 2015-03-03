@@ -97,7 +97,6 @@ class Renderer extends \s9e\TextFormatter\Renderer
 			if (substr($m[0], -2, 1) === '/')
 			{
 				$m[0] = substr($m[0], 0, -2) . '></' . $id . '>';
-				$m[1] = $id;
 				unset($m[2]);
 
 				return $this->quick($m);
@@ -131,10 +130,10 @@ class Renderer extends \s9e\TextFormatter\Renderer
 			return '';
 		}
 
-		if ($id[0] !== '/')
+		$attributes = [];
+		if (strpos($m[0], '="') !== false)
 		{
-			$attributes = [];
-			preg_match_all('(([^ ]+)="([^"]*))', $m[0], $matches);
+			preg_match_all('(([^ ]+)="([^"]*))', substr($m[0], 0, strpos($m[0], '>')), $matches);
 			foreach ($matches[1] as $i => $attrName)
 				$attributes[$attrName] = $matches[2][$i];
 		}
