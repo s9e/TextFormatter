@@ -14,7 +14,7 @@
 	<extract>!imgur\.com/(?'id'\w+)\.(?:gifv|mp4)!</extract>
 	<scrape>
 		<match>!imgur\.com/a/\w!</match>
-		<extract>!&lt;a class="(?'type'album)-embed-link!</extract>
+		<extract>!&lt;a class="(?'type'album)!</extract>
 	</scrape>
 	<scrape url="http://i.imgur.com/{@id}.gifv">
 		<match>!imgur\.com/\w+\.(?:gifv|mp4)!</match>
