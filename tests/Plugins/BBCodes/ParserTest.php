@@ -520,6 +520,17 @@ class ParserTest extends Test
 					$configurator->tags->add('IMG');
 				}
 			],
+			[
+				'x [X/] [Z/] y',
+				'<r>x [X/] <Z>[Z/]</Z> y</r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->add('Z');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Z');
+				}
+			],
 		];
 	}
 }
