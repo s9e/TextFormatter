@@ -131,9 +131,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			if (isset($config[$ruleName]))
 			{
 				$targets = array_fill_keys($config[$ruleName], 1);
-
-				$config[$ruleName] = new Variant($targets);
-				$config[$ruleName]->set('JS', new Dictionary($targets));
+				$config[$ruleName] = new Dictionary($targets);
 			}
 		}
 
