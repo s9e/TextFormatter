@@ -28,7 +28,6 @@ $page  = getPage(
 	'/tmp/html40attributes.html',
 	'http://www.w3.org/TR/html4/index/attributes.html'
 );
-
 foreach ($page->xpath($query) as $a)
 {
 	if (strpos($a->textContent(), 'URI') !== false)
@@ -37,12 +36,11 @@ foreach ($page->xpath($query) as $a)
 	}
 }
 
-$query = '/html/body/dl/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr';
+$query = '/html/body/section/section/table[@id="attributes-1"]/tbody/tr';
 $page  = getPage(
 	'/tmp/html51attributes.html',
-	'http://www.w3.org/html/wg/drafts/html/master/text-level-semantics.html'
+	'http://www.w3.org/html/wg/drafts/html/master/index.html'
 );
-
 foreach ($page->xpath($query) as $tr)
 {
 	foreach (['CSS', 'URL'] as $type)
