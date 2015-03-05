@@ -197,11 +197,9 @@ class Configurator extends ConfiguratorBase
 
 		if (!empty($this->aliases))
 		{
-			$jsAliases = new Dictionary;
+			$config['aliases'] = new Dictionary;
 			foreach ($this->aliases as $elName => $aliases)
-				$jsAliases[$elName] = new Dictionary($aliases);
-
-			$config['aliases'] = new Variant($this->aliases, ['JS' => $jsAliases]);
+				$config['aliases'][$elName] = new Dictionary($aliases);
 		}
 
 		return $config;

@@ -28,8 +28,6 @@ class MediaSiteCollection extends ArrayObject implements ConfigProvider
 					$map[$scheme . ':'] = $siteId;
 		}
 
-		$config = new Variant($map, ['JS' => new Dictionary($map)]);
-
-		return $config;
+		return new Dictionary($map);
 	}
 }

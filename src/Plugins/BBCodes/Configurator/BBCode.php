@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\AttributeList;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
@@ -42,9 +43,10 @@ class BBCode implements ConfigProvider
 	public function asConfig()
 	{
 		$config = ConfigHelper::toArray(\get_object_vars($this));
-
 		if (!$this->forceLookahead)
 			unset($config['forceLookahead']);
+		if (isset($config['predefinedAttributes']))
+			$config['predefinedAttributes'] = new Dictionary($config['predefinedAttributes']);
 
 		return $config;
 	}
