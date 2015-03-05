@@ -210,28 +210,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
-		// Create the BBCodes config, with its JavaScript variant
-		$bbcodesConfig = new Variant($this->collection->asConfig());
-
-		// Create the JavaScript config. Ensure that BBCode names are preserved
-		$jsConfig = new Dictionary;
-		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
-		{
-			if (isset($bbcodeConfig['predefinedAttributes']))
-			{
-				// Ensure that attribute names are preserved
-				$bbcodeConfig['predefinedAttributes']
-					= new Dictionary($bbcodeConfig['predefinedAttributes']);
-			}
-
-			$jsConfig[$bbcodeName] = $bbcodeConfig;
-		}
-
-		// Add the JavaScript config as a variant
-		$bbcodesConfig->set('JS', $jsConfig);
-
 		return [
-			'bbcodes'    => $bbcodesConfig,
+			'bbcodes'    => new Dictionary($this->collection->asConfig()),
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		];

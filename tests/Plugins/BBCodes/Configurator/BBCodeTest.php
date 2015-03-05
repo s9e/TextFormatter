@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Tests\Test;
 
@@ -117,6 +118,20 @@ class BBCodeTest extends Test
 
 		$this->assertSame(
 			['tagName' => 'FOO'],
+			$bbcode->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() returns predefinedAttributes in a Dictionary
+	*/
+	public function testAsConfigPredefinedAttributesDictionary()
+	{
+		$bbcode = new BBCode;
+		$bbcode->predefinedAttributes = ['foo' => 'bar'];
+
+		$this->assertEquals(
+			['predefinedAttributes' => new Dictionary(['foo' => 'bar'])],
 			$bbcode->asConfig()
 		);
 	}
