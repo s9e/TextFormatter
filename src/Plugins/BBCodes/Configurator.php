@@ -116,22 +116,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				$regexp = \substr($regexp, 3, -1);
 		}
 
-		$bbcodesConfig = new Variant($this->collection->asConfig());
-
-		$jsConfig = new Dictionary;
-		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
-		{
-			if (isset($bbcodeConfig['predefinedAttributes']))
-				$bbcodeConfig['predefinedAttributes']
-					= new Dictionary($bbcodeConfig['predefinedAttributes']);
-
-			$jsConfig[$bbcodeName] = $bbcodeConfig;
-		}
-
-		$bbcodesConfig->set('JS', $jsConfig);
-
 		return [
-			'bbcodes'    => $bbcodesConfig,
+			'bbcodes'    => new Dictionary($this->collection->asConfig()),
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		];
