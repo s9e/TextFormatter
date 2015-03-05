@@ -44,7 +44,7 @@ abstract class ConfigHelper
 
 			if ($value instanceof Dictionary && $variant !== 'JS')
 			{
-				$value = iterator_to_array($value);
+				$value = (array) $value;
 			}
 
 			if (is_array($value) || $value instanceof Traversable)
