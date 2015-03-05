@@ -2336,7 +2336,7 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Extends ArrayObject
  [x] Implements ConfigProvider
- [x] asConfig() returns a JS variant
+ [x] asConfig() returns a Dictionary
  [x] The config contains a map of ['host.tld' => 'site id']
  [x] The config contains a map of ['scheme:' => 'site id']
  [x] Accept "host" as a string or an array of strings

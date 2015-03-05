@@ -30,15 +30,14 @@ class MediaSiteCollectionTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns a JS variant
+	* @testdox asConfig() returns a Dictionary
 	*/
-	public function testAsConfigVariant()
+	public function testAsConfigDictionary()
 	{
 		$collection = new MediaSiteCollection;
 		$config     = $collection->asConfig();
 
-		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\Items\\Variant', $config);
-		$this->assertTrue($config->has('JS'));
+		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary', $config);
 	}
 
 	/**
@@ -53,7 +52,7 @@ class MediaSiteCollectionTest extends Test
 
 		$this->assertEquals(
 			['foo.tld' => 'foo'],
-			$config->get()
+			(array) $config
 		);
 	}
 
@@ -69,7 +68,7 @@ class MediaSiteCollectionTest extends Test
 
 		$this->assertEquals(
 			['bar:' => 'foo'],
-			$config->get()
+			(array) $config
 		);
 	}
 
@@ -86,7 +85,7 @@ class MediaSiteCollectionTest extends Test
 
 		$this->assertEquals(
 			['foo.tld' => 'foo', 'bar.tld' => 'bar', 'bar.example' => 'bar'],
-			$config->get()
+			(array) $config
 		);
 	}
 }

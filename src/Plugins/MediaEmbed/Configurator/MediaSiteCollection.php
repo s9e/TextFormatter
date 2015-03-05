@@ -39,9 +39,6 @@ class MediaSiteCollection extends ArrayObject implements ConfigProvider
 			}
 		}
 
-		// Create a JS variant as a dictionary to preserve the keys (which hold the hosts)
-		$config = new Variant($map, ['JS' => new Dictionary($map)]);
-
-		return $config;
+		return new Dictionary($map);
 	}
 }
