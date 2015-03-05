@@ -349,13 +349,11 @@ class Configurator extends ConfiguratorBase
 		if (!empty($this->aliases))
 		{
 			// Preserve the aliases array's keys in JavaScript
-			$jsAliases = new Dictionary;
+			$config['aliases'] = new Dictionary;
 			foreach ($this->aliases as $elName => $aliases)
 			{
-				$jsAliases[$elName] = new Dictionary($aliases);
+				$config['aliases'][$elName] = new Dictionary($aliases);
 			}
-
-			$config['aliases'] = new Variant($this->aliases, ['JS' => $jsAliases]);
 		}
 
 		return $config;
