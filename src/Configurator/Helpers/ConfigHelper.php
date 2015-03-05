@@ -11,6 +11,7 @@ use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 abstract class ConfigHelper
 {
@@ -39,6 +40,11 @@ abstract class ConfigHelper
 
 					continue 2;
 				}
+			}
+
+			if ($value instanceof Dictionary && $variant !== 'JS')
+			{
+				$value = iterator_to_array($value);
 			}
 
 			if (is_array($value) || $value instanceof Traversable)

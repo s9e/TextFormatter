@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -92,6 +93,34 @@ class ConfigHelperTest extends Test
 
 		$this->assertSame(
 			[],
+			$config
+		);
+	}
+
+	/**
+	* @testdox filterVariants() replaces instances of Dictionary with an array if the variant is not JS
+	*/
+	public function testFilterVariantsDictionaryNotJS()
+	{
+		$config = ['dict' => new Dictionary(['foo' => 'bar'])];
+		ConfigHelper::filterVariants($config);
+
+		$this->assertSame(
+			['dict' => ['foo' => 'bar']],
+			$config
+		);
+	}
+
+	/**
+	* @testdox filterVariants() preserves instances of Dictionary with an array if the variant is JS
+	*/
+	public function testFilterVariantsDictionaryJS()
+	{
+		$config = ['dict' => new Dictionary(['foo' => 'bar'])];
+		ConfigHelper::filterVariants($config, 'JS');
+
+		$this->assertEquals(
+			['dict' => new Dictionary(['foo' => 'bar'])],
 			$config
 		);
 	}

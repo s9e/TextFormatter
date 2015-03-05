@@ -422,6 +422,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] filterVariants() recurses into deep arrays
  [x] filterVariants() recurses into variants
  [x] filterVariants() removes NULL variants
+ [x] filterVariants() replaces instances of Dictionary with an array if the variant is not JS
+ [x] filterVariants() preserves instances of Dictionary with an array if the variant is JS
  [x] generateQuickMatchFromList() returns the longest common substring of a list of strings
  [x] generateQuickMatchFromList() returns a string even if it contains only digit characters
  [x] generateQuickMatchFromList() returns FALSE if no common substring is found
