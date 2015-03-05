@@ -23,14 +23,8 @@ function loadPage($url)
 
 $page = loadPage('http://www.w3.org/html/wg/drafts/html/master/index.html');
 
-$table = $page->getElementById('attributes-1')->nextSibling;
-while ($table->nodeName !== 'table')
-{
-	$table = $table->nextSibling;
-}
-
 $filters = [];
-foreach ($table->getElementsByTagName('tr') as $tr)
+foreach ($page->getElementById('attributes-1')->getElementsByTagName('tr') as $tr)
 {
 	if (strpos($tr->textContent, 'URL') === false)
 	{
