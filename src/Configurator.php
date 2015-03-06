@@ -283,7 +283,7 @@ class Configurator implements ConfigProvider
 				// Remove JS-specific data from the config
 				ConfigHelper::filterVariants($config);
 
-				if ($options['optimizeConfig'])
+				if ($options['optimizeConfig'] && version_compare(PHP_VERSION, '6', '<'))
 				{
 					ConfigHelper::optimizeArray($config);
 				}
