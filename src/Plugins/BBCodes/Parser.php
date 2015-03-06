@@ -19,10 +19,9 @@ class Parser extends ParserBase
 		foreach ($matches as $m)
 		{
 			$bbcodeName = \strtoupper($m[1][0]);
-
-			$bbcodeConfig = (isset($this->config['bbcodes'][$bbcodeName]))
-			              ? $this->config['bbcodes'][$bbcodeName]
-			              : array();
+			if (!isset($this->config['bbcodes'][$bbcodeName]))
+				continue;
+			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
 
 			$tagName = (isset($bbcodeConfig['tagName']))
 			         ? $bbcodeConfig['tagName']

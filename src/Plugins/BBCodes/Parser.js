@@ -1,10 +1,11 @@
 matches.forEach(function(m)
 {
 	var bbcodeName = m[1][0].toUpperCase();
-
-	// BBCodes with no custom setting may not appear in the config. We only know they exist
-	// because the regexp matches exact names
-	var bbcodeConfig = config.bbcodes[bbcodeName] || {};
+	if (!(bbcodeName in config.bbcodes))
+	{
+		return;
+	}
+	var bbcodeConfig = config.bbcodes[bbcodeName];
 
 	// Use the configured tagName if available, or reuse the BBCode's name otherwise
 	var tagName = bbcodeConfig.tagName || bbcodeName;
