@@ -22,12 +22,11 @@ class Parser extends ParserBase
 		foreach ($matches as $m)
 		{
 			$bbcodeName = strtoupper($m[1][0]);
-
-			// BBCodes with no custom setting may not appear in the config. We only know they exist
-			// because the regexp matches exact names
-			$bbcodeConfig = (isset($this->config['bbcodes'][$bbcodeName]))
-			              ? $this->config['bbcodes'][$bbcodeName]
-			              : [];
+			if (!isset($this->config['bbcodes'][$bbcodeName]))
+			{
+				continue;
+			}
+			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
 
 			// Use the configured tagName if available, or reuse the BBCode's name otherwise
 			$tagName = (isset($bbcodeConfig['tagName']))

@@ -348,37 +348,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
-	*/
-	public function testRegexpSubpatternRemoved()
-	{
-		$plugin = $this->configurator->plugins->load('BBCodes');
-		$plugin->add('BAR');
-		$plugin->add('FOO');
-
-		$config = $plugin->asConfig();
-
-		$this->assertNotContains('(?:', $config['regexp']);
-		$this->assertNotContains('(?>', $config['regexp']);
-	}
-
-	/**
-	* @testdox Essential non-capturing subpatterns are preserved
-	*/
-	public function testRegexpSubpatternPreserved()
-	{
-		$plugin = $this->configurator->plugins->load('BBCodes');
-		$plugin->add('AAXXX');
-		$plugin->add('AAYYY');
-		$plugin->add('BBXXX');
-		$plugin->add('BBYYY');
-
-		$config = $plugin->asConfig();
-
-		$this->assertContains('((?>AA|BB)(?>XXX|YYY))', $config['regexp']);
-	}
-
-	/**
 	* @testdox asConfig() returns BBCodes in a Dictionary
 	*/
 	public function testAsConfigPreservesBBCodeNames()

@@ -187,33 +187,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			return;
 		}
 
-		// Build the regexp that matches all the BBCode names
-		$regexp = RegexpBuilder::fromList(
-			array_keys(iterator_to_array($this->collection)),
-			['delim' => '#']
-		);
-
-		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern.
-		// For that, we need to reparse the regexp
-		$def    = RegexpParser::parse('#' . $regexp . '#');
-		$tokens = $def['tokens'];
-		if (isset($tokens[0]['endToken']) && $tokens[0]['pos'] === 0)
-		{
-			// Here, we test that the whole regexp is covered by one subpattern, e.g.
-			// (?:AA(?:XXX|YYY)) not (?:AA|BB)XXX or (?:AA|BB)(?:XXX|YYY)
-			$endToken = $tokens[0]['endToken'];
-			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
-
-			if ($endPos === strlen($regexp))
-			{
-				$regexp = substr($regexp, 3, -1);
-			}
-		}
-
 		return [
 			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
+			'regexp'     => '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#'
 		];
 	}
 }
