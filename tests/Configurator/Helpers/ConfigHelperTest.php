@@ -306,11 +306,6 @@ class ConfigHelperTest extends Test
 	*/
 	public function testOptimizeArraySmaller()
 	{
-		if (version_compare(PHP_VERSION, '6', '>'))
-		{
-			$this->markTestSkipped('Triggers a fatal error on PHP 7');
-		}
-
 		// Create a Configurator and load a few of BBCodes
 		$configurator = new Configurator;
 		$configurator->BBCodes->addFromRepository('B');

@@ -124,25 +124,20 @@ abstract class ConfigHelper
 				continue;
 			}
 
-			// Iterate over the cache to look for a matching structure
-			foreach ($cache as &$cachedArray)
-			{
-				if ($cachedArray == $v)
-				{
-					// Replace the entry in $config with a reference to the cached value
-					$config[$k] =& $cachedArray;
-
-					// Skip to the next element
-					continue 2;
-				}
-			}
-			unset($cachedArray);
-
-			// Record this value in the cache
-			$cache[] =& $v;
-
 			// Dig deeper into this array
 			self::optimizeArray($v, $cache);
+
+			// Look for a matching structure
+			$cacheKey = array_search($v, $cache);
+			if ($cacheKey === false)
+			{
+				// Record this value in the cache
+				$cacheKey         = count($cache);
+				$cache[$cacheKey] = $v;
+			}
+
+			// Replace the entry in $config with a reference to the cached value
+			$config[$k] =& $cache[$cacheKey];
 		}
 		unset($v);
 	}
