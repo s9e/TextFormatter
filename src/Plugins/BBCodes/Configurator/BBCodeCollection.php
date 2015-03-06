@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
@@ -39,9 +40,8 @@ class BBCodeCollection extends NormalizedCollection
 	*/
 	public function asConfig()
 	{
-		$config = parent::asConfig();
-
-		foreach ($config as $bbcodeName => &$bbcode)
+		$bbcodes = parent::asConfig();
+		foreach ($bbcodes as $bbcodeName => &$bbcode)
 		{
 			// Remove the tag name if it's the same name as the BBCode
 			if (isset($bbcode['tagName'])
@@ -61,6 +61,6 @@ class BBCodeCollection extends NormalizedCollection
 		}
 		unset($bbcode);
 
-		return $config;
+		return new Dictionary($bbcodes);
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
 use s9e\TextFormatter\Tests\Test;
@@ -95,6 +96,17 @@ class BBCodeCollectionTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() returns a Dictionary
+	*/
+	public function testAsConfigDictionary()
+	{
+		$collection = new BBCodeCollection;
+		$collection->add('X');
+
+		$this->assertEquals(new Dictionary(['X' => []]), $collection->asConfig());
+	}
+
+	/**
 	* @testdox asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
 	*/
 	public function testDefaultAttributeRemoved()
@@ -108,7 +120,7 @@ class BBCodeCollectionTest extends Test
 				'X' => ['defaultAttribute' => null],
 				'Y' => ['defaultAttribute' => 'x']
 			],
-			$collection->asConfig()
+			(array) $collection->asConfig()
 		);
 	}
 
@@ -126,7 +138,7 @@ class BBCodeCollectionTest extends Test
 				'X' => ['tagName' => null],
 				'Y' => ['tagName' => 'X']
 			],
-			$collection->asConfig()
+			(array) $collection->asConfig()
 		);
 	}
 }

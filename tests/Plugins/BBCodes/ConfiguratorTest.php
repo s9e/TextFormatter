@@ -379,7 +379,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant that preserves BBCode names
+	* @testdox asConfig() returns BBCodes in a Dictionary
 	*/
 	public function testAsConfigPreservesBBCodeNames()
 	{
@@ -397,7 +397,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant that preserves attribute names in predefinedAttributes
+	* @testdox asConfig() returns predefinedAttributes in a Dictionary
 	*/
 	public function testAsConfigPreservesPredefinedAttributeNames()
 	{

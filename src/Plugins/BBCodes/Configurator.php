@@ -211,7 +211,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		return [
-			'bbcodes'    => new Dictionary($this->collection->asConfig()),
+			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		];

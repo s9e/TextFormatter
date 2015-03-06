@@ -1997,6 +1997,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] exists() normalizes the BBCode's name
  [x] get() normalizes the BBCode's name
  [x] set() normalizes the BBCode's name
+ [x] asConfig() returns a Dictionary
  [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
 
@@ -2051,8 +2052,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
- [x] asConfig() creates a JavaScript variant that preserves BBCode names
- [x] asConfig() creates a JavaScript variant that preserves attribute names in predefinedAttributes
+ [x] asConfig() returns BBCodes in a Dictionary
+ [x] asConfig() returns predefinedAttributes in a Dictionary
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
