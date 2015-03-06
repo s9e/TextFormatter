@@ -100,26 +100,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!\count($this->collection))
 			return;
 
-		$regexp = RegexpBuilder::fromList(
-			\array_keys(\iterator_to_array($this->collection)),
-			['delim' => '#']
-		);
-
-		$def    = RegexpParser::parse('#' . $regexp . '#');
-		$tokens = $def['tokens'];
-		if (isset($tokens[0]['endToken']) && $tokens[0]['pos'] === 0)
-		{
-			$endToken = $tokens[0]['endToken'];
-			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
-
-			if ($endPos === \strlen($regexp))
-				$regexp = \substr($regexp, 3, -1);
-		}
-
 		return [
-			'bbcodes'    => new Dictionary($this->collection->asConfig()),
+			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
+			'regexp'     => '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#'
 		];
 	}
 }

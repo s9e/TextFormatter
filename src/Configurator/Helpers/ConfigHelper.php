@@ -83,18 +83,16 @@ abstract class ConfigHelper
 			if (!\is_array($v))
 				continue;
 
-			foreach ($cache as &$cachedArray)
-				if ($cachedArray == $v)
-				{
-					$config[$k] =& $cachedArray;
-
-					continue 2;
-				}
-			unset($cachedArray);
-
-			$cache[] =& $v;
-
 			self::optimizeArray($v, $cache);
+
+			$cacheKey = \array_search($v, $cache);
+			if ($cacheKey === \false)
+			{
+				$cacheKey         = \count($cache);
+				$cache[$cacheKey] = $v;
+			}
+
+			$config[$k] =& $cache[$cacheKey];
 		}
 		unset($v);
 	}
