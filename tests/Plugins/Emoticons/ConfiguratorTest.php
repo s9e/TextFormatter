@@ -113,7 +113,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox asConfig() returns NULL if no emoticons were set
 	*/
-	public function testFalseConfig()
+	public function testNullConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$this->assertNull($plugin->asConfig());

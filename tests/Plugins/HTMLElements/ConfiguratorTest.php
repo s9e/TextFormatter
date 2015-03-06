@@ -272,7 +272,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox asConfig() returns NULL if no elements were allowed
 	*/
-	public function testFalseConfig()
+	public function testNullConfig()
 	{
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$this->assertNull($plugin->asConfig());

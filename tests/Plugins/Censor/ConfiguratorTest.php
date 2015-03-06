@@ -63,7 +63,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox asConfig() returns NULL if no words were added
 	*/
-	public function testFalseConfig()
+	public function testNullConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
 		$this->assertNull($plugin->asConfig());
