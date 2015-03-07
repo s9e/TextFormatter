@@ -68,6 +68,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	protected $quickMatch = '[';
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#';
+
+	/**
 	* @var RepositoryCollection BBCode repositories
 	*/
 	public $repositories;
@@ -190,7 +195,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return [
 			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#'
+			'regexp'     => $this->regexp
 		];
 	}
 }
