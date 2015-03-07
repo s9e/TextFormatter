@@ -69,7 +69,7 @@ class Parser extends ParserBase
 				// Test whether the tag is properly closed and whether this tag has an identifier.
 				// We skip end tags that carry an identifier because they're automatically added
 				// when their start tag is processed
-				if ($text[$rpos] === ']' && $bbcodeId === '')
+				if (substr($text, $rpos, 1) === ']' && $bbcodeId === '')
 				{
 					$this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
 				}

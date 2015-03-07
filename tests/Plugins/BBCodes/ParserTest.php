@@ -531,6 +531,16 @@ class ParserTest extends Test
 					$configurator->tags->add('Z');
 				}
 			],
+			[
+				'[/X:',
+				'<t>[/X:</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->add('X');
+					$configurator->tags->add('X');
+				}
+			],
 		];
 	}
 }
