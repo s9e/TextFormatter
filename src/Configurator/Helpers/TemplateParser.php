@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use DOMXPath;
 use RuntimeException;
 
@@ -245,63 +246,63 @@ class TemplateParser
 
 	protected static function normalize(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
+		self::addDefaultCase($ir);
+		self::addElementIds($ir);
+		self::addCloseTagElements($ir);
+		self::markEmptyElements($ir);
+		self::optimize($ir);
+		self::markConditionalCloseTagElements($ir);
+		self::setOutputContext($ir);
+		self::markBranchTables($ir);
+	}
 
+	protected static function addDefaultCase(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
 			self::appendElement($switch, 'case');
+	}
 
+	protected static function addElementIds(DOMDocument $ir)
+	{
 		$id = 0;
 		foreach ($ir->getElementsByTagName('element') as $element)
 			$element->setAttribute('id', ++$id);
+	}
 
-		$query = '//applyTemplates[not(ancestor::attribute)]|//comment|//element|//output[not(ancestor::attribute)]';
-
-		foreach ($xpath->query($query) as $node)
+	protected static function addCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$exprs = array(
+			'//applyTemplates[not(ancestor::attribute)]',
+			'//comment',
+			'//element',
+			'//output[not(ancestor::attribute)]'
+		);
+		foreach ($xpath->query(\implode('|', $exprs)) as $node)
 		{
-			$parentNode = $node->parentNode;
-			while ($parentNode)
-			{
-				if ($parentNode->nodeName === 'element')
-				{
-					$node->parentNode->insertBefore(
-						$ir->createElement('closeTag'),
-						$node
-					)->setAttribute('id', $parentNode->getAttribute('id'));
-
-					break;
-				}
-
-				$parentNode = $parentNode->parentNode;
-			}
+			$parentElementId = self::getParentElementId($node);
+			if (isset($parentElementId))
+				$node->parentNode
+				     ->insertBefore($ir->createElement('closeTag'), $node)
+				     ->setAttribute('id', $parentElementId);
 
 			if ($node->nodeName === 'element')
-				self::appendElement($node, 'closeTag')
-					->setAttribute('id', $node->getAttribute('id'));
+			{
+				$id = $node->getAttribute('id');
+				self::appendElement($node, 'closeTag')->setAttribute('id', $id);
+			}
 		}
+	}
 
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			$elName = $element->getAttribute('name');
-
-			if (\strpos($elName, '{') !== \false)
-				$element->setAttribute('void', 'maybe');
-			elseif (\preg_match(self::$voidRegexp, $elName))
-				$element->setAttribute('void', 'yes');
-
-			$isEmpty = self::isEmpty($element);
-
-			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
-				$element->setAttribute('empty', $isEmpty);
-		}
-
-		self::optimize($ir);
-
+	protected static function markConditionalCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
 		{
 			$id = $closeTag->getAttribute('id');
 
 			$query = 'ancestor::switch/following-sibling::*/descendant-or-self::closeTag[@id = "' . $id . '"]';
-
 			foreach ($xpath->query($query, $closeTag) as $following)
 			{
 				$following->setAttribute('check', '');
@@ -309,7 +310,38 @@ class TemplateParser
 				$closeTag->setAttribute('set', '');
 			}
 		}
+	}
 
+	protected static function markEmptyElements(DOMDocument $ir)
+	{
+		foreach ($ir->getElementsByTagName('element') as $element)
+		{
+			$elName = $element->getAttribute('name');
+			if (\strpos($elName, '{') !== \false)
+				$element->setAttribute('void', 'maybe');
+			elseif (\preg_match(self::$voidRegexp, $elName))
+				$element->setAttribute('void', 'yes');
+
+			$isEmpty = self::isEmpty($element);
+			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
+				$element->setAttribute('empty', $isEmpty);
+		}
+	}
+
+	protected static function getParentElementId(DOMNode $node)
+	{
+		$parentNode = $node->parentNode;
+		while (isset($parentNode))
+		{
+			if ($parentNode->nodeName === 'element')
+				return $parentNode->getAttribute('id');
+			$parentNode = $parentNode->parentNode;
+		}
+	}
+
+	protected static function setOutputContext(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($ir->getElementsByTagName('output') as $output)
 		{
 			$escape = ($xpath->evaluate('boolean(ancestor::attribute)', $output))
@@ -318,14 +350,10 @@ class TemplateParser
 
 			$output->setAttribute('escape', $escape);
 		}
-
-		self::markBranchTables($ir);
 	}
 
 	protected static function optimize(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
-
 		$xml = $ir->saveXML();
 
 		$remainingLoops = 10;
@@ -333,75 +361,112 @@ class TemplateParser
 		do
 		{
 			$old = $xml;
-
-			$query = '//switch[name(following-sibling::*) = "closeTag"]';
-			foreach ($xpath->query($query) as $switch)
-			{
-				$closeTag = $switch->nextSibling;
-
-				foreach ($switch->childNodes as $case)
-					if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
-						$case->appendChild($closeTag->cloneNode());
-			}
-
-			$query = '//switch[not(preceding-sibling::closeTag)]';
-			foreach ($xpath->query($query) as $switch)
-			{
-				foreach ($switch->childNodes as $case)
-					if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-						continue 2;
-
-				$switch->parentNode->insertBefore(
-					$switch->lastChild->firstChild->cloneNode(),
-					$switch
-				);
-			}
-
-			$query = '//switch[name(following-sibling::*) = "closeTag"]';
-			foreach ($xpath->query($query) as $switch)
-				foreach ($switch->childNodes as $case)
-					while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
-						$case->removeChild($case->lastChild);
-
-			$query = '//closeTag';
-			foreach ($xpath->query($query) as $closeTag)
-			{
-				$id    = $closeTag->getAttribute('id');
-				$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
-
-				foreach ($xpath->query($query, $closeTag) as $dupe)
-					$dupe->parentNode->removeChild($dupe);
-			}
-
-			foreach ($xpath->query('//element[@void="yes"]') as $element)
-			{
-				$id    = $element->getAttribute('id');
-				$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
-
-				foreach ($xpath->query($query, $element) as $node)
-					$node->parentNode->removeChild($node);
-			}
-
+			self::optimizeCloseTagElements($ir);
 			$xml = $ir->saveXML();
 		}
 		while (--$remainingLoops > 0 && $xml !== $old);
 
+		self::removeCloseTagSiblings($ir);
+		self::removeContentFromVoidElements($ir);
+		self::mergeConsecutiveLiteralOutputElements($ir);
+		self::removeEmptyDefaultCases($ir);
+	}
+
+	protected static function removeCloseTagSiblings(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
 		foreach ($xpath->query($query) as $closeTag)
 			$closeTag->parentNode->removeChild($closeTag);
+	}
 
+	protected static function removeEmptyDefaultCases(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//case[not(@test | node())]') as $case)
+			$case->parentNode->removeChild($case);
+	}
+
+	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($xpath->query('//output[@type="literal"]') as $output)
 			while ($output->nextSibling
 				&& $output->nextSibling->nodeName === 'output'
 				&& $output->nextSibling->getAttribute('type') === 'literal')
 			{
 				$output->nodeValue
-					= \htmlspecialchars($output->nodeValue . $output->nextSibling->textContent);
+					= \htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
 				$output->parentNode->removeChild($output->nextSibling);
 			}
+	}
 
-		foreach ($xpath->query('//case[not(@test | node())]') as $case)
-			$case->parentNode->removeChild($case);
+	protected static function optimizeCloseTagElements(DOMDocument $ir)
+	{
+		self::cloneCloseTagElementsIntoSwitch($ir);
+		self::cloneCloseTagElementsOutOfSwitch($ir);
+		self::removeRedundantCloseTagElementsInSwitch($ir);
+		self::removeRedundantCloseTagElements($ir);
+	}
+
+	protected static function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($xpath->query($query) as $switch)
+		{
+			$closeTag = $switch->nextSibling;
+			foreach ($switch->childNodes as $case)
+				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
+					$case->appendChild($closeTag->cloneNode());
+		}
+	}
+
+	protected static function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[not(preceding-sibling::closeTag)]';
+		foreach ($xpath->query($query) as $switch)
+		{
+			foreach ($switch->childNodes as $case)
+				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
+					continue 2;
+			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
+		}
+	}
+
+	protected static function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($xpath->query($query) as $switch)
+			foreach ($switch->childNodes as $case)
+				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
+					$case->removeChild($case->lastChild);
+	}
+
+	protected static function removeRedundantCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//closeTag') as $closeTag)
+		{
+			$id    = $closeTag->getAttribute('id');
+			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
+			foreach ($xpath->query($query, $closeTag) as $dupe)
+				$dupe->parentNode->removeChild($dupe);
+		}
+	}
+
+	protected static function removeContentFromVoidElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//element[@void="yes"]') as $element)
+		{
+			$id    = $element->getAttribute('id');
+			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
+			foreach ($xpath->query($query, $element) as $node)
+				$node->parentNode->removeChild($node);
+		}
 	}
 
 	protected static function markBranchTables(DOMDocument $ir)

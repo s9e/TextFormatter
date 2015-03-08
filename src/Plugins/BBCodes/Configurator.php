@@ -87,6 +87,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 	protected $quickMatch = '[';
 
+	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#';
+
 	public $repositories;
 
 	protected function setUp()
@@ -156,7 +158,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return array(
 			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#'
+			'regexp'     => $this->regexp
 		);
 	}
 }
