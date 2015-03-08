@@ -601,8 +601,6 @@ class TemplateParser
 	*/
 	protected static function optimize(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
-
 		// Get a snapshot of current internal representation
 		$xml = $ir->saveXML();
 
