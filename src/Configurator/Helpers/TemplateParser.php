@@ -451,7 +451,6 @@ class TemplateParser
 	*/
 	protected static function addElementIds(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		$id = 0;
 		foreach ($ir->getElementsByTagName('element') as $element)
 		{
@@ -532,7 +531,6 @@ class TemplateParser
 	*/
 	protected static function markEmptyElements(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		foreach ($ir->getElementsByTagName('element') as $element)
 		{
 			// Test whether this element is (maybe) void
