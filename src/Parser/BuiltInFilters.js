@@ -492,7 +492,7 @@ var BuiltInFilters =
 	*
 	* @param  {!Object} urlConfig
 	* @param  {!Object} p
-	* @return {string}
+	* @return {?string}
 	*/
 	validateUrl: function(urlConfig, p)
 	{

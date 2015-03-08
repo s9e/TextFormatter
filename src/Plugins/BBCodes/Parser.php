@@ -7,190 +7,236 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use RuntimeException;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
+	protected $attributes;
+
+	protected $bbcodeConfig;
+
+	protected $bbcodeName;
+
+	protected $bbcodeSuffix;
+
+	protected $pos;
+
+	protected $startPos;
+
+	protected $text;
+
+	protected $textLen;
+
 	public function parse($text, array $matches)
 	{
-		$textLen = \strlen($text);
+		$this->text = $text;
+		$this->textLen = \strlen($text);
 
 		foreach ($matches as $m)
 		{
-			$bbcodeName = \strtoupper($m[1][0]);
-			if (!isset($this->config['bbcodes'][$bbcodeName]))
+			$this->bbcodeName = \strtoupper($m[1][0]);
+			if (!isset($this->config['bbcodes'][$this->bbcodeName]))
 				continue;
-			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
+			$this->bbcodeConfig = $this->config['bbcodes'][$this->bbcodeName];
+			$this->startPos     = $m[0][1];
+			$this->pos          = $this->startPos + \strlen($m[0][0]);
 
-			$tagName = (isset($bbcodeConfig['tagName']))
-			         ? $bbcodeConfig['tagName']
-			         : $bbcodeName;
-
-			$lpos = $m[0][1];
-
-			$rpos = $lpos + \strlen($m[0][0]);
-
-			if ($text[$rpos] === ':')
+			try
 			{
-				$spn      = 1 + \strspn($text, '0123456789', 1 + $rpos);
-				$bbcodeId = \substr($text, $rpos, $spn);
-
-				$rpos += $spn;
+				$this->parseBBCode();
 			}
-			else
-				$bbcodeId = '';
-
-			if ($text[$lpos + 1] === '/')
+			catch (RuntimeException $e)
 			{
-				if ($text[$rpos] === ']' && $bbcodeId === '')
-					$this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
+				}
+		}
+	}
 
+	protected function addBBCodeEndTag()
+	{
+		return $this->parser->addEndTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+	}
+
+	protected function addBBCodeSelfClosingTag()
+	{
+		$tag = $this->parser->addSelfClosingTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+		$tag->setAttributes($this->attributes);
+
+		return $tag;
+	}
+
+	protected function addBBCodeStartTag()
+	{
+		$tag = $this->parser->addStartTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+		$tag->setAttributes($this->attributes);
+
+		return $tag;
+	}
+
+	protected function captureEndTag()
+	{
+		$match     = '[/' . $this->bbcodeName . $this->bbcodeSuffix . ']';
+		$endTagPos = \stripos($this->text, $match, $this->pos);
+		if ($endTagPos === \false)
+			return;
+
+		return $this->parser->addEndTag($this->getTagName(), $endTagPos, \strlen($match));
+	}
+
+	protected function getTagName()
+	{
+		return (isset($this->bbcodeConfig['tagName']))
+		     ? $this->bbcodeConfig['tagName']
+		     : $this->bbcodeName;
+	}
+
+	protected function parseAttributes()
+	{
+		$firstPos = $this->pos;
+		$this->attributes = [];
+		while ($this->pos < $this->textLen)
+		{
+			$c = $this->text[$this->pos];
+			if ($c === ' ')
+			{
+				++$this->pos;
 				continue;
 			}
+			if ($c === ']' || $c === '/')
+				return;
 
-			$type       = Tag::START_TAG;
-			$attributes = (isset($bbcodeConfig['predefinedAttributes']))
-			            ? $bbcodeConfig['predefinedAttributes']
-			            : [];
-			$wellFormed = \false;
-			$firstPos   = $rpos;
-
-			while ($rpos < $textLen)
+			$spn = \strspn($this->text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $this->pos);
+			if ($spn)
 			{
-				$c = $text[$rpos];
-
-				if ($c === ' ')
-				{
-					++$rpos;
+				$attrName = \strtolower(\substr($this->text, $this->pos, $spn));
+				$this->pos += $spn;
+				if ($this->pos >= $this->textLen)
+					throw new RuntimeException;
+				if ($this->text[$this->pos] !== '=')
 					continue;
-				}
-
-				if ($c === ']' || $c === '/')
-				{
-					if ($c === '/')
-					{
-						$type = Tag::SELF_CLOSING_TAG;
-						++$rpos;
-
-						if ($rpos === $textLen || $text[$rpos] !== ']')
-							continue 2;
-					}
-
-					$wellFormed = \true;
-
-					++$rpos;
-
-					break;
-				}
-
-				$spn = \strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $rpos);
-
-				if ($spn)
-				{
-					if ($rpos + $spn >= $textLen)
-						continue 2;
-
-					$attrName = \strtolower(\substr($text, $rpos, $spn));
-					$rpos += $spn;
-
-					if ($text[$rpos] !== '=')
-						continue;
-				}
-				elseif ($c === '=' && $rpos === $firstPos)
-					if (isset($bbcodeConfig['defaultAttribute']))
-						$attrName = $bbcodeConfig['defaultAttribute'];
-					else
-						$attrName = \strtolower($bbcodeName);
-				else
-					continue 2;
-
-				if (++$rpos >= $textLen)
-					continue 2;
-
-				$c = $text[$rpos];
-
-				if ($c === '"' || $c === "'")
-				{
-					$valuePos = $rpos + 1;
-
-					while (1)
-					{
-						++$rpos;
-
-						$rpos = \strpos($text, $c, $rpos);
-
-						if ($rpos === \false)
-							continue 3;
-
-						$n = 0;
-						while ($text[$rpos - ++$n] === '\\');
-
-						if ($n % 2)
-							break;
-					}
-
-					$attrValue = \preg_replace(
-						'#\\\\([\\\\\'"])#',
-						'$1',
-						\substr($text, $valuePos, $rpos - $valuePos)
-					);
-
-					++$rpos;
-				}
-				else
-				{
-					if (!\preg_match('#[^\\]]*?(?=\\s*(?: /)?\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, \null, $rpos))
-						continue;
-
-					$attrValue  = $m[0];
-					$rpos  += \strlen($attrValue);
-				}
-
-				$attributes[$attrName] = $attrValue;
 			}
-
-			if (!$wellFormed)
-				continue;
-
-			if ($type === Tag::START_TAG)
-			{
-				$contentAttributes = [];
-
-				if (isset($bbcodeConfig['contentAttributes']))
-					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
-						if (!isset($attributes[$attrName]))
-							$contentAttributes[] = $attrName;
-
-				$endTag = \null;
-				if (!empty($contentAttributes) || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
-				{
-					$match     = '[/' . $bbcodeName . $bbcodeId . ']';
-					$endTagPos = \stripos($text, $match, $rpos);
-
-					if ($endTagPos === \false)
-					{
-						if ($bbcodeId || !empty($bbcodeConfig['forceLookahead']))
-							continue;
-					}
-					else
-					{
-						foreach ($contentAttributes as $attrName)
-							$attributes[$attrName] = \substr($text, $rpos, $endTagPos - $rpos);
-
-						$endTag = $this->parser->addEndTag($tagName, $endTagPos, \strlen($match));
-					}
-				}
-
-				$tag = $this->parser->addStartTag($tagName, $lpos, $rpos - $lpos);
-
-				if ($endTag)
-					$tag->pairWith($endTag);
-			}
+			elseif ($c === '=' && $this->pos === $firstPos)
+				$attrName = (isset($this->bbcodeConfig['defaultAttribute']))
+				          ? $this->bbcodeConfig['defaultAttribute']
+				          : \strtolower($this->bbcodeName);
 			else
-				$tag = $this->parser->addSelfClosingTag($tagName, $lpos, $rpos - $lpos);
+				throw new RuntimeException;
 
-			$tag->setAttributes($attributes);
+			if (++$this->pos >= $this->textLen)
+				throw new RuntimeException;
+
+			$this->attributes[$attrName] = $this->parseAttributeValue();
+		}
+	}
+
+	protected function parseAttributeValue()
+	{
+		$c = $this->text[$this->pos];
+
+		if ($c === '"' || $c === "'")
+		{
+			$valuePos = $this->pos + 1;
+			while (1)
+			{
+				++$this->pos;
+
+				$this->pos = \strpos($this->text, $c, $this->pos);
+				if ($this->pos === \false)
+					throw new RuntimeException;
+
+				$n = 0;
+				do
+				{
+					++$n;
+				}
+				while ($this->text[$this->pos - $n] === '\\');
+
+				if ($n % 2)
+					break;
+			}
+
+			$attrValue = \preg_replace(
+				'#\\\\([\\\\\'"])#',
+				'$1',
+				\substr($this->text, $valuePos, $this->pos - $valuePos)
+			);
+
+			++$this->pos;
+		}
+		else
+		{
+			if (!\preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, \null, $this->pos))
+				throw new RuntimeException;
+
+			$attrValue  = $m[0];
+			$this->pos += \strlen($attrValue);
+		}
+
+		return $attrValue;
+	}
+
+	protected function parseBBCode()
+	{
+		$this->parseBBCodeSuffix();
+
+		if ($this->text[$this->startPos + 1] === '/')
+		{
+			if (\substr($this->text, $this->pos, 1) === ']' && $this->bbcodeSuffix === '')
+			{
+				++$this->pos;
+				$this->addBBCodeEndTag();
+			}
+
+			return;
+		}
+
+		$this->parseAttributes();
+		if (isset($this->bbcodeConfig['predefinedAttributes']))
+			$this->attributes += $this->bbcodeConfig['predefinedAttributes'];
+
+		if (\substr($this->text, $this->pos, 1) === ']')
+			++$this->pos;
+		else
+		{
+			if (\substr($this->text, $this->pos, 2) === '/]')
+			{
+				$this->pos += 2;
+				$this->addBBCodeSelfClosingTag();
+			}
+
+			return;
+		}
+
+		$contentAttributes = [];
+		if (isset($this->bbcodeConfig['contentAttributes']))
+			foreach ($this->bbcodeConfig['contentAttributes'] as $attrName)
+				if (!isset($this->attributes[$attrName]))
+					$contentAttributes[] = $attrName;
+
+		$requireEndTag = ($this->bbcodeSuffix || !empty($this->bbcodeConfig['forceLookahead']));
+		$endTag = ($requireEndTag || !empty($contentAttributes)) ? $this->captureEndTag() : \null;
+		if (isset($endTag))
+			foreach ($contentAttributes as $attrName)
+				$this->attributes[$attrName] = \substr($this->text, $this->pos, $endTag->getPos() - $this->pos);
+		elseif ($requireEndTag)
+			return;
+
+		$tag = $this->addBBCodeStartTag();
+
+		if (isset($endTag))
+			$tag->pairWith($endTag);
+	}
+
+	protected function parseBBCodeSuffix()
+	{
+		$this->bbcodeSuffix = '';
+		if ($this->text[$this->pos] === ':')
+		{
+			$spn      = 1 + \strspn($this->text, '0123456789', 1 + $this->pos);
+			$this->bbcodeSuffix = \substr($this->text, $this->pos, $spn);
+
+			$this->pos += $spn;
 		}
 	}
 }
