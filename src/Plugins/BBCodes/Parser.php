@@ -7,300 +7,389 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use RuntimeException;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
 	/**
+	* @var array Attributes of the BBCode being parsed
+	*/
+	protected $attributes;
+
+	/**
+	* @var array Configuration for the BBCode being parsed
+	*/
+	protected $bbcodeConfig;
+
+	/**
+	* @var string Name of the BBCode being parsed
+	*/
+	protected $bbcodeName;
+
+	/**
+	* @var string Suffix of the BBCode being parsed, including its colon
+	*/
+	protected $bbcodeSuffix;
+
+	/**
+	* @var integer Position of the cursor in the original text
+	*/
+	protected $pos;
+
+	/**
+	* @var integer Position of the start of the BBCode being parsed
+	*/
+	protected $startPos;
+
+	/**
+	* @var string Text being parsed
+	*/
+	protected $text;
+
+	/**
+	* @var integer Length of the text being parsed
+	*/
+	protected $textLen;
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
 	{
-		$textLen = strlen($text);
+		$this->text = $text;
+		$this->textLen = strlen($text);
 
 		foreach ($matches as $m)
 		{
-			$bbcodeName = strtoupper($m[1][0]);
-			if (!isset($this->config['bbcodes'][$bbcodeName]))
+			$this->bbcodeName = strtoupper($m[1][0]);
+			if (!isset($this->config['bbcodes'][$this->bbcodeName]))
 			{
 				continue;
 			}
-			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
+			$this->bbcodeConfig = $this->config['bbcodes'][$this->bbcodeName];
+			$this->startPos     = $m[0][1];
+			$this->pos          = $this->startPos + strlen($m[0][0]);
 
-			// Use the configured tagName if available, or reuse the BBCode's name otherwise
-			$tagName = (isset($bbcodeConfig['tagName']))
-			         ? $bbcodeConfig['tagName']
-			         : $bbcodeName;
-
-			/**
-			* @var integer Position of the first character of current BBCode, which should be a [
-			*/
-			$lpos = $m[0][1];
-
-			/**
-			* @var integer  Position of the last character of current BBCode, starts as the position
-			*               of the "]", " ", "=", ":" or "/" character as per the plugin's regexp,
-			*               then advances towards the right as the BBCode is being parsed
-			*/
-			$rpos = $lpos + strlen($m[0][0]);
-
-			// Check for an identifier
-			//
-			// Used to explicitly pair specific tags together, e.g.
-			//   [code:123][code]type your code here[/code][/code:123]
-			if ($text[$rpos] === ':')
+			try
 			{
-				// Capture the colon and the (0 or more) digits following it
-				$spn      = 1 + strspn($text, '0123456789', 1 + $rpos);
-				$bbcodeId = substr($text, $rpos, $spn);
-
-				// Move past the suffix
-				$rpos += $spn;
+				$this->parseBBCode();
 			}
-			else
+			catch (RuntimeException $e)
 			{
-				$bbcodeId = '';
+				// Do nothing
+			}
+		}
+	}
+
+	/**
+	* Add the end tag that matches current BBCode
+	*
+	* @return Tag
+	*/
+	protected function addBBCodeEndTag()
+	{
+		return $this->parser->addEndTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+	}
+
+	/**
+	* Add the self-closing tag that matches current BBCode
+	*
+	* @return Tag
+	*/
+	protected function addBBCodeSelfClosingTag()
+	{
+		$tag = $this->parser->addSelfClosingTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+		$tag->setAttributes($this->attributes);
+
+		return $tag;
+	}
+
+	/**
+	* Add the start tag that matches current BBCode
+	*
+	* @return Tag
+	*/
+	protected function addBBCodeStartTag()
+	{
+		$tag = $this->parser->addStartTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+		$tag->setAttributes($this->attributes);
+
+		return $tag;
+	}
+
+	/**
+	* Parse the end tag that matches given BBCode name and suffix starting at current position
+	*
+	* @return Tag|null
+	*/
+	protected function captureEndTag()
+	{
+		$match     = '[/' . $this->bbcodeName . $this->bbcodeSuffix . ']';
+		$endTagPos = stripos($this->text, $match, $this->pos);
+		if ($endTagPos === false)
+		{
+			return;
+		}
+
+		return $this->parser->addEndTag($this->getTagName(), $endTagPos, strlen($match));
+	}
+
+	/**
+	* Get the tag name for current BBCode
+	*
+	* @return string
+	*/
+	protected function getTagName()
+	{
+		// Use the configured tagName if available, or reuse the BBCode's name otherwise
+		return (isset($this->bbcodeConfig['tagName']))
+		     ? $this->bbcodeConfig['tagName']
+		     : $this->bbcodeName;
+	}
+
+	/**
+	* Parse attributes starting at current position
+	*
+	* @return array Associative array of [name => value]
+	*/
+	protected function parseAttributes()
+	{
+		$firstPos = $this->pos;
+		$this->attributes = [];
+		while ($this->pos < $this->textLen)
+		{
+			$c = $this->text[$this->pos];
+			if ($c === ' ')
+			{
+				++$this->pos;
+				continue;
+			}
+			if ($c === ']' || $c === '/')
+			{
+				return;
 			}
 
-			// Test whether this is an end tag
-			if ($text[$lpos + 1] === '/')
+			// Capture the attribute name
+			$spn = strspn($this->text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $this->pos);
+			if ($spn)
 			{
-				// Test whether the tag is properly closed and whether this tag has an identifier.
-				// We skip end tags that carry an identifier because they're automatically added
-				// when their start tag is processed
-				if (substr($text, $rpos, 1) === ']' && $bbcodeId === '')
+				$attrName = strtolower(substr($this->text, $this->pos, $spn));
+				$this->pos += $spn;
+				if ($this->pos >= $this->textLen)
 				{
-					$this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
+					// The attribute name extends to the end of the text
+					throw new RuntimeException;
 				}
-
-				continue;
-			}
-
-			// This is a start tag, now we'll parse attributes
-			$type       = Tag::START_TAG;
-			$attributes = (isset($bbcodeConfig['predefinedAttributes']))
-			            ? $bbcodeConfig['predefinedAttributes']
-			            : [];
-			$wellFormed = false;
-			$firstPos   = $rpos;
-
-			while ($rpos < $textLen)
-			{
-				$c = $text[$rpos];
-
-				if ($c === ' ')
+				if ($this->text[$this->pos] !== '=')
 				{
-					++$rpos;
+					// It's an attribute name not followed by an equal sign, ignore it
 					continue;
 				}
-
-				if ($c === ']' || $c === '/')
-				{
-					// We're closing this tag
-					if ($c === '/')
-					{
-						// Self-closing tag, e.g. [foo/]
-						$type = Tag::SELF_CLOSING_TAG;
-						++$rpos;
-
-						if ($rpos === $textLen || $text[$rpos] !== ']')
-						{
-							// There isn't a closing bracket after the slash, e.g. [foo/
-							continue 2;
-						}
-					}
-
-					// This tag is well-formed
-					$wellFormed = true;
-
-					// Move past the right bracket
-					++$rpos;
-
-					break;
-				}
-
-				// Capture the attribute name
-				$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $rpos);
-
-				if ($spn)
-				{
-					if ($rpos + $spn >= $textLen)
-					{
-						// The attribute name extends to the end of the text
-						continue 2;
-					}
-
-					$attrName = strtolower(substr($text, $rpos, $spn));
-					$rpos += $spn;
-
-					if ($text[$rpos] !== '=')
-					{
-						// It's an attribute name not followed by an equal sign, ignore it
-						continue;
-					}
-				}
-				elseif ($c === '=' && $rpos === $firstPos)
-				{
-					// This is the default param, e.g. [quote=foo]. If there's no default attribute
-					// set, we reuse the BBCode's name instead
-					if (isset($bbcodeConfig['defaultAttribute']))
-					{
-						$attrName = $bbcodeConfig['defaultAttribute'];
-					}
-					else
-					{
-						$attrName = strtolower($bbcodeName);
-					}
-				}
-				else
-				{
-					continue 2;
-				}
-
-				// Move past the = and make sure we're not at the end of the text
-				if (++$rpos >= $textLen)
-				{
-					continue 2;
-				}
-
-				// Grab the first character after the equal sign
-				$c = $text[$rpos];
-
-				// Test whether the value is in quotes
-				if ($c === '"' || $c === "'")
-				{
-					// This is where the actual value starts
-					$valuePos = $rpos + 1;
-
-					while (1)
-					{
-						// Move past the quote
-						++$rpos;
-
-						// Look for the next quote
-						$rpos = strpos($text, $c, $rpos);
-
-						if ($rpos === false)
-						{
-							// No matching quote. Apparently that string never ends...
-							continue 3;
-						}
-
-						// Test for an odd number of backslashes before this character
-						$n = 0;
-						while ($text[$rpos - ++$n] === '\\');
-
-						if ($n % 2)
-						{
-							// If $n is odd, it means there's an even number of backslashes so
-							// we can exit this loop
-							break;
-						}
-					}
-
-					// Unescape special characters ' " and \
-					$attrValue = preg_replace(
-						'#\\\\([\\\\\'"])#',
-						'$1',
-						substr($text, $valuePos, $rpos - $valuePos)
-					);
-
-					// Skip past the closing quote
-					++$rpos;
-				}
-				else
-				{
-					// Capture everything after the equal sign up to whichever comes first:
-					//  - whitespace followed by a slash and a closing bracket
-					//  - a closing bracket, optionally preceded by whitespace
-					//  - whitespace followed by another attribute (name followed by equal sign)
-					//
-					// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
-					//       that do not put attribute values in quotes, e.g.
-					//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-					if (!preg_match('#[^\\]]*?(?=\\s*(?: /)?\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, null, $rpos))
-					{
-						continue;
-					}
-
-					$attrValue  = $m[0];
-					$rpos  += strlen($attrValue);
-				}
-
-				$attributes[$attrName] = $attrValue;
 			}
-
-			if (!$wellFormed)
+			elseif ($c === '=' && $this->pos === $firstPos)
 			{
-				continue;
-			}
-
-			if ($type === Tag::START_TAG)
-			{
-				/**
-				* @var array List of attributes whose value should be set to this tag's content
-				*/
-				$contentAttributes = [];
-
-				// Record the names of attributes that need the content of this tag
-				if (isset($bbcodeConfig['contentAttributes']))
-				{
-					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
-					{
-						if (!isset($attributes[$attrName]))
-						{
-							$contentAttributes[] = $attrName;
-						}
-					}
-				}
-
-				// Test whether we need to look for this tag's end tag
-				$endTag = null;
-				if (!empty($contentAttributes) || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
-				{
-					// Find the position of its end tag
-					$match     = '[/' . $bbcodeName . $bbcodeId . ']';
-					$endTagPos = stripos($text, $match, $rpos);
-
-					if ($endTagPos === false)
-					{
-						// We didn't find an end tag, did we *need* one?
-						if ($bbcodeId || !empty($bbcodeConfig['forceLookahead']))
-						{
-							// No matching end tag, we skip this start tag
-							continue;
-						}
-					}
-					else
-					{
-						// We found the end tag, we can use the content of this tag pair
-						foreach ($contentAttributes as $attrName)
-						{
-							$attributes[$attrName] = substr($text, $rpos, $endTagPos - $rpos);
-						}
-
-						// We create an end tag, which we will pair with this start tag
-						$endTag = $this->parser->addEndTag($tagName, $endTagPos, strlen($match));
-					}
-				}
-
-				// Create this start tag
-				$tag = $this->parser->addStartTag($tagName, $lpos, $rpos - $lpos);
-
-				// If an end tag was created, pair it with this start tag
-				if ($endTag)
-				{
-					$tag->pairWith($endTag);
-				}
+				// This is the default param, e.g. [quote=foo]
+				$attrName = (isset($this->bbcodeConfig['defaultAttribute']))
+				          ? $this->bbcodeConfig['defaultAttribute']
+				          : strtolower($this->bbcodeName);
 			}
 			else
 			{
-				$tag = $this->parser->addSelfClosingTag($tagName, $lpos, $rpos - $lpos);
+				throw new RuntimeException;
 			}
 
-			// Add all attributes to the tag
-			$tag->setAttributes($attributes);
+			// Move past the = and make sure we're not at the end of the text
+			if (++$this->pos >= $this->textLen)
+			{
+				throw new RuntimeException;
+			}
+
+			$this->attributes[$attrName] = $this->parseAttributeValue();
+		}
+	}
+
+	/**
+	* Parse the attribute value starting at current position
+	*
+	* @return string
+	*/
+	protected function parseAttributeValue()
+	{
+		$c = $this->text[$this->pos];
+
+		// Test whether the value is in quotes
+		if ($c === '"' || $c === "'")
+		{
+			// This is where the actual value starts
+			$valuePos = $this->pos + 1;
+			while (1)
+			{
+				// Move past the quote
+				++$this->pos;
+
+				// Look for the next quote
+				$this->pos = strpos($this->text, $c, $this->pos);
+				if ($this->pos === false)
+				{
+					// No matching quote. Apparently that string never ends...
+					throw new RuntimeException;
+				}
+
+				// Test for an odd number of backslashes before this character
+				$n = 0;
+				do
+				{
+					++$n;
+				}
+				while ($this->text[$this->pos - $n] === '\\');
+
+				if ($n % 2)
+				{
+					// If $n is odd, it means there's an even number of backslashes so
+					// we can exit this loop
+					break;
+				}
+			}
+
+			// Unescape special characters ' " and \
+			$attrValue = preg_replace(
+				'#\\\\([\\\\\'"])#',
+				'$1',
+				substr($this->text, $valuePos, $this->pos - $valuePos)
+			);
+
+			// Skip past the closing quote
+			++$this->pos;
+		}
+		else
+		{
+			// Capture everything after the equal sign up to whichever comes first:
+			//  - whitespace followed by a slash and a closing bracket
+			//  - a closing bracket, optionally preceded by whitespace
+			//  - whitespace followed by another attribute (name followed by equal sign)
+			//
+			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
+			//       that do not put attribute values in quotes, e.g.
+			//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
+			if (!preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, null, $this->pos))
+			{
+				throw new RuntimeException;
+			}
+
+			$attrValue  = $m[0];
+			$this->pos += strlen($attrValue);
+		}
+
+		return $attrValue;
+	}
+
+	/**
+	* Parse current BBCode
+	*
+	* @return void
+	*/
+	protected function parseBBCode()
+	{
+		$this->parseBBCodeSuffix();
+
+		// Test whether this is an end tag
+		if ($this->text[$this->startPos + 1] === '/')
+		{
+			// Test whether the tag is properly closed and whether this tag has an identifier.
+			// We skip end tags that carry an identifier because they're automatically added
+			// when their start tag is processed
+			if (substr($this->text, $this->pos, 1) === ']' && $this->bbcodeSuffix === '')
+			{
+				++$this->pos;
+				$this->addBBCodeEndTag();
+			}
+
+			return;
+		}
+
+		// Parse attributes and fill in the blanks with predefined attributes
+		$this->parseAttributes();
+		if (isset($this->bbcodeConfig['predefinedAttributes']))
+		{
+			$this->attributes += $this->bbcodeConfig['predefinedAttributes'];
+		}
+
+		// Test whether the tag is properly closed
+		if (substr($this->text, $this->pos, 1) === ']')
+		{
+			++$this->pos;
+		}
+		else
+		{
+			// Test whether this is a self-closing tag
+			if (substr($this->text, $this->pos, 2) === '/]')
+			{
+				$this->pos += 2;
+				$this->addBBCodeSelfClosingTag();
+			}
+
+			return;
+		}
+
+		// Record the names of attributes that need the content of this tag
+		$contentAttributes = [];
+		if (isset($this->bbcodeConfig['contentAttributes']))
+		{
+			foreach ($this->bbcodeConfig['contentAttributes'] as $attrName)
+			{
+				if (!isset($this->attributes[$attrName]))
+				{
+					$contentAttributes[] = $attrName;
+				}
+			}
+		}
+
+		// Look ahead and parse the end tag that matches this tag, if applicable
+		$requireEndTag = ($this->bbcodeSuffix || !empty($this->bbcodeConfig['forceLookahead']));
+		$endTag = ($requireEndTag || !empty($contentAttributes)) ? $this->captureEndTag() : null;
+		if (isset($endTag))
+		{
+			foreach ($contentAttributes as $attrName)
+			{
+				$this->attributes[$attrName] = substr($this->text, $this->pos, $endTag->getPos() - $this->pos);
+			}
+		}
+		elseif ($requireEndTag)
+		{
+			return;
+		}
+
+		// Create this start tag
+		$tag = $this->addBBCodeStartTag();
+
+		// If an end tag was created, pair it with this start tag
+		if (isset($endTag))
+		{
+			$tag->pairWith($endTag);
+		}
+	}
+
+	/**
+	* Parse the BBCode suffix starting at current position
+	*
+	* Used to explicitly pair specific tags together, e.g.
+	*   [code:123][code]type your code here[/code][/code:123]
+	*
+	* @return void
+	*/
+	protected function parseBBCodeSuffix()
+	{
+		$this->bbcodeSuffix = '';
+		if ($this->text[$this->pos] === ':')
+		{
+			// Capture the colon and the (0 or more) digits following it
+			$spn      = 1 + strspn($this->text, '0123456789', 1 + $this->pos);
+			$this->bbcodeSuffix = substr($this->text, $this->pos, $spn);
+
+			// Move past the suffix
+			$this->pos += $spn;
 		}
 	}
 }
