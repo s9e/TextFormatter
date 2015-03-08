@@ -617,6 +617,7 @@ class TemplateParser
 		while (--$remainingLoops > 0 && $xml !== $old);
 
 		self::removeCloseTagSiblings($ir);
+		self::removeContentFromVoidElements($ir);
 		self::mergeConsecutiveLiteralOutputElements($ir);
 		self::removeEmptyDefaultCases($ir);
 	}
@@ -684,10 +685,24 @@ class TemplateParser
 	*/
 	protected static function optimizeCloseTagElements(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
+		self::cloneCloseTagElementsIntoSwitch($ir);
+		self::cloneCloseTagElementsOutOfSwitch($ir);
+		self::removeRedundantCloseTagElementsInSwitch($ir);
+		self::removeRedundantCloseTagElements($ir);
+	}
 
-		// If there's a <closeTag/> right after a <switch/>, clone the <closeTag/> at the end of
-		// the every <case/> that does not end with a <closeTag/>
+	/**
+	* Clone closeTag elements that follow a switch into said switch
+	*
+	* If there's a <closeTag/> right after a <switch/>, clone the <closeTag/> at the end of
+	* the every <case/> that does not end with a <closeTag/>
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		$query = '//switch[name(following-sibling::*) = "closeTag"]';
 		foreach ($xpath->query($query) as $switch)
 		{
@@ -700,9 +715,20 @@ class TemplateParser
 				}
 			}
 		}
+	}
 
-		// If there's a <closeTag/> at the beginning of every <case/>, clone it and insert it
-		// right before the <switch/> unless there's already one
+	/**
+	* Clone closeTag elements from the head of a switch's cases before said switch
+	*
+	* If there's a <closeTag/> at the beginning of every <case/>, clone it and insert it
+	* right before the <switch/> unless there's already one
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		$query = '//switch[not(preceding-sibling::closeTag)]';
 		foreach ($xpath->query($query) as $switch)
 		{
@@ -715,14 +741,24 @@ class TemplateParser
 					continue 2;
 				}
 			}
-
 			// Insert the first child of the last <case/>, which should be the same <closeTag/>
 			// as every other <case/>
 			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
 		}
+	}
 
-		// If there's a <closeTag/> right after a <switch/>, remove all <closeTag/> nodes at the
-		// end of every <case/>
+	/**
+	* Remove redundant closeTag elements from the tail of a switch's cases
+	*
+	* If there's a <closeTag/> right after a <switch/>, remove all <closeTag/> nodes at the
+	* end of every <case/>
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		$query = '//switch[name(following-sibling::*) = "closeTag"]';
 		foreach ($xpath->query($query) as $switch)
 		{
@@ -734,11 +770,21 @@ class TemplateParser
 				}
 			}
 		}
+	}
 
-		// Finally, for each <closeTag/> remove duplicate <closeTag/> nodes that are either
-		// siblings or descendants of a sibling
-		$query = '//closeTag';
-		foreach ($xpath->query($query) as $closeTag)
+	/**
+	* Remove redundant closeTag elements from the tail of a switch's cases
+	*
+	* For each <closeTag/> remove duplicate <closeTag/> nodes that are either siblings or
+	* descendants of a sibling
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function removeRedundantCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//closeTag') as $closeTag)
 		{
 			$id    = $closeTag->getAttribute('id');
 			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
@@ -747,9 +793,20 @@ class TemplateParser
 				$dupe->parentNode->removeChild($dupe);
 			}
 		}
+	}
 
-		// For each void element, we find whichever <closeTag/> elements closes it and
-		// remove everything after
+	/**
+	* Remove content from void elements
+	*
+	* For each void element, we find whichever <closeTag/> elements close it and remove everything
+	* after
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function removeContentFromVoidElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($xpath->query('//element[@void="yes"]') as $element)
 		{
 			$id    = $element->getAttribute('id');
