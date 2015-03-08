@@ -618,15 +618,53 @@ class TemplateParser
 		}
 		while (--$remainingLoops > 0 && $xml !== $old);
 
-		// If all branches of a switch have a closeTag we can remove the any closeTag siblings of
-		// the switch
+		self::removeCloseTagSiblings($ir);
+		self::mergeConsecutiveLiteralOutputElements($ir);
+		self::removeEmptyDefaultCases($ir);
+	}
+
+	/**
+	* Remove redundant closeTag siblings after a switch
+	*
+	* If all branches of a switch have a closeTag we can remove any closeTag siblings of the switch
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function removeCloseTagSiblings(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
 		foreach ($xpath->query($query) as $closeTag)
 		{
 			$closeTag->parentNode->removeChild($closeTag);
 		}
+	}
 
-		// Coalesce consecutive literal outputs
+	/**
+	* Remove empty default cases (no test and no descendants)
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function removeEmptyDefaultCases(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//case[not(@test | node())]') as $case)
+		{
+			$case->parentNode->removeChild($case);
+		}
+	}
+
+	/**
+	* Merge consecutive literal outputs
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
 		foreach ($xpath->query('//output[@type="literal"]') as $output)
 		{
 			while ($output->nextSibling
@@ -634,15 +672,9 @@ class TemplateParser
 				&& $output->nextSibling->getAttribute('type') === 'literal')
 			{
 				$output->nodeValue
-					= htmlspecialchars($output->nodeValue . $output->nextSibling->textContent);
+					= htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
 				$output->parentNode->removeChild($output->nextSibling);
 			}
-		}
-
-		// Remove empty default cases (no @test and no descendants)
-		foreach ($xpath->query('//case[not(@test | node())]') as $case)
-		{
-			$case->parentNode->removeChild($case);
 		}
 	}
 
