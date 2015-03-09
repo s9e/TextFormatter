@@ -364,5 +364,3 @@ function parseBBCodeSuffix()
 		pos += bbcodeSuffix.length;
 	}
 }
-
-
