@@ -68,7 +68,7 @@ Automatically creates paragraphs (HTML element <code>&lt;p&gt;</code>) to host c
 
 <dt>defaultChildRule</dt>
 <dd><i>Example:</i> <code>$tag->rules->defaultChildRule('deny');</code><br/>
-If defaultChildRule is set to 'deny', all tags that are not targeted by an allowChild rule will be denied. By default, defaultChildRule is set to 'deny', which means that all tags are allowed as children unless they are targeted by a denyChild rule. </dd>
+If defaultChildRule is set to 'deny', all tags that are not targeted by an allowChild rule will be denied. By default, defaultChildRule is set to 'allow', which means that all tags are allowed as children unless they are targeted by a denyChild rule. </dd>
 
 <dt>defaultDescendantRule</dt>
 <dd><i>Example:</i> <code>$tag->rules->defaultDescendantRule('deny');</code><br/>
