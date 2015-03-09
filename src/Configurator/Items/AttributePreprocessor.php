@@ -59,9 +59,9 @@ class AttributePreprocessor
 			if (!isset($attributes[$attrName]))
 			{
 				$regexp = $regexpInfo['delimiter']
-						. '^(?:' . $token['content'] . ')$'
-						. $regexpInfo['delimiter']
-						. $regexpInfo['modifiers'];
+				        . '^(?:' . $token['content'] . ')$'
+				        . $regexpInfo['delimiter']
+				        . $regexpInfo['modifiers'];
 
 				$attributes[$attrName] = $regexp;
 			}
