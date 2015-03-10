@@ -18,6 +18,10 @@ class CustomTest extends Test
 	*/
 	public function testInvalidCallback()
 	{
+		if (version_compare(PHP_VERSION, '6', '>='))
+		{
+			$this->markTestSkipped('Triggers a fatal error on PHP 7');
+		}
 		new Custom('*invalid*');
 	}
 
