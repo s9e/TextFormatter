@@ -30,9 +30,9 @@ class Quick
 				continue;
 			}
 
-			foreach ($rendering as $i => $_1445730487)
+			foreach ($rendering as $i => $_562c18b7)
 			{
-				list($strategy, $replacement) = $_1445730487;
+				list($strategy, $replacement) = $_562c18b7;
 				$match = (($i) ? '/' : '') . $tagName;
 				$map[$strategy][$match] = $replacement;
 			}

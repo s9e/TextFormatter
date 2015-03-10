@@ -31,9 +31,9 @@ class NormalizeUrls extends TemplateNormalization
 		$tokens = AVTHelper::parse(\trim($attribute->value));
 
 		$attrValue = '';
-		foreach ($tokens as $_4138972761)
+		foreach ($tokens as $_f6b3b659)
 		{
-			list($type, $content) = $_4138972761;
+			list($type, $content) = $_f6b3b659;
 			if ($type === 'literal')
 				$attrValue .= BuiltInFilters::sanitizeUrl($content);
 			else

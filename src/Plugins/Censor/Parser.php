@@ -28,9 +28,9 @@ class Parser extends ParserBase
 
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], \strlen($m[0][0]));
 
-			foreach ($replacements as $_1745900017)
+			foreach ($replacements as $_681051f1)
 			{
-				list($regexp, $replacement) = $_1745900017;
+				list($regexp, $replacement) = $_681051f1;
 				if (\preg_match($regexp, $m[0][0]))
 				{
 					$tag->setAttribute($attrName, $replacement);

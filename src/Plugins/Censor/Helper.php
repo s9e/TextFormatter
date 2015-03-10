@@ -134,9 +134,9 @@ class Helper
 		if ($this->isAllowed($word))
 			return $word;
 
-		foreach ($this->replacements as $_37478556)
+		foreach ($this->replacements as $_23be09c)
 		{
-			list($regexp, $replacement) = $_37478556;
+			list($regexp, $replacement) = $_23be09c;
 			if (\preg_match($regexp, $word))
 				return $replacement;
 		}

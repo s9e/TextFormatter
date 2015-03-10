@@ -336,9 +336,9 @@ class Configurator extends ConfiguratorBase
 			{
 				$tokens   = AVTHelper::parse($innerXML);
 				$innerXML = '';
-				foreach ($tokens as $_3134889776)
+				foreach ($tokens as $_bada9f30)
 				{
-					list($type, $content) = $_3134889776;
+					list($type, $content) = $_bada9f30;
 					if ($type === 'literal')
 						$innerXML .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
 					else

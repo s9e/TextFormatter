@@ -179,9 +179,9 @@ class Parser
 	public static function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
-			foreach ($tagConfig['attributePreprocessors'] as $_2698889989)
+			foreach ($tagConfig['attributePreprocessors'] as $_a0ddcb05)
 			{
-				list($attrName, $regexp) = $_2698889989;
+				list($attrName, $regexp) = $_a0ddcb05;
 				if (!$tag->hasAttribute($attrName))
 					continue;
 
