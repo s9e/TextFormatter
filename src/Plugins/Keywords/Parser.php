@@ -24,9 +24,9 @@ class Parser extends ParserBase
 		{
 			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
 
-			foreach ($matches[0] as $_295000607)
+			foreach ($matches[0] as $_11955a1f)
 			{
-				list($value, $pos) = $_295000607;
+				list($value, $pos) = $_11955a1f;
 				if ($onlyFirst)
 				{
 					if (isset($keywords[$value]))

@@ -217,9 +217,9 @@ class Configurator extends ConfiguratorBase
 
 		$generics   = [];
 		$jsGenerics = [];
-		foreach ($this->collection as $tagName => $_2321574420)
+		foreach ($this->collection as $tagName => $_8a606a14)
 		{
-			list($regexp, $passthroughIdx) = $_2321574420;
+			list($regexp, $passthroughIdx) = $_8a606a14;
 			$generics[] = [$tagName, $regexp, $passthroughIdx];
 
 			if (isset($this->configurator->javascript))

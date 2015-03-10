@@ -158,9 +158,9 @@ class F5 extends Bundle
 
 		$configurator->BBCodes->add('COLOUR')->tagName = 'COLOR';
 
-		foreach ($bbcodes as $_69183664)
+		foreach ($bbcodes as $_41fa8b0)
 		{
-			list($definition, $template) = $_69183664;
+			list($definition, $template) = $_41fa8b0;
 			$configurator->BBCodes->addCustom($definition, $template);
 		}
 

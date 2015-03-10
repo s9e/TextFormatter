@@ -231,9 +231,9 @@ class BBCodeMonkey
 
 		$table = [];
 
-		foreach ($definitions as $_3899968967)
+		foreach ($definitions as $_e874cdc7)
 		{
-			list($attrName, $definition) = $_3899968967;
+			list($attrName, $definition) = $_e874cdc7;
 			if (!isset($bbcode->defaultAttribute))
 				$bbcode->defaultAttribute = $attrName;
 
@@ -269,9 +269,9 @@ class BBCodeMonkey
 				$composites[] = [$attrName, $definition, $tokens];
 		}
 
-		foreach ($composites as $_763687072)
+		foreach ($composites as $_2d84f0a0)
 		{
-			list($attrName, $definition, $tokens) = $_763687072;
+			list($attrName, $definition, $tokens) = $_2d84f0a0;
 			$regexp  = '/^';
 			$lastPos = 0;
 

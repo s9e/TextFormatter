@@ -64,9 +64,9 @@ class Parser extends ParserBase
 
 		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
 		if (\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE))
-			foreach ($matches[0] as $_4117811821)
+			foreach ($matches[0] as $_f570d26d)
 			{
-				list($match, $matchPos) = $_4117811821;
+				list($match, $matchPos) = $_f570d26d;
 				$endTagPos = $matchPos - 1;
 				while ($endTagPos > 0 && $this->text[$endTagPos - 1] === ' ')
 					--$endTagPos;
@@ -385,9 +385,9 @@ class Parser extends ParserBase
 		$breakPos = \strpos($this->text, "\x17", $pos);
 
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
-		foreach ($matches[0] as $_1258507557)
+		foreach ($matches[0] as $_4b034d25)
 		{
-			list($match, $matchPos) = $_1258507557;
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen = \strlen($match);
 
 			if ($matchPos > $breakPos)
@@ -612,9 +612,9 @@ class Parser extends ParserBase
 			$pos
 		);
 
-		foreach ($matches[0] as $_1258507557)
+		foreach ($matches[0] as $_4b034d25)
 		{
-			list($match, $matchPos) = $_1258507557;
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen = \strlen($match);
 
 			$this->parser->addTagPair('DEL', $matchPos, 2, $matchPos + $matchLen - 2, 2);
@@ -635,9 +635,9 @@ class Parser extends ParserBase
 			$pos
 		);
 
-		foreach ($matches[0] as $_1258507557)
+		foreach ($matches[0] as $_4b034d25)
 		{
-			list($match, $matchPos) = $_1258507557;
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen    = \strlen($match);
 			$startTagPos = $matchPos;
 			$endTagPos   = $matchPos + $matchLen;

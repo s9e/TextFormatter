@@ -59,9 +59,9 @@ class S18 extends Bundle
 			['C:-)', 'police.gif',      'Police'     ],
 			['O:-)', 'angel.gif',       'Angel'      ]
 		];
-		foreach ($smileys as $_2342570762)
+		foreach ($smileys as $_8ba0cb0a)
 		{
-			list($code, $filename, $title) = $_2342570762;
+			list($code, $filename, $title) = $_8ba0cb0a;
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$SMILEYS_PATH}' . $filename . '" alt="' . $code . '" title="' . $title . '" class="smiley"/>'
@@ -340,9 +340,9 @@ class S18 extends Bundle
 			],
 		];
 
-		foreach ($bbcodes as $_69183664)
+		foreach ($bbcodes as $_41fa8b0)
 		{
-			list($definition, $template) = $_69183664;
+			list($definition, $template) = $_41fa8b0;
 			$configurator->BBCodes->addCustom($definition, $template);
 		}
 
