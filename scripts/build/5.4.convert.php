@@ -47,7 +47,13 @@ function convertForeachList($filepath, &$file)
 		function ($m)
 		{
 			// Generate a var name based on replaced code
-			$varName = '$_' . crc32($m[0]);
+			$crc = crc32($m[0]);
+			// the crc may be a negative number in PHP
+			if ($crc < 0)
+			{
+				$crc = sprintf('%u', $crc);
+			}
+			$varName = '$_' . $crc;
 
 			return $m[1] . $varName . $m[3] . $m[2] . ' = ' . $varName . ';' . $m[4];
 		},
