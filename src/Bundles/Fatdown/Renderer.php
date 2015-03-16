@@ -55,7 +55,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = \preg_replace_callback(
-			'(<(?:((?>BANDCAMP|DAILYMOTION|F(?>P|ACEBOOK)|GROOVESHARK|H[CER]|IMG|LIVELEAK|S(?>OUNDCLOUD|POTIFY)|TWITCH|VI(?>MEO|NE)|YOUTUBE|html:(?>br|img)))(?: [^>]*)?(?:/|>.*?</\\1)|(/?(?!br/|p>)[^ />]+)[^>]*)>)',
+			'(<(?:((?>BANDCAMP|DAILYMOTION|F(?>P|ACEBOOK)|GROOVESHARK|H[CER]|IMG|LIVELEAK|S(?>OUNDCLOUD|POTIFY)|TWITCH|VI(?>MEO|NE)|YOUTUBE|html:(?>br|img)))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			\preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
@@ -73,8 +73,10 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		{
 			$id = $m[2];
 
-			if (\substr($m[0], -2, 1) === '/')
+			if (isset($m[3]))
 			{
+				unset($m[3]);
+
 				$m[0] = \substr($m[0], 0, -2) . '>';
 				$html = $this->quick($m);
 
@@ -88,14 +90,6 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		else
 		{
 			$id = $m[1];
-
-			if (\substr($m[0], -2, 1) === '/')
-			{
-				$m[0] = \substr($m[0], 0, -2) . '></' . $id . '>';
-				unset($m[2]);
-
-				return $this->quick($m);
-			}
 
 			$lpos = 1 + \strpos($m[0], '>');
 			$rpos = \strrpos($m[0], '<');
