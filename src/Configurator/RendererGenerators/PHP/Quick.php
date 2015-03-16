@@ -88,7 +88,7 @@ class Quick
 		// Build the regexp that matches all the tags
 		$regexp  = '(<(?:(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
-		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*)>)';
+		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
 
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . var_export($regexp, true) . ',';
@@ -109,8 +109,10 @@ class Quick
 		$php[] = '		{';
 		$php[] = '			$id = $m[2];';
 		$php[] = '';
-		$php[] = '			if (substr($m[0], -2, 1) === \'/\')';
+		$php[] = '			if (isset($m[3]))';
 		$php[] = '			{';
+		$php[] = '				unset($m[3]);';
+		$php[] = '';
 		$php[] = '				$m[0] = substr($m[0], 0, -2) . \'>\';';
 		$php[] = '				$html = $this->quick($m);';
 		$php[] = '';

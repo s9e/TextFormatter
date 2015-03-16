@@ -60,7 +60,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = preg_replace_callback(
-			'(<(?:((?>E|FLASH|IMG|TIME|html:(?>img|[bh]r)|[BH]R))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*)>)',
+			'(<(?:((?>E|FLASH|IMG|TIME|html:(?>img|[bh]r)|[BH]R))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
@@ -78,8 +78,10 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		{
 			$id = $m[2];
 
-			if (substr($m[0], -2, 1) === '/')
+			if (isset($m[3]))
 			{
+				unset($m[3]);
+
 				$m[0] = substr($m[0], 0, -2) . '>';
 				$html = $this->quick($m);
 
