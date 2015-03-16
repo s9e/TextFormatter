@@ -54,7 +54,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = \preg_replace_callback(
-			'(<(?:((?:A(?>BCNEWS|MAZON|UDIO(?>BOOM|MACK))|B(?>ANDCAMP|BCNEWS|LIP|REAK)|C(?:BSNEWS|N(?:BC|N(?>MONEY)?)|O(?>L(?>BERTNATION|LEGEHUMOR)|MEDYCENTRAL|UB))|D(?>AILY(?>MOTION|SHOW)|UMPERT)|E(?:IGHTTRACKS|SPN(?>DEPORTES)?)|F(?>ACEBOOK|LICKR|OXNEWS|UNNYORDIE)|G(?>AME(?>SPOT|TRAILERS)|ETTY|FYCAT|IST|LOBALNEWS|O(?>FUNDME|OGLE(?>PLU|SHEET)S)|ROOVESHARK)|HU(?>DL|LU|MORTVNL)|I(?>GN|M(?>DB|GUR)|N(?>DIEGOGO|STAGRAM|TERNETARCHIVE)|ZLESENE)|K(?>HL|ICKSTARTER)|LIVE(?>LEAK|STREAM)|M(?>AILRU|E(?>DIUM|TACAFE)|IXCLOUD|SNBC)|N(?>ATGEO(?>CHANNEL|VIDEO)|PR|YTIMES)|P(?>ASTEBIN|ODBEAN|REZI)|R(?>DIO|UTUBE)|S(?>CRIBD|LIDESHARE|OUNDCLOUD|PO(?>RTSNET|TIFY)|TR(?>AWPOLL|EAMABLE))|T(?>E(?>D|AMCOCO)|HE(?>ATLANTIC|ONION)|INYPIC|MZ|RAILERADDICT|WIT(?>CH|TER))|USTREAM|V(?>K|BOX7|EVO|I(?>AGAME|D(?>EOMEGA|ME)|MEO|NE)|OCAROO)|WS(?>J|HH)|XBOX(?>CLIPS|DVR)|Y(?>AHOOSCREEN|OU(?>KU|TUBE))|ZIPPYSHARE))(?: [^>]*)?(?:/|>.*?</\\1)|(/?(?!br/|p>)[^ />]+)[^>]*)>)',
+			'(<(?:((?:A(?>BCNEWS|MAZON|UDIO(?>BOOM|MACK))|B(?>ANDCAMP|BCNEWS|LIP|REAK)|C(?:BSNEWS|N(?:BC|N(?>MONEY)?)|O(?>L(?>BERTNATION|LEGEHUMOR)|MEDYCENTRAL|UB))|D(?>AILY(?>MOTION|SHOW)|UMPERT)|E(?:IGHTTRACKS|SPN(?>DEPORTES)?)|F(?>ACEBOOK|LICKR|OXNEWS|UNNYORDIE)|G(?>AME(?>SPOT|TRAILERS)|ETTY|FYCAT|IST|LOBALNEWS|O(?>FUNDME|OGLE(?>PLU|SHEET)S)|ROOVESHARK)|HU(?>DL|LU|MORTVNL)|I(?>GN|M(?>DB|GUR)|N(?>DIEGOGO|STAGRAM|TERNETARCHIVE)|ZLESENE)|K(?>HL|ICKSTARTER)|LIVE(?>LEAK|STREAM)|M(?>AILRU|E(?>DIUM|TACAFE)|IXCLOUD|SNBC)|N(?>ATGEO(?>CHANNEL|VIDEO)|PR|YTIMES)|P(?>ASTEBIN|ODBEAN|REZI)|R(?>DIO|UTUBE)|S(?>CRIBD|LIDESHARE|OUNDCLOUD|PO(?>RTSNET|TIFY)|TR(?>AWPOLL|EAMABLE))|T(?>E(?>D|AMCOCO)|HE(?>ATLANTIC|ONION)|INYPIC|MZ|RAILERADDICT|WIT(?>CH|TER))|USTREAM|V(?>K|BOX7|EVO|I(?>AGAME|D(?>EOMEGA|ME)|MEO|NE)|OCAROO)|WS(?>J|HH)|XBOX(?>CLIPS|DVR)|Y(?>AHOOSCREEN|OU(?>KU|TUBE))|ZIPPYSHARE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			\preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
@@ -72,8 +72,10 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		{
 			$id = $m[2];
 
-			if (\substr($m[0], -2, 1) === '/')
+			if (isset($m[3]))
 			{
+				unset($m[3]);
+
 				$m[0] = \substr($m[0], 0, -2) . '>';
 				$html = $this->quick($m);
 
@@ -87,14 +89,6 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		else
 		{
 			$id = $m[1];
-
-			if (\substr($m[0], -2, 1) === '/')
-			{
-				$m[0] = \substr($m[0], 0, -2) . '></' . $id . '>';
-				unset($m[2]);
-
-				return $this->quick($m);
-			}
 
 			$lpos = 1 + \strpos($m[0], '>');
 			$rpos = \strrpos($m[0], '<');
