@@ -668,6 +668,13 @@ class PHPTest extends Test
 						= '<div><xsl:copy-of select="@z"/></div>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<b>X</b>';
+				}
+			],
 		];
 	}
 
