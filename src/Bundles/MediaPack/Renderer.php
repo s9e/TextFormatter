@@ -114,7 +114,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		$attributes = [];
 		if (strpos($m[0], '="') !== false)
 		{
-			preg_match_all('(([^ ]+)="([^"]*))', substr($m[0], 0, strpos($m[0], '>')), $matches);
+			preg_match_all('(([^ =]++)="([^"]*))S', substr($m[0], 0, strpos($m[0], '>')), $matches);
 			foreach ($matches[1] as $i => $attrName)
 				$attributes[$attrName] = $matches[2][$i];
 		}
