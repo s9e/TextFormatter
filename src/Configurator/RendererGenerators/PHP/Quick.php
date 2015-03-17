@@ -168,7 +168,7 @@ class Quick
 			$php[] = '		$attributes = array();';
 			$php[] = '		if (strpos($m[0], \'="\') !== false)';
 			$php[] = '		{';
-			$php[] = '			preg_match_all(\'(([^ ]+)="([^"]*))\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
+			$php[] = '			preg_match_all(\'(([^ =]++)="([^"]*))S\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
 			$php[] = '			foreach ($matches[1] as $i => $attrName)';
 			$php[] = '			{';
 			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
