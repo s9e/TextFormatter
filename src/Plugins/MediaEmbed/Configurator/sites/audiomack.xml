@@ -9,12 +9,12 @@
 	<iframe width="100%" style="max-width:900px">
 		<height><![CDATA[
 			<xsl:choose>
-				<xsl:when test="@mode='album'">352</xsl:when>
-				<xsl:otherwise>144</xsl:otherwise>
+				<xsl:when test="@mode='album'">340</xsl:when>
+				<xsl:otherwise>110</xsl:otherwise>
 			</xsl:choose>
 		]]></height>
 		<src><![CDATA[
-			<xsl:text>//www.audiomack.com/embed3</xsl:text>
+			<xsl:text>//www.audiomack.com/embed4</xsl:text>
 			<xsl:if test="@mode='album'">-album</xsl:if>
 			<xsl:text>/</xsl:text>
 			<xsl:value-of select="@id"/>
