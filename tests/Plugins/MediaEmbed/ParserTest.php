@@ -833,6 +833,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://mrbenvey.tumblr.com/post/104191225637',
+				'<r><TUMBLR did="5f3b4bc6718317df9c2b1e77c20839ab94f949cd" id="104191225637" key="uFhWDPKj-bGU0ZlDAnUyxg" name="mrbenvey" url="http://mrbenvey.tumblr.com/post/104191225637">http://mrbenvey.tumblr.com/post/104191225637</TUMBLR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tumblr');
+				}
+			],
+			[
 				'http://www.twitch.tv/m/57217',
 				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
 				[],
