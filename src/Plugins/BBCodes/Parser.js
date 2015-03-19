@@ -337,8 +337,11 @@ function parseQuotedAttributeValue()
 		valuePos = pos + 1;
 	while (1)
 	{
-		// Move past the quote
-		++pos;
+		// Move past the quote and make sure we're still within boundaries
+		if (++pos >= textLen)
+		{
+			throw '';
+		}
 
 		// Look for the next quote
 		pos = text.indexOf(quote, pos);

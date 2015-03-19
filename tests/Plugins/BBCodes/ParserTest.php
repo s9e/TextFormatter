@@ -329,6 +329,17 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'x [b x="',
+				'<t>x [b x="</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->add('B');
+					$attributes = $configurator->tags->add('B')->attributes;
+					$attributes->add('x');
+				}
+			],
+			[
 				'x [B="foo" /]',
 				'<r>x <B b="foo">[B="foo" /]</B></r>',
 				[],
