@@ -378,7 +378,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>nhl</code></td>
 		<td>NHL VideoCenter</td>
-		<td>http://video.nhl.com/videocenter/console?id=783647&amp;catid=35</td>
+		<td>http://video.nhl.com/videocenter/console?id=783647&amp;catid=35<br/>http://video.nhl.com/videocenter/console?id=2014021049-387-h</td>
 	</tr>
 	<tr>
 		<td><code>npr</code></td>
