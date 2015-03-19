@@ -2203,6 +2203,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://video.predators.nhl.com/videocenter/?id=783382',
+				'<r><NHL id="783382" url="http://video.predators.nhl.com/videocenter/?id=783382">http://video.predators.nhl.com/videocenter/?id=783382</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'http://video.nhl.com/videocenter/console?catid=337&id=783647&lang=en&navid=nhl:topheads',
+				'<r><NHL id="783647" url="http://video.nhl.com/videocenter/console?catid=337&amp;id=783647&amp;lang=en&amp;navid=nhl:topheads">http://video.nhl.com/videocenter/console?catid=337&amp;id=783647&amp;lang=en&amp;navid=nhl:topheads</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
 				'http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html',
 				'<r><NYTIMES id="100000002907606" url="http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html">http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</NYTIMES></r>',
 				[],
