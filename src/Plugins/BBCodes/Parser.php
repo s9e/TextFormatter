@@ -132,46 +132,14 @@ class Parser extends ParserBase
 
 	protected function parseAttributeValue()
 	{
-		$c = $this->text[$this->pos];
+		if ($this->text[$this->pos] === '"' || $this->text[$this->pos] === "'")
+			return $this->parseQuotedAttributeValue();
 
-		if ($c === '"' || $c === "'")
-		{
-			$valuePos = $this->pos + 1;
-			while (1)
-			{
-				++$this->pos;
+		if (!\preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, \null, $this->pos))
+			throw new RuntimeException;
 
-				$this->pos = \strpos($this->text, $c, $this->pos);
-				if ($this->pos === \false)
-					throw new RuntimeException;
-
-				$n = 0;
-				do
-				{
-					++$n;
-				}
-				while ($this->text[$this->pos - $n] === '\\');
-
-				if ($n % 2)
-					break;
-			}
-
-			$attrValue = \preg_replace(
-				'#\\\\([\\\\\'"])#',
-				'$1',
-				\substr($this->text, $valuePos, $this->pos - $valuePos)
-			);
-
-			++$this->pos;
-		}
-		else
-		{
-			if (!\preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, \null, $this->pos))
-				throw new RuntimeException;
-
-			$attrValue  = $m[0];
-			$this->pos += \strlen($attrValue);
-		}
+		$attrValue  = $m[0];
+		$this->pos += \strlen($attrValue);
 
 		return $attrValue;
 	}
@@ -238,5 +206,40 @@ class Parser extends ParserBase
 
 			$this->pos += $spn;
 		}
+	}
+
+	protected function parseQuotedAttributeValue()
+	{
+		$quote    = $this->text[$this->pos];
+		$valuePos = $this->pos + 1;
+		while (1)
+		{
+			if (++$this->pos >= $this->textLen)
+				throw new RuntimeException;
+
+			$this->pos = \strpos($this->text, $quote, $this->pos);
+			if ($this->pos === \false)
+				throw new RuntimeException;
+
+			$n = 0;
+			do
+			{
+				++$n;
+			}
+			while ($this->text[$this->pos - $n] === '\\');
+
+			if ($n % 2)
+				break;
+		}
+
+		$attrValue = \preg_replace(
+			'#\\\\([\\\\\'"])#',
+			'$1',
+			\substr($this->text, $valuePos, $this->pos - $valuePos)
+		);
+
+		++$this->pos;
+
+		return $attrValue;
 	}
 }
