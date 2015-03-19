@@ -217,70 +217,27 @@ class Parser extends ParserBase
 	*/
 	protected function parseAttributeValue()
 	{
-		$c = $this->text[$this->pos];
-
 		// Test whether the value is in quotes
-		if ($c === '"' || $c === "'")
+		if ($this->text[$this->pos] === '"' || $this->text[$this->pos] === "'")
 		{
-			// This is where the actual value starts
-			$valuePos = $this->pos + 1;
-			while (1)
-			{
-				// Move past the quote
-				++$this->pos;
-
-				// Look for the next quote
-				$this->pos = strpos($this->text, $c, $this->pos);
-				if ($this->pos === false)
-				{
-					// No matching quote. Apparently that string never ends...
-					throw new RuntimeException;
-				}
-
-				// Test for an odd number of backslashes before this character
-				$n = 0;
-				do
-				{
-					++$n;
-				}
-				while ($this->text[$this->pos - $n] === '\\');
-
-				if ($n % 2)
-				{
-					// If $n is odd, it means there's an even number of backslashes so
-					// we can exit this loop
-					break;
-				}
-			}
-
-			// Unescape special characters ' " and \
-			$attrValue = preg_replace(
-				'#\\\\([\\\\\'"])#',
-				'$1',
-				substr($this->text, $valuePos, $this->pos - $valuePos)
-			);
-
-			// Skip past the closing quote
-			++$this->pos;
+			return $this->parseQuotedAttributeValue();
 		}
-		else
+
+		// Capture everything up to whichever comes first:
+		//  - whitespace followed by a slash and a closing bracket
+		//  - a closing bracket, optionally preceded by whitespace
+		//  - whitespace followed by another attribute (name followed by equal sign)
+		//
+		// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
+		//       that do not put attribute values in quotes, e.g.
+		//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
+		if (!preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, null, $this->pos))
 		{
-			// Capture everything after the equal sign up to whichever comes first:
-			//  - whitespace followed by a slash and a closing bracket
-			//  - a closing bracket, optionally preceded by whitespace
-			//  - whitespace followed by another attribute (name followed by equal sign)
-			//
-			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
-			//       that do not put attribute values in quotes, e.g.
-			//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-			if (!preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, null, $this->pos))
-			{
-				throw new RuntimeException;
-			}
-
-			$attrValue  = $m[0];
-			$this->pos += strlen($attrValue);
+			throw new RuntimeException;
 		}
+
+		$attrValue  = $m[0];
+		$this->pos += strlen($attrValue);
 
 		return $attrValue;
 	}
@@ -391,5 +348,56 @@ class Parser extends ParserBase
 			// Move past the suffix
 			$this->pos += $spn;
 		}
+	}
+
+	/**
+	* Parse a quoted attribute value that starts at current offset
+	*
+	* @return string
+	*/
+	protected function parseQuotedAttributeValue()
+	{
+		$quote    = $this->text[$this->pos];
+		$valuePos = $this->pos + 1;
+		while (1)
+		{
+			// Move past the quote
+			++$this->pos;
+
+			// Look for the next quote
+			$this->pos = strpos($this->text, $quote, $this->pos);
+			if ($this->pos === false)
+			{
+				// No matching quote. Apparently that string never ends...
+				throw new RuntimeException;
+			}
+
+			// Test for an odd number of backslashes before this character
+			$n = 0;
+			do
+			{
+				++$n;
+			}
+			while ($this->text[$this->pos - $n] === '\\');
+
+			if ($n % 2)
+			{
+				// If $n is odd, it means there's an even number of backslashes. We can exit this
+				// loop
+				break;
+			}
+		}
+
+		// Unescape special characters ' " and \
+		$attrValue = preg_replace(
+			'#\\\\([\\\\\'"])#',
+			'$1',
+			substr($this->text, $valuePos, $this->pos - $valuePos)
+		);
+
+		// Skip past the closing quote
+		++$this->pos;
+
+		return $attrValue;
 	}
 }

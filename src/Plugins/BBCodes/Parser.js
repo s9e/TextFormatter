@@ -184,67 +184,28 @@ function parseAttributes()
 */
 function parseAttributeValue()
 {
-	var c = text.charAt(pos), attrValue;
-
 	// Test whether the value is in quotes
-	if (c === '"' || c === "'")
+	if (text.charAt(pos) === '"' || text.charAt(pos) === "'")
 	{
-		// This is where the actual value starts
-		var valuePos = pos + 1;
-		while (1)
-		{
-			// Move past the quote
-			++pos;
-
-			// Look for the next quote
-			pos = text.indexOf(c, pos);
-			if (pos < 0)
-			{
-				// No matching quote. Apparently that string never ends...
-				throw '';
-			}
-
-			// Test for an odd number of backslashes before this character
-			var n = 0;
-			do
-			{
-				++n;
-			}
-			while (text.charAt(pos - n) === '\\');
-
-			if (n % 2)
-			{
-				// If $n is odd, it means there's an even number of backslashes so
-				// we can exit this loop
-				break;
-			}
-		}
-
-		// Unescape special characters ' " and \
-		attrValue = text.substr(valuePos, pos - valuePos).replace(/\\([\\'"])/g, '$1');
-
-		// Skip past the closing quote
-		++pos;
+		return parseQuotedAttributeValue();
 	}
-	else
+
+	// Capture everything up to whichever comes first:
+	//  - whitespace followed by a slash and a closing bracket
+	//  - a closing bracket, optionally preceded by whitespace
+	//  - whitespace followed by another attribute (name followed by equal sign)
+	//
+	// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
+	//       that do not put attribute values in quotes, e.g.
+	//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
+	var match = /[^\]]*?(?= *(?: \/)?\]| +[-\w]+=)/.exec(text.substr(pos));
+	if (!match)
 	{
-		// Capture everything after the equal sign up to whichever comes first:
-		//  - whitespace followed by a slash and a closing bracket
-		//  - a closing bracket, optionally preceded by whitespace
-		//  - whitespace followed by another attribute (name followed by equal sign)
-		//
-		// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
-		//       that do not put attribute values in quotes, e.g.
-		//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-		var match = /[^\]]*?(?= *(?: \/)?\]| +[-\w]+=)/.exec(text.substr(pos));
-		if (!match)
-		{
-			throw '';
-		}
-
-		attrValue = match[0];
-		pos      += attrValue.length;
+		throw '';
 	}
+
+	var attrValue = match[0];
+	pos += attrValue.length;
 
 	return attrValue;
 }
@@ -363,4 +324,50 @@ function parseBBCodeSuffix()
 		// Move past the suffix
 		pos += bbcodeSuffix.length;
 	}
+}
+
+/**
+* Parse a quoted attribute value that starts at current offset
+*
+* @return {!string}
+*/
+function parseQuotedAttributeValue()
+{
+	var quote    = text.charAt(pos),
+		valuePos = pos + 1;
+	while (1)
+	{
+		// Move past the quote
+		++pos;
+
+		// Look for the next quote
+		pos = text.indexOf(quote, pos);
+		if (pos < 0)
+		{
+			// No matching quote. Apparently that string never ends...
+			throw '';
+		}
+
+		// Test for an odd number of backslashes before this character
+		var n = 0;
+		do
+		{
+			++n;
+		}
+		while (text.charAt(pos - n) === '\\');
+
+		if (n % 2)
+		{
+			// If n is odd, it means there's an even number of backslashes. We can exit this loop
+			break;
+		}
+	}
+
+	// Unescape special characters ' " and \
+	var attrValue = text.substr(valuePos, pos - valuePos).replace(/\\([\\'"])/g, '$1');
+
+	// Skip past the closing quote
+	++pos;
+
+	return attrValue;
 }
