@@ -66,7 +66,7 @@ class Quick
 		if (isset($map['php']))
 			$php[] = '		self::$attributes = [];';
 
-		$regexp  = '(<(?:(';
+		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
 		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
 

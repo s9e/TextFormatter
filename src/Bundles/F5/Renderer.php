@@ -61,7 +61,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = \preg_replace_callback(
-			'(<(?:(E)(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
+			'(<(?:(?!/)(E)(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			\preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
