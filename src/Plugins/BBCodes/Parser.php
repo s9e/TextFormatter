@@ -214,10 +214,7 @@ class Parser extends ParserBase
 		$valuePos = $this->pos + 1;
 		while (1)
 		{
-			if (++$this->pos >= $this->textLen)
-				throw new RuntimeException;
-
-			$this->pos = \strpos($this->text, $quote, $this->pos);
+			$this->pos = \strpos($this->text, $quote, $this->pos + 1);
 			if ($this->pos === \false)
 				throw new RuntimeException;
 
