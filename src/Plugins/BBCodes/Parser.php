@@ -361,14 +361,8 @@ class Parser extends ParserBase
 		$valuePos = $this->pos + 1;
 		while (1)
 		{
-			// Move past the quote and make sure we're still within boundaries
-			if (++$this->pos >= $this->textLen)
-			{
-				throw new RuntimeException;
-			}
-
 			// Look for the next quote
-			$this->pos = strpos($this->text, $quote, $this->pos);
+			$this->pos = strpos($this->text, $quote, $this->pos + 1);
 			if ($this->pos === false)
 			{
 				// No matching quote. Apparently that string never ends...

@@ -337,14 +337,8 @@ function parseQuotedAttributeValue()
 		valuePos = pos + 1;
 	while (1)
 	{
-		// Move past the quote and make sure we're still within boundaries
-		if (++pos >= textLen)
-		{
-			throw '';
-		}
-
 		// Look for the next quote
-		pos = text.indexOf(quote, pos);
+		pos = text.indexOf(quote, pos + 1);
 		if (pos < 0)
 		{
 			// No matching quote. Apparently that string never ends...
