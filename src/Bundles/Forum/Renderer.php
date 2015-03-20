@@ -60,7 +60,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = preg_replace_callback(
-			'(<(?:((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|GROOVESHARK|IN(?>DIEGOGO|STAGRAM)|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWITCH|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
+			'(<(?:(?!/)((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|GROOVESHARK|IN(?>DIEGOGO|STAGRAM)|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWITCH|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',

@@ -60,7 +60,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	{
 		self::$attributes = [];
 		$html = preg_replace_callback(
-			'(<(?:((?>E|FLASH|IMG|TIME|html:(?>img|[bh]r)|[BH]R))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
+			'(<(?:(?!/)((?>E|FLASH|IMG|TIME|html:(?>img|[bh]r)|[BH]R))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
 			[$this, 'quick'],
 			preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',

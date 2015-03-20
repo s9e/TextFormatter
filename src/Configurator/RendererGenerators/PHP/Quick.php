@@ -86,7 +86,7 @@ class Quick
 		}
 
 		// Build the regexp that matches all the tags
-		$regexp  = '(<(?:(';
+		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
 		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
 
