@@ -618,6 +618,19 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'xx [hr][/hr] yy',
+				'<r>xx <HR><s>[hr]</s><e>[/hr]</e></HR> yy</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('HR')->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('HR', 3, 4);
+					$parser->addEndTag('HR', 7, 5);
+				}
+			],
+			[
 				'xx [img=foo.png] yy',
 				'<r>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</r>',
 				function ($configurator)

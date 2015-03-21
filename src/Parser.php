@@ -1386,6 +1386,17 @@ class Parser
 	}
 
 	/**
+	* Test whether given start tag is immediately followed by a closing tag
+	*
+	* @param  Tag  $tag Start tag
+	* @return bool
+	*/
+	protected function isFollowedByClosingTag(Tag $tag)
+	{
+		return (empty($this->tagStack)) ? false : end($this->tagStack)->canClose($tag);
+	}
+
+	/**
 	* Process all tags in the stack
 	*
 	* @return void
@@ -1618,10 +1629,11 @@ class Parser
 			return;
 		}
 
-		// If this tag has an autoClose rule and it's not paired with an end tag, we replace it
-		// with a self-closing tag with the same properties
+		// If this tag has an autoClose rule and it's not paired with an end tag or followed by an
+		// end tag, we replace it with a self-closing tag with the same properties
 		if ($tag->getFlags() & self::RULE_AUTO_CLOSE
-		 && !$tag->getEndTag())
+		 && !$tag->getEndTag()
+		 && !$this->isFollowedByClosingTag($tag))
 		{
 			$newTag = new Tag(Tag::SELF_CLOSING_TAG, $tagName, $tag->getPos(), $tag->getLen());
 			$newTag->setAttributes($tag->getAttributes());
