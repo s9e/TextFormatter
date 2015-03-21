@@ -19,7 +19,6 @@ class InlineXPathLiterals extends TemplateNormalization
 		$_this = $this;
 
 		$xpath = new DOMXPath($template->ownerDocument);
-
 		foreach ($xpath->query('//xsl:value-of') as $valueOf)
 		{
 			$textContent = $this->getTextContent($valueOf->getAttribute('select'));

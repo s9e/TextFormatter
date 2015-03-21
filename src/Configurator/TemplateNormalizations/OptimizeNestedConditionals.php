@@ -17,7 +17,6 @@ class OptimizeNestedConditionals extends TemplateNormalization
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query = '//xsl:choose/xsl:otherwise[count(node()) = 1]/xsl:choose';
-
 		foreach ($xpath->query($query) as $innerChoose)
 		{
 			$otherwise   = $innerChoose->parentNode;

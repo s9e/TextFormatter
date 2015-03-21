@@ -20,7 +20,6 @@ class InlineInferredValues extends TemplateNormalization
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
 		$query = '//xsl:if | //xsl:when';
-
 		foreach ($xpath->query($query) as $node)
 		{
 			$map = TemplateParser::parseEqualityExpr($node->getAttribute('test'));

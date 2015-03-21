@@ -17,7 +17,6 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query = '//xsl:if[count(descendant::node()) = 1]/xsl:value-of';
-
 		foreach ($xpath->query($query) as $valueOf)
 		{
 			$if     = $valueOf->parentNode;
