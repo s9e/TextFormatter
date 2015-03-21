@@ -23,7 +23,6 @@ class InlineTextElements extends TemplateNormalization
 	{
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
-
 		foreach ($xpath->query('//xsl:text') as $node)
 		{
 			// If this node's content is whitespace, ensure it's preceded or followed by a text node
@@ -43,7 +42,6 @@ class InlineTextElements extends TemplateNormalization
 					continue;
 				}
 			}
-
 			$node->parentNode->replaceChild(
 				$dom->createTextNode($node->textContent),
 				$node

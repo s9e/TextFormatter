@@ -81,7 +81,6 @@ class NormalizeUrls extends TemplateNormalization
 	{
 		$xpath = new DOMXPath($element->ownerDocument);
 		$query = './/text()[normalize-space() != ""]';
-
 		foreach ($xpath->query($query, $element) as $i => $node)
 		{
 			$value = BuiltInFilters::sanitizeUrl($node->nodeValue);
@@ -93,7 +92,6 @@ class NormalizeUrls extends TemplateNormalization
 
 			$node->nodeValue = $value;
 		}
-
 		if (isset($node))
 		{
 			$node->nodeValue = rtrim($node->nodeValue);

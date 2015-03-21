@@ -27,7 +27,6 @@ class InlineElements extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		$dom = $template->ownerDocument;
-
 		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'element') as $element)
 		{
 			$elName = $element->getAttribute('name');

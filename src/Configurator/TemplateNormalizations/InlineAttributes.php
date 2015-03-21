@@ -30,7 +30,6 @@ class InlineAttributes extends TemplateNormalization
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/xsl:attribute';
-
 		foreach ($xpath->query($query) as $attribute)
 		{
 			$this->inlineAttribute($attribute);
@@ -68,7 +67,6 @@ class InlineAttributes extends TemplateNormalization
 				return;
 			}
 		}
-
 		$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);
 		$attribute->parentNode->removeChild($attribute);
 	}

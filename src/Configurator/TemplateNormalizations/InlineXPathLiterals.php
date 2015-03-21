@@ -23,7 +23,6 @@ class InlineXPathLiterals extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
-
 		foreach ($xpath->query('//xsl:value-of') as $valueOf)
 		{
 			$textContent = $this->getTextContent($valueOf->getAttribute('select'));

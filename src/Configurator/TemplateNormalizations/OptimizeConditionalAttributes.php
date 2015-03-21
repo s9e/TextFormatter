@@ -36,7 +36,6 @@ class OptimizeConditionalAttributes extends TemplateNormalization
 		       . "[starts-with(@test, '@')]"
 		       . '[count(descendant::node()) = 2]'
 		       . '[xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
-
 		foreach ($xpath->query($query) as $if)
 		{
 			$copyOf = $dom->createElementNS(self::XMLNS_XSL, 'xsl:copy-of');

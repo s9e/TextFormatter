@@ -22,7 +22,6 @@ class RemoveComments extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
-
 		foreach ($xpath->query('//comment()') as $comment)
 		{
 			$comment->parentNode->removeChild($comment);

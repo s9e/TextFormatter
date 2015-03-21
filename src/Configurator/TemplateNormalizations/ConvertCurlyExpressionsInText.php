@@ -29,7 +29,6 @@ class ConvertCurlyExpressionsInText extends TemplateNormalization
 		$dom   = $template->ownerDocument;
 		$xpath = new DOMXPath($dom);
 		$query = '//text()[contains(., "{@") or contains(., "{$")]';
-
 		foreach ($xpath->query($query) as $node)
 		{
 			$parentNode = $node->parentNode;
