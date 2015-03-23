@@ -36,6 +36,32 @@ abstract class Utils
 	}
 
 	/**
+	* Remove all tags at given nesting level
+	*
+	* @param  string  $xml          Intermediate representation
+	* @param  string  $tagName      Tag's name (case-sensitive)
+	* @param  integer $nestingLevel Minimum nesting level
+	* @return string                Updated intermediate representation
+	*/
+	public static function removeTag($xml, $tagName, $nestingLevel = 0)
+	{
+		$dom   = self::loadXML($xml);
+		$xpath = new DOMXPath($dom);
+		$nodes = $xpath->query(str_repeat('//' . $tagName, 1 + $nestingLevel));
+		if (!$nodes)
+		{
+			return $xml;
+		}
+
+		foreach ($nodes as $node)
+		{
+			$node->parentNode->removeChild($node);
+		}
+
+		return $dom->saveXML($dom->documentElement);
+	}
+
+	/**
 	* Create a return a new DOMDocument loaded with given XML
 	*
 	* @param  string      $xml Source XML

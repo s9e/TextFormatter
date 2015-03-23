@@ -2570,6 +2570,7 @@ s9e\TextFormatter\Tests\Unparser
 
 s9e\TextFormatter\Tests\Utils
  [x] removeFormatting() tests
+ [x] removeTag() tests
 
 s9e\TextFormatter\Tests\Bundle
  [x] parse() creates a parser, parses the input and returns the output

@@ -40,4 +40,63 @@ class UtilsTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox removeTag() tests
+	* @dataProvider getRemoveTagTests
+	*/
+	public function testRemoveTag($original, $args, $expected)
+	{
+		array_unshift($args, $original);
+		$this->assertSame(
+			$expected,
+			call_user_func_array('s9e\\TextFormatter\\Utils::removeTag', $args)
+		);
+	}
+
+	public function getRemoveTagTests()
+	{
+		return [
+			[
+				'<t>Plain text</t>',
+				['X'],
+				'<t>Plain text</t>'
+			],
+			[
+				'<r><X><s>X</s>..<e>/X</e></X><Y>..</Y></r>',
+				['X'],
+				'<r><Y>..</Y></r>'
+			],
+			[
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>',
+				['X'],
+				'<r><Y>..</Y></r>'
+			],
+			[
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>',
+				['X', 0],
+				'<r><Y>..</Y></r>'
+			],
+			[
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>',
+				['X', 1],
+				'<r><X><s>X</s>....<e>/X</e></X><Y>..</Y></r>'
+			],
+			[
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>',
+				['X', 2],
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>'
+			],
+			[
+				'<r xmlns:foo="urn:foo"><X>..</X><foo:X>..</foo:X></r>',
+				['X'],
+				'<r xmlns:foo="urn:foo"><foo:X>..</foo:X></r>'
+			],
+			[
+				'<r xmlns:foo="urn:foo"><X>..</X><foo:X>..</foo:X></r>',
+				['foo:X'],
+				'<r xmlns:foo="urn:foo"><X>..</X></r>'
+			],
+		];
+	}
 }
