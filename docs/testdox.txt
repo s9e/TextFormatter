@@ -2569,10 +2569,7 @@ s9e\TextFormatter\Tests\Unparser
  [x] Can unparse representations that were over-escaped
 
 s9e\TextFormatter\Tests\Utils
- [x] removeFormatting('<t>Plain text</t>') returns 'Plain text'
- [x] removeFormatting('<t>&lt;Plain text&gt;</t>') returns '<Plain text>'
- [x] removeFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
- [x] removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns 'Rich text :)'
+ [x] removeFormatting() tests
 
 s9e\TextFormatter\Tests\Bundle
  [x] parse() creates a parser, parses the input and returns the output

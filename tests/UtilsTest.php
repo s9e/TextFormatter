@@ -11,46 +11,33 @@ use s9e\TextFormatter\Tests\Test;
 class UtilsTest extends Test
 {
 	/**
-	* @testdox removeFormatting('<t>Plain text</t>') returns 'Plain text'
+	* @testdox removeFormatting() tests
+	* @dataProvider getRemoveFormattingTests
 	*/
-	public function testRemoveFormattingPlainText()
+	public function testRemoveFormattingPlainText($original, $expected)
 	{
-		$this->assertSame(
-			'Plain text',
-			Utils::removeFormatting('<t>Plain text</t>')
-		);
+		$this->assertSame($expected, Utils::removeFormatting($original));
 	}
 
-	/**
-	* @testdox removeFormatting('<t>&lt;Plain text&gt;</t>') returns '<Plain text>'
-	*/
-	public function testRemoveFormattingPlainTextWithSpecialChars()
+	public function getRemoveFormattingTests()
 	{
-		$this->assertSame(
-			'<Plain text>',
-			Utils::removeFormatting('<t>&lt;Plain text&gt;</t>')
-		);
-	}
-
-	/**
-	* @testdox removeFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
-	*/
-	public function testRemoveFormattingPlainTextWithLinebreaks()
-	{
-		$this->assertSame(
-			"a\nb",
-			Utils::removeFormatting("<t>a<br/>\nb</t>")
-		);
-	}
-
-	/**
-	* @testdox removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns 'Rich text :)'
-	*/
-	public function testRemoveFormattingRichText()
-	{
-		$this->assertSame(
-			'Rich text :)',
-			Utils::removeFormatting('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>')
-		);
+		return [
+			[
+				'<t>Plain text</t>',
+				'Plain text'
+			],
+			[
+				'<t>&lt;Plain text&gt;</t>',
+				'<Plain text>'
+			],
+			[
+				"<t>a<br/>\nb</t>",
+				"a\nb"
+			],
+			[
+				'<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>',
+				'Rich text :)'
+			],
+		];
 	}
 }
