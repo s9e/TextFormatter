@@ -14,7 +14,7 @@ class UtilsTest extends Test
 	* @testdox removeFormatting() tests
 	* @dataProvider getRemoveFormattingTests
 	*/
-	public function testRemoveFormattingPlainText($original, $expected)
+	public function testRemoveFormatting($original, $expected)
 	{
 		$this->assertSame($expected, Utils::removeFormatting($original));
 	}
