@@ -12,32 +12,6 @@ use DOMDocument;
 abstract class Unparser
 {
 	/**
-	* Strip the formatting of an intermediate representation and return plain text
-	*
-	* This will remove start tags and end tags but will keep the text content of everything else
-	*
-	* @param  string $xml Intermediate representation
-	* @return string      Plain text
-	*/
-	public static function removeFormatting($xml)
-	{
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		foreach ($dom->getElementsByTagName('s') as $tag)
-		{
-			$tag->parentNode->removeChild($tag);
-		}
-
-		foreach ($dom->getElementsByTagName('e') as $tag)
-		{
-			$tag->parentNode->removeChild($tag);
-		}
-
-		return $dom->documentElement->textContent;
-	}
-
-	/**
 	* Transform an intermediate representation back to its original form
 	*
 	* @param  string $xml Intermediate representation

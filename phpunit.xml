@@ -238,6 +238,7 @@
 			<file>tests/Renderers/UnformattedTest.php</file>
 
 			<file>tests/UnparserTest.php</file>
+			<file>tests/UtilsTest.php</file>
 
 			<file>tests/BundleTest.php</file>
 			<file>tests/Bundles/F5Test.php</file>
