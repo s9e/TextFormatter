@@ -248,7 +248,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.bbc.com/news/science-environment-29232523',
-				'<r><BBCNEWS ad_site="/news/science_and_environment/" playlist="/news/science-environment-29232523A" poster="/media/images/77632000/jpg/_77632870_77632869.jpg" url="http://www.bbc.com/news/science-environment-29232523">http://www.bbc.com/news/science-environment-29232523</BBCNEWS></r>',
+				'<r><BBCNEWS ad_site="/news/science_and_environment" playlist="/news/science-environment-29232523A" poster="/media/images/77632000/jpg/_77632871_77632869.jpg" url="http://www.bbc.com/news/science-environment-29232523">http://www.bbc.com/news/science-environment-29232523</BBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
