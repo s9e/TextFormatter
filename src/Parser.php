@@ -816,6 +816,11 @@ class Parser
 		return $tagPos;
 	}
 
+	protected function isFollowedByClosingTag(Tag $tag)
+	{
+		return (empty($this->tagStack)) ? \false : \end($this->tagStack)->canClose($tag);
+	}
+
 	protected function processTags()
 	{
 		$this->pos       = 0;
@@ -980,7 +985,8 @@ class Parser
 		}
 
 		if ($tag->getFlags() & self::RULE_AUTO_CLOSE
-		 && !$tag->getEndTag())
+		 && !$tag->getEndTag()
+		 && !$this->isFollowedByClosingTag($tag))
 		{
 			$newTag = new Tag(Tag::SELF_CLOSING_TAG, $tagName, $tag->getPos(), $tag->getLen());
 			$newTag->setAttributes($tag->getAttributes());

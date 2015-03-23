@@ -11,20 +11,6 @@ use DOMDocument;
 
 abstract class Unparser
 {
-	public static function removeFormatting($xml)
-	{
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		foreach ($dom->getElementsByTagName('s') as $tag)
-			$tag->parentNode->removeChild($tag);
-
-		foreach ($dom->getElementsByTagName('e') as $tag)
-			$tag->parentNode->removeChild($tag);
-
-		return $dom->documentElement->textContent;
-	}
-
 	public static function unparse($xml)
 	{
 		return \htmlspecialchars_decode(\strip_tags($xml), \ENT_QUOTES);
