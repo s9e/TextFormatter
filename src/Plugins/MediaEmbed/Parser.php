@@ -293,7 +293,12 @@ class Parser extends ParserBase
 		{
 			$prefix  = 'compress.zlib://';
 			$suffix  = '.gz';
-			$context = stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']]);
+			$context = stream_context_create(
+				[
+					'http' => ['header' => 'Accept-Encoding: gzip'],
+					'ssl'  => ['verify_peer' => false]
+				]
+			);
 		}
 
 		// Return the content from the cache if applicable
