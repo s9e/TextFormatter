@@ -368,12 +368,6 @@ class XPathConvertor
 		if (isset($this->regexp))
 			return;
 
-		if (\version_compare($this->pcreVersion, '8.13', '<'))
-		{
-			$this->regexp = '(^(?<attr>@\\s*(?<attr0>[-\\w]+))$)';
-			return;
-		}
-
 		$patterns = [
 			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
 			'dot'       => '\\.',
@@ -436,25 +430,27 @@ class XPathConvertor
 			]
 		];
 
-		$exprs = [];
-
 		$valueExprs = [];
 		foreach ($patterns as $name => $pattern)
 		{
 			if (\is_array($pattern))
 				$pattern = \implode(' ', $pattern);
 
-			$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
+			if (\strpos($pattern, '?&') === \false || \version_compare($this->pcreVersion, '8.13', '>='))
+				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 		}
-		$exprs[] = '(?<value>' . \implode('|', $valueExprs) . ')';
 
-		$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+		$exprs = ['(?<value>' . \implode('|', $valueExprs) . ')'];
+		if (\version_compare($this->pcreVersion, '8.13', '>='))
+		{
+			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
-		$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
+			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
 
-		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
 
-		$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+		}
 
 		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
 
