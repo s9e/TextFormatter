@@ -215,7 +215,7 @@ class XPathConvertorTest extends Test
 			[
 				'@foo + 12',
 				"\$node->getAttribute('foo')+12",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -224,9 +224,17 @@ class XPathConvertorTest extends Test
 				}
 			],
 			[
+				'@foo + 12',
+				"\$this->xpath->evaluate('string(@foo + 12)',\$node)",
+				function ($convertor)
+				{
+					$convertor->pcreVersion = '8.02 2010-03-19';
+				}
+			],
+			[
 				'44 + $bar',
 				"44+\$this->params['bar']",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -237,7 +245,7 @@ class XPathConvertorTest extends Test
 			[
 				'@h * 3600 + @m * 60 + @s',
 				"\$node->getAttribute('h')*3600+\$node->getAttribute('m')*60+\$node->getAttribute('s')",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -248,7 +256,7 @@ class XPathConvertorTest extends Test
 			[
 				'@x div@y',
 				"\$node->getAttribute('x')/\$node->getAttribute('y')",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -260,7 +268,7 @@ class XPathConvertorTest extends Test
 			[
 				'12+34',
 				'46',
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -271,7 +279,7 @@ class XPathConvertorTest extends Test
 			[
 				'44-11',
 				'33',
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -282,7 +290,7 @@ class XPathConvertorTest extends Test
 			[
 				'7*9',
 				'63',
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -293,7 +301,7 @@ class XPathConvertorTest extends Test
 			[
 				'10div2',
 				'5',
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -304,7 +312,7 @@ class XPathConvertorTest extends Test
 			[
 				'1div100000',
 				'1/100000',
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -381,7 +389,7 @@ class XPathConvertorTest extends Test
 			[
 				'not(@foo and @bar)',
 				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -405,7 +413,7 @@ class XPathConvertorTest extends Test
 			[
 				"not(contains(@id, 'bar'))",
 				"(strpos(\$node->getAttribute('id'),'bar')===false)",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -420,7 +428,7 @@ class XPathConvertorTest extends Test
 			[
 				'@foo and (@bar or @baz)',
 				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
@@ -431,7 +439,7 @@ class XPathConvertorTest extends Test
 			[
 				'(@a = @b) or (@b = @c)',
 				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))",
-				function ()
+				function ($convertor)
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{

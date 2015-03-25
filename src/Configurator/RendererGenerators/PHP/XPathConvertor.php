@@ -29,9 +29,29 @@ class XPathConvertor
 	];
 
 	/**
+	* @var string PCRE version
+	*/
+	public $pcreVersion;
+
+	/**
+	* @var string Regexp used to match XPath expressions
+	*/
+	protected $regexp;
+
+	/**
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
 	public $useMultibyteStringFunctions = false;
+
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->pcreVersion = PCRE_VERSION;
+	}
 
 	/**
 	* Convert an XPath expression (used in a condition) into PHP code
@@ -104,7 +124,8 @@ class XPathConvertor
 			return $this->customXPath[$expr];
 		}
 
-		if (preg_match($this->getXPathRegexp(), $expr, $m))
+		$this->generateXPathRegexp();
+		if (preg_match($this->regexp, $expr, $m))
 		{
 			$methodName = null;
 			foreach ($m as $k => $v)
@@ -505,15 +526,19 @@ class XPathConvertor
 	/**
 	* Generate a regexp used to parse XPath expressions
 	*
-	* @return string
+	* @return void
 	*/
-	protected function getXPathRegexp()
+	protected function generateXPathRegexp()
 	{
-		static $regexp;
-
-		if (isset($regexp))
+		if (isset($this->regexp))
 		{
-			return $regexp;
+			return;
+		}
+
+		if (version_compare($this->pcreVersion, '8.13', '<'))
+		{
+			$this->regexp = '(^(?<attr>@\\s*(?<attr0>[-\\w]+))$)';
+			return;
 		}
 
 		$patterns = [
@@ -559,20 +584,13 @@ class XPathConvertor
 				',',
 				'(?<startswith1>(?&value))',
 				'\\)'
-			]
-		];
-
-		// Old versions of PCRE and/or PHP choke on long expressions, so we only add those
-		// if the version of PCRE isn't ancient
-		if (version_compare(PCRE_VERSION, '8.13', '>='))
-		{
-			$patterns['math'] = [
+			],
+			'math' => [
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
 				'(?<math1>[-+*]|div)',
 				'(?<math2>(?&math)|(?&math0))'
-			];
-
-			$patterns['notcontains'] = [
+			],
+			'notcontains' => [
 				'not',
 				'\\(',
 				'contains',
@@ -582,8 +600,8 @@ class XPathConvertor
 				'(?<notcontains1>(?&value))',
 				'\\)',
 				'\\)'
-			];
-		}
+			]
+		];
 
 		$exprs = [];
 
@@ -604,24 +622,15 @@ class XPathConvertor
 		// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
 		$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
-		// Match parenthesized expressions and some not() expressions on PCRE >= 8.13 only.
-		// Previous versions segfault because of the mutual references
-		$boolMatch = $parensMatch = '';
-		if (version_compare(PCRE_VERSION, '8.13', '>='))
-		{
-			$boolMatch   = '(?&bool)|';
-			$parensMatch = '|(?&parens)';
-
-			// Create a regexp that matches a parenthesized expression
-			// NOTE: could be expanded to support any expression
-			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
-		}
+		// Create a regexp that matches a parenthesized expression
+		// NOTE: could be expanded to support any expression
+		$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
 
 		// Create a regexp that matches boolean operations
-		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)' . $parensMatch . '))';
+		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
 
 		// Create a regexp that matches not() expressions
-		$exprs[] = '(?<not>not \\( (?<not0>' . $boolMatch . '(?&value)) \\))';
+		$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
 
 		// Assemble the final regexp
 		$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
@@ -629,6 +638,6 @@ class XPathConvertor
 		// Replace spaces with any amount of whitespace
 		$regexp = str_replace(' ', '\\s*', $regexp);
 
-		return $regexp;
+		$this->regexp = $regexp;
 	}
 }
