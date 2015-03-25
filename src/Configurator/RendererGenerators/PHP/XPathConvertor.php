@@ -23,7 +23,16 @@ class XPathConvertor
 			=> "(\$node->hasAttribute('songid')?40:400)"
 	];
 
+	public $pcreVersion;
+
+	protected $regexp;
+
 	public $useMultibyteStringFunctions = \false;
+
+	public function __construct()
+	{
+		$this->pcreVersion = \PCRE_VERSION;
+	}
 
 	public function convertCondition($expr)
 	{
@@ -54,7 +63,8 @@ class XPathConvertor
 		if (isset($this->customXPath[$expr]))
 			return $this->customXPath[$expr];
 
-		if (\preg_match($this->getXPathRegexp(), $expr, $m))
+		$this->generateXPathRegexp();
+		if (\preg_match($this->regexp, $expr, $m))
 		{
 			$methodName = \null;
 			foreach ($m as $k => $v)
@@ -353,12 +363,16 @@ class XPathConvertor
 		return \implode('.', $phpTokens);
 	}
 
-	protected function getXPathRegexp()
+	protected function generateXPathRegexp()
 	{
-		static $regexp;
+		if (isset($this->regexp))
+			return;
 
-		if (isset($regexp))
-			return $regexp;
+		if (\version_compare($this->pcreVersion, '8.13', '<'))
+		{
+			$this->regexp = '(^(?<attr>@\\s*(?<attr0>[-\\w]+))$)';
+			return;
+		}
 
 		$patterns = [
 			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
@@ -403,18 +417,13 @@ class XPathConvertor
 				',',
 				'(?<startswith1>(?&value))',
 				'\\)'
-			]
-		];
-
-		if (\version_compare(\PCRE_VERSION, '8.13', '>='))
-		{
-			$patterns['math'] = [
+			],
+			'math' => [
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
 				'(?<math1>[-+*]|div)',
 				'(?<math2>(?&math)|(?&math0))'
-			];
-
-			$patterns['notcontains'] = [
+			],
+			'notcontains' => [
 				'not',
 				'\\(',
 				'contains',
@@ -424,8 +433,8 @@ class XPathConvertor
 				'(?<notcontains1>(?&value))',
 				'\\)',
 				'\\)'
-			];
-		}
+			]
+		];
 
 		$exprs = [];
 
@@ -441,23 +450,16 @@ class XPathConvertor
 
 		$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
-		$boolMatch = $parensMatch = '';
-		if (\version_compare(\PCRE_VERSION, '8.13', '>='))
-		{
-			$boolMatch   = '(?&bool)|';
-			$parensMatch = '|(?&parens)';
+		$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
 
-			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
-		}
+		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
 
-		$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)' . $parensMatch . '))';
-
-		$exprs[] = '(?<not>not \\( (?<not0>' . $boolMatch . '(?&value)) \\))';
+		$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
 
 		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
 
 		$regexp = \str_replace(' ', '\\s*', $regexp);
 
-		return $regexp;
+		$this->regexp = $regexp;
 	}
 }

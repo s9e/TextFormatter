@@ -6,9 +6,9 @@
 	<tags><tag>social</tag></tags>
 
 	<host>plus.google.com</host>
-	<extract>!//plus\.google\.com/(?:\+\w+|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
+	<extract>!//plus\.google\.com/(?:u/\d+/)?(?:\+\w+|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
 	<scrape>
-		<match>!//plus\.google\.com/\+[^/]+/posts/\w!</match>
+		<match>!//plus\.google\.com/(?:u/\d+/)?\+[^/]+/posts/\w!</match>
 		<extract>!oid="?(?'oid'\d+)!</extract>
 	</scrape>
 	<iframe width="450" height="240" src="//s9e.github.io/iframe/googleplus.min.html#{@oid}/posts/{@pid}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
