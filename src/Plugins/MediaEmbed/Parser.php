@@ -170,7 +170,12 @@ class Parser extends ParserBase
 		{
 			$prefix  = 'compress.zlib://';
 			$suffix  = '.gz';
-			$context = \stream_context_create(array('http' => array('header' => 'Accept-Encoding: gzip')));
+			$context = \stream_context_create(
+				array(
+					'http' => array('header' => 'Accept-Encoding: gzip'),
+					'ssl'  => array('verify_peer' => \false)
+				)
+			);
 		}
 
 		if (isset($cacheDir) && \file_exists($cacheDir))
