@@ -266,22 +266,50 @@ class QuickTest extends Test
 			[
 				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
 				'<r><X x="&quot;&lt;&gt;"/></r>',
-				'x'
+				'x',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
 				'<r><X x="&quot;&lt;&gt;"/></r>',
-				'x'
+				'x',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
 				'<r><X x="1"/><X x="2"/></r>',
-				'x'
+				'x',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="11=@x">x</xsl:if>'],
 				'<r><X x="11"/><X x="2"/></r>',
-				'x'
+				'x',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
@@ -310,7 +338,14 @@ class QuickTest extends Test
 			[
 				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
 				'<r><X x="&amp;amp;"/></r>',
-				'<hr title="&amp;Amp;">'
+				'<hr title="&amp;Amp;">',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:value-of select="@foo"/>'],
@@ -333,8 +368,12 @@ class QuickTest extends Test
 	/**
 	* @dataProvider getRenderingStrategyTests
 	*/
-	public function testRenderingStrategy($template, $expected)
+	public function testRenderingStrategy($template, $expected, $setup = null)
 	{
+		if (isset($setup))
+		{
+			$setup();
+		}
 		$php = self::getPHP($template, 'html');
 		$this->assertSame($expected, Quick::getRenderingStrategy($php));
 	}
@@ -530,7 +569,14 @@ class QuickTest extends Test
 						'php',
 						'$attributes=array_pop(self::$attributes);$html=\'\';if($attributes[\'foo\']==1){if($attributes[\'foo\']==2){$html.=\'[/2]\';}else{$html.=\'[/3]\';}$html.=\'[/1]\';}else{if($attributes[\'foo\']==4){$html.=\'[/4]\';}else{$html.=\'[/5]\';}$html.=\'[/o]\';}$html.=\'END\';'
 					]
-				]
+				],
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				'<b><xsl:apply-templates/><xsl:apply-templates/></b>',
@@ -580,7 +626,14 @@ class QuickTest extends Test
 						</xsl:otherwise>
 					</xsl:choose>'
 				),
-				[['php', '$html=\'\';if($textContent===\':)\'){$html.=\'<img src="happy.png">\';}else{$html.=htmlspecialchars($textContent,0);}']]
+				[['php', '$html=\'\';if($textContent===\':)\'){$html.=\'<img src="happy.png">\';}else{$html.=htmlspecialchars($textContent,0);}']],
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 		];
 	}
@@ -647,19 +700,47 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
-				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}"
+				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
-				"if('&quot;&lt;&gt;'===\$attributes['x']){\$html.='x';}"
+				"if('&quot;&lt;&gt;'===\$attributes['x']){\$html.='x';}",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
-				"if(\$attributes['x']==1){\$html.='x';}"
+				"if(\$attributes['x']==1){\$html.='x';}",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="1=@x">x</xsl:if>'],
-				"if(1==\$attributes['x']){\$html.='x';}"
+				"if(1==\$attributes['x']){\$html.='x';}",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
@@ -685,23 +766,58 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:if test="@x1=@x2">x</xsl:if>'],
-				"if(\$attributes['x1']===\$attributes['x2']){\$html.='x';}"
+				"if(\$attributes['x1']===\$attributes['x2']){\$html.='x';}",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="contains(@x,\'&quot;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;')!==false)"
+				"(strpos(\$attributes['x'],'&quot;')!==false)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="contains(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)"
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="starts-with(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)"
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="starts-with(@x,\'&quot;&lt;&gt;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)"
+				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => '<xsl:if test="not(contains(@x,\'&quot;\'))">x</xsl:if>'],
@@ -727,16 +843,37 @@ class QuickTest extends Test
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'_','-')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'"
+				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'ABC','abc')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'"
+				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				// Replacing "a" with "A" would mess up "&amp;"
 				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
-				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'"
+				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'",
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 		];
 	}

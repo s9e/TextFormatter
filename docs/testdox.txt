@@ -2409,8 +2409,13 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
- [x] convertXPath() tests
- [x] convertCondition() tests
+ [x] convertXPath() basic tests
+ [x] convertXPath() advanced tests (PCRE >= 8.13)
+ [x] convertXPath() advanced tests (PCRE < 8.13)
+ [x] convertXPath() mbstring tests
+ [x] convertCondition() basic tests
+ [x] convertCondition() advanced tests (PCRE >= 8.13)
+ [x] convertCondition() advanced tests (PCRE < 8.13)
  [x] Covering test for resolveConstantMathExpression()
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\BranchOutputOptimizer

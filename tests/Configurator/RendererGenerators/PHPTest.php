@@ -768,6 +768,10 @@ class PHPTest extends Test
 					{
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
 				}
 			],
 			// XPath in conditions
