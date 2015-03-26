@@ -9,18 +9,13 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Simpletext extends AttributeFilter
+class IpFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterSimpletext');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIp');
 
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterSimpletext');
-	}
-
-	public function isSafeInCSS()
-	{
-		return \true;
+		$this->setJS('BuiltInFilters.filterIp');
 	}
 }
