@@ -9,27 +9,17 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Uint extends AttributeFilter
+class SimpletextFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUint');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterSimpletext');
 
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterUint');
+		$this->setJS('BuiltInFilters.filterSimpletext');
 	}
 
 	public function isSafeInCSS()
-	{
-		return \true;
-	}
-
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-
-	public function isSafeAsURL()
 	{
 		return \true;
 	}
