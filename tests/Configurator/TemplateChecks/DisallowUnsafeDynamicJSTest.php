@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 use DOMDocument;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\NumberFilter;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicJS;
 use s9e\TextFormatter\Tests\Test;
@@ -58,7 +58,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 		$node = $this->loadTemplate('<b onclick="alert({@foo})">...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Number);
+		$tag->attributes->add('foo')->filterChain->append(new NumberFilter);
 
 		$check = new DisallowUnsafeDynamicJS;
 		$check->check($node, $tag);
@@ -157,7 +157,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@onclick"/>...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('onclick')->filterChain->append(new Number);
+		$tag->attributes->add('onclick')->filterChain->append(new NumberFilter);
 
 		$check = new DisallowUnsafeDynamicJS;
 		$check->check($node, $tag);
@@ -228,7 +228,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Number);
+		$tag->attributes->add('foo')->filterChain->append(new NumberFilter);
 
 		$check = new DisallowUnsafeDynamicJS;
 		$check->check($node, $tag);

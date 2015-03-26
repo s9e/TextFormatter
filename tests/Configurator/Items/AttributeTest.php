@@ -5,8 +5,8 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterChain;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IntFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Tests\Test;
 
@@ -34,7 +34,7 @@ class AttributeTest extends Test
 	public function testSetFilterChainArray()
 	{
 		$attr = new Attribute;
-		$attr->filterChain = [new Int, new Url];
+		$attr->filterChain = [new IntFilter, new UrlFilter];
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Collections\\AttributeFilterChain',

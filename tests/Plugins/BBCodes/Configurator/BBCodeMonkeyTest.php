@@ -7,17 +7,17 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Hashmap;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Map;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Range;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\ChoiceFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IdentifierFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IntFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\MapFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\NumberFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RangeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\SimpletextFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UintFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
@@ -149,7 +149,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'url' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template' => '<xsl:apply-templates/>'
@@ -168,7 +168,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'        => new Tag([
 						'attributes' => [
 							'content' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template' => '<xsl:value-of select="@content"/>'
@@ -292,7 +292,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'src' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template' => ''
@@ -311,7 +311,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'url' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template' => '<a href="{@url}"><xsl:apply-templates/></a>'
@@ -329,7 +329,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => ['strtolower', 'strtotime', new Int]
+								'filterChain' => ['strtolower', 'strtotime', new IntFilter]
 							]
 						],
 						'template' => ''
@@ -347,7 +347,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Simpletext, 'strtolower', 'ucwords']
+								'filterChain' => [new SimpletextFilter, 'strtolower', 'ucwords']
 							]
 						],
 						'template' => ''
@@ -365,7 +365,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Int, new Identifier]
+								'filterChain' => [new IntFilter, new IdentifierFilter]
 							]
 						],
 						'template' => ''
@@ -393,7 +393,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/^foo$/')]
+								'filterChain' => [new RegexpFilter('/^foo$/')]
 							]
 						],
 						'template' => ''
@@ -411,7 +411,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('#^foo$#')]
+								'filterChain' => [new RegexpFilter('#^foo$#')]
 							]
 						],
 						'template' => ''
@@ -429,7 +429,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('#^foo$#iusDSU')]
+								'filterChain' => [new RegexpFilter('#^foo$#iusDSU')]
 							]
 						],
 						'template' => ''
@@ -447,7 +447,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/[a-z]{3}\\//')]
+								'filterChain' => [new RegexpFilter('/[a-z]{3}\\//')]
 							]
 						],
 						'template' => ''
@@ -465,7 +465,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'anchor' => [
-								'filterChain' => [new Regexp('/^#?[a-z][-a-z_0-9]{0,}$/i')]
+								'filterChain' => [new RegexpFilter('/^#?[a-z][-a-z_0-9]{0,}$/i')]
 							]
 						],
 						'template' => ''
@@ -486,7 +486,7 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'bar' => [
-								'filterChain' => [new Regexp('/^(?:.)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:.)$/D')]
 							]
 						],
 						'template' => ''
@@ -509,10 +509,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/^(?:\\d+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/D')]
 							],
 							'bar' => [
-								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/D')]
 							]
 						],
 						'template' => ''
@@ -533,7 +533,7 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/^(?:\\d+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/uD')]
 							]
 						],
 						'template' => ''
@@ -556,10 +556,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/^(?:\\d+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/D')]
 							],
 							'bar' => [
-								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/D')]
 							]
 						],
 						'template' => ''
@@ -581,10 +581,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Regexp('/^(?:\\d+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/uD')]
 							],
 							'bar' => [
-								'filterChain' => [new Regexp('/^(?:\\D+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/uD')]
 							]
 						],
 						'template' => ''
@@ -606,10 +606,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'first' => [
-								'filterChain' => [new Regexp('/^(?:\\w+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\w+)$/D')]
 							],
 							'last' => [
-								'filterChain' => [new Regexp('/^(?:\\w+)$/D')]
+								'filterChain' => [new RegexpFilter('/^(?:\\w+)$/D')]
 							]
 						],
 						'template' => ''
@@ -627,7 +627,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new Range(-2, 5)]
+								'filterChain' => [new RangeFilter(-2, 5)]
 							]
 						],
 						'template' => ''
@@ -664,7 +664,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Choice(['one', 'two'])
+									new ChoiceFilter(['one', 'two'])
 								]
 							]
 						],
@@ -684,7 +684,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Choice(['pokémon', 'yugioh'])
+									new ChoiceFilter(['pokémon', 'yugioh'])
 								]
 							]
 						],
@@ -704,7 +704,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Choice(['Pokémon', 'YuGiOh'], true)
+									new ChoiceFilter(['Pokémon', 'YuGiOh'], true)
 								]
 							]
 						],
@@ -724,7 +724,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map([
+									new MapFilter([
 										'one' => 'uno',
 										'two' => 'dos'
 									])
@@ -747,7 +747,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map(
+									new MapFilter(
 										[
 											'one' => 'uno',
 											'two' => 'dos'
@@ -774,7 +774,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map(
+									new MapFilter(
 										[
 											'one' => 'uno',
 											'two' => 'dos'
@@ -801,7 +801,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map([
+									new MapFilter([
 										'pokémon' => 'Pikachu',
 										'yugioh'  => 'Yugi'
 									])
@@ -824,7 +824,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map(
+									new MapFilter(
 										[
 											'Pokémon' => 'Pikachu',
 											'YuGiOh'  => 'Yugi'
@@ -850,7 +850,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Map([
+									new MapFilter([
 										'sans serif' => 'sans-serif',
 										'sansserif'  => 'sans-serif'
 									])
@@ -875,7 +875,7 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo0' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => ''
@@ -897,10 +897,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo0' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							],
 							'foo1' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => '<xsl:value-of select="@foo0"/><xsl:value-of select="@foo1"/>'
@@ -924,7 +924,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Hashmap([
+									new HashmapFilter([
 										'one' => 'uno',
 										'two' => 'dos'
 									])
@@ -947,7 +947,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'foo' => [
 								'filterChain' => [
-									new Hashmap(
+									new HashmapFilter(
 										[
 											'one' => 'uno',
 											'two' => 'dos'
@@ -984,13 +984,13 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'content' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							],
 							'flash0' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							],
 							'flash1' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => '<object width="{@flash0}" height="{@flash1}"/>'
@@ -1012,13 +1012,13 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'url' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							],
 							'width' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							],
 							'height' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => '<object width="{@width}" height="{@height}"/>'
@@ -1065,7 +1065,7 @@ class BBCodeMonkeyTest extends Test
 								'required' => false
 							],
 							'id'     => [
-								'filterChain' => [new Uint],
+								'filterChain' => [new UintFilter],
 								'required' => false
 							]
 						],
@@ -1119,10 +1119,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'content0' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							],
 							'content1' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => ''
@@ -1144,10 +1144,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'content0' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							],
 							'content1' => [
-								'filterChain' => [new Number]
+								'filterChain' => [new NumberFilter]
 							]
 						],
 						'template' => ''
@@ -1298,7 +1298,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'        => new Tag([
 						'attributes' => [
 							'url' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template'   => '<a href="{@url}"><xsl:apply-templates/></a>'
@@ -1325,7 +1325,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'        => new Tag([
 						'attributes' => [
 							'id' => [
-								'filterChain' => [new Identifier]
+								'filterChain' => [new IdentifierFilter]
 							]
 						],
 						'template'   => '<span title="{@id}{@id}"/>'
@@ -1363,7 +1363,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'        => new Tag([
 						'attributes' => [
 							'url' => [
-								'filterChain' => [new Url]
+								'filterChain' => [new UrlFilter]
 							]
 						],
 						'template' => '<hr/><img src="{@url}"/><br/>'

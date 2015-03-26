@@ -3,7 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator;
 
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\TemplateChecker;
@@ -176,7 +176,7 @@ class TemplateCheckerTest extends Test
 		$templateChecker = new TemplateChecker;
 
 		$tag = new Tag;
-		$tag->attributes->add('url')->filterChain->append(new Url);
+		$tag->attributes->add('url')->filterChain->append(new UrlFilter);
 		$tag->template = '<embed allowScriptAccess="always" src="{@url}"/>';
 
 		$templateChecker->checkTag($tag);

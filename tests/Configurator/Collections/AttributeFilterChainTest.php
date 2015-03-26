@@ -92,7 +92,7 @@ class AttributeFilterChainTest extends Test
 		$filterChain = new AttributeFilterChain;
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Int',
+			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\IntFilter',
 			$filterChain->append('#int')
 		);
 	}

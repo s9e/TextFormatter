@@ -4,8 +4,8 @@ namespace s9e\TextFormatter\Tests\Plugins\Generic;
 
 use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp as RegexpFilter;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url as UrlFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;

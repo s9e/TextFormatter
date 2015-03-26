@@ -15,7 +15,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -254,7 +254,7 @@ class Configurator extends ConfiguratorBase
 			}
 			elseif (isset($attrConfig['regexp']))
 			{
-				$attribute->filterChain->append(new Regexp($attrConfig['regexp']));
+				$attribute->filterChain->append(new RegexpFilter($attrConfig['regexp']));
 			}
 
 			if (isset($attrConfig['required']))

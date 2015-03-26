@@ -64,25 +64,25 @@
 			<file>tests/Configurator/Items/AttributeFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributePreprocessorTest.php</file>
 			<file>tests/Configurator/Items/ProgrammableCallbackTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/AlnumTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/ChoiceTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/ColorTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/EmailTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/FloatTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/HashmapTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/IdentifierTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/IntTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/IpTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/IpportTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/Ipv4Test.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/Ipv6Test.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/MapTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/NumberTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/RangeTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/RegexpTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/SimpletextTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/UintTest.php</file>
-			<file>tests/Configurator/Items/AttributeFilters/UrlTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/AlnumFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/ChoiceFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/ColorFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/EmailFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/FloatFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/HashmapFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IdentifierFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IntFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IpFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IpportFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/Ipv4FilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/Ipv6FilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/MapFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/NumberFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/RangeFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/RegexpFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/SimpletextFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/UintFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/UrlFilterTest.php</file>
 			<file>tests/Configurator/Items/RegexpTest.php</file>
 			<file>tests/Configurator/Items/TagTest.php</file>
 			<file>tests/Configurator/Items/TagFilterTest.php</file>

@@ -69,7 +69,7 @@ class AttributeFilterCollectionTest extends Test
 		$collection = new AttributeFilterCollection;
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Number',
+			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\NumberFilter',
 			$collection->get('#number')
 		);
 	}
@@ -83,7 +83,7 @@ class AttributeFilterCollectionTest extends Test
 		$collection->set('#number', new AttributeFilter(function(){}));
 
 		$this->assertNotInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Number',
+			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\NumberFilter',
 			$collection->get('#number')
 		);
 	}

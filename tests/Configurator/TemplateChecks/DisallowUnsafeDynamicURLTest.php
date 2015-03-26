@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 use DOMDocument;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicURL;
 use s9e\TextFormatter\Tests\Test;
@@ -47,7 +47,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 		$node = $this->loadTemplate('<a href="{@foo}">...</a>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Url);
+		$tag->attributes->add('foo')->filterChain->append(new UrlFilter);
 
 		$check = new DisallowUnsafeDynamicURL;
 		$check->check($node, $tag);
@@ -335,7 +335,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 		$node = $this->loadTemplate('<a><xsl:copy-of select="@href"/>...</a>');
 
 		$tag = new Tag;
-		$tag->attributes->add('href')->filterChain->append(new Url);
+		$tag->attributes->add('href')->filterChain->append(new UrlFilter);
 
 		$check = new DisallowUnsafeDynamicURL;
 		$check->check($node, $tag);
@@ -406,7 +406,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Url);
+		$tag->attributes->add('foo')->filterChain->append(new UrlFilter);
 
 		$check = new DisallowUnsafeDynamicURL;
 		$check->check($node, $tag);
@@ -448,7 +448,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 		$node = $this->loadTemplate('<a><xsl:attribute name="href">http://<xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Url);
+		$tag->attributes->add('foo')->filterChain->append(new UrlFilter);
 
 		$check = new DisallowUnsafeDynamicURL;
 		$check->check($node, $tag);

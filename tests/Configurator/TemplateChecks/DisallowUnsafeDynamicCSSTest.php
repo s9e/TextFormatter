@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 use DOMDocument;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Color;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\ColorFilter;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS;
 use s9e\TextFormatter\Tests\Test;
@@ -58,7 +58,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 		$node = $this->loadTemplate('<b style="color:{@foo}">...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Color);
+		$tag->attributes->add('foo')->filterChain->append(new ColorFilter);
 
 		$check = new DisallowUnsafeDynamicCSS;
 		$check->check($node, $tag);
@@ -157,7 +157,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@style"/>...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('style')->filterChain->append(new Color);
+		$tag->attributes->add('style')->filterChain->append(new ColorFilter);
 
 		$check = new DisallowUnsafeDynamicCSS;
 		$check->check($node, $tag);
@@ -228,7 +228,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new Color);
+		$tag->attributes->add('foo')->filterChain->append(new ColorFilter);
 
 		$check = new DisallowUnsafeDynamicCSS;
 		$check->check($node, $tag);

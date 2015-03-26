@@ -7,25 +7,25 @@ use ReflectionClass;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Alnum;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Color;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Email;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Float;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Hashmap;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ip;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipport;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv4;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv6;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Map;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Range;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\AlnumFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\ChoiceFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\ColorFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\EmailFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\FloatFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IdentifierFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IntFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IpFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\IpportFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv4Filter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv6Filter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\MapFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\NumberFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RangeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\SimpletextFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UintFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Tests\Test;
@@ -351,16 +351,16 @@ class BuiltInFiltersTest extends Test
 	public function getData()
 	{
 		return [
-			[new Alnum, '', false],
-			[new Alnum, 'abcDEF', 'abcDEF'],
-			[new Alnum, 'abc_def', false],
-			[new Alnum, '0123', '0123'],
-			[new Alnum, 'é', false],
-			[new Range(2, 5), '2', 2],
-			[new Range(2, 5), '5', 5],
-			[new Range(-5, 5), '-5', -5],
+			[new AlnumFilter, '', false],
+			[new AlnumFilter, 'abcDEF', 'abcDEF'],
+			[new AlnumFilter, 'abc_def', false],
+			[new AlnumFilter, '0123', '0123'],
+			[new AlnumFilter, 'é', false],
+			[new RangeFilter(2, 5), '2', 2],
+			[new RangeFilter(2, 5), '5', 5],
+			[new RangeFilter(-5, 5), '-5', -5],
 			[
-				new Range(2, 5),
+				new RangeFilter(2, 5),
 				'1',
 				2,
 				[
@@ -372,7 +372,7 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
-				new Range(2, 5),
+				new RangeFilter(2, 5),
 				'10',
 				5,
 				[
@@ -383,9 +383,9 @@ class BuiltInFiltersTest extends Test
 					]
 				]
 			],
-			[new Range(2, 5), '5x', false],
+			[new RangeFilter(2, 5), '5x', false],
 			[
-				new Url,
+				new UrlFilter,
 				'http://www.älypää.com',
 				'http://www.xn--lyp-plada.com',
 				[],
@@ -398,31 +398,31 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/', 'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/'
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://127.0.0.1:80/',
 				'http://127.0.0.1:80/'
 			],
-			[new Url, '//foo', '//foo'],
-			[new Url, '/foo', '/foo'],
-			[new Url, '?foo', '?foo'],
-			[new Url, '#bar', '#bar'],
-			[new Url, '://bar', '%3A//bar'],
-			[new Url, '*://bar', '*%3A//bar'],
-			[new Url, '/:foo/:bar', '/:foo/:bar'],
+			[new UrlFilter, '//foo', '//foo'],
+			[new UrlFilter, '/foo', '/foo'],
+			[new UrlFilter, '?foo', '?foo'],
+			[new UrlFilter, '#bar', '#bar'],
+			[new UrlFilter, '://bar', '%3A//bar'],
+			[new UrlFilter, '*://bar', '*%3A//bar'],
+			[new UrlFilter, '/:foo/:bar', '/:foo/:bar'],
 			[
-				new Url,
+				new UrlFilter,
 				'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nykänen?foo&bar#baz', 'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nyk%C3%A4nen?foo&bar#baz'
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://älypää.com:älypää.com@älypää.com',
 				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com',
 				[],
@@ -435,7 +435,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'javascript:alert()',
 				false,
 				[
@@ -456,30 +456,30 @@ class BuiltInFiltersTest extends Test
 					]
 				]
 			],
-			[new Url, 'http://www.example.com', 'http://www.example.com'],
-			[new Url, '//www.example.com', '//www.example.com'],
-			[new Url, 'HTTP://www.example.com', 'http://www.example.com'],
-			[new Url, ' http://www.example.com ', 'http://www.example.com'],
-			[new Url, "http://example.com/''", 'http://example.com/%27%27'],
-			[new Url, 'http://example.com/""', 'http://example.com/%22%22'],
-			[new Url, 'http://example.com/(', 'http://example.com/%28'],
-			[new Url, 'http://example.com/)', 'http://example.com/%29'],
-			[new Url, "http://example.com/x\0y", 'http://example.com/x%00y'],
-			[new Url, "http://example.com/x y", 'http://example.com/x%20y'],
-			[new Url, 'http://example.com/foo.php?a[]=1', 'http://example.com/foo.php?a%5B%5D=1'],
-			[new Url, 'http://example.com/</script>', 'http://example.com/%3C/script%3E'],
+			[new UrlFilter, 'http://www.example.com', 'http://www.example.com'],
+			[new UrlFilter, '//www.example.com', '//www.example.com'],
+			[new UrlFilter, 'HTTP://www.example.com', 'http://www.example.com'],
+			[new UrlFilter, ' http://www.example.com ', 'http://www.example.com'],
+			[new UrlFilter, "http://example.com/''", 'http://example.com/%27%27'],
+			[new UrlFilter, 'http://example.com/""', 'http://example.com/%22%22'],
+			[new UrlFilter, 'http://example.com/(', 'http://example.com/%28'],
+			[new UrlFilter, 'http://example.com/)', 'http://example.com/%29'],
+			[new UrlFilter, "http://example.com/x\0y", 'http://example.com/x%00y'],
+			[new UrlFilter, "http://example.com/x y", 'http://example.com/x%20y'],
+			[new UrlFilter, 'http://example.com/foo.php?a[]=1', 'http://example.com/foo.php?a%5B%5D=1'],
+			[new UrlFilter, 'http://example.com/</script>', 'http://example.com/%3C/script%3E'],
 			[
-				new Url,
+				new UrlFilter,
 				"http://example.com/\xE2\x80\xA8",
 				'http://example.com/%E2%80%A8'
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://example.com/\xE2\x80\xA9",
 				'http://example.com/%E2%80%A9'
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'ftp://example.com',
 				false,
 				[
@@ -501,7 +501,7 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'ftp://example.com',
 				'ftp://example.com',
 				[],
@@ -511,7 +511,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://evil.example.com',
 				false,
 				[
@@ -537,7 +537,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'//evil.example.com',
 				false,
 				[
@@ -563,7 +563,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil\xE3\x80\x82example.com",
 				false,
 				[
@@ -589,7 +589,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil\xEF\xBC\x8Eexample.com",
 				false,
 				[
@@ -615,7 +615,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil\xEF\xBD\xA1example.com",
 				false,
 				[
@@ -641,7 +641,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil.example.com.",
 				false,
 				[
@@ -667,7 +667,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
 				false,
 				[
@@ -693,7 +693,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				"http://evil.ex%41mple.com",
 				false,
 				[
@@ -719,7 +719,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://www.pаypal.com',
 				false,
 				[
@@ -751,7 +751,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://www.example.org',
 				'http://www.example.org',
 				[],
@@ -761,7 +761,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://www.example.org',
 				'http://www.example.org',
 				[],
@@ -771,7 +771,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://www.example.org',
 				'http://www.example.org',
 				[],
@@ -782,7 +782,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://evil.example.com',
 				false,
 				[
@@ -808,7 +808,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://example.org.example.com',
 				false,
 				[
@@ -834,7 +834,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http:',
 				false,
 				[
@@ -856,7 +856,7 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http:?foo',
 				false,
 				[
@@ -878,7 +878,7 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http:#foo',
 				false,
 				[
@@ -900,7 +900,7 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'file:///foo.txt',
 				'file:///foo.txt',
 				[],
@@ -910,7 +910,7 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'file://localhost/c:/WINDOWS/clock.avi',
 				'file://localhost/c:/WINDOWS/clock.avi',
 				[],
@@ -920,51 +920,51 @@ class BuiltInFiltersTest extends Test
 				}
 			],
 			[
-				new Url,
+				new UrlFilter,
 				'http://example.org/Pok%c3%a9mon%c2%ae',
 				'http://example.org/Pok%C3%A9mon%C2%AE',
 			],
-			[new Identifier, '123abcABC', '123abcABC'],
-			[new Identifier, '-_-', '-_-'],
-			[new Identifier, 'a b', false],
-			[new Color, '#123abc', '#123abc'],
-			[new Color, 'red', 'red'],
-			[new Color, 'rgb(12,34,56)', 'rgb(12,34,56)'],
-			[new Color, 'rgb(12, 34, 56)', 'rgb(12, 34, 56)'],
-			[new Color, '#1234567', false],
-			[new Color, 'blue()', false],
+			[new IdentifierFilter, '123abcABC', '123abcABC'],
+			[new IdentifierFilter, '-_-', '-_-'],
+			[new IdentifierFilter, 'a b', false],
+			[new ColorFilter, '#123abc', '#123abc'],
+			[new ColorFilter, 'red', 'red'],
+			[new ColorFilter, 'rgb(12,34,56)', 'rgb(12,34,56)'],
+			[new ColorFilter, 'rgb(12, 34, 56)', 'rgb(12, 34, 56)'],
+			[new ColorFilter, '#1234567', false],
+			[new ColorFilter, 'blue()', false],
 			[
-				new Simpletext,
+				new SimpletextFilter,
 				'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ '
 			],
-			[new Simpletext, 'a()b', false],
-			[new Simpletext, 'a[]b', false],
-			[new Regexp('/^[A-Z]+$/D'), 'ABC', 'ABC'],
-			[new Regexp('/^[A-Z]+$/D'), 'Abc', false],
-			[new Email, 'example@example.com', 'example@example.com'],
-			[new Email, 'example@example.com()', false],
-			[new Map(['uno' => 'one', 'dos' => 'two']), 'dos', 'two'],
-			[new Map(['uno' => 'one', 'dos' => 'two']), 'three', 'three'],
-			[new Map(['uno' => 'one', 'dos' => 'two'], true, true), 'three', false],
-			[new Ip, '8.8.8.8', '8.8.8.8'],
-			[new Ip, 'ff02::1', 'ff02::1'],
-			[new Ip, 'localhost', false],
-			[new Ipv4, '8.8.8.8', '8.8.8.8'],
-			[new Ipv4, 'ff02::1', false],
-			[new Ipv4, 'localhost', false],
-			[new Ipv6, '8.8.8.8', false],
-			[new Ipv6, 'ff02::1', 'ff02::1'],
-			[new Ipv6, 'localhost', false],
-			[new Ipport, '8.8.8.8:80', '8.8.8.8:80'],
-			[new Ipport, '[ff02::1]:80', '[ff02::1]:80'],
-			[new Ipport, 'localhost:80', false],
-			[new Ipport, '[localhost]:80', false],
-			[new Ipport, '8.8.8.8', false],
-			[new Ipport, 'ff02::1', false],
-			[new Hashmap(['foo' => 'bar']), 'foo', 'bar'],
-			[new Hashmap(['foo' => 'bar']), 'bar', 'bar'],
-			[new Hashmap(['foo' => 'bar'], false), 'bar', 'bar'],
-			[new Hashmap(['foo' => 'bar'], true), 'bar', false],
+			[new SimpletextFilter, 'a()b', false],
+			[new SimpletextFilter, 'a[]b', false],
+			[new RegexpFilter('/^[A-Z]+$/D'), 'ABC', 'ABC'],
+			[new RegexpFilter('/^[A-Z]+$/D'), 'Abc', false],
+			[new EmailFilter, 'example@example.com', 'example@example.com'],
+			[new EmailFilter, 'example@example.com()', false],
+			[new MapFilter(['uno' => 'one', 'dos' => 'two']), 'dos', 'two'],
+			[new MapFilter(['uno' => 'one', 'dos' => 'two']), 'three', 'three'],
+			[new MapFilter(['uno' => 'one', 'dos' => 'two'], true, true), 'three', false],
+			[new IpFilter, '8.8.8.8', '8.8.8.8'],
+			[new IpFilter, 'ff02::1', 'ff02::1'],
+			[new IpFilter, 'localhost', false],
+			[new Ipv4Filter, '8.8.8.8', '8.8.8.8'],
+			[new Ipv4Filter, 'ff02::1', false],
+			[new Ipv4Filter, 'localhost', false],
+			[new Ipv6Filter, '8.8.8.8', false],
+			[new Ipv6Filter, 'ff02::1', 'ff02::1'],
+			[new Ipv6Filter, 'localhost', false],
+			[new IpportFilter, '8.8.8.8:80', '8.8.8.8:80'],
+			[new IpportFilter, '[ff02::1]:80', '[ff02::1]:80'],
+			[new IpportFilter, 'localhost:80', false],
+			[new IpportFilter, '[localhost]:80', false],
+			[new IpportFilter, '8.8.8.8', false],
+			[new IpportFilter, 'ff02::1', false],
+			[new HashmapFilter(['foo' => 'bar']), 'foo', 'bar'],
+			[new HashmapFilter(['foo' => 'bar']), 'bar', 'bar'],
+			[new HashmapFilter(['foo' => 'bar'], false), 'bar', 'bar'],
+			[new HashmapFilter(['foo' => 'bar'], true), 'bar', false],
 		];
 	}
 

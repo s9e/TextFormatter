@@ -3,7 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\HTMLElements;
 
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\HTMLElements\Configurator;
 use s9e\TextFormatter\Tests\Test;
@@ -174,7 +174,7 @@ class ConfiguratorTest extends Test
 		$plugin->allowElement('a');
 		$plugin->allowAttribute('a', 'href');
 
-		$this->assertTrue($this->configurator->tags['html:a']->attributes['href']->filterChain->contains(new Url));
+		$this->assertTrue($this->configurator->tags['html:a']->attributes['href']->filterChain->contains(new UrlFilter));
 	}
 
 	/**

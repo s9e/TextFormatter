@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Autolink;
 
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -22,7 +22,7 @@ class ConfiguratorTest extends Test
 		$this->assertTrue($tag->attributes->exists('url'));
 
 		$attribute = $tag->attributes->get('url');
-		$this->assertTrue($attribute->filterChain->contains(new Url));
+		$this->assertTrue($attribute->filterChain->contains(new UrlFilter));
 	}
 
 	/**

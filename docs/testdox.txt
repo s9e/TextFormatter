@@ -803,12 +803,12 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
  [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Alnum
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\AlnumFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
  [x] Is safe in CSS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Choice
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\ChoiceFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] __construct() forwards its arguments to setValues()
  [x] setValues() creates a regexp that matches all given values (case-insensitive) and calls setRegexp()
@@ -816,20 +816,20 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Choice
  [x] setValues() creates a Unicode-aware regexp if any values are non-ASCII
  [x] setValues() throws an exception if its second argument is not a boolean
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Color
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\ColorFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterColor()
  [x] Is safe in CSS
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Email
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\EmailFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterEmail()
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Float
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FloatFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFloat()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Hashmap
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\HashmapFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterHashmap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
@@ -853,30 +853,30 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Hashmap
  [x] isSafeInJS() returns false if a value in the map contains U+2028
  [x] isSafeInJS() returns false if a value in the map contains U+2029
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Identifier
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IdentifierFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
  [x] Is safe in CSS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Int
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IntFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterInt()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ip
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IpFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIp()
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipport
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IpportFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpport()
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4Filter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv4()
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6Filter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv6()
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\MapFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
@@ -903,13 +903,13 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
  [x] isSafeInJS() returns false if a value in the map contains U+2028
  [x] isSafeInJS() returns false if a value in the map contains U+2029
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Number
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\NumberFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Range
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RangeFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRange()
  [x] Is safe in CSS
  [x] Is safe in JS
@@ -923,7 +923,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Range
  [x] setRange() throws an exception if the second argument is not a number
  [x] setRange() throws an exception if the min value is greater than the max value
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is not safe as URL
  [x] Is safe as URL if the regexp is /^[a-z]$/
@@ -956,17 +956,17 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
  [x] asConfig() throws an exception if the 'regexp' var is missing
  [x] asConfig() creates a JS variant for the regexp
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Simpletext
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()
  [x] Is safe in CSS
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Uint
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UintFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUint()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
 
-s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UrlFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUrl()
  [x] Is safe in CSS
  [x] Is safe in JS
