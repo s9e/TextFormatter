@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Range extends AttributeFilter
+class RangeFilter extends AttributeFilter
 {
 	public function __construct($min = \null, $max = \null)
 	{

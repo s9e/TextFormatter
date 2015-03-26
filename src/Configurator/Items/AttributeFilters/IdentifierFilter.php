@@ -9,22 +9,17 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Int extends AttributeFilter
+class IdentifierFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIdentifier');
 
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterInt');
+		$this->setJS('BuiltInFilters.filterIdentifier');
 	}
 
 	public function isSafeInCSS()
-	{
-		return \true;
-	}
-
-	public function isSafeInJS()
 	{
 		return \true;
 	}

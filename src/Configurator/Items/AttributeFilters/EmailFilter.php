@@ -9,28 +9,13 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Float extends AttributeFilter
+class EmailFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterEmail');
 
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterFloat');
-	}
-
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-
-	public function isSafeAsURL()
-	{
-		return \true;
+		$this->setJS('BuiltInFilters.filterEmail');
 	}
 }

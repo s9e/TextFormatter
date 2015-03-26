@@ -9,17 +9,25 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Identifier extends AttributeFilter
+class UrlFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIdentifier');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
 
+		$this->resetParameters();
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterIdentifier');
+		$this->addParameterByName('urlConfig');
+		$this->addParameterByName('logger');
+		$this->setJS('BuiltInFilters.filterUrl');
 	}
 
 	public function isSafeInCSS()
+	{
+		return \true;
+	}
+
+	public function isSafeInJS()
 	{
 		return \true;
 	}

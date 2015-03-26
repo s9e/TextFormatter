@@ -32,7 +32,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	public static function getDefaultFilter($filterName)
 	{
 		$filterName = \ucfirst(\strtolower($filterName));
-		$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
+		$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName . 'Filter';
 
 		if (!\class_exists($className))
 			throw new InvalidArgumentException("Unknown attribute filter '" . $filterName . "'");

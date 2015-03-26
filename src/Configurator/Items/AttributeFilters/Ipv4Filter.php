@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Ipv4 extends AttributeFilter
+class Ipv4Filter extends AttributeFilter
 {
 	public function __construct()
 	{
