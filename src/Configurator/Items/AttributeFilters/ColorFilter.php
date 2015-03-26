@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Color extends AttributeFilter
+class ColorFilter extends AttributeFilter
 {
 	public function __construct()
 	{

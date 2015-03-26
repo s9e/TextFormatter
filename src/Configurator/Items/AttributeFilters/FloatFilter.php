@@ -9,17 +9,14 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Url extends AttributeFilter
+class FloatFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat');
 
-		$this->resetParameters();
 		$this->addParameterByName('attrValue');
-		$this->addParameterByName('urlConfig');
-		$this->addParameterByName('logger');
-		$this->setJS('BuiltInFilters.filterUrl');
+		$this->setJS('BuiltInFilters.filterFloat');
 	}
 
 	public function isSafeInCSS()

@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 
-class Map extends AttributeFilter
+class MapFilter extends AttributeFilter
 {
 	public function __construct(array $map = \null, $caseSensitive = \false, $strict = \false)
 	{

@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
-class Choice extends Regexp
+class ChoiceFilter extends RegexpFilter
 {
 	public function __construct(array $values = \null, $caseSensitive = \false)
 	{

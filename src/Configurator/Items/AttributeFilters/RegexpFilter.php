@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 
-class Regexp extends AttributeFilter
+class RegexpFilter extends AttributeFilter
 {
 	public function __construct($regexp = \null)
 	{

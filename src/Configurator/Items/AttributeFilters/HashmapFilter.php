@@ -12,7 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Hashmap extends AttributeFilter
+class HashmapFilter extends AttributeFilter
 {
 	public function __construct(array $map = \null, $strict = \false)
 	{

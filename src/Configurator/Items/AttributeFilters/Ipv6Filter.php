@@ -9,23 +9,13 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 
-class Alnum extends AttributeFilter
+class Ipv6Filter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterAlnum');
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpv6');
 
 		$this->addParameterByName('attrValue');
-		$this->setJS('BuiltInFilters.filterAlnum');
-	}
-
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-
-	public function isSafeAsURL()
-	{
-		return \true;
+		$this->setJS('BuiltInFilters.filterIpv6');
 	}
 }
