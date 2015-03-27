@@ -133,6 +133,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] asConfig() calls every plugin's finalize() before retrieving their config
  [x] asConfig() returns an array with a rootContext element
  [x] asConfig() returns an array with a registeredVars element that contains urlConfig
+ [x] asConfig() returns all registeredVars including empty arrays
  [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
  [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp

@@ -190,6 +190,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() returns all registeredVars including empty arrays
+	*/
+	public function testAsConfigRegisteredVarsEmpty()
+	{
+		$this->configurator->registeredVars['foo'] = [];
+		$config = $this->configurator->asConfig();
+		$this->assertArrayHasKey('foo', $config['registeredVars']);
+		$this->assertSame([], $config['registeredVars']['foo']);
+	}
+
+	/**
 	* @testdox asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
 	*/
 	public function testAsConfigAddRegexpLimit()
