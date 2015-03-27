@@ -18,6 +18,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateChecker;
@@ -220,6 +221,7 @@ class Configurator implements ConfigProvider
 		unset($properties['javascript']);
 		unset($properties['rendering']);
 		unset($properties['rulesGenerator']);
+		unset($properties['registeredVars']);
 		unset($properties['templateChecker']);
 		unset($properties['templateNormalizer']);
 		unset($properties['stylesheet']);
@@ -230,9 +232,10 @@ class Configurator implements ConfigProvider
 		$config['rootContext'] = $bitfields['root'];
 		$config['rootContext']['flags'] = $config['rootRules']['flags'];
 
+		$config['registeredVars'] = ConfigHelper::toArray($this->registeredVars, \true);
+
 		$config += [
 			'plugins'        => [],
-			'registeredVars' => [],
 			'tags'           => []
 		];
 
