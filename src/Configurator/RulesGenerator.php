@@ -38,19 +38,14 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 	public function getRules(TagCollection $tags, array $options = [])
 	{
-		$parentHTML = (isset($options['parentHTML']))
-		            ? $options['parentHTML']
-		            : '<div>';
+		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
 
 		$rootForensics = $this->generateRootForensics($parentHTML);
 
 		$templateForensics = [];
 		foreach ($tags as $tagName => $tag)
 		{
-			$template = (isset($tag->template))
-			          ? $tag->template
-			          : '<xsl:apply-templates/>';
-
+			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
 			$templateForensics[$tagName] = new TemplateForensics($template);
 		}
 
