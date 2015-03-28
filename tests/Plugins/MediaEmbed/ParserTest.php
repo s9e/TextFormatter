@@ -382,7 +382,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					// NOTE: we force this test to run without the cache on Travis to ensure we hit
+					//       the no-cache code path
+					if (empty($_SERVER['TRAVIS']))
+					{
+						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					}
 					$configurator->MediaEmbed->add('flickr');
 				}
 			],
@@ -507,31 +512,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW',
-				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW">https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
-				[],
-				function ($configurator)
-				{
-					// NOTE: we force this test to run without the cache on Travis to ensure we hit
-					//       the no-cache code path
-					if (empty($_SERVER['TRAVIS']))
-					{
-						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					}
-					$configurator->MediaEmbed->add('googleplus');
-				}
-			],
-			[
-				'https://plus.google.com/u/0/+FeliciaDay/posts/XMABm8rLvRW',
-				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/u/0/+FeliciaDay/posts/XMABm8rLvRW">https://plus.google.com/u/0/+FeliciaDay/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('googleplus');
 				}
 			],
 			[
@@ -1951,6 +1931,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd',
+				'<r><GOOGLEPLUS name="TonyHawk" pid="C5TMsDZJWBd" url="https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd">https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd</GOOGLEPLUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googleplus');
+				}
+			],
+			[
 				'https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE',
 				'<r><GOOGLESHEETS id="1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE" url="https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE">https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE</GOOGLESHEETS></r>',
 				[],
@@ -3111,6 +3100,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
+				'<iframe width="450" height="240" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/googleplus.min.html#110286587261352351537/posts/XMABm8rLvRW"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googleplus');
+				}
+			],
+			[
+				'https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd',
+				'<iframe width="450" height="240" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/googleplus.min.html#+TonyHawk/posts/C5TMsDZJWBd"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googleplus');
 				}
 			],
 			[

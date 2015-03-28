@@ -258,7 +258,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>googleplus</code></td>
 		<td>Google+</td>
-		<td>https://plus.google.com/+FeliciaDay/posts/XMABm8rLvRW<br/>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</td>
+		<td>https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd<br/>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</td>
 	</tr>
 	<tr>
 		<td><code>googlesheets</code></td>
