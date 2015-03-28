@@ -89,9 +89,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 	{
 		// Unless specified otherwise, we consider that the renderered text will be displayed as
 		// the child of a <div> element
-		$parentHTML = (isset($options['parentHTML']))
-		            ? $options['parentHTML']
-		            : '<div>';
+		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
 
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
 		// the root of the text (IOW, with no parent) or even disabled altogether
@@ -102,10 +100,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		foreach ($tags as $tagName => $tag)
 		{
 			// Use the tag's template if applicable or XSLT's implicit default otherwise
-			$template = (isset($tag->template))
-			          ? $tag->template
-			          : '<xsl:apply-templates/>';
-
+			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
 			$templateForensics[$tagName] = new TemplateForensics($template);
 		}
 
