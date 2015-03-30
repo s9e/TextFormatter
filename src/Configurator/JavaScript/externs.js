@@ -43,6 +43,11 @@ Window.prototype.opera.postError;
 
 /** @constructor */ function XSLTProcessor() {}
 /**
+ * @type {number}
+ * @const
+ */
+var Infinity;
+/**
  * @type {undefined}
  * @const
  */

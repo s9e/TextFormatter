@@ -616,59 +616,65 @@ class Parser
 			$this->pluginsConfig[$pluginName]['isDisabled'] = \false;
 	}
 
+	protected function executePluginParser($pluginName)
+	{
+		$pluginConfig = $this->pluginsConfig[$pluginName];
+		if (isset($pluginConfig['quickMatch']) && \strpos($this->text, $pluginConfig['quickMatch']) === \false)
+			return;
+
+		$matches = [];
+		if (isset($pluginConfig['regexp']))
+		{
+			$matches = $this->getMatches($pluginConfig['regexp'], $pluginConfig['regexpLimit']);
+			if (empty($matches))
+				return;
+		}
+
+		\call_user_func($this->getPluginParser($pluginName), $this->text, $matches);
+	}
+
 	protected function executePluginParsers()
 	{
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
-		{
-			if (!empty($pluginConfig['isDisabled']))
-				continue;
-
-			if (isset($pluginConfig['quickMatch'])
-			 && \strpos($this->text, $pluginConfig['quickMatch']) === \false)
-				continue;
-
-			$matches = [];
-
-			if (isset($pluginConfig['regexp']))
-			{
-				$cnt = \preg_match_all(
-					$pluginConfig['regexp'],
-					$this->text,
-					$matches,
-					\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
-				);
-
-				if (!$cnt)
-					continue;
-
-				if ($cnt > $pluginConfig['regexpLimit'])
-					$matches = \array_slice($matches, 0, $pluginConfig['regexpLimit']);
-			}
-
-			if (!isset($this->pluginParsers[$pluginName]))
-			{
-				$className = (isset($pluginConfig['className']))
-				           ? $pluginConfig['className']
-				           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
-
-				$this->pluginParsers[$pluginName] = [
-					new $className($this, $pluginConfig),
-					'parse'
-				];
-			}
-
-			\call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
-		}
+			if (empty($pluginConfig['isDisabled']))
+				$this->executePluginParser($pluginName);
 	}
 
-	public function registerParser($pluginName, $parser)
+	protected function getMatches($regexp, $limit)
+	{
+		$cnt = \preg_match_all($regexp, $this->text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+		if ($cnt > $limit)
+			$matches = \array_slice($matches, 0, $limit);
+
+		return $matches;
+	}
+
+	protected function getPluginParser($pluginName)
+	{
+		if (!isset($this->pluginParsers[$pluginName]))
+		{
+			$pluginConfig = $this->pluginsConfig[$pluginName];
+			$className = (isset($pluginConfig['className']))
+			           ? $pluginConfig['className']
+			           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
+
+			$this->pluginParsers[$pluginName] = [new $className($this, $pluginConfig), 'parse'];
+		}
+
+		return $this->pluginParsers[$pluginName];
+	}
+
+	public function registerParser($pluginName, $parser, $regexp = \null, $limit = \PHP_INT_MAX)
 	{
 		if (!\is_callable($parser))
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
-
 		if (!isset($this->pluginsConfig[$pluginName]))
 			$this->pluginsConfig[$pluginName] = [];
-
+		if (isset($regexp))
+		{
+			$this->pluginsConfig[$pluginName]['regexp']      = $regexp;
+			$this->pluginsConfig[$pluginName]['regexpLimit'] = $limit;
+		}
 		$this->pluginParsers[$pluginName] = $parser;
 	}
 
