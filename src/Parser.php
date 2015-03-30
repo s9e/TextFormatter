@@ -1080,6 +1080,34 @@ class Parser
 	}
 
 	/**
+	* Execute given plugin
+	*
+	* @param  string $pluginName Plugin's name
+	* @return void
+	*/
+	protected function executePluginParser($pluginName)
+	{
+		$pluginConfig = $this->pluginsConfig[$pluginName];
+		if (isset($pluginConfig['quickMatch']) && strpos($this->text, $pluginConfig['quickMatch']) === false)
+		{
+			return;
+		}
+
+		$matches = [];
+		if (isset($pluginConfig['regexp']))
+		{
+			$matches = $this->getMatches($pluginConfig['regexp'], $pluginConfig['regexpLimit']);
+			if (empty($matches))
+			{
+				return;
+			}
+		}
+
+		// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
+		call_user_func($this->getPluginParser($pluginName), $this->text, $matches);
+	}
+
+	/**
 	* Execute all the plugins
 	*
 	* @return void
@@ -1088,56 +1116,52 @@ class Parser
 	{
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
-			if (!empty($pluginConfig['isDisabled']))
+			if (empty($pluginConfig['isDisabled']))
 			{
-				continue;
+				$this->executePluginParser($pluginName);
 			}
-
-			if (isset($pluginConfig['quickMatch'])
-			 && strpos($this->text, $pluginConfig['quickMatch']) === false)
-			{
-				continue;
-			}
-
-			$matches = [];
-
-			if (isset($pluginConfig['regexp']))
-			{
-				$cnt = preg_match_all(
-					$pluginConfig['regexp'],
-					$this->text,
-					$matches,
-					PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-				);
-
-				if (!$cnt)
-				{
-					continue;
-				}
-
-				if ($cnt > $pluginConfig['regexpLimit'])
-				{
-					$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
-				}
-			}
-
-			// Cache a new instance of this plugin's parser if there isn't one already
-			if (!isset($this->pluginParsers[$pluginName]))
-			{
-				$className = (isset($pluginConfig['className']))
-				           ? $pluginConfig['className']
-				           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
-
-				// Register the parser as a callback
-				$this->pluginParsers[$pluginName] = [
-					new $className($this, $pluginConfig),
-					'parse'
-				];
-			}
-
-			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
-			call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
 		}
+	}
+
+	/**
+	* Execute given regexp and returns as many matches as given limit
+	*
+	* @param  string  $regexp
+	* @param  integer $limit
+	* @return array
+	*/
+	protected function getMatches($regexp, $limit)
+	{
+		$cnt = preg_match_all($regexp, $this->text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+		if ($cnt > $limit)
+		{
+			$matches = array_slice($matches, 0, $limit);
+		}
+
+		return $matches;
+	}
+
+	/**
+	* Get the cached callback for given plugin's parser
+	*
+	* @param  string $pluginName Plugin's name
+	* @return callable
+	*/
+	protected function getPluginParser($pluginName)
+	{
+		// Cache a new instance of this plugin's parser if there isn't one already
+		if (!isset($this->pluginParsers[$pluginName]))
+		{
+			$pluginConfig = $this->pluginsConfig[$pluginName];
+			$className = (isset($pluginConfig['className']))
+			           ? $pluginConfig['className']
+			           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
+
+			// Register the parser as a callback
+			$this->pluginParsers[$pluginName] = [new $className($this, $pluginConfig), 'parse'];
+		}
+
+		return $this->pluginParsers[$pluginName];
 	}
 
 	/**
