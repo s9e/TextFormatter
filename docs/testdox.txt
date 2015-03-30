@@ -1836,6 +1836,8 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] registerParser() can register a callback that replaces the parser of an existing plugin
  [x] registerParser() can register a callback that acts as the parser of a new plugin
  [x] registerParser() throws an exception if its second argument is not callable
+ [x] registerParser() accepts a regexp
+ [x] registerParser() accepts a limit
 
 s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() adds a start tag to the stack

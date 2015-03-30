@@ -1174,19 +1174,22 @@ class Parser
 	* @param  callback $parser
 	* @return void
 	*/
-	public function registerParser($pluginName, $parser)
+	public function registerParser($pluginName, $parser, $regexp = null, $limit = PHP_INT_MAX)
 	{
 		if (!is_callable($parser))
 		{
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
 		}
-
 		// Create an empty config for this plugin to ensure it is executed
 		if (!isset($this->pluginsConfig[$pluginName]))
 		{
 			$this->pluginsConfig[$pluginName] = [];
 		}
-
+		if (isset($regexp))
+		{
+			$this->pluginsConfig[$pluginName]['regexp']      = $regexp;
+			$this->pluginsConfig[$pluginName]['regexpLimit'] = $limit;
+		}
 		$this->pluginParsers[$pluginName] = $parser;
 	}
 

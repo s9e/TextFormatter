@@ -318,6 +318,55 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$dummy->registerParser('Foo', '*invalid*');
 	}
+
+	/**
+	* @testdox registerParser() accepts a regexp
+	*/
+	public function testRegisterParserRegexp()
+	{
+		$this->configurator->tags->add('X');
+		extract($this->configurator->finalize(['returnRenderer' => false]));
+		$parser->registerParser(
+			'foo',
+			function ($text, $matches) use ($parser)
+			{
+				foreach ($matches as $m)
+				{
+					$parser->addSelfClosingTag('X', $m[0][1], 1);
+				}
+			},
+			'(x)'
+		);
+		$this->assertSame(
+			'<r>oo<X>x</X>oo<X>x</X>oo</r>',
+			$parser->parse('ooxooxoo')
+		);
+	}
+
+	/**
+	* @testdox registerParser() accepts a limit
+	*/
+	public function testRegisterParserRegexpLimit()
+	{
+		$this->configurator->tags->add('X');
+		extract($this->configurator->finalize(['returnRenderer' => false]));
+		$parser->registerParser(
+			'foo',
+			function ($text, $matches) use ($parser)
+			{
+				foreach ($matches as $m)
+				{
+					$parser->addSelfClosingTag('X', $m[0][1], 1);
+				}
+			},
+			'(x)',
+			2
+		);
+		$this->assertSame(
+			'<r>oo<X>x</X>oo<X>x</X>ooxoo</r>',
+			$parser->parse('ooxooxooxoo')
+		);
+	}
 }
 
 class PluginsHandlingDummy extends Parser

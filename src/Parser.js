@@ -1016,15 +1016,21 @@ function getPluginParser(pluginName)
 *
 * @param  {!string}   pluginName
 * @param  {!Function} parser
+* @param  {RegExp}   regexp
+* @param  {number}   limit
 */
-function registerParser(pluginName, parser)
+function registerParser(pluginName, parser, regexp, limit)
 {
 	// Create an empty config for this plugin to ensure it is executed
 	if (!plugins[pluginName])
 	{
 		plugins[pluginName] = {};
 	}
-
+	if (regexp)
+	{
+		plugins[pluginName].regexp = regexp;
+		plugins[pluginName].limit  = limit || Infinity;
+	}
 	plugins[pluginName].parser = parser;
 }
 

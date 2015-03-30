@@ -10,6 +10,7 @@ $externs = [
 		'function XSLTProcessor('
 	],
 	'es3.js' => [
+		'var Infinity',
 		'var undefined',
 
 		'function decodeURIComponent(',
