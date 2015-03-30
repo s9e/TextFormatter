@@ -993,23 +993,7 @@ function executePluginParsers()
 
 			if (cnt > plugin.regexpLimit)
 			{
-				if (HINT.regexpLimitActionAbort && plugin.regexpLimitAction === 'abort')
-				{
-					throw (pluginName + ' limit exceeded');
-				}
-
 				matches = matches.slice(0, plugin.regexpLimit);
-
-				var msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed',
-					context = {
-						'pluginName' : pluginName,
-						'limit'      : plugin.regexpLimit
-					};
-
-				if (HINT.regexpLimitActionWarn && plugin.regexpLimitAction === 'warn')
-				{
-					logger.warn(msg, context);
-				}
 			}
 		}
 

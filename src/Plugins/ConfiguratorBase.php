@@ -23,8 +23,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 
 	protected $regexpLimit = 10000;
 
-	protected $regexpLimitAction = 'warn';
-
 	final public function __construct(Configurator $configurator, array $overrideProps = [])
 	{
 		$this->configurator = $configurator;
@@ -63,10 +61,9 @@ abstract class ConfiguratorBase implements ConfigProvider
 	final public function getBaseProperties()
 	{
 		return [
-			'className'         => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
-			'quickMatch'        => $this->quickMatch,
-			'regexpLimit'       => $this->regexpLimit,
-			'regexpLimitAction' => $this->regexpLimitAction
+			'className'   => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
+			'quickMatch'  => $this->quickMatch,
+			'regexpLimit' => $this->regexpLimit
 		];
 	}
 
@@ -123,16 +120,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 			throw new InvalidArgumentException('regexpLimit must be a number greater than 0');
 
 		$this->regexpLimit = $limit;
-	}
-
-	public function setRegexpLimitAction($action)
-	{
-		if ($action !== 'ignore'
-		 && $action !== 'warn'
-		 && $action !== 'abort')
-			throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
-
-		$this->regexpLimitAction = $action;
 	}
 
 	protected function setTagName($tagName)
