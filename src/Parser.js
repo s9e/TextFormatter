@@ -917,25 +917,64 @@ function enablePlugin(pluginName)
 }
 
 /**
+* Execute given plugin
+*
+* @param {!string} pluginName Plugin's name
+*/
+function executePluginParser(pluginName)
+{
+	var pluginConfig = plugins[pluginName];
+	if (pluginConfig.quickMatch && text.indexOf(pluginConfig.quickMatch) < 0)
+	{
+		return;
+	}
+
+	var matches = [];
+	if (pluginConfig.regexp)
+	{
+		matches = getMatches(pluginConfig.regexp, pluginConfig.regexpLimit);
+		if (!matches.length)
+		{
+			return;
+		}
+	}
+
+	// Execute the plugin's parser, which will add tags via addStartTag() and others
+	getPluginParser(pluginName)(text, matches);
+}
+
+/**
+* Execute all the plugins
+*/
+function executePluginParsers()
+{
+	for (var pluginName in plugins)
+	{
+		if (!plugins[pluginName].isDisabled)
+		{
+			executePluginParser(pluginName);
+		}
+	}
+}
+
+/**
 * Get regexp matches in a manner similar to preg_match_all() with PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 *
 * @param  {!RegExp} regexp
+* @param  {!number} limit
 * @return {!Array.<!Array>}
 */
-function getMatches(regexp)
+function getMatches(regexp, limit)
 {
-	var matches = [], m;
-
 	// Reset the regexp
 	regexp.lastIndex = 0;
-
-	while (m = regexp.exec(text))
+	var matches = [], cnt = 0, m;
+	while (++cnt <= limit && (m = regexp.exec(text)))
 	{
 		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
 		var pos   = +m['index'],
 			match = [[m[0], pos]],
 			i = 0;
-
 		while (++i < m.length)
 		{
 			var str = m[i];
@@ -959,47 +998,14 @@ function getMatches(regexp)
 }
 
 /**
-* Execute all the plugins
+* Get the callback for given plugin's parser
+*
+* @param  {!string}   pluginName
+* @return {!function}
 */
-function executePluginParsers()
+function getPluginParser(pluginName)
 {
-	for (var pluginName in plugins)
-	{
-		var plugin = plugins[pluginName];
-
-		if (plugin.isDisabled)
-		{
-			continue;
-		}
-
-		if (plugin.quickMatch
-		 && text.indexOf(plugin.quickMatch) < 0)
-		{
-			continue;
-		}
-
-		var matches = [];
-
-		if (plugin.regexp)
-		{
-			matches = getMatches(plugin.regexp);
-
-			var cnt = matches.length;
-
-			if (!cnt)
-			{
-				continue;
-			}
-
-			if (cnt > plugin.regexpLimit)
-			{
-				matches = matches.slice(0, plugin.regexpLimit);
-			}
-		}
-
-		// Execute the plugin's parser, which will add tags via addStartTag() and others
-		plugin.parser(text, matches);
-	}
+	return plugins[pluginName].parser;
 }
 
 /**
@@ -1010,15 +1016,21 @@ function executePluginParsers()
 *
 * @param  {!string}   pluginName
 * @param  {!Function} parser
+* @param  {RegExp}   regexp
+* @param  {number}   limit
 */
-function registerParser(pluginName, parser)
+function registerParser(pluginName, parser, regexp, limit)
 {
 	// Create an empty config for this plugin to ensure it is executed
 	if (!plugins[pluginName])
 	{
 		plugins[pluginName] = {};
 	}
-
+	if (regexp)
+	{
+		plugins[pluginName].regexp = regexp;
+		plugins[pluginName].limit  = limit || Infinity;
+	}
 	plugins[pluginName].parser = parser;
 }
 
