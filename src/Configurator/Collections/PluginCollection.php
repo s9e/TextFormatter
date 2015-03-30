@@ -76,10 +76,7 @@ class PluginCollection extends NormalizedCollection
 				unset($pluginConfig['quickMatch']);
 
 			if (!isset($pluginConfig['regexp']))
-			{
 				unset($pluginConfig['regexpLimit']);
-				unset($pluginConfig['regexpLimitAction']);
-			}
 
 			if (!isset($pluginConfig['parser']))
 			{

@@ -125,19 +125,15 @@ class JavaScript
 	protected function getHints()
 	{
 		$this->hints = [
-			'attributeGenerator'      => 0,
-			'attributeDefaultValue'   => 0,
-			'closeAncestor'           => 0,
-			'closeParent'             => 0,
-			'fosterParent'            => 0,
-			'postProcessing'          => 1,
-			'regexpLimitActionAbort'  => 0,
-			'regexpLimitActionIgnore' => 0,
-			'regexpLimitActionWarn'   => 0,
-			'requireAncestor'         => 0
+			'attributeGenerator'    => 0,
+			'attributeDefaultValue' => 0,
+			'closeAncestor'         => 0,
+			'closeParent'           => 0,
+			'fosterParent'          => 0,
+			'postProcessing'        => 1,
+			'requireAncestor'       => 0
 		];
 
-		$this->setPluginHints();
 		$this->setRenderingHints();
 		$this->setRulesHints();
 		$this->setTagsHints();
@@ -178,11 +174,10 @@ class JavaScript
 			}
 
 			$globalKeys = [
-				'parser'            => 1,
-				'quickMatch'        => 1,
-				'regexp'            => 1,
-				'regexpLimit'       => 1,
-				'regexpLimitAction' => 1
+				'parser'      => 1,
+				'quickMatch'  => 1,
+				'regexp'      => 1,
+				'regexpLimit' => 1
 			];
 
 			$globalConfig = \array_intersect_key($pluginConfig, $globalKeys);
@@ -473,17 +468,6 @@ class JavaScript
 		$this->callbacks[$funcName] = $js;
 
 		return new Code($funcName);
-	}
-
-	protected function setPluginHints()
-	{
-		foreach ($this->config['plugins'] as $pluginConfig)
-			if (isset($pluginConfig['regexpLimitAction']))
-			{
-				$hintName = 'regexpLimitAction' . \ucfirst($pluginConfig['regexpLimitAction']);
-				if (isset($this->hints[$hintName]))
-					$this->hints[$hintName] = 1;
-			}
 	}
 
 	protected function setRulesHints()
