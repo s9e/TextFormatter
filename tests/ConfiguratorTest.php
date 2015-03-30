@@ -247,52 +247,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
-	*/
-	public function testAsConfigAddRegexpLimitAction()
-	{
-		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(['regexp' => '//']);
-
-		$this->configurator->plugins->add('Dummy', $plugin);
-		$config = $this->configurator->asConfig();
-
-		$this->assertArrayMatches(
-			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimitAction' => 'warn'
-					]
-				]
-			],
-			$config
-		);
-	}
-
-	/**
-	* @testdox asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
-	*/
-	public function testAsConfigRemoveRegexpLimitAction()
-	{
-		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(['regexpLimitAction' => 1000]);
-
-		$this->configurator->plugins->add('Dummy', $plugin);
-		$config = $this->configurator->asConfig();
-
-		$this->assertArrayMatches(
-			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimitAction' => null
-					]
-				]
-			],
-			$config
-		);
-	}
-
-	/**
 	* @testdox asConfig() adds quickMatch to the plugin's configuration if available
 	*/
 	public function testAsConfigAddQuickMatch()

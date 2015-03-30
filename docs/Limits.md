@@ -9,7 +9,7 @@ The default values are meant to be set high enough not to be reached by legitima
 	<dt>regexpLimit</dt>
 	<dd><i>(default: 10000)</i></dd>
 	<dd>Works at the plugin level, e.g. <code>$configurator->Emoticons->regexpLimit = 100;</code></dd>
-	<dd>Most plugins (BBCodes, Emoticons, etc...) use a regexp to identify the parts of the text they apply to. This setting limits the number of matches to process, with the supernumary matches being ignored. In addition, if the related setting "regexpLimitAction" is set to "abort", as in <code>$configurator->Emoticons->regexpLimitAction = 'abort';</code> then an exception will be thrown if the limit is exceeded.</dd>
+	<dd>Most plugins (BBCodes, Emoticons, etc...) use a regexp to identify the parts of the text they apply to. This setting limits the number of matches to process, with the supernumary matches being ignored.</dd>
 
 	<dt>tagLimit</dt>
 	<dd><i>(default: 1000)</i></dd>

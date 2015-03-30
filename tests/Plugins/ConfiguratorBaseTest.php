@@ -96,7 +96,7 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox getBaseProperties() returns the values of quickMatch, regexpLimit and regexpLimitAction
+	* @testdox getBaseProperties() returns the values of quickMatch and regexpLimit
 	*/
 	public function testGetBaseProperties()
 	{
@@ -105,7 +105,6 @@ class ConfiguratorBaseTest extends Test
 
 		$this->assertArrayHasKey('quickMatch', $config);
 		$this->assertArrayHasKey('regexpLimit', $config);
-		$this->assertArrayHasKey('regexpLimitAction', $config);
 	}
 
 	/**
@@ -177,27 +176,6 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox setRegexpLimitAction() sets the regexpLimitAction property
-	*/
-	public function testSetRegexpLimitAction()
-	{
-		$dummy = new DummyPluginConfigurator($this->configurator);
-		$dummy->setRegexpLimitAction('abort');
-		$this->assertAttributeEquals('abort', 'regexpLimitAction', $dummy);
-	}
-
-	/**
-	* @testdox setRegexpLimitAction() throws an exception on invalid values
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'
-	*/
-	public function testSetRegexpLimitActionInvalid()
-	{
-		$dummy = new DummyPluginConfigurator($this->configurator);
-		$dummy->setRegexpLimitAction('chill out');
-	}
-
-	/**
 	* @testdox Offers a default asConfig() implementation that leaves out the configurator instance
 	*/
 	public function testAsConfig()
@@ -210,8 +188,7 @@ class ConfiguratorBaseTest extends Test
 				'bar'   => 'foo',
 				'setup' => 'foo',
 				'quickMatch'  => false,
-				'regexpLimit' => 10000,
-				'regexpLimitAction' => 'warn'
+				'regexpLimit' => 10000
 			],
 			$dummy->asConfig()
 		);

@@ -1117,23 +1117,7 @@ class Parser
 
 				if ($cnt > $pluginConfig['regexpLimit'])
 				{
-					if ($pluginConfig['regexpLimitAction'] === 'abort')
-					{
-						throw new RuntimeException($pluginName . ' limit exceeded');
-					}
-
 					$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
-
-					$msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed';
-					$context = [
-						'pluginName' => $pluginName,
-						'limit'      => $pluginConfig['regexpLimit']
-					];
-
-					if ($pluginConfig['regexpLimitAction'] === 'warn')
-					{
-						$this->logger->warn($msg, $context);
-					}
 				}
 			}
 

@@ -35,13 +35,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 	protected $regexpLimit = 10000;
 
 	/**
-	* @var string  What to do if the number of matches exceeds the limit. Values can be: "ignore"
-	*              (ignore matches past limit), "warn" (same as "ignore" but also log a warning) and
-	*              "abort" (abort parsing)
-	*/
-	protected $regexpLimitAction = 'warn';
-
-	/**
 	* @param Configurator $configurator
 	* @param array        $overrideProps Properties of the plugin will be overwritten with those
 	*/
@@ -115,10 +108,9 @@ abstract class ConfiguratorBase implements ConfigProvider
 	final public function getBaseProperties()
 	{
 		return [
-			'className'         => preg_replace('/Configurator$/', 'Parser', get_class($this)),
-			'quickMatch'        => $this->quickMatch,
-			'regexpLimit'       => $this->regexpLimit,
-			'regexpLimitAction' => $this->regexpLimitAction
+			'className'   => preg_replace('/Configurator$/', 'Parser', get_class($this)),
+			'quickMatch'  => $this->quickMatch,
+			'regexpLimit' => $this->regexpLimit
 		];
 	}
 
@@ -225,24 +217,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 		}
 
 		$this->regexpLimit = $limit;
-	}
-
-	/**
-	* Set the action to perform when the regexp limit is broken
-	*
-	* @param  string $action
-	* @return void
-	*/
-	public function setRegexpLimitAction($action)
-	{
-		if ($action !== 'ignore'
-		 && $action !== 'warn'
-		 && $action !== 'abort')
-		{
-			throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
-		}
-
-		$this->regexpLimitAction = $action;
 	}
 
 	/**

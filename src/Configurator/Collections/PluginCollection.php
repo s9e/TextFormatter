@@ -133,7 +133,6 @@ class PluginCollection extends NormalizedCollection
 			if (!isset($pluginConfig['regexp']))
 			{
 				unset($pluginConfig['regexpLimit']);
-				unset($pluginConfig['regexpLimitAction']);
 			}
 
 			// Add the JavaScript parser (generated dynamically)

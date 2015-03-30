@@ -136,8 +136,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] asConfig() returns all registeredVars including empty arrays
  [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
  [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
- [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
- [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] asConfig() adds allowedChildren and allowedDescendants bitfields to each tag
@@ -251,8 +249,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] asConfig() returns an entry for plugins whose asConfig() returns an empty array
  [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
  [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
- [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
- [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] asConfig() removes className from the plugin's configuration if it's using its default value
@@ -1640,15 +1636,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.fosterParent=1 if any tag has a fosterParent rule
  [x] HINT.postProcessing=0 by default
  [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
- [x] HINT.regexpLimitActionAbort=0 by default
- [x] HINT.regexpLimitActionAbort=1 if a plugin has setRegexpLimitAction('abort')
- [x] HINT.regexpLimitActionAbort=0 if a plugin has setRegexpLimitAction('abort') but is disabled
- [x] HINT.regexpLimitActionIgnore=0 by default
- [x] HINT.regexpLimitActionIgnore=1 if a plugin has setRegexpLimitAction('ignore')
- [x] HINT.regexpLimitActionIgnore=0 if a plugin has setRegexpLimitAction('ignore') but is disabled
- [x] HINT.regexpLimitActionWarn=0 by default
- [x] HINT.regexpLimitActionWarn=1 if a plugin has setRegexpLimitAction('warn')
- [x] HINT.regexpLimitActionWarn=0 if a plugin has setRegexpLimitAction('warn') but is disabled
  [x] HINT.requireAncestor=0 by default
  [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
  [x] HINT.RULE_AUTO_CLOSE=0 by default
@@ -1844,9 +1831,7 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] executePluginParsers() executes a plugin if its regexp test passes
  [x] executePluginParsers() does not execute a plugin if its regexp test fails
  [x] executePluginParsers() passes the text and the matches to the plugin's parser
- [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is 'warn'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is 'ignore'
+ [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit
  [x] executePluginParsers() creates an instance of the class name stored in className if present
  [x] registerParser() can register a callback that replaces the parser of an existing plugin
  [x] registerParser() can register a callback that acts as the parser of a new plugin
@@ -1917,15 +1902,13 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor normalizes custom tag names
  [x] Constructor throws an exception if we attempt to set an attribute name but the property does not exist
  [x] Constructor throws an exception if we attempt to set a tag name but the property does not exist
- [x] getBaseProperties() returns the values of quickMatch, regexpLimit and regexpLimitAction
+ [x] getBaseProperties() returns the values of quickMatch and regexpLimit
  [x] getBaseProperties() returns a className value derived from the configurator's class
  [x] setQuickMatch() sets the quickMatch property
  [x] setQuickMatch() throws an exception on non-strings
  [x] disableQuickMatch() sets the quickMatch property to false
  [x] setRegexpLimit() sets the regexpLimit property
  [x] setRegexpLimit() throws an exception on invalid values
- [x] setRegexpLimitAction() sets the regexpLimitAction property
- [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
  [x] Has a default finalize() method that doesn't do anything
  [x] getJSParser() returns NULL for custom plugins

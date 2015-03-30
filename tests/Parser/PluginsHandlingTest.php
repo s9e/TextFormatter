@@ -227,71 +227,9 @@ class PluginsHandlingTest extends Test
 	}
 
 	/**
-	* @testdox executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Test limit exceeded
+	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit
 	*/
-	public function testExecutePluginParsersRegexpLimitActionAbort()
-	{
-		$dummy  = new PluginsHandlingDummy('...foo...');
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
-		$plugin->expects($this->never())
-		       ->method('parse');
-
-		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
-		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
-		$dummy->pluginsConfig['Test']['regexpLimit'] = 1;
-		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'abort';
-
-		$dummy->executePluginParsers();
-	}
-
-	/**
-	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is 'warn'
-	*/
-	public function testExecutePluginParsersRegexpLimitActionWarn()
-	{
-		$text = '...fooo...';
-		$matches = [
-			[['o', 4]],
-			[['o', 5]]
-		];
-
-		$dummy  = new PluginsHandlingDummy($text);
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
-		$plugin->expects($this->once())
-		       ->method('parse')
-		       ->with($text, $matches);
-
-		$logger = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Logger',
-			['warn']
-		);
-		$logger->expects($this->once())
-		       ->method('warn')
-		       ->with('Regexp limit exceeded. Only the allowed number of matches will be processed', ['pluginName' => 'Test', 'limit' => 2]);
-		$dummy->logger = $logger;
-
-		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
-		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
-		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
-		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'warn';
-
-		$dummy->executePluginParsers();
-	}
-
-	/**
-	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is 'ignore'
-	*/
-	public function testExecutePluginParsersRegexpLimitActionIgnore()
+	public function testExecutePluginParsersRegexpLimit()
 	{
 		$text = '...fooo...';
 		$matches = [
@@ -312,7 +250,6 @@ class PluginsHandlingTest extends Test
 		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
-		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'ignore';
 
 		$dummy->executePluginParsers();
 	}
