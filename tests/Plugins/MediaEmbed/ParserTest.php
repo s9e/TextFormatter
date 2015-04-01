@@ -3148,7 +3148,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="220" height="380" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="220" height="420" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html"></iframe>',
 				[],
 				function ($configurator)
 				{
