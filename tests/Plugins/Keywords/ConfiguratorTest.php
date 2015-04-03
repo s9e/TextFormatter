@@ -89,22 +89,16 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigRegexpsHuge()
 	{
-		for ($i = 0; $i < 7; ++$i)
+		// 62 chars * 1000 = 68200 bytes that should be split in 3 regexps
+		$chars = array_merge(range('a', 'z'), range('A', 'Z'), range('0', '9'));
+		foreach ($chars as $char)
 		{
-			$this->configurator->Keywords->add(str_repeat($i, 8000));
+			$this->configurator->Keywords->add(str_repeat($char, 1100));
 		}
 
 		$config = $this->configurator->Keywords->asConfig();
-
 		$this->assertArrayHasKey('regexps', $config);
-		$this->assertEquals(
-			[
-				'/\\b(?>' . str_repeat('0', 8000) . '|' . str_repeat('1', 8000) . '|' . str_repeat('2', 8000) . ')\\b/S',
-				'/\\b(?>' . str_repeat('3', 8000) . '|' . str_repeat('4', 8000) . '|' . str_repeat('5', 8000) . ')\\b/S',
-				'/\\b' . str_repeat('6', 8000) . '\\b/S'
-			],
-			$config['regexps']
-		);
+		$this->assertGreaterThan(2, count($config['regexps']));
 	}
 
 	/**
