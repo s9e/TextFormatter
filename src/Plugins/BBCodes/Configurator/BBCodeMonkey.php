@@ -63,8 +63,8 @@ class BBCodeMonkey
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
 	*/
 	public $tokenRegexp = [
-		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
-		'EMAIL'      => '[^@]+@.+?',
+		'COLOR'      => '^(?:#[0-9a-f]{3,6}|rgb\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\)|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow)$',
+		'EMAIL'      => '[a-z0-9!#$%&\'*+0=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+0=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|me|biz|info|mobi|name|aero|asia|jobs|museum)\b',
 		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
 		'ID'         => '[-a-zA-Z0-9_]+',
 		'IDENTIFIER' => '[-a-zA-Z0-9_]+',
