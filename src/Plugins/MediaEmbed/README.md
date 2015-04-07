@@ -298,7 +298,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>imgur</code></td>
 		<td>imgur albums and GIFV</td>
-		<td>http://imgur.com/a/9UGCL<br/>http://i.imgur.com/u7Yo0Vy.gifv<br/>http://i.imgur.com/UO1UrIx.mp4</td>
+		<td>http://imgur.com/a/9UGCL<br/>http://imgur.com/gallery/9UGCL<br/>http://i.imgur.com/u7Yo0Vy.gifv<br/>http://i.imgur.com/UO1UrIx.mp4</td>
 	</tr>
 	<tr>
 		<td><code>indiegogo</code></td>
