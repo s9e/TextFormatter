@@ -556,7 +556,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/a/9UGCL',
-				'<r><IMGUR id="9UGCL" type="album" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
+				'<r><IMGUR id="a/9UGCL" type="album" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -567,6 +567,16 @@ class ParserTest extends Test
 			[
 				'http://imgur.com/gallery/9UGCL',
 				'<r><IMGUR id="9UGCL" type="album" url="http://imgur.com/gallery/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://imgur.com/gallery/49H5yU8',
+				'<r><IMGUR id="49H5yU8" url="http://imgur.com/gallery/49H5yU8">http://imgur.com/gallery/49H5yU8</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1061,7 +1071,17 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/a/9UGCL',
-				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//imgur.com/a/9UGCL/embed"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//imgur.com/a/9UGCL/embed" onload=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'https://imgur.com/AsQ0K3P',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//s9e.github.io/iframe/imgur.min.html#AsQ0K3P" onload="var id=Math.random();window.addEventListener(\'message\',function(a){a.data.id==id&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});var origin=src.substr(0,src.indexOf(\'/\',8));contentWindow.postMessage(\'s9e:\'+id,origin);"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1071,7 +1091,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.gifv',
-				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed" onload=""></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1081,7 +1101,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.mp4',
-				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed"></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="915" height="389" src="//i.imgur.com/u7Yo0Vy.gifv#embed" onload=""></iframe>',
 				[],
 				function ($configurator)
 				{
