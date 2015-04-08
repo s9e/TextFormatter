@@ -1,5 +1,7 @@
-<site name="imgur albums and GIFV" homepage="http://imgur.com/">
+<site name="Imgur" homepage="http://imgur.com/">
+	<example>http://imgur.com/AsQ0K3P</example>
 	<example>http://imgur.com/a/9UGCL</example>
+	<example>http://imgur.com/gallery/9UGCL</example>
 	<example>http://i.imgur.com/u7Yo0Vy.gifv</example>
 	<example>http://i.imgur.com/UO1UrIx.mp4</example>
 
@@ -10,11 +12,10 @@
 	</attributes>
 
 	<host>imgur.com</host>
-	<extract>!imgur\.com/a/(?'id'\w+)!</extract>
-	<extract>!imgur\.com/(?'id'\w+)\.(?:gifv|mp4)!</extract>
+	<extract>!imgur\.com/(?:gallery/)?(?'id'(?:a/)?\w+)!</extract>
 	<scrape>
-		<match>!imgur\.com/a/\w!</match>
-		<extract>!&lt;a class="(?'type'album)!</extract>
+		<match>!imgur\.com/(?:a|gallery)/\w!</match>
+		<extract>!&lt;div id="(?'type'album)-!</extract>
 	</scrape>
 	<scrape url="http://i.imgur.com/{@id}.gifv">
 		<match>!imgur\.com/\w+\.(?:gifv|mp4)!</match>
@@ -39,8 +40,28 @@
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@type='gifv'">//i.imgur.com/<xsl:value-of select="@id"/>.gifv#embed</xsl:when>
-				<xsl:otherwise>//imgur.com/a/<xsl:value-of select="@id"/>/embed</xsl:otherwise>
+				<xsl:when test="starts-with(@id,'a/')">//imgur.com/<xsl:value-of select="@id"/>/embed</xsl:when>
+				<xsl:when test="@type='album'">//imgur.com/a/<xsl:value-of select="@id"/>/embed</xsl:when>
+				<xsl:otherwise>//s9e.github.io/iframe/imgur.min.html#<xsl:value-of select="@id"/></xsl:otherwise>
 			</xsl:choose>
 		]]></src>
+		<!--
+			var id = Math.random();
+			window.addEventListener('message', function(e)
+			{
+				// NOTE: e.data.id is a string whereas id is a number
+				if (e.data.id == id)
+				{
+					style.height = e.data.height + 'px';
+					style.width = e.data.width + 'px';
+				}
+			});
+
+			var origin = src.substr(0, src.indexOf('/', 8));
+			contentWindow.postMessage('s9e:' + id, origin);
+		-->
+		<onload><![CDATA[
+			<xsl:if test="not(@type='gifv' or @type='album')">var id=Math.random();window.addEventListener('message',function(a){a.data.id==id&&(style.height=a.data.height+'px',style.width=a.data.width+'px')});var origin=src.substr(0,src.indexOf('/',8));contentWindow.postMessage('s9e:'+id,origin);</xsl:if>
+		]]></onload>
 	</iframe>
 </site>
