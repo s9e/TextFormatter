@@ -40,12 +40,8 @@
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@type='gifv'">//i.imgur.com/<xsl:value-of select="@id"/>.gifv#embed</xsl:when>
-				<xsl:when test="@type='album'">
-					<xsl:text>//imgur.com/</xsl:text>
-					<xsl:if test="not(contains(@id,'a/'))">a/</xsl:if>
-					<xsl:value-of select="@id"/>
-					<xsl:text>/embed</xsl:text>
-				</xsl:when>
+				<xsl:when test="starts-with(@id,'a/')">//imgur.com/<xsl:value-of select="@id"/>/embed</xsl:when>
+				<xsl:when test="@type='album'">//imgur.com/a/<xsl:value-of select="@id"/>/embed</xsl:when>
 				<xsl:otherwise>//s9e.github.io/iframe/imgur.min.html#<xsl:value-of select="@id"/></xsl:otherwise>
 			</xsl:choose>
 		]]></src>
