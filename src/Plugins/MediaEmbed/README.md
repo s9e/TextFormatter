@@ -338,7 +338,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>livestream</code></td>
 		<td>Livestream</td>
-		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437</td>
+		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://livestream.com/ccscsl/USChessChampionships/videos/83267610</td>
 	</tr>
 	<tr>
 		<td><code>mailru</code></td>

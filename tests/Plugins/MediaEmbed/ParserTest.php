@@ -669,8 +669,8 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
-				'http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437',
-				'<r><LIVESTREAM account_id="12014794" event_id="3788876" url="http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437" video_id="77576437">http://new.livestream.com/ShawConferenceCentre/CrashedIce/videos/77576437</LIVESTREAM></r>',
+				'http://livestream.com/ccscsl/USChessChampionships/videos/83267610',
+				'<r><LIVESTREAM account_id="3913412" event_id="3933674" url="http://livestream.com/ccscsl/USChessChampionships/videos/83267610" video_id="83267610">http://livestream.com/ccscsl/USChessChampionships/videos/83267610</LIVESTREAM></r>',
 				[],
 				function ($configurator)
 				{
