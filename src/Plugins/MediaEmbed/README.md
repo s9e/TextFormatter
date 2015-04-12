@@ -121,6 +121,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.bbc.com/news/science-environment-29232523</td>
 	</tr>
 	<tr>
+		<td><code>bleacherreport</code></td>
+		<td>Bleacher Report videos</td>
+		<td>http://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
+	</tr>
+	<tr>
 		<td><code>blip</code></td>
 		<td>Blip</td>
 		<td>http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104<br/>http://blip.tv/play/g6VTgpjxbQA</td>

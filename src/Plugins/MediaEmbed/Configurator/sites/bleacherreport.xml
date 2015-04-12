@@ -1,0 +1,12 @@
+<site name="Bleacher Report videos" homepage="http://bleacherreport.com/">
+	<example>http://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</example>
+
+	<tags><tag>sports</tag></tags>
+
+	<host>bleacherreport.com</host>
+	<scrape>
+		<match>!/articles/.!</match>
+		<extract>!video-(?'id'[-\w]+)!</extract>
+	</scrape>
+	<iframe width="640" height="360" src="//bleacherreport.com/video_embed?id={@id}"/>
+</site>
