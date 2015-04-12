@@ -6,7 +6,7 @@
 	<host>bleacherreport.com</host>
 	<scrape>
 		<match>!/articles/.!</match>
-		<extract>!video-(?'id'[-\w]+)!</extract>
+		<extract>!id="video-(?'id'[-\w]+)!</extract>
 	</scrape>
 	<iframe width="640" height="360" src="//bleacherreport.com/video_embed?id={@id}"/>
 </site>
