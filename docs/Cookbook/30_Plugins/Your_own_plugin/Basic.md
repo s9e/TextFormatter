@@ -68,9 +68,10 @@ $text = 'Less than three: <3 <3';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
-echo $xml, "\n", $html;
+echo "XML:  $xml\n";
+echo "HTML: $html";
 ```
 ```html
-<r>Less than three: <HEART>&lt;3</HEART> <HEART>&lt;3</HEART></r>
-Less than three: ♥ ♥
+XML:  <r>Less than three: <HEART>&lt;3</HEART> <HEART>&lt;3</HEART></r>
+HTML: Less than three: ♥ ♥
 ```
