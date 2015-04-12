@@ -1,6 +1,12 @@
 ## Plug your own parser
 
-You can register your own parser to be executed at runtime with `$parser->registerParser($name, $callback[, $regexp])` where `$name` is the name you want to give to the parser and `$callback` is a [callback](http://php.net/manual/en/language.types.callable.php) that receives two arguments: the original text and an optional array containing the matches of a `preg_match_all()` call if a regexp was configured.
+You can register your own parser to be executed at runtime with `$parser->registerParser($name, $callback[, $regexp])` in which:
+
+ 1. `$name` is the name you want to give to the parser.
+ 2. `$callback` is a [callback](http://php.net/manual/en/language.types.callable.php) that receives two arguments:
+     1. The original text.
+     2. An optional array containing the matches of a `preg_match_all()` call if a regexp was configured
+ 3. `$regexp` is an optional regular expression. If specified, the custom parser is only called if the original text matches the expression. Matches are passed as the callback's second argument.
 
 ### Register a parser that is run every time
 
