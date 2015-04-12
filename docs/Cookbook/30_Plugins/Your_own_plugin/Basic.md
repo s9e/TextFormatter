@@ -39,7 +39,7 @@ echo $xml;
 In this example, we create a tag called `HEART` that our custom parser will use to replace the string `<3` with a Unicode heart.
 
 ```php
-// Create a new configuration and create a `HEART` tag that's rendered as an HTML entity
+// Create a new configuration and create a "HEART" tag that's rendered as an HTML entity
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->tags->add('HEART')->template = '&#9829;';
 
@@ -68,8 +68,9 @@ $text = 'Less than three: <3 <3';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
-echo $html;
+echo $xml, "\n", $html;
 ```
 ```html
+<r>Less than three: <HEART>&lt;3</HEART> <HEART>&lt;3</HEART></r>
 Less than three: ♥ ♥
 ```
