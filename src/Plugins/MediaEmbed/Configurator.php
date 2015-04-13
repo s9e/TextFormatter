@@ -38,6 +38,8 @@ class Configurator extends ConfiguratorBase
 
 	protected $preferredRenderingMethods = array('template', 'iframe', 'flash');
 
+	protected $responsiveEmbeds = \false;
+
 	public $sitesDir;
 
 	protected function setUp()
@@ -221,6 +223,50 @@ class Configurator extends ConfiguratorBase
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
+	public function disableResponsiveEmbeds()
+	{
+		$this->responsiveEmbeds = \false;
+	}
+
+	public function enableResponsiveEmbeds()
+	{
+		$this->responsiveEmbeds = \true;
+	}
+
+	protected function addResponsiveStyle(array $attributes)
+	{
+		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
+		if (isset($attributes['style']))
+			$attributes['style'] .= ';' . $css;
+		else
+			$attributes['style'] = $css;
+
+		return $attributes;
+	}
+
+	protected function addResponsiveWrapper($template, array $attributes)
+	{
+		$height = $attributes['height'];
+		$width  = $attributes['width'];
+
+		$isFixedHeight = (bool) \preg_match('(^\\d+$)D', $height);
+		$isFixedWidth  = (bool) \preg_match('(^\\d+$)D', $width);
+
+		if ($isFixedHeight && $isFixedWidth)
+			$padding = \round(100 * $height / $width, 2);
+		else
+		{
+			if (!\preg_match('(^[@$]?[-\\w]+$)D', $height))
+				$height = '(' . $height . ')';
+			if (!\preg_match('(^[@$]?[-\\w]+$)D', $width))
+				$width = '(' . $width . ')';
+
+			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
+		}
+
+		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
+	}
+
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
 		if (!isset($scrapes[0]))
@@ -278,13 +324,18 @@ class Configurator extends ConfiguratorBase
 			'height' => $siteConfig['flash']['height'],
 			'data'   => $siteConfig['flash']['src']
 		);
+
 		if (isset($siteConfig['flash']['base']))
 			$attributes['base'] = $siteConfig['flash']['base'];
 		if (isset($siteConfig['flash']['style']))
 			$attributes['style'] = $siteConfig['flash']['style'];
 
+		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		if ($isResponsive)
+			$attributes = $this->addResponsiveStyle($attributes);
+
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes);
+		$template .= $this->generateAttributes($attributes, $isResponsive);
 		$template .= '<param name="allowfullscreen" value="true"/>';
 		if (isset($siteConfig['flash']['flashvars']))
 		{
@@ -304,6 +355,9 @@ class Configurator extends ConfiguratorBase
 		$template .= $this->generateAttributes($attributes);
 		$template .= '</embed></object>';
 
+		if ($isResponsive)
+			$template = $this->addResponsiveWrapper($template, $attributes);
+
 		return $template;
 	}
 
@@ -317,7 +371,11 @@ class Configurator extends ConfiguratorBase
 			'scrolling'       => 'no'
 		);
 
-		$template = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
+
+		if ($isResponsive)
+			$template = $this->addResponsiveWrapper($template, $attributes);
 
 		return $template;
 	}
@@ -327,8 +385,16 @@ class Configurator extends ConfiguratorBase
 		return $siteConfig['template'];
 	}
 
-	protected function generateAttributes(array $attributes)
+	protected function canBeResponsive(array $attributes)
 	{
+		return !\preg_match('([%<])', $attributes['width'] . $attributes['height']);
+	}
+
+	protected function generateAttributes(array $attributes, $addResponsive = \false)
+	{
+		if ($addResponsive)
+			$attributes = $this->addResponsiveStyle($attributes);
+
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)
 		{
