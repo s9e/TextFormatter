@@ -557,7 +557,7 @@ class Configurator extends ConfiguratorBase
 		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
 		*/
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes);
+		$template .= $this->generateAttributes($attributes, $isResponsive);
 		$template .= '<param name="allowfullscreen" value="true"/>';
 		if (isset($siteConfig['flash']['flashvars']))
 		{
@@ -609,14 +609,9 @@ class Configurator extends ConfiguratorBase
 			'scrolling'       => 'no'
 		];
 
-		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
-		if ($isResponsive)
-		{
-			$attributes = $this->addResponsiveStyle($attributes);
-		}
-
 		// Build the template
-		$template = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
 
 		if ($isResponsive)
 		{
@@ -652,11 +647,17 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Generate xsl:attributes elements from an array
 	*
-	* @param  array  $attributes Array of [name => value] where value can be XSL code
-	* @return string             XSL source
+	* @param  array  $attributes    Array of [name => value] where value can be XSL code
+	* @param  bool   $addResponsive Whether to add the responsive style attributes
+	* @return string                XSL source
 	*/
-	protected function generateAttributes(array $attributes)
+	protected function generateAttributes(array $attributes, $addResponsive = false)
 	{
+		if ($addResponsive)
+		{
+			$attributes = $this->addResponsiveStyle($attributes);
+		}
+
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)
 		{
