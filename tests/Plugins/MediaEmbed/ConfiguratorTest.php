@@ -1128,4 +1128,168 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame('://', $config['quickMatch']);
 	}
+
+	/**
+	* @testdox Iframes with fixed dimensions can be made responsive
+	*/
+	public function testResponsiveIframeFixed()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertContains(
+			'<div style="height:0;position:relative;padding-top:56.25%">',
+			(string) $tag->template
+		);
+		$this->assertContains(
+			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
+	* @testdox Iframes with 100% width cannot be made responsive
+	*/
+	public function testResponsiveIframeFullWidth()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => '100%',
+					'height' => 315,
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertNotContains('style', (string) $tag->template);
+	}
+
+	/**
+	* @testdox Iframes with variable width and height can be made responsive
+	*/
+	public function testResponsiveIframeVariable()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => '@width',
+					'height' => '@height',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertContains(
+			'<div style="height:0;position:relative;padding-top:{100*@height div@width}%">',
+			(string) $tag->template
+		);
+		$this->assertContains(
+			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
+	* @testdox Iframes with width expressed in XSL cannot be made responsive
+	*/
+	public function testResponsiveIframeXSLWidth()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => '10<xsl:if test="@foo">0</xsl:if>',
+					'height' => '100',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertNotContains('style', (string) $tag->template);
+	}
+
+	/**
+	* @testdox Iframes with height expressed in XSL cannot be made responsive
+	*/
+	public function testResponsiveIframeXSLHeight()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => '10',
+					'height' => '10<xsl:if test="@foo">0</xsl:if>',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertNotContains('style', (string) $tag->template);
+	}
+
+	/**
+	* @testdox CSS required for responsive iframes is added to the iframe's style
+	*/
+	public function testResponsiveIframeStyle()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => 'foo',
+					'style'  => 'margin:10px'
+				]
+			]
+		);
+
+		$this->assertContains(
+			'<div style="height:0;position:relative;padding-top:56.25%">',
+			(string) $tag->template
+		);
+		$this->assertContains(
+			'style="margin:10px;position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
+	* @testdox Default sites marked as unreponsive do not get the responsive wrapper
+	*/
+	public function testUnresponsiveDefaultSite()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add('twitter');
+		$this->assertNotContains('padding', (string) $tag->template);
+	}
 }

@@ -57,6 +57,11 @@ class Configurator extends ConfiguratorBase
 	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
 
 	/**
+	* @var bool Whether to enable responsive embeds
+	*/
+	protected $responsiveEmbeds = false;
+
+	/**
 	* @var string Path to the directory that contains the sites definitions
 	*/
 	public $sitesDir;
@@ -352,9 +357,86 @@ class Configurator extends ConfiguratorBase
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
+	/**
+	* Disable responsive embeds
+	*
+	* @return void
+	*/
+	public function disableResponsiveEmbeds()
+	{
+		$this->responsiveEmbeds = false;
+	}
+
+	/**
+	* Enable responsive embeds
+	*
+	* @return void
+	*/
+	public function enableResponsiveEmbeds()
+	{
+		$this->responsiveEmbeds = true;
+	}
+
 	//==========================================================================
 	// Internal methods
 	//==========================================================================
+
+	/**
+	* Add the attributes required for responsive embeds
+	*
+	* @param  array $attributes Array of [name => value] where value can be XSL code
+	* @return array             Modified attributes
+	*/
+	protected function addResponsiveStyle(array $attributes)
+	{
+		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
+		if (isset($attributes['style']))
+		{
+			$attributes['style'] .= ';' . $css;
+		}
+		else
+		{
+			$attributes['style'] = $css;
+		}
+
+		return $attributes;
+	}
+
+	/**
+	* Add the attributes required for responsive embeds
+	*
+	* @param  string $template   Original template
+	* @param  array  $attributes Array of [name => value] where value can be XSL code
+	* @return string             Modified template
+	*/
+	protected function addResponsiveWrapper($template, array $attributes)
+	{
+		$height = $attributes['height'];
+		$width  = $attributes['width'];
+
+		$isFixedHeight = (bool) preg_match('(^\\d+$)D', $height);
+		$isFixedWidth  = (bool) preg_match('(^\\d+$)D', $width);
+
+		if ($isFixedHeight && $isFixedWidth)
+		{
+			$padding = round(100 * $height / $width, 2);
+		}
+		else
+		{
+			if (!preg_match('(^[@$]?[-\\w]+$)D', $height))
+			{
+				$height = '(' . $height . ')';
+			}
+			if (!preg_match('(^[@$]?[-\\w]+$)D', $width))
+			{
+				$width = '(' . $width . ')';
+			}
+
+			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
+		}
+
+		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
+	}
 
 	/**
 	* Add the defined scrapes to given tag
@@ -455,6 +537,7 @@ class Configurator extends ConfiguratorBase
 			'height' => $siteConfig['flash']['height'],
 			'data'   => $siteConfig['flash']['src']
 		];
+
 		if (isset($siteConfig['flash']['base']))
 		{
 			$attributes['base'] = $siteConfig['flash']['base'];
@@ -462,6 +545,12 @@ class Configurator extends ConfiguratorBase
 		if (isset($siteConfig['flash']['style']))
 		{
 			$attributes['style'] = $siteConfig['flash']['style'];
+		}
+
+		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		if ($isResponsive)
+		{
+			$attributes = $this->addResponsiveStyle($attributes);
 		}
 
 		/**
@@ -494,6 +583,11 @@ class Configurator extends ConfiguratorBase
 		$template .= $this->generateAttributes($attributes);
 		$template .= '</embed></object>';
 
+		if ($isResponsive)
+		{
+			$template = $this->addResponsiveWrapper($template, $attributes);
+		}
+
 		return $template;
 	}
 
@@ -515,8 +609,19 @@ class Configurator extends ConfiguratorBase
 			'scrolling'       => 'no'
 		];
 
+		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		if ($isResponsive)
+		{
+			$attributes = $this->addResponsiveStyle($attributes);
+		}
+
 		// Build the template
 		$template = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+
+		if ($isResponsive)
+		{
+			$template = $this->addResponsiveWrapper($template, $attributes);
+		}
 
 		return $template;
 	}
@@ -530,6 +635,18 @@ class Configurator extends ConfiguratorBase
 	protected function buildTemplate(array $siteConfig)
 	{
 		return $siteConfig['template'];
+	}
+
+	/**
+	* Test whether given dimensions can be made repsonsive
+	*
+	* @param  array $attributes Array of [name => value] where value can be XSL code
+	* @return bool
+	*/
+	protected function canBeResponsive(array $attributes)
+	{
+		// Cannot be responsive if dimensions contain a percentage of an XSL element
+		return !preg_match('([%<])', $attributes['width'] . $attributes['height']);
 	}
 
 	/**

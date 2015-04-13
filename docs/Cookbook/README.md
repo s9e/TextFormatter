@@ -41,6 +41,7 @@
     * [Add a link to the original URL below the embedded content](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AppendTemplate.md)
     * [Change the template used to render embedded content](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/ChangeTemplate.md)
     * [Use a cache to improve scraping performance](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/PerformanceCacheDir.md)
+    * [Use responsive embeds](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/ResponsiveEmbeds.md)
   * **Your own plugin**
     * [Plug your own parser](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Your_own_plugin/Basic.md)
 

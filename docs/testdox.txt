@@ -1207,7 +1207,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressi
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
- [x] Constructor expects a valid callback
  [x] normalize() calls the user-defined callback with a DOMElement as argument
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
@@ -2383,6 +2382,13 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] asConfig() creates a regexp if a site has both "host" and "scheme"
  [x] asConfig() returns ':' as quickMatch if it has a site with a "scheme"
  [x] asConfig() returns '://' as quickMatch if it has no site with a "scheme"
+ [x] Iframes with fixed dimensions can be made responsive
+ [x] Iframes with 100% width cannot be made responsive
+ [x] Iframes with variable width and height can be made responsive
+ [x] Iframes with width expressed in XSL cannot be made responsive
+ [x] Iframes with height expressed in XSL cannot be made responsive
+ [x] CSS required for responsive iframes is added to the iframe's style
+ [x] Default sites marked as unreponsive do not get the responsive wrapper
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute
