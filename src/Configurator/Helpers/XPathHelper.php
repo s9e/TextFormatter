@@ -81,11 +81,11 @@ abstract class XPathHelper
 	public static function isExpressionNumeric($expr)
 	{
 		// Trim the expression and remove parentheses that are not part of a function call. PCRE
-		// does not support lookbehind assertions of variable length so we have to flip the string
+		// does not support lookbehind assertions of variable length so we have to flip the string.
+		// We exclude the XPath operator "div" (flipped into "vid") to avoid false positives
 		$expr = trim($expr);
-		$expr = strrev(preg_replace('(\\((?!\\s*\\w))', '', strrev($expr)));
+		$expr = strrev(preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', '', strrev($expr)));
 		$expr = str_replace(')', '', $expr);
-
 		if (preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++$)', $expr))
 		{
 			return true;

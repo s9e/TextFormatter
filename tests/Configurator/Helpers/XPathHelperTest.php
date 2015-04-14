@@ -107,6 +107,8 @@ class XPathHelperTest extends Test
 			[true,  '(@height+100)*@width'],
 			[false, 'foo(@height+100)'],
 			[false, 'foo ( @height + 100 )'],
+			[false, 'foodiv ( @height + 100 )'],
+			[true,  '@foo div (1+1)'],
 		];
 	}
 
