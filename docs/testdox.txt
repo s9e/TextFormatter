@@ -2385,9 +2385,12 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] Iframes with fixed dimensions can be made responsive
  [x] Iframes with 100% width cannot be made responsive
  [x] Iframes with variable width and height can be made responsive
+ [x] Iframes with variable width and height expressed an as XPath operation can be made responsive
  [x] Iframes with width expressed in XSL cannot be made responsive
  [x] Iframes with height expressed in XSL cannot be made responsive
  [x] CSS required for responsive iframes is added to the iframe's style
+ [x] Flash objects with fixed dimensions can be made responsive
+ [x] Responsive embeds can be disabled
  [x] Default sites marked as unreponsive do not get the responsive wrapper
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser

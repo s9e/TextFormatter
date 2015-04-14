@@ -1210,6 +1210,35 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Iframes with variable width and height expressed an as XPath operation can be made responsive
+	*/
+	public function testResponsiveIframeXPath()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => '{@width+12}',
+					'height' => '{@height+34}',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertContains(
+			'<div style="height:0;position:relative;padding-top:{100*(@height+34)div(@width+12)}%">',
+			(string) $tag->template
+		);
+		$this->assertContains(
+			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
 	* @testdox Iframes with width expressed in XSL cannot be made responsive
 	*/
 	public function testResponsiveIframeXSLWidth()
@@ -1279,6 +1308,65 @@ class ConfiguratorTest extends Test
 		);
 		$this->assertContains(
 			'style="margin:10px;position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
+	* @testdox Flash objects with fixed dimensions can be made responsive
+	*/
+	public function testResponsiveFlashFixed()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'flash'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertContains(
+			'<div style="height:0;position:relative;padding-top:56.25%">',
+			(string) $tag->template
+		);
+		$this->assertContains(
+			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
+			(string) $tag->template
+		);
+	}
+
+	/**
+	* @testdox Responsive embeds can be disabled
+	*/
+	public function testDisableResponsiveEmbeds()
+	{
+		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
+		$this->configurator->MediaEmbed->disableResponsiveEmbeds();
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.org',
+				'extract'  => "!(?'id'\\d+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertNotContains(
+			'<div style="height:0;position:relative;padding-top:56.25%">',
+			(string) $tag->template
+		);
+		$this->assertNotContains(
+			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
 			(string) $tag->template
 		);
 	}

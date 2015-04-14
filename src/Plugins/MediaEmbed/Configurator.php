@@ -411,8 +411,9 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function addResponsiveWrapper($template, array $attributes)
 	{
-		$height = $attributes['height'];
-		$width  = $attributes['width'];
+		// Remove braces from the values
+		$height = preg_replace('([{}])', '', $attributes['height']);
+		$width  = preg_replace('([{}])', '', $attributes['width']);
 
 		$isFixedHeight = (bool) preg_match('(^\\d+$)D', $height);
 		$isFixedWidth  = (bool) preg_match('(^\\d+$)D', $width);
