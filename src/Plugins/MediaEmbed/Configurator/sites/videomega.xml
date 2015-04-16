@@ -1,9 +1,0 @@
-<site name="Videomega" homepage="http://videomega.tv/">
-	<example>http://videomega.tv/?ref=aPRKXgQdaD</example>
-
-	<tags><tag>videos</tag></tags>
-
-	<host>videomega.tv</host>
-	<extract>!videomega\.tv/\?ref=(?'id'\w+)!</extract>
-	<iframe width="560" height="315" src="http://videomega.tv/iframe.php?ref={@id}"/>
-</site>

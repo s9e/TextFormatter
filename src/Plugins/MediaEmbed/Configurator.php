@@ -7,9 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
@@ -19,6 +16,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
 class Configurator extends ConfiguratorBase
@@ -36,11 +34,11 @@ class Configurator extends ConfiguratorBase
 
 	protected $createBBCodes = \true;
 
+	public $defaultSites;
+
 	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
 
 	protected $responsiveEmbeds = \false;
-
-	public $sitesDir;
 
 	protected function setUp()
 	{
@@ -63,8 +61,8 @@ class Configurator extends ConfiguratorBase
 		if ($this->createBBCodes)
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 
-		if (!isset($this->sitesDir))
-			$this->sitesDir = __DIR__ . '/Configurator/sites';
+		if (!isset($this->defaultSites))
+			$this->defaultSites = new CachedSiteDefinitionProvider;
 	}
 
 	public function asConfig()
@@ -116,7 +114,7 @@ class Configurator extends ConfiguratorBase
 		$siteId = $this->normalizeId($siteId);
 
 		if (!isset($siteConfig))
-			$siteConfig = $this->getDefaultSite($siteId);
+			$siteConfig = $this->defaultSites->get($siteId);
 
 		$this->collection[$siteId] = $siteConfig;
 
@@ -246,8 +244,8 @@ class Configurator extends ConfiguratorBase
 
 	protected function addResponsiveWrapper($template, array $attributes)
 	{
-		$height = $attributes['height'];
-		$width  = $attributes['width'];
+		$height = \preg_replace('([{}])', '', $attributes['height']);
+		$width  = \preg_replace('([{}])', '', $attributes['width']);
 
 		$isFixedHeight = (bool) \preg_match('(^\\d+$)D', $height);
 		$isFixedWidth  = (bool) \preg_match('(^\\d+$)D', $width);
@@ -416,54 +414,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $xsl;
-	}
-
-	protected function getConfigFromXmlFile($filepath)
-	{
-		$dom = new DOMDocument;
-		if (!$dom->load($filepath))
-			throw new RuntimeException('Invalid XML');
-
-		return $this->getElementConfig($dom->documentElement);
-	}
-
-	protected function getDefaultSite($siteId)
-	{
-		$filepath = $this->sitesDir . '/' . $siteId . '.xml';
-
-		if (!\file_exists($filepath))
-			throw new RuntimeException("Unknown media site '" . $siteId . "'");
-
-		return $this->getConfigFromXmlFile($filepath);
-	}
-
-	protected function getElementConfig(DOMElement $element)
-	{
-		$config = [];
-		foreach ($element->attributes as $attribute)
-			$config[$attribute->name] = $attribute->value;
-
-		$childNodes = [];
-		foreach ($element->childNodes as $childNode)
-		{
-			if ($childNode->nodeType !== \XML_ELEMENT_NODE)
-				continue;
-
-			if (!$childNode->attributes->length && $childNode->childNodes->length === 1)
-				$value = $childNode->nodeValue;
-			else
-				$value = $this->getElementConfig($childNode);
-
-			$childNodes[$childNode->nodeName][] = $value;
-		}
-
-		foreach ($childNodes as $nodeName => $childNodes)
-			if (\count($childNodes) === 1)
-				$config[$nodeName] = \end($childNodes);
-			else
-				$config[$nodeName] = $childNodes;
-
-		return $config;
 	}
 
 	protected function normalizeId($siteId)

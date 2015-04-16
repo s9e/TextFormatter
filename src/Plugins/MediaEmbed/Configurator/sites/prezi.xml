@@ -1,9 +1,0 @@
-<site name="Prezi" homepage="http://prezi.com/">
-	<example>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</example>
-
-	<tags><tag>presentations</tag></tags>
-
-	<host>prezi.com</host>
-	<extract>#//prezi\.com/(?!(?:a(?:bout|mbassadors)|c(?:o(?:llaborate|mmunity|ntact)|reate)|exp(?:erts|lore)|ip(?:ad|hone)|jobs|l(?:ear|ogi)n|m(?:ac|obility)|pr(?:es(?:s|ent)|icing)|recommend|support|user|windows|your)/)(?'id'\w+)/#</extract>
-	<iframe width="550" height="400" src="//prezi.com/embed/{@id}/"/>
-</site>
