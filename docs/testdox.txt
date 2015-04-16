@@ -2327,7 +2327,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProv
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
  [x] getIds() returns a list of siteIds
- [x] get('youtube') returns a configuration
+ [x] get('foo') returns a configuration if foo.xml exists
  [x] get('invalid') throws an exception
  [x] The constructor throws an exception if the dir does not exist
 

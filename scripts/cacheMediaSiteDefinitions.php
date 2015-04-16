@@ -4,7 +4,7 @@
 include __DIR__ . '/../src/autoloader.php';
 
 $normalizer = new s9e\TextFormatter\Configurator\TemplateNormalizer;
-$provider = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider;
+$provider = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
 $cache = [];
 foreach ($provider->getIds() as $siteId)
 {
