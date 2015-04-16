@@ -1,9 +1,0 @@
-<site name="Fox News" homepage="http://www.foxnews.com/">
-	<example>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</example>
-
-	<tags><tag>news</tag></tags>
-
-	<host>video.foxnews.com</host>
-	<extract>!video\.foxnews\.com/v/(?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="//video.foxnews.com/v/video-embed.html?video_id={@id}"/>
-</site>

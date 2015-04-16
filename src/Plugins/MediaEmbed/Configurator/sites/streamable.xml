@@ -1,9 +1,0 @@
-<site name="Streamable" homepage="http://streamable.com/">
-	<example>http://streamable.com/e4d</example>
-
-	<tags><tag>videos</tag></tags>
-
-	<host>streamable.com</host>
-	<extract>!streamable\.com/(?'id'\w+)!</extract>
-	<iframe width="560" height="315" src="//streamable.com/e/{@id}"/>
-</site>

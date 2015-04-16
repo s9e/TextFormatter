@@ -1,9 +1,0 @@
-<site name="Global News" homepage="http://globalnews.ca/">
-	<example>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</example>
-
-	<tags><tag>.ca</tag><tag>news</tag></tags>
-
-	<host>globalnews.ca</host>
-	<extract>!globalnews\.ca/video/(?'id'\d+)!</extract>
-	<iframe width="560" height="377" src="http://globalnews.ca/video/embed/{@id}/"/>
-</site>
