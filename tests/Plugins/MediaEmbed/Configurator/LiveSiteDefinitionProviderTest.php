@@ -6,6 +6,7 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteDefinitionProvider
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
 */
 class LiveSiteDefinitionProviderTest extends Test

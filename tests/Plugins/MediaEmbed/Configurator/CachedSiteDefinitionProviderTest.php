@@ -6,6 +6,7 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvid
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteDefinitionProvider
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider
 */
 class CachedSiteDefinitionProviderTest extends Test
