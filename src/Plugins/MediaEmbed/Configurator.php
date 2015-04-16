@@ -50,7 +50,7 @@ class Configurator extends ConfiguratorBase
 	protected $createBBCodes = true;
 
 	/**
-	* @var SiteDefinitionProvider Default sites
+	* @var Configurator\SiteDefinitionProvider Default sites
 	*/
 	public $defaultSites;
 
