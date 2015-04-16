@@ -28,9 +28,6 @@ abstract class Utils
 		$dom   = self::loadXML($xml);
 		$xpath = new DOMXPath($dom);
 		$nodes = $xpath->query(\str_repeat('//' . $tagName, 1 + $nestingLevel));
-		if (!$nodes)
-			return $xml;
-
 		foreach ($nodes as $node)
 			$node->parentNode->removeChild($node);
 
