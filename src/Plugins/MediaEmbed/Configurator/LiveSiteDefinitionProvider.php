@@ -17,10 +17,8 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 {
 	protected $path;
 
-	public function __construct($path = \null)
+	public function __construct($path)
 	{
-		if (!isset($path))
-			$path = __DIR__ . '/sites';
 		if (!\file_exists($path) || !\is_dir($path))
 			throw new InvalidArgumentException('Invalid site directory');
 		$this->path = $path;
