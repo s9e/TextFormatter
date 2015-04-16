@@ -10,27 +10,44 @@ use s9e\TextFormatter\Tests\Test;
 */
 class LiveSiteDefinitionProviderTest extends Test
 {
+	protected function generateDefinition()
+	{
+		$xml = "<site>
+					<host>localhost</host>
+					<extract>!localhost/v/(?'id'\\d+)</extract>
+					<iframe width='560' height='315' src='//localhost/e/{@id}'/>
+				</site>";
+		$siteId   = uniqid('mediaembed');
+		$filepath = sys_get_temp_dir() . '/' . $siteId . '.xml';
+		self::$tmpFiles[] = $filepath;
+		file_put_contents($filepath, $xml);
+
+		return $siteId;
+	}
+
 	/**
 	* @testdox getIds() returns a list of siteIds
 	*/
 	public function testGetIds()
 	{
-		$provider = new LiveSiteDefinitionProvider;
+		$siteId   = $this->generateDefinition();
+		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
 		$siteIds  = $provider->getIds();
 		$this->assertInternalType('array', $siteIds);
-		$this->assertContains('youtube', $siteIds);
+		$this->assertContains($siteId, $siteIds);
 	}
 
 	/**
-	* @testdox get('youtube') returns a configuration
+	* @testdox get('foo') returns a configuration if foo.xml exists
 	*/
 	public function testGet()
 	{
-		$provider   = new LiveSiteDefinitionProvider;
-		$siteConfig = $provider->get('youtube');
+		$siteId     = $this->generateDefinition();
+		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$siteConfig = $provider->get($siteId);
 		$this->assertInternalType('array', $siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
-		$this->assertContains('youtube.com', $siteConfig['host']);
+		$this->assertContains('localhost', $siteConfig['host']);
 	}
 
 	/**
@@ -40,7 +57,7 @@ class LiveSiteDefinitionProviderTest extends Test
 	*/
 	public function testGetInvalid()
 	{
-		$provider   = new LiveSiteDefinitionProvider;
+		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
 		$siteConfig = $provider->get('invalid');
 	}
 
