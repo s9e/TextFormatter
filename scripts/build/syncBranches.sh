@@ -27,8 +27,7 @@ do
 		cp "scripts/build/$version.composer.json" composer.json
 	fi
 
-	php scripts/build/patchSources.php $version
-	php scripts/build/optimizeSources.php
+	OPTIMIZE=1 scripts/build/prepareFiles.sh $version
 
 	for file in $ignore;
 	do

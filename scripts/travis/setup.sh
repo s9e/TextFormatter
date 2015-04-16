@@ -32,13 +32,7 @@ echo "Installing Closure Compiler"
 # The cache dir lets the MediaEmbed plugin cache scraped content
 mkdir ../../tests/.cache
 
-# Patch the sources for current PHP version
-php ../build/patchSources.php
-
-# Optimize the sources if applicable
-if [ -n "$OPTIMIZE" ]
-then
-	php ../build/optimizeSources.php
-fi
+# Prepare the files as for a release branch
+../build/prepareFiles.sh
 
 wait
