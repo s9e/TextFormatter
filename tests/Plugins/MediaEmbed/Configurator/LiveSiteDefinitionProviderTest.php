@@ -14,6 +14,7 @@ class LiveSiteDefinitionProviderTest extends Test
 	{
 		$xml = "<site>
 					<host>localhost</host>
+					<host>127.0.0.1</host>
 					<extract>!localhost/v/(?'id'\\d+)</extract>
 					<iframe width='560' height='315' src='//localhost/e/{@id}'/>
 				</site>";
@@ -69,5 +70,19 @@ class LiveSiteDefinitionProviderTest extends Test
 	public function testPathInvalid()
 	{
 		new LiveSiteDefinitionProvider('/invalid/path');
+	}
+
+	/**
+	* @testdox get() correctly interprets multiple nodes of the same name in XML
+	*/
+	public function testGetMultipleNodes()
+	{
+		$siteId     = $this->generateDefinition();
+		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$siteConfig = $provider->get($siteId);
+		$this->assertInternalType('array', $siteConfig);
+		$this->assertArrayHasKey('host', $siteConfig);
+		$this->assertContains('localhost', $siteConfig['host']);
+		$this->assertContains('127.0.0.1', $siteConfig['host']);
 	}
 }

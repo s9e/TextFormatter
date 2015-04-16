@@ -2330,6 +2330,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvid
  [x] get('foo') returns a configuration if foo.xml exists
  [x] get('invalid') throws an exception
  [x] The constructor throws an exception if the dir does not exist
+ [x] get() correctly interprets multiple nodes of the same name in XML
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Extends ArrayObject
