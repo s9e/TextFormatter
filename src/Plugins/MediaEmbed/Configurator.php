@@ -7,9 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
@@ -19,6 +16,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
 class Configurator extends ConfiguratorBase
@@ -52,6 +50,11 @@ class Configurator extends ConfiguratorBase
 	protected $createBBCodes = true;
 
 	/**
+	* @var SiteDefinitionProvider Default sites
+	*/
+	public $defaultSites;
+
+	/**
 	* @var array List of rendering methods in order of preference, descending
 	*/
 	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
@@ -60,11 +63,6 @@ class Configurator extends ConfiguratorBase
 	* @var bool Whether to enable responsive embeds
 	*/
 	protected $responsiveEmbeds = false;
-
-	/**
-	* @var string Path to the directory that contains the sites definitions
-	*/
-	public $sitesDir;
 
 	/**
 	* {@inheritdoc}
@@ -98,9 +96,9 @@ class Configurator extends ConfiguratorBase
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 		}
 
-		if (!isset($this->sitesDir))
+		if (!isset($this->defaultSites))
 		{
-			$this->sitesDir = __DIR__ . '/Configurator/sites';
+			$this->defaultSites = new CachedSiteDefinitionProvider;
 		}
 	}
 
@@ -185,7 +183,7 @@ class Configurator extends ConfiguratorBase
 		// If there's no value, look into the default site definitions
 		if (!isset($siteConfig))
 		{
-			$siteConfig = $this->getDefaultSite($siteId);
+			$siteConfig = $this->defaultSites->get($siteId);
 		}
 
 		// Add this site to the list
@@ -684,92 +682,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $xsl;
-	}
-
-	/**
-	* Extract a site's config from its XML file
-	*
-	* @param  string $filepath Path to the XML file
-	* @return mixed
-	*/
-	protected function getConfigFromXmlFile($filepath)
-	{
-		$dom = new DOMDocument;
-		if (!$dom->load($filepath))
-		{
-			throw new RuntimeException('Invalid XML');
-		}
-
-		return $this->getElementConfig($dom->documentElement);
-	}
-
-	/**
-	* Get the default config for given site
-	*
-	* @param  string $siteId Site'd ID, e.g. "youtube"
-	* @return array          Site's config
-	*/
-	protected function getDefaultSite($siteId)
-	{
-		$filepath = $this->sitesDir . '/' . $siteId . '.xml';
-
-		if (!file_exists($filepath))
-		{
-			throw new RuntimeException("Unknown media site '" . $siteId . "'");
-		}
-
-		// Extract the site info from the node and put it into an array
-		return $this->getConfigFromXmlFile($filepath);
-	}
-
-	/**
-	* Extract a site's config from its XML representation
-	*
-	* @param  DOMElement $element Current node
-	* @return mixed
-	*/
-	protected function getElementConfig(DOMElement $element)
-	{
-		$config = [];
-		foreach ($element->attributes as $attribute)
-		{
-			$config[$attribute->name] = $attribute->value;
-		}
-
-		// Group child nodes by name
-		$childNodes = [];
-		foreach ($element->childNodes as $childNode)
-		{
-			if ($childNode->nodeType !== XML_ELEMENT_NODE)
-			{
-				continue;
-			}
-
-			if (!$childNode->attributes->length && $childNode->childNodes->length === 1)
-			{
-				$value = $childNode->nodeValue;
-			}
-			else
-			{
-				$value = $this->getElementConfig($childNode);
-			}
-
-			$childNodes[$childNode->nodeName][] = $value;
-		}
-
-		foreach ($childNodes as $nodeName => $childNodes)
-		{
-			if (count($childNodes) === 1)
-			{
-				$config[$nodeName] = end($childNodes);
-			}
-			else
-			{
-				$config[$nodeName] = $childNodes;
-			}
-		}
-
-		return $config;
 	}
 
 	/**

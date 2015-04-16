@@ -215,6 +215,8 @@
 			<file>tests/Plugins/Keywords/ParserTest.php</file>
 			<file>tests/Plugins/Litedown/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Litedown/ParserTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProviderTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/LiveSiteDefinitionProviderTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ConfiguratorTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>

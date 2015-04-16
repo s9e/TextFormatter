@@ -13,12 +13,14 @@ fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 then
+	./scripts/cacheMediaSiteDefinitions.php
 	./scripts/generateBundles.php
 	./scripts/patchExamples.php
 	./scripts/patchMediaEmbedReadme.php
 
 	git update-index --add src/Bundles/*.php
 	git update-index --add src/Bundles/*/Renderer.php
+	git update-index --add "src/Plugins/MediaEmbed/Configurator.php"
 	git update-index --add "src/Plugins/MediaEmbed/README.md"
 fi
 
@@ -26,7 +28,7 @@ if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repo
 then
 	./scripts/patchBundledBBCodesCookbook.php
 
-	git update-index --add "src/Plugins/MediaEmbed/README.md"
+	git update-index --add "src/Plugins/BBCodes/README.md"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]

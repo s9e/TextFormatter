@@ -7,7 +7,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
-foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
+$dirpath = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
+foreach (glob($dirpath . '/*.xml') as $siteFile)
 {
 	$siteId = basename($siteFile, '.xml');
 
@@ -23,7 +24,7 @@ $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
 $siteHtml = [];
-foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
+foreach (glob($dirpath . '/*.xml') as $siteFile)
 {
 	$siteId = basename($siteFile, '.xml');
 

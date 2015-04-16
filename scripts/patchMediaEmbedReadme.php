@@ -12,7 +12,8 @@ $html[] = '		<th>Example URLs</th>';
 $html[] = '	</tr>';
 
 $configurator = new s9e\TextFormatter\Configurator;
-foreach (glob($configurator->MediaEmbed->sitesDir . '/*.xml') as $siteFile)
+$dirpath = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
+foreach (glob($dirpath . '/*.xml') as $siteFile)
 {
 	$site   = simplexml_load_file($siteFile);
 	$siteId = basename($siteFile, '.xml');
