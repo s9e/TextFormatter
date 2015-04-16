@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
 use ArrayObject;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 class MediaSiteCollection extends ArrayObject implements ConfigProvider

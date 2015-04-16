@@ -1,9 +1,0 @@
-<site name="VBOX7" homepage="http://vbox7.com/">
-	<example>http://vbox7.com/play:3975300ec6</example>
-
-	<tags><tag>.bg</tag></tags>
-
-	<host>vbox7.com</host>
-	<extract>!vbox7\.com/play:(?'id'[\da-f]+)!</extract>
-	<iframe width="560" height="315" src="http://vbox7.com/emb/external.php?vid={@id}"/>
-</site>

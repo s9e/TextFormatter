@@ -1,9 +1,0 @@
-<site name="Xbox DVR" homepage="http://xboxdvr.com/">
-	<example>http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc</example>
-
-	<tags><tag>gaming</tag></tags>
-
-	<host>xboxdvr.com</host>
-	<extract>!xboxdvr\.com/(?'user'[^/]+)/(?'id'[-0-9a-f]+)!</extract>
-	<iframe width="560" height="430" src="//xboxdvr.com/{@user}/{@id}/embed"/>
-</site>
