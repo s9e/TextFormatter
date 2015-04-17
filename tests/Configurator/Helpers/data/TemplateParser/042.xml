@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="div">
+    <switch>
+      <case test="@foo">
+        <attribute name="title">
+          <output escape="attribute" type="literal">111</output>
+        </attribute>
+        <closeTag id="1" set=""/>
+        <output escape="text" type="literal">222</output>
+      </case>
+    </switch>
+    <closeTag check="" id="1"/>
+    <output escape="text" type="literal">333</output>
+  </element>
+</template>

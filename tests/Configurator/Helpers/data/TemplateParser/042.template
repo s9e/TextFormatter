@@ -1,0 +1,6 @@
+<div>
+	<xsl:choose>
+		<xsl:when test="@foo"><xsl:attribute name="title">111</xsl:attribute>222</xsl:when>
+	</xsl:choose>
+	<xsl:text>333</xsl:text>
+</div>

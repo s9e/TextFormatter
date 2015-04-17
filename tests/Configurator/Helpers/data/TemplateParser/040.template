@@ -1,0 +1,5 @@
+<b>
+	<!-- comment -->
+	<xsl:attribute name="title">foo</xsl:attribute>
+	<xsl:text>...</xsl:text>
+</b>
