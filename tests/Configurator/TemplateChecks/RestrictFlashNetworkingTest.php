@@ -292,6 +292,17 @@ class RestrictFlashNetworkingTest extends Test
 	}
 
 	/**
+	* @testdox 'internal' allows <object><param name="allowNetworking" value="all"/></object> if onlyIfDynamic is TRUE
+	*/
+	public function test4aIfDynamic()
+	{
+		$node = $this->loadTemplate('<object><param name="allowNetworking" value="all"/></object>');
+		$check = new RestrictFlashNetworking('internal');
+		$check->onlyIfDynamic = true;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="internal"/></object>
 	*/
 	public function test4b()

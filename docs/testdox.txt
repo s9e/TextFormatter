@@ -1455,6 +1455,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashNetworking
  [x] 'none' disallows <embed/>
  [x] 'internal' disallows <embed allowNetworking="internal"><xsl:attribute name="allowNetworking"/></embed>
  [x] 'internal' disallows <object><param name="allowNetworking" value="all"/></object>
+ [x] 'internal' allows <object><param name="allowNetworking" value="all"/></object> if onlyIfDynamic is TRUE
  [x] 'internal' allows <object><param name="allowNetworking" value="internal"/></object>
  [x] 'internal' allows <object><param name="allowNetworking" value="none"/></object>
  [x] 'internal' disallows <object/>
