@@ -7,8 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
-use RuntimeException;
-
 class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 {
 	/**
@@ -132,11 +130,14 @@ class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 	*/
 	protected function getSiteConfig($siteId)
 	{
-		if (!isset($this->cache[$siteId]))
-		{
-			throw new RuntimeException("Unknown media site '" . $siteId . "'");
-		}
-
 		return unserialize($this->cache[$siteId]);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function hasSiteConfig($siteId)
+	{
+		return isset($this->cache[$siteId]);
 	}
 }

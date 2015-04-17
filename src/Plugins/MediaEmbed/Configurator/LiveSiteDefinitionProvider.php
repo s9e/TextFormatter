@@ -11,7 +11,6 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use InvalidArgumentException;
-use RuntimeException;
 
 class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 {
@@ -114,17 +113,30 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 	}
 
 	/**
+	* Return the path that corresponds to given siteId
+	*
+	* @param  string $siteId
+	* @return string
+	*/
+	protected function getFilePath($siteId)
+	{
+		return $this->path . '/' . $siteId . '.xml';
+	}
+
+	/**
 	* {@inheritdoc}
 	*/
 	protected function getSiteConfig($siteId)
 	{
-		$filepath = $this->path . '/' . $siteId . '.xml';
-		if (!file_exists($filepath))
-		{
-			throw new RuntimeException("Unknown media site '" . $siteId . "'");
-		}
-
 		// Extract the site info from the node and put it into an array
-		return $this->getConfigFromXmlFile($filepath);
+		return $this->getConfigFromXmlFile($this->getFilePath($siteId));
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function hasSiteConfig($siteId)
+	{
+		return file_exists($this->getFilePath($siteId));
 	}
 }

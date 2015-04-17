@@ -28,6 +28,37 @@ class LiveSiteDefinitionProviderTest extends Test
 	}
 
 	/**
+	* @testdox has() returns TRUE if the site config exists
+	*/
+	public function testHas()
+	{
+		$siteId   = $this->generateDefinition();
+		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$this->assertTrue($provider->has($siteId));
+	}
+
+	/**
+	* @testdox has('unknown') returns FALSE
+	*/
+	public function testHasFalse()
+	{
+		$siteId   = $this->generateDefinition();
+		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$this->assertFalse($provider->has('unknown'));
+	}
+
+	/**
+	* @testdox has('*invalid*') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid site ID
+	*/
+	public function testHasInvalid()
+	{
+		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$provider->has('*invalid*');
+	}
+
+	/**
 	* @testdox getIds() returns a list of siteIds
 	*/
 	public function testGetIds()
@@ -53,14 +84,25 @@ class LiveSiteDefinitionProviderTest extends Test
 	}
 
 	/**
-	* @testdox get('invalid') throws an exception
+	* @testdox get('unknown') throws an exception
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Unknown media site
+	*/
+	public function testGetUnknown()
+	{
+		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
+		$siteConfig = $provider->get('unknown');
+	}
+
+	/**
+	* @testdox get('*invalid*') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testGetInvalid()
 	{
 		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteConfig = $provider->get('invalid');
+		$siteConfig = $provider->get('*invalid*');
 	}
 
 	/**

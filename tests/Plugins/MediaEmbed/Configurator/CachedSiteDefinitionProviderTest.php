@@ -12,6 +12,35 @@ use s9e\TextFormatter\Tests\Test;
 class CachedSiteDefinitionProviderTest extends Test
 {
 	/**
+	* @testdox has('youtube') returns TRUE
+	*/
+	public function testHas()
+	{
+		$provider = new CachedSiteDefinitionProvider;
+		$this->assertTrue($provider->has('youtube'));
+	}
+
+	/**
+	* @testdox has('unknown') returns FALSE
+	*/
+	public function testHasFalse()
+	{
+		$provider = new CachedSiteDefinitionProvider;
+		$this->assertFalse($provider->has('unknown'));
+	}
+
+	/**
+	* @testdox has('*invalid*') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid site ID
+	*/
+	public function testHasInvalid()
+	{
+		$provider = new CachedSiteDefinitionProvider;
+		$provider->has('*invalid*');
+	}
+
+	/**
 	* @testdox getIds() returns a list of siteIds
 	*/
 	public function testGetIds()
@@ -35,13 +64,24 @@ class CachedSiteDefinitionProviderTest extends Test
 	}
 
 	/**
-	* @testdox get('invalid') throws an exception
+	* @testdox get('unknown') returns FALSE
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Unknown media site
+	*/
+	public function testGetUnknown()
+	{
+		$provider   = new CachedSiteDefinitionProvider;
+		$siteConfig = $provider->get('unknown');
+	}
+
+	/**
+	* @testdox get('*invalid*') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testGetInvalid()
 	{
 		$provider   = new CachedSiteDefinitionProvider;
-		$siteConfig = $provider->get('invalid');
+		$siteConfig = $provider->get('*invalid*');
 	}
 }

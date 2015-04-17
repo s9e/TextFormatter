@@ -2321,14 +2321,22 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider
+ [x] has('youtube') returns TRUE
+ [x] has('unknown') returns FALSE
+ [x] has('*invalid*') throws an exception
  [x] getIds() returns a list of siteIds
  [x] get('youtube') returns a configuration
- [x] get('invalid') throws an exception
+ [x] get('unknown') returns FALSE
+ [x] get('*invalid*') throws an exception
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
+ [x] has() returns TRUE if the site config exists
+ [x] has('unknown') returns FALSE
+ [x] has('*invalid*') throws an exception
  [x] getIds() returns a list of siteIds
  [x] get('foo') returns a configuration if foo.xml exists
- [x] get('invalid') throws an exception
+ [x] get('unknown') throws an exception
+ [x] get('*invalid*') throws an exception
  [x] The constructor throws an exception if the dir does not exist
  [x] get() correctly interprets multiple nodes of the same name in XML
 
