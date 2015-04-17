@@ -131,11 +131,6 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 		$settingName = strtolower($this->settingName);
 		foreach ($this->getElements('object') as $object)
 		{
-			if ($this->onlyIfDynamic && !$this->isDynamic($object))
-			{
-				continue;
-			}
-
 			// Test the element's <param/> descendants
 			$useDefault = true;
 			foreach ($object->getElementsByTagName('param') as $param)
