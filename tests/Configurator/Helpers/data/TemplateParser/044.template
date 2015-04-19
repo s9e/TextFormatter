@@ -1,0 +1,5 @@
+<div>
+	<xsl:choose>
+		<xsl:when test="@foo">.</xsl:when>
+	</xsl:choose>
+</div>

@@ -1,0 +1,10 @@
+<div>
+	<xsl:choose>
+		<xsl:when test="@foo">
+			<xsl:choose>
+				<xsl:when test="@foo">.</xsl:when>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:otherwise>.</xsl:otherwise>
+	</xsl:choose>
+</div>
