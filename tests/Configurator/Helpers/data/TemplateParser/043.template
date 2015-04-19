@@ -1,0 +1,5 @@
+<xsl:choose>
+	<xsl:when test="@foo='a'or@bar='b'">.</xsl:when>
+	<xsl:when test="@foo='c'">.</xsl:when>
+	<xsl:when test="@foo='d'">.</xsl:when>
+</xsl:choose>
