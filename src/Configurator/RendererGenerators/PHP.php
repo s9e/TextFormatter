@@ -429,24 +429,19 @@ class PHP implements RendererGenerator
 	}
 
 	/**
-	* Export given value as PHP code
+	* Export given array as PHP code
 	*
-	* @param  mixed  $value Original value
+	* @param  array  $value Original value
 	* @return string        PHP code
 	*/
-	protected static function export($value)
+	protected static function export(array $value)
 	{
-		if (is_array($value))
+		$pairs = [];
+		foreach ($value as $k => $v)
 		{
-			$pairs = [];
-			foreach ($value as $k => $v)
-			{
-				$pairs[] = var_export($k, true) . '=>' . var_export($v, true);
-			}
-
-			return '[' . implode(',', $pairs) . ']';
+			$pairs[] = var_export($k, true) . '=>' . var_export($v, true);
 		}
 
-		return var_export($value, true);
+		return '[' . implode(',', $pairs) . ']';
 	}
 }
