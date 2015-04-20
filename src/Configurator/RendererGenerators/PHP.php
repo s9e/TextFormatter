@@ -288,17 +288,12 @@ class PHP implements RendererGenerator
 		return $php;
 	}
 
-	protected static function export($value)
+	protected static function export(array $value)
 	{
-		if (\is_array($value))
-		{
-			$pairs = [];
-			foreach ($value as $k => $v)
-				$pairs[] = \var_export($k, \true) . '=>' . \var_export($v, \true);
+		$pairs = [];
+		foreach ($value as $k => $v)
+			$pairs[] = \var_export($k, \true) . '=>' . \var_export($v, \true);
 
-			return '[' . \implode(',', $pairs) . ']';
-		}
-
-		return \var_export($value, \true);
+		return '[' . \implode(',', $pairs) . ']';
 	}
 }
