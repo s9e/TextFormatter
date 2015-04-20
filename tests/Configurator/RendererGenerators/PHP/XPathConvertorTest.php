@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
 use Exception;
 use ReflectionMethod;
+use ReflectionProperty;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor;
 use s9e\TextFormatter\Tests\Test;
@@ -449,5 +450,20 @@ class XPathConvertorTest extends Test
 		$method = new ReflectionMethod($className, 'resolveConstantMathExpression');
 		$method->setAccessible(true);
 		$method->invoke(new XPathConvertor, 1, '**', 2);
+	}
+
+	/**
+	* @testdox Covering test for convertXPath()
+	*/
+	public function testConvertXPathUnsupported()
+	{
+		$convertor = new XPathConvertor;
+		$method = new ReflectionProperty(get_class($convertor), 'regexp');
+		$method->setAccessible(true);
+		$method->setValue($convertor, '()');
+		$this->assertSame(
+			"\$this->xpath->evaluate('@foo=@bar',\$node)",
+			$convertor->convertXPath('@foo=@bar')
+		);
 	}
 }

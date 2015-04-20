@@ -2432,6 +2432,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertCondition() advanced tests (PCRE >= 8.13)
  [x] convertCondition() advanced tests (PCRE < 8.13)
  [x] Covering test for resolveConstantMathExpression()
+ [x] Covering test for convertXPath()
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\BranchOutputOptimizer
  [x] optimize() tests
