@@ -387,21 +387,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
-				'<r><FLICKR height="640" id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/" width="427">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
-				[],
-				function ($configurator)
-				{
-					// NOTE: we force this test to run without the cache on Travis to ensure we hit
-					//       the no-cache code path
-					if (empty($_SERVER['TRAVIS']))
-					{
-						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					}
-					$configurator->MediaEmbed->add('flickr');
-				}
-			],
-			[
 				'http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-',
 				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
 				[],
@@ -1823,6 +1808,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
+				'<r><FLICKR id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('flickr');
 				}
 			],
 			[
