@@ -4,7 +4,7 @@
 include __DIR__ . '/../../src/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
-foreach (glob(__DIR__ . '/../../src/Plugins/*', GLOB_ONLYDIR) as $dirpath)
+foreach (glob(realpath(__DIR__ . '/../../src/Plugins') . '/*', GLOB_ONLYDIR) as $dirpath)
 {
 	$pluginName = basename($dirpath);
 	$js = $configurator->$pluginName->getJSParser();
