@@ -168,20 +168,8 @@ class BundleGenerator
 	{
 		$str = \call_user_func($this->serializer, $obj);
 
-		$str = \preg_replace_callback(
-			'#[\\x00-\\x1F\\x7F-\xFF\\\\$"]#',
-			function ($m)
-			{
-				$c = $m[0];
+		$str = \var_export($str, \true);
 
-				if ($c === '"' || $c === '\\' || $c === '$')
-					return '\\' . $c;
-
-				return '\\' . \substr('00' . \decoct(\ord($c)), -3);
-			},
-			$str
-		);
-
-		return $this->unserializer . '("' . $str . '")';
+		return $this->unserializer . '(' . $str . ')';
 	}
 }
