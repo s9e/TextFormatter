@@ -38,7 +38,7 @@ do
 	done
 
 	git show-branch "$rel" || git branch "$rel"
-	patch=$(git diff --no-color "$rel")
+	patch=$(git diff --binary --no-color "$rel")
 	git reset --hard
 
 	if [ -z "$patch" ]
@@ -46,7 +46,7 @@ do
 		echo "No patching: $rel is up-to-date"
 	else
 		git checkout "$rel"
-		echo "$patch" | git apply --index --whitespace=nowarn -
+		echo "$patch" | git apply --binary --index --whitespace=nowarn -
 		git commit -aq --no-verify -m"$msg"
 	fi
 done
