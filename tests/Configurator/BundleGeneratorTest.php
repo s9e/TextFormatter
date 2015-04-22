@@ -91,11 +91,11 @@ class BundleGeneratorTest extends Test
 		);
 
 		$this->assertRegexp(
-			'/\\\\"Autolink\\\\";[^}]*s:10:\\\\"isDisabled\\\\";b:1;/',
+			'/\\"Autolink\\";[^}]*s:10:\\"isDisabled\\";b:1;/',
 			$bundle
 		);
 		$this->assertRegexp(
-			'/\\\\"URL\\\\";[^}]*s:10:\\\\"isDisabled\\\\";b:1;/',
+			'/\\"URL\\";[^}]*s:10:\\"isDisabled\\";b:1;/',
 			$bundle
 		);
 	}
@@ -129,7 +129,7 @@ class BundleGeneratorTest extends Test
 		);
 
 		$this->assertContains(
-			's:3:\\"foo\\";s:3:\\"bar\\";',
+			's:3:"foo";s:3:"bar";',
 			$bundle
 		);
 	}
@@ -318,11 +318,11 @@ class BundleGeneratorTest extends Test
 		return [
 			[
 				"\7" . '0',
-				'unserialize("s:2:\\"\\0070\\";")'
+				"unserialize('s:2:\"\0070\";')"
 			],
 			[
 				'"$\\',
-				'unserialize("s:3:\\"\\"\\$\\\\\\";")'
+				'unserialize(\'s:3:""$\\\\";\')'
 			],
 		];
 	}
