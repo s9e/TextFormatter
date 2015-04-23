@@ -59,9 +59,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 	protected function renderQuick($xml)
 	{
-		if (\strpos($xml, '&#') !== \false)
-			$xml = \html_entity_decode($xml, \ENT_NOQUOTES, 'UTF-8');
-
+		$xml = $this->decodeSMP($xml);
 		self::$attributes = [];
 		$html = \preg_replace_callback(
 			'(<(?:(?!/)(E)(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
@@ -123,7 +121,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 		if (!isset(self::$quickBranches[$id]))
 		{
-			if (\preg_match('(^/?(?>CODE|FORUM|IMG|POST|TOPIC|U(?>RL|SER))$)', $id))
+			if ($id[0] === '!' || $id[0] === '?' || \preg_match('(^/?(?>CODE|FORUM|IMG|POST|TOPIC|U(?>RL|SER))$)', $id))
 				throw new \RuntimeException;
 			return '';
 		}
