@@ -63,6 +63,12 @@ class Quick
 		$php[] = '	protected function renderQuick($xml)';
 		$php[] = '	{';
 
+		$php[] = "		if (strpos(\$xml, '&#') !== false)";
+		$php[] = '		{';
+		$php[] = "			\$xml = html_entity_decode(\$xml, ENT_NOQUOTES, 'UTF-8');";
+		$php[] = '		}';
+		$php[] = '';
+
 		if (isset($map['php']))
 			$php[] = '		self::$attributes = [];';
 

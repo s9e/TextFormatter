@@ -58,6 +58,9 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 	protected function renderQuick($xml)
 	{
+		if (\strpos($xml, '&#') !== \false)
+			$xml = \html_entity_decode($xml, \ENT_NOQUOTES, 'UTF-8');
+
 		self::$attributes = [];
 		$html = \preg_replace_callback(
 			'(<(?:(?!/)((?>E|FLASH|IMG|TIME|html:(?>img|[bh]r)|[BH]R))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
