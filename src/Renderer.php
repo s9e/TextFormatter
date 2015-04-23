@@ -42,6 +42,8 @@ abstract class Renderer
 
 		$html = \str_replace('<br/>', '<br>', $html);
 
+		$html = $this->decodeSMP($html);
+
 		return $html;
 	}
 
@@ -72,5 +74,18 @@ abstract class Renderer
 	{
 		if (\strpos($xml, '<!') !== \false && \preg_match('(<!(?!\\[CDATA\\[))', $xml))
 			throw new InvalidArgumentException('DTDs are not allowed');
+	}
+
+	protected function decodeSMP($str)
+	{
+		if (\strpos($str, '&#') === \false)
+			return $str;
+
+		return \preg_replace_callback('(&#\\d+;)', __CLASS__ . '::decodeEntity', $str);
+	}
+
+	protected static function decodeEntity($m)
+	{
+		return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
 	}
 }
