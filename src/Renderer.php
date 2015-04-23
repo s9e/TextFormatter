@@ -74,6 +74,9 @@ abstract class Renderer
 		// Replace all <br/> with <br>
 		$html = str_replace('<br/>', '<br>', $html);
 
+		// Decode encoded characters from the Supplementary Multilingual Plane
+		$html = $this->decodeSMP($html);
+
 		return $html;
 	}
 
@@ -144,5 +147,32 @@ abstract class Renderer
 		{
 			throw new InvalidArgumentException('DTDs are not allowed');
 		}
+	}
+
+	/**
+	* Decode encoded characters from the Supplementary Multilingual Plane
+	*
+	* @param  string $str Encoded string
+	* @return string      Decoded string
+	*/
+	protected function decodeSMP($str)
+	{
+		if (strpos($str, '&#') === false)
+		{
+			return $str;
+		}
+
+		return preg_replace_callback('(&#\\d+;)', __CLASS__ . '::decodeEntity', $str);
+	}
+
+	/**
+	* Decode a matched SGML entity
+	*
+	* @param  string[] $m Captures from PCRE
+	* @return string      Decoded entity
+	*/
+	protected static function decodeEntity($m)
+	{
+		return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
 	}
 }

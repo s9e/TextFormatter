@@ -78,13 +78,7 @@ class Quick
 		$php[] = '';
 		$php[] = '	protected function renderQuick($xml)';
 		$php[] = '	{';
-
-		// Decode HTML numeric entities
-		$php[] = "		if (strpos(\$xml, '&#') !== false)";
-		$php[] = '		{';
-		$php[] = "			\$xml = html_entity_decode(\$xml, ENT_NOQUOTES, 'UTF-8');";
-		$php[] = '		}';
-		$php[] = '';
+		$php[] = '		$xml = $this->decodeSMP($xml);';
 
 		if (isset($map['php']))
 		{

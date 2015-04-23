@@ -202,4 +202,48 @@ trait RendererTests
 
 		$this->configurator->getRenderer()->render($xml);
 	}
+
+	/**
+	* @testdox Renders plain text with SMP character
+	*/
+	public function testRenderPlainSMP()
+	{
+		$this->assertSame(
+			'😀',
+			$this->configurator->getRenderer()->render('<t>&#128512;</t>')
+		);
+	}
+
+	/**
+	* @testdox Renders rich text with SMP character
+	*/
+	public function testRenderRichSMP()
+	{
+		$this->assertSame(
+			'😀',
+			$this->configurator->getRenderer()->render('<r>&#128512;</r>')
+		);
+	}
+
+	/**
+	* @testdox Does not decode special chars in a plain text with a SMP character
+	*/
+	public function testRenderPlainSMPSpecial()
+	{
+		$this->assertSame(
+			'&lt;😀&gt;',
+			$this->configurator->getRenderer()->render('<t>&lt;&#128512;&gt;</t>')
+		);
+	}
+
+	/**
+	* @testdox Does not decode special chars in a rich text with a SMP character
+	*/
+	public function testRenderRichSMPSpecial()
+	{
+		$this->assertSame(
+			'&lt;😀&gt;',
+			$this->configurator->getRenderer()->render('<r>&lt;&#128512;&gt;</r>')
+		);
+	}
 }

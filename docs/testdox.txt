@@ -2462,6 +2462,10 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
+ [x] Renders plain text with SMP character
+ [x] Renders rich text with SMP character
+ [x] Does not decode special chars in a plain text with a SMP character
+ [x] Does not decode special chars in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] serialize() tests
@@ -2549,6 +2553,10 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
+ [x] Renders plain text with SMP character
+ [x] Renders rich text with SMP character
+ [x] Does not decode special chars in a plain text with a SMP character
+ [x] Does not decode special chars in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] getFilepath() returns the path to the stylesheet file
@@ -2569,6 +2577,10 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
+ [x] Renders plain text with SMP character
+ [x] Renders rich text with SMP character
+ [x] Does not decode special chars in a plain text with a SMP character
+ [x] Does not decode special chars in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
@@ -2589,6 +2601,10 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
+ [x] Renders plain text with SMP character
+ [x] Renders rich text with SMP character
+ [x] Does not decode special chars in a plain text with a SMP character
+ [x] Does not decode special chars in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
