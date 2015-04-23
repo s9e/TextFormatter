@@ -176,15 +176,18 @@ class Quick
 			$php[] = '		{';
 		}
 
+		// Test for <! and <? tags
+		$condition = "\$id[0] === '!' || \$id[0] === '?'";
 		if (!empty($unsupported))
 		{
 			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . '$)';
-			$php[] = '			if (preg_match(' . var_export($regexp, true) . ', $id))';
-			$php[] = '			{';
-			$php[] = '				throw new \\RuntimeException;';
-			$php[] = '			}';
+			$condition .= ' || preg_match(' . var_export($regexp, true) . ', $id)';
 		}
 
+		$php[] = '			if (' . $condition . ')';
+		$php[] = '			{';
+		$php[] = '				throw new \\RuntimeException;';
+		$php[] = '			}';
 		$php[] = "			return '';";
 
 		if (isset($map['php']))

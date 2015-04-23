@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
+use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -14,6 +15,14 @@ use s9e\TextFormatter\Tests\Test;
 */
 class QuickTest extends Test
 {
+	use RendererTests;
+
+	public function setUp()
+	{
+		$this->configurator->rendering->engine = 'PHP';
+		$this->configurator->rendering->engine->enableQuickRenderer = true;
+	}
+
 	protected function getPHP($template, $renderingType)
 	{
 		$serializer = new Serializer;
