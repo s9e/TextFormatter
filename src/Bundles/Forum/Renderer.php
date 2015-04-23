@@ -58,6 +58,9 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 	protected function renderQuick($xml)
 	{
+		if (\strpos($xml, '&#') !== \false)
+			$xml = \html_entity_decode($xml, \ENT_NOQUOTES, 'UTF-8');
+
 		self::$attributes = array();
 		$html = \preg_replace_callback(
 			'(<(?:(?!/)((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|GROOVESHARK|IN(?>DIEGOGO|STAGRAM)|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWITCH|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
