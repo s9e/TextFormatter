@@ -58,9 +58,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 	protected function renderQuick($xml)
 	{
-		if (\strpos($xml, '&#') !== \false)
-			$xml = \html_entity_decode($xml, \ENT_NOQUOTES, 'UTF-8');
-
+		$xml = $this->decodeSMP($xml);
 		self::$attributes = [];
 		$html = \preg_replace_callback(
 			'(<(?:(?!/)((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|GROOVESHARK|IN(?>DIEGOGO|STAGRAM)|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWITCH|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
@@ -122,7 +120,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 		if (!isset(self::$quickBranches[$id]))
 		{
-			if (\preg_match('(^/?CODE$)', $id))
+			if ($id[0] === '!' || $id[0] === '?' || \preg_match('(^/?CODE$)', $id))
 				throw new \RuntimeException;
 			return '';
 		}
