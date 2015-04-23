@@ -86,6 +86,6 @@ abstract class Renderer
 
 	protected static function decodeEntity($m)
 	{
-		return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
+		return \htmlspecialchars(\html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8'), \ENT_QUOTES);
 	}
 }
