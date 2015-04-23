@@ -11,7 +11,6 @@ if (!file_exists($filepath))
 
 $all = [];
 $map = [];
-$shortNames = [];
 foreach (json_decode(file_get_contents($filepath), true) as $shortname => $info)
 {
 	$seq  = $info['unicode'];
@@ -19,7 +18,6 @@ foreach (json_decode(file_get_contents($filepath), true) as $shortname => $info)
 
 	$all[$utf8] = $seq;
 	$all[$info['shortname']] = $seq;
-	$shortNames[$utf8] = $info['shortname'];
 
 	if (isset($info['alternates']))
 	{
@@ -37,31 +35,28 @@ foreach ($all as $match => $seq)
 {
 	$html = '<img alt="' . $match . '" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/' . $seq . '.png">';
 
-	$allText .= $match . "\n";
-	$allHtml .= $html . "\n";
+	$allText .= $match;
+	$allHtml .= $html;
 
 	$map[str_replace(FE0F, '', $match)] = $seq;
 }
 ksort($map);
 
 // PHP Parser
+$arr = [];
+foreach ($map as $k => $v)
+{
+	$arr[] = var_export($k, true) . '=>' . var_export($v, true);
+}
+$php = '[' . implode(',', $arr) . ']';
+
 $filepath = __DIR__ . '/../src/Plugins/Emoji/Parser.php';
 $file = file_get_contents($filepath);
 if (!preg_match('((.*\\$map = ).*?(;\\n.*))s', $file, $m))
 {
 	die("Could not find \$map\n");
 }
-$file = $m[1] . export($map) . $m[2];
-file_put_contents($filepath, $file);
-
-// PHP helper
-$filepath = __DIR__ . '/../src/Plugins/Emoji/Helper.php';
-$file = file_get_contents($filepath);
-if (!preg_match('((.*\\$map = ).*?(;\\n.*))s', $file, $m))
-{
-	die("Could not find \$map\n");
-}
-$file = $m[1] . export($shortNames) . $m[2];
+$file = $m[1] . $php . $m[2];
 file_put_contents($filepath, $file);
 
 // JS Parser
@@ -116,17 +111,6 @@ function cp($str)
 	}
 
 	return $cp;
-}
-
-function export($map)
-{
-	$arr = [];
-	foreach ($map as $k => $v)
-	{
-		$arr[] = var_export($k, true) . '=>' . var_export($v, true);
-	}
-
-	return '[' . implode(',', $arr) . ']';
 }
 
 function seqToUtf8($seq)
