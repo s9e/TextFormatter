@@ -64,4 +64,15 @@ class UnparserTest extends Test
 			Unparser::unparse('<t>&amp;&lt;&gt;&quot;&#039;</t>')
 		);
 	}
+
+	/**
+	* @testdox Characters outside Unicode's BMP are decoded
+	*/
+	public function testUnicodeSMP()
+	{
+		$this->assertSame(
+			'😀',
+			Unparser::unparse('<t>&#128512;</t>')
+		);
+	}
 }

@@ -79,6 +79,13 @@ class Quick
 		$php[] = '	protected function renderQuick($xml)';
 		$php[] = '	{';
 
+		// Decode HTML numeric entities
+		$php[] = "		if (strpos(\$xml, '&#') !== false)";
+		$php[] = '		{';
+		$php[] = "			\$xml = html_entity_decode(\$xml, ENT_NOQUOTES, 'UTF-8');";
+		$php[] = '		}';
+		$php[] = '';
+
 		if (isset($map['php']))
 		{
 			// Reset saved attributes before we start rendering

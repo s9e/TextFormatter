@@ -353,4 +353,14 @@ class ParserTest extends Test
 		$this->assertSame(123, $tagsConfig['FOO']['nestingLimit']);
 		$this->assertSame(456, $tagsConfig['BAR']['nestingLimit']);
 	}
+
+	/**
+	* @testdox Characters outside Unicode's BMP are encoded
+	*/
+	public function testUnicodeSMP()
+	{
+		$text = '😀';
+		$xml  = $this->configurator->getParser()->parse($text);
+		$this->assertSame('<t>&#128512;</t>', $xml);
+	}
 }

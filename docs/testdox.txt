@@ -1893,6 +1893,7 @@ s9e\TextFormatter\Tests\Parser
  [x] setTagLimit() does not have side-effects due to references
  [x] setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
  [x] setNestingLimit() does not have side-effects due to references
+ [x] Characters outside Unicode's BMP are encoded
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
@@ -2591,6 +2592,7 @@ s9e\TextFormatter\Tests\Unparser
  [x] unparse("<mt>a<br />\nb</mt>") returns "a\nb"
  [x] unparse('<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>') returns '[b]Rich[/b] text :)'
  [x] Can unparse representations that were over-escaped
+ [x] Characters outside Unicode's BMP are decoded
 
 s9e\TextFormatter\Tests\Utils
  [x] removeFormatting() tests
