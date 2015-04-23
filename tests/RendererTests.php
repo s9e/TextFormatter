@@ -246,4 +246,26 @@ trait RendererTests
 			$this->configurator->getRenderer()->render('<r>&lt;&#128512;&gt;</r>')
 		);
 	}
+
+	/**
+	* @testdox Does not decode special chars encoded as numeric entities in a plain text with a SMP character
+	*/
+	public function testRenderPlainSMPSpecialNumeric()
+	{
+		$this->assertSame(
+			'&lt;😀',
+			$this->configurator->getRenderer()->render('<t>&#0060;&#128512;</t>')
+		);
+	}
+
+	/**
+	* @testdox Does not decode special chars encoded as numeric entities in a rich text with a SMP character
+	*/
+	public function testRenderRichSMPSpecialNumeric()
+	{
+		$this->assertSame(
+			'&lt;😀',
+			$this->configurator->getRenderer()->render('<r>&#0060;&#128512;</r>')
+		);
+	}
 }

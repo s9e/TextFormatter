@@ -2466,6 +2466,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Renders rich text with SMP character
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] serialize() tests
@@ -2557,6 +2559,8 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Renders rich text with SMP character
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] getFilepath() returns the path to the stylesheet file
@@ -2581,6 +2585,8 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Renders rich text with SMP character
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
@@ -2605,6 +2611,8 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Renders rich text with SMP character
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
+ [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
 
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
