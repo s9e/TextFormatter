@@ -58,16 +58,16 @@ class Configurator extends ConfiguratorBase
 		$jsRegexp  .= '\\u3030\\u303D\\u3297\\u3299]';
 
 		$phpRegexp .= '|\\xF0\\x9F(?>';
-		$jsRegexp  .= '|\\uD83C';
+		$jsRegexp  .= '|\\uD83C(?:';
 
 		$phpRegexp .= '[\\x80-\\x86].';
-		$jsRegexp  .= '[\\uDC04-\\uDD9A';
+		$jsRegexp  .= '[\\uDC04-\\uDD9A]';
 
 		$phpRegexp .= '|\\x87.\\xF0\\x9F\\x87.';
-		$jsRegexp  .= '\\uDDE8-\\uDDFA';
+		$jsRegexp  .= '|[\\uDDE6-\\uDDFF]\\uD83C[\\uDDE6-\\uDDFF]';
 
 		$phpRegexp .= '|[\\x88-\\x9B].';
-		$jsRegexp  .= '\\uDE01-\\uDFFF]|\\uD83D[\\uDC00-\\uDEC5]';
+		$jsRegexp  .= '|[\\uDE01-\\uDFFF])|\\uD83D[\\uDC00-\\uDEC5]';
 
 		$phpRegexp .= ')';
 
