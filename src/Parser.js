@@ -474,6 +474,32 @@ function filterTag(tag)
 //==========================================================================
 
 /**
+* Replace Unicode characters outside the BMP with XML entities in the output
+*/
+function encodeUnicodeSupplementaryCharacters()
+{
+	output = output.replace(
+		/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+		encodeUnicodeSupplementaryCharactersCallback
+	);
+}
+
+/**
+* Encode given surrogate pair into an XML entity
+*
+* @param  {!string} pair Surrogate pair
+* @return {!string}      XML entity
+*/
+function encodeUnicodeSupplementaryCharactersCallback(pair)
+{
+	var cp = ((pair.charCodeAt(0) & 0x3FF) << 10)
+	       + ((pair.charCodeAt(1) & 0x3FF))
+	       + 0x10000;
+
+	return '&#' + cp + ';';
+}
+
+/**
 * Finalize the output by appending the rest of the unprocessed text and create the root node
 */
 function finalizeOutput()
@@ -493,6 +519,9 @@ function finalizeOutput()
 
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '', output);
+
+	// Encode Unicode characters that are outside of the BMP
+	encodeUnicodeSupplementaryCharacters();
 
 	// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
 	var tagName = (isRich) ? 'r' : 't';
