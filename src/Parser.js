@@ -1030,7 +1030,7 @@ function getMatches(regexp, limit)
 * Get the callback for given plugin's parser
 *
 * @param  {!string}   pluginName
-* @return {!function}
+* @return {!function(string, Array)}
 */
 function getPluginParser(pluginName)
 {
