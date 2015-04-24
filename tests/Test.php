@@ -123,10 +123,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$this->configurator->javascript->exportMethods = ['parse'];
 		$src = $this->configurator->javascript->getParser();
 
-		$this->$assertMethod(
-			$expected,
-			$this->execJS($src, $original)
-		);
+		$this->$assertMethod($expected, $this->execJS($src, $original));
 	}
 
 	public function getClosureCompilerBin()
@@ -186,8 +183,10 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 
 		$src = file_get_contents(__DIR__ . '/browserStub.js') . $src . ';' . $function . '(window.s9e.TextFormatter.parse(' . json_encode($input) . '))';
+		$filepath = $this->tempnam();
+		file_put_contents($filepath, $src);
 
-		return substr(shell_exec($exec . $options . ' -e ' . escapeshellarg($src)), 0, -1);
+		return substr(shell_exec($exec . $options . ' ' . escapeshellarg($filepath)), 0, -1);
 	}
 
 	protected static $tmpFiles = [];

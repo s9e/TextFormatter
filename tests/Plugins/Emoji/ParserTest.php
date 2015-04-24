@@ -55,6 +55,16 @@ class ParserTest extends Test
 				'😀',
 				'<r><E1 seq="1F600">&#128512;</E1></r>'
 			],
+			[
+				file_get_contents(__DIR__ . '/all.txt'),
+				file_get_contents(__DIR__ . '/all.xml'),
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setRegexpLimit(10000);
+					$plugin->getTag()->tagLimit = 10000;
+				}
+			],
 		];
 	}
 

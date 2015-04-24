@@ -29,14 +29,28 @@ foreach (json_decode(file_get_contents($filepath), true) as $shortname => $info)
 }
 
 $allText = '';
+$allXml  = '';
 $allHtml = '';
-$i = 0;
 foreach ($all as $match => $seq)
 {
 	$html = '<img alt="' . $match . '" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/' . $seq . '.png">';
 
-	$allText .= $match;
-	$allHtml .= $html;
+	if ($match[0] < "\xF0")
+	{
+		$content = $match;
+	}
+	else
+	{
+		$content = '';
+		foreach (explode('-', $seq) as $hex)
+		{
+			$content .= '&#' . hexdec($hex) . ';';
+		}
+	}
+
+	$allText .= $match . "\n";
+	$allXml  .= '<E1 seq="' . $seq . '">' . $content . "</E1>\n";
+	$allHtml .= $html . "\n";
 
 	$map[str_replace(FE0F, '', $match)] = $seq;
 }
@@ -77,6 +91,7 @@ $file = $m[1] . $js . $m[2];
 file_put_contents($filepath, $file);
 
 file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.txt',  $allText);
+file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.xml',  '<r>' . $allXml . '</r>');
 file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.html', $allHtml);
 
 die("Done.\n");

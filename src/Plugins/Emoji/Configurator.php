@@ -86,7 +86,7 @@ class Configurator extends ConfiguratorBase
 
 		// Start the 0xF09FXXXX block
 		$phpRegexp .= '|\\xF0\\x9F(?>';
-		$jsRegexp  .= '|\\uD83C';
+		$jsRegexp  .= '|\\uD83C(?:';
 
 		// Subblock: 0x80XX..0x86XX
 		//
@@ -94,15 +94,15 @@ class Configurator extends ConfiguratorBase
 		//       U+1F004..U+1F19A
 		// U+D83C U+DC04..U+D83C U+DD9A
 		$phpRegexp .= '[\\x80-\\x86].';
-		$jsRegexp  .= '[\\uDC04-\\uDD9A';
+		$jsRegexp  .= '[\\uDC04-\\uDD9A]';
 
 		// Subblock: 0x87XX (flag pairs)
 		//
-		//    0xF09F87A8..0xF09F87BA
-		//       U+1F1E8..U+1F1FA
-		// U+D83C U+DDE8..U+D83C U+DDFA
+		//    0xF09F87A6..0xF09F87BA
+		//       U+1F1E6..U+1F1FF
+		// U+D83C U+DDE6..U+D83C U+DDFF
 		$phpRegexp .= '|\\x87.\\xF0\\x9F\\x87.';
-		$jsRegexp  .= '\\uDDE8-\\uDDFA';
+		$jsRegexp  .= '|[\\uDDE6-\\uDDFF]\\uD83C[\\uDDE6-\\uDDFF]';
 
 		// Subblock: 0x88XX..0x9BXX
 		//
@@ -112,7 +112,7 @@ class Configurator extends ConfiguratorBase
 		//       U+1F400..U+1F6C5
 		// U+D83D U+DC00..U+D83D U+DEC5
 		$phpRegexp .= '|[\\x88-\\x9B].';
-		$jsRegexp  .= '\\uDE01-\\uDFFF]|\\uD83D[\\uDC00-\\uDEC5]';
+		$jsRegexp  .= '|[\\uDE01-\\uDFFF])|\\uD83D[\\uDC00-\\uDEC5]';
 
 		// Close the 0xF09FXXXX block
 		$phpRegexp .= ')';
