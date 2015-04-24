@@ -492,9 +492,7 @@ function encodeUnicodeSupplementaryCharacters()
 */
 function encodeUnicodeSupplementaryCharactersCallback(pair)
 {
-	var cp = ((pair.charCodeAt(0) & 0x3FF) << 10)
-	       + (pair.charCodeAt(1) & 0x3FF)
-	       + 0x10000;
+	var cp = (pair.charCodeAt(0) << 10) + pair.charCodeAt(1) - 56613888;
 
 	return '&#' + cp + ';';
 }
@@ -1030,7 +1028,7 @@ function getMatches(regexp, limit)
 * Get the callback for given plugin's parser
 *
 * @param  {!string}   pluginName
-* @return {!function}
+* @return {!function(string, Array)}
 */
 function getPluginParser(pluginName)
 {
