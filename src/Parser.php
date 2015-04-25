@@ -638,7 +638,7 @@ class Parser
 	* @param  string[] $m Array of captures
 	* @return string      Encoded character
 	*/
-	protected function encodeUnicodeSupplementaryCharactersCallback($m)
+	protected function encodeUnicodeSupplementaryCharactersCallback(array $m)
 	{
 		$utf8 = $m[0];
 		$cp   = ((ord($utf8[0]) & 7)  << 18)

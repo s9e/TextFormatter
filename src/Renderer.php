@@ -171,7 +171,7 @@ abstract class Renderer
 	* @param  string[] $m Captures from PCRE
 	* @return string      Decoded entity
 	*/
-	protected static function decodeEntity($m)
+	protected static function decodeEntity(array $m)
 	{
 		return htmlspecialchars(html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8'), ENT_QUOTES);
 	}
