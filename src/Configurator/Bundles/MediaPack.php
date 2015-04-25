@@ -21,7 +21,7 @@ class MediaPack extends Bundle
 		if (!isset($configurator->MediaEmbed))
 		{
 			// Only create BBCodes if the BBCodes plugin is already loaded
-			$pluginOptions = ['createBBCodes' => isset($configurator->BBCodes)];
+			$pluginOptions = ['createMediaBBCode' => isset($configurator->BBCodes)];
 
 			$configurator->plugins->load('MediaEmbed', $pluginOptions);
 		}

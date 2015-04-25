@@ -31,29 +31,29 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Does not create a [media] BBCode if createBBCodes is false
+	* @testdox Does not create a [media] BBCode if createMediaBBCode is false
 	*/
 	public function testNoMediaBBCode()
 	{
-		$this->configurator->plugins->load('MediaEmbed', ['createBBCodes' => false]);
+		$this->configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => false]);
 		$this->assertFalse(isset($this->configurator->BBCodes['MEDIA']));
 	}
 
 	/**
-	* @testdox add('youtube') creates a [youtube] BBCode by default
+	* @testdox add('youtube') does not create a [youtube] BBCode by default
 	*/
-	public function testSiteBBCode()
+	public function testSiteBBCodeDefault()
 	{
 		$this->configurator->MediaEmbed->add('youtube');
-		$this->assertTrue(isset($this->configurator->BBCodes['YOUTUBE']));
+		$this->assertFalse(isset($this->configurator->BBCodes['YOUTUBE']));
 	}
 
 	/**
-	* @testdox add('youtube') does not create a [youtube] BBCode if createBBCodes is false
+	* @testdox add('youtube') creates a [youtube] BBCode if createIndividualBBCodes is True
 	*/
-	public function testNoSiteBBCode()
+	public function testSiteBBCode()
 	{
-		$this->configurator->plugins->load('MediaEmbed', ['createBBCodes' => false])->add('youtube');
+		$this->configurator->plugins->load('MediaEmbed', ['createIndividualBBCodes' => false])->add('youtube');
 		$this->assertFalse(isset($this->configurator->BBCodes['YOUTUBE']));
 	}
 

@@ -79,6 +79,7 @@ class Forum extends Bundle
 			);
 		}
 
+		$configurator->MediaEmbed->createIndividualBBCodes = true;
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');

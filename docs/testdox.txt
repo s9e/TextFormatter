@@ -1688,7 +1688,7 @@ s9e\TextFormatter\Tests\Configurator\Bundles\Forum
 s9e\TextFormatter\Tests\Configurator\Bundles\MediaPack
  [x] Features
  [x] Does not create BBCodes by default
- [x] Creates BBCodes if the BBCodes plugin is loaded
+ [x] Creates a MEDIA BBCode if the BBCodes plugin is loaded
 
 s9e\TextFormatter\Tests\Configurator\Bundles\S18
  [x] Features
@@ -2353,9 +2353,9 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] Registers mediasites as a variable for the parser
  [x] Creates a [media] BBCode by default
- [x] Does not create a [media] BBCode if createBBCodes is false
- [x] add('youtube') creates a [youtube] BBCode by default
- [x] add('youtube') does not create a [youtube] BBCode if createBBCodes is false
+ [x] Does not create a [media] BBCode if createMediaBBCode is false
+ [x] add('youtube') does not create a [youtube] BBCode by default
+ [x] add('youtube') creates a [youtube] BBCode if createIndividualBBCodes is True
  [x] add('inexistent') throws an exception
  [x] add() returns a tag
  [x] add() accepts an array as second argument

@@ -106,7 +106,7 @@ class Fatdown extends Bundle
 			}
 		}
 
-		$configurator->plugins->load('MediaEmbed', ['createBBCodes' => false]);
+		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => false]);
 		$sites = [
 			'bandcamp',
 			'dailymotion',

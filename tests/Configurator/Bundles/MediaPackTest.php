@@ -33,7 +33,7 @@ class MediaPackTest extends Test
 	}
 
 	/**
-	* @testdox Creates BBCodes if the BBCodes plugin is loaded
+	* @testdox Creates a MEDIA BBCode if the BBCodes plugin is loaded
 	*/
 	public function testBBCodes()
 	{
@@ -44,6 +44,5 @@ class MediaPackTest extends Test
 		$bundleConfigurator->configure($configurator);
 
 		$this->assertTrue(isset($configurator->BBCodes['MEDIA']));
-		$this->assertTrue(isset($configurator->BBCodes['YOUTUBE']));
 	}
 }

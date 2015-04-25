@@ -1341,6 +1341,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
@@ -2377,6 +2378,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -2386,6 +2388,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -2413,6 +2416,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -2440,6 +2444,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('spotify');
 				}
 			],
@@ -2827,6 +2832,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -2836,6 +2842,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -2845,6 +2852,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -2854,6 +2862,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -2863,6 +2872,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -3241,6 +3251,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -3250,6 +3261,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -3277,6 +3289,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
@@ -3296,6 +3309,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('spotify');
 				}
 			],
@@ -3440,6 +3454,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -3449,6 +3464,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -3458,6 +3474,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],

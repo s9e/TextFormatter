@@ -45,9 +45,14 @@ class Configurator extends ConfiguratorBase
 	protected $collection;
 
 	/**
-	* @var bool Whether to create BBCodes
+	* @var bool Whether to create the MEDIA BBCode
 	*/
-	protected $createBBCodes = true;
+	protected $createMediaBBCode = true;
+
+	/**
+	* @var bool Whether to create a BBCode for each site
+	*/
+	public $createIndividualBBCodes = false;
 
 	/**
 	* @var Configurator\SiteDefinitionProvider Default sites
@@ -91,7 +96,7 @@ class Configurator extends ConfiguratorBase
 		    ->setJS(file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 
 		// Create a [MEDIA] BBCode if applicable
-		if ($this->createBBCodes)
+		if ($this->createMediaBBCode)
 		{
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 		}
@@ -330,7 +335,7 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->tags->add($siteId, $tag);
 
 		// Create a BBCode for this site if applicable
-		if ($this->createBBCodes)
+		if ($this->createIndividualBBCodes)
 		{
 			$this->configurator->BBCodes->add(
 				$siteId,
