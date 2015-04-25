@@ -84,7 +84,7 @@ abstract class Renderer
 		return \preg_replace_callback('(&#\\d+;)', __CLASS__ . '::decodeEntity', $str);
 	}
 
-	protected static function decodeEntity($m)
+	protected static function decodeEntity(array $m)
 	{
 		return \htmlspecialchars(\html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8'), \ENT_QUOTES);
 	}
