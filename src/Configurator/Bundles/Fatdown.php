@@ -95,7 +95,7 @@ class Fatdown extends Bundle
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 		}
 
-		$configurator->plugins->load('MediaEmbed', array('createBBCodes' => \false));
+		$configurator->plugins->load('MediaEmbed', array('createMediaBBCode' => \false));
 		$sites = array(
 			'bandcamp',
 			'dailymotion',

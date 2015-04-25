@@ -74,6 +74,7 @@ class Forum extends Bundle
 				'<img src="{$EMOTICONS_PATH}/' . $filename . '.png" alt="' . $code . '"/>'
 			);
 
+		$configurator->MediaEmbed->createIndividualBBCodes = \true;
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');
