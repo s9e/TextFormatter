@@ -32,7 +32,9 @@ class Configurator extends ConfiguratorBase
 
 	protected $collection;
 
-	protected $createBBCodes = \true;
+	protected $createMediaBBCode = \true;
+
+	public $createIndividualBBCodes = \false;
 
 	public $defaultSites;
 
@@ -58,7 +60,7 @@ class Configurator extends ConfiguratorBase
 		    ->addParameterByName('mediasites')
 		    ->setJS(\file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 
-		if ($this->createBBCodes)
+		if ($this->createMediaBBCode)
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 
 		if (!isset($this->defaultSites))
@@ -204,7 +206,7 @@ class Configurator extends ConfiguratorBase
 
 		$this->configurator->tags->add($siteId, $tag);
 
-		if ($this->createBBCodes)
+		if ($this->createIndividualBBCodes)
 			$this->configurator->BBCodes->add(
 				$siteId,
 				[
