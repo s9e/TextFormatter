@@ -334,7 +334,7 @@ class Parser
 		);
 	}
 
-	protected function encodeUnicodeSupplementaryCharactersCallback($m)
+	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
 	{
 		$utf8 = $m[0];
 		$cp   = ((\ord($utf8[0]) & 7)  << 18)
