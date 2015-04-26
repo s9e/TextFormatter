@@ -2674,6 +2674,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://player.vimeo.com/video/125956083',
+				'<r><VIMEO id="125956083" url="https://player.vimeo.com/video/125956083">https://player.vimeo.com/video/125956083</VIMEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
 				'http://www.ustream.tv/recorded/40771396',
 				'<r><USTREAM url="http://www.ustream.tv/recorded/40771396" vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></r>',
 				[],
