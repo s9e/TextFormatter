@@ -42,6 +42,7 @@ $configurator->Autoemail;
 
 // Load some media sites, this will create a general-purpose [media] BBCode,
 // as well as [youtube], [dailymotion], etc...
+$configurator->MediaEmbed->createIndividualBBCodes = true;
 $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('liveleak');
 $configurator->MediaEmbed->add('youtube');

@@ -14,7 +14,7 @@ $tag->template = '<div class="embed-youtube">'
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
+$text = 'http://www.youtube.com/watch?v=-cEzsCAzTak';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

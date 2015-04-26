@@ -5,6 +5,7 @@ You can look into the list of supported sites in [the sites directory](https://g
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
+$configurator->MediaEmbed->createIndividualBBCodes = true;
 $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');

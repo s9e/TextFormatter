@@ -18,6 +18,7 @@ Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and m
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
+$configurator->MediaEmbed->createIndividualBBCodes = true;
 $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');
@@ -68,7 +69,7 @@ $configurator->MediaEmbed->add(
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
+$text = 'http://www.youtube.com/watch?v=-cEzsCAzTak';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

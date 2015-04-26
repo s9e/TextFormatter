@@ -35,6 +35,7 @@ $configurator->Autolink;
 $configurator->HTMLEntities;
 $configurator->FancyPants;
 
+$configurator->MediaEmbed->createIndividualBBCodes = true;
 $configurator->MediaEmbed->add('youtube');
 $configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="http://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
