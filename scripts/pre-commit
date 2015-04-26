@@ -13,7 +13,7 @@ fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 then
-	./scripts/cacheMediaSiteDefinitions.php
+	./scripts/patchCachedSiteDefinitionProvider.php
 	./scripts/generateBundles.php
 	./scripts/patchExamples.php
 	./scripts/patchMediaEmbedReadme.php

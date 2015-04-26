@@ -51,7 +51,7 @@ foreach ($cache as $siteId => $siteConfig)
 }
 $php = rtrim($php, ',');
 
-$filepath = __DIR__ . '/../src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php';
+$filepath = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php');
 $oldFile = file_get_contents($filepath);
 $newFile = preg_replace_callback(
 	'((?<=\\$cache = \\[).*?(?=\\n\\t\\];))s',
