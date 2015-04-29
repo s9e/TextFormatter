@@ -57,6 +57,32 @@ abstract class Utils
 	}
 
 	/**
+	* Replace the attributes of all tags of given name in given XML
+	*
+	* @param  string   $xml      Original XML
+	* @param  string   $tagName  Target tag's name
+	* @param  callback $callback Callback used to process attributes. Receives the old attributes
+	*                            as an array, should return the new attributes as an array
+	* @return string             Modified XML
+	*/
+	public static function replaceAttributes($xml, $tagName, callable $callback)
+	{
+		if (strpos($xml, '<' . $tagName) === false)
+		{
+			return $xml;
+		}
+
+		return preg_replace_callback(
+			'((<' . preg_quote($tagName) . ')(?=[ />])[^>]*?(/?>))',
+			function ($m) use ($callback)
+			{
+				return $m[1] . self::serializeAttributes($callback(self::parseAttributes($m[0]))) . $m[2];
+			},
+			$xml
+		);
+	}
+
+	/**
 	* Create a return a new DOMDocument loaded with given XML
 	*
 	* @param  string      $xml Source XML
@@ -71,5 +97,44 @@ abstract class Utils
 		$dom->loadXML($xml, $flags);
 
 		return $dom;
+	}
+
+	/**
+	* Parse the attributes contained in given XML
+	*
+	* @param  string $xml XML string, normally a start tag
+	* @return array       Associative array of attribute values
+	*/
+	protected static function parseAttributes($xml)
+	{
+		$attributes = [];
+		if (strpos($xml, '="') !== false)
+		{
+			preg_match_all('(([^ =]++)="([^"]*))S', $xml, $matches);
+			foreach ($matches[1] as $i => $attrName)
+			{
+				$attributes[$attrName] = html_entity_decode($matches[2][$i], ENT_QUOTES, 'UTF-8');
+			}
+		}
+
+		return $attributes;
+	}
+
+	/**
+	* Serialize an array of attribute values
+	*
+	* @param  array  $attributes Associative array of attribute values
+	* @return string             Attributes, sorted by name and serialized to XML
+	*/
+	protected static function serializeAttributes(array $attributes)
+	{
+		$xml = '';
+		ksort($attributes);
+		foreach ($attributes as $attrName => $attrValue)
+		{
+			$xml .= ' ' . htmlspecialchars($attrName, ENT_QUOTES) . '="' . htmlspecialchars($attrValue, ENT_QUOTES) . '"';
+		}
+
+		return $xml;
 	}
 }

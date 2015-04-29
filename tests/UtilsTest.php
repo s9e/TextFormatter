@@ -99,4 +99,95 @@ class UtilsTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox replaceAttributes() tests
+	* @dataProvider getReplaceAttributesTests
+	*/
+	public function testReplaceAttributes($original, $expected, $tagName, $callback)
+	{
+		$this->assertSame($expected, Utils::replaceAttributes($original, $tagName, $callback));
+	}
+
+	public function getReplaceAttributesTests()
+	{
+		return [
+			[
+				'<t>Plain text</t>',
+				'<t>Plain text</t>',
+				'X',
+				function ()
+				{
+				}
+			],
+			[
+				'<r><X/></r>',
+				'<r><X attr="value"/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['attr' => 'value'];
+				}
+			],
+			[
+				'<r><X></X></r>',
+				'<r><X attr="value"></X></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['attr' => 'value'];
+				}
+			],
+			[
+				'<r><X/><X/><XX/></r>',
+				'<r><X attr="value"/><X attr="value"/><XX/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['attr' => 'value'];
+				}
+			],
+			[
+				'<r><X/></r>',
+				'<r><X bar="Bar" foo="Foo"/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['foo' => 'Foo', 'bar' => 'Bar'];
+				}
+			],
+			[
+				'<r><X/></r>',
+				'<r><X attr="&amp;&quot;&lt;&gt;"/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['attr' => '&"<>'];
+				}
+			],
+			[
+				'<r><X a="A" b="B"/></r>',
+				'<r><X a="s:1:&quot;A&quot;;" b="s:1:&quot;B&quot;;"/></r>',
+				'X',
+				function ($attributes)
+				{
+					foreach ($attributes as $attrName => $attrValue)
+					{
+						$attributes[$attrName] = serialize($attrValue);
+					}
+					return $attributes;
+				}
+			],
+			[
+				'<r><X a="&lt;"/></r>',
+				'<r><X a="&lt;!"/></r>',
+				'X',
+				function ($attributes)
+				{
+					$attributes['a'] .= '!';
+					return $attributes;
+				}
+			],
+		];
+	}
 }
