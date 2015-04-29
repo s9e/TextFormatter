@@ -34,6 +34,23 @@ abstract class Utils
 		return $dom->saveXML($dom->documentElement);
 	}
 
+	public static function replaceAttributes($xml, $tagName, $callback)
+	{
+		$_self = __CLASS__;
+
+		if (\strpos($xml, '<' . $tagName) === \false)
+			return $xml;
+
+		return \preg_replace_callback(
+			'((<' . \preg_quote($tagName) . ')(?=[ />])[^>]*?(/?>))',
+			function ($m) use ($callback, $_self)
+			{
+				return $m[1] . $_self::serializeAttributes($callback($_self::parseAttributes($m[0]))) . $m[2];
+			},
+			$xml
+		);
+	}
+
 	protected static function loadXML($xml)
 	{
 		$flags = (\LIBXML_VERSION >= 20700) ? \LIBXML_COMPACT | \LIBXML_PARSEHUGE : 0;
@@ -42,5 +59,28 @@ abstract class Utils
 		$dom->loadXML($xml, $flags);
 
 		return $dom;
+	}
+
+	public static function parseAttributes($xml)
+	{
+		$attributes = array();
+		if (\strpos($xml, '="') !== \false)
+		{
+			\preg_match_all('(([^ =]++)="([^"]*))S', $xml, $matches);
+			foreach ($matches[1] as $i => $attrName)
+				$attributes[$attrName] = \html_entity_decode($matches[2][$i], \ENT_QUOTES, 'UTF-8');
+		}
+
+		return $attributes;
+	}
+
+	public static function serializeAttributes(array $attributes)
+	{
+		$xml = '';
+		\ksort($attributes);
+		foreach ($attributes as $attrName => $attrValue)
+			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . \htmlspecialchars($attrValue, \ENT_QUOTES) . '"';
+
+		return $xml;
 	}
 }
