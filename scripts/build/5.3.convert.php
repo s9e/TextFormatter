@@ -37,22 +37,10 @@ function convertCustom($filepath, &$file)
 {
 	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
 	$replacements = array(
-		'AVTHelper.php' => array(
-			array(
-				'public static function replace(DOMAttr $attribute, callable $callback)',
-				'public static function replace(DOMAttr $attribute, $callback)'
-			)
-		),
 		'BBCodeMonkey.php' => array(
 			array(
 				'protected function isFilter($tokenId)',
 				'public function isFilter($tokenId)'
-			)
-		),
-		'BundleGenerator.php' => array(
-			array(
-				'protected function exportCallback($namespace, callable $callback, $argument)',
-				'protected function exportCallback($namespace, $callback, $argument)'
 			)
 		),
 		'Configurator.php' => array(
@@ -66,10 +54,6 @@ function convertCustom($filepath, &$file)
 			)
 		),
 		'Custom.php' => array(
-			array(
-				'public function __construct(callable $callback)',
-				'public function __construct($callback)'
-			),
 			array(
 				'$this->callback = $callback;',
 				str_replace(
@@ -224,6 +208,16 @@ function convertCustom($filepath, &$file)
 				'$engine = (func_num_args() > 1) ? $reflection->newInstanceArgs(array_slice(func_get_args(), 1)) : $reflection->newInstance();'
 			)
 		),
+		'Utils.php' => array(
+			array(
+				'protected static function parseAttributes($xml)',
+				'public static function parseAttributes($xml)'
+			),
+			array(
+				'protected static function serializeAttributes(array $attributes)',
+				'public static function serializeAttributes(array $attributes)'
+			)
+		),
 		'Variant.php' => array(
 			array(
 				'return ($isDynamic) ? $value() : $value;',
@@ -305,6 +299,7 @@ function convertFile($filepath)
 	convertClosureBinding($filepath, $file);
 	convertCustom($filepath, $file);
 	convertArraySyntax($file);
+	removeCallable($file);
 
 	if ($file !== $oldFile)
 	{
@@ -458,6 +453,7 @@ function convertClosureBinding($filepath, &$file)
 		}
 
 		$rebind     = false;
+		$saveName   = false;
 		$savedIndex = $i;
 		$hasUse     = false;
 
@@ -491,9 +487,14 @@ function convertClosureBinding($filepath, &$file)
 				$tokens[$i][1] = '$_this';
 				$rebind = true;
 			}
+			elseif ($tokens[$i][0] === T_STRING && $tokens[$i][1] === 'self')
+			{
+				$tokens[$i][1] = '$_self';
+				$saveName = true;
+			}
 		}
 
-		if ($rebind)
+		if ($rebind || $saveName)
 		{
 			$rebuild = true;
 
@@ -510,7 +511,25 @@ function convertClosureBinding($filepath, &$file)
 
 			if ($tokens[$j] === '{')
 			{
-				$tokens[$j] = "{\n\t\t\$_this = \$this;\n";
+				$tokens[$j] = "{\n\t\t";
+				if ($rebind)
+				{
+					$tokens[$j] .= "\$_this = \$this;\n";
+				}
+				if ($saveName)
+				{
+					$tokens[$j] .= "\$_self = __CLASS__;\n";
+				}
+			}
+
+			$vars = array();
+			if ($rebind)
+			{
+				$vars[] = '$_this';
+			}
+			if ($saveName)
+			{
+				$vars[] = '$_self';
 			}
 
 			if ($hasUse)
@@ -522,7 +541,7 @@ function convertClosureBinding($filepath, &$file)
 					return;
 				}
 
-				$tokens[$braceIndex - 2] = ', $_this)';
+				$tokens[$braceIndex - 2] = ', ' . implode(', ', $vars) . ')';
 			}
 			else
 			{
@@ -533,7 +552,7 @@ function convertClosureBinding($filepath, &$file)
 					return;
 				}
 
-				$tokens[$braceIndex - 2] = ') use ($_this)';
+				$tokens[$braceIndex - 2] = ') use (' . implode(', ', $vars) . ')';
 			}
 		}
 	}
@@ -546,6 +565,43 @@ function convertClosureBinding($filepath, &$file)
 			$file .= (is_array($token)) ? $token[1] : $token;
 		}
 	}
+}
+
+function removeCallable(&$file)
+{
+	$tokens = token_get_all($file);
+
+	$i        = 0;
+	$cnt      = count($tokens);
+	$modified = false;
+	while (++$i < $cnt)
+	{
+		$token = $tokens[$i];
+		if (($token[0] === T_STRING && $token[1] === 'callable') || $token[0] === T_CALLABLE)
+		{
+			$modified = true;
+			unset($tokens[$i]);
+			if ($tokens[$i + 1][1] === ' ')
+			{
+				unset($tokens[++$i]);
+			}
+		}
+	}
+	if (!$modified)
+	{
+		return;
+	}
+
+	$file = '';
+	foreach ($tokens as $token)
+	{
+		$file .= (is_string($token)) ? $token : $token[1];
+	}
+}
+
+if (!defined('T_CALLABLE'))
+{
+	define('T_CALLABLE', -1);
 }
 
 convertDir(realpath(__DIR__ . '/../../src'));
