@@ -918,8 +918,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www51.zippyshare.com/v/94505619/file.html',
-				'<r><ZIPPYSHARE file="94505619" server="51" url="http://www51.zippyshare.com/v/94505619/file.html">http://www51.zippyshare.com/v/94505619/file.html</ZIPPYSHARE></r>',
+				'http://www17.zippyshare.com/v/EtPLaXGE/file.html',
+				'<r><ZIPPYSHARE file="EtPLaXGE" server="17" url="http://www17.zippyshare.com/v/EtPLaXGE/file.html">http://www17.zippyshare.com/v/EtPLaXGE/file.html</ZIPPYSHARE></r>',
 				[],
 				function ($configurator)
 				{
