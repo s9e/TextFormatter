@@ -166,15 +166,6 @@ class XPathConvertorTest extends Test
 				'substring(.,2)',
 				"\$this->xpath->evaluate('substring(.,2)',\$node)"
 			],
-			// Custom representations
-			[
-				"substring('songWw',6-5*boolean(@songid),5)",
-				"(\$node->hasAttribute('songid')?'songW':'w')"
-			],
-			[
-				'400-360*boolean(@songid)',
-				"(\$node->hasAttribute('songid')?40:400)"
-			],
 		];
 	}
 

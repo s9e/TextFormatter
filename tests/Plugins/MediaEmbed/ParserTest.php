@@ -510,26 +510,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
-				'<r><GROOVESHARK songid="35292216" url="http://grooveshark.com/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('grooveshark');
-				}
-			],
-			[
-				'http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5',
-				'<r><GROOVESHARK songid="35292216" url="http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('grooveshark');
-				}
-			],
-			[
 				'http://www.hudl.com/v/CVmja',
 				'<r><HUDL athlete="2122944" highlight="206727383" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
 				[],
@@ -1052,16 +1032,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'http://grooveshark.com/s/Soul+Below/4zGL7i?src=5',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="400" height="40" data="//grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=&amp;songID=35292216"><embed type="application/x-shockwave-flash" width="400" height="40" src="//grooveshark.com/songWidget.swf" allowfullscreen="" flashvars="playlistID=&amp;songID=35292216"></object>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
 			[
@@ -1989,24 +1959,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('googlesheets');
-				}
-			],
-			[
-				'http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761',
-				'<r><GROOVESHARK playlistid="74854761" url="http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761">http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761</GROOVESHARK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('grooveshark');
-				}
-			],
-			[
-				'http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761',
-				'<r><GROOVESHARK playlistid="74854761" url="http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761">http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761</GROOVESHARK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
 			[
@@ -3170,15 +3122,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('googleplus');
-				}
-			],
-			[
-				'http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761',
-				'<object type="application/x-shockwave-flash" typemustmatch="" width="400" height="400" data="//grooveshark.com/widget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="playlistID=74854761&amp;songID="><embed type="application/x-shockwave-flash" width="400" height="400" src="//grooveshark.com/widget.swf" allowfullscreen="" flashvars="playlistID=74854761&amp;songID="></object>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
 			[

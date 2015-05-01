@@ -41,7 +41,6 @@ class ForumTest extends Test
 		$this->assertTrue($configurator->BBCodes->exists('BANDCAMP'));
 		$this->assertTrue($configurator->BBCodes->exists('DAILYMOTION'));
 		$this->assertTrue($configurator->BBCodes->exists('FACEBOOK'));
-		$this->assertTrue($configurator->BBCodes->exists('GROOVESHARK'));
 		$this->assertTrue($configurator->BBCodes->exists('INDIEGOGO'));
 		$this->assertTrue($configurator->BBCodes->exists('INSTAGRAM'));
 		$this->assertTrue($configurator->BBCodes->exists('KICKSTARTER'));

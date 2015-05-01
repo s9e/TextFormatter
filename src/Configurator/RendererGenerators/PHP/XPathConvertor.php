@@ -18,14 +18,7 @@ class XPathConvertor
 	protected $customXPath = [
 		// BBcodes: LIST
 		"contains('upperlowerdecim',substring(@type,1,5))"
-			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
-
-		// MediaEmbed: Grooveshark
-		"substring('songWw',6-5*boolean(@songid),5)"
-			=> "(\$node->hasAttribute('songid')?'songW':'w')",
-
-		"400-360*boolean(@songid)"
-			=> "(\$node->hasAttribute('songid')?40:400)"
+			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
 	];
 
 	/**

@@ -111,7 +111,6 @@ class Fatdown extends Bundle
 			'bandcamp',
 			'dailymotion',
 			'facebook',
-			'grooveshark',
 			'liveleak',
 			'soundcloud',
 			'spotify',
