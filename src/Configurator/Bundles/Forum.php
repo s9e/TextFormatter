@@ -78,7 +78,6 @@ class Forum extends Bundle
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');
-		$configurator->MediaEmbed->add('grooveshark');
 		$configurator->MediaEmbed->add('indiegogo');
 		$configurator->MediaEmbed->add('instagram');
 		$configurator->MediaEmbed->add('kickstarter');
