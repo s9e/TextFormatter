@@ -1,0 +1,11 @@
+<site name="Libsyn" homepage="http://www.libsyn.com/">
+	<example>http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</example>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>libsyn.com</host>
+	<scrape>
+		<extract>!embed/episode/id/(?'id'\d+)!</extract>
+	</scrape>
+	<iframe width="100%" height="45" style="max-width:900px" src="//html5-player.libsyn.com/embed/episode/id/{@id}/height/45/width/900/theme/standard/direction/no/autoplay/no/autonext/no/thumbnail/no/preload/no/no_addthis/no/"/>
+</site>

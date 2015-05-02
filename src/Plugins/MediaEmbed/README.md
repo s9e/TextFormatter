@@ -332,6 +332,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>
 	</tr>
 	<tr>
+		<td><code>libsyn</code></td>
+		<td>Libsyn</td>
+		<td>http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
+	</tr>
+	<tr>
 		<td><code>liveleak</code></td>
 		<td>LiveLeak</td>
 		<td>http://www.liveleak.com/view?i=3dd_1366238099</td>
@@ -445,6 +450,11 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 		<td><code>spotify</code></td>
 		<td>Spotify</td>
 		<td>spotify:track:5JunxkcjfCYcY7xJ29tLai<br/>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<br/>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
+	</tr>
+	<tr>
+		<td><code>stitcher</code></td>
+		<td>Stitcher</td>
+		<td>http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</td>
 	</tr>
 	<tr>
 		<td><code>strawpoll</code></td>
@@ -594,6 +604,6 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>zippyshare</code></td>
 		<td>Zippyshare audio files</td>
-		<td>http://www51.zippyshare.com/v/94505619/file.html</td>
+		<td>http://www17.zippyshare.com/v/EtPLaXGE/file.html</td>
 	</tr>
 </table>

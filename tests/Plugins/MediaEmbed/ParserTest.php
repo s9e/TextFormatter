@@ -644,6 +644,16 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
+				'http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey',
+				'<r><LIBSYN id="3521244" url="http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('libsyn');
+				}
+			],
+			[
 				'http://livestream.com/ccscsl/USChessChampionships/videos/83267610',
 				'<r><LIVESTREAM account_id="3913412" event_id="3933674" url="http://livestream.com/ccscsl/USChessChampionships/videos/83267610" video_id="83267610">http://livestream.com/ccscsl/USChessChampionships/videos/83267610</LIVESTREAM></r>',
 				[],
@@ -796,6 +806,16 @@ class ParserTest extends Test
 				},
 				null,
 				'assertRegexp'
+			],
+			[
+				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
+				'<r><STITCHER eid="37808629" fid="12645" url="http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('stitcher');
+				}
 			],
 			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
