@@ -1,9 +1,10 @@
 <site name="The Onion" homepage="http://www.theonion.com/video/">
 	<example>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
+	<example>http://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</example>
 
 	<tags><tag>entertainment</tag></tags>
 
 	<host>theonion.com</host>
-	<extract>!theonion\.com/video/[-\w]+,(?'id'\d+)!</extract>
+	<extract>!theonion\.com/video/[-\w]+[-,](?'id'\d+)!</extract>
 	<iframe width="560" height="315" src="http://www.theonion.com/video_embed/?id={@id}"/>
 </site>

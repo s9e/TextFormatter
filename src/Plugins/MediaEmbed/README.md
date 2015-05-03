@@ -484,7 +484,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>theonion</code></td>
 		<td>The Onion</td>
-		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</td>
+		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>http://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>
 	</tr>
 	<tr>
 		<td><code>tinypic</code></td>
