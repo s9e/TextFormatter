@@ -12,11 +12,6 @@ use RuntimeException;
 
 class XPathConvertor
 {
-	protected $customXPath = [
-		"contains('upperlowerdecim',substring(@type,1,5))"
-			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
-	];
-
 	public $pcreVersion;
 
 	protected $regexp;
@@ -53,9 +48,6 @@ class XPathConvertor
 	public function convertXPath($expr)
 	{
 		$expr = \trim($expr);
-
-		if (isset($this->customXPath[$expr]))
-			return $this->customXPath[$expr];
 
 		$this->generateXPathRegexp();
 		if (\preg_match($this->regexp, $expr, $m))
