@@ -210,7 +210,14 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ul><li>one</li><li>two</li><li>three</li></ul>'
+				'<ul><li>one</li><li>two</li><li>three</li></ul>',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				[
@@ -230,7 +237,14 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST type="upper-roman"><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li><li>three</li></ol>'
+				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li><li>three</li></ol>',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				[
@@ -250,7 +264,14 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST type="square"><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ul style="list-style-type:square"><li>one</li><li>two</li><li>three</li></ul>'
+				'<ul style="list-style-type:square"><li>one</li><li>two</li><li>three</li></ul>',
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
+					}
+				}
 			],
 			[
 				['IMG' => '<img src="{@url}"/>'],
