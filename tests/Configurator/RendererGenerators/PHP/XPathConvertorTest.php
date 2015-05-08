@@ -32,7 +32,7 @@ class XPathConvertorTest extends Test
 	* @dataProvider getConvertXPathTestsAdvanced
 	* @testdox convertXPath() advanced tests (PCRE >= 8.13)
 	*/
-	public function testConvertXPathAdvanced($original, $expected, $fallback)
+	public function testConvertXPathAdvanced($original, $expected, $fallback = null)
 	{
 		if (version_compare(PCRE_VERSION, '8.13', '<'))
 		{
@@ -46,8 +46,12 @@ class XPathConvertorTest extends Test
 	* @dataProvider getConvertXPathTestsAdvanced
 	* @testdox convertXPath() advanced tests (PCRE < 8.13)
 	*/
-	public function testConvertXPathAdvancedFallback($original, $expected, $fallback)
+	public function testConvertXPathAdvancedFallback($original, $expected, $fallback = null)
 	{
+		if (!isset($fallback))
+		{
+			$fallback = '$this->xpath->evaluate(' . var_export($original, true) . ',$node)';
+		}
 		$convertor = new XPathConvertor;
 		$convertor->pcreVersion = '8.02 2010-03-19';
 		$this->assertSame($fallback, $convertor->convertXPath($original));
@@ -82,7 +86,7 @@ class XPathConvertorTest extends Test
 	* @dataProvider getConvertConditionTestsAdvanced
 	* @testdox convertCondition() advanced tests (PCRE >= 8.13)
 	*/
-	public function testConvertConditionAdvanced($original, $expected, $fallback)
+	public function testConvertConditionAdvanced($original, $expected, $fallback = null)
 	{
 		if (version_compare(PCRE_VERSION, '8.13', '<'))
 		{
@@ -96,8 +100,12 @@ class XPathConvertorTest extends Test
 	* @dataProvider getConvertConditionTestsAdvanced
 	* @testdox convertCondition() advanced tests (PCRE < 8.13)
 	*/
-	public function testConvertConditionFallback($original, $expected, $fallback)
+	public function testConvertConditionFallback($original, $expected, $fallback = null)
 	{
+		if (!isset($fallback))
+		{
+			$fallback = '$this->xpath->evaluate(' . var_export($original, true) . ',$node)';
+		}
 		$convertor = new XPathConvertor;
 		$convertor->pcreVersion = '8.02 2010-03-19';
 		$this->assertSame($fallback, $convertor->convertCondition($original));
@@ -174,13 +182,11 @@ class XPathConvertorTest extends Test
 		return [
 			[
 				'string-length(@bar)',
-				"strlen(preg_replace('(.)us','.',\$node->getAttribute('bar')))",
-				"\$this->xpath->evaluate('string-length(@bar)',\$node)",
+				"strlen(preg_replace('(.)us','.',\$node->getAttribute('bar')))"
 			],
 			[
 				'string-length()',
-				"strlen(preg_replace('(.)us','.',\$node->textContent))",
-				"\$this->xpath->evaluate('string-length()',\$node)"
+				"strlen(preg_replace('(.)us','.',\$node->textContent))"
 			],
 			[
 				'translate(@bar,"abc","ABC")',
@@ -349,38 +355,31 @@ class XPathConvertorTest extends Test
 			],
 			[
 				'.=3',
-				"\$node->textContent==3",
-				"\$this->xpath->evaluate('.=3',\$node)"
+				"\$node->textContent==3"
 			],
 			[
 				'.=022',
-				"\$node->textContent==22",
-				"\$this->xpath->evaluate('.=022',\$node)"
+				"\$node->textContent==22"
 			],
 			[
 				'044=.',
-				"44==\$node->textContent",
-				"\$this->xpath->evaluate('044=.',\$node)"
+				"44==\$node->textContent"
 			],
 			[
 				'@foo != @bar',
-				"\$node->getAttribute('foo')!==\$node->getAttribute('bar')",
-				"\$this->xpath->evaluate('@foo != @bar',\$node)"
+				"\$node->getAttribute('foo')!==\$node->getAttribute('bar')"
 			],
 			[
 				'@foo = @bar or @baz',
-				"\$node->getAttribute('foo')===\$node->getAttribute('bar')||\$node->hasAttribute('baz')",
-				"\$this->xpath->evaluate('@foo = @bar or @baz',\$node)"
+				"\$node->getAttribute('foo')===\$node->getAttribute('bar')||\$node->hasAttribute('baz')"
 			],
 			[
 				'not(@foo) and @bar',
-				"!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar')",
-				"\$this->xpath->evaluate('not(@foo) and @bar',\$node)"
+				"!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar')"
 			],
 			[
 				'not(@foo and @bar)',
-				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))",
-				"\$this->xpath->evaluate('not(@foo and @bar)',\$node)"
+				"!(\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
 			],
 			[
 				".='x'or.='y'or.='z'",
@@ -409,13 +408,11 @@ class XPathConvertorTest extends Test
 			],
 			[
 				'@foo and (@bar or @baz)',
-				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))",
-				"\$this->xpath->evaluate('@foo and (@bar or @baz)',\$node)"
+				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))"
 			],
 			[
 				'(@a = @b) or (@b = @c)',
-				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))",
-				"\$this->xpath->evaluate('(@a = @b) or (@b = @c)',\$node)"
+				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))"
 			],
 			[
 				'ancestor::foo',
