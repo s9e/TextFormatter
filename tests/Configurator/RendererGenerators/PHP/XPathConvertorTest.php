@@ -419,11 +419,10 @@ class XPathConvertorTest extends Test
 				"\$this->xpath->evaluate('boolean(ancestor::foo)',\$node)",
 				"\$this->xpath->evaluate('boolean(ancestor::foo)',\$node)",
 			],
-			// Custom representations
 			[
-				"contains('upperlowerdecim',substring(@type,1,5))",
-				"strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
-				"strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
+				"starts-with(@type,'decimal-') or starts-with(@type,'lower-') or starts-with(@type,'upper-')",
+				"(strpos(\$node->getAttribute('type'),'decimal-')===0)||(strpos(\$node->getAttribute('type'),'lower-')===0)||(strpos(\$node->getAttribute('type'),'upper-')===0)",
+				"\$this->xpath->evaluate('starts-with(@type,'.'\'decimal-\''.') or starts-with(@type,'.'\'lower-\''.') or starts-with(@type,'.'\'upper-\''.')',\$node)"
 			],
 		];
 	}

@@ -200,7 +200,7 @@ class QuickTest extends Test
 							<xsl:when test="not(@type)">
 								<ul><xsl:apply-templates /></ul>
 							</xsl:when>
-							<xsl:when test="contains(\'upperlowerdecim\',substring(@type,1,5))">
+							<xsl:when test="starts-with(@type,\'decimal-\') or starts-with(@type,\'lower-\') or starts-with(@type,\'upper-\')">
 								<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
 							</xsl:when>
 							<xsl:otherwise>
@@ -220,7 +220,7 @@ class QuickTest extends Test
 							<xsl:when test="not(@type)">
 								<ul><xsl:apply-templates /></ul>
 							</xsl:when>
-							<xsl:when test="contains(\'upperlowerdecim\',substring(@type,1,5))">
+							<xsl:when test="starts-with(@type,\'decimal-\') or starts-with(@type,\'lower-\') or starts-with(@type,\'upper-\')">
 								<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
 							</xsl:when>
 							<xsl:otherwise>
@@ -240,7 +240,7 @@ class QuickTest extends Test
 							<xsl:when test="not(@type)">
 								<ul><xsl:apply-templates /></ul>
 							</xsl:when>
-							<xsl:when test="contains(\'upperlowerdecim\',substring(@type,1,5))">
+							<xsl:when test="starts-with(@type,\'decimal-\') or starts-with(@type,\'lower-\') or starts-with(@type,\'upper-\')">
 								<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
 							</xsl:when>
 							<xsl:otherwise>

@@ -13,15 +13,6 @@ use RuntimeException;
 class XPathConvertor
 {
 	/**
-	* @var array Custom XPath representations as [xpath => php]
-	*/
-	protected $customXPath = [
-		// BBcodes: LIST
-		"contains('upperlowerdecim',substring(@type,1,5))"
-			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false"
-	];
-
-	/**
 	* @var string PCRE version
 	*/
 	public $pcreVersion;
@@ -110,12 +101,6 @@ class XPathConvertor
 	public function convertXPath($expr)
 	{
 		$expr = trim($expr);
-
-		// Use the custom representation if applicable
-		if (isset($this->customXPath[$expr]))
-		{
-			return $this->customXPath[$expr];
-		}
 
 		$this->generateXPathRegexp();
 		if (preg_match($this->regexp, $expr, $m))
