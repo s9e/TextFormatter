@@ -20,6 +20,6 @@ abstract class MediaPack extends \s9e\TextFormatter\Bundle
 
 	public static function getRenderer()
 	{
-		return \unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":2:{s:9:"' . "\0" . '*' . "\0" . 'params";a:1:{s:20:"AMAZON_ASSOCIATE_TAG";s:0:"";}s:18:"metaElementsRegexp";s:22:"(<[eis]>[^<]*</[eis]>)";}');
+		return \unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":2:{s:9:"' . "\0" . '*' . "\0" . 'params";a:7:{s:20:"AMAZON_ASSOCIATE_TAG";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_CA";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_DE";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_FR";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_IT";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_JP";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_UK";s:0:"";}s:18:"metaElementsRegexp";s:22:"(<[eis]>[^<]*</[eis]>)";}');
 	}
 }
