@@ -16,6 +16,11 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 class Serializer
 {
 	/**
+	* @var integer Minimum number of branches required to use a branch table
+	*/
+	public $branchTableThreshold = 8;
+
+	/**
 	* @var array Branch tables created during last serialization
 	*/
 	public $branchTables = [];
@@ -393,10 +398,9 @@ class Serializer
 	*/
 	protected function serializeSwitch(DOMElement $switch)
 	{
-		// Use a specialized branch table only if there are more than 7 elements because of the
-		// overhead of setting it up
+		// Use a specialized branch table if the minimum number of branches is reached
 		if ($switch->hasAttribute('branch-key')
-		 && $switch->childNodes->length > 7)
+		 && $switch->childNodes->length >= $this->branchTableThreshold)
 		{
 			return $this->serializeHash($switch);
 		}
