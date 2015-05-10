@@ -6,6 +6,7 @@
 	<example>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</example>
 	<example>http://www.amazon.com/gp/product/B0094H8H7I</example>
 	<example>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</example>
+	<example>http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/</example>
 	<example>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
 	<example>http://www.amazon.it/gp/product/B00JGOMIP6/</example>
 
@@ -14,18 +15,19 @@
 	<host>amazon.co.jp</host>
 	<host>amazon.com</host>
 	<host>amazon.de</host>
+	<host>amazon.es</host>
 	<host>amazon.fr</host>
 	<host>amazon.it</host>
 	<extract>#/(?:dp|gp/product)/(?'id'[A-Z0-9]+)#</extract>
-	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|fr|it|jp|uk)#</extract>
+	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|es|fr|it|jp|uk)#</extract>
 	<iframe width="120" height="240">
 		<src><![CDATA[
 			<xsl:text>//rcm</xsl:text>
-			<xsl:if test="@tld and contains('cadefritjpuk',@tld)">-<xsl:value-of select="@tld"/></xsl:if>
+			<xsl:if test="@tld and contains('cadesfritjpuk',@tld)">-<xsl:value-of select="@tld"/></xsl:if>
 			<xsl:text>.amazon.</xsl:text>
 			<xsl:choose>
 				<xsl:when test="@tld='jp' or @tld='uk'">co.<xsl:value-of select="@tld"/></xsl:when>
-				<xsl:when test="@tld and contains('cadefrit',@tld)"><xsl:value-of select="@tld"/></xsl:when>
+				<xsl:when test="@tld and contains('cadesfrit',@tld)"><xsl:value-of select="@tld"/></xsl:when>
 				<xsl:otherwise>com</xsl:otherwise>
 			</xsl:choose>
 			<xsl:text>/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
@@ -34,6 +36,7 @@
 			<xsl:choose>
 				<xsl:when test="@tld='ca'">15</xsl:when>
 				<xsl:when test="@tld='de'">3</xsl:when>
+				<xsl:when test="@tld='es'">30</xsl:when>
 				<xsl:when test="@tld='fr'">8</xsl:when>
 				<xsl:when test="@tld='it'">29</xsl:when>
 				<xsl:when test="@tld='jp'">9</xsl:when>
@@ -44,6 +47,7 @@
 			<xsl:choose>
 				<xsl:when test="@tld='ca' and $AMAZON_ASSOCIATE_TAG_CA"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when>
 				<xsl:when test="@tld='de' and $AMAZON_ASSOCIATE_TAG_DE"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when>
+				<xsl:when test="@tld='es' and $AMAZON_ASSOCIATE_TAG_ES"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/></xsl:when>
 				<xsl:when test="@tld='fr' and $AMAZON_ASSOCIATE_TAG_FR"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when>
 				<xsl:when test="@tld='it' and $AMAZON_ASSOCIATE_TAG_IT"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/></xsl:when>
 				<xsl:when test="@tld='jp' and $AMAZON_ASSOCIATE_TAG_JP"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when>

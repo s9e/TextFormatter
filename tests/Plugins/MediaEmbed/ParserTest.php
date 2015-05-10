@@ -327,16 +327,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-',
-				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:627cc3c2-4218-4a78-bf1d-c8258f4db2f8" url="http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-">http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</DAILYSHOW></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('dailyshow');
-				}
-			],
-			[
 				'http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy',
 				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:e2ed81f7-a322-4ef9-82d9-12ba07e5c319" url="http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy">http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</DAILYSHOW></r>',
 				[],
@@ -1423,6 +1413,15 @@ class ParserTest extends Test
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
 				'<r><AMAZON id="B00ET2LTE6" tld="de" url="http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/">http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</AMAZON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
+				'<r><AMAZON id="B000R3QPEA" tld="es" url="http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/">http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -3009,6 +3008,16 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-es.amazon.es/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B000R3QPEA&amp;o=30&amp;t=es-20"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+					$configurator->rendering->parameters['AMAZON_ASSOCIATE_TAG_ES'] = 'es-20';
 				}
 			],
 			[

@@ -99,7 +99,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>amazon</code></td>
 		<td>Amazon Product</td>
-		<td>http://www.amazon.ca/gp/product/B00GQT1LNO/<br/>http://www.amazon.co.jp/gp/product/B003AKZ6I8/<br/>http://www.amazon.co.uk/gp/product/B00BET0NR6/<br/>http://www.amazon.com/dp/B002MUC0ZY<br/>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/<br/>http://www.amazon.com/gp/product/B0094H8H7I<br/>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/<br/>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/<br/>http://www.amazon.it/gp/product/B00JGOMIP6/</td>
+		<td>http://www.amazon.ca/gp/product/B00GQT1LNO/<br/>http://www.amazon.co.jp/gp/product/B003AKZ6I8/<br/>http://www.amazon.co.uk/gp/product/B00BET0NR6/<br/>http://www.amazon.com/dp/B002MUC0ZY<br/>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/<br/>http://www.amazon.com/gp/product/B0094H8H7I<br/>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/<br/>http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/<br/>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/<br/>http://www.amazon.it/gp/product/B00JGOMIP6/</td>
 	</tr>
 	<tr>
 		<td><code>audioboom</code></td>
