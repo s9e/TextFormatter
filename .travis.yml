@@ -13,9 +13,8 @@ matrix:
       env: OPTIMIZE=1
     - php: 5.6
       env: OPTIMIZE=1
-    - php: nightly
-      env: OPTIMIZE=1
     - php: hhvm
+      env: OPTIMIZE=1
     - php: nightly
       env: OPTIMIZE=1
 branches:
