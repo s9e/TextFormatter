@@ -179,6 +179,11 @@ class SerializerTest extends Test
 				[],
 				function ($serializer)
 				{
+					if (PCRE_VERSION < 8.13)
+					{
+						// The PHP output is different with older PCRE versions
+						$this->markTestSkipped();
+					}
 					$serializer->branchTableThreshold = 20;
 				}
 			],
