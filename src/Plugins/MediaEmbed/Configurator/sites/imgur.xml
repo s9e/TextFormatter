@@ -18,7 +18,7 @@
 		<extract>!&lt;div id="(?'type'album)-!</extract>
 	</scrape>
 	<scrape url="http://i.imgur.com/{@id}.gifv">
-		<match>!imgur\.com/\w+\.(?:gifv|mp4)!</match>
+		<match>!imgur\.com/\w+\.(?:gifv|mp4|webm)!</match>
 		<extract>!width:\s*(?'width'\d+)!</extract>
 		<extract>!height:\s*(?'height'\d+)!</extract>
 		<extract>!(?'type'gifv)!</extract>

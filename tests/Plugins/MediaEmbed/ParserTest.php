@@ -570,6 +570,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://i.imgur.com/u7Yo0Vy.webm',
+				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.webm" width="915">http://i.imgur.com/u7Yo0Vy.webm</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
 				[],
