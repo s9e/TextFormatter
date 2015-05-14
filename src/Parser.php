@@ -216,15 +216,24 @@ class Parser
 		$this->logger->clear();
 
 		// Initialize the rest
+		$this->cntOpen    = [];
+		$this->cntTotal   = [];
 		$this->currentFixingCost = 0;
+		$this->currentTag = null;
 		$this->isRich     = false;
 		$this->namespaces = [];
+		$this->openTags   = [];
 		$this->output     = '';
-		$this->text       = $text;
-		$this->textLen    = strlen($text);
+		$this->pos        = 0;
 		$this->tagStack   = [];
 		$this->tagStackIsSorted = true;
+		$this->text       = $text;
+		$this->textLen    = strlen($text);
 		$this->wsPos      = 0;
+
+		// Initialize the root context
+		$this->context = $this->rootContext;
+		$this->context['inParagraph'] = false;
 
 		// Bump the UID
 		++$this->uid;
@@ -326,6 +335,9 @@ class Parser
 		// Do the heavy lifting
 		$this->executePluginParsers();
 		$this->processTags();
+
+		// Finalize the document
+		$this->finalizeOutput();
 
 		// Check the uid in case a plugin or a filter reset the parser mid-execution
 		if ($this->uid !== $uid)
@@ -1448,16 +1460,10 @@ class Parser
 	*/
 	protected function processTags()
 	{
-		// Reset some internal vars
-		$this->pos       = 0;
-		$this->cntOpen   = [];
-		$this->cntTotal  = [];
-		$this->openTags  = [];
-		unset($this->currentTag);
-
-		// Initialize the root context
-		$this->context = $this->rootContext;
-		$this->context['inParagraph'] = false;
+		if (empty($this->tagStack))
+		{
+			return;
+		}
 
 		// Initialize the count tables
 		foreach (array_keys($this->tagsConfig) as $tagName)
@@ -1502,9 +1508,6 @@ class Parser
 			}
 		}
 		while (!empty($this->tagStack));
-
-		// Finalize the document
-		$this->finalizeOutput();
 	}
 
 	/**
