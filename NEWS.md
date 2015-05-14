@@ -1,6 +1,35 @@
+###### May 2015
+
+- [Removed PHP7 from allowed failures](https://github.com/s9e/TextFormatter/commit/94397e26178ce2b09f9f1562dd4ff722cf9ecc43)
+
+###### April 2015
+
+- [MediaEmbed: added support for responsive embeds](https://github.com/s9e/TextFormatter/e2e4d3ebfcf7a5e067f0975c6af7c5be4c0515b4)
+- [Added support for automatically encoding/decoding Unicode characters outsi
+de the BMP](https://github.com/s9e/TextFormatter/commit/42d614c08e5f3ce5d35a29867d58a7f50fed7c91)
+
+###### March 2015
+
+- [Added support for a custom regexp and limit in custom registered parsers](https://github.com/s9e/TextFormatter/03376d66118ee9c6ce22cf77aaa8db016ba31133)
+
+###### February 2015
+
+- [Autolink: added support for linking strings that start with "www."](https://github.com/s9e/TextFormatter/commit/52bb7babc45c2359bcea9bd25a94ecefc2d77bb9)
+- [Added support for setting default attribute filters using a string such as "#int".](https://github.com/s9e/TextFormatter/commit/c184543565381695191b5f4fccc187a75f454f99)
+- [Removed XHTML output mode.](https://github.com/s9e/TextFormatter/commit/6f3d6c7b15f4cc225b843db86700d2bcaace5044)
+
+###### November 2014
+
+- Improved XPathConvertor to support more math expressions natively. [[1](https://github.com/s9e/TextFormatter/commit/d3d4014d7a1b10b1b1fa48a9eda62666370a391f)] [[2](https://github.com/s9e/TextFormatter/commit/c1237dea4f5d67cbacdb56650f3cec7b78c8f7be)]
+
+###### October 2014
+
+- [Enabled all tests and features on HHVM](https://github.com/s9e/TextFormatter/commit/e81476633b6686255cff549843295376925ed093)
+
 ###### September 2014
 
 - Added Emoji plugin.
+- [Added BranchOutputOptimizer.](https://github.com/s9e/TextFormatter/commit/9cc2ceb5e2b0ce579b71aa02e62afc5f9278cb96)
 
 ###### August 2014
 
