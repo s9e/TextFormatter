@@ -74,3 +74,13 @@ then
 		exit 1;
 	fi
 fi
+
+# Clean up the temp files
+rm -f \
+	/tmp/Bundle.php     \
+	/tmp/censor.txt     \
+	/tmp/formatted.xml  \
+	/tmp/MyRenderer.php \
+	/tmp/parser.txt     \
+	/tmp/Renderer_*.php \
+	/tmp/renderer.txt
