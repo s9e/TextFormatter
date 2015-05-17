@@ -78,6 +78,10 @@ echo $html;
 <b>Bold enabled</b>
 ```
 
+### Plug your own parser
+
+[You can register your own parser to be executed at runtime.](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Your_own_plugin/Basic.md)
+
 ## Renderer
 
 ### Change a template parameter
