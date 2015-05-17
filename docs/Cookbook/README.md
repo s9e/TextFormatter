@@ -3,7 +3,7 @@
 ### **Getting started**
   * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md)
   * [Mode of operation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/01_Mode_of_operation.md)
-  * [Mode of operation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/10_Runtime_configuration.xml)
+  * [Runtime configuration](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/10_Runtime_configuration.md)
   * **Basic usage**
     * **Configuration**
       * [Zero-configuration: using predefined bundles](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Configuration/00_ZeroConfig.md)
