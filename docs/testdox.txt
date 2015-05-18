@@ -2633,6 +2633,7 @@ s9e\TextFormatter\Tests\Unparser
  [x] Characters outside Unicode's BMP are decoded
 
 s9e\TextFormatter\Tests\Utils
+ [x] encodeUnicodeSupplementaryCharacters() tests
  [x] removeFormatting() tests
  [x] removeTag() tests
  [x] replaceAttributes() tests

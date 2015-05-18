@@ -631,37 +631,6 @@ class Parser
 	//==========================================================================
 
 	/**
-	* Replace Unicode characters outside the BMP with XML entities in the output
-	*
-	* @return void
-	*/
-	protected function encodeUnicodeSupplementaryCharacters()
-	{
-		$this->output = preg_replace_callback(
-			'([\\xF0-\\xF4]...)',
-			__CLASS__ . '::encodeUnicodeSupplementaryCharactersCallback',
-			$this->output
-		);
-	}
-
-	/**
-	* Encode given Unicode character into an XML entity
-	*
-	* @param  string[] $m Array of captures
-	* @return string      Encoded character
-	*/
-	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
-	{
-		$utf8 = $m[0];
-		$cp   = ((ord($utf8[0]) & 7)  << 18)
-		      | ((ord($utf8[1]) & 63) << 12)
-		      | ((ord($utf8[2]) & 63) << 6)
-		      | (ord($utf8[3]) & 63);
-
-		return '&#' . $cp . ';';
-	}
-
-	/**
 	* Finalize the output by appending the rest of the unprocessed text and create the root node
 	*
 	* @return void
@@ -691,7 +660,7 @@ class Parser
 		}
 
 		// Encode Unicode characters that are outside of the BMP
-		$this->encodeUnicodeSupplementaryCharacters();
+		$this->output = Utils::encodeUnicodeSupplementaryCharacters($this->output);
 
 		// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
 		$tagName = ($this->isRich) ? 'r' : 't';

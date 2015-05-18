@@ -13,6 +13,21 @@ use DOMXPath;
 abstract class Utils
 {
 	/**
+	* Replace Unicode characters outside the BMP with XML entities
+	*
+	* @param  string $str Original string
+	* @return string      String with SMP characters encoded
+	*/
+	public static function encodeUnicodeSupplementaryCharacters($str)
+	{
+		return preg_replace_callback(
+			'([\\xF0-\\xF4]...)S',
+			__CLASS__ . '::encodeUnicodeSupplementaryCharactersCallback',
+			$str
+		);
+	}
+
+	/**
 	* Strip the formatting of an intermediate representation and return plain text
 	*
 	* This will remove start tags and end tags but will keep the text content of everything else
@@ -80,6 +95,23 @@ abstract class Utils
 			},
 			$xml
 		);
+	}
+
+	/**
+	* Encode given Unicode character into an XML entity
+	*
+	* @param  string[] $m Array of captures
+	* @return string      Encoded character
+	*/
+	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
+	{
+		$utf8 = $m[0];
+		$cp   = ((ord($utf8[0]) & 7)  << 18)
+		      | ((ord($utf8[1]) & 63) << 12)
+		      | ((ord($utf8[2]) & 63) << 6)
+		      | (ord($utf8[3]) & 63);
+
+		return '&#' . $cp . ';';
 	}
 
 	/**
