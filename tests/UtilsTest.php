@@ -212,6 +212,15 @@ class UtilsTest extends Test
 					return $attributes;
 				}
 			],
+			[
+				'<r><X emotes=":D"/></r>',
+				'<r><X emotes="&#128513;"/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['emotes' => '😁'];
+				}
+			],
 		];
 	}
 }
