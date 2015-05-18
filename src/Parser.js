@@ -198,6 +198,9 @@ function parse(_text)
 	executePluginParsers();
 	processTags();
 
+	// Finalize the document
+	finalizeOutput();
+
 	// Check the uid in case a plugin or a filter reset the parser mid-execution
 	if (uid !== _uid)
 	{
@@ -222,15 +225,24 @@ function reset(_text)
 	logger.clear();
 
 	// Initialize the rest
+	cntOpen    = {};
+	cntTotal   = {};
 	currentFixingCost = 0;
+	currentTag = null;
 	isRich     = false;
 	namespaces = {};
+	openTags   = [];
 	output     = '';
-	text       = _text;
-	textLen    = text.length;
+	pos        = 0;
 	tagStack   = [];
 	tagStackIsSorted = true;
+	text       = _text;
+	textLen    = text.length;
 	wsPos      = 0;
+
+	// Initialize the root context
+	context = rootContext;
+	context.inParagraph = false;
 
 	// Bump the UID
 	++uid;
@@ -1301,16 +1313,10 @@ function isFollowedByClosingTag(tag)
 */
 function processTags()
 {
-	// Reset some internal vars
-	pos        = 0;
-	cntOpen    = {};
-	cntTotal   = {};
-	openTags   = [];
-	currentTag = null;
-
-	// Initialize the root context
-	context = rootContext;
-	context.inParagraph = false;
+	if (!tagStack.length)
+	{
+		return;
+	}
 
 	// Initialize the count tables
 	for (var tagName in tagsConfig)
@@ -1355,9 +1361,6 @@ function processTags()
 		});
 	}
 	while (tagStack.length);
-
-	// Finalize the document
-	finalizeOutput();
 }
 
 /**

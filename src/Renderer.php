@@ -81,7 +81,7 @@ abstract class Renderer
 		if (\strpos($str, '&#') === \false)
 			return $str;
 
-		return \preg_replace_callback('(&#\\d+;)', __CLASS__ . '::decodeEntity', $str);
+		return \preg_replace_callback('(&#(?:x[0-9A-Fa-f]+|[0-9]+);)', __CLASS__ . '::decodeEntity', $str);
 	}
 
 	protected static function decodeEntity(array $m)

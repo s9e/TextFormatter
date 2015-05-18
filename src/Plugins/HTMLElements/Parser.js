@@ -45,7 +45,8 @@ function captureAttributes(tag, elName, str)
 	var attrRegexp = /[a-z][-a-z0-9]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
 		attrName,
 		attrValue,
-		attrMatch;
+		attrMatch,
+		pos;
 
 	while (attrMatch = attrRegexp.exec(str))
 	{
