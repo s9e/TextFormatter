@@ -106,15 +106,23 @@ class Parser
 
 		$this->logger->clear();
 
+		$this->cntOpen    = [];
+		$this->cntTotal   = [];
 		$this->currentFixingCost = 0;
+		$this->currentTag = \null;
 		$this->isRich     = \false;
 		$this->namespaces = [];
+		$this->openTags   = [];
 		$this->output     = '';
-		$this->text       = $text;
-		$this->textLen    = \strlen($text);
+		$this->pos        = 0;
 		$this->tagStack   = [];
 		$this->tagStackIsSorted = \true;
+		$this->text       = $text;
+		$this->textLen    = \strlen($text);
 		$this->wsPos      = 0;
+
+		$this->context = $this->rootContext;
+		$this->context['inParagraph'] = \false;
 
 		++$this->uid;
 	}
@@ -159,6 +167,8 @@ class Parser
 
 		$this->executePluginParsers();
 		$this->processTags();
+
+		$this->finalizeOutput();
 
 		if ($this->uid !== $uid)
 			throw new RuntimeException('The parser has been reset during execution');
@@ -324,26 +334,6 @@ class Parser
 		return $isValid;
 	}
 
-	protected function encodeUnicodeSupplementaryCharacters()
-	{
-		$this->output = \preg_replace_callback(
-			'([\\xF0-\\xF4]...)',
-			__CLASS__ . '::encodeUnicodeSupplementaryCharactersCallback',
-			$this->output
-		);
-	}
-
-	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
-	{
-		$utf8 = $m[0];
-		$cp   = ((\ord($utf8[0]) & 7)  << 18)
-		      | ((\ord($utf8[1]) & 63) << 12)
-		      | ((\ord($utf8[2]) & 63) << 6)
-		      | (\ord($utf8[3]) & 63);
-
-		return '&#' . $cp . ';';
-	}
-
 	protected function finalizeOutput()
 	{
 		$this->outputText($this->textLen, 0, \true);
@@ -363,7 +353,7 @@ class Parser
 		if (\strpos($this->output, '</i><i>') !== \false)
 			$this->output = \str_replace('</i><i>', '', $this->output);
 
-		$this->encodeUnicodeSupplementaryCharacters();
+		$this->output = Utils::encodeUnicodeSupplementaryCharacters($this->output);
 
 		$tagName = ($this->isRich) ? 'r' : 't';
 
@@ -837,14 +827,8 @@ class Parser
 
 	protected function processTags()
 	{
-		$this->pos       = 0;
-		$this->cntOpen   = [];
-		$this->cntTotal  = [];
-		$this->openTags  = [];
-		unset($this->currentTag);
-
-		$this->context = $this->rootContext;
-		$this->context['inParagraph'] = \false;
+		if (empty($this->tagStack))
+			return;
 
 		foreach (\array_keys($this->tagsConfig) as $tagName)
 		{
@@ -873,8 +857,6 @@ class Parser
 				$this->addMagicEndTag($startTag, $this->textLen);
 		}
 		while (!empty($this->tagStack));
-
-		$this->finalizeOutput();
 	}
 
 	protected function processCurrentTag()

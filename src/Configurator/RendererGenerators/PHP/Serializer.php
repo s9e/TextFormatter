@@ -15,6 +15,8 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 
 class Serializer
 {
+	public $branchTableThreshold = 8;
+
 	public $branchTables = [];
 
 	public $convertor;
@@ -232,7 +234,7 @@ class Serializer
 	protected function serializeSwitch(DOMElement $switch)
 	{
 		if ($switch->hasAttribute('branch-key')
-		 && $switch->childNodes->length > 7)
+		 && $switch->childNodes->length >= $this->branchTableThreshold)
 			return $this->serializeHash($switch);
 
 		$php  = '';
