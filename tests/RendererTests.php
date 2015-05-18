@@ -226,6 +226,17 @@ trait RendererTests
 	}
 
 	/**
+	* @testdox Renders rich text with SMP character encoded as hex
+	*/
+	public function testRenderRichSMPHex()
+	{
+		$this->assertSame(
+			'😀',
+			$this->configurator->getRenderer()->render('<r>&#x1F600;</r>')
+		);
+	}
+
+	/**
 	* @testdox Does not decode special chars in a plain text with a SMP character
 	*/
 	public function testRenderPlainSMPSpecial()

@@ -2464,6 +2464,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
+ [x] Renders rich text with SMP character encoded as hex
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
@@ -2557,6 +2558,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
+ [x] Renders rich text with SMP character encoded as hex
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
@@ -2583,6 +2585,7 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
+ [x] Renders rich text with SMP character encoded as hex
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
@@ -2609,6 +2612,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
+ [x] Renders rich text with SMP character encoded as hex
  [x] Does not decode special chars in a plain text with a SMP character
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
