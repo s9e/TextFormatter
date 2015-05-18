@@ -5,8 +5,7 @@
 ###### April 2015
 
 - [MediaEmbed: added support for responsive embeds](https://github.com/s9e/TextFormatter/e2e4d3ebfcf7a5e067f0975c6af7c5be4c0515b4)
-- [Added support for automatically encoding/decoding Unicode characters outsi
-de the BMP](https://github.com/s9e/TextFormatter/commit/42d614c08e5f3ce5d35a29867d58a7f50fed7c91)
+- [Added support for automatically encoding/decoding Unicode characters outside the BMP](https://github.com/s9e/TextFormatter/commit/42d614c08e5f3ce5d35a29867d58a7f50fed7c91)
 
 ###### March 2015
 
