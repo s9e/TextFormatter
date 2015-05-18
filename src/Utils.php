@@ -60,6 +60,11 @@ abstract class Utils
 	*/
 	public static function removeTag($xml, $tagName, $nestingLevel = 0)
 	{
+		if (strpos($xml, '<' . $tagName) === false)
+		{
+			return $xml;
+		}
+
 		$dom   = self::loadXML($xml);
 		$xpath = new DOMXPath($dom);
 		$nodes = $xpath->query(str_repeat('//' . $tagName, 1 + $nestingLevel));
@@ -68,7 +73,7 @@ abstract class Utils
 			$node->parentNode->removeChild($node);
 		}
 
-		return $dom->saveXML($dom->documentElement);
+		return self::saveXML($dom);
 	}
 
 	/**
@@ -150,6 +155,27 @@ abstract class Utils
 		}
 
 		return $attributes;
+	}
+
+	/**
+	* Serialize given DOMDocument
+	*
+	* @param  DOMDocument $dom
+	* @return string
+	*/
+	protected static function saveXML(DOMDocument $dom)
+	{
+		return preg_replace_callback(
+			'([\\xF0-\\xF4]...)',
+			function ($m)
+			{
+				$utf8 = $m[0];
+				$cp = ((ord($utf8[0]) & 7) << 18) | ((ord($utf8[1]) & 63) << 12) | ((ord($utf8[2]) & 63) << 6) | (ord($utf8[3]) & 63);
+
+				return '&#' . $cp . ';';
+			},
+			$dom->saveXML($dom->documentElement)
+		);
 	}
 
 	/**

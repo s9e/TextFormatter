@@ -116,6 +116,11 @@ class UtilsTest extends Test
 				['foo:X'],
 				'<r xmlns:foo="urn:foo"><X>..</X></r>'
 			],
+			[
+				'<r><X/>&#128512;</r>',
+				['X', 0],
+				'<r>&#128512;</r>'
+			],
 		];
 	}
 
