@@ -132,6 +132,15 @@ class ParserTest extends Test
 				'<r>WWW address: <URL url="http://www.example.org">www.example.org</URL> ...</r>',
 				['matchWww' => true]
 			],
+			[
+				'Not a WWW address: Awww...',
+				'<t>Not a WWW address: Awww...</t>',
+				['matchWww' => true]
+			],
+			[
+				'Not a valid URL: foohttp://example.org',
+				'<t>Not a valid URL: foohttp://example.org</t>'
+			],
 		];
 	}
 

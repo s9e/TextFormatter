@@ -18,10 +18,18 @@ class Parser extends ParserBase
 	{
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
+		$chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 		foreach ($matches as $m)
 		{
-			$url = $m[0][0];
+			$url    = $m[0][0];
+			$tagPos = $m[0][1];
+
+			// Make sure that the URL is not preceded by an alphanumeric character
+			if ($tagPos > 0 && strpos($chars, $text[$tagPos - 1]) !== false)
+			{
+				continue;
+			}
 
 			// Remove trailing punctuation and right angle brackets. We preserve right parentheses
 			// if there's a balanced number of parentheses in the URL, e.g.
@@ -42,7 +50,7 @@ class Parser extends ParserBase
 			}
 
 			// Create a zero-width end tag right after the URL
-			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + strlen($url), 0);
+			$endTag = $this->parser->addEndTag($tagName, $tagPos + strlen($url), 0);
 
 			// If the URL starts with "www." we prepend "http://"
 			if ($url[3] === '.')
@@ -51,7 +59,7 @@ class Parser extends ParserBase
 			}
 
 			// Create a zero-width start tag right before the URL
-			$startTag = $this->parser->addStartTag($tagName, $m[0][1], 0);
+			$startTag = $this->parser->addStartTag($tagName, $tagPos, 0);
 			$startTag->setAttribute($attrName, $url);
 
 			// Pair the tags together
