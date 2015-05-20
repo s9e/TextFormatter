@@ -15,10 +15,15 @@ class Parser extends ParserBase
 	{
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
+		$chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 		foreach ($matches as $m)
 		{
-			$url = $m[0][0];
+			$url    = $m[0][0];
+			$tagPos = $m[0][1];
+
+			if ($tagPos > 0 && \strpos($chars, $text[$tagPos - 1]) !== \false)
+				continue;
 
 			while (1)
 			{
@@ -32,12 +37,12 @@ class Parser extends ParserBase
 				break;
 			}
 
-			$endTag = $this->parser->addEndTag($tagName, $m[0][1] + \strlen($url), 0);
+			$endTag = $this->parser->addEndTag($tagName, $tagPos + \strlen($url), 0);
 
 			if ($url[3] === '.')
 				$url = 'http://' . $url;
 
-			$startTag = $this->parser->addStartTag($tagName, $m[0][1], 0);
+			$startTag = $this->parser->addStartTag($tagName, $tagPos, 0);
 			$startTag->setAttribute($attrName, $url);
 
 			$startTag->pairWith($endTag);
