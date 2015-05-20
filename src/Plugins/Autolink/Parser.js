@@ -1,9 +1,17 @@
 var tagName  = config.tagName,
-	attrName = config.attrName;
+	attrName = config.attrName,
+	chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 matches.forEach(function(m)
 {
-	var url = m[0][0];
+	var url    = m[0][0],
+		tagPos = m[0][1];
+
+	// Make sure that the URL is not preceded by an alphanumeric character
+	if (tagPos > 0 && chars.indexOf(text.charAt(tagPos - 1)) > -1)
+	{
+		return;
+	}
 
 	// Remove trailing punctuation and right angle brackets. We preserve right parentheses
 	// if there's a balanced number of parentheses in the URL, e.g.
@@ -23,7 +31,7 @@ matches.forEach(function(m)
 	}
 
 	// Create a zero-width end tag right after the URL
-	var endTag = addEndTag(tagName, m[0][1] + url.length, 0);
+	var endTag = addEndTag(tagName, tagPos + url.length, 0);
 
 	// If the URL starts with "www." we prepend "http://"
 	if (url.charAt(3) === '.')
@@ -32,7 +40,7 @@ matches.forEach(function(m)
 	}
 
 	// Create a zero-width start tag right before the URL
-	var startTag = addStartTag(tagName, m[0][1], 0);
+	var startTag = addStartTag(tagName, tagPos, 0);
 	startTag.setAttribute(attrName, url);
 
 	// Pair the tags together
