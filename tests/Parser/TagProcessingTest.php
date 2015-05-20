@@ -779,8 +779,8 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
-				'XYYYYX',
-				new RuntimeException('Fixing cost exceeded'),
+				'XYYYX',
+				'<r><X><s>X</s><Y><s>Y</s><Y><s>Y</s><Y><s>Y</s></Y></Y></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X');
@@ -794,9 +794,9 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 1, 1);
 					$parser->addStartTag('Y', 2, 1);
 					$parser->addStartTag('Y', 3, 1);
-					$parser->addStartTag('Y', 4, 1);
-					$parser->addEndTag('X', 5, 1);
-				}
+					$parser->addEndTag('X', 4, 1);
+				},
+				[['warn', 'Fixing cost limit exceeded']]
 			],
 			[
 				'XYYYYX',

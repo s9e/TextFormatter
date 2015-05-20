@@ -345,6 +345,12 @@ class Parser
 			throw new RuntimeException('The parser has been reset during execution');
 		}
 
+		// Log a warning if the fixing cost limit was exceeded
+		if ($this->currentFixingCost > $this->maxFixingCost)
+		{
+			$this->logger->warn('Fixing cost limit exceeded');
+		}
+
 		return $this->output;
 	}
 
@@ -1696,12 +1702,8 @@ class Parser
 				break;
 			}
 
-			if (++$this->currentFixingCost > $this->maxFixingCost)
-			{
-				throw new RuntimeException('Fixing cost exceeded');
-			}
-
 			$closeTags[] = $openTag;
+			++$this->currentFixingCost;
 		}
 
 		if ($i < 0)
