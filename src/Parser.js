@@ -207,6 +207,12 @@ function parse(_text)
 		throw 'The parser has been reset during execution';
 	}
 
+	// Log a warning if the fixing cost limit was exceeded
+	if (currentFixingCost > maxFixingCost)
+	{
+		logger.warn('Fixing cost limit exceeded');
+	}
+
 	return output;
 }
 
@@ -1577,12 +1583,8 @@ function processEndTag(tag)
 			break;
 		}
 
-		if (++currentFixingCost > maxFixingCost)
-		{
-			throw 'Fixing cost exceeded';
-		}
-
 		closeTags.push(openTag);
+		++currentFixingCost;
 	}
 
 	if (i < 0)
