@@ -49,6 +49,17 @@ class BuiltInFilters
 	}
 
 	/**
+	* Invalidate an attribute value
+	*
+	* @param  string $attrValue Original value
+	* @return bool              Always FALSE
+	*/
+	public static function filterFalse($attrValue)
+	{
+		return false;
+	}
+
+	/**
 	* Filter a float value
 	*
 	* @param  string $attrValue Original value

@@ -820,6 +820,9 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\ColorFilter
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\EmailFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterEmail()
 
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FalseFilter
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFalse()
+
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FloatFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFloat()
  [x] Is safe in CSS

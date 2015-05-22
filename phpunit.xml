@@ -68,6 +68,7 @@
 			<file>tests/Configurator/Items/AttributeFilters/ChoiceFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/ColorFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/EmailFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/FalseFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/FloatFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/HashmapFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IdentifierFilterTest.php</file>

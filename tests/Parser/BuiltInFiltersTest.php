@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\AlnumFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\ChoiceFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\ColorFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\EmailFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\FalseFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\FloatFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\IdentifierFilter;
@@ -965,6 +966,8 @@ class BuiltInFiltersTest extends Test
 			[new HashmapFilter(['foo' => 'bar']), 'bar', 'bar'],
 			[new HashmapFilter(['foo' => 'bar'], false), 'bar', 'bar'],
 			[new HashmapFilter(['foo' => 'bar'], true), 'bar', false],
+			[new FalseFilter, 'bar', false],
+			[new FalseFilter, 'false', false],
 		];
 	}
 
