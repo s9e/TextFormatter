@@ -54,6 +54,15 @@ var BuiltInFilters =
 
 	/**
 	* @param  {*} attrValue
+	* @return {!boolean}
+	*/
+	filterFalse: function(attrValue)
+	{
+		return false;
+	},
+
+	/**
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterFloat: function(attrValue)
