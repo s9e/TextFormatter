@@ -30,6 +30,11 @@ class BuiltInFilters
 		return \filter_var($attrValue, \FILTER_VALIDATE_EMAIL);
 	}
 
+	public static function filterFalse($attrValue)
+	{
+		return \false;
+	}
+
 	public static function filterFloat($attrValue)
 	{
 		return \filter_var($attrValue, \FILTER_VALIDATE_FLOAT);
