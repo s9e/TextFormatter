@@ -818,6 +818,30 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.RULE_IGNORE_WHITESPACE=0 by default
+	*/
+	public function testHintRuleIgnoreSurroundingWhitespaceFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_IGNORE_WHITESPACE=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IGNORE_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
+	*/
+	public function testHintRuleIgnoreSurroundingWhitespaceTrue()
+	{
+		$this->configurator->tags->add('X')->rules->ignoreSurroundingWhitespace();
+
+		$this->assertContains(
+			'HINT.RULE_IGNORE_WHITESPACE=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.RULE_IS_TRANSPARENT=0 by default
 	*/
 	public function testHintRuleIsTransparentFalse()
@@ -837,30 +861,6 @@ class JavaScriptTest extends Test
 
 		$this->assertContains(
 			'HINT.RULE_IS_TRANSPARENT=1',
-			$this->configurator->javascript->getParser()
-		);
-	}
-
-	/**
-	* @testdox HINT.RULE_TRIM_WHITESPACE=0 by default
-	*/
-	public function testHintRuleIgnoreSurroundingWhitespaceFalse()
-	{
-		$this->assertContains(
-			'HINT.RULE_TRIM_WHITESPACE=0',
-			$this->configurator->javascript->getParser()
-		);
-	}
-
-	/**
-	* @testdox HINT.RULE_TRIM_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
-	*/
-	public function testHintRuleIgnoreSurroundingWhitespaceTrue()
-	{
-		$this->configurator->tags->add('X')->rules->ignoreSurroundingWhitespace();
-
-		$this->assertContains(
-			'HINT.RULE_TRIM_WHITESPACE=1',
 			$this->configurator->javascript->getParser()
 		);
 	}

@@ -25,10 +25,10 @@ class Parser
 	const RULE_ENABLE_AUTO_BR    = 1 << 5;
 	const RULE_IGNORE_TAGS       = 1 << 6;
 	const RULE_IGNORE_TEXT       = 1 << 7;
-	const RULE_IS_TRANSPARENT    = 1 << 8;
-	const RULE_PREVENT_BR        = 1 << 9;
-	const RULE_SUSPEND_AUTO_BR   = 1 << 10;
-	const RULE_TRIM_WHITESPACE   = 1 << 11;
+	const RULE_IGNORE_WHITESPACE = 1 << 8;
+	const RULE_IS_TRANSPARENT    = 1 << 9;
+	const RULE_PREVENT_BR        = 1 << 10;
+	const RULE_SUSPEND_AUTO_BR   = 1 << 11;
 	/**#@-*/
 
 	/**
@@ -696,7 +696,7 @@ class Parser
 		$tagLen   = $tag->getLen();
 		$tagFlags = $tag->getFlags();
 
-		if ($tagFlags & self::RULE_TRIM_WHITESPACE)
+		if ($tagFlags & self::RULE_IGNORE_WHITESPACE)
 		{
 			$skipBefore = ($tag->isStartTag()) ? 2 : 1;
 			$skipAfter  = ($tag->isEndTag())   ? 2 : 1;
@@ -1390,7 +1390,7 @@ class Parser
 		$tagName = $startTag->getName();
 
 		// Adjust the end tag's position if whitespace is to be minimized
-		if ($startTag->getFlags() & self::RULE_TRIM_WHITESPACE)
+		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 		{
 			$tagPos = $this->getMagicPos($tagPos);
 		}
@@ -1739,7 +1739,7 @@ class Parser
 
 			// Find the earliest position we can close this open tag
 			$tagPos = $tag->getPos();
-			if ($openTag->getFlags() & self::RULE_TRIM_WHITESPACE)
+			if ($openTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			{
 				$tagPos = $this->getMagicPos($tagPos);
 			}

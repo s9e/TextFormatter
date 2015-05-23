@@ -9,10 +9,10 @@
 /** @const */ var RULE_ENABLE_AUTO_BR    = 1 << 5;
 /** @const */ var RULE_IGNORE_TAGS       = 1 << 6;
 /** @const */ var RULE_IGNORE_TEXT       = 1 << 7;
-/** @const */ var RULE_IS_TRANSPARENT    = 1 << 8;
-/** @const */ var RULE_PREVENT_BR        = 1 << 9;
-/** @const */ var RULE_SUSPEND_AUTO_BR   = 1 << 10;
-/** @const */ var RULE_TRIM_WHITESPACE   = 1 << 11;
+/** @const */ var RULE_IGNORE_WHITESPACE = 1 << 8;
+/** @const */ var RULE_IS_TRANSPARENT    = 1 << 9;
+/** @const */ var RULE_PREVENT_BR        = 1 << 10;
+/** @const */ var RULE_SUSPEND_AUTO_BR   = 1 << 11;
 /**#@-*/
 
 /**
@@ -568,7 +568,7 @@ function outputTag(tag)
 		skipBefore = 0,
 		skipAfter  = 0;
 
-	if (HINT.RULE_TRIM_WHITESPACE && (tagFlags & RULE_TRIM_WHITESPACE))
+	if (HINT.RULE_IGNORE_WHITESPACE && (tagFlags & RULE_IGNORE_WHITESPACE))
 	{
 		skipBefore = (tag.isStartTag()) ? 2 : 1;
 		skipAfter  = (tag.isEndTag())   ? 2 : 1;
@@ -1276,7 +1276,7 @@ function addMagicEndTag(startTag, tagPos)
 	var tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
-	if (HINT.RULE_TRIM_WHITESPACE && (startTag.getFlags() & RULE_TRIM_WHITESPACE))
+	if (HINT.RULE_IGNORE_WHITESPACE && (startTag.getFlags() & RULE_IGNORE_WHITESPACE))
 	{
 		tagPos = getMagicPos(tagPos);
 	}
@@ -1617,7 +1617,7 @@ function processEndTag(tag)
 
 		// Find the earliest position we can close this open tag
 		var tagPos = tag.getPos();
-		if (HINT.RULE_TRIM_WHITESPACE && openTag.getFlags() & RULE_TRIM_WHITESPACE)
+		if (HINT.RULE_IGNORE_WHITESPACE && openTag.getFlags() & RULE_IGNORE_WHITESPACE)
 		{
 			tagPos = getMagicPos(tagPos);
 		}

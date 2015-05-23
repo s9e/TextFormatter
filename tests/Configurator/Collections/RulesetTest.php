@@ -1240,7 +1240,7 @@ class RulesetTest extends Test
 			'createParagraphs'            => Parser::RULE_CREATE_PARAGRAPHS,
 			'disableAutoLineBreaks'       => Parser::RULE_DISABLE_AUTO_BR,
 			'enableAutoLineBreaks'        => Parser::RULE_ENABLE_AUTO_BR,
-			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
+			'ignoreSurroundingWhitespace' => Parser::RULE_IGNORE_WHITESPACE,
 			'ignoreTags'                  => Parser::RULE_IGNORE_TAGS,
 			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
@@ -1272,6 +1272,6 @@ class RulesetTest extends Test
 
 		$config = $ruleset->asConfig();
 
-		$this->assertSame(Parser::RULE_AUTO_CLOSE | Parser::RULE_TRIM_WHITESPACE, $config['flags']);
+		$this->assertSame(Parser::RULE_AUTO_CLOSE | Parser::RULE_IGNORE_WHITESPACE, $config['flags']);
 	}
 }
