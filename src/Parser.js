@@ -13,6 +13,7 @@
 /** @const */ var RULE_IS_TRANSPARENT    = 1 << 9;
 /** @const */ var RULE_PREVENT_BR        = 1 << 10;
 /** @const */ var RULE_SUSPEND_AUTO_BR   = 1 << 11;
+/** @const */ var RULE_TRIM_FIRST_LINE   = 1 << 12;
 /**#@-*/
 
 /**
@@ -1545,6 +1546,14 @@ function processStartTag(tag)
 		newTag.setFlags(tag.getFlags());
 
 		tag = newTag;
+	}
+
+	if (HINT.RULE_TRIM_FIRST_LINE
+	 && tag.getFlags() & RULE_TRIM_FIRST_LINE
+	 && !tag.getEndTag()
+	 && text.charAt(tag.getPos() + tag.getLen()) === "\n")
+	{
+		addIgnoreTag(tag.getPos() + tag.getLen(), 1);
 	}
 
 	// This tag is valid, output it and update the context

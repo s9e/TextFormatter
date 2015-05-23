@@ -335,6 +335,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] suspendAutoLineBreaks() accepts a boolean
  [x] suspendAutoLineBreaks() throws an exception if its argument is not a boolean
  [x] suspendAutoLineBreaks() is chainable
+ [x] trimFirstLine() accepts a boolean
+ [x] trimFirstLine() throws an exception if its argument is not a boolean
+ [x] trimFirstLine() is chainable
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array
@@ -1196,6 +1199,11 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\ManageParagraphs
  [x] Generates a breakParagraph and a createParagraphs rule for <blockquote>
  [x] Generates a breakParagraph rule but no createParagraphs rule for <p>
 
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
+ [x] Generates a trimFirstLine rule for <pre><code><xsl:apply-templates/></code></pre>
+ [x] Does not generate any rules for <pre><xsl:apply-templates/></pre>
+ [x] Does not generate any rules for <pre><code></code></pre>
+
 s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Implements ArrayAccess
  [x] Implements Iterator
@@ -1657,6 +1665,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.RULE_IGNORE_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
  [x] HINT.RULE_IS_TRANSPARENT=0 by default
  [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
+ [x] HINT.RULE_TRIM_FIRST_LINE=0 by default
+ [x] HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator

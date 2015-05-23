@@ -19,6 +19,7 @@ foreach ($configurator->rulesGenerator as $i => $generator)
 5	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
 6	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
 7	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
+8	s9e\TextFormatter\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
 </pre>
 
 ### Remove a generator

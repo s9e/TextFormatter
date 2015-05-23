@@ -29,6 +29,7 @@ class Parser
 	const RULE_IS_TRANSPARENT    = 1 << 9;
 	const RULE_PREVENT_BR        = 1 << 10;
 	const RULE_SUSPEND_AUTO_BR   = 1 << 11;
+	const RULE_TRIM_FIRST_LINE   = 1 << 12;
 	/**#@-*/
 
 	/**
@@ -1663,6 +1664,13 @@ class Parser
 			$newTag->setFlags($tag->getFlags());
 
 			$tag = $newTag;
+		}
+
+		if ($tag->getFlags() & self::RULE_TRIM_FIRST_LINE
+		 && !$tag->getEndTag()
+		 && substr($this->text, $tag->getPos() + $tag->getLen(), 1) === "\n")
+		{
+			$this->addIgnoreTag($tag->getPos() + $tag->getLen(), 1);
 		}
 
 		// This tag is valid, output it and update the context

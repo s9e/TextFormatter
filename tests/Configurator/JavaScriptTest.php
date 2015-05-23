@@ -864,6 +864,30 @@ class JavaScriptTest extends Test
 			$this->configurator->javascript->getParser()
 		);
 	}
+
+	/**
+	* @testdox HINT.RULE_TRIM_FIRST_LINE=0 by default
+	*/
+	public function testHintRuleTrimFirstLineFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_TRIM_FIRST_LINE=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
+	*/
+	public function testHintRuleTrimFirstLineTrue()
+	{
+		$this->configurator->tags->add('X')->rules->trimFirstLine();
+
+		$this->assertContains(
+			'HINT.RULE_TRIM_FIRST_LINE=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
 }
 
 class NonScalarConfigThing implements ConfigProvider

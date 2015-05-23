@@ -111,7 +111,8 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
 			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
-			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR
+			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR,
+			'trimFirstLine'               => Parser::RULE_TRIM_FIRST_LINE
 		];
 
 		$bitfield = 0;
@@ -524,5 +525,16 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function suspendAutoLineBreaks($bool = true)
 	{
 		return $this->addBooleanRule('suspendAutoLineBreaks', $bool);
+	}
+
+	/**
+	* Add a trimFirstLine rule
+	*
+	* @param  bool $bool Whether the white space inside this tag should be trimmed 
+	* @return self
+	*/
+	public function trimFirstLine($bool = true)
+	{
+		return $this->addBooleanRule('trimFirstLine', $bool);
 	}
 }

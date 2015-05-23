@@ -132,6 +132,23 @@ class RulesGeneratorTest extends Test
 					]
 				]
 			],
+			[
+				[
+					'CODE' => '<pre><code><xsl:apply-templates/></code></pre>'
+				],
+				[
+					'root' => [],
+					'tags' => [
+						'CODE' => [
+							'denyChild'                   => ['CODE'],
+							'disableAutoLineBreaks'       => true,
+							'ignoreTags'                  => true,
+							'ignoreSurroundingWhitespace' => true,
+							'trimFirstLine'               => true
+						]
+					]
+				]
+			],
 		];
 	}
 }

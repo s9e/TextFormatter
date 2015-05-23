@@ -126,4 +126,8 @@ Prevents this tag from being used unless it's as a descendant of X. If multiple 
 <dd><i>Example:</i> <code>$tag->rules->suspendAutoLineBreaks();</code><br/>
 Temporarily turns off the conversion of new lines into <code>br</code> elements in this tag's text. Does not apply to descendants.</dd>
 
+<dt>trimFirstLine</dt>
+<dd><i>Example:</i> <code>$tag->rules->trimFirstLine();</code><br/>
+Removes the first character inside given tag if it's a newline.</dd>
+
 </dl>

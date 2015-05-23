@@ -976,6 +976,35 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox trimFirstLine() accepts a boolean
+	*/
+	public function testTrimWhitespaceValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->trimFirstLine(true);
+	}
+
+	/**
+	* @testdox trimFirstLine() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage trimFirstLine() expects a boolean
+	*/
+	public function testTrimWhitespaceInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->trimFirstLine('foo');
+	}
+
+	/**
+	* @testdox trimFirstLine() is chainable
+	*/
+	public function testTrimWhitespaceChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->trimFirstLine());
+	}
+
+	/**
 	* @testdox merge() accepts a 2D array of rules
 	*/
 	public function testMergeArray()
@@ -1245,7 +1274,8 @@ class RulesetTest extends Test
 			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
 			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
-			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR
+			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR,
+			'trimFirstLine'               => Parser::RULE_TRIM_FIRST_LINE
 		];
 
 		$ruleset = new Ruleset;
