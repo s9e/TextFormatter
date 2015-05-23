@@ -87,6 +87,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreTagsInCode');
 		$this->collection->append('IgnoreTextIfDisallowed');
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
+		$this->collection->append('TrimFirstLineInCodeBlocks');
 	}
 
 	public function getRules(TagCollection $tags, array $options = array())
