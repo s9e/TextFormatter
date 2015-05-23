@@ -63,12 +63,13 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'createParagraphs'            => Parser::RULE_CREATE_PARAGRAPHS,
 			'disableAutoLineBreaks'       => Parser::RULE_DISABLE_AUTO_BR,
 			'enableAutoLineBreaks'        => Parser::RULE_ENABLE_AUTO_BR,
-			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
+			'ignoreSurroundingWhitespace' => Parser::RULE_IGNORE_WHITESPACE,
 			'ignoreTags'                  => Parser::RULE_IGNORE_TAGS,
 			'ignoreText'                  => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'               => Parser::RULE_IS_TRANSPARENT,
 			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
-			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR
+			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR,
+			'trimFirstLine'               => Parser::RULE_TRIM_FIRST_LINE
 		];
 
 		$bitfield = 0;
@@ -272,5 +273,10 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function suspendAutoLineBreaks($bool = \true)
 	{
 		return $this->addBooleanRule('suspendAutoLineBreaks', $bool);
+	}
+
+	public function trimFirstLine($bool = \true)
+	{
+		return $this->addBooleanRule('trimFirstLine', $bool);
 	}
 }

@@ -22,10 +22,11 @@ class Parser
 	const RULE_ENABLE_AUTO_BR    = 1 << 5;
 	const RULE_IGNORE_TAGS       = 1 << 6;
 	const RULE_IGNORE_TEXT       = 1 << 7;
-	const RULE_IS_TRANSPARENT    = 1 << 8;
-	const RULE_PREVENT_BR        = 1 << 9;
-	const RULE_SUSPEND_AUTO_BR   = 1 << 10;
-	const RULE_TRIM_WHITESPACE   = 1 << 11;
+	const RULE_IGNORE_WHITESPACE = 1 << 8;
+	const RULE_IS_TRANSPARENT    = 1 << 9;
+	const RULE_PREVENT_BR        = 1 << 10;
+	const RULE_SUSPEND_AUTO_BR   = 1 << 11;
+	const RULE_TRIM_FIRST_LINE   = 1 << 12;
 	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
 
 	const RULES_INHERITANCE = self::RULE_ENABLE_AUTO_BR;
@@ -375,7 +376,7 @@ class Parser
 		$tagLen   = $tag->getLen();
 		$tagFlags = $tag->getFlags();
 
-		if ($tagFlags & self::RULE_TRIM_WHITESPACE)
+		if ($tagFlags & self::RULE_IGNORE_WHITESPACE)
 		{
 			$skipBefore = ($tag->isStartTag()) ? 2 : 1;
 			$skipAfter  = ($tag->isEndTag())   ? 2 : 1;
@@ -808,7 +809,7 @@ class Parser
 	{
 		$tagName = $startTag->getName();
 
-		if ($startTag->getFlags() & self::RULE_TRIM_WHITESPACE)
+		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			$tagPos = $this->getMagicPos($tagPos);
 
 		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
@@ -993,6 +994,11 @@ class Parser
 			$tag = $newTag;
 		}
 
+		if ($tag->getFlags() & self::RULE_TRIM_FIRST_LINE
+		 && !$tag->getEndTag()
+		 && \substr($this->text, $tag->getPos() + $tag->getLen(), 1) === "\n")
+			$this->addIgnoreTag($tag->getPos() + $tag->getLen(), 1);
+
 		$this->outputTag($tag);
 		$this->pushContext($tag);
 	}
@@ -1039,7 +1045,7 @@ class Parser
 					$keepReopening = \false;
 
 			$tagPos = $tag->getPos();
-			if ($openTag->getFlags() & self::RULE_TRIM_WHITESPACE)
+			if ($openTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 				$tagPos = $this->getMagicPos($tagPos);
 
 			$endTag = new Tag(Tag::END_TAG, $openTagName, $tagPos, 0);
