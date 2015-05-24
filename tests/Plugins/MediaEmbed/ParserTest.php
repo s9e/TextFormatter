@@ -347,6 +347,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://m.democracynow.org/stories/15236',
+				'<r><DEMOCRACYNOW id="2015/5/22/neil_young_premieres_new_anti_gmo" url="http://m.democracynow.org/stories/15236">http://m.democracynow.org/stories/15236</DEMOCRACYNOW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
 				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
 				'<r><DUMPERT id="6622577_4652b140" url="http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html">http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</DUMPERT></r>',
 				[],
@@ -1646,6 +1656,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
+				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
+				'<r><DEMOCRACYNOW id="2014/7/2/dn_at_almedalen_week_at_swedens" url="http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens">http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</DEMOCRACYNOW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
 				}
 			],
 			[

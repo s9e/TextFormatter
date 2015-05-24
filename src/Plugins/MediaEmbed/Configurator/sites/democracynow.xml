@@ -1,0 +1,12 @@
+<site name="Democracy Now!" homepage="http://www.democracynow.org/">
+	<example>http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</example>
+	<example>http://m.democracynow.org/stories/15236</example>
+
+	<host>democracynow.org</host>
+	<extract>!democracynow.org/(?:embed/story/)?(?'id'\d+/\d+/\d+/\w+)!</extract>
+	<scrape>
+		<match>!m\.democracynow\.org/stories/\d!</match>
+		<extract>!democracynow\.org/(?'id'\d+/\d+/\d+/\w+)' rel='canonical!</extract>
+	</scrape>
+	<iframe width="640" height="360" src="//www.democracynow.org/embed/story/{@id}"/>
+</site>
