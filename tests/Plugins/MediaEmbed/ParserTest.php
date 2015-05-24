@@ -1668,6 +1668,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the',
+				'<r><DEMOCRACYNOW id="blog/2015/3/13/part_2_bruce_schneier_on_the" url="http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the">http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the</DEMOCRACYNOW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
+				'http://www.democracynow.org/shows/2006/2/20',
+				'<r><DEMOCRACYNOW id="shows/2006/2/20" url="http://www.democracynow.org/shows/2006/2/20">http://www.democracynow.org/shows/2006/2/20</DEMOCRACYNOW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
 				'http://8tracks.com/midna/2242699',
 				'<r><EIGHTTRACKS id="2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
 				[],
@@ -3110,6 +3128,33 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
+				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
+				'<iframe width="640" height="360" allowfullscreen="" frameborder="0" scrolling="no" src="//www.democracynow.org/embed/story/2014/7/2/dn_at_almedalen_week_at_swedens"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
+				'http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the',
+				'<iframe width="640" height="360" allowfullscreen="" frameborder="0" scrolling="no" src="//www.democracynow.org/embed/blog/2015/3/13/part_2_bruce_schneier_on_the"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
+				'http://www.democracynow.org/shows/2006/2/20',
+				'<iframe width="640" height="360" allowfullscreen="" frameborder="0" scrolling="no" src="//www.democracynow.org/embed/show/2006/2/20"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
 				}
 			],
 			[
