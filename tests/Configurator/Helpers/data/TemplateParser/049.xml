@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="b">
+    <closeTag id="1"/>
+    <output escape="text" type="literal">x </output>
+    <element id="2" name="i">
+      <closeTag id="2"/>
+      <output escape="text" type="literal">i</output>
+    </element>
+    <element id="3" name="u">
+      <closeTag id="3"/>
+      <output escape="text" type="literal">u</output>
+    </element>
+    <output escape="text" type="literal"> y</output>
+  </element>
+</template>

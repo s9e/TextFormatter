@@ -298,6 +298,7 @@ class PHPTest extends Test
 	{
 		call_user_func($configuratorSetup, $this->configurator, $this);
 
+		$this->configurator->rendering->engine = 'XSLT';
 		$xsltRenderer = $this->configurator->getRenderer();
 
 		$this->configurator->rendering->engine = 'PHP';
