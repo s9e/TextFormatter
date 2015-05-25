@@ -189,7 +189,7 @@ You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatte
 	<tr>
 		<td><code>democracynow</code></td>
 		<td>Democracy Now!</td>
-		<td>http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens<br/>http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the<br/>http://www.democracynow.org/shows/2006/2/20<br/>http://m.democracynow.org/stories/15236</td>
+		<td>http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens<br/>http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the<br/>http://www.democracynow.org/shows/2006/2/20<br/>http://www.democracynow.org/2015/5/21/headlines<br/>http://m.democracynow.org/stories/15236</td>
 	</tr>
 	<tr>
 		<td><code>dumpert</code></td>

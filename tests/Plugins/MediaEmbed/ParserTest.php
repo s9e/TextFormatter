@@ -3158,6 +3158,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.democracynow.org/2015/5/21/headlines',
+				'<iframe width="640" height="360" allowfullscreen="" frameborder="0" scrolling="no" src="//www.democracynow.org/embed/headlines/2015/5/21"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('democracynow');
+				}
+			],
+			[
 				'http://espn.go.com/video/clip?id=10315344',
 				'<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms=espn&amp;id=10315344" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
