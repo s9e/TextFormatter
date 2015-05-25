@@ -218,6 +218,21 @@ class XPathConvertorTest extends Test
 				"strtr(\$node->getAttribute('bar'),'abd','ABD')",
 				"\$this->xpath->evaluate('translate(@bar,'.'\"abbd\"'.','.'\"ABCD\"'.')',\$node)"
 			],
+			[
+				'substring-after(@foo,"/")',
+				"substr(\$node->getAttribute('foo'),strpos(\$node->getAttribute('foo'),'/')+1)",
+				"\$this->xpath->evaluate('substring-after(@foo,'.'\"/\"'.')',\$node)"
+			],
+			[
+				'substring-after(@foo,"&amp;")',
+				"substr(\$node->getAttribute('foo'),strpos(\$node->getAttribute('foo'),'&amp;')+5)",
+				"\$this->xpath->evaluate('substring-after(@foo,'.'\"&amp;\"'.')',\$node)"
+			],
+			[
+				'substring-before(@foo,"/")',
+				"substr(\$node->getAttribute('foo'),0,strpos(\$node->getAttribute('foo'),'/'))",
+				"\$this->xpath->evaluate('substring-before(@foo,'.'\"/\"'.')',\$node)"
+			],
 			// Math
 			[
 				'@foo + 12',

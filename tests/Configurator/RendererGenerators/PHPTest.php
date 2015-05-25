@@ -675,6 +675,22 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<b>X</b>';
 				}
 			],
+			[
+				'<r><X x="a&amp;b"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:value-of select="substring-after(@x,\'&amp;\')"/>';
+				}
+			],
+			[
+				'<r><X x="a&amp;b"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:value-of select="substring-before(@x,\'&amp;\')"/>';
+				}
+			],
 		];
 	}
 
