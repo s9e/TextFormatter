@@ -278,9 +278,9 @@ class XPathConvertor
 		return 'substr(' . $this->convertXPath($expr) . ',strpos(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . ')+' . (strlen($str) - 2) . ')';
 	}
 
-	protected function substringbefore($expr, $str)
+	protected function substringbefore($expr1, $expr2)
 	{
-		return 'substr(' . $this->convertXPath($expr) . ',0,strpos(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . '))';
+		return 'strstr(' . $this->convertXPath($expr1) . ',' . $this->convertXPath($expr2) . ',true)';
 	}
 
 	protected function cmp($expr1, $operator, $expr2)
@@ -572,7 +572,7 @@ class XPathConvertor
 				'\\(',
 				'(?<substringbefore0>(?&value))',
 				',',
-				'(?<substringbefore1>(?&string))',
+				'(?<substringbefore1>(?&value))',
 				'\\)'
 			],
 			'startswith' => [
