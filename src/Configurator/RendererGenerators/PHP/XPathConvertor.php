@@ -275,7 +275,7 @@ class XPathConvertor
 
 	protected function substringafter($expr, $str)
 	{
-		return 'substr(' . $this->convertXPath($expr) . ',strpos(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . ')+' . (strlen($str) - 2) . ')';
+		return 'substr(strstr(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . '),' . (strlen($str) - 2) . ')';
 	}
 
 	protected function substringbefore($expr1, $expr2)

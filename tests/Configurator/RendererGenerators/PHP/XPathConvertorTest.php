@@ -220,12 +220,12 @@ class XPathConvertorTest extends Test
 			],
 			[
 				'substring-after(@foo,"/")',
-				"substr(\$node->getAttribute('foo'),strpos(\$node->getAttribute('foo'),'/')+1)",
+				"substr(strstr(\$node->getAttribute('foo'),'/'),1)",
 				"\$this->xpath->evaluate('substring-after(@foo,'.'\"/\"'.')',\$node)"
 			],
 			[
 				'substring-after(@foo,"&amp;")',
-				"substr(\$node->getAttribute('foo'),strpos(\$node->getAttribute('foo'),'&amp;')+5)",
+				"substr(strstr(\$node->getAttribute('foo'),'&amp;'),5)",
 				"\$this->xpath->evaluate('substring-after(@foo,'.'\"&amp;\"'.')',\$node)"
 			],
 			[
