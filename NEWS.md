@@ -1,6 +1,7 @@
 ###### May 2015
 
 - [Removed PHP7 from allowed failures](https://github.com/s9e/TextFormatter/commit/94397e26178ce2b09f9f1562dd4ff722cf9ecc43)
+- [Improved XPathConvertor to support more string functions natively](https://github.com/s9e/TextFormatter/commit/75a538a7503144d50ef45d697da144e6ae8e52c6)
 
 ###### April 2015
 
