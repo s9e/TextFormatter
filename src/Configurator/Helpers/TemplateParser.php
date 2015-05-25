@@ -81,7 +81,8 @@ class TemplateParser
 					break;
 
 				case \XML_TEXT_NODE:
-					self::appendOutput($ir, 'literal', $child->textContent);
+					if (\trim($child->textContent) !== '')
+						self::appendOutput($ir, 'literal', $child->textContent);
 					break;
 
 				case \XML_ELEMENT_NODE:
