@@ -1689,9 +1689,6 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] exportCallback()
  [x] exportObject()
 
-s9e\TextFormatter\Tests\Configurator\Bundles\F5
- [x] Features
-
 s9e\TextFormatter\Tests\Configurator\Bundles\Fatdown
  [x] Features
 
@@ -1702,10 +1699,6 @@ s9e\TextFormatter\Tests\Configurator\Bundles\MediaPack
  [x] Features
  [x] Does not create BBCodes by default
  [x] Creates a MEDIA BBCode if the BBCodes plugin is loaded
-
-s9e\TextFormatter\Tests\Configurator\Bundles\S18
- [x] Features
- [x] getOptions() sets the helper's callbacks
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
@@ -2666,9 +2659,6 @@ s9e\TextFormatter\Tests\Bundle
  [x] unparse() executes static::$afterUnparse after calling the parser's unparse() method
  [x] reset() removes the cached parser and renderer
 
-s9e\TextFormatter\Tests\Bundles\F5
- [x] Rendering tests
-
 s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests
 
@@ -2677,30 +2667,4 @@ s9e\TextFormatter\Tests\Bundles\Forum
 
 s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] Rendering tests
-
-s9e\TextFormatter\Tests\Bundles\S18
- [x] Rendering tests
-
-s9e\TextFormatter\Tests\Bundles\S18\Helper
- [x] configureParser() has no effect if SMF is not loaded
- [x] configureRenderer() has no effect if SMF is not loaded
- [x] applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
- [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
- [x] applyTimeformat() uses timeformat() if it exists
- [x] configureParser() disables the Autoemail and Autolink plugins if $modSettings['autoLinkUrls'] is falsy
- [x] configureParser() disables the BBCodes plugin if $modSettings['enableBBC'] is falsy
- [x] configureParser() disables the HTMLElements plugin if $modSettings['enablePostHTML'] is falsy
- [x] configureParser() disables the BBCodes found in $modSettings['disabledBBC']
- [x] configureParser() disables the FLASH tag if $modSettings['enableEmbeddedFlash'] is falsy
- [x] configureRenderer() set lang strings and parameters if SMF is loaded
- [x] prependFtp() returns ftp:// URLs as-is
- [x] prependFtp() returns ftps:// URLs as-is
- [x] prependFtp() prepends ftp:// to non-ftp, non-ftps URLs
- [x] prependHttp() returns http:// URLs as-is
- [x] prependHttp() returns https:// URLs as-is
- [x] prependHttp() prepends http:// to non-http, non-https URLs
- [x] filterIurl() returns URL fragments as-is
- [x] filterIurl() returns valid http:// URLs as-is
- [x] filterIurl() returns valid https:// URLs as-is
- [x] filterIurl() prepends http:// to non-http, non-https URLs
 

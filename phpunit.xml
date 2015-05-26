@@ -160,11 +160,9 @@
 			<file>tests/Configurator/JavaScriptTest.php</file>
 			<file>tests/Configurator/BundleTest.php</file>
 			<file>tests/Configurator/BundleGeneratorTest.php</file>
-			<file>tests/Configurator/Bundles/F5Test.php</file>
 			<file>tests/Configurator/Bundles/FatdownTest.php</file>
 			<file>tests/Configurator/Bundles/ForumTest.php</file>
 			<file>tests/Configurator/Bundles/MediaPackTest.php</file>
-			<file>tests/Configurator/Bundles/S18Test.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
 			<file>tests/Parser/TagTest.php</file>
@@ -245,12 +243,9 @@
 			<file>tests/UtilsTest.php</file>
 
 			<file>tests/BundleTest.php</file>
-			<file>tests/Bundles/F5Test.php</file>
 			<file>tests/Bundles/FatdownTest.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
 			<file>tests/Bundles/MediaPackTest.php</file>
-			<file>tests/Bundles/S18Test.php</file>
-			<file>tests/Bundles/S18/HelperTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -258,11 +253,7 @@
 		<whitelist>
 			<directory suffix=".php">src</directory>
 			<exclude>
-				<file>src/Bundles/F5/Renderer.php</file>
-				<file>src/Bundles/Fatdown/Renderer.php</file>
-				<file>src/Bundles/Forum/Renderer.php</file>
-				<file>src/Bundles/MediaPack/Renderer.php</file>
-				<file>src/Bundles/S18/Renderer.php</file>
+				<file>src/Bundles/*/Renderer.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
