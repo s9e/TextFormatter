@@ -201,7 +201,7 @@ class Parser extends ParserBase
 		$this->bbcodeSuffix = '';
 		if ($this->text[$this->pos] === ':')
 		{
-			$spn      = 1 + \strspn($this->text, '0123456789', 1 + $this->pos);
+			$spn = 1 + \strspn($this->text, '0123456789', 1 + $this->pos);
 			$this->bbcodeSuffix = \substr($this->text, $this->pos, $spn);
 
 			$this->pos += $spn;
