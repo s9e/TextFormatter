@@ -50,10 +50,10 @@
 			<!--
 				if (typeof hljs !== 'undefined')
 				{
-					var x = this.innerHTML;
+					var x = innerHTML;
 					if (x in hljs['_'])
 					{
-						this.innerHTML = hljs['_'][x];
+						innerHTML = hljs['_'][x];
 					}
 					else
 					{
@@ -61,12 +61,12 @@
 						{
 							hljs['_'] = {}
 						}
-						hljs['highlightBlock'](this.firstChild);
-						hljs['_'][x] = this.innerHTML;
+						hljs['highlightBlock'](firstChild);
+						hljs['_'][x] = innerHTML;
 					}
 				}
 			-->
-			<pre data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs){{var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={{}}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}};"><code class="{@lang}">
+			<pre data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs){{var a=innerHTML;a in hljs._?innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={{}}),hljs.highlightBlock(firstChild),hljs._[a]=innerHTML)}};"><code class="{@lang}">
 				<xsl:apply-templates />
 			</code></pre>
 			<!-- Include the necessary JavaScript/CSS if it's the last CODE tag -->
@@ -348,7 +348,23 @@
 		<template><![CDATA[
 			<div class="spoiler">
 				<div class="spoiler-header">
-					<button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;''!=c.display?(c.display=h.display='',s.display='none'):(c.display=h.display='none',s.display='')"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
+					<!--
+						var nextSiblingStyle = parentNode.nextSibling.style,
+							firstChildStyle  = firstChild.style,
+							lastChildStyle   = lastChild.style;
+
+						if (nextSiblingStyle.display !== '')
+						{
+							nextSiblingStyle.display = lastChildStyle.display = '';
+							firstChildStyle.display  = 'none';
+						}
+						else
+						{
+							nextSiblingStyle.display = lastChildStyle.display = 'none';
+							firstChildStyle.display  = '';
+						}
+					-->
+					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
 					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
 				</div>
 				<div class="spoiler-content" style="display:none">{TEXT2}</div>

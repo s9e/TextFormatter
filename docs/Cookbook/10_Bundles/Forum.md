@@ -12,7 +12,7 @@ $html = TextFormatter::render($xml);
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;''!=c.display?(c.display=h.display='',s.display='none'):(c.display=h.display='none',s.display='')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
 ```
 
 ### Plugins
@@ -75,5 +75,5 @@ $html = TextFormatter::render($xml, [
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img src="/path/to/emoticons/smile.png" alt=":)"> <div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;''!=c.display?(c.display=h.display='',s.display='none'):(c.display=h.display='none',s.display='')"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img src="/path/to/emoticons/smile.png" alt=":)"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
 ```
