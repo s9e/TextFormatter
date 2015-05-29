@@ -78,6 +78,8 @@ class Tag
 			{
 				$this->endTag  = $tag;
 				$tag->startTag = $this;
+
+				$this->cascadeInvalidationTo($tag);
 			}
 			elseif ($this->type === self::END_TAG
 			     && $tag->type  === self::START_TAG
