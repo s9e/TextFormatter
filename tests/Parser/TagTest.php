@@ -342,6 +342,18 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox Invalidating a start tag automatically cascades to its paired tag
+	*/
+	public function testInvalidateCascadesOnPaired()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG, 'X', 1, 0);
+		$startTag->pairWith($endTag);
+		$startTag->invalidate();
+		$this->assertTrue($endTag->isInvalid());
+	}
+
+	/**
 	* @testdox $tag1->pairWith($tag2) does not do anything if the tags have different names
 	*/
 	public function testPairWithDifferentNames()

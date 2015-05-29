@@ -148,6 +148,8 @@ Tag.prototype.pairWith = function(tag)
 		{
 			this.endTag  = tag;
 			tag.startTag = this;
+
+			this.cascadeInvalidationTo(tag);
 		}
 		else if (this.type === Tag.END_TAG
 		      && tag.type  === Tag.START_TAG
