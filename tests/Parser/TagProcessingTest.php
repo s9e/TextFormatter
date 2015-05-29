@@ -982,6 +982,39 @@ class TagProcessingTest extends Test
 				]
 			],
 			[
+				'XX',
+				'<r><X><s>X</s><e>X</e></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->denyChild('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 0);
+					$parser->addEndTag('X', 1, 1);
+				},
+				[
+					[
+						'debug',
+						'Tag is not allowed in this context',
+						[
+							'tagName' => 'Y',
+							'tag'     => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'Y', 1, 0);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
+						]
+					]
+				]
+			],
+			[
 				'X',
 				'<t>X</t>',
 				function ($configurator)
