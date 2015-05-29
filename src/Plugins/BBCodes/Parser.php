@@ -342,7 +342,7 @@ class Parser extends ParserBase
 		if ($this->text[$this->pos] === ':')
 		{
 			// Capture the colon and the (0 or more) digits following it
-			$spn      = 1 + strspn($this->text, '0123456789', 1 + $this->pos);
+			$spn = 1 + strspn($this->text, '0123456789', 1 + $this->pos);
 			$this->bbcodeSuffix = substr($this->text, $this->pos, $spn);
 
 			// Move past the suffix
