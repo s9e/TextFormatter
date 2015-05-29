@@ -26,6 +26,7 @@ class Forum extends Bundle
 		$configurator->BBCodes->addFromRepository('EMAIL');
 		$configurator->BBCodes->addFromRepository('FONT');
 		$configurator->BBCodes->addFromRepository('I');
+		$configurator->BBCodes->addFromRepository('IMG');
 		$configurator->BBCodes->addFromRepository('LIST');
 		$configurator->BBCodes->addFromRepository('*');
 		$configurator->BBCodes->add('LI');
@@ -89,6 +90,7 @@ class Forum extends Bundle
 		$configurator->MediaEmbed->add('liveleak');
 		$configurator->MediaEmbed->add('soundcloud');
 		$configurator->MediaEmbed->add('twitch');
+		$configurator->MediaEmbed->add('twitter');
 		$configurator->MediaEmbed->add('vimeo');
 		$configurator->MediaEmbed->add('vine');
 		$configurator->MediaEmbed->add('wshh');

@@ -25,8 +25,8 @@ echo $html;
 
 ### BBCodes
 
-BBCodes enabled: b, center, code, color, email, i, list, li, *, media, quote, s, size, spoiler, u, url.
-Media BBCodes: Bandcamp, Dailymotion, Facebook, Grooveshark, Indiegogo, Instagram, Kickstarter, Liveleak, Soundcloud, Twitch, Vimeo, Vine, WSHH, YouTube.
+BBCodes enabled: b, center, code, color, email, i, img, list, li, *, media, quote, s, size, spoiler, u, url.
+Media BBCodes: Bandcamp, Dailymotion, Facebook, Indiegogo, Instagram, Kickstarter, Liveleak, Soundcloud, Twitch, Twitter, Vimeo, Vine, WSHH, YouTube.
 
 ### Emoticons
 
@@ -59,7 +59,7 @@ Media BBCodes: Bandcamp, Dailymotion, Facebook, Grooveshark, Indiegogo, Instagra
 ```php
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
-$text = '[quote="John Doe"]Star Wars spoiler :) [spoiler]Snapes kills Dumbledore[/spoiler][/quote]';
+$text = '[quote="John Doe"]Star Wars spoiler :) [spoiler]Spocks kills Dumbledore[/spoiler][/quote]';
 $xml  = TextFormatter::parse($text);
 $html = TextFormatter::render($xml, [
 	// Path to the emoticons
@@ -75,5 +75,5 @@ $html = TextFormatter::render($xml, [
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img src="/path/to/emoticons/smile.png" alt=":)"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img src="/path/to/emoticons/smile.png" alt=":)"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
 ```
