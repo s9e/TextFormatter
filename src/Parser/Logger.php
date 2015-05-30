@@ -14,8 +14,6 @@ class Logger
 {
 	protected $attrName;
 
-	protected $callbacks = array();
-
 	protected $logs = array();
 
 	protected $tag;
@@ -27,10 +25,6 @@ class Logger
 
 		if (!isset($context['tag']) && isset($this->tag))
 			$context['tag'] = $this->tag;
-
-		if (isset($this->callbacks[$type]))
-			foreach ($this->callbacks[$type] as $callback)
-				\call_user_func_array($callback, array(&$msg, &$context));
 
 		$this->logs[] = array($type, $msg, $context);
 	}
@@ -45,14 +39,6 @@ class Logger
 	public function get()
 	{
 		return $this->logs;
-	}
-
-	public function on($type, $callback)
-	{
-		if (!\is_callable($callback))
-			throw new InvalidArgumentException('on() expects a valid callback');
-
-		$this->callbacks[$type][] = $callback;
 	}
 
 	public function setAttribute($attrName)
