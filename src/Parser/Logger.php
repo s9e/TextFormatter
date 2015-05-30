@@ -18,11 +18,6 @@ class Logger
 	protected $attrName;
 
 	/**
-	* @var array 2D array of [<log type> => [<callbacks>]]
-	*/
-	protected $callbacks = [];
-
-	/**
 	* @var array Log entries in the form [[<type>,<msg>,<context>]]
 	*/
 	protected $logs = [];
@@ -52,15 +47,6 @@ class Logger
 			$context['tag'] = $this->tag;
 		}
 
-		// Execute callbacks
-		if (isset($this->callbacks[$type]))
-		{
-			foreach ($this->callbacks[$type] as $callback)
-			{
-				$callback($msg, $context);
-			}
-		}
-
 		$this->logs[] = [$type, $msg, $context];
 	}
 
@@ -84,23 +70,6 @@ class Logger
 	public function get()
 	{
 		return $this->logs;
-	}
-
-	/**
-	* Attach a callback to be executed when a message of given type is logged
-	*
-	* @param  string   $type     Log type
-	* @param  callback $callback Callback
-	* @return void
-	*/
-	public function on($type, $callback)
-	{
-		if (!is_callable($callback))
-		{
-			throw new InvalidArgumentException('on() expects a valid callback');
-		}
-
-		$this->callbacks[$type][] = $callback;
 	}
 
 	/**
