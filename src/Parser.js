@@ -1515,13 +1515,16 @@ function processStartTag(tag)
 
 	if (!tagIsAllowed(tagName))
 	{
-		logger.warn(
-			'Tag is not allowed in this context',
-			{
-				'tag'     : tag,
-				'tagName' : tagName
-			}
-		);
+		var msg     = 'Tag is not allowed in this context',
+			context = {'tag': tag, 'tagName': tagName};
+		if (tag.getLen() > 0)
+		{
+			logger.warn(msg, context);
+		}
+		else
+		{
+			logger.debug(msg, context);
+		}
 		tag.invalidate();
 
 		return;
