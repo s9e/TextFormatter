@@ -966,13 +966,12 @@ class Parser
 
 		if (!$this->tagIsAllowed($tagName))
 		{
-			$this->logger->warn(
-				'Tag is not allowed in this context',
-				[
-					'tag'     => $tag,
-					'tagName' => $tagName
-				]
-			);
+			$msg     = 'Tag is not allowed in this context';
+			$context = ['tag' => $tag, 'tagName' => $tagName];
+			if ($tag->getLen() > 0)
+				$this->logger->warn($msg, $context);
+			else
+				$this->logger->debug($msg, $context);
 			$tag->invalidate();
 
 			return;
