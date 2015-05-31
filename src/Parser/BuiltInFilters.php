@@ -540,8 +540,9 @@ class BuiltInFilters
 			/**
 			* Test whether the host is valid
 			* @link http://tools.ietf.org/html/rfc1035#section-2.3.1
+			* @link http://tools.ietf.org/html/rfc1123#section-2
 			*/
-			$regexp = '/^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i';
+			$regexp = '/^(?!-)[-a-z0-9]{0,62}[a-z0-9](?:\\.(?!-)[-a-z0-9]{0,62}[a-z0-9])*$/i';
 			if (!preg_match($regexp, $p['host']))
 			{
 				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
