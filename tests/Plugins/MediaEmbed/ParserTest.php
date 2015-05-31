@@ -1687,7 +1687,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://8tracks.com/midna/2242699',
-				'<r><EIGHTTRACKS id="2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
+				'<r><EIGHTTRACKS id="2242699" url="http://8tracks.com/midna/2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
 				[],
 				function ($configurator)
 				{
