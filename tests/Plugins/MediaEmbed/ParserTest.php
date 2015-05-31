@@ -368,7 +368,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://8tracks.com/lovinq/headphones-in-world-out',
-				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
+				'<r><EIGHTTRACKS id="4982023" url="http://8tracks.com/lovinq/headphones-in-world-out">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
 				[],
 				function ($configurator)
 				{
