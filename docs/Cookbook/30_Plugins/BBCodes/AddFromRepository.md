@@ -83,10 +83,10 @@ __CODE__
 <!--
 	if (typeof hljs !== 'undefined')
 	{
-		var x = innerHTML;
-		if (x in hljs['_'])
+		var html = this.innerHTML;
+		if (html in hljs['_'])
 		{
-			innerHTML = hljs['_'][x];
+			this.innerHTML = hljs['_'][html];
 		}
 		else
 		{
@@ -94,43 +94,42 @@ __CODE__
 			{
 				hljs['_'] = {}
 			}
-			hljs['highlightBlock'](firstChild);
-			hljs['_'][x] = innerHTML;
+			hljs['highlightBlock'](this.firstChild);
+			hljs['_'][html] = this.innerHTML;
 		}
 	}
 -->
-<pre data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs){{var a=innerHTML;a in hljs._?innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={{}}),hljs.highlightBlock(firstChild),hljs._[a]=innerHTML)}};"><code class="{@lang}">
+<pre data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs){{var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={{}}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}}"><code class="{@lang}">
 	<xsl:apply-templates />
 </code></pre>
-<!-- Include the necessary JavaScript/CSS if it's the last CODE tag -->
-<xsl:if test="not(following::CODE)">
-	<!--
-		if (typeof hljs === 'undefined')
+<!--
+	if (typeof hljs === 'undefined')
+	{
+		var head = document.getElementsByTagName('head')[0],
+			el   = document.createElement('link'),
+			stylesheetUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css',
+			scriptUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js';
+
+		el.type = 'text/css';
+		el.rel  = 'stylesheet';
+		el.href = stylesheetUrl;
+
+		head.appendChild(el);
+
+		el        = document.createElement('script');
+		el.type   = 'text/javascript';
+		el.onload = function()
 		{
-			var head = document.getElementsByTagName('head')[0],
-				el   = document.createElement('link');
+			hljs['_'] = {};
+			hljs['initHighlighting']();
+		};
+		el.async = true;
+		el.src   = scriptUrl;
 
-			el.type = 'text/css';
-			el.rel  = 'stylesheet';
-			el.href = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css';
-
-			head.appendChild(el);
-
-			el        = document.createElement('script');
-			el.type   = 'text/javascript';
-			el.onload = function()
-			{
-				hljs['_'] = {};
-				hljs['initHighlighting']();
-			};
-			el.async  = true;
-			el.src    = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js';
-
-			head.appendChild(el);
-		}
-	-->
-	<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/github.min.css";a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js";a.appendChild(b)};</script>
-</xsl:if>
+		head.appendChild(el);
+	}
+-->
+<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js';a.appendChild(b)}</script>
 ```
 <table>
 	<tr>
@@ -140,12 +139,22 @@ __CODE__
 	</tr>
 	<tr>
 		<td><code>stylesheetUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/github.min.css</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td><code>scriptUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><code>stylesheetUrl</code></td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><code>scriptUrl</code></td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js</td>
 		<td></td>
 	</tr>
 </table>
