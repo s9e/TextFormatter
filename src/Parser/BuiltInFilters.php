@@ -294,7 +294,7 @@ class BuiltInFilters
 		}
 		else
 		{
-			$regexp = '/^(?=[a-z])[-a-z0-9]{0,62}[a-z0-9](?:\\.(?=[a-z])[-a-z0-9]{0,62}[a-z0-9])*$/i';
+			$regexp = '/^(?!-)[-a-z0-9]{0,62}[a-z0-9](?:\\.(?!-)[-a-z0-9]{0,62}[a-z0-9])*$/i';
 			if (!\preg_match($regexp, $p['host']))
 				if (!self::filterIpv4($p['host'])
 				 && !self::filterIpv6(\preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
