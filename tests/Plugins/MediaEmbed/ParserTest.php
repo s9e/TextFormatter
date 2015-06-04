@@ -746,6 +746,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://n.pr/1Qky1m5',
+				'<r><NPR i="411271189" m="411271193" url="http://n.pr/1Qky1m5">http://n.pr/1Qky1m5</NPR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('npr');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
