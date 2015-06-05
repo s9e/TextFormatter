@@ -1,6 +1,6 @@
 ## Automatic rules generation
 
-Automatic rules generation is performed by `$configurator->rulesGenerator`, which you can access as an array.
+[Automatic rules generation](https://github.com/s9e/TextFormatter/blob/master/docs/RulesGenerators.md) is performed by `$configurator->rulesGenerator`, which you can access as an array.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
