@@ -2155,6 +2155,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html',
+				'<r><KISSVIDEO id="7789d8de8" url="http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html">http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</KISSVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kissvideo');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<r><LIVELEAK id="3dd_1366238099" url="http://www.liveleak.com/view?i=3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></r>',
 				[],
