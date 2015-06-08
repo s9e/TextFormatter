@@ -1,4 +1,4 @@
-<site name="Twitter (via custom iframe)" homepage="https://twitter.com/" unresponsive="1">
+<site name="Twitter" homepage="https://twitter.com/" unresponsive="1">
 	<example>https://twitter.com/IJasonAlexander/statuses/526635414338023424</example>
 	<example>https://mobile.twitter.com/DerekTVShow/status/463372588690202624</example>
 	<example>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</example>
