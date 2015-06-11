@@ -958,6 +958,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://on.wsj.com/1MJvx06',
+				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6" url="http://on.wsj.com/1MJvx06">http://on.wsj.com/1MJvx06</WSJ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wsj');
+				}
+			],
+			[
 				'http://www17.zippyshare.com/v/EtPLaXGE/file.html',
 				'<r><ZIPPYSHARE file="EtPLaXGE" server="17" url="http://www17.zippyshare.com/v/EtPLaXGE/file.html">http://www17.zippyshare.com/v/EtPLaXGE/file.html</ZIPPYSHARE></r>',
 				[],
@@ -2810,6 +2820,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html',
+				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6" url="http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html">http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html</WSJ></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wsj');
+				}
+			],
+			[
 				'https://screen.yahoo.com/mr-short-term-memory-000000263.html',
 				'<r><YAHOOSCREEN id="mr-short-term-memory-000000263" url="https://screen.yahoo.com/mr-short-term-memory-000000263.html">https://screen.yahoo.com/mr-short-term-memory-000000263.html</YAHOOSCREEN></r>',
 				[],
@@ -3513,15 +3532,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vine');
-				}
-			],
-			[
-				'http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2',
-				'<iframe width="512" height="288" src="http://live.wsj.com/public/page/embed-09FB2B3B_583E_4284_99D8_FEF6C23BE4E2.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('wsj');
 				}
 			],
 			[

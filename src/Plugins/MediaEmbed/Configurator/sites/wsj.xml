@@ -1,12 +1,16 @@
-<site name="The Wall Street Journal Online" homepage="http://live.wsj.com/">
+<site name="The Wall Street Journal Online" homepage="http://www.wsj.com/video/">
+	<example>http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html</example>
 	<example>http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2</example>
 	<example>http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</example>
-	<example>http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</example>
 
 	<tags><tag>news</tag></tags>
 
-	<host>live.wsj.com</host>
-	<extract>@live\.wsj\.com/[^#]*#!(?'id'[-0-9A-F]{36})@</extract>
-	<extract>@live\.wsj\.com/video/[^/]+/(?'id'[-0-9A-F]{36})@</extract>
-	<iframe width="512" height="288" src="http://live.wsj.com/public/page/embed-{translate(@id,'-','_')}.html"/>
+	<host>wsj.com</host>
+	<extract>@wsj\.com/[^#]*#!(?'id'[-0-9A-F]{36})@</extract>
+	<extract>@wsj\.com/video/[^/]+/(?'id'[-0-9A-F]{36})@</extract>
+	<scrape>
+		<match>@on\.wsj\.com/\w@</match>
+		<extract>@guid=(?'id'[-0-9A-F]{36})@</extract>
+	</scrape>
+	<iframe width="512" height="288" src="//video-api.wsj.com/api-video/player/iframe.html?guid={@id}"/>
 </site>
