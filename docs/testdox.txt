@@ -1047,6 +1047,11 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 
+s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
+ [x] get() will return the source from cache if available
+ [x] get() will return the source from the filesystem if applicable
+ [x] get() will throw an exception if the function can't be sourced
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
  [x] Returns a JavaScript literal when cast as a string
  [x] Returns /(?:)/ if the regexp is empty to avoid being parsed as a comment

@@ -207,14 +207,16 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testGetJSAutofills()
 	{
+		$filepath = __DIR__ . '/../../../src/Configurator/JavaScript/functions/strtolower.js';
+		if (!file_exists($filepath))
+		{
+			$this->markTestSkipped();
+		}
 		$pc = new ProgrammableCallback('strtolower');
 		$js = $pc->getJS();
 
 		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Code', $js);
-		$this->assertStringEqualsFile(
-			__DIR__ . '/../../../src/Configurator/JavaScript/functions/strtolower.js',
-			(string) $js
-		);
+		$this->assertStringEqualsFile($filepath, (string) $js);
 	}
 
 	/**
