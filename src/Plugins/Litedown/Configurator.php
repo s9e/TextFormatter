@@ -11,22 +11,22 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	protected $tags = [
+	protected $tags = array(
 		'C'      => '<code><xsl:apply-templates /></code>',
-		'CODE'   => [
-			'attributes' => [
-				'lang' => [
-					'filterChain' => ['#simpletext'],
+		'CODE'   => array(
+			'attributes' => array(
+				'lang' => array(
+					'filterChain' => array('#simpletext'),
 					'required'    => \false
-				]
-			],
+				)
+			),
 			'template' =>
 				'<pre>
 					<code class="{@lang}">
 						<xsl:apply-templates />
 					</code>
 				</pre>'
-		],
+		),
 		'DEL'    => '<del><xsl:apply-templates/></del>',
 		'EM'     => '<em><xsl:apply-templates/></em>',
 		'H1'     => '<h1><xsl:apply-templates/></h1>',
@@ -36,22 +36,22 @@ class Configurator extends ConfiguratorBase
 		'H5'     => '<h5><xsl:apply-templates/></h5>',
 		'H6'     => '<h6><xsl:apply-templates/></h6>',
 		'HR'     => '<hr/>',
-		'IMG'    => [
-			'attributes' => [
-				'alt'   => ['required' => \false],
-				'src'   => ['filterChain' => ['#url']],
-				'title' => ['required' => \false]
-			],
+		'IMG'    => array(
+			'attributes' => array(
+				'alt'   => array('required' => \false),
+				'src'   => array('filterChain' => array('#url')),
+				'title' => array('required' => \false)
+			),
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
-		],
+		),
 		'LI'     => '<li><xsl:apply-templates/></li>',
-		'LIST'   => [
-			'attributes' => [
-				'type' => [
-					'filterChain' => ['#simpletext'],
+		'LIST'   => array(
+			'attributes' => array(
+				'type' => array(
+					'filterChain' => array('#simpletext'),
 					'required'    => \false
-				]
-			],
+				)
+			),
 			'template' =>
 				'<xsl:choose>
 					<xsl:when test="not(@type)">
@@ -61,22 +61,22 @@ class Configurator extends ConfiguratorBase
 						<ol><xsl:apply-templates/></ol>
 					</xsl:otherwise>
 				</xsl:choose>'
-		],
+		),
 		'QUOTE'  => '<blockquote><xsl:apply-templates/></blockquote>',
 		'STRONG' => '<strong><xsl:apply-templates/></strong>',
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
-		'URL'    => [
-			'attributes' => [
-				'title' => [
+		'URL'    => array(
+			'attributes' => array(
+				'title' => array(
 					'required' => \false
-				],
-				'url'   => [
-					'filterChain' => ['#url']
-				]
-			],
+				),
+				'url'   => array(
+					'filterChain' => array('#url')
+				)
+			),
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
-		]
-	];
+		)
+	);
 
 	protected function setUp()
 	{
@@ -88,7 +88,7 @@ class Configurator extends ConfiguratorBase
 				continue;
 
 			if (\is_string($tagConfig))
-				$tagConfig = ['template' => $tagConfig];
+				$tagConfig = array('template' => $tagConfig);
 
 			if (isset($tagConfig['attributes']))
 			{
@@ -109,6 +109,6 @@ class Configurator extends ConfiguratorBase
 
 	public function asConfig()
 	{
-		return [];
+		return array();
 	}
 }

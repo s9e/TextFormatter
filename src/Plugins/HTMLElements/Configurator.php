@@ -20,9 +20,9 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	protected $aliases = [];
+	protected $aliases = array();
 
-	protected $attributeFilters = [
+	protected $attributeFilters = array(
 		'action'     => '#url',
 		'cite'       => '#url',
 		'data'       => '#url',
@@ -33,15 +33,15 @@ class Configurator extends ConfiguratorBase
 		'manifest'   => '#url',
 		'poster'     => '#url',
 		'src'        => '#url'
-	];
+	);
 
-	protected $elements = [];
+	protected $elements = array();
 
 	protected $prefix = 'html';
 
 	protected $quickMatch = '<';
 
-	protected $unsafeElements = [
+	protected $unsafeElements = array(
 		'base',
 		'embed',
 		'frame',
@@ -49,12 +49,12 @@ class Configurator extends ConfiguratorBase
 		'meta',
 		'object',
 		'script'
-	];
+	);
 
-	protected $unsafeAttributes = [
+	protected $unsafeAttributes = array(
 		'style',
 		'target'
-	];
+	);
 
 	public function aliasAttribute($elName, $attrName, $alias)
 	{
@@ -189,11 +189,11 @@ class Configurator extends ConfiguratorBase
 
 		$regexp = '#<(?>' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
-		$config = [
+		$config = array(
 			'quickMatch' => $this->quickMatch,
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
-		];
+		);
 
 		if (!empty($this->aliases))
 		{

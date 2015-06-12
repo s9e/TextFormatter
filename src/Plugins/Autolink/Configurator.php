@@ -37,11 +37,11 @@ class Configurator extends ConfiguratorBase
 		if ($this->matchWww)
 			$anchor = '(?:' . $anchor . '|www\.)';
 
-		$config = [
+		$config = array(
 			'attrName'   => $this->attrName,
 			'regexp'     => '#' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
-		];
+		);
 		if (!$this->matchWww)
 			$config['quickMatch'] = '://';
 

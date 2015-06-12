@@ -46,16 +46,18 @@ abstract class Utils
 		return self::saveXML($dom);
 	}
 
-	public static function replaceAttributes($xml, $tagName, callable $callback)
+	public static function replaceAttributes($xml, $tagName, $callback)
 	{
+		$_self = __CLASS__;
+
 		if (\strpos($xml, '<' . $tagName) === \false)
 			return $xml;
 
 		return \preg_replace_callback(
 			'((<' . \preg_quote($tagName) . ')(?=[ />])[^>]*?(/?>))',
-			function ($m) use ($callback)
+			function ($m) use ($callback, $_self)
 			{
-				return $m[1] . self::serializeAttributes($callback(self::parseAttributes($m[0]))) . $m[2];
+				return $m[1] . $_self::serializeAttributes($callback($_self::parseAttributes($m[0]))) . $m[2];
 			},
 			$xml
 		);
@@ -82,9 +84,9 @@ abstract class Utils
 		return $dom;
 	}
 
-	protected static function parseAttributes($xml)
+	public static function parseAttributes($xml)
 	{
-		$attributes = [];
+		$attributes = array();
 		if (\strpos($xml, '="') !== \false)
 		{
 			\preg_match_all('(([^ =]++)="([^"]*))S', $xml, $matches);
@@ -100,7 +102,7 @@ abstract class Utils
 		return self::encodeUnicodeSupplementaryCharacters($dom->saveXML($dom->documentElement));
 	}
 
-	protected static function serializeAttributes(array $attributes)
+	public static function serializeAttributes(array $attributes)
 	{
 		$xml = '';
 		\ksort($attributes);

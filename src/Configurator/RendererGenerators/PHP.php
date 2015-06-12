@@ -85,18 +85,18 @@ class PHP implements RendererGenerator
 
 		$templates = $rendering->getTemplates();
 
-		$groupedTemplates = [];
+		$groupedTemplates = array();
 		foreach ($templates as $tagName => $template)
 			$groupedTemplates[$template][] = $tagName;
 
 		$hasApplyTemplatesSelect = \false;
 
 		$tagBranch   = 0;
-		$tagBranches = [];
+		$tagBranches = array();
 
-		$compiledTemplates = [];
+		$compiledTemplates = array();
 
-		$branchTables = [];
+		$branchTables = array();
 
 		foreach ($groupedTemplates as $template => $tagNames)
 		{
@@ -124,7 +124,7 @@ class PHP implements RendererGenerator
 		$quickSource = \false;
 		if ($this->enableQuickRenderer)
 		{
-			$quickRender = [];
+			$quickRender = array();
 			foreach ($tagBranches as $tagName => $tagBranch)
 				$quickRender[$tagName] = $compiledTemplates[$tagBranch];
 
@@ -144,7 +144,7 @@ class PHP implements RendererGenerator
 		else
 			$needsXPath = \false;
 
-		$php = [];
+		$php = array();
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
 		$php[] = '{';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
@@ -242,7 +242,7 @@ class PHP implements RendererGenerator
 			$php[] = '		{';
 			$php[] = '			return "\\"$str\\"";';
 			$php[] = '		}';
-			$php[] = '		$toks = [];';
+			$php[] = '		$toks = array();';
 			$php[] = '		$c = \'"\';';
 			$php[] = '		$pos = 0;';
 			$php[] = '		while ($pos < strlen($str))';
@@ -290,10 +290,10 @@ class PHP implements RendererGenerator
 
 	protected static function export(array $value)
 	{
-		$pairs = [];
+		$pairs = array();
 		foreach ($value as $k => $v)
 			$pairs[] = \var_export($k, \true) . '=>' . \var_export($v, \true);
 
-		return '[' . \implode(',', $pairs) . ']';
+		return 'array(' . \implode(',', $pairs) . ')';
 	}
 }

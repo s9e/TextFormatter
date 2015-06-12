@@ -39,10 +39,10 @@ class Configurator extends ConfiguratorBase
 		if (!\count($this->collection))
 			return;
 
-		$config = [
+		$config = array(
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
-		];
+		);
 
 		if (!empty($this->onlyFirst))
 			$config['onlyFirst'] = $this->onlyFirst;
@@ -50,7 +50,7 @@ class Configurator extends ConfiguratorBase
 		$keywords = \array_unique(\iterator_to_array($this->collection));
 		\sort($keywords);
 
-		$groups   = [];
+		$groups   = array();
 		$groupKey = 0;
 		$groupLen = 0;
 		foreach ($keywords as $keyword)
@@ -71,7 +71,7 @@ class Configurator extends ConfiguratorBase
 		{
 			$regexp = RegexpBuilder::fromList(
 				$keywords,
-				['caseInsensitive' => !$this->caseSensitive]
+				array('caseInsensitive' => !$this->caseSensitive)
 			);
 
 			$regexp = '/\\b' . $regexp . '\\b/S';

@@ -13,11 +13,11 @@ class Tag
 
 	const END_TAG = 2;
 
-	const SELF_CLOSING_TAG = self::START_TAG | self::END_TAG;
+	const SELF_CLOSING_TAG = 3;
 
-	protected $attributes = [];
+	protected $attributes = array();
 
-	protected $cascade = [];
+	protected $cascade = array();
 
 	protected $endTag = \null;
 

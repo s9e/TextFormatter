@@ -14,6 +14,6 @@ class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? ['closeParent'] : [];
+		return ($src->isBlock() && $trg->isFormattingElement()) ? array('closeParent') : array();
 	}
 }

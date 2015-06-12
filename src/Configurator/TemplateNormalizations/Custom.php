@@ -14,8 +14,11 @@ class Custom extends TemplateNormalization
 {
 	protected $callback;
 
-	public function __construct(callable $callback)
+	public function __construct($callback)
 	{
+		if (!\is_callable($callback))
+			\trigger_error("Argument 1 passed to " . __METHOD__ . "() must be callable, " . \gettype($callback) . " given", \E_USER_ERROR);
+
 		$this->callback = $callback;
 	}
 

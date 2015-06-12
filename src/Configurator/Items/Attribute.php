@@ -17,7 +17,52 @@ use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
 class Attribute implements ConfigProvider
 {
 	use Configurable;
-	use TemplateSafeness;
+	protected $markedSafe = array();
+
+
+
+	public function isSafeAsURL()
+	{
+		return $this->isSafe('AsURL');
+	}
+
+	public function isSafeInCSS()
+	{
+		return $this->isSafe('InCSS');
+	}
+
+	public function isSafeInJS()
+	{
+		return $this->isSafe('InJS');
+	}
+
+	public function markAsSafeAsURL()
+	{
+		$this->markedSafe['AsURL'] = \true;
+
+		return $this;
+	}
+
+	public function markAsSafeInCSS()
+	{
+		$this->markedSafe['InCSS'] = \true;
+
+		return $this;
+	}
+
+	public function markAsSafeInJS()
+	{
+		$this->markedSafe['InJS'] = \true;
+
+		return $this;
+	}
+
+	public function resetSafeness()
+	{
+		$this->markedSafe = array();
+
+		return $this;
+	}
 
 	protected $defaultValue;
 

@@ -35,7 +35,7 @@ class BranchOutputOptimizer
 
 	protected function captureOutput()
 	{
-		$expressions = [];
+		$expressions = array();
 		while ($this->skipOutputAssignment())
 		{
 			do
@@ -86,7 +86,7 @@ class BranchOutputOptimizer
 
 	protected function isBranchToken()
 	{
-		return \in_array($this->tokens[$this->i][0], [\T_ELSE, \T_ELSEIF, \T_IF], \true);
+		return \in_array($this->tokens[$this->i][0], array(\T_ELSE, \T_ELSEIF, \T_IF), \true);
 	}
 
 	protected function mergeIfBranches(array $branches)
@@ -98,17 +98,17 @@ class BranchOutputOptimizer
 			$after  = $this->optimizeBranchesTail($branches);
 		}
 		else
-			$before = $after = [];
+			$before = $after = array();
 
 		$source = '';
 		foreach ($branches as $branch)
 			$source .= $this->serializeBranch($branch);
 
-		return [
+		return array(
 			'before' => $before,
 			'source' => $source,
 			'after'  => $after
-		];
+		);
 	}
 
 	protected function mergeOutput(array $left, array $right)
@@ -140,7 +140,7 @@ class BranchOutputOptimizer
 				continue;
 
 			$branch['tail'] = \array_reverse($branch['head']);
-			$branch['head'] = [];
+			$branch['head'] = array();
 		}
 		unset($branch);
 
@@ -149,7 +149,7 @@ class BranchOutputOptimizer
 
 	protected function optimizeBranchesOutput(array &$branches, $which)
 	{
-		$expressions = [];
+		$expressions = array();
 		while (isset($branches[0][$which][0]))
 		{
 			$expr = $branches[0][$which][0];
@@ -177,7 +177,7 @@ class BranchOutputOptimizer
 
 		$head = $this->captureOutput();
 		$body = '';
-		$tail = [];
+		$tail = array();
 
 		$braces = 0;
 		do
@@ -187,7 +187,7 @@ class BranchOutputOptimizer
 				break;
 
 			$body .= $this->serializeOutput(\array_reverse($tail));
-			$tail  = [];
+			$tail  = array();
 
 			if ($this->tokens[$this->i][0] === \T_IF)
 			{
@@ -213,17 +213,17 @@ class BranchOutputOptimizer
 		}
 		while (++$this->i < $this->cnt);
 
-		return [
+		return array(
 			'structure' => $structure,
 			'head'      => $head,
 			'body'      => $body,
 			'tail'      => $tail
-		];
+		);
 	}
 
 	protected function parseIfBlock()
 	{
-		$branches = [];
+		$branches = array();
 		do
 		{
 			$branches[] = $this->parseBranch();

@@ -64,7 +64,7 @@ class XPathConvertor
 
 			if (isset($methodName))
 			{
-				$args = [$m[$methodName]];
+				$args = array($m[$methodName]);
 
 				$i = 0;
 				while (isset($m[$methodName . $i]))
@@ -73,7 +73,7 @@ class XPathConvertor
 					++$i;
 				}
 
-				return \call_user_func_array([$this, $methodName], $args);
+				return \call_user_func_array(array($this, $methodName), $args);
 			}
 		}
 
@@ -180,7 +180,7 @@ class XPathConvertor
 			else
 				$php .= 'max(0,' . $this->convertXPath($exprLen) . ')';
 		else
-			$php .= 'null';
+			$php .= 0x7fffffe;
 
 		$php .= ",'utf-8')";
 
@@ -199,17 +199,17 @@ class XPathConvertor
 
 	protected function cmp($expr1, $operator, $expr2)
 	{
-		$operands  = [];
-		$operators = [
+		$operands  = array();
+		$operators = array(
 			'='  => '===',
 			'!=' => '!==',
 			'>'  => '>',
 			'>=' => '>=',
 			'<'  => '<',
 			'<=' => '<='
-		];
+		);
 
-		foreach ([$expr1, $expr2] as $expr)
+		foreach (array($expr1, $expr2) as $expr)
 			if (\is_numeric($expr))
 			{
 				$operators['=']  = '==';
@@ -225,10 +225,10 @@ class XPathConvertor
 
 	protected function bool($expr1, $operator, $expr2)
 	{
-		$operators = [
+		$operators = array(
 			'and' => '&&',
 			'or'  => '||'
-		];
+		);
 
 		return $this->convertCondition($expr1) . $operators[$operator] . $this->convertCondition($expr2);
 	}
@@ -257,12 +257,12 @@ class XPathConvertor
 
 		$php = 'strtr(' . $this->convertXPath($str) . ',';
 
-		if ([1] === \array_unique(\array_map('strlen', $from))
-		 && [1] === \array_unique(\array_map('strlen', $to)))
+		if (array(1) === \array_unique(\array_map('strlen', $from))
+		 && array(1) === \array_unique(\array_map('strlen', $to)))
 			$php .= \var_export(\implode('', $from), \true) . ',' . \var_export(\implode('', $to), \true);
 		else
 		{
-			$php .= '[';
+			$php .= 'array(';
 
 			$cnt = \count($from);
 			for ($i = 0; $i < $cnt; ++$i)
@@ -273,7 +273,7 @@ class XPathConvertor
 				$php .= \var_export($from[$i], \true) . '=>' . \var_export($to[$i], \true);
 			}
 
-			$php .= ']';
+			$php .= ')';
 		}
 
 		$php .= ')';
@@ -322,7 +322,7 @@ class XPathConvertor
 
 	protected function exportXPath($expr)
 	{
-		$phpTokens = [];
+		$phpTokens = array();
 		$pos = 0;
 		$len = \strlen($expr);
 		while ($pos < $len)
@@ -364,24 +364,24 @@ class XPathConvertor
 		if (isset($this->regexp))
 			return;
 
-		$patterns = [
-			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
+		$patterns = array(
+			'attr'      => array('@', '(?<attr0>[-\\w]+)'),
 			'dot'       => '\\.',
 			'name'      => 'name\\(\\)',
 			'lname'     => 'local-name\\(\\)',
-			'param'     => ['\\$', '(?<param0>\\w+)'],
+			'param'     => array('\\$', '(?<param0>\\w+)'),
 			'string'    => '"[^"]*"|\'[^\']*\'',
-			'number'    => ['-?', '\\d++'],
-			'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'],
-			'contains'  => [
+			'number'    => array('-?', '\\d++'),
+			'strlen'    => array('string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'),
+			'contains'  => array(
 				'contains',
 				'\\(',
 				'(?<contains0>(?&value))',
 				',',
 				'(?<contains1>(?&value))',
 				'\\)'
-			],
-			'translate' => [
+			),
+			'translate' => array(
 				'translate',
 				'\\(',
 				'(?<translate0>(?&value))',
@@ -390,8 +390,8 @@ class XPathConvertor
 				',',
 				'(?<translate2>(?&string))',
 				'\\)'
-			],
-			'substr' => [
+			),
+			'substr' => array(
 				'substring',
 				'\\(',
 				'(?<substr0>(?&value))',
@@ -399,37 +399,37 @@ class XPathConvertor
 				'(?<substr1>(?&value))',
 				'(?:, (?<substr2>(?&value)))?',
 				'\\)'
-			],
-			'substringafter' => [
+			),
+			'substringafter' => array(
 				'substring-after',
 				'\\(',
 				'(?<substringafter0>(?&value))',
 				',',
 				'(?<substringafter1>(?&string))',
 				'\\)'
-			],
-			'substringbefore' => [
+			),
+			'substringbefore' => array(
 				'substring-before',
 				'\\(',
 				'(?<substringbefore0>(?&value))',
 				',',
 				'(?<substringbefore1>(?&value))',
 				'\\)'
-			],
-			'startswith' => [
+			),
+			'startswith' => array(
 				'starts-with',
 				'\\(',
 				'(?<startswith0>(?&value))',
 				',',
 				'(?<startswith1>(?&value))',
 				'\\)'
-			],
-			'math' => [
+			),
+			'math' => array(
 				'(?<math0>(?&attr)|(?&number)|(?&param))',
 				'(?<math1>[-+*]|div)',
 				'(?<math2>(?&math)|(?&math0))'
-			],
-			'notcontains' => [
+			),
+			'notcontains' => array(
 				'not',
 				'\\(',
 				'contains',
@@ -439,10 +439,10 @@ class XPathConvertor
 				'(?<notcontains1>(?&value))',
 				'\\)',
 				'\\)'
-			]
-		];
+			)
+		);
 
-		$valueExprs = [];
+		$valueExprs = array();
 		foreach ($patterns as $name => $pattern)
 		{
 			if (\is_array($pattern))
@@ -452,7 +452,7 @@ class XPathConvertor
 				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 		}
 
-		$exprs = ['(?<value>' . \implode('|', $valueExprs) . ')'];
+		$exprs = array('(?<value>' . \implode('|', $valueExprs) . ')');
 		if (\version_compare($this->pcreVersion, '8.13', '>='))
 		{
 			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';

@@ -21,10 +21,10 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
 class Configurator extends ConfiguratorBase
 {
-	public $allowedFilters = [
+	public $allowedFilters = array(
 		'hexdec',
 		'urldecode'
-	];
+	);
 
 	protected $appendTemplate = '';
 
@@ -38,7 +38,7 @@ class Configurator extends ConfiguratorBase
 
 	public $defaultSites;
 
-	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
+	protected $preferredRenderingMethods = array('template', 'iframe', 'flash');
 
 	protected $responsiveEmbeds = \false;
 
@@ -55,13 +55,13 @@ class Configurator extends ConfiguratorBase
 
 		$tag->filterChain->clear();
 		$tag->filterChain
-		    ->append([__NAMESPACE__ . '\\Parser', 'filterTag'])
+		    ->append(array(__NAMESPACE__ . '\\Parser', 'filterTag'))
 		    ->addParameterByName('parser')
 		    ->addParameterByName('mediasites')
 		    ->setJS(\file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 
 		if ($this->createMediaBBCode)
-			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
+			$this->configurator->BBCodes->set('MEDIA', array('contentAttributes' => array('url')));
 
 		if (!isset($this->defaultSites))
 			$this->defaultSites = new CachedSiteDefinitionProvider;
@@ -75,7 +75,7 @@ class Configurator extends ConfiguratorBase
 		$char = "\xEE\x80\x80";
 
 		$hasSchemes = \false;
-		$patterns   = [];
+		$patterns   = array();
 		foreach ($this->collection as $site)
 		{
 			if (isset($site['host']))
@@ -95,20 +95,20 @@ class Configurator extends ConfiguratorBase
 
 		$regexp = RegexpBuilder::fromList(
 			$patterns,
-			[
+			array(
 				'delimiter'    => '#',
-				'specialChars' => [$char => 'https?://(?:[-.\\w]+\\.)?']
-			]
+				'specialChars' => array($char => 'https?://(?:[-.\\w]+\\.)?')
+			)
 		);
 
 		$regexp = \preg_replace('(^\\(\\?:)', '(?>', $regexp);
 
 		$regexp = '#\\b' . $regexp . '[^["\'\\s]+(?!\\S)#S';
 
-		return [
+		return array(
 			'quickMatch' => ($hasSchemes) ? ':' : '://',
 			'regexp'     => $regexp
-		];
+		);
 	}
 
 	public function add($siteId, array $siteConfig = \null)
@@ -125,9 +125,9 @@ class Configurator extends ConfiguratorBase
 		$tag->rules->autoClose();
 		$tag->rules->ignoreTags();
 
-		$attributes = [
-			'url' => ['type' => 'url']
-		];
+		$attributes = array(
+			'url' => array('type' => 'url')
+		);
 
 		if (isset($siteConfig['scrape']))
 			$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
@@ -185,7 +185,7 @@ class Configurator extends ConfiguratorBase
 
 		if (!$hasRequiredAttribute)
 			$tag->filterChain
-				->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
+				->append(array(__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'))
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
 
 		foreach ($this->preferredRenderingMethods as $renderingMethod)
@@ -209,10 +209,10 @@ class Configurator extends ConfiguratorBase
 		if ($this->createIndividualBBCodes)
 			$this->configurator->BBCodes->add(
 				$siteId,
-				[
+				array(
 					'defaultAttribute'  => 'url',
-					'contentAttributes' => ['url']
-				]
+					'contentAttributes' => array('url')
+				)
 			);
 
 		return $tag;
@@ -270,13 +270,13 @@ class Configurator extends ConfiguratorBase
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
 		if (!isset($scrapes[0]))
-			$scrapes = [$scrapes];
+			$scrapes = array($scrapes);
 
-		$attributes   = [];
-		$scrapeConfig = [];
+		$attributes   = array();
+		$scrapeConfig = array();
 		foreach ($scrapes as $scrape)
 		{
-			$attrNames = [];
+			$attrNames = array();
 			foreach ((array) $scrape['extract'] as $extractRegexp)
 			{
 				$attributePreprocessor = new AttributePreprocessor($extractRegexp);
@@ -293,7 +293,7 @@ class Configurator extends ConfiguratorBase
 
 			if (!isset($scrape['match']))
 				$scrape['match'] = '//';
-			$entry = [$scrape['match'], $scrape['extract'], $attrNames];
+			$entry = array($scrape['match'], $scrape['extract'], $attrNames);
 			if (isset($scrape['url']))
 				$entry[] = $scrape['url'];
 
@@ -319,11 +319,11 @@ class Configurator extends ConfiguratorBase
 
 	protected function buildFlash(array $siteConfig)
 	{
-		$attributes = [
+		$attributes = array(
 			'width'  => $siteConfig['flash']['width'],
 			'height' => $siteConfig['flash']['height'],
 			'data'   => $siteConfig['flash']['src']
-		];
+		);
 
 		if (isset($siteConfig['flash']['base']))
 			$attributes['base'] = $siteConfig['flash']['base'];
@@ -340,9 +340,9 @@ class Configurator extends ConfiguratorBase
 		if (isset($siteConfig['flash']['flashvars']))
 		{
 			$template .= '<param name="flashvars">';
-			$template .= $this->generateAttributes([
+			$template .= $this->generateAttributes(array(
 				'value' => $siteConfig['flash']['flashvars']
-			]);
+			));
 			$template .= '</param>';
 		}
 		$template .= '<embed type="application/x-shockwave-flash">';
@@ -365,11 +365,11 @@ class Configurator extends ConfiguratorBase
 	{
 		$attributes = $siteConfig['iframe'];
 
-		$attributes += [
+		$attributes += array(
 			'allowfullscreen' => '',
 			'frameborder'     => '0',
 			'scrolling'       => 'no'
-		];
+		);
 
 		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
 		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
@@ -402,11 +402,14 @@ class Configurator extends ConfiguratorBase
 			{
 				$tokens   = AVTHelper::parse($innerXML);
 				$innerXML = '';
-				foreach ($tokens as list($type, $content))
+				foreach ($tokens as $_bada9f30)
+				{
+					list($type, $content) = $_bada9f30;
 					if ($type === 'literal')
 						$innerXML .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
 					else
 						$innerXML .= '<xsl:value-of select="' . \htmlspecialchars($content, \ENT_QUOTES, 'UTF-8') . '"/>';
+				}
 			}
 
 			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, \ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';

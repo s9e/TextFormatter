@@ -13,8 +13,9 @@ class Parser extends ParserBase
 {
 	public function parse($text, array $matches)
 	{
-		foreach ($this->config['generics'] as list($tagName, $regexp, $passthroughIdx))
+		foreach ($this->config['generics'] as $_ca164be8)
 		{
+			list($tagName, $regexp, $passthroughIdx) = $_ca164be8;
 			\preg_match_all($regexp, $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
 
 			foreach ($matches as $m)

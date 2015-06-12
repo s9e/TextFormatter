@@ -73,11 +73,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
-		$config = [
+		$config = array(
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $regexp,
 			'tagName'    => $this->tagName
-		];
+		);
 
 		if ($this->notAfter !== '')
 		{

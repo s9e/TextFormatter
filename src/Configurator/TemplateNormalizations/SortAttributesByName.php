@@ -19,7 +19,7 @@ class SortAttributesByName extends TemplateNormalization
 			if (!$element->attributes->length)
 				continue;
 
-			$attributes = [];
+			$attributes = array();
 			foreach ($element->attributes as $name => $attribute)
 				$attributes[$name] = $element->removeAttributeNode($attribute);
 

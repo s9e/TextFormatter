@@ -14,7 +14,7 @@ class Logger
 {
 	protected $attrName;
 
-	protected $logs = [];
+	protected $logs = array();
 
 	protected $tag;
 
@@ -26,12 +26,12 @@ class Logger
 		if (!isset($context['tag']) && isset($this->tag))
 			$context['tag'] = $this->tag;
 
-		$this->logs[] = [$type, $msg, $context];
+		$this->logs[] = array($type, $msg, $context);
 	}
 
 	public function clear()
 	{
-		$this->logs = [];
+		$this->logs = array();
 		$this->unsetAttribute();
 		$this->unsetTag();
 	}
@@ -61,22 +61,22 @@ class Logger
 		unset($this->tag);
 	}
 
-	public function debug($msg, array $context = [])
+	public function debug($msg, array $context = array())
 	{
 		$this->add('debug', $msg, $context);
 	}
 
-	public function err($msg, array $context = [])
+	public function err($msg, array $context = array())
 	{
 		$this->add('err', $msg, $context);
 	}
 
-	public function info($msg, array $context = [])
+	public function info($msg, array $context = array())
 	{
 		$this->add('info', $msg, $context);
 	}
 
-	public function warn($msg, array $context = [])
+	public function warn($msg, array $context = array())
 	{
 		$this->add('warn', $msg, $context);
 	}

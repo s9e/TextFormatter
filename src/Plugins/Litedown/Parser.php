@@ -50,32 +50,33 @@ class Parser extends ParserBase
 		$str = \stripslashes(\str_replace("\x1A", '', $str));
 
 		if ($this->hasEscapedChars)
-			$str = \strtr($str, ["\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')', "\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\', "\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_', "\x1B9" => '`', "\x1BA" => '~']);
+			$str = \strtr($str, array("\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')', "\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\', "\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_', "\x1B9" => '`', "\x1BA" => '~'));
 
 		return $str;
 	}
 
 	protected function getSetextLines()
 	{
-		$setextLines = [];
+		$setextLines = array();
 
 		if (\strpos($this->text, '-') === \false && \strpos($this->text, '=') === \false)
 			return $setextLines;
 
 		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
 		if (\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE))
-			foreach ($matches[0] as list($match, $matchPos))
+			foreach ($matches[0] as $_f570d26d)
 			{
+				list($match, $matchPos) = $_f570d26d;
 				$endTagPos = $matchPos - 1;
 				while ($endTagPos > 0 && $this->text[$endTagPos - 1] === ' ')
 					--$endTagPos;
 
-				$setextLines[$matchPos - 1] = [
+				$setextLines[$matchPos - 1] = array(
 					'endTagLen'  => $matchPos + \strlen($match) - $endTagPos,
 					'endTagPos'  => $endTagPos,
 					'quoteDepth' => \substr_count($match, '>'),
 					'tagName'    => ($match[0] === '=') ? 'H1' : 'H2'
-				];
+				);
 			}
 
 		return $setextLines;
@@ -89,7 +90,7 @@ class Parser extends ParserBase
 		{
 			$this->hasEscapedChars = \true;
 
-			$text = \strtr($text, ['\\!' => "\x1B0", '\\"' => "\x1B1", '\\)' => "\x1B2", '\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5", '\\]' => "\x1B6", '\\^' => "\x1B7", '\\_' => "\x1B8", '\\`' => "\x1B9", '\\~' => "\x1BA"]);
+			$text = \strtr($text, array('\\!' => "\x1B0", '\\"' => "\x1B1", '\\)' => "\x1B2", '\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5", '\\]' => "\x1B6", '\\^' => "\x1B7", '\\_' => "\x1B8", '\\`' => "\x1B9", '\\~' => "\x1BA"));
 		}
 
 		$text .= "\n\n\x17";
@@ -99,14 +100,14 @@ class Parser extends ParserBase
 
 	protected function matchBlockLevelMarkup()
 	{
-		$boundaries   = [];
+		$boundaries   = array();
 		$codeIndent   = 4;
 		$codeTag      = \null;
 		$lineIsEmpty  = \true;
-		$lists        = [];
+		$lists        = array();
 		$listsCnt     = 0;
 		$newContext   = \false;
-		$quotes       = [];
+		$quotes       = array();
 		$quotesCnt    = 0;
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
@@ -197,7 +198,7 @@ class Parser extends ParserBase
 
 				foreach ($lists as $list)
 					$this->closeList($list, $textBoundary);
-				$lists    = [];
+				$lists    = array();
 				$listsCnt = 0;
 
 				if ($matchPos)
@@ -213,7 +214,7 @@ class Parser extends ParserBase
 					if (!isset($codeTag))
 						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
 
-					$m = [];
+					$m = array();
 				}
 			}
 			else
@@ -284,14 +285,14 @@ class Parser extends ParserBase
 						if (\strpos($m[4][0], '.') !== \false)
 							$listTag->setAttribute('type', 'decimal');
 
-						$lists[] = [
+						$lists[] = array(
 							'listTag'   => $listTag,
 							'itemTag'   => $itemTag,
-							'itemTags'  => [$itemTag],
+							'itemTags'  => array($itemTag),
 							'minIndent' => $minIndent,
 							'maxIndent' => $maxIndent,
 							'tight'     => \true
-						];
+						);
 					}
 				}
 
@@ -384,8 +385,9 @@ class Parser extends ParserBase
 		$breakPos = \strpos($this->text, "\x17", $pos);
 
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
-		foreach ($matches[0] as list($match, $matchPos))
+		foreach ($matches[0] as $_4b034d25)
 		{
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen = \strlen($match);
 
 			if ($matchPos > $breakPos)
@@ -610,8 +612,9 @@ class Parser extends ParserBase
 			$pos
 		);
 
-		foreach ($matches[0] as list($match, $matchPos))
+		foreach ($matches[0] as $_4b034d25)
 		{
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen = \strlen($match);
 
 			$this->parser->addTagPair('DEL', $matchPos, 2, $matchPos + $matchLen - 2, 2);
@@ -632,8 +635,9 @@ class Parser extends ParserBase
 			$pos
 		);
 
-		foreach ($matches[0] as list($match, $matchPos))
+		foreach ($matches[0] as $_4b034d25)
 		{
+			list($match, $matchPos) = $_4b034d25;
 			$matchLen    = \strlen($match);
 			$startTagPos = $matchPos;
 			$endTagPos   = $matchPos + $matchLen;

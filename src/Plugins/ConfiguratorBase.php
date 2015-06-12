@@ -23,7 +23,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 
 	protected $regexpLimit = 10000;
 
-	final public function __construct(Configurator $configurator, array $overrideProps = [])
+	final public function __construct(Configurator $configurator, array $overrideProps = array())
 	{
 		$this->configurator = $configurator;
 
@@ -60,11 +60,11 @@ abstract class ConfiguratorBase implements ConfigProvider
 
 	final public function getBaseProperties()
 	{
-		return [
+		return array(
 			'className'   => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
 			'quickMatch'  => $this->quickMatch,
 			'regexpLimit' => $this->regexpLimit
-		];
+		);
 	}
 
 	public function getJSParser()

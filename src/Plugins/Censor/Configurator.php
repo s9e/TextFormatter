@@ -23,7 +23,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 {
 	use CollectionProxy;
 
-	protected $allowed = [];
+	protected $allowed = array();
 
 	protected $attrName = 'with';
 
@@ -31,14 +31,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 	protected $defaultReplacement = '****';
 
-	protected $regexpOptions = [
+	protected $regexpOptions = array(
 		'caseInsensitive' => \true,
-		'specialChars'    => [
+		'specialChars'    => array(
 			'*' => '[\\pL\\pN]*',
 			'?' => '.',
 			' ' => '\\s*'
-		]
-	];
+		)
+	);
 
 	protected $tagName = 'CENSOR';
 
@@ -76,11 +76,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (isset($config))
 			ConfigHelper::filterVariants($config);
 		else
-			$config = [
+			$config = array(
 				'attrName' => $this->attrName,
 				'regexp'   => '/(?!)/',
 				'tagName'  => $this->tagName
-			];
+			);
 
 		return new Helper($config);
 	}
@@ -92,13 +92,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (empty($words))
 			return;
 
-		$config = [
+		$config = array(
 			'attrName' => $this->attrName,
 			'regexp'   => $this->getWordsRegexp(\array_keys($words)),
 			'tagName'  => $this->tagName
-		];
+		);
 
-		$replacementWords = [];
+		$replacementWords = array();
 		foreach ($words as $word => $replacement)
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 				$replacementWords[$replacement][] = $word;
@@ -112,7 +112,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 			$variant->set('JS', RegexpConvertor::toJS($regexp));
 
-			$config['replacements'][] = [$variant, $replacement];
+			$config['replacements'][] = array($variant, $replacement);
 		}
 
 		if (!empty($this->allowed))

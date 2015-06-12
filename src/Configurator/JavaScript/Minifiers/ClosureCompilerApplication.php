@@ -32,12 +32,12 @@ class ClosureCompilerApplication extends Minifier
 
 	public function getCacheDifferentiator()
 	{
-		$key = [
+		$key = array(
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
 			$this->options,
 			\crc32(\file_get_contents($this->closureCompilerBin))
-		];
+		);
 
 		if ($this->excludeDefaultExterns)
 			$key[] = \file_get_contents(__DIR__ . '/../externs.js');

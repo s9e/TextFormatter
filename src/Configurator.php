@@ -7,23 +7,89 @@
 */
 namespace s9e\TextFormatter;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
 use s9e\TextFormatter\Configurator\Rendering;
 use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
 use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Configurator implements ConfigProvider
 {
@@ -54,7 +120,7 @@ class Configurator implements ConfigProvider
 		$this->attributeFilters   = new AttributeFilterCollection;
 		$this->bundleGenerator    = new BundleGenerator($this);
 		$this->plugins            = new PluginCollection($this);
-		$this->registeredVars     = ['urlConfig' => new UrlConfig];
+		$this->registeredVars     = array('urlConfig' => new UrlConfig);
 		$this->rendering          = new Rendering($this);
 		$this->rootRules          = new Ruleset;
 		$this->rulesGenerator     = new RulesGenerator;
@@ -106,17 +172,17 @@ class Configurator implements ConfigProvider
 			$this->javascript = new JavaScript($this);
 	}
 
-	public function finalize(array $options = [])
+	public function finalize(array $options = array())
 	{
-		$return = [];
+		$return = array();
 
-		$options += [
+		$options += array(
 			'addHTML5Rules'  => \true,
 			'optimizeConfig' => \true,
 			'returnJS'       => isset($this->javascript),
 			'returnParser'   => \true,
 			'returnRenderer' => \true
-		];
+		);
 
 		if ($options['addHTML5Rules'])
 			$this->addHTML5Rules($options);
@@ -126,7 +192,7 @@ class Configurator implements ConfigProvider
 			$renderer = $this->getRenderer();
 
 			if (isset($options['finalizeRenderer']))
-				$options['finalizeRenderer']($renderer);
+				\call_user_func($options['finalizeRenderer'], $renderer);
 
 			$return['renderer'] = $renderer;
 		}
@@ -153,7 +219,7 @@ class Configurator implements ConfigProvider
 				$parser = new Parser($config);
 
 				if (isset($options['finalizeParser']))
-					$options['finalizeParser']($parser);
+					\call_user_func($options['finalizeParser'], $parser);
 
 				$return['parser'] = $parser;
 			}
@@ -187,16 +253,16 @@ class Configurator implements ConfigProvider
 		$bundle->configure($this);
 	}
 
-	public function saveBundle($className, $filepath, array $options = [])
+	public function saveBundle($className, $filepath, array $options = array())
 	{
 		$file = "<?php\n\n" . $this->bundleGenerator->generate($className, $options);
 
 		return (\file_put_contents($filepath, $file) !== \false);
 	}
 
-	public function addHTML5Rules(array $options = [])
+	public function addHTML5Rules(array $options = array())
 	{
-		$options += ['rootRules' => $this->rootRules];
+		$options += array('rootRules' => $this->rootRules);
 
 		$this->plugins->finalize();
 
@@ -234,10 +300,10 @@ class Configurator implements ConfigProvider
 
 		$config['registeredVars'] = ConfigHelper::toArray($this->registeredVars, \true);
 
-		$config += [
-			'plugins'        => [],
-			'tags'           => []
-		];
+		$config += array(
+			'plugins'        => array(),
+			'tags'           => array()
+		);
 
 		$config['tags'] = \array_intersect_key($config['tags'], $bitfields['tags']);
 
@@ -257,8 +323,89 @@ class Configurator implements ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class BundleGenerator
 {
@@ -273,9 +420,9 @@ class BundleGenerator
 		$this->configurator = $configurator;
 	}
 
-	public function generate($className, array $options = [])
+	public function generate($className, array $options = array())
 	{
-		$options += ['autoInclude' => \true];
+		$options += array('autoInclude' => \true);
 
 		$objects  = $this->configurator->finalize($options);
 		$parser   = $objects['parser'];
@@ -288,7 +435,7 @@ class BundleGenerator
 			$className = $m[2];
 		}
 
-		$php = [];
+		$php = array();
 		$php[] = '/**';
 		$php[] = '* @package   s9e\TextFormatter';
 		$php[] = '* @copyright Copyright (c) 2010-2015 The s9e Authors';
@@ -314,7 +461,7 @@ class BundleGenerator
 		$php[] = '	public static $renderer;';
 		$php[] = '';
 
-		$events = [
+		$events = array(
 			'beforeParse'
 				=> 'Callback executed before parse(), receives the original text as argument',
 			'afterParse'
@@ -327,7 +474,7 @@ class BundleGenerator
 				=> 'Callback executed before unparse(), receives the parsed text as argument',
 			'afterUnparse'
 				=> 'Callback executed after unparse(), receives the original text as argument'
-		];
+		);
 		foreach ($events as $eventName => $eventDesc)
 			if (isset($options[$eventName]))
 			{
@@ -397,7 +544,7 @@ class BundleGenerator
 		return \implode("\n", $php);
 	}
 
-	protected function exportCallback($namespace, callable $callback, $argument)
+	protected function exportCallback($namespace, $callback, $argument)
 	{
 		if (\is_array($callback) && \is_string($callback[0]))
 			$callback = $callback[0] . '::' . $callback[1];
@@ -443,9 +590,89 @@ interface ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
 use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateForensics
 {
@@ -477,13 +704,13 @@ class TemplateForensics
 
 	protected $isVoid = \true;
 
-	protected $leafNodes = [];
+	protected $leafNodes = array();
 
 	protected $preservesNewLines = \false;
 
-	protected $rootBitfields = [];
+	protected $rootBitfields = array();
 
-	protected $rootNodes = [];
+	protected $rootNodes = array();
 
 	protected $xpath;
 
@@ -634,7 +861,7 @@ class TemplateForensics
 
 	protected function analyseBranches()
 	{
-		$branchBitfields = [];
+		$branchBitfields = array();
 
 		$isFormattingElement = \true;
 
@@ -775,116 +1002,116 @@ class TemplateForensics
 		return \true;
 	}
 
-	protected static $htmlElements = [
-		'a'=>['c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'fe'=>1],
-		'abbr'=>['c'=>"\7",'ac'=>"\4"],
-		'address'=>['c'=>"\3\10",'ac'=>"\1",'dd'=>"\100\12",'b'=>1,'cp'=>['p']],
-		'area'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1],
-		'article'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'aside'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>['p']],
-		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
-		'b'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'base'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'bdi'=>['c'=>"\7",'ac'=>"\4"],
-		'bdo'=>['c'=>"\7",'ac'=>"\4"],
-		'blockquote'=>['c'=>"\3\1",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'body'=>['c'=>"\0\1\2",'ac'=>"\1",'b'=>1],
-		'br'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1],
-		'button'=>['c'=>"\17",'ac'=>"\4",'dd'=>"\10"],
-		'canvas'=>['c'=>"\47",'ac'=>"\0",'t'=>1],
-		'caption'=>['c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1],
-		'cite'=>['c'=>"\7",'ac'=>"\4"],
-		'code'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'col'=>['c'=>"\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\4",'ac18'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1],
-		'data'=>['c'=>"\7",'ac'=>"\4"],
-		'datalist'=>['c'=>"\5",'ac'=>"\4\0\0\1"],
-		'dd'=>['c'=>"\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>['dd','dt']],
-		'del'=>['c'=>"\5",'ac'=>"\0",'t'=>1],
-		'dfn'=>['c'=>"\7\0\0\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"],
-		'div'=>['c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'dl'=>['c'=>"\3",'ac'=>"\0\40\20",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'dt'=>['c'=>"\0\0\20",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>['dd','dt']],
-		'em'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'embed'=>['c'=>"\57",'nt'=>1,'e'=>1,'v'=>1],
-		'fieldset'=>['c'=>"\3\1",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>['p']],
-		'figcaption'=>['c'=>"\0\0\0\0\40",'ac'=>"\1",'b'=>1],
-		'figure'=>['c'=>"\3\1",'ac'=>"\1\0\0\0\40",'b'=>1],
-		'footer'=>['c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>['p']],
-		'form'=>['c'=>"\3\0\0\0\1",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
-		'h1'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h2'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h3'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h4'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h5'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h6'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'head'=>['c'=>"\0\0\2",'ac'=>"\20",'nt'=>1,'b'=>1],
-		'header'=>['c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>['p']],
-		'hr'=>['c'=>"\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
-		'html'=>['c'=>"\0",'ac'=>"\0\0\2",'nt'=>1,'b'=>1],
-		'i'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'iframe'=>['c'=>"\57",'nt'=>1,'e'=>1,'to'=>1],
-		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1],
-		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1],
-		'ins'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
-		'kbd'=>['c'=>"\7",'ac'=>"\4"],
-		'keygen'=>['c'=>"\17",'nt'=>1,'e'=>1,'v'=>1],
-		'label'=>['c'=>"\17\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\100"],
-		'legend'=>['c'=>"\0\0\0\2",'ac'=>"\4",'b'=>1],
-		'li'=>['c'=>"\0\0\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'main'=>['c'=>"\3\20\0\200",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'map'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
-		'mark'=>['c'=>"\7",'ac'=>"\4"],
-		'meta'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'meter'=>['c'=>"\7\100\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"],
-		'nav'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>['p']],
-		'noscript'=>['c'=>"\25\0\100",'ac'=>"\0",'dd'=>"\0\0\100",'t'=>1],
-		'object'=>['c'=>"\57",'c3'=>'@usemap','ac'=>"\0\0\0\20",'t'=>1],
-		'ol'=>['c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'optgroup'=>['c'=>"\0\200",'ac'=>"\0\40\0\1",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
-		'option'=>['c'=>"\0\200\0\1",'e'=>1,'e0'=>'@label and @value','to'=>1,'b'=>1,'cp'=>['option']],
-		'output'=>['c'=>"\7",'ac'=>"\4"],
-		'p'=>['c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'param'=>['c'=>"\0\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'pre'=>['c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>['p']],
-		'progress'=>['c'=>"\7\100\40",'ac'=>"\4",'dd'=>"\0\0\40"],
-		'q'=>['c'=>"\7",'ac'=>"\4"],
-		'rb'=>['c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>['rb','rp','rt','rtc']],
-		'rp'=>['c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>['rb','rp','rtc']],
-		'rt'=>['c'=>"\0\4\0\0\10",'ac'=>"\4",'b'=>1,'cp'=>['rb','rp','rt']],
-		'rtc'=>['c'=>"\0\4",'ac'=>"\4\0\0\0\10",'b'=>1,'cp'=>['rb','rp','rt','rtc']],
-		'ruby'=>['c'=>"\7",'ac'=>"\4\4"],
-		's'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'samp'=>['c'=>"\7",'ac'=>"\4"],
-		'script'=>['c'=>"\25\40",'e'=>1,'e0'=>'@src','to'=>1],
-		'section'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'select'=>['c'=>"\17",'ac'=>"\0\240",'nt'=>1],
-		'small'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'source'=>['c'=>"\0\0\200",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'span'=>['c'=>"\7",'ac'=>"\4"],
-		'strong'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'style'=>['c'=>"\20",'to'=>1,'b'=>1],
-		'sub'=>['c'=>"\7",'ac'=>"\4"],
-		'sup'=>['c'=>"\7",'ac'=>"\4"],
-		'table'=>['c'=>"\3\0\0\10",'ac'=>"\200\40",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'tbody'=>['c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>['tbody','tfoot','thead']],
-		'td'=>['c'=>"\0\1\10",'ac'=>"\1",'b'=>1,'cp'=>['td','th']],
-		'template'=>['c'=>"\25\40\4",'ac'=>"\21"],
-		'textarea'=>['c'=>"\17",'pre'=>1],
-		'tfoot'=>['c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>['tbody','thead']],
-		'th'=>['c'=>"\0\0\10",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>['td','th']],
-		'thead'=>['c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1],
-		'time'=>['c'=>"\7",'ac'=>"\4"],
-		'title'=>['c'=>"\20",'to'=>1,'b'=>1],
-		'tr'=>['c'=>"\200\0\0\0\4",'ac'=>"\0\40\10",'nt'=>1,'b'=>1,'cp'=>['tr']],
-		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'u'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'ul'=>['c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'var'=>['c'=>"\7",'ac'=>"\4"],
-		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
-		'wbr'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1]
-	];
+	protected static $htmlElements = array(
+		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'fe'=>1),
+		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
+		'address'=>array('c'=>"\3\10",'ac'=>"\1",'dd'=>"\100\12",'b'=>1,'cp'=>array('p')),
+		'area'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
+		'article'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>array('p')),
+		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1),
+		'b'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'base'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
+		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
+		'blockquote'=>array('c'=>"\3\1",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'body'=>array('c'=>"\0\1\2",'ac'=>"\1",'b'=>1),
+		'br'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
+		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
+		'canvas'=>array('c'=>"\47",'ac'=>"\0",'t'=>1),
+		'caption'=>array('c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1),
+		'cite'=>array('c'=>"\7",'ac'=>"\4"),
+		'code'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'col'=>array('c'=>"\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'colgroup'=>array('c'=>"\200",'ac'=>"\0\0\4",'ac18'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
+		'data'=>array('c'=>"\7",'ac'=>"\4"),
+		'datalist'=>array('c'=>"\5",'ac'=>"\4\0\0\1"),
+		'dd'=>array('c'=>"\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
+		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
+		'dfn'=>array('c'=>"\7\0\0\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
+		'div'=>array('c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'dl'=>array('c'=>"\3",'ac'=>"\0\40\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\20",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>array('dd','dt')),
+		'em'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'embed'=>array('c'=>"\57",'nt'=>1,'e'=>1,'v'=>1),
+		'fieldset'=>array('c'=>"\3\1",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\40",'ac'=>"\1",'b'=>1),
+		'figure'=>array('c'=>"\3\1",'ac'=>"\1\0\0\0\40",'b'=>1),
+		'footer'=>array('c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\0\1",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>array('p')),
+		'h1'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h2'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h3'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h4'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h5'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h6'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'head'=>array('c'=>"\0\0\2",'ac'=>"\20",'nt'=>1,'b'=>1),
+		'header'=>array('c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
+		'html'=>array('c'=>"\0",'ac'=>"\0\0\2",'nt'=>1,'b'=>1),
+		'i'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'iframe'=>array('c'=>"\57",'nt'=>1,'e'=>1,'to'=>1),
+		'img'=>array('c'=>"\57",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1),
+		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1),
+		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
+		'keygen'=>array('c'=>"\17",'nt'=>1,'e'=>1,'v'=>1),
+		'label'=>array('c'=>"\17\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\100"),
+		'legend'=>array('c'=>"\0\0\0\2",'ac'=>"\4",'b'=>1),
+		'li'=>array('c'=>"\0\0\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
+		'link'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'main'=>array('c'=>"\3\20\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'map'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'mark'=>array('c'=>"\7",'ac'=>"\4"),
+		'meta'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'meter'=>array('c'=>"\7\100\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"),
+		'nav'=>array('c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>array('p')),
+		'noscript'=>array('c'=>"\25\0\100",'ac'=>"\0",'dd'=>"\0\0\100",'t'=>1),
+		'object'=>array('c'=>"\57",'c3'=>'@usemap','ac'=>"\0\0\0\20",'t'=>1),
+		'ol'=>array('c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\200",'ac'=>"\0\40\0\1",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\200\0\1",'e'=>1,'e0'=>'@label and @value','to'=>1,'b'=>1,'cp'=>array('option')),
+		'output'=>array('c'=>"\7",'ac'=>"\4"),
+		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'param'=>array('c'=>"\0\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'pre'=>array('c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>array('p')),
+		'progress'=>array('c'=>"\7\100\40",'ac'=>"\4",'dd'=>"\0\0\40"),
+		'q'=>array('c'=>"\7",'ac'=>"\4"),
+		'rb'=>array('c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rt','rtc')),
+		'rp'=>array('c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rtc')),
+		'rt'=>array('c'=>"\0\4\0\0\10",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rt')),
+		'rtc'=>array('c'=>"\0\4",'ac'=>"\4\0\0\0\10",'b'=>1,'cp'=>array('rb','rp','rt','rtc')),
+		'ruby'=>array('c'=>"\7",'ac'=>"\4\4"),
+		's'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'samp'=>array('c'=>"\7",'ac'=>"\4"),
+		'script'=>array('c'=>"\25\40",'e'=>1,'e0'=>'@src','to'=>1),
+		'section'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'select'=>array('c'=>"\17",'ac'=>"\0\240",'nt'=>1),
+		'small'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'source'=>array('c'=>"\0\0\200",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'span'=>array('c'=>"\7",'ac'=>"\4"),
+		'strong'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'style'=>array('c'=>"\20",'to'=>1,'b'=>1),
+		'sub'=>array('c'=>"\7",'ac'=>"\4"),
+		'sup'=>array('c'=>"\7",'ac'=>"\4"),
+		'table'=>array('c'=>"\3\0\0\10",'ac'=>"\200\40",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'tbody'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>array('tbody','tfoot','thead')),
+		'td'=>array('c'=>"\0\1\10",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
+		'template'=>array('c'=>"\25\40\4",'ac'=>"\21"),
+		'textarea'=>array('c'=>"\17",'pre'=>1),
+		'tfoot'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>array('tbody','thead')),
+		'th'=>array('c'=>"\0\0\10",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1),
+		'time'=>array('c'=>"\7",'ac'=>"\4"),
+		'title'=>array('c'=>"\20",'to'=>1,'b'=>1),
+		'tr'=>array('c'=>"\200\0\0\0\4",'ac'=>"\0\40\10",'nt'=>1,'b'=>1,'cp'=>array('tr')),
+		'track'=>array('c'=>"\0\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'u'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'ul'=>array('c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'var'=>array('c'=>"\7",'ac'=>"\4"),
+		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1),
+		'wbr'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1)
+	);
 
 	protected function getBitfield($elName, $k, DOMElement $node)
 	{
@@ -946,20 +1173,93 @@ class TemplateForensics
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use ArrayAccess;
+use Countable;
 use DOMAttr;
 use DOMCharacterData;
 use DOMDocument;
 use DOMElement;
+use DOMException;
 use DOMNode;
 use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 abstract class TemplateHelper
 {
-	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+	const XMLNS_XSL = ;
 
 	public static function loadTemplate($template)
 	{
@@ -1031,7 +1331,7 @@ abstract class TemplateHelper
 
 	public static function getParametersFromXSL($xsl)
 	{
-		$paramNames = [];
+		$paramNames = array();
 
 		$xsl = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '"><xsl:template>'
 		     . $xsl
@@ -1081,7 +1381,7 @@ abstract class TemplateHelper
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
 		$xpath = new DOMXPath($dom);
-		$nodes = [];
+		$nodes = array();
 
 		foreach ($xpath->query('//@*') as $attribute)
 			if (\preg_match($regexp, $attribute->name))
@@ -1106,7 +1406,7 @@ abstract class TemplateHelper
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
 		$xpath = new DOMXPath($dom);
-		$nodes = [];
+		$nodes = array();
 
 		foreach ($xpath->query('//*') as $element)
 			if (\preg_match($regexp, $element->localName))
@@ -1131,7 +1431,7 @@ abstract class TemplateHelper
 	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
 	{
 		$xpath = new DOMXPath($dom);
-		$nodes = [];
+		$nodes = array();
 
 		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
 			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
@@ -1244,7 +1544,7 @@ abstract class TemplateHelper
 					);
 				$lastPos = $pos + \strlen($m[0][0]);
 
-				$_m = [];
+				$_m = array();
 				foreach ($m as $capture)
 					$_m[] = $capture[0];
 
@@ -1320,7 +1620,7 @@ abstract class TemplateHelper
 
 	public static function getMetaElementsRegexp(array $templates)
 	{
-		$exprs = [];
+		$exprs = array();
 
 		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . \implode('', $templates) . '</xsl:template>';
 		$dom = new DOMDocument;
@@ -1337,11 +1637,11 @@ abstract class TemplateHelper
 				if ($token[0] === 'expression')
 					$exprs[] = $token[1];
 
-		$tagNames = [
+		$tagNames = array(
 			'e' => \true,
 			'i' => \true,
 			's' => \true
-		];
+		);
 
 		foreach (\array_keys($tagNames) as $tagName)
 			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
@@ -1362,7 +1662,7 @@ abstract class TemplateHelper
 
 	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
 	{
-		$tagNames = [];
+		$tagNames = array();
 
 		$expr = 'name()';
 
@@ -1413,7 +1713,89 @@ interface RendererGenerator
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Optimizer
 {
@@ -1440,7 +1822,89 @@ class Optimizer
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 interface BooleanRulesGenerator
 {
@@ -1454,7 +1918,89 @@ interface BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 interface TargetedRulesGenerator
 {
@@ -1468,12 +2014,93 @@ interface TargetedRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 abstract class TemplateCheck
 {
-	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+	const XMLNS_XSL = ;
 
 	abstract public function check(DOMElement $template, Tag $tag);
 }
@@ -1485,7 +2112,89 @@ abstract class TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 abstract class TemplateNormalization
 {
@@ -1512,7 +2221,7 @@ trait CollectionProxy
 {
 	public function __call($methodName, $args)
 	{
-		return \call_user_func_array([$this->collection, $methodName], $args);
+		return \call_user_func_array(array($this->collection, $methodName), $args);
 	}
 
 	public function offsetExists($offset)
@@ -1573,11 +2282,89 @@ trait CollectionProxy
 */
 namespace s9e\TextFormatter\Configurator\Traits;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
 use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 trait Configurable
 {
@@ -1706,18 +2493,97 @@ trait Configurable
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
 use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
 use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Collection implements ConfigProvider, Countable, Iterator
 {
-	protected $items = [];
+	protected $items = array();
 
 	public function clear()
 	{
-		$this->items = [];
+		$this->items = array();
 	}
 
 	public function asConfig()
@@ -1763,12 +2629,89 @@ class Collection implements ConfigProvider, Countable, Iterator
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class ProgrammableCallback implements ConfigProvider
 {
@@ -1776,9 +2719,9 @@ class ProgrammableCallback implements ConfigProvider
 
 	protected $js = \null;
 
-	protected $params = [];
+	protected $params = array();
 
-	protected $vars = [];
+	protected $vars = array();
 
 	public function __construct($callback)
 	{
@@ -1790,6 +2733,9 @@ class ProgrammableCallback implements ConfigProvider
 
 		if (\is_string($callback))
 			$callback = \ltrim($callback, '\\');
+
+		if (!\is_callable($callback))
+			\trigger_error("Argument 1 passed to " . __METHOD__ . "() must be callable, " . \gettype($callback) . " given", \E_USER_ERROR);
 
 		$this->callback = $callback;
 	}
@@ -1834,7 +2780,7 @@ class ProgrammableCallback implements ConfigProvider
 
 	public function resetParameters()
 	{
-		$this->params = [];
+		$this->params = array();
 
 		return $this;
 	}
@@ -1865,7 +2811,7 @@ class ProgrammableCallback implements ConfigProvider
 
 	public function asConfig()
 	{
-		$config = ['callback' => $this->callback];
+		$config = array('callback' => $this->callback);
 
 		foreach ($this->params as $k => $v)
 			if (\is_numeric($k))
@@ -1896,15 +2842,89 @@ class ProgrammableCallback implements ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
 use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
 use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Tag implements ConfigProvider
 {
@@ -2038,10 +3058,88 @@ class Tag implements ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
 use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class XSLT implements RendererGenerator
@@ -2060,8 +3158,8 @@ class XSLT implements RendererGenerator
 
 	public function getXSL(Rendering $rendering)
 	{
-		$groupedTemplates = [];
-		$prefixes         = [];
+		$groupedTemplates = array();
+		$prefixes         = array();
 		$templates        = $rendering->getTemplates();
 
 		TemplateHelper::replaceHomogeneousTemplates($templates, 3);
@@ -2122,12 +3220,89 @@ class XSLT implements RendererGenerator
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
 use ReflectionClass;
 use RuntimeException;
+use Traversable;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
 use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Rendering
 {
@@ -2149,7 +3324,7 @@ class Rendering
 
 	public function getAllParameters()
 	{
-		$params = [];
+		$params = array();
 		foreach ($this->configurator->tags as $tag)
 			if (isset($tag->template))
 				foreach ($tag->template->getParameters() as $paramName)
@@ -2169,13 +3344,13 @@ class Rendering
 
 	public function getTemplates()
 	{
-		$templates = [
+		$templates = array(
 			'br' => '<br/>',
 			'e'  => '',
 			'i'  => '',
 			'p'  => '<p><xsl:apply-templates/></p>',
 			's'  => ''
-		];
+		);
 
 		foreach ($this->configurator->tags as $tagName => $tag)
 			if (isset($tag->template))
@@ -2193,7 +3368,7 @@ class Rendering
 			$className  = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\' . $engine;
 			$reflection = new ReflectionClass($className);
 
-			$engine = $reflection->newInstanceArgs(\array_slice(\func_get_args(), 1));
+			$engine = (\func_num_args() > 1) ? $reflection->newInstanceArgs(\array_slice(\func_get_args(), 1)) : $reflection->newInstance();
 		}
 
 		$this->engine = $engine;
@@ -2210,14 +3385,88 @@ class Rendering
 namespace s9e\TextFormatter\Configurator;
 
 use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
 use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
 use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
 use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class RulesGenerator implements ArrayAccess, Iterator
 {
@@ -2240,13 +3489,13 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('TrimFirstLineInCodeBlocks');
 	}
 
-	public function getRules(TagCollection $tags, array $options = [])
+	public function getRules(TagCollection $tags, array $options = array())
 	{
 		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
 
 		$rootForensics = $this->generateRootForensics($parentHTML);
 
-		$templateForensics = [];
+		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
 			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
@@ -2290,10 +3539,10 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 	protected function generateRulesets(array $templateForensics, TemplateForensics $rootForensics)
 	{
-		$rules = [
+		$rules = array(
 			'root' => $this->generateRuleset($rootForensics, $templateForensics),
-			'tags' => []
-		];
+			'tags' => array()
+		);
 
 		foreach ($templateForensics as $tagName => $src)
 			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
@@ -2303,7 +3552,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 	protected function generateRuleset(TemplateForensics $src, array $targets)
 	{
-		$rules = [];
+		$rules = array();
 
 		foreach ($this->collection as $rulesGenerator)
 		{
@@ -2328,14 +3577,95 @@ class RulesGenerator implements ArrayAccess, Iterator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class AutoCloseIfVoid implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->isVoid()) ? ['autoClose' => \true] : [];
+		return ($src->isVoid()) ? array('autoClose' => \true) : array();
 	}
 }
 
@@ -2346,14 +3676,95 @@ class AutoCloseIfVoid implements BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class AutoReopenFormattingElements implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->isFormattingElement()) ? ['autoReopen' => \true] : [];
+		return ($src->isFormattingElement()) ? array('autoReopen' => \true) : array();
 	}
 }
 
@@ -2364,14 +3775,95 @@ class AutoReopenFormattingElements implements BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? ['fosterParent'] : [];
+		return ($src->isBlock() && $trg->isFormattingElement()) ? array('fosterParent') : array();
 	}
 }
 
@@ -2382,14 +3874,95 @@ class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->preservesNewLines()) ? ['disableAutoLineBreaks' => \true] : [];
+		return ($src->preservesNewLines()) ? array('disableAutoLineBreaks' => \true) : array();
 	}
 }
 
@@ -2400,9 +3973,89 @@ class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerat
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
 {
@@ -2415,7 +4068,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		$rules = [];
+		$rules = array();
 
 		if ($src->isTransparent())
 			$rules['isTransparent'] = \true;
@@ -2437,7 +4090,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		$rules = [];
+		$rules = array();
 
 		if (!$src->allowsChild($trg))
 			$rules[] = 'denyChild';
@@ -2456,14 +4109,95 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class EnforceOptionalEndTags implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->closesParent($trg)) ? ['closeParent'] : [];
+		return ($src->closesParent($trg)) ? array('closeParent') : array();
 	}
 }
 
@@ -2474,9 +4208,89 @@ class EnforceOptionalEndTags implements TargetedRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class IgnoreTagsInCode implements BooleanRulesGenerator
 {
@@ -2485,9 +4299,9 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 		$xpath = new DOMXPath($src->getDOM());
 
 		if ($xpath->evaluate('count(//code//xsl:apply-templates)'))
-			return ['ignoreTags' => \true];
+			return array('ignoreTags' => \true);
 
-		return [];
+		return array();
 	}
 }
 
@@ -2498,14 +4312,95 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->allowsText()) ? [] : ['ignoreText' => \true];
+		return ($src->allowsText()) ? array() : array('ignoreText' => \true);
 	}
 }
 
@@ -2516,14 +4411,95 @@ class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->isBlock()) ? ['ignoreSurroundingWhitespace' => \true] : [];
+		return ($src->isBlock()) ? array('ignoreSurroundingWhitespace' => \true) : array();
 	}
 }
 
@@ -2534,15 +4510,95 @@ class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		$rules = [];
+		$rules = array();
 		$xpath = new DOMXPath($src->getDOM());
 		if ($xpath->evaluate('count(//pre//code//xsl:apply-templates)') > 0)
 			$rules['trimFirstLine'] = \true;
@@ -2559,15 +4615,88 @@ class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 namespace s9e\TextFormatter\Configurator;
 
 use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
 use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
 use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateChecker implements ArrayAccess, Iterator
 {
@@ -2637,15 +4766,89 @@ class TemplateChecker implements ArrayAccess, Iterator
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
 use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
 use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
@@ -2756,7 +4959,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		$xpath = new DOMXPath($node->ownerDocument);
 
-		foreach (['xsl:param', 'xsl:variable'] as $nodeName)
+		foreach (array('xsl:param', 'xsl:variable') as $nodeName)
 		{
 			$query = 'ancestor-or-self::*/preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
 
@@ -2794,12 +4997,89 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
 use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 abstract class AbstractFlashRestriction extends TemplateCheck
 {
@@ -2917,7 +5197,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 	protected function getElements($tagName)
 	{
-		$nodes = [];
+		$nodes = array();
 		foreach ($this->template->ownerDocument->getElementsByTagName($tagName) as $node)
 			if (!$this->onlyIfDynamic || $this->isDynamic($node))
 				$nodes[] = $node;
@@ -2933,11 +5213,89 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowAttributeSets extends TemplateCheck
 {
@@ -2958,10 +5316,89 @@ class DisallowAttributeSets extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowCopy extends TemplateCheck
 {
@@ -2982,11 +5419,89 @@ class DisallowCopy extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowDisableOutputEscaping extends TemplateCheck
 {
@@ -3007,10 +5522,89 @@ class DisallowDisableOutputEscaping extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowDynamicAttributeNames extends TemplateCheck
 {
@@ -3030,10 +5624,89 @@ class DisallowDynamicAttributeNames extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowDynamicElementNames extends TemplateCheck
 {
@@ -3053,10 +5726,89 @@ class DisallowDynamicElementNames extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowElementNS extends TemplateCheck
 {
@@ -3086,11 +5838,89 @@ class DisallowElementNS extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowObjectParamsWithGeneratedName extends TemplateCheck
 {
@@ -3112,17 +5942,95 @@ class DisallowObjectParamsWithGeneratedName extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowPHPTags extends TemplateCheck
 {
 	public function check(DOMElement $template, Tag $tag)
 	{
-		$queries = [
+		$queries = array(
 			'//processing-instruction()["php" = translate(name(),"HP","hp")]'
 				=> 'PHP tags are not allowed in the template',
 
@@ -3134,7 +6042,7 @@ class DisallowPHPTags extends TemplateCheck
 
 			'//xsl:processing-instruction[contains(@name, "{")]'
 				=> 'Dynamic processing instructions are not allowed',
-		];
+		);
 
 		$xpath = new DOMXPath($template->ownerDocument);
 		foreach ($queries as $query => $error)
@@ -3154,10 +6062,89 @@ class DisallowPHPTags extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowUnsafeCopyOf extends TemplateCheck
 {
@@ -3182,12 +6169,89 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowXPathFunction extends TemplateCheck
 {
@@ -3216,7 +6280,7 @@ class DisallowXPathFunction extends TemplateCheck
 	protected function getExpressions(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
-		$exprs = [];
+		$exprs = array();
 
 		foreach ($xpath->query('//@*') as $attribute)
 			if ($attribute->parentNode->namespaceURI === self::XMLNS_XSL)
@@ -3240,11 +6304,89 @@ class DisallowXPathFunction extends TemplateCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
 use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
 use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineAttributes extends TemplateNormalization
 {
@@ -3282,9 +6424,89 @@ class InlineAttributes extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineCDATA extends TemplateNormalization
 {
@@ -3308,9 +6530,89 @@ class InlineCDATA extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
 use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineElements extends TemplateNormalization
 {
@@ -3347,11 +6649,89 @@ class InlineElements extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineInferredValues extends TemplateNormalization
 {
@@ -3385,7 +6765,7 @@ class InlineInferredValues extends TemplateNormalization
 					function ($token) use ($value, $var)
 					{
 						if ($token[0] === 'expression' && $token[1] === $var)
-							$token = ['literal', $value];
+							$token = array('literal', $value);
 
 						return $token;
 					}
@@ -3402,9 +6782,89 @@ class InlineInferredValues extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineTextElements extends TemplateNormalization
 {
@@ -3436,15 +6896,96 @@ class InlineTextElements extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class InlineXPathLiterals extends TemplateNormalization
 {
 	public function normalize(DOMElement $template)
 	{
+		$_this = $this;
+
 		$xpath = new DOMXPath($template->ownerDocument);
 		foreach ($xpath->query('//xsl:value-of') as $valueOf)
 		{
@@ -3459,13 +7000,13 @@ class InlineXPathLiterals extends TemplateNormalization
 		{
 			AVTHelper::replace(
 				$attribute,
-				function ($token)
+				function ($token) use ($_this)
 				{
 					if ($token[0] === 'expression')
 					{
-						$textContent = $this->getTextContent($token[1]);
+						$textContent = $_this->getTextContent($token[1]);
 						if ($textContent !== \false)
-							$token = ['literal', $textContent];
+							$token = array('literal', $textContent);
 					}
 
 					return $token;
@@ -3474,7 +7015,7 @@ class InlineXPathLiterals extends TemplateNormalization
 		}
 	}
 
-	protected function getTextContent($expr)
+	public function getTextContent($expr)
 	{
 		$expr = \trim($expr);
 
@@ -3503,10 +7044,89 @@ class InlineXPathLiterals extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
 use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class MergeIdenticalConditionalBranches extends TemplateNormalization
 {
@@ -3539,21 +7159,21 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 
 	protected static function mergeConsecutiveBranches(DOMElement $choose)
 	{
-		$nodes = [];
+		$nodes = array();
 		foreach ($choose->childNodes as $node)
 			if (self::isXslWhen($node))
 				$nodes[] = $node;
 
 		$i = \count($nodes);
 		while (--$i > 0)
-			self::mergeBranches([$nodes[$i - 1], $nodes[$i]]);
+			self::mergeBranches(array($nodes[$i - 1], $nodes[$i]));
 	}
 
 	protected static function collectCompatibleBranches(DOMNode $node)
 	{
-		$nodes  = [];
+		$nodes  = array();
 		$key    = \null;
-		$values = [];
+		$values = array();
 
 		while ($node && self::isXslWhen($node))
 		{
@@ -3580,7 +7200,7 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 
 	protected static function mergeBranches(array $nodes)
 	{
-		$sortedNodes = [];
+		$sortedNodes = array();
 		foreach ($nodes as $node)
 		{
 			$outerXML = $node->ownerDocument->saveXML($node);
@@ -3594,7 +7214,7 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 			if (\count($identicalNodes) < 2)
 				continue;
 
-			$expr = [];
+			$expr = array();
 			foreach ($identicalNodes as $i => $node)
 			{
 				$expr[] = $node->getAttribute('test');
@@ -3620,11 +7240,89 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class MinifyXPathExpressions extends TemplateNormalization
 {
@@ -3663,9 +7361,89 @@ class MinifyXPathExpressions extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class NormalizeAttributeNames extends TemplateNormalization
 {
@@ -3700,9 +7478,89 @@ class NormalizeAttributeNames extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class NormalizeElementNames extends TemplateNormalization
 {
@@ -3751,13 +7609,89 @@ class NormalizeElementNames extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
 use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class NormalizeUrls extends TemplateNormalization
 {
@@ -3775,11 +7709,14 @@ class NormalizeUrls extends TemplateNormalization
 		$tokens = AVTHelper::parse(\trim($attribute->value));
 
 		$attrValue = '';
-		foreach ($tokens as list($type, $content))
+		foreach ($tokens as $_f6b3b659)
+		{
+			list($type, $content) = $_f6b3b659;
 			if ($type === 'literal')
 				$attrValue .= BuiltInFilters::sanitizeUrl($content);
 			else
 				$attrValue .= '{' . $content . '}';
+		}
 
 		$attrValue = $this->unescapeBrackets($attrValue);
 
@@ -3816,9 +7753,89 @@ class NormalizeUrls extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class OptimizeConditionalAttributes extends TemplateNormalization
 {
@@ -3846,9 +7863,89 @@ class OptimizeConditionalAttributes extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class OptimizeConditionalValueOf extends TemplateNormalization
 {
@@ -3881,9 +7978,89 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class OptimizeNestedConditionals extends TemplateNormalization
 {
@@ -3911,9 +8088,89 @@ class OptimizeNestedConditionals extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class PreserveSingleSpaces extends TemplateNormalization
 {
@@ -3938,9 +8195,89 @@ class PreserveSingleSpaces extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class RemoveComments extends TemplateNormalization
 {
@@ -3959,9 +8296,89 @@ class RemoveComments extends TemplateNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class RemoveInterElementWhitespace extends TemplateNormalization
 {
@@ -3983,11 +8400,88 @@ class RemoveInterElementWhitespace extends TemplateNormalization
 namespace s9e\TextFormatter\Configurator;
 
 use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
 use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
 use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateNormalizer implements ArrayAccess, Iterator
 {
@@ -4026,7 +8520,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	{
 		$dom = TemplateHelper::loadTemplate($template);
 
-		$applied = [];
+		$applied = array();
 
 		$loops = 5;
 		do
@@ -4057,10 +8551,89 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class UrlConfig implements ConfigProvider
 {
@@ -4127,11 +8700,89 @@ class UrlConfig implements ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class AttributePreprocessorCollection extends Collection
 {
@@ -4139,7 +8790,7 @@ class AttributePreprocessorCollection extends Collection
 	{
 		$attrName = AttributeName::normalize($attrName);
 
-		$k = \serialize([$attrName, $regexp]);
+		$k = \serialize(array($attrName, $regexp));
 		$this->items[$k] = new AttributePreprocessor($regexp);
 
 		return $this->items[$k];
@@ -4186,7 +8837,7 @@ class AttributePreprocessorCollection extends Collection
 
 	public function asConfig()
 	{
-		$config = [];
+		$config = array();
 
 		foreach ($this->items as $k => $ap)
 		{
@@ -4195,10 +8846,10 @@ class AttributePreprocessorCollection extends Collection
 			$jsRegexp = RegexpConvertor::toJS($regexp);
 
 			$config[] = new Variant(
-				[$attrName, $regexp],
-				[
-					'JS' => [$attrName, $jsRegexp, $jsRegexp->map]
-				]
+				array($attrName, $regexp),
+				array(
+					'JS' => array($attrName, $jsRegexp, $jsRegexp->map)
+				)
 			);
 		}
 
@@ -4214,8 +8865,88 @@ class AttributePreprocessorCollection extends Collection
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class NormalizedCollection extends Collection implements ArrayAccess
 {
@@ -4326,13 +9057,88 @@ class NormalizedCollection extends Collection implements ArrayAccess
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
 use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
@@ -4374,7 +9180,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
 
-		$bitValues = [
+		$bitValues = array(
 			'autoClose'                   => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'                  => Parser::RULE_AUTO_REOPEN,
 			'breakParagraph'              => Parser::RULE_BREAK_PARAGRAPH,
@@ -4388,7 +9194,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'preventLineBreaks'           => Parser::RULE_PREVENT_BR,
 			'suspendAutoLineBreaks'       => Parser::RULE_SUSPEND_AUTO_BR,
 			'trimFirstLine'               => Parser::RULE_TRIM_FIRST_LINE
-		];
+		);
 
 		$bitfield = 0;
 		foreach ($bitValues as $ruleName => $bitValue)
@@ -4399,7 +9205,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			unset($config[$ruleName]);
 		}
 
-		foreach (['closeAncestor', 'closeParent', 'fosterParent'] as $ruleName)
+		foreach (array('closeAncestor', 'closeParent', 'fosterParent') as $ruleName)
 			if (isset($config[$ruleName]))
 			{
 				$targets = \array_fill_keys($config[$ruleName], 1);
@@ -4438,7 +9244,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			{
 				$this->items[$type] = \array_diff(
 					$this->items[$type],
-					[$tagName]
+					array($tagName)
 				);
 
 				if (empty($this->items[$type]))
@@ -4617,10 +9423,89 @@ abstract class Filter extends ProgrammableCallback
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 {
@@ -4647,10 +9532,89 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
-use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 {
@@ -4677,12 +9641,89 @@ class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
+use ArrayAccess;
+use Countable;
 use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
 use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
 use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 {
@@ -4730,11 +9771,11 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 
 	protected $settingName = 'allowScriptAccess';
 
-	protected $settings = [
+	protected $settings = array(
 		'always'     => 3,
 		'samedomain' => 2,
 		'never'      => 1
-	];
+	);
 }
 
 /*
@@ -4744,8 +9785,89 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class AttributeCollection extends NormalizedCollection
 {
@@ -4769,8 +9891,89 @@ class AttributeCollection extends NormalizedCollection
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class AttributeFilterCollection extends NormalizedCollection
 {
@@ -4832,7 +10035,89 @@ class AttributeFilterCollection extends NormalizedCollection
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class NormalizedList extends NormalizedCollection
 {
@@ -4862,7 +10147,7 @@ class NormalizedList extends NormalizedCollection
 		$offset = $this->normalizeKey($offset);
 		$value  = $this->normalizeValue($value);
 
-		\array_splice($this->items, $offset, 0, [$value]);
+		\array_splice($this->items, $offset, 0, array($value));
 
 		return $value;
 	}
@@ -4872,12 +10157,12 @@ class NormalizedList extends NormalizedCollection
 		$normalizedKey = \filter_var(
 			$key,
 			\FILTER_VALIDATE_INT,
-			[
-				'options' => [
+			array(
+				'options' => array(
 					'min_range' => 0,
 					'max_range' => \count($this->items)
-				]
-			]
+				)
+			)
 		);
 
 		if ($normalizedKey === \false)
@@ -4922,11 +10207,89 @@ class NormalizedList extends NormalizedCollection
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
 use RuntimeException;
+use Traversable;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class PluginCollection extends NormalizedCollection
 {
@@ -4962,7 +10325,7 @@ class PluginCollection extends NormalizedCollection
 		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Plugins\\ConfiguratorBase');
 	}
 
-	public function load($pluginName, array $overrideProps = [])
+	public function load($pluginName, array $overrideProps = array())
 	{
 		$pluginName = $this->normalizeKey($pluginName);
 		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Configurator';
@@ -4996,7 +10359,7 @@ class PluginCollection extends NormalizedCollection
 			if (!isset($pluginConfig['parser']))
 			{
 				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('JS', [$plugin, 'getJSParser']);
+				$pluginConfig['parser']->setDynamic('JS', array($plugin, 'getJSParser'));
 			}
 
 			$className = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
@@ -5016,8 +10379,89 @@ class PluginCollection extends NormalizedCollection
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TagCollection extends NormalizedCollection
 {
@@ -5041,7 +10485,89 @@ class TagCollection extends NormalizedCollection
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateParameterCollection extends NormalizedCollection
 {
@@ -5081,8 +10607,89 @@ class TagFilter extends Filter
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class HostnameList extends NormalizedList
 {
@@ -5098,19 +10705,19 @@ class HostnameList extends NormalizedList
 
 	public function getRegexp()
 	{
-		$hosts = [];
+		$hosts = array();
 		foreach ($this->items as $host)
 			$hosts[] = $this->normalizeHostmask($host);
 
 		$regexp = RegexpBuilder::fromList(
 			$hosts,
-			[
-				'specialChars' => [
+			array(
+				'specialChars' => array(
 					'*' => '.*',
 					'^' => '^',
 					'$' => '$'
-				]
-			]
+				)
+			)
 		);
 
 		return '/' . $regexp . '/DSis';
@@ -5142,9 +10749,89 @@ class HostnameList extends NormalizedList
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class RulesGeneratorList extends NormalizedList
 {
@@ -5173,9 +10860,89 @@ class RulesGeneratorList extends NormalizedList
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class SchemeList extends NormalizedList
 {
@@ -5202,8 +10969,89 @@ class SchemeList extends NormalizedList
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
 use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TagFilterChain extends NormalizedList
 {
@@ -5226,7 +11074,89 @@ class TagFilterChain extends NormalizedList
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateCheckList extends NormalizedList
 {
@@ -5249,8 +11179,89 @@ class TemplateCheckList extends NormalizedList
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use ArrayAccess;
+use Countable;
+use DOMAttr;
+use DOMCharacterData;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMNode;
+use DOMProcessingInstruction;
+use DOMText;
+use DOMXPath;
+use InvalidArgumentException;
+use Iterator;
+use ReflectionClass;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\BundleGenerator;
+use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\RulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+use s9e\TextFormatter\Configurator\TemplateCheck;
+use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
+use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\UrlConfig;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Configurator\Validators\TemplateParameterName;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class TemplateNormalizationList extends NormalizedList
 {

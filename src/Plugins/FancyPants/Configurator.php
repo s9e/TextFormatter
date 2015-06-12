@@ -30,9 +30,9 @@ class Configurator extends ConfiguratorBase
 
 	public function asConfig()
 	{
-		return [
+		return array(
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
-		];
+		);
 	}
 }

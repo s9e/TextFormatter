@@ -25,7 +25,7 @@ abstract class Minifier
 
 				if ($differentiator !== \false)
 				{
-					$key       = \sha1(\serialize([\get_class($this), $differentiator, $src]));
+					$key       = \sha1(\serialize(array(\get_class($this), $differentiator, $src)));
 					$cacheFile = $this->cacheDir . '/minifier.' . $key . '.js';
 
 					if (\file_exists($cacheFile))

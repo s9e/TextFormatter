@@ -24,7 +24,7 @@ class AttributePreprocessor
 
 	public function getAttributes()
 	{
-		$attributes = [];
+		$attributes = array();
 		$regexpInfo = RegexpParser::parse($this->regexp);
 
 		if (\strpos($regexpInfo['modifiers'], 'D') === \false)

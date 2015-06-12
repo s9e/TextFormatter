@@ -14,24 +14,25 @@ use s9e\TextFormatter\Parser\Tag;
 
 class Parser
 {
-	const RULE_AUTO_CLOSE        = 1 << 0;
-	const RULE_AUTO_REOPEN       = 1 << 1;
-	const RULE_BREAK_PARAGRAPH   = 1 << 2;
-	const RULE_CREATE_PARAGRAPHS = 1 << 3;
-	const RULE_DISABLE_AUTO_BR   = 1 << 4;
-	const RULE_ENABLE_AUTO_BR    = 1 << 5;
-	const RULE_IGNORE_TAGS       = 1 << 6;
-	const RULE_IGNORE_TEXT       = 1 << 7;
-	const RULE_IGNORE_WHITESPACE = 1 << 8;
-	const RULE_IS_TRANSPARENT    = 1 << 9;
-	const RULE_PREVENT_BR        = 1 << 10;
-	const RULE_SUSPEND_AUTO_BR   = 1 << 11;
-	const RULE_TRIM_FIRST_LINE   = 1 << 12;
-	const RULES_AUTO_LINEBREAKS = self::RULE_DISABLE_AUTO_BR | self::RULE_ENABLE_AUTO_BR | self::RULE_SUSPEND_AUTO_BR;
+	const RULE_AUTO_CLOSE        = 1;
+	const RULE_AUTO_REOPEN       = 2;
+	const RULE_BREAK_PARAGRAPH   = 4;
+	const RULE_CREATE_PARAGRAPHS = 8;
+	const RULE_DISABLE_AUTO_BR   = 16;
+	const RULE_ENABLE_AUTO_BR    = 32;
+	const RULE_IGNORE_TAGS       = 64;
+	const RULE_IGNORE_TEXT       = 128;
+	const RULE_IGNORE_WHITESPACE = 256;
+	const RULE_IS_TRANSPARENT    = 512;
+	const RULE_PREVENT_BR        = 1024;
+	const RULE_SUSPEND_AUTO_BR   = 2048;
+	const RULE_TRIM_FIRST_LINE   = 4096;
+	const RULES_AUTO_LINEBREAKS = 2096;
 
-	const RULES_INHERITANCE = self::RULE_ENABLE_AUTO_BR;
+	const RULES_INHERITANCE = 32;
 
-	const WHITESPACE = " \n\t";
+	const WHITESPACE = ' 
+	';
 
 	protected $cntOpen;
 
@@ -57,11 +58,11 @@ class Parser
 
 	protected $pos;
 
-	protected $pluginParsers = [];
+	protected $pluginParsers = array();
 
 	protected $pluginsConfig;
 
-	public $registeredVars = [];
+	public $registeredVars = array();
 
 	protected $rootContext;
 
@@ -91,7 +92,7 @@ class Parser
 
 	public function __sleep()
 	{
-		return ['pluginsConfig', 'registeredVars', 'rootContext', 'tagsConfig'];
+		return array('pluginsConfig', 'registeredVars', 'rootContext', 'tagsConfig');
 	}
 
 	public function __wakeup()
@@ -106,16 +107,16 @@ class Parser
 
 		$this->logger->clear();
 
-		$this->cntOpen    = [];
-		$this->cntTotal   = [];
+		$this->cntOpen    = array();
+		$this->cntTotal   = array();
 		$this->currentFixingCost = 0;
 		$this->currentTag = \null;
 		$this->isRich     = \false;
-		$this->namespaces = [];
-		$this->openTags   = [];
+		$this->namespaces = array();
+		$this->openTags   = array();
 		$this->output     = '';
 		$this->pos        = 0;
-		$this->tagStack   = [];
+		$this->tagStack   = array();
 		$this->tagStackIsSorted = \true;
 		$this->text       = $text;
 		$this->textLen    = \strlen($text);
@@ -192,8 +193,9 @@ class Parser
 	public static function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
-			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp))
+			foreach ($tagConfig['attributePreprocessors'] as $_a0ddcb05)
 			{
+				list($attrName, $regexp) = $_a0ddcb05;
 				if (!$tag->hasAttribute($attrName))
 					continue;
 
@@ -216,9 +218,9 @@ class Parser
 	protected static function executeFilter(array $filter, array $vars)
 	{
 		$callback = $filter['callback'];
-		$params   = (isset($filter['params'])) ? $filter['params'] : [];
+		$params   = (isset($filter['params'])) ? $filter['params'] : array();
 
-		$args = [];
+		$args = array();
 		foreach ($params as $k => $v)
 			if (\is_numeric($k))
 				$args[] = $v;
@@ -236,7 +238,7 @@ class Parser
 	{
 		if (empty($tagConfig['attributes']))
 		{
-			$tag->setAttributes([]);
+			$tag->setAttributes(array());
 
 			return \true;
 		}
@@ -247,11 +249,11 @@ class Parser
 					$attrName,
 					self::executeFilter(
 						$attrConfig['generator'],
-						[
+						array(
 							'attrName'       => $attrName,
 							'logger'         => $logger,
 							'registeredVars' => $registeredVars
-						]
+						)
 					)
 				);
 
@@ -274,12 +276,12 @@ class Parser
 			{
 				$attrValue = self::executeFilter(
 					$filter,
-					[
+					array(
 						'attrName'       => $attrName,
 						'attrValue'      => $attrValue,
 						'logger'         => $logger,
 						'registeredVars' => $registeredVars
-					]
+					)
 				);
 
 				if ($attrValue === \false)
@@ -315,14 +317,14 @@ class Parser
 		{
 			$this->logger->setTag($tag);
 
-			$vars = [
+			$vars = array(
 				'logger'         => $this->logger,
 				'openTags'       => $this->openTags,
 				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
 				'tagConfig'      => $tagConfig
-			];
+			);
 
 			foreach ($tagConfig['filterChain'] as $filter)
 				if (!self::executeFilter($filter, $vars))
@@ -630,7 +632,7 @@ class Parser
 		if (isset($pluginConfig['quickMatch']) && \strpos($this->text, $pluginConfig['quickMatch']) === \false)
 			return;
 
-		$matches = [];
+		$matches = array();
 		if (isset($pluginConfig['regexp']))
 		{
 			$matches = $this->getMatches($pluginConfig['regexp'], $pluginConfig['regexpLimit']);
@@ -666,7 +668,7 @@ class Parser
 			           ? $pluginConfig['className']
 			           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 
-			$this->pluginParsers[$pluginName] = [new $className($this, $pluginConfig), 'parse'];
+			$this->pluginParsers[$pluginName] = array(new $className($this, $pluginConfig), 'parse');
 		}
 
 		return $this->pluginParsers[$pluginName];
@@ -677,7 +679,7 @@ class Parser
 		if (!\is_callable($parser))
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
 		if (!isset($this->pluginsConfig[$pluginName]))
-			$this->pluginsConfig[$pluginName] = [];
+			$this->pluginsConfig[$pluginName] = array();
 		if (isset($regexp))
 		{
 			$this->pluginsConfig[$pluginName]['regexp']      = $regexp;
@@ -788,10 +790,10 @@ class Parser
 				if (!empty($this->cntOpen[$ancestorName]))
 					return \false;
 
-			$this->logger->err('Tag requires an ancestor', [
+			$this->logger->err('Tag requires an ancestor', array(
 				'requireAncestor' => \implode(',', $tagConfig['rules']['requireAncestor']),
 				'tag'             => $tag
-			]);
+			));
 
 			return \true;
 		}
@@ -920,11 +922,11 @@ class Parser
 		{
 			$this->logger->err(
 				'Tag limit exceeded',
-				[
+				array(
 					'tag'      => $tag,
 					'tagName'  => $tagName,
 					'tagLimit' => $tagConfig['tagLimit']
-				]
+				)
 			);
 			$tag->invalidate();
 
@@ -945,11 +947,11 @@ class Parser
 		{
 			$this->logger->err(
 				'Nesting limit exceeded',
-				[
+				array(
 					'tag'          => $tag,
 					'tagName'      => $tagName,
 					'nestingLimit' => $tagConfig['nestingLimit']
-				]
+				)
 			);
 			$tag->invalidate();
 
@@ -959,7 +961,7 @@ class Parser
 		if (!$this->tagIsAllowed($tagName))
 		{
 			$msg     = 'Tag is not allowed in this context';
-			$context = ['tag' => $tag, 'tagName' => $tagName];
+			$context = array('tag' => $tag, 'tagName' => $tagName);
 			if ($tag->getLen() > 0)
 				$this->logger->warn($msg, $context);
 			else
@@ -1003,7 +1005,7 @@ class Parser
 		if (empty($this->cntOpen[$tagName]))
 			return;
 
-		$closeTags = [];
+		$closeTags = array();
 
 		$i = \count($this->openTags);
 		while (--$i >= 0)
@@ -1019,14 +1021,14 @@ class Parser
 
 		if ($i < 0)
 		{
-			$this->logger->debug('Skipping end tag with no start tag', ['tag' => $tag]);
+			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
 
 			return;
 		}
 
 		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
 
-		$reopenTags = [];
+		$reopenTags = array();
 		foreach ($closeTags as $openTag)
 		{
 			$openTagName = $openTag->getName();
@@ -1134,13 +1136,13 @@ class Parser
 		if ($flags & self::RULE_DISABLE_AUTO_BR)
 			$flags &= ~self::RULE_ENABLE_AUTO_BR;
 
-		$this->context = [
+		$this->context = array(
 			'allowedChildren'    => $allowedChildren,
 			'allowedDescendants' => $allowedDescendants,
 			'flags'              => $flags,
 			'inParagraph'        => \false,
 			'parentContext'      => $this->context
-		];
+		);
 	}
 
 	protected function tagIsAllowed($tagName)
@@ -1202,10 +1204,10 @@ class Parser
 		{
 			$this->logger->warn(
 				'Tag is disabled',
-				[
+				array(
 					'tag'     => $tag,
 					'tagName' => $name
-				]
+				)
 			);
 			$tag->invalidate();
 		}
@@ -1256,11 +1258,11 @@ class Parser
 		{
 			if (!$aLen && !$bLen)
 			{
-				$order = [
+				$order = array(
 					Tag::END_TAG          => 0,
 					Tag::SELF_CLOSING_TAG => 1,
 					Tag::START_TAG        => 2
-				];
+				);
 
 				return $order[$b->getType()] - $order[$a->getType()];
 			}

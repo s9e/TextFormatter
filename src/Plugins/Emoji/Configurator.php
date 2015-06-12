@@ -82,10 +82,10 @@ class Configurator extends ConfiguratorBase
 		$regexp = new Variant($phpRegexp);
 		$regexp->set('JS', new RegExp($jsRegexp, 'g'));
 
-		return [
+		return array(
 			'attrName' => $this->attrName,
 			'regexp'   => $regexp,
 			'tagName'  => $this->tagName
-		];
+		);
 	}
 }

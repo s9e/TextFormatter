@@ -35,11 +35,11 @@ class Optimizer
 				unset($token[2]);
 		unset($token);
 
-		$passes = [
+		$passes = array(
 			'optimizeOutConcatEqual',
 			'optimizeConcatenations',
 			'optimizeHtmlspecialchars'
-		];
+		);
 
 		$remainingLoops = $this->maxLoops;
 		do
@@ -70,7 +70,7 @@ class Optimizer
 
 	protected function isBetweenHtmlspecialcharCalls()
 	{
-		return ($this->tokens[$this->i + 1]    === [\T_STRING, 'htmlspecialchars']
+		return ($this->tokens[$this->i + 1]    === array(\T_STRING, 'htmlspecialchars')
 		     && $this->tokens[$this->i + 2]    === '('
 		     && $this->tokens[$this->i - 1]    === ')'
 		     && $this->tokens[$this->i - 2][0] === \T_LNUMBER
@@ -79,10 +79,10 @@ class Optimizer
 
 	protected function isHtmlspecialcharSafeVar()
 	{
-		return ($this->tokens[$this->i    ]    === [\T_VARIABLE,        '$node']
-		     && $this->tokens[$this->i + 1]    === [\T_OBJECT_OPERATOR, '->']
-		     && ($this->tokens[$this->i + 2]   === [\T_STRING,          'localName']
-		      || $this->tokens[$this->i + 2]   === [\T_STRING,          'nodeName'])
+		return ($this->tokens[$this->i    ]    === array(\T_VARIABLE,        '$node')
+		     && $this->tokens[$this->i + 1]    === array(\T_OBJECT_OPERATOR, '->')
+		     && ($this->tokens[$this->i + 2]   === array(\T_STRING,          'localName')
+		      || $this->tokens[$this->i + 2]   === array(\T_STRING,          'nodeName'))
 		     && $this->tokens[$this->i + 3]    === ','
 		     && $this->tokens[$this->i + 4][0] === \T_LNUMBER
 		     && $this->tokens[$this->i + 5]    === ')');
@@ -90,17 +90,17 @@ class Optimizer
 
 	protected function isOutputAssignment()
 	{
-		return ($this->tokens[$this->i    ] === [\T_VARIABLE,        '$this']
-		     && $this->tokens[$this->i + 1] === [\T_OBJECT_OPERATOR, '->']
-		     && $this->tokens[$this->i + 2] === [\T_STRING,          'out']
-		     && $this->tokens[$this->i + 3] === [\T_CONCAT_EQUAL,    '.=']);
+		return ($this->tokens[$this->i    ] === array(\T_VARIABLE,        '$this')
+		     && $this->tokens[$this->i + 1] === array(\T_OBJECT_OPERATOR, '->')
+		     && $this->tokens[$this->i + 2] === array(\T_STRING,          'out')
+		     && $this->tokens[$this->i + 3] === array(\T_CONCAT_EQUAL,    '.='));
 	}
 
 	protected function isPrecededByOutputVar()
 	{
-		return ($this->tokens[$this->i - 1] === [\T_STRING,          'out']
-		     && $this->tokens[$this->i - 2] === [\T_OBJECT_OPERATOR, '->']
-		     && $this->tokens[$this->i - 3] === [\T_VARIABLE,        '$this']);
+		return ($this->tokens[$this->i - 1] === array(\T_STRING,          'out')
+		     && $this->tokens[$this->i - 2] === array(\T_OBJECT_OPERATOR, '->')
+		     && $this->tokens[$this->i - 3] === array(\T_VARIABLE,        '$this'));
 	}
 
 	protected function mergeConcatenatedHtmlSpecialChars()
@@ -127,7 +127,7 @@ class Optimizer
 				--$parens;
 		}
 
-		if ($this->tokens[$this->i + 1] !== [\T_LNUMBER, $escapeMode])
+		if ($this->tokens[$this->i + 1] !== array(\T_LNUMBER, $escapeMode))
 			return \false;
 
 		$this->tokens[$startIndex] = '.';
@@ -161,7 +161,7 @@ class Optimizer
 	{
 		$this->i = 3;
 
-		while ($this->skipTo([\T_CONCAT_EQUAL, '.=']))
+		while ($this->skipTo(array(\T_CONCAT_EQUAL, '.=')))
 		{
 			if (!$this->isPrecededByOutputVar())
 				 continue;
@@ -192,7 +192,7 @@ class Optimizer
 	{
 		$this->i = 0;
 
-		while ($this->skipPast([\T_STRING, 'htmlspecialchars']))
+		while ($this->skipPast(array(\T_STRING, 'htmlspecialchars')))
 			if ($this->tokens[$this->i] === '(')
 			{
 				++$this->i;

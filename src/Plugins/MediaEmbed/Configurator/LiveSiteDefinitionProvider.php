@@ -25,7 +25,7 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 
 	public function getIds()
 	{
-		$siteIds = [];
+		$siteIds = array();
 		foreach (\glob($this->path . '/*.xml') as $filepath)
 			$siteIds[] = \basename($filepath, '.xml');
 
@@ -42,11 +42,11 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 
 	protected function getElementConfig(DOMElement $element)
 	{
-		$config = [];
+		$config = array();
 		foreach ($element->attributes as $attribute)
 			$config[$attribute->name] = $attribute->value;
 
-		$childNodes = [];
+		$childNodes = array();
 		foreach ($element->childNodes as $childNode)
 		{
 			if ($childNode->nodeType !== \XML_ELEMENT_NODE)

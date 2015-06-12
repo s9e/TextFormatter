@@ -46,7 +46,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
-	public function addCustom($usage, $template, array $options = [])
+	public function addCustom($usage, $template, array $options = array())
 	{
 		$config = $this->bbcodeMonkey->create($usage, $template);
 
@@ -59,7 +59,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($config);
 	}
 
-	public function addFromRepository($name, $repository = 'default', array $vars = [])
+	public function addFromRepository($name, $repository = 'default', array $vars = array())
 	{
 		if (!($repository instanceof Repository))
 		{
@@ -102,10 +102,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!\count($this->collection))
 			return;
 
-		return [
+		return array(
 			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $this->regexp
-		];
+		);
 	}
 }

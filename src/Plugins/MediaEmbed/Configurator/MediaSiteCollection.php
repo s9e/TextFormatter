@@ -15,7 +15,7 @@ class MediaSiteCollection extends ArrayObject implements ConfigProvider
 {
 	public function asConfig()
 	{
-		$map = [];
+		$map = array();
 		foreach ($this as $siteId => $siteConfig)
 		{
 			if (isset($siteConfig['host']))

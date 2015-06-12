@@ -13,10 +13,10 @@ class DisallowFlashFullScreen extends AbstractFlashRestriction
 
 	protected $settingName = 'allowFullScreen';
 
-	protected $settings = [
+	protected $settings = array(
 		'true'  => 1,
 		'false' => 0
-	];
+	);
 
 	public function __construct($onlyIfDynamic = \false)
 	{

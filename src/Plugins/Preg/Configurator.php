@@ -21,9 +21,9 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	protected $captures;
+	public $captures;
 
-	protected $collection = [];
+	protected $collection = array();
 
 	protected $delimiter;
 
@@ -38,18 +38,19 @@ class Configurator extends ConfiguratorBase
 		if (!\count($this->collection))
 			return;
 
-		$generics   = [];
-		$jsPregs = [];
-		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
+		$generics   = array();
+		$jsPregs = array();
+		foreach ($this->collection as $tagName => $_8a606a14)
 		{
-			$generics[] = [$tagName, $regexp, $passthroughIdx];
+			list($regexp, $passthroughIdx) = $_8a606a14;
+			$generics[] = array($tagName, $regexp, $passthroughIdx);
 
 			if (isset($this->configurator->javascript))
 			{
 				$jsRegexp = RegexpConvertor::toJS($regexp);
 				$jsRegexp->flags .= 'g';
 
-				$jsPregs[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
+				$jsPregs[] = array($tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map);
 			}
 		}
 
@@ -57,7 +58,7 @@ class Configurator extends ConfiguratorBase
 		if (isset($this->configurator->javascript))
 			$variant->set('JS', $jsPregs);
 
-		return ['generics' => $variant];
+		return array('generics' => $variant);
 	}
 
 	public function replace($regexp, $template, $tagName = \null)
@@ -74,7 +75,7 @@ class Configurator extends ConfiguratorBase
 		$regexp   = $this->fixUnnamedCaptures($regexp);
 		$template = $this->convertTemplate($template, $passthrough);
 
-		$this->collection[$tagName] = [$regexp, $passthrough];
+		$this->collection[$tagName] = array($regexp, $passthrough);
 
 		return $this->createTag($tagName, $template);
 	}
@@ -82,7 +83,7 @@ class Configurator extends ConfiguratorBase
 	protected function addAttribute(Tag $tag, $attrName)
 	{
 		$isUrl = \false;
-		$exprs = [];
+		$exprs = array();
 		foreach ($this->captures as $key => $capture)
 		{
 			if ($capture['name'] !== $attrName)
@@ -112,20 +113,22 @@ class Configurator extends ConfiguratorBase
 
 	protected function convertTemplate($template, $passthrough)
 	{
+		$_this = $this;
+
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			$this->referencesRegexp,
-			function ($m, $node) use ($passthrough)
+			function ($m, $node) use ($passthrough, $_this)
 			{
 				$key = (int) \trim($m[0], '\\${}');
 				if ($key === 0)
-					return ['expression', '.'];
+					return array('expression', '.');
 				if ($key === $passthrough && $node instanceof DOMText)
-					return ['passthrough'];
-				if (isset($this->captures[$key]['name']))
-					return ['expression', '@' . $this->captures[$key]['name']];
+					return array('passthrough');
+				if (isset($_this->captures[$key]['name']))
+					return array('expression', '@' . $_this->captures[$key]['name']);
 
-				return ['literal', ''];
+				return array('literal', '');
 			}
 		);
 
@@ -134,7 +137,7 @@ class Configurator extends ConfiguratorBase
 			'(\\\\+[0-9${\\\\])',
 			function ($m)
 			{
-				return ['literal', \stripslashes($m[0])];
+				return array('literal', \stripslashes($m[0]));
 			}
 		);
 
@@ -166,7 +169,7 @@ class Configurator extends ConfiguratorBase
 
 	protected function fixUnnamedCaptures($regexp)
 	{
-		$keys = [];
+		$keys = array();
 		foreach ($this->references['anywhere'] as $key)
 		{
 			$capture = $this->captures[$key];
@@ -219,7 +222,7 @@ class Configurator extends ConfiguratorBase
 		if ($valid === \false)
 			throw new InvalidArgumentException('Invalid regexp');
 
-		$this->captures = [['name' => \null, 'expr' => \null]];
+		$this->captures = array(array('name' => \null, 'expr' => \null));
 		$regexpInfo = RegexpParser::parse($regexp);
 		$this->delimiter = $regexpInfo['delimiter'];
 		$this->modifiers = \str_replace('D', '', $regexpInfo['modifiers']);
@@ -227,21 +230,21 @@ class Configurator extends ConfiguratorBase
 		{
 			if ($token['type'] !== 'capturingSubpatternStart')
 				continue;
-			$this->captures[] = [
+			$this->captures[] = array(
 				'pos'    => $token['pos'],
 				'name'   => (isset($token['name'])) ? $token['name'] : \null,
 				'expr'   => $token['content']
-			];
+			);
 		}
 	}
 
 	protected function parseTemplate($template)
 	{
-		$this->references = [
-			'anywhere' => [],
-			'asUrl'    => [],
-			'inText'   => []
-		];
+		$this->references = array(
+			'anywhere' => array(),
+			'asUrl'    => array(),
+			'inText'   => array()
+		);
 
 		\preg_match_all($this->referencesRegexp, $template, $matches);
 		foreach ($matches[0] as $match)

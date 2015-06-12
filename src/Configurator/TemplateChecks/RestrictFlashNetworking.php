@@ -13,9 +13,9 @@ class RestrictFlashNetworking extends AbstractFlashRestriction
 
 	protected $settingName = 'allowNetworking';
 
-	protected $settings = [
+	protected $settings = array(
 		'all'      => 3,
 		'internal' => 2,
 		'none'     => 1
-	];
+	);
 }
