@@ -1,3 +1,8 @@
+###### June 2015
+
+- [Replaced the Generic plugin with a refactored Preg plugin](https://github.com/s9e/TextFormatter/commit/fe6b168cf031e5ce2bf0703a641e3e3f4c78dab5)
+- Reduced the number of files in the release branches by merging together most of the files used by the configurator
+
 ###### May 2015
 
 - [Removed PHP7 from allowed failures](https://github.com/s9e/TextFormatter/commit/94397e26178ce2b09f9f1562dd4ff722cf9ecc43)
