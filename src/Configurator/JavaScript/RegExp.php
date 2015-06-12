@@ -11,7 +11,7 @@ class RegExp
 {
 	public $flags;
 
-	public $map = array('');
+	public $map = [''];
 
 	public $regexp;
 

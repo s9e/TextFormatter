@@ -13,9 +13,9 @@ class Variant
 {
 	protected $defaultValue;
 
-	protected $variants = array();
+	protected $variants = [];
 
-	public function __construct($value = \null, array $variants = array())
+	public function __construct($value = \null, array $variants = [])
 	{
 		if ($value instanceof self)
 		{
@@ -40,7 +40,7 @@ class Variant
 		{
 			list($isDynamic, $value) = $this->variants[$variant];
 
-			return ($isDynamic) ? \call_user_func($value) : $value;
+			return ($isDynamic) ? $value() : $value;
 		}
 
 		return $this->defaultValue;
@@ -53,7 +53,7 @@ class Variant
 
 	public function set($variant, $value)
 	{
-		$this->variants[$variant] = array(\false, $value);
+		$this->variants[$variant] = [\false, $value];
 	}
 
 	public function setDynamic($variant, $callback)
@@ -61,6 +61,6 @@ class Variant
 		if (!\is_callable($callback))
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
 
-		$this->variants[$variant] = array(\true, $callback);
+		$this->variants[$variant] = [\true, $callback];
 	}
 }

@@ -26,60 +26,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
-	public function __call($methodName, $args)
-	{
-		return \call_user_func_array(array($this->collection, $methodName), $args);
-	}
-
-	public function offsetExists($offset)
-	{
-		return isset($this->collection[$offset]);
-	}
-
-	public function offsetGet($offset)
-	{
-		return $this->collection[$offset];
-	}
-
-	public function offsetSet($offset, $value)
-	{
-		$this->collection[$offset] = $value;
-	}
-
-	public function offsetUnset($offset)
-	{
-		unset($this->collection[$offset]);
-	}
-
-	public function count()
-	{
-		return \count($this->collection);
-	}
-
-	public function current()
-	{
-		return $this->collection->current();
-	}
-
-	public function key()
-	{
-		return $this->collection->key();
-	}
-
-	public function next()
-	{
-		return $this->collection->next();
-	}
-
-	public function rewind()
-	{
-		$this->collection->rewind();
-	}
-
-	public function valid()
-	{
-		return $this->collection->valid();
-	}
+	use CollectionProxy;
 
 	public $bbcodeMonkey;
 
@@ -99,7 +46,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
-	public function addCustom($usage, $template, array $options = array())
+	public function addCustom($usage, $template, array $options = [])
 	{
 		$config = $this->bbcodeMonkey->create($usage, $template);
 
@@ -112,7 +59,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		return $this->addFromConfig($config);
 	}
 
-	public function addFromRepository($name, $repository = 'default', array $vars = array())
+	public function addFromRepository($name, $repository = 'default', array $vars = [])
 	{
 		if (!($repository instanceof Repository))
 		{
@@ -155,10 +102,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!\count($this->collection))
 			return;
 
-		return array(
+		return [
 			'bbcodes'    => $this->collection->asConfig(),
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $this->regexp
-		);
+		];
 	}
 }

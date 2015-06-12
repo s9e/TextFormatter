@@ -48,11 +48,11 @@ class Parser extends ParserBase
 			$matches,
 			\PREG_OFFSET_CAPTURE
 		);
-		$chrs = array(
+		$chrs = [
 			'--'  => "\xE2\x80\x93",
 			'---' => "\xE2\x80\x94",
 			'...' => "\xE2\x80\xA6"
-		);
+		];
 		foreach ($matches[0] as $m)
 		{
 			$pos = $m[1];
@@ -156,11 +156,11 @@ class Parser extends ParserBase
 			$matches,
 			\PREG_OFFSET_CAPTURE
 		);
-		$chrs = array(
+		$chrs = [
 			'(c)'  => "\xC2\xA9",
 			'(r)'  => "\xC2\xAE",
 			'(tm)' => "\xE2\x84\xA2"
-		);
+		];
 		foreach ($matches[0] as $m)
 		{
 			$pos = $m[1];

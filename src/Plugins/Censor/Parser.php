@@ -18,7 +18,7 @@ class Parser extends ParserBase
 
 		$replacements = (isset($this->config['replacements']))
 		              ? $this->config['replacements']
-		              : array();
+		              : [];
 
 		foreach ($matches as $m)
 		{
@@ -28,15 +28,12 @@ class Parser extends ParserBase
 
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], \strlen($m[0][0]));
 
-			foreach ($replacements as $_681051f1)
-			{
-				list($regexp, $replacement) = $_681051f1;
+			foreach ($replacements as list($regexp, $replacement))
 				if (\preg_match($regexp, $m[0][0]))
 				{
 					$tag->setAttribute($attrName, $replacement);
 					break;
 				}
-			}
 		}
 	}
 }

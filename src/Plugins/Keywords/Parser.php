@@ -18,15 +18,14 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 
 		$onlyFirst = !empty($this->config['onlyFirst']);
-		$keywords  = array();
+		$keywords  = [];
 
 		foreach ($regexps as $regexp)
 		{
 			\preg_match_all($regexp, $text, $matches, \PREG_OFFSET_CAPTURE);
 
-			foreach ($matches[0] as $_11955a1f)
+			foreach ($matches[0] as list($value, $pos))
 			{
-				list($value, $pos) = $_11955a1f;
 				if ($onlyFirst)
 				{
 					if (isset($keywords[$value]))

@@ -11,18 +11,18 @@ class BuiltInFilters
 {
 	public static function filterAlnum($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[0-9A-Za-z]+$/D')
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[0-9A-Za-z]+$/D']
+		]);
 	}
 
 	public static function filterColor($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array(
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => [
 				'regexp' => '/^(?>#[0-9a-f]{3,6}|rgb\\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\\)|[a-z]+)$/Di'
-			)
-		));
+			]
+		]);
 	}
 
 	public static function filterEmail($attrValue)
@@ -50,9 +50,9 @@ class BuiltInFilters
 
 	public static function filterIdentifier($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[-0-9A-Za-z_]+$/D')
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[-0-9A-Za-z_]+$/D']
+		]);
 	}
 
 	public static function filterInt($attrValue)
@@ -111,9 +111,9 @@ class BuiltInFilters
 
 	public static function filterNumber($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[0-9]+$/D')
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[0-9]+$/D']
+		]);
 	}
 
 	public static function filterRange($attrValue, $min, $max, Logger $logger = \null)
@@ -128,11 +128,11 @@ class BuiltInFilters
 			if (isset($logger))
 				$logger->warn(
 					'Value outside of range, adjusted up to min value',
-					array(
+					[
 						'attrValue' => $attrValue,
 						'min'       => $min,
 						'max'       => $max
-					)
+					]
 				);
 
 			return $min;
@@ -143,11 +143,11 @@ class BuiltInFilters
 			if (isset($logger))
 				$logger->warn(
 					'Value outside of range, adjusted down to max value',
-					array(
+					[
 						'attrValue' => $attrValue,
 						'min'       => $min,
 						'max'       => $max
-					)
+					]
 				);
 
 			return $max;
@@ -158,23 +158,23 @@ class BuiltInFilters
 
 	public static function filterRegexp($attrValue, $regexp)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => $regexp)
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => $regexp]
+		]);
 	}
 
 	public static function filterSimpletext($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[- +,.0-9A-Za-z_]+$/D')
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[- +,.0-9A-Za-z_]+$/D']
+		]);
 	}
 
 	public static function filterUint($attrValue)
 	{
-		return \filter_var($attrValue, \FILTER_VALIDATE_INT, array(
-			'options' => array('min_range' => 0)
-		));
+		return \filter_var($attrValue, \FILTER_VALIDATE_INT, [
+			'options' => ['min_range' => 0]
+		]);
 	}
 
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = \null)
@@ -202,8 +202,8 @@ class BuiltInFilters
 
 		\preg_match($regexp, $url, $m);
 
-		$parts  = array();
-		$tokens = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment');
+		$parts  = [];
+		$tokens = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment'];
 		foreach ($tokens as $i => $name)
 			$parts[$name] = (isset($m[$i + 1])) ? $m[$i + 1] : '';
 

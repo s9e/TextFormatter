@@ -31,7 +31,7 @@ abstract class Bundle
 		return $xml;
 	}
 
-	public static function render($xml, array $params = array())
+	public static function render($xml, array $params = [])
 	{
 		if (!isset(static::$renderer))
 			static::$renderer = static::getRenderer();

@@ -21,60 +21,7 @@ use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
-	public function __call($methodName, $args)
-	{
-		return \call_user_func_array(array($this->collection, $methodName), $args);
-	}
-
-	public function offsetExists($offset)
-	{
-		return isset($this->collection[$offset]);
-	}
-
-	public function offsetGet($offset)
-	{
-		return $this->collection[$offset];
-	}
-
-	public function offsetSet($offset, $value)
-	{
-		$this->collection[$offset] = $value;
-	}
-
-	public function offsetUnset($offset)
-	{
-		unset($this->collection[$offset]);
-	}
-
-	public function count()
-	{
-		return \count($this->collection);
-	}
-
-	public function current()
-	{
-		return $this->collection->current();
-	}
-
-	public function key()
-	{
-		return $this->collection->key();
-	}
-
-	public function next()
-	{
-		return $this->collection->next();
-	}
-
-	public function rewind()
-	{
-		$this->collection->rewind();
-	}
-
-	public function valid()
-	{
-		return $this->collection->valid();
-	}
+	use CollectionProxy;
 
 	protected $collection;
 
@@ -126,11 +73,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
 
-		$config = array(
+		$config = [
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $regexp,
 			'tagName'    => $this->tagName
-		);
+		];
 
 		if ($this->notAfter !== '')
 		{

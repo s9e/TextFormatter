@@ -21,62 +21,9 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
-	public function __call($methodName, $args)
-	{
-		return \call_user_func_array(array($this->collection, $methodName), $args);
-	}
+	use CollectionProxy;
 
-	public function offsetExists($offset)
-	{
-		return isset($this->collection[$offset]);
-	}
-
-	public function offsetGet($offset)
-	{
-		return $this->collection[$offset];
-	}
-
-	public function offsetSet($offset, $value)
-	{
-		$this->collection[$offset] = $value;
-	}
-
-	public function offsetUnset($offset)
-	{
-		unset($this->collection[$offset]);
-	}
-
-	public function count()
-	{
-		return \count($this->collection);
-	}
-
-	public function current()
-	{
-		return $this->collection->current();
-	}
-
-	public function key()
-	{
-		return $this->collection->key();
-	}
-
-	public function next()
-	{
-		return $this->collection->next();
-	}
-
-	public function rewind()
-	{
-		$this->collection->rewind();
-	}
-
-	public function valid()
-	{
-		return $this->collection->valid();
-	}
-
-	protected $allowed = array();
+	protected $allowed = [];
 
 	protected $attrName = 'with';
 
@@ -84,14 +31,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 	protected $defaultReplacement = '****';
 
-	protected $regexpOptions = array(
+	protected $regexpOptions = [
 		'caseInsensitive' => \true,
-		'specialChars'    => array(
+		'specialChars'    => [
 			'*' => '[\\pL\\pN]*',
 			'?' => '.',
 			' ' => '\\s*'
-		)
-	);
+		]
+	];
 
 	protected $tagName = 'CENSOR';
 
@@ -129,11 +76,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (isset($config))
 			ConfigHelper::filterVariants($config);
 		else
-			$config = array(
+			$config = [
 				'attrName' => $this->attrName,
 				'regexp'   => '/(?!)/',
 				'tagName'  => $this->tagName
-			);
+			];
 
 		return new Helper($config);
 	}
@@ -145,13 +92,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (empty($words))
 			return;
 
-		$config = array(
+		$config = [
 			'attrName' => $this->attrName,
 			'regexp'   => $this->getWordsRegexp(\array_keys($words)),
 			'tagName'  => $this->tagName
-		);
+		];
 
-		$replacementWords = array();
+		$replacementWords = [];
 		foreach ($words as $word => $replacement)
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 				$replacementWords[$replacement][] = $word;
@@ -165,7 +112,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 			$variant->set('JS', RegexpConvertor::toJS($regexp));
 
-			$config['replacements'][] = array($variant, $replacement);
+			$config['replacements'][] = [$variant, $replacement];
 		}
 
 		if (!empty($this->allowed))

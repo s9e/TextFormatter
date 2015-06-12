@@ -94,7 +94,7 @@ class Parser extends ParserBase
 	protected function parseAttributes()
 	{
 		$firstPos = $this->pos;
-		$this->attributes = array();
+		$this->attributes = [];
 		while ($this->pos < $this->textLen)
 		{
 			$c = $this->text[$this->pos];
@@ -176,7 +176,7 @@ class Parser extends ParserBase
 			return;
 		}
 
-		$contentAttributes = array();
+		$contentAttributes = [];
 		if (isset($this->bbcodeConfig['contentAttributes']))
 			foreach ($this->bbcodeConfig['contentAttributes'] as $attrName)
 				if (!isset($this->attributes[$attrName]))

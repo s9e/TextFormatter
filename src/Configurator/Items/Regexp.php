@@ -34,14 +34,12 @@ class Regexp implements ConfigProvider
 
 	public function asConfig()
 	{
-		$_this = $this;
-
 		$variant = new Variant($this->regexp);
 		$variant->setDynamic(
 			'JS',
-			function () use ($_this)
+			function ()
 			{
-				return $_this->toJS();
+				return $this->toJS();
 			}
 		);
 

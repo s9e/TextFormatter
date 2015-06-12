@@ -14,7 +14,7 @@ abstract class Renderer
 {
 	public $metaElementsRegexp = '(<[eis]>[^<]*</[eis]>)';
 
-	protected $params = array();
+	protected $params = [];
 
 	protected function loadXML($xml)
 	{

@@ -11,7 +11,7 @@ use InvalidArgumentException;
 
 class FunctionProvider
 {
-	static public $cache = array(
+	static public $cache = [
 		'addslashes'=>'function(str)
 {
 	return str.replace(/["\'\\\\]/g, \'\\\\$&\').replace(/\\u0000/g, \'\\\\0\');
@@ -111,7 +111,7 @@ class FunctionProvider
 {
 	return encodeURIComponent(str);
 }'
-	);
+	];
 
 	public static function get($funcName)
 	{

@@ -28,7 +28,7 @@ class JavaScript
 
 	protected $configurator;
 
-	public $exportMethods = array(
+	public $exportMethods = [
 		'disablePlugin',
 		'disableTag',
 		'enablePlugin',
@@ -39,7 +39,7 @@ class JavaScript
 		'setNestingLimit',
 		'setParameter',
 		'setTagLimit'
-	);
+	];
 
 	protected $hints;
 
@@ -71,7 +71,7 @@ class JavaScript
 
 		if (!empty($this->exportMethods))
 		{
-			$methods = array();
+			$methods = [];
 			foreach ($this->exportMethods as $method)
 				$methods[] = "'" . $method . "':" . $method;
 
@@ -106,7 +106,7 @@ class JavaScript
 
 	protected static function convertBitfield($bitfield)
 	{
-		$hex = array();
+		$hex = [];
 
 		foreach (\str_split($bitfield, 4) as $quad)
 		{
@@ -124,7 +124,7 @@ class JavaScript
 
 	protected function getHints()
 	{
-		$this->hints = array(
+		$this->hints = [
 			'attributeGenerator'    => 0,
 			'attributeDefaultValue' => 0,
 			'closeAncestor'         => 0,
@@ -132,7 +132,7 @@ class JavaScript
 			'fosterParent'          => 0,
 			'postProcessing'        => 1,
 			'requireAncestor'       => 0
-		);
+		];
 
 		$this->setRenderingHints();
 		$this->setRulesHints();
@@ -158,12 +158,12 @@ class JavaScript
 
 			if (isset($pluginConfig['quickMatch']))
 			{
-				$valid = array(
+				$valid = [
 					'[[:ascii:]]',
 					'[\\xC0-\\xDF][\\x80-\\xBF]',
 					'[\\xE0-\\xEF][\\x80-\\xBF]{2}',
 					'[\\xF0-\\xF7][\\x80-\\xBF]{3}'
-				);
+				];
 
 				$regexp = '#(?>' . \implode('|', $valid) . ')+#';
 
@@ -173,12 +173,12 @@ class JavaScript
 					unset($pluginConfig['quickMatch']);
 			}
 
-			$globalKeys = array(
+			$globalKeys = [
 				'parser'      => 1,
 				'quickMatch'  => 1,
 				'regexp'      => 1,
 				'regexpLimit' => 1
-			);
+			];
 
 			$globalConfig = \array_intersect_key($pluginConfig, $globalKeys);
 			$localConfig  = \array_diff_key($pluginConfig, $globalKeys);
@@ -238,19 +238,18 @@ class JavaScript
 
 	protected function getSource()
 	{
-		$files = array(
+		$files = [
 			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
 			'Parser/' . (\in_array('getLogger', $this->exportMethods) ? '' : 'Null') . 'Logger.js',
 			'Parser/Tag.js',
 			'Parser.js'
-		);
+		];
 
 		if (\in_array('preview', $this->exportMethods, \true))
 			$files[] = 'render.js';
 
-		$rendererGenerator = new XSLT;
-		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
+		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
 
 		$src = $this->getHints();
 
@@ -340,14 +339,14 @@ class JavaScript
 
 	protected function injectConfig(&$src)
 	{
-		$this->callbacks = array();
+		$this->callbacks = [];
 
-		$config = array(
+		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
 			'rootContext'    => $this->getRootContext(),
 			'tagsConfig'     => $this->getTagsConfig()
-		);
+		];
 		$src = \preg_replace_callback(
 			'/(\\nvar (' . \implode('|', \array_keys($config)) . '))(;)/',
 			function ($m) use ($config)
@@ -362,7 +361,7 @@ class JavaScript
 
 	public static function isLegalProp($name)
 	{
-		$reserved = array('abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while', 'with');
+		$reserved = ['abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while', 'with'];
 
 		if (\in_array($name, $reserved, \true))
 			return \false;
@@ -406,7 +405,7 @@ class JavaScript
 	protected function convertCallback($callbackType, array $callbackConfig)
 	{
 		$callback = $callbackConfig['callback'];
-		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : array();
+		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
 
 		if (isset($callbackConfig['js']))
 			$jsCallback = '(' . $callbackConfig['js'] . ')';
@@ -419,19 +418,19 @@ class JavaScript
 		if (!isset($jsCallback))
 			return new Code('returnFalse');
 
-		$arguments = array(
-			'attributeFilter' => array(
+		$arguments = [
+			'attributeFilter' => [
 				'attrValue' => '*',
 				'attrName'  => '!string'
-			),
-			'attributeGenerator' => array(
+			],
+			'attributeGenerator' => [
 				'attrName'  => '!string'
-			),
-			'tagFilter' => array(
+			],
+			'tagFilter' => [
 				'tag'       => '!Tag',
 				'tagConfig' => '!Object'
-			)
-		);
+			]
+		];
 
 		$js = '(' . \implode(',', \array_keys($arguments[$callbackType])) . '){return ' . $jsCallback . '(';
 

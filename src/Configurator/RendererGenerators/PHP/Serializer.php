@@ -17,7 +17,7 @@ class Serializer
 {
 	public $branchTableThreshold = 8;
 
-	public $branchTables = array();
+	public $branchTables = [];
 
 	public $convertor;
 
@@ -30,7 +30,7 @@ class Serializer
 
 	protected function convertAttributeValueTemplate($attrValue)
 	{
-		$phpExpressions = array();
+		$phpExpressions = [];
 		foreach (AVTHelper::parse($attrValue) as $token)
 			if ($token[0] === 'literal')
 				$phpExpressions[] = \var_export($token[1], \true);
@@ -79,7 +79,7 @@ class Serializer
 
 	public function serialize(DOMElement $ir)
 	{
-		$this->branchTables = array();
+		$this->branchTables = [];
 
 		return $this->serializeChildren($ir);
 	}
@@ -177,7 +177,7 @@ class Serializer
 
 	protected function serializeHash(DOMElement $switch)
 	{
-		$statements = array();
+		$statements = [];
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
 			if (!$case->parentNode->isSameNode($switch))

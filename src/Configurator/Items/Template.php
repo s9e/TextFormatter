@@ -27,7 +27,7 @@ class Template
 
 	public function __call($methodName, $args)
 	{
-		return \call_user_func_array(array($this->getForensics(), $methodName), $args);
+		return \call_user_func_array([$this->getForensics(), $methodName], $args);
 	}
 
 	public function __toString()

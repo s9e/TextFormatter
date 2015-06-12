@@ -126,7 +126,7 @@ class Parser extends ParserBase
 		if (!self::tagIsMissingAnyAttribute($tag, $attrNames))
 			return;
 
-		$vars    = array();
+		$vars    = [];
 		$matched = \false;
 		foreach ((array) $matchRegexps as $matchRegexp)
 			if (\preg_match($matchRegexp, $url, $m))
@@ -171,10 +171,10 @@ class Parser extends ParserBase
 			$prefix  = 'compress.zlib://';
 			$suffix  = '.gz';
 			$context = \stream_context_create(
-				array(
-					'http' => array('header' => 'Accept-Encoding: gzip'),
-					'ssl'  => array('verify_peer' => \false)
-				)
+				[
+					'http' => ['header' => 'Accept-Encoding: gzip'],
+					'ssl'  => ['verify_peer' => \false]
+				]
 			);
 		}
 

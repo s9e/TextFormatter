@@ -56,14 +56,14 @@ class ControlStructuresOptimizer
 
 	protected function blockEndsWithIf()
 	{
-		return \in_array($this->context['lastBlock'], array(\T_IF, \T_ELSEIF), \true);
+		return \in_array($this->context['lastBlock'], [\T_IF, \T_ELSEIF], \true);
 	}
 
 	protected function isControlStructure()
 	{
 		return \in_array(
 			$this->tokens[$this->i][0],
-			array(\T_ELSE, \T_ELSEIF, \T_FOR, \T_FOREACH, \T_IF, \T_WHILE),
+			[\T_ELSE, \T_ELSEIF, \T_FOR, \T_FOREACH, \T_IF, \T_WHILE],
 			\true
 		);
 	}
@@ -78,7 +78,7 @@ class ControlStructuresOptimizer
 		if ($this->tokens[$k][0] === \T_WHITESPACE)
 			++$k;
 
-		return \in_array($this->tokens[$k][0], array(\T_ELSEIF, \T_ELSE), \true);
+		return \in_array($this->tokens[$k][0], [\T_ELSEIF, \T_ELSE], \true);
 	}
 
 	protected function mustPreserveBraces()
@@ -90,7 +90,7 @@ class ControlStructuresOptimizer
 	{
 		$savedIndex = $this->i;
 
-		if (!\in_array($this->tokens[$this->i][0], array(\T_ELSE, \T_ELSEIF), \true))
+		if (!\in_array($this->tokens[$this->i][0], [\T_ELSE, \T_ELSEIF], \true))
 			++$this->context['statements'];
 
 		if ($this->tokens[$this->i][0] !== \T_ELSE)
@@ -107,16 +107,16 @@ class ControlStructuresOptimizer
 
 		++$this->braces;
 
-		$replacement = array(\T_WHITESPACE, '');
+		$replacement = [\T_WHITESPACE, ''];
 
 		if ($this->tokens[$savedIndex][0]  === \T_ELSE
 		 && $this->tokens[$this->i + 1][0] !== \T_VARIABLE
 		 && $this->tokens[$this->i + 1][0] !== \T_WHITESPACE)
-			$replacement = array(\T_WHITESPACE, ' ');
+			$replacement = [\T_WHITESPACE, ' '];
 
 		$this->context['lastBlock'] = $this->tokens[$savedIndex][0];
 
-		$this->context = array(
+		$this->context = [
 			'braces'      => $this->braces,
 			'index'       => $this->i,
 			'lastBlock'   => \null,
@@ -124,7 +124,7 @@ class ControlStructuresOptimizer
 			'replacement' => $replacement,
 			'savedIndex'  => $savedIndex,
 			'statements'  => 0
-		);
+		];
 	}
 
 	protected function processEndOfBlock()
@@ -141,9 +141,9 @@ class ControlStructuresOptimizer
 	{
 		$this->tokens[$this->context['index']] = $this->context['replacement'];
 
-		$this->tokens[$this->i] = ($this->context['statements']) ? array(\T_WHITESPACE, '') : ';';
+		$this->tokens[$this->i] = ($this->context['statements']) ? [\T_WHITESPACE, ''] : ';';
 
-		foreach (array($this->context['index'] - 1, $this->i - 1) as $tokenIndex)
+		foreach ([$this->context['index'] - 1, $this->i - 1] as $tokenIndex)
 			if ($this->tokens[$tokenIndex][0] === \T_WHITESPACE)
 				$this->tokens[$tokenIndex][1] = '';
 
@@ -158,17 +158,17 @@ class ControlStructuresOptimizer
 
 			if ($this->tokens[$j][0] === \T_IF)
 			{
-				$this->tokens[$j] = array(\T_ELSEIF, 'elseif');
+				$this->tokens[$j] = [\T_ELSEIF, 'elseif'];
 
 				$j = $this->context['savedIndex'];
-				$this->tokens[$j] = array(\T_WHITESPACE, '');
+				$this->tokens[$j] = [\T_WHITESPACE, ''];
 
 				if ($this->tokens[$j - 1][0] === \T_WHITESPACE)
 					$this->tokens[$j - 1][1] = '';
 
 				$this->unindentBlock($j, $this->i - 1);
 
-				$this->tokens[$this->context['index']] = array(\T_WHITESPACE, '');
+				$this->tokens[$this->context['index']] = [\T_WHITESPACE, ''];
 			}
 		}
 
@@ -179,14 +179,14 @@ class ControlStructuresOptimizer
 	{
 		$this->tokens = \token_get_all('<?php ' . $php);
 
-		$this->context = array(
+		$this->context = [
 			'braces'      => 0,
 			'index'       => -1,
-			'parent'      => array(),
+			'parent'      => [],
 			'preventElse' => \false,
 			'savedIndex'  => 0,
 			'statements'  => 0
-		);
+		];
 
 		$this->i       = 0;
 		$this->cnt     = \count($this->tokens);

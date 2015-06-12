@@ -43,7 +43,7 @@ class Repository
 		$this->dom = $value;
 	}
 
-	public function get($name, array $vars = array())
+	public function get($name, array $vars = [])
 	{
 		$name = \preg_replace_callback(
 			'/^[^#]+/',
@@ -86,22 +86,22 @@ class Repository
 		foreach ($xpath->query('rules/*', $node) as $ruleNode)
 		{
 			$methodName = $ruleNode->nodeName;
-			$args       = array();
+			$args       = [];
 
 			if ($ruleNode->textContent)
 				$args[] = $ruleNode->textContent;
 
-			\call_user_func_array(array($tag->rules, $methodName), $args);
+			\call_user_func_array([$tag->rules, $methodName], $args);
 		}
 
 		foreach ($node->getElementsByTagName('predefinedAttributes') as $predefinedAttributes)
 			foreach ($predefinedAttributes->attributes as $attribute)
 				$bbcode->predefinedAttributes->set($attribute->name, $attribute->value);
 
-		return array(
+		return [
 			'bbcode'     => $bbcode,
 			'bbcodeName' => $bbcodeName,
 			'tag'        => $tag
-		);
+		];
 	}
 }

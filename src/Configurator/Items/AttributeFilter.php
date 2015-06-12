@@ -11,52 +11,7 @@ use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
 
 class AttributeFilter extends Filter
 {
-	protected $markedSafe = array();
-
-	protected function isSafe($context)
-	{
-		return !empty($this->markedSafe[$context]);
-	}
-
-	public function isSafeAsURL()
-	{
-		return $this->isSafe('AsURL');
-	}
-
-	public function isSafeInCSS()
-	{
-		return $this->isSafe('InCSS');
-	}
-
-
-
-	public function markAsSafeAsURL()
-	{
-		$this->markedSafe['AsURL'] = \true;
-
-		return $this;
-	}
-
-	public function markAsSafeInCSS()
-	{
-		$this->markedSafe['InCSS'] = \true;
-
-		return $this;
-	}
-
-	public function markAsSafeInJS()
-	{
-		$this->markedSafe['InJS'] = \true;
-
-		return $this;
-	}
-
-	public function resetSafeness()
-	{
-		$this->markedSafe = array();
-
-		return $this;
-	}
+	use TemplateSafeness;
 
 	public function __construct($callback)
 	{
@@ -68,11 +23,11 @@ class AttributeFilter extends Filter
 
 	public function isSafeInJS()
 	{
-		$safeCallbacks = array(
+		$safeCallbacks = [
 			'urlencode',
 			'strtotime',
 			'rawurlencode'
-		);
+		];
 
 		if (\in_array($this->callback, $safeCallbacks, \true))
 			return \true;
