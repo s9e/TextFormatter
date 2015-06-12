@@ -12,6 +12,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 
 class ProgrammableCallback implements ConfigProvider
 {
@@ -58,15 +59,14 @@ class ProgrammableCallback implements ConfigProvider
 
 	public function getJS()
 	{
-		if (!isset($this->js)
-		 && \is_string($this->callback)
-		 && \preg_match('#^[a-z_0-9]+$#D', $this->callback))
-		{
-			$filepath = __DIR__ . '/../JavaScript/functions/' . $this->callback . '.js';
-
-			if (\file_exists($filepath))
-				return new Code(\file_get_contents($filepath));
-		}
+		if (!isset($this->js) && \is_string($this->callback))
+			try
+			{
+				return new Code(FunctionProvider::get($this->callback));
+			}
+			catch (InvalidArgumentException $e)
+			{
+				}
 
 		return $this->js;
 	}
