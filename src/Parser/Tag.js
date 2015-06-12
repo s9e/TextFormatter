@@ -202,7 +202,7 @@ Tag.prototype.setSortPriority = function(sortPriority)
 */
 Tag.prototype.getAttributes = function()
 {
-	var attributes = {}
+	var attributes = {};
 	for (var attrName in this.attributes)
 	{
 		attributes[attrName] = this.attributes[attrName];
