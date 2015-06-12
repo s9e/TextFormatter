@@ -20,3 +20,6 @@ if [ -n "$OPTIMIZE" ]
 then
 	php optimizeSources.php
 fi
+
+# Coalesce the Configurator files
+php coalesceConfiguratorFiles.php

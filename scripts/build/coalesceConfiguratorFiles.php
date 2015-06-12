@@ -63,10 +63,6 @@ do
 }
 while ($continue);
 
-asort($scores);
-print_r($scores);
-//exit;
-
 $classNamesByScore = array();
 foreach ($scores as $className => $score)
 {
