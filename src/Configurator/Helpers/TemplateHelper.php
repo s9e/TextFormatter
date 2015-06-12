@@ -267,7 +267,7 @@ abstract class TemplateHelper
 					if ($replacement[0] === 'expression')
 						return '{' . $replacement[1] . '}';
 					elseif ($replacement[0] === 'passthrough')
-						return ($replacement[1]) ? '{.}' : '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
+						return '{.}';
 					else
 						return $replacement[1];
 				},
