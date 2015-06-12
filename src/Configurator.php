@@ -959,7 +959,7 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 abstract class TemplateHelper
 {
-	const XMLNS_XSL = ;
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	public static function loadTemplate($template)
 	{
@@ -1473,7 +1473,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class TemplateCheck
 {
-	const XMLNS_XSL = ;
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	abstract public function check(DOMElement $template, Tag $tag);
 }
