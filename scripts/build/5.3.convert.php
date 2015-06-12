@@ -155,6 +155,12 @@ function convertCustom($filepath, &$file)
 				"\"strtr(\\\$node->getAttribute('bar'),array('a'=>'A','b'=>'B','c'=>'','d'=>''))\""
 			)
 		),
+		'Preg/Configurator.php' => array(
+			array(
+				'protected $captures;',
+				'public $captures;'
+			)
+		),
 		'Quick.php' => array(
 			array(
 				'$php[] = \'		self::$attributes = [];\';',
