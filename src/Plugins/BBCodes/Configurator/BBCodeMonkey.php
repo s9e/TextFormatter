@@ -138,8 +138,7 @@ class BBCodeMonkey
 				// Test whether the token is used as passthrough
 				if ($tokenId === $config['passthroughToken'])
 				{
-					// Use substring() to exclude the <st/> and <et/> children
-					return ['passthrough', false];
+					return ['passthrough'];
 				}
 
 				// Undefined token. If it's the name of a filter, consider it's an error

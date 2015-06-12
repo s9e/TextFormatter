@@ -1312,7 +1312,7 @@ class BBCodeMonkeyTest extends Test
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode	,
 					'tag'        => new Tag([
-						'template' => '<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>'
+						'template' => '<b title="{.}"><xsl:apply-templates/></b>'
 					])
 				]
 			],

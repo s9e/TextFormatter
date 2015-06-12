@@ -384,25 +384,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox A passthrough capture used in an attribute does not include the start/end tags
-	*/
-	public function testPassthroughInAttribute()
-	{
-		$plugin  = $this->configurator->plugins->load('Generic');
-		$tagName = $plugin->add(
-			'#<(.*)>#',
-			'<b title="$1">$1</a>'
-		);
-
-		$tag = $this->configurator->tags->get($tagName);
-
-		$this->assertEquals(
-			'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>',
-			$tag->template
-		);
-	}
-
-	/**
 	* @testdox A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
 	* depends testCreatesAttributesWithUrlFilter
 	*/

@@ -621,18 +621,9 @@ class TemplateHelperTest extends Test
 				'/\\$[0-9]+/',
 				function ($m)
 				{
-					return ['passthrough', true];
+					return ['passthrough'];
 				},
 				'<b title="{.}"/>'
-			],
-			[
-				'<b title="$1"/>',
-				'/\\$[0-9]+/',
-				function ($m)
-				{
-					return ['passthrough', false];
-				},
-				'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"/>'
 			],
 			[
 				'<b>$1</b>',
@@ -657,16 +648,7 @@ class TemplateHelperTest extends Test
 				'/\\$[0-9]+/',
 				function ($m)
 				{
-					return ['passthrough', true];
-				},
-				'<b><xsl:apply-templates/></b>'
-			],
-			[
-				'<b>$1</b>',
-				'/\\$[0-9]+/',
-				function ($m)
-				{
-					return ['passthrough', false];
+					return ['passthrough'];
 				},
 				'<b><xsl:apply-templates/></b>'
 			],

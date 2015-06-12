@@ -41,8 +41,8 @@ class MinifyXPathExpressionsTest extends AbstractTest
 				'<div><xsl:if test="@foo=2">!</xsl:if></div>'
 			],
 			[
-				'<div><xsl:value-of select="substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))"/></div>',
-				'<div><xsl:value-of select="substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))"/></div>'
+				'<div><xsl:value-of select="substring(., 1 + string-length(s), string-length() - (string-length(s) + string-length(e)))"/></div>',
+				'<div><xsl:value-of select="substring(.,1+string-length(s),string-length()-(string-length(s)+string-length(e)))"/></div>'
 			],
 			[
 				'<div><xsl:if test="@foo - bar = 2">!</xsl:if></div>',

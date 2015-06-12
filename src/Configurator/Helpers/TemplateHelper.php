@@ -417,9 +417,8 @@ abstract class TemplateHelper
 	*  - 'literal' indicates a literal (plain text) replacement, passed as its second element.
 	*  - 'passthrough' indicates that the replacement should the tag's content. It works differently
 	*    whether it is inside an attribute's value or a text node. Within an attribute's value, the
-	*    replacement will be the text content of the tag and the second element must be a boolean
-	*    that indicates whether it should include the start and end tags. Within a text node, the
-	*    replacement becomes an <xsl:apply-templates/> node and the second element is ignored.
+	*    replacement will be the text content of the tag. Within a text node, the replacement
+	*    becomes an <xsl:apply-templates/> node.
 	*
 	* @param  string   $template Original template
 	* @param  string   $regexp   Regexp for matching parts that need replacement
@@ -452,7 +451,7 @@ abstract class TemplateHelper
 					}
 					elseif ($replacement[0] === 'passthrough')
 					{
-						return ($replacement[1]) ? '{.}' : '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
+						return '{.}';
 					}
 					else
 					{

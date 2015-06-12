@@ -278,7 +278,7 @@ class Configurator extends ConfiguratorBase
 					if (!isset($captures[$idx])
 					 || $node instanceof DOMText)
 					{
-						return ['passthrough', false];
+						return ['passthrough'];
 					}
 				}
 
