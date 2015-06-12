@@ -2,7 +2,11 @@
 <?php
 
 include __DIR__ . '/../../src/autoloader.php';
-new s9e\TextFormatter\Configurator;
+$configurator = new s9e\TextFormatter\Configurator;
+$tag = $configurator->tags->add('X');
+$tag->attributes->add('x');
+$tag->template = '<b><xsl:apply-templates/></b>';
+$configurator->finalize();
 
 $scores = $relations = array();
 foreach (get_declared_classes() as $className)
@@ -83,5 +87,12 @@ foreach ($classNamesByScore as $classNames)
 		unlink($filepath);
 	}
 }
+
+// Fix __DIR__ in FunctionProvider
+$file = str_replace(
+	"\$filepath = __DIR__ . '/functions/' . \$funcName . '.js';",
+	"\$filepath = __DIR__ . '/Configurator/JavaScript/functions/' . \$funcName . '.js';",
+	$file
+);
 
 file_put_contents($target, $file);
