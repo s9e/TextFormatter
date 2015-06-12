@@ -443,6 +443,1008 @@ interface ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+
+abstract class ConfigHelper
+{
+	public static function filterVariants(&$config, $variant = \null)
+	{
+		foreach ($config as $name => $value)
+		{
+			while ($value instanceof Variant)
+			{
+				$value = $value->get($variant);
+
+				if ($value === \null)
+				{
+					unset($config[$name]);
+
+					continue 2;
+				}
+			}
+
+			if ($value instanceof Dictionary && $variant !== 'JS')
+				$value = (array) $value;
+
+			if (\is_array($value) || $value instanceof Traversable)
+				self::filterVariants($value, $variant);
+
+			$config[$name] = $value;
+		}
+	}
+
+	public static function generateQuickMatchFromList(array $strings)
+	{
+		foreach ($strings as $string)
+		{
+			$stringLen  = \strlen($string);
+			$substrings = [];
+
+			for ($len = $stringLen; $len; --$len)
+			{
+				$pos = $stringLen - $len;
+
+				do
+				{
+					$substrings[\substr($string, $pos, $len)] = 1;
+				}
+				while (--$pos >= 0);
+			}
+
+			if (isset($goodStrings))
+			{
+				$goodStrings = \array_intersect_key($goodStrings, $substrings);
+
+				if (empty($goodStrings))
+					break;
+			}
+			else
+				$goodStrings = $substrings;
+		}
+
+		if (empty($goodStrings))
+			return \false;
+
+		return \strval(\key($goodStrings));
+	}
+
+	public static function optimizeArray(array &$config, array &$cache = [])
+	{
+		foreach ($config as $k => &$v)
+		{
+			if (!\is_array($v))
+				continue;
+
+			self::optimizeArray($v, $cache);
+
+			$cacheKey = \array_search($v, $cache);
+			if ($cacheKey === \false)
+			{
+				$cacheKey         = \count($cache);
+				$cache[$cacheKey] = $v;
+			}
+
+			$config[$k] =& $cache[$cacheKey];
+		}
+		unset($v);
+	}
+
+	public static function toArray($value, $keepEmpty = \false, $keepNull = \false)
+	{
+		$array = [];
+
+		foreach ($value as $k => $v)
+		{
+			if ($v instanceof ConfigProvider)
+				$v = $v->asConfig();
+			elseif ($v instanceof Traversable || \is_array($v))
+				$v = self::toArray($v, $keepEmpty, $keepNull);
+			elseif (\is_scalar($v) || \is_null($v))
+				;
+			else
+			{
+				$type = (\is_object($v))
+				      ? 'an instance of ' . \get_class($v)
+				      : 'a ' . \gettype($v);
+
+				throw new RuntimeException('Cannot convert ' . $type . ' to array');
+			}
+
+			if (!isset($v) && !$keepNull)
+				continue;
+
+			if (!$keepEmpty && $v === [])
+				continue;
+
+			$array[$k] = $v;
+		}
+
+		return $array;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
+
+use RuntimeException;
+
+abstract class RegexpBuilder
+{
+	public static function fromList(array $words, array $options = [])
+	{
+		if (empty($words))
+			return '';
+
+		$options += [
+			'delimiter'       => '/',
+			'caseInsensitive' => \false,
+			'specialChars'    => [],
+			'useLookahead'    => \false
+		];
+
+		if ($options['caseInsensitive'])
+		{
+			foreach ($words as &$word)
+				$word = \strtr(
+					$word,
+					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+					'abcdefghijklmnopqrstuvwxyz'
+				);
+			unset($word);
+		}
+
+		$words = \array_unique($words);
+
+		\sort($words);
+
+		$initials = [];
+
+		$esc  = $options['specialChars'];
+		$esc += [$options['delimiter'] => '\\' . $options['delimiter']];
+
+		$esc += [
+			'!' => '!',
+			'-' => '-',
+			':' => ':',
+			'<' => '<',
+			'=' => '=',
+			'>' => '>',
+			'}' => '}'
+		];
+
+		$splitWords = [];
+
+		foreach ($words as $word)
+		{
+			if (\preg_match_all('#.#us', $word, $matches) === \false)
+				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
+
+			$splitWord = [];
+			foreach ($matches[0] as $pos => $c)
+			{
+				if (!isset($esc[$c]))
+					$esc[$c] = \preg_quote($c);
+
+				if ($pos === 0)
+					$initials[] = $esc[$c];
+
+				$splitWord[] = $esc[$c];
+			}
+
+			$splitWords[] = $splitWord;
+		}
+
+		$regexp = self::assemble([self::mergeChains($splitWords)]);
+
+		if ($options['useLookahead']
+		 && \count($initials) > 1
+		 && $regexp[0] !== '[')
+		{
+			$useLookahead = \true;
+
+			foreach ($initials as $initial)
+				if (!self::canBeUsedInCharacterClass($initial))
+				{
+					$useLookahead = \false;
+					break;
+				}
+
+			if ($useLookahead)
+				$regexp = '(?=' . self::generateCharacterClass($initials) . ')' . $regexp;
+		}
+
+		return $regexp;
+	}
+
+	protected static function mergeChains(array $chains)
+	{
+		if (!isset($chains[1]))
+			return $chains[0];
+
+		$mergedChain = self::removeLongestCommonPrefix($chains);
+
+		if (!isset($chains[0][0])
+		 && !\array_filter($chains))
+			return $mergedChain;
+
+		$suffix = self::removeLongestCommonSuffix($chains);
+
+		if (isset($chains[1]))
+		{
+			self::optimizeDotChains($chains);
+			self::optimizeCatchallChains($chains);
+		}
+
+		$endOfChain = \false;
+
+		$remerge = \false;
+
+		$groups = [];
+		foreach ($chains as $chain)
+		{
+			if (!isset($chain[0]))
+			{
+				$endOfChain = \true;
+				continue;
+			}
+
+			$head = $chain[0];
+
+			if (isset($groups[$head]))
+				$remerge = \true;
+
+			$groups[$head][] = $chain;
+		}
+
+		$characterClass = [];
+		foreach ($groups as $head => $groupChains)
+		{
+			$head = (string) $head;
+
+			if ($groupChains === [[$head]]
+			 && self::canBeUsedInCharacterClass($head))
+				$characterClass[$head] = $head;
+		}
+
+		\sort($characterClass);
+
+		if (isset($characterClass[1]))
+		{
+			foreach ($characterClass as $char)
+				unset($groups[$char]);
+
+			$head = self::generateCharacterClass($characterClass);
+			$groups[$head][] = [$head];
+
+			$groups = [$head => $groups[$head]]
+			        + $groups;
+		}
+
+		if ($remerge)
+		{
+			$mergedChains = [];
+			foreach ($groups as $head => $groupChains)
+				$mergedChains[] = self::mergeChains($groupChains);
+
+			self::mergeTails($mergedChains);
+
+			$regexp = \implode('', self::mergeChains($mergedChains));
+
+			if ($endOfChain)
+				$regexp = self::makeRegexpOptional($regexp);
+
+			$mergedChain[] = $regexp;
+		}
+		else
+		{
+			self::mergeTails($chains);
+			$mergedChain[] = self::assemble($chains);
+		}
+
+		foreach ($suffix as $atom)
+			$mergedChain[] = $atom;
+
+		return $mergedChain;
+	}
+
+	protected static function mergeTails(array &$chains)
+	{
+		self::mergeTailsCC($chains);
+
+		self::mergeTailsAltern($chains);
+
+		$chains = \array_values($chains);
+	}
+
+	protected static function mergeTailsCC(array &$chains)
+	{
+		$groups = [];
+
+		foreach ($chains as $k => $chain)
+			if (isset($chain[1])
+			 && !isset($chain[2])
+			 && self::canBeUsedInCharacterClass($chain[0]))
+				$groups[$chain[1]][$k] = $chain;
+
+		foreach ($groups as $groupChains)
+		{
+			if (\count($groupChains) < 2)
+				continue;
+
+			$chains = \array_diff_key($chains, $groupChains);
+
+			$chains[] = self::mergeChains(\array_values($groupChains));
+		}
+	}
+
+	protected static function mergeTailsAltern(array &$chains)
+	{
+		$groups = [];
+		foreach ($chains as $k => $chain)
+			if (!empty($chain))
+			{
+				$tail = \array_slice($chain, -1);
+				$groups[$tail[0]][$k] = $chain;
+			}
+
+		foreach ($groups as $tail => $groupChains)
+		{
+			if (\count($groupChains) < 2)
+				continue;
+
+			$mergedChain = self::mergeChains(\array_values($groupChains));
+
+			$oldLen = 0;
+			foreach ($groupChains as $groupChain)
+				$oldLen += \array_sum(\array_map('strlen', $groupChain));
+
+			if ($oldLen <= \array_sum(\array_map('strlen', $mergedChain)))
+				continue;
+
+			$chains = \array_diff_key($chains, $groupChains);
+
+			$chains[] = $mergedChain;
+		}
+	}
+
+	protected static function removeLongestCommonPrefix(array &$chains)
+	{
+		$pLen = 0;
+
+		while (1)
+		{
+			$c = \null;
+
+			foreach ($chains as $chain)
+			{
+				if (!isset($chain[$pLen]))
+					break 2;
+
+				if (!isset($c))
+				{
+					$c = $chain[$pLen];
+					continue;
+				}
+
+				if ($chain[$pLen] !== $c)
+					break 2;
+			}
+
+			++$pLen;
+		}
+
+		if (!$pLen)
+			return [];
+
+		$prefix = \array_slice($chains[0], 0, $pLen);
+
+		foreach ($chains as &$chain)
+			$chain = \array_slice($chain, $pLen);
+		unset($chain);
+
+		return $prefix;
+	}
+
+	protected static function removeLongestCommonSuffix(array &$chains)
+	{
+		$chainsLen = \array_map('count', $chains);
+
+		$maxLen = \min($chainsLen);
+
+		if (\max($chainsLen) === $maxLen)
+			--$maxLen;
+
+		$sLen = 0;
+
+		while ($sLen < $maxLen)
+		{
+			$c = \null;
+
+			foreach ($chains as $k => $chain)
+			{
+				$pos = $chainsLen[$k] - ($sLen + 1);
+
+				if (!isset($c))
+				{
+					$c = $chain[$pos];
+					continue;
+				}
+
+				if ($chain[$pos] !== $c)
+					break 2;
+			}
+
+			++$sLen;
+		}
+
+		if (!$sLen)
+			return [];
+
+		$suffix = \array_slice($chains[0], -$sLen);
+
+		foreach ($chains as &$chain)
+			$chain = \array_slice($chain, 0, -$sLen);
+		unset($chain);
+
+		return $suffix;
+	}
+
+	protected static function assemble(array $chains)
+	{
+		$endOfChain = \false;
+
+		$regexps        = [];
+		$characterClass = [];
+
+		foreach ($chains as $chain)
+		{
+			if (empty($chain))
+			{
+				$endOfChain = \true;
+				continue;
+			}
+
+			if (!isset($chain[1])
+			 && self::canBeUsedInCharacterClass($chain[0]))
+				$characterClass[$chain[0]] = $chain[0];
+			else
+				$regexps[] = \implode('', $chain);
+		}
+
+		if (!empty($characterClass))
+		{
+			\sort($characterClass);
+
+			$regexp = (isset($characterClass[1]))
+					? self::generateCharacterClass($characterClass)
+					: $characterClass[0];
+
+			\array_unshift($regexps, $regexp);
+		}
+
+		if (empty($regexps))
+			return '';
+
+		if (isset($regexps[1]))
+		{
+			$regexp = \implode('|', $regexps);
+
+			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
+		}
+		else
+			$regexp = $regexps[0];
+
+		if ($endOfChain)
+			$regexp = self::makeRegexpOptional($regexp);
+
+		return $regexp;
+	}
+
+	protected static function makeRegexpOptional($regexp)
+	{
+		if (\preg_match('#^\\.\\+\\??$#', $regexp))
+			return \str_replace('+', '*', $regexp);
+
+		if (\preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
+			return $m[1] . '?' . $m[2];
+
+		if (\preg_match('#^(?:[$^]|\\\\[bBAZzGQEK])$#', $regexp))
+			return '';
+
+		if (\preg_match('#^\\\\?.$#Dus', $regexp))
+			$isAtomic = \true;
+		elseif (\preg_match('#^[^[(].#s', $regexp))
+			$isAtomic = \false;
+		else
+		{
+			$def    = RegexpParser::parse('#' . $regexp . '#');
+			$tokens = $def['tokens'];
+
+			switch (\count($tokens))
+			{
+				case 1:
+					$startPos = $tokens[0]['pos'];
+					$len      = $tokens[0]['len'];
+
+					$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
+
+					if ($isAtomic && $tokens[0]['type'] === 'characterClass')
+					{
+						$regexp = \rtrim($regexp, '+*?');
+
+						if (!empty($tokens[0]['quantifiers']) && $tokens[0]['quantifiers'] !== '?')
+							$regexp .= '*';
+					}
+					break;
+
+				case 2:
+					if ($tokens[0]['type'] === 'nonCapturingSubpatternStart'
+					 && $tokens[1]['type'] === 'nonCapturingSubpatternEnd')
+					{
+						$startPos = $tokens[0]['pos'];
+						$len      = $tokens[1]['pos'] + $tokens[1]['len'];
+
+						$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
+
+						break;
+					}
+					default:
+					$isAtomic = \false;
+			}
+		}
+
+		if (!$isAtomic)
+			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
+
+		$regexp .= '?';
+
+		return $regexp;
+	}
+
+	protected static function generateCharacterClass(array $chars)
+	{
+		$chars = \array_flip($chars);
+
+		$unescape = \str_split('$()*+.?[{|^', 1);
+
+		foreach ($unescape as $c)
+			if (isset($chars['\\' . $c]))
+			{
+				unset($chars['\\' . $c]);
+				$chars[$c] = 1;
+			}
+
+		\ksort($chars);
+
+		if (isset($chars['-']))
+			$chars = ['-' => 1] + $chars;
+
+		if (isset($chars['^']))
+		{
+			unset($chars['^']);
+			$chars['^'] = 1;
+		}
+
+		return '[' . \implode('', \array_keys($chars)) . ']';
+	}
+
+	protected static function canBeUsedInCharacterClass($char)
+	{
+		if (\preg_match('#^\\\\[aefnrtdDhHsSvVwW]$#D', $char))
+			return \true;
+
+		if (\preg_match('#^\\\\[^A-Za-z0-9]$#Dus', $char))
+			return \true;
+
+		if (\preg_match('#..#Dus', $char))
+			return \false;
+
+		if (\preg_quote($char) !== $char
+		 && !\preg_match('#^[-!:<=>}]$#D', $char))
+			return \false;
+
+		return \true;
+	}
+
+	protected static function optimizeDotChains(array &$chains)
+	{
+		$validAtoms = [
+			'\\d' => 1, '\\D' => 1, '\\h' => 1, '\\H' => 1,
+			'\\s' => 1, '\\S' => 1, '\\v' => 1, '\\V' => 1,
+			'\\w' => 1, '\\W' => 1,
+
+			'\\^' => 1, '\\$' => 1, '\\.' => 1, '\\?' => 1,
+			'\\[' => 1, '\\]' => 1, '\\(' => 1, '\\)' => 1,
+			'\\+' => 1, '\\*' => 1, '\\\\' => 1
+		];
+
+		do
+		{
+			$hasMoreDots = \false;
+			foreach ($chains as $k1 => $dotChain)
+			{
+				$dotKeys = \array_keys($dotChain, '.?', \true);
+
+				if (!empty($dotKeys))
+				{
+					$dotChain[$dotKeys[0]] = '.';
+					$chains[$k1] = $dotChain;
+
+					\array_splice($dotChain, $dotKeys[0], 1);
+					$chains[] = $dotChain;
+
+					if (isset($dotKeys[1]))
+						$hasMoreDots = \true;
+				}
+			}
+		}
+		while ($hasMoreDots);
+
+		foreach ($chains as $k1 => $dotChain)
+		{
+			$dotKeys = \array_keys($dotChain, '.', \true);
+
+			if (empty($dotKeys))
+				continue;
+
+			foreach ($chains as $k2 => $tmpChain)
+			{
+				if ($k2 === $k1)
+					continue;
+
+				foreach ($dotKeys as $dotKey)
+				{
+					if (!isset($tmpChain[$dotKey]))
+						continue 2;
+
+					if (!\preg_match('#^.$#Du', \preg_quote($tmpChain[$dotKey]))
+					 && !isset($validAtoms[$tmpChain[$dotKey]]))
+						continue 2;
+
+					$tmpChain[$dotKey] = '.';
+				}
+
+				if ($tmpChain === $dotChain)
+					unset($chains[$k2]);
+			}
+		}
+	}
+
+	protected static function optimizeCatchallChains(array &$chains)
+	{
+		$precedence = [
+			'.*'  => 3,
+			'.*?' => 2,
+			'.+'  => 1,
+			'.+?' => 0
+		];
+
+		$tails = [];
+
+		foreach ($chains as $k => $chain)
+		{
+			if (!isset($chain[0]))
+				continue;
+
+			$head = $chain[0];
+
+			if (!isset($precedence[$head]))
+				continue;
+
+			$tail = \implode('', \array_slice($chain, 1));
+			if (!isset($tails[$tail])
+			 || $precedence[$head] > $tails[$tail]['precedence'])
+				$tails[$tail] = [
+					'key'        => $k,
+					'precedence' => $precedence[$head]
+				];
+		}
+
+		$catchallChains = [];
+		foreach ($tails as $tail => $info)
+			$catchallChains[$info['key']] = $chains[$info['key']];
+
+		foreach ($catchallChains as $k1 => $catchallChain)
+		{
+			$headExpr = $catchallChain[0];
+			$tailExpr = \false;
+			$match    = \array_slice($catchallChain, 1);
+
+			if (isset($catchallChain[1])
+			 && isset($precedence[\end($catchallChain)]))
+				$tailExpr = \array_pop($match);
+
+			$matchCnt = \count($match);
+
+			foreach ($chains as $k2 => $chain)
+			{
+				if ($k2 === $k1)
+					continue;
+
+				$start = 0;
+
+				$end = \count($chain);
+
+				if ($headExpr[1] === '+')
+				{
+					$found = \false;
+
+					foreach ($chain as $start => $atom)
+						if (self::matchesAtLeastOneCharacter($atom))
+						{
+							$found = \true;
+							break;
+						}
+
+					if (!$found)
+						continue;
+				}
+
+				if ($tailExpr === \false)
+					$end = $start;
+				else
+				{
+					if ($tailExpr[1] === '+')
+					{
+						$found = \false;
+
+						while (--$end > $start)
+							if (self::matchesAtLeastOneCharacter($chain[$end]))
+							{
+								$found = \true;
+								break;
+							}
+
+						if (!$found)
+							continue;
+					}
+
+					$end -= $matchCnt;
+				}
+
+				while ($start <= $end)
+				{
+					if (\array_slice($chain, $start, $matchCnt) === $match)
+					{
+						unset($chains[$k2]);
+						break;
+					}
+
+					++$start;
+				}
+			}
+		}
+	}
+
+	protected static function matchesAtLeastOneCharacter($expr)
+	{
+		if (\preg_match('#^[$*?^]$#', $expr))
+			return \false;
+
+		if (\preg_match('#^.$#u', $expr))
+			return \true;
+
+		if (\preg_match('#^.\\+#u', $expr))
+			return \true;
+
+		if (\preg_match('#^\\\\[^bBAZzGQEK1-9](?![*?])#', $expr))
+			return \true;
+
+		return \false;
+	}
+
+	protected static function canUseAtomicGrouping($expr)
+	{
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\.#', $expr))
+			return \false;
+
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*[+*]#', $expr))
+			return \false;
+
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\(?(?<!\\()\\?#', $expr))
+			return \false;
+
+		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\\\[a-z0-9]#', $expr))
+			return \false;
+
+		return \true;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
+
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\TagCollection;
+
+abstract class RulesHelper
+{
+	public static function getBitfields(TagCollection $tags, Ruleset $rootRules)
+	{
+		$rules = ['*root*' => \iterator_to_array($rootRules)];
+		foreach ($tags as $tagName => $tag)
+			$rules[$tagName] = \iterator_to_array($tag->rules);
+
+		$matrix = self::unrollRules($rules);
+
+		self::pruneMatrix($matrix);
+
+		$groupedTags = [];
+		foreach (\array_keys($matrix) as $tagName)
+		{
+			if ($tagName === '*root*')
+				continue;
+
+			$k = '';
+			foreach ($matrix as $tagMatrix)
+			{
+				$k .= $tagMatrix['allowedChildren'][$tagName];
+				$k .= $tagMatrix['allowedDescendants'][$tagName];
+			}
+
+			$groupedTags[$k][] = $tagName;
+		}
+
+		$return = [];
+
+		$bitTag    = [];
+		$bitNumber = 0;
+		foreach ($groupedTags as $tagNames)
+		{
+			foreach ($tagNames as $tagName)
+			{
+				$return['tags'][$tagName]['bitNumber'] = $bitNumber;
+				$bitTag[$bitNumber] = $tagName;
+			}
+
+			++$bitNumber;
+		}
+
+		foreach ($matrix as $tagName => $tagMatrix)
+			foreach (['allowedChildren', 'allowedDescendants'] as $fieldName)
+			{
+				$bitfield = '';
+				foreach ($bitTag as $targetName)
+					$bitfield .= $tagMatrix[$fieldName][$targetName];
+
+				$return['tags'][$tagName][$fieldName] = $bitfield;
+			}
+
+		foreach ($return['tags'] as &$bitfields)
+		{
+			$bitfields['allowedChildren']    = self::pack($bitfields['allowedChildren']);
+			$bitfields['allowedDescendants'] = self::pack($bitfields['allowedDescendants']);
+		}
+		unset($bitfields);
+
+		$return['root'] = $return['tags']['*root*'];
+		unset($return['tags']['*root*']);
+
+		return $return;
+	}
+
+	protected static function initMatrix(array $rules)
+	{
+		$matrix   = [];
+		$tagNames = \array_keys($rules);
+
+		foreach ($rules as $tagName => $tagRules)
+		{
+			if ($tagRules['defaultDescendantRule'] === 'allow')
+			{
+				$childValue      = (int) ($tagRules['defaultChildRule'] === 'allow');
+				$descendantValue = 1;
+			}
+			else
+			{
+				$childValue      = 0;
+				$descendantValue = 0;
+			}
+
+			$matrix[$tagName]['allowedChildren']    = \array_fill_keys($tagNames, $childValue);
+			$matrix[$tagName]['allowedDescendants'] = \array_fill_keys($tagNames, $descendantValue);
+		}
+
+		return $matrix;
+	}
+
+	protected static function applyTargetedRule(array &$matrix, $rules, $ruleName, $key, $value)
+	{
+		foreach ($rules as $tagName => $tagRules)
+		{
+			if (!isset($tagRules[$ruleName]))
+				continue;
+
+			foreach ($tagRules[$ruleName] as $targetName)
+				$matrix[$tagName][$key][$targetName] = $value;
+		}
+	}
+
+	protected static function unrollRules(array $rules)
+	{
+		$matrix = self::initMatrix($rules);
+
+		$tagNames = \array_keys($rules);
+		foreach ($rules as $tagName => $tagRules)
+		{
+			if (!empty($tagRules['ignoreTags']))
+				$rules[$tagName]['denyDescendant'] = $tagNames;
+
+			if (!empty($tagRules['requireParent']))
+			{
+				$denyParents = \array_diff($tagNames, $tagRules['requireParent']);
+				foreach ($denyParents as $parentName)
+					$rules[$parentName]['denyChild'][] = $tagName;
+			}
+		}
+
+		self::applyTargetedRule($matrix, $rules, 'allowChild',      'allowedChildren',    1);
+		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedChildren',    1);
+		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedDescendants', 1);
+
+		self::applyTargetedRule($matrix, $rules, 'denyChild',      'allowedChildren',    0);
+		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedChildren',    0);
+		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedDescendants', 0);
+
+		return $matrix;
+	}
+
+	protected static function pruneMatrix(array &$matrix)
+	{
+		$usableTags = ['*root*' => 1];
+
+		$parentTags = $usableTags;
+		do
+		{
+			$nextTags = [];
+			foreach (\array_keys($parentTags) as $tagName)
+				$nextTags += \array_filter($matrix[$tagName]['allowedChildren']);
+
+			$parentTags  = \array_diff_key($nextTags, $usableTags);
+			$parentTags  = \array_intersect_key($parentTags, $matrix);
+			$usableTags += $parentTags;
+		}
+		while (!empty($parentTags));
+
+		$matrix = \array_intersect_key($matrix, $usableTags);
+		unset($usableTags['*root*']);
+
+		foreach ($matrix as $tagName => &$tagMatrix)
+		{
+			$tagMatrix['allowedChildren']
+				= \array_intersect_key($tagMatrix['allowedChildren'], $usableTags);
+
+			$tagMatrix['allowedDescendants']
+				= \array_intersect_key($tagMatrix['allowedDescendants'], $usableTags);
+		}
+		unset($tagMatrix);
+	}
+
+	protected static function pack($bitfield)
+	{
+		return \implode('', \array_map('chr', \array_map('bindec', \array_map('strrev', \str_split($bitfield, 8)))));
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
+
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
@@ -1399,6 +2401,318 @@ abstract class TemplateHelper
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator\Items;
+
+use DOMDocument;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+
+class Template
+{
+	protected $forensics;
+
+	protected $isNormalized = \false;
+
+	protected $template;
+
+	public function __construct($template)
+	{
+		$this->template = $template;
+	}
+
+	public function __call($methodName, $args)
+	{
+		return \call_user_func_array([$this->getForensics(), $methodName], $args);
+	}
+
+	public function __toString()
+	{
+		return $this->template;
+	}
+
+	public function asDOM()
+	{
+		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $this->__toString()
+		     . '</xsl:template>';
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml);
+
+		return $dom;
+	}
+
+	public function getCSSNodes()
+	{
+		return TemplateHelper::getCSSNodes($this->asDOM());
+	}
+
+	public function getForensics()
+	{
+		if (!isset($this->forensics))
+			$this->forensics = new TemplateForensics($this->__toString());
+
+		return $this->forensics;
+	}
+
+	public function getJSNodes()
+	{
+		return TemplateHelper::getJSNodes($this->asDOM());
+	}
+
+	public function getURLNodes()
+	{
+		return TemplateHelper::getURLNodes($this->asDOM());
+	}
+
+	public function getParameters()
+	{
+		return TemplateHelper::getParametersFromXSL($this->__toString());
+	}
+
+	public function isNormalized($bool = \null)
+	{
+		if (isset($bool))
+			$this->isNormalized = $bool;
+
+		return $this->isNormalized;
+	}
+
+	public function normalize(TemplateNormalizer $templateNormalizer)
+	{
+		$this->forensics    = \null;
+		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
+		$this->isNormalized = \true;
+	}
+
+	public function replaceTokens($regexp, $fn)
+	{
+		$this->forensics    = \null;
+		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
+		$this->isNormalized = \false;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Items;
+
+use InvalidArgumentException;
+
+class Variant
+{
+	protected $defaultValue;
+
+	protected $variants = [];
+
+	public function __construct($value = \null, array $variants = [])
+	{
+		if ($value instanceof self)
+		{
+			$this->defaultValue = $value->defaultValue;
+			$this->variants     = $value->variants;
+		}
+		else
+			$this->defaultValue = $value;
+
+		foreach ($variants as $k => $v)
+			$this->set($k, $v);
+	}
+
+	public function __toString()
+	{
+		return (string) $this->defaultValue;
+	}
+
+	public function get($variant = \null)
+	{
+		if (isset($variant) && isset($this->variants[$variant]))
+		{
+			list($isDynamic, $value) = $this->variants[$variant];
+
+			return ($isDynamic) ? $value() : $value;
+		}
+
+		return $this->defaultValue;
+	}
+
+	public function has($variant)
+	{
+		return isset($this->variants[$variant]);
+	}
+
+	public function set($variant, $value)
+	{
+		$this->variants[$variant] = [\false, $value];
+	}
+
+	public function setDynamic($variant, $callback)
+	{
+		if (!\is_callable($callback))
+			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
+
+		$this->variants[$variant] = [\true, $callback];
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\JavaScript;
+
+class Code
+{
+	public $code;
+
+	public function __construct($code)
+	{
+		$this->code = $code;
+	}
+
+	public function __toString()
+	{
+		return $this->code;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\JavaScript;
+
+use InvalidArgumentException;
+
+class FunctionProvider
+{
+	static public $cache = [
+		'addslashes'=>'function(str)
+{
+	return str.replace(/["\'\\\\]/g, \'\\\\$&\').replace(/\\u0000/g, \'\\\\0\');
+}',
+		'dechex'=>'function(str)
+{
+	return parseInt(str).toString(16);
+}',
+		'intval'=>'function(str)
+{
+	return parseInt(str) || 0;
+}',
+		'ltrim'=>'function(str)
+{
+	return str.replace(/^[ \\n\\r\\t\\0\\x0B]+/g, \'\');
+}',
+		'mb_strtolower'=>'function(str)
+{
+	return str.toLowerCase();
+}',
+		'mb_strtoupper'=>'function(str)
+{
+	return str.toUpperCase();
+}',
+		'mt_rand'=>'function(min, max)
+{
+	return (min + Math.floor(Math.random() * (max + 1 - min)));
+}',
+		'rawurlencode'=>'function(str)
+{
+	return encodeURIComponent(str).replace(
+		/[!\'()*]/g,
+		/**
+		* @param {!string} c
+		*/
+		function(c)
+		{
+			return \'%\' + c.charCodeAt(0).toString(16).toUpperCase();
+		}
+	);
+}',
+		'rtrim'=>'function(str)
+{
+	return str.replace(/[ \\n\\r\\t\\0\\x0B]+$/g, \'\');
+}',
+		'str_rot13'=>'function(str)
+{
+	return str.replace(
+		/[a-z]/gi,
+		function(c)
+		{
+			return String.fromCharCode(c.charCodeAt(0) + ((c.toLowerCase() < \'n\') ? 13 : -13));
+		}
+	);
+}',
+		'stripslashes'=>'function(str)
+{
+	// NOTE: this will not correctly transform \\0 into a NULL byte. I consider this a feature
+	//       rather than a bug. There\'s no reason to use NULL bytes in a text.
+	return str.replace(/\\\\([\\s\\S]?)/g, \'\\\\1\');
+}',
+		'strrev'=>'function(str)
+{
+	return str.split(\'\').reverse().join(\'\');
+}',
+		'strtolower'=>'function(str)
+{
+	return str.toLowerCase();
+}',
+		'strtotime'=>'function(str)
+{
+	return Date.parse(str) / 1000;
+}',
+		'strtoupper'=>'function(str)
+{
+	return str.toUpperCase();
+}',
+		'trim'=>'function(str)
+{
+	return str.replace(/^[ \\n\\r\\t\\0\\x0B]+/g, \'\').replace(/[ \\n\\r\\t\\0\\x0B]+$/g, \'\');
+}',
+		'ucfirst'=>'function(str)
+{
+	return str.charAt(0).toUpperCase() + str.substr(1);
+}',
+		'ucwords'=>'function(str)
+{
+	return str.replace(
+		/(?:^|\\s)[a-z]/g,
+		function(m)
+		{
+			return m.toUpperCase()
+		}
+	);
+}',
+		'urlencode'=>'function(str)
+{
+	return encodeURIComponent(str);
+}'
+	];
+
+	public static function get($funcName)
+	{
+		if (isset(self::$cache[$funcName]))
+			return self::$cache[$funcName];
+		if (\preg_match('(^[a-z_0-9]+$)D', $funcName))
+		{
+			$filepath = __DIR__ . '/Configurator/JavaScript/functions/' . $funcName . '.js';
+			if (\file_exists($filepath))
+				return \file_get_contents($filepath);
+		}
+		throw new InvalidArgumentException("Unknown function '" . $funcName . "'");
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator;
 
 interface RendererGenerator
@@ -1704,6 +3018,119 @@ trait Configurable
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator\Traits;
+
+trait TemplateSafeness
+{
+	protected $markedSafe = [];
+
+	protected function isSafe($context)
+	{
+		return !empty($this->markedSafe[$context]);
+	}
+
+	public function isSafeAsURL()
+	{
+		return $this->isSafe('AsURL');
+	}
+
+	public function isSafeInCSS()
+	{
+		return $this->isSafe('InCSS');
+	}
+
+	public function isSafeInJS()
+	{
+		return $this->isSafe('InJS');
+	}
+
+	public function markAsSafeAsURL()
+	{
+		$this->markedSafe['AsURL'] = \true;
+
+		return $this;
+	}
+
+	public function markAsSafeInCSS()
+	{
+		$this->markedSafe['InCSS'] = \true;
+
+		return $this;
+	}
+
+	public function markAsSafeInJS()
+	{
+		$this->markedSafe['InJS'] = \true;
+
+		return $this;
+	}
+
+	public function resetSafeness()
+	{
+		$this->markedSafe = [];
+
+		return $this;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Validators;
+
+use InvalidArgumentException;
+
+abstract class AttributeName
+{
+	public static function isValid($name)
+	{
+		return (bool) \preg_match('#^(?!xmlns$)[a-z_][-a-z_0-9]*$#Di', $name);
+	}
+
+	public static function normalize($name)
+	{
+		if (!static::isValid($name))
+			throw new InvalidArgumentException("Invalid attribute name '" . $name . "'");
+
+		return \strtolower($name);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Validators;
+
+use InvalidArgumentException;
+
+abstract class TagName
+{
+	public static function isValid($name)
+	{
+		return (bool) \preg_match('#^(?:(?!xmlns|xsl|s9e)[a-z_][a-z_0-9]*:)?[a-z_][-a-z_0-9]*$#Di', $name);
+	}
+
+	public static function normalize($name)
+	{
+		if (!static::isValid($name))
+			throw new InvalidArgumentException("Invalid tag name '" . $name . "'");
+
+		if (\strpos($name, ':') === \false)
+			$name = \strtoupper($name);
+
+		return $name;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use Countable;
@@ -1753,6 +3180,69 @@ class Collection implements ConfigProvider, Countable, Iterator
 	public function valid()
 	{
 		return (\key($this->items) !== \null);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Items;
+
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterChain;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
+
+class Attribute implements ConfigProvider
+{
+	use Configurable;
+	use TemplateSafeness;
+
+	protected $defaultValue;
+
+	protected $filterChain;
+
+	protected $generator;
+
+	protected $required = \true;
+
+	public function __construct(array $options = \null)
+	{
+		$this->filterChain = new AttributeFilterChain;
+
+		if (isset($options))
+			foreach ($options as $optionName => $optionValue)
+				$this->__set($optionName, $optionValue);
+	}
+
+	protected function isSafe($context)
+	{
+		$methodName = 'isSafe' . $context;
+		foreach ($this->filterChain as $filter)
+			if ($filter->$methodName())
+				return \true;
+
+		return !empty($this->markedSafe[$context]);
+	}
+
+	public function setGenerator($callback)
+	{
+		if (!($callback instanceof ProgrammableCallback))
+			$callback = new ProgrammableCallback($callback);
+
+		$this->generator = $callback;
+	}
+
+	public function asConfig()
+	{
+		$vars = \get_object_vars($this);
+		unset($vars['markedSafe']);
+
+		return ConfigHelper::toArray($vars);
 	}
 }
 
@@ -1886,6 +3376,63 @@ class ProgrammableCallback implements ConfigProvider
 		}
 
 		return $config;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Items;
+
+use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+
+class Regexp implements ConfigProvider
+{
+	protected $isGlobal;
+
+	protected $regexp;
+
+	public function __construct($regexp, $isGlobal = \false)
+	{
+		if (@\preg_match($regexp, '') === \false)
+			throw new InvalidArgumentException('Invalid regular expression ' . \var_export($regexp, \true));
+
+		$this->regexp   = $regexp;
+		$this->isGlobal = $isGlobal;
+	}
+
+	public function __toString()
+	{
+		return $this->regexp;
+	}
+
+	public function asConfig()
+	{
+		$variant = new Variant($this->regexp);
+		$variant->setDynamic(
+			'JS',
+			function ()
+			{
+				return $this->toJS();
+			}
+		);
+
+		return $variant;
+	}
+
+	public function toJS()
+	{
+		$obj = RegexpConvertor::toJS($this->regexp);
+
+		if ($this->isGlobal)
+			$obj->flags .= 'g';
+
+		return $obj;
 	}
 }
 
@@ -5071,6 +6618,33 @@ class TagFilter extends Filter
 
 		$this->resetParameters();
 		$this->addParameterByName('tag');
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Collections;
+
+use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+
+class AttributeFilterChain extends NormalizedList
+{
+	public function normalizeValue($value)
+	{
+		if (\is_string($value) && \preg_match('(^#\\w+$)', $value))
+			$value = AttributeFilterCollection::getDefaultFilter(\substr($value, 1));
+
+		if ($value instanceof AttributeFilter)
+			return $value;
+
+		if (!\is_callable($value))
+			throw new InvalidArgumentException("Filter '" . \print_r($value, \true) . "' is neither callable nor an instance of AttributeFilter");
+
+		return new AttributeFilter($value);
 	}
 }
 
