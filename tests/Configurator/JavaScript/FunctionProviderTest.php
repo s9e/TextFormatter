@@ -12,7 +12,7 @@ class FunctionProviderTest extends Test
 {
 	public function tearDown()
 	{
-		FunctionProvider::$cache = [];
+		unset(FunctionProvider::$cache['foo']);
 	}
 
 	/**
@@ -20,7 +20,7 @@ class FunctionProviderTest extends Test
 	*/
 	public function testReturnFromCache()
 	{
-		FunctionProvider::$cache = ['foo' => 'alert(1)'];
+		FunctionProvider::$cache['foo'] = 'alert(1)';
 		$this->assertSame('alert(1)', FunctionProvider::get('foo'));
 	}
 
@@ -29,7 +29,7 @@ class FunctionProviderTest extends Test
 	*/
 	public function testReturnFromFilesystem()
 	{
-		FunctionProvider::$cache = [];
+		unset(FunctionProvider::$cache['foo']);
 		$filepath = __DIR__ . '/../../../src/Configurator/JavaScript/functions/foo.js';
 		self::$tmpFiles[] = $filepath;
 		file_put_contents($filepath, 'alert(2)');
@@ -43,7 +43,7 @@ class FunctionProviderTest extends Test
 	*/
 	public function testInvalid()
 	{
-		FunctionProvider::$cache = [];
+		unset(FunctionProvider::$cache['foobar']);
 		FunctionProvider::get('foobar');
 	}
 }
