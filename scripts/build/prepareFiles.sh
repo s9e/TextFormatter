@@ -5,6 +5,9 @@ cd $(dirname "$0")
 # Cache plugins' JavaScript parsers' source inside the plugin's configurator
 #php cacheJavaScriptParsers.php
 
+# Cache JavaScript functions' source
+php cacheJavaScriptFunctions.php
+
 # Remove the MediaEmbed default site files
 rm -f ../../src/Plugins/MediaEmbed/Configurator/sites/*
 rmdir ../../src/Plugins/MediaEmbed/Configurator/sites
