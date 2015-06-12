@@ -43,7 +43,7 @@ config.generics.forEach(function(entry)
 		map.forEach(function(attrName, i)
 		{
 			// NOTE: subpatterns with no name have an empty entry to preserve the array indices
-			if (attrName)
+			if (attrName && typeof m[i] !== 'undefined')
 			{
 				tag.setAttribute(attrName, m[i]);
 			}

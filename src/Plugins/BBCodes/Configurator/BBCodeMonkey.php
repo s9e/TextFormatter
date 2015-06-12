@@ -89,7 +89,7 @@ class BBCodeMonkey
 					return ['expression', '@' . $config['tokens'][$tokenId]];
 
 				if ($tokenId === $config['passthroughToken'])
-					return ['passthrough', \false];
+					return ['passthrough'];
 
 				if ($this->isFilter($tokenId))
 					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
