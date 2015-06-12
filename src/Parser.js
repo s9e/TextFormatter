@@ -624,7 +624,7 @@ function outputTag(tag)
 			attributeNames = [];
 		for (var attrName in attributes)
 		{
-			attributeNames.push([attrName]);
+			attributeNames.push(attrName);
 		}
 		attributeNames.sort(
 			function(a, b)
