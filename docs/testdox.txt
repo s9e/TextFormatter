@@ -1084,6 +1084,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() converts named captures into normal captures
  [x] toJS() replaces its second parameter with a list of capturing subpattern names
  [x] toJS() non-named capturing subpatterns leave an empty name in the map
+ [x] toJS() handles duplicate subpattern names
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
  [x] toJS() converts atomic groups to non-capturing groups
  [x] toJS() throws a RuntimeException on unknown regexp features/tokens

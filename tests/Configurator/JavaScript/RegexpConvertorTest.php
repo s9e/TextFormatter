@@ -370,6 +370,24 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
+	* @testdox toJS() handles duplicate subpattern names
+	*/
+	public function testConvertRegexpDuplicateNamedCapturesMap()
+	{
+		$regexp = RegexpConvertor::toJS('/(?<foo>[0-9]+)|(?<foo>[a-z]+)/');
+
+		$this->assertEquals(
+			'/([0-9]+)|([a-z]+)/',
+			$regexp
+		);
+
+		$this->assertEquals(
+			['', 'foo', 'foo'],
+			$regexp->map
+		);
+	}
+
+	/**
 	* NOTE: this is a regression test
 	* @testdox toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 	*/

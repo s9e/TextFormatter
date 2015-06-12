@@ -43,7 +43,11 @@ abstract class RegexpConvertor
 			switch ($tok['type'])
 			{
 				case 'option':
-					throw new RuntimeException('Regexp options are not supported');
+					if ($tok['options'] !== 'J')
+					{
+						throw new RuntimeException('Regexp options are not supported');
+					}
+					break;
 
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
