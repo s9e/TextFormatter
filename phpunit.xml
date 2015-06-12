@@ -203,8 +203,6 @@
 			<file>tests/Plugins/Escaper/ParserTest.php</file>
 			<file>tests/Plugins/FancyPants/ConfiguratorTest.php</file>
 			<file>tests/Plugins/FancyPants/ParserTest.php</file>
-			<file>tests/Plugins/Generic/ConfiguratorTest.php</file>
-			<file>tests/Plugins/Generic/ParserTest.php</file>
 			<file>tests/Plugins/HTMLComments/ConfiguratorTest.php</file>
 			<file>tests/Plugins/HTMLComments/ParserTest.php</file>
 			<file>tests/Plugins/HTMLElements/ConfiguratorTest.php</file>
@@ -220,6 +218,8 @@
 			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ConfiguratorTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>
+			<file>tests/Plugins/Preg/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Preg/ParserTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertorTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/BranchOutputOptimizerTest.php</file>

@@ -34,13 +34,13 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 * @property Plugins\Emoticons\Configurator $Emoticons Emoticons plugin's configurator
 * @property Plugins\Escaper\Configurator $Escaper Escaper plugin's configurator
 * @property Plugins\FancyPants\Configurator $FancyPants FancyPants plugin's configurator
-* @property Plugins\Generic\Configurator $Generic Generic plugin's configurator
 * @property Plugins\HTMLComments\Configurator $HTMLComments HTMLComments plugin's configurator
 * @property Plugins\HTMLElements\Configurator $HTMLElements HTMLElements plugin's configurator
 * @property Plugins\HTMLEntities\Configurator $HTMLEntities HTMLEntities plugin's configurator
 * @property Plugins\Keywords\Configurator $Keywords Keywords plugin's configurator
 * @property Plugins\Litedown\Configurator $Litedown Litedown plugin's configurator
 * @property Plugins\MediaEmbed\Configurator $MediaEmbed MediaEmbed plugin's configurator
+* @property Plugins\Preg\Configurator $Preg Preg plugin's configurator
 * @property UrlConfig $urlConfig Default URL config
 */
 class Configurator implements ConfigProvider

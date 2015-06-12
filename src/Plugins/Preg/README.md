@@ -11,7 +11,7 @@ Note that while the first syntax resembles `preg_replace()`, the implementation 
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Generic->add(
+$configurator->Preg->replace(
 	'/@(\\w+)/',
 	'<a href="https://twitter.com/$1">$0</a>'
 );
@@ -33,7 +33,7 @@ Twitter's official tweets <a href="https://twitter.com/Twitter">@Twitter</a>
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Generic->add(
+$configurator->Preg->replace(
 	'/@(?<username>\\w+)/',
 	'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 );
@@ -57,8 +57,8 @@ Multiple replacements can be applied to the same span of text, provided that the
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Generic->add('/_(.*?)_/', '<em>$1</em>');
-$configurator->Generic->add('/~(.*?)~/', '<s>$1</s>');
+$configurator->Preg->replace('/_(.*?)_/', '<em>$1</em>');
+$configurator->Preg->replace('/~(.*?)~/', '<s>$1</s>');
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
@@ -80,7 +80,7 @@ Unsafe markup is rejected and an exception is thrown. The following example will
 try
 {
 	$configurator = new s9e\TextFormatter\Configurator;
-	$configurator->Generic->add(
+	$configurator->Preg->replace(
 		'#<script>(.*)</script>#',
 		'<pre><code>$1</code></pre><script>$1</script>'
 	);
@@ -105,7 +105,7 @@ Cannot allow unfiltered data in this context
 Additionally, if a replacement is used as a URL, this plugin will automatically filter it as a URL, using the default URL filter. For instance:
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Generic->add(
+$configurator->Preg->replace(
 	'#<(.*?)>#',
 	'<a href="$1">$1</a>'
 );

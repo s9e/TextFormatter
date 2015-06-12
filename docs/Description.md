@@ -217,12 +217,6 @@
 
 	* Enhanced typography, similar to [SmartyPants](http://daringfireball.net/projects/smartypants/) and [RedCloth's Textile](http://redcloth.org/textile/writing-paragraph-text/#typographers-quotes)
 
-* [Generic](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Generic)
-
-	* Performs regexp-based replacements although it does *not* use `preg_replace()`
-	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html)
-	* Subject to the same filtering and validation as other plugins, meaning it offers the same protection against XSS
-
 * [HTMLComments](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/HTMLComments)
 
 	* Supports the use of HTML comments
@@ -253,3 +247,9 @@
 	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and dozens more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites/)
 	* Flexible syntax
 	* Comparable to [XenForo's media sites](http://xenforo.com/help/bb-code-media-sites/)
+
+* [Preg](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Preg)
+
+	* Performs regexp-based replacements although it does *not* use `preg_replace()`
+	* Mostly compatible with [MyBB's Custom MyCodes](http://community.mybb.com/thread-12008.html)
+	* Subject to the same filtering and validation as other plugins, meaning it offers the same protection against XSS

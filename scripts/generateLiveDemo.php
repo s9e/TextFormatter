@@ -22,7 +22,7 @@ $configurator->BBCodes->addFromRepository('CODE');
 
 $configurator->Censor->add('apple', 'banana');
 $configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
-$configurator->Generic->add(
+$configurator->Preg->replace(
 	'/#(?<tag>[a-z0-9]+)/i',
 	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
@@ -100,7 +100,7 @@ printf("Hello %s\n", $who);[/code]
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
   [*][b]FancyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
-  [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [C]/#(?<tag>[a-z0-9]+)/i[/C] is replaced with the template [C]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/C] -- For example: #PHP, #fml
+  [*][b]Preg[/b] --- the Preg plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [C]/#(?<tag>[a-z0-9]+)/i[/C] is replaced with the template [C]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/C] -- For example: #PHP, #fml
   [*][b]HTMLElements[/b] --- [C]<a>[/C] and [C]<b>[/C] tags are allowed, with two whitelisted attributes for [C]<a>[/C]: [C]href[/C] and [C]title[/C]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
 [/list]

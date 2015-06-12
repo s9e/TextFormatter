@@ -2190,47 +2190,6 @@ s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9e\TextFormatter\Tests\Plugins\Generic\Configurator
- [x] add() generates a tag name automatically
- [x] The name of the tag can be specified
- [x] add() returns the name of the tag it creates
- [x] add() throws an exception if the regexp is invalid
- [x] add() throws an exception on duplicate named subpatterns
- [x] add() creates a tag to represent the replacement
- [x] add() creates an attribute for each named subpattern
- [x] add() creates an attribute for each numeric subpattern in use
- [x] add() creates a #regexp filter for each attribute created
- [x] add() appends a #url filter to attributes that are used as a URL
- [x] add() replaces numeric references in the template with the corresponding attribute value
- [x] add() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
- [x] add() alters the regexp to give a name to unnamed subpatterns used in the template
- [x] add() does not give a name to unnamed subpatterns that are not used in the template
- [x] add() identifies $1 as a numeric reference in the template
- [x] add() identifies \1 as a numeric reference in the template
- [x] add() identifies ${1} as a numeric reference in the template
- [x] add() interprets \\1 in the template as a literal \1
- [x] add() interprets \\\1 in the template as a literal backslashes followed by a numeric reference
- [x] add() interprets \$1 in the template as a literal $1
- [x] add() replaces $0 with the whole match
- [x] add() interprets a (.*?) capture used in template's text as a passthrough
- [x] A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
- [x] Captures from non-existent subpattern are removed from the template
- [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
- [x] add() normalizes the tag's template
- [x] add() checks the safeness of the tag
- [x] add() checks the safeness of the tag before adding it to the configurator's collection
- [x] add() throws a LogicException on unexpected captures
- [x] asConfig() returns NULL if no replacements were set
- [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
- [x] asConfig() does not creates a JavaScript variant by default
- [x] asConfig() creates a JavaScript variant of generics if JavaScript is enabled
- [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
-
-s9e\TextFormatter\Tests\Plugins\Generic\Parser
- [x] Parsing tests
- [x] Parsing tests (JavaScript)
- [x] Parsing+rendering tests
-
 s9e\TextFormatter\Tests\Plugins\HTMLComments\Configurator
  [x] Automatically creates an "HC" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -2422,6 +2381,44 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Abstract tests (not tied to bundled sites)
  [x] Scraping tests
  [x] Scraping+rendering tests
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
+s9e\TextFormatter\Tests\Plugins\Preg\Configurator
+ [x] replace() generates a tag name automatically
+ [x] The name of the tag can be specified
+ [x] replace() returns the tag it creates
+ [x] replace() throws an exception if the regexp is invalid
+ [x] replace() accepts duplicate named subpatterns
+ [x] replace() creates an attribute for each named subpattern
+ [x] replace() creates an attribute for each numeric subpattern in use
+ [x] replace() creates a #regexp filter for each attribute created
+ [x] replace() appends a #url filter to attributes that are used as a URL
+ [x] replace() replaces numeric references in the template with the corresponding attribute value
+ [x] replace() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
+ [x] replace() alters the regexp to give a name to unnamed subpatterns used in the template
+ [x] replace() does not give a name to unnamed subpatterns that are not used in the template
+ [x] replace() identifies $1 as a numeric reference in the template
+ [x] replace() identifies \1 as a numeric reference in the template
+ [x] replace() identifies ${1} as a numeric reference in the template
+ [x] replace() interprets \\1 in the template as a literal \1
+ [x] replace() interprets \\\1 in the template as a literal backslashes followed by a numeric reference
+ [x] replace() interprets \$1 in the template as a literal $1
+ [x] replace() replaces $0 with the whole match
+ [x] replace() interprets a (.*?) capture used in template's text as a passthrough
+ [x] A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
+ [x] Captures from non-existent subpattern are removed from the template
+ [x] replace() normalizes the tag's template
+ [x] replace() checks the safeness of the tag
+ [x] replace() checks the safeness of the tag before adding it to the configurator's collection
+ [x] asConfig() returns NULL if no replacements were set
+ [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
+ [x] asConfig() does not creates a JavaScript variant by default
+ [x] asConfig() creates a JavaScript variant of generics if JavaScript is enabled
+ [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+
+s9e\TextFormatter\Tests\Plugins\Preg\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests

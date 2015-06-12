@@ -1,16 +1,16 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\Generic;
+namespace s9e\TextFormatter\Tests\Plugins\Preg;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Plugins\Generic\Parser;
+use s9e\TextFormatter\Plugins\Preg\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\Generic\Parser
+* @covers s9e\TextFormatter\Plugins\Preg\Parser
 */
 class ParserTest extends Test
 {
@@ -23,11 +23,11 @@ class ParserTest extends Test
 		return [
 			[
 				'Follow @twitter for more info',
-				'<r>Follow <GAC9F10E2 username="twitter">@twitter</GAC9F10E2> for more info</r>',
+				'<r>Follow <PREG_AC9F10E2 username="twitter">@twitter</PREG_AC9F10E2> for more info</r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
+					$configurator->Preg->replace(
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
@@ -35,23 +35,20 @@ class ParserTest extends Test
 			],
 			[
 				'Some *emphasis*.',
-				'<r>Some <G86655032><s>*</s>emphasis<e>*</e></G86655032>.</r>',
+				'<r>Some <PREG_86655032><s>*</s>emphasis<e>*</e></PREG_86655032>.</r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
-						'/\\*(.*?)\\*/',
-						'<em>$1</em>'
-					);
+					$configurator->Preg->replace('/\\*(.*?)\\*/', '<em>$1</em>');
 				}
 			],
 			[
 				'Markdown [link](http://example.com) style.',
-				'<r>Markdown <G792685FB _2="http://example.com"><s>[</s>link<e>](http://example.com)</e></G792685FB> style.</r>',
+				'<r>Markdown <PREG_792685FB _2="http://example.com"><s>[</s>link<e>](http://example.com)</e></PREG_792685FB> style.</r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
+					$configurator->Preg->replace(
 						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
 						'<a href="$2">$1</a>'
 					);
@@ -59,17 +56,35 @@ class ParserTest extends Test
 			],
 			[
 				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
-				'<r>Some <G86655032><s>*</s><G74E475F4><s>_</s>bold<e>_</e></G74E475F4> emphasis<e>*</e></G86655032> or <G74E475F4><s>_</s><G86655032><s>*</s>emphasised<e>*</e></G86655032> boldness<e>_</e></G74E475F4>.</r>',
+				'<r>Some <PREG_86655032><s>*</s><PREG_74E475F4><s>_</s>bold<e>_</e></PREG_74E475F4> emphasis<e>*</e></PREG_86655032> or <PREG_74E475F4><s>_</s><PREG_86655032><s>*</s>emphasised<e>*</e></PREG_86655032> boldness<e>_</e></PREG_74E475F4>.</r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
-						'/\\*(.*?)\\*/',
-						'<em>$1</em>'
+					$configurator->Preg->replace('/\\*(.*?)\\*/', '<em>$1</em>');
+					$configurator->Preg->replace('/_(.*?)_/',     '<b>$1</b>');
+				}
+			],
+			[
+				'@foo @"bar"',
+				'<r><PREG_979965EC name="foo">@foo</PREG_979965EC> <PREG_979965EC name="bar">@"bar"</PREG_979965EC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Preg->replace(
+						'/(?J)@(?:(?<name>\\w+)|"(?<name>[^"]+)")/',
+						'<cite><xsl:value-of select="@name"/></cite>'
 					);
-					$configurator->Generic->add(
-						'/_(.*?)_/',
-						'<b>$1</b>'
+				}
+			],
+			[
+				'foo bar',
+				'<r><PREG_2467EF05 name="foo">foo</PREG_2467EF05> <PREG_2467EF05 name="bar">bar</PREG_2467EF05></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Preg->replace(
+						'/(?J)(?<name>foo)|(?<name>bar)/',
+						'<cite><xsl:value-of select="@name"/></cite>'
 					);
 				}
 			],
@@ -85,7 +100,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
+					$configurator->Preg->replace(
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
@@ -97,10 +112,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
-						'/\\*(.*?)\\*/',
-						'<em>$1</em>'
-					);
+					$configurator->Preg->replace('/\\*(.*?)\\*/', '<em>$1</em>');
 				}
 			],
 			[
@@ -109,7 +121,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
+					$configurator->Preg->replace(
 						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
 						'<a href="$2">$1</a>'
 					);
@@ -121,14 +133,8 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->Generic->add(
-						'/\\*(.*?)\\*/',
-						'<em>$1</em>'
-					);
-					$configurator->Generic->add(
-						'/_(.*?)_/',
-						'<b>$1</b>'
-					);
+					$configurator->Preg->replace('/\\*(.*?)\\*/', '<em>$1</em>');
+					$configurator->Preg->replace('/_(.*?)_/',     '<b>$1</b>');
 				}
 			],
 		];
