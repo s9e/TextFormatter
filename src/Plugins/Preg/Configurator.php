@@ -62,11 +62,11 @@ class Configurator extends ConfiguratorBase
 			return;
 		}
 
-		$generics   = [];
+		$pregs   = [];
 		$jsPregs = [];
 		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
 		{
-			$generics[] = [$tagName, $regexp, $passthroughIdx];
+			$pregs[] = [$tagName, $regexp, $passthroughIdx];
 
 			if (isset($this->configurator->javascript))
 			{
@@ -77,7 +77,7 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
-		$variant = new Variant($generics);
+		$variant = new Variant($pregs);
 		if (isset($this->configurator->javascript))
 		{
 			$variant->set('JS', $jsPregs);
