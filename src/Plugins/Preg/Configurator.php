@@ -29,11 +29,11 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!\count($this->collection))
 			return;
-		$generics   = [];
+		$pregs   = [];
 		$jsPregs = [];
 		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
 		{
-			$generics[] = [$tagName, $regexp, $passthroughIdx];
+			$pregs[] = [$tagName, $regexp, $passthroughIdx];
 			if (isset($this->configurator->javascript))
 			{
 				$jsRegexp = RegexpConvertor::toJS($regexp);
@@ -41,7 +41,7 @@ class Configurator extends ConfiguratorBase
 				$jsPregs[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
 			}
 		}
-		$variant = new Variant($generics);
+		$variant = new Variant($pregs);
 		if (isset($this->configurator->javascript))
 			$variant->set('JS', $jsPregs);
 		return ['generics' => $variant];
