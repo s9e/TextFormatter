@@ -42,15 +42,6 @@ MyRenderer
 
 This is the fastest renderer if you enable automatic caching and you have an opcode cache.
 
-#### XSLCache renderer
-
-```php
-// With automatic caching to /tmp
-$configurator->rendering->setEngine('XSLCache', '/tmp');
-```
-
-This renderer uses [PECL's xslcache extension](http://pecl.php.net/package/xslcache).
-
 #### Unformatted renderer
 
 ```php

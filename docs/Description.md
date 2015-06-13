@@ -95,10 +95,9 @@
 	* Is extensible
 		* ...as long as [you can convert it back to XSLT](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/03_Extends.md)
 
-	* Offer multiple renderers
+	* Offers multiple renderers
 		* the __XSLT__ renderer uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
 		* the __PHP__ renderer uses plain PHP (faster if you're using an opcode cache but does not support the whole range of XSLT. It *does* support everything listed on this page though)
-		* the __XSLCache__ renderer uses PECL's [xslcache](http://pecl.php.net/package/xslcache)
 
 ## Security
 
