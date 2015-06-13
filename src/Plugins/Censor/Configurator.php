@@ -6,7 +6,6 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Censor;
-
 use ArrayAccess;
 use Countable;
 use Iterator;
@@ -18,19 +17,13 @@ use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
-
 	protected $allowed = [];
-
 	protected $attrName = 'with';
-
 	protected $collection;
-
 	protected $defaultReplacement = '****';
-
 	protected $regexpOptions = [
 		'caseInsensitive' => \true,
 		'specialChars'    => [
@@ -39,23 +32,16 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			' ' => '\\s*'
 		]
 	];
-
 	protected $tagName = 'CENSOR';
-
 	protected function setUp()
 	{
 		$this->collection = new NormalizedCollection;
 		$this->collection->onDuplicate('replace');
-
 		if (isset($this->configurator->tags[$this->tagName]))
 			return;
-
 		$tag = $this->configurator->tags->add($this->tagName);
-
 		$tag->attributes->add($this->attrName)->required = \false;
-
 		$tag->rules->ignoreTags();
-
 		$tag->template =
 			'<xsl:choose>
 				<xsl:when test="@' . $this->attrName . '">
@@ -64,12 +50,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				<xsl:otherwise>' . \htmlspecialchars($this->defaultReplacement) . '</xsl:otherwise>
 			</xsl:choose>';
 	}
-
 	public function allow($word)
 	{
 		$this->allowed[$word] = \true;
 	}
-
 	public function getHelper()
 	{
 		$config = $this->asConfig();
@@ -81,57 +65,41 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				'regexp'   => '/(?!)/',
 				'tagName'  => $this->tagName
 			];
-
 		return new Helper($config);
 	}
-
 	public function asConfig()
 	{
 		$words = \array_diff_key(\iterator_to_array($this->collection), $this->allowed);
-
 		if (empty($words))
 			return;
-
 		$config = [
 			'attrName' => $this->attrName,
 			'regexp'   => $this->getWordsRegexp(\array_keys($words)),
 			'tagName'  => $this->tagName
 		];
-
 		$replacementWords = [];
 		foreach ($words as $word => $replacement)
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 				$replacementWords[$replacement][] = $word;
-
 		foreach ($replacementWords as $replacement => $words)
 		{
 			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
-
 			$variant = new Variant($regexp);
-
 			$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 			$variant->set('JS', RegexpConvertor::toJS($regexp));
-
 			$config['replacements'][] = [$variant, $replacement];
 		}
-
 		if (!empty($this->allowed))
 			$config['allowed'] = $this->getWordsRegexp(\array_keys($this->allowed));
-
 		return $config;
 	}
-
 	protected function getWordsRegexp(array $words)
 	{
 		$regexp = RegexpBuilder::fromList($words, $this->regexpOptions);
-
 		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
-
 		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/Siu');
-
 		$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
-
 		return $variant;
 	}
 }

@@ -6,13 +6,10 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Renderers;
-
 use s9e\TextFormatter\Renderer;
-
 class Unformatted extends Renderer
 {
 	public $metaElementsRegexp = '((?!))';
-
 	protected function renderRichText($xml)
 	{
 		return \str_replace("\n", "<br>\n", \strip_tags($xml));
