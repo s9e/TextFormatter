@@ -14,6 +14,9 @@ function autoload($className)
 		$path = __DIR__ . \strtr(\substr($className, 17), '\\', '/') . '.php';
 		if (\file_exists($path))
 			include $path;
+		elseif (!\class_exists('s9e\\TextFormatter\\Configurator', \false)
+			 && \strpos($className, 's9e\\TextFormatter\\Configurator\\') === 0)
+			include __DIR__ . '/Configurator.php';
 	}
 }
 \spl_autoload_register('s9e\\TextFormatter\\autoload');
