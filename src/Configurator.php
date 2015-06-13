@@ -435,8 +435,8 @@ class Configurator implements ConfigProvider
 
 		// Make sure those keys exist even if they're empty
 		$config += [
-			'plugins'        => [],
-			'tags'           => []
+			'plugins' => [],
+			'tags'    => []
 		];
 
 		// Remove unused tags
