@@ -249,6 +249,18 @@ function optimizeFile($filepath, array $options = array())
 		}
 		unset($token);
 	}
+	elseif (!empty($options['removeBlankLines']))
+	{
+		foreach ($tokens as $i => &$token)
+		{
+			if ($token[0] === T_WHITESPACE)
+			{
+				$token[1] = str_replace("\n\n", "\n", $token[1]);
+			}
+		}
+		unset($token);
+		$changed  = true;
+	}
 
 	if ($changed)
 	{
@@ -282,6 +294,7 @@ if (!defined('T_TRAIT'))
 $options = array(
 	'convertDocblock'     => true,
 	'foldGlobalConstants' => false,
+	'removeBlankLines'    => true,
 	'removeComments'      => true,
 	'removeDocblock'      => true,
 	'removeLicense'       => false,
