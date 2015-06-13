@@ -29,12 +29,12 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!\count($this->collection))
 			return;
-		$generics   = [];
+		$pregs   = [];
 		$jsPregs = [];
 		foreach ($this->collection as $tagName => $_8a606a14)
 		{
 			list($regexp, $passthroughIdx) = $_8a606a14;
-			$generics[] = [$tagName, $regexp, $passthroughIdx];
+			$pregs[] = [$tagName, $regexp, $passthroughIdx];
 			if (isset($this->configurator->javascript))
 			{
 				$jsRegexp = RegexpConvertor::toJS($regexp);
@@ -42,7 +42,7 @@ class Configurator extends ConfiguratorBase
 				$jsPregs[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
 			}
 		}
-		$variant = new Variant($generics);
+		$variant = new Variant($pregs);
 		if (isset($this->configurator->javascript))
 			$variant->set('JS', $jsPregs);
 		return ['generics' => $variant];
