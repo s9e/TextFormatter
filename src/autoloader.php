@@ -18,6 +18,11 @@ function autoload($className)
 		{
 			include $path;
 		}
+		elseif (!class_exists('s9e\\TextFormatter\\Configurator', false)
+			 && strpos($className, 's9e\\TextFormatter\\Configurator\\') === 0)
+		{
+			include __DIR__ . '/Configurator.php';
+		}
 	}
 }
 

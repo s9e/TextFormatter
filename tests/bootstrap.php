@@ -1,7 +1,6 @@
 <?php
 
 include __DIR__ . '/../src/autoloader.php';
-include __DIR__ . '/../src/Configurator.php';
 
 spl_autoload_register(
 	function($className)

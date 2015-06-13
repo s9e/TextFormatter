@@ -25,6 +25,18 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	* @testdox Can load s9e\TextFormatter\Configurator\\Items\\Tag
+	* @runInSeparateProcess
+	* @preserveGlobalState disabled
+	* @group runs-in-separate-process
+	*/
+	public function testConfiguratorTag()
+	{
+		include_once __DIR__ . '/bootstrap.php';
+		$this->autoload('s9e\\TextFormatter\\Configurator\\Items\\Tag');
+	}
+
+	/**
 	* @testdox Can load s9e\TextFormatter\Parser\Logger
 	* @runInSeparateProcess
 	* @preserveGlobalState disabled
