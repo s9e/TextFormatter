@@ -6,9 +6,7 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
-
 use DOMDocument;
-
 abstract class Unparser
 {
 	public static function unparse($xml)

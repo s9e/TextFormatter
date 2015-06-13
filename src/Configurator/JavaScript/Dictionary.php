@@ -6,9 +6,7 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
-
 use ArrayObject;
-
 class Dictionary extends ArrayObject
 {
 }

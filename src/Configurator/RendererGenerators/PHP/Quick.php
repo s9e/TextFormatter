@@ -6,10 +6,8 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
-
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-
 class Quick
 {
 	public static function getSource(array $compiledTemplates)
@@ -17,29 +15,24 @@ class Quick
 		$map = [];
 		$tagNames = [];
 		$unsupported = [];
-
 		foreach ($compiledTemplates as $tagName => $php)
 		{
 			if (\preg_match('(^(?:br|[ieps])$)', $tagName))
 				continue;
-
 			$rendering = self::getRenderingStrategy($php);
 			if ($rendering === \false)
 			{
 				$unsupported[] = $tagName;
 				continue;
 			}
-
 			foreach ($rendering as $i => list($strategy, $replacement))
 			{
 				$match = (($i) ? '/' : '') . $tagName;
 				$map[$strategy][$match] = $replacement;
 			}
-
 			if (!isset($rendering[1]))
 				$tagNames[] = $tagName;
 		}
-
 		$php = [];
 		if (isset($map['static']))
 			$php[] = '	private static $static=' . self::export($map['static']) . ';';
@@ -48,29 +41,23 @@ class Quick
 		if (isset($map['php']))
 		{
 			list($quickBranches, $quickSource) = self::generateBranchTable('$qb', $map['php']);
-
 			$php[] = '	private static $attributes;';
 			$php[] = '	private static $quickBranches=' . self::export($quickBranches) . ';';
 		}
-
 		if (!empty($unsupported))
 		{
 			$regexp = '(<' . RegexpBuilder::fromList($unsupported, ['useLookahead' => \true]) . '[ />])';
 			$php[] = '	public static $quickRenderingTest=' . \var_export($regexp, \true) . ';';
 		}
-
 		$php[] = '';
 		$php[] = '	protected function renderQuick($xml)';
 		$php[] = '	{';
 		$php[] = '		$xml = $this->decodeSMP($xml);';
-
 		if (isset($map['php']))
 			$php[] = '		self::$attributes = [];';
-
 		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
 		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
-
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . \var_export($regexp, \true) . ',';
 		$php[] = "			[\$this, 'quick'],";
@@ -120,7 +107,6 @@ class Quick
 		$php[] = '			$textContent = htmlspecialchars_decode($textContent);';
 		$php[] = '		}';
 		$php[] = '';
-
 		if (isset($map['static']))
 		{
 			$php[] = '		if (isset(self::$static[$id]))';
@@ -129,7 +115,6 @@ class Quick
 			$php[] = '		}';
 			$php[] = '';
 		}
-
 		if (isset($map['dynamic']))
 		{
 			$php[] = '		if (isset(self::$dynamic[$id]))';
@@ -143,26 +128,22 @@ class Quick
 			$php[] = '		}';
 			$php[] = '';
 		}
-
 		if (isset($map['php']))
 		{
 			$php[] = '		if (!isset(self::$quickBranches[$id]))';
 			$php[] = '		{';
 		}
-
 		$condition = "\$id[0] === '!' || \$id[0] === '?'";
 		if (!empty($unsupported))
 		{
 			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . '$)';
 			$condition .= ' || preg_match(' . \var_export($regexp, \true) . ', $id)';
 		}
-
 		$php[] = '			if (' . $condition . ')';
 		$php[] = '			{';
 		$php[] = '				throw new \\RuntimeException;';
 		$php[] = '			}';
 		$php[] = "			return '';";
-
 		if (isset($map['php']))
 		{
 			$php[] = '		}';
@@ -182,34 +163,26 @@ class Quick
 			$php[] = '';
 			$php[] = '		return $html;';
 		}
-
 		$php[] = '	}';
-
 		return \implode("\n", $php);
 	}
-
 	protected static function export(array $arr)
 	{
 		\ksort($arr);
 		$entries = [];
-
 		$naturalKey = 0;
 		foreach ($arr as $k => $v)
 		{
 			$entries[] = (($k === $naturalKey) ? '' : \var_export($k, \true) . '=>')
 			           . ((\is_array($v)) ? self::export($v) : \var_export($v, \true));
-
 			$naturalKey = $k + 1;
 		}
-
 		return '[' . \implode(',', $entries) . ']';
 	}
-
 	public static function getRenderingStrategy($php)
 	{
 		$chunks = \explode('$this->at($node);', $php);
 		$renderings = [];
-
 		if (\count($chunks) <= 2)
 		{
 			foreach ($chunks as $k => $chunk)
@@ -220,7 +193,6 @@ class Quick
 					$renderings[$k] = ['static', $rendering];
 					continue;
 				}
-
 				if ($k === 0)
 				{
 					$rendering = self::getDynamicRendering($chunk);
@@ -230,36 +202,27 @@ class Quick
 						continue;
 					}
 				}
-
 				$renderings[$k] = \false;
 			}
-
 			if (!\in_array(\false, $renderings, \true))
 				return $renderings;
 		}
-
 		$phpRenderings = self::getQuickRendering($php);
 		if ($phpRenderings === \false)
 			return \false;
-
 		foreach ($phpRenderings as $i => $phpRendering)
 			if (!isset($renderings[$i]) || $renderings[$i] === \false)
 				$renderings[$i] = ['php', $phpRendering];
-
 		return $renderings;
 	}
-
 	protected static function getQuickRendering($php)
 	{
 		if (\preg_match('(\\$this->at\\((?!\\$node\\);))', $php))
 			return \false;
-
 		$tokens   = \token_get_all('<?php ' . $php);
 		$tokens[] = [0, ''];
-
 		\array_shift($tokens);
 		$cnt = \count($tokens);
-
 		$branch = [
 			'braces'      => -1,
 			'branches'    => [],
@@ -268,7 +231,6 @@ class Quick
 			'statement'   => '',
 			'tail'        => ''
 		];
-
 		$braces = 0;
 		$i = 0;
 		do
@@ -286,72 +248,53 @@ class Quick
 			{
 				if (++$branch['passthrough'] > 1)
 					return \false;
-
 				$i += 6;
-
 				continue;
 			}
-
 			$key = ($branch['passthrough']) ? 'tail' : 'head';
 			$branch[$key] .= (\is_array($tokens[$i])) ? $tokens[$i][1] : $tokens[$i];
-
 			if ($tokens[$i] === '{')
 			{
 				++$braces;
 				continue;
 			}
-
 			if ($tokens[$i] === '}')
 			{
 				--$braces;
-
 				if ($branch['braces'] === $braces)
 				{
 					$branch[$key] = \substr($branch[$key], 0, -1);
-
 					$branch =& $branch['parent'];
-
 					$j = $i;
-
 					while ($tokens[++$j][0] === \T_WHITESPACE);
-
 					if ($tokens[$j][0] !== \T_ELSEIF
 					 && $tokens[$j][0] !== \T_ELSE)
 					{
 						$passthroughs = self::getBranchesPassthrough($branch['branches']);
-
 						if ($passthroughs === [0])
 						{
 							foreach ($branch['branches'] as $child)
 								$branch['head'] .= $child['statement'] . '{' . $child['head'] . '}';
-
 							$branch['branches'] = [];
 							continue;
 						}
-
 						if ($passthroughs === [1])
 						{
 							++$branch['passthrough'];
-
 							continue;
 						}
-
 						return \false;
 					}
 				}
-
 				continue;
 			}
-
 			if ($branch['passthrough'])
 				continue;
-
 			if ($tokens[$i][0] === \T_IF
 			 || $tokens[$i][0] === \T_ELSEIF
 			 || $tokens[$i][0] === \T_ELSE)
 			{
 				$branch[$key] = \substr($branch[$key], 0, -\strlen($tokens[$i][1]));
-
 				$branch['branches'][] = [
 					'braces'      => $braces,
 					'branches'    => [],
@@ -361,36 +304,27 @@ class Quick
 					'statement'   => '',
 					'tail'        => ''
 				];
-
 				$branch =& $branch['branches'][\count($branch['branches']) - 1];
-
 				do
 				{
 					$branch['statement'] .= (\is_array($tokens[$i])) ? $tokens[$i][1] : $tokens[$i];
 				}
 				while ($tokens[++$i] !== '{');
-
 				++$braces;
 			}
 		}
 		while (++$i < $cnt);
-
 		list($head, $tail) = self::buildPHP($branch['branches']);
 		$head  = $branch['head'] . $head;
 		$tail .= $branch['tail'];
-
 		self::convertPHP($head, $tail, (bool) $branch['passthrough']);
-
 		if (\preg_match('((?<!-)->(?!params\\[))', $head . $tail))
 			return \false;
-
 		return ($branch['passthrough']) ? [$head, $tail] : [$head];
 	}
-
 	protected static function convertPHP(&$head, &$tail, $passthrough)
 	{
 		$saveAttributes = (bool) \preg_match('(\\$node->(?:get|has)Attribute)', $tail);
-
 		\preg_match_all(
 			"(\\\$node->getAttribute\\('([^']+)'\\))",
 			\preg_replace_callback(
@@ -404,59 +338,47 @@ class Quick
 			$matches
 		);
 		$attrNames = \array_unique($matches[1]);
-
 		self::replacePHP($head);
 		self::replacePHP($tail);
-
 		if (!$passthrough)
 			$head = \str_replace('$node->textContent', '$textContent', $head);
-
 		if (!empty($attrNames))
 		{
 			\ksort($attrNames);
 			$head = "\$attributes+=['" . \implode("'=>null,'", $attrNames) . "'=>null];" . $head;
 		}
-
 		if ($saveAttributes)
 		{
 			$head .= 'self::$attributes[]=$attributes;';
 			$tail  = '$attributes=array_pop(self::$attributes);' . $tail;
 		}
 	}
-
 	protected static function replacePHP(&$php)
 	{
 		if ($php === '')
 			return;
-
 		$php = \str_replace('$this->out', '$html', $php);
-
 		$getAttribute = "\\\$node->getAttribute\\(('[^']+')\\)";
-
 		$php = \preg_replace(
 			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_NOQUOTES . '\\))',
 			"str_replace('&quot;','\"',\$attributes[\$1])",
 			$php
 		);
-
 		$php = \preg_replace(
 			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_COMPAT . '\\))',
 			'$attributes[$1]',
 			$php
 		);
-
 		$php = \preg_replace(
 			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . \ENT_COMPAT . '\\))',
 			'strtr($attributes[$1],$2,$3)',
 			$php
 		);
-
 		$php = \preg_replace(
 			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')',
 			'$attributes[$1]$2$attributes[$3]',
 			$php
 		);
-
 		$php = \preg_replace_callback(
 			'(' . $getAttribute . "==='(.*?(?<!\\\\)(?:\\\\\\\\)*)')s",
 			function ($m)
@@ -489,7 +411,6 @@ class Quick
 			},
 			$php
 		);
-
 		$php = \preg_replace(
 			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))',
 			'$attributes[$1]',
@@ -510,19 +431,16 @@ class Quick
 			'isset($attributes[$1])',
 			$php
 		);
-
 		$php = \preg_replace(
 			"(\\\$node->getAttribute\\(('[^']+')\\))",
 			'htmlspecialchars_decode($attributes[$1])',
 			$php
 		);
-
 		if (\substr($php, 0, 7) === '$html.=')
 			$php = '$html=' . \substr($php, 7);
 		else
 			$php = "\$html='';" . $php;
 	}
-
 	protected static function buildPHP(array $branches)
 	{
 		$return = ['', ''];
@@ -530,148 +448,107 @@ class Quick
 		{
 			$return[0] .= $branch['statement'] . '{' . $branch['head'];
 			$return[1] .= $branch['statement'] . '{';
-
 			if ($branch['branches'])
 			{
 				list($head, $tail) = self::buildPHP($branch['branches']);
-
 				$return[0] .= $head;
 				$return[1] .= $tail;
 			}
-
 			$return[0] .= '}';
 			$return[1] .= $branch['tail'] . '}';
 		}
-
 		return $return;
 	}
-
 	protected static function getBranchesPassthrough(array $branches)
 	{
 		$values = [];
 		foreach ($branches as $branch)
 			$values[] = $branch['passthrough'];
-
 		if ($branch['statement'] !== 'else')
 			$values[] = 0;
-
 		return \array_unique($values);
 	}
-
 	protected static function getDynamicRendering($php)
 	{
 		$rendering = '';
-
 		$literal   = "(?<literal>'((?>[^'\\\\]+|\\\\['\\\\])*)')";
 		$attribute = "(?<attribute>htmlspecialchars\\(\\\$node->getAttribute\\('([^']+)'\\),2\\))";
 		$value     = "(?<value>$literal|$attribute)";
 		$output    = "(?<output>\\\$this->out\\.=$value(?:\\.(?&value))*;)";
-
 		$copyOfAttribute = "(?<copyOfAttribute>if\\(\\\$node->hasAttribute\\('([^']+)'\\)\\)\\{\\\$this->out\\.=' \\g-1=\"'\\.htmlspecialchars\\(\\\$node->getAttribute\\('\\g-1'\\),2\\)\\.'\"';\\})";
-
 		$regexp = '(^(' . $output . '|' . $copyOfAttribute . ')*$)';
-
 		if (!\preg_match($regexp, $php, $m))
 			return \false;
-
 		$copiedAttributes = [];
-
 		$usedAttributes = [];
-
 		$regexp = '(' . $output . '|' . $copyOfAttribute . ')A';
 		$offset = 0;
 		while (\preg_match($regexp, $php, $m, 0, $offset))
 			if ($m['output'])
 			{
 				$offset += 12;
-
 				while (\preg_match('(' . $value . ')A', $php, $m, 0, $offset))
 				{
 					if ($m['literal'])
 					{
 						$str = \stripslashes(\substr($m[0], 1, -1));
-
 						$rendering .= \preg_replace('([\\\\$](?=\\d))', '\\\\$0', $str);
 					}
 					else
 					{
 						$attrName = \end($m);
-
 						if (!isset($usedAttributes[$attrName]))
 							$usedAttributes[$attrName] = \uniqid($attrName, \true);
-
 						$rendering .= $usedAttributes[$attrName];
 					}
-
 					$offset += 1 + \strlen($m[0]);
 				}
 			}
 			else
 			{
 				$attrName = \end($m);
-
 				if (!isset($copiedAttributes[$attrName]))
 					$copiedAttributes[$attrName] = \uniqid($attrName, \true);
-
 				$rendering .= $copiedAttributes[$attrName];
 				$offset += \strlen($m[0]);
 			}
-
 		$attrNames = \array_keys($copiedAttributes + $usedAttributes);
-
 		\sort($attrNames);
-
 		$remainingAttributes = \array_combine($attrNames, $attrNames);
-
 		$regexp = '(^[^ ]+';
 		$index  = 0;
 		foreach ($attrNames as $attrName)
 		{
 			$regexp .= '(?> (?!' . RegexpBuilder::fromList($remainingAttributes) . '=)[^=]+="[^"]*")*';
 			unset($remainingAttributes[$attrName]);
-
 			$regexp .= '(';
-
 			if (isset($copiedAttributes[$attrName]))
 				self::replacePlaceholder($rendering, $copiedAttributes[$attrName], ++$index);
 			else
 				$regexp .= '?>';
-
 			$regexp .= ' ' . $attrName . '="';
-
 			if (isset($usedAttributes[$attrName]))
 			{
 				$regexp .= '(';
-
 				self::replacePlaceholder($rendering, $usedAttributes[$attrName], ++$index);
 			}
-
 			$regexp .= '[^"]*';
-
 			if (isset($usedAttributes[$attrName]))
 				$regexp .= ')';
-
 			$regexp .= '")?';
 		}
-
 		$regexp .= '.*)s';
-
 		return [$regexp, $rendering];
 	}
-
 	protected static function getStaticRendering($php)
 	{
 		if ($php === '')
 			return '';
-
 		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]+|\\\\['\\\\])*)';\$)";
-
 		if (!\preg_match($regexp, $php, $m))
 			return \false;
-
 		return \stripslashes($m[1]);
 	}
-
 	protected static function replacePlaceholder(&$str, $uniqid, $index)
 	{
 		$str = \preg_replace_callback(
@@ -686,19 +563,16 @@ class Quick
 			$str
 		);
 	}
-
 	public static function generateConditionals($expr, array $statements)
 	{
 		$keys = \array_keys($statements);
 		$cnt  = \count($statements);
 		$min  = (int) $keys[0];
 		$max  = (int) $keys[$cnt - 1];
-
 		if ($cnt <= 4)
 		{
 			if ($cnt === 1)
 				return \end($statements);
-
 			$php = '';
 			$k = $min;
 			do
@@ -706,34 +580,25 @@ class Quick
 				$php .= 'if(' . $expr . '===' . $k . '){' . $statements[$k] . '}else';
 			}
 			while (++$k < $max);
-
 			$php .= '{' . $statements[$max] . '}';
 			
 			return $php;
 		}
-
 		$cutoff = \ceil($cnt / 2);
 		$chunks = \array_chunk($statements, $cutoff, \true);
-
 		return 'if(' . $expr . '<' . \key($chunks[1]) . '){' . self::generateConditionals($expr, \array_slice($statements, 0, $cutoff, \true)) . '}else' . self::generateConditionals($expr, \array_slice($statements, $cutoff, \null, \true));
 	}
-
 	public static function generateBranchTable($expr, array $statements)
 	{
 		$branchTable = [];
-
 		$branchIds = [];
-
 		\ksort($statements);
-
 		foreach ($statements as $value => $statement)
 		{
 			if (!isset($branchIds[$statement]))
 				$branchIds[$statement] = \count($branchIds);
-
 			$branchTable[$value] = $branchIds[$statement];
 		}
-
 		return [$branchTable, self::generateConditionals($expr, \array_keys($branchIds))];
 	}
 }

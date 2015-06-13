@@ -6,17 +6,14 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
-
 use DOMAttr;
 use RuntimeException;
-
 abstract class AVTHelper
 {
 	public static function parse($attrValue)
 	{
 		$tokens  = [];
 		$attrLen = \strlen($attrValue);
-
 		$pos = 0;
 		while ($pos < $attrLen)
 		{
@@ -26,12 +23,9 @@ abstract class AVTHelper
 				{
 					$tokens[] = ['literal', '{'];
 					$pos += 2;
-
 					continue;
 				}
-
 				++$pos;
-
 				$expr = '';
 				while ($pos < $attrLen)
 				{
@@ -41,51 +35,38 @@ abstract class AVTHelper
 						$expr .= \substr($attrValue, $pos, $spn);
 						$pos += $spn;
 					}
-
 					if ($pos >= $attrLen)
 						throw new RuntimeException('Unterminated XPath expression');
-
 					$c = $attrValue[$pos];
 					++$pos;
-
 					if ($c === '}')
 						break;
-
 					$quotePos = \strpos($attrValue, $c, $pos);
 					if ($quotePos === \false)
 						throw new RuntimeException('Unterminated XPath expression');
-
 					$expr .= $c . \substr($attrValue, $pos, $quotePos + 1 - $pos);
 					$pos = 1 + $quotePos;
 				}
-
 				$tokens[] = ['expression', $expr];
 			}
-
 			$spn = \strcspn($attrValue, '{', $pos);
 			if ($spn)
 			{
 				$str = \substr($attrValue, $pos, $spn);
-
 				$str = \str_replace('}}', '}', $str);
-
 				$tokens[] = ['literal', $str];
 				$pos += $spn;
 			}
 		}
-
 		return $tokens;
 	}
-
 	public static function replace(DOMAttr $attribute, callable $callback)
 	{
 		$tokens = self::parse($attribute->value);
 		foreach ($tokens as $k => $token)
 			$tokens[$k] = $callback($token);
-
 		$attribute->value = \htmlspecialchars(self::serialize($tokens), \ENT_NOQUOTES, 'UTF-8');
 	}
-
 	public static function serialize(array $tokens)
 	{
 		$attrValue = '';
@@ -96,7 +77,6 @@ abstract class AVTHelper
 				$attrValue .= '{' . $token[1] . '}';
 			else
 				throw new RuntimeException('Unknown token type');
-
 		return $attrValue;
 	}
 }

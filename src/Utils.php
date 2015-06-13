@@ -6,10 +6,8 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
-
 use DOMDocument;
 use DOMXPath;
-
 abstract class Utils
 {
 	public static function encodeUnicodeSupplementaryCharacters($str)
@@ -20,7 +18,6 @@ abstract class Utils
 			$str
 		);
 	}
-
 	public static function removeFormatting($xml)
 	{
 		$dom = self::loadXML($xml);
@@ -28,29 +25,23 @@ abstract class Utils
 			$tag->parentNode->removeChild($tag);
 		foreach ($dom->getElementsByTagName('e') as $tag)
 			$tag->parentNode->removeChild($tag);
-
 		return $dom->documentElement->textContent;
 	}
-
 	public static function removeTag($xml, $tagName, $nestingLevel = 0)
 	{
 		if (\strpos($xml, '<' . $tagName) === \false)
 			return $xml;
-
 		$dom   = self::loadXML($xml);
 		$xpath = new DOMXPath($dom);
 		$nodes = $xpath->query(\str_repeat('//' . $tagName, 1 + $nestingLevel));
 		foreach ($nodes as $node)
 			$node->parentNode->removeChild($node);
-
 		return self::saveXML($dom);
 	}
-
 	public static function replaceAttributes($xml, $tagName, callable $callback)
 	{
 		if (\strpos($xml, '<' . $tagName) === \false)
 			return $xml;
-
 		return \preg_replace_callback(
 			'((<' . \preg_quote($tagName) . ')(?=[ />])[^>]*?(/?>))',
 			function ($m) use ($callback)
@@ -60,7 +51,6 @@ abstract class Utils
 			$xml
 		);
 	}
-
 	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
 	{
 		$utf8 = $m[0];
@@ -68,20 +58,15 @@ abstract class Utils
 		      | ((\ord($utf8[1]) & 63) << 12)
 		      | ((\ord($utf8[2]) & 63) << 6)
 		      | (\ord($utf8[3]) & 63);
-
 		return '&#' . $cp . ';';
 	}
-
 	protected static function loadXML($xml)
 	{
 		$flags = (\LIBXML_VERSION >= 20700) ? \LIBXML_COMPACT | \LIBXML_PARSEHUGE : 0;
-
 		$dom = new DOMDocument;
 		$dom->loadXML($xml, $flags);
-
 		return $dom;
 	}
-
 	protected static function parseAttributes($xml)
 	{
 		$attributes = [];
@@ -91,22 +76,18 @@ abstract class Utils
 			foreach ($matches[1] as $i => $attrName)
 				$attributes[$attrName] = \html_entity_decode($matches[2][$i], \ENT_QUOTES, 'UTF-8');
 		}
-
 		return $attributes;
 	}
-
 	protected static function saveXML(DOMDocument $dom)
 	{
 		return self::encodeUnicodeSupplementaryCharacters($dom->saveXML($dom->documentElement));
 	}
-
 	protected static function serializeAttributes(array $attributes)
 	{
 		$xml = '';
 		\ksort($attributes);
 		foreach ($attributes as $attrName => $attrValue)
 			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . self::encodeUnicodeSupplementaryCharacters(\htmlspecialchars($attrValue, \ENT_QUOTES)) . '"';
-
 		return $xml;
 	}
 }

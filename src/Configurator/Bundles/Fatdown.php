@@ -6,16 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
-
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Bundle;
-
 class Fatdown extends Bundle
 {
 	public function configure(Configurator $configurator)
 	{
 		$configurator->urlConfig->allowScheme('ftp');
-
 		$configurator->Litedown;
 		$configurator->Autoemail;
 		$configurator->Autolink;
@@ -23,7 +20,6 @@ class Fatdown extends Bundle
 		$configurator->FancyPants;
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
-
 		$htmlAliases = [
 			'a'      => ['URL', 'href' => 'url'],
 			'hr'     => 'HR',
@@ -38,13 +34,11 @@ class Fatdown extends Bundle
 			{
 				$configurator->HTMLElements->aliasElement($elName, $alias[0]);
 				unset($alias[0]);
-
 				foreach ($alias as $attrName => $alias)
 					$configurator->HTMLElements->aliasAttribute($elName, $attrName, $alias);
 			}
 			else
 				$configurator->HTMLElements->aliasElement($elName, $alias);
-
 		$htmlElements = [
 			'abbr' => ['title'],
 			'b',
@@ -89,12 +83,10 @@ class Fatdown extends Bundle
 				$elName    = $k;
 				$attrNames = $v;
 			}
-
 			$configurator->HTMLElements->allowElement($elName);
 			foreach ($attrNames as $attrName)
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 		}
-
 		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => \false]);
 		$sites = [
 			'bandcamp',
