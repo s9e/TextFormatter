@@ -6,7 +6,6 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Preg;
-
 use DOMAttr;
 use DOMText;
 use DOMXPath;
@@ -18,68 +17,50 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-
 class Configurator extends ConfiguratorBase
 {
 	protected $captures;
-
 	protected $collection = [];
-
 	protected $delimiter;
-
 	protected $modifiers;
-
 	protected $references;
-
 	protected $referencesRegexp = '((?<!\\\\)(?:\\\\\\\\)*\\K(?:[$\\\\]\\d+|\\$\\{\\d+\\}))S';
-
 	public function asConfig()
 	{
 		if (!\count($this->collection))
 			return;
-
 		$generics   = [];
 		$jsPregs = [];
 		foreach ($this->collection as $tagName => $_8a606a14)
 		{
 			list($regexp, $passthroughIdx) = $_8a606a14;
 			$generics[] = [$tagName, $regexp, $passthroughIdx];
-
 			if (isset($this->configurator->javascript))
 			{
 				$jsRegexp = RegexpConvertor::toJS($regexp);
 				$jsRegexp->flags .= 'g';
-
 				$jsPregs[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
 			}
 		}
-
 		$variant = new Variant($generics);
 		if (isset($this->configurator->javascript))
 			$variant->set('JS', $jsPregs);
-
 		return ['generics' => $variant];
 	}
-
 	public function replace($regexp, $template, $tagName = \null)
 	{
 		if (!isset($tagName))
 			$tagName = 'PREG_' . \strtoupper(\dechex(\crc32($regexp)));
 		$this->parseRegexp($regexp);
 		$this->parseTemplate($template);
-
 		$passthrough = $this->getPassthroughCapture();
 		if ($passthrough)
 			$this->captures[$passthrough]['passthrough'] = \true;
-
 		$regexp   = $this->fixUnnamedCaptures($regexp);
 		$template = $this->convertTemplate($template, $passthrough);
-
 		$this->collection[$tagName] = [$regexp, $passthrough];
-
 		return $this->createTag($tagName, $template);
 	}
-
 	protected function addAttribute(Tag $tag, $attrName)
 	{
 		$isUrl = \false;
@@ -93,24 +74,19 @@ class Configurator extends ConfiguratorBase
 				$isUrl = \true;
 		}
 		$exprs = \array_unique($exprs);
-
 		$regexp = $this->delimiter . '^';
 		$regexp .= (\count($exprs) === 1) ? $exprs[0] : '(?:' . \implode('|', $exprs) . ')';
 		$regexp .= '$' . $this->delimiter . 'D' . $this->modifiers;
-
 		$attribute = $tag->attributes->add($attrName);
-
 		$filter = $this->configurator->attributeFilters['#regexp'];
 		$filter->setRegexp($regexp);
 		$attribute->filterChain[] = $filter;
-
 		if ($isUrl)
 		{
 			$filter = $this->configurator->attributeFilters['#url'];
 			$attribute->filterChain[] = $filter;
 		}
 	}
-
 	protected function convertTemplate($template, $passthrough)
 	{
 		$template = TemplateHelper::replaceTokens(
@@ -125,11 +101,9 @@ class Configurator extends ConfiguratorBase
 					return ['passthrough'];
 				if (isset($this->captures[$key]['name']))
 					return ['expression', '@' . $this->captures[$key]['name']];
-
 				return ['literal', ''];
 			}
 		);
-
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			'(\\\\+[0-9${\\\\])',
@@ -138,10 +112,8 @@ class Configurator extends ConfiguratorBase
 				return ['literal', \stripslashes($m[0])];
 			}
 		);
-
 		return $template;
 	}
-
 	protected function createTag($tagName, $template)
 	{
 		$tag = new Tag;
@@ -149,22 +121,16 @@ class Configurator extends ConfiguratorBase
 		{
 			if (!isset($capture['name']))
 				continue;
-
 			$attrName = $capture['name'];
 			if (isset($tag->attributes[$attrName]))
 				continue;
-
 			$this->addAttribute($tag, $attrName);
 		}
 		$tag->template = $template;
-
 		$this->configurator->templateNormalizer->normalizeTag($tag);
-
 		$this->configurator->templateChecker->checkTag($tag);
-
 		return $this->configurator->tags->add($tagName, $tag);
 	}
-
 	protected function fixUnnamedCaptures($regexp)
 	{
 		$keys = [];
@@ -176,7 +142,6 @@ class Configurator extends ConfiguratorBase
 			if (isset($this->references['asUrl'][$key]) || !isset($capture['passthrough']))
 				$keys[] = $key;
 		}
-
 		\rsort($keys);
 		foreach ($keys as $key)
 		{
@@ -185,10 +150,8 @@ class Configurator extends ConfiguratorBase
 			$regexp = \substr_replace($regexp, "?'" . $name . "'", 2 + $pos, 0);
 			$this->captures[$key]['name'] = $name;
 		}
-
 		return $regexp;
 	}
-
 	protected function getPassthroughCapture()
 	{
 		$passthrough = 0;
@@ -203,10 +166,8 @@ class Configurator extends ConfiguratorBase
 			}
 			$passthrough = (int) $key;
 		}
-
 		return $passthrough;
 	}
-
 	protected function parseRegexp($regexp)
 	{
 		$valid = \false;
@@ -219,7 +180,6 @@ class Configurator extends ConfiguratorBase
 			}
 		if ($valid === \false)
 			throw new InvalidArgumentException('Invalid regexp');
-
 		$this->captures = [['name' => \null, 'expr' => \null]];
 		$regexpInfo = RegexpParser::parse($regexp);
 		$this->delimiter = $regexpInfo['delimiter'];
@@ -235,7 +195,6 @@ class Configurator extends ConfiguratorBase
 			];
 		}
 	}
-
 	protected function parseTemplate($template)
 	{
 		$this->references = [
@@ -243,14 +202,12 @@ class Configurator extends ConfiguratorBase
 			'asUrl'    => [],
 			'inText'   => []
 		];
-
 		\preg_match_all($this->referencesRegexp, $template, $matches);
 		foreach ($matches[0] as $match)
 		{
 			$key = \trim($match, '\\${}');
 			$this->references['anywhere'][$key] = $key;
 		}
-
 		$dom   = TemplateHelper::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//text()') as $node)
@@ -262,7 +219,6 @@ class Configurator extends ConfiguratorBase
 				$this->references['inText'][$key] = $key;
 			}
 		}
-
 		foreach (TemplateHelper::getURLNodes($dom) as $node)
 			if ($node instanceof DOMAttr
 			 && \preg_match('(^(?:[$\\\\]\\d+|\\$\\{\\d+\\}))', \trim($node->value), $m))
@@ -270,10 +226,8 @@ class Configurator extends ConfiguratorBase
 				$key = \trim($m[0], '\\${}');
 				$this->references['asUrl'][$key] = $key;
 			}
-
 		$this->removeUnknownReferences();
 	}
-
 	protected function removeUnknownReferences()
 	{
 		foreach ($this->references as &$references)

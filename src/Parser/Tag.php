@@ -6,37 +6,22 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Parser;
-
 class Tag
 {
 	const START_TAG = 1;
-
 	const END_TAG = 2;
-
 	const SELF_CLOSING_TAG = 3;
-
 	protected $attributes = [];
-
 	protected $cascade = [];
-
 	protected $endTag = \null;
-
 	protected $flags = 0;
-
 	protected $invalid = \false;
-
 	protected $len;
-
 	protected $name;
-
 	protected $pos;
-
 	protected $sortPriority = 0;
-
 	protected $startTag = \null;
-
 	protected $type;
-
 	public function __construct($type, $name, $pos, $len)
 	{
 		$this->type = (int) $type;
@@ -44,31 +29,24 @@ class Tag
 		$this->pos  = (int) $pos;
 		$this->len  = (int) $len;
 	}
-
 	public function addFlags($flags)
 	{
 		$this->flags |= $flags;
 	}
-
 	public function cascadeInvalidationTo(Tag $tag)
 	{
 		$this->cascade[] = $tag;
-
 		if ($this->invalid)
 			$tag->invalidate();
 	}
-
 	public function invalidate()
 	{
 		if ($this->invalid)
 			return;
-
 		$this->invalid = \true;
-
 		foreach ($this->cascade as $tag)
 			$tag->invalidate();
 	}
-
 	public function pairWith(Tag $tag)
 	{
 		if ($this->name === $tag->name)
@@ -78,7 +56,6 @@ class Tag
 			{
 				$this->endTag  = $tag;
 				$tag->startTag = $this;
-
 				$this->cascadeInvalidationTo($tag);
 			}
 			elseif ($this->type === self::END_TAG
@@ -89,67 +66,54 @@ class Tag
 				$tag->endTag    = $this;
 			}
 	}
-
 	public function removeFlags($flags)
 	{
 		$this->flags &= ~$flags;
 	}
-
 	public function setFlags($flags)
 	{
 		$this->flags = $flags;
 	}
-
 	public function setSortPriority($sortPriority)
 	{
 		$this->sortPriority = $sortPriority;
 	}
-
 	public function getAttributes()
 	{
 		return $this->attributes;
 	}
-
 	public function getEndTag()
 	{
 		return $this->endTag;
 	}
-
 	public function getFlags()
 	{
 		return $this->flags;
 	}
-
 	public function getLen()
 	{
 		return $this->len;
 	}
-
 	public function getName()
 	{
 		return $this->name;
 	}
-
 	public function getPos()
 	{
 		return $this->pos;
 	}
-
 	public function getSortPriority()
 	{
 		return $this->sortPriority;
 	}
-
 	public function getStartTag()
 	{
 		return $this->startTag;
 	}
-
 	public function getType()
 	{
 		return $this->type;
 	}
-
 	public function canClose(Tag $startTag)
 	{
 		if ($this->invalid
@@ -160,70 +124,56 @@ class Tag
 		 || ($this->startTag && $this->startTag !== $startTag)
 		 || ($startTag->endTag && $startTag->endTag !== $this))
 			return \false;
-
 		return \true;
 	}
-
 	public function isBrTag()
 	{
 		return ($this->name === 'br');
 	}
-
 	public function isEndTag()
 	{
 		return (bool) ($this->type & self::END_TAG);
 	}
-
 	public function isIgnoreTag()
 	{
 		return ($this->name === 'i');
 	}
-
 	public function isInvalid()
 	{
 		return $this->invalid;
 	}
-
 	public function isParagraphBreak()
 	{
 		return ($this->name === 'pb');
 	}
-
 	public function isSelfClosingTag()
 	{
 		return ($this->type === self::SELF_CLOSING_TAG);
 	}
-
 	public function isSystemTag()
 	{
 		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb');
 	}
-
 	public function isStartTag()
 	{
 		return (bool) ($this->type & self::START_TAG);
 	}
-
 	public function getAttribute($attrName)
 	{
 		return $this->attributes[$attrName];
 	}
-
 	public function hasAttribute($attrName)
 	{
 		return isset($this->attributes[$attrName]);
 	}
-
 	public function removeAttribute($attrName)
 	{
 		unset($this->attributes[$attrName]);
 	}
-
 	public function setAttribute($attrName, $attrValue)
 	{
 		$this->attributes[$attrName] = $attrValue;
 	}
-
 	public function setAttributes(array $attributes)
 	{
 		$this->attributes = $attributes;

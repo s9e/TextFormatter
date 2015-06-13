@@ -6,11 +6,9 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
-
 use DOMDocument;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Bundle;
-
 class MediaPack extends Bundle
 {
 	public function configure(Configurator $configurator)
@@ -18,10 +16,8 @@ class MediaPack extends Bundle
 		if (!isset($configurator->MediaEmbed))
 		{
 			$pluginOptions = ['createMediaBBCode' => isset($configurator->BBCodes)];
-
 			$configurator->plugins->load('MediaEmbed', $pluginOptions);
 		}
-
 		foreach ($configurator->MediaEmbed->defaultSites->getIds() as $siteId)
 			$configurator->MediaEmbed->add($siteId);
 	}

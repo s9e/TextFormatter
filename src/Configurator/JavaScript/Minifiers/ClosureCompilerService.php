@@ -6,35 +6,25 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
-
 use RuntimeException;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
-
 class ClosureCompilerService extends Minifier
 {
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
-
 	public $excludeDefaultExterns = \true;
-
 	public $externs;
-
 	public $url = 'http://closure-compiler.appspot.com/compile';
-
 	public function __construct()
 	{
 		$this->externs = \file_get_contents(__DIR__ . '/../externs.js');
 	}
-
 	public function getCacheDifferentiator()
 	{
 		$key = [$this->compilationLevel, $this->excludeDefaultExterns];
-
 		if ($this->excludeDefaultExterns)
 			$key[] = $this->externs;
-
 		return $key;
 	}
-
 	public function minify($src)
 	{
 		$params = [
@@ -43,15 +33,12 @@ class ClosureCompilerService extends Minifier
 			'output_format'     => 'json',
 			'output_info'       => 'compiled_code'
 		];
-
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 		{
 			$params['exclude_default_externs'] = 'true';
 			$params['js_externs'] = $this->externs;
 		}
-
 		$content = \http_build_query($params) . '&output_info=errors';
-
 		$response = \file_get_contents(
 			$this->url,
 			\false,
@@ -63,10 +50,8 @@ class ClosureCompilerService extends Minifier
 				]
 			])
 		);
-
 		if (!$response)
 			throw new RuntimeException('Could not contact the Closure Compiler service');
-
 		$response = \json_decode($response, \true);
 		if (\is_null($response))
 		{
@@ -80,21 +65,16 @@ class ClosureCompilerService extends Minifier
 				);
 				throw new RuntimeException('Closure Compiler service returned invalid JSON: ' . (isset($msgs[\json_last_error()]) ? $msgs[\json_last_error()] : 'Unknown error'));
 		}
-
 		if (isset($response['serverErrors'][0]))
 		{
 			$error = $response['serverErrors'][0];
-
 			throw new RuntimeException('Server error ' . $error['code'] . ': ' . $error['error']);
 		}
-
 		if (isset($response['errors'][0]))
 		{
 			$error = $response['errors'][0];
-
 			throw new RuntimeException('Compilation error: ' . $error['error']);
 		}
-
 		return $response['compiledCode'];
 	}
 }

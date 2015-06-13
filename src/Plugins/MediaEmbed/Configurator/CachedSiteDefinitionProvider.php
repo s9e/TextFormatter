@@ -6,7 +6,6 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
-
 class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 {
 	protected $cache = [
@@ -116,17 +115,14 @@ class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 		'youtube'=>'a:3:{s:4:"host";a:2:{i:0;s:11:"youtube.com";i:1;s:8:"youtu.be";}s:7:"extract";a:4:{i:0;s:45:"!youtube\\.com/(?:watch.*?v=|v/)(?\'id\'[-\\w]+)!";i:1;s:25:"!youtu\\.be/(?\'id\'[-\\w]+)!";i:2;s:57:"![#&?]t=(?:(?:(?\'h\'\\d+)h)?(?\'m\'\\d+)m(?\'s\'\\d+)|(?\'t\'\\d+))!";i:3;s:23:"!&list=(?\'list\'[-\\w]+)!";}s:6:"iframe";a:3:{s:5:"width";s:3:"560";s:6:"height";s:3:"315";s:3:"src";s:471:"//www.youtube.com/embed/<xsl:value-of select="@id"/><xsl:if test="@list">?list=<xsl:value-of select="@list"/></xsl:if><xsl:if test="@t or@m"><xsl:choose><xsl:when test="@list">&amp;</xsl:when><xsl:otherwise>?</xsl:otherwise></xsl:choose>start=<xsl:choose><xsl:when test="@t"><xsl:value-of select="@t"/></xsl:when><xsl:when test="@h"><xsl:value-of select="@h*3600+@m*60+@s"/></xsl:when><xsl:otherwise><xsl:value-of select="@m*60+@s"/></xsl:otherwise></xsl:choose></xsl:if>";}}',
 		'zippyshare'=>'a:4:{s:12:"unresponsive";s:1:"1";s:4:"host";s:14:"zippyshare.com";s:6:"scrape";a:2:{s:5:"match";s:5:"!/v/!";s:7:"extract";s:45:"!file=(?\'file\'\\w+)&amp;server=(?\'server\'\\d+)!";}s:5:"flash";a:5:{s:5:"width";s:4:"100%";s:6:"height";s:2:"80";s:5:"style";s:15:"max-width:900px";s:3:"src";s:35:"//api.zippyshare.com/api/player.swf";s:9:"flashvars";s:45:"file={@file}&server={@server}&autostart=false";}}'
 	];
-
 	public function getIds()
 	{
 		return \array_keys($this->cache);
 	}
-
 	protected function getSiteConfig($siteId)
 	{
 		return \unserialize($this->cache[$siteId]);
 	}
-
 	protected function hasSiteConfig($siteId)
 	{
 		return isset($this->cache[$siteId]);
