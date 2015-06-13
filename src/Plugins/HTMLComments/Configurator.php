@@ -6,19 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\HTMLComments;
-
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-
 class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'content';
-
 	protected $quickMatch = '<!--';
-
 	protected $regexp = '/<!--(?!\\[if).*?-->/is';
-
 	protected $tagName = 'HC';
-
 	protected function setUp()
 	{
 		$tag = $this->configurator->tags->add($this->tagName);

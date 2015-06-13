@@ -4,9 +4,7 @@
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-
 namespace s9e\TextFormatter\Bundles\Fatdown;
-
 class Renderer extends \s9e\TextFormatter\Renderer
 {
 	protected $params=array();
@@ -50,7 +48,6 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	private static $dynamic=array('CODE'=>array('(^[^ ]+(?> (?!lang=)[^=]+="[^"]*")*(?> lang="([^"]*)")?.*)s','<pre><code class="$1">'),'DAILYMOTION'=>array('(^[^ ]+(?> (?!id=)[^=]+="[^"]*")*(?> id="([^"]*)")?.*)s','<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/$1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>'),'EMAIL'=>array('(^[^ ]+(?> (?!email=)[^=]+="[^"]*")*(?> email="([^"]*)")?.*)s','<a href="mailto:$1">'),'FACEBOOK'=>array('(^[^ ]+(?> (?!id=)[^=]+="[^"]*")*(?> id="([^"]*)")?.*)s','<iframe width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#$1" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,src.substr(0,src.indexOf(\'/\',8)))" allowfullscreen="" frameborder="0" scrolling="no"></iframe>'),'IMG'=>array('(^[^ ]+(?> (?!(?>alt|src|title)=)[^=]+="[^"]*")*( alt="[^"]*")?(?> (?!(?>src|title)=)[^=]+="[^"]*")*(?> src="([^"]*)")?(?> (?!title=)[^=]+="[^"]*")*( title="[^"]*")?.*)s','<img src="$2"$1$3>'),'LIVELEAK'=>array('(^[^ ]+(?> (?!id=)[^=]+="[^"]*")*(?> id="([^"]*)")?.*)s','<iframe width="640" height="360" src="http://www.liveleak.com/ll_embed?i=$1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>'),'URL'=>array('(^[^ ]+(?> (?!(?>title|url)=)[^=]+="[^"]*")*( title="[^"]*")?(?> (?!url=)[^=]+="[^"]*")*(?> url="([^"]*)")?.*)s','<a href="$2"$1>'),'VIMEO'=>array('(^[^ ]+(?> (?!id=)[^=]+="[^"]*")*(?> id="([^"]*)")?.*)s','<iframe width="560" height="315" src="//player.vimeo.com/video/$1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>'),'VINE'=>array('(^[^ ]+(?> (?!id=)[^=]+="[^"]*")*(?> id="([^"]*)")?.*)s','<iframe width="480" height="480" src="https://vine.co/v/$1/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"></iframe><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>'),'html:abbr'=>array('(^[^ ]+(?> (?!title=)[^=]+="[^"]*")*( title="[^"]*")?.*)s','<abbr$1>'),'html:div'=>array('(^[^ ]+(?> (?!class=)[^=]+="[^"]*")*( class="[^"]*")?.*)s','<div$1>'),'html:img'=>array('(^[^ ]+(?> (?!(?>alt|height|src|title|width)=)[^=]+="[^"]*")*( alt="[^"]*")?(?> (?!(?>height|src|title|width)=)[^=]+="[^"]*")*( height="[^"]*")?(?> (?!(?>src|title|width)=)[^=]+="[^"]*")*( src="[^"]*")?(?> (?!(?>title|width)=)[^=]+="[^"]*")*( title="[^"]*")?(?> (?!width=)[^=]+="[^"]*")*( width="[^"]*")?.*)s','<img$1$2$3$4$5>'),'html:span'=>array('(^[^ ]+(?> (?!class=)[^=]+="[^"]*")*( class="[^"]*")?.*)s','<span$1>'),'html:td'=>array('(^[^ ]+(?> (?!(?>col|row)span=)[^=]+="[^"]*")*( colspan="[^"]*")?(?> (?!rowspan=)[^=]+="[^"]*")*( rowspan="[^"]*")?.*)s','<td$1$2>'),'html:th'=>array('(^[^ ]+(?> (?!(?>colspan|rowspan|scope)=)[^=]+="[^"]*")*( colspan="[^"]*")?(?> (?!(?>rowspan|scope)=)[^=]+="[^"]*")*( rowspan="[^"]*")?(?> (?!scope=)[^=]+="[^"]*")*( scope="[^"]*")?.*)s','<th$1$2$3>'));
 	private static $attributes;
 	private static $quickBranches=array('/LIST'=>0,'BANDCAMP'=>1,'FP'=>2,'HC'=>3,'HE'=>2,'LIST'=>4,'SOUNDCLOUD'=>5,'SPOTIFY'=>6,'TWITCH'=>7,'YOUTUBE'=>8);
-
 	protected function renderQuick($xml)
 	{
 		$xml = $this->decodeSMP($xml);
@@ -64,47 +61,36 @@ class Renderer extends \s9e\TextFormatter\Renderer
 				\substr($xml, 1 + \strpos($xml, '>'), -4)
 			)
 		);
-
 		return \str_replace('<br/>', '<br>', $html);
 	}
-
 	protected function quick($m)
 	{
 		if (isset($m[2]))
 		{
 			$id = $m[2];
-
 			if (isset($m[3]))
 			{
 				unset($m[3]);
-
 				$m[0] = \substr($m[0], 0, -2) . '>';
 				$html = $this->quick($m);
-
 				$m[0] = '</' . $id . '>';
 				$m[2] = '/' . $id;
 				$html .= $this->quick($m);
-
 				return $html;
 			}
 		}
 		else
 		{
 			$id = $m[1];
-
 			$lpos = 1 + \strpos($m[0], '>');
 			$rpos = \strrpos($m[0], '<');
 			$textContent = \substr($m[0], $lpos, $rpos - $lpos);
-
 			if (\strpos($textContent, '<') !== \false)
 				throw new \RuntimeException;
-
 			$textContent = \htmlspecialchars_decode($textContent);
 		}
-
 		if (isset(self::$static[$id]))
 			return self::$static[$id];
-
 		if (isset(self::$dynamic[$id]))
 		{
 			list($match, $replace) = self::$dynamic[$id];
@@ -112,14 +98,12 @@ class Renderer extends \s9e\TextFormatter\Renderer
 			if ($cnt)
 				return $html;
 		}
-
 		if (!isset(self::$quickBranches[$id]))
 		{
 			if ($id[0] === '!' || $id[0] === '?')
 				throw new \RuntimeException;
 			return '';
 		}
-
 		$attributes = array();
 		if (\strpos($m[0], '="') !== \false)
 		{
@@ -127,10 +111,8 @@ class Renderer extends \s9e\TextFormatter\Renderer
 			foreach ($matches[1] as $i => $attrName)
 				$attributes[$attrName] = $matches[2][$i];
 		}
-
 		$qb = self::$quickBranches[$id];
 		if($qb<5)if($qb<3)if($qb===0){$attributes=\array_pop(self::$attributes);$html='';if(!isset($attributes['type']))$html.='</ul>';else$html.='</ol>';}elseif($qb===1){$attributes+=array('track_num'=>\null,'track_id'=>\null);$html='<iframe width="400" height="400" allowfullscreen="" frameborder="0" scrolling="no" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/';if(isset($attributes['album_id'])){$html.='album='.$attributes['album_id'];if(isset($attributes['track_num']))$html.='/t='.$attributes['track_num'];}else$html.='track='.$attributes['track_id'];$html.='"></iframe>';}else{$attributes+=array('char'=>\null);$html=\str_replace('&quot;','"',$attributes['char']);}elseif($qb===3){$attributes+=array('content'=>\null);$html='<!--'.\str_replace('&quot;','"',$attributes['content']).'-->';}else{$html='';if(!isset($attributes['type']))$html.='<ul>';else$html.='<ol>';self::$attributes[]=$attributes;}elseif($qb===5){$attributes+=array('playlist_id'=>\null,'track_id'=>\null,'id'=>\null);$html='<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=';if(isset($attributes['secret_token'])&&isset($attributes['playlist_id']))$html.='https://api.soundcloud.com/playlists/'.$attributes['playlist_id'].'&amp;secret_token='.$attributes['secret_token'];elseif(isset($attributes['secret_token'])&&isset($attributes['track_id']))$html.='https://api.soundcloud.com/tracks/'.$attributes['track_id'].'&amp;secret_token='.$attributes['secret_token'];else{if((\strpos($attributes['id'],'://')===\false))$html.='https://soundcloud.com/';$html.=$attributes['id'];if(isset($attributes['secret_token']))$html.='&amp;secret_token='.$attributes['secret_token'];}$html.='"></iframe>';}elseif($qb===6){$attributes+=array('path'=>\null);$html='<iframe width="400" height="480" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=';if(isset($attributes['uri']))$html.=$attributes['uri'];else$html.='spotify:'.\strtr($attributes['path'],'/',':');$html.='"></iframe>';}elseif($qb===7){$attributes+=array('channel'=>\null);$html='<iframe width="620" height="378" allowfullscreen="" frameborder="0" scrolling="no" src="//s9e.github.io/iframe/twitch.min.html#channel='.$attributes['channel'];if(isset($attributes['archive_id']))$html.='&amp;videoId=a'.$attributes['archive_id'];elseif(isset($attributes['chapter_id']))$html.='&amp;videoId=c'.$attributes['chapter_id'];elseif(isset($attributes['video_id']))$html.='&amp;videoId=v'.$attributes['video_id'];$html.='"></iframe>';}else{$attributes+=array('id'=>\null,'m'=>\null,'s'=>\null);$html='<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/'.$attributes['id'];if(isset($attributes['list']))$html.='?list='.$attributes['list'];if(isset($attributes['t'])||isset($attributes['m'])){if(isset($attributes['list']))$html.='&amp;';else$html.='?';$html.='start=';if(isset($attributes['t']))$html.=$attributes['t'];elseif(isset($attributes['h']))$html.=\htmlspecialchars($attributes['h']*3600+$attributes['m']*60+$attributes['s'],2);else$html.=\htmlspecialchars($attributes['m']*60+$attributes['s'],2);}$html.='"></iframe>';}
-
 		return $html;
 	}
 }

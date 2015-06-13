@@ -6,9 +6,7 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
-
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-
 class Configurator extends ConfiguratorBase
 {
 	protected $tags = array(
@@ -77,19 +75,15 @@ class Configurator extends ConfiguratorBase
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		)
 	);
-
 	protected function setUp()
 	{
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
-
 		foreach ($this->tags as $tagName => $tagConfig)
 		{
 			if (isset($this->configurator->tags[$tagName]))
 				continue;
-
 			if (\is_string($tagConfig))
 				$tagConfig = array('template' => $tagConfig);
-
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
@@ -102,11 +96,9 @@ class Configurator extends ConfiguratorBase
 					}
 				unset($attributeConfig);
 			}
-
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
 	}
-
 	public function asConfig()
 	{
 		return array();
