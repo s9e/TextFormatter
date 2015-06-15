@@ -47,6 +47,7 @@
 
 ### **Templating**
   * [Introduction](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/00_Introduction.md)
+  * [Modify a template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/10_ModifyTemplate.md)
   * [Template parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/TemplateParameters.md)
   * **Template normalization**
     * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/01_ChangeDefault.md)
