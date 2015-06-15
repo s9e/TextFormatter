@@ -2595,6 +2595,7 @@ s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text
  [x] Converts newlines to <br>
  [x] Keeps HTML's special characters escaped
+ [x] Escapes unescaped special characters
  [x] setParameter() doesn't do anything
 
 s9e\TextFormatter\Tests\Unparser

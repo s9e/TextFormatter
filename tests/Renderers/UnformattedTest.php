@@ -40,7 +40,7 @@ class UnformattedTest extends Test
 	/**
 	* @testdox Keeps HTML's special characters escaped
 	*/
-	public function testSpecialChars()
+	public function testPreservesSpecialChars()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
 		$renderer = $this->configurator->getRenderer();
@@ -48,6 +48,20 @@ class UnformattedTest extends Test
 		$this->assertSame(
 			'AT&amp;T &lt;b&gt;',
 			$renderer->render("<r>AT&amp;T &lt;b&gt;</r>")
+		);
+	}
+
+	/**
+	* @testdox Escapes unescaped special characters
+	*/
+	public function testEncodesSpecialChars()
+	{
+		$this->configurator->rendering->engine = 'Unformatted';
+		$renderer = $this->configurator->getRenderer();
+
+		$this->assertSame(
+			'AT&amp;T &lt;b&gt; &amp; &lt; &gt;',
+			$renderer->render('AT&amp;T &lt;b&gt; & < >')
 		);
 	}
 
