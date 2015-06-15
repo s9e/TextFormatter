@@ -230,7 +230,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n\n[DIV]\n\n...\n\n[/DIV]\n\nyyy",
-				"<r>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</r>",
+				"<r>xxx<br/>\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</r>",
 				function ($configurator)
 				{
 					$configurator->rootRules->enableAutoLineBreaks();
@@ -251,7 +251,7 @@ class OutputHandlingTest extends Test
 				[/UL]
 
 yyy',
-				'<r>xxx
+				'<r>xxx<br/>
 
 				<UL><s>[UL]</s>
 					<LI><s>[LI]</s>aaa<e>[/LI]</e></LI>

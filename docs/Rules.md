@@ -96,7 +96,7 @@ Forces current parent X to be closed when this tag is encountered, and reopened 
 
 <dt>ignoreSurroundingWhitespace</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreSurroundingWhitespace();</code><br/>
-Whether whitespace around this tag should be ignored. Useful for allowing whitespace around block elements without extra newlines being displayed. Limited to 2 newlines before and after the tag and 1 newline at the start and at the end of its content.</dd>
+Whether whitespace around this tag should be ignored. Useful for allowing whitespace around block elements without extra newlines being displayed. Limited to 1 newline before the template, 1 newline at the start and at the end of its content, and up to 2 newlines after it.</dd>
 
 <dt>ignoreTags</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreTags();</code><br/>

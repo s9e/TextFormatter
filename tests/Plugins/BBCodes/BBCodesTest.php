@@ -445,7 +445,7 @@ class BBCodesTest extends Test
 					[QUOTE]...text...[/QUOTE]
 
 				follow-up',
-				'my quote:
+				'my quote:<br>
 
 					<blockquote class="uncited"><div>...text...</div></blockquote>
 
@@ -464,7 +464,7 @@ class BBCodesTest extends Test
 
 				follow-up',
 				'my quote:<br>
-
+<br>
 
 					<blockquote class="uncited"><div>...text...</div></blockquote>
 
