@@ -220,4 +220,15 @@ class TemplateTest extends Test
 		$this->assertTrue($template->isBlock());
 		$this->assertFalse($template->isPassthrough());
 	}
+
+	/**
+	* @testdox setContent() updates the template's content
+	*/
+	public function testSetContent()
+	{
+		$template = new Template('<hr/>');
+		$template->setContent('<br/>');
+
+		$this->assertEquals('<br/>', $template);
+	}
 }

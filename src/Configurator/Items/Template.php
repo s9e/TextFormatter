@@ -178,4 +178,17 @@ class Template
 		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = false;
 	}
+
+	/**
+	* Replace this template's content
+	*
+	* @param  string $template New content
+	* @return void
+	*/
+	public function setContent($template)
+	{
+		$this->forensics    = null;
+		$this->template     = (string) $template;
+		$this->isNormalized = false;
+	}
 }
