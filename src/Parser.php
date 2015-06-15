@@ -285,8 +285,8 @@ class Parser
 		$tagFlags = $tag->getFlags();
 		if ($tagFlags & self::RULE_IGNORE_WHITESPACE)
 		{
-			$skipBefore = ($tag->isStartTag()) ? 2 : 1;
-			$skipAfter  = ($tag->isEndTag())   ? 2 : 1;
+			$skipBefore = 1;
+			$skipAfter  = ($tag->isEndTag()) ? 2 : 1;
 		}
 		else
 			$skipBefore = $skipAfter = 0;
