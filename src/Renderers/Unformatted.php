@@ -12,6 +12,6 @@ class Unformatted extends Renderer
 	public $metaElementsRegexp = '((?!))';
 	protected function renderRichText($xml)
 	{
-		return \str_replace("\n", "<br>\n", \strip_tags($xml));
+		return \str_replace("\n", "<br>\n", \htmlspecialchars(\strip_tags($xml), \ENT_COMPAT, 'UTF-8', \false));
 	}
 }

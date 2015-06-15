@@ -1903,7 +1903,7 @@ class Template
 		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $this->__toString()
 		     . '</xsl:template>';
-		$dom = new DOMDocument;
+		$dom = new TemplateDocument($this);
 		$dom->loadXML($xml);
 		return $dom;
 	}
@@ -1945,6 +1945,12 @@ class Template
 	{
 		$this->forensics    = \null;
 		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
+		$this->isNormalized = \false;
+	}
+	public function setContent($template)
+	{
+		$this->forensics    = \null;
+		$this->template     = (string) $template;
 		$this->isNormalized = \false;
 	}
 }
