@@ -88,6 +88,7 @@
 			<file>tests/Configurator/Items/TagTest.php</file>
 			<file>tests/Configurator/Items/TagFilterTest.php</file>
 			<file>tests/Configurator/Items/TemplateTest.php</file>
+			<file>tests/Configurator/Items/TemplateDocumentTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
 			<file>tests/Configurator/JavaScript/CodeTest.php</file>
 			<file>tests/Configurator/JavaScript/FunctionProviderTest.php</file>

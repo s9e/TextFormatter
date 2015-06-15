@@ -75,7 +75,7 @@ class Template
 		     . $this->__toString()
 		     . '</xsl:template>';
 
-		$dom = new DOMDocument;
+		$dom = new TemplateDocument($this);
 		$dom->loadXML($xml);
 
 		return $dom;
