@@ -1,7 +1,6 @@
 site_name: s9e\TextFormatter
 theme: readthedocs
 repo_url: https://github.com/s9e/TextFormatter/
-docs_dir: .
 pages:
   - Home: index.md
   - Getting started:
