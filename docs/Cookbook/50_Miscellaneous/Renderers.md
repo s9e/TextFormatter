@@ -1,6 +1,6 @@
 ## Rendering engines
 
-s9e\TextFormatter offers multiple renderers: 3 general purpose renderers, plus a special one. In general, you can just use the default setting but in some cases, some renderers may offer better performance. The type of renderer can be during configuration. Multiple renderers can be created based on the same config, and except for the special one, they will produce the same output.
+s9e\TextFormatter offers multiple renderers: 2 general purpose renderers, plus a special one. In general, you can just use the default setting but in some cases, some renderers may offer better performance. The type of renderer can be during configuration. Multiple renderers can be created based on the same config, and except for the special one, they will produce the same output.
 
 #### XSLT renderer
 
