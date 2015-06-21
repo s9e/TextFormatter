@@ -1,4 +1,4 @@
-## Plug your own parser
+<h2>Plug your own parser</h2>
 
 You can register your own parser to be executed at runtime with `$parser->registerParser($name, $callback[, $regexp])` in which:
 

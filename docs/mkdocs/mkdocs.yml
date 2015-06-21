@@ -8,14 +8,27 @@ pages:
     - How it works: Getting_started/How_it_works.md
     - Using predefined bundles: Getting_started/Using_predefined_bundles.md
     - Runtime configuration: Getting_started/Runtime_configuration.md
+    - Unparsing: Getting_started/Unparsing.md
+  - Bundles:
+    - Fatdown: Bundles/Fatdown.md
+    - Forum: Bundles/Forum.md
   - Templating:
     - Introduction: Templating/Introduction.md
     - Modify a template: Templating/Modify_a_template.md
     - Template parameters: Templating/Template_parameters.md
+    - Template normalization:
+      - Change the default settings: Templating/Template_normalization/Change_default.md
+      - Extend the template syntax through normalization: Templating/Template_normalization/Extend.md
   - Rules:
     - Tag rules: Rules/Tag_rules.md
     - Automatic rules generation: Rules/Automatic_rules_generation.md
     - Rules generators: Rules/Rules_generators.md
+  - Filters:
+    - Built-in filters: Filters/Built-in_filters.md
+    - URL features:
+      - Blacklist hosts: Filters/URL_features/Blacklist_hosts.md
+      - Whitelist hosts: Filters/URL_features/Whitelist_hosts.md
+      - Restrict schemes: Filters/URL_features/Schemes.md
   - Plugins:
     - Autoemail:
       - Synopsis: Plugins/Autoemail/Synopsis.md
@@ -59,3 +72,5 @@ pages:
       - Synopsis: Plugins/MediaEmbed/Synopsis.md
     - Preg:
       - Synopsis: Plugins/Preg/Synopsis.md
+    - Your own plugin:
+      - Plug your own parser: Plugins/Your_own_plugin/Register_parser.md

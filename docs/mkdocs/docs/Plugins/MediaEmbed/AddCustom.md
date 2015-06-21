@@ -202,7 +202,7 @@ echo $html;
 
 If the URL used for scraping is different from the media's URL, you can specify it in the `url` element of the `scrape` array. You can also use variables in the URL using the familiar syntax `{@id}`. Values for those variables come from named captures in previous `extract` regexp and from the tag's attributes if applicable.
 
-For example: in some places, Grooveshark uses hashbang URLs such as `http://grooveshark.com/#!/s/Soul+Below/4zGL7i`. Fragment identifiers (everything after `#`) are by definition omitted when requesting the page. If we tried to retrieve this URL as-is, the server would return the page that corresponds to `http://grooveshark.com/`.
+For example: in some places, Grooveshark used hashbang URLs such as `http://grooveshark.com/#!/s/Soul+Below/4zGL7i`. Fragment identifiers (everything after `#`) are by definition omitted when requesting the page. If we tried to retrieve this URL as-is, the server would return the page that corresponds to `http://grooveshark.com/`.
 
 In the following example, we configure `scrape` with a custom URL by matching everything after the hashbang using a capture named `path` and reconstructing the URL without the hashbang.
 
