@@ -14,10 +14,10 @@ You can use s9e\\TextFormatter via Composer or by cloning this repository. See [
 
 ## Demo
 
-If you're not using Internet Explorer, you can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html). No PHP demo online yet, try the PHP examples below.
+You can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html). No PHP demo online yet, try the PHP examples below.
 
 ## Examples
 
-If you can only read one example, [read how to use a bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Configuration/00_ZeroConfig.md).
+If you can only read one example, [read how to use a bundle](http://s9etextformatter.readthedocs.org/Getting_started/Using_predefined_bundles/).
 
-You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), you can look into the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/Plugins) for a description of each plugin or into the [Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook) for topical snippets.
+You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), you can look into the [manual](http://s9etextformatter.readthedocs.org/) for a description of each plugin and other examples.
