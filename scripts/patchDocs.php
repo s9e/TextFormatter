@@ -14,21 +14,6 @@ function patchFile($filepath)
 {
 	$file = file_get_contents($filepath);
 
-	// Execute the lone PHP in 02_Expert.md
-	if (strpos($filepath, '02_Expert.md'))
-	{
-		$text = preg_replace_callback(
-			'#```php([^`]+)\\n```\\s+(?!```html|<pre>)#s',
-			function ($m)
-			{
-				eval($m[1]);
-
-				return $m[0];
-			},
-			$file
-		);
-	}
-
 	// Execute PHP and replace output
 	$text = preg_replace_callback(
 		'#
@@ -62,6 +47,11 @@ function patchFile($filepath)
 	}
 }
 
-patchDir(__DIR__ . '/../docs/mkdocs/docs/');
+patchDir(__DIR__ . '/../docs/Bundles');
+patchDir(__DIR__ . '/../docs/Filters');
+patchDir(__DIR__ . '/../docs/Getting_started');
+patchDir(__DIR__ . '/../docs/Plugins');
+patchDir(__DIR__ . '/../docs/Rules');
+patchDir(__DIR__ . '/../docs/Templating');
 
 die("Done.\n");
