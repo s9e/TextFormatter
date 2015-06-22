@@ -20,8 +20,8 @@ $configurator->tags['X']->tagLimit     = 10;
 extract($configurator->finalize());
 
 // Change the limits at runtime
-$configurator->setNestingLimit('X', 10);
-$configurator->setTagLimit('X', 100);
+$parser->setNestingLimit('X', 10);
+$parser->setTagLimit('X', 100);
 ```
 
 ### Toggle a plugin
