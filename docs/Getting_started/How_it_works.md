@@ -28,7 +28,7 @@ $configurator → finalize()   (cache)
                              $renderer
 ```
 
-The parser object transforms plain text into XML, the renderer object transforms XML to HTML. The XML can be transformed back to the original text using the `s9e\TextFormatter\Unparser::unparse()` static method.
+The parser object transforms plain text into XML, the renderer object transforms XML into HTML. The XML can be transformed back to the original text using the `s9e\TextFormatter\Unparser::unparse()` static method.
 
 ```
         $parser->parse()
