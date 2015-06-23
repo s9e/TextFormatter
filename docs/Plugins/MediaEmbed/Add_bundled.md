@@ -1,6 +1,4 @@
-## Add a site from the supported list
-
-You can look into the list of supported sites in [the sites directory](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/MediaEmbed/Configurator/sites/).
+<h2>How to add a site from the supported list</h2>
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;

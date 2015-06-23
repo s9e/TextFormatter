@@ -1,4 +1,4 @@
-## Use a cache to improve scraping performance
+<h2>Use a cache to improve scraping performance</h2>
 
 In some cases, a simple URL does not provide all the information needed to embed a resource and the external content has to be downloaded, inspected and the information extracted. This only happens once at parsing time, but if you parse the same text multiple times (e.g. when editing a text) you may want to save a local copy of the external content for performance.
 

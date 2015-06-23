@@ -1,4 +1,4 @@
-## Change the template used to render embedded content
+<h2>Change the template used to render embedded content</h2>
 
 `add()` returns the tag that is associate with the newly-added media site. You can change its default template to change the way the embedded content is displayed. In the following example, we put YouTube videos inside of a special `<div>`.
 

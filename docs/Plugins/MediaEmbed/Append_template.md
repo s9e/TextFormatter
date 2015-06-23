@@ -1,4 +1,4 @@
-## Add a link to the original URL below the embedded content
+<h2>How to add a link to the original URL below the embedded content</h2>
 
 If you want to display a link to the original page below the embedded content, the `appendTemplate()` method can be called (before adding media sites) to set a template to be displayed after the embedded content.
 

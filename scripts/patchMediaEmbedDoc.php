@@ -27,7 +27,7 @@ foreach (glob($dirpath . '/*.xml') as $siteFile)
 
 $html[] = '</table>';
 
-$filepath = __DIR__ . '/../src/Plugins/MediaEmbed/README.md';
+$filepath = __DIR__ . '/../docs/Plugins/MediaEmbed/Sites.md';
 $file     = file_get_contents($filepath);
 $pos      = strpos($file, '<table>');
 

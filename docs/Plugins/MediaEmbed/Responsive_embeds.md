@@ -1,4 +1,4 @@
-## Use responsive embeds
+<h2>How to use responsive embeds</h2>
 
 Most embeds can be made responsive if you call `enableResponsiveEmbeds()` before adding sites. This will wrap the embedded content in a `div` element that will automatically shrink if the original content is wider than the available space.
 

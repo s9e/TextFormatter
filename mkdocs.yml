@@ -1,6 +1,8 @@
 site_name: s9e\TextFormatter
 theme: readthedocs
 repo_url: https://github.com/s9e/TextFormatter/
+markdown_extensions:
+    - sane_lists
 pages:
   - Home: index.md
   - Getting started:
@@ -71,6 +73,13 @@ pages:
       - Synopsis: Plugins/Litedown/Synopsis.md
     - MediaEmbed:
       - Synopsis: Plugins/MediaEmbed/Synopsis.md
+      - Supported sites: Plugins/MediaEmbed/Sites.md
+      - Add a supported site: Plugins/MediaEmbed/Add_bundled.md
+      - Add a custom site: Plugins/MediaEmbed/Add_custom.md
+      - Add a link to the original URL: Plugins/MediaEmbed/Append_template.md
+      - Change a template: Plugins/MediaEmbed/Change_template.md
+      - Configure a cache dir: Plugins/MediaEmbed/Performance_cache_dir.md
+      - Responsive embeds: Plugins/MediaEmbed/Responsive_embeds.md
     - Preg:
       - Synopsis: Plugins/Preg/Synopsis.md
     - Your own plugin:
