@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ROOT=$(dirname $(dirname $(realpath $0)))
 
 cd "$ROOT"
@@ -12,7 +12,7 @@ then
 
 	./scripts/patchDocs.php
 	./scripts/patchExamples.php
-	git update-index --add "docs"
+	git add "docs"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
