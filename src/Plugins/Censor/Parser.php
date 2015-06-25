@@ -16,23 +16,17 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-
-		$replacements = (isset($this->config['replacements']))
-		              ? $this->config['replacements']
-		              : [];
-
+		$tagName      = $this->config['tagName'];
+		$attrName     = $this->config['attrName'];
+		$replacements = (isset($this->config['replacements'])) ? $this->config['replacements'] : [];
 		foreach ($matches as $m)
 		{
-			if (isset($this->config['allowed'])
-			 && preg_match($this->config['allowed'], $m[0][0]))
+			if ($this->isAllowed($m[0][0]))
 			{
 				continue;
 			}
 
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
-
 			foreach ($replacements as list($regexp, $replacement))
 			{
 				if (preg_match($regexp, $m[0][0]))
@@ -42,5 +36,16 @@ class Parser extends ParserBase
 				}
 			}
 		}
+	}
+
+	/**
+	* Test whether given word is allowed
+	*
+	* @param  string $word
+	* @return bool
+	*/
+	protected function isAllowed($word)
+	{
+		return (isset($this->config['allowed']) && preg_match($this->config['allowed'], $word));
 	}
 }
