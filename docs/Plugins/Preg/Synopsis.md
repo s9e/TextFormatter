@@ -71,6 +71,28 @@ echo $html;
 This is <em>emphasised <s>striked</s> text</em>.
 ```
 
+### Using match()
+
+In the following example, we use BBCodes plugin to implement a `[B]` BBCode for bold then we configure the Preg plugin to match any pair of asterisks with some text in the middle, such as `*text*`. We assign the match to the `B` tag.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->BBCodes->addFromRepository('B');
+$configurator->Preg->match('/\\*(.+?)\\*/', 'B');
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = '[b]BBCode[/b] or *Preg*.';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<b>BBCode</b> or <b>Preg</b>.
+```
+
 ## Security
 
 Unsafe markup is rejected and an exception is thrown. The following example will fail because its template uses unfiltered content in a JavaScript context. We use the `highlightNode()` method of `UnsafeTemplateException` to display exactly which node caused the exception to be thrown. Note that it's the XSL representation of the template that is displayed.

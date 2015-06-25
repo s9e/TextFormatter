@@ -88,6 +88,26 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				'Some *emphasis*.',
+				'<r>Some <B><s>*</s>emphasis<e>*</e></B>.</r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->Preg->match('/\\*(.*?)\\*/', 'B');
+				}
+			],
+			[
+				'[foo](http://example.org) [bar](http://example.com)',
+				'<r><A href="http://example.org"><s>[</s>foo<e>](http://example.org)</e></A> <A href="http://example.com"><s>[</s>bar<e>](http://example.com)</e></A></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->tags->add('A')->attributes->add('href');
+					$configurator->Preg->match('/\\[(.*?)\\]\\((?<href>[^)]+)\\)/', 'A');
+				}
+			],
 		];
 	}
 

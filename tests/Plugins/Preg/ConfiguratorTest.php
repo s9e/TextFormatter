@@ -472,6 +472,20 @@ class ConfiguratorTest extends Test
 			$config['generics']
 		);
 	}
+
+	/**
+	* @testdox match() uses the last catch-all expression as passthrough
+	*/
+	public function testMatch()
+	{
+		$this->configurator->tags->add('X');
+		$this->configurator->Preg->match('/`(.*?)`/', 'X');
+
+		$config   = $this->configurator->Preg->asConfig();
+		$generics = $config['generics']->get();
+
+		$this->assertSame(1, $generics[0][2]);
+	}
 }
 
 class FakeToken implements \ArrayAccess

@@ -27,7 +27,7 @@ class Configurator extends ConfiguratorBase
 	protected $captures;
 
 	/**
-	* @var array Array of [tagName => [regexp, passthroughIdx]]
+	* @var array[] List of [tagName, regexp, passthroughIdx]
 	*/
 	protected $collection = [];
 
@@ -64,7 +64,7 @@ class Configurator extends ConfiguratorBase
 
 		$pregs   = [];
 		$jsPregs = [];
-		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
+		foreach ($this->collection as list($tagName, $regexp, $passthroughIdx))
 		{
 			$pregs[] = [$tagName, $regexp, $passthroughIdx];
 
@@ -84,6 +84,29 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return ['generics' => $variant];
+	}
+
+	/**
+	* Configure a pattern-based match
+	*
+	* @param  string $regexp   Regexp to be used by the parser
+	* @param  string $tagName  Name of the tag that holds the matched text
+	* @return void
+	*/
+	public function match($regexp, $tagName)
+	{
+		$passthrough = 0;
+		$this->parseRegexp($regexp);
+		foreach ($this->captures as $i => $capture)
+		{
+			if (!$this->isCatchAll($capture['expr']))
+			{
+				continue;
+			}
+			$passthrough = $i;
+		}
+
+		$this->collection[] = [$tagName, $regexp, $passthrough];
 	}
 
 	/**
@@ -113,7 +136,7 @@ class Configurator extends ConfiguratorBase
 		$regexp   = $this->fixUnnamedCaptures($regexp);
 		$template = $this->convertTemplate($template, $passthrough);
 
-		$this->collection[$tagName] = [$regexp, $passthrough];
+		$this->collection[] = [$tagName, $regexp, $passthrough];
 
 		return $this->createTag($tagName, $template);
 	}
@@ -296,7 +319,7 @@ class Configurator extends ConfiguratorBase
 		$passthrough = 0;
 		foreach ($this->references['inText'] as $key)
 		{
-			if (!preg_match('(^\\.[*+]\\??$)D', $this->captures[$key]['expr']))
+			if (!$this->isCatchAll($this->captures[$key]['expr']))
 			{
 				// Ignore if it's not a catch-all expression such as .*?
 				continue;
@@ -314,12 +337,12 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Parse given regexp and store its information
+	* Parse a regexp and return its info
 	*
-	* @param  string  $regexp
-	* @return void
+	* @param  string $regexp
+	* @return array
 	*/
-	protected function parseRegexp($regexp)
+	protected function getRegexpInfo($regexp)
 	{
 		$valid = false;
 		try
@@ -335,8 +358,30 @@ class Configurator extends ConfiguratorBase
 			throw new InvalidArgumentException('Invalid regexp');
 		}
 
+		return RegexpParser::parse($regexp);
+	}
+
+	/**
+	* Test whether given expression is a catch-all expression such as .*?
+	*
+	* @param  string $expr Subpattern
+	* @return bool
+	*/
+	protected function isCatchAll($expr)
+	{
+		return (bool) preg_match('(^\\.[*+]\\??$)D', $expr);
+	}
+
+	/**
+	* Parse given regexp and store its information
+	*
+	* @param  string  $regexp
+	* @return void
+	*/
+	protected function parseRegexp($regexp)
+	{
 		$this->captures = [['name' => null, 'expr' => null]];
-		$regexpInfo = RegexpParser::parse($regexp);
+		$regexpInfo = $this->getRegexpInfo($regexp);
 		$this->delimiter = $regexpInfo['delimiter'];
 		$this->modifiers = str_replace('D', '', $regexpInfo['modifiers']);
 		foreach ($regexpInfo['tokens'] as $token)
