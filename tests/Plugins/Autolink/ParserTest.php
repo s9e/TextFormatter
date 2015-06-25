@@ -141,6 +141,15 @@ class ParserTest extends Test
 				'Not a valid URL: foohttp://example.org',
 				'<t>Not a valid URL: foohttp://example.org</t>'
 			],
+			[
+				"... http://_ ...",
+				'<t>... http://_ ...</t>'
+			],
+			[
+				'... www._ ..',
+				'<t>... www._ ..</t>',
+				['matchWww' => true]
+			],
 		];
 	}
 

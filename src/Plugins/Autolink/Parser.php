@@ -22,31 +22,18 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$url    = $m[0][0];
-			$tagPos = $m[0][1];
-
 			// Make sure that the URL is not preceded by an alphanumeric character
+			$tagPos = $m[0][1];
 			if ($tagPos > 0 && strpos($chars, $text[$tagPos - 1]) !== false)
 			{
 				continue;
 			}
 
-			// Remove trailing punctuation and right angle brackets. We preserve right parentheses
-			// if there's a balanced number of parentheses in the URL, e.g.
-			//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
-			while (1)
+			// Trim the URL and ensure the anchor (scheme/www) is still there
+			$url = $this->trimUrl($m[0][0]);
+			if (!preg_match('/^[^:]+:|^www\\./i', $url))
 			{
-				// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
-				// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
-				// and parentheses, which are balanced separately
-				$url = preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
-
-				if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
-				{
-					$url = substr($url, 0, -1);
-					continue;
-				}
-				break;
+				continue;
 			}
 
 			// Create a zero-width end tag right after the URL
@@ -65,5 +52,35 @@ class Parser extends ParserBase
 			// Pair the tags together
 			$startTag->pairWith($endTag);
 		}
+	}
+
+	/**
+	* Remove trailing punctuation from given URL
+	*
+	* Removes trailing punctuation and right angle brackets. We preserve right parentheses
+	* if there's a balanced number of parentheses in the URL, e.g.
+	*   http://en.wikipedia.org/wiki/Mars_(disambiguation)
+	*
+	* @param  string $url Original URL
+	* @return string      Trimmed URL
+	*/
+	protected function trimUrl($url)
+	{
+		while (1)
+		{
+			// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
+			// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
+			// and parentheses, which are balanced separately
+			$url = preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
+
+			if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
+			{
+				$url = substr($url, 0, -1);
+				continue;
+			}
+			break;
+		}
+
+		return $url;
 	}
 }
