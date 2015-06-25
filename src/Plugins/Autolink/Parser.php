@@ -16,42 +16,51 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-		$chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
+		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		foreach ($matches as $m)
 		{
 			// Make sure that the URL is not preceded by an alphanumeric character
-			$tagPos = $m[0][1];
-			if ($tagPos > 0 && strpos($chars, $text[$tagPos - 1]) !== false)
+			$matchPos = $m[0][1];
+			if ($matchPos > 0 && strpos($chars, $text[$matchPos - 1]) !== false)
 			{
 				continue;
 			}
 
-			// Trim the URL and ensure the anchor (scheme/www) is still there
-			$url = $this->trimUrl($m[0][0]);
-			if (!preg_match('/^[^:]+:|^www\\./i', $url))
-			{
-				continue;
-			}
-
-			// Create a zero-width end tag right after the URL
-			$endTag = $this->parser->addEndTag($tagName, $tagPos + strlen($url), 0);
-
-			// If the URL starts with "www." we prepend "http://"
-			if ($url[3] === '.')
-			{
-				$url = 'http://' . $url;
-			}
-
-			// Create a zero-width start tag right before the URL
-			$startTag = $this->parser->addStartTag($tagName, $tagPos, 0);
-			$startTag->setAttribute($attrName, $url);
-
-			// Pair the tags together
-			$startTag->pairWith($endTag);
+			// Linkify the trimmed URL
+			$this->linkifyUrl($matchPos, $this->trimUrl($m[0][0]));
 		}
+	}
+
+	/**
+	* Linkify given URL at given position
+	*
+	* @param  integer $tagPos URL's position in the text
+	* @param  string  $url    URL
+	* @return void
+	*/
+	protected function linkifyUrl($tagPos, $url)
+	{
+		// Ensure that the anchor (scheme/www) is still there
+		if (!preg_match('/^[^:]+:|^www\\./i', $url))
+		{
+			return;
+		}
+
+		// Create a zero-width end tag right after the URL
+		$endTag = $this->parser->addEndTag($this->config['tagName'], $tagPos + strlen($url), 0);
+
+		// If the URL starts with "www." we prepend "http://"
+		if ($url[3] === '.')
+		{
+			$url = 'http://' . $url;
+		}
+
+		// Create a zero-width start tag right before the URL
+		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0);
+		$startTag->setAttribute($this->config['attrName'], $url);
+
+		// Pair the tags together
+		$startTag->pairWith($endTag);
 	}
 
 	/**

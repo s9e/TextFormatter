@@ -1,25 +1,35 @@
-var tagName  = config.tagName,
-	attrName = config.attrName,
-	chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+/** @const */
+var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 matches.forEach(function(m)
 {
 	// Make sure that the URL is not preceded by an alphanumeric character
-	var tagPos = m[0][1];
-	if (tagPos > 0 && chars.indexOf(text.charAt(tagPos - 1)) > -1)
+	var matchPos = m[0][1];
+	if (matchPos > 0 && chars.indexOf(text.charAt(matchPos - 1)) > -1)
 	{
 		return;
 	}
 
-	// Trim the URL and ensure the anchor (scheme/www) is still there
-	var url = trimUrl(m[0][0]);
+	// Linkify the trimmed URL
+	linkifyUrl(matchPos, trimUrl(m[0][0]));
+});
+
+/**
+* Linkify given URL at given position
+*
+* @param {!integer} tagPos URL's position in the text
+* @param {!string}  url    URL
+*/
+function linkifyUrl(tagPos, url)
+{
+	// Ensure that the anchor (scheme/www) is still there
 	if (!/^www\.|^[^:]+:/i.test(url))
 	{
 		return;
 	}
 
 	// Create a zero-width end tag right after the URL
-	var endTag = addEndTag(tagName, tagPos + url.length, 0);
+	var endTag = addEndTag(config.tagName, tagPos + url.length, 0);
 
 	// If the URL starts with "www." we prepend "http://"
 	if (url.charAt(3) === '.')
@@ -28,12 +38,12 @@ matches.forEach(function(m)
 	}
 
 	// Create a zero-width start tag right before the URL
-	var startTag = addStartTag(tagName, tagPos, 0);
-	startTag.setAttribute(attrName, url);
+	var startTag = addStartTag(config.tagName, tagPos, 0);
+	startTag.setAttribute(config.attrName, url);
 
 	// Pair the tags together
 	startTag.pairWith(endTag);
-});
+};
 
 /**
 * Trim any trailing punctuation from given URL
