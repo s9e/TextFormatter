@@ -21,4 +21,4 @@ cd "$TARGET"
 cd ../..
 git add TextFormatter/api
 git commit -m"Updated API docs"
-git push
+git push --all

@@ -7,7 +7,7 @@ if [[ -n `git diff --cached --name-only -b src` ]]
 then
 	if [ `git rev-parse --abbrev-ref HEAD` = "master" ]
 	then
-		./scripts/generateApiDoc.sh &
+		env -i ./scripts/generateApiDoc.sh &
 	fi
 
 	./scripts/patchDocs.php
