@@ -31,7 +31,7 @@ class Configurator extends ConfiguratorBase
 			return;
 		$pregs   = [];
 		$jsPregs = [];
-		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
+		foreach ($this->collection as list($tagName, $regexp, $passthroughIdx))
 		{
 			$pregs[] = [$tagName, $regexp, $passthroughIdx];
 			if (isset($this->configurator->javascript))
@@ -46,6 +46,18 @@ class Configurator extends ConfiguratorBase
 			$variant->set('JS', $jsPregs);
 		return ['generics' => $variant];
 	}
+	public function match($regexp, $tagName)
+	{
+		$passthrough = 0;
+		$this->parseRegexp($regexp);
+		foreach ($this->captures as $i => $capture)
+		{
+			if (!$this->isCatchAll($capture['expr']))
+				continue;
+			$passthrough = $i;
+		}
+		$this->collection[] = [$tagName, $regexp, $passthrough];
+	}
 	public function replace($regexp, $template, $tagName = \null)
 	{
 		if (!isset($tagName))
@@ -57,7 +69,7 @@ class Configurator extends ConfiguratorBase
 			$this->captures[$passthrough]['passthrough'] = \true;
 		$regexp   = $this->fixUnnamedCaptures($regexp);
 		$template = $this->convertTemplate($template, $passthrough);
-		$this->collection[$tagName] = [$regexp, $passthrough];
+		$this->collection[] = [$tagName, $regexp, $passthrough];
 		return $this->createTag($tagName, $template);
 	}
 	protected function addAttribute(Tag $tag, $attrName)
@@ -156,7 +168,7 @@ class Configurator extends ConfiguratorBase
 		$passthrough = 0;
 		foreach ($this->references['inText'] as $key)
 		{
-			if (!\preg_match('(^\\.[*+]\\??$)D', $this->captures[$key]['expr']))
+			if (!$this->isCatchAll($this->captures[$key]['expr']))
 				continue;
 			if ($passthrough)
 			{
@@ -167,7 +179,7 @@ class Configurator extends ConfiguratorBase
 		}
 		return $passthrough;
 	}
-	protected function parseRegexp($regexp)
+	protected function getRegexpInfo($regexp)
 	{
 		$valid = \false;
 		try
@@ -179,8 +191,16 @@ class Configurator extends ConfiguratorBase
 			}
 		if ($valid === \false)
 			throw new InvalidArgumentException('Invalid regexp');
+		return RegexpParser::parse($regexp);
+	}
+	protected function isCatchAll($expr)
+	{
+		return (bool) \preg_match('(^\\.[*+]\\??$)D', $expr);
+	}
+	protected function parseRegexp($regexp)
+	{
 		$this->captures = [['name' => \null, 'expr' => \null]];
-		$regexpInfo = RegexpParser::parse($regexp);
+		$regexpInfo = $this->getRegexpInfo($regexp);
 		$this->delimiter = $regexpInfo['delimiter'];
 		$this->modifiers = \str_replace('D', '', $regexpInfo['modifiers']);
 		foreach ($regexpInfo['tokens'] as $token)
