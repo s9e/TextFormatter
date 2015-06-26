@@ -3,7 +3,7 @@ var tagName  = config.tagName,
 
 matches.forEach(function(m)
 {
-	if (config.allowed && config.allowed.test(m[0][0]))
+	if (isAllowed(m[0][0]))
 	{
 		return;
 	}
@@ -30,3 +30,14 @@ matches.forEach(function(m)
 		}
 	}
 });
+
+/**
+* Test whether given word is allowed
+*
+* @param  {!string}  word
+* @return {!boolean}
+*/
+function isAllowed(word)
+{
+	return (config.allowed && config.allowed.test(word));
+}

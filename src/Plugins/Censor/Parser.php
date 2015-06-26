@@ -11,15 +11,12 @@ class Parser extends ParserBase
 {
 	public function parse($text, array $matches)
 	{
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-		$replacements = (isset($this->config['replacements']))
-		              ? $this->config['replacements']
-		              : array();
+		$tagName      = $this->config['tagName'];
+		$attrName     = $this->config['attrName'];
+		$replacements = (isset($this->config['replacements'])) ? $this->config['replacements'] : array();
 		foreach ($matches as $m)
 		{
-			if (isset($this->config['allowed'])
-			 && \preg_match($this->config['allowed'], $m[0][0]))
+			if ($this->isAllowed($m[0][0]))
 				continue;
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], \strlen($m[0][0]));
 			foreach ($replacements as $_681051f1)
@@ -32,5 +29,9 @@ class Parser extends ParserBase
 				}
 			}
 		}
+	}
+	protected function isAllowed($word)
+	{
+		return (isset($this->config['allowed']) && \preg_match($this->config['allowed'], $word));
 	}
 }
