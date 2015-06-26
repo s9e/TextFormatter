@@ -11,31 +11,38 @@ class Parser extends ParserBase
 {
 	public function parse($text, array $matches)
 	{
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-		$chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		foreach ($matches as $m)
 		{
-			$url    = $m[0][0];
-			$tagPos = $m[0][1];
-			if ($tagPos > 0 && \strpos($chars, $text[$tagPos - 1]) !== \false)
+			$matchPos = $m[0][1];
+			if ($matchPos > 0 && \strpos($chars, $text[$matchPos - 1]) !== \false)
 				continue;
-			while (1)
-			{
-				$url = \preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
-				if (\substr($url, -1) === ')' && \substr_count($url, '(') < \substr_count($url, ')'))
-				{
-					$url = \substr($url, 0, -1);
-					continue;
-				}
-				break;
-			}
-			$endTag = $this->parser->addEndTag($tagName, $tagPos + \strlen($url), 0);
-			if ($url[3] === '.')
-				$url = 'http://' . $url;
-			$startTag = $this->parser->addStartTag($tagName, $tagPos, 0);
-			$startTag->setAttribute($attrName, $url);
-			$startTag->pairWith($endTag);
+			$this->linkifyUrl($matchPos, $this->trimUrl($m[0][0]));
 		}
+	}
+	protected function linkifyUrl($tagPos, $url)
+	{
+		if (!\preg_match('/^[^:]+:|^www\\./i', $url))
+			return;
+		$endTag = $this->parser->addEndTag($this->config['tagName'], $tagPos + \strlen($url), 0);
+		if ($url[3] === '.')
+			$url = 'http://' . $url;
+		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0);
+		$startTag->setAttribute($this->config['attrName'], $url);
+		$startTag->pairWith($endTag);
+	}
+	protected function trimUrl($url)
+	{
+		while (1)
+		{
+			$url = \preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
+			if (\substr($url, -1) === ')' && \substr_count($url, '(') < \substr_count($url, ')'))
+			{
+				$url = \substr($url, 0, -1);
+				continue;
+			}
+			break;
+		}
+		return $url;
 	}
 }
