@@ -4,7 +4,6 @@ Long-term goals (?)
 - Have a piece of utilities that converts a parsed text to BBCodes or Markdown
 - RTE
 - Slowly convince every forum, blog and wiki software, open source and otherwise, to use s9e\TextFormatter 
-- Move (and expand) to ReadTheDocs.org, maybe. Someday.
 
 
 Random stuff that may never happen
