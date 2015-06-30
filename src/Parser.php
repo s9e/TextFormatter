@@ -31,6 +31,7 @@ class Parser
 	protected $cntOpen;
 	protected $cntTotal;
 	protected $context;
+	protected $createdTags;
 	protected $currentFixingCost;
 	protected $currentTag;
 	protected $isRich;
@@ -67,25 +68,32 @@ class Parser
 	{
 		$this->logger = new Logger;
 	}
+	protected function gc()
+	{
+		foreach ($this->createdTags as $tag)
+			$tag->gc();
+		$this->createdTags = [];
+	}
 	protected function reset($text)
 	{
 		$text = \preg_replace('/\\r\\n?/', "\n", $text);
 		$text = \preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 		$this->logger->clear();
-		$this->cntOpen    = [];
-		$this->cntTotal   = [];
+		$this->cntOpen     = [];
+		$this->cntTotal    = [];
+		$this->createdTags = [];
 		$this->currentFixingCost = 0;
-		$this->currentTag = \null;
-		$this->isRich     = \false;
-		$this->namespaces = [];
-		$this->openTags   = [];
-		$this->output     = '';
-		$this->pos        = 0;
-		$this->tagStack   = [];
+		$this->currentTag  = \null;
+		$this->isRich      = \false;
+		$this->namespaces  = [];
+		$this->openTags    = [];
+		$this->output      = '';
+		$this->pos         = 0;
+		$this->tagStack    = [];
 		$this->tagStackIsSorted = \true;
-		$this->text       = $text;
-		$this->textLen    = \strlen($text);
-		$this->wsPos      = 0;
+		$this->text        = $text;
+		$this->textLen     = \strlen($text);
+		$this->wsPos       = 0;
 		$this->context = $this->rootContext;
 		$this->context['inParagraph'] = \false;
 		++$this->uid;
@@ -124,6 +132,7 @@ class Parser
 		$this->executePluginParsers();
 		$this->processTags();
 		$this->finalizeOutput();
+		$this->gc();
 		if ($this->uid !== $uid)
 			throw new RuntimeException('The parser has been reset during execution');
 		if ($this->currentFixingCost > $this->maxFixingCost)
@@ -925,6 +934,7 @@ class Parser
 	protected function addTag($type, $name, $pos, $len)
 	{
 		$tag = new Tag($type, $name, $pos, $len);
+		$this->createdTags[] = $tag;
 		if (isset($this->tagsConfig[$name]))
 			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
 		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
