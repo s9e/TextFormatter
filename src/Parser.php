@@ -63,6 +63,11 @@ class Parser
 	protected $context;
 
 	/**
+	* @var Tag[] Every tag created by this parser, used for garbage collection
+	*/
+	protected $createdTags;
+
+	/**
 	* @var integer How hard the parser has worked on fixing bad markup so far
 	*/
 	protected $currentFixingCost;
@@ -202,6 +207,20 @@ class Parser
 	}
 
 	/**
+	* Remove old references to tags
+	*
+	* @return void
+	*/
+	protected function gc()
+	{
+		foreach ($this->createdTags as $tag)
+		{
+			$tag->gc();
+		}
+		$this->createdTags = [];
+	}
+
+	/**
 	* Reset the parser for a new parsing
 	*
 	* @param  string $text Text to be parsed
@@ -217,20 +236,21 @@ class Parser
 		$this->logger->clear();
 
 		// Initialize the rest
-		$this->cntOpen    = [];
-		$this->cntTotal   = [];
+		$this->cntOpen     = [];
+		$this->cntTotal    = [];
+		$this->createdTags = [];
 		$this->currentFixingCost = 0;
-		$this->currentTag = null;
-		$this->isRich     = false;
-		$this->namespaces = [];
-		$this->openTags   = [];
-		$this->output     = '';
-		$this->pos        = 0;
-		$this->tagStack   = [];
+		$this->currentTag  = null;
+		$this->isRich      = false;
+		$this->namespaces  = [];
+		$this->openTags    = [];
+		$this->output      = '';
+		$this->pos         = 0;
+		$this->tagStack    = [];
 		$this->tagStackIsSorted = true;
-		$this->text       = $text;
-		$this->textLen    = strlen($text);
-		$this->wsPos      = 0;
+		$this->text        = $text;
+		$this->textLen     = strlen($text);
+		$this->wsPos       = 0;
 
 		// Initialize the root context
 		$this->context = $this->rootContext;
@@ -339,6 +359,9 @@ class Parser
 
 		// Finalize the document
 		$this->finalizeOutput();
+
+		// Remove old references
+		$this->gc();
 
 		// Check the uid in case a plugin or a filter reset the parser mid-execution
 		if ($this->uid !== $uid)
@@ -2029,6 +2052,9 @@ class Parser
 	{
 		// Create the tag
 		$tag = new Tag($type, $name, $pos, $len);
+
+		// Keep a copy of this tag to destroy its references after processing
+		$this->createdTags[] = $tag;
 
 		// Set this tag's rules bitfield
 		if (isset($this->tagsConfig[$name]))
