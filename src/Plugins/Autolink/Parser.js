@@ -17,8 +17,8 @@ matches.forEach(function(m)
 /**
 * Linkify given URL at given position
 *
-* @param {!integer} tagPos URL's position in the text
-* @param {!string}  url    URL
+* @param {!number} tagPos URL's position in the text
+* @param {!string} url    URL
 */
 function linkifyUrl(tagPos, url)
 {

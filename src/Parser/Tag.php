@@ -39,6 +39,12 @@ class Tag
 		if ($this->invalid)
 			$tag->invalidate();
 	}
+	public function gc()
+	{
+		$this->cascade  = array();
+		$this->endTag   = \null;
+		$this->startTag = \null;
+	}
 	public function invalidate()
 	{
 		if ($this->invalid)
