@@ -132,8 +132,8 @@ class Parser
 		$uid = $this->uid;
 		$this->executePluginParsers();
 		$this->processTags();
-		$this->finalizeOutput();
 		$this->gc();
+		$this->finalizeOutput();
 		if ($this->uid !== $uid)
 			throw new RuntimeException('The parser has been reset during execution');
 		if ($this->currentFixingCost > $this->maxFixingCost)
