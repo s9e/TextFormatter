@@ -879,10 +879,10 @@ class Parser
 		$this->openTags[] = $tag;
 		$allowedChildren = $tagConfig['allowedChildren'];
 		if ($tagFlags & self::RULE_IS_TRANSPARENT)
-			$allowedChildren &= $this->context['allowedChildren'];
+			$allowedChildren = $allowedChildren & $this->context['allowedChildren'];
 		$allowedDescendants = $this->context['allowedDescendants']
 		                    & $tagConfig['allowedDescendants'];
-		$allowedChildren &= $allowedDescendants;
+		$allowedChildren = $allowedChildren & $allowedDescendants;
 		$flags = $tagFlags;
 		$flags |= $this->context['flags'] & self::RULES_INHERITANCE;
 		if ($flags & self::RULE_DISABLE_AUTO_BR)
