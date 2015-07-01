@@ -1899,7 +1899,7 @@ class Parser
 		// parent, minus this tag's own disallowed children
 		if ($tagFlags & self::RULE_IS_TRANSPARENT)
 		{
-			$allowedChildren &= $this->context['allowedChildren'];
+			$allowedChildren = $allowedChildren & $this->context['allowedChildren'];
 		}
 
 		// The allowedDescendants bitfield is restricted by this tag's
@@ -1907,7 +1907,7 @@ class Parser
 		                    & $tagConfig['allowedDescendants'];
 
 		// Ensure that disallowed descendants are not allowed as children
-		$allowedChildren &= $allowedDescendants;
+		$allowedChildren = $allowedChildren & $allowedDescendants;
 
 		// Use this tag's flags as a base for this context
 		$flags = $tagFlags;
