@@ -204,11 +204,11 @@ function parse(_text)
 	executePluginParsers();
 	processTags();
 
-	// Finalize the document
-	finalizeOutput();
-
 	// Remove old references
 	gc();
+
+	// Finalize the document
+	finalizeOutput();
 
 	// Check the uid in case a plugin or a filter reset the parser mid-execution
 	if (uid !== _uid)
