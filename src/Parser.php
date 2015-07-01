@@ -357,11 +357,11 @@ class Parser
 		$this->executePluginParsers();
 		$this->processTags();
 
-		// Finalize the document
-		$this->finalizeOutput();
-
 		// Remove old references
 		$this->gc();
+
+		// Finalize the document
+		$this->finalizeOutput();
 
 		// Check the uid in case a plugin or a filter reset the parser mid-execution
 		if ($this->uid !== $uid)
