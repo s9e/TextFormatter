@@ -796,18 +796,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm" secret_token="s-UpqTm" track_id="51465673" url="https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm">https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep" playlist_id="3111458" secret_token="s-0WDep" url="https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep">https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep</SOUNDCLOUD></r>',
+				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
+				'<r><SOUNDCLOUD id="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/" playlist_id="1919974" url="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/">https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -1122,16 +1112,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/51465673&amp;secret_token=s-UpqTm"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
 			[
@@ -2421,17 +2401,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<r><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->createIndividualBBCodes = true;
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
-				'<r><SOUNDCLOUD id="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" secret_token="s-foobar" url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar">[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2449,17 +2419,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix" url="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/">https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<r><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -3360,17 +3321,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->createIndividualBBCodes = true;
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/12345?secret_token=s-foobar&amp;secret_token=s-foobar"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3380,7 +3331,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3389,7 +3340,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3398,7 +3349,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/playlists/1919974"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3409,7 +3360,7 @@ class ParserTest extends Test
 			[
 				// http://xenforo.com/community/threads/s9e-media-bbcodes-pack.61883/page-16#post-741750
 				'[media=soundcloud]nruau/nruau-mix2[/media]',
-				'<iframe width="100%" height="166" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/nruau/nruau-mix2"></iframe>',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nruau/nruau-mix2"></iframe>',
 				[],
 				function ($configurator)
 				{
