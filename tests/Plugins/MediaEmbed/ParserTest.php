@@ -801,6 +801,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (version_compare(PHP_VERSION, '5.4', '<'))
+					{
+						$this->markTestSkipped('This test fails on PHP 5.3 because of the lack of SSL');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1112,6 +1116,20 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
+				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
+				[],
+				function ($configurator)
+				{
+					if (version_compare(PHP_VERSION, '5.4', '<'))
+					{
+						$this->markTestSkipped('This test fails on PHP 5.3 because of the lack of SSL');
+					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
 			[
@@ -3332,15 +3350,6 @@ class ParserTest extends Test
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
 				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
 				[],
 				function ($configurator)
 				{
