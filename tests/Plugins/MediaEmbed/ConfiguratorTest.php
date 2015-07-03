@@ -53,8 +53,8 @@ class ConfiguratorTest extends Test
 	*/
 	public function testSiteBBCode()
 	{
-		$this->configurator->plugins->load('MediaEmbed', ['createIndividualBBCodes' => false])->add('youtube');
-		$this->assertFalse(isset($this->configurator->BBCodes['YOUTUBE']));
+		$this->configurator->plugins->load('MediaEmbed', ['createIndividualBBCodes' => true])->add('youtube');
+		$this->assertTrue(isset($this->configurator->BBCodes['YOUTUBE']));
 	}
 
 	/**
