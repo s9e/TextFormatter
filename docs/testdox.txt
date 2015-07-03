@@ -2472,6 +2472,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] setParameter() accepts values that contain both types of quotes
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
+ [x] Comments in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
@@ -2561,6 +2562,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] setParameters() sets the values of any number of parameters in an associative array
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
+ [x] Comments in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
@@ -2588,6 +2590,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] setParameter() accepts values that contain both types of quotes
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
+ [x] Comments in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character

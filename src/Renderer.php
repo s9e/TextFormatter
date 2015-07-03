@@ -143,9 +143,9 @@ abstract class Renderer
 	*/
 	protected function preventDTD($xml)
 	{
-		if (strpos($xml, '<!') !== false && preg_match('(<!(?!\\[CDATA\\[))', $xml))
+		if (strpos($xml, '<!') !== false)
 		{
-			throw new InvalidArgumentException('DTDs are not allowed');
+			throw new InvalidArgumentException('DTDs, CDATA nodes and comments are not allowed');
 		}
 	}
 

@@ -191,6 +191,15 @@ trait RendererTests
 	}
 
 	/**
+	* @testdox Comments in the XML representation cause an exception to be thrown
+	* @expectedException InvalidArgumentException comments
+	*/
+	public function testComment()
+	{
+		$this->configurator->getRenderer()->render('<r><!-- -->foo</r>');
+	}
+
+	/**
 	* @testdox Is not vulnerable to XXE
 	* @expectedException InvalidArgumentException DTD
 	*/
