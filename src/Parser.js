@@ -1763,59 +1763,31 @@ function pushContext(tag)
 
 	++cntTotal[tagName];
 
-	// If this is a self-closing tag, we don't need to do anything else; The context remains the
-	// same
+	// If this is a self-closing tag, the context remains the same
 	if (tag.isSelfClosingTag())
 	{
 		return;
 	}
 
-	++cntOpen[tagName];
-	openTags.push(tag);
-
-	/**
-	* @param {!Array} a1
-	* @param {!Array} a2
-	*/
-	function contextAnd(a1, a2)
-	{
-		var i = -1, cnt = a1.length, ret = new Array(cnt);
-
-		while (++i < cnt)
-		{
-			ret[i] = a1[i] & a2[i];
-		}
-
-		return ret;
-	}
-
-	// Using contextAnd() to copy the array
-	var allowedChildren = contextAnd(tagConfig.allowedChildren, tagConfig.allowedChildren);
-
-	// If the tag is transparent, we restrict its allowed children to the same set as its
-	// parent, minus this tag's own disallowed children
+	// Recompute the allowed tags
+	var allowed = [];
 	if (HINT.RULE_IS_TRANSPARENT && (tagFlags & RULE_IS_TRANSPARENT))
 	{
-		allowedChildren = contextAnd(allowedChildren, context.allowedChildren);
+		context.allowed.forEach(function(v, k)
+		{
+			allowed.push(tagConfig.allowed[k] & v);
+		});
+	}
+	else
+	{
+		context.allowed.forEach(function(v, k)
+		{
+			allowed.push(tagConfig.allowed[k] & ((v & 0xFF00) | (v >> 8)));
+		});
 	}
 
-	// The allowedDescendants bitfield is restricted by this tag's
-	var allowedDescendants = contextAnd(
-		context.allowedDescendants,
-		tagConfig.allowedDescendants
-	);
-
-	// Ensure that disallowed descendants are not allowed as children
-	allowedChildren = contextAnd(
-		allowedChildren,
-		allowedDescendants
-	);
-
-	// Use this tag's flags as a base for this context
-	var flags = tagFlags;
-
-	// Add inherited rules
-	flags |= context.flags & RULES_INHERITANCE;
+	// Use this tag's flags as a base for this context and add inherited rules
+	var flags = tagFlags | (context.flags & RULES_INHERITANCE);
 
 	// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
 	if (flags & RULE_DISABLE_AUTO_BR)
@@ -1823,11 +1795,12 @@ function pushContext(tag)
 		flags &= ~RULE_ENABLE_AUTO_BR;
 	}
 
+	++cntOpen[tagName];
+	openTags.push(tag);
 	context = {
-		allowedChildren    : allowedChildren,
-		allowedDescendants : allowedDescendants,
-		flags              : flags,
-		parentContext      : context
+		allowed       : allowed,
+		flags         : flags,
+		parentContext : context
 	};
 }
 
@@ -1841,7 +1814,7 @@ function tagIsAllowed(tagName)
 {
 	var n = tagsConfig[tagName].bitNumber;
 
-	return !!(context.allowedChildren[n >> 5] & (1 << (n & 31)));
+	return !!(context.allowed[n >> 3] & (1 << (n & 7)));
 }
 
 //==========================================================================

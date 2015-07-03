@@ -414,12 +414,9 @@ abstract class ConfigHelper
 			if (!\is_array($v))
 				continue;
 			self::optimizeArray($v, $cache);
-			$cacheKey = \array_search($v, $cache);
-			if ($cacheKey === \false)
-			{
-				$cacheKey         = \count($cache);
+			$cacheKey = \serialize($v);
+			if (!isset($cache[$cacheKey]))
 				$cache[$cacheKey] = $v;
-			}
 			$config[$k] =& $cache[$cacheKey];
 		}
 		unset($v);
@@ -1009,33 +1006,33 @@ abstract class RulesHelper
 			}
 			$groupedTags[$k][] = $tagName;
 		}
-		$return = [];
-		$bitTag    = [];
-		$bitNumber = 0;
+		$bitTag     = [];
+		$bitNumber  = 0;
+		$tagsConfig = [];
 		foreach ($groupedTags as $tagNames)
 		{
 			foreach ($tagNames as $tagName)
 			{
-				$return['tags'][$tagName]['bitNumber'] = $bitNumber;
+				$tagsConfig[$tagName]['bitNumber'] = $bitNumber;
 				$bitTag[$bitNumber] = $tagName;
 			}
 			++$bitNumber;
 		}
 		foreach ($matrix as $tagName => $tagMatrix)
-			foreach (['allowedChildren', 'allowedDescendants'] as $fieldName)
-			{
-				$bitfield = '';
-				foreach ($bitTag as $targetName)
-					$bitfield .= $tagMatrix[$fieldName][$targetName];
-				$return['tags'][$tagName][$fieldName] = $bitfield;
-			}
-		foreach ($return['tags'] as &$bitfields)
 		{
-			$bitfields['allowedChildren']    = self::pack($bitfields['allowedChildren']);
-			$bitfields['allowedDescendants'] = self::pack($bitfields['allowedDescendants']);
+			$allowedChildren    = '';
+			$allowedDescendants = '';
+			foreach ($bitTag as $targetName)
+			{
+				$allowedChildren    .= $tagMatrix['allowedChildren'][$targetName];
+				$allowedDescendants .= $tagMatrix['allowedDescendants'][$targetName];
+			}
+			$tagsConfig[$tagName]['allowed'] = self::pack($allowedChildren, $allowedDescendants);
 		}
-		unset($bitfields);
-		$return['root'] = $return['tags']['*root*'];
+		$return = [
+			'root' => $tagsConfig['*root*'],
+			'tags' => $tagsConfig
+		];
 		unset($return['tags']['*root*']);
 		return $return;
 	}
@@ -1118,9 +1115,18 @@ abstract class RulesHelper
 		}
 		unset($tagMatrix);
 	}
-	protected static function pack($bitfield)
+	protected static function pack($allowedChildren, $allowedDescendants)
 	{
-		return \implode('', \array_map('chr', \array_map('bindec', \array_map('strrev', \str_split($bitfield, 8)))));
+		$allowedChildren    = \str_split($allowedChildren,    8);
+		$allowedDescendants = \str_split($allowedDescendants, 8);
+		$allowed = [];
+		foreach (\array_keys($allowedChildren) as $k)
+			$allowed[] = \bindec(\sprintf(
+				'%1$08s%2$08s',
+				\strrev($allowedDescendants[$k]),
+				\strrev($allowedChildren[$k])
+			));
+		return $allowed;
 	}
 }
 
