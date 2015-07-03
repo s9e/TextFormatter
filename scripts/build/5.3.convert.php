@@ -306,6 +306,7 @@ function convertFile($filepath)
 	convertCustom($filepath, $file);
 	convertArraySyntax($file);
 	removeCallable($file);
+	convertBinaryNotation($file);
 
 	if ($file !== $oldFile)
 	{
@@ -591,6 +592,45 @@ function removeCallable(&$file)
 			{
 				unset($tokens[++$i]);
 			}
+		}
+	}
+	if (!$modified)
+	{
+		return;
+	}
+
+	$file = '';
+	foreach ($tokens as $token)
+	{
+		$file .= (is_string($token)) ? $token : $token[1];
+	}
+}
+
+function convertBinaryNotation(&$file)
+{
+	$tokens = token_get_all($file);
+
+	$i        = 0;
+	$cnt      = count($tokens);
+	$modified = false;
+	while (++$i < $cnt)
+	{
+		$token = $tokens[$i];
+		if ($token[0] !== T_LNUMBER)
+		{
+			continue;
+		}
+		if ($token[1] === '0' && $tokens[$i + 1][0] === T_STRING && $tokens[$i + 1][1][0] === 'b')
+		{
+			$tokens[$i][1] = bindec($tokens[$i + 1][1]);
+			++$i;
+			unset($tokens[$i]);
+			$modified = true;
+		}
+		elseif (strpos($token[1], '0b') === 0)
+		{
+			$tokens[$i][1] = bindec(substr($token[1], 2));
+			$modified = true;
 		}
 	}
 	if (!$modified)
