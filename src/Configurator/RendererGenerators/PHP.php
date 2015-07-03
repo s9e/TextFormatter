@@ -278,7 +278,7 @@ class PHP implements RendererGenerator
 		{
 			// Try the Quick renderer first and if anything happens just keep going with the normal
 			// rendering
-			$php[] = '		if (!isset(self::$quickRenderingTest) || !preg_match(self::$quickRenderingTest, $xml))';
+			$php[] = '		if (!isset($this->quickRenderingTest) || !preg_match($this->quickRenderingTest, $xml))';
 			$php[] = '		{';
 			$php[] = '			try';
 			$php[] = '			{';
