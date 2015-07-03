@@ -877,30 +877,29 @@ class Parser
 		++$this->cntTotal[$tagName];
 		if ($tag->isSelfClosingTag())
 			return;
-		++$this->cntOpen[$tagName];
-		$this->openTags[] = $tag;
-		$allowedChildren = $tagConfig['allowedChildren'];
+		$allowed = array();
 		if ($tagFlags & self::RULE_IS_TRANSPARENT)
-			$allowedChildren = $allowedChildren & $this->context['allowedChildren'];
-		$allowedDescendants = $this->context['allowedDescendants']
-		                    & $tagConfig['allowedDescendants'];
-		$allowedChildren = $allowedChildren & $allowedDescendants;
-		$flags = $tagFlags;
-		$flags |= $this->context['flags'] & self::RULES_INHERITANCE;
+			foreach ($this->context['allowed'] as $k => $v)
+				$allowed[] = $tagConfig['allowed'][$k] & $v;
+		else
+			foreach ($this->context['allowed'] as $k => $v)
+				$allowed[] = $tagConfig['allowed'][$k] & (($v & 0xFF00) | ($v >> 8));
+		$flags = $tagFlags | ($this->context['flags'] & self::RULES_INHERITANCE);
 		if ($flags & self::RULE_DISABLE_AUTO_BR)
 			$flags &= ~self::RULE_ENABLE_AUTO_BR;
+		++$this->cntOpen[$tagName];
+		$this->openTags[] = $tag;
 		$this->context = array(
-			'allowedChildren'    => $allowedChildren,
-			'allowedDescendants' => $allowedDescendants,
-			'flags'              => $flags,
-			'inParagraph'        => \false,
-			'parentContext'      => $this->context
+			'allowed'       => $allowed,
+			'flags'         => $flags,
+			'inParagraph'   => \false,
+			'parentContext' => $this->context
 		);
 	}
 	protected function tagIsAllowed($tagName)
 	{
 		$n = $this->tagsConfig[$tagName]['bitNumber'];
-		return (bool) (\ord($this->context['allowedChildren'][$n >> 3]) & (1 << ($n & 7)));
+		return (bool) ($this->context['allowed'][$n >> 3] & (1 << ($n & 7)));
 	}
 	public function addStartTag($name, $pos, $len)
 	{

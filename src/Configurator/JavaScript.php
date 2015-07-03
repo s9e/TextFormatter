@@ -81,19 +81,6 @@ class JavaScript
 		$this->minifier = $minifier;
 		return $minifier;
 	}
-	protected static function convertBitfield($bitfield)
-	{
-		$hex = array();
-		foreach (\str_split($bitfield, 4) as $quad)
-		{
-			$v = '';
-			foreach (\str_split($quad, 1) as $c)
-				$v = \sprintf('%02X', \ord($c)) . $v;
-			$hex[] = '0x' . $v;
-		}
-		$code = new Code('[' . \implode(',', $hex) . ']');
-		return $code;
-	}
 	protected function getHints()
 	{
 		$this->hints = array(
@@ -175,13 +162,7 @@ class JavaScript
 	}
 	protected function getRootContext()
 	{
-		$rootContext = $this->config['rootContext'];
-		$rootContext['allowedChildren']
-			= self::convertBitfield($rootContext['allowedChildren']);
-		$rootContext['allowedDescendants']
-			= self::convertBitfield($rootContext['allowedDescendants']);
-		$code = new Code(self::encode($rootContext));
-		return $code;
+		return new Code(self::encode($this->config['rootContext']));
 	}
 	protected function getSource()
 	{
@@ -214,10 +195,6 @@ class JavaScript
 		{
 			if (isset($tagConfig['attributes']))
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
-			$tagConfig['allowedChildren']
-				= self::convertBitfield($tagConfig['allowedChildren']);
-			$tagConfig['allowedDescendants']
-				= self::convertBitfield($tagConfig['allowedDescendants']);
 			$tags[$tagName] = $tagConfig;
 		}
 		$code = new Code(self::encode($tags));
