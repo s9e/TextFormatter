@@ -168,36 +168,6 @@ class JavaScript
 	//==========================================================================
 
 	/**
-	* Convert a bitfield to the JavaScript representationg of an array of number
-	*
-	* Context bitfields are stored as binary strings, but JavaScript doesn't really have binary
-	* strings so instead we split up that string in 4-bytes chunk, which we represent in hex
-	* notation to avoid the number overflowing to a float in 32bit PHP
-	*
-	* @param  string $bitfield Raw bytes
-	* @return Code             JavaScript code
-	*/
-	protected static function convertBitfield($bitfield)
-	{
-		$hex = [];
-
-		foreach (str_split($bitfield, 4) as $quad)
-		{
-			$v = '';
-			foreach (str_split($quad, 1) as $c)
-			{
-				$v = sprintf('%02X', ord($c)) . $v;
-			}
-
-			$hex[] = '0x' . $v;
-		}
-
-		$code = new Code('[' . implode(',', $hex) . ']');
-
-		return $code;
-	}
-
-	/**
 	* Generate a HINT object that contains informations about the configuration
 	*
 	* @return string JavaScript Code
@@ -344,16 +314,7 @@ class JavaScript
 	*/
 	protected function getRootContext()
 	{
-		$rootContext = $this->config['rootContext'];
-
-		$rootContext['allowedChildren']
-			= self::convertBitfield($rootContext['allowedChildren']);
-		$rootContext['allowedDescendants']
-			= self::convertBitfield($rootContext['allowedDescendants']);
-
-		$code = new Code(self::encode($rootContext));
-
-		return $code;
+		return new Code(self::encode($this->config['rootContext']));
 	}
 
 	/**
@@ -418,11 +379,6 @@ class JavaScript
 				// Make the attributes array a Dictionary, to preserve the attributes' names
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
 			}
-
-			$tagConfig['allowedChildren']
-				= self::convertBitfield($tagConfig['allowedChildren']);
-			$tagConfig['allowedDescendants']
-				= self::convertBitfield($tagConfig['allowedDescendants']);
 
 			$tags[$tagName] = $tagConfig;
 		}

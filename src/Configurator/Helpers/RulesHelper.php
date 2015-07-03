@@ -53,17 +53,15 @@ abstract class RulesHelper
 			$groupedTags[$k][] = $tagName;
 		}
 
-		// Prepare the return value
-		$return = [];
-
 		// Record the bit number of each tag, and the name of a tag for each bit
-		$bitTag    = [];
-		$bitNumber = 0;
+		$bitTag     = [];
+		$bitNumber  = 0;
+		$tagsConfig = [];
 		foreach ($groupedTags as $tagNames)
 		{
 			foreach ($tagNames as $tagName)
 			{
-				$return['tags'][$tagName]['bitNumber'] = $bitNumber;
+				$tagsConfig[$tagName]['bitNumber'] = $bitNumber;
 				$bitTag[$bitNumber] = $tagName;
 			}
 
@@ -73,28 +71,22 @@ abstract class RulesHelper
 		// Build the bitfields of each tag, including the *root* pseudo-tag
 		foreach ($matrix as $tagName => $tagMatrix)
 		{
-			foreach (['allowedChildren', 'allowedDescendants'] as $fieldName)
+			$allowedChildren    = '';
+			$allowedDescendants = '';
+			foreach ($bitTag as $targetName)
 			{
-				$bitfield = '';
-				foreach ($bitTag as $targetName)
-				{
-					$bitfield .= $tagMatrix[$fieldName][$targetName];
-				}
-
-				$return['tags'][$tagName][$fieldName] = $bitfield;
+				$allowedChildren    .= $tagMatrix['allowedChildren'][$targetName];
+				$allowedDescendants .= $tagMatrix['allowedDescendants'][$targetName];
 			}
+
+			$tagsConfig[$tagName]['allowed'] = self::pack($allowedChildren, $allowedDescendants);
 		}
 
-		// Pack the binary representations into raw bytes
-		foreach ($return['tags'] as &$bitfields)
-		{
-			$bitfields['allowedChildren']    = self::pack($bitfields['allowedChildren']);
-			$bitfields['allowedDescendants'] = self::pack($bitfields['allowedDescendants']);
-		}
-		unset($bitfields);
-
-		// Remove the *root* pseudo-tag from the list of tags and move it to its own entry
-		$return['root'] = $return['tags']['*root*'];
+		// Prepare the return value
+		$return = [
+			'root' => $tagsConfig['*root*'],
+			'tags' => $tagsConfig
+		];
 		unset($return['tags']['*root*']);
 
 		return $return;
@@ -247,13 +239,31 @@ abstract class RulesHelper
 	}
 
 	/**
-	* Convert a binary representation such as "101011" to raw bytes
+	* Convert a binary representation such as "101011" to an array of integer
 	*
-	* @param  string $bitfield "10000010"
-	* @return string           "\x82"
+	* Each bitfield is split in groups of 8 bits, then converted to a 16-bit integer where the
+	* allowedChildren bitfield occupies the least significant bits and the allowedDescendants
+	* bitfield occupies the most significant bits
+	*
+	* @param  string    $allowedChildren
+	* @param  string    $allowedDescendants
+	* @return integer[]
 	*/
-	protected static function pack($bitfield)
+	protected static function pack($allowedChildren, $allowedDescendants)
 	{
-		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bitfield, 8)))));
+		$allowedChildren    = str_split($allowedChildren,    8);
+		$allowedDescendants = str_split($allowedDescendants, 8);
+
+		$allowed = [];
+		foreach (array_keys($allowedChildren) as $k)
+		{
+			$allowed[] = bindec(sprintf(
+				'%1$08s%2$08s',
+				strrev($allowedDescendants[$k]),
+				strrev($allowedChildren[$k])
+			));
+		}
+
+		return $allowed;
 	}
 }

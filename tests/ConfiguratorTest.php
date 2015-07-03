@@ -303,10 +303,7 @@ class ConfiguratorTest extends Test
 		$this->assertArrayMatches(
 			[
 				'tags' => [
-					'A' => [
-						'allowedChildren'    => "\1",
-						'allowedDescendants' => "\1"
-					]
+					'A' => ['allowed' => [0b100000001]]
 				]
 			],
 			$config

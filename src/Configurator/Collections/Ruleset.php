@@ -89,7 +89,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		$config = $this->items;
 
 		// Remove rules that are not needed at parsing time. All of those are resolved when building
-		// the allowedChildren and allowedDescendants bitfields
+		// the allowed bitfields
 		unset($config['allowChild']);
 		unset($config['allowDescendant']);
 		unset($config['defaultChildRule']);

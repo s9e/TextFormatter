@@ -23,15 +23,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -50,15 +46,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -78,20 +70,15 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x03",
-					'allowedDescendants' => "\x03"
-				],
+				'root' => ['allowed' => [0b1100000011]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x03",
-						'allowedDescendants' => "\x03"
+						'bitNumber' => 0,
+						'allowed'   => [0b1100000011]
 					],
 					'B' => [
-						'bitNumber'          => 1,
-						'allowedChildren'    => "\x02",
-						'allowedDescendants' => "\x03"
+						'bitNumber' => 1,
+						'allowed'   => [0b1100000010]
 					]
 				]
 			],
@@ -110,15 +97,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000000]
 					]
 				]
 			],
@@ -139,15 +122,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -168,15 +147,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000000]
 					]
 				]
 			],
@@ -197,15 +172,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000000]
 					]
 				]
 			],
@@ -226,15 +197,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x00"
+						'bitNumber' => 0,
+						'allowed'   => [0]
 					]
 				]
 			],
@@ -253,15 +220,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x00"
+						'bitNumber' => 0,
+						'allowed'   => [0]
 					]
 				]
 			],
@@ -282,15 +245,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -311,15 +270,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000000]
 					]
 				]
 			],
@@ -340,15 +295,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x00"
+						'bitNumber' => 0,
+						'allowed'   => [0]
 					]
 				]
 			],
@@ -369,15 +320,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x00"
+						'bitNumber' => 0,
+						'allowed'   => [0]
 					]
 				]
 			],
@@ -401,15 +348,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x00",
-						'allowedDescendants' => "\x00"
+						'bitNumber' => 0,
+						'allowed'   => [0]
 					]
 				]
 			],
@@ -433,15 +376,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -461,20 +400,15 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x03"
-				],
+				'root' => ['allowed' => [0b1100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x03",
-						'allowedDescendants' => "\x03"
+						'bitNumber' => 0,
+						'allowed'   => [0b1100000011]
 					],
 					'B' => [
-						'bitNumber'          => 1,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x03"
+						'bitNumber' => 1,
+						'allowed'   => [0b1100000001]
 					]
 				]
 			],
@@ -496,15 +430,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -527,10 +457,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x00",
-					'allowedDescendants' => "\x00"
-				],
+				'root' => ['allowed' => [0]],
 				'tags' => []
 			],
 			RulesHelper::getBitfields($tags, $rootRules)
@@ -550,15 +477,11 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],
@@ -578,20 +501,15 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			[
-				'root' => [
-					'allowedChildren'    => "\x01",
-					'allowedDescendants' => "\x01"
-				],
+				'root' => ['allowed' => [0b100000001]],
 				'tags' => [
 					'A' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					],
 					'B' => [
-						'bitNumber'          => 0,
-						'allowedChildren'    => "\x01",
-						'allowedDescendants' => "\x01"
+						'bitNumber' => 0,
+						'allowed'   => [0b100000001]
 					]
 				]
 			],

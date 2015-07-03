@@ -1893,21 +1893,22 @@ class Parser
 		++$this->cntOpen[$tagName];
 		$this->openTags[] = $tag;
 
-		$allowedChildren = $tagConfig['allowedChildren'];
-
-		// If the tag is transparent, we restrict its allowed children to the same set as its
-		// parent, minus this tag's own disallowed children
+		// Recompute the allowed tags
+		$allowed = [];
 		if ($tagFlags & self::RULE_IS_TRANSPARENT)
 		{
-			$allowedChildren = $allowedChildren & $this->context['allowedChildren'];
+			foreach ($this->context['allowed'] as $k => $v)
+			{
+				$allowed[] = $tagConfig['allowed'][$k] & $v;
+			}
 		}
-
-		// The allowedDescendants bitfield is restricted by this tag's
-		$allowedDescendants = $this->context['allowedDescendants']
-		                    & $tagConfig['allowedDescendants'];
-
-		// Ensure that disallowed descendants are not allowed as children
-		$allowedChildren = $allowedChildren & $allowedDescendants;
+		else
+		{
+			foreach ($this->context['allowed'] as $k => $v)
+			{
+				$allowed[] = $tagConfig['allowed'][$k] & (($v & 0xFF00) | ($v >> 8));
+			}
+		}
 
 		// Use this tag's flags as a base for this context
 		$flags = $tagFlags;
@@ -1922,11 +1923,10 @@ class Parser
 		}
 
 		$this->context = [
-			'allowedChildren'    => $allowedChildren,
-			'allowedDescendants' => $allowedDescendants,
-			'flags'              => $flags,
-			'inParagraph'        => false,
-			'parentContext'      => $this->context
+			'allowed'       => $allowed,
+			'flags'         => $flags,
+			'inParagraph'   => false,
+			'parentContext' => $this->context
 		];
 	}
 
@@ -1940,7 +1940,7 @@ class Parser
 	{
 		$n = $this->tagsConfig[$tagName]['bitNumber'];
 
-		return (bool) (ord($this->context['allowedChildren'][$n >> 3]) & (1 << ($n & 7)));
+		return (bool) ($this->context['allowed'][$n >> 3] & (1 << ($n & 7)));
 	}
 
 	//==========================================================================
