@@ -1763,15 +1763,11 @@ function pushContext(tag)
 
 	++cntTotal[tagName];
 
-	// If this is a self-closing tag, we don't need to do anything else; The context remains the
-	// same
+	// If this is a self-closing tag, the context remains the same
 	if (tag.isSelfClosingTag())
 	{
 		return;
 	}
-
-	++cntOpen[tagName];
-	openTags.push(tag);
 
 	// Recompute the allowed tags
 	var allowed = [];
@@ -1790,11 +1786,8 @@ function pushContext(tag)
 		});
 	}
 
-	// Use this tag's flags as a base for this context
-	var flags = tagFlags;
-
-	// Add inherited rules
-	flags |= context.flags & RULES_INHERITANCE;
+	// Use this tag's flags as a base for this context and add inherited rules
+	var flags = tagFlags | (context.flags & RULES_INHERITANCE);
 
 	// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
 	if (flags & RULE_DISABLE_AUTO_BR)
@@ -1802,6 +1795,8 @@ function pushContext(tag)
 		flags &= ~RULE_ENABLE_AUTO_BR;
 	}
 
+	++cntOpen[tagName];
+	openTags.push(tag);
 	context = {
 		allowed       : allowed,
 		flags         : flags,

@@ -1883,15 +1883,11 @@ class Parser
 
 		++$this->cntTotal[$tagName];
 
-		// If this is a self-closing tag, we don't need to do anything else; The context remains the
-		// same
+		// If this is a self-closing tag, the context remains the same
 		if ($tag->isSelfClosingTag())
 		{
 			return;
 		}
-
-		++$this->cntOpen[$tagName];
-		$this->openTags[] = $tag;
 
 		// Recompute the allowed tags
 		$allowed = [];
@@ -1910,11 +1906,8 @@ class Parser
 			}
 		}
 
-		// Use this tag's flags as a base for this context
-		$flags = $tagFlags;
-
-		// Add inherited rules
-		$flags |= $this->context['flags'] & self::RULES_INHERITANCE;
+		// Use this tag's flags as a base for this context and add inherited rules
+		$flags = $tagFlags | ($this->context['flags'] & self::RULES_INHERITANCE);
 
 		// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
 		if ($flags & self::RULE_DISABLE_AUTO_BR)
@@ -1922,6 +1915,8 @@ class Parser
 			$flags &= ~self::RULE_ENABLE_AUTO_BR;
 		}
 
+		++$this->cntOpen[$tagName];
+		$this->openTags[] = $tag;
 		$this->context = [
 			'allowed'       => $allowed,
 			'flags'         => $flags,
