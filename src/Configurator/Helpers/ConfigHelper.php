@@ -128,11 +128,10 @@ abstract class ConfigHelper
 			self::optimizeArray($v, $cache);
 
 			// Look for a matching structure
-			$cacheKey = array_search($v, $cache);
-			if ($cacheKey === false)
+			$cacheKey = serialize($v);
+			if (!isset($cache[$cacheKey]))
 			{
 				// Record this value in the cache
-				$cacheKey         = count($cache);
 				$cache[$cacheKey] = $v;
 			}
 
