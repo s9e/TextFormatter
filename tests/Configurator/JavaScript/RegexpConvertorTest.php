@@ -374,7 +374,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpDuplicateNamedCapturesMap()
 	{
-		$regexp = RegexpConvertor::toJS('/(?<foo>[0-9]+)|(?<foo>[a-z]+)/');
+		$regexp = RegexpConvertor::toJS('/(?J)(?<foo>[0-9]+)|(?<foo>[a-z]+)/');
 
 		$this->assertEquals(
 			'/([0-9]+)|([a-z]+)/',
