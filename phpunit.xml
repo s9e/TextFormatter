@@ -253,7 +253,9 @@
 		<whitelist>
 			<directory suffix=".php">src</directory>
 			<exclude>
-				<file>src/Bundles/*/Renderer.php</file>
+				<file>src/Bundles/Fatdown/Renderer.php</file>
+				<file>src/Bundles/Forum/Renderer.php</file>
+				<file>src/Bundles/MediaPack/Renderer.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
