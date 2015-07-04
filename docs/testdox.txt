@@ -2640,11 +2640,35 @@ s9e\TextFormatter\Tests\Bundle
  [x] reset() removes the cached parser and renderer
 
 s9e\TextFormatter\Tests\Bundles\Fatdown
+ [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] The renderer can be un/serialized
+ [x] The quick renderer can handle unknown tags
+ [x] The quick renderer can handle unknown self-closing tags
+ [x] The quick renderer can handle comments
+ [x] The quick renderer can handle processing instructions
  [x] Rendering tests
+ [x] Rendering tests (quick renderer)
 
 s9e\TextFormatter\Tests\Bundles\Forum
+ [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] The renderer can be un/serialized
+ [x] The quick renderer can handle unknown tags
+ [x] The quick renderer can handle unknown self-closing tags
+ [x] The quick renderer can handle comments
+ [x] The quick renderer can handle processing instructions
  [x] Rendering tests
+ [x] Rendering tests (quick renderer)
 
 s9e\TextFormatter\Tests\Bundles\MediaPack
+ [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] The renderer can be un/serialized
+ [x] The quick renderer can handle unknown tags
+ [x] The quick renderer can handle unknown self-closing tags
+ [x] The quick renderer can handle comments
+ [x] The quick renderer can handle processing instructions
  [x] Rendering tests
+ [x] Rendering tests (quick renderer)
 
