@@ -4,8 +4,8 @@
 include __DIR__ . '/../../src/autoloader.php';
 $configurator = new s9e\TextFormatter\Configurator;
 $tag = $configurator->tags->add('X');
-$tag->attributes->add('x');
-$tag->template = '<b><xsl:apply-templates/></b>';
+$tag->attributes->add('x')->filterChain->append('#url');
+$tag->template = '<a href="{@url}"><xsl:apply-templates/></a>';
 $configurator->finalize();
 
 $scores = $relations = array();
