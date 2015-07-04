@@ -14,7 +14,7 @@ abstract class Renderer
 	protected $params = [];
 	protected function loadXML($xml)
 	{
-		$this->preventDTD($xml);
+		$this->checkUnsupported($xml);
 		$flags = (\LIBXML_VERSION >= 20700) ? \LIBXML_COMPACT | \LIBXML_PARSEHUGE : 0;
 		$dom = new DOMDocument;
 		$dom->loadXML($xml, $flags);
@@ -52,10 +52,12 @@ abstract class Renderer
 		foreach ($params as $paramName => $paramValue)
 			$this->setParameter($paramName, $paramValue);
 	}
-	protected function preventDTD($xml)
+	protected function checkUnsupported($xml)
 	{
-		if (\strpos($xml, '<!') !== \false && \preg_match('(<!(?!\\[CDATA\\[))', $xml))
-			throw new InvalidArgumentException('DTDs are not allowed');
+		if (\strpos($xml, '<!') !== \false)
+			throw new InvalidArgumentException('DTDs, CDATA nodes and comments are not allowed');
+		if (\strpos($xml, '<?') !== \false)
+			throw new InvalidArgumentException('Processing instructions are not allowed');
 	}
 	protected function decodeSMP($str)
 	{

@@ -122,7 +122,7 @@ class PHP implements RendererGenerator
 		$php[] = '	{';
 		if ($quickSource !== \false)
 		{
-			$php[] = '		if (!isset(self::$quickRenderingTest) || !preg_match(self::$quickRenderingTest, $xml))';
+			$php[] = '		if (!isset($this->quickRenderingTest) || !preg_match($this->quickRenderingTest, $xml))';
 			$php[] = '		{';
 			$php[] = '			try';
 			$php[] = '			{';
