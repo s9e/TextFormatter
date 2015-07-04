@@ -867,6 +867,25 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					// Run this test without cache on Travis
+					if (!isset($_SERVER['TRAVIS']))
+					{
+						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					}
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'http://www.twitch.tv/m/57217',
+				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					// Skip during cache preload
+					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('twitch');
 				}
