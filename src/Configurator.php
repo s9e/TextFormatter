@@ -352,6 +352,87 @@ interface ConfigProvider
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
+use DOMAttr;
+use RuntimeException;
+abstract class AVTHelper
+{
+	public static function parse($attrValue)
+	{
+		$tokens  = array();
+		$attrLen = \strlen($attrValue);
+		$pos = 0;
+		while ($pos < $attrLen)
+		{
+			if ($attrValue[$pos] === '{')
+			{
+				if (\substr($attrValue, $pos, 2) === '{{')
+				{
+					$tokens[] = array('literal', '{');
+					$pos += 2;
+					continue;
+				}
+				++$pos;
+				$expr = '';
+				while ($pos < $attrLen)
+				{
+					$spn = \strcspn($attrValue, '\'"}', $pos);
+					if ($spn)
+					{
+						$expr .= \substr($attrValue, $pos, $spn);
+						$pos += $spn;
+					}
+					if ($pos >= $attrLen)
+						throw new RuntimeException('Unterminated XPath expression');
+					$c = $attrValue[$pos];
+					++$pos;
+					if ($c === '}')
+						break;
+					$quotePos = \strpos($attrValue, $c, $pos);
+					if ($quotePos === \false)
+						throw new RuntimeException('Unterminated XPath expression');
+					$expr .= $c . \substr($attrValue, $pos, $quotePos + 1 - $pos);
+					$pos = 1 + $quotePos;
+				}
+				$tokens[] = array('expression', $expr);
+			}
+			$spn = \strcspn($attrValue, '{', $pos);
+			if ($spn)
+			{
+				$str = \substr($attrValue, $pos, $spn);
+				$str = \str_replace('}}', '}', $str);
+				$tokens[] = array('literal', $str);
+				$pos += $spn;
+			}
+		}
+		return $tokens;
+	}
+	public static function replace(DOMAttr $attribute, $callback)
+	{
+		$tokens = self::parse($attribute->value);
+		foreach ($tokens as $k => $token)
+			$tokens[$k] = $callback($token);
+		$attribute->value = \htmlspecialchars(self::serialize($tokens), \ENT_NOQUOTES, 'UTF-8');
+	}
+	public static function serialize(array $tokens)
+	{
+		$attrValue = '';
+		foreach ($tokens as $token)
+			if ($token[0] === 'literal')
+				$attrValue .= \preg_replace('([{}])', '$0$0', $token[1]);
+			elseif ($token[0] === 'expression')
+				$attrValue .= '{' . $token[1] . '}';
+			else
+				throw new RuntimeException('Unknown token type');
+		return $attrValue;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -1874,6 +1955,79 @@ abstract class TemplateHelper
 		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
 		foreach ($tagNames as $tagName)
 			$templates[$tagName] = $template;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
+use RuntimeException;
+abstract class XPathHelper
+{
+	public static function export($str)
+	{
+		if (\strpos($str, "'") === \false)
+			return "'" . $str . "'";
+		if (\strpos($str, '"') === \false)
+			return '"' . $str . '"';
+		$toks = array();
+		$c = '"';
+		$pos = 0;
+		while ($pos < \strlen($str))
+		{
+			$spn = \strcspn($str, $c, $pos);
+			if ($spn)
+			{
+				$toks[] = $c . \substr($str, $pos, $spn) . $c;
+				$pos += $spn;
+			}
+			$c = ($c === '"') ? "'" : '"';
+		}
+		return 'concat(' . \implode(',', $toks) . ')';
+	}
+	public static function getVariables($expr)
+	{
+		$expr = \preg_replace('/(["\']).*?\\1/s', '$1$1', $expr);
+		\preg_match_all('/\\$(\\w+)/', $expr, $matches);
+		$varNames = \array_unique($matches[1]);
+		\sort($varNames);
+		return $varNames;
+	}
+	public static function isExpressionNumeric($expr)
+	{
+		$expr = \trim($expr);
+		$expr = \strrev(\preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', '', \strrev($expr)));
+		$expr = \str_replace(')', '', $expr);
+		if (\preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++$)', $expr))
+			return \true;
+		return \false;
+	}
+	public static function minify($expr)
+	{
+		$old     = $expr;
+		$strings = array();
+		$expr = \preg_replace_callback(
+			'/(?:"[^"]*"|\'[^\']*\')/',
+			function ($m) use (&$strings)
+			{
+				$uniqid = '(' . \sha1(\uniqid()) . ')';
+				$strings[$uniqid] = $m[0];
+				return $uniqid;
+			},
+			\trim($expr)
+		);
+		if (\preg_match('/[\'"]/', $expr))
+			throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
+		$expr = \preg_replace('/\\s+/', ' ', $expr);
+		$expr = \preg_replace('/([-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+		$expr = \preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
+		$expr = \preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+		$expr = \preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+		$expr = \strtr($expr, $strings);
+		return $expr;
 	}
 }
 
@@ -3408,7 +3562,7 @@ class XSLT implements RendererGenerator
 			if ($pos !== \false)
 				$prefixes[\substr($tagName, 0, $pos)] = 1;
 		}
-		$xsl = '<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
+		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 		$prefixes = \array_keys($prefixes);
 		\sort($prefixes);
 		foreach ($prefixes as $prefix)
@@ -5601,6 +5755,68 @@ class TemplateParameterCollection extends NormalizedCollection
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
+use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
+class AttributeFilter extends Filter
+{
+	protected $markedSafe = array();
+	protected function isSafe($context)
+	{
+		return !empty($this->markedSafe[$context]);
+	}
+	public function isSafeAsURL()
+	{
+		return $this->isSafe('AsURL');
+	}
+	public function isSafeInCSS()
+	{
+		return $this->isSafe('InCSS');
+	}
+
+	public function markAsSafeAsURL()
+	{
+		$this->markedSafe['AsURL'] = \true;
+		return $this;
+	}
+	public function markAsSafeInCSS()
+	{
+		$this->markedSafe['InCSS'] = \true;
+		return $this;
+	}
+	public function markAsSafeInJS()
+	{
+		$this->markedSafe['InJS'] = \true;
+		return $this;
+	}
+	public function resetSafeness()
+	{
+		$this->markedSafe = array();
+		return $this;
+	}
+	public function __construct($callback)
+	{
+		parent::__construct($callback);
+		$this->resetParameters();
+		$this->addParameterByName('attrValue');
+	}
+	public function isSafeInJS()
+	{
+		$safeCallbacks = array(
+			'urlencode',
+			'strtotime',
+			'rawurlencode'
+		);
+		if (\in_array($this->callback, $safeCallbacks, \true))
+			return \true;
+		return $this->isSafe('InJS');
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Items;
 class TagFilter extends Filter
 {
 	public function __construct($callback)
@@ -5791,5 +6007,37 @@ class TemplateNormalizationList extends NormalizedList
 			return new Custom($value);
 		$className = 's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\' . $value;
 		return new $className;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+class UrlFilter extends AttributeFilter
+{
+	public function __construct()
+	{
+		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
+		$this->resetParameters();
+		$this->addParameterByName('attrValue');
+		$this->addParameterByName('urlConfig');
+		$this->addParameterByName('logger');
+		$this->setJS('BuiltInFilters.filterUrl');
+	}
+	public function isSafeInCSS()
+	{
+		return \true;
+	}
+	public function isSafeInJS()
+	{
+		return \true;
+	}
+	public function isSafeAsURL()
+	{
+		return \true;
 	}
 }

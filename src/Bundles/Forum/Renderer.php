@@ -18,7 +18,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	}
 	public function renderRichText($xml)
 	{
-		if (!isset(self::$quickRenderingTest) || !\preg_match(self::$quickRenderingTest, $xml))
+		if (!isset($this->quickRenderingTest) || !\preg_match($this->quickRenderingTest, $xml))
 			try
 			{
 				return $this->renderQuick($xml);
@@ -95,9 +95,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		if (isset(self::$dynamic[$id]))
 		{
 			list($match, $replace) = self::$dynamic[$id];
-			$html = \preg_replace($match, $replace, $m[0], 1, $cnt);
-			if ($cnt)
-				return $html;
+			return \preg_replace($match, $replace, $m[0], 1, $cnt);
 		}
 		if (!isset(self::$quickBranches[$id]))
 		{
