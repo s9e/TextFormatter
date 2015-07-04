@@ -68,8 +68,7 @@ class XSLT implements RendererGenerator
 		}
 
 		// Declare all the namespaces in use at the top
-		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
-		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
+		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 
 		// Append the namespace declarations to the stylesheet
 		$prefixes = array_keys($prefixes);
