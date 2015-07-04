@@ -1,3 +1,8 @@
+###### July 2015
+
+- Fixed two memory leaks that could happen on some versions of PHP [[1](https://github.com/s9e/TextFormatter/commit/0ca302b992697b2f85da85d323588884c50cdbb1)] [[2](https://github.com/s9e/TextFormatter/commit/844420e217a0dbd01341e3f027048f3962ccfd12)]
+- [Replaced the data structure used in tags config to hold the list of allowed tags during parsing](https://github.com/s9e/TextFormatter/commit/ea7d8a9431271599ac580fbe0d5b1f8c314f0166)
+
 ###### June 2015
 
 - [Replaced the Generic plugin with a refactored Preg plugin](https://github.com/s9e/TextFormatter/commit/fe6b168cf031e5ce2bf0703a641e3e3f4c78dab5)
