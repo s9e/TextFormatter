@@ -47,7 +47,7 @@ class Quick
 		if (!empty($unsupported))
 		{
 			$regexp = '(<' . RegexpBuilder::fromList($unsupported, ['useLookahead' => \true]) . '[ />])';
-			$php[] = '	public static $quickRenderingTest=' . \var_export($regexp, \true) . ';';
+			$php[] = '	public $quickRenderingTest=' . \var_export($regexp, \true) . ';';
 		}
 		$php[] = '';
 		$php[] = '	protected function renderQuick($xml)';
@@ -120,11 +120,7 @@ class Quick
 			$php[] = '		if (isset(self::$dynamic[$id]))';
 			$php[] = '		{';
 			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
-			$php[] = '			$html = preg_replace($match, $replace, $m[0], 1, $cnt);';
-			$php[] = '			if ($cnt)';
-			$php[] = '			{';
-			$php[] = '				return $html;';
-			$php[] = '			}';
+			$php[] = '			return preg_replace($match, $replace, $m[0], 1, $cnt);';
 			$php[] = '		}';
 			$php[] = '';
 		}
