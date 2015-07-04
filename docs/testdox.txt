@@ -2473,6 +2473,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Comments in the XML representation cause an exception to be thrown
+ [x] Processing instructions in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
@@ -2563,6 +2564,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Comments in the XML representation cause an exception to be thrown
+ [x] Processing instructions in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character
@@ -2591,6 +2593,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Custom parameters are properly saved and restored after serialization
  [x] DTDs in the XML representation cause an exception to be thrown
  [x] Comments in the XML representation cause an exception to be thrown
+ [x] Processing instructions in the XML representation cause an exception to be thrown
  [x] Is not vulnerable to XXE
  [x] Renders plain text with SMP character
  [x] Renders rich text with SMP character

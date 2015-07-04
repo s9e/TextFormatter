@@ -183,8 +183,7 @@ trait RendererTests
 	*/
 	public function testDTD()
 	{
-		$xml = '<?xml version="1.0" encoding="UTF-8"?>'
-		     . '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY foo "FOO">]>'
+		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY foo "FOO">]>'
 		     . '<r>x&foo;y</r>';
 
 		$this->configurator->getRenderer()->render($xml);
@@ -200,13 +199,21 @@ trait RendererTests
 	}
 
 	/**
+	* @testdox Processing instructions in the XML representation cause an exception to be thrown
+	* @expectedException InvalidArgumentException Processing
+	*/
+	public function testPI()
+	{
+		$this->configurator->getRenderer()->render('<r><?pi ?>foo</r>');
+	}
+
+	/**
 	* @testdox Is not vulnerable to XXE
 	* @expectedException InvalidArgumentException DTD
 	*/
 	public function testXXE()
 	{
-		$xml = '<?xml version="1.0" encoding="UTF-8"?>'
-		     . '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
+		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
 		     . '<r>x&xxe;y</r>';
 
 		$this->configurator->getRenderer()->render($xml);

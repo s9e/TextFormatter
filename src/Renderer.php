@@ -30,7 +30,7 @@ abstract class Renderer
 	*/
 	protected function loadXML($xml)
 	{
-		$this->preventDTD($xml);
+		$this->checkUnsupported($xml);
 
 		// Activate small nodes allocation and relax LibXML's hardcoded limits if applicable. Limits
 		// on tags can be set during configuration
@@ -136,16 +136,20 @@ abstract class Renderer
 	}
 
 	/**
-	* Test for the presence of a DTD declaration and throw an exception if found
+	* Test for the presence of unsupported XML and throw an exception if found
 	*
 	* @param  string $xml XML
 	* @return void
 	*/
-	protected function preventDTD($xml)
+	protected function checkUnsupported($xml)
 	{
 		if (strpos($xml, '<!') !== false)
 		{
 			throw new InvalidArgumentException('DTDs, CDATA nodes and comments are not allowed');
+		}
+		if (strpos($xml, '<?') !== false)
+		{
+			throw new InvalidArgumentException('Processing instructions are not allowed');
 		}
 	}
 
