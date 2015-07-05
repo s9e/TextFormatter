@@ -33,7 +33,6 @@ class Fatdown extends Bundle
 			'em'     => 'EM',
 			's'      => 'S',
 			'strong' => 'STRONG',
-			'sub'    => 'SUB',
 			'sup'    => 'SUP'
 		];
 		foreach ($htmlAliases as $elName => $alias)
