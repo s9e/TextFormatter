@@ -1,4 +1,0 @@
-*.php   diff=php
-*.html  diff=html
-*.xhtml diff=html
-src/Bundles/MediaPack*/Renderer.php -diff
