@@ -26,7 +26,6 @@ class Fatdown extends Bundle
 			'em'     => 'EM',
 			's'      => 'S',
 			'strong' => 'STRONG',
-			'sub'    => 'SUB',
 			'sup'    => 'SUP'
 		);
 		foreach ($htmlAliases as $elName => $alias)
@@ -44,8 +43,11 @@ class Fatdown extends Bundle
 			'b',
 			'br',
 			'code',
+			'dd',
 			'del',
 			'div' => array('class'),
+			'dl',
+			'dt',
 			'i',
 			'img' => array('alt', 'height', 'src', 'title', 'width'),
 			'ins',
@@ -87,6 +89,8 @@ class Fatdown extends Bundle
 			foreach ($attrNames as $attrName)
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 		}
+		$configurator->tags['html:dd']->rules->createParagraphs(\false);
+		$configurator->tags['html:dt']->rules->createParagraphs(\false);
 		$configurator->plugins->load('MediaEmbed', array('createMediaBBCode' => \false));
 		$sites = array(
 			'bandcamp',
