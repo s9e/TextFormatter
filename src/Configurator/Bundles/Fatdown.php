@@ -59,8 +59,11 @@ class Fatdown extends Bundle
 			'b',
 			'br',
 			'code',
+			'dd',
 			'del',
 			'div' => ['class'],
+			'dl',
+			'dt',
 			'i',
 			'img' => ['alt', 'height', 'src', 'title', 'width'],
 			'ins',
@@ -105,6 +108,9 @@ class Fatdown extends Bundle
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
 			}
 		}
+
+		$configurator->tags['html:dd']->rules->createParagraphs(false);
+		$configurator->tags['html:dt']->rules->createParagraphs(false);
 
 		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => false]);
 		$sites = [
