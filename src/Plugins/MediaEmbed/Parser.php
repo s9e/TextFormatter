@@ -151,7 +151,7 @@ class Parser extends ParserBase
 			if (\file_exists($cacheFile))
 				return \file_get_contents($prefix . $cacheFile);
 		}
-		$content = \file_get_contents($prefix . $url, \false, $context);
+		$content = @\file_get_contents($prefix . $url, \false, $context);
 		if (isset($cacheFile) && $content !== \false)
 			\file_put_contents($prefix . $cacheFile, $content);
 		return $content;
