@@ -313,7 +313,7 @@ class Parser extends ParserBase
 		}
 
 		// Retrieve the external content from the source
-		$content = file_get_contents($prefix . $url, false, $context);
+		$content = @file_get_contents($prefix . $url, false, $context);
 
 		// Save to the cache if applicable
 		if (isset($cacheFile) && $content !== false)
