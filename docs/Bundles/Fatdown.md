@@ -57,6 +57,7 @@ echo $html;
  * `b`, `em`, `i`, `s`, `strong`, `u`
  * `br`
  * `code`
+ * `dl`, `dt` and `dd`
  * `del` and `ins`
  * `div` with an optional `class` attribute
  * `hr`
