@@ -317,16 +317,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
-				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" url="http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508">http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</DAILYSHOW></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('dailyshow');
-				}
-			],
-			[
 				'http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy',
 				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:e2ed81f7-a322-4ef9-82d9-12ba07e5c319" url="http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy">http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</DAILYSHOW></r>',
 				[],
@@ -1054,16 +1044,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
-			[
-				'http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508',
-				'<iframe width="512" height="288" src="//media.mtvnservices.com/embed/mgid:arc:video:thedailyshow.com:9fd84f1c-a137-4998-b891-14a57b4ac0f5" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('dailyshow');
 				}
 			],
 			[
