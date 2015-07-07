@@ -161,12 +161,12 @@ class Parser extends ParserBase
 		while ($this->pos < $this->textLen)
 		{
 			$c = $this->text[$this->pos];
-			if ($c === ' ')
+			if (strpos(" \n\t", $c) !== false)
 			{
 				++$this->pos;
 				continue;
 			}
-			if ($c === ']' || $c === '/')
+			if (strpos('/]', $c) !== false)
 			{
 				return;
 			}
@@ -224,6 +224,7 @@ class Parser extends ParserBase
 		}
 
 		// Capture everything up to whichever comes first:
+		//  - an endline
 		//  - whitespace followed by a slash and a closing bracket
 		//  - a closing bracket, optionally preceded by whitespace
 		//  - whitespace followed by another attribute (name followed by equal sign)
@@ -231,7 +232,7 @@ class Parser extends ParserBase
 		// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 		//       that do not put attribute values in quotes, e.g.
 		//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-		if (!preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, null, $this->pos))
+		if (!preg_match('#[^\\]\\n]*?(?=\\s*(?:\\s/)?\\]|\\s+[-\\w]+=)#', $this->text, $m, null, $this->pos))
 		{
 			throw new RuntimeException;
 		}

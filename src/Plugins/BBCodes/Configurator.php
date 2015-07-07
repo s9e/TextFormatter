@@ -70,7 +70,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	/**
 	* {@inheritdoc}
 	*/
-	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#';
+	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\]\\s=:/])#';
 
 	/**
 	* @var RepositoryCollection BBCode repositories

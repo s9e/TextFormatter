@@ -130,12 +130,12 @@ function parseAttributes()
 	while (pos < textLen)
 	{
 		var c = text.charAt(pos);
-		if (c === ' ')
+		if (" \n\t".indexOf(c) > -1)
 		{
 			++pos;
 			continue;
 		}
-		if (c === ']' || c === '/')
+		if ('/]'.indexOf(c) > -1)
 		{
 			return;
 		}
@@ -191,6 +191,7 @@ function parseAttributeValue()
 	}
 
 	// Capture everything up to whichever comes first:
+	//  - an endline
 	//  - whitespace followed by a slash and a closing bracket
 	//  - a closing bracket, optionally preceded by whitespace
 	//  - whitespace followed by another attribute (name followed by equal sign)
@@ -198,7 +199,7 @@ function parseAttributeValue()
 	// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 	//       that do not put attribute values in quotes, e.g.
 	//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-	var match = /[^\]]*?(?= *(?: \/)?\]| +[-\w]+=)/.exec(text.substr(pos));
+	var match = /[^\]\n]*?(?=\s*(?:\s\/)?\]|\s+[-\w]+=)/.exec(text.substr(pos));
 	if (!match)
 	{
 		throw '';

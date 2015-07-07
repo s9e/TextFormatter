@@ -552,6 +552,18 @@ class ParserTest extends Test
 					$configurator->tags->add('X');
 				}
 			],
+			[
+				"[X\n\tfoo=1\n\tbar=2\n]..[/X]",
+				"<r><X bar=\"2\" foo=\"1\"><s>[X\n\tfoo=1\n\tbar=2\n]</s>..<e>[/X]</e></X></r>",
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->add('X');
+					$tag = $configurator->tags->add('X');
+					$tag->attributes->add('foo');
+					$tag->attributes->add('bar');
+				}
+			],
 		];
 	}
 }
