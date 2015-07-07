@@ -23,9 +23,5 @@
 		"psr-4": {
 			"s9e\\TextFormatter\\": "src"
 		}
-	},
-	"scripts": {
-		"post-install-cmd": "php scripts/build/patchSources.php",
-		"post-update-cmd":  "php scripts/build/patchSources.php"
 	}
 }
