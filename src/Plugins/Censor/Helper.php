@@ -79,9 +79,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				if ($this->isAllowed($m[0]))
-					return $m[0];
-				return $this->buildTag($m[0]);
+				return ($this->isAllowed($m[0])) ? $m[0] : $this->buildTag($m[0]);
 			},
 			$xml,
 			-1,
