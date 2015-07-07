@@ -1,0 +1,12 @@
+#!/bin/bash
+ROOT=$(dirname $(dirname $(realpath $0)))
+
+cd "$ROOT"
+
+if [[ -n `git diff-tree --no-commit-id --name-only HEAD src` ]]
+then
+	if [ `git rev-parse --abbrev-ref HEAD` = "master" ]
+	then
+		env -i ./scripts/generateApiDoc.sh
+	fi
+fi
