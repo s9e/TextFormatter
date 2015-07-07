@@ -17,8 +17,11 @@ fi
 
 php sami.phar update /tmp/sami/conf.php -v
 
+cd "$DIR"
+COMMIT_MSG="Updated API docs to $(git rev-parse HEAD)"
+
 cd "$TARGET"
 cd ../..
 git add TextFormatter/api
-git commit -m"Updated API docs"
+git commit -m"$COMMIT_MSG"
 git push --all
