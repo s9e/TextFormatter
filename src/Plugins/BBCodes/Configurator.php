@@ -71,7 +71,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $bbcodeMonkey;
 	public $collection;
 	protected $quickMatch = '[';
-	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\] =:/])#';
+	protected $regexp = '#\\[/?(\\*|[-\\w]+)(?=[\\]\\s=:/])#';
 	public $repositories;
 	protected function setUp()
 	{

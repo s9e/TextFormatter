@@ -82,9 +82,7 @@ class Helper
 			$regexp,
 			function ($m) use ($_this)
 			{
-				if ($_this->isAllowed($m[0]))
-					return $m[0];
-				return $_this->buildTag($m[0]);
+				return ($_this->isAllowed($m[0])) ? $m[0] : $_this->buildTag($m[0]);
 			},
 			$xml,
 			-1,

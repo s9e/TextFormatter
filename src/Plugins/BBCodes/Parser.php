@@ -77,12 +77,12 @@ class Parser extends ParserBase
 		while ($this->pos < $this->textLen)
 		{
 			$c = $this->text[$this->pos];
-			if ($c === ' ')
+			if (\strpos(" \n\t", $c) !== \false)
 			{
 				++$this->pos;
 				continue;
 			}
-			if ($c === ']' || $c === '/')
+			if (\strpos('/]', $c) !== \false)
 				return;
 			$spn = \strspn($this->text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $this->pos);
 			if ($spn)
@@ -109,7 +109,7 @@ class Parser extends ParserBase
 	{
 		if ($this->text[$this->pos] === '"' || $this->text[$this->pos] === "'")
 			return $this->parseQuotedAttributeValue();
-		if (!\preg_match('#[^\\]]*?(?= *(?: /)?\\]| +[-\\w]+=)#', $this->text, $m, \null, $this->pos))
+		if (!\preg_match('#[^\\]\\n]*?(?=\\s*(?:\\s/)?\\]|\\s+[-\\w]+=)#', $this->text, $m, \null, $this->pos))
 			throw new RuntimeException;
 		$attrValue  = $m[0];
 		$this->pos += \strlen($attrValue);
