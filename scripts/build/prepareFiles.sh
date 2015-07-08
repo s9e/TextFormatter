@@ -2,6 +2,9 @@
 
 cd $(dirname "$0")
 
+# Update the PHP requirement in composer.json and remove the post-install script
+php patchComposer.php "$@"
+
 # Cache plugins' JavaScript parsers' source inside the plugin's configurator
 #php cacheJavaScriptParsers.php
 
@@ -13,7 +16,7 @@ rm -f ../../src/Plugins/MediaEmbed/Configurator/sites/*
 rmdir ../../src/Plugins/MediaEmbed/Configurator/sites
 
 # Patch the sources for current PHP version
-php patchSources.php $@
+php patchSources.php "$@"
 
 # Optimize the sources if applicable
 if [ -n "$OPTIMIZE" ]

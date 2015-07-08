@@ -15,19 +15,17 @@ do
 	fi
 done
 
-for version in 5.6 5.5 5.4 5.3;
+for fullversion in 5.6.0 5.5.0 5.4.7 5.3.3;
 do
+	version="${fullversion%.*}"
+
 	tmp="tmp-$version"
 	rel="release/php$version"
+
 	git branch -D "$tmp" 2> /dev/null
 	git checkout -b "$tmp" master 2> /dev/null
 
-	if [ -f "scripts/build/$version.composer.json" ]
-	then
-		cp "scripts/build/$version.composer.json" composer.json
-	fi
-
-	OPTIMIZE=1 scripts/build/prepareFiles.sh $version
+	OPTIMIZE=1 scripts/build/prepareFiles.sh $fullversion
 
 	for file in $ignore;
 	do
