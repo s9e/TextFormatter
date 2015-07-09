@@ -139,6 +139,16 @@ class TemplateNormalizerTest extends Test
 				</div>',
 				'<div title="{@foo}"/>'
 			],
+			[
+				'<div>
+					<xsl:attribute name="title">
+						<xsl:text>x</xsl:text>
+						<xsl:value-of select="@foo"/>
+						<xsl:text>y</xsl:text>
+					</xsl:attribute>
+				</div>',
+				'<div title="x{@foo}y"/>'
+			],
 		];
 	}
 }
