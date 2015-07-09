@@ -53,9 +53,7 @@ pages:
       - As a standalone: Plugins/Censor/Standalone.md
       - Quick reparsing: Plugins/Censor/Reparse.md
     - Emoji:
-      - Synopsis: Plugins/EmojiOne/Synopsis.md
-    - EmojiOne:
-      - Synopsis: Plugins/EmojiOne/Synopsis.md
+      - Synopsis: Plugins/Emoji/Synopsis.md
     - Emoticons:
       - Synopsis: Plugins/Emoticons/Synopsis.md
       - Add emoticons: Plugins/Emoticons/Add_emoticons.md

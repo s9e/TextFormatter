@@ -39,7 +39,7 @@
 
 ###### September 2014
 
-- Added EmojiOne plugin.
+- Added Emoji plugin.
 - [Added BranchOutputOptimizer.](https://github.com/s9e/TextFormatter/commit/9cc2ceb5e2b0ce579b71aa02e62afc5f9278cb96)
 
 ###### August 2014

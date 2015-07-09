@@ -200,9 +200,9 @@
 
 	* Censors words. Accepts jokers
 
-* [EmojiOne](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/EmojiOne)
+* [Emoji](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoji)
 
-	* Automatically renders emoji as images. Uses the emoji set from [Emoji One](http://www.emojione.com/)
+	* Automatically renders emoji as images. Can use the emoji sets from [Twemoji](http://twitter.github.io/twemoji/) or [Emoji One](http://www.emojione.com/)
 
 * [Emoticons](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoticons)
 
