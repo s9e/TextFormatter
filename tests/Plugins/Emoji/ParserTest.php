@@ -48,6 +48,18 @@ class ParserTest extends Test
 				'<r><EMOJI seq="23-20e3">#⃣</EMOJI><EMOJI seq="31-20e3">1⃣</EMOJI><EMOJI seq="32-20e3">2⃣</EMOJI></r>'
 			],
 			[
+				':bouquet:',
+				'<r><EMOJI seq="1f490">:bouquet:</EMOJI></r>'
+			],
+			[
+				':xyz:',
+				'<t>:xyz:</t>'
+			],
+			[
+				':xyz:bouquet:',
+				'<r>:xyz<EMOJI seq="1f490">:bouquet:</EMOJI></r>'
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],

@@ -71,9 +71,17 @@ class Configurator extends ConfiguratorBase
 		//       negatively impact performance
 		$phpRegexp .= '(?=[#0-9:\\xC2\\xE2\\xE3\\xF0])';
 
-		// Start the emoji alternation
+		// Start the main alternation
 		$phpRegexp .= '(?>';
 		$jsRegexp  .= '(?:';
+
+		// Shortcodes
+		$phpRegexp .= ':[-+_a-z0-9]+(?=:)';
+		$jsRegexp  .= ':[-+_a-z0-9]+(?=:)';
+
+		// Start the emoji alternation
+		$phpRegexp .= '|(?>';
+		$jsRegexp  .= '|(?:';
 
 		// Keypad emoji: starts with [#0-9], optional U+FE0F, ends with U+20E3
 		$phpRegexp .= '[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3';
@@ -127,6 +135,10 @@ class Configurator extends ConfiguratorBase
 		// Close the emoji alternation, optionally followed by U+FE0F
 		$phpRegexp .= ')(?>\\xEF\\xB8\\x8F)?';
 		$jsRegexp  .= ')\uFE0F?';
+
+		// Close the main alternation
+		$phpRegexp .= ')';
+		$jsRegexp  .= ')';
 
 		// End the PHP regexp with the S modifier
 		$phpRegexp .= ')S';
