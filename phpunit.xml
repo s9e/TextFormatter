@@ -196,8 +196,8 @@
 			<file>tests/Plugins/Censor/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Censor/HelperTest.php</file>
 			<file>tests/Plugins/Censor/ParserTest.php</file>
-			<file>tests/Plugins/Emoji/ConfiguratorTest.php</file>
-			<file>tests/Plugins/Emoji/ParserTest.php</file>
+			<file>tests/Plugins/EmojiOne/ConfiguratorTest.php</file>
+			<file>tests/Plugins/EmojiOne/ParserTest.php</file>
 			<file>tests/Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Emoticons/Configurator/EmoticonCollectionTest.php</file>
 			<file>tests/Plugins/Emoticons/ParserTest.php</file>

@@ -2125,7 +2125,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
+s9e\TextFormatter\Tests\Plugins\EmojiOne\Configurator
  [x] Automatically creates an "E1" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
@@ -2133,7 +2133,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
 
-s9e\TextFormatter\Tests\Plugins\Emoji\Parser
+s9e\TextFormatter\Tests\Plugins\EmojiOne\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests

@@ -1,16 +1,16 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\Emoji;
+namespace s9e\TextFormatter\Tests\Plugins\EmojiOne;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Plugins\Emoji\Parser;
+use s9e\TextFormatter\Plugins\EmojiOne\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\Emoji\Parser
+* @covers s9e\TextFormatter\Plugins\EmojiOne\Parser
 */
 class ParserTest extends Test
 {

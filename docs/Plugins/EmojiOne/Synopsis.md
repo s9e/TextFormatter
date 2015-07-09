@@ -8,7 +8,7 @@ Emoji set designed and offered free by [Emoji One](http://emojione.com/).
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Emoji;
+$configurator->EmojiOne;
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

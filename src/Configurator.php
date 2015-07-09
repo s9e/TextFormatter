@@ -30,7 +30,7 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 * @property Plugins\Autolink\Configurator $Autolink Autolink plugin's configurator
 * @property Plugins\BBCodes\Configurator $BBCodes BBCodes plugin's configurator
 * @property Plugins\Censor\Configurator $Censor Censor plugin's configurator
-* @property Plugins\Emoji\Configurator $Emoji Emoji plugin's configurator
+* @property Plugins\EmojiOne\Configurator $EmojiOne EmojiOne plugin's configurator
 * @property Plugins\Emoticons\Configurator $Emoticons Emoticons plugin's configurator
 * @property Plugins\Escaper\Configurator $Escaper Escaper plugin's configurator
 * @property Plugins\FancyPants\Configurator $FancyPants FancyPants plugin's configurator

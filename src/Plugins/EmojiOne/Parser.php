@@ -5,7 +5,7 @@
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins\Emoji;
+namespace s9e\TextFormatter\Plugins\EmojiOne;
 
 use s9e\TextFormatter\Plugins\ParserBase;
 

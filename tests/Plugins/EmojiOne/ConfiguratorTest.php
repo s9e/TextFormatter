@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\Emoji;
+namespace s9e\TextFormatter\Tests\Plugins\EmojiOne;
 
-use s9e\TextFormatter\Plugins\Emoji\Configurator;
+use s9e\TextFormatter\Plugins\EmojiOne\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\Emoji\Configurator
+* @covers s9e\TextFormatter\Plugins\EmojiOne\Configurator
 */
 class ConfiguratorTest extends Test
 {
@@ -15,7 +15,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesTag()
 	{
-		$this->configurator->plugins->load('Emoji');
+		$this->configurator->plugins->load('EmojiOne');
 		$this->assertTrue($this->configurator->tags->exists('E1'));
 	}
 
@@ -25,7 +25,7 @@ class ConfiguratorTest extends Test
 	public function testDoesNotCreateTag()
 	{
 		$tag = $this->configurator->tags->add('E1');
-		$this->configurator->plugins->load('Emoji');
+		$this->configurator->plugins->load('EmojiOne');
 
 		$this->assertSame($tag, $this->configurator->tags->get('E1'));
 	}
@@ -35,7 +35,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Emoji', ['tagName' => 'FOO']);
+		$this->configurator->plugins->load('EmojiOne', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -44,7 +44,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('Emoji', ['attrName' => 'bar']);
+		$this->configurator->plugins->load('EmojiOne', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['E1']->attributes->exists('bar'));
 	}
 
@@ -53,7 +53,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigTagName()
 	{
-		$plugin = $this->configurator->plugins->load('Emoji', ['tagName' => 'FOO']);
+		$plugin = $this->configurator->plugins->load('EmojiOne', ['tagName' => 'FOO']);
 
 		$config = $plugin->asConfig();
 
@@ -66,7 +66,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigAttrName()
 	{
-		$plugin = $this->configurator->plugins->load('Emoji', ['attrName' => 'bar']);
+		$plugin = $this->configurator->plugins->load('EmojiOne', ['attrName' => 'bar']);
 
 		$config = $plugin->asConfig();
 

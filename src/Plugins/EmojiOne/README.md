@@ -1,12 +1,12 @@
 ## Synopsis
 
-Emoji are a standardized set of pictographs. They exists as Unicode characters and ASCII shortcodes. The Emoji plugin renders both as images, using the free set from [Emoji One](http://emojione.com/). Please consult their website for license terms.
+Emoji are a standardized set of pictographs. They exists as Unicode characters and ASCII shortcodes. The EmojiOne plugin renders both as images, using the free set from [Emoji One](http://emojione.com/). Please consult their website for license terms.
 
 ## Example
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Emoji;
+$configurator->EmojiOne;
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

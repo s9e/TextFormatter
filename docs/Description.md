@@ -200,7 +200,7 @@
 
 	* Censors words. Accepts jokers
 
-* [Emoji](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoji)
+* [EmojiOne](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/EmojiOne)
 
 	* Automatically renders emoji as images. Uses the emoji set from [Emoji One](http://www.emojione.com/)
 

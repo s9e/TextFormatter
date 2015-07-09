@@ -64,7 +64,7 @@ foreach ($map as $k => $v)
 }
 $php = '[' . implode(',', $arr) . ']';
 
-$filepath = __DIR__ . '/../src/Plugins/Emoji/Parser.php';
+$filepath = __DIR__ . '/../src/Plugins/EmojiOne/Parser.php';
 $file = file_get_contents($filepath);
 if (!preg_match('((.*\\$map = ).*?(;\\n.*))s', $file, $m))
 {
@@ -81,7 +81,7 @@ foreach ($map as $k => $v)
 }
 $js = '{' . implode(',', $arr) . '}';
 
-$filepath = __DIR__ . '/../src/Plugins/Emoji/Parser.js';
+$filepath = __DIR__ . '/../src/Plugins/EmojiOne/Parser.js';
 $file = file_get_contents($filepath);
 if (!preg_match('((.*\\map = ).*?(;\\n.*))s', $file, $m))
 {
@@ -90,9 +90,9 @@ if (!preg_match('((.*\\map = ).*?(;\\n.*))s', $file, $m))
 $file = $m[1] . $js . $m[2];
 file_put_contents($filepath, $file);
 
-file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.txt',  $allText);
-file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.xml',  '<r>' . $allXml . '</r>');
-file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.html', $allHtml);
+file_put_contents(__DIR__ . '/../tests/Plugins/EmojiOne/all.txt',  $allText);
+file_put_contents(__DIR__ . '/../tests/Plugins/EmojiOne/all.xml',  '<r>' . $allXml . '</r>');
+file_put_contents(__DIR__ . '/../tests/Plugins/EmojiOne/all.html', $allHtml);
 
 die("Done.\n");
 

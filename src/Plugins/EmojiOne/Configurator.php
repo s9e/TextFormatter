@@ -5,7 +5,7 @@
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins\Emoji;
+namespace s9e\TextFormatter\Plugins\EmojiOne;
 
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
@@ -64,7 +64,7 @@ class Configurator extends ConfiguratorBase
 		$phpRegexp .= ':[-+_a-z0-9]+(?=:)';
 		$jsRegexp  .= ':[-+_a-z0-9]+(?=:)';
 
-		// Start the Emoji alternation
+		// Start the emoji alternation
 		$phpRegexp .= '|(?>';
 		$jsRegexp  .= '|(?:';
 
@@ -117,7 +117,7 @@ class Configurator extends ConfiguratorBase
 		// Close the 0xF09FXXXX block
 		$phpRegexp .= ')';
 
-		// Close the Emoji alternation, optionally followed by U+FE0F
+		// Close the emoji alternation, optionally followed by U+FE0F
 		$phpRegexp .= ')(?>\\xEF\\xB8\\x8F)?';
 		$jsRegexp  .= ')\uFE0F?';
 
