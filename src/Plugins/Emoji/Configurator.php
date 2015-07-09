@@ -29,7 +29,7 @@ class Configurator extends ConfiguratorBase
 	protected $imageSize = 36;
 
 	/**
-	* @var Preferred image type
+	* @var string Preferred image type
 	*/
 	protected $imageType = 'png';
 
