@@ -1,12 +1,33 @@
 ## Synopsis
 
-Emoji are a standardized set of pictographs. They exists as Unicode characters and ASCII shortcodes. The EmojiOne plugin renders both as images, using the free set from [Emoji One](http://emojione.com/). Please consult their website for license terms.
+Emoji are a standardized set of pictographs.  They exists as Unicode characters and ASCII shortcodes. The Emoji plugin renders both as images, using the free sets from [Twemoji](http://twitter.github.io/twemoji/) or [Emoji One](http://emojione.com/). Please consult their respective website for license terms.
 
-## Example
+## Examples
+
+### Using the Twemoji set
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->EmojiOne;
+$configurator->Emoji->useTwemoji();
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = 'Hello world ☺';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+Hello world <img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">
+```
+
+### Using the EmojiOne set
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Emoji->useEmojiOne();
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
@@ -20,7 +41,3 @@ echo $html;
 ```html
 Hello world <img alt="☺" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">
 ```
-
-### Art license terms
-
-Emoji set designed and offered free by [Emoji One](http://emojione.com/).
