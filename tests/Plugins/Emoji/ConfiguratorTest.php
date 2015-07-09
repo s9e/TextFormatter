@@ -73,4 +73,85 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('attrName', $config);
 		$this->assertSame('bar', $config['attrName']);
 	}
+
+	/**
+	* @testdox Can use the EmojiOne set
+	*/
+	public function testTemplateEmojiOne()
+	{
+		$this->configurator->Emoji->useEmojiOne();
+		$this->assertContains('emojione', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Can use the Twemoji set
+	*/
+	public function testTemplateTwemoji()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->assertContains('twemoji', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Uses Twemoji by default
+	*/
+	public function testDefaultTemplateTwemoji()
+	{
+		$this->configurator->Emoji;
+		$this->assertContains('twemoji', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji set can use PNG images
+	*/
+	public function testTwemojiPNG()
+	{
+		$this->configurator->Emoji->usePNG();
+		$this->assertContains('png', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji set can use SVG images
+	*/
+	public function testTwemojiSVG()
+	{
+		$this->configurator->Emoji->useSVG();
+		$this->assertContains('svg', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji set uses PNG images by default
+	*/
+	public function testTwemojiDefaultPNG()
+	{
+		$this->configurator->Emoji;
+		$this->assertContains('png', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox EmojiOne set can use PNG images
+	*/
+	public function testEmojiOnePNG()
+	{
+		$this->configurator->Emoji->usePNG();
+		$this->assertContains('png', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox EmojiOne set can use SVG images
+	*/
+	public function testEmojiOneSVG()
+	{
+		$this->configurator->Emoji->useSVG();
+		$this->assertContains('svg', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox EmojiOne set uses PNG by Default
+	*/
+	public function testEmojiOneDefaultPNG()
+	{
+		$this->configurator->Emoji;
+		$this->assertContains('png', (string) $this->configurator->tags['EMOJI']->template);
+	}
 }

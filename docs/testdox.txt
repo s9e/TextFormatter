@@ -2132,6 +2132,15 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
+ [x] Can use the EmojiOne set
+ [x] Can use the Twemoji set
+ [x] Uses Twemoji by default
+ [x] Twemoji set can use PNG images
+ [x] Twemoji set can use SVG images
+ [x] Twemoji set uses PNG images by default
+ [x] EmojiOne set can use PNG images
+ [x] EmojiOne set can use SVG images
+ [x] EmojiOne set uses PNG by Default
 
 s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests

@@ -54,7 +54,51 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append(
 			$this->configurator->attributeFilters['#identifier']
 		);
-		$tag->template = $this->getTemplate();
+		$this->resetTemplate();
+	}
+
+	/**
+	* Use the EmojiOne image set
+	*
+	* @return void
+	*/
+	public function useEmojiOne()
+	{
+		$this->imageSet = 'emojione';
+		$this->resetTemplate();
+	}
+
+	/**
+	* Use PNG images if available
+	*
+	* @return void
+	*/
+	public function usePNG()
+	{
+		$this->imageType = 'png';
+		$this->resetTemplate();
+	}
+
+	/**
+	* Use SVG images if available
+	*
+	* @return void
+	*/
+	public function useSVG()
+	{
+		$this->imageType = 'svg';
+		$this->resetTemplate();
+	}
+
+	/**
+	* Use the Twemoji image set
+	*
+	* @return void
+	*/
+	public function useTwemoji()
+	{
+		$this->imageSet = 'twemoji';
+		$this->resetTemplate();
 	}
 
 	/**
@@ -155,6 +199,25 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* Get the template used to display EmojiOne's images
+	*
+	* @return string
+	*/
+	protected function getEmojiOneTemplate()
+	{
+		$template =
+			'<img alt="{.}" class="emojione">
+				<xsl:attribute name="src">
+					<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
+					<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
+					<xsl:text>.' . $this->imageType . '</xsl:text>
+				</xsl:attribute>
+			</img>';
+
+		return $template;
+	}
+
+	/**
 	* Get the first available size that satisfies our size requirement
 	*
 	* @param  integer[] $sizes Available sizes
@@ -181,7 +244,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getTemplate()
 	{
-		return $this->getTwemojiTemplate();
+		return ($this->imageSet === 'emojione') ? $this->getEmojiOneTemplate() :  $this->getTwemojiTemplate();
 	}
 
 	/**
@@ -204,5 +267,15 @@ class Configurator extends ConfiguratorBase
 		$template .= '/{@seq}.' . $this->imageType . '"/>';
 
 		return $template;
+	}
+
+	/**
+	* Reset the template used by this plugin's tag
+	*
+	* @return void
+	*/
+	protected function resetTemplate()
+	{
+		$this->getTag()->template = $this->getTemplate();
 	}
 }
