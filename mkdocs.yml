@@ -54,6 +54,7 @@ pages:
       - Quick reparsing: Plugins/Censor/Reparse.md
     - Emoji:
       - Synopsis: Plugins/Emoji/Synopsis.md
+      - Configuration: Plugins/Emoji/Configuration.md
     - Emoticons:
       - Synopsis: Plugins/Emoticons/Synopsis.md
       - Add emoticons: Plugins/Emoticons/Add_emoticons.md
