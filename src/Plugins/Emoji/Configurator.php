@@ -206,7 +206,7 @@ class Configurator extends ConfiguratorBase
 	protected function getEmojiOneTemplate()
 	{
 		$template =
-			'<img alt="{.}" class="emojione">
+			'<img alt="{.}" class="emoji" draggable="false">
 				<xsl:attribute name="src">
 					<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
 					<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
@@ -255,7 +255,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getTwemojiTemplate()
 	{
-		$template = '<img alt="{.}" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/';
+		$template = '<img alt="{.}" class="emoji" draggable="false" src="//twemoji.maxcdn.com/';
 		if ($this->imageType === 'svg')
 		{
 			$template .= 'svg';

@@ -35,7 +35,7 @@ foreach ($matches[0] as $i => $seq)
 
 	$allText .= $utf8;
 	$allXml  .= '<EMOJI seq="' . $seq . '">' . $innerXml . '</EMOJI>';
-	$allHtml .= '<img alt="' . $utf8 . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
+	$allHtml .= '<img alt="' . $utf8 . '" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
 }
 */
 
@@ -56,7 +56,7 @@ foreach (json_decode(wget($url)) as $entry)
 	{
 		$allText .= $utf8;
 		$allXml  .= '<EMOJI seq="' . $seq . '">' . innerXml($utf8, $seq) . '</EMOJI>';
-		$allHtml .= '<img alt="' . $utf8 . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
+		$allHtml .= '<img alt="' . $utf8 . '" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
 
 		$utf8 = $entry->emoji;
 	}
@@ -68,7 +68,7 @@ foreach (json_decode(wget($url)) as $entry)
 
 		$allText .= $alias;
 		$allXml  .= '<EMOJI seq="' . $seq . '">' . $alias . '</EMOJI>';
-		$allHtml .= '<img alt="' . $alias . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
+		$allHtml .= '<img alt="' . $alias . '" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
 	}
 }
 

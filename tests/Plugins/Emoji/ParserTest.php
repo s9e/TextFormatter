@@ -81,46 +81,46 @@ class ParserTest extends Test
 		return [
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">'
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">'
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/16x16/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/16x16/263a.png">',
 				['imageSize' => 16]
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
 				['imageSize' => 24]
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
 				['imageSize' => 36]
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
 				['imageSize' => 72]
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
 				['imageSize' => 720]
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/svg/263a.svg">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/svg/263a.svg">',
 				['imageType' => 'svg']
 			],
 			[
 				'☺',
-				'<img alt="☺" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
 				['tagName' => 'EMOTE']
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				'<img alt="☺" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -129,7 +129,7 @@ class ParserTest extends Test
 			],
 			[
 				'#⃣1⃣2⃣',
-				'<img alt="#⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
+				'<img alt="#⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
 				[],
 				function ($configurator, $plugin)
 				{
