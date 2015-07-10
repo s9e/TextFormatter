@@ -137,7 +137,7 @@ class Configurator extends ConfiguratorBase
 
 		// 0xE2XXXX block: U+203C..U+2B55. We try to avoid common symbols such as U+2018..U+201D
 		$phpRegexp .= '|\\xE2(?>\\x80\\xBC|[\\x81-\\xAD].)';
-		$jsRegexp  .= '\\u203C\\u2049\u2122-\\u2B55';
+		$jsRegexp  .= '\\u203C\\u2049\\u2122-\\u2B55';
 
 		// 0xE3XXXX block: U+3030, U+303D, U+3297, U+3299. Also the end of the JS character class
 		$phpRegexp .= '|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])';
