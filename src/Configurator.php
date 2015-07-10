@@ -4663,6 +4663,9 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	public function __construct()
 	{
 		$this->collection = new TemplateNormalizationList;
+		$this->collection->append('PreserveSingleSpaces');
+		$this->collection->append('RemoveComments');
+		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
@@ -4675,9 +4678,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('NormalizeUrls');
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
-		$this->collection->append('PreserveSingleSpaces');
-		$this->collection->append('RemoveComments');
-		$this->collection->append('RemoveInterElementWhitespace');
 	}
 	public function normalizeTag(Tag $tag)
 	{
