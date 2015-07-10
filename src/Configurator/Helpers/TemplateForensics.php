@@ -691,18 +691,12 @@ class TemplateForensics
 	* Additionally, other flags are set:
 	*
 	*   "t" indicates that the element uses the "transparent" content model.
-	*
 	*   "e" indicates that the element uses the "empty" content model.
-	*
 	*   "v" indicates that the element is a void element.
-	*
 	*   "nt" indicates that the element does not accept text nodes. (no text)
-	*
 	*   "to" indicates that the element should only contain text. (text-only)
-	*
 	*   "fe" indicates that the element is a formatting element. It will automatically be reopened
 	*   when closed by an end tag of a different name.
-	*
 	*   "b" indicates that the element is not phrasing content, which makes it likely to act like
 	*   a block element.
 	*
