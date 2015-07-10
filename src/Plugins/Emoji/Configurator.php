@@ -93,6 +93,7 @@ class Configurator extends ConfiguratorBase
 			'<img alt="{.}" class="emojione">
 				<xsl:attribute name="src">
 					<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
+					<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
 					<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
 					<xsl:text>.' . $this->imageType . '</xsl:text>
 				</xsl:attribute>
