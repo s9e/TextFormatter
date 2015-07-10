@@ -44,6 +44,10 @@ class ParserTest extends Test
 				'<r><EMOJI seq="1f600">&#128512;</EMOJI></r>'
 			],
 			[
+				'▬',
+				'<t>▬</t>'
+			],
+			[
 				'#⃣1⃣2⃣',
 				'<r><EMOJI seq="23-20e3">#⃣</EMOJI><EMOJI seq="31-20e3">1⃣</EMOJI><EMOJI seq="32-20e3">2⃣</EMOJI></r>'
 			],

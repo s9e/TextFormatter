@@ -3,12 +3,12 @@
 
 const FE0F = "\xEF\xB8\x8F";
 
-$url = 'http://www.unicode.org/Public/UNIDATA/EmojiSources.txt';
-
 $allText = '';
 $allXml  = '';
 $allHtml = '';
 
+/*
+$url = 'http://www.unicode.org/Public/UNIDATA/EmojiSources.txt';
 preg_match_all('(^[0-9A-F ]++)m', wget($url), $matches);
 foreach ($matches[0] as $i => $seq)
 {
@@ -37,6 +37,7 @@ foreach ($matches[0] as $i => $seq)
 	$allXml  .= '<EMOJI seq="' . $seq . '">' . $innerXml . '</EMOJI>';
 	$allHtml .= '<img alt="' . $utf8 . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
 }
+*/
 
 $url = 'https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json';
 $map = [];
@@ -46,15 +47,28 @@ foreach (json_decode(wget($url)) as $entry)
 	{
 		continue;
 	}
+	$utf8 = str_replace(FE0F, '', $entry->emoji);
+	$seq = utf8ToSeq($utf8);
+	$map[$utf8] = $seq;
+
+	$loops = ($utf8 === $entry->emoji) ? 1 : 2;
+	while (--$loops)
+	{
+		$allText .= $utf8;
+		$allXml  .= '<EMOJI seq="' . $seq . '">' . innerXml($utf8, $seq) . '</EMOJI>';
+		$allHtml .= '<img alt="' . $utf8 . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
+
+		$utf8 = $entry->emoji;
+	}
+
 	foreach ($entry->aliases as $alias)
 	{
-		$utf8 = $entry->emoji;
-		$seq = utf8ToSeq($utf8);
+		$alias = ':' . $alias . ':';
 		$map[$alias] = $seq;
 
-		$allText .= ':' . $alias . ':';
-		$allXml  .= '<EMOJI seq="' . $seq . '">:' . $alias . ':</EMOJI>';
-		$allHtml .= '<img alt=":' . $alias . ':" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
+		$allText .= $alias;
+		$allXml  .= '<EMOJI seq="' . $seq . '">' . $alias . '</EMOJI>';
+		$allHtml .= '<img alt="' . $alias . '" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/' . $seq . '.png">';
 	}
 }
 
@@ -64,9 +78,9 @@ file_put_contents(__DIR__ . '/../tests/Plugins/Emoji/all.html', $allHtml);
 
 $php = '[';
 ksort($map);
-foreach ($map as $alias => $seq)
+foreach ($map as $emoji => $seq)
 {
-	$php .= var_export((string) $alias, true) . '=>' . var_export($seq, true) . ',';
+	$php .= var_export($emoji, true) . '=>' . var_export($seq, true) . ',';
 }
 $php = substr($php, 0, -1) . ']';
 
@@ -206,4 +220,22 @@ function utf8ToSeq($str)
 	while (++$i < strlen($str));
 
 	return implode('-', $seq);
+}
+
+function innerXml($utf8, $seq)
+{
+	if ($utf8[0] < "\xF0")
+	{
+		$innerXml = $utf8;
+	}
+	else
+	{
+		$innerXml = '';
+		foreach (explode('-', $seq) as $hex)
+		{
+			$innerXml .= '&#' . hexdec($hex) . ';';
+		}
+	}
+
+	return $innerXml;
 }
