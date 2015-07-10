@@ -12,7 +12,10 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'seq';
-	protected $tagName = 'E1';
+	protected $imageSet = 'twemoji';
+	protected $imageSize = 36;
+	protected $imageType = 'png';
+	protected $tagName = 'EMOJI';
 	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
@@ -21,7 +24,27 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append(
 			$this->configurator->attributeFilters['#identifier']
 		);
-		$tag->template = '<img alt="{.}" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/{@seq}.png"/>';
+		$this->resetTemplate();
+	}
+	public function useEmojiOne()
+	{
+		$this->imageSet = 'emojione';
+		$this->resetTemplate();
+	}
+	public function usePNG()
+	{
+		$this->imageType = 'png';
+		$this->resetTemplate();
+	}
+	public function useSVG()
+	{
+		$this->imageType = 'svg';
+		$this->resetTemplate();
+	}
+	public function useTwemoji()
+	{
+		$this->imageSet = 'twemoji';
+		$this->resetTemplate();
 	}
 	public function asConfig()
 	{
@@ -63,5 +86,46 @@ class Configurator extends ConfiguratorBase
 			'regexp'   => $regexp,
 			'tagName'  => $this->tagName
 		);
+	}
+	protected function getEmojiOneTemplate()
+	{
+		$template =
+			'<img alt="{.}" class="emojione">
+				<xsl:attribute name="src">
+					<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
+					<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
+					<xsl:text>.' . $this->imageType . '</xsl:text>
+				</xsl:attribute>
+			</img>';
+		return $template;
+	}
+	protected function getTargetSize(array $sizes)
+	{
+		$k = 0;
+		foreach ($sizes as $k => $size)
+			if ($size >= $this->imageSize)
+				break;
+		return $sizes[$k];
+	}
+	protected function getTemplate()
+	{
+		return ($this->imageSet === 'emojione') ? $this->getEmojiOneTemplate() :  $this->getTwemojiTemplate();
+	}
+	protected function getTwemojiTemplate()
+	{
+		$template = '<img alt="{.}" class="Emoji twitter-emoji" draggable="false" src="//twemoji.maxcdn.com/';
+		if ($this->imageType === 'svg')
+			$template .= 'svg';
+		else
+		{
+			$size = $this->getTargetSize(array(16, 36, 72));
+			$template .= $size . 'x' . $size;
+		}
+		$template .= '/{@seq}.' . $this->imageType . '"/>';
+		return $template;
+	}
+	protected function resetTemplate()
+	{
+		$this->getTag()->template = $this->getTemplate();
 	}
 }
