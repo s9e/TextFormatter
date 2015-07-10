@@ -154,4 +154,93 @@ class ConfiguratorTest extends Test
 		$this->configurator->Emoji;
 		$this->assertContains('png', (string) $this->configurator->tags['EMOJI']->template);
 	}
+
+	/**
+	* @testdox Image size is forced by default with Twemoji
+	*/
+	public function testTwemojiForceImageSizeDefault()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertContains('width="16"',  $template);
+		$this->assertContains('height="16"', $template);
+	}
+
+	/**
+	* @testdox Image size can be omitted with Twemoji
+	*/
+	public function testTwemojiOmitImageSizeDefault()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->configurator->Emoji->omitImageSize();
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertNotContains('width="',  $template);
+		$this->assertNotContains('height="', $template);
+	}
+
+	/**
+	* @testdox Image size is forced by default with EmojiOne
+	*/
+	public function testEmojiOneImageForceSizeDefault()
+	{
+		$this->configurator->Emoji->useEmojiOne();
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertContains('width="16"',  $template);
+		$this->assertContains('height="16"', $template);
+	}
+
+	/**
+	* @testdox Image size can be omitted with EmojiOne
+	*/
+	public function testEmojiOneOmitImageSizeDefault()
+	{
+		$this->configurator->Emoji->useEmojiOne();
+		$this->configurator->Emoji->omitImageSize();
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertNotContains('width="',  $template);
+		$this->assertNotContains('height="', $template);
+	}
+
+	/**
+	* @testdox Twemoji uses 16x16 assets by default
+	*/
+	public function testTwemojiDefaultSize()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->configurator->Emoji->forceImageSize();
+		$this->assertContains('16x16', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji uses 36x36 assets if the image size is 22
+	*/
+	public function testTwemojiSize22()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->configurator->Emoji->forceImageSize();
+		$this->configurator->Emoji->setImageSize(22);
+		$this->assertContains('36x36', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji uses 36x36 assets if the image size is 36
+	*/
+	public function testTwemojiSize36()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->configurator->Emoji->forceImageSize();
+		$this->configurator->Emoji->setImageSize(36);
+		$this->assertContains('36x36', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox Twemoji uses 72x72 assets if the image size is 72
+	*/
+	public function testTwemojiSize72()
+	{
+		$this->configurator->Emoji->useTwemoji();
+		$this->configurator->Emoji->forceImageSize();
+		$this->configurator->Emoji->setImageSize(72);
+		$this->assertContains('72x72', (string) $this->configurator->tags['EMOJI']->template);
+	}
 }

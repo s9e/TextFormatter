@@ -19,6 +19,11 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'seq';
 
 	/**
+	* @var bool Whether to force the image size in the img tag
+	*/
+	protected $forceImageSize = true;
+
+	/**
 	* @var string Emoji set to use
 	*/
 	protected $imageSet = 'twemoji';
@@ -26,7 +31,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var integer Target size for the emoji images
 	*/
-	protected $imageSize = 36;
+	protected $imageSize = 16;
 
 	/**
 	* @var string Preferred image type
@@ -54,6 +59,40 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append(
 			$this->configurator->attributeFilters['#identifier']
 		);
+		$this->resetTemplate();
+	}
+
+	/**
+	* Force the size of the image to be set in the img element
+	*
+	* @return void
+	*/
+	public function forceImageSize()
+	{
+		$this->forceImageSize = true;
+		$this->resetTemplate();
+	}
+
+	/**
+	* Omit the size of the image in the img element
+	*
+	* @return void
+	*/
+	public function omitImageSize()
+	{
+		$this->forceImageSize = false;
+		$this->resetTemplate();
+	}
+
+	/**
+	* Set the size of the images used for emoji
+	*
+	* @param  integer $size Preferred size
+	* @return void
+	*/
+	public function setImageSize($size)
+	{
+		$this->imageSize = (int) $size;
 		$this->resetTemplate();
 	}
 
@@ -205,15 +244,19 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getEmojiOneTemplate()
 	{
-		$template =
-			'<img alt="{.}" class="emoji" draggable="false">
-				<xsl:attribute name="src">
-					<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
-					<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
-					<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
-					<xsl:text>.' . $this->imageType . '</xsl:text>
-				</xsl:attribute>
-			</img>';
+		$template = '<img alt="{.}" class="emoji"';
+		if ($this->forceImageSize)
+		{
+			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
+		}
+		$template .= '>
+			<xsl:attribute name="src">
+				<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
+				<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
+				<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
+				<xsl:text>.' . $this->imageType . '</xsl:text>
+			</xsl:attribute>
+		</img>';
 
 		return $template;
 	}
@@ -255,7 +298,12 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getTwemojiTemplate()
 	{
-		$template = '<img alt="{.}" class="emoji" draggable="false" src="//twemoji.maxcdn.com/';
+		$template = '<img alt="{.}" class="emoji" draggable="false"';
+		if ($this->forceImageSize)
+		{
+			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
+		}
+		$template .= ' src="//twemoji.maxcdn.com/';
 		if ($this->imageType === 'svg')
 		{
 			$template .= 'svg';

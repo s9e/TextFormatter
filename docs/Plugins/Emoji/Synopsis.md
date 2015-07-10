@@ -18,7 +18,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">
+Hello world <img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">
 ```
 
 ### Using the EmojiOne set
@@ -37,5 +37,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt="☺" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">
+Hello world <img alt="☺" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">
 ```

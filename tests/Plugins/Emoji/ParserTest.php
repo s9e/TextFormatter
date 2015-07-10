@@ -81,46 +81,79 @@ class ParserTest extends Test
 		return [
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">'
+				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">'
 			],
 			[
 				'☺',
 				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/16x16/263a.png">',
-				['imageSize' => 16]
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->omitImageSize();
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
-				['imageSize' => 24]
+				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setImageSize(16);
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
-				['imageSize' => 36]
+				'<img alt="☺" class="emoji" draggable="false" width="24" height="24" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setImageSize(24);
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
-				['imageSize' => 72]
+				'<img alt="☺" class="emoji" draggable="false" width="36" height="36" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setImageSize(36);
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">',
-				['imageSize' => 720]
+				'<img alt="☺" class="emoji" draggable="false" width="72" height="72" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setImageSize(72);
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/svg/263a.svg">',
-				['imageType' => 'svg']
+				'<img alt="☺" class="emoji" draggable="false" width="720" height="720" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->setImageSize(720);
+				}
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/263a.svg">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useSVG();
+				}
+			],
+			[
+				'☺',
+				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">',
 				['tagName' => 'EMOTE']
 			],
 			[
 				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				'<img alt="☺" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -128,8 +161,18 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'☺',
+				'<img alt="☺" class="emoji" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useEmojiOne();
+					$plugin->omitImageSize();
+				}
+			],
+			[
 				'#⃣1⃣2⃣',
-				'<img alt="#⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
+				'<img alt="#⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
 				[],
 				function ($configurator, $plugin)
 				{

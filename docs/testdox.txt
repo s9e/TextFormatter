@@ -2141,6 +2141,14 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] EmojiOne set can use PNG images
  [x] EmojiOne set can use SVG images
  [x] EmojiOne set uses PNG by Default
+ [x] Image size is forced by default with Twemoji
+ [x] Image size can be omitted with Twemoji
+ [x] Image size is forced by default with EmojiOne
+ [x] Image size can be omitted with EmojiOne
+ [x] Twemoji uses 16x16 assets by default
+ [x] Twemoji uses 36x36 assets if the image size is 22
+ [x] Twemoji uses 36x36 assets if the image size is 36
+ [x] Twemoji uses 72x72 assets if the image size is 72
 
 s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests
