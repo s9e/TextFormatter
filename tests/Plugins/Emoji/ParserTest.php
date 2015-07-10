@@ -115,6 +115,24 @@ class ParserTest extends Test
 				['tagName' => 'EMOTE']
 			],
 			[
+				'☺',
+				'<img alt="☺" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useEmojiOne();
+				}
+			],
+			[
+				'#⃣1⃣2⃣',
+				'<img alt="#⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useEmojiOne();
+				}
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.html'),
 				[],
