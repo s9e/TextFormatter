@@ -64,42 +64,8 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		$phpRegexp = '(';
-		$jsRegexp  = '';
-		$phpRegexp .= '(?=[#0-9:\\xC2\\xE2\\xE3\\xF0])';
-		$phpRegexp .= '(?>';
-		$jsRegexp  .= '(?:';
-		$phpRegexp .= ':[-+_a-z0-9]+(?=:)';
-		$jsRegexp  .= ':[-+_a-z0-9]+(?=:)';
-		$phpRegexp .= '|(?>';
-		$jsRegexp  .= '|(?:';
-		$phpRegexp .= '[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3';
-		$jsRegexp  .= '[#0-9]\\uFE0F?\\u20E3';
-		$phpRegexp .= '|\\xC2[\\xA9\\xAE]';
-		$jsRegexp  .= '|[\\u00A9\\u00AE';
-		$phpRegexp .= '|\\xE2(?>\\x80\\xBC|[\\x81-\\xAD].)';
-		$jsRegexp  .= '\\u203C\\u2049\\u2122-\\u2B55';
-		$phpRegexp .= '|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])';
-		$jsRegexp  .= '\\u3030\\u303D\\u3297\\u3299]';
-		$phpRegexp .= '|\\xF0\\x9F(?>';
-		$jsRegexp  .= '|\\uD83C(?:';
-		$phpRegexp .= '[\\x80-\\x86].';
-		$jsRegexp  .= '[\\uDC04-\\uDD9A]';
-		$phpRegexp .= '|\\x87.\\xF0\\x9F\\x87.';
-		$jsRegexp  .= '|[\\uDDE6-\\uDDFF]\\uD83C[\\uDDE6-\\uDDFF]';
-		$phpRegexp .= '|[\\x88-\\x9B].';
-		$jsRegexp  .= '|[\\uDE01-\\uDFFF])|\\uD83D[\\uDC00-\\uDEC5]';
-		$phpRegexp .= ')';
-		$phpRegexp .= ')(?>\\xEF\\xB8\\x8F)?';
-		$jsRegexp  .= ')\uFE0F?';
-		$phpRegexp .= ')';
-		$jsRegexp  .= ')';
-		$phpRegexp .= ')S';
-		$regexp = new Variant($phpRegexp);
-		$regexp->set('JS', new RegExp($jsRegexp, 'g'));
 		return array(
 			'attrName' => $this->attrName,
-			'regexp'   => $regexp,
 			'tagName'  => $this->tagName
 		);
 	}
