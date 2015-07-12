@@ -84,6 +84,15 @@ class ParserTest extends Test
 				'<r>:xyz<EMOJI seq="1f490">:bouquet:</EMOJI></r>'
 			],
 			[
+				':bouquet:',
+				'<r><E>:bouquet:</E></r>',
+				[],
+				function ($configurator, $plugin)
+				{
+					$configurator->Emoticons->add(':bouquet:', '...');
+				}
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],
