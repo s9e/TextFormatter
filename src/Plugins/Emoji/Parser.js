@@ -20,7 +20,9 @@ parseUnicodeEmoji(text);
 */
 function addTag(tagPos, tagLen, seq)
 {
-	addSelfClosingTag(config.tagName, tagPos, tagLen).setAttribute(config.attrName, seq);
+	var tag = addSelfClosingTag(config.tagName, tagPos, tagLen);
+	tag.setSortPriority(10);
+	tag.setAttribute(config.attrName, seq);
 }
 
 /**
