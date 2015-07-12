@@ -9,14 +9,14 @@ $configurator->Emoji->setImageSize(18);
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = 'Hello world ☺';
+$text = 'Hello world 😀';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
 echo $html;
 ```
 ```html
-Hello world <img alt="☺" class="emoji" draggable="false" width="18" height="18" src="//twemoji.maxcdn.com/36x36/263a.png">
+Hello world <img alt="😀" class="emoji" draggable="false" width="18" height="18" src="//twemoji.maxcdn.com/36x36/1f600.png">
 ```
 
 ### Remove the hardcoded size
@@ -33,14 +33,14 @@ $configurator->Emoji->omitImageSize();
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = 'Hello world ☺';
+$text = 'Hello world 😀';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
 echo $html;
 ```
 ```html
-Hello world <img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/263a.png">
+Hello world <img alt="😀" class="emoji" draggable="false" src="//twemoji.maxcdn.com/72x72/1f600.png">
 ```
 
 ### Use SVG images
@@ -54,12 +54,12 @@ $configurator->Emoji->useSVG();
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = 'Hello world ☺';
+$text = 'Hello world 😀';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
 echo $html;
 ```
 ```html
-Hello world <img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/263a.svg">
+Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/1f600.svg">
 ```

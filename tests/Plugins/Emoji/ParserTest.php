@@ -22,22 +22,42 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				'☺',
-				'<r><EMOJI seq="263a">☺</EMOJI></r>'
+				'⚫️',
+				'<r><EMOJI seq="26ab">⚫️</EMOJI></r>'
 			],
 			[
+				// U+263A U+FE0F
+				'☺️',
+				'<r><EMOJI seq="263a">☺️</EMOJI></r>'
+			],
+			[
+				// U+263A
 				'☺',
-				'<r><EMO seq="263a">☺</EMO></r>',
+				'<t>☺</t>'
+			],
+			[
+				// U+2615
+				'☕',
+				'<r><EMOJI seq="2615">☕</EMOJI></r>'
+			],
+			[
+				// U+2615 U+FE0E
+				'☕︎',
+				'<t>☕︎</t>'
+			],
+			[
+				'☺️',
+				'<r><EMO seq="263a">☺️</EMO></r>',
 				['tagName' => 'EMO']
 			],
 			[
-				'☺',
-				'<r><EMOJI cp="263a">☺</EMOJI></r>',
+				'☺️',
+				'<r><EMOJI cp="263a">☺️</EMOJI></r>',
 				['attrName' => 'cp']
 			],
 			[
-				'☺☺',
-				'<r><EMOJI seq="263a">☺</EMOJI><EMOJI seq="263a">☺</EMOJI></r>'
+				'☺️☺️',
+				'<r><EMOJI seq="263a">☺️</EMOJI><EMOJI seq="263a">☺️</EMOJI></r>'
 			],
 			[
 				'😀',
@@ -48,8 +68,8 @@ class ParserTest extends Test
 				'<t>▬</t>'
 			],
 			[
-				'#⃣1⃣2⃣',
-				'<r><EMOJI seq="23-20e3">#⃣</EMOJI><EMOJI seq="31-20e3">1⃣</EMOJI><EMOJI seq="32-20e3">2⃣</EMOJI></r>'
+				'#️⃣1️⃣2️⃣',
+				'<r><EMOJI seq="23-20e3">#️⃣</EMOJI><EMOJI seq="31-20e3">1️⃣</EMOJI><EMOJI seq="32-20e3">2️⃣</EMOJI></r>'
 			],
 			[
 				':bouquet:',
@@ -80,12 +100,12 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">'
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/1f600.png">'
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" src="//twemoji.maxcdn.com/16x16/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" src="//twemoji.maxcdn.com/16x16/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -93,8 +113,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -102,8 +122,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="24" height="24" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="24" height="24" src="//twemoji.maxcdn.com/36x36/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -111,8 +131,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="36" height="36" src="//twemoji.maxcdn.com/36x36/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="36" height="36" src="//twemoji.maxcdn.com/36x36/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -120,8 +140,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="72" height="72" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="72" height="72" src="//twemoji.maxcdn.com/72x72/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -129,8 +149,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="720" height="720" src="//twemoji.maxcdn.com/72x72/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="720" height="720" src="//twemoji.maxcdn.com/72x72/1f600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -138,8 +158,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/263a.svg">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/1f600.svg">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -147,13 +167,13 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/263a.png">',
+				'😀',
+				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/1f600.png">',
 				['tagName' => 'EMOTE']
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				'😀',
+				'<img alt="😀" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -161,8 +181,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'☺',
-				'<img alt="☺" class="emoji" src="//cdn.jsdelivr.net/emojione/assets/png/263A.png">',
+				'😀',
+				'<img alt="😀" class="emoji" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -171,22 +191,12 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'#⃣1⃣2⃣',
-				'<img alt="#⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
+				'#️⃣1️⃣2️⃣',
+				'<img alt="#️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
 				[],
 				function ($configurator, $plugin)
 				{
 					$plugin->useEmojiOne();
-				}
-			],
-			[
-				file_get_contents(__DIR__ . '/all.txt'),
-				file_get_contents(__DIR__ . '/all.html'),
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setRegexpLimit(10000);
-					$plugin->getTag()->tagLimit = 10000;
 				}
 			],
 		];
