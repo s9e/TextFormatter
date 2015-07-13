@@ -93,6 +93,10 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'🇯🇵',
+				'<r><EMOJI seq="1f1ef-1f1f5">&#127471;&#127477;</EMOJI></r>'
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],
