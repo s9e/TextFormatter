@@ -145,7 +145,7 @@ function getPHPRegexp($imgEmoji, $textEmoji)
 	$regexp .= '|' . getPHPRegexpSubpattern($textEmoji) . '\\xEF\\xB8\\x8F';
 
 	// Finish with keypad emoji
-	$regexp .= '|[#0-9]\\xEF\\xB8\\x8F\\xE2\\x83\\xA3)S';
+	$regexp .= '|[#0-9](?:\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3)S';
 
 	return $regexp;
 }
@@ -194,7 +194,7 @@ function getJSRegexp($imgEmoji, $textEmoji)
 	$regexp .= '|' . getJSRegexpSubpattern($textEmoji) . '\\uFE0F';
 
 	// Finish with keypad emoji
-	$regexp .= '|[#0-9]\\uFE0F\\u20E3/g';
+	$regexp .= '|[#0-9]\\uFE0F?\\u20E3/g';
 
 	return $regexp;
 }
