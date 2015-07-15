@@ -24,41 +24,39 @@ $imgEmoji  = ['1f1e6'];
 $textEmoji = [];
 $utf8Emoji = [];
 
-$url  = 'http://www.unicode.org/emoji/charts/emoji-style.html';
-$html = wget($url);
-preg_match("(<tr><td><a href='#emoji'.*?</tr>)s", $html, $m);
-preg_match_all('(#([0-9_a-f]{2,}))', $m[0], $matches);
-foreach ($matches[1] as $seq)
+$url = 'http://unicode.org/Public/emoji/latest/emoji-data.txt';
+$regexp = '(^([0-9A-F][0-9A-F ]+[0-9A-F])\\s*;\\s*(emoji|text)\\s*;\\s*L1\\s*;\\s*(?:none|primary|secondary))m';
+preg_match_all($regexp, wget($url), $matches, PREG_SET_ORDER);
+foreach ($matches as list(, $seq, $style))
 {
-	if ($seq >= '1f1e6_1f1e6' && $seq <= '1f1ff_1f1ff')
+	if ($seq >= '1F1E6 1F1E6' && $seq <= '1F1FF 1F1FF')
 	{
 		// Skip flags
 		continue;
 	}
-
-	$utf8     = seqToUtf8($seq);
-	$allText .= $utf8;
-	$allXml  .= getXml($utf8, $seq);
-
-	$imgEmoji[]  = strtr($seq, '_', ' ');
-	$utf8Emoji[] = $utf8;
-}
-preg_match("(<tr><td><a href='#text_with_emoji_variant'.*?</tr>)s", $html, $m);
-preg_match_all('(#([0-9_a-f]{2,}))', $m[0], $matches);
-foreach ($matches[1] as $seq)
-{
-	if ($seq >= '0023_20e3' && $seq <= '0039_20e3')
+	if ($seq >= '0023 20E3' && $seq <= '0039 20E3')
 	{
 		// Skip keypads
 		continue;
 	}
 
-	$utf8     = seqToUtf8($seq);
-	$allText .= $utf8 . $utf8 . "\xEF\xB8\x8F";
-	$allXml  .= $utf8 . getXml($utf8 . "\xEF\xB8\x8F", $seq);
+	$utf8 = seqToUtf8($seq);
+	if ($style === 'emoji')
+	{
+		$imgEmoji[]  = $seq;
+		$utf8Emoji[] = $utf8;
 
-	$textEmoji[] = strtr($seq, '_', ' ');
-	$utf8Emoji[] = $utf8 . "\xEF\xB8\x8F";
+		$allText .= $utf8;
+		$allXml  .= getXml($utf8, $seq);
+	}
+	else
+	{
+		$textEmoji[] = $seq;
+		$utf8Emoji[] = $utf8 . "\xEF\xB8\x8F";
+
+		$allText .= $utf8 . $utf8 . "\xEF\xB8\x8F";
+		$allXml  .= $utf8 . getXml($utf8 . "\xEF\xB8\x8F", $seq);
+	}
 }
 
 foreach ($utf8Emoji as $utf8)
@@ -333,7 +331,7 @@ function getRanges(array $values)
 
 function getXml($utf8, $seq)
 {
-	return '<EMOJI seq="' . ltrim($seq, '0') . '">' . $utf8 . '</EMOJI>';
+	return '<EMOJI seq="' . ltrim(strtolower($seq), '0') . '">' . $utf8 . '</EMOJI>';
 }
 
 function wget($url)
