@@ -92,11 +92,12 @@ class Parser extends ParserBase
 	*/
 	protected function parseAsciiEmoji($text)
 	{
-		if (strpos($text, ':') === false)
+		$matchPos = strpos($text, ':');
+		if ($matchPos === false)
 		{
 			return;
 		}
-		preg_match_all($this->asciiRegexp, $text, $matches, PREG_OFFSET_CAPTURE);
+		preg_match_all($this->asciiRegexp, $text, $matches, PREG_OFFSET_CAPTURE, $matchPos);
 		foreach ($matches[0] as $m)
 		{
 			$shortName = substr($m[0], 1);
