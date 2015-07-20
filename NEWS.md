@@ -3,6 +3,7 @@
 - Fixed two memory leaks that could happen on some versions of PHP [[1](https://github.com/s9e/TextFormatter/commit/0ca302b992697b2f85da85d323588884c50cdbb1)] [[2](https://github.com/s9e/TextFormatter/commit/844420e217a0dbd01341e3f027048f3962ccfd12)]
 - [Replaced the data structure used in tags config to hold the list of allowed tags during parsing](https://github.com/s9e/TextFormatter/commit/ea7d8a9431271599ac580fbe0d5b1f8c314f0166)
 - [New](https://github.com/s9e/TextFormatter/commit/99895aecfd04f0260d086cbca83d536aab57f61e) and [improved](https://github.com/s9e/TextFormatter/commit/bd5d6e4da151dd0d3e4f6244684b9cdc95dd4a39) Emoji plugin
+- [Added FixUnescapedCurlyBracesInHtmlAttributes template normalization](https://github.com/s9e/TextFormatter/commit/f809b2c6eb9abc7b0d777e75fd7fe1228a11031f)
 
 ###### June 2015
 
