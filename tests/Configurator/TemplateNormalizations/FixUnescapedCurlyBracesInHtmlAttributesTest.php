@@ -35,6 +35,10 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<hr onmouseover="if(1){{alert(1)}else{{alert(0)}"/>'
 			],
 			[
+				'<hr onmouseover="if(1){alert(1)}else&#123;alert(12)}"/>',
+				'<hr onmouseover="if(1){{alert(1)}else{{alert(12)}"/>'
+			],
+			[
 				// Do not escape {@cmd}
 				'<hr onmouseover="if(1){@cmd}(1)"/>',
 				'<hr onmouseover="if(1){@cmd}(1)"/>',
