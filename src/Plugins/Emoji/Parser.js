@@ -58,12 +58,12 @@ function getSequence(str)
 */
 function parseAsciiEmoji(text)
 {
-	if (text.indexOf(':') < 0)
+	var m, matchPos = text.indexOf(':');
+	if (matchPos < 0)
 	{
 		return;
 	}
-	var m;
-	asciiRegexp.lastIndex = 0;
+	asciiRegexp.lastIndex = matchPos;
 	while (m = asciiRegexp.exec(text))
 	{
 		var shortName = m[0].substr(1);
