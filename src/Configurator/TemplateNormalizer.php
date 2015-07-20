@@ -65,6 +65,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('PreserveSingleSpaces');
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
+		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');

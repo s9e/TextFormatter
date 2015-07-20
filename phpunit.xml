@@ -115,6 +115,7 @@
 			<file>tests/Configurator/TemplateNormalizationTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/FixUnescapedCurlyBracesInHtmlAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineCDATATest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineElementsTest.php</file>

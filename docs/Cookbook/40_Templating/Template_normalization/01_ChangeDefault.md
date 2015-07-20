@@ -16,18 +16,19 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 0	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
 1	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
 2	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
-3	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
-4	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineCDATA
-5	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineElements
-6	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
-7	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineTextElements
-8	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineXPathLiterals
-9	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyXPathExpressions
-10	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeAttributeNames
-11	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
-12	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
-13	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
-14	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+3	s9e\TextFormatter\Configurator\TemplateNormalizations\FixUnescapedCurlyBracesInHtmlAttributes
+4	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
+5	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineCDATA
+6	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineElements
+7	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
+8	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineTextElements
+9	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineXPathLiterals
+10	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyXPathExpressions
+11	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeAttributeNames
+12	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
+13	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
+14	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
+15	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
 ```
 
 ### Remove a normalization

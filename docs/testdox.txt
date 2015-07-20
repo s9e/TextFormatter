@@ -1231,6 +1231,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressi
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] normalize() calls the user-defined callback with a DOMElement as argument
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBracesInHtmlAttributes
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
  [x] Works
 
