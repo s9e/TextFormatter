@@ -2873,6 +2873,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('PreserveSingleSpaces');
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
+		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
@@ -4292,6 +4293,43 @@ class DisallowXPathFunction extends TemplateCheck
 					if ($token[0] === 'expression')
 						$exprs[$token[1]] = $attribute;
 		return $exprs;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
+{
+	public function normalize(DOMElement $template)
+	{
+		$dom   = $template->ownerDocument;
+		$xpath = new DOMXPath($dom);
+		$query = '//@*[contains(., "{")]';
+		foreach ($xpath->query($query) as $attribute)
+			$this->fixAttribute($attribute);
+	}
+	protected function fixAttribute(DOMAttr $attribute)
+	{
+		$parentNode = $attribute->parentNode;
+		if ($parentNode->namespaceURI === self::XMLNS_XSL)
+			return;
+		$attribute->value = \htmlspecialchars(
+			\preg_replace(
+				'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+				'$0{',
+				$attribute->value
+			),
+			\ENT_NOQUOTES,
+			'UTF-8'
+		);
 	}
 }
 
