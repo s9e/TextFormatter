@@ -202,27 +202,27 @@ echo $html;
 
 If the URL used for scraping is different from the media's URL, you can specify it in the `url` element of the `scrape` array. You can also use variables in the URL using the familiar syntax `{@id}`. Values for those variables come from named captures in previous `extract` regexp and from the tag's attributes if applicable.
 
-For example: in some places, Grooveshark uses hashbang URLs such as `http://grooveshark.com/#!/s/Soul+Below/4zGL7i`. Fragment identifiers (everything after `#`) are by definition omitted when requesting the page. If we tried to retrieve this URL as-is, the server would return the page that corresponds to `http://grooveshark.com/`.
-
-In the following example, we configure `scrape` with a custom URL by matching everything after the hashbang using a capture named `path` and reconstructing the URL without the hashbang.
+For example: the dimensions of a Gfycat video are mentionned in the metadata of their page. However, if someone posted a direct link to a Gfycat .gif image such as `http://giant.gfycat.com/SereneIllfatedCapybara.gif`, the dimensions would not be available. In the following example, we configure `scrape` with a custom URL that is known to include the original image's dimensions.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
 $configurator->MediaEmbed->add(
-	'grooveshark',
+	'gfycat',
 	[
-		'host'   => 'grooveshark.com',
+		'host'   => 'gfycat.com',
+		'extract' => "!gfycat\\.com/(?'id'\\w+)!",
 		'scrape' => [
-			'match'   => "%grooveshark\\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%",
-			'url'     => 'http://grooveshark.com/s/{@path}',
-			'extract' => "%songID=(?'songid'[0-9]+)%"
+			'url'     => 'http://gfycat.com/{@id}',
+			'extract' => [
+				'!property="og:image:height"\s*content="(?<height>\d+)!',
+				'!property="og:image:width"\s*content="(?<width>\d+)!'
+			]
 		],
-		'flash' => [
-			'width'     => 250,
-			'height'    => 40,
-			'src'       => 'http://grooveshark.com/songWidget.swf',
-			'flashvars' => 'songID={@songid}'
+		'iframe' => [
+			'width'     => '{@width}',
+			'height'    => '{@height}',
+			'src'       => '//gfycat.com/iframe/{@id}'
 		]
 	]
 );
@@ -230,12 +230,12 @@ $configurator->MediaEmbed->add(
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = 'http://grooveshark.com/#!/s/Soul+Below/4zGL7i';
+$text = 'http://giant.gfycat.com/SereneIllfatedCapybara.gif';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
 echo $html;
 ```
 ```html
-<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="songID=35292216"><embed type="application/x-shockwave-flash" width="250" height="40" src="http://grooveshark.com/songWidget.swf" allowfullscreen="" flashvars="songID=35292216"></object>
+<iframe width="600" height="338" src="//gfycat.com/iframe/SereneIllfatedCapybara" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
