@@ -99,6 +99,25 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Encode escaped literals that have a special meaning
+	*
+	* @param  string $str Original text
+	* @return string      Encoded text
+	*/
+	protected function encode($str)
+	{
+		return strtr(
+			$str,
+			[
+				'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
+				'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
+				'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
+				'\\`' => "\x1B9", '\\~' => "\x1BA"
+			]
+		);
+	}
+
+	/**
 	* Capture lines that contain a Setext-tyle header
 	*
 	* @return array
@@ -158,15 +177,7 @@ class Parser extends ParserBase
 
 			// Encode escaped literals that have a special meaning otherwise, so that we don't have
 			// to take them into account in regexps
-			$text = strtr(
-				$text,
-				[
-					'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
-					'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
-					'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
-					'\\`' => "\x1B9", '\\~' => "\x1BA"
-				]
-			);
+			$text = $this->encode($text);
 		}
 
 		// We append a couple of lines and a non-whitespace character at the end of the text in
