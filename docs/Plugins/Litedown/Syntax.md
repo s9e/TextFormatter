@@ -186,7 +186,7 @@ foo^bar^baz
 
 ### Inline code
 
-Any text between two `\`` or `\`\`` markers.
+Any text between two <code>&#96;</code> or <code>&#96;&#96;</code>  markers.
 
 ```md
 Single `print("``")` or double ``print("`")``
