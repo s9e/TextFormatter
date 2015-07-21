@@ -75,6 +75,7 @@ pages:
       - Automatically link MTG cards: Plugins/Keywords/MTG.md
     - Litedown:
       - Synopsis: Plugins/Litedown/Synopsis.md
+      - Syntax: Plugins/Litedown/Syntax.md
     - MediaEmbed:
       - Synopsis: Plugins/MediaEmbed/Synopsis.md
       - Supported sites: Plugins/MediaEmbed/Sites.md
