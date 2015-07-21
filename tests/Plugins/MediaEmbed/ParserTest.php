@@ -2762,6 +2762,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb',
+				'<r><VOX id="ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb" url="http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb">http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</VOX></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vox');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/featured/71630',
 				'<r><WSHH id="71630" url="http://www.worldstarhiphop.com/featured/71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
