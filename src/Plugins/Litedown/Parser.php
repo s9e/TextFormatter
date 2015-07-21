@@ -84,7 +84,15 @@ class Parser extends ParserBase
 
 		if ($this->hasEscapedChars)
 		{
-			$str = strtr($str, ["\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')', "\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\', "\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_', "\x1B9" => '`', "\x1BA" => '~']);
+			$str = strtr(
+				$str,
+				[
+					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')',
+					"\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\',
+					"\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_',
+					"\x1B9" => '`', "\x1BA" => '~'
+				]
+			);
 		}
 
 		return $str;
@@ -150,7 +158,15 @@ class Parser extends ParserBase
 
 			// Encode escaped literals that have a special meaning otherwise, so that we don't have
 			// to take them into account in regexps
-			$text = strtr($text, ['\\!' => "\x1B0", '\\"' => "\x1B1", '\\)' => "\x1B2", '\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5", '\\]' => "\x1B6", '\\^' => "\x1B7", '\\_' => "\x1B8", '\\`' => "\x1B9", '\\~' => "\x1BA"]);
+			$text = strtr(
+				$text,
+				[
+					'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
+					'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
+					'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
+					'\\`' => "\x1B9", '\\~' => "\x1BA"
+				]
+			);
 		}
 
 		// We append a couple of lines and a non-whitespace character at the end of the text in
