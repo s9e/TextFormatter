@@ -10,6 +10,18 @@ use DOMDocument;
 use DOMXPath;
 abstract class Utils
 {
+	public static function getAttributeValues($xml, $tagName, $attrName)
+	{
+		$values = [];
+		if (\strpos($xml, '<' . $tagName) !== \false)
+		{
+			$regexp = '(<' . \preg_quote($tagName) . '(?= )[^>]*? ' . \preg_quote($attrName) . '="([^"]*+))';
+			\preg_match_all($regexp, $xml, $matches);
+			foreach ($matches[1] as $value)
+				$values[] = \html_entity_decode($value, \ENT_QUOTES, 'UTF-8');
+		}
+		return $values;
+	}
 	public static function encodeUnicodeSupplementaryCharacters($str)
 	{
 		return \preg_replace_callback(
