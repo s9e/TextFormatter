@@ -2640,6 +2640,7 @@ s9e\TextFormatter\Tests\Unparser
 
 s9e\TextFormatter\Tests\Utils
  [x] encodeUnicodeSupplementaryCharacters() tests
+ [x] getAttributeValues() tests
  [x] removeFormatting() tests
  [x] removeTag() tests
  [x] replaceAttributes() tests

@@ -13,6 +13,32 @@ use DOMXPath;
 abstract class Utils
 {
 	/**
+	* Return every value used in given attribute from given tag
+	*
+	* Will include duplicate values
+	*
+	* @param  string   $xml      Parsed text
+	* @param  string   $tagName  Target tag's name
+	* @param  string   $attrName Target attribute's name
+	* @return string[]           Attribute values
+	*/
+	public static function getAttributeValues($xml, $tagName, $attrName)
+	{
+		$values = [];
+		if (strpos($xml, '<' . $tagName) !== false)
+		{
+			$regexp = '(<' . preg_quote($tagName) . '(?= )[^>]*? ' . preg_quote($attrName) . '="([^"]*+))';
+			preg_match_all($regexp, $xml, $matches);
+			foreach ($matches[1] as $value)
+			{
+				$values[] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+			}
+		}
+
+		return $values;
+	}
+
+	/**
 	* Replace Unicode characters outside the BMP with XML entities
 	*
 	* @param  string $str Original string

@@ -30,6 +30,70 @@ class UtilsTest extends Test
 	}
 
 	/**
+	* @testdox getAttributeValues() tests
+	* @dataProvider getGetAttributeValuesTests
+	*/
+	public function testGetAttributeValues($xml, $tagName, $attrName, $expected)
+	{
+		Utils::getAttributeValues($xml, $tagName, $attrName);
+		$this->assertSame($expected, Utils::getAttributeValues($xml, $tagName, $attrName));
+	}
+
+	public function getGetAttributeValuesTests()
+	{
+		return [
+			[
+				'<t>Plain text</t>',
+				'X',
+				'x',
+				[]
+			],
+			[
+				'<r>..<X x=""/></r>',
+				'X',
+				'x',
+				['']
+			],
+			[
+				'<r>..<X a="x" x="z"/></r>',
+				'X',
+				'x',
+				['z']
+			],
+			[
+				'<r><X x="a&amp;b"/></r>',
+				'X',
+				'x',
+				['a&b']
+			],
+			[
+				'<r><X x="..&#128512;.."/></r>',
+				'X',
+				'x',
+				['..😀..']
+			],
+			[
+				'<r><FOO bar="123"/><FOO bar="456"/></r>',
+				'FOO',
+				'bar',
+				['123', '456']
+			],
+			[
+				'<r><FOO bar="123"/><FOOBAR bar="456"/></r>',
+				'FOO',
+				'bar',
+				['123']
+			],
+			[
+				'<r><FOO babar="123"/><FOO bar="456"/></r>',
+				'FOO',
+				'bar',
+				['456']
+			],
+		];
+	}
+
+	/**
 	* @testdox removeFormatting() tests
 	* @dataProvider getRemoveFormattingTests
 	*/
