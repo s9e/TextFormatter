@@ -57,12 +57,38 @@ function decode(str)
 			/\x1B./g,
 			function (seq)
 			{
-				return {"\x1B0": '!', "\x1B1": '"', "\x1B2": ')', "\x1B3": '*', "\x1B4": '[', "\x1B5": '\\', "\x1B6": ']', "\x1B7": '^', "\x1B8": '_', "\x1B9": '`', "\x1BA": '~'}[seq];
+				return {
+					"\x1B0": '!', "\x1B1": '"',  "\x1B2": ')', "\x1B3": '*',
+					"\x1B4": '[', "\x1B5": '\\', "\x1B6": ']', "\x1B7": '^',
+					"\x1B8": '_', "\x1B9": '`',  "\x1BA": '~'
+				}[seq];
 			}
 		);
 	}
 
 	return str;
+}
+
+/**
+* Encode escaped literals that have a special meaning
+*
+* @param  {!string}  str Original text
+* @return {!string}      Encoded text
+*/
+function encode(str)
+{
+	return str.replace(
+		/\\[!")*[\\\]^_`~]/g,
+		function (str)
+		{
+			return {
+				'\\!': "\x1B0", '\\"': "\x1B1", '\\)':  "\x1B2",
+				'\\*': "\x1B3", '\\[': "\x1B4", '\\\\': "\x1B5",
+				'\\]': "\x1B6", '\\^': "\x1B7", '\\_':  "\x1B8",
+				'\\`': "\x1B9", '\\~': "\x1BA"
+			}[str];
+		}
+	);
 }
 
 /**
@@ -124,13 +150,7 @@ function init()
 
 		// Encode escaped literals that have a special meaning otherwise, so that we don't have
 		// to take them into account in regexps
-		text = text.replace(
-			/\\[!")*[\\\]^_`~]/g,
-			function (str)
-			{
-				return {'\\!': "\x1B0", '\\"': "\x1B1", '\\)': "\x1B2", '\\*': "\x1B3", '\\[': "\x1B4", '\\\\': "\x1B5", '\\]': "\x1B6", '\\^': "\x1B7", '\\_': "\x1B8", '\\`': "\x1B9", '\\~': "\x1BA"}[str];
-			}
-		);
+		text = encode(text);
 	}
 
 	// We append a couple of lines and a non-whitespace character at the end of the text in
