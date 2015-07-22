@@ -37,8 +37,28 @@ class Parser extends ParserBase
 	{
 		$str = \stripslashes(\str_replace("\x1A", '', $str));
 		if ($this->hasEscapedChars)
-			$str = \strtr($str, ["\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')', "\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\', "\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_', "\x1B9" => '`', "\x1BA" => '~']);
+			$str = \strtr(
+				$str,
+				[
+					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')',
+					"\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\',
+					"\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_',
+					"\x1B9" => '`', "\x1BA" => '~'
+				]
+			);
 		return $str;
+	}
+	protected function encode($str)
+	{
+		return \strtr(
+			$str,
+			[
+				'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
+				'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
+				'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
+				'\\`' => "\x1B9", '\\~' => "\x1BA"
+			]
+		);
 	}
 	protected function getSetextLines()
 	{
@@ -69,7 +89,7 @@ class Parser extends ParserBase
 		else
 		{
 			$this->hasEscapedChars = \true;
-			$text = \strtr($text, ['\\!' => "\x1B0", '\\"' => "\x1B1", '\\)' => "\x1B2", '\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5", '\\]' => "\x1B6", '\\^' => "\x1B7", '\\_' => "\x1B8", '\\`' => "\x1B9", '\\~' => "\x1BA"]);
+			$text = $this->encode($text);
 		}
 		$text .= "\n\n\x17";
 		$this->text = $text;
