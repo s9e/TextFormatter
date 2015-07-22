@@ -560,6 +560,48 @@ class JavaScript
 	}
 
 	/**
+	* Build the list of parameters used in a callback invocation
+	*
+	* @param  array  $params    Callback parameters
+	* @param  array  $localVars Known vars from the calling scope
+	* @return string            JavaScript code
+	*/
+	protected function buildCallbackParameters(array $params, array $localVars)
+	{
+		// Remove 'parser' as a parameter, since there's no such thing in JavaScript
+		unset($params['parser']);
+
+		$js = '';
+		$sep = '';
+		foreach ($params as $k => $v)
+		{
+			$js .= $sep;
+			$sep = ',';
+
+			if (isset($v))
+			{
+				// Param by value
+				$js .= self::encode($v);
+			}
+			else
+			{
+				// Param by name -- if it's not one of the local vars passed to the callback, and
+				// it's not one of the global vars "logger", "openTags" and "registeredVars" then we
+				// assume that it's a variable registered in registeredVars
+				if (!isset($localVars[$k])
+				 && !in_array($k, ['logger', 'openTags', 'registeredVars'], true))
+				{
+					$k = 'registeredVars[' . json_encode($k) . ']';
+				}
+
+				$js .= $k;
+			}
+		}
+
+		return $js;
+	}
+
+	/**
 	* Convert a callback array into JavaScript code
 	*
 	* Will create entries in $this->callbacks
@@ -621,39 +663,7 @@ class JavaScript
 		// name is a hash of its content so we start with the first parenthesis after the function
 		// name in the function definition, which will prepend once we know what it is
 		$js = '(' . implode(',', array_keys($arguments[$callbackType])) . '){'
-		    . 'return ' . $jsCallback . '(';
-
-		// Add this callback's params
-		$sep = '';
-		foreach ($params as $k => $v)
-		{
-			$js .= $sep;
-			$sep = ',';
-
-			if (isset($v))
-			{
-				// Param by value
-				$js .= self::encode($v);
-			}
-			else
-			{
-				// Param by name -- if it's not one of the local vars passed to the callback, and
-				// it's not one of the global vars "logger", "openTags" and "registeredVars" then we
-				// assume that it's a variable registered in registeredVars
-				if (!isset($arguments[$callbackType][$k])
-				 && $k !== 'logger'
-				 && $k !== 'openTags'
-				 && $k !== 'registeredVars')
-				{
-					$k = 'registeredVars[' . json_encode($k) . ']';
-				}
-
-				$js .= $k;
-			}
-		}
-
-		// Close the list of arguments and the function body
-		$js .= ');}';
+		    . 'return ' . $jsCallback . '(' . $this->buildCallbackParameters($params, $arguments[$callbackType]) . ');}';
 
 		// Prepare the function's header
 		$header = "/**\n";
