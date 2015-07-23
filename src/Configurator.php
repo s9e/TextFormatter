@@ -4885,6 +4885,14 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		$this->onDuplicateAction = $action;
 		return $old;
 	}
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Item '" . $key . "' already exists");
+	}
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Item '" . $key . "' does not exist");
+	}
 	public function normalizeKey($key)
 	{
 		return $key;
@@ -4899,7 +4907,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 			if ($this->onDuplicateAction === 'ignore')
 				return $this->get($key);
 			elseif ($this->onDuplicateAction === 'error')
-				throw new RuntimeException("Item '" . $key . "' already exists");
+				throw $this->getAlreadyExistsException($key);
 		return $this->set($key, $value);
 	}
 	public function contains($value)
@@ -4919,7 +4927,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	public function get($key)
 	{
 		if (!$this->exists($key))
-			throw new RuntimeException("Item '" . $key . "' does not exist");
+			throw $this->getNotExistException($key);
 		$key = $this->normalizeKey($key);
 		return $this->items[$key];
 	}
@@ -5303,10 +5311,19 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 class AttributeCollection extends NormalizedCollection
 {
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Attribute '" . $key . "' already exists");
+	}
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Attribute '" . $key . "' does not exist");
+	}
 	public function normalizeKey($key)
 	{
 		return AttributeName::normalize($key);
@@ -5515,10 +5532,19 @@ class PluginCollection extends NormalizedCollection
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 class TagCollection extends NormalizedCollection
 {
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Tag '" . $key . "' already exists");
+	}
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Tag '" . $key . "' does not exist");
+	}
 	public function normalizeKey($key)
 	{
 		return TagName::normalize($key);
