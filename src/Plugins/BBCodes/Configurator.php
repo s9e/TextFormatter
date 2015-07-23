@@ -63,10 +63,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$tag        = $config['tag'];
 		if (!isset($bbcode->tagName))
 			$bbcode->tagName = $bbcodeName;
-		if ($this->collection->exists($bbcodeName))
-			throw new RuntimeException("BBCode '" . $bbcodeName . "' already exists");
-		if ($this->configurator->tags->exists($bbcode->tagName))
-			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->collection->add($bbcodeName, $bbcode);
