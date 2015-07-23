@@ -7,11 +7,28 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributeCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Attribute '" . $key . "' already exists");
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Attribute '" . $key . "' does not exist");
+	}
+
 	/**
 	* Normalize a key as an attribute name
 	*

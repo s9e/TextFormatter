@@ -79,4 +79,27 @@ class TagCollectionTest extends Test
 
 		$this->assertTrue($collection->exists('X'));
 	}
+
+	/**
+	* @testdox Throws an exception when creating a Tag that already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Tag 'X' already exists
+	*/
+	public function testAlreadyExist()
+	{
+		$collection = new TagCollection;
+		$collection->add('X');
+		$collection->add('X');
+	}
+
+	/**
+	* @testdox Throws an exception when accessing a Tag that does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Tag 'X' does not exist
+	*/
+	public function testNotExist()
+	{
+		$collection = new TagCollection;
+		$collection->get('X');
+	}
 }

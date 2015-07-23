@@ -7,11 +7,28 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class TagCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Tag '" . $key . "' already exists");
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Tag '" . $key . "' does not exist");
+	}
+
 	/**
 	* Normalize a tag name used as a key in this colelction
 	*

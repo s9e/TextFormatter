@@ -141,4 +141,27 @@ class BBCodeCollectionTest extends Test
 			(array) $collection->asConfig()
 		);
 	}
+
+	/**
+	* @testdox Throws an exception when creating a BBCode that already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage BBCode 'X' already exists
+	*/
+	public function testAlreadyExist()
+	{
+		$collection = new BBCodeCollection;
+		$collection->add('X');
+		$collection->add('X');
+	}
+
+	/**
+	* @testdox Throws an exception when accessing a BBCode that does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage BBCode 'X' does not exist
+	*/
+	public function testNotExist()
+	{
+		$collection = new BBCodeCollection;
+		$collection->get('X');
+	}
 }

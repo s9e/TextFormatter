@@ -44,6 +44,28 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	//==========================================================================
 
 	/**
+	* Return the exception that is thrown when creating an item using a key that already exists
+	*
+	* @param  string           $key Item's key
+	* @return RuntimeException
+	*/
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Item '" . $key . "' already exists");
+	}
+
+	/**
+	* Return the exception that is thrown when accessing an item that does not exist
+	*
+	* @param  string           $key Item's key
+	* @return RuntimeException
+	*/
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Item '" . $key . "' does not exist");
+	}
+
+	/**
 	* Normalize an item's key
 	*
 	* This method can be overridden to implement keys normalization or implement constraints
@@ -95,7 +117,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 			}
 			elseif ($this->onDuplicateAction === 'error')
 			{
-				throw new RuntimeException("Item '" . $key . "' already exists");
+				throw $this->getAlreadyExistsException($key);
 			}
 		}
 
@@ -149,7 +171,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	{
 		if (!$this->exists($key))
 		{
-			throw new RuntimeException("Item '" . $key . "' does not exist");
+			throw $this->getNotExistException($key);
 		}
 
 		$key = $this->normalizeKey($key);

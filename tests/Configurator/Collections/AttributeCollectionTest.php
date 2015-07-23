@@ -79,4 +79,27 @@ class AttributeCollectionTest extends Test
 
 		$this->assertTrue($collection->exists('X'));
 	}
+
+	/**
+	* @testdox Throws an exception when creating a Attribute that already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Attribute 'x' already exists
+	*/
+	public function testAlreadyExist()
+	{
+		$collection = new AttributeCollection;
+		$collection->add('x');
+		$collection->add('x');
+	}
+
+	/**
+	* @testdox Throws an exception when accessing a Attribute that does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Attribute 'x' does not exist
+	*/
+	public function testNotExist()
+	{
+		$collection = new AttributeCollection;
+		$collection->get('x');
+	}
 }

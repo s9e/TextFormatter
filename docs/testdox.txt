@@ -185,6 +185,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] exists() normalizes the attribute name
  [x] get() normalizes the attribute name
  [x] set() normalizes the attribute name
+ [x] Throws an exception when creating a Attribute that already exists
+ [x] Throws an exception when accessing a Attribute that does not exist
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] append() throws an InvalidArgumentException on invalid callbacks
@@ -378,6 +380,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] exists() normalizes the tag name
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
+ [x] Throws an exception when creating a Tag that already exists
+ [x] Throws an exception when accessing a Tag that does not exist
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] append() throws an InvalidArgumentException on invalid callbacks
@@ -2007,6 +2011,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] asConfig() returns a Dictionary
  [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
+ [x] Throws an exception when creating a BBCode that already exists
+ [x] Throws an exception when accessing a BBCode that does not exist
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] $bbcodeMonkey->allowedFilters is a publicly-accessible list of callbacks

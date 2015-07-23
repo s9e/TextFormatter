@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
@@ -14,6 +15,22 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class BBCodeCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("BBCode '" . $key . "' already exists");
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("BBCode '" . $key . "' does not exist");
+	}
+
 	/**
 	* {@inheritdoc}
 	*/
