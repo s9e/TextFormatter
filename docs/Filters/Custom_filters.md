@@ -70,3 +70,36 @@ echo $html;
 ```html
 To bE FrAnK, iT'S NoT AcTuAlLy fUnNy.
 ```
+
+### JavaScript filters
+
+Custom PHP filters need custom JavaScript filters in order to work in both environment. For each custom PHP filter you can set a JavaScript function with `setJS()`. The function should take the same arguments and return the same value. For instance, let's add a custom JavaScript filter to the previous example:
+
+```php
+// PHP filter
+function mixcase($value)
+{
+	$str = '';
+	foreach (str_split($value, 1) as $i => $char)
+	{
+		$str .= ($i % 2) ? strtolower($char) : strtoupper($char);
+	}
+	return $str;
+}
+
+// JavaScript filter
+$js = "
+function (value)
+{
+	var str = '';
+	value.split('').forEach(function(char, i)
+	{
+		str += (i % 2) ? char.toLowerCase() : char.toUpperCase();
+	});
+	return str;
+}
+";
+
+// Add our #funnytext filter with its JavaScript counterpart
+$configurator->attributeFilters->set('#funnytext', 'mixcase')->setJS($js);
+```
