@@ -560,45 +560,40 @@ class JavaScript
 	}
 
 	/**
-	* Build the list of parameters used in a callback invocation
+	* Build the list of arguments used in a callback invocation
 	*
 	* @param  array  $params    Callback parameters
 	* @param  array  $localVars Known vars from the calling scope
 	* @return string            JavaScript code
 	*/
-	protected function buildCallbackParameters(array $params, array $localVars)
+	protected function buildCallbackArguments(array $params, array $localVars)
 	{
 		// Remove 'parser' as a parameter, since there's no such thing in JavaScript
 		unset($params['parser']);
 
-		$js = '';
-		$sep = '';
+		// Add global vars to the list of vars in scope
+		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1];
+
+		$args = [];
 		foreach ($params as $k => $v)
 		{
-			$js .= $sep;
-			$sep = ',';
-
 			if (isset($v))
 			{
 				// Param by value
-				$js .= self::encode($v);
+				$args[] = self::encode($v);
+			}
+			elseif (isset($localVars[$k]))
+			{
+				// Param by name that matches a local var
+				$args[] = $k;
 			}
 			else
 			{
-				// Param by name -- if it's not one of the local vars passed to the callback, and
-				// it's not one of the global vars "logger", "openTags" and "registeredVars" then we
-				// assume that it's a variable registered in registeredVars
-				if (!isset($localVars[$k])
-				 && !in_array($k, ['logger', 'openTags', 'registeredVars'], true))
-				{
-					$k = 'registeredVars[' . json_encode($k) . ']';
-				}
-
-				$js .= $k;
+				$args[] = 'registeredVars[' . json_encode($k) . ']';
 			}
 		}
 
-		return $js;
+		return implode(',', $args);
 	}
 
 	/**
@@ -663,7 +658,7 @@ class JavaScript
 		// name is a hash of its content so we start with the first parenthesis after the function
 		// name in the function definition, which will prepend once we know what it is
 		$js = '(' . implode(',', array_keys($arguments[$callbackType])) . '){'
-		    . 'return ' . $jsCallback . '(' . $this->buildCallbackParameters($params, $arguments[$callbackType]) . ');}';
+		    . 'return ' . $jsCallback . '(' . $this->buildCallbackArguments($params, $arguments[$callbackType]) . ');}';
 
 		// Prepare the function's header
 		$header = "/**\n";
