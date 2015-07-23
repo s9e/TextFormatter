@@ -522,41 +522,61 @@ class JavaScript
 	*/
 	protected function replaceCallbacks()
 	{
-		foreach ($this->config['tags'] as &$tagConfig)
+		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
-			if (isset($tagConfig['filterChain']))
-			{
-				foreach ($tagConfig['filterChain'] as &$filter)
-				{
-					$filter = $this->convertCallback('tagFilter', $filter);
-				}
-				unset($filter);
-			}
+			$this->config['tags'][$tagName] = $this->replaceCallbacksInTagConfig($tagConfig);
+		}
+	}
 
-			if (isset($tagConfig['attributes']))
+	/**
+	* Replace callbacks in given attribute config array
+	*
+	* @param  array $config Original config
+	* @return array         Modified config
+	*/
+	protected function replaceCallbacksInAttributeConfig(array $config)
+	{
+		if (isset($config['filterChain']))
+		{
+			foreach ($config['filterChain'] as $i => $filter)
 			{
-				foreach ($tagConfig['attributes'] as &$attrConfig)
-				{
-					if (isset($attrConfig['filterChain']))
-					{
-						foreach ($attrConfig['filterChain'] as &$filter)
-						{
-							$filter = $this->convertCallback('attributeFilter', $filter);
-						}
-						unset($filter);
-					}
-
-					if (isset($attrConfig['generator']))
-					{
-						$attrConfig['generator'] = $this->convertCallback(
-							'attributeGenerator',
-							$attrConfig['generator']
-						);
-					}
-				}
-				unset($attrConfig);
+				$config['filterChain'][$i] = $this->convertCallback('attributeFilter', $filter);
 			}
 		}
+
+		if (isset($config['generator']))
+		{
+			$config['generator'] = $this->convertCallback('attributeGenerator', $config['generator']);
+		}
+
+		return $config;
+	}
+
+	/**
+	* Replace callbacks in given tag config array
+	*
+	* @param  array $config Original config
+	* @return array         Modified config
+	*/
+	protected function replaceCallbacksInTagConfig(array $config)
+	{
+		if (isset($config['filterChain']))
+		{
+			foreach ($config['filterChain'] as $i => $filter)
+			{
+				$config['filterChain'][$i] = $this->convertCallback('tagFilter', $filter);
+			}
+		}
+
+		if (isset($config['attributes']))
+		{
+			foreach ($config['attributes'] as $attrName => $attrConfig)
+			{
+				$config['attributes'][$attrName] = $this->replaceCallbacksInAttributeConfig($attrConfig);
+			}
+		}
+
+		return $config;
 	}
 
 	/**
