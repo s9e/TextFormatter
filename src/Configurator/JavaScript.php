@@ -601,43 +601,12 @@ class JavaScript
 	*
 	* Will create entries in $this->callbacks
 	*
-	* @param  string $callbackType   Type of callback: either "attributeFilter",
-	*                                "attributeGenerator" or "tagFilter"
-	* @param  array  $callbackConfig Callback's config
-	* @return Code                   The name of the function representing this callback
+	* @param  string $type   Either one of: "attributeFilter", "attributeGenerator" or "tagFilter"
+	* @param  array  $config Callback's config
+	* @return Code           The name of the function representing this callback
 	*/
-	protected function convertCallback($callbackType, array $callbackConfig)
+	protected function convertCallback($type, array $config)
 	{
-		$callback = $callbackConfig['callback'];
-		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
-
-		if (isset($callbackConfig['js']))
-		{
-			// Use the JavaScript source code that was set in the callback. Put it in parentheses to
-			// ensure we can use it in our "return" statement without worrying about empty lines or
-			// comments at the beginning
-			$jsCallback = '(' . $callbackConfig['js'] . ')';
-		}
-		elseif (is_string($callback))
-		{
-			if (substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
-			{
-				// BuiltInFilters::filterNumber => BuiltInFilters.filterNumber
-				$jsCallback = 'BuiltInFilters.' . substr($callback, 41);
-			}
-			elseif (substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
-			{
-				// Parser::filterAttributes => filterAttributes
-				$jsCallback = substr($callback, 26);
-			}
-		}
-
-		// If there's no JS callback available, return FALSE unconditionally
-		if (!isset($jsCallback))
-		{
-			return new Code('returnFalse');
-		}
-
 		// List of arguments (and their type) for each type of callbacks. MUST be kept in sync with
 		// the invocations in Parser.js
 		$arguments = [
@@ -654,30 +623,67 @@ class JavaScript
 			]
 		];
 
-		// Generate the function that will call the callback with the right signature. The function
-		// name is a hash of its content so we start with the first parenthesis after the function
-		// name in the function definition, which will prepend once we know what it is
-		$js = '(' . implode(',', array_keys($arguments[$callbackType])) . '){'
-		    . 'return ' . $jsCallback . '(' . $this->buildCallbackArguments($params, $arguments[$callbackType]) . ');}';
-
 		// Prepare the function's header
 		$header = "/**\n";
-		foreach ($arguments[$callbackType] as $paramName => $paramType)
+		foreach ($arguments[$type] as $paramName => $paramType)
 		{
 			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
 		}
 		$header .= "*/\n";
 
+		// Generate the function that will call the callback with the right signature. The function
+		// name is a hash of its content so we start with the first parenthesis after the function
+		// name in the function definition, which will prepend once we know what it is
+		$params   = (isset($config['params'])) ? $config['params'] : [];
+		$callback = $this->getJavaScriptCallback($config);
+
+		$js = '(' . implode(',', array_keys($arguments[$type])) . '){return ' . $callback . '(' . $this->buildCallbackArguments($params, $arguments[$type]) . ');}';
+
 		// Compute the function's name
 		$funcName = sprintf('c%08X', crc32($js));
 
 		// Prepend the function header and the fill the missing part of the function definition
-		$js = $header . 'function ' . $funcName . $js;
+		$js = $header . 'function ' . $funcName . $js . "\n";
 
 		// Save the callback
 		$this->callbacks[$funcName] = $js;
 
 		return new Code($funcName);
+	}
+
+	/**
+	* Get the JavaScript callback that corresponds to given config
+	*
+	* @param  array  $callbackConfig
+	* @return string
+	*/
+	protected function getJavaScriptCallback(array $callbackConfig)
+	{
+		if (isset($callbackConfig['js']))
+		{
+			// Use the JavaScript source code that was set in the callback. Put it in parentheses to
+			// ensure we can use it in our "return" statement without worrying about empty lines or
+			// comments at the beginning
+			return '(' . $callbackConfig['js'] . ')';
+		}
+
+		$callback = $callbackConfig['callback'];
+		if (is_string($callback))
+		{
+			if (substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
+			{
+				// BuiltInFilters::filterNumber => BuiltInFilters.filterNumber
+				return 'BuiltInFilters.' . substr($callback, 41);
+			}
+			elseif (substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
+			{
+				// Parser::filterAttributes => filterAttributes
+				return substr($callback, 26);
+			}
+		}
+
+		// If there's no JS callback available, return FALSE unconditionally
+		return 'returnFalse';
 	}
 
 	/**
