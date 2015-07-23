@@ -6,12 +6,21 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 class BBCodeCollection extends NormalizedCollection
 {
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("BBCode '" . $key . "' already exists");
+	}
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("BBCode '" . $key . "' does not exist");
+	}
 	public function normalizeKey($key)
 	{
 		return BBCode::normalizeName($key);
