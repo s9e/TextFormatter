@@ -4,12 +4,11 @@
 * This will always invalidate the original tag, and possibly replace it with the tag that
 * corresponds to the media site
 *
-* @param  {!Tag}     tag      The original tag
-* @param  {*}        tagStack Unused
-* @param  {!Object}  sites    Map of [host => siteId]
-* @return {!boolean}          Always false
+* @param  {!Tag}     tag   The original tag
+* @param  {!Object}  sites Map of [host => siteId]
+* @return {!boolean}       Always false
 */
-function (tag, tagStack, sites)
+function (tag, sites)
 {
 	var tagName;
 
