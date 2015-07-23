@@ -111,7 +111,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox addFromRepository() throws an exception if the BBCode already exists
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage BBCode 'B' already exists
+	* @expectedExceptionMessage 'B' already exists
 	*/
 	public function testAddFromRepositoryBBCodeExists()
 	{
@@ -123,7 +123,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox addFromRepository() throws an exception if the tag already exists
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Tag 'B' already exists
+	* @expectedExceptionMessage 'B' already exists
 	*/
 	public function testAddFromRepositoryTagExists()
 	{
