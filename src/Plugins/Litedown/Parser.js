@@ -731,7 +731,7 @@ function matchImages()
 		return;
 	}
 
-	var m, regexp = /!\[([^\x17\]]+)] ?\(([^\x17 ")]+)(?: "([^\x17"]*)")?\)/g;
+	var m, regexp = /!\[([^\x17\]]*)] ?\(([^\x17 ")]+)(?: "([^\x17"]*)")?\)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
