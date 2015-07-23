@@ -133,6 +133,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addFromRepository() respects onDuplicate() setting on tags
+	*/
+	public function testAddFromRepositoryDuplicateTag()
+	{
+		$this->configurator->tags->onDuplicate('ignore');
+		$this->configurator->tags->add('B')->template = '...';
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->addFromRepository('B');
+		$this->assertEquals('...', $this->configurator->tags['B']->template);
+	}
+
+	/**
 	* @testdox addFromRepository() normalizes the tag's templates
 	*/
 	public function testAddFromRepositoryNormalize()

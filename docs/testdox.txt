@@ -2045,6 +2045,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() throws an exception if the BBCode already exists
  [x] addFromRepository() throws an exception if the tag already exists
+ [x] addFromRepository() respects onDuplicate() setting on tags
  [x] addFromRepository() normalizes the tag's templates
  [x] addFromRepository() checks that the tag is safe before adding it
  [x] addFromRepository() returns the newly-created BBCode
