@@ -245,8 +245,8 @@ function gc()
 function reset(_text)
 {
 	// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
-	_text = _text.replace(/\r\n?/g, "\n", _text);
-	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '', _text);
+	_text = _text.replace(/\r\n?/g, "\n");
+	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '');
 
 	// Clear the logs
 	logger.clear();

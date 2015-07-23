@@ -264,47 +264,44 @@ class JavaScript
 	}
 	protected function replaceCallbacks()
 	{
-		foreach ($this->config['tags'] as &$tagConfig)
-		{
-			if (isset($tagConfig['filterChain']))
-			{
-				foreach ($tagConfig['filterChain'] as &$filter)
-					$filter = $this->convertCallback('tagFilter', $filter);
-				unset($filter);
-			}
-			if (isset($tagConfig['attributes']))
-			{
-				foreach ($tagConfig['attributes'] as &$attrConfig)
-				{
-					if (isset($attrConfig['filterChain']))
-					{
-						foreach ($attrConfig['filterChain'] as &$filter)
-							$filter = $this->convertCallback('attributeFilter', $filter);
-						unset($filter);
-					}
-					if (isset($attrConfig['generator']))
-						$attrConfig['generator'] = $this->convertCallback(
-							'attributeGenerator',
-							$attrConfig['generator']
-						);
-				}
-				unset($attrConfig);
-			}
-		}
+		foreach ($this->config['tags'] as $tagName => $tagConfig)
+			$this->config['tags'][$tagName] = $this->replaceCallbacksInTagConfig($tagConfig);
 	}
-	protected function convertCallback($callbackType, array $callbackConfig)
+	protected function replaceCallbacksInAttributeConfig(array $config)
 	{
-		$callback = $callbackConfig['callback'];
-		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : array();
-		if (isset($callbackConfig['js']))
-			$jsCallback = '(' . $callbackConfig['js'] . ')';
-		elseif (\is_string($callback))
-			if (\substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
-				$jsCallback = 'BuiltInFilters.' . \substr($callback, 41);
-			elseif (\substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
-				$jsCallback = \substr($callback, 26);
-		if (!isset($jsCallback))
-			return new Code('returnFalse');
+		if (isset($config['filterChain']))
+			foreach ($config['filterChain'] as $i => $filter)
+				$config['filterChain'][$i] = $this->convertCallback('attributeFilter', $filter);
+		if (isset($config['generator']))
+			$config['generator'] = $this->convertCallback('attributeGenerator', $config['generator']);
+		return $config;
+	}
+	protected function replaceCallbacksInTagConfig(array $config)
+	{
+		if (isset($config['filterChain']))
+			foreach ($config['filterChain'] as $i => $filter)
+				$config['filterChain'][$i] = $this->convertCallback('tagFilter', $filter);
+		if (isset($config['attributes']))
+			foreach ($config['attributes'] as $attrName => $attrConfig)
+				$config['attributes'][$attrName] = $this->replaceCallbacksInAttributeConfig($attrConfig);
+		return $config;
+	}
+	protected function buildCallbackArguments(array $params, array $localVars)
+	{
+		unset($params['parser']);
+		$localVars += array('logger' => 1, 'openTags' => 1, 'registeredVars' => 1);
+		$args = array();
+		foreach ($params as $k => $v)
+			if (isset($v))
+				$args[] = self::encode($v);
+			elseif (isset($localVars[$k]))
+				$args[] = $k;
+			else
+				$args[] = 'registeredVars[' . \json_encode($k) . ']';
+		return \implode(',', $args);
+	}
+	protected function convertCallback($type, array $config)
+	{
 		$arguments = array(
 			'attributeFilter' => array(
 				'attrValue' => '*',
@@ -318,33 +315,29 @@ class JavaScript
 				'tagConfig' => '!Object'
 			)
 		);
-		$js = '(' . \implode(',', \array_keys($arguments[$callbackType])) . '){return ' . $jsCallback . '(';
-		$sep = '';
-		foreach ($params as $k => $v)
-		{
-			$js .= $sep;
-			$sep = ',';
-			if (isset($v))
-				$js .= self::encode($v);
-			else
-			{
-				if (!isset($arguments[$callbackType][$k])
-				 && $k !== 'logger'
-				 && $k !== 'openTags'
-				 && $k !== 'registeredVars')
-					$k = 'registeredVars[' . \json_encode($k) . ']';
-				$js .= $k;
-			}
-		}
-		$js .= ');}';
 		$header = "/**\n";
-		foreach ($arguments[$callbackType] as $paramName => $paramType)
+		foreach ($arguments[$type] as $paramName => $paramType)
 			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
 		$header .= "*/\n";
+		$params   = (isset($config['params'])) ? $config['params'] : array();
+		$callback = $this->getJavaScriptCallback($config);
+		$js = '(' . \implode(',', \array_keys($arguments[$type])) . '){return ' . $callback . '(' . $this->buildCallbackArguments($params, $arguments[$type]) . ');}';
 		$funcName = \sprintf('c%08X', \crc32($js));
-		$js = $header . 'function ' . $funcName . $js;
+		$js = $header . 'function ' . $funcName . $js . "\n";
 		$this->callbacks[$funcName] = $js;
 		return new Code($funcName);
+	}
+	protected function getJavaScriptCallback(array $callbackConfig)
+	{
+		if (isset($callbackConfig['js']))
+			return '(' . $callbackConfig['js'] . ')';
+		$callback = $callbackConfig['callback'];
+		if (\is_string($callback))
+			if (\substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
+				return 'BuiltInFilters.' . \substr($callback, 41);
+			elseif (\substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
+				return \substr($callback, 26);
+		return 'returnFalse';
 	}
 	protected function setRulesHints()
 	{
