@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\TagFilter;
 use s9e\TextFormatter\Tests\Test;
 
@@ -98,4 +99,23 @@ class TagFilterChainTest extends Test
 			$filterChain->append($filter)
 		);
 	}
+
+	/**
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns true on default tags
+	*/
+	public function testContainsCallback()
+	{
+		$tag = new Tag;
+		$this->assertTrue($tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
+	}
+
+	/**
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns false on empty chains
+	*/
+	public function testContainsCallbackFalse()
+	{
+		$filterChain = new TagFilterChain;
+		$this->assertFalse($filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
+	}
+
 }

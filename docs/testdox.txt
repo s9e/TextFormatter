@@ -391,6 +391,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] PHP string callbacks are normalized to an instance of TagFilter
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
+ [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns true on default tags
+ [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns false on empty chains
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagList
  [x] Tag names are normalized for storage

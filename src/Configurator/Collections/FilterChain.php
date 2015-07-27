@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 abstract class FilterChain extends NormalizedList
 {
@@ -17,6 +18,28 @@ abstract class FilterChain extends NormalizedList
 	* @return string
 	*/
 	abstract protected function getFilterClassName();
+
+	/**
+	* Test whether this filter chain contains given callback
+	*
+	* @param  callable $callback
+	* @return bool
+	*/
+	public function containsCallback(callable $callback)
+	{
+		// Normalize the callback
+		$pc = new ProgrammableCallback($callback);
+		$callback = $pc->getCallback();
+		foreach ($this->items as $filter)
+		{
+			if ($callback === $filter->getCallback())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	/**
 	* Normalize a value into an TagFilter instance
