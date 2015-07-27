@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator\Items\TagFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Collections\FilterChain
 * @covers s9e\TextFormatter\Configurator\Collections\TagFilterChain
 */
 class TagFilterChainTest extends Test
@@ -17,7 +18,7 @@ class TagFilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of TagFilter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testAppendInvalidCallback()
 	{
@@ -28,7 +29,7 @@ class TagFilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of TagFilter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testPrependInvalidCallback()
 	{
@@ -39,7 +40,7 @@ class TagFilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of TagFilter
+	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testAppendUncallableCallback()
 	{
@@ -50,7 +51,7 @@ class TagFilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of TagFilter
+	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testPrependUncallableCallback()
 	{

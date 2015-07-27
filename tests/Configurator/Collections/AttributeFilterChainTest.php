@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Collections\FilterChain
 * @covers s9e\TextFormatter\Configurator\Collections\AttributeFilterChain
 */
 class AttributeFilterChainTest extends Test
@@ -17,7 +18,7 @@ class AttributeFilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of AttributeFilter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
 	*/
 	public function testAppendInvalidCallback()
 	{
@@ -28,7 +29,7 @@ class AttributeFilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of AttributeFilter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
 	*/
 	public function testPrependInvalidCallback()
 	{
@@ -39,7 +40,7 @@ class AttributeFilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of AttributeFilter
+	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
 	*/
 	public function testAppendUncallableCallback()
 	{
@@ -50,7 +51,7 @@ class AttributeFilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of AttributeFilter
+	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
 	*/
 	public function testPrependUncallableCallback()
 	{

@@ -7,16 +7,21 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-
-class AttributeFilterChain extends NormalizedList
+class AttributeFilterChain extends FilterChain
 {
+	/**
+	* {@inheritdoc}
+	*/
+	public function getFilterClassName()
+	{
+		return 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilter';
+	}
+
 	/**
 	* Normalize a value into an AttributeFilter instance
 	*
-	* @param  mixed           $value Either a valid callback or an instance of AttributeFilter
-	* @return AttributeFilter        Normalized filter
+	* @param  mixed $value Either a valid callback or an instance of AttributeFilter
+	* @return \s9e\TextFormatter\Configurator\Items\AttributeFilter Normalized filter
 	*/
 	public function normalizeValue($value)
 	{
@@ -25,16 +30,6 @@ class AttributeFilterChain extends NormalizedList
 			$value = AttributeFilterCollection::getDefaultFilter(substr($value, 1));
 		}
 
-		if ($value instanceof AttributeFilter)
-		{
-			return $value;
-		}
-
-		if (!is_callable($value))
-		{
-			throw new InvalidArgumentException("Filter '" . print_r($value, true) . "' is neither callable nor an instance of AttributeFilter");
-		}
-
-		return new AttributeFilter($value);
+		return parent::normalizeValue($value);
 	}
 }
