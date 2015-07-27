@@ -3808,14 +3808,6 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
 	protected $ignoreUnknownAttributes = \false;
-	protected $tagFilter;
-	public function __construct()
-	{
-		$tag = new Tag;
-		foreach ($tag->filterChain as $filter)
-			if ($filter->getCallback() === 's9e\\TextFormatter\\Parser::filterAttributes')
-				$this->tagFilter = $filter;
-	}
 	abstract protected function getNodes(DOMElement $template);
 	abstract protected function isSafe(Attribute $attribute);
 	public function check(DOMElement $template, Tag $tag)
@@ -3835,12 +3827,11 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		if (!isset($tag->attributes[$attrName]))
 		{
-			$this->handleUnknownAttribute($attrName, $node);
-			return;
+			if ($this->ignoreUnknownAttributes)
+				return;
+			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
 		}
-		if (!isset($this->tagFilter)
-		 || !$tag->filterChain->contains($this->tagFilter)
-		 || !$this->isSafe($tag->attributes[$attrName]))
+		if (!$this->tagFiltersAttributes($tag) || !$this->isSafe($tag->attributes[$attrName]))
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 	}
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
@@ -3901,21 +3892,23 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	}
 	protected function checkVariable(DOMNode $node, $tag, $qname)
 	{
+		$this->checkVariableDeclaration($node, $tag, 'xsl:param[@name="' . $qname . '"]');
+		$this->checkVariableDeclaration($node, $tag, 'xsl:variable[@name="' . $qname . '"]');
+	}
+	protected function checkVariableDeclaration(DOMNode $node, $tag, $query)
+	{
+		$query = 'ancestor-or-self::*/preceding-sibling::' . $query . '[@select]';
 		$xpath = new DOMXPath($node->ownerDocument);
-		foreach (array('xsl:param', 'xsl:variable') as $nodeName)
+		foreach ($xpath->query($query, $node) as $varNode)
 		{
-			$query = 'ancestor-or-self::*/preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
-			foreach ($xpath->query($query, $node) as $varNode)
+			try
 			{
-				try
-				{
-					$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
-				}
-				catch (UnsafeTemplateException $e)
-				{
-					$e->setNode($node);
-					throw $e;
-				}
+				$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
+			}
+			catch (UnsafeTemplateException $e)
+			{
+				$e->setNode($node);
+				throw $e;
 			}
 		}
 	}
@@ -3923,14 +3916,13 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		$this->checkExpression($select, $select->value, $tag);
 	}
-	protected function handleUnknownAttribute($attrName, DOMNode $node)
-	{
-		if (!$this->ignoreUnknownAttributes)
-			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
-	}
 	protected function isExpressionSafe($expr)
 	{
 		return \false;
+	}
+	protected function tagFiltersAttributes(Tag $tag)
+	{
+		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes');
 	}
 }
 
@@ -5915,18 +5907,27 @@ class TagFilter extends Filter
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-class AttributeFilterChain extends NormalizedList
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+abstract class FilterChain extends NormalizedList
 {
+	abstract protected function getFilterClassName();
+	public function containsCallback($callback)
+	{
+		$pc = new ProgrammableCallback($callback);
+		$callback = $pc->getCallback();
+		foreach ($this->items as $filter)
+			if ($callback === $filter->getCallback())
+				return \true;
+		return \false;
+	}
 	public function normalizeValue($value)
 	{
-		if (\is_string($value) && \preg_match('(^#\\w+$)', $value))
-			$value = AttributeFilterCollection::getDefaultFilter(\substr($value, 1));
-		if ($value instanceof AttributeFilter)
+		$className  = $this->getFilterClassName();
+		if ($value instanceof $className)
 			return $value;
 		if (!\is_callable($value))
-			throw new InvalidArgumentException("Filter '" . \print_r($value, \true) . "' is neither callable nor an instance of AttributeFilter");
-		return new AttributeFilter($value);
+			throw new InvalidArgumentException('Filter ' . \var_export($value, \true) . ' is neither callable nor an instance of ' . $className);
+		return new $className($value);
 	}
 }
 
@@ -6036,26 +6037,6 @@ class SchemeList extends NormalizedList
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
-use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\TagFilter;
-class TagFilterChain extends NormalizedList
-{
-	public function normalizeValue($value)
-	{
-		if ($value instanceof TagFilter)
-			return $value;
-		if (!\is_callable($value))
-			throw new InvalidArgumentException('Filter ' . \var_export($value, \true) . ' is neither callable nor an instance of TagFilter');
-		return new TagFilter($value);
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\Collections;
 use s9e\TextFormatter\Configurator\TemplateCheck;
 class TemplateCheckList extends NormalizedList
 {
@@ -6120,5 +6101,39 @@ class UrlFilter extends AttributeFilter
 	public function isSafeAsURL()
 	{
 		return \true;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Collections;
+class AttributeFilterChain extends FilterChain
+{
+	public function getFilterClassName()
+	{
+		return 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilter';
+	}
+	public function normalizeValue($value)
+	{
+		if (\is_string($value) && \preg_match('(^#\\w+$)', $value))
+			$value = AttributeFilterCollection::getDefaultFilter(\substr($value, 1));
+		return parent::normalizeValue($value);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Collections;
+class TagFilterChain extends FilterChain
+{
+	public function getFilterClassName()
+	{
+		return 's9e\\TextFormatter\\Configurator\\Items\\TagFilter';
 	}
 }
