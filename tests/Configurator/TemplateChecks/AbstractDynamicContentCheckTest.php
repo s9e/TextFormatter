@@ -242,7 +242,6 @@ class AbstractDynamicContentCheckTest extends Test
 		$tag = new Tag;
 		$tag->attributes->add('foo')->defaultValue = 1;
 		$tag->filterChain->clear();
-		$tag->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes');
 
 		$check = new DummyContentCheck;
 		$check->check($node, $tag);
