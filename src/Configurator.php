@@ -3807,6 +3807,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
 abstract class AbstractDynamicContentCheck extends TemplateCheck
 {
+	protected $ignoreUnknownAttributes = \false;
 	protected $tagFilter;
 	public function __construct()
 	{
@@ -3822,10 +3823,21 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		foreach ($this->getNodes($template) as $node)
 			$this->checkNode($node, $tag);
 	}
+	public function detectUnknownAttributes()
+	{
+		$this->ignoreUnknownAttributes = \false;
+	}
+	public function ignoreUnknownAttributes()
+	{
+		$this->ignoreUnknownAttributes = \true;
+	}
 	protected function checkAttribute(DOMNode $node, Tag $tag, $attrName)
 	{
 		if (!isset($tag->attributes[$attrName]))
-			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
+		{
+			$this->handleUnknownAttribute($attrName, $node);
+			return;
+		}
 		if (!isset($this->tagFilter)
 		 || !$tag->filterChain->contains($this->tagFilter)
 		 || !$this->isSafe($tag->attributes[$attrName]))
@@ -3910,6 +3922,11 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	protected function checkSelectNode(DOMAttr $select, Tag $tag)
 	{
 		$this->checkExpression($select, $select->value, $tag);
+	}
+	protected function handleUnknownAttribute($attrName, DOMNode $node)
+	{
+		if (!$this->ignoreUnknownAttributes)
+			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
 	}
 	protected function isExpressionSafe($expr)
 	{
