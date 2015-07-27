@@ -98,7 +98,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 
 		// Test whether the attribute is safe to be used in this content type
-		if (!$this->tagFiltersAttribute($tag) || !$this->isSafe($tag->attributes[$attrName]))
+		if (!$this->tagFiltersAttributes($tag) || !$this->isSafe($tag->attributes[$attrName]))
 		{
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 		}
@@ -325,7 +325,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	* @param  Tag  $tag
 	* @return bool
 	*/
-	protected function tagFiltersAttribute(Tag $tag)
+	protected function tagFiltersAttributes(Tag $tag)
 	{
 		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes');
 	}
