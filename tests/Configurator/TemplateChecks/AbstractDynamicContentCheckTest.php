@@ -52,6 +52,33 @@ class AbstractDynamicContentCheckTest extends Test
 	}
 
 	/**
+	* @testdox Variables pointing to an unknown attribute are ignored if ignoreUnknownAttributes() is called
+	*/
+	public function testVarUnknownIgnored()
+	{
+		$node = $this->loadTemplate('<xsl:variable name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
+
+		$check = new DummyContentCheck;
+		$check->ignoreUnknownAttributes();
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Variables pointing to an unknown attribute are detected if detectUnknownAttributes() is called after ignoreUnknownAttributes()
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
+	*/
+	public function testVarUnknownDetected()
+	{
+		$node = $this->loadTemplate('<xsl:variable name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
+
+		$check = new DummyContentCheck;
+		$check->ignoreUnknownAttributes();
+		$check->detectUnknownAttributes();
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Variables pointing to a safe attribute are safe
 	*/
 	public function testVarSafe()

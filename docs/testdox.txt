@@ -1307,6 +1307,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Stylesheet parameters are considered safe
  [x] Variables pointing to an unknown attribute are unsafe
+ [x] Variables pointing to an unknown attribute are ignored if ignoreUnknownAttributes() is called
+ [x] Variables pointing to an unknown attribute are detected if detectUnknownAttributes() is called after ignoreUnknownAttributes()
  [x] Variables pointing to a safe attribute are safe
  [x] Variables pointing to an unsafe attribute are unsafe
  [x] Variables pointing to a safe variable are safe
