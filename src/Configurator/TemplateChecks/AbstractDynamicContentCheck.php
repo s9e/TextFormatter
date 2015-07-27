@@ -112,9 +112,12 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		// Test whether the attribute exists
 		if (!isset($tag->attributes[$attrName]))
 		{
-			$this->handleUnknownAttribute($attrName, $node);
+			if ($this->ignoreUnknownAttributes)
+			{
+				return;
+			}
 
-			return;
+			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
 		}
 
 		// Test whether the attribute is safe to be used in this content type
@@ -320,21 +323,6 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	protected function checkSelectNode(DOMAttr $select, Tag $tag)
 	{
 		$this->checkExpression($select, $select->value, $tag);
-	}
-
-	/**
-	* Handle an unknown attribute used in given node
-	*
-	* @param  string  $attrName
-	* @param  DOMNode $node
-	* @return void
-	*/
-	protected function handleUnknownAttribute($attrName, DOMNode $node)
-	{
-		if (!$this->ignoreUnknownAttributes)
-		{
-			throw new UnsafeTemplateException("Cannot assess the safety of unknown attribute '" . $attrName . "'", $node);
-		}
 	}
 
 	/**
