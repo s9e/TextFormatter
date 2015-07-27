@@ -164,6 +164,7 @@ function init()
 function matchBlockLevelMarkup()
 {
 	var boundaries   = [],
+		codeFence,
 		codeIndent   = 4,
 		codeTag,
 		lineIsEmpty  = true,
@@ -182,13 +183,15 @@ function matchBlockLevelMarkup()
 		listIndex,
 		maxIndent,
 		minIndent,
-		quoteDepth;
+		quoteDepth,
+		tagPos,
+		tagLen;
 
 	// Capture all the lines at once so that we can overwrite newlines safely, without preventing
 	// further matches
 	var matches = [],
 		m,
-		regexp = /^(?:(?=[-*+\d \t>`#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+)?)?/gm;
+		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=.))?[ \t]*(#+[ \t]*(?=.)|```+.*|~~~+.*)?)?/gm;
 	while (m = regexp.exec(text))
 	{
 		matches.push(m);
@@ -286,7 +289,7 @@ function matchBlockLevelMarkup()
 		}
 
 		// Test whether we're out of a code block
-		if (indentWidth < codeIndent && codeTag && !lineIsEmpty)
+		if (codeTag && !codeFence && indentWidth < codeIndent && !lineIsEmpty)
 		{
 			newContext = true;
 		}
@@ -305,6 +308,7 @@ function matchBlockLevelMarkup()
 				endTag.pairWith(codeTag);
 				endTag.setSortPriority(-1);
 				codeTag = null;
+				codeFence = null;
 			}
 
 			// Close all the lists
@@ -397,8 +401,8 @@ function matchBlockLevelMarkup()
 				breakParagraph = true;
 
 				// Compute the position and amount of text consumed by the item tag
-				var tagPos = matchPos + ignoreLen + indentPos,
-					tagLen = m[4].length;
+				tagPos = matchPos + ignoreLen + indentPos
+				tagLen = m[4].length;
 
 				// Create a LI tag that consumes its markup
 				var itemTag = addStartTag('LI', tagPos, tagLen);
@@ -496,6 +500,42 @@ function matchBlockLevelMarkup()
 				if (continuation)
 				{
 					breakParagraph = true;
+				}
+			}
+			// Code fence
+			else if (m[5].charAt(0) === '`' || m[5].charAt(0) === '~')
+			{
+				tagPos = matchPos + ignoreLen;
+				tagLen = lfPos - tagPos;
+
+				if (m[5].charAt(0) === codeFence)
+				{
+					endTag = addEndTag('CODE', tagPos, tagLen);
+					endTag.pairWith(codeTag);
+					endTag.setSortPriority(-1);
+
+					addIgnoreTag(textBoundary, tagPos - textBoundary);
+
+					// Overwrite the whole block
+					overwrite(codeTag.getPos(), tagPos + tagLen);
+					codeTag = null;
+					codeFence = null;
+				}
+				else if (!codeTag)
+				{
+					// Create code block
+					codeTag   = addStartTag('CODE', tagPos, tagLen);
+					codeFence = m[5].charAt(0);
+
+					// Ignore the next character, which should be a newline
+					addIgnoreTag(tagPos + tagLen, 1);
+
+					// Add the language if present, e.g. ```php
+					var lang = m[5].replace(/^[`~]*/, '');
+					if (lang !== '')
+					{
+						codeTag.setAttribute('lang', lang);
+					}
 				}
 			}
 		}

@@ -1170,6 +1170,85 @@ class ParserTest extends Test
 					'<p>bar</p>  </r>'
 				]
 			],
+			// Fenced code blocks
+			[
+				[
+					'```',
+					'code',
+					'```'
+				],
+				[
+					'<r><CODE><s>```</s><i>',
+					'</i>code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'~~~',
+					'code',
+					'~~~'
+				],
+				[
+					'<r><CODE><s>~~~</s><i>',
+					'</i>code<i>',
+					'</i><e>~~~</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'~~~',
+					'```',
+					'code',
+					'```',
+					'~~~'
+				],
+				[
+					'<r><CODE><s>~~~</s><i>',
+					'</i>```',
+					'code',
+					'```<i>',
+					'</i><e>~~~</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'```php',
+					'code',
+					'```'
+				],
+				[
+					'<r><CODE lang="php"><s>```php</s><i>',
+					'</i>code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'> ```',
+					'> code',
+					'> ```'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><CODE><s>```</s><i>',
+					'&gt; </i>code<i>',
+					'&gt; </i><e>```</e></CODE></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'    code',
+					'```',
+					'more code',
+					'```'
+				],
+				[
+					'<r><i>    </i><CODE>code</CODE>',
+					'<CODE><s>```</s><i>',
+					'</i>more code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
 		]);
 	}
 

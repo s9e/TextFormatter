@@ -195,6 +195,7 @@ class Parser extends ParserBase
 	protected function matchBlockLevelMarkup()
 	{
 		$boundaries   = [];
+		$codeFence    = null;
 		$codeIndent   = 4;
 		$codeTag      = null;
 		$lineIsEmpty  = true;
@@ -206,7 +207,7 @@ class Parser extends ParserBase
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=.))?[ \\t]*(#+[ \\t]*(?=.)|```+.*|~~~+.*)?)?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
@@ -287,7 +288,7 @@ class Parser extends ParserBase
 			}
 
 			// Test whether we're out of a code block
-			if ($indentWidth < $codeIndent && isset($codeTag) && !$lineIsEmpty)
+			if (isset($codeTag) && !$codeFence && $indentWidth < $codeIndent && !$lineIsEmpty)
 			{
 				$newContext = true;
 			}
@@ -306,6 +307,7 @@ class Parser extends ParserBase
 					$endTag->pairWith($codeTag);
 					$endTag->setSortPriority(-1);
 					$codeTag = null;
+					$codeFence = null;
 				}
 
 				// Close all the lists
@@ -502,8 +504,41 @@ class Parser extends ParserBase
 					}
 				}
 				// Code fence
-				elseif ($m[5][0][0] === '`')
+				elseif ($m[5][0][0] === '`' || $m[5][0][0] === '~')
 				{
+					$tagPos = $matchPos + $ignoreLen;
+					$tagLen = $lfPos - $tagPos;
+
+					if ($m[5][0][0] === $codeFence)
+					{
+
+						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
+						$endTag->pairWith($codeTag);
+						$endTag->setSortPriority(-1);
+
+						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
+
+						// Overwrite the whole block
+						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen);
+						$codeTag = null;
+						$codeFence = null;
+					}
+					elseif (!isset($codeTag))
+					{
+						// Create code block
+						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
+						$codeFence = $m[5][0][0];
+
+						// Ignore the next character, which should be a newline
+						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
+
+						// Add the language if present, e.g. ```php
+						$lang = ltrim($m[5][0], '`~');
+						if ($lang !== '')
+						{
+							$codeTag->setAttribute('lang', $lang);
+						}
+					}
 				}
 			}
 			elseif (!empty($m[3][0]) && !$listsCnt)

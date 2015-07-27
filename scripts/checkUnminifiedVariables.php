@@ -31,6 +31,7 @@ foreach (range('a', 'z') as $c)
 foreach (range('A', 'Z') as $c)
 {
 	$knownVars[$c . 'a'] = 1;
+	$knownVars[$c . 'b'] = 1;
 }
 
 // Browser stuff
