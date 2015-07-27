@@ -287,28 +287,36 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	*/
 	protected function checkVariable(DOMNode $node, $tag, $qname)
 	{
-		$xpath = new DOMXPath($node->ownerDocument);
-
 		// Test whether this variable comes from a previous xsl:param or xsl:variable element
-		foreach (['xsl:param', 'xsl:variable'] as $nodeName)
+		$this->checkVariableDeclaration($node, $tag, 'xsl:param[@name="' . $qname . '"]');
+		$this->checkVariableDeclaration($node, $tag, 'xsl:variable[@name="' . $qname . '"]');
+	}
+
+	/**
+	* Check whether a variable declaration is safe in context
+	*
+	* @param  DOMNode $node  Context node
+	* @param  Tag     $tag   Source tag
+	* @param  string  $query XPath query
+	* @return void
+	*/
+	protected function checkVariableDeclaration(DOMNode $node, $tag, $query)
+	{
+		$query = 'ancestor-or-self::*/preceding-sibling::' . $query . '[@select]';
+		$xpath = new DOMXPath($node->ownerDocument);
+		foreach ($xpath->query($query, $node) as $varNode)
 		{
-			$query = 'ancestor-or-self::*/'
-				   . 'preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
-
-			foreach ($xpath->query($query, $node) as $varNode)
+			// Intercept the UnsafeTemplateException and change the node to the one we're
+			// really checking before rethrowing it
+			try
 			{
-				// Intercept the UnsafeTemplateException and change the node to the one we're
-				// really checking before rethrowing it
-				try
-				{
-					$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
-				}
-				catch (UnsafeTemplateException $e)
-				{
-					$e->setNode($node);
+				$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
+			}
+			catch (UnsafeTemplateException $e)
+			{
+				$e->setNode($node);
 
-					throw $e;
-				}
+				throw $e;
 			}
 		}
 	}
