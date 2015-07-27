@@ -509,7 +509,7 @@ class Parser extends ParserBase
 					$tagPos = $matchPos + $ignoreLen;
 					$tagLen = $lfPos - $tagPos;
 
-					if ($m[5][0][0] === $codeFence)
+					if (isset($codeTag) && $m[5][0][0] === $codeFence)
 					{
 
 						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);

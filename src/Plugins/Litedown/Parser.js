@@ -508,7 +508,7 @@ function matchBlockLevelMarkup()
 				tagPos = matchPos + ignoreLen;
 				tagLen = lfPos - tagPos;
 
-				if (m[5].charAt(0) === codeFence)
+				if (codeTag && m[5].charAt(0) === codeFence)
 				{
 					endTag = addEndTag('CODE', tagPos, tagLen);
 					endTag.pairWith(codeTag);
