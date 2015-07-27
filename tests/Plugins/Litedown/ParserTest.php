@@ -1132,6 +1132,18 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'    first line  ',
+					'',
+					'outside code'
+				],
+				[
+					'<r><i>    </i><CODE>first line  </CODE>',
+					'',
+					'<p>outside code</p></r>'
+				],
+			],
+			[
+				[
 					' * first item  ',
 					'   still the first item  ',
 					' * second item',
