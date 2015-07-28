@@ -31,6 +31,7 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
+		$this->parseAliases($text);
 		$this->parseAsciiEmoji($text);
 		$this->parseUnicodeEmoji($text);
 	}
@@ -85,6 +86,40 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Parse aliases in given text
+	*
+	* @param  string $text Original text
+	* @return void
+	*/
+	protected function parseAliases($text)
+	{
+		if (empty($this->config['aliases']))
+		{
+			return;
+		}
+
+		$matchPos = 0;
+		if (isset($this->config['aliasesQuickMatch']))
+		{
+			$matchPos = strpos($text, $this->config['aliasesQuickMatch']);
+			if ($matchPos === false)
+			{
+				return;
+			}
+		}
+
+		preg_match_all($this->config['aliasesRegexp'], $text, $matches, PREG_OFFSET_CAPTURE, $matchPos);
+		foreach ($matches[0] as list($alias, $tagPos))
+		{
+			if (isset($this->config['aliases'][$alias]))
+			{
+				$emoji = $this->config['aliases'][$alias];
+				$this->addTag($tagPos, strlen($alias), $this->getSequence($emoji));
+			}
+		}
+	}
+
+	/**
 	* Parse ASCII emoji in given text
 	*
 	* @param  string $text Original text
@@ -98,12 +133,12 @@ class Parser extends ParserBase
 			return;
 		}
 		preg_match_all($this->asciiRegexp, $text, $matches, PREG_OFFSET_CAPTURE, $matchPos);
-		foreach ($matches[0] as $m)
+		foreach ($matches[0] as list($shortName, $tagPos))
 		{
-			$shortName = substr($m[0], 1);
+			$shortName = substr($shortName, 1);
 			if (isset(self::$map[$shortName]))
 			{
-				$this->addTag($m[1], 1 + strlen($m[0]), self::$map[$shortName]);
+				$this->addTag($tagPos, 2 + strlen($shortName), self::$map[$shortName]);
 			}
 		}
 	}
@@ -121,9 +156,9 @@ class Parser extends ParserBase
 			return;
 		}
 		preg_match_all($this->unicodeRegexp, $text, $matches, PREG_OFFSET_CAPTURE);
-		foreach ($matches[0] as $m)
+		foreach ($matches[0] as list($emoji, $tagPos))
 		{
-			$this->addTag($m[1], strlen($m[0]), $this->getSequence($m[0]));
+			$this->addTag($tagPos, strlen($emoji), $this->getSequence($emoji));
 		}
 	}
 }

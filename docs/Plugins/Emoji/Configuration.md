@@ -63,3 +63,22 @@ echo $html;
 ```html
 Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/svg/1f600.svg">
 ```
+
+### Add aliases to emoji
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Emoji->addAlias(':D', '😀');
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = 'Hello world :D';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+Hello world <img alt=":D" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/1f600.png">
+```

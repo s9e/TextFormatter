@@ -7,8 +7,10 @@
 */
 namespace s9e\TextFormatter\Plugins\Emoji;
 
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
@@ -17,6 +19,11 @@ class Configurator extends ConfiguratorBase
 	* @var string Name of the attribute used by this plugin
 	*/
 	protected $attrName = 'seq';
+
+	/**
+	* @var array Associative array of alias => emoji
+	*/
+	protected $aliases = [];
 
 	/**
 	* @var bool Whether to force the image size in the img tag
@@ -63,6 +70,18 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* Add an emoji alias
+	*
+	* @param  string $alias
+	* @param  string $emoji
+	* @return void
+	*/
+	public function addAlias($alias, $emoji)
+	{
+		$this->aliases[$alias] = $emoji;
+	}
+
+	/**
 	* Force the size of the image to be set in the img element
 	*
 	* @return void
@@ -74,6 +93,17 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* Remove an emoji alias
+	*
+	* @param  string $alias
+	* @return void
+	*/
+	public function removeAlias($alias)
+	{
+		unset($this->aliases[$alias]);
+	}
+
+	/**
 	* Omit the size of the image in the img element
 	*
 	* @return void
@@ -82,6 +112,16 @@ class Configurator extends ConfiguratorBase
 	{
 		$this->forceImageSize = false;
 		$this->resetTemplate();
+	}
+
+	/**
+	* Get all emoji aliases
+	*
+	* @return array
+	*/
+	public function getAliases()
+	{
+		return $this->aliases;
 	}
 
 	/**
@@ -145,10 +185,27 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		return [
+		$config = [
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
 		];
+
+		if (!empty($this->aliases))
+		{
+			$aliases = array_keys($this->aliases);
+			$regexp  = '/' . RegexpBuilder::fromList($aliases) . '/';
+
+			$config['aliases']       = $this->aliases;
+			$config['aliasesRegexp'] = new Regexp($regexp, true);
+
+			$quickMatch = ConfigHelper::generateQuickMatchFromList($aliases);
+			if ($quickMatch !== false)
+			{
+				$config['aliasesQuickMatch'] = $quickMatch;
+			}
+		}
+
+		return $config;
 	}
 
 	/**

@@ -2146,6 +2146,11 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
+ [x] The config array contains no entry for aliases if there are none
+ [x] The config array contains aliases if applicable
+ [x] The config array contains a regexp for aliases if applicable
+ [x] The config array contains a quickMatch for aliases if applicable
+ [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Can use the EmojiOne set
  [x] Can use the Twemoji set
  [x] Uses Twemoji by default
@@ -2163,6 +2168,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] Twemoji uses 36x36 assets if the image size is 22
  [x] Twemoji uses 36x36 assets if the image size is 36
  [x] Twemoji uses 72x72 assets if the image size is 72
+ [x] removeAlias() removes given alias
 
 s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests

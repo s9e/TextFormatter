@@ -75,6 +75,75 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The config array contains no entry for aliases if there are none
+	*/
+	public function testConfigNoAliases()
+	{
+		$plugin = $this->configurator->Emoji;
+		$config = $plugin->asConfig();
+
+		$this->assertArrayNotHasKey('aliases',           $config);
+		$this->assertArrayNotHasKey('aliasesQuickMatch', $config);
+		$this->assertArrayNotHasKey('aliasesRegexp',     $config);
+	}
+
+	/**
+	* @testdox The config array contains aliases if applicable
+	*/
+	public function testConfigAliases()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('aliases', $config);
+		$this->assertSame([':)' => "\xF0\x9F\x98\x80"], $config['aliases']);
+	}
+
+	/**
+	* @testdox The config array contains a regexp for aliases if applicable
+	*/
+	public function testConfigAliasesRegexp()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('aliasesRegexp', $config);
+		$this->assertEquals('/:D/', $config['aliasesRegexp']);
+	}
+
+	/**
+	* @testdox The config array contains a quickMatch for aliases if applicable
+	*/
+	public function testConfigAliasesQuickMatch()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('aliasesQuickMatch', $config);
+		$this->assertEquals(':D', $config['aliasesQuickMatch']);
+	}
+
+	/**
+	* @testdox The config array does not contain a quickMatch for aliases if impossible
+	*/
+	public function testConfigAliasesNoQuickMatch()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$plugin->addAlias(';)', "\xF0\x9F\x98\x80");
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayNotHasKey('aliasesQuickMatch', $config);
+	}
+
+	/**
 	* @testdox Can use the EmojiOne set
 	*/
 	public function testTemplateEmojiOne()
@@ -242,5 +311,22 @@ class ConfiguratorTest extends Test
 		$this->configurator->Emoji->forceImageSize();
 		$this->configurator->Emoji->setImageSize(72);
 		$this->assertContains('72x72', (string) $this->configurator->tags['EMOJI']->template);
+	}
+
+	/**
+	* @testdox removeAlias() removes given alias
+	*/
+	public function testRemoveAlias()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$plugin->addAlias('XD', "\xF0\x9F\x98\x86");
+		$plugin->removeAlias(':)');
+
+		$this->assertEquals(
+			[':D' => "\xF0\x9F\x98\x80", 'XD' => "\xF0\x9F\x98\x86"],
+			$plugin->getAliases()
+		);
 	}
 }
