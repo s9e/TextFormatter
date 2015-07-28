@@ -1110,8 +1110,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result
- [x] Caching is disabled by default
- [x] Caching is enabled if cacheDir is set and the minifier implements getCacheDifferentiator()
+ [x] Caching is disabled if cacheDir is not set
+ [x] Caching is enabled if cacheDir is set
  [x] get() returns the cached result if applicable
  [x] get() rethrows exception thrown during minification by default
  [x] get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE

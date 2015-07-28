@@ -15,6 +15,14 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 class Noop extends Minifier
 {
 	/**
+	* {@inheritdoc}
+	*/
+	public function getCacheDifferentiator()
+	{
+		return uniqid();
+	}
+
+	/**
 	* No-op method, output is the same as input
 	*
 	* @param  string $src JavaScript source

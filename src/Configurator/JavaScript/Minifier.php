@@ -22,6 +22,21 @@ abstract class Minifier
 	public $keepGoing = false;
 
 	/**
+	* Return a value that uniquely identify this minifier's configuration
+	*
+	* @return string Any unique value
+	*/
+	abstract public function getCacheDifferentiator();
+
+	/**
+	* Minify given JavaScript source
+	*
+	* @param  string $src JavaScript source
+	* @return string      Minified source
+	*/
+	abstract public function minify($src);
+
+	/**
 	* Minify given JavaScript source and cache the result if applicable
 	*
 	* @param  string $src JavaScript source
@@ -31,31 +46,7 @@ abstract class Minifier
 	{
 		try
 		{
-			// Check the cache for a hit, if applicable
-			if (isset($this->cacheDir))
-			{
-				$differentiator = $this->getCacheDifferentiator();
-
-				if ($differentiator !== false)
-				{
-					$key       = sha1(serialize([get_class($this), $differentiator, $src]));
-					$cacheFile = $this->cacheDir . '/minifier.' . $key . '.js';
-
-					if (file_exists($cacheFile))
-					{
-						return file_get_contents($cacheFile);
-					}
-				}
-			}
-
-			// Minify the source
-			$src = $this->minify($src);
-
-			// Cache the result if applicable
-			if (isset($cacheFile))
-			{
-				file_put_contents($cacheFile, $src);
-			}
+			return (isset($this->cacheDir)) ? $this->getFromCache($src) : $this->minify($src);
 		}
 		catch (Exception $e)
 		{
@@ -68,21 +59,24 @@ abstract class Minifier
 		return $src;
 	}
 
-	/**
-	* Return a value that uniquely identify this minifier's configuration
-	*
-	* @return integer|string|false Any value, or FALSE to disable caching
-	*/
-	public function getCacheDifferentiator()
-	{
-		return false;
-	}
 
 	/**
-	* Minify given JavaScript source
+	* Get the minified source from cache, or minify and cache the result
 	*
 	* @param  string $src JavaScript source
 	* @return string      Minified source
 	*/
-	abstract public function minify($src);
+	protected function getFromCache($src)
+	{
+		$differentiator = $this->getCacheDifferentiator();
+		$key            = sha1(serialize([get_class($this), $differentiator, $src]));
+		$cacheFile      = $this->cacheDir . '/minifier.' . $key . '.js';
+
+		if (!file_exists($cacheFile))
+		{
+			file_put_contents($cacheFile, $this->minify($src));
+		}
+
+		return file_get_contents($cacheFile);
+	}
 }

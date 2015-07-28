@@ -36,7 +36,7 @@ class MinifierTest extends Test
 
 		$stub = $this->getMock(
 			's9e\\TextFormatter\\Configurator\\JavaScript\\Minifier',
-			['minify']
+			['getCacheDifferentiator', 'minify']
 		);
 		$stub->expects($this->once())
 		     ->method('minify')
@@ -47,12 +47,11 @@ class MinifierTest extends Test
 	}
 
 	/**
-	* @testdox Caching is disabled by default
+	* @testdox Caching is disabled if cacheDir is not set
 	*/
 	public function testNoCache()
 	{
 		$minifier = new DummyNonCachingMinifier;
-		$minifier->cacheDir = sys_get_temp_dir();
 
 		$minifier->get("alert('Hello world')");
 
@@ -60,7 +59,7 @@ class MinifierTest extends Test
 	}
 
 	/**
-	* @testdox Caching is enabled if cacheDir is set and the minifier implements getCacheDifferentiator()
+	* @testdox Caching is enabled if cacheDir is set
 	*/
 	public function testCache()
 	{
@@ -122,6 +121,11 @@ class DummyNonCachingMinifier extends Minifier
 	{
 		return $src;
 	}
+
+	public function getCacheDifferentiator()
+	{
+		return 'foo';
+	}
 }
 
 class DummyCachingMinifier extends Minifier
@@ -142,5 +146,10 @@ class DummyThrowingMinifier extends Minifier
 	public function minify($src)
 	{
 		throw new Exception('foo');
+	}
+
+	public function getCacheDifferentiator()
+	{
+		return 'foo';
 	}
 }
