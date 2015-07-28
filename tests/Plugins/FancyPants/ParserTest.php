@@ -144,6 +144,18 @@ class ParserTest extends Test
 				'<r>3<FP char="″">"</FP> <FP char="×">x</FP> 3<FP char="″">"</FP></r>'
 			],
 			[
+				'3"x3"',
+				'<r>3<FP char="″">"</FP><FP char="×">x</FP>3<FP char="″">"</FP></r>'
+			],
+			[
+				"3' x 3'",
+				'<r>3<FP char="′">\'</FP> <FP char="×">x</FP> 3<FP char="′">\'</FP></r>'
+			],
+			[
+				"3'x3'",
+				'<r>3<FP char="′">\'</FP><FP char="×">x</FP>3<FP char="′">\'</FP></r>'
+			],
+			[
 				"O'Connor's pants",
 				'<r>O<FP char="’">\'</FP>Connor<FP char="’">\'</FP>s pants</r>'
 			]
