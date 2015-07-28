@@ -1,21 +1,22 @@
 #!/bin/bash
 DIR="$(dirname $(dirname $(realpath $0)))/src"
 TARGET="$(dirname $(dirname $(dirname $(realpath $0))))/s9e.github.io/TextFormatter/api"
-CONF="<?php return new Sami\\Sami('$DIR',['build_dir'=>'$TARGET','cache_dir'=>__DIR__]);"
+CONF="<?php return new Sami\\Sami('$DIR',['build_dir'=>'$TARGET','cache_dir'=>__DIR__.'/sami']);"
+TMP_DIR="$(dirname $TARGET)/.cache"
 
-if [ ! -d /tmp/sami ]
+if [ ! -d "$TMP_DIR/sami" ]
 then
-	mkdir /tmp/sami
+	mkdir -p "$TMP_DIR/sami"
 fi
-echo "$CONF" > /tmp/sami/conf.php
 
-cd "$(dirname $(realpath $0))"
+cd "$TMP_DIR"
 if [ ! -f ./sami.phar ];
 then
 	wget http://get.sensiolabs.org/sami.phar
 fi
 
-php sami.phar update /tmp/sami/conf.php -v
+echo "$CONF" > conf.php
+php sami.phar update conf.php -v
 
 cd "$DIR"
 COMMIT_MSG="Updated API docs to $(git rev-parse HEAD)"
