@@ -93,8 +93,8 @@ function parseQuotePairs(q, regexp, leftQuote, rightQuote)
 	var m;
 	while (m = regexp.exec(text))
 	{
-		var left  = addTag(m['index'] + m[0].indexOf(q), 1, leftQuote),
-			right = addTag(m['index'] + m[0].length - 1, 1, rightQuote);
+		var left  = addTag(+m['index'] + m[0].indexOf(q), 1, leftQuote),
+			right = addTag(+m['index'] + m[0].length - 1, 1, rightQuote);
 
 		// Cascade left tag's invalidation to the right so that if we skip the left quote,
 		// the right quote is left untouched
@@ -118,7 +118,7 @@ function parseSingleQuotes(text)
 	var m, regexp = /[a-z]'|(?:^|\s)'(?=[a-z]|[0-9]{2})/gi;
 	while (m = regexp.exec(text))
 	{
-		var tag = addTag(m['index'] + m[0].indexOf("'"), 1, "\u2019");
+		var tag = addTag(+m['index'] + m[0].indexOf("'"), 1, "\u2019");
 
 		// Give this tag a worse priority than default so that quote pairs take precedence
 		tag.setSortPriority(10);
@@ -136,7 +136,7 @@ function parseSymbolsAfterDigits(text)
 		// Test for a multiply sign at the end
 		if (m[0].charAt(m[0].length - 1) === 'x')
 		{
-			addTag(m['index'] + m[0].length - 1, 1, "\u00d7");
+			addTag(+m['index'] + m[0].length - 1, 1, "\u00d7");
 		}
 
 		// Test for a apostrophe/prime right after the digit
@@ -154,7 +154,7 @@ function parseSymbolsAfterDigits(text)
 				chr = (c === "'") ? "\u2032" : "\u2033";
 			}
 
-			addTag(1 + m['index'], 1, chr);
+			addTag(+m['index'] + 1, 1, chr);
 		}
 	}
 }

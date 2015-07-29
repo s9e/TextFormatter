@@ -202,7 +202,7 @@ class Parser extends ParserBase
 					$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
 				}
 
-				$this->addTag(1 + $m[1], 1, $chr);
+				$this->addTag($m[1] + 1, 1, $chr);
 			}
 		}
 	}
