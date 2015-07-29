@@ -67,30 +67,38 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Add a fancy replacement tag
+	*
+	* @param  integer $tagPos
+	* @param  integer $tagLen
+	* @param  string  $chr
+	* @return \s9e\TextFormatter\Parser\Tag
+	*/
+	protected function addTag($tagPos, $tagLen, $chr)
+	{
+		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen);
+		$tag->setAttribute($this->config['attrName'], $chr);
+
+		return $tag;
+	}
+
+	/**
 	* Parse dashes and ellipses
 	*
 	* @return void
 	*/
 	protected function parseDashesAndEllipses()
 	{
-		preg_match_all(
-			'/---?|\\.\\.\\./S',
-			$this->text,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
 		$chrs = [
 			'--'  => "\xE2\x80\x93",
 			'---' => "\xE2\x80\x94",
 			'...' => "\xE2\x80\xA6"
 		];
+		$regexp = '/---?|\\.\\.\\./S';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$pos = $m[1];
-			$len = strlen($m[0]);
-			$chr = $chrs[$m[0]];
-
-			$this->parser->addSelfClosingTag($this->config['tagName'], $pos, $len)->setAttribute($this->config['attrName'], $chr);
+			$this->addTag($m[1], strlen($m[0]), $chrs[$m[0]]);
 		}
 	}
 
@@ -121,11 +129,8 @@ class Parser extends ParserBase
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$left  = $this->parser->addSelfClosingTag($this->config['tagName'], $m[1], 1);
-			$right = $this->parser->addSelfClosingTag($this->config['tagName'], $m[1] + strlen($m[0]) - 1, 1);
-
-			$left->setAttribute($this->config['attrName'], $leftQuote);
-			$right->setAttribute($this->config['attrName'], $rightQuote);
+			$left  = $this->addTag($m[1], 1, $leftQuote);
+			$right = $this->addTag($m[1] + strlen($m[0]) - 1, 1, $rightQuote);
 
 			// Cascade left tag's invalidation to the right so that if we skip the left quote,
 			// the right quote is left untouched
@@ -154,17 +159,11 @@ class Parser extends ParserBase
 	*/
 	protected function parseSingleQuotes()
 	{
-		preg_match_all(
-			"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
-			$this->text,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
-
+		$regexp = "/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS";
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $m[1], 1);
-			$tag->setAttribute($this->config['attrName'], "\xE2\x80\x99");
+			$tag = $this->addTag($m[1], 1, "\xE2\x80\x99");
 
 			// Give this tag a worse priority than default so that quote pairs take precedence
 			$tag->setSortPriority(10);
@@ -178,30 +177,20 @@ class Parser extends ParserBase
 	*/
 	protected function parseSymbolsAfterDigits()
 	{
-		preg_match_all(
-			'/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
-			$this->text,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
-
+		$regexp = '/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
 			// Test for a multiply sign at the end
 			if (substr($m[0], -1) === 'x')
 			{
-				$pos = $m[1] + strlen($m[0]) - 1;
-				$chr = "\xC3\x97";
-
-				$this->parser->addSelfClosingTag($this->config['tagName'], $pos, 1)->setAttribute($this->config['attrName'], $chr);
+				$this->addTag($m[1] + strlen($m[0]) - 1, 1, "\xC3\x97");
 			}
 
 			// Test for a apostrophe/prime right after the digit
 			$c = $m[0][1];
 			if ($c === "'" || $c === '"')
 			{
-				$pos = 1 + $m[1];
-
 				if (substr($m[0], 1, 2) === "'s")
 				{
 					// 80's -- use an apostrophe
@@ -213,7 +202,7 @@ class Parser extends ParserBase
 					$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
 				}
 
-				$this->parser->addSelfClosingTag($this->config['tagName'], $pos, 1)->setAttribute($this->config['attrName'], $chr);
+				$this->addTag(1 + $m[1], 1, $chr);
 			}
 		}
 	}
@@ -225,24 +214,16 @@ class Parser extends ParserBase
 	*/
 	protected function parseSymbolsInParentheses()
 	{
-		preg_match_all(
-			'/\\((?>c|r|tm)\\)/i',
-			$this->text,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
 		$chrs = [
 			'(c)'  => "\xC2\xA9",
 			'(r)'  => "\xC2\xAE",
 			'(tm)' => "\xE2\x84\xA2"
 		];
+		$regexp = '/\\((?>c|r|tm)\\)/i';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$pos = $m[1];
-			$len = strlen($m[0]);
-			$chr = $chrs[strtr($m[0], 'CMRT', 'cmrt')];
-
-			$this->parser->addSelfClosingTag($this->config['tagName'], $pos, $len)->setAttribute($this->config['attrName'], $chr);
+			$this->addTag($m[1], strlen($m[0]), $chrs[strtr($m[0], 'CMRT', 'cmrt')]);
 		}
 	}
 }
