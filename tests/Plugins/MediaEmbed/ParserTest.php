@@ -970,16 +970,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('wsj');
 				}
 			],
-			[
-				'http://www17.zippyshare.com/v/EtPLaXGE/file.html',
-				'<r><ZIPPYSHARE file="EtPLaXGE" server="17" url="http://www17.zippyshare.com/v/EtPLaXGE/file.html">http://www17.zippyshare.com/v/EtPLaXGE/file.html</ZIPPYSHARE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('zippyshare');
-				}
-			],
 		];
 	}
 
@@ -3037,7 +3027,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/ http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-ca.amazon.ca/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe> <iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-de.amazon.de/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=bar-20"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-ca.amazon.ca/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe> <iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=bar-20"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3057,7 +3047,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-uk.amazon.co.uk/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00BET0NR6&amp;o=2&amp;t=_"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00BET0NR6&amp;o=2&amp;t=_"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3075,7 +3065,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-de.amazon.de/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=_"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=_"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3084,7 +3074,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-es.amazon.es/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B000R3QPEA&amp;o=30&amp;t=es-20"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B000R3QPEA&amp;o=30&amp;t=es-20"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3094,7 +3084,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-fr.amazon.fr/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B005NIKPAY&amp;o=8&amp;t=_"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B005NIKPAY&amp;o=8&amp;t=_"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3103,7 +3093,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.it/gp/product/B00JGOMIP6/',
-				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-it.amazon.it/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00JGOMIP6&amp;o=29&amp;t=_"></iframe>',
+				'<iframe width="120" height="240" allowfullscreen="" frameborder="0" scrolling="no" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00JGOMIP6&amp;o=29&amp;t=_"></iframe>',
 				[],
 				function ($configurator)
 				{
