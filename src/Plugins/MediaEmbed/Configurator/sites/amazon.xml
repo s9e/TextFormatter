@@ -26,8 +26,8 @@
 			<xsl:choose>
 				<xsl:when test="@tld='ca'">-ca.amazon.ca</xsl:when>
 				<xsl:when test="@tld='jp'">-jp.amazon.co.jp</xsl:when>
-				<xsl:when test="not(@tld)">.amazon.com</xsl:when>
-				<xsl:otherwise>-eu.amazon-adsystem.com</xsl:otherwise>
+				<xsl:when test="@tld and contains('desfrituk',@tld)">-eu.amazon-adsystem.com</xsl:when>
+				<xsl:otherwise>.amazon.com</xsl:otherwise>
 			</xsl:choose>
 			<xsl:text>/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
 			<xsl:value-of select="@id"/>
