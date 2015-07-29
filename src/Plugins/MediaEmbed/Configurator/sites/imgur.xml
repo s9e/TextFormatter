@@ -61,7 +61,7 @@
 			contentWindow.postMessage('s9e:' + id, origin);
 		-->
 		<onload><![CDATA[
-			<xsl:if test="not(@type='gifv' or @type='album')">var b=Math.random();window.addEventListener("message",function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+"px",style.width=a.data.width+"px")});contentWindow.postMessage("s9e:"+b,src.substr(0,src.indexOf("/",8)));</xsl:if>
+			<xsl:if test="not(@type='gifv' or @type='album')">var b=Math.random();window.addEventListener('message',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')});contentWindow.postMessage('s9e:'+b,src.substr(0,src.indexOf('/',8)))</xsl:if>
 		]]></onload>
 	</iframe>
 </site>

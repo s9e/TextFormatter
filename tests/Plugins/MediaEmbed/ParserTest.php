@@ -1079,7 +1079,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/AsQ0K3P',
-				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//s9e.github.io/iframe/imgur.min.html#AsQ0K3P" onload=\'var b=Math.random();window.addEventListener("message",function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+"px",style.width=a.data.width+"px")});contentWindow.postMessage("s9e:"+b,src.substr(0,src.indexOf("/",8)));\'></iframe>',
+				'<iframe allowfullscreen="" frameborder="0" scrolling="no" width="100%" height="550" src="//s9e.github.io/iframe/imgur.min.html#AsQ0K3P" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,src.substr(0,src.indexOf(\'/\',8)))"></iframe>',
 				[],
 				function ($configurator)
 				{
