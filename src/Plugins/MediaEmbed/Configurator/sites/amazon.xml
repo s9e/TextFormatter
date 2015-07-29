@@ -22,14 +22,13 @@
 	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|es|fr|it|jp|uk)#</extract>
 	<iframe width="120" height="240">
 		<src><![CDATA[
-			<xsl:text>//rcm</xsl:text>
+			<xsl:text>//rcm-</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@tld='ca'">-ca.amazon.ca</xsl:when>
-				<xsl:when test="@tld='jp'">-jp.amazon.co.jp</xsl:when>
-				<xsl:when test="@tld and contains('desfrituk',@tld)">-eu.amazon-adsystem.com</xsl:when>
-				<xsl:otherwise>.amazon.com</xsl:otherwise>
+				<xsl:when test="@tld='jp'">fe</xsl:when>
+				<xsl:when test="@tld and contains('desfrituk',@tld)">eu</xsl:when>
+				<xsl:otherwise>na</xsl:otherwise>
 			</xsl:choose>
-			<xsl:text>/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
+			<xsl:text>.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
 			<xsl:value-of select="@id"/>
 			<xsl:text>&amp;o=</xsl:text>
 			<xsl:choose>
