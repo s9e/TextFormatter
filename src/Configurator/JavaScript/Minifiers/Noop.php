@@ -9,6 +9,10 @@ namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 class Noop extends Minifier
 {
+	public function getCacheDifferentiator()
+	{
+		return \uniqid();
+	}
 	public function minify($src)
 	{
 		return $src;
