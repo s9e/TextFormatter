@@ -14,6 +14,7 @@ class Parser extends ParserBase
 	protected $unicodeRegexp = '((?:\\xE2(?:\\x8C[\\x9A\\x9B]|\\x8F[\\xA9-\\xAC\\xB0\\xB3]|\\x97[\\xBD\\xBE]|\\x98[\\x94\\x95]|\\x99[\\x88-\\x93\\xBF]|\\x9A[\\x93\\xA1\\xAA\\xAB\\xBD\\xBE]|\\x9B[\\x84\\x85\\x8E\\x94\\xAA\\xB2\\xB3\\xB5\\xBA\\xBD]|\\x9C[\\x85\\x8A\\x8B\\xA8]|\\x9D[\\x8C\\x8E\\x93-\\x95\\x97]|\\x9E[\\x95-\\x97\\xB0\\xBF]|\\xAC[\\x9B\\x9C]|\\xAD[\\x90\\x95])|\\xF0\\x9F(?:\\x80\\x84|\\x83\\x8F|\\x86[\\x8E\\x91-\\x9A]|\\x87[\\xA6-\\xBF]\\xF0\\x9F\\x87[\\xA6-\\xBF]|\\x88[\\x81\\x9A\\xAF\\xB2-\\xB6\\xB8-\\xBA]|\\x89[\\x90\\x91]|\\x8C[\\x80-\\xA0\\xB0-\\xB5\\xB7-\\xBF]|\\x8D[\\x80-\\xBC]|\\x8E[\\x80-\\x93\\xA0-\\xBF]|\\x8F[\\x80-\\x84\\x86-\\x8A\\xA0-\\xB0]|\\x90[\\x80-\\xBE]|\\x91[\\x80\\x82-\\xBF]|\\x92[\\x80-\\xBF]|\\x93[\\x80-\\xB7\\xB9-\\xBC]|\\x94[\\x80-\\xBD]|\\x95[\\x90-\\xA7]|\\x97[\\xBB-\\xBF]|\\x98[\\x80-\\xBF]|\\x99[\\x80\\x85-\\x8F]|\\x9A[\\x80-\\xBF]|\\x9B[\\x80-\\x85]))(?!\\xEF\\xB8\\x8E)(?:\\xEF\\xB8\\x8F)?|(?:\\xC2[\\xA9\\xAE]|\\xE2(?:\\x80\\xBC|\\x81\\x89|\\x84[\\xA2\\xB9]|\\x86[\\x94-\\x99\\xA9\\xAA]|\\x93\\x82|\\x96[\\xAA\\xAB\\xB6]|\\x97[\\x80\\xBB\\xBC]|\\x98[\\x80\\x81\\x8E\\x91\\x9D\\xBA]|\\x99[\\xA0\\xA3\\xA5\\xA6\\xA8\\xBB]|\\x9A\\xA0|\\x9C[\\x82\\x88\\x89\\x8C\\x8F\\x92\\x94\\x96\\xB3\\xB4]|\\x9D[\\x84\\x87\\xA4]|\\x9E\\xA1|\\xA4[\\xB4\\xB5]|\\xAC[\\x85-\\x87])|\\xE3(?:\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])|\\xF0\\x9F(?:\\x85[\\xB0\\xB1\\xBE\\xBF]|\\x88[\\x82\\xB7]))\\xEF\\xB8\\x8F|[#0-9](?:\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3)S';
 	public function parse($text, array $matches)
 	{
+		$this->parseAliases($text);
 		$this->parseAsciiEmoji($text);
 		$this->parseUnicodeEmoji($text);
 	}
@@ -42,17 +43,40 @@ class Parser extends ParserBase
 		while (++$i < \strlen($str));
 		return \implode('-', $seq);
 	}
+	protected function parseAliases($text)
+	{
+		if (empty($this->config['aliases']))
+			return;
+		$matchPos = 0;
+		if (isset($this->config['aliasesQuickMatch']))
+		{
+			$matchPos = \strpos($text, $this->config['aliasesQuickMatch']);
+			if ($matchPos === \false)
+				return;
+		}
+		\preg_match_all($this->config['aliasesRegexp'], $text, $matches, \PREG_OFFSET_CAPTURE, $matchPos);
+		foreach ($matches[0] as $_8bb89e38)
+		{
+			list($alias, $tagPos) = $_8bb89e38;
+			if (isset($this->config['aliases'][$alias]))
+			{
+				$emoji = $this->config['aliases'][$alias];
+				$this->addTag($tagPos, \strlen($alias), $this->getSequence($emoji));
+			}
+		}
+	}
 	protected function parseAsciiEmoji($text)
 	{
 		$matchPos = \strpos($text, ':');
 		if ($matchPos === \false)
 			return;
 		\preg_match_all($this->asciiRegexp, $text, $matches, \PREG_OFFSET_CAPTURE, $matchPos);
-		foreach ($matches[0] as $m)
+		foreach ($matches[0] as $_765c1971)
 		{
-			$shortName = \substr($m[0], 1);
+			list($shortName, $tagPos) = $_765c1971;
+			$shortName = \substr($shortName, 1);
 			if (isset(self::$map[$shortName]))
-				$this->addTag($m[1], 1 + \strlen($m[0]), self::$map[$shortName]);
+				$this->addTag($tagPos, 2 + \strlen($shortName), self::$map[$shortName]);
 		}
 	}
 	protected function parseUnicodeEmoji($text)
@@ -60,7 +84,10 @@ class Parser extends ParserBase
 		if (\strpos($text, "\xE2") === \false && \strpos($text, "\xEF") === \false && \strpos($text, "\xF0") === \false)
 			return;
 		\preg_match_all($this->unicodeRegexp, $text, $matches, \PREG_OFFSET_CAPTURE);
-		foreach ($matches[0] as $m)
-			$this->addTag($m[1], \strlen($m[0]), $this->getSequence($m[0]));
+		foreach ($matches[0] as $_e20330bd)
+		{
+			list($emoji, $tagPos) = $_e20330bd;
+			$this->addTag($tagPos, \strlen($emoji), $this->getSequence($emoji));
+		}
 	}
 }

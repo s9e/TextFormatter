@@ -4365,15 +4365,12 @@ class InlineAttributes extends TemplateNormalization
 	protected function inlineAttribute(DOMElement $attribute)
 	{
 		$value = '';
-		foreach ($attribute->childNodes as $childNode)
-			if ($childNode instanceof DOMText)
-				$value .= \preg_replace('([{}])', '$0$0', $childNode->textContent);
-			elseif ($childNode->namespaceURI === self::XMLNS_XSL
-			     && $childNode->localName    === 'value-of')
-				$value .= '{' . $childNode->getAttribute('select') . '}';
-			elseif ($childNode->namespaceURI === self::XMLNS_XSL
-			     && $childNode->localName    === 'text')
-				$value .= \preg_replace('([{}])', '$0$0', $childNode->textContent);
+		foreach ($attribute->childNodes as $node)
+			if ($node instanceof DOMText
+			 || array($node->namespaceURI, $node->localName) === array(self::XMLNS_XSL, 'text'))
+				$value .= \preg_replace('([{}])', '$0$0', $node->textContent);
+			elseif (array($node->namespaceURI, $node->localName) === array(self::XMLNS_XSL, 'value-of'))
+				$value .= '{' . $node->getAttribute('select') . '}';
 			else
 				return;
 		$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);

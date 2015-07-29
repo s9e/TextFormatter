@@ -6,12 +6,15 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Emoji;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'seq';
+	protected $aliases = array();
 	protected $forceImageSize = \true;
 	protected $imageSet = 'twemoji';
 	protected $imageSize = 16;
@@ -27,15 +30,27 @@ class Configurator extends ConfiguratorBase
 		);
 		$this->resetTemplate();
 	}
+	public function addAlias($alias, $emoji)
+	{
+		$this->aliases[$alias] = $emoji;
+	}
 	public function forceImageSize()
 	{
 		$this->forceImageSize = \true;
 		$this->resetTemplate();
 	}
+	public function removeAlias($alias)
+	{
+		unset($this->aliases[$alias]);
+	}
 	public function omitImageSize()
 	{
 		$this->forceImageSize = \false;
 		$this->resetTemplate();
+	}
+	public function getAliases()
+	{
+		return $this->aliases;
 	}
 	public function setImageSize($size)
 	{
@@ -64,10 +79,21 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		return array(
+		$config = array(
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
 		);
+		if (!empty($this->aliases))
+		{
+			$aliases = \array_keys($this->aliases);
+			$regexp  = '/' . RegexpBuilder::fromList($aliases) . '/';
+			$config['aliases']       = $this->aliases;
+			$config['aliasesRegexp'] = new Regexp($regexp, \true);
+			$quickMatch = ConfigHelper::generateQuickMatchFromList($aliases);
+			if ($quickMatch !== \false)
+				$config['aliasesQuickMatch'] = $quickMatch;
+		}
+		return $config;
 	}
 	protected function getEmojiOneTemplate()
 	{
