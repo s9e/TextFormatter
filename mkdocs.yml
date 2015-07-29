@@ -60,6 +60,8 @@ pages:
       - Add emoticons: Plugins/Emoticons/Add_emoticons.md
       - Toggle rendering: Plugins/Emoticons/Toggle_rendering.md
       - Change the matching regexp: Plugins/Emoticons/Change_regexp.md
+    - Escaper:
+      - Synopsis: Plugins/Escaper/Synopsis.md
     - FancyPants:
       - Synopsis: Plugins/FancyPants/Synopsis.md
     - HTMLComments:
