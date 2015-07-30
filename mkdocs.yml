@@ -92,5 +92,7 @@ pages:
     - Your own plugin:
       - Plug your own parser: Plugins/Your_own_plugin/Register_parser.md
       - Create tags: Plugins/Your_own_plugin/Create_tags.md
+  - JavaScript:
+    - Introduction: JavaScript/Introduction.md
   - Internals:
     - Limits: Internals/Limits.md
