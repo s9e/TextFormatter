@@ -7,7 +7,13 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
-class ControlStructuresOptimizer
+/**
+* Optimize the control structures of a script
+*
+* Removes brackets in control structures wherever possible. Prevents the generation of EXT_STMT
+* opcodes where they're not strictly required.
+*/
+class ControlStructuresOptimizer extends AbstractOptimizer
 {
 	/**
 	* @var integer Number of braces encountered in current source
@@ -15,55 +21,9 @@ class ControlStructuresOptimizer
 	protected $braces;
 
 	/**
-	* @var integer Number of tokens
-	*/
-	protected $cnt;
-
-	/**
 	* @var array Current context
 	*/
 	protected $context;
-
-	/**
-	* @var integer Current token index
-	*/
-	protected $i;
-
-	/**
-	* @var boolean Whether the tokens have been changed
-	*/
-	protected $changed;
-
-	/**
-	* @var array Tokens from current source
-	*/
-	protected $tokens;
-
-	/**
-	* Optimize the control structures of a script
-	*
-	* Removes brackets in control structures wherever possible. Prevents the generation of EXT_STMT
-	* opcodes where they're not strictly required.
-	*
-	* @param  string $php Original code
-	* @return string      Optimized code
-	*/
-	public function optimize($php)
-	{
-		$this->reset($php);
-		$this->optimizeControlStructures();
-
-		// Rebuild the source if it has changed
-		if ($this->changed)
-		{
-			$php = $this->serialize();
-		}
-
-		// Free the memory taken up by the tokens
-		unset($this->tokens);
-
-		return $php;
-	}
 
 	/**
 	* Test whether current block ends with an if or elseif control structure
@@ -131,7 +91,7 @@ class ControlStructuresOptimizer
 	*
 	* @return void
 	*/
-	protected function optimizeControlStructures()
+	protected function optimizeTokens()
 	{
 		while (++$this->i < $this->cnt)
 		{
@@ -304,51 +264,6 @@ class ControlStructuresOptimizer
 	}
 
 	/**
-	* Reset the internal state of this optimizer
-	*
-	* @param  string $php PHP source
-	* @return void
-	*/
-	protected function reset($php)
-	{
-		$this->tokens = token_get_all('<?php ' . $php);
-
-		// Root context
-		$this->context = [
-			'braces'      => 0,
-			'index'       => -1,
-			'parent'      => [],
-			'preventElse' => false,
-			'savedIndex'  => 0,
-			'statements'  => 0
-		];
-
-		$this->i       = 0;
-		$this->cnt     = count($this->tokens);
-		$this->braces  = 0;
-		$this->changed = false;
-	}
-
-	/**
-	* Serialize the tokens back to source
-	*
-	* @return string
-	*/
-	protected function serialize()
-	{
-		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
-		unset($this->tokens[0]);
-
-		$php = '';
-		foreach ($this->tokens as $token)
-		{
-			$php .= (is_string($token)) ? $token : $token[1];
-		}
-
-		return $php;
-	}
-
-	/**
 	* Skip the condition of a control structure
 	*
 	* @return void
@@ -378,46 +293,5 @@ class ControlStructuresOptimizer
 				++$parens;
 			}
 		}
-	}
-
-	/**
-	* Move the internal cursor until it reaches given string
-	*
-	* @param  string $str String to reach
-	* @return void
-	*/
-	protected function skipToString($str)
-	{
-		while (++$this->i < $this->cnt && $this->tokens[$this->i] !== $str);
-	}
-
-	/**
-	* Skip all whitespace
-	*
-	* @return void
-	*/
-	protected function skipWhitespace()
-	{
-		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === T_WHITESPACE);
-	}
-
-	/**
-	* Remove one tab of indentation off a range of PHP tokens
-	*
-	* @param  integer $start  Index of the first token to unindent
-	* @param  integer $end    Index of the last token to unindent
-	* @return void
-	*/
-	protected function unindentBlock($start, $end)
-	{
-		$this->i = $start;
-		do
-		{
-			if ($this->tokens[$this->i][0] === T_WHITESPACE || $this->tokens[$this->i][0] === T_DOC_COMMENT)
-			{
-				$this->tokens[$this->i][1] = preg_replace("/^\t/m", '', $this->tokens[$this->i][1]);
-			}
-		}
-		while (++$this->i <= $end);
 	}
 }

@@ -7,6 +7,7 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @requires extension tokenizer
+* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\AbstractOptimizer
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer
 */
 class ControlStructuresOptimizerTest extends Test
