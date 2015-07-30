@@ -83,6 +83,71 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	}
 
 	/**
+	* Test given element's attributes
+	*
+	* @param  DOMElement $embed Context element
+	* @return void
+	*/
+	protected function checkAttributes(DOMElement $embed)
+	{
+		$settingName = strtolower($this->settingName);
+		$useDefault  = true;
+		foreach ($embed->attributes as $attribute)
+		{
+			$attrName = strtolower($attribute->name);
+			if ($attrName === $settingName)
+			{
+				$this->checkSetting($attribute, $attribute->value);
+				$useDefault = false;
+			}
+		}
+		if ($useDefault)
+		{
+			$this->checkSetting($embed, $this->defaultSetting);
+		}
+	}
+
+	/**
+	* Test whether given element has dynamic attributes that match the setting's name
+	*
+	* @param  DOMElement $embed Context element
+	* @return void
+	*/
+	protected function checkDynamicAttributes(DOMElement $embed)
+	{
+		$settingName = strtolower($this->settingName);
+		foreach ($embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute') as $attribute)
+		{
+			$attrName = strtolower($attribute->getAttribute('name'));
+			if ($attrName === $settingName)
+			{
+				throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
+			}
+		}
+	}
+
+	/**
+	* Test the presence of dynamic params in given object
+	*
+	* @param  DOMElement $object Context element
+	* @return void
+	*/
+	protected function checkDynamicParams(DOMElement $object)
+	{
+		foreach ($this->getObjectParams($object) as $param)
+		{
+			foreach ($param->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute') as $attribute)
+			{
+				// Test for a dynamic "value" attribute
+				if (strtolower($attribute->getAttribute('name')) === 'value')
+				{
+					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
+				}
+			}
+		}
+	}
+
+	/**
 	* Check embed elements in given template
 	*
 	* @return void
@@ -93,31 +158,10 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 		foreach ($this->getElements('embed') as $embed)
 		{
 			// Test <xsl:attribute/> descendants
-			$nodes = $embed->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
-			foreach ($nodes as $attribute)
-			{
-				$attrName = strtolower($attribute->getAttribute('name'));
-				if ($attrName === $settingName)
-				{
-					throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
-				}
-			}
+			$this->checkDynamicAttributes($embed);
 
 			// Test the element's attributes
-			$useDefault  = true;
-			foreach ($embed->attributes as $attribute)
-			{
-				$attrName = strtolower($attribute->name);
-				if ($attrName === $settingName)
-				{
-					$this->checkSetting($attribute, $attribute->value);
-					$useDefault = false;
-				}
-			}
-			if ($useDefault)
-			{
-				$this->checkSetting($embed, $this->defaultSetting);
-			}
+			$this->checkAttributes($embed);
 		}
 	}
 
@@ -128,38 +172,18 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	*/
 	protected function checkObjects()
 	{
-		$settingName = strtolower($this->settingName);
 		foreach ($this->getElements('object') as $object)
 		{
+			// Make sure this object doesn't have dynamic params
+			$this->checkDynamicParams($object);
+
 			// Test the element's <param/> descendants
-			$useDefault = true;
-			foreach ($object->getElementsByTagName('param') as $param)
+			$params = $this->getObjectParams($object);
+			foreach ($params as $param)
 			{
-				$paramName = strtolower($param->getAttribute('name'));
-				if ($paramName === $settingName)
-				{
-					$this->checkSetting($param, $param->getAttribute('value'));
-
-					// Test for a dynamic "value" attribute
-					$nodes = $param->getElementsByTagNameNS(self::XMLNS_XSL, 'attribute');
-					foreach ($nodes as $attribute)
-					{
-						if (strtolower($attribute->getAttribute('name')) === 'value')
-						{
-							throw new UnsafeTemplateException('Cannot assess the safety of dynamic attributes', $attribute);
-						}
-					}
-
-					// Test whether this <param/> is a child of this object. If it's not, it might
-					// actually apply to another <object/> descendant used as fallback, or perhaps
-					// it's in an <xsl:if/> condition
-					if ($param->parentNode->isSameNode($object))
-					{
-						$useDefault = false;
-					}
-				}
+				$this->checkSetting($param, $param->getAttribute('value'));
 			}
-			if ($useDefault)
+			if (empty($params))
 			{
 				$this->checkSetting($object, $this->defaultSetting);
 			}
@@ -242,5 +266,27 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 		}
 
 		return $nodes;
+	}
+
+	/**
+	* Get all param elements attached to given object
+	*
+	* @param  DOMElement   $object Context element
+	* @return DOMElement[]
+	*/
+	protected function getObjectParams(DOMElement $object)
+	{
+		$params      = [];
+		$settingName = strtolower($this->settingName);
+		foreach ($object->getElementsByTagName('param') as $param)
+		{
+			$paramName = strtolower($param->getAttribute('name'));
+			if ($paramName === $settingName && $param->parentNode->isSameNode($object))
+			{
+				$params[] = $param;
+			}
+		}
+
+		return $params;
 	}
 }
