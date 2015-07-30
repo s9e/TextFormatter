@@ -154,7 +154,6 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	*/
 	protected function checkEmbeds()
 	{
-		$settingName = strtolower($this->settingName);
 		foreach ($this->getElements('embed') as $embed)
 		{
 			// Test <xsl:attribute/> descendants
