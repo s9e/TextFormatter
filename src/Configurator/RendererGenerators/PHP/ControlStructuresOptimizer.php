@@ -51,43 +51,12 @@ class ControlStructuresOptimizer
 	public function optimize($php)
 	{
 		$this->reset($php);
+		$this->optimizeControlStructures();
 
-		while (++$this->i < $this->cnt)
-		{
-			if ($this->tokens[$this->i] === ';')
-			{
-				++$this->context['statements'];
-			}
-			elseif ($this->tokens[$this->i] === '{')
-			{
-				++$this->braces;
-			}
-			elseif ($this->tokens[$this->i] === '}')
-			{
-				if ($this->context['braces'] === $this->braces)
-				{
-					$this->processEndOfBlock();
-				}
-
-				--$this->braces;
-			}
-			elseif ($this->isControlStructure())
-			{
-				$this->processControlStructure();
-			}
-		}
-
-		// Rebuild the source
+		// Rebuild the source if it has changed
 		if ($this->changed)
 		{
-			// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
-			unset($this->tokens[0]);
-
-			$php = '';
-			foreach ($this->tokens as $token)
-			{
-				$php .= (is_string($token)) ? $token : $token[1];
-			}
+			$php = $this->serialize();
 		}
 
 		// Free the memory taken up by the tokens
@@ -155,6 +124,39 @@ class ControlStructuresOptimizer
 		// its braces to prevent it from merging with the outer elseif/else. IOW, we must preserve
 		// the braces if "if{if{}}else" would become "if{if else}"
 		return ($this->blockEndsWithIf() && $this->isFollowedByElse());
+	}
+
+	/**
+	* Optimize control structures in stored tokens
+	*
+	* @return void
+	*/
+	protected function optimizeControlStructures()
+	{
+		while (++$this->i < $this->cnt)
+		{
+			if ($this->tokens[$this->i] === ';')
+			{
+				++$this->context['statements'];
+			}
+			elseif ($this->tokens[$this->i] === '{')
+			{
+				++$this->braces;
+			}
+			elseif ($this->tokens[$this->i] === '}')
+			{
+				if ($this->context['braces'] === $this->braces)
+				{
+					$this->processEndOfBlock();
+				}
+
+				--$this->braces;
+			}
+			elseif ($this->isControlStructure())
+			{
+				$this->processControlStructure();
+			}
+		}
 	}
 
 	/**
@@ -326,6 +328,26 @@ class ControlStructuresOptimizer
 		$this->braces  = 0;
 		$this->changed = false;
 	}
+
+	/**
+	* Serialize the tokens back to source
+	*
+	* @return string
+	*/
+	protected function serialize()
+	{
+		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
+		unset($this->tokens[0]);
+
+		$php = '';
+		foreach ($this->tokens as $token)
+		{
+			$php .= (is_string($token)) ? $token : $token[1];
+		}
+
+		return $php;
+	}
+
 	/**
 	* Skip the condition of a control structure
 	*
