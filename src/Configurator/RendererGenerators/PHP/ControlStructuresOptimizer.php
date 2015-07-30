@@ -264,6 +264,24 @@ class ControlStructuresOptimizer extends AbstractOptimizer
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected function reset($php)
+	{
+		parent::reset($php);
+
+		$this->braces  = 0;
+		$this->context = [
+			'braces'      => 0,
+			'index'       => -1,
+			'parent'      => [],
+			'preventElse' => false,
+			'savedIndex'  => 0,
+			'statements'  => 0
+		];
+	}
+
+	/**
 	* Skip the condition of a control structure
 	*
 	* @return void

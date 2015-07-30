@@ -70,21 +70,9 @@ abstract class AbstractOptimizer
 	*/
 	protected function reset($php)
 	{
-		$this->tokens = token_get_all('<?php ' . $php);
-
-		// Root context
-		$this->context = [
-			'braces'      => 0,
-			'index'       => -1,
-			'parent'      => [],
-			'preventElse' => false,
-			'savedIndex'  => 0,
-			'statements'  => 0
-		];
-
+		$this->tokens  = token_get_all('<?php ' . $php);
 		$this->i       = 0;
 		$this->cnt     = count($this->tokens);
-		$this->braces  = 0;
 		$this->changed = false;
 	}
 
