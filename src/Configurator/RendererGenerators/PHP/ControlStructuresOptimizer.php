@@ -17,26 +17,9 @@ class ControlStructuresOptimizer
 	public function optimize($php)
 	{
 		$this->reset($php);
-		while (++$this->i < $this->cnt)
-			if ($this->tokens[$this->i] === ';')
-				++$this->context['statements'];
-			elseif ($this->tokens[$this->i] === '{')
-				++$this->braces;
-			elseif ($this->tokens[$this->i] === '}')
-			{
-				if ($this->context['braces'] === $this->braces)
-					$this->processEndOfBlock();
-				--$this->braces;
-			}
-			elseif ($this->isControlStructure())
-				$this->processControlStructure();
+		$this->optimizeControlStructures();
 		if ($this->changed)
-		{
-			unset($this->tokens[0]);
-			$php = '';
-			foreach ($this->tokens as $token)
-				$php .= (\is_string($token)) ? $token : $token[1];
-		}
+			$php = $this->serialize();
 		unset($this->tokens);
 		return $php;
 	}
@@ -64,6 +47,22 @@ class ControlStructuresOptimizer
 	protected function mustPreserveBraces()
 	{
 		return ($this->blockEndsWithIf() && $this->isFollowedByElse());
+	}
+	protected function optimizeControlStructures()
+	{
+		while (++$this->i < $this->cnt)
+			if ($this->tokens[$this->i] === ';')
+				++$this->context['statements'];
+			elseif ($this->tokens[$this->i] === '{')
+				++$this->braces;
+			elseif ($this->tokens[$this->i] === '}')
+			{
+				if ($this->context['braces'] === $this->braces)
+					$this->processEndOfBlock();
+				--$this->braces;
+			}
+			elseif ($this->isControlStructure())
+				$this->processControlStructure();
 	}
 	protected function processControlStructure()
 	{
@@ -144,6 +143,14 @@ class ControlStructuresOptimizer
 		$this->cnt     = \count($this->tokens);
 		$this->braces  = 0;
 		$this->changed = \false;
+	}
+	protected function serialize()
+	{
+		unset($this->tokens[0]);
+		$php = '';
+		foreach ($this->tokens as $token)
+			$php .= (\is_string($token)) ? $token : $token[1];
+		return $php;
 	}
 	protected function skipCondition()
 	{
