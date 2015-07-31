@@ -1,11 +1,12 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Emoticons;
+
 use ArrayAccess;
 use Countable;
 use Iterator;
@@ -17,74 +18,203 @@ use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
+
+/**
+* @method mixed   add(string $key, mixed $value)
+* @method array   asConfig()
+* @method void    clear()
+* @method bool    contains(mixed $value)
+* @method integer count()
+* @method mixed   current()
+* @method void    delete(string $key)
+* @method bool    exists(string $key)
+* @method mixed   get(string $key)
+* @method mixed   indexOf(mixed $value)
+* @method integer|string key()
+* @method mixed   next()
+* @method string  normalizeKey(string $key)
+* @method string  normalizeValue(string $value)
+* @method bool    offsetExists(string|integer $offset)
+* @method mixed   offsetGet(string|integer $offset)
+* @method void    offsetSet(string|integer $offset, mixed $value)
+* @method void    offsetUnset(string|integer $offset)
+* @method string  onDuplicate(string|null $action)
+* @method void    rewind()
+* @method mixed   set(string $key, mixed $value)
+* @method bool    valid()
+*/
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
+
+	/**
+	* @var EmoticonCollection
+	*/
 	protected $collection;
+
+	/**
+	* @var string PCRE subpattern used in a negative lookbehind assertion before the emoticons
+	*/
 	public $notAfter = '';
+
+	/**
+	* @var string PCRE subpattern used in a negative lookahead assertion after the emoticons
+	*/
 	public $notBefore = '';
+
+	/**
+	* @var string XPath expression that, if true, forces emoticons to be rendered as text
+	*/
 	public $notIfCondition;
+
+	/**
+	* @var string Name of the tag used by this plugin
+	*/
 	protected $tagName = 'E';
+
+	/**
+	* Plugin's setup
+	*
+	* Will create the tag used by this plugin
+	*/
 	protected function setUp()
 	{
 		$this->collection = new EmoticonCollection;
+
 		if (!$this->configurator->tags->exists($this->tagName))
+		{
 			$this->configurator->tags->add($this->tagName);
+		}
 	}
+
+	/**
+	* Create the template used for emoticons
+	*
+	* @return void
+	*/
 	public function finalize()
 	{
 		$tag = $this->getTag();
+
 		if (!isset($tag->template))
+		{
 			$tag->template = $this->getTemplate();
+		}
 	}
+
+	/**
+	* @return array
+	*/
 	public function asConfig()
 	{
-		if (!\count($this->collection))
+		if (!count($this->collection))
+		{
 			return;
-		$codes = \array_keys(\iterator_to_array($this->collection));
+		}
+
+		// Grab the emoticons from the collection
+		$codes = array_keys(iterator_to_array($this->collection));
+
+		// Build the regexp used to match emoticons
 		$regexp = '/';
+
 		if ($this->notAfter !== '')
+		{
 			$regexp .= '(?<!' . $this->notAfter . ')';
+		}
+
 		$regexp .= RegexpBuilder::fromList($codes);
+
 		if ($this->notBefore !== '')
+		{
 			$regexp .= '(?!' . $this->notBefore . ')';
+		}
+
 		$regexp .= '/S';
-		if (\preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
+
+		// Set the Unicode mode if Unicode properties are used
+		if (preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
+		{
 			$regexp .= 'u';
-		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+		}
+
+		// Force the regexp to use atomic grouping for performance
+		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+
+		// Prepare the config array
 		$config = [
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $regexp,
 			'tagName'    => $this->tagName
 		];
+
+		// If notAfter is used, we need to create a JavaScript-specific regexp that does not use a
+		// lookbehind assertion, and we add the notAfter subpattern to the config as a RegExp
 		if ($this->notAfter !== '')
 		{
-			$lpos = 6 + \strlen($this->notAfter);
-			$rpos = \strrpos($regexp, '/');
-			$jsRegexp = RegexpConvertor::toJS('/' . \substr($regexp, $lpos, $rpos - $lpos) . '/');
+			// Skip the first assertion by skipping the first N characters, where N equals the
+			// length of $this->notAfter plus 1 for the first "/" and 5 for "(?<!)"
+			$lpos = 6 + strlen($this->notAfter);
+			$rpos = strrpos($regexp, '/');
+			$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/');
 			$jsRegexp->flags .= 'g';
+
 			$config['regexp'] = new Variant($regexp);
 			$config['regexp']->set('JS', $jsRegexp);
+
 			$config['notAfter'] = new Variant;
 			$config['notAfter']->set('JS', RegexpConvertor::toJS('/' . $this->notAfter . '/'));
 		}
-		if ($this->quickMatch === \false)
+
+		// Try to find a quickMatch if none is set
+		if ($this->quickMatch === false)
+		{
 			$config['quickMatch'] = ConfigHelper::generateQuickMatchFromList($codes);
+		}
+
 		return $config;
 	}
+
+	/**
+	* Generate the dynamic template that renders all emoticons
+	*
+	* @return string
+	*/
 	public function getTemplate()
 	{
+		// Build the <xsl:choose> node
 		$xsl = '<xsl:choose>';
+
+		// First, test whether the emoticon should be rendered as text if applicable
 		if (!empty($this->notIfCondition))
-			$xsl .= '<xsl:when test="' . \htmlspecialchars($this->notIfCondition) . '"><xsl:value-of select="."/></xsl:when><xsl:otherwise><xsl:choose>';
+		{
+			$xsl .= '<xsl:when test="' . htmlspecialchars($this->notIfCondition) . '">'
+			      . '<xsl:value-of select="."/>'
+			      . '</xsl:when>'
+			      . '<xsl:otherwise>'
+			      . '<xsl:choose>';
+		}
+
+		// Iterate over codes, create an <xsl:when> for each emote
 		foreach ($this->collection as $code => $template)
-			$xsl .= '<xsl:when test=".=' . \htmlspecialchars(XPathHelper::export($code)) . '">'
+		{
+			$xsl .= '<xsl:when test=".=' . htmlspecialchars(XPathHelper::export($code)) . '">'
 			      . $template
 			      . '</xsl:when>';
+		}
+
+		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
+
+		// Close the emote switch
 		$xsl .= '</xsl:choose>';
+
+		// Close the "notIf" condition if applicable
 		if (!empty($this->notIfCondition))
+		{
 			$xsl .= '</xsl:otherwise></xsl:choose>';
+		}
+
 		return $xsl;
 	}
 }
