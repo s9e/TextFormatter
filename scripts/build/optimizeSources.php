@@ -17,6 +17,7 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 
 */
 
+include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/AbstractOptimizer.php';
 include __DIR__ . '/../../src/Configurator/RendererGenerators/PHP/ControlStructuresOptimizer.php';
 $optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer;
 
