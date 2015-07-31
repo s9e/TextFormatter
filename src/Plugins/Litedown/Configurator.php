@@ -1,21 +1,26 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
+
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+
 class Configurator extends ConfiguratorBase
 {
+	/**
+	* @var array Default tags
+	*/
 	protected $tags = array(
 		'C'      => '<code><xsl:apply-templates /></code>',
 		'CODE'   => array(
 			'attributes' => array(
 				'lang' => array(
 					'filterChain' => array('#simpletext'),
-					'required'    => \false
+					'required'    => false
 				)
 			),
 			'template' =>
@@ -36,9 +41,9 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => array(
 			'attributes' => array(
-				'alt'   => array('required' => \false),
+				'alt'   => array('required' => false),
 				'src'   => array('filterChain' => array('#url')),
-				'title' => array('required' => \false)
+				'title' => array('required' => false)
 			),
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		),
@@ -47,7 +52,7 @@ class Configurator extends ConfiguratorBase
 			'attributes' => array(
 				'type' => array(
 					'filterChain' => array('#simpletext'),
-					'required'    => \false
+					'required'    => false
 				)
 			),
 			'template' =>
@@ -66,7 +71,7 @@ class Configurator extends ConfiguratorBase
 		'URL'    => array(
 			'attributes' => array(
 				'title' => array(
-					'required' => \false
+					'required' => false
 				),
 				'url'   => array(
 					'filterChain' => array('#url')
@@ -75,30 +80,56 @@ class Configurator extends ConfiguratorBase
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		)
 	);
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function setUp()
 	{
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
+
 		foreach ($this->tags as $tagName => $tagConfig)
 		{
+			// Skip this tag if it already exists
 			if (isset($this->configurator->tags[$tagName]))
+			{
 				continue;
-			if (\is_string($tagConfig))
+			}
+
+			// If the tag's config is a single string, it's really its default template
+			if (is_string($tagConfig))
+			{
 				$tagConfig = array('template' => $tagConfig);
+			}
+
+			// Replace default filters in the definition
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
+				{
 					if (isset($attributeConfig['filterChain']))
 					{
 						foreach ($attributeConfig['filterChain'] as &$filter)
-							if (\is_string($filter) && $filter[0] === '#')
+						{
+							if (is_string($filter) && $filter[0] === '#')
+							{
 								$filter = $this->configurator->attributeFilters[$filter];
+							}
+						}
 						unset($filter);
 					}
+				}
 				unset($attributeConfig);
 			}
+
+			// Add this tag
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function asConfig()
 	{
 		return array();

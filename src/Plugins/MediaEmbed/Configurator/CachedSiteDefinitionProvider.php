@@ -1,13 +1,17 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
+
 class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 {
+	/**
+	* @var array Array of [siteId => siteConfig]
+	*/
 	protected $cache = array(
 		'abcnews'=>'a:3:{s:4:"host";s:14:"abcnews.go.com";s:7:"extract";s:47:"!abcnews\\.go\\.com/[^/]+/video/[^/]+-(?\'id\'\\d+)!";s:6:"iframe";a:3:{s:5:"width";s:3:"640";s:6:"height";s:3:"360";s:3:"src";s:37:"//abcnews.go.com/video/embed?id={@id}";}}',
 		'amazon'=>'a:4:{s:12:"unresponsive";s:1:"1";s:4:"host";a:8:{i:0;s:9:"amazon.ca";i:1;s:12:"amazon.co.uk";i:2;s:12:"amazon.co.jp";i:3;s:10:"amazon.com";i:4;s:9:"amazon.de";i:5;s:9:"amazon.es";i:6;s:9:"amazon.fr";i:7;s:9:"amazon.it";}s:7:"extract";a:2:{i:0;s:37:"#/(?:dp|gp/product)/(?\'id\'[A-Z0-9]+)#";i:1;s:47:"#amazon\\.(?:co\\.)?(?\'tld\'ca|de|es|fr|it|jp|uk)#";}s:6:"iframe";a:3:{s:5:"width";s:3:"120";s:6:"height";s:3:"240";s:3:"src";s:1631:"//rcm-<xsl:choose><xsl:when test="@tld=\'jp\'">fe</xsl:when><xsl:when test="@tld and contains(\'desfrituk\',@tld)">eu</xsl:when><xsl:otherwise>na</xsl:otherwise></xsl:choose>.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=<xsl:value-of select="@id"/>&amp;o=<xsl:choose><xsl:when test="@tld=\'ca\'">15</xsl:when><xsl:when test="@tld=\'de\'">3</xsl:when><xsl:when test="@tld=\'es\'">30</xsl:when><xsl:when test="@tld=\'fr\'">8</xsl:when><xsl:when test="@tld=\'it\'">29</xsl:when><xsl:when test="@tld=\'jp\'">9</xsl:when><xsl:when test="@tld=\'uk\'">2</xsl:when><xsl:otherwise>1</xsl:otherwise></xsl:choose>&amp;t=<xsl:choose><xsl:when test="@tld=\'ca\'and$AMAZON_ASSOCIATE_TAG_CA"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when><xsl:when test="@tld=\'de\'and$AMAZON_ASSOCIATE_TAG_DE"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when><xsl:when test="@tld=\'es\'and$AMAZON_ASSOCIATE_TAG_ES"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/></xsl:when><xsl:when test="@tld=\'fr\'and$AMAZON_ASSOCIATE_TAG_FR"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when><xsl:when test="@tld=\'it\'and$AMAZON_ASSOCIATE_TAG_IT"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/></xsl:when><xsl:when test="@tld=\'jp\'and$AMAZON_ASSOCIATE_TAG_JP"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when><xsl:when test="@tld=\'uk\'and$AMAZON_ASSOCIATE_TAG_UK"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when><xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when><xsl:otherwise>_</xsl:otherwise></xsl:choose>";}}',
@@ -80,7 +84,7 @@ class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 		'rutube'=>'a:4:{s:4:"host";s:9:"rutube.ru";s:7:"extract";s:30:"!rutube\\.ru/tracks/(?\'id\'\\d+)!";s:6:"scrape";a:2:{s:5:"match";s:31:"!rutube\\.ru/video/[0-9a-f]{32}!";s:7:"extract";s:34:"!rutube\\.ru/play/embed/(?\'id\'\\d+)!";}s:6:"iframe";a:3:{s:5:"width";s:3:"720";s:6:"height";s:3:"405";s:3:"src";s:28:"//rutube.ru/play/embed/{@id}";}}',
 		'scribd'=>'a:4:{s:12:"unresponsive";s:1:"1";s:4:"host";s:10:"scribd.com";s:7:"extract";s:28:"!scribd\\.com/doc/(?\'id\'\\d+)!";s:6:"iframe";a:4:{s:5:"width";s:4:"100%";s:6:"height";s:3:"500";s:5:"style";s:11:"resize:both";s:3:"src";s:81:"//www.scribd.com/embeds/{@id}/content?view_mode=scroll&show_recommendations=false";}}',
 		'slideshare'=>'a:4:{s:4:"host";s:14:"slideshare.net";s:7:"extract";s:45:"!slideshare\\.net/[^/]+/[-\\w]+-(?\'id\'\\d{6,})$!";s:6:"scrape";a:2:{s:5:"match";s:26:"!slideshare\\.net/[^/]+/\\w!";s:7:"extract";s:29:"!"presentationId":(?\'id\'\\d+)!";}s:6:"iframe";a:3:{s:5:"width";s:3:"427";s:6:"height";s:3:"356";s:3:"src";s:47:"//www.slideshare.net/slideshow/embed_code/{@id}";}}',
-		'soundcloud'=>'a:5:{s:12:"unresponsive";s:1:"1";s:4:"host";s:14:"soundcloud.com";s:7:"extract";a:3:{i:0;s:79:"@(?\'id\'https?://(?:api\\.)?soundcloud\\.com/(?!pages/)\\w+/[-\\w/]+|^[^/]+/[^/]+$)@";i:1;s:50:"@api.soundcloud.com/playlists/(?\'playlist_id\'\\d+)@";i:2;s:44:"@api.soundcloud.com/tracks/(?\'track_id\'\\d+)@";}s:6:"scrape";a:3:{s:3:"url";s:158:"https://api.soundcloud.com/resolve?url={@id}&_status_code_map%5B302%5D=200&_status_format=json&client_id=b45b1aa10f1ac2941910a7f0d10f8e28&app_version=7a35847b";s:5:"match";s:8:"@/sets/@";s:7:"extract";s:50:"@api.soundcloud.com/playlists/(?\'playlist_id\'\\d+)@";}s:6:"iframe";a:4:{s:5:"width";s:4:"100%";s:5:"style";s:15:"max-width:900px";s:6:"height";s:103:"<xsl:choose><xsl:when test="@playlist_id">450</xsl:when><xsl:otherwise>166</xsl:otherwise></xsl:choose>";s:3:"src";s:420:"https://w.soundcloud.com/player/?url=<xsl:choose><xsl:when test="@playlist_id">https%3A//api.soundcloud.com/playlists/<xsl:value-of select="@playlist_id"/></xsl:when><xsl:when test="@track_id">https%3A//api.soundcloud.com/tracks/<xsl:value-of select="@track_id"/></xsl:when><xsl:otherwise><xsl:if test="not(contains(@id,\'://\'))">https%3A//soundcloud.com/</xsl:if><xsl:value-of select="@id"/></xsl:otherwise></xsl:choose>";}}',
+		'soundcloud'=>'a:5:{s:12:"unresponsive";s:1:"1";s:4:"host";s:14:"soundcloud.com";s:7:"extract";a:3:{i:0;s:83:"@(?\'id\'https?://(?:api\\.)?soundcloud\\.com/(?!pages/)[-\\w/]+/[-\\w/]+|^[^/]+/[^/]+$)@";i:1;s:50:"@api.soundcloud.com/playlists/(?\'playlist_id\'\\d+)@";i:2;s:44:"@api.soundcloud.com/tracks/(?\'track_id\'\\d+)@";}s:6:"scrape";a:3:{s:3:"url";s:158:"https://api.soundcloud.com/resolve?url={@id}&_status_code_map%5B302%5D=200&_status_format=json&client_id=b45b1aa10f1ac2941910a7f0d10f8e28&app_version=7a35847b";s:5:"match";s:8:"@/sets/@";s:7:"extract";s:50:"@api.soundcloud.com/playlists/(?\'playlist_id\'\\d+)@";}s:6:"iframe";a:4:{s:5:"width";s:4:"100%";s:5:"style";s:15:"max-width:900px";s:6:"height";s:103:"<xsl:choose><xsl:when test="@playlist_id">450</xsl:when><xsl:otherwise>166</xsl:otherwise></xsl:choose>";s:3:"src";s:420:"https://w.soundcloud.com/player/?url=<xsl:choose><xsl:when test="@playlist_id">https%3A//api.soundcloud.com/playlists/<xsl:value-of select="@playlist_id"/></xsl:when><xsl:when test="@track_id">https%3A//api.soundcloud.com/tracks/<xsl:value-of select="@track_id"/></xsl:when><xsl:otherwise><xsl:if test="not(contains(@id,\'://\'))">https%3A//soundcloud.com/</xsl:if><xsl:value-of select="@id"/></xsl:otherwise></xsl:choose>";}}',
 		'sportsnet'=>'a:3:{s:4:"host";s:12:"sportsnet.ca";s:6:"scrape";a:1:{s:7:"extract";a:2:{i:0;s:25:"/vid(?:eoId)?=(?\'id\'\\d+)/";i:1;s:46:"/param name="@videoPlayer" value="(?\'id\'\\d+)"/";}}s:6:"iframe";a:3:{s:5:"width";s:3:"560";s:6:"height";s:3:"315";s:3:"src";s:173:"https://images.rogersdigitalmedia.com/video_service.php?videoId={@id}&playerKey=AQ~~,AAAAAGWRwLc~,cRCmKE8Utf7OFWP38XQcokFZ80fR-u_y&autoStart=false&width=100%25&height=100%25";}}',
 		'spotify'=>'a:4:{s:6:"scheme";s:7:"spotify";s:4:"host";a:2:{i:0;s:16:"open.spotify.com";i:1;s:16:"play.spotify.com";}s:7:"extract";a:2:{i:0;s:61:"!(?\'uri\'spotify:(?:album|artist|user|track(?:set)?):[,:\\w]+)!";i:1;s:73:"!(?:open|play)\\.spotify\\.com/(?\'path\'(?:album|artist|track|user)/[/\\w]+)!";}s:6:"iframe";a:3:{s:5:"width";s:3:"400";s:6:"height";s:3:"480";s:3:"src";s:224:"https://embed.spotify.com/?view=coverart&amp;uri=<xsl:choose><xsl:when test="@uri"><xsl:value-of select="@uri"/></xsl:when><xsl:otherwise>spotify:<xsl:value-of select="translate(@path,\'/\',\':\')"/></xsl:otherwise></xsl:choose>";}}',
 		'stitcher'=>'a:3:{s:4:"host";s:12:"stitcher.com";s:6:"scrape";a:2:{s:5:"match";s:11:"!/podcast/!";s:7:"extract";a:2:{i:0;s:23:"!data-eid="(?\'eid\'\\d+)!";i:1;s:23:"!data-fid="(?\'fid\'\\d+)!";}}s:6:"iframe";a:4:{s:5:"width";s:4:"100%";s:6:"height";s:3:"150";s:5:"style";s:15:"max-width:900px";s:3:"src";s:42:"//app.stitcher.com/splayer/f/{@fid}/{@eid}";}}',
@@ -116,14 +120,26 @@ class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 		'youtube'=>'a:3:{s:4:"host";a:2:{i:0;s:11:"youtube.com";i:1;s:8:"youtu.be";}s:7:"extract";a:4:{i:0;s:45:"!youtube\\.com/(?:watch.*?v=|v/)(?\'id\'[-\\w]+)!";i:1;s:25:"!youtu\\.be/(?\'id\'[-\\w]+)!";i:2;s:57:"![#&?]t=(?:(?:(?\'h\'\\d+)h)?(?\'m\'\\d+)m(?\'s\'\\d+)|(?\'t\'\\d+))!";i:3;s:23:"!&list=(?\'list\'[-\\w]+)!";}s:6:"iframe";a:3:{s:5:"width";s:3:"560";s:6:"height";s:3:"315";s:3:"src";s:471:"//www.youtube.com/embed/<xsl:value-of select="@id"/><xsl:if test="@list">?list=<xsl:value-of select="@list"/></xsl:if><xsl:if test="@t or@m"><xsl:choose><xsl:when test="@list">&amp;</xsl:when><xsl:otherwise>?</xsl:otherwise></xsl:choose>start=<xsl:choose><xsl:when test="@t"><xsl:value-of select="@t"/></xsl:when><xsl:when test="@h"><xsl:value-of select="@h*3600+@m*60+@s"/></xsl:when><xsl:otherwise><xsl:value-of select="@m*60+@s"/></xsl:otherwise></xsl:choose></xsl:if>";}}',
 		'zippyshare'=>'a:4:{s:12:"unresponsive";s:1:"1";s:4:"host";s:14:"zippyshare.com";s:6:"scrape";a:2:{s:5:"match";s:5:"!/v/!";s:7:"extract";s:45:"!file=(?\'file\'\\w+)&amp;server=(?\'server\'\\d+)!";}s:5:"flash";a:5:{s:5:"width";s:4:"100%";s:6:"height";s:2:"80";s:5:"style";s:15:"max-width:900px";s:3:"src";s:35:"//api.zippyshare.com/api/player.swf";s:9:"flashvars";s:45:"file={@file}&server={@server}&autostart=false";}}'
 	);
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function getIds()
 	{
-		return \array_keys($this->cache);
+		return array_keys($this->cache);
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function getSiteConfig($siteId)
 	{
-		return \unserialize($this->cache[$siteId]);
+		return unserialize($this->cache[$siteId]);
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function hasSiteConfig($siteId)
 	{
 		return isset($this->cache[$siteId]);
