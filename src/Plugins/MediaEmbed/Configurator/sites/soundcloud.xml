@@ -7,7 +7,7 @@
 	<tags><tag>music</tag></tags>
 
 	<host>soundcloud.com</host>
-	<extract>@(?'id'https?://(?:api\.)?soundcloud\.com/(?!pages/)\w+/[-\w/]+|^[^/]+/[^/]+$)@</extract>
+	<extract>@(?'id'https?://(?:api\.)?soundcloud\.com/(?!pages/)[-\w/]+/[-\w/]+|^[^/]+/[^/]+$)@</extract>
 	<extract>@api.soundcloud.com/playlists/(?'playlist_id'\d+)@</extract>
 	<extract>@api.soundcloud.com/tracks/(?'track_id'\d+)@</extract>
 	<scrape url="https://api.soundcloud.com/resolve?url={@id}&amp;_status_code_map%5B302%5D=200&amp;_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;app_version=7a35847b">

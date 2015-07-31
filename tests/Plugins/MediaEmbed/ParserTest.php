@@ -2426,6 +2426,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle',
+				'<r><SOUNDCLOUD id="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle" url="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle">https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
 				'<r><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
