@@ -26,6 +26,14 @@ s9e.TextFormatter.preview($text, $target);
 // Toggle a plugin by name
 s9e.TextFormatter.disablePlugin($pluginName);
 s9e.TextFormatter.enablePlugin($pluginName);
+
+// Toggle a tag by name
+s9e.TextFormatter.disableTag($tagName);
+s9e.TextFormatter.enableTag($tagName);
+
+// Runtime configuration
+s9e.TextFormatter.setNestingLimit($tagName, $limit);
+s9e.TextFormatter.setTagLimit($tagName, $limit);
 ```
 
 ### Minify the JavaScript parser with Google Closure Compiler service
