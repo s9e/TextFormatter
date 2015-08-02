@@ -272,17 +272,7 @@ class BBCodeMonkey
 			if ($name[0] === '$')
 			{
 				$optionName = substr($name, 1);
-
-				if ($value === 'true')
-				{
-					$value = true;
-				}
-				elseif ($value === 'false')
-				{
-					$value = false;
-				}
-
-				$bbcode->$optionName = $value;
+				$bbcode->$optionName = $this->convertValue($value);
 			}
 			elseif ($name[0] === '#')
 			{
@@ -291,16 +281,7 @@ class BBCodeMonkey
 				// Supports #denyChild=foo,bar
 				foreach (explode(',', $value) as $value)
 				{
-					if ($value === 'true')
-					{
-						$value = true;
-					}
-					elseif ($value === 'false')
-					{
-						$value = false;
-					}
-
-					$tag->rules->$ruleName($value);
+					$tag->rules->$ruleName($this->convertValue($value));
 				}
 			}
 			else
@@ -550,6 +531,27 @@ class BBCodeMonkey
 		}
 
 		return $table;
+	}
+
+	/**
+	* Convert a human-readable value to a typed PHP value
+	*
+	* @param  string      $value Original value
+	* @return bool|string        Converted value
+	*/
+	protected function convertValue($value)
+	{
+		if ($value === 'true')
+		{
+			return true;
+		}
+
+		if ($value === 'false')
+		{
+			return false;
+		}
+
+		return $value;
 	}
 
 	/**
