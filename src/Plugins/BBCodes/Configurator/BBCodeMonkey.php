@@ -155,23 +155,13 @@ class BBCodeMonkey
 			if ($name[0] === '$')
 			{
 				$optionName = \substr($name, 1);
-				if ($value === 'true')
-					$value = \true;
-				elseif ($value === 'false')
-					$value = \false;
-				$bbcode->$optionName = $value;
+				$bbcode->$optionName = $this->convertValue($value);
 			}
 			elseif ($name[0] === '#')
 			{
 				$ruleName = \substr($name, 1);
 				foreach (\explode(',', $value) as $value)
-				{
-					if ($value === 'true')
-						$value = \true;
-					elseif ($value === 'false')
-						$value = \false;
-					$tag->rules->$ruleName($value);
-				}
+					$tag->rules->$ruleName($this->convertValue($value));
 			}
 			else
 			{
@@ -285,6 +275,14 @@ class BBCodeMonkey
 			$tag->attributes->add($attrName)->filterChain->append($filter)->setRegexp($regexp);
 		}
 		return $table;
+	}
+	protected function convertValue($value)
+	{
+		if ($value === 'true')
+			return \true;
+		if ($value === 'false')
+			return \false;
+		return $value;
 	}
 	protected static function parseTokens($definition)
 	{
