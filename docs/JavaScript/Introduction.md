@@ -36,7 +36,7 @@ s9e.TextFormatter.setNestingLimit($tagName, $limit);
 s9e.TextFormatter.setTagLimit($tagName, $limit);
 ```
 
-### Minify the JavaScript parser with Google Closure Compiler service
+### Minify the JavaScript parser with the Google Closure Compiler service
 
 The JavaScript parser can be automatically be minified using the [Google Closure Compiler service](https://developers.google.com/closure/compiler/docs/gettingstarted_api) via HTTP. The minification level and other configuration are automatically set.
 
@@ -46,7 +46,7 @@ $configurator->enableJavaScript();
 $configurator->javascript->setMinifier('ClosureCompilerService');
 ```
 
-### Minify the JavaScript parser with Google Closure Compiler application
+### Minify the JavaScript parser with the Google Closure Compiler application
 
 Alternatively, the [Google Closure Compiler application](https://developers.google.com/closure/compiler/docs/gettingstarted_app) can be used. This require PHP to be able to use `exec()` and for the `java` executable and `compiler.jar` to be available locally. Like the Google Closure Compiler service, configuration is automatic.
 
@@ -67,4 +67,18 @@ $configurator->enableJavaScript();
 $configurator->javascript
 	->setMinifier('ClosureCompilerService')
 	->cacheDir = '/path/to/cache';
+```
+
+### Improve minification
+
+It is possible to improve the minification ratio by disabling features that are not used. For instance, if you only use the `parse` and `preview` methods you can reduce the API to only those two methods.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->enableJavaScript();
+
+$configurator->javascript->exportMethods = [
+	'parse',
+	'preview'
+];
 ```
