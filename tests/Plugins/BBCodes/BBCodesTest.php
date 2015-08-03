@@ -122,107 +122,107 @@ class BBCodesTest extends Test
 	public function getPredefinedBBCodesTests()
 	{
 		return [
-//			[
-//				'[acronym="foobar"]F.B[/acronym]',
-//				'<acronym title="foobar">F.B</acronym>'
-//			],
-//			[
-//				'[acronym="\'\"foobar\"\'"]F.B[/acronym]',
-//				'<acronym title="\'&quot;foobar&quot;\'">F.B</acronym>'
-//			],
-//			[
-//				'[align=center]...[/align]',
-//				'<div style="text-align:center">...</div>'
-//			],
-//			[
-//				'[align=;color:red]...[/align]',
-//				'[align=;color:red]...[/align]'
-//			],
-//			[
-//				'x [b]bold[/b] y',
-//				'x <b>bold</b> y'
-//			],
-//			[
-//				'x [B]BOLD[/b] y',
-//				'x <b>BOLD</b> y'
-//			],
-//			[
-//				'x [background=yellow]color me[/background] y',
-//				'x <span style="background-color:yellow">color me</span> y'
-//			],
-//			[
-//				'x [C][b]not bold[/b][/C] y',
-//				'x <code class="inline">[b]not bold[/b]</code> y'
-//			],
-//			[
-//				'x [C:123][C][b]not bold[/b][/C][/C:123] y',
-//				'x <code class="inline">[C][b]not bold[/b][/C]</code> y'
-//			],
-//			[
-//				'[center]...[/center]',
-//				'<div style="text-align:center">...</div>'
-//			],
-//			[
-//				'[code]echo "Hello world";[/code]',
-//				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">echo "Hello world";</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>',
-//			],
-//			[
-//				'[code=html]<b>Hello world</b>[/code]',
-//				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>',
-//			],
-//			[
-//				'[code]alert("first");[/code][code]alert("second");[/code]',
-//				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">alert("first");</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script><pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">alert("second");</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>'
-//			],
-//			[
-//				'[code=php]echo "Hello world";[/code]',
-//				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="php">echo "Hello world";</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'highlight.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'highlight.js\';a.appendChild(b)}</script>',
-//				function ($configurator)
-//				{
-//					$configurator->BBCodes->addFromRepository('CODE', 'default', [
-//						'scriptUrl'     => 'highlight.js',
-//						'stylesheetUrl' => 'highlight.css'
-//					]);
-//				}
-//			],
-//			[
-//				'x [COLOR=red]is red[/COLOR] y',
-//				'x <span style="color:red">is red</span> y'
-//			],
-//			[
-//				'x [COLOR=red]is [COLOR=green]green[/COLOR] and red[/COLOR] y',
-//				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
-//			],
-//			[
-//				'our [del]great [/del]leader',
-//				'our <del>great </del>leader'
-//			],
-//			[
-//				'[dl]
-//					[dt]Hacker
-//					[dd]a clever programmer
-//					[dt]Nerd
-//					[dd]technically bright but socially [s]inept[/s] awesome person
-//				[/dl]',
-//				'<dl>
-//					<dt>Hacker</dt>
-//					<dd>a clever programmer</dd>
-//					<dt>Nerd</dt>
-//					<dd>technically bright but socially <s>inept</s> awesome person</dd>
-//				</dl>'
-//			],
-//			[
-//				'Putting the EM in [em]em[/em]phasis',
-//				'Putting the EM in <em>em</em>phasis'
-//			],
-//			[
-//				'x [EMAIL]test@example.org[/EMAIL] y',
-//				'x <a href="mailto:test@example.org">test@example.org</a> y'
-//			],
-//			[
-//				'x [EMAIL=test@example.org]email[/EMAIL] y',
-//				'x <a href="mailto:test@example.org">email</a> y'
-//			],
+			[
+				'[acronym="foobar"]F.B[/acronym]',
+				'<acronym title="foobar">F.B</acronym>'
+			],
+			[
+				'[acronym="\'\"foobar\"\'"]F.B[/acronym]',
+				'<acronym title="\'&quot;foobar&quot;\'">F.B</acronym>'
+			],
+			[
+				'[align=center]...[/align]',
+				'<div style="text-align:center">...</div>'
+			],
+			[
+				'[align=;color:red]...[/align]',
+				'[align=;color:red]...[/align]'
+			],
+			[
+				'x [b]bold[/b] y',
+				'x <b>bold</b> y'
+			],
+			[
+				'x [B]BOLD[/b] y',
+				'x <b>BOLD</b> y'
+			],
+			[
+				'x [background=yellow]color me[/background] y',
+				'x <span style="background-color:yellow">color me</span> y'
+			],
+			[
+				'x [C][b]not bold[/b][/C] y',
+				'x <code class="inline">[b]not bold[/b]</code> y'
+			],
+			[
+				'x [C:123][C][b]not bold[/b][/C][/C:123] y',
+				'x <code class="inline">[C][b]not bold[/b][/C]</code> y'
+			],
+			[
+				'[center]...[/center]',
+				'<div style="text-align:center">...</div>'
+			],
+			[
+				'[code]echo "Hello world";[/code]',
+				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">echo "Hello world";</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>',
+			],
+			[
+				'[code=html]<b>Hello world</b>[/code]',
+				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>',
+			],
+			[
+				'[code]alert("first");[/code][code]alert("second");[/code]',
+				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">alert("first");</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script><pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="">alert("second");</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js\';a.appendChild(b)}</script>'
+			],
+			[
+				'[code=php]echo "Hello world";[/code]',
+				'<pre data-s9e-livepreview-postprocess="if(\'undefined\'!==typeof hljs){var a=this.innerHTML;a in hljs._?this.innerHTML=hljs._[a]:(Object.keys&amp;&amp;7&lt;Object.keys(hljs._).length&amp;&amp;(hljs._={}),hljs.highlightBlock(this.firstChild),hljs._[a]=this.innerHTML)}"><code class="php">echo "Hello world";</code></pre><script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=\'highlight.css\';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=\'highlight.js\';a.appendChild(b)}</script>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('CODE', 'default', [
+						'scriptUrl'     => 'highlight.js',
+						'stylesheetUrl' => 'highlight.css'
+					]);
+				}
+			],
+			[
+				'x [COLOR=red]is red[/COLOR] y',
+				'x <span style="color:red">is red</span> y'
+			],
+			[
+				'x [COLOR=red]is [COLOR=green]green[/COLOR] and red[/COLOR] y',
+				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
+			],
+			[
+				'our [del]great [/del]leader',
+				'our <del>great </del>leader'
+			],
+			[
+				'[dl]
+					[dt]Hacker
+					[dd]a clever programmer
+					[dt]Nerd
+					[dd]technically bright but socially [s]inept[/s] awesome person
+				[/dl]',
+				'<dl>
+					<dt>Hacker</dt>
+					<dd>a clever programmer</dd>
+					<dt>Nerd</dt>
+					<dd>technically bright but socially <s>inept</s> awesome person</dd>
+				</dl>'
+			],
+			[
+				'Putting the EM in [em]em[/em]phasis',
+				'Putting the EM in <em>em</em>phasis'
+			],
+			[
+				'x [EMAIL]test@example.org[/EMAIL] y',
+				'x <a href="mailto:test@example.org">test@example.org</a> y'
+			],
+			[
+				'x [EMAIL=test@example.org]email[/EMAIL] y',
+				'x <a href="mailto:test@example.org">email</a> y'
+			],
 			[
 				'x [FLASH=600,400]http://example.org/foo.swf[/FLASH] y',
 				'x <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="600" height="400"><param name="movie" value="http://example.org/foo.swf"><param name="quality" value="high"><param name="wmode" value="opaque"><param name="play" value="false"><param name="loop" value="false"><param name="allowScriptAccess" value="never"><param name="allowNetworking" value="internal"><embed src="http://example.org/foo.swf" quality="high" width="600" height="400" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></object> y',
