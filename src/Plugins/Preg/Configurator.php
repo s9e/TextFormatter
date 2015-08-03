@@ -13,8 +13,8 @@ use Exception;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
@@ -29,22 +29,13 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!\count($this->collection))
 			return;
-		$pregs   = [];
-		$jsPregs = [];
+		$pregs = [];
 		foreach ($this->collection as list($tagName, $regexp, $passthroughIdx))
 		{
-			$pregs[] = [$tagName, $regexp, $passthroughIdx];
-			if (isset($this->configurator->javascript))
-			{
-				$jsRegexp = RegexpConvertor::toJS($regexp);
-				$jsRegexp->flags .= 'g';
-				$jsPregs[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
-			}
+			$captures = RegexpParser::getCaptureNames($regexp);
+			$pregs[]  = [$tagName, new Regexp($regexp, \true), $passthroughIdx, $captures];
 		}
-		$variant = new Variant($pregs);
-		if (isset($this->configurator->javascript))
-			$variant->set('JS', $jsPregs);
-		return ['generics' => $variant];
+		return ['generics' => $pregs];
 	}
 	public function match($regexp, $tagName)
 	{
