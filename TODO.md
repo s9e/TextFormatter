@@ -6,6 +6,7 @@ Current things
 - Modify NormalizedCollection::asConfig() to order items in lexical order
 - Move AttributeProcessor instances to Attribute
 - Replace AttributePreprocessorCollection with AttributePreprocessorList
+- Refactor BBCodeMonkey, create a token class
 
 Long-term goals (?)
 -------------------
