@@ -151,21 +151,31 @@ class Parser
 	public static function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
-			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp))
+			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp, $map))
 			{
 				if (!$tag->hasAttribute($attrName))
 					continue;
-				$attrValue = $tag->getAttribute($attrName);
-				if (\preg_match($regexp, $attrValue, $m))
-					foreach ($m as $targetName => $targetValue)
-					{
-						if (\is_numeric($targetName) || $targetValue === '')
-							continue;
-						if ($targetName === $attrName || !$tag->hasAttribute($targetName))
-							$tag->setAttribute($targetName, $targetValue);
-					}
+				self::executeAttributePreprocessor($tag, $attrName, $regexp, $map);
 			}
 		return \true;
+	}
+	protected static function executeAttributePreprocessor(Tag $tag, $attrName, $regexp, $map)
+	{
+		$attrValue = $tag->getAttribute($attrName);
+		$captures  = self::getNamedCaptures($attrValue, $regexp, $map);
+		foreach ($captures as $k => $v)
+			if ($k === $attrName || !$tag->hasAttribute($k))
+				$tag->setAttribute($k, $v);
+	}
+	protected static function getNamedCaptures($attrValue, $regexp, $map)
+	{
+		if (!\preg_match($regexp, $attrValue, $m))
+			return [];
+		$values = [];
+		foreach ($map as $i => $k)
+			if (isset($m[$i]) && $m[$i] !== '')
+				$values[$k] = $m[$i];
+		return $values;
 	}
 	protected static function executeFilter(array $filter, array $vars)
 	{
