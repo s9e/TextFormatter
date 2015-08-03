@@ -336,36 +336,64 @@ function executeAttributePreprocessors(tag, tagConfig)
 				return;
 			}
 
-			var m, attrValue = tag.getAttribute(attrName);
-
-			// If the regexp matches, we remove the source attribute then we add the
-			// captured attributes
-			if (m = regexp.exec(attrValue))
-			{
-				// Set the target attributes
-				map.forEach(function(targetName, mIndex)
-				{
-					// Skip captures with no targets and targets with no captures (in case of
-					// optional captures)
-					if (targetName === '' || typeof m[mIndex] !== 'string')
-					{
-						return;
-					}
-
-					var targetValue = m[mIndex];
-
-					// Attribute preprocessors cannot overwrite other attributes but they can
-					// overwrite themselves
-					if (targetName === attrName || !tag.hasAttribute(targetName))
-					{
-						tag.setAttribute(targetName, targetValue);
-					}
-				});
-			}
+			executeAttributePreprocessor(tag, attrName, regexp, map);
 		});
 	}
 
 	return true;
+}
+
+/**
+* Execute an attribute preprocessor
+*
+* @param  {!Tag}            tag
+* @param  {!string}         attrName
+* @param  {!string}         regexp
+* @param  {!Array<!string>} map
+*/
+function executeAttributePreprocessor(tag, attrName, regexp, map)
+{
+	var attrValue = tag.getAttribute(attrName),
+		captures  = getNamedCaptures(attrValue, regexp, map),
+		k;
+	
+	for (k in captures)
+	{
+		// Attribute preprocessors cannot overwrite other attributes but they can
+		// overwrite themselves
+		if (k === attrName || !tag.hasAttribute(k))
+		{
+			tag.setAttribute(k, captures[k]);
+		}
+	}
+}
+
+/**
+* Execute a regexp and return the values of the mapped captures
+*
+* @param  {!string}                  attrValue
+* @param  {!string}                  regexp
+* @param  {!Array<!string>}          map
+* @return {!Object<!string,!string>}
+*/
+function getNamedCaptures(attrValue, regexp, map)
+{
+	var m = regexp.exec(attrValue);
+	if (!m)
+	{
+		return [];
+	}
+
+	var values = {};
+	map.forEach(function(k, i)
+	{
+		if (typeof m[i] === 'string' && m[i] !== '')
+		{
+			values[k] = m[i];
+		}
+	});
+
+	return values;
 }
 
 /**

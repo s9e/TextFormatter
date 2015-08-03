@@ -5073,8 +5073,9 @@ class UrlConfig implements ConfigProvider
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
-use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 class AttributePreprocessorCollection extends Collection
@@ -5123,12 +5124,10 @@ class AttributePreprocessorCollection extends Collection
 		foreach ($this->items as $k => $ap)
 		{
 			list($attrName, $regexp) = \unserialize($k);
-			$jsRegexp = RegexpConvertor::toJS($regexp);
-			$config[] = new Variant(
-				array($attrName, $regexp),
-				array(
-					'JS' => array($attrName, $jsRegexp, $jsRegexp->map)
-				)
+			$config[] = array(
+				$attrName,
+				new Regexp($regexp, \true),
+				RegexpParser::getCaptureNames($regexp)
 			);
 		}
 		return $config;

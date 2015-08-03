@@ -11,9 +11,9 @@ class Parser extends ParserBase
 {
 	public function parse($text, array $matches)
 	{
-		foreach ($this->config['generics'] as $_ca164be8)
+		foreach ($this->config['generics'] as $_8d36e519)
 		{
-			list($tagName, $regexp, $passthroughIdx) = $_ca164be8;
+			list($tagName, $regexp, $passthroughIdx, $map) = $_8d36e519;
 			\preg_match_all($regexp, $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
 			foreach ($matches as $m)
 			{
@@ -36,9 +36,9 @@ class Parser extends ParserBase
 				}
 				else
 					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
-				foreach ($m as $k => $v)
-					if (!\is_numeric($k))
-						$tag->setAttribute($k, $v[0]);
+				foreach ($map as $i => $attrName)
+					if ($attrName && isset($m[$i]) && $m[$i][0] !== '')
+						$tag->setAttribute($attrName, $m[$i][0]);
 			}
 		}
 	}
