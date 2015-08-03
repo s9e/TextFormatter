@@ -12,7 +12,6 @@ class NumberFilter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterNumber');
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterNumber');
 	}
 	public function isSafeInCSS()

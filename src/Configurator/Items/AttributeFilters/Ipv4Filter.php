@@ -12,7 +12,6 @@ class Ipv4Filter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpv4');
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterIpv4');
 	}
 }

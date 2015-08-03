@@ -12,7 +12,6 @@ class SimpletextFilter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterSimpletext');
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterSimpletext');
 	}
 	public function isSafeInCSS()
