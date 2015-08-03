@@ -3214,6 +3214,8 @@ class ProgrammableCallback implements ConfigProvider
 	}
 	public function addParameterByName($paramName)
 	{
+		if (\array_key_exists($paramName, $this->params))
+			throw new InvalidArgumentException("Parameter '" . $paramName . "' already exists");
 		$this->params[$paramName] = \null;
 		return $this;
 	}
@@ -3451,10 +3453,8 @@ class Tag implements ConfigProvider
 		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
-		                  ->addParameterByName('tag')
 		                  ->addParameterByName('tagConfig');
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
-		                  ->addParameterByName('tag')
 		                  ->addParameterByName('tagConfig')
 		                  ->addParameterByName('registeredVars')
 		                  ->addParameterByName('logger');

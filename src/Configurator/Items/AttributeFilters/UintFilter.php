@@ -12,7 +12,6 @@ class UintFilter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUint');
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterUint');
 	}
 	public function isSafeInCSS()
