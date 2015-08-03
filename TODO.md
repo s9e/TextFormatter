@@ -1,7 +1,7 @@
 Current things
 --------------
 - ~~Add RegexpParser::getCaptureNames()~~
-- Modify the Preg plugin to use getCaptureNames()
+- ~~Modify the Preg plugin to use getCaptureNames()~~
 - Modify AttributePreprocessor to use getCaptureNames()
 - Modify NormalizedCollection::asConfig() to order items in lexical order
 - Move AttributeProcessor instances to Attribute
