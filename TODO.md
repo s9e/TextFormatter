@@ -1,6 +1,15 @@
+Current things
+--------------
+- Add RegexpParser::getCaptureNames()
+- Modify the Preg plugin to use getCaptureNames()
+- Modify AttributePreprocessor to use getCaptureNames()
+- Modify NormalizedCollection::asConfig() to order items in lexical order
+- Move AttributeProcessor instances to Attribute
+- Replace AttributePreprocessorCollection with AttributePreprocessorList
+
 Long-term goals (?)
 -------------------
-- Extend Litedown: fenced code blocks, perhaps reference links
+- Extend Litedown: perhaps reference links
 - Have a piece of utilities that converts a parsed text to BBCodes or Markdown
 - RTE
 
