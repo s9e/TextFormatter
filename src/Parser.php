@@ -423,39 +423,69 @@ class Parser
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
 		{
-			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp))
+			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp, $map))
 			{
 				if (!$tag->hasAttribute($attrName))
 				{
 					continue;
 				}
 
-				$attrValue = $tag->getAttribute($attrName);
-
-				// If the regexp matches, we add the captured attributes
-				if (preg_match($regexp, $attrValue, $m))
-				{
-					// Set the target attributes
-					foreach ($m as $targetName => $targetValue)
-					{
-						// Skip numeric captures and empty captures
-						if (is_numeric($targetName) || $targetValue === '')
-						{
-							continue;
-						}
-
-						// Attribute preprocessors cannot overwrite other attributes but they can
-						// overwrite themselves
-						if ($targetName === $attrName || !$tag->hasAttribute($targetName))
-						{
-							$tag->setAttribute($targetName, $targetValue);
-						}
-					}
-				}
+				self::executeAttributePreprocessor($tag, $attrName, $regexp, $map);
 			}
 		}
 
 		return true;
+	}
+
+	/**
+	* Execute an attribute preprocessor
+	*
+	* @param  Tag      $tag
+	* @param  string   $attrName
+	* @param  string   $regexp
+	* @param  string[] $map
+	* @return void
+	*/
+	protected static function executeAttributePreprocessor(Tag $tag, $attrName, $regexp, $map)
+	{
+		$attrValue = $tag->getAttribute($attrName);
+		$captures  = self::getNamedCaptures($attrValue, $regexp, $map);
+		foreach ($captures as $k => $v)
+		{
+			// Attribute preprocessors cannot overwrite other attributes but they can
+			// overwrite themselves
+			if ($k === $attrName || !$tag->hasAttribute($k))
+			{
+				$tag->setAttribute($k, $v);
+			}
+		}
+	}
+
+	/**
+	* Execute a regexp and return the values of the mapped captures
+	*
+	* @param  string   $attrValue
+	* @param  string   $regexp
+	* @param  string[] $map
+	* @return array
+	*/
+	protected static function getNamedCaptures($attrValue, $regexp, $map)
+	{
+		if (!preg_match($regexp, $attrValue, $m))
+		{
+			return [];
+		}
+
+		$values = [];
+		foreach ($map as $i => $k)
+		{
+			if (isset($m[$i]) && $m[$i] !== '')
+			{
+				$values[$k] = $m[$i];
+			}
+		}
+
+		return $values;
 	}
 
 	/**

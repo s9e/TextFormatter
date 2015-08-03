@@ -219,9 +219,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeList
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\AttributePreprocessor
- [x] asConfig() returns a list of [attrName, regexp] arrays
- [x] asConfig() has a JavaScript variant for each attribute preprocessor
- [x] asConfig()'s JavaScript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+ [x] asConfig() returns a list of [attrName, Regexp instance, map] arrays
  [x] Is iterable with foreach
  [x] Uses the name of the source attribute as key when iterating
  [x] merge() accepts a 2D array of regexps

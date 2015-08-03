@@ -7,7 +7,7 @@ use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection
@@ -28,86 +28,24 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns a list of [attrName, regexp] arrays
+	* @testdox asConfig() returns a list of [attrName, Regexp instance, map] arrays
 	*/
 	public function testGetConfig()
 	{
 		$collection = new AttributePreprocessorCollection;
-
-		$collection->add('x', '#x1#');
-		$collection->add('x', '#x2#');
-		$collection->add('y', '#y1#');
-		$collection->add('y', '#y2#');
-
-		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config);
-
-		$this->assertEquals(
-			[
-				['x', '#x1#'],
-				['x', '#x2#'],
-				['y', '#y1#'],
-				['y', '#y2#']
-			],
-			$config
-		);
-	}
-
-	/**
-	* @testdox asConfig() has a JavaScript variant for each attribute preprocessor
-	*/
-	public function testGetConfigVariant()
-	{
-		$collection = new AttributePreprocessorCollection;
-
-		$collection->add('x', '#x1#');
-		$collection->add('x', '#x2#');
-		$collection->add('y', '#y1#');
-		$collection->add('y', '#y2#');
-
-		$config = $collection->asConfig();
-
-		foreach ($config as $entry)
-		{
-			$this->assertInstanceOf(
-				's9e\\TextFormatter\\Configurator\\Items\\Variant',
-				$entry
-			);
-		}
-	}
-
-	/**
-	* @testdox asConfig()'s JavaScript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
-	*/
-	public function testGetConfigJavaScript()
-	{
-		$collection = new AttributePreprocessorCollection;
-
 		$collection->add('x', '#(?<x1>x1)#');
 		$collection->add('x', '#(?<x2>x2)#');
 		$collection->add('y', '#(?<y1>y1)#');
 		$collection->add('y', '#(?<y2>y2)#');
 
-		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
-
-		$rx1 = new RegExp('(x1)');
-		$rx1->map = ['', 'x1'];
-		$rx2 = new RegExp('(x2)');
-		$rx2->map = ['', 'x2'];
-		$ry1 = new RegExp('(y1)');
-		$ry1->map = ['', 'y1'];
-		$ry2 = new RegExp('(y2)');
-		$ry2->map = ['', 'y2'];
-
 		$this->assertEquals(
 			[
-				['x', $rx1, $rx1->map],
-				['x', $rx2, $rx2->map],
-				['y', $ry1, $ry1->map],
-				['y', $ry2, $ry2->map]
+				['x', new Regexp('#(?<x1>x1)#', true), ['', 'x1']],
+				['x', new Regexp('#(?<x2>x2)#', true), ['', 'x2']],
+				['y', new Regexp('#(?<y1>y1)#', true), ['', 'y1']],
+				['y', new Regexp('#(?<y2>y2)#', true), ['', 'y2']]
 			],
-			$config
+			$collection->asConfig()
 		);
 	}
 
@@ -163,16 +101,16 @@ class AttributePreprocessorCollectionTest extends Test
 			['bar', '/c/']
 		];
 
+		$expected = new AttributePreprocessorCollection;
+		foreach ($attributePreprocessors as list($attrName, $regexp))
+		{
+			$expected->add($attrName, $regexp);
+		}
+
 		$collection = new AttributePreprocessorCollection;
 		$collection->merge($attributePreprocessors);
 
-		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config);
-
-		$this->assertEquals(
-			$attributePreprocessors,
-			$config
-		);
+		$this->assertEquals($expected, $collection);
 	}
 
 	/**
@@ -187,17 +125,12 @@ class AttributePreprocessorCollectionTest extends Test
 			['bar', new AttributePreprocessor('/c/')]
 		]);
 
-		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config);
+		$expected = new AttributePreprocessorCollection;
+		$expected->add('foo', '/a/');
+		$expected->add('foo', '/b/');
+		$expected->add('bar', '/c/');
 
-		$this->assertEquals(
-			[
-				['foo', '/a/'],
-				['foo', '/b/'],
-				['bar', '/c/']
-			],
-			$config
-		);
+		$this->assertEquals($expected, $collection);
 	}
 
 	/**

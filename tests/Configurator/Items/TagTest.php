@@ -33,15 +33,17 @@ class TagTest extends Test
 			['bar', '/c/']
 		];
 
+		$expected = new AttributePreprocessorCollection;
+		$expected->add('foo', '/a/');
+		$expected->add('foo', '/b/');
+		$expected->add('bar', '/c/');
+
 		$tag = new Tag;
 		$tag->attributePreprocessors = $attributePreprocessors;
 
-		$config = $tag->attributePreprocessors->asConfig();
-		ConfigHelper::filterVariants($config);
-
 		$this->assertEquals(
-			$attributePreprocessors,
-			$config
+			$expected->asConfig(),
+			$tag->attributePreprocessors->asConfig()
 		);
 	}
 
@@ -80,16 +82,18 @@ class TagTest extends Test
 			['bar', '/c/']
 		];
 
+		$expected = new AttributePreprocessorCollection;
+		$expected->add('foo', '/a/');
+		$expected->add('foo', '/b/');
+		$expected->add('bar', '/c/');
+
 		$tag = new Tag;
 		$tag->attributePreprocessors->add('baz', '/d/');
 		$tag->attributePreprocessors = $attributePreprocessors;
 
-		$config = $tag->attributePreprocessors->asConfig();
-		ConfigHelper::filterVariants($config);
-
-		$this->assertSame(
-			$attributePreprocessors,
-			$config
+		$this->assertEquals(
+			$expected->asConfig(),
+			$tag->attributePreprocessors->asConfig()
 		);
 	}
 
