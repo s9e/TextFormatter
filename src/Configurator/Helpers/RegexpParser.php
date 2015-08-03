@@ -9,6 +9,92 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 abstract class RegexpParser
 {
+	public static function getAllowedCharacterRegexp($regexp)
+	{
+		$def = self::parse($regexp);
+		if (\strpos($def['modifiers'], 'm') !== \false)
+			return '//';
+		if (\substr($def['regexp'], 0, 1) !== '^'
+		 || \substr($def['regexp'], -1)   !== '$')
+			return '//';
+		$def['tokens'][] = array(
+			'pos'  => \strlen($def['regexp']),
+			'len'  => 0,
+			'type' => 'end'
+		);
+		$patterns = array();
+		$literal = '';
+		$pos     = 0;
+		$skipPos = 0;
+		$depth   = 0;
+		foreach ($def['tokens'] as $token)
+		{
+			if ($token['type'] === 'option')
+				$skipPos = \max($skipPos, $token['pos'] + $token['len']);
+			if (\strpos($token['type'], 'AssertionStart') !== \false)
+			{
+				$endToken = $def['tokens'][$token['endToken']];
+				$skipPos  = \max($skipPos, $endToken['pos'] + $endToken['len']);
+			}
+			if ($token['pos'] >= $skipPos)
+			{
+				if ($token['type'] === 'characterClass')
+					$patterns[] = '[' . $token['content'] . ']';
+				if ($token['pos'] > $pos)
+				{
+					$tmp = \substr($def['regexp'], $pos, $token['pos'] - $pos);
+					$literal .= $tmp;
+					if (!$depth)
+					{
+						$tmp = \str_replace('\\\\', '', $tmp);
+						if (\preg_match('/(?<!\\\\)\\|(?!\\^)/', $tmp))
+							return '//';
+						if (\preg_match('/(?<![$\\\\])\\|/', $tmp))
+							return '//';
+					}
+				}
+			}
+			if (\substr($token['type'], -5) === 'Start')
+				++$depth;
+			elseif (\substr($token['type'], -3) === 'End')
+				--$depth;
+			$pos = \max($skipPos, $token['pos'] + $token['len']);
+		}
+		if (\preg_match('#(?<!\\\\)(?:\\\\\\\\)*\\.#', $literal))
+		{
+			if (\strpos($def['modifiers'], 's') !== \false
+			 || \strpos($literal, "\n") !== \false)
+				return '//';
+			$patterns[] = '.';
+			$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1', $literal);
+		}
+		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[*+?]#', '$1', $literal);
+		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
+		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG1-9]#', '$1', $literal);
+		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
+		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);
+		if (\strpos($def['modifiers'], 'D') === \false)
+			$literal .= "\n";
+		if ($literal !== '')
+			$patterns[] = '[' . $literal . ']';
+		if (empty($patterns))
+			return '/^$/D';
+		$regexp = $def['delimiter'] . \implode('|', $patterns) . $def['delimiter'];
+		if (\strpos($def['modifiers'], 'i') !== \false)
+			$regexp .= 'i';
+		if (\strpos($def['modifiers'], 'u') !== \false)
+			$regexp .= 'u';
+		return $regexp;
+	}
+	public static function getCaptureNames($regexp)
+	{
+		$map        = array('');
+		$regexpInfo = self::parse($regexp);
+		foreach ($regexpInfo['tokens'] as $tok)
+			if ($tok['type'] === 'capturingSubpatternStart')
+				$map[] = (isset($tok['name'])) ? $tok['name'] : '';
+		return $map;
+	}
 	public static function parse($regexp)
 	{
 		if (!\preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#Ds', $regexp, $m))
@@ -142,82 +228,5 @@ abstract class RegexpParser
 		if (!empty($openSubpatterns))
 			throw new RuntimeException('Could not find matching pattern end for left parenthesis at pos ' . $ret['tokens'][$openSubpatterns[0]]['pos']);
 		return $ret;
-	}
-	public static function getAllowedCharacterRegexp($regexp)
-	{
-		$def = self::parse($regexp);
-		if (\strpos($def['modifiers'], 'm') !== \false)
-			return '//';
-		if (\substr($def['regexp'], 0, 1) !== '^'
-		 || \substr($def['regexp'], -1)   !== '$')
-			return '//';
-		$def['tokens'][] = array(
-			'pos'  => \strlen($def['regexp']),
-			'len'  => 0,
-			'type' => 'end'
-		);
-		$patterns = array();
-		$literal = '';
-		$pos     = 0;
-		$skipPos = 0;
-		$depth   = 0;
-		foreach ($def['tokens'] as $token)
-		{
-			if ($token['type'] === 'option')
-				$skipPos = \max($skipPos, $token['pos'] + $token['len']);
-			if (\strpos($token['type'], 'AssertionStart') !== \false)
-			{
-				$endToken = $def['tokens'][$token['endToken']];
-				$skipPos  = \max($skipPos, $endToken['pos'] + $endToken['len']);
-			}
-			if ($token['pos'] >= $skipPos)
-			{
-				if ($token['type'] === 'characterClass')
-					$patterns[] = '[' . $token['content'] . ']';
-				if ($token['pos'] > $pos)
-				{
-					$tmp = \substr($def['regexp'], $pos, $token['pos'] - $pos);
-					$literal .= $tmp;
-					if (!$depth)
-					{
-						$tmp = \str_replace('\\\\', '', $tmp);
-						if (\preg_match('/(?<!\\\\)\\|(?!\\^)/', $tmp))
-							return '//';
-						if (\preg_match('/(?<![$\\\\])\\|/', $tmp))
-							return '//';
-					}
-				}
-			}
-			if (\substr($token['type'], -5) === 'Start')
-				++$depth;
-			elseif (\substr($token['type'], -3) === 'End')
-				--$depth;
-			$pos = \max($skipPos, $token['pos'] + $token['len']);
-		}
-		if (\preg_match('#(?<!\\\\)(?:\\\\\\\\)*\\.#', $literal))
-		{
-			if (\strpos($def['modifiers'], 's') !== \false
-			 || \strpos($literal, "\n") !== \false)
-				return '//';
-			$patterns[] = '.';
-			$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1', $literal);
-		}
-		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[*+?]#', '$1', $literal);
-		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
-		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG1-9]#', '$1', $literal);
-		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
-		$literal = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);
-		if (\strpos($def['modifiers'], 'D') === \false)
-			$literal .= "\n";
-		if ($literal !== '')
-			$patterns[] = '[' . $literal . ']';
-		if (empty($patterns))
-			return '/^$/D';
-		$regexp = $def['delimiter'] . \implode('|', $patterns) . $def['delimiter'];
-		if (\strpos($def['modifiers'], 'i') !== \false)
-			$regexp .= 'i';
-		if (\strpos($def['modifiers'], 'u') !== \false)
-			$regexp .= 'u';
-		return $regexp;
 	}
 }
