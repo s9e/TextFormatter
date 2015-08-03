@@ -19,8 +19,6 @@ class ColorFilter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterColor');
-
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterColor');
 	}
 

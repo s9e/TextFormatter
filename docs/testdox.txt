@@ -788,6 +788,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByValue() is chainable
  [x] addParameterByName() adds a parameter as a name with no value
+ [x] addParameterByName() throws an exception when the same parameter is added twice
  [x] addParameterByName() is chainable
  [x] resetParameters() removes all parameters
  [x] resetParameters() is chainable
@@ -1918,6 +1919,7 @@ s9e\TextFormatter\Tests\Parser
  [x] setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
  [x] setNestingLimit() does not have side-effects due to references
  [x] Characters outside Unicode's BMP are encoded
+ [x] Attribute preprocessors are properly run with default config
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument

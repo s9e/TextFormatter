@@ -81,11 +81,9 @@ class Tag implements ConfigProvider
 
 		// Start the filterChain with the default processing
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
-		                  ->addParameterByName('tag')
 		                  ->addParameterByName('tagConfig');
 
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
-		                  ->addParameterByName('tag')
 		                  ->addParameterByName('tagConfig')
 		                  ->addParameterByName('registeredVars')
 		                  ->addParameterByName('logger');

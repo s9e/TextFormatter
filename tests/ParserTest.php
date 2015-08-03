@@ -363,4 +363,30 @@ class ParserTest extends Test
 		$xml  = $this->configurator->getParser()->parse($text);
 		$this->assertSame('<t>&#128512;</t>', $xml);
 	}
+
+	/**
+	* @testdox Attribute preprocessors are properly run with default config
+	*/
+	public function testAttributePreprocessors()
+	{
+		$configurator = new Configurator;
+		$tag = $configurator->tags->add('X');
+		$tag->attributePreprocessors->add('foo', '/(?<bar>\\d+)/');
+		$tag->attributes->add('bar');
+
+		extract($configurator->finalize());
+
+		$parser->registerParser(
+			'foo',
+			function ($text) use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 0)->setAttribute('foo', '123');
+			}
+		);
+
+		$this->assertSame(
+			'<r><X bar="123"/></r>',
+			$parser->parse('')
+		);
+	}
 }

@@ -110,6 +110,18 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox addParameterByName() throws an exception when the same parameter is added twice
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Parameter 'foobar' already exists
+	*/
+	public function testAddParameterByNameDuplicated()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->addParameterByName('foobar');
+		$pc->addParameterByName('foobar');
+	}
+
+	/**
 	* @testdox addParameterByName() is chainable
 	*/
 	public function testAddParameterByNameChainable()

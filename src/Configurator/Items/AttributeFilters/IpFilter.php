@@ -19,8 +19,6 @@ class IpFilter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIp');
-
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterIp');
 	}
 }

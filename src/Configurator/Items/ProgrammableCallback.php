@@ -84,6 +84,11 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public function addParameterByName($paramName)
 	{
+		if (array_key_exists($paramName, $this->params))
+		{
+			throw new InvalidArgumentException("Parameter '" . $paramName . "' already exists");
+		}
+
 		$this->params[$paramName] = null;
 
 		return $this;
