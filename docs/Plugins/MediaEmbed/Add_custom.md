@@ -237,5 +237,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="600" height="338" src="//gfycat.com/iframe/SereneIllfatedCapybara" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
+<iframe width="500" height="281" src="//gfycat.com/iframe/SereneIllfatedCapybara" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```

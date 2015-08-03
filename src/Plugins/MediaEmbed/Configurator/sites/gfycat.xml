@@ -12,8 +12,8 @@
 	<host>gfycat.com</host>
 	<extract>!gfycat\.com/(?'id'\w+)!</extract>
 	<scrape url="http://gfycat.com/{@id}">
-		<extract>!property="og:image:height"\s*content="(?'height'\d+)!</extract>
-		<extract>!property="og:image:width"\s*content="(?'width'\d+)!</extract>
+		<extract>!gfyHeight\s*=\s*"?(?'height'\d+)!</extract>
+		<extract>!gfyWidth\s*=\s*"?(?'width'\d+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="//gfycat.com/iframe/{@id}"/>
 </site>
