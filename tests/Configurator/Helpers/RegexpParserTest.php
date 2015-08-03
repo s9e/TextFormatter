@@ -1098,4 +1098,31 @@ class RegexpParserTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox getCaptureNames() works
+	* @dataProvider getGetCaptureNamesTests
+	*/
+	public function testGetCaptureNamesTests($regexp, array $expected)
+	{
+		$this->assertSame($expected, RegexpParser::getCaptureNames($regexp));
+	}
+
+	public function getGetCaptureNamesTests()
+	{
+		return [
+			[
+				'//',
+				['']
+			],
+			[
+				'/(.)/',
+				['', '']
+			],
+			[
+				'/(x)(?<foo>y)(?<bar>y)/',
+				['', '', 'foo', 'bar']
+			],
+		];
+	}
 }

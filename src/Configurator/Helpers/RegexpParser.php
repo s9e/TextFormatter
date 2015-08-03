@@ -12,6 +12,199 @@ use RuntimeException;
 abstract class RegexpParser
 {
 	/**
+	* Generate a regexp that matches any single character allowed in a regexp
+	*
+	* This method will generate a regexp that can be used to determine whether a given character
+	* could in theory be allowed in a string that matches the source regexp. For example, the source
+	* regexp /^a+$/D would generate /a/ while /^foo\d+$/D would generate /[fo\d]/ whereas the regexp
+	* /foo/ would generate // because it's not anchored so any characters could be found before or
+	* after the literal "foo".
+	*
+	* @param  string $regexp Source regexp
+	* @return string         Regexp that matches any single character allowed in the source regexp
+	*/
+	public static function getAllowedCharacterRegexp($regexp)
+	{
+		$def = self::parse($regexp);
+
+		// If the regexp is uses the multiline modifier, this regexp can't match the whole string if
+		// it contains newlines, so in effect it could allow any content
+		if (strpos($def['modifiers'], 'm') !== false)
+		{
+			return '//';
+		}
+
+		if (substr($def['regexp'], 0, 1) !== '^'
+		 || substr($def['regexp'], -1)   !== '$')
+		{
+			return '//';
+		}
+
+		// Append a token to mark the end of the regexp
+		$def['tokens'][] = [
+			'pos'  => strlen($def['regexp']),
+			'len'  => 0,
+			'type' => 'end'
+		];
+
+		$patterns = [];
+
+		// Collect the literal portions of the source regexp while testing for alternations
+		$literal = '';
+		$pos     = 0;
+		$skipPos = 0;
+		$depth   = 0;
+		foreach ($def['tokens'] as $token)
+		{
+			// Skip options
+			if ($token['type'] === 'option')
+			{
+				$skipPos = max($skipPos, $token['pos'] + $token['len']);
+			}
+
+			// Skip assertions
+			if (strpos($token['type'], 'AssertionStart') !== false)
+			{
+				$endToken = $def['tokens'][$token['endToken']];
+				$skipPos  = max($skipPos, $endToken['pos'] + $endToken['len']);
+			}
+
+			if ($token['pos'] >= $skipPos)
+			{
+				if ($token['type'] === 'characterClass')
+				{
+					$patterns[] = '[' . $token['content'] . ']';
+				}
+
+				if ($token['pos'] > $pos)
+				{
+					// Capture the content between last position and current position
+					$tmp = substr($def['regexp'], $pos, $token['pos'] - $pos);
+
+					// Append the content to the literal portion
+					$literal .= $tmp;
+
+					// Test for alternations if it's the root of the regexp
+					if (!$depth)
+					{
+						// Remove literal backslashes for convenience
+						$tmp = str_replace('\\\\', '', $tmp);
+
+						// Look for an unescaped | that is not followed by ^
+						if (preg_match('/(?<!\\\\)\\|(?!\\^)/', $tmp))
+						{
+							return '//';
+						}
+
+						// Look for an unescaped | that is not preceded by $
+						if (preg_match('/(?<![$\\\\])\\|/', $tmp))
+						{
+							return '//';
+						}
+					}
+				}
+			}
+
+			if (substr($token['type'], -5) === 'Start')
+			{
+				++$depth;
+			}
+			elseif (substr($token['type'], -3) === 'End')
+			{
+				--$depth;
+			}
+
+			$pos = max($skipPos, $token['pos'] + $token['len']);
+		}
+
+		// Test for the presence of an unescaped dot
+		if (preg_match('#(?<!\\\\)(?:\\\\\\\\)*\\.#', $literal))
+		{
+			if (strpos($def['modifiers'], 's') !== false
+			 || strpos($literal, "\n") !== false)
+			{
+				return '//';
+			}
+
+			$patterns[] = '.';
+
+			// Remove unescaped dots
+			$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1', $literal);
+		}
+
+		// Remove unescaped quantifiers *, + and ?
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[*+?]#', '$1', $literal);
+
+		// Remove unescaped quantifiers {}
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
+
+		// Remove backslash assertions \b, \B, \A, \Z, \z and \G, as well as back references
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG1-9]#', '$1', $literal);
+
+		// Remove unescaped ^, | and $
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
+
+		// Escape unescaped - and ] so they are safe to use in a character class
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);
+
+		// If the regexp doesn't use PCRE_DOLLAR_ENDONLY, it could end with a \n
+		if (strpos($def['modifiers'], 'D') === false)
+		{
+			$literal .= "\n";
+		}
+
+		// Add the literal portion of the regexp to the patterns, as a character class
+		if ($literal !== '')
+		{
+			$patterns[] = '[' . $literal . ']';
+		}
+
+		// Test whether this regexp actually matches anything
+		if (empty($patterns))
+		{
+			return '/^$/D';
+		}
+
+		// Build the allowed characters regexp
+		$regexp = $def['delimiter'] . implode('|', $patterns) . $def['delimiter'];
+
+		// Add the modifiers
+		if (strpos($def['modifiers'], 'i') !== false)
+		{
+			$regexp .= 'i';
+		}
+		if (strpos($def['modifiers'], 'u') !== false)
+		{
+			$regexp .= 'u';
+		}
+
+		return $regexp;
+	}
+
+	/**
+	* Return the name of each capture in given regexp
+	*
+	* Will return an empty string for unnamed captures
+	*
+	* @param  string   $regexp
+	* @return string[]
+	*/
+	public static function getCaptureNames($regexp)
+	{
+		$map        = [''];
+		$regexpInfo = self::parse($regexp);
+		foreach ($regexpInfo['tokens'] as $tok)
+		{
+			if ($tok['type'] === 'capturingSubpatternStart')
+			{
+				$map[] = (isset($tok['name'])) ? $tok['name'] : '';
+			}
+		}
+
+		return $map;
+	}
+
+	/**
 	* @param  string $regexp
 	* @return array
 	*/
@@ -196,175 +389,5 @@ abstract class RegexpParser
 		}
 
 		return $ret;
-	}
-
-	/**
-	* Generate a regexp that matches any single character allowed in a regexp
-	*
-	* This method will generate a regexp that can be used to determine whether a given character
-	* could in theory be allowed in a string that matches the source regexp. For example, the source
-	* regexp /^a+$/D would generate /a/ while /^foo\d+$/D would generate /[fo\d]/ whereas the regexp
-	* /foo/ would generate // because it's not anchored so any characters could be found before or
-	* after the literal "foo".
-	*
-	* @param  string $regexp Source regexp
-	* @return string         Regexp that matches any single character allowed in the source regexp
-	*/
-	public static function getAllowedCharacterRegexp($regexp)
-	{
-		$def = self::parse($regexp);
-
-		// If the regexp is uses the multiline modifier, this regexp can't match the whole string if
-		// it contains newlines, so in effect it could allow any content
-		if (strpos($def['modifiers'], 'm') !== false)
-		{
-			return '//';
-		}
-
-		if (substr($def['regexp'], 0, 1) !== '^'
-		 || substr($def['regexp'], -1)   !== '$')
-		{
-			return '//';
-		}
-
-		// Append a token to mark the end of the regexp
-		$def['tokens'][] = [
-			'pos'  => strlen($def['regexp']),
-			'len'  => 0,
-			'type' => 'end'
-		];
-
-		$patterns = [];
-
-		// Collect the literal portions of the source regexp while testing for alternations
-		$literal = '';
-		$pos     = 0;
-		$skipPos = 0;
-		$depth   = 0;
-		foreach ($def['tokens'] as $token)
-		{
-			// Skip options
-			if ($token['type'] === 'option')
-			{
-				$skipPos = max($skipPos, $token['pos'] + $token['len']);
-			}
-
-			// Skip assertions
-			if (strpos($token['type'], 'AssertionStart') !== false)
-			{
-				$endToken = $def['tokens'][$token['endToken']];
-				$skipPos  = max($skipPos, $endToken['pos'] + $endToken['len']);
-			}
-
-			if ($token['pos'] >= $skipPos)
-			{
-				if ($token['type'] === 'characterClass')
-				{
-					$patterns[] = '[' . $token['content'] . ']';
-				}
-
-				if ($token['pos'] > $pos)
-				{
-					// Capture the content between last position and current position
-					$tmp = substr($def['regexp'], $pos, $token['pos'] - $pos);
-
-					// Append the content to the literal portion
-					$literal .= $tmp;
-
-					// Test for alternations if it's the root of the regexp
-					if (!$depth)
-					{
-						// Remove literal backslashes for convenience
-						$tmp = str_replace('\\\\', '', $tmp);
-
-						// Look for an unescaped | that is not followed by ^
-						if (preg_match('/(?<!\\\\)\\|(?!\\^)/', $tmp))
-						{
-							return '//';
-						}
-
-						// Look for an unescaped | that is not preceded by $
-						if (preg_match('/(?<![$\\\\])\\|/', $tmp))
-						{
-							return '//';
-						}
-					}
-				}
-			}
-
-			if (substr($token['type'], -5) === 'Start')
-			{
-				++$depth;
-			}
-			elseif (substr($token['type'], -3) === 'End')
-			{
-				--$depth;
-			}
-
-			$pos = max($skipPos, $token['pos'] + $token['len']);
-		}
-
-		// Test for the presence of an unescaped dot
-		if (preg_match('#(?<!\\\\)(?:\\\\\\\\)*\\.#', $literal))
-		{
-			if (strpos($def['modifiers'], 's') !== false
-			 || strpos($literal, "\n") !== false)
-			{
-				return '//';
-			}
-
-			$patterns[] = '.';
-
-			// Remove unescaped dots
-			$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1', $literal);
-		}
-
-		// Remove unescaped quantifiers *, + and ?
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[*+?]#', '$1', $literal);
-
-		// Remove unescaped quantifiers {}
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
-
-		// Remove backslash assertions \b, \B, \A, \Z, \z and \G, as well as back references
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG1-9]#', '$1', $literal);
-
-		// Remove unescaped ^, | and $
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
-
-		// Escape unescaped - and ] so they are safe to use in a character class
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);
-
-		// If the regexp doesn't use PCRE_DOLLAR_ENDONLY, it could end with a \n
-		if (strpos($def['modifiers'], 'D') === false)
-		{
-			$literal .= "\n";
-		}
-
-		// Add the literal portion of the regexp to the patterns, as a character class
-		if ($literal !== '')
-		{
-			$patterns[] = '[' . $literal . ']';
-		}
-
-		// Test whether this regexp actually matches anything
-		if (empty($patterns))
-		{
-			return '/^$/D';
-		}
-
-		// Build the allowed characters regexp
-		$regexp = $def['delimiter'] . implode('|', $patterns) . $def['delimiter'];
-
-		// Add the modifiers
-		if (strpos($def['modifiers'], 'i') !== false)
-		{
-			$regexp .= 'i';
-		}
-		if (strpos($def['modifiers'], 'u') !== false)
-		{
-			$regexp .= 'u';
-		}
-
-		return $regexp;
 	}
 }
