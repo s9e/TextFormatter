@@ -12,7 +12,6 @@ class Ipv6Filter extends AttributeFilter
 	public function __construct()
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpv6');
-		$this->addParameterByName('attrValue');
 		$this->setJS('BuiltInFilters.filterIpv6');
 	}
 }
