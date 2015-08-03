@@ -16,7 +16,7 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		foreach ($this->config['generics'] as list($tagName, $regexp, $passthroughIdx))
+		foreach ($this->config['generics'] as list($tagName, $regexp, $passthroughIdx, $map))
 		{
 			preg_match_all($regexp, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
@@ -50,11 +50,11 @@ class Parser extends ParserBase
 					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
 				}
 
-				foreach ($m as $k => $v)
+				foreach ($map as $i => $attrName)
 				{
-					if (!is_numeric($k))
+					if ($attrName && isset($m[$i]) && $m[$i][0] !== '')
 					{
-						$tag->setAttribute($k, $v[0]);
+						$tag->setAttribute($attrName, $m[$i][0]);
 					}
 				}
 			}

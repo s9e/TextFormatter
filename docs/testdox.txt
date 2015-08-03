@@ -2462,10 +2462,8 @@ s9e\TextFormatter\Tests\Plugins\Preg\Configurator
  [x] replace() checks the safeness of the tag
  [x] replace() checks the safeness of the tag before adding it to the configurator's collection
  [x] asConfig() returns NULL if no replacements were set
- [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
- [x] asConfig() does not creates a JavaScript variant by default
- [x] asConfig() creates a JavaScript variant of generics if JavaScript is enabled
- [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+ [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>,<map>]
+ [x] asConfig() returns regexp in a Regexp object
  [x] match() uses the last catch-all expression as passthrough
 
 s9e\TextFormatter\Tests\Plugins\Preg\Parser

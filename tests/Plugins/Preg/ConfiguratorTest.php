@@ -157,9 +157,9 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->Preg->replace('/([0-9]+),([0-9]+)/', '$1,$2');
 
 		$config   = $this->configurator->Preg->asConfig();
-		$generics = $config['generics']->get();
+		$generics = $config['generics'];
 
-		$this->assertSame(
+		$this->assertEquals(
 			"/(?'_1'[0-9]+),(?'_2'[0-9]+)/",
 			$generics[0][1]
 		);
@@ -173,9 +173,9 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->Preg->replace('/([0-9]+),([0-9]+)/', '$2');
 
 		$config   = $this->configurator->Preg->asConfig();
-		$generics = $config['generics']->get();
+		$generics = $config['generics'];
 
-		$this->assertSame(
+		$this->assertEquals(
 			"/([0-9]+),(?'_2'[0-9]+)/",
 			$generics[0][1]
 		);
@@ -391,7 +391,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
+	* @testdox asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>,<map>]
 	*/
 	public function testAsConfig()
 	{
@@ -402,11 +402,11 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config);
 
-		$this->assertSame(
+		$this->assertEquals(
 			[
 				'generics' => [
-					['PREG_C53BB427', '/(?<foo>[0-9]+)/', 0],
-					['PREG_DCEA6E9C', '/(?<bar>[a-z]+)/', 0]
+					['PREG_C53BB427', '/(?<foo>[0-9]+)/', 0, ['', 'foo']],
+					['PREG_DCEA6E9C', '/(?<bar>[a-z]+)/', 0, ['', 'bar']]
 				]
 			],
 			$config
@@ -414,7 +414,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() does not creates a JavaScript variant by default
+	* @testdox asConfig() returns regexp in a Regexp object
 	*/
 	public function testAsConfigNoJSVariant()
 	{
@@ -425,51 +425,12 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$config['generics']
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$config['generics'][0][1]
 		);
-
-		$this->assertFalse($config['generics']->has('JS'));
-	}
-
-	/**
-	* @testdox asConfig() creates a JavaScript variant of generics if JavaScript is enabled
-	*/
-	public function testAsConfigVariant()
-	{
-		$plugin = $this->configurator->plugins->load('Preg');
-		$plugin->replace('/(?<foo>[0-9]+)/', '');
-		$plugin->replace('/(?<bar>[a-z]+)/', '');
-
-		$this->configurator->enableJavaScript();
-		$config = $plugin->asConfig();
-
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$config['generics']
-		);
-
-		$this->assertTrue($config['generics']->has('JS'));
-	}
-
-	/**
-	* @testdox asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
-	*/
-	public function testAsConfigVariantContent()
-	{
-		$plugin = $this->configurator->plugins->load('Preg');
-		$plugin->replace('/(?<foo>[0-9]+)/', '');
-
-		$regexp = new RegExp('([0-9]+)', 'g');
-		$regexp->map = ['', 'foo'];
-
-		$this->configurator->enableJavaScript();
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
-
-		$this->assertEquals(
-			[['PREG_C53BB427', $regexp, 0, $regexp->map]],
-			$config['generics']
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$config['generics'][1][1]
 		);
 	}
 
@@ -482,7 +443,7 @@ class ConfiguratorTest extends Test
 		$this->configurator->Preg->match('/`(.*?)`/', 'X');
 
 		$config   = $this->configurator->Preg->asConfig();
-		$generics = $config['generics']->get();
+		$generics = $config['generics'];
 
 		$this->assertSame(1, $generics[0][2]);
 	}
