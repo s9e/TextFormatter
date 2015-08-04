@@ -27,7 +27,7 @@ class AttributePreprocessor extends Regexp
 	*/
 	public function getAttributes()
 	{
-		return parent::getNamedCaptures();
+		return $this->getNamedCaptures();
 	}
 	
 	/**
