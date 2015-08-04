@@ -1147,6 +1147,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
+ [x] getCacheDifferentiator() returns a unique string
 
 s9e\TextFormatter\Tests\Configurator\Rendering
  [x] Default engine is XSLT
