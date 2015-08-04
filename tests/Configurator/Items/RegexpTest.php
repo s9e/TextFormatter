@@ -92,4 +92,36 @@ class RegexpTest extends Test
 			$regexp->asConfig()->get('JS')->flags
 		);
 	}
+
+	/**
+	* @testdox getNamedCaptures() returns an array where keys are the name of the named captures and values are regexps that exactly match them
+	*/
+	public function testGetNamedCaptures()
+	{
+		$ap = new Regexp('#(?<year>\\d{4}) (?<name>[a-z]+)#');
+
+		$this->assertSame(
+			[
+				'year' => '#^(?:\\d{4})$#D',
+				'name' => '#^(?:[a-z]+)$#D'
+			],
+			$ap->getNamedCaptures()
+		);
+	}
+
+	/**
+	* @testdox getNamedCaptures() preserves the original's regexp "i", "s" and "u" flags
+	*/
+	public function testGetNamedCapturesFlags()
+	{
+		$ap = new Regexp('#(?<year>\\d{4}) (?<name>[a-z]+)#Disu');
+
+		$this->assertSame(
+			[
+				'year' => '#^(?:\\d{4})$#Disu',
+				'name' => '#^(?:[a-z]+)$#Disu'
+			],
+			$ap->getNamedCaptures()
+		);
+	}
 }

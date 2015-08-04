@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
@@ -66,6 +67,44 @@ class Regexp implements ConfigProvider
 		);
 
 		return $variant;
+	}
+
+	/**
+	* Return all the named captures with a standalone regexp that matches them
+	*
+	* @return array Array of [capture name => regexp]
+	*/
+	public function getNamedCaptures()
+	{
+		$captures   = [];
+		$regexpInfo = RegexpParser::parse($this->regexp);
+
+		// Ensure that we use the D modifier
+		if (strpos($regexpInfo['modifiers'], 'D') === false)
+		{
+			$regexpInfo['modifiers'] .= 'D';
+		}
+
+		foreach ($regexpInfo['tokens'] as $token)
+		{
+			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
+			{
+				continue;
+			}
+
+			$name = $token['name'];
+			if (!isset($captures[$name]))
+			{
+				$regexp = $regexpInfo['delimiter']
+				        . '^(?:' . $token['content'] . ')$'
+				        . $regexpInfo['delimiter']
+				        . $regexpInfo['modifiers'];
+
+				$captures[$name] = $regexp;
+			}
+		}
+
+		return $captures;
 	}
 
 	/**

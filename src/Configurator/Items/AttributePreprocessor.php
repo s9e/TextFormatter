@@ -8,26 +8,16 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 
-class AttributePreprocessor
+class AttributePreprocessor extends Regexp
 {
-	/**
-	* @var string
-	*/
-	protected $regexp;
-
 	/**
 	* @param string $regexp
 	*/
 	public function __construct($regexp)
 	{
-		if (@preg_match($regexp, '') === false)
-		{
-			throw new InvalidArgumentException('Invalid regular expression ' . var_export($regexp, true));
-		}
-
-		$this->regexp = $regexp;
+		parent::__construct($regexp, true);
 	}
 
 	/**
@@ -37,39 +27,9 @@ class AttributePreprocessor
 	*/
 	public function getAttributes()
 	{
-		$attributes = [];
-		$regexpInfo = RegexpParser::parse($this->regexp);
-
-		// Ensure that we use the D modifier
-		if (strpos($regexpInfo['modifiers'], 'D') === false)
-		{
-			$regexpInfo['modifiers'] .= 'D';
-		}
-
-		foreach ($regexpInfo['tokens'] as $token)
-		{
-			if ($token['type'] !== 'capturingSubpatternStart'
-			 || !isset($token['name']))
-			{
-				continue;
-			}
-
-			$attrName = $token['name'];
-
-			if (!isset($attributes[$attrName]))
-			{
-				$regexp = $regexpInfo['delimiter']
-				        . '^(?:' . $token['content'] . ')$'
-				        . $regexpInfo['delimiter']
-				        . $regexpInfo['modifiers'];
-
-				$attributes[$attrName] = $regexp;
-			}
-		}
-
-		return $attributes;
+		return parent::getNamedCaptures();
 	}
-
+	
 	/**
 	* Return the regexp this preprocessor is based on
 	*

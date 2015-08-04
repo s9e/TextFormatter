@@ -990,6 +990,8 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] asConfig() returns a JS variant
  [x] asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
  [x] asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
+ [x] getNamedCaptures() returns an array where keys are the name of the named captures and values are regexps that exactly match them
+ [x] getNamedCaptures() preserves the original's regexp "i", "s" and "u" flags
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
