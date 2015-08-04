@@ -3291,6 +3291,7 @@ class ProgrammableCallback implements ConfigProvider
 namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 class Regexp implements ConfigProvider
@@ -3320,6 +3321,28 @@ class Regexp implements ConfigProvider
 			}
 		);
 		return $variant;
+	}
+	public function getNamedCaptures()
+	{
+		$captures   = array();
+		$regexpInfo = RegexpParser::parse($this->regexp);
+		if (\strpos($regexpInfo['modifiers'], 'D') === \false)
+			$regexpInfo['modifiers'] .= 'D';
+		foreach ($regexpInfo['tokens'] as $token)
+		{
+			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
+				continue;
+			$name = $token['name'];
+			if (!isset($captures[$name]))
+			{
+				$regexp = $regexpInfo['delimiter']
+				        . '^(?:' . $token['content'] . ')$'
+				        . $regexpInfo['delimiter']
+				        . $regexpInfo['modifiers'];
+				$captures[$name] = $regexp;
+			}
+		}
+		return $captures;
 	}
 	public function toJS()
 	{
