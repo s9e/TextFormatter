@@ -7,39 +7,18 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-class AttributePreprocessor
+use s9e\TextFormatter\Configurator\Items\Regexp;
+class AttributePreprocessor extends Regexp
 {
-	protected $regexp;
 	public function __construct($regexp)
 	{
-		if (@\preg_match($regexp, '') === \false)
-			throw new InvalidArgumentException('Invalid regular expression ' . \var_export($regexp, \true));
-		$this->regexp = $regexp;
+		parent::__construct($regexp, \true);
 	}
 	public function getAttributes()
 	{
-		$attributes = [];
-		$regexpInfo = RegexpParser::parse($this->regexp);
-		if (\strpos($regexpInfo['modifiers'], 'D') === \false)
-			$regexpInfo['modifiers'] .= 'D';
-		foreach ($regexpInfo['tokens'] as $token)
-		{
-			if ($token['type'] !== 'capturingSubpatternStart'
-			 || !isset($token['name']))
-				continue;
-			$attrName = $token['name'];
-			if (!isset($attributes[$attrName]))
-			{
-				$regexp = $regexpInfo['delimiter']
-				        . '^(?:' . $token['content'] . ')$'
-				        . $regexpInfo['delimiter']
-				        . $regexpInfo['modifiers'];
-				$attributes[$attrName] = $regexp;
-			}
-		}
-		return $attributes;
+		return $this->getNamedCaptures();
 	}
+	
 	public function getRegexp()
 	{
 		return $this->regexp;
