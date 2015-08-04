@@ -106,6 +106,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				':P',
+				'<t>:P</t>',
+				[],
+				function ($configurator, $plugin)
+				{
+					$configurator->Emoji->addAlias(':p', '😀');
+				}
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],
