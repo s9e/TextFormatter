@@ -549,6 +549,11 @@ class ParserTest extends Test
 					'<p>text</p></r>'
 				]
 			],
+			[
+				// https://github.com/s9e/TextFormatter/issues/14
+				'# ',
+				'<t><p>#</p> </t>'
+			],
 			// Setext-style headers
 			[
 				[
