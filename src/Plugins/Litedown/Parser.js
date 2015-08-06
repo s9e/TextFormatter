@@ -485,7 +485,7 @@ function matchBlockLevelMarkup()
 				endTagLen   = 0;
 
 				// Consume the leftmost whitespace and # characters as part of the end tag
-				while (" #\t".indexOf(text.charAt(endTagPos - 1)) > -1)
+				while (endTagPos > 0 && " #\t".indexOf(text.charAt(endTagPos - 1)) > -1)
 				{
 					--endTagPos;
 					++endTagLen;
