@@ -486,7 +486,7 @@ class Parser extends ParserBase
 					$endTagLen   = 0;
 
 					// Consume the leftmost whitespace and # characters as part of the end tag
-					while (strpos(" #\t", $this->text[$endTagPos - 1]) !== false)
+					while ($endTagPos > 0 && strpos(" #\t", $this->text[$endTagPos - 1]) !== false)
 					{
 						--$endTagPos;
 						++$endTagLen;
