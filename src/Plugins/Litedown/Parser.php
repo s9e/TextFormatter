@@ -274,7 +274,7 @@ class Parser extends ParserBase
 					$startTagPos = $matchPos + $matchLen - $startTagLen;
 					$endTagPos   = $lfPos;
 					$endTagLen   = 0;
-					while (\strpos(" #\t", $this->text[$endTagPos - 1]) !== \false)
+					while ($endTagPos > 0 && \strpos(" #\t", $this->text[$endTagPos - 1]) !== \false)
 					{
 						--$endTagPos;
 						++$endTagLen;
