@@ -47,6 +47,10 @@ ob_start();
 			border-left-width: 4px;
 			padding-left: 1em;
 		}
+		p
+		{
+			margin: 0;
+		}
 	</style>
 
 </head>
