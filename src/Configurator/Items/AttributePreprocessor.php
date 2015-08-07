@@ -10,10 +10,6 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 class AttributePreprocessor extends Regexp
 {
-	public function __construct($regexp)
-	{
-		parent::__construct($regexp, \true);
-	}
 	public function getAttributes()
 	{
 		return $this->getNamedCaptures();
