@@ -41,7 +41,7 @@ class AttributePreprocessorCollectionTest extends Test
 		$config = $collection->asConfig();
 		ConfigHelper::filterVariants($config);
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				['x', '#(?<x1>x1)#', ['', 'x1']],
 				['x', '#(?<x2>x2)#', ['', 'x2']],
