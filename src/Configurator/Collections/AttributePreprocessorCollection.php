@@ -101,7 +101,7 @@ class AttributePreprocessorCollection extends Collection
 
 		foreach ($this->items as $k => $ap)
 		{
-			list($attrName, $regexp) = unserialize($k);
+			list($attrName) = unserialize($k);
 			$config[] = [$attrName, $ap->asConfig(), $ap->getCaptureNames()];
 		}
 
