@@ -74,8 +74,8 @@
 				{
 					var head = document.getElementsByTagName('head')[0],
 						el   = document.createElement('link'),
-						stylesheetUrl = ']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css</var><![CDATA[',
-						scriptUrl = ']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js</var><![CDATA[';
+						stylesheetUrl = ']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</var><![CDATA[',
+						scriptUrl = ']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</var><![CDATA[';
 
 					el.type = 'text/css';
 					el.rel  = 'stylesheet';
@@ -96,7 +96,7 @@
 					head.appendChild(el);
 				}
 			-->
-			<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css</var><![CDATA[';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js</var><![CDATA[';a.appendChild(b)}</script>
+			<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</var><![CDATA[';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</var><![CDATA[';a.appendChild(b)}</script>
 		]]></template>
 	</bbcode>
 
