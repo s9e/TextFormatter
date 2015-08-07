@@ -38,14 +38,17 @@ class AttributePreprocessorCollectionTest extends Test
 		$collection->add('y', '#(?<y1>y1)#');
 		$collection->add('y', '#(?<y2>y2)#');
 
+		$config = $collection->asConfig();
+		ConfigHelper::filterVariants($config);
+
 		$this->assertEquals(
 			[
-				['x', new Regexp('#(?<x1>x1)#', false), ['', 'x1']],
-				['x', new Regexp('#(?<x2>x2)#', false), ['', 'x2']],
-				['y', new Regexp('#(?<y1>y1)#', false), ['', 'y1']],
-				['y', new Regexp('#(?<y2>y2)#', false), ['', 'y2']]
+				['x', '#(?<x1>x1)#', ['', 'x1']],
+				['x', '#(?<x2>x2)#', ['', 'x2']],
+				['y', '#(?<y1>y1)#', ['', 'y1']],
+				['y', '#(?<y2>y2)#', ['', 'y2']]
 			],
-			$collection->asConfig()
+			$config
 		);
 	}
 
