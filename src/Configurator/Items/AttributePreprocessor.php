@@ -13,14 +13,6 @@ use s9e\TextFormatter\Configurator\Items\Regexp;
 class AttributePreprocessor extends Regexp
 {
 	/**
-	* @param string $regexp
-	*/
-	public function __construct($regexp)
-	{
-		parent::__construct($regexp, true);
-	}
-
-	/**
 	* Return all the attributes created by the preprocessor along with the regexp that matches them
 	*
 	* @return array Array of [attribute name => regexp]
