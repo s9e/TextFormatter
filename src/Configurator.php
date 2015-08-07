@@ -5149,7 +5149,7 @@ class AttributePreprocessorCollection extends Collection
 			list($attrName, $regexp) = \unserialize($k);
 			$config[] = array(
 				$attrName,
-				new Regexp($regexp, \true),
+				new Regexp($regexp),
 				RegexpParser::getCaptureNames($regexp)
 			);
 		}
