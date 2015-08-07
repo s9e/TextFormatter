@@ -378,7 +378,6 @@ function executeAttributePreprocessor(tag, attrName, regexp, map)
 */
 function getNamedCaptures(attrValue, regexp, map)
 {
-	regexp.lastIndex = 0;
 	var m = regexp.exec(attrValue);
 	if (!m)
 	{
