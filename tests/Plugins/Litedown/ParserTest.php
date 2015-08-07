@@ -499,7 +499,7 @@ class ParserTest extends Test
 			],
 			[
 				'####### H7',
-				'<r><H6><s>####### </s>H7</H6></r>'
+				'<t><p>####### H7</p></t>'
 			],
 			[
 				'# H1 #',
@@ -552,7 +552,15 @@ class ParserTest extends Test
 			[
 				// https://github.com/s9e/TextFormatter/issues/14
 				'# ',
-				'<t><p>#</p> </t>'
+				'<r><H1><s># </s></H1></r>'
+			],
+			[
+				'# #',
+				'<r><H1><s># </s><e>#</e></H1></r>'
+			],
+			[
+				'# foo # #',
+				'<r><H1><s># </s>foo #<e> #</e></H1></r>'
 			],
 			// Setext-style headers
 			[

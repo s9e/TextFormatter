@@ -160,6 +160,21 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Return the length of the markup at the end of an ATX header
+	*
+	* @param  integer $startPos Start of the header's text
+	* @param  integer $endPos   End of the header's text
+	* @return integer
+	*/
+	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	{
+		$content = substr($this->text, $startPos, $endPos - $startPos);
+		preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
+
+		return strlen($m[0]);
+	}
+
+	/**
 	* Initialize this parser with given text
 	*
 	* @param  string $text Text to be parsed
@@ -207,7 +222,7 @@ class Parser extends ParserBase
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#+[ \\t]+(?=\\S)|```+.*|~~~+.*)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+.*|~~~+.*)?)?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
@@ -482,15 +497,8 @@ class Parser extends ParserBase
 				{
 					$startTagLen = strlen($m[5][0]);
 					$startTagPos = $matchPos + $matchLen - $startTagLen;
-					$endTagPos   = $lfPos;
-					$endTagLen   = 0;
-
-					// Consume the leftmost whitespace and # characters as part of the end tag
-					while ($endTagPos > 0 && strpos(" #\t", $this->text[$endTagPos - 1]) !== false)
-					{
-						--$endTagPos;
-						++$endTagLen;
-					}
+					$endTagLen   = $this->getAtxHeaderEndTagLen($matchPos + $matchLen, $lfPos);
+					$endTagPos   = $lfPos - $endTagLen;
 
 					$this->parser->addTagPair('H' . strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 
