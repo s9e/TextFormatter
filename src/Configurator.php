@@ -2886,6 +2886,10 @@ class Regexp implements ConfigProvider
 		);
 		return $variant;
 	}
+	public function getCaptureNames()
+	{
+		return RegexpParser::getCaptureNames($this->regexp);
+	}
 	public function getNamedCaptures()
 	{
 		$captures   = [];
@@ -4913,11 +4917,7 @@ class AttributePreprocessorCollection extends Collection
 		foreach ($this->items as $k => $ap)
 		{
 			list($attrName, $regexp) = \unserialize($k);
-			$config[] = [
-				$attrName,
-				new Regexp($regexp),
-				RegexpParser::getCaptureNames($regexp)
-			];
+			$config[] = [$attrName, $ap, $ap->getCaptureNames()];
 		}
 		return $config;
 	}
