@@ -136,6 +136,21 @@ function getSetextLines()
 }
 
 /**
+* Return the length of the markup at the end of an ATX header
+*
+* @param  {!number} startPos Start of the header's text
+* @param  {!number} endPos   End of the header's text
+* @return {!number}
+*/
+function getAtxHeaderEndTagLen(startPos, endPos)
+{
+	var content = text.substr(startPos, endPos - startPos),
+		m = /[ \t]*#*[ \t]*$/.exec(content);
+
+	return m[0].length;
+}
+
+/**
 * Initialize this parser
 */
 function init()
@@ -191,7 +206,7 @@ function matchBlockLevelMarkup()
 	// further matches
 	var matches = [],
 		m,
-		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#+[ \t]+(?=\S)|```+.*|~~~+.*)?)?/gm;
+		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+.*|~~~+.*)?)?/gm;
 	while (m = regexp.exec(text))
 	{
 		matches.push(m);
@@ -481,15 +496,8 @@ function matchBlockLevelMarkup()
 			{
 				startTagLen = m[5].length;
 				startTagPos = matchPos + matchLen - startTagLen;
-				endTagPos   = lfPos;
-				endTagLen   = 0;
-
-				// Consume the leftmost whitespace and # characters as part of the end tag
-				while (endTagPos > 0 && " #\t".indexOf(text.charAt(endTagPos - 1)) > -1)
-				{
-					--endTagPos;
-					++endTagLen;
-				}
+				endTagLen   = getAtxHeaderEndTagLen(matchPos + matchLen, lfPos);
+				endTagPos   = lfPos - endTagLen;
 
 				addTagPair('H' + /#{1,6}/.exec(m[5])[0].length, startTagPos, startTagLen, endTagPos, endTagLen);
 
