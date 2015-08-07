@@ -70,6 +70,16 @@ class Regexp implements ConfigProvider
 	}
 
 	/**
+	* Return the name of each capture in this regexp
+	*
+	* @return string[]
+	*/
+	public function getCaptureNames()
+	{
+		return RegexpParser::getCaptureNames($this->regexp);
+	}
+
+	/**
 	* Return all the named captures with a standalone regexp that matches them
 	*
 	* @return array Array of [capture name => regexp]

@@ -124,4 +124,17 @@ class RegexpTest extends Test
 			$ap->getNamedCaptures()
 		);
 	}
+
+	/**
+	* @testdox getCaptureNames() returns the names of all captures
+	*/
+	public function testGetCaptureNames()
+	{
+		$ap = new Regexp('#(?<year>\\d{4}) (?<name>[a-z]+)#');
+
+		$this->assertSame(
+			['', 'year', 'name'],
+			$ap->getCaptureNames()
+		);
+	}
 }
