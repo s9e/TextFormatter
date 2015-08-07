@@ -40,10 +40,10 @@ class AttributePreprocessorCollectionTest extends Test
 
 		$this->assertEquals(
 			[
-				['x', new Regexp('#(?<x1>x1)#', true), ['', 'x1']],
-				['x', new Regexp('#(?<x2>x2)#', true), ['', 'x2']],
-				['y', new Regexp('#(?<y1>y1)#', true), ['', 'y1']],
-				['y', new Regexp('#(?<y2>y2)#', true), ['', 'y2']]
+				['x', new Regexp('#(?<x1>x1)#', false), ['', 'x1']],
+				['x', new Regexp('#(?<x2>x2)#', false), ['', 'x2']],
+				['y', new Regexp('#(?<y1>y1)#', false), ['', 'y1']],
+				['y', new Regexp('#(?<y2>y2)#', false), ['', 'y2']]
 			],
 			$collection->asConfig()
 		);

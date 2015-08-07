@@ -105,7 +105,7 @@ class AttributePreprocessorCollection extends Collection
 
 			$config[] = [
 				$attrName,
-				new Regexp($regexp, true),
+				new Regexp($regexp),
 				RegexpParser::getCaptureNames($regexp)
 			];
 		}
