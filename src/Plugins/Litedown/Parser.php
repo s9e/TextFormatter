@@ -81,6 +81,12 @@ class Parser extends ParserBase
 			}
 		return $setextLines;
 	}
+	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	{
+		$content = \substr($this->text, $startPos, $endPos - $startPos);
+		\preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
+		return \strlen($m[0]);
+	}
 	protected function init($text)
 	{
 		if (\strpos($text, '\\') === \false || !\preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
@@ -107,7 +113,7 @@ class Parser extends ParserBase
 		$quotesCnt    = 0;
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#+[ \\t]+(?=\\S)|```+.*|~~~+.*)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+.*|~~~+.*)?)?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
@@ -272,13 +278,8 @@ class Parser extends ParserBase
 				{
 					$startTagLen = \strlen($m[5][0]);
 					$startTagPos = $matchPos + $matchLen - $startTagLen;
-					$endTagPos   = $lfPos;
-					$endTagLen   = 0;
-					while ($endTagPos > 0 && \strpos(" #\t", $this->text[$endTagPos - 1]) !== \false)
-					{
-						--$endTagPos;
-						++$endTagLen;
-					}
+					$endTagLen   = $this->getAtxHeaderEndTagLen($matchPos + $matchLen, $lfPos);
+					$endTagPos   = $lfPos - $endTagLen;
 					$this->parser->addTagPair('H' . \strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 					$boundaries[] = $startTagPos;
 					$boundaries[] = $endTagPos;
