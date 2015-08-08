@@ -746,8 +746,14 @@ class JavaScript
 	{
 		$this->hints['attributeGenerator']    = 0;
 		$this->hints['attributeDefaultValue'] = 0;
-		foreach ($this->config['tags'] as $tagConfig)
+		$this->hints['namespaces']            = 0;
+		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
+			if (strpos($tagName, ':') !== false)
+			{
+				$this->hints['namespaces'] = 1;
+			}
+
 			// Test the presence of an attribute generator, and an attribute's defaultValue
 			if (!empty($tagConfig['attributes']))
 			{

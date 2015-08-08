@@ -1671,6 +1671,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.closeParent=1 if any tag has a closeParent rule
  [x] HINT.fosterParent=0 by default
  [x] HINT.fosterParent=1 if any tag has a fosterParent rule
+ [x] HINT.namespaces=0 by default
+ [x] HINT.namespaces=1 if any tag has a namespaces rule
  [x] HINT.postProcessing=0 by default
  [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
  [x] HINT.requireAncestor=0 by default

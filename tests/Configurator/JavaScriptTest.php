@@ -627,6 +627,30 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.namespaces=0 by default
+	*/
+	public function testHintNamespacesFalse()
+	{
+		$this->assertContains(
+			'HINT.namespaces=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.namespaces=1 if any tag has a namespaces rule
+	*/
+	public function testHintNamespacesTrue()
+	{
+		$this->configurator->tags->add('foo:X');
+
+		$this->assertContains(
+			'HINT.namespaces=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.postProcessing=0 by default
 	*/
 	public function testHintPostProcessingFalse()
