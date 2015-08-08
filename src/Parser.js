@@ -2055,7 +2055,7 @@ function addTagPair(name, startPos, startLen, endPos, endLen)
 */
 function addVerbatim(pos, len)
 {
-	return addTag(SELF_CLOSING_TAG, 'v', pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len);
 }
 
 /**
