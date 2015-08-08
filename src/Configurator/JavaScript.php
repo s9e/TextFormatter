@@ -351,6 +351,16 @@ class JavaScript
 			if (\substr($constName, 0, 5) === 'RULE_')
 				$this->hints[$constName] = ($flags & $constValue) ? 1 : 0;
 	}
+	protected function setTagAttributesHints(array $tagConfig)
+	{
+		if (empty($tagConfig['attributes']))
+			return;
+		foreach ($tagConfig['attributes'] as $attrConfig)
+		{
+			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
+			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
+		}
+	}
 	protected function setTagsHints()
 	{
 		$this->hints['attributeGenerator']    = 0;
@@ -358,16 +368,8 @@ class JavaScript
 		$this->hints['namespaces']            = 0;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
-			if (\strpos($tagName, ':') !== \false)
-				$this->hints['namespaces'] = 1;
-			if (!empty($tagConfig['attributes']))
-				foreach ($tagConfig['attributes'] as $attrConfig)
-				{
-					if (isset($attrConfig['generator']))
-						$this->hints['attributeGenerator'] = 1;
-					if (isset($attrConfig['defaultValue']))
-						$this->hints['attributeDefaultValue'] = 1;
-				}
+			$this->hints['namespaces'] |= (\strpos($tagName, ':') !== \false);
+			$this->setTagAttributesHints($tagConfig);
 		}
 	}
 	protected function setRenderingHints()
