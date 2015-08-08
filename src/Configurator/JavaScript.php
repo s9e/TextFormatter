@@ -84,18 +84,11 @@ class JavaScript
 	}
 	protected function getHints()
 	{
-		$this->hints = [
-			'attributeGenerator'    => 0,
-			'attributeDefaultValue' => 0,
-			'closeAncestor'         => 0,
-			'closeParent'           => 0,
-			'fosterParent'          => 0,
-			'postProcessing'        => 1,
-			'requireAncestor'       => 0
-		];
+		$this->hints = [];
 		$this->setRenderingHints();
 		$this->setRulesHints();
 		$this->setTagsHints();
+		\ksort($this->hints);
 		$js = "/** @const */ var HINT={};\n";
 		foreach ($this->hints as $hintName => $hintValue)
 			$js .= '/** @const */ HINT.' . $hintName . '=' . self::encode($hintValue) . ";\n";
@@ -341,6 +334,10 @@ class JavaScript
 	}
 	protected function setRulesHints()
 	{
+		$this->hints['closeAncestor']   = 0;
+		$this->hints['closeParent']     = 0;
+		$this->hints['fosterParent']    = 0;
+		$this->hints['requireAncestor'] = 0;
 		$flags = 0;
 		foreach ($this->config['tags'] as $tagConfig)
 		{
@@ -356,7 +353,13 @@ class JavaScript
 	}
 	protected function setTagsHints()
 	{
-		foreach ($this->config['tags'] as $tagConfig)
+		$this->hints['attributeGenerator']    = 0;
+		$this->hints['attributeDefaultValue'] = 0;
+		$this->hints['namespaces']            = 0;
+		foreach ($this->config['tags'] as $tagName => $tagConfig)
+		{
+			if (\strpos($tagName, ':') !== \false)
+				$this->hints['namespaces'] = 1;
 			if (!empty($tagConfig['attributes']))
 				foreach ($tagConfig['attributes'] as $attrConfig)
 				{
@@ -365,10 +368,10 @@ class JavaScript
 					if (isset($attrConfig['defaultValue']))
 						$this->hints['attributeDefaultValue'] = 1;
 				}
+		}
 	}
 	protected function setRenderingHints()
 	{
-		if (\strpos($this->xsl, 'data-s9e-livepreview-postprocess') === \false)
-			$this->hints['postProcessing'] = 0;
+		$this->hints['postProcessing'] = (int) (\strpos($this->xsl, 'data-s9e-livepreview-postprocess') !== \false);
 	}
 }
