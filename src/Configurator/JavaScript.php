@@ -197,7 +197,7 @@ class JavaScript
 	/**
 	* Get the JavaScript representation of the plugins
 	*
-	* @return Code JavaScript code
+	* @return string JavaScript code
 	*/
 	protected function getPluginsConfig()
 	{
@@ -280,16 +280,13 @@ class JavaScript
 			$plugins[$pluginName] = $globalConfig;
 		}
 
-		// Create an instance of Code that represents the plugins array
-		$code = new Code(self::encode($plugins));
-
-		return $code;
+		return self::encode($plugins);
 	}
 
 	/**
 	* Generate a JavaScript representation of the registered vars
 	*
-	* @return Code JavaScript source code
+	* @return string JavaScript source code
 	*/
 	protected function getRegisteredVarsConfig()
 	{
@@ -299,17 +296,17 @@ class JavaScript
 		// leak some informations about the server
 		unset($registeredVars['cacheDir']);
 
-		return new Code(self::encode(new Dictionary($registeredVars)));
+		return self::encode(new Dictionary($registeredVars));
 	}
 
 	/**
 	* Generate a JavaScript representation of the root context
 	*
-	* @return Code JavaScript source code
+	* @return string JavaScript source code
 	*/
 	protected function getRootContext()
 	{
-		return new Code(self::encode($this->config['rootContext']));
+		return self::encode($this->config['rootContext']);
 	}
 
 	/**
@@ -358,7 +355,7 @@ class JavaScript
 	/**
 	* Generate a JavaScript representation of the tags' config
 	*
-	* @return Code JavaScript source code
+	* @return string JavaScript source code
 	*/
 	protected function getTagsConfig()
 	{
@@ -378,10 +375,7 @@ class JavaScript
 			$tags[$tagName] = $tagConfig;
 		}
 
-		// Create an instance of Code that represents the tags array
-		$code = new Code(self::encode($tags));
-
-		return $code;
+		return self::encode($tags);
 	}
 
 	/**
