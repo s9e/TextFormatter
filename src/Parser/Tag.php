@@ -407,13 +407,13 @@ class Tag
 	}
 
 	/**
-	* Test whether this tag is a special tag: "br", "i" or "pb"
+	* Test whether this tag is a special tag: "br", "i", "pb" or "v"
 	*
 	* @return bool
 	*/
 	public function isSystemTag()
 	{
-		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb');
+		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb' || $this->name === 'v');
 	}
 
 	/**
@@ -424,6 +424,16 @@ class Tag
 	public function isStartTag()
 	{
 		return (bool) ($this->type & self::START_TAG);
+	}
+
+	/**
+	* Test whether this tag represents verbatim text
+	*
+	* @return bool
+	*/
+	public function isVerbatim()
+	{
+		return ($this->name === 'v');
 	}
 
 	//==========================================================================

@@ -390,13 +390,13 @@ Tag.prototype.isSelfClosingTag = function()
 }
 
 /**
-* Test whether this tag is a special tag: "br", "i" or "pb"
+* Test whether this tag is a special tag: "br", "i", "pb" or "v"
 *
 * @return {!boolean}
 */
 Tag.prototype.isSystemTag = function()
 {
-	return (this.name === 'br' || this.name === 'i' || this.name === 'pb');
+	return (this.name === 'br' || this.name === 'i' || this.name === 'pb' || this.name === 'v');
 }
 
 /**
@@ -407,6 +407,16 @@ Tag.prototype.isSystemTag = function()
 Tag.prototype.isStartTag = function()
 {
 	return !!(this.type & Tag.START_TAG);
+}
+
+/**
+* Test whether this tag represents verbatim text
+*
+* @return {!boolean}
+*/
+Tag.prototype.isVerbatim = function()
+{
+	return (this.name === 'v');
 }
 
 //==========================================================================

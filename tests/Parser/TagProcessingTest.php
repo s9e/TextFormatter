@@ -1250,6 +1250,43 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 22, 4);
 				}
 			],
+			[
+				'...',
+				'<t>...</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 1, 1);
+					$parser->addVerbatim(0, 3);
+				}
+			],
+			[
+				".\n.\n",
+				"<t>.\n.<br/>\n</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				},
+				function ($parser)
+				{
+					$parser->addVerbatim(1, 1)->setFlags(0);
+				}
+			],
+			[
+				".\n.\n",
+				"<t>.<br/>\n.\n</t>",
+				function ($configurator)
+				{
+					$configurator->rootRules->disableAutoLineBreaks();
+				},
+				function ($parser)
+				{
+					$parser->addVerbatim(1, 1)->setFlags(Parser::RULE_ENABLE_AUTO_BR);
+				}
+			],
 		];
 	}
 }

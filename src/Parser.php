@@ -1091,6 +1091,20 @@ class Parser
 	}
 
 	/**
+	* Output the content of a verbatim tag
+	*
+	* @param  Tag  $tag
+	* @return void
+	*/
+	protected function outputVerbatim(Tag $tag)
+	{
+		$flags = $this->context['flags'];
+		$this->context['flags'] = $tag->getFlags();
+		$this->outputText($this->currentTag->getPos() + $this->currentTag->getLen(), 0, false);
+		$this->context['flags'] = $flags;
+	}
+
+	/**
 	* Skip as much whitespace after current position as possible
 	*
 	* @param  integer $maxPos Rightmost character to be skipped
@@ -1603,6 +1617,10 @@ class Parser
 		elseif ($this->currentTag->isParagraphBreak())
 		{
 			$this->outputText($this->currentTag->getPos(), 0, true);
+		}
+		elseif ($this->currentTag->isVerbatim())
+		{
+			$this->outputVerbatim($this->currentTag);
 		}
 		elseif ($this->currentTag->isStartTag())
 		{
@@ -2144,6 +2162,18 @@ class Parser
 		$tag->pairWith($this->addEndTag($name, $endPos, $endLen));
 
 		return $tag;
+	}
+
+	/**
+	* Add a tag that represents a verbatim copy of the original text
+	*
+	* @param  integer $pos  Position of the tag in the text
+	* @param  integer $len  Length of text consumed by the tag
+	* @return Tag
+	*/
+	public function addVerbatim($pos, $len)
+	{
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len);
 	}
 
 	/**
