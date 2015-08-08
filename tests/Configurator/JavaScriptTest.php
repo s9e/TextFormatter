@@ -108,7 +108,7 @@ class JavaScriptTest extends Test
 		$this->configurator->enableJavaScript();
 		$this->configurator->javascript->setMinifier($mock);
 
-		$this->assertSame('/**/', $this->configurator->javascript->getParser());
+		$this->assertContains('/**/', $this->configurator->javascript->getParser());
 	}
 
 	/**

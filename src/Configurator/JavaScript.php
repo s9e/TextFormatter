@@ -128,6 +128,9 @@ class JavaScript
 		// Minify the source
 		$src = $this->getMinifier()->get($src);
 
+		// Wrap the source in a function to protect the global scope
+		$src = '(function(){' . $src . '})()';
+
 		return $src;
 	}
 
