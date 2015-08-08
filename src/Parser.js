@@ -974,6 +974,19 @@ function outputParagraphEnd()
 }
 
 /**
+* Output the content of a verbatim tag
+*
+* @param {!Tag} tag
+*/
+function outputVerbatim(tag)
+{
+	var flags = context.flags;
+	context.flags = tag.getFlags();
+	outputText(currentTag.getPos() + currentTag.getLen(), 0, false);
+	context.flags = flags;
+}
+
+/**
 * Skip as much whitespace after current position as possible
 *
 * @param  {!number} maxPos Rightmost character to be skipped
@@ -1493,6 +1506,10 @@ function processCurrentTag()
 	else if (currentTag.isParagraphBreak())
 	{
 		outputText(currentTag.getPos(), 0, true);
+	}
+	else if (currentTag.isVerbatim())
+	{
+		outputVerbatim(currentTag);
 	}
 	else if (currentTag.isStartTag())
 	{
@@ -2027,6 +2044,18 @@ function addTagPair(name, startPos, startLen, endPos, endLen)
 	tag.pairWith(addEndTag(name, endPos, endLen));
 
 	return tag;
+}
+
+/**
+* Add a tag that represents a verbatim copy of the original text
+*
+* @param  {!number} pos  Position of the tag in the text
+* @param  {!number} len  Length of text consumed by the tag
+* @return {!Tag}
+*/
+function addVerbatim(pos, len)
+{
+	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len);
 }
 
 /**
