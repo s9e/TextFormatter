@@ -474,6 +474,13 @@ class Parser
 		$this->output .= '</p>';
 		$this->context['inParagraph'] = \false;
 	}
+	protected function outputVerbatim(Tag $tag)
+	{
+		$flags = $this->context['flags'];
+		$this->context['flags'] = $tag->getFlags();
+		$this->outputText($this->currentTag->getPos() + $this->currentTag->getLen(), 0, \false);
+		$this->context['flags'] = $flags;
+	}
 	protected function outputWhitespace($maxPos)
 	{
 		if ($maxPos > $this->pos)
@@ -723,6 +730,8 @@ class Parser
 		}
 		elseif ($this->currentTag->isParagraphBreak())
 			$this->outputText($this->currentTag->getPos(), 0, \true);
+		elseif ($this->currentTag->isVerbatim())
+			$this->outputVerbatim($this->currentTag);
 		elseif ($this->currentTag->isStartTag())
 			$this->processStartTag($this->currentTag);
 		else
@@ -977,6 +986,10 @@ class Parser
 		$tag = $this->addStartTag($name, $startPos, $startLen);
 		$tag->pairWith($this->addEndTag($name, $endPos, $endLen));
 		return $tag;
+	}
+	public function addVerbatim($pos, $len)
+	{
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len);
 	}
 	protected function sortTags()
 	{
