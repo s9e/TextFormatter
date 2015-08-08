@@ -1760,6 +1760,8 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] isSystemTag() returns true if the tag's name is "i"
  [x] isSystemTag() returns true if the tag's name is "br"
  [x] isSystemTag() returns true if the tag's name is "pb"
+ [x] isVerbatim() returns true if the tag's name is "v"
+ [x] isVerbatim() returns false by default
  [x] invalidate() makes isInvalid() return true
  [x] $tag1->cascadeInvalidationTo($tag2) causes $tag1->invalidate() to call $tag2->invalidate()
  [x] $tag1->cascadeInvalidationTo($tag2) does not cause $tag2->invalidate() to call $tag1->invalidate()

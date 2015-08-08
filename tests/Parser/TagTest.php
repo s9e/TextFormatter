@@ -263,6 +263,24 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox isVerbatim() returns true if the tag's name is "v"
+	*/
+	public function testIsVerbatimTrue()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'v', 12, 0);
+		$this->assertTrue($tag->isVerbatim());
+	}
+
+	/**
+	* @testdox isVerbatim() returns false by default
+	*/
+	public function testIsVerbatimFalse()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'BR', 12, 0);
+		$this->assertFalse($tag->isVerbatim());
+	}
+
+	/**
 	* @testdox invalidate() makes isInvalid() return true
 	*/
 	public function testInvalidate()

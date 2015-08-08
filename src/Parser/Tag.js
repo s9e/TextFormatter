@@ -396,7 +396,7 @@ Tag.prototype.isSelfClosingTag = function()
 */
 Tag.prototype.isSystemTag = function()
 {
-	return (this.name === 'br' || this.name === 'i' || this.name === 'pb' || this.name === 'v');
+	return ('br i pb v'.indexOf(this.name) > -1);
 }
 
 /**

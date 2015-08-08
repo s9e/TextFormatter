@@ -413,7 +413,7 @@ class Tag
 	*/
 	public function isSystemTag()
 	{
-		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb' || $this->name === 'v');
+		return (strpos('br i pb v', $this->name) !== false);
 	}
 
 	/**
