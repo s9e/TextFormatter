@@ -594,9 +594,12 @@ function finalizeOutput()
 
 	// Prepare the root node with all the namespace declarations
 	tmp = '<' + tagName;
-	for (var prefix in namespaces)
+	if (HINT.namespaces)
 	{
-		tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix + '"';
+		for (var prefix in namespaces)
+		{
+			tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix + '"';
+		}
 	}
 
 	output = tmp + '>' + output + '</' + tagName + '>';
@@ -658,10 +661,13 @@ function outputTag(tag)
 		}
 
 		// Record this tag's namespace, if applicable
-		var colonPos = tagName.indexOf(':');
-		if (colonPos > 0)
+		if (HINT.namespaces)
 		{
-			namespaces[tagName.substr(0, colonPos)] = 0;
+			var colonPos = tagName.indexOf(':');
+			if (colonPos > 0)
+			{
+				namespaces[tagName.substr(0, colonPos)] = 0;
+			}
 		}
 
 		// Open the start tag and add its attributes, but don't close the tag
