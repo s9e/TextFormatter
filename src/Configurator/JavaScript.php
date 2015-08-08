@@ -738,6 +738,26 @@ class JavaScript
 	}
 
 	/**
+	* Set hints based on given tag's attributes config
+	*
+	* @param  array $tagConfig
+	* @return void
+	*/
+	protected function setTagAttributesHints(array $tagConfig)
+	{
+		if (empty($tagConfig['attributes']))
+		{
+			return;
+		}
+
+		foreach ($tagConfig['attributes'] as $attrConfig)
+		{
+			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
+			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
+		}
+	}
+
+	/**
 	* Set hints related to tags config
 	*
 	* @return void
@@ -749,27 +769,8 @@ class JavaScript
 		$this->hints['namespaces']            = 0;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
-			if (strpos($tagName, ':') !== false)
-			{
-				$this->hints['namespaces'] = 1;
-			}
-
-			// Test the presence of an attribute generator, and an attribute's defaultValue
-			if (!empty($tagConfig['attributes']))
-			{
-				foreach ($tagConfig['attributes'] as $attrConfig)
-				{
-					if (isset($attrConfig['generator']))
-					{
-						$this->hints['attributeGenerator'] = 1;
-					}
-
-					if (isset($attrConfig['defaultValue']))
-					{
-						$this->hints['attributeDefaultValue'] = 1;
-					}
-				}
-			}
+			$this->hints['namespaces'] |= (strpos($tagName, ':') !== false);
+			$this->setTagAttributesHints($tagConfig);
 		}
 	}
 
