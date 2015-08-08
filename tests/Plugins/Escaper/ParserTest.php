@@ -23,16 +23,11 @@ class ParserTest extends Test
 		return [
 			[
 				'\\[',
-				'<r><ESC><s>\\</s>[</ESC></r>'
-			],
-			[
-				'\\[',
-				'<r><FOO><s>\\</s>[</FOO></r>',
-				['tagName' => 'FOO']
+				'<r><i>\\</i>[</r>'
 			],
 			[
 				"a\\\nb",
-				"<r>a<ESC><s>\\</s>\n</ESC>b</r>",
+				"<r>a<i>\\</i>\nb</r>",
 				[],
 				function ($configurator, $plugin)
 				{
@@ -41,11 +36,20 @@ class ParserTest extends Test
 			],
 			[
 				'a\\♥b',
-				'<r>a<ESC><s>\\</s>♥</ESC>b</r>',
+				'<r>a<i>\\</i>♥b</r>',
 				[],
 				function ($configurator, $plugin)
 				{
 					$plugin->escapeAll();
+				}
+			],
+			[
+				'\\*foo*bar*',
+				'<r><i>\\</i>*foo<EM><s>*</s>bar<e>*</e></EM></r>',
+				[],
+				function ($configurator, $plugin)
+				{
+					$configurator->Litedown;
 				}
 			],
 		];
@@ -57,11 +61,6 @@ class ParserTest extends Test
 			[
 				'\\[',
 				'['
-			],
-			[
-				'\\[',
-				'[',
-				['tagName' => 'FOO']
 			],
 			[
 				"a\\\nb",

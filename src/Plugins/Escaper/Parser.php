@@ -18,13 +18,11 @@ class Parser extends ParserBase
 	{
 		foreach ($matches as $m)
 		{
-			$this->parser->addTagPair(
-				$this->config['tagName'],
-				$m[0][1],
-				1,
-				$m[0][1] + strlen($m[0][0]),
-				0
-			);
+			$tag = $this->parser->addVerbatim($m[0][1] + 1, strlen($m[0][0]) - 1);
+			$tag->setFlags(0);
+			$tag->setSortPriority(-1000);
+
+			$this->parser->addIgnoreTag($m[0][1], 1)->cascadeInvalidationTo($tag);
 		}
 	}
 }

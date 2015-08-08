@@ -2224,12 +2224,8 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] By default only escapes the characters !#()*+-.:@[\]^_`{}
  [x] $plugin->escapeAll() makes it escape any Unicode character
  [x] $plugin->escapeAll(false) reverts to default escape list
- [x] Automatically creates an "ESC" tag
- [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
- [x] The config array contains the name of the tag
- [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
