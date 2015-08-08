@@ -1266,6 +1266,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressio
  [x] Throws an exception if a string isn't properly closed
  [x] Works
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MergeConsecutiveCopyOf
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MergeIdenticalConditionalBranches
  [x] Works
 
