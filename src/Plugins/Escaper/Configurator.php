@@ -11,7 +11,6 @@ class Configurator extends ConfiguratorBase
 {
 	protected $quickMatch = '\\';
 	protected $regexp;
-	protected $tagName = 'ESC';
 	public function escapeAll($bool = \true)
 	{
 		$this->regexp = ($bool) ? '/\\\\./su' : '/\\\\[-!#()*+.:<>@[\\\\\\]^_`{}]/';
@@ -19,10 +18,5 @@ class Configurator extends ConfiguratorBase
 	protected function setUp()
 	{
 		$this->escapeAll(\false);
-		$tag = $this->configurator->tags->add($this->tagName);
-		$tag->rules->disableAutoLineBreaks();
-		$tag->rules->ignoreTags();
-		$tag->rules->preventLineBreaks();
-		$tag->template = '<xsl:apply-templates/>';
 	}
 }

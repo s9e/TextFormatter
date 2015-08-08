@@ -158,11 +158,15 @@ class Tag
 	}
 	public function isSystemTag()
 	{
-		return ($this->name === 'br' || $this->name === 'i' || $this->name === 'pb');
+		return (\strpos('br i pb v', $this->name) !== \false);
 	}
 	public function isStartTag()
 	{
 		return (bool) ($this->type & self::START_TAG);
+	}
+	public function isVerbatim()
+	{
+		return ($this->name === 'v');
 	}
 	public function getAttribute($attrName)
 	{
