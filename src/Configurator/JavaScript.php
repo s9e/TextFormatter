@@ -62,6 +62,7 @@ class JavaScript
 			$src .= "window['s9e'] = { 'TextFormatter': {" . \implode(',', $methods) . "} }\n";
 		}
 		$src = $this->getMinifier()->get($src);
+		$src = '(function(){' . $src . '})()';
 		return $src;
 	}
 	public function setMinifier($minifier)
