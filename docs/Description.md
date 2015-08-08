@@ -36,7 +36,7 @@
 * Unit-tested
 	* Tests are [automatically](https://github.com/s9e/TextFormatter/blob/master/scripts/pre-commit) run before every commit. A failing test blocks the commit
 	* [Testdox output](https://github.com/s9e/TextFormatter/blob/master/docs/testdox.txt) is updated [with every commit](https://github.com/s9e/TextFormatter/commit/83d959aebe601eac207c499ef6922224b3958211)
-	* Travis follows the [build status across the supported PHP versions: ![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
+	* Travis follows the [build status across the supported PHP versions: ![Build Status](https://api.travis-ci.org/s9e/TextFormatter.svg?branch=master)](https://travis-ci.org/s9e/TextFormatter)
 	* Aiming for [100% code coverage](http://s9e.github.io/TextFormatter/coverage/) at all time [![Coverage Status](https://coveralls.io/repos/s9e/TextFormatter/badge.png)](https://coveralls.io/r/s9e/TextFormatter)
 
 * Stable format
