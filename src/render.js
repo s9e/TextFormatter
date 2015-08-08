@@ -77,7 +77,7 @@ var xslt = {
 		}
 
 		// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
-		return targetDoc.importNode(xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc), true)
+		return targetDoc.importNode(xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc), true);
 	}
 }
 xslt.init(xsl);
