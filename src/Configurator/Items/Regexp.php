@@ -120,7 +120,7 @@ class Regexp extends Variant implements ConfigProvider
 	/**
 	* Return this regexp as JavaScript code
 	*
-	* @return Code
+	* @return \s9e\TextFormatter\Configurator\JavaScript\Code
 	*/
 	public function toJS()
 	{
