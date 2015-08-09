@@ -91,6 +91,7 @@
 			<file>tests/Configurator/Items/TemplateDocumentTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
 			<file>tests/Configurator/JavaScript/CodeTest.php</file>
+			<file>tests/Configurator/JavaScript/EncoderTest.php</file>
 			<file>tests/Configurator/JavaScript/FunctionProviderTest.php</file>
 			<file>tests/Configurator/JavaScript/RegexpConvertorTest.php</file>
 			<file>tests/Configurator/JavaScript/MinifierTest.php</file>

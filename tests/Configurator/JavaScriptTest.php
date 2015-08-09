@@ -186,7 +186,7 @@ class JavaScriptTest extends Test
 	/**
 	* @testdox getParser() throws an exception if it encounters a value that cannot be encoded into JavaScript
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot encode non-scalar value
+	* @expectedExceptionMessage Cannot encode instance of stdClass
 	*/
 	public function testNonScalarConfigException()
 	{
@@ -383,121 +383,6 @@ class JavaScriptTest extends Test
 			'("foo",42)',
 			$this->configurator->javascript->getParser()
 		);
-	}
-
-	/**
-	* @testdox isLegalProp() tests
-	*/
-	public function testLegalProps()
-	{
-		$legal = [
-			'foo',
-			'foo33',
-			'G89',
-			'$foo',
-			'$foo$bar',
-			'foo_bar'
-		];
-
-		foreach ($legal as $name)
-		{
-			$this->assertTrue(JavaScript::isLegalProp($name), $name);
-		}
-
-		$illegal = [
-			'',
-			'0foo',
-			'foo bar',
-			"foo\n",
-			'foo-bar',
-			"'foo'",
-			'"foo"',
-			'youtube.com',
-			'with',
-			'break',
-			'false',
-			'float'
-		];
-
-		foreach ($illegal as $name)
-		{
-			$this->assertFalse(JavaScript::isLegalProp($name), $name);
-		}
-	}
-
-	/**
-	* @testdox encode() tests
-	* @dataProvider getEncodeTests
-	*/
-	public function testEncode($original, $expected)
-	{
-		$this->assertSame($expected, JavaScript::encode($original));
-	}
-
-	public function getEncodeTests()
-	{
-		return [
-			[
-				123,
-				'123'
-			],
-			[
-				'foo',
-				'"foo"'
-			],
-			[
-				false,
-				'!1'
-			],
-			[
-				true,
-				'!0'
-			],
-			[
-				[1, 2],
-				'[1,2]'
-			],
-			[
-				['foo' => 'bar', 'baz' => 'quux'],
-				'{foo:"bar",baz:"quux"}'
-			],
-			[
-				['' => 'bar', 'baz' => 'quux'],
-				'{"":"bar",baz:"quux"}'
-			],
-			[
-				new Dictionary(['foo' => 'bar', 'baz' => 'quux']),
-				'{"foo":"bar","baz":"quux"}'
-			],
-			[
-				new Dictionary(['' => 'bar', 'baz' => 'quux']),
-				'{"":"bar","baz":"quux"}'
-			],
-			[
-				new Regexp('/^foo$/'),
-				'/^foo$/'
-			],
-			[
-				new Code('function(){return false;}'),
-				'function(){return false;}'
-			],
-			[
-				new Dictionary(['foo' => "bar\r\n"]),
-				'{"foo":"bar\\r\\n"}'
-			],
-			[
-				new Dictionary(["foo\r\n" => 'bar']),
-				'{"foo\\r\\n":"bar"}'
-			],
-			[
-				new Dictionary(['foo' => "bar\xE2\x80\xA8"]),
-				'{"foo":"bar\\u2028"}'
-			],
-			[
-				new Dictionary(['foo' => "bar\xE2\x80\xA9"]),
-				'{"foo":"bar\\u2029"}'
-			],
-		];
 	}
 
 	/**

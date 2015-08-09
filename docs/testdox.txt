@@ -1063,6 +1063,11 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 
+s9e\TextFormatter\Tests\Configurator\Encoder
+ [x] encode() tests
+ [x] encode() does not quote legal property names
+ [x] encode() quotes illegal property names
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will return the source from cache if available
  [x] get() will return the source from the filesystem if applicable
@@ -1659,8 +1664,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The normal Logger is present by default
  [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
- [x] isLegalProp() tests
- [x] encode() tests
  [x] HINT.attributeGenerator=0 by default
  [x] HINT.attributeGenerator=1 if any attribute has a generator
  [x] HINT.attributeDefaultValue=0 by default

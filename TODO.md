@@ -11,7 +11,6 @@ Current things
 - Add MergeConsecutiveCopyOf to the XSLT renderer's optimizations
 - Optimize the JS config by deduplicating the tagConfig.allowed, tagConfig.rules.closeAncestor, tagConfig.rules.closeParent, tagConfig.rules.fosterParent and tagConfig.rules.requireAncestor arrays.
 - Add PluginBase::getJavaScriptHints()
-- Move JavaScript::encode() to its own class
 
 Long-term goals (?)
 -------------------
