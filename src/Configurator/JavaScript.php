@@ -10,12 +10,11 @@ use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 class JavaScript
@@ -124,13 +123,8 @@ class JavaScript
 			];
 			$globalConfig = \array_intersect_key($pluginConfig, $globalKeys);
 			$localConfig  = \array_diff_key($pluginConfig, $globalKeys);
-			if (isset($globalConfig['regexp'])
-			 && !($globalConfig['regexp'] instanceof RegExp))
-			{
-				$regexp = RegexpConvertor::toJS($globalConfig['regexp']);
-				$regexp->flags .= 'g';
-				$globalConfig['regexp'] = $regexp;
-			}
+			if (isset($globalConfig['regexp']) && !($globalConfig['regexp'] instanceof Code))
+				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp'], \true);
 			$globalConfig['parser'] = new Code(
 				'/**
 				* @param {!string} text
@@ -145,18 +139,17 @@ class JavaScript
 			);
 			$plugins[$pluginName] = $globalConfig;
 		}
-		$code = new Code(self::encode($plugins));
-		return $code;
+		return self::encode($plugins);
 	}
 	protected function getRegisteredVarsConfig()
 	{
 		$registeredVars = $this->config['registeredVars'];
 		unset($registeredVars['cacheDir']);
-		return new Code(self::encode(new Dictionary($registeredVars)));
+		return self::encode(new Dictionary($registeredVars));
 	}
 	protected function getRootContext()
 	{
-		return new Code(self::encode($this->config['rootContext']));
+		return self::encode($this->config['rootContext']);
 	}
 	protected function getSource()
 	{
@@ -190,8 +183,7 @@ class JavaScript
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
 			$tags[$tagName] = $tagConfig;
 		}
-		$code = new Code(self::encode($tags));
-		return $code;
+		return self::encode($tags);
 	}
 	public static function encode($value)
 	{
@@ -201,10 +193,9 @@ class JavaScript
 				return ($value) ? '!0' : '!1';
 			return \json_encode($value);
 		}
-		if ($value instanceof RegexpObject)
+		if ($value instanceof Regexp)
 			$value = $value->toJS();
-		if ($value instanceof RegExp
-		 || $value instanceof Code)
+		if ($value instanceof Code)
 			return (string) $value;
 		if (!\is_array($value) && !($value instanceof Dictionary))
 			throw new RuntimeException('Cannot encode non-scalar value');
