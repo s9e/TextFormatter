@@ -156,8 +156,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			// length of $this->notAfter plus 1 for the first "/" and 5 for "(?<!)"
 			$lpos = 6 + strlen($this->notAfter);
 			$rpos = strrpos($regexp, '/');
-			$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/');
-			$jsRegexp->flags .= 'g';
+			$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/', true);
 
 			$config['regexp'] = new Variant($regexp);
 			$config['regexp']->set('JS', $jsRegexp);

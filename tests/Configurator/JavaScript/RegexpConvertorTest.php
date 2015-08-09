@@ -411,6 +411,22 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
+	* @testdox toJS('/x/') returns /x/
+	*/
+	public function testConvertDefaultNotGlobal()
+	{
+		$this->assertEquals('/x/', RegexpConvertor::toJS('/x/'));
+	}
+
+	/**
+	* @testdox toJS('/x/', true) returns /x/g
+	*/
+	public function testConvertGlobal()
+	{
+		$this->assertEquals('/x/g', RegexpConvertor::toJS('/x/', true));
+	}
+
+	/**
 	* @testdox toJS() throws a RuntimeException on unknown regexp features/tokens
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Unknown token type 'unknown' encountered while parsing regexp

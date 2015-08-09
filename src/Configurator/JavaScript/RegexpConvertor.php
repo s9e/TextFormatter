@@ -18,10 +18,11 @@ abstract class RegexpConvertor
 	/**
 	* Convert a PCRE regexp to a JavaScript regexp
 	*
-	* @param  string $regexp PCRE regexp
-	* @return RegExp         RegExp object
+	* @param  string $regexp   PCRE regexp
+	* @param  bool   $isGlobal Whether the global flag should be set
+	* @return RegExp           RegExp object
 	*/
-	public static function toJS($regexp)
+	public static function toJS($regexp, $isGlobal = false)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
 		$dotAll     = (strpos($regexpInfo['modifiers'], 's') !== false);
@@ -142,6 +143,10 @@ abstract class RegexpConvertor
 		);
 
 		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
+		if ($isGlobal)
+		{
+			$modifiers .= 'g';
+		}
 
 		$regexp = new RegExp($regexp, $modifiers);
 		$regexp->map = $map;

@@ -1106,6 +1106,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() handles duplicate subpattern names
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
  [x] toJS() converts atomic groups to non-capturing groups
+ [x] toJS('/x/') returns /x/
+ [x] toJS('/x/', true) returns /x/g
  [x] toJS() throws a RuntimeException on unknown regexp features/tokens
  [x] toJS() converts literal ASCII line terminators \r and \n
  [x] toJS() converts literal Unicode line terminators \u2028 and \u2029

@@ -124,13 +124,6 @@ class Regexp implements ConfigProvider
 	*/
 	public function toJS()
 	{
-		$obj = RegexpConvertor::toJS($this->regexp);
-
-		if ($this->isGlobal)
-		{
-			$obj->flags .= 'g';
-		}
-
-		return $obj;
+		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
 	}
 }

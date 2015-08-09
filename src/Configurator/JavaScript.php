@@ -258,8 +258,7 @@ class JavaScript
 			if (isset($globalConfig['regexp'])
 			 && !($globalConfig['regexp'] instanceof RegExp))
 			{
-				$regexp = RegexpConvertor::toJS($globalConfig['regexp']);
-				$regexp->flags .= 'g';
+				$regexp = RegexpConvertor::toJS($globalConfig['regexp'], true);
 
 				$globalConfig['regexp'] = $regexp;
 			}
