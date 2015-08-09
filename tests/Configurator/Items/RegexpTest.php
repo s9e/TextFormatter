@@ -32,65 +32,61 @@ class RegexpTest extends Test
 	}
 
 	/**
-	* @testdox toJS() returns a JavaScript RegExp
+	* @testdox toJS() returns a JavaScript Code
 	*/
 	public function testToJS()
 	{
 		$regexp = new Regexp('/foo/i');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$regexp->toJS()
 		);
 	}
 
 	/**
-	* @testdox asConfig() returns an instance of Variant
+	* @testdox Is an instance of Variant
 	*/
-	public function testAsConfigInstance()
+	public function testIsVariant()
 	{
 		$regexp = new Regexp('//');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$regexp->asConfig()
+			$regexp
 		);
 	}
 
 	/**
-	* @testdox asConfig() returns a JS variant
+	* @testdox Has a JS variant
 	*/
-	public function testAsConfigJSVariant()
+	public function testJSVariant()
 	{
 		$regexp = new Regexp('//');
 
-		$this->assertTrue($regexp->asConfig()->has('JS'));
+		$this->assertTrue($regexp->has('JS'));
 	}
 
 	/**
-	* @testdox asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+	* @testdox The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
 	*/
-	public function testAsConfigJSVariantInstance()
+	public function testJSVariantInstance()
 	{
 		$regexp = new Regexp('//');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
-			$regexp->asConfig()->get('JS')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
+			$regexp->get('JS')
 		);
 	}
 
 	/**
-	* @testdox asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
+	* @testdox The JS regexp has a global flag if isGlobal is true
 	*/
-	public function testAsConfigGlobal()
+	public function testJSVariantGlobal()
 	{
-		$regexp = new Regexp('//', true);
-
-		$this->assertSame(
-			'g',
-			$regexp->asConfig()->get('JS')->flags
-		);
+		$regexp = new Regexp('/x/', true);
+		$this->assertEquals('/x/g', $regexp->get('JS'));
 	}
 
 	/**

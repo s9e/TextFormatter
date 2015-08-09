@@ -12,7 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class RegexpFilter extends AttributeFilter
 {
@@ -70,7 +70,7 @@ class RegexpFilter extends AttributeFilter
 	{
 		if (is_string($regexp))
 		{
-			$regexp = new RegexpObject($regexp);
+			$regexp = new Regexp($regexp);
 		}
 
 		$this->vars['regexp'] = $regexp;

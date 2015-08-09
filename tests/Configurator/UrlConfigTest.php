@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\UrlConfig;
 use s9e\TextFormatter\Tests\Test;
 
@@ -30,7 +29,7 @@ class UrlConfigTest extends Test
 			$urlConfig['disallowedHosts']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$urlConfig['disallowedHosts']->get('JS')
 		);
 	}

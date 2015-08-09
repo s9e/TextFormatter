@@ -15,7 +15,7 @@ class HostnameList extends NormalizedList
 	/**
 	* Return this hostname list as a regexp's config
 	*
-	* @return \s9e\TextFormatter\Configurator\Items\Variant|null An instance of Variant that represents a regexp, or NULL if the collection is empty
+	* @return Regexp|null A Regexp instance, or NULL if the collection is empty
 	*/
 	public function asConfig()
 	{
@@ -24,9 +24,7 @@ class HostnameList extends NormalizedList
 			return null;
 		}
 
-		$regexp = new Regexp($this->getRegexp());
-
-		return $regexp->asConfig();
+		return new Regexp($this->getRegexp());
 	}
 
 	/**

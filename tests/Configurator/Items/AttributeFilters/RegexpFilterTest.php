@@ -4,7 +4,6 @@ namespace s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -361,7 +360,7 @@ class RegexpFilterTest extends Test
 		);
 		$this->assertTrue($variant->has('JS'));
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$variant->get('JS')
 		);
 	}

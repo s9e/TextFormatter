@@ -2,8 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
+use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
-use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
@@ -349,22 +349,15 @@ class ProgrammableCallbackTest extends Test
 	public function testAsConfigProvider()
 	{
 		$pc = new ProgrammableCallback(function(){});
-		$pc->setVars(['x' => new Regexp('/x/')]);
+		$pc->setVars(['x' => new DummyConfigProvider]);
 
 		$pc->addParameterByName('x');
-		$pc->addParameterByValue(new Regexp('/y/'));
+		$pc->addParameterByValue(new DummyConfigProvider);
 
 		$config = $pc->asConfig();
 
-		$this->assertNotInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
-			$config['params'][0]
-		);
-
-		$this->assertNotInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
-			$config['params'][1]
-		);
+		$this->assertSame('foo', $config['params'][0]);
+		$this->assertSame('foo', $config['params'][1]);
 	}
 
 	/**
@@ -373,14 +366,11 @@ class ProgrammableCallbackTest extends Test
 	public function testAsConfigProviderDeep()
 	{
 		$pc = new ProgrammableCallback(function(){});
-		$pc->addParameterByValue([new Regexp('/x/')]);
+		$pc->addParameterByValue([new DummyConfigProvider]);
 
 		$config = $pc->asConfig();
 
-		$this->assertNotInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
-			$config['params'][0][0]
-		);
+		$this->assertSame('foo', $config['params'][0][0]);
 	}
 
 	/**
@@ -405,5 +395,13 @@ class DummyStaticCallback
 {
 	public static function bar()
 	{
+	}
+}
+
+class DummyConfigProvider implements ConfigProvider
+{
+	public function asConfig()
+	{
+		return 'foo';
 	}
 }

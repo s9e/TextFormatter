@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -39,7 +39,7 @@ class SchemeListTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns an instance of RegExp as the JS variant
+	* @testdox asConfig() returns an instance of Code as the JS variant
 	*/
 	public function testAsConfigVariantJS()
 	{
@@ -48,7 +48,7 @@ class SchemeListTest extends Test
 		$list->add('https');
 
 		$this->assertEquals(
-			new RegExp('^https?$', 'i'),
+			new Code('/^https?$/i'),
 			$list->asConfig()->get('JS')
 		);
 	}

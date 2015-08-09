@@ -6,13 +6,12 @@ use stdClass;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -475,11 +474,7 @@ class JavaScriptTest extends Test
 				'{"":"bar","baz":"quux"}'
 			],
 			[
-				new RegExp('^foo$'),
-				'/^foo$/'
-			],
-			[
-				new RegexpObject('/^foo$/'),
+				new Regexp('/^foo$/'),
 				'/^foo$/'
 			],
 			[

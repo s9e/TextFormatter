@@ -180,7 +180,7 @@ class ConfiguratorTest extends Test
 			$config['regexp']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$config['regexp']->get('JS')
 		);
 	}
@@ -200,7 +200,7 @@ class ConfiguratorTest extends Test
 			$config['replacements'][0][0]
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$config['replacements'][0][0]->get('JS')
 		);
 	}

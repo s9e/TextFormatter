@@ -13,10 +13,10 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
-class Regexp implements ConfigProvider
+class Regexp extends Variant implements ConfigProvider
 {
 	/**
-	* @var bool Whether this regexp should become a JavaScript RegExp object with global flag
+	* @var bool Whether this regexp should have the global flag set in JavaScript
 	*/
 	protected $isGlobal;
 
@@ -38,6 +38,15 @@ class Regexp implements ConfigProvider
 			throw new InvalidArgumentException('Invalid regular expression ' . var_export($regexp, true));
 		}
 
+		parent::__construct($regexp);
+		$this->setDynamic(
+			'JS',
+			function ()
+			{
+				return $this->toJS();
+			}
+		);
+
 		$this->regexp   = $regexp;
 		$this->isGlobal = $isGlobal;
 	}
@@ -57,16 +66,7 @@ class Regexp implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$variant = new Variant($this->regexp);
-		$variant->setDynamic(
-			'JS',
-			function ()
-			{
-				return $this->toJS();
-			}
-		);
-
-		return $variant;
+		return $this;
 	}
 
 	/**
@@ -118,9 +118,9 @@ class Regexp implements ConfigProvider
 	}
 
 	/**
-	* Return this regexp as a JavaScript RegExp
+	* Return this regexp as JavaScript code
 	*
-	* @return RegExp
+	* @return Code
 	*/
 	public function toJS()
 	{

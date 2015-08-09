@@ -3,7 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\Emoticons;
 
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -187,8 +187,8 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config, 'JS');
 
-		$this->assertEquals(new RegExp('(?:xx|yy)', 'g'), $config['regexp']);
-		$this->assertEquals(new RegExp('\\w'),            $config['notAfter']);
+		$this->assertEquals(new Code('/(?:xx|yy)/g'), $config['regexp']);
+		$this->assertEquals(new Code('/\\w/'),        $config['notAfter']);
 	}
 
 	/**
@@ -203,8 +203,8 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config, 'JS');
 
-		$this->assertEquals(new RegExp('x', 'g'), $config['regexp']);
-		$this->assertEquals(new RegExp('(?:x)'),  $config['notAfter']);
+		$this->assertEquals(new Code('/x/g'),    $config['regexp']);
+		$this->assertEquals(new Code('/(?:x)/'), $config['notAfter']);
 	}
 
 	/**
@@ -233,8 +233,8 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config, 'JS');
 
-		$this->assertEquals(new RegExp('x', 'g'),   $config['regexp']);
-		$this->assertEquals(new RegExp('\\w'), $config['notAfter']);
+		$this->assertEquals(new Code('/x/g', 'g'), $config['regexp']);
+		$this->assertEquals(new Code('/\\w/'),     $config['notAfter']);
 	}
 
 	/**

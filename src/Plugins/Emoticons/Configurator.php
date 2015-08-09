@@ -149,7 +149,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		];
 
 		// If notAfter is used, we need to create a JavaScript-specific regexp that does not use a
-		// lookbehind assertion, and we add the notAfter subpattern to the config as a RegExp
+		// lookbehind assertion, and we add the notAfter subpattern to the config as a variant
 		if ($this->notAfter !== '')
 		{
 			// Skip the first assertion by skipping the first N characters, where N equals the

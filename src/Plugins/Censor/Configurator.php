@@ -14,7 +14,6 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -186,13 +185,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		foreach ($replacementWords as $replacement => $words)
 		{
-			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
-
-			// Create a regexp with a JavaScript variant for each group of words
-			$variant = new Variant($regexp);
-
-			$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-			$variant->set('JS', RegexpConvertor::toJS($regexp));
+			$regexp   = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
+			$jsRegexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
+			$variant  = new Variant($regexp, ['JS' => RegexpConvertor::toJS($jsRegexp)]);
 
 			$config['replacements'][] = [$variant, $replacement];
 		}
@@ -214,20 +209,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	protected function getWordsRegexp(array $words)
 	{
-		$regexp = RegexpBuilder::fromList($words, $this->regexpOptions);
+		$expr = RegexpBuilder::fromList($words, $this->regexpOptions);
 
 		// Force atomic grouping for performance. Theorically it could prevent some matches but in
 		// practice it shouldn't happen
-		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
-
-		// Create a variant for the return value
-		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/Siu');
+		$expr = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $expr);
 
 		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
 		// we'll accept any non-whitespace, non-common punctuation
-		$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
+		$regexp   = '/(?<![\\pL\\pN])' . $expr . '(?![\\pL\\pN])/Siu';
+		$jsRegexp = '/(?:^|\\W)' . str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $expr) . '(?!\\w)/gi';
 
-		return $variant;
+		return new Variant($regexp, ['JS' => RegexpConvertor::toJS($jsRegexp, true)]);
 	}
 }

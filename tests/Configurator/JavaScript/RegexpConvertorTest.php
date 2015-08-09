@@ -13,12 +13,12 @@ include_once __DIR__ . '/../../bootstrap.php';
 class RegexpConvertorTest extends Test
 {
 	/**
-	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
 	*/
 	public function testReturnInstance()
 	{
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			RegexpConvertor::toJS('//')
 		);
 	}
@@ -330,60 +330,6 @@ class RegexpConvertorTest extends Test
 		$this->assertEquals(
 			'/x([0-9]+)([a-z]+)x/',
 			RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#')
-		);
-	}
-
-	/**
-	* @testdox toJS() replaces its second parameter with a list of capturing subpattern names
-	*/
-	public function testConvertRegexpNamedCapturesMap()
-	{
-		$regexp = RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#');
-
-		$this->assertEquals(
-			'/x([0-9]+)([a-z]+)x/',
-			$regexp
-		);
-
-		$this->assertEquals(
-			['', 'foo', 'bar'],
-			$regexp->map
-		);
-	}
-
-	/**
-	* @testdox toJS() non-named capturing subpatterns leave an empty name in the map
-	*/
-	public function testConvertRegexpNamedCapturesMapIndices()
-	{
-		$regexp = RegexpConvertor::toJS('#x([0-9]+)(?<bar>[a-z]+)x#');
-
-		$this->assertEquals(
-			'/x([0-9]+)([a-z]+)x/',
-			$regexp
-		);
-
-		$this->assertEquals(
-			['', '', 'bar'],
-			$regexp->map
-		);
-	}
-
-	/**
-	* @testdox toJS() handles duplicate subpattern names
-	*/
-	public function testConvertRegexpDuplicateNamedCapturesMap()
-	{
-		$regexp = RegexpConvertor::toJS('/(?J)(?<foo>[0-9]+)|(?<foo>[a-z]+)/');
-
-		$this->assertEquals(
-			'/([0-9]+)|([a-z]+)/',
-			$regexp
-		);
-
-		$this->assertEquals(
-			['', 'foo', 'foo'],
-			$regexp->map
 		);
 	}
 

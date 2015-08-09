@@ -12,7 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class MapFilter extends AttributeFilter
 {
@@ -114,7 +114,7 @@ class MapFilter extends AttributeFilter
 			}
 
 			// Add the [regexp,value] pair to the map
-			$map[] = [new RegexpObject($regexp), $value];
+			$map[] = [new Regexp($regexp), $value];
 		}
 
 		// If the "strict" option is enabled, a catch-all regexp which replaces the value with FALSE

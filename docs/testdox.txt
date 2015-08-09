@@ -366,7 +366,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
 s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
  [x] asConfig() returns an instance of Variant
  [x] asConfig() returns a regexp that matches all the allowed schemes in the default variant
- [x] asConfig() returns an instance of RegExp as the JS variant
+ [x] asConfig() returns an instance of Code as the JS variant
  [x] asConfig() creates a case-insensitive regexp that matches the schemes in the collection
  [x] add('*invalid*') throws an exception
  [x] add() normalizes schemes to lowercase
@@ -985,11 +985,11 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UrlFilter
 s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
- [x] toJS() returns a JavaScript RegExp
- [x] asConfig() returns an instance of Variant
- [x] asConfig() returns a JS variant
- [x] asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
- [x] asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
+ [x] toJS() returns a JavaScript Code
+ [x] Is an instance of Variant
+ [x] Has a JS variant
+ [x] The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
+ [x] The JS regexp has a global flag if isGlobal is true
  [x] getNamedCaptures() returns an array where keys are the name of the named captures and values are regexps that exactly match them
  [x] getNamedCaptures() preserves the original's regexp "i", "s" and "u" flags
  [x] getCaptureNames() returns the names of all captures
@@ -1066,13 +1066,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will return the source from the filesystem if applicable
  [x] get() will throw an exception if the function can't be sourced
 
-s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
- [x] Returns a JavaScript literal when cast as a string
- [x] Returns /(?:)/ if the regexp is empty to avoid being parsed as a comment
- [x] The default map as an empty entry that represents capture #0
-
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
- [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+ [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
  [x] toJS() can convert plain regexps
  [x] toJS() escapes forward slashes
  [x] toJS() does not double-escape forward slashes that are already escaped
@@ -1101,9 +1096,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
  [x] toJS() does not convert . inside of character classes
  [x] toJS() converts named captures into normal captures
- [x] toJS() replaces its second parameter with a list of capturing subpattern names
- [x] toJS() non-named capturing subpatterns leave an empty name in the map
- [x] toJS() handles duplicate subpattern names
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
  [x] toJS() converts atomic groups to non-capturing groups
  [x] toJS('/x/') returns /x/

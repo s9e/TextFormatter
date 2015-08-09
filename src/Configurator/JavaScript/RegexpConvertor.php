@@ -20,7 +20,7 @@ abstract class RegexpConvertor
 	*
 	* @param  string $regexp   PCRE regexp
 	* @param  bool   $isGlobal Whether the global flag should be set
-	* @return RegExp           RegExp object
+	* @return Code             JavaScript regexp
 	*/
 	public static function toJS($regexp, $isGlobal = false)
 	{
@@ -29,9 +29,6 @@ abstract class RegexpConvertor
 
 		$regexp = '';
 		$pos = 0;
-
-		// Add an empty entry for match #0
-		$map = [''];
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
@@ -52,10 +49,6 @@ abstract class RegexpConvertor
 
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
-
-					// Each capturing subpattern adds an entry to the map. Non-named subpatterns
-					// leave an empty entry
-					$map[] = (isset($tok['name'])) ? $tok['name'] : '';
 					break;
 
 				case 'nonCapturingSubpatternStart':
@@ -74,11 +67,7 @@ abstract class RegexpConvertor
 
 				case 'characterClass':
 					$regexp .= '[';
-					$regexp .= self::unfoldUnicodeProperties(
-						$tok['content'],
-						true,
-						false
-					);
+					$regexp .= self::unfoldUnicodeProperties($tok['content'], true, false);
 					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
 					break;
 
@@ -108,27 +97,20 @@ abstract class RegexpConvertor
 			$pos = $tok['pos'] + $tok['len'];
 		}
 
-		$regexp .= self::unfoldUnicodeProperties(
-			substr($regexpInfo['regexp'], $pos),
-			false,
-			$dotAll
-		);
+		$regexp .= self::unfoldUnicodeProperties(substr($regexpInfo['regexp'], $pos), false, $dotAll);
 
 		if ($regexpInfo['delimiter'] !== '/')
 		{
 			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
 		}
 
-		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
+		$modifiers = preg_replace('#[^im]#', '', $regexpInfo['modifiers']);
 		if ($isGlobal)
 		{
 			$modifiers .= 'g';
 		}
 
-		$regexp = new RegExp(self::escapeLineTerminators($regexp), $modifiers);
-		$regexp->map = $map;
-
-		return $regexp;
+		return new Code('/' . self::escapeLineTerminators($regexp) . '/' . $modifiers);
 	}
 
 	/**

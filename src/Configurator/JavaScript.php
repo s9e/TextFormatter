@@ -11,12 +11,11 @@ use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 
@@ -255,12 +254,9 @@ class JavaScript
 			$globalConfig = array_intersect_key($pluginConfig, $globalKeys);
 			$localConfig  = array_diff_key($pluginConfig, $globalKeys);
 
-			if (isset($globalConfig['regexp'])
-			 && !($globalConfig['regexp'] instanceof RegExp))
+			if (isset($globalConfig['regexp']) && !($globalConfig['regexp'] instanceof Code))
 			{
-				$regexp = RegexpConvertor::toJS($globalConfig['regexp'], true);
-
-				$globalConfig['regexp'] = $regexp;
+				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp'], true);
 			}
 
 			$globalConfig['parser'] = new Code(
@@ -396,15 +392,13 @@ class JavaScript
 			return json_encode($value);
 		}
 
-		if ($value instanceof RegexpObject)
+		if ($value instanceof Regexp)
 		{
 			$value = $value->toJS();
 		}
 
-		if ($value instanceof RegExp
-		 || $value instanceof Code)
+		if ($value instanceof Code)
 		{
-			// Rely on RegExp::__toString() and Code::__toString()
 			return (string) $value;
 		}
 

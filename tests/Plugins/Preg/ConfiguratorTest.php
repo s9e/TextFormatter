@@ -6,7 +6,6 @@ use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Preg\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -100,17 +99,15 @@ class ConfiguratorTest extends Test
 	{
 		$tag = $this->configurator->Preg->replace('/(?<w>[0-9]+),(?<h>[0-9]+)/', '');
 
-		$this->assertTrue(
-			$tag->attributes->get('w')->filterChain->contains(
-				new RegexpFilter('/^[0-9]+$/D')
-			)
-		);
+		$regexp   = '/^[0-9]+$/D';
+		$filter   = new RegexpFilter($regexp);
+		$callback = $filter->getCallback();
 
-		$this->assertTrue(
-			$tag->attributes->get('h')->filterChain->contains(
-				new RegexpFilter('/^[0-9]+$/D')
-			)
-		);
+		$this->assertSame($callback, $tag->attributes['w']->filterChain[0]->getCallback());
+		$this->assertSame($regexp,   $tag->attributes['w']->filterChain[0]->getRegexp());
+
+		$this->assertSame($callback, $tag->attributes['h']->filterChain[0]->getCallback());
+		$this->assertSame($regexp,   $tag->attributes['h']->filterChain[0]->getRegexp());
 	}
 
 	/**
