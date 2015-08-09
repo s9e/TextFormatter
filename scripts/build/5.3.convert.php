@@ -94,6 +94,16 @@ function convertCustom($filepath, &$file)
 				"\$rendererGenerator = new XSLT;\n\t\t\$this->xsl = \$rendererGenerator->getXSL(\$this->configurator->rendering);"
 			)
 		),
+		'JavaScript/Encoder.php' => array(
+			array(
+				'return $this->typeEncoders[$type]($value);',
+				'return call_user_func($this->typeEncoders[$type], $value);'
+			),
+			array(
+				'return $callback($object);',
+				'return call_user_func($callback, $object);'
+			)
+		),
 		'Logger.php' => array(
 			array(
 				'$callback($msg, $context);',
