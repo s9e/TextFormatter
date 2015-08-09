@@ -119,8 +119,27 @@ abstract class RegexpConvertor
 			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
 		}
 
-		// Escape line terminators
-		$regexp = preg_replace_callback(
+		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
+		if ($isGlobal)
+		{
+			$modifiers .= 'g';
+		}
+
+		$regexp = new RegExp(self::escapeLineTerminators($regexp), $modifiers);
+		$regexp->map = $map;
+
+		return $regexp;
+	}
+
+	/**
+	* Escape line terminators in given regexp
+	*
+	* @param  string $regexp Original regexp
+	* @return string         Modified regexp
+	*/
+	protected static function escapeLineTerminators($regexp)
+	{
+		return preg_replace_callback(
 			"/(\\\\*)([\\r\\n]|\xE2\x80\xA8|\xE2\x80\xA9)/",
 			function ($m)
 			{
@@ -141,17 +160,6 @@ abstract class RegexpConvertor
 			},
 			$regexp
 		);
-
-		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
-		if ($isGlobal)
-		{
-			$modifiers .= 'g';
-		}
-
-		$regexp = new RegExp($regexp, $modifiers);
-		$regexp->map = $map;
-
-		return $regexp;
 	}
 
 	/**
