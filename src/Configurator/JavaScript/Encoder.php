@@ -36,22 +36,22 @@ class Encoder
 		$type = \gettype($value);
 		if (!isset($this->typeEncoders[$type]))
 			throw new RuntimeException('Cannot encode ' . $type . ' value');
-		return $this->typeEncoders[$type]($value);
+		return \call_user_func($this->typeEncoders[$type], $value);
 	}
-	protected function encodeArray(array $array, $preserveNames = \false)
+	protected function encodeArray(array $array)
 	{
-		$isObject = ($preserveNames || \array_keys($array) !== \range(0, \count($array) - 1));
-		$src = ($isObject) ? '{' : '[';
+		return (\array_keys($array) === \range(0, \count($array) - 1)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
+	}
+	protected function encodeAssociativeArray(array $array, $preserveNames = \false)
+	{
+		$src = '{';
 		$sep = '';
 		foreach ($array as $k => $v)
 		{
-			$src .= $sep;
-			if ($isObject)
-				$src .= $this->encodePropertyName($k, $preserveNames) . ':';
-			$src .= $this->encode($v);
+			$src .= $sep . $this->encodePropertyName($k, $preserveNames) . ':' . $this->encode($v);
 			$sep = ',';
 		}
-		$src .= ($isObject) ? '}' : ']';
+		$src .= '}';
 		return $src;
 	}
 	protected function encodeBoolean($value)
@@ -64,13 +64,17 @@ class Encoder
 	}
 	protected function encodeDictionary(Dictionary $dict)
 	{
-		return $this->encodeArray($dict->getArrayCopy(), \true);
+		return $this->encodeAssociativeArray($dict->getArrayCopy(), \true);
+	}
+	protected function encodeIndexedArray(array $array)
+	{
+		return '[' . \implode(',', \array_map(array($this, 'encode'), $array)) . ']';
 	}
 	protected function encodeObject($object)
 	{
 		foreach ($this->objectEncoders as $className => $callback)
 			if ($object instanceof $className)
-				return $callback($object);
+				return \call_user_func($callback, $object);
 		throw new RuntimeException('Cannot encode instance of ' . \get_class($object));
 	}
 	protected function encodeRegexp(Regexp $regexp)
