@@ -45,16 +45,30 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is a config provider
+	*/
+	public function testIsConfigProvider()
+	{
+		$regexp = new Regexp('//');
+		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\ConfigProvider', $regexp);
+	}
+
+	/**
+	* @testdox Returns itself as config
+	*/
+	public function testAsConfigReturnsItself()
+	{
+		$regexp = new Regexp('//');
+		$this->assertSame($regexp, $regexp->asConfig());
+	}
+
+	/**
 	* @testdox Is an instance of Variant
 	*/
 	public function testIsVariant()
 	{
 		$regexp = new Regexp('//');
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$regexp
-		);
+		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\Items\\Variant', $regexp);
 	}
 
 	/**

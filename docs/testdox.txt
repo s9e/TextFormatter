@@ -986,6 +986,8 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
  [x] toJS() returns a JavaScript Code
+ [x] Is a config provider
+ [x] Returns itself as config
  [x] Is an instance of Variant
  [x] Has a JS variant
  [x] The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
