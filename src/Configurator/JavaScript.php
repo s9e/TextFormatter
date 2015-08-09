@@ -7,12 +7,11 @@
 */
 namespace s9e\TextFormatter\Configurator;
 use ReflectionClass;
-use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -22,6 +21,7 @@ class JavaScript
 	protected $callbacks;
 	protected $config;
 	protected $configurator;
+	public $encoder;
 	public $exportMethods = array(
 		'disablePlugin',
 		'disableTag',
@@ -40,6 +40,7 @@ class JavaScript
 	public function __construct(Configurator $configurator)
 	{
 		$this->configurator = $configurator;
+		$this->encoder      = new Encoder;
 	}
 	public function getMinifier()
 	{
@@ -90,7 +91,7 @@ class JavaScript
 		\ksort($this->hints);
 		$js = "/** @const */ var HINT={};\n";
 		foreach ($this->hints as $hintName => $hintValue)
-			$js .= '/** @const */ HINT.' . $hintName . '=' . self::encode($hintValue) . ";\n";
+			$js .= '/** @const */ HINT.' . $hintName . '=' . $this->encode($hintValue) . ";\n";
 		return $js;
 	}
 	protected function getPluginsConfig()
@@ -133,23 +134,23 @@ class JavaScript
 				function(text, matches)
 				{
 					/** @const */
-					var config=' . self::encode($localConfig) . ';
+					var config=' . $this->encode($localConfig) . ';
 					' . $globalConfig['parser'] . '
 				}'
 			);
 			$plugins[$pluginName] = $globalConfig;
 		}
-		return self::encode($plugins);
+		return $this->encode($plugins);
 	}
 	protected function getRegisteredVarsConfig()
 	{
 		$registeredVars = $this->config['registeredVars'];
 		unset($registeredVars['cacheDir']);
-		return self::encode(new Dictionary($registeredVars));
+		return $this->encode(new Dictionary($registeredVars));
 	}
 	protected function getRootContext()
 	{
-		return self::encode($this->config['rootContext']);
+		return $this->encode($this->config['rootContext']);
 	}
 	protected function getSource()
 	{
@@ -184,42 +185,11 @@ class JavaScript
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
 			$tags[$tagName] = $tagConfig;
 		}
-		return self::encode($tags);
+		return $this->encode($tags);
 	}
-	public static function encode($value)
+	public function encode($value)
 	{
-		if (\is_scalar($value))
-		{
-			if (\is_bool($value))
-				return ($value) ? '!0' : '!1';
-			return \json_encode($value);
-		}
-		if ($value instanceof Regexp)
-			$value = $value->toJS();
-		if ($value instanceof Code)
-			return (string) $value;
-		if (!\is_array($value) && !($value instanceof Dictionary))
-			throw new RuntimeException('Cannot encode non-scalar value');
-		if ($value instanceof Dictionary)
-		{
-			$value = $value->getArrayCopy();
-			$preserveKeys = \true;
-		}
-		else
-			$preserveKeys = \false;
-		$isArray = (!$preserveKeys && \array_keys($value) === \range(0, \count($value) - 1));
-		$src = ($isArray) ? '[' : '{';
-		$sep = '';
-		foreach ($value as $k => $v)
-		{
-			$src .= $sep;
-			if (!$isArray)
-				$src .= (($preserveKeys || !self::isLegalProp($k)) ? \json_encode($k) : $k) . ':';
-			$src .= self::encode($v);
-			$sep = ',';
-		}
-		$src .= ($isArray) ? ']' : '}';
-		return $src;
+		return $this->encoder->encode($value);
 	}
 	protected function injectConfig(&$src)
 	{
@@ -239,13 +209,6 @@ class JavaScript
 			$src
 		);
 		$src .= "\n" . \implode("\n", $this->callbacks) . "\n";
-	}
-	public static function isLegalProp($name)
-	{
-		$reserved = array('abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while', 'with');
-		if (\in_array($name, $reserved, \true))
-			return \false;
-		return (bool) \preg_match('#^[$_\\pL][$_\\pL\\pNl]+$#Du', $name);
 	}
 	protected function replaceCallbacks()
 	{
@@ -278,7 +241,7 @@ class JavaScript
 		$args = array();
 		foreach ($params as $k => $v)
 			if (isset($v))
-				$args[] = self::encode($v);
+				$args[] = $this->encode($v);
 			elseif (isset($localVars[$k]))
 				$args[] = $k;
 			else
