@@ -59,10 +59,10 @@ $configurator->plugins->load('Escaper', ['regexp' => '/\\\\(?=[[:ascii:]])\\W/s'
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = <<<END
-Backslash before backslash: \\\\
-Backslash before bracket:   \\[
-Backslash before letter:    s9e\\TextFormatter
+$text = <<<'END'
+Backslash before backslash: \\
+Backslash before bracket:   \[
+Backslash before letter:    s9e\TextFormatter
 END;
 
 $xml  = $parser->parse($text);
