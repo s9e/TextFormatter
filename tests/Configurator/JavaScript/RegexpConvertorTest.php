@@ -133,6 +133,14 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
+	* @testdox toJS() removes option (?J)
+	*/
+	public function testConvertRegexpOption()
+	{
+		$this->assertEquals('/x/', RegexpConvertor::toJS('/(?J)x/'));
+	}
+
+	/**
 	* @testdox toJS() throws a RuntimeException on subpattern options (?i:)
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Subpattern options are not supported

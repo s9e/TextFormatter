@@ -1080,6 +1080,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
  [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
  [x] toJS() throws a RuntimeException on options (?i)
+ [x] toJS() removes option (?J)
  [x] toJS() throws a RuntimeException on subpattern options (?i:)
  [x] toJS() can convert regexps with character classes with a quantifier
  [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
