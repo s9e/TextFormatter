@@ -11,7 +11,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 class MapFilter extends AttributeFilter
 {
 	public function __construct(array $map = \null, $caseSensitive = \false, $strict = \false)
@@ -57,7 +57,7 @@ class MapFilter extends AttributeFilter
 				$regexp .= 'i';
 			if (!\preg_match('#^[[:ascii:]]*$#D', $regexp))
 				$regexp .= 'u';
-			$map[] = array(new RegexpObject($regexp), $value);
+			$map[] = array(new Regexp($regexp), $value);
 		}
 		if ($strict)
 			$map[] = array('//', \false);

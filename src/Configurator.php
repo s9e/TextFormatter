@@ -3294,14 +3294,23 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
-class Regexp implements ConfigProvider
+class Regexp extends Variant implements ConfigProvider
 {
 	protected $isGlobal;
 	protected $regexp;
 	public function __construct($regexp, $isGlobal = \false)
 	{
+		$_this = $this;
 		if (@\preg_match($regexp, '') === \false)
 			throw new InvalidArgumentException('Invalid regular expression ' . \var_export($regexp, \true));
+		parent::__construct($regexp);
+		$this->setDynamic(
+			'JS',
+			function () use ($_this)
+			{
+				return $_this->toJS();
+			}
+		);
 		$this->regexp   = $regexp;
 		$this->isGlobal = $isGlobal;
 	}
@@ -3311,16 +3320,7 @@ class Regexp implements ConfigProvider
 	}
 	public function asConfig()
 	{
-		$_this = $this;
-		$variant = new Variant($this->regexp);
-		$variant->setDynamic(
-			'JS',
-			function () use ($_this)
-			{
-				return $_this->toJS();
-			}
-		);
-		return $variant;
+		return $this;
 	}
 	public function getCaptureNames()
 	{
@@ -3350,10 +3350,7 @@ class Regexp implements ConfigProvider
 	}
 	public function toJS()
 	{
-		$obj = RegexpConvertor::toJS($this->regexp);
-		if ($this->isGlobal)
-			$obj->flags .= 'g';
-		return $obj;
+		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
 	}
 }
 
@@ -5151,7 +5148,7 @@ class AttributePreprocessorCollection extends Collection
 		foreach ($this->items as $k => $ap)
 		{
 			list($attrName) = \unserialize($k);
-			$config[] = array($attrName, $ap->asConfig(), $ap->getCaptureNames());
+			$config[] = array($attrName, $ap, $ap->getCaptureNames());
 		}
 		return $config;
 	}
@@ -5991,8 +5988,7 @@ class HostnameList extends NormalizedList
 	{
 		if (empty($this->items))
 			return \null;
-		$regexp = new Regexp($this->getRegexp());
-		return $regexp->asConfig();
+		return new Regexp($this->getRegexp());
 	}
 	public function getRegexp()
 	{
@@ -6066,8 +6062,7 @@ class SchemeList extends NormalizedList
 {
 	public function asConfig()
 	{
-		$regexp = new Regexp('/^' . RegexpBuilder::fromList($this->items) . '$/Di');
-		return $regexp->asConfig();
+		return new Regexp('/^' . RegexpBuilder::fromList($this->items) . '$/Di');
 	}
 	public function normalizeValue($scheme)
 	{

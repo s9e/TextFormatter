@@ -13,7 +13,6 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -126,10 +125,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				$replacementWords[$replacement][] = $word;
 		foreach ($replacementWords as $replacement => $words)
 		{
-			$regexp = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
-			$variant = new Variant($regexp);
-			$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-			$variant->set('JS', RegexpConvertor::toJS($regexp));
+			$regexp   = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
+			$jsRegexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
+			$variant  = new Variant($regexp, array('JS' => RegexpConvertor::toJS($jsRegexp)));
 			$config['replacements'][] = array($variant, $replacement);
 		}
 		if (!empty($this->allowed))
@@ -138,11 +136,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 	protected function getWordsRegexp(array $words)
 	{
-		$regexp = RegexpBuilder::fromList($words, $this->regexpOptions);
-		$regexp = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
-		$variant = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/Siu');
-		$regexp = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-		$variant->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
-		return $variant;
+		$expr = RegexpBuilder::fromList($words, $this->regexpOptions);
+		$expr = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $expr);
+		$regexp   = '/(?<![\\pL\\pN])' . $expr . '(?![\\pL\\pN])/Siu';
+		$jsRegexp = '/(?:^|\\W)' . \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $expr) . '(?!\\w)/gi';
+		return new Variant($regexp, array('JS' => RegexpConvertor::toJS($jsRegexp, \true)));
 	}
 }

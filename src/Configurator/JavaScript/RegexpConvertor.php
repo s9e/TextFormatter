@@ -10,13 +10,12 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 abstract class RegexpConvertor
 {
-	public static function toJS($regexp)
+	public static function toJS($regexp, $isGlobal = \false)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
 		$dotAll     = (\strpos($regexpInfo['modifiers'], 's') !== \false);
 		$regexp = '';
 		$pos = 0;
-		$map = array('');
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
 			$regexp .= self::unfoldUnicodeProperties(
@@ -32,7 +31,6 @@ abstract class RegexpConvertor
 					break;
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
-					$map[] = (isset($tok['name'])) ? $tok['name'] : '';
 					break;
 				case 'nonCapturingSubpatternStart':
 					if (!empty($tok['options']))
@@ -45,11 +43,7 @@ abstract class RegexpConvertor
 					break;
 				case 'characterClass':
 					$regexp .= '[';
-					$regexp .= self::unfoldUnicodeProperties(
-						$tok['content'],
-						\true,
-						\false
-					);
+					$regexp .= self::unfoldUnicodeProperties($tok['content'], \true, \false);
 					$regexp .= ']' . \substr($tok['quantifiers'], 0, 1);
 					break;
 				case 'lookaheadAssertionStart':
@@ -71,14 +65,17 @@ abstract class RegexpConvertor
 			}
 			$pos = $tok['pos'] + $tok['len'];
 		}
-		$regexp .= self::unfoldUnicodeProperties(
-			\substr($regexpInfo['regexp'], $pos),
-			\false,
-			$dotAll
-		);
+		$regexp .= self::unfoldUnicodeProperties(\substr($regexpInfo['regexp'], $pos), \false, $dotAll);
 		if ($regexpInfo['delimiter'] !== '/')
 			$regexp = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
-		$regexp = \preg_replace_callback(
+		$modifiers = \preg_replace('#[^im]#', '', $regexpInfo['modifiers']);
+		if ($isGlobal)
+			$modifiers .= 'g';
+		return new Code('/' . self::escapeLineTerminators($regexp) . '/' . $modifiers);
+	}
+	protected static function escapeLineTerminators($regexp)
+	{
+		return \preg_replace_callback(
 			"/(\\\\*)([\\r\\n]|\xE2\x80\xA8|\xE2\x80\xA9)/",
 			function ($m)
 			{
@@ -94,10 +91,6 @@ abstract class RegexpConvertor
 			},
 			$regexp
 		);
-		$modifiers = \preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
-		$regexp = new RegExp($regexp, $modifiers);
-		$regexp->map = $map;
-		return $regexp;
 	}
 	protected static function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
 	{

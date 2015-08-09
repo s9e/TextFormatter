@@ -104,8 +104,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			$lpos = 6 + \strlen($this->notAfter);
 			$rpos = \strrpos($regexp, '/');
-			$jsRegexp = RegexpConvertor::toJS('/' . \substr($regexp, $lpos, $rpos - $lpos) . '/');
-			$jsRegexp->flags .= 'g';
+			$jsRegexp = RegexpConvertor::toJS('/' . \substr($regexp, $lpos, $rpos - $lpos) . '/', \true);
 			$config['regexp'] = new Variant($regexp);
 			$config['regexp']->set('JS', $jsRegexp);
 			$config['notAfter'] = new Variant;

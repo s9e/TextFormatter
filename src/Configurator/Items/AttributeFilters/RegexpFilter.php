@@ -11,7 +11,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 class RegexpFilter extends AttributeFilter
 {
 	public function __construct($regexp = \null)
@@ -37,7 +37,7 @@ class RegexpFilter extends AttributeFilter
 	public function setRegexp($regexp)
 	{
 		if (\is_string($regexp))
-			$regexp = new RegexpObject($regexp);
+			$regexp = new Regexp($regexp);
 		$this->vars['regexp'] = $regexp;
 	}
 	public function isSafeAsURL()
