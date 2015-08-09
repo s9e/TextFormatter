@@ -70,25 +70,30 @@ class Encoder
 	* Encode an array to JavaScript
 	*
 	* @param  array  $array
+	* @return string
+	*/
+	protected function encodeArray(array $array)
+	{
+		return (array_keys($array) === range(0, count($array) - 1)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
+	}
+
+	/**
+	* Encode an associative array to JavaScript
+	*
+	* @param  array  $array
 	* @param  bool   $preserveNames
 	* @return string
 	*/
-	protected function encodeArray(array $array, $preserveNames = false)
+	protected function encodeAssociativeArray(array $array, $preserveNames = false)
 	{
-		$isObject = ($preserveNames || array_keys($array) !== range(0, count($array) - 1));
-		$src = ($isObject) ? '{' : '[';
+		$src = '{';
 		$sep = '';
 		foreach ($array as $k => $v)
 		{
-			$src .= $sep;
-			if ($isObject)
-			{
-				$src .= $this->encodePropertyName($k, $preserveNames) . ':';
-			}
-			$src .= $this->encode($v);
+			$src .= $sep . $this->encodePropertyName($k, $preserveNames) . ':' . $this->encode($v);
 			$sep = ',';
 		}
-		$src .= ($isObject) ? '}' : ']';
+		$src .= '}';
 
 		return $src;
 	}
@@ -123,7 +128,18 @@ class Encoder
 	*/
 	protected function encodeDictionary(Dictionary $dict)
 	{
-		return $this->encodeArray($dict->getArrayCopy(), true);
+		return $this->encodeAssociativeArray($dict->getArrayCopy(), true);
+	}
+
+	/**
+	* Encode an indexed array to JavaScript
+	*
+	* @param  array  $array
+	* @return string
+	*/
+	protected function encodeIndexedArray(array $array)
+	{
+		return '[' . implode(',', array_map([$this, 'encode'], $array)) . ']';
 	}
 
 	/**
