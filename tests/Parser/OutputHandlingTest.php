@@ -197,6 +197,26 @@ class OutputHandlingTest extends Test
 				}
 			],
 			[
+				'[X][B].[/B].[HR][/X]',
+				'<r><X><s>[X]</s><p><B><s>[B]</s>.<e>[/B]</e></B><i>.</i></p><HR>[HR]</HR><e>[/X]</e></X></r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('X');
+					$tag->rules->ignoreText();
+					$tag->rules->createParagraphs();
+					$configurator->tags->add('B');
+					$configurator->tags->add('HR')->rules->breakParagraph();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 3);
+					$parser->addStartTag('B', 3, 3);
+					$parser->addEndTag('B', 7, 4);
+					$parser->addSelfClosingTag('HR', 12, 4);
+					$parser->addEndTag('X', 16, 4);
+				}
+			],
+			[
 				'foo bar',
 				'<r><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</r>',
 				function ($configurator)
