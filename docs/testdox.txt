@@ -1067,6 +1067,8 @@ s9e\TextFormatter\Tests\Configurator\Encoder
  [x] encode() tests
  [x] encode() does not quote legal property names
  [x] encode() quotes illegal property names
+ [x] encode() throws an exception on unsupported types
+ [x] encode() throws an exception on unsupported objects
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will return the source from cache if available

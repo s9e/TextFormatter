@@ -140,4 +140,26 @@ class EncoderTest extends Test
 			$this->assertContains(json_encode($name) . ':', $js);
 		}
 	}
+
+	/**
+	* @testdox encode() throws an exception on unsupported types
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Cannot encode resource value
+	*/
+	public function testEncodeUnsupportedType()
+	{
+		$encoder = new Encoder;
+		$encoder->encode(fopen('php://stdin', 'rb'));
+	}
+
+	/**
+	* @testdox encode() throws an exception on unsupported objects
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Cannot encode instance of Closure
+	*/
+	public function testEncodeUnsupportedObjects()
+	{
+		$encoder = new Encoder;
+		$encoder->encode(function(){});
+	}
 }
