@@ -277,15 +277,8 @@ class JavaScript
 	}
 	protected function getJavaScriptCallback(array $callbackConfig)
 	{
-		if (isset($callbackConfig['js']))
-			return '(' . $callbackConfig['js'] . ')';
-		$callback = $callbackConfig['callback'];
-		if (\is_string($callback))
-			if (\substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
-				return 'BuiltInFilters.' . \substr($callback, 41);
-			elseif (\substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
-				return \substr($callback, 26);
-		return 'returnFalse';
+		$js = $callbackConfig['js'];
+		return (\preg_match('(^\\w+$)D', $js)) ? $js : '(' . $js  . ')';
 	}
 	protected function setRulesHints()
 	{

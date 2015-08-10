@@ -2173,29 +2173,10 @@ class Variant
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
-class Code
-{
-	public $code;
-	public function __construct($code)
-	{
-		$this->code = $code;
-	}
-	public function __toString()
-	{
-		return $this->code;
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\JavaScript;
 use InvalidArgumentException;
 class FunctionProvider
 {
-	static public $cache = array(
+	public static $cache = array(
 		'addslashes'=>'function(str)
 {
 	return str.replace(/["\'\\\\]/g, \'\\\\$&\').replace(/\\u0000/g, \'\\\\0\');
@@ -3194,18 +3175,15 @@ use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 class ProgrammableCallback implements ConfigProvider
 {
 	protected $callback;
-	protected $js = \null;
+	protected $js = 'returnFalse';
 	protected $params = array();
 	protected $vars = array();
 	public function __construct($callback)
 	{
 		if (!\is_callable($callback))
 			throw new InvalidArgumentException(__METHOD__ . '() expects a callback');
-		if (\is_array($callback) && \is_string($callback[0]))
-			$callback = $callback[0] . '::' . $callback[1];
-		if (\is_string($callback))
-			$callback = \ltrim($callback, '\\');
-		$this->callback = $callback;
+		$this->callback = $this->normalizeCallback($callback);
+		$this->autoloadJS();
 	}
 	public function addParameterByValue($paramValue)
 	{
@@ -3225,14 +3203,6 @@ class ProgrammableCallback implements ConfigProvider
 	}
 	public function getJS()
 	{
-		if (!isset($this->js) && \is_string($this->callback))
-			try
-			{
-				return new Code(FunctionProvider::get($this->callback));
-			}
-			catch (InvalidArgumentException $e)
-			{
-				}
 		return $this->js;
 	}
 	public function getVars()
@@ -3246,8 +3216,6 @@ class ProgrammableCallback implements ConfigProvider
 	}
 	public function setJS($js)
 	{
-		if (!($js instanceof Code))
-			$js = new Code($js);
 		$this->js = $js;
 		return $this;
 	}
@@ -3273,13 +3241,29 @@ class ProgrammableCallback implements ConfigProvider
 				$config['params'][$k] = \null;
 		if (isset($config['params']))
 			$config['params'] = ConfigHelper::toArray($config['params'], \true, \true);
-		$js = $this->getJS();
-		if (isset($js))
-		{
-			$config['js'] = new Variant;
-			$config['js']->set('JS', $js);
-		}
+		$config['js'] = new Variant;
+		$config['js']->set('JS', $this->js);
 		return $config;
+	}
+	protected function autoloadJS()
+	{
+		if (!\is_string($this->callback))
+			return;
+		try
+		{
+			$this->js = FunctionProvider::get($this->callback);
+		}
+		catch (InvalidArgumentException $e)
+		{
+			}
+	}
+	protected function normalizeCallback($callback)
+	{
+		if (\is_array($callback) && \is_string($callback[0]))
+			$callback = $callback[0] . '::' . $callback[1];
+		if (\is_string($callback))
+			$callback = \ltrim($callback, '\\');
+		return $callback;
 	}
 }
 
@@ -3477,11 +3461,13 @@ class Tag implements ConfigProvider
 		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
-		                  ->addParameterByName('tagConfig');
+		                  ->addParameterByName('tagConfig')
+		                  ->setJS('executeAttributePreprocessors');
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
 		                  ->addParameterByName('tagConfig')
 		                  ->addParameterByName('registeredVars')
-		                  ->addParameterByName('logger');
+		                  ->addParameterByName('logger')
+		                  ->setJS('filterAttributes');
 		if (isset($options))
 		{
 			\ksort($options);
