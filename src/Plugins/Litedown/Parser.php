@@ -297,7 +297,7 @@ class Parser extends ParserBase
 						$endTag->pairWith($codeTag);
 						$endTag->setSortPriority(-1);
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
-						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen);
+						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen - $codeTag->getPos());
 						$codeTag = \null;
 						$codeFence = \null;
 					}
