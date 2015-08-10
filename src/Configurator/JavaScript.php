@@ -119,7 +119,7 @@ class JavaScript
 		$src = $this->getSource();
 
 		// Inject the parser config
-		$this->injectConfig($src);
+		$src = $this->injectConfig($src);
 
 		// Export the public API
 		if (!empty($this->exportMethods))
@@ -393,10 +393,10 @@ class JavaScript
 	/**
 	* Inject the parser config into given source
 	*
-	* @param  string &$src Parser's source, by reference
-	* @return void
+	* @param  string $src Parser's source
+	* @return string      Modified source
 	*/
-	protected function injectConfig(&$src)
+	protected function injectConfig($src)
 	{
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
@@ -415,6 +415,8 @@ class JavaScript
 
 		// Append the functions from filters and generators
 		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
+
+		return $src;
 	}
 
 	/**
