@@ -38,8 +38,8 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->plugins->load('Litedown');
 
-		$this->assertSame($tag,       $this->configurator->tags->get('URL'));
-		$this->assertSame($tagConfig, $tag->asConfig());
+		$this->assertSame($tag, $this->configurator->tags->get('URL'));
+		$this->assertEquals($tagConfig, $tag->asConfig());
 	}
 
 	/**

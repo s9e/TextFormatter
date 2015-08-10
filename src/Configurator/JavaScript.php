@@ -583,31 +583,9 @@ class JavaScript
 	*/
 	protected function getJavaScriptCallback(array $callbackConfig)
 	{
-		if (isset($callbackConfig['js']))
-		{
-			// Use the JavaScript source code that was set in the callback. Put it in parentheses to
-			// ensure we can use it in our "return" statement without worrying about empty lines or
-			// comments at the beginning
-			return '(' . $callbackConfig['js'] . ')';
-		}
+		$js = (isset($callbackConfig['js'])) ? $callbackConfig['js'] : 'returnFalse';
 
-		$callback = $callbackConfig['callback'];
-		if (is_string($callback))
-		{
-			if (substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
-			{
-				// BuiltInFilters::filterNumber => BuiltInFilters.filterNumber
-				return 'BuiltInFilters.' . substr($callback, 41);
-			}
-			elseif (substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
-			{
-				// Parser::filterAttributes => filterAttributes
-				return substr($callback, 26);
-			}
-		}
-
-		// If there's no JS callback available, return FALSE unconditionally
-		return 'returnFalse';
+		return (preg_match('(^\\w+$)D', $js)) ? $js : '(' . $js  . ')';
 	}
 
 	/**
