@@ -2467,6 +2467,7 @@ s9e\TextFormatter\Tests\Plugins\Preg\Configurator
  [x] replace() interprets \$1 in the template as a literal $1
  [x] replace() replaces $0 with the whole match
  [x] replace() interprets a (.*?) capture used in template's text as a passthrough
+ [x] replace() doesn't set a passthrough if there are multiple candidates
  [x] A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
  [x] Captures from non-existent subpattern are removed from the template
  [x] replace() normalizes the tag's template

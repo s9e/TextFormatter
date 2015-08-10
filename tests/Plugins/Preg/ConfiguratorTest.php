@@ -317,6 +317,22 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox replace() doesn't set a passthrough if there are multiple candidates
+	*/
+	public function testMultiplePassthrough()
+	{
+		$tag = $this->configurator->Preg->replace(
+			'/(.*?)x(.*?)/',
+			'<b>$1</b>x<b>$2</b>'
+		);
+
+		$this->assertEquals(
+			'<b><xsl:value-of select="@_1"/></b>x<b><xsl:value-of select="@_2"/></b>',
+			$tag->template
+		);
+	}
+
+	/**
 	* @testdox A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
 	* depends testCreatesAttributesWithUrlFilter
 	*/
