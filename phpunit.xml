@@ -90,6 +90,7 @@
 			<file>tests/Configurator/Items/TemplateTest.php</file>
 			<file>tests/Configurator/Items/TemplateDocumentTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
+			<file>tests/Configurator/JavaScript/CallbackGeneratorTest.php</file>
 			<file>tests/Configurator/JavaScript/CodeTest.php</file>
 			<file>tests/Configurator/JavaScript/EncoderTest.php</file>
 			<file>tests/Configurator/JavaScript/FunctionProviderTest.php</file>

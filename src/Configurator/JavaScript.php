@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator;
 use ReflectionClass;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
@@ -21,10 +22,9 @@ use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 class JavaScript
 {
 	/**
-	* @var array Associative array of functions [name => function literal] built from and for
-	*            ProgrammableCallback instances
+	* @var CallbackGenerator
 	*/
-	protected $callbacks;
+	protected $callbackGenerator;
 
 	/**
 	* @var array Configuration, filtered for JavaScript
@@ -80,8 +80,9 @@ class JavaScript
 	*/
 	public function __construct(Configurator $configurator)
 	{
-		$this->configurator = $configurator;
-		$this->encoder      = new Encoder;
+		$this->callbackGenerator = new CallbackGenerator;
+		$this->configurator      = $configurator;
+		$this->encoder           = new Encoder;
 	}
 
 	/**
@@ -110,6 +111,9 @@ class JavaScript
 		// Store the parser's config
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
+
+		// Replace callback arrays with JavaScript code
+		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 
 		// Get parser's source
 		$src = $this->getSource();
@@ -359,9 +363,6 @@ class JavaScript
 	*/
 	protected function getTagsConfig()
 	{
-		// Replace callback arrays with JavaScript code
-		$this->replaceCallbacks();
-
 		// Prepare a Dictionary that will preserve tags' names
 		$tags = new Dictionary;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
@@ -397,9 +398,6 @@ class JavaScript
 	*/
 	protected function injectConfig(&$src)
 	{
-		// Reset this instance's callbacks
-		$this->callbacks = [];
-
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
@@ -415,177 +413,8 @@ class JavaScript
 			$src
 		);
 
-		// Append the callbacks from filters and generators
-		$src .= "\n" . implode("\n", $this->callbacks) . "\n";
-	}
-
-	/**
-	* Replace the callbacks in the config with their JavaScript representation
-	*
-	* @return void
-	*/
-	protected function replaceCallbacks()
-	{
-		foreach ($this->config['tags'] as $tagName => $tagConfig)
-		{
-			$this->config['tags'][$tagName] = $this->replaceCallbacksInTagConfig($tagConfig);
-		}
-	}
-
-	/**
-	* Replace callbacks in given attribute config array
-	*
-	* @param  array $config Original config
-	* @return array         Modified config
-	*/
-	protected function replaceCallbacksInAttributeConfig(array $config)
-	{
-		if (isset($config['filterChain']))
-		{
-			foreach ($config['filterChain'] as $i => $filter)
-			{
-				$config['filterChain'][$i] = $this->convertCallback('attributeFilter', $filter);
-			}
-		}
-
-		if (isset($config['generator']))
-		{
-			$config['generator'] = $this->convertCallback('attributeGenerator', $config['generator']);
-		}
-
-		return $config;
-	}
-
-	/**
-	* Replace callbacks in given tag config array
-	*
-	* @param  array $config Original config
-	* @return array         Modified config
-	*/
-	protected function replaceCallbacksInTagConfig(array $config)
-	{
-		if (isset($config['filterChain']))
-		{
-			foreach ($config['filterChain'] as $i => $filter)
-			{
-				$config['filterChain'][$i] = $this->convertCallback('tagFilter', $filter);
-			}
-		}
-
-		if (isset($config['attributes']))
-		{
-			foreach ($config['attributes'] as $attrName => $attrConfig)
-			{
-				$config['attributes'][$attrName] = $this->replaceCallbacksInAttributeConfig($attrConfig);
-			}
-		}
-
-		return $config;
-	}
-
-	/**
-	* Build the list of arguments used in a callback invocation
-	*
-	* @param  array  $params    Callback parameters
-	* @param  array  $localVars Known vars from the calling scope
-	* @return string            JavaScript code
-	*/
-	protected function buildCallbackArguments(array $params, array $localVars)
-	{
-		// Remove 'parser' as a parameter, since there's no such thing in JavaScript
-		unset($params['parser']);
-
-		// Add global vars to the list of vars in scope
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1];
-
-		$args = [];
-		foreach ($params as $k => $v)
-		{
-			if (isset($v))
-			{
-				// Param by value
-				$args[] = $this->encode($v);
-			}
-			elseif (isset($localVars[$k]))
-			{
-				// Param by name that matches a local var
-				$args[] = $k;
-			}
-			else
-			{
-				$args[] = 'registeredVars[' . json_encode($k) . ']';
-			}
-		}
-
-		return implode(',', $args);
-	}
-
-	/**
-	* Convert a callback array into JavaScript code
-	*
-	* Will create entries in $this->callbacks
-	*
-	* @param  string $type   Either one of: "attributeFilter", "attributeGenerator" or "tagFilter"
-	* @param  array  $config Callback's config
-	* @return Code           The name of the function representing this callback
-	*/
-	protected function convertCallback($type, array $config)
-	{
-		// List of arguments (and their type) for each type of callbacks. MUST be kept in sync with
-		// the invocations in Parser.js
-		$arguments = [
-			'attributeFilter' => [
-				'attrValue' => '*',
-				'attrName'  => '!string'
-			],
-			'attributeGenerator' => [
-				'attrName'  => '!string'
-			],
-			'tagFilter' => [
-				'tag'       => '!Tag',
-				'tagConfig' => '!Object'
-			]
-		];
-
-		// Prepare the function's header
-		$header = "/**\n";
-		foreach ($arguments[$type] as $paramName => $paramType)
-		{
-			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
-		}
-		$header .= "*/\n";
-
-		// Generate the function that will call the callback with the right signature. The function
-		// name is a hash of its content so we start with the first parenthesis after the function
-		// name in the function definition, which will prepend once we know what it is
-		$params   = (isset($config['params'])) ? $config['params'] : [];
-		$callback = $this->getJavaScriptCallback($config);
-
-		$js = '(' . implode(',', array_keys($arguments[$type])) . '){return ' . $callback . '(' . $this->buildCallbackArguments($params, $arguments[$type]) . ');}';
-
-		// Compute the function's name
-		$funcName = sprintf('c%08X', crc32($js));
-
-		// Prepend the function header and the fill the missing part of the function definition
-		$js = $header . 'function ' . $funcName . $js . "\n";
-
-		// Save the callback
-		$this->callbacks[$funcName] = $js;
-
-		return new Code($funcName);
-	}
-
-	/**
-	* Get the JavaScript callback that corresponds to given config
-	*
-	* @param  array  $callbackConfig
-	* @return string
-	*/
-	protected function getJavaScriptCallback(array $callbackConfig)
-	{
-		$js = $callbackConfig['js'];
-
-		return (preg_match('(^\\w+$)D', $js)) ? $js : '(' . $js  . ')';
+		// Append the functions from filters and generators
+		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
 	}
 
 	/**

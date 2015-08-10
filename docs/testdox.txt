@@ -1060,6 +1060,9 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
  [x] setDynamic() throws an exception on invalid callback
 
+s9e\TextFormatter\Tests\Configurator\CallbackGenerator
+ [x] replaceCallbacks() tests
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 

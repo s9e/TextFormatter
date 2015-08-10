@@ -224,11 +224,11 @@ class JavaScriptTest extends Test
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertContains(
-			'filterChain:[c4CA1D8BA]',
+			'filterChain:[cDF617284]',
 			$js
 		);
 		$this->assertContains(
-			'function c4CA1D8BA(attrValue,attrName){return (BuiltInFilters.filterNumber)(attrValue);}',
+			'function cDF617284(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}',
 			$js
 		);
 	}
