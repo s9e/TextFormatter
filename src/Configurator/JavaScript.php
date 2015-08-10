@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator;
 use ReflectionClass;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
@@ -18,7 +19,7 @@ use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 class JavaScript
 {
-	protected $callbacks;
+	protected $callbackGenerator;
 	protected $config;
 	protected $configurator;
 	public $encoder;
@@ -39,8 +40,9 @@ class JavaScript
 	protected $xsl;
 	public function __construct(Configurator $configurator)
 	{
-		$this->configurator = $configurator;
-		$this->encoder      = new Encoder;
+		$this->callbackGenerator = new CallbackGenerator;
+		$this->configurator      = $configurator;
+		$this->encoder           = new Encoder;
 	}
 	public function getMinifier()
 	{
@@ -52,6 +54,7 @@ class JavaScript
 	{
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
+		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 		$src = $this->getSource();
 		$this->injectConfig($src);
 		if (!empty($this->exportMethods))
@@ -176,7 +179,6 @@ class JavaScript
 	}
 	protected function getTagsConfig()
 	{
-		$this->replaceCallbacks();
 		$tags = new Dictionary;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
@@ -192,7 +194,6 @@ class JavaScript
 	}
 	protected function injectConfig(&$src)
 	{
-		$this->callbacks = [];
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
@@ -207,77 +208,7 @@ class JavaScript
 			},
 			$src
 		);
-		$src .= "\n" . \implode("\n", $this->callbacks) . "\n";
-	}
-	protected function replaceCallbacks()
-	{
-		foreach ($this->config['tags'] as $tagName => $tagConfig)
-			$this->config['tags'][$tagName] = $this->replaceCallbacksInTagConfig($tagConfig);
-	}
-	protected function replaceCallbacksInAttributeConfig(array $config)
-	{
-		if (isset($config['filterChain']))
-			foreach ($config['filterChain'] as $i => $filter)
-				$config['filterChain'][$i] = $this->convertCallback('attributeFilter', $filter);
-		if (isset($config['generator']))
-			$config['generator'] = $this->convertCallback('attributeGenerator', $config['generator']);
-		return $config;
-	}
-	protected function replaceCallbacksInTagConfig(array $config)
-	{
-		if (isset($config['filterChain']))
-			foreach ($config['filterChain'] as $i => $filter)
-				$config['filterChain'][$i] = $this->convertCallback('tagFilter', $filter);
-		if (isset($config['attributes']))
-			foreach ($config['attributes'] as $attrName => $attrConfig)
-				$config['attributes'][$attrName] = $this->replaceCallbacksInAttributeConfig($attrConfig);
-		return $config;
-	}
-	protected function buildCallbackArguments(array $params, array $localVars)
-	{
-		unset($params['parser']);
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1];
-		$args = [];
-		foreach ($params as $k => $v)
-			if (isset($v))
-				$args[] = $this->encode($v);
-			elseif (isset($localVars[$k]))
-				$args[] = $k;
-			else
-				$args[] = 'registeredVars[' . \json_encode($k) . ']';
-		return \implode(',', $args);
-	}
-	protected function convertCallback($type, array $config)
-	{
-		$arguments = [
-			'attributeFilter' => [
-				'attrValue' => '*',
-				'attrName'  => '!string'
-			],
-			'attributeGenerator' => [
-				'attrName'  => '!string'
-			],
-			'tagFilter' => [
-				'tag'       => '!Tag',
-				'tagConfig' => '!Object'
-			]
-		];
-		$header = "/**\n";
-		foreach ($arguments[$type] as $paramName => $paramType)
-			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
-		$header .= "*/\n";
-		$params   = (isset($config['params'])) ? $config['params'] : [];
-		$callback = $this->getJavaScriptCallback($config);
-		$js = '(' . \implode(',', \array_keys($arguments[$type])) . '){return ' . $callback . '(' . $this->buildCallbackArguments($params, $arguments[$type]) . ');}';
-		$funcName = \sprintf('c%08X', \crc32($js));
-		$js = $header . 'function ' . $funcName . $js . "\n";
-		$this->callbacks[$funcName] = $js;
-		return new Code($funcName);
-	}
-	protected function getJavaScriptCallback(array $callbackConfig)
-	{
-		$js = $callbackConfig['js'];
-		return (\preg_match('(^\\w+$)D', $js)) ? $js : '(' . $js  . ')';
+		$src .= "\n" . \implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
 	}
 	protected function setRulesHints()
 	{
