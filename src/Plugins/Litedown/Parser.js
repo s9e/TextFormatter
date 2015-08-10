@@ -525,7 +525,7 @@ function matchBlockLevelMarkup()
 					addIgnoreTag(textBoundary, tagPos - textBoundary);
 
 					// Overwrite the whole block
-					overwrite(codeTag.getPos(), tagPos + tagLen);
+					overwrite(codeTag.getPos(), tagPos + tagLen - codeTag.getPos());
 					codeTag = null;
 					codeFence = null;
 				}

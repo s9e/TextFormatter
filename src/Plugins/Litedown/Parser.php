@@ -519,7 +519,6 @@ class Parser extends ParserBase
 
 					if (isset($codeTag) && $m[5][0][0] === $codeFence)
 					{
-
 						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
 						$endTag->pairWith($codeTag);
 						$endTag->setSortPriority(-1);
@@ -527,7 +526,7 @@ class Parser extends ParserBase
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 
 						// Overwrite the whole block
-						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen);
+						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen - $codeTag->getPos());
 						$codeTag = null;
 						$codeFence = null;
 					}
