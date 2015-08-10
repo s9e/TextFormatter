@@ -77,6 +77,10 @@ class Encoder
 				return $callback($object);
 		throw new RuntimeException('Cannot encode instance of ' . \get_class($object));
 	}
+	protected function encodePropertyName($name, $preserveNames)
+	{
+		return ($preserveNames || !$this->isLegalProp($name)) ? \json_encode($name) : $name;
+	}
 	protected function encodeRegexp(Regexp $regexp)
 	{
 		return (string) $regexp->toJS();
@@ -84,10 +88,6 @@ class Encoder
 	protected function encodeScalar($value)
 	{
 		return \json_encode($value);
-	}
-	protected function encodePropertyName($name, $preserveNames)
-	{
-		return ($preserveNames || !$this->isLegalProp($name)) ? \json_encode($name) : $name;
 	}
 	protected function isLegalProp($name)
 	{
