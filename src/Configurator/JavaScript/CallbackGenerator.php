@@ -27,6 +27,11 @@ class CallbackGenerator
 	];
 
 	/**
+	* @var Encoder
+	*/
+	protected $encoder;
+
+	/**
 	* @var array Associative array of functions [name => function definition]
 	*/
 	protected $functions;
