@@ -56,7 +56,7 @@ class JavaScript
 		ConfigHelper::filterVariants($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 		$src = $this->getSource();
-		$this->injectConfig($src);
+		$src = $this->injectConfig($src);
 		if (!empty($this->exportMethods))
 		{
 			$methods = [];
@@ -192,7 +192,7 @@ class JavaScript
 	{
 		return $this->encoder->encode($value);
 	}
-	protected function injectConfig(&$src)
+	protected function injectConfig($src)
 	{
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
@@ -209,6 +209,7 @@ class JavaScript
 			$src
 		);
 		$src .= "\n" . \implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
+		return $src;
 	}
 	protected function setRulesHints()
 	{
