@@ -52,16 +52,12 @@ abstract class RegexpConvertor
 				case 'negativeLookaheadAssertionStart':
 					$regexp .= '(?!';
 					break;
-				case 'lookbehindAssertionStart':
-					throw new RuntimeException('Lookbehind assertions are not supported');
-				case 'negativeLookbehindAssertionStart':
-					throw new RuntimeException('Negative lookbehind assertions are not supported');
 				case 'lookaheadAssertionEnd':
 				case 'negativeLookaheadAssertionEnd':
 					$regexp .= ')';
 					break;
 				default:
-					throw new RuntimeException("Unknown token type '" . $tok['type'] . "' encountered while parsing regexp");
+					throw new RuntimeException("Unsupported token type '" . $tok['type'] . "'");
 			}
 			$pos = $tok['pos'] + $tok['len'];
 		}
