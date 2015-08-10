@@ -162,6 +162,18 @@ class Encoder
 	}
 
 	/**
+	* Encode an object property name into JavaScript
+	*
+	* @param  string $name
+	* @param  bool   $preserveNames
+	* @return string
+	*/
+	protected function encodePropertyName($name, $preserveNames)
+	{
+		return ($preserveNames || !$this->isLegalProp($name)) ? json_encode($name) : $name;
+	}
+
+	/**
 	* Encode a Regexp object into JavaScript
 	*
 	* @param  Regexp $regexp
@@ -181,18 +193,6 @@ class Encoder
 	protected function encodeScalar($value)
 	{
 		return json_encode($value);
-	}
-
-	/**
-	* Encode an object property name into JavaScript
-	*
-	* @param  string $name
-	* @param  bool   $preserveNames
-	* @return string
-	*/
-	protected function encodePropertyName($name, $preserveNames)
-	{
-		return ($preserveNames || !$this->isLegalProp($name)) ? json_encode($name) : $name;
 	}
 
 	/**
