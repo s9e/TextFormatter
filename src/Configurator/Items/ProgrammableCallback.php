@@ -22,9 +22,9 @@ class ProgrammableCallback implements ConfigProvider
 	protected $callback;
 
 	/**
-	* @var Code JavaScript source code for this callback
+	* @var string JavaScript source code for this callback
 	*/
-	protected $js = null;
+	protected $js = 'returnFalse';
 
 	/**
 	* @var array List of params to be passed to the callback
@@ -46,19 +46,8 @@ class ProgrammableCallback implements ConfigProvider
 			throw new InvalidArgumentException(__METHOD__ . '() expects a callback');
 		}
 
-		// Normalize ['foo', 'bar'] to 'foo::bar'
-		if (is_array($callback) && is_string($callback[0]))
-		{
-			$callback = $callback[0] . '::' . $callback[1];
-		}
-
-		// Normalize '\\foo' to 'foo' and '\\foo::bar' to 'foo::bar'
-		if (is_string($callback))
-		{
-			$callback = ltrim($callback, '\\');
-		}
-
-		$this->callback = $callback;
+		$this->callback = $this->normalizeCallback($callback);
+		$this->autoloadJS();
 	}
 
 	/**
@@ -107,23 +96,10 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Get this callback's JavaScript
 	*
-	* @return Code Instance of Code
+	* @return string
 	*/
 	public function getJS()
 	{
-		// If no JavaScript was set try the default FunctionProvider
-		if (!isset($this->js) && is_string($this->callback))
-		{
-			try
-			{
-				return new Code(FunctionProvider::get($this->callback));
-			}
-			catch (InvalidArgumentException $e)
-			{
-				// Do nothing
-			}
-		}
-
 		return $this->js;
 	}
 
@@ -152,16 +128,11 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Set this callback's JavaScript
 	*
-	* @param  Code|string $js JavaScript source code for this callback
+	* @param  string $js JavaScript source code for this callback
 	* @return self
 	*/
 	public function setJS($js)
 	{
-		if (!($js instanceof Code))
-		{
-			$js = new Code($js);
-		}
-
 		$this->js = $js;
 
 		return $this;
@@ -225,14 +196,55 @@ class ProgrammableCallback implements ConfigProvider
 			$config['params'] = ConfigHelper::toArray($config['params'], true, true);
 		}
 
-		// Add the callback's JavaScript representation, if available
-		$js = $this->getJS();
-		if (isset($js))
-		{
-			$config['js'] = new Variant;
-			$config['js']->set('JS', $js);
-		}
+		// Add the callback's JavaScript representation
+		$config['js'] = new Variant;
+		$config['js']->set('JS', $this->js);
 
 		return $config;
+	}
+
+	/**
+	* Try to load the JavaScript source for this callback
+	*
+	* @return void
+	*/
+	protected function autoloadJS()
+	{
+		if (!is_string($this->callback))
+		{
+			return;
+		}
+
+		try
+		{
+			$this->js = FunctionProvider::get($this->callback);
+		}
+		catch (InvalidArgumentException $e)
+		{
+			// Do nothing
+		}
+	}
+
+	/**
+	* Normalize a callback's representation
+	*
+	* @param  callable $callback
+	* @return callable
+	*/
+	protected function normalizeCallback($callback)
+	{
+		// Normalize ['foo', 'bar'] to 'foo::bar'
+		if (is_array($callback) && is_string($callback[0]))
+		{
+			$callback = $callback[0] . '::' . $callback[1];
+		}
+
+		// Normalize '\\foo' to 'foo' and '\\foo::bar' to 'foo::bar'
+		if (is_string($callback))
+		{
+			$callback = ltrim($callback, '\\');
+		}
+
+		return $callback;
 	}
 }

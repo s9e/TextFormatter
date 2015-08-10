@@ -205,25 +205,22 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox getJS() returns NULL by default
+	* @testdox getJS() returns 'returnFalse' by default
 	*/
 	public function testGetJS()
 	{
 		$pc = new ProgrammableCallback(function(){});
 
-		$this->assertNull($pc->getJS());
+		$this->assertSame('returnFalse', $pc->getJS());
 	}
 
 	/**
-	* @testdox getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/JavaScript/functions/
+	* @testdox getJS() returns a JavaScript source for known functions
 	*/
 	public function testGetJSAutofills()
 	{
 		$pc = new ProgrammableCallback('strtolower');
-		$js = $pc->getJS();
-
-		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Code', $js);
-		$this->assertSame("function(str)\n{\n\treturn str.toLowerCase();\n}", (string) $js);
+		$this->assertSame("function(str)\n{\n\treturn str.toLowerCase();\n}", $pc->getJS());
 	}
 
 	/**
@@ -233,7 +230,7 @@ class ProgrammableCallbackTest extends Test
 	{
 		$pc = new ProgrammableCallback('levenshtein');
 
-		$this->assertNull($pc->getJS());
+		$this->assertSame('returnFalse', $pc->getJS());
 	}
 
 	/**

@@ -796,8 +796,8 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] Callback ['\\foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
- [x] getJS() returns NULL by default
- [x] getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/JavaScript/functions/
+ [x] getJS() returns 'returnFalse' by default
+ [x] getJS() returns a JavaScript source for known functions
  [x] getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/JavaScript/functions/
  [x] setJS() accepts a string and normalizes it to an instance of Code
  [x] setJS() accepts an instance of Code

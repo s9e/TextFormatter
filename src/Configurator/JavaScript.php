@@ -583,7 +583,7 @@ class JavaScript
 	*/
 	protected function getJavaScriptCallback(array $callbackConfig)
 	{
-		$js = (isset($callbackConfig['js'])) ? $callbackConfig['js'] : 'returnFalse';
+		$js = $callbackConfig['js'];
 
 		return (preg_match('(^\\w+$)D', $js)) ? $js : '(' . $js  . ')';
 	}
