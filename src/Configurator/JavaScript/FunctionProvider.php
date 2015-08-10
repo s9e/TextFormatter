@@ -11,7 +11,10 @@ use InvalidArgumentException;
 
 class FunctionProvider
 {
-	static public $cache = [];
+	/**
+	* @param array Function name as keys, JavaScript source as values
+	*/
+	public static $cache = [];
 
 	/**
 	* Return a function's source from the cache or the filesystem

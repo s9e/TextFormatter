@@ -21,7 +21,7 @@ $php = substr($php, 0, -1) . "\n\t]";
 
 $filepath = realpath(__DIR__ . '/../../src/Configurator/JavaScript/FunctionProvider.php');
 $old = file_get_contents($filepath);
-$new = str_replace('public $cache = []', 'public $cache = ' . $php, $old);
+$new = str_replace('public static $cache = []', 'public static $cache = ' . $php, $old);
 if ($new !== $old)
 {
 	file_put_contents($filepath, $new);
