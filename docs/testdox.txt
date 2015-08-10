@@ -1113,7 +1113,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() converts atomic groups to non-capturing groups
  [x] toJS('/x/') returns /x/
  [x] toJS('/x/', true) returns /x/g
- [x] toJS() throws a RuntimeException on unknown regexp features/tokens
  [x] toJS() converts literal ASCII line terminators \r and \n
  [x] toJS() converts literal Unicode line terminators \u2028 and \u2029
  [x] toJS() escapes backslashes that precede literal line terminators

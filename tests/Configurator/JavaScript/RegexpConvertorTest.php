@@ -280,7 +280,7 @@ class RegexpConvertorTest extends Test
 	/**
 	* @testdox toJS() throws a RuntimeException on lookbehind assertions
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Lookbehind assertions are not supported
+	* @expectedExceptionMessage Unsupported token type 'lookbehindAssertionStart'
 	*/
 	public function testConvertRegexpExceptionOnLookbehind()
 	{
@@ -290,7 +290,7 @@ class RegexpConvertorTest extends Test
 	/**
 	* @testdox toJS() throws a RuntimeException on negative lookbehind assertions
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Negative lookbehind assertions are not supported
+	* @expectedExceptionMessage Unsupported token type 'negativeLookbehindAssertionStart'
 	*/
 	public function testConvertRegexpExceptionOnNegativeLookbehind()
 	{
@@ -378,31 +378,6 @@ class RegexpConvertorTest extends Test
 	public function testConvertGlobal()
 	{
 		$this->assertEquals('/x/g', RegexpConvertor::toJS('/x/', true));
-	}
-
-	/**
-	* @testdox toJS() throws a RuntimeException on unknown regexp features/tokens
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown token type 'unknown' encountered while parsing regexp
-	* @runInSeparateProcess
-	* @preserveGlobalState disabled
-	* @group runs-in-separate-process
-	*/
-	public function testUnknownToken()
-	{
-		eval(
-			'namespace s9e\\TextFormatter\\Configurator\\Helpers;
-
-			class RegexpParser
-			{
-				public static function parse()
-				{
-					return \\' . __CLASS__ . '::dummyParse();
-				}
-			}'
-		);
-
-		RegexpConvertor::toJS('#x#');
 	}
 
 	public static function dummyParse()
