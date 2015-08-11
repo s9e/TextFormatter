@@ -1964,6 +1964,467 @@ abstract class TemplateHelper
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMXPath;
+use RuntimeException;
+class TemplateParser
+{
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
+	public static function parse($template)
+	{
+		$xsl = '<xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+		$ir = new DOMDocument;
+		$ir->loadXML('<template/>');
+		self::parseChildren($ir->documentElement, $dom->documentElement);
+		self::normalize($ir);
+		return $ir;
+	}
+	public static function parseEqualityExpr($expr)
+	{
+		$eq = '(?<equality>(?<key>@[-\\w]+|\\$\\w+|\\.)(?<operator>\\s*=\\s*)(?:(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)|(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\)))|(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key)))';
+		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
+		if (!\preg_match($regexp, $expr))
+			return \false;
+		\preg_match_all("((?J)$eq)", $expr, $matches, \PREG_SET_ORDER);
+		$map = [];
+		foreach ($matches as $m)
+		{
+			$key = $m['key'];
+			if (!empty($m['concat']))
+			{
+				\preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+				$value = '';
+				foreach ($strings[0] as $string)
+					$value .= \substr($string, 1, -1);
+			}
+			else
+			{
+				$value = $m['literal'];
+				if ($value[0] === "'" || $value[0] === '"')
+					$value = \substr($value, 1, -1);
+			}
+			$map[$key][] = $value;
+		}
+		return $map;
+	}
+	protected static function parseChildren(DOMElement $ir, DOMElement $parent)
+	{
+		foreach ($parent->childNodes as $child)
+		{
+			switch ($child->nodeType)
+			{
+				case \XML_COMMENT_NODE:
+					break;
+				case \XML_TEXT_NODE:
+					if (\trim($child->textContent) !== '')
+						self::appendOutput($ir, 'literal', $child->textContent);
+					break;
+				case \XML_ELEMENT_NODE:
+					self::parseNode($ir, $child);
+					break;
+				default:
+					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "''");
+			}
+		}
+	}
+	protected static function parseNode(DOMElement $ir, DOMElement $node)
+	{
+		if ($node->namespaceURI === self::XMLNS_XSL)
+		{
+			$methodName = 'parseXsl' . \str_replace(' ', '', \ucwords(\str_replace('-', ' ', $node->localName)));
+			if (!\method_exists(__CLASS__, $methodName))
+				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
+			return self::$methodName($ir, $node);
+		}
+		if (!\is_null($node->namespaceURI))
+			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
+		$element = self::appendElement($ir, 'element');
+		$element->setAttribute('name', $node->localName);
+		foreach ($node->attributes as $attribute)
+		{
+			$irAttribute = self::appendElement($element, 'attribute');
+			$irAttribute->setAttribute('name', $attribute->name);
+			self::appendOutput($irAttribute, 'avt', $attribute->value);
+		}
+		self::parseChildren($element, $node);
+	}
+	protected static function parseXslApplyTemplates(DOMElement $ir, DOMElement $node)
+	{
+		$applyTemplates = self::appendElement($ir, 'applyTemplates');
+		if ($node->hasAttribute('select'))
+			$applyTemplates->setAttribute(
+				'select',
+				$node->getAttribute('select')
+			);
+	}
+	protected static function parseXslAttribute(DOMElement $ir, DOMElement $node)
+	{
+		$attrName = $node->getAttribute('name');
+		if ($attrName !== '')
+		{
+			$attribute = self::appendElement($ir, 'attribute');
+			$attribute->setAttribute('name', $attrName);
+			self::parseChildren($attribute, $node);
+		}
+	}
+	protected static function parseXslChoose(DOMElement $ir, DOMElement $node)
+	{
+		$switch = self::appendElement($ir, 'switch');
+		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
+		{
+			if ($when->parentNode !== $node)
+				continue;
+			$case = self::appendElement($switch, 'case');
+			$case->setAttribute('test', $when->getAttribute('test'));
+			self::parseChildren($case, $when);
+		}
+		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'otherwise') as $otherwise)
+		{
+			if ($otherwise->parentNode !== $node)
+				continue;
+			$case = self::appendElement($switch, 'case');
+			self::parseChildren($case, $otherwise);
+			break;
+		}
+	}
+	protected static function parseXslComment(DOMElement $ir, DOMElement $node)
+	{
+		$comment = self::appendElement($ir, 'comment');
+		self::parseChildren($comment, $node);
+	}
+	protected static function parseXslCopyOf(DOMElement $ir, DOMElement $node)
+	{
+		$expr = $node->getAttribute('select');
+		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
+		{
+			$switch = self::appendElement($ir, 'switch');
+			$case   = self::appendElement($switch, 'case');
+			$case->setAttribute('test', $expr);
+			$attribute = self::appendElement($case, 'attribute');
+			$attribute->setAttribute('name', $m[1]);
+			self::appendOutput($attribute, 'xpath', $expr);
+			return;
+		}
+		if ($expr === '@*')
+		{
+			self::appendElement($ir, 'copyOfAttributes');
+			return;
+		}
+		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
+	}
+	protected static function parseXslElement(DOMElement $ir, DOMElement $node)
+	{
+		$elName = $node->getAttribute('name');
+		if ($elName !== '')
+		{
+			$element = self::appendElement($ir, 'element');
+			$element->setAttribute('name', $elName);
+			self::parseChildren($element, $node);
+		}
+	}
+	protected static function parseXslIf(DOMElement $ir, DOMElement $node)
+	{
+		$switch = self::appendElement($ir, 'switch');
+		$case   = self::appendElement($switch, 'case');
+		$case->setAttribute('test', $node->getAttribute('test'));
+		self::parseChildren($case, $node);
+	}
+	protected static function parseXslText(DOMElement $ir, DOMElement $node)
+	{
+		self::appendOutput($ir, 'literal', $node->textContent);
+	}
+	protected static function parseXslValueOf(DOMElement $ir, DOMElement $node)
+	{
+		self::appendOutput($ir, 'xpath', $node->getAttribute('select'));
+	}
+	protected static function normalize(DOMDocument $ir)
+	{
+		self::addDefaultCase($ir);
+		self::addElementIds($ir);
+		self::addCloseTagElements($ir);
+		self::markEmptyElements($ir);
+		self::optimize($ir);
+		self::markConditionalCloseTagElements($ir);
+		self::setOutputContext($ir);
+		self::markBranchTables($ir);
+	}
+	protected static function addDefaultCase(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
+			self::appendElement($switch, 'case');
+	}
+	protected static function addElementIds(DOMDocument $ir)
+	{
+		$id = 0;
+		foreach ($ir->getElementsByTagName('element') as $element)
+			$element->setAttribute('id', ++$id);
+	}
+	protected static function addCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$exprs = [
+			'//applyTemplates[not(ancestor::attribute)]',
+			'//comment',
+			'//element',
+			'//output[not(ancestor::attribute)]'
+		];
+		foreach ($xpath->query(\implode('|', $exprs)) as $node)
+		{
+			$parentElementId = self::getParentElementId($node);
+			if (isset($parentElementId))
+				$node->parentNode
+				     ->insertBefore($ir->createElement('closeTag'), $node)
+				     ->setAttribute('id', $parentElementId);
+			if ($node->nodeName === 'element')
+			{
+				$id = $node->getAttribute('id');
+				self::appendElement($node, 'closeTag')->setAttribute('id', $id);
+			}
+		}
+	}
+	protected static function markConditionalCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
+		{
+			$id = $closeTag->getAttribute('id');
+			$query = 'ancestor::switch/following-sibling::*/descendant-or-self::closeTag[@id = "' . $id . '"]';
+			foreach ($xpath->query($query, $closeTag) as $following)
+			{
+				$following->setAttribute('check', '');
+				$closeTag->setAttribute('set', '');
+			}
+		}
+	}
+	protected static function markEmptyElements(DOMDocument $ir)
+	{
+		foreach ($ir->getElementsByTagName('element') as $element)
+		{
+			$elName = $element->getAttribute('name');
+			if (\strpos($elName, '{') !== \false)
+				$element->setAttribute('void', 'maybe');
+			elseif (\preg_match(self::$voidRegexp, $elName))
+				$element->setAttribute('void', 'yes');
+			$isEmpty = self::isEmpty($element);
+			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
+				$element->setAttribute('empty', $isEmpty);
+		}
+	}
+	protected static function getParentElementId(DOMNode $node)
+	{
+		$parentNode = $node->parentNode;
+		while (isset($parentNode))
+		{
+			if ($parentNode->nodeName === 'element')
+				return $parentNode->getAttribute('id');
+			$parentNode = $parentNode->parentNode;
+		}
+	}
+	protected static function setOutputContext(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($ir->getElementsByTagName('output') as $output)
+		{
+			$escape = ($xpath->evaluate('boolean(ancestor::attribute)', $output))
+			        ? 'attribute'
+			        : 'text';
+			$output->setAttribute('escape', $escape);
+		}
+	}
+	protected static function optimize(DOMDocument $ir)
+	{
+		$xml = $ir->saveXML();
+		$remainingLoops = 10;
+		do
+		{
+			$old = $xml;
+			self::optimizeCloseTagElements($ir);
+			$xml = $ir->saveXML();
+		}
+		while (--$remainingLoops > 0 && $xml !== $old);
+		self::removeCloseTagSiblings($ir);
+		self::removeContentFromVoidElements($ir);
+		self::mergeConsecutiveLiteralOutputElements($ir);
+		self::removeEmptyDefaultCases($ir);
+	}
+	protected static function removeCloseTagSiblings(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
+		foreach ($xpath->query($query) as $closeTag)
+			$closeTag->parentNode->removeChild($closeTag);
+	}
+	protected static function removeEmptyDefaultCases(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//case[not(@test | node())]') as $case)
+			$case->parentNode->removeChild($case);
+	}
+	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//output[@type="literal"]') as $output)
+			while ($output->nextSibling
+				&& $output->nextSibling->nodeName === 'output'
+				&& $output->nextSibling->getAttribute('type') === 'literal')
+			{
+				$output->nodeValue
+					= \htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
+				$output->parentNode->removeChild($output->nextSibling);
+			}
+	}
+	protected static function optimizeCloseTagElements(DOMDocument $ir)
+	{
+		self::cloneCloseTagElementsIntoSwitch($ir);
+		self::cloneCloseTagElementsOutOfSwitch($ir);
+		self::removeRedundantCloseTagElementsInSwitch($ir);
+		self::removeRedundantCloseTagElements($ir);
+	}
+	protected static function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($xpath->query($query) as $switch)
+		{
+			$closeTag = $switch->nextSibling;
+			foreach ($switch->childNodes as $case)
+				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
+					$case->appendChild($closeTag->cloneNode());
+		}
+	}
+	protected static function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[not(preceding-sibling::closeTag)]';
+		foreach ($xpath->query($query) as $switch)
+		{
+			foreach ($switch->childNodes as $case)
+				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
+					continue 2;
+			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
+		}
+	}
+	protected static function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($xpath->query($query) as $switch)
+			foreach ($switch->childNodes as $case)
+				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
+					$case->removeChild($case->lastChild);
+	}
+	protected static function removeRedundantCloseTagElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//closeTag') as $closeTag)
+		{
+			$id    = $closeTag->getAttribute('id');
+			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
+			foreach ($xpath->query($query, $closeTag) as $dupe)
+				$dupe->parentNode->removeChild($dupe);
+		}
+	}
+	protected static function removeContentFromVoidElements(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//element[@void="yes"]') as $element)
+		{
+			$id    = $element->getAttribute('id');
+			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
+			foreach ($xpath->query($query, $element) as $node)
+				$node->parentNode->removeChild($node);
+		}
+	}
+	protected static function markBranchTables(DOMDocument $ir)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query('//switch[case[2][@test]]') as $switch)
+		{
+			$key = \null;
+			$branchValues = [];
+			foreach ($switch->childNodes as $i => $case)
+			{
+				if (!$case->hasAttribute('test'))
+					continue;
+				$map = self::parseEqualityExpr($case->getAttribute('test'));
+				if ($map === \false)
+					continue 2;
+				if (\count($map) !== 1)
+					continue 2;
+				if (isset($key) && $key !== \key($map))
+					continue 2;
+				$key = \key($map);
+				$branchValues[$i] = \end($map);
+			}
+			$switch->setAttribute('branch-key', $key);
+			foreach ($branchValues as $i => $values)
+			{
+				\sort($values);
+				$switch->childNodes->item($i)->setAttribute('branch-values', \serialize($values));
+			}
+		}
+	}
+	protected static function appendElement(DOMElement $parentNode, $name, $value = '')
+	{
+		if ($value === '')
+			$element = $parentNode->ownerDocument->createElement($name);
+		else
+			$element = $parentNode->ownerDocument->createElement($name, $value);
+		$parentNode->appendChild($element);
+		return $element;
+	}
+	protected static function appendOutput(DOMElement $ir, $type, $content)
+	{
+		if ($type === 'avt')
+		{
+			foreach (AVTHelper::parse($content) as $token)
+			{
+				$type = ($token[0] === 'expression') ? 'xpath' : 'literal';
+				self::appendOutput($ir, $type, $token[1]);
+			}
+			return;
+		}
+		if ($type === 'xpath')
+			$content = \trim($content);
+		if ($type === 'literal' && $content === '')
+			return;
+		self::appendElement($ir, 'output', \htmlspecialchars($content))
+			->setAttribute('type', $type);
+	}
+	protected static function isEmpty(DOMElement $ir)
+	{
+		$xpath = new DOMXPath($ir->ownerDocument);
+		if ($xpath->evaluate('count(comment | element | output[@type="literal"])', $ir))
+			return 'no';
+		$cases = [];
+		foreach ($xpath->query('switch/case', $ir) as $case)
+			$cases[self::isEmpty($case)] = 1;
+		if (isset($cases['maybe']))
+			return 'maybe';
+		if (isset($cases['no']))
+		{
+			if (!isset($cases['yes']))
+				return 'no';
+			return 'maybe';
+		}
+		if ($xpath->evaluate('count(applyTemplates | output[@type="xpath"])', $ir))
+			return 'maybe';
+		return 'yes';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 abstract class XPathHelper
 {
@@ -2307,22 +2768,1662 @@ interface RendererGenerator
 * @copyright Copyright (c) 2010-2015 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
-use s9e\TextFormatter\Configurator\TemplateNormalizer;
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+abstract class AbstractOptimizer
+{
+	protected $cnt;
+	protected $i;
+	protected $changed;
+	protected $tokens;
+	public function optimize($php)
+	{
+		$this->reset($php);
+		$this->optimizeTokens();
+		if ($this->changed)
+			$php = $this->serialize();
+		unset($this->tokens);
+		return $php;
+	}
+	abstract protected function optimizeTokens();
+	protected function reset($php)
+	{
+		$this->tokens  = \token_get_all('<?php ' . $php);
+		$this->i       = 0;
+		$this->cnt     = \count($this->tokens);
+		$this->changed = \false;
+	}
+	protected function serialize()
+	{
+		unset($this->tokens[0]);
+		$php = '';
+		foreach ($this->tokens as $token)
+			$php .= (\is_string($token)) ? $token : $token[1];
+		return $php;
+	}
+	protected function skipToString($str)
+	{
+		while (++$this->i < $this->cnt && $this->tokens[$this->i] !== $str);
+	}
+	protected function skipWhitespace()
+	{
+		while (++$this->i < $this->cnt && $this->tokens[$this->i][0] === \T_WHITESPACE);
+	}
+	protected function unindentBlock($start, $end)
+	{
+		$this->i = $start;
+		do
+		{
+			if ($this->tokens[$this->i][0] === \T_WHITESPACE || $this->tokens[$this->i][0] === \T_DOC_COMMENT)
+				$this->tokens[$this->i][1] = \preg_replace("/^\t/m", '', $this->tokens[$this->i][1]);
+		}
+		while (++$this->i <= $end);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+class BranchOutputOptimizer
+{
+	protected $cnt;
+	protected $i;
+	protected $tokens;
+	public function optimize(array $tokens)
+	{
+		$this->tokens = $tokens;
+		$this->i      = 0;
+		$this->cnt    = \count($this->tokens);
+		$php = '';
+		while (++$this->i < $this->cnt)
+			if ($this->tokens[$this->i][0] === \T_IF)
+				$php .= $this->serializeIfBlock($this->parseIfBlock());
+			else
+				$php .= $this->serializeToken($this->tokens[$this->i]);
+		unset($this->tokens);
+		return $php;
+	}
+	protected function captureOutput()
+	{
+		$expressions = [];
+		while ($this->skipOutputAssignment())
+		{
+			do
+			{
+				$expressions[] = $this->captureOutputExpression();
+			}
+			while ($this->tokens[$this->i++] === '.');
+		}
+		return $expressions;
+	}
+	protected function captureOutputExpression()
+	{
+		$parens = 0;
+		$php = '';
+		do
+		{
+			if ($this->tokens[$this->i] === ';')
+				break;
+			elseif ($this->tokens[$this->i] === '.' && !$parens)
+				break;
+			elseif ($this->tokens[$this->i] === '(')
+				++$parens;
+			elseif ($this->tokens[$this->i] === ')')
+				--$parens;
+			$php .= $this->serializeToken($this->tokens[$this->i]);
+		}
+		while (++$this->i < $this->cnt);
+		return $php;
+	}
+	protected function captureStructure()
+	{
+		$php = '';
+		do
+		{
+			$php .= $this->serializeToken($this->tokens[$this->i]);
+		}
+		while ($this->tokens[++$this->i] !== '{');
+		++$this->i;
+		return $php;
+	}
+	protected function isBranchToken()
+	{
+		return \in_array($this->tokens[$this->i][0], [\T_ELSE, \T_ELSEIF, \T_IF], \true);
+	}
+	protected function mergeIfBranches(array $branches)
+	{
+		$lastBranch = \end($branches);
+		if ($lastBranch['structure'] === 'else')
+		{
+			$before = $this->optimizeBranchesHead($branches);
+			$after  = $this->optimizeBranchesTail($branches);
+		}
+		else
+			$before = $after = [];
+		$source = '';
+		foreach ($branches as $branch)
+			$source .= $this->serializeBranch($branch);
+		return [
+			'before' => $before,
+			'source' => $source,
+			'after'  => $after
+		];
+	}
+	protected function mergeOutput(array $left, array $right)
+	{
+		if (empty($left))
+			return $right;
+		if (empty($right))
+			return $left;
+		$k = \count($left) - 1;
+		if (\substr($left[$k], -1) === "'" && $right[0][0] === "'")
+		{
+			$right[0] = \substr($left[$k], 0, -1) . \substr($right[0], 1);
+			unset($left[$k]);
+		}
+		return \array_merge($left, $right);
+	}
+	protected function optimizeBranchesHead(array &$branches)
+	{
+		$before = $this->optimizeBranchesOutput($branches, 'head');
+		foreach ($branches as &$branch)
+		{
+			if ($branch['body'] !== '' || !empty($branch['tail']))
+				continue;
+			$branch['tail'] = \array_reverse($branch['head']);
+			$branch['head'] = [];
+		}
+		unset($branch);
+		return $before;
+	}
+	protected function optimizeBranchesOutput(array &$branches, $which)
+	{
+		$expressions = [];
+		while (isset($branches[0][$which][0]))
+		{
+			$expr = $branches[0][$which][0];
+			foreach ($branches as $branch)
+				if (!isset($branch[$which][0]) || $branch[$which][0] !== $expr)
+					break 2;
+			$expressions[] = $expr;
+			foreach ($branches as &$branch)
+				\array_shift($branch[$which]);
+			unset($branch);
+		}
+		return $expressions;
+	}
+	protected function optimizeBranchesTail(array &$branches)
+	{
+		return $this->optimizeBranchesOutput($branches, 'tail');
+	}
+	protected function parseBranch()
+	{
+		$structure = $this->captureStructure();
+		$head = $this->captureOutput();
+		$body = '';
+		$tail = [];
+		$braces = 0;
+		do
+		{
+			$tail = $this->mergeOutput($tail, \array_reverse($this->captureOutput()));
+			if ($this->tokens[$this->i] === '}' && !$braces)
+				break;
+			$body .= $this->serializeOutput(\array_reverse($tail));
+			$tail  = [];
+			if ($this->tokens[$this->i][0] === \T_IF)
+			{
+				$child = $this->parseIfBlock();
+				if ($body === '')
+					$head = $this->mergeOutput($head, $child['before']);
+				else
+					$body .= $this->serializeOutput($child['before']);
+				$body .= $child['source'];
+				$tail  = $child['after'];
+			}
+			else
+			{
+				$body .= $this->serializeToken($this->tokens[$this->i]);
+				if ($this->tokens[$this->i] === '{')
+					++$braces;
+				elseif ($this->tokens[$this->i] === '}')
+					--$braces;
+			}
+		}
+		while (++$this->i < $this->cnt);
+		return [
+			'structure' => $structure,
+			'head'      => $head,
+			'body'      => $body,
+			'tail'      => $tail
+		];
+	}
+	protected function parseIfBlock()
+	{
+		$branches = [];
+		do
+		{
+			$branches[] = $this->parseBranch();
+		}
+		while (++$this->i < $this->cnt && $this->isBranchToken());
+		--$this->i;
+		return $this->mergeIfBranches($branches);
+	}
+	protected function serializeBranch(array $branch)
+	{
+		if ($branch['structure'] === 'else'
+		 && $branch['body']      === ''
+		 && empty($branch['head'])
+		 && empty($branch['tail']))
+			return '';
+		return $branch['structure'] . '{' . $this->serializeOutput($branch['head']) . $branch['body'] . $this->serializeOutput(\array_reverse($branch['tail'])) . '}';
+	}
+	protected function serializeIfBlock(array $block)
+	{
+		return $this->serializeOutput($block['before']) . $block['source'] . $this->serializeOutput(\array_reverse($block['after']));
+	}
+	protected function serializeOutput(array $expressions)
+	{
+		if (empty($expressions))
+			return '';
+		return '$this->out.=' . \implode('.', $expressions) . ';';
+	}
+	protected function serializeToken($token)
+	{
+		return (\is_array($token)) ? $token[1] : $token;
+	}
+	protected function skipOutputAssignment()
+	{
+		if ($this->tokens[$this->i    ][0] !== \T_VARIABLE
+		 || $this->tokens[$this->i    ][1] !== '$this'
+		 || $this->tokens[$this->i + 1][0] !== \T_OBJECT_OPERATOR
+		 || $this->tokens[$this->i + 2][0] !== \T_STRING
+		 || $this->tokens[$this->i + 2][1] !== 'out'
+		 || $this->tokens[$this->i + 3][0] !== \T_CONCAT_EQUAL)
+			 return \false;
+		$this->i += 4;
+		return \true;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 class Optimizer
 {
-	public $normalizer;
+	public $branchOutputOptimizer;
+	protected $cnt;
+	protected $i;
+	public $maxLoops = 10;
+	protected $tokens;
 	public function __construct()
 	{
-		$this->normalizer = new TemplateNormalizer;
-		$this->normalizer->clear();
-		$this->normalizer->append('MergeConsecutiveCopyOf');
-		$this->normalizer->append('MergeIdenticalConditionalBranches');
-		$this->normalizer->append('OptimizeNestedConditionals');
+		$this->branchOutputOptimizer = new BranchOutputOptimizer;
 	}
-	public function optimizeTemplate($template)
+	public function optimize($php)
 	{
-		return $this->normalizer->normalizeTemplate($template);
+		$this->tokens = \token_get_all('<?php ' . $php);
+		$this->cnt    = \count($this->tokens);
+		$this->i      = 0;
+		foreach ($this->tokens as &$token)
+			if (\is_array($token))
+				unset($token[2]);
+		unset($token);
+		$passes = [
+			'optimizeOutConcatEqual',
+			'optimizeConcatenations',
+			'optimizeHtmlspecialchars'
+		];
+		$remainingLoops = $this->maxLoops;
+		do
+		{
+			$continue = \false;
+			foreach ($passes as $pass)
+			{
+				$this->$pass();
+				$cnt = \count($this->tokens);
+				if ($this->cnt !== $cnt)
+				{
+					$this->tokens = \array_values($this->tokens);
+					$this->cnt    = $cnt;
+					$continue     = \true;
+				}
+			}
+		}
+		while ($continue && --$remainingLoops);
+		$php = $this->branchOutputOptimizer->optimize($this->tokens);
+		unset($this->tokens);
+		return $php;
+	}
+	protected function isBetweenHtmlspecialcharCalls()
+	{
+		return ($this->tokens[$this->i + 1]    === [\T_STRING, 'htmlspecialchars']
+		     && $this->tokens[$this->i + 2]    === '('
+		     && $this->tokens[$this->i - 1]    === ')'
+		     && $this->tokens[$this->i - 2][0] === \T_LNUMBER
+		     && $this->tokens[$this->i - 3]    === ',');
+	}
+	protected function isHtmlspecialcharSafeVar()
+	{
+		return ($this->tokens[$this->i    ]    === [\T_VARIABLE,        '$node']
+		     && $this->tokens[$this->i + 1]    === [\T_OBJECT_OPERATOR, '->']
+		     && ($this->tokens[$this->i + 2]   === [\T_STRING,          'localName']
+		      || $this->tokens[$this->i + 2]   === [\T_STRING,          'nodeName'])
+		     && $this->tokens[$this->i + 3]    === ','
+		     && $this->tokens[$this->i + 4][0] === \T_LNUMBER
+		     && $this->tokens[$this->i + 5]    === ')');
+	}
+	protected function isOutputAssignment()
+	{
+		return ($this->tokens[$this->i    ] === [\T_VARIABLE,        '$this']
+		     && $this->tokens[$this->i + 1] === [\T_OBJECT_OPERATOR, '->']
+		     && $this->tokens[$this->i + 2] === [\T_STRING,          'out']
+		     && $this->tokens[$this->i + 3] === [\T_CONCAT_EQUAL,    '.=']);
+	}
+	protected function isPrecededByOutputVar()
+	{
+		return ($this->tokens[$this->i - 1] === [\T_STRING,          'out']
+		     && $this->tokens[$this->i - 2] === [\T_OBJECT_OPERATOR, '->']
+		     && $this->tokens[$this->i - 3] === [\T_VARIABLE,        '$this']);
+	}
+	protected function mergeConcatenatedHtmlSpecialChars()
+	{
+		if (!$this->isBetweenHtmlspecialcharCalls())
+			 return \false;
+		$escapeMode = $this->tokens[$this->i - 2][1];
+		$startIndex = $this->i - 3;
+		$endIndex = $this->i + 2;
+		$this->i = $endIndex;
+		$parens = 0;
+		while (++$this->i < $this->cnt)
+		{
+			if ($this->tokens[$this->i] === ',' && !$parens)
+				break;
+			if ($this->tokens[$this->i] === '(')
+				++$parens;
+			elseif ($this->tokens[$this->i] === ')')
+				--$parens;
+		}
+		if ($this->tokens[$this->i + 1] !== [\T_LNUMBER, $escapeMode])
+			return \false;
+		$this->tokens[$startIndex] = '.';
+		$this->i = $startIndex;
+		while (++$this->i <= $endIndex)
+			unset($this->tokens[$this->i]);
+		return \true;
+	}
+	protected function mergeConcatenatedStrings()
+	{
+		if ($this->tokens[$this->i - 1][0]    !== \T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i + 1][0]    !== \T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i - 1][1][0] !== $this->tokens[$this->i + 1][1][0])
+			return \false;
+		$this->tokens[$this->i + 1][1] = \substr($this->tokens[$this->i - 1][1], 0, -1)
+		                               . \substr($this->tokens[$this->i + 1][1], 1);
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[$this->i]);
+		++$this->i;
+		return \true;
+	}
+	protected function optimizeOutConcatEqual()
+	{
+		$this->i = 3;
+		while ($this->skipTo([\T_CONCAT_EQUAL, '.=']))
+		{
+			if (!$this->isPrecededByOutputVar())
+				 continue;
+			while ($this->skipPast(';'))
+			{
+				if (!$this->isOutputAssignment())
+					 break;
+				$this->tokens[$this->i - 1] = '.';
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
+				unset($this->tokens[$this->i++]);
+			}
+		}
+	}
+	protected function optimizeConcatenations()
+	{
+		$this->i = 1;
+		while ($this->skipTo('.'))
+			$this->mergeConcatenatedStrings() || $this->mergeConcatenatedHtmlSpecialChars();
+	}
+	protected function optimizeHtmlspecialchars()
+	{
+		$this->i = 0;
+		while ($this->skipPast([\T_STRING, 'htmlspecialchars']))
+			if ($this->tokens[$this->i] === '(')
+			{
+				++$this->i;
+				$this->replaceHtmlspecialcharsLiteral() || $this->removeHtmlspecialcharsSafeVar();
+			}
+	}
+	protected function removeHtmlspecialcharsSafeVar()
+	{
+		if (!$this->isHtmlspecialcharSafeVar())
+			 return \false;
+		unset($this->tokens[$this->i - 2]);
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[$this->i + 3]);
+		unset($this->tokens[$this->i + 4]);
+		unset($this->tokens[$this->i + 5]);
+		$this->i += 6;
+		return \true;
+	}
+	protected function replaceHtmlspecialcharsLiteral()
+	{
+		if ($this->tokens[$this->i    ][0] !== \T_CONSTANT_ENCAPSED_STRING
+		 || $this->tokens[$this->i + 1]    !== ','
+		 || $this->tokens[$this->i + 2][0] !== \T_LNUMBER
+		 || $this->tokens[$this->i + 3]    !== ')')
+			return \false;
+		$this->tokens[$this->i][1] = \var_export(
+			\htmlspecialchars(
+				\stripslashes(\substr($this->tokens[$this->i][1], 1, -1)),
+				$this->tokens[$this->i + 2][1]
+			),
+			\true
+		);
+		unset($this->tokens[$this->i - 2]);
+		unset($this->tokens[$this->i - 1]);
+		unset($this->tokens[++$this->i]);
+		unset($this->tokens[++$this->i]);
+		unset($this->tokens[++$this->i]);
+		return \true;
+	}
+	protected function skipPast($token)
+	{
+		return ($this->skipTo($token) && ++$this->i < $this->cnt);
+	}
+	protected function skipTo($token)
+	{
+		while (++$this->i < $this->cnt)
+			if ($this->tokens[$this->i] === $token)
+				return \true;
+		return \false;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+class Quick
+{
+	public static function getSource(array $compiledTemplates)
+	{
+		$map = [];
+		$tagNames = [];
+		$unsupported = [];
+		foreach ($compiledTemplates as $tagName => $php)
+		{
+			if (\preg_match('(^(?:br|[ieps])$)', $tagName))
+				continue;
+			$rendering = self::getRenderingStrategy($php);
+			if ($rendering === \false)
+			{
+				$unsupported[] = $tagName;
+				continue;
+			}
+			foreach ($rendering as $i => list($strategy, $replacement))
+			{
+				$match = (($i) ? '/' : '') . $tagName;
+				$map[$strategy][$match] = $replacement;
+			}
+			if (!isset($rendering[1]))
+				$tagNames[] = $tagName;
+		}
+		$php = [];
+		if (isset($map['static']))
+			$php[] = '	private static $static=' . self::export($map['static']) . ';';
+		if (isset($map['dynamic']))
+			$php[] = '	private static $dynamic=' . self::export($map['dynamic']) . ';';
+		if (isset($map['php']))
+		{
+			list($quickBranches, $quickSource) = self::generateBranchTable('$qb', $map['php']);
+			$php[] = '	private static $attributes;';
+			$php[] = '	private static $quickBranches=' . self::export($quickBranches) . ';';
+		}
+		if (!empty($unsupported))
+		{
+			$regexp = '(<' . RegexpBuilder::fromList($unsupported, ['useLookahead' => \true]) . '[ />])';
+			$php[] = '	public $quickRenderingTest=' . \var_export($regexp, \true) . ';';
+		}
+		$php[] = '';
+		$php[] = '	protected function renderQuick($xml)';
+		$php[] = '	{';
+		$php[] = '		$xml = $this->decodeSMP($xml);';
+		if (isset($map['php']))
+			$php[] = '		self::$attributes = [];';
+		$regexp  = '(<(?:(?!/)(';
+		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
+		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
+		$php[] = '		$html = preg_replace_callback(';
+		$php[] = '			' . \var_export($regexp, \true) . ',';
+		$php[] = "			[\$this, 'quick'],";
+		$php[] = '			preg_replace(';
+		$php[] = "				'(<[eis]>[^<]*</[eis]>)',";
+		$php[] = "				'',";
+		$php[] = '				substr($xml, 1 + strpos($xml, \'>\'), -4)';
+		$php[] = '			)';
+		$php[] = '		);';
+		$php[] = '';
+		$php[] = "		return str_replace('<br/>', '<br>', \$html);";
+		$php[] = '	}';
+		$php[] = '';
+		$php[] = '	protected function quick($m)';
+		$php[] = '	{';
+		$php[] = '		if (isset($m[2]))';
+		$php[] = '		{';
+		$php[] = '			$id = $m[2];';
+		$php[] = '';
+		$php[] = '			if (isset($m[3]))';
+		$php[] = '			{';
+		$php[] = '				unset($m[3]);';
+		$php[] = '';
+		$php[] = '				$m[0] = substr($m[0], 0, -2) . \'>\';';
+		$php[] = '				$html = $this->quick($m);';
+		$php[] = '';
+		$php[] = '				$m[0] = \'</\' . $id . \'>\';';
+		$php[] = '				$m[2] = \'/\' . $id;';
+		$php[] = '				$html .= $this->quick($m);';
+		$php[] = '';
+		$php[] = '				return $html;';
+		$php[] = '			}';
+		$php[] = '		}';
+		$php[] = '		else';
+		$php[] = '		{';
+		$php[] = '			$id = $m[1];';
+		$php[] = '';
+		$php[] = '			$lpos = 1 + strpos($m[0], \'>\');';
+		$php[] = '			$rpos = strrpos($m[0], \'<\');';
+		$php[] = '			$textContent = substr($m[0], $lpos, $rpos - $lpos);';
+		$php[] = '';
+		$php[] = '			if (strpos($textContent, \'<\') !== false)';
+		$php[] = '			{';
+		$php[] = '				throw new \\RuntimeException;';
+		$php[] = '			}';
+		$php[] = '';
+		$php[] = '			$textContent = htmlspecialchars_decode($textContent);';
+		$php[] = '		}';
+		$php[] = '';
+		if (isset($map['static']))
+		{
+			$php[] = '		if (isset(self::$static[$id]))';
+			$php[] = '		{';
+			$php[] = '			return self::$static[$id];';
+			$php[] = '		}';
+			$php[] = '';
+		}
+		if (isset($map['dynamic']))
+		{
+			$php[] = '		if (isset(self::$dynamic[$id]))';
+			$php[] = '		{';
+			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
+			$php[] = '			return preg_replace($match, $replace, $m[0], 1, $cnt);';
+			$php[] = '		}';
+			$php[] = '';
+		}
+		if (isset($map['php']))
+		{
+			$php[] = '		if (!isset(self::$quickBranches[$id]))';
+			$php[] = '		{';
+		}
+		$condition = "\$id[0] === '!' || \$id[0] === '?'";
+		if (!empty($unsupported))
+		{
+			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . '$)';
+			$condition .= ' || preg_match(' . \var_export($regexp, \true) . ', $id)';
+		}
+		$php[] = '			if (' . $condition . ')';
+		$php[] = '			{';
+		$php[] = '				throw new \\RuntimeException;';
+		$php[] = '			}';
+		$php[] = "			return '';";
+		if (isset($map['php']))
+		{
+			$php[] = '		}';
+			$php[] = '';
+			$php[] = '		$attributes = [];';
+			$php[] = '		if (strpos($m[0], \'="\') !== false)';
+			$php[] = '		{';
+			$php[] = '			preg_match_all(\'(([^ =]++)="([^"]*))S\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
+			$php[] = '			foreach ($matches[1] as $i => $attrName)';
+			$php[] = '			{';
+			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
+			$php[] = '			}';
+			$php[] = '		}';
+			$php[] = '';
+			$php[] = '		$qb = self::$quickBranches[$id];';
+			$php[] = '		' . $quickSource;
+			$php[] = '';
+			$php[] = '		return $html;';
+		}
+		$php[] = '	}';
+		return \implode("\n", $php);
+	}
+	protected static function export(array $arr)
+	{
+		\ksort($arr);
+		$entries = [];
+		$naturalKey = 0;
+		foreach ($arr as $k => $v)
+		{
+			$entries[] = (($k === $naturalKey) ? '' : \var_export($k, \true) . '=>')
+			           . ((\is_array($v)) ? self::export($v) : \var_export($v, \true));
+			$naturalKey = $k + 1;
+		}
+		return '[' . \implode(',', $entries) . ']';
+	}
+	public static function getRenderingStrategy($php)
+	{
+		$chunks = \explode('$this->at($node);', $php);
+		$renderings = [];
+		if (\count($chunks) <= 2)
+		{
+			foreach ($chunks as $k => $chunk)
+			{
+				$rendering = self::getStaticRendering($chunk);
+				if ($rendering !== \false)
+				{
+					$renderings[$k] = ['static', $rendering];
+					continue;
+				}
+				if ($k === 0)
+				{
+					$rendering = self::getDynamicRendering($chunk);
+					if ($rendering !== \false)
+					{
+						$renderings[$k] = ['dynamic', $rendering];
+						continue;
+					}
+				}
+				$renderings[$k] = \false;
+			}
+			if (!\in_array(\false, $renderings, \true))
+				return $renderings;
+		}
+		$phpRenderings = self::getQuickRendering($php);
+		if ($phpRenderings === \false)
+			return \false;
+		foreach ($phpRenderings as $i => $phpRendering)
+			if (!isset($renderings[$i]) || $renderings[$i] === \false)
+				$renderings[$i] = ['php', $phpRendering];
+		return $renderings;
+	}
+	protected static function getQuickRendering($php)
+	{
+		if (\preg_match('(\\$this->at\\((?!\\$node\\);))', $php))
+			return \false;
+		$tokens   = \token_get_all('<?php ' . $php);
+		$tokens[] = [0, ''];
+		\array_shift($tokens);
+		$cnt = \count($tokens);
+		$branch = [
+			'braces'      => -1,
+			'branches'    => [],
+			'head'        => '',
+			'passthrough' => 0,
+			'statement'   => '',
+			'tail'        => ''
+		];
+		$braces = 0;
+		$i = 0;
+		do
+		{
+			if ($tokens[$i    ][0] === \T_VARIABLE
+			 && $tokens[$i    ][1] === '$this'
+			 && $tokens[$i + 1][0] === \T_OBJECT_OPERATOR
+			 && $tokens[$i + 2][0] === \T_STRING
+			 && $tokens[$i + 2][1] === 'at'
+			 && $tokens[$i + 3]    === '('
+			 && $tokens[$i + 4][0] === \T_VARIABLE
+			 && $tokens[$i + 4][1] === '$node'
+			 && $tokens[$i + 5]    === ')'
+			 && $tokens[$i + 6]    === ';')
+			{
+				if (++$branch['passthrough'] > 1)
+					return \false;
+				$i += 6;
+				continue;
+			}
+			$key = ($branch['passthrough']) ? 'tail' : 'head';
+			$branch[$key] .= (\is_array($tokens[$i])) ? $tokens[$i][1] : $tokens[$i];
+			if ($tokens[$i] === '{')
+			{
+				++$braces;
+				continue;
+			}
+			if ($tokens[$i] === '}')
+			{
+				--$braces;
+				if ($branch['braces'] === $braces)
+				{
+					$branch[$key] = \substr($branch[$key], 0, -1);
+					$branch =& $branch['parent'];
+					$j = $i;
+					while ($tokens[++$j][0] === \T_WHITESPACE);
+					if ($tokens[$j][0] !== \T_ELSEIF
+					 && $tokens[$j][0] !== \T_ELSE)
+					{
+						$passthroughs = self::getBranchesPassthrough($branch['branches']);
+						if ($passthroughs === [0])
+						{
+							foreach ($branch['branches'] as $child)
+								$branch['head'] .= $child['statement'] . '{' . $child['head'] . '}';
+							$branch['branches'] = [];
+							continue;
+						}
+						if ($passthroughs === [1])
+						{
+							++$branch['passthrough'];
+							continue;
+						}
+						return \false;
+					}
+				}
+				continue;
+			}
+			if ($branch['passthrough'])
+				continue;
+			if ($tokens[$i][0] === \T_IF
+			 || $tokens[$i][0] === \T_ELSEIF
+			 || $tokens[$i][0] === \T_ELSE)
+			{
+				$branch[$key] = \substr($branch[$key], 0, -\strlen($tokens[$i][1]));
+				$branch['branches'][] = [
+					'braces'      => $braces,
+					'branches'    => [],
+					'head'        => '',
+					'parent'      => &$branch,
+					'passthrough' => 0,
+					'statement'   => '',
+					'tail'        => ''
+				];
+				$branch =& $branch['branches'][\count($branch['branches']) - 1];
+				do
+				{
+					$branch['statement'] .= (\is_array($tokens[$i])) ? $tokens[$i][1] : $tokens[$i];
+				}
+				while ($tokens[++$i] !== '{');
+				++$braces;
+			}
+		}
+		while (++$i < $cnt);
+		list($head, $tail) = self::buildPHP($branch['branches']);
+		$head  = $branch['head'] . $head;
+		$tail .= $branch['tail'];
+		self::convertPHP($head, $tail, (bool) $branch['passthrough']);
+		if (\preg_match('((?<!-)->(?!params\\[))', $head . $tail))
+			return \false;
+		return ($branch['passthrough']) ? [$head, $tail] : [$head];
+	}
+	protected static function convertPHP(&$head, &$tail, $passthrough)
+	{
+		$saveAttributes = (bool) \preg_match('(\\$node->(?:get|has)Attribute)', $tail);
+		\preg_match_all(
+			"(\\\$node->getAttribute\\('([^']+)'\\))",
+			\preg_replace_callback(
+				'(if\\(\\$node->hasAttribute\\(([^\\)]+)[^}]+)',
+				function ($m)
+				{
+					return \str_replace('$node->getAttribute(' . $m[1] . ')', '', $m[0]);
+				},
+				$head . $tail
+			),
+			$matches
+		);
+		$attrNames = \array_unique($matches[1]);
+		self::replacePHP($head);
+		self::replacePHP($tail);
+		if (!$passthrough)
+			$head = \str_replace('$node->textContent', '$textContent', $head);
+		if (!empty($attrNames))
+		{
+			\ksort($attrNames);
+			$head = "\$attributes+=['" . \implode("'=>null,'", $attrNames) . "'=>null];" . $head;
+		}
+		if ($saveAttributes)
+		{
+			$head .= 'self::$attributes[]=$attributes;';
+			$tail  = '$attributes=array_pop(self::$attributes);' . $tail;
+		}
+	}
+	protected static function replacePHP(&$php)
+	{
+		if ($php === '')
+			return;
+		$php = \str_replace('$this->out', '$html', $php);
+		$getAttribute = "\\\$node->getAttribute\\(('[^']+')\\)";
+		$php = \preg_replace(
+			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_NOQUOTES . '\\))',
+			"str_replace('&quot;','\"',\$attributes[\$1])",
+			$php
+		);
+		$php = \preg_replace(
+			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_COMPAT . '\\))',
+			'$attributes[$1]',
+			$php
+		);
+		$php = \preg_replace(
+			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . \ENT_COMPAT . '\\))',
+			'strtr($attributes[$1],$2,$3)',
+			$php
+		);
+		$php = \preg_replace(
+			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')',
+			'$attributes[$1]$2$attributes[$3]',
+			$php
+		);
+		$php = \preg_replace_callback(
+			'(' . $getAttribute . "==='(.*?(?<!\\\\)(?:\\\\\\\\)*)')s",
+			function ($m)
+			{
+				return '$attributes[' . $m[1] . "]==='" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "'";
+			},
+			$php
+		);
+		$php = \preg_replace_callback(
+			"('(.*?(?<!\\\\)(?:\\\\\\\\)*)'===" . $getAttribute . ')s',
+			function ($m)
+			{
+				return "'" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "'===\$attributes[" . $m[2] . ']';
+			},
+			$php
+		);
+		$php = \preg_replace_callback(
+			'(strpos\\(' . $getAttribute . ",'(.*?(?<!\\\\)(?:\\\\\\\\)*)'\\)([!=]==(?:0|false)))s",
+			function ($m)
+			{
+				return 'strpos($attributes[' . $m[1] . "],'" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "')" . $m[3];
+			},
+			$php
+		);
+		$php = \preg_replace_callback(
+			"(strpos\\('(.*?(?<!\\\\)(?:\\\\\\\\)*)'," . $getAttribute . '\\)([!=]==(?:0|false)))s',
+			function ($m)
+			{
+				return "strpos('" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "',\$attributes[" . $m[2] . '])' . $m[3];
+			},
+			$php
+		);
+		$php = \preg_replace(
+			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))',
+			'$attributes[$1]',
+			$php
+		);
+		$php = \preg_replace(
+			'((?<!\\w)(\\d+(?:==|[-+*]))' . $getAttribute . ')',
+			'$1$attributes[$2]',
+			$php
+		);
+		$php = \preg_replace(
+			"(empty\\(\\\$node->getAttribute\\(('[^']+')\\)\\))",
+			'empty($attributes[$1])',
+			$php
+		);
+		$php = \preg_replace(
+			"(\\\$node->hasAttribute\\(('[^']+')\\))",
+			'isset($attributes[$1])',
+			$php
+		);
+		$php = \preg_replace(
+			"(\\\$node->getAttribute\\(('[^']+')\\))",
+			'htmlspecialchars_decode($attributes[$1])',
+			$php
+		);
+		if (\substr($php, 0, 7) === '$html.=')
+			$php = '$html=' . \substr($php, 7);
+		else
+			$php = "\$html='';" . $php;
+	}
+	protected static function buildPHP(array $branches)
+	{
+		$return = ['', ''];
+		foreach ($branches as $branch)
+		{
+			$return[0] .= $branch['statement'] . '{' . $branch['head'];
+			$return[1] .= $branch['statement'] . '{';
+			if ($branch['branches'])
+			{
+				list($head, $tail) = self::buildPHP($branch['branches']);
+				$return[0] .= $head;
+				$return[1] .= $tail;
+			}
+			$return[0] .= '}';
+			$return[1] .= $branch['tail'] . '}';
+		}
+		return $return;
+	}
+	protected static function getBranchesPassthrough(array $branches)
+	{
+		$values = [];
+		foreach ($branches as $branch)
+			$values[] = $branch['passthrough'];
+		if ($branch['statement'] !== 'else')
+			$values[] = 0;
+		return \array_unique($values);
+	}
+	protected static function getDynamicRendering($php)
+	{
+		$rendering = '';
+		$literal   = "(?<literal>'((?>[^'\\\\]+|\\\\['\\\\])*)')";
+		$attribute = "(?<attribute>htmlspecialchars\\(\\\$node->getAttribute\\('([^']+)'\\),2\\))";
+		$value     = "(?<value>$literal|$attribute)";
+		$output    = "(?<output>\\\$this->out\\.=$value(?:\\.(?&value))*;)";
+		$copyOfAttribute = "(?<copyOfAttribute>if\\(\\\$node->hasAttribute\\('([^']+)'\\)\\)\\{\\\$this->out\\.=' \\g-1=\"'\\.htmlspecialchars\\(\\\$node->getAttribute\\('\\g-1'\\),2\\)\\.'\"';\\})";
+		$regexp = '(^(' . $output . '|' . $copyOfAttribute . ')*$)';
+		if (!\preg_match($regexp, $php, $m))
+			return \false;
+		$copiedAttributes = [];
+		$usedAttributes = [];
+		$regexp = '(' . $output . '|' . $copyOfAttribute . ')A';
+		$offset = 0;
+		while (\preg_match($regexp, $php, $m, 0, $offset))
+			if ($m['output'])
+			{
+				$offset += 12;
+				while (\preg_match('(' . $value . ')A', $php, $m, 0, $offset))
+				{
+					if ($m['literal'])
+					{
+						$str = \stripslashes(\substr($m[0], 1, -1));
+						$rendering .= \preg_replace('([\\\\$](?=\\d))', '\\\\$0', $str);
+					}
+					else
+					{
+						$attrName = \end($m);
+						if (!isset($usedAttributes[$attrName]))
+							$usedAttributes[$attrName] = \uniqid($attrName, \true);
+						$rendering .= $usedAttributes[$attrName];
+					}
+					$offset += 1 + \strlen($m[0]);
+				}
+			}
+			else
+			{
+				$attrName = \end($m);
+				if (!isset($copiedAttributes[$attrName]))
+					$copiedAttributes[$attrName] = \uniqid($attrName, \true);
+				$rendering .= $copiedAttributes[$attrName];
+				$offset += \strlen($m[0]);
+			}
+		$attrNames = \array_keys($copiedAttributes + $usedAttributes);
+		\sort($attrNames);
+		$remainingAttributes = \array_combine($attrNames, $attrNames);
+		$regexp = '(^[^ ]+';
+		$index  = 0;
+		foreach ($attrNames as $attrName)
+		{
+			$regexp .= '(?> (?!' . RegexpBuilder::fromList($remainingAttributes) . '=)[^=]+="[^"]*")*';
+			unset($remainingAttributes[$attrName]);
+			$regexp .= '(';
+			if (isset($copiedAttributes[$attrName]))
+				self::replacePlaceholder($rendering, $copiedAttributes[$attrName], ++$index);
+			else
+				$regexp .= '?>';
+			$regexp .= ' ' . $attrName . '="';
+			if (isset($usedAttributes[$attrName]))
+			{
+				$regexp .= '(';
+				self::replacePlaceholder($rendering, $usedAttributes[$attrName], ++$index);
+			}
+			$regexp .= '[^"]*';
+			if (isset($usedAttributes[$attrName]))
+				$regexp .= ')';
+			$regexp .= '")?';
+		}
+		$regexp .= '.*)s';
+		return [$regexp, $rendering];
+	}
+	protected static function getStaticRendering($php)
+	{
+		if ($php === '')
+			return '';
+		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]+|\\\\['\\\\])*)';\$)";
+		if (!\preg_match($regexp, $php, $m))
+			return \false;
+		return \stripslashes($m[1]);
+	}
+	protected static function replacePlaceholder(&$str, $uniqid, $index)
+	{
+		$str = \preg_replace_callback(
+			'(' . \preg_quote($uniqid) . '(.))',
+			function ($m) use ($index)
+			{
+				if (\is_numeric($m[1]))
+					return '${' . $index . '}' . $m[1];
+				else
+					return '$' . $index . $m[1];
+			},
+			$str
+		);
+	}
+	public static function generateConditionals($expr, array $statements)
+	{
+		$keys = \array_keys($statements);
+		$cnt  = \count($statements);
+		$min  = (int) $keys[0];
+		$max  = (int) $keys[$cnt - 1];
+		if ($cnt <= 4)
+		{
+			if ($cnt === 1)
+				return \end($statements);
+			$php = '';
+			$k = $min;
+			do
+			{
+				$php .= 'if(' . $expr . '===' . $k . '){' . $statements[$k] . '}else';
+			}
+			while (++$k < $max);
+			$php .= '{' . $statements[$max] . '}';
+			
+			return $php;
+		}
+		$cutoff = \ceil($cnt / 2);
+		$chunks = \array_chunk($statements, $cutoff, \true);
+		return 'if(' . $expr . '<' . \key($chunks[1]) . '){' . self::generateConditionals($expr, \array_slice($statements, 0, $cutoff, \true)) . '}else' . self::generateConditionals($expr, \array_slice($statements, $cutoff, \null, \true));
+	}
+	public static function generateBranchTable($expr, array $statements)
+	{
+		$branchTable = [];
+		$branchIds = [];
+		\ksort($statements);
+		foreach ($statements as $value => $statement)
+		{
+			if (!isset($branchIds[$statement]))
+				$branchIds[$statement] = \count($branchIds);
+			$branchTable[$value] = $branchIds[$statement];
+		}
+		return [$branchTable, self::generateConditionals($expr, \array_keys($branchIds))];
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use DOMElement;
+use DOMXPath;
+use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+class Serializer
+{
+	public $branchTableThreshold = 8;
+	public $branchTables = [];
+	public $convertor;
+	public $useMultibyteStringFunctions = \false;
+	public function __construct()
+	{
+		$this->convertor = new XPathConvertor;
+	}
+	protected function convertAttributeValueTemplate($attrValue)
+	{
+		$phpExpressions = [];
+		foreach (AVTHelper::parse($attrValue) as $token)
+			if ($token[0] === 'literal')
+				$phpExpressions[] = \var_export($token[1], \true);
+			else
+				$phpExpressions[] = $this->convertXPath($token[1]);
+		return \implode('.', $phpExpressions);
+	}
+	public function convertCondition($expr)
+	{
+		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
+		return $this->convertor->convertCondition($expr);
+	}
+	public function convertXPath($expr)
+	{
+		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
+		return $this->convertor->convertXPath($expr);
+	}
+	protected function serializeApplyTemplates(DOMElement $applyTemplates)
+	{
+		$php = '$this->at($node';
+		if ($applyTemplates->hasAttribute('select'))
+			$php .= ',' . \var_export($applyTemplates->getAttribute('select'), \true);
+		$php .= ');';
+		return $php;
+	}
+	protected function serializeAttribute(DOMElement $attribute)
+	{
+		$attrName = $attribute->getAttribute('name');
+		$phpAttrName = $this->convertAttributeValueTemplate($attrName);
+		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . \ENT_QUOTES . ')';
+		return "\$this->out.=' '." . $phpAttrName . ".'=\"';"
+		     . $this->serializeChildren($attribute)
+		     . "\$this->out.='\"';";
+	}
+	public function serialize(DOMElement $ir)
+	{
+		$this->branchTables = [];
+		return $this->serializeChildren($ir);
+	}
+	protected function serializeChildren(DOMElement $ir)
+	{
+		$php = '';
+		foreach ($ir->childNodes as $node)
+		{
+			$methodName = 'serialize' . \ucfirst($node->localName);
+			$php .= $this->$methodName($node);
+		}
+		return $php;
+	}
+	protected function serializeCloseTag(DOMElement $closeTag)
+	{
+		$php = '';
+		$id  = $closeTag->getAttribute('id');
+		if ($closeTag->hasAttribute('check'))
+			$php .= 'if(!isset($t' . $id . ')){';
+		if ($closeTag->hasAttribute('set'))
+			$php .= '$t' . $id . '=1;';
+		$xpath   = new DOMXPath($closeTag->ownerDocument);
+		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
+		if (!($element instanceof DOMElement))
+			throw new RuntimeException;
+		$php .= "\$this->out.='>';";
+		if ($element->getAttribute('void') === 'maybe')
+			$php .= 'if(!$v' . $id . '){';
+		if ($closeTag->hasAttribute('check'))
+			$php .= '}';
+		return $php;
+	}
+	protected function serializeComment(DOMElement $comment)
+	{
+		return "\$this->out.='<!--';"
+		     . $this->serializeChildren($comment)
+		     . "\$this->out.='-->';";
+	}
+	protected function serializeCopyOfAttributes(DOMElement $copyOfAttributes)
+	{
+		return 'foreach($node->attributes as $attribute){'
+		     . "\$this->out.=' ';\$this->out.=\$attribute->name;\$this->out.='=\"';\$this->out.=htmlspecialchars(\$attribute->value," . \ENT_COMPAT . ");\$this->out.='\"';"
+		     . '}';
+	}
+	protected function serializeElement(DOMElement $element)
+	{
+		$php     = '';
+		$elName  = $element->getAttribute('name');
+		$id      = $element->getAttribute('id');
+		$isVoid  = $element->getAttribute('void');
+		$isDynamic = (bool) (\strpos($elName, '{') !== \false);
+		$phpElName = $this->convertAttributeValueTemplate($elName);
+		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . \ENT_QUOTES . ')';
+		if ($isDynamic)
+		{
+			$varName = '$e' . $id;
+			$php .= $varName . '=' . $phpElName . ';';
+			$phpElName = $varName;
+		}
+		if ($isVoid === 'maybe')
+			$php .= '$v' . $id . '=preg_match(' . \var_export(TemplateParser::$voidRegexp, \true) . ',' . $phpElName . ');';
+		$php .= "\$this->out.='<'." . $phpElName . ';';
+		$php .= $this->serializeChildren($element);
+		if ($isVoid !== 'yes')
+			$php .= "\$this->out.='</'." . $phpElName . ".'>';";
+		if ($isVoid === 'maybe')
+			$php .= '}';
+		return $php;
+	}
+	protected function serializeHash(DOMElement $switch)
+	{
+		$statements = [];
+		foreach ($switch->getElementsByTagName('case') as $case)
+		{
+			if (!$case->parentNode->isSameNode($switch))
+				continue;
+			if ($case->hasAttribute('branch-values'))
+			{
+				$php = $this->serializeChildren($case);
+				foreach (\unserialize($case->getAttribute('branch-values')) as $value)
+					$statements[$value] = $php;
+			}
+		}
+		if (!isset($case))
+			throw new RuntimeException;
+		list($branchTable, $php) = Quick::generateBranchTable('$n', $statements);
+		$varName = 'bt' . \sprintf('%08X', \crc32(\serialize($branchTable)));
+		$expr = 'self::$' . $varName . '[' . $this->convertXPath($switch->getAttribute('branch-key')) . ']';
+		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
+		if (!$case->hasAttribute('branch-values'))
+			$php .= 'else{' . $this->serializeChildren($case) . '}';
+		$this->branchTables[$varName] = $branchTable;
+		return $php;
+	}
+	protected function serializeOutput(DOMElement $output)
+	{
+		$php        = '';
+		$escapeMode = ($output->getAttribute('escape') === 'attribute')
+		            ? \ENT_COMPAT
+		            : \ENT_NOQUOTES;
+		if ($output->getAttribute('type') === 'xpath')
+		{
+			$php .= '$this->out.=htmlspecialchars(';
+			$php .= $this->convertXPath($output->textContent);
+			$php .= ',' . $escapeMode . ');';
+		}
+		else
+		{
+			$php .= '$this->out.=';
+			$php .= \var_export(\htmlspecialchars($output->textContent, $escapeMode), \true);
+			$php .= ';';
+		}
+		return $php;
+	}
+	protected function serializeSwitch(DOMElement $switch)
+	{
+		if ($switch->hasAttribute('branch-key')
+		 && $switch->childNodes->length >= $this->branchTableThreshold)
+			return $this->serializeHash($switch);
+		$php  = '';
+		$else = '';
+		foreach ($switch->getElementsByTagName('case') as $case)
+		{
+			if (!$case->parentNode->isSameNode($switch))
+				continue;
+			if ($case->hasAttribute('test'))
+				$php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
+			else
+				$php .= 'else';
+			$else = 'else';
+			$php .= '{';
+			$php .= $this->serializeChildren($case);
+			$php .= '}';
+		}
+		return $php;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+use LogicException;
+use RuntimeException;
+class XPathConvertor
+{
+	public $pcreVersion;
+	protected $regexp;
+	public $useMultibyteStringFunctions = \false;
+	public function __construct()
+	{
+		$this->pcreVersion = \PCRE_VERSION;
+	}
+	public function convertCondition($expr)
+	{
+		$expr = \trim($expr);
+		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
+			return '$node->hasAttribute(' . \var_export($m[1], \true) . ')';
+		if (\preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
+			return '!$node->hasAttribute(' . \var_export($m[1], \true) . ')';
+		if (\preg_match('#^\\$(\\w+)$#', $expr, $m))
+			return '!empty($this->params[' . \var_export($m[1], \true) . '])';
+		if (\preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
+			return 'empty($this->params[' . \var_export($m[1], \true) . '])';
+		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
+			$expr = 'boolean(' . $expr . ')';
+		return $this->convertXPath($expr);
+	}
+	public function convertXPath($expr)
+	{
+		$expr = \trim($expr);
+		$this->generateXPathRegexp();
+		if (\preg_match($this->regexp, $expr, $m))
+		{
+			$methodName = \null;
+			foreach ($m as $k => $v)
+			{
+				if (\is_numeric($k) || $v === '' || !\method_exists($this, $k))
+					continue;
+				$methodName = $k;
+				break;
+			}
+			if (isset($methodName))
+			{
+				$args = [$m[$methodName]];
+				$i = 0;
+				while (isset($m[$methodName . $i]))
+				{
+					$args[$i] = $m[$methodName . $i];
+					++$i;
+				}
+				return \call_user_func_array([$this, $methodName], $args);
+			}
+		}
+		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
+			$expr = 'string(' . $expr . ')';
+		return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
+	}
+	protected function attr($attrName)
+	{
+		return '$node->getAttribute(' . \var_export($attrName, \true) . ')';
+	}
+	protected function dot()
+	{
+		return '$node->textContent';
+	}
+	protected function param($paramName)
+	{
+		return '$this->params[' . \var_export($paramName, \true) . ']';
+	}
+	protected function string($string)
+	{
+		return \var_export(\substr($string, 1, -1), \true);
+	}
+	protected function lname()
+	{
+		return '$node->localName';
+	}
+	protected function name()
+	{
+		return '$node->nodeName';
+	}
+	protected function number($number)
+	{
+		return "'" . $number . "'";
+	}
+	protected function strlen($expr)
+	{
+		if ($expr === '')
+			$expr = '.';
+		$php = $this->convertXPath($expr);
+		return ($this->useMultibyteStringFunctions)
+			? 'mb_strlen(' . $php . ",'utf-8')"
+			: "strlen(preg_replace('(.)us','.'," . $php . '))';
+	}
+	protected function contains($haystack, $needle)
+	{
+		return '(strpos(' . $this->convertXPath($haystack) . ',' . $this->convertXPath($needle) . ')!==false)';
+	}
+	protected function startswith($string, $substring)
+	{
+		return '(strpos(' . $this->convertXPath($string) . ',' . $this->convertXPath($substring) . ')===0)';
+	}
+	protected function not($expr)
+	{
+		return '!(' . $this->convertCondition($expr) . ')';
+	}
+	protected function notcontains($haystack, $needle)
+	{
+		return '(strpos(' . $this->convertXPath($haystack) . ',' . $this->convertXPath($needle) . ')===false)';
+	}
+	protected function substr($exprString, $exprPos, $exprLen = \null)
+	{
+		if (!$this->useMultibyteStringFunctions)
+		{
+			$expr = 'substring(' . $exprString . ',' . $exprPos;
+			if (isset($exprLen))
+				$expr .= ',' . $exprLen;
+			$expr .= ')';
+			return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
+		}
+		$php = 'mb_substr(' . $this->convertXPath($exprString) . ',';
+		if (\is_numeric($exprPos))
+			$php .= \max(0, $exprPos - 1);
+		else
+			$php .= 'max(0,' . $this->convertXPath($exprPos) . '-1)';
+		$php .= ',';
+		if (isset($exprLen))
+			if (\is_numeric($exprLen))
+				if (\is_numeric($exprPos) && $exprPos < 1)
+					$php .= \max(0, $exprPos + $exprLen - 1);
+				else
+					$php .= \max(0, $exprLen);
+			else
+				$php .= 'max(0,' . $this->convertXPath($exprLen) . ')';
+		else
+			$php .= 'null';
+		$php .= ",'utf-8')";
+		return $php;
+	}
+	protected function substringafter($expr, $str)
+	{
+		return 'substr(strstr(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . '),' . (\strlen($str) - 2) . ')';
+	}
+	protected function substringbefore($expr1, $expr2)
+	{
+		return 'strstr(' . $this->convertXPath($expr1) . ',' . $this->convertXPath($expr2) . ',true)';
+	}
+	protected function cmp($expr1, $operator, $expr2)
+	{
+		$operands  = [];
+		$operators = [
+			'='  => '===',
+			'!=' => '!==',
+			'>'  => '>',
+			'>=' => '>=',
+			'<'  => '<',
+			'<=' => '<='
+		];
+		foreach ([$expr1, $expr2] as $expr)
+			if (\is_numeric($expr))
+			{
+				$operators['=']  = '==';
+				$operators['!='] = '!=';
+				$operands[] = \ltrim($expr, '0');
+			}
+			else
+				$operands[] = $this->convertXPath($expr);
+		return \implode($operators[$operator], $operands);
+	}
+	protected function bool($expr1, $operator, $expr2)
+	{
+		$operators = [
+			'and' => '&&',
+			'or'  => '||'
+		];
+		return $this->convertCondition($expr1) . $operators[$operator] . $this->convertCondition($expr2);
+	}
+	protected function parens($expr)
+	{
+		return '(' . $this->convertXPath($expr) . ')';
+	}
+	protected function translate($str, $from, $to)
+	{
+		\preg_match_all('(.)su', \substr($from, 1, -1), $matches);
+		$from = $matches[0];
+		\preg_match_all('(.)su', \substr($to, 1, -1), $matches);
+		$to = $matches[0];
+		if (\count($to) > \count($from))
+			$to = \array_slice($to, 0, \count($from));
+		else
+			while (\count($from) > \count($to))
+				$to[] = '';
+		$from = \array_unique($from);
+		$to   = \array_intersect_key($to, $from);
+		$php = 'strtr(' . $this->convertXPath($str) . ',';
+		if ([1] === \array_unique(\array_map('strlen', $from))
+		 && [1] === \array_unique(\array_map('strlen', $to)))
+			$php .= \var_export(\implode('', $from), \true) . ',' . \var_export(\implode('', $to), \true);
+		else
+		{
+			$php .= '[';
+			$cnt = \count($from);
+			for ($i = 0; $i < $cnt; ++$i)
+			{
+				if ($i)
+					$php .= ',';
+				$php .= \var_export($from[$i], \true) . '=>' . \var_export($to[$i], \true);
+			}
+			$php .= ']';
+		}
+		$php .= ')';
+		return $php;
+	}
+	protected function math($expr1, $operator, $expr2)
+	{
+		if (\is_numeric($expr1) && \is_numeric($expr2))
+		{
+			$result = (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
+			if (\preg_match('(^[.0-9]+$)D', $result))
+				return $result;
+		}
+		if (!\is_numeric($expr1))
+			$expr1 = $this->convertXPath($expr1);
+		if (!\is_numeric($expr2))
+			$expr2 = $this->convertXPath($expr2);
+		if ($operator === 'div')
+			$operator = '/';
+		return $expr1 . $operator . $expr2;
+	}
+	protected function resolveConstantMathExpression($expr1, $operator, $expr2)
+	{
+		if ($operator === '+')
+			return $expr1 + $expr2;
+		if ($operator === '-')
+			return $expr1 - $expr2;
+		if ($operator === '*')
+			return $expr1 * $expr2;
+		if ($operator === 'div')
+			return $expr1 / $expr2;
+		throw new LogicException;
+	}
+	protected function exportXPath($expr)
+	{
+		$phpTokens = [];
+		$pos = 0;
+		$len = \strlen($expr);
+		while ($pos < $len)
+		{
+			if ($expr[$pos] === "'" || $expr[$pos] === '"')
+			{
+				$nextPos = \strpos($expr, $expr[$pos], 1 + $pos);
+				if ($nextPos === \false)
+					throw new RuntimeException('Unterminated string literal in XPath expression ' . \var_export($expr, \true));
+				$phpTokens[] = \var_export(\substr($expr, $pos, $nextPos + 1 - $pos), \true);
+				$pos = $nextPos + 1;
+				continue;
+			}
+			if ($expr[$pos] === '$' && \preg_match('/\\$(\\w+)/', $expr, $m, 0, $pos))
+			{
+				$phpTokens[] = '$this->getParamAsXPath(' . \var_export($m[1], \true) . ')';
+				$pos += \strlen($m[0]);
+				continue;
+			}
+			$spn = \strcspn($expr, '\'"$', $pos);
+			if ($spn)
+			{
+				$phpTokens[] = \var_export(\substr($expr, $pos, $spn), \true);
+				$pos += $spn;
+			}
+		}
+		return \implode('.', $phpTokens);
+	}
+	protected function generateXPathRegexp()
+	{
+		if (isset($this->regexp))
+			return;
+		$patterns = [
+			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
+			'dot'       => '\\.',
+			'name'      => 'name\\(\\)',
+			'lname'     => 'local-name\\(\\)',
+			'param'     => ['\\$', '(?<param0>\\w+)'],
+			'string'    => '"[^"]*"|\'[^\']*\'',
+			'number'    => ['-?', '\\d++'],
+			'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'],
+			'contains'  => [
+				'contains',
+				'\\(',
+				'(?<contains0>(?&value))',
+				',',
+				'(?<contains1>(?&value))',
+				'\\)'
+			],
+			'translate' => [
+				'translate',
+				'\\(',
+				'(?<translate0>(?&value))',
+				',',
+				'(?<translate1>(?&string))',
+				',',
+				'(?<translate2>(?&string))',
+				'\\)'
+			],
+			'substr' => [
+				'substring',
+				'\\(',
+				'(?<substr0>(?&value))',
+				',',
+				'(?<substr1>(?&value))',
+				'(?:, (?<substr2>(?&value)))?',
+				'\\)'
+			],
+			'substringafter' => [
+				'substring-after',
+				'\\(',
+				'(?<substringafter0>(?&value))',
+				',',
+				'(?<substringafter1>(?&string))',
+				'\\)'
+			],
+			'substringbefore' => [
+				'substring-before',
+				'\\(',
+				'(?<substringbefore0>(?&value))',
+				',',
+				'(?<substringbefore1>(?&value))',
+				'\\)'
+			],
+			'startswith' => [
+				'starts-with',
+				'\\(',
+				'(?<startswith0>(?&value))',
+				',',
+				'(?<startswith1>(?&value))',
+				'\\)'
+			],
+			'math' => [
+				'(?<math0>(?&attr)|(?&number)|(?&param))',
+				'(?<math1>[-+*]|div)',
+				'(?<math2>(?&math)|(?&math0))'
+			],
+			'notcontains' => [
+				'not',
+				'\\(',
+				'contains',
+				'\\(',
+				'(?<notcontains0>(?&value))',
+				',',
+				'(?<notcontains1>(?&value))',
+				'\\)',
+				'\\)'
+			]
+		];
+		$valueExprs = [];
+		foreach ($patterns as $name => $pattern)
+		{
+			if (\is_array($pattern))
+				$pattern = \implode(' ', $pattern);
+			if (\strpos($pattern, '?&') === \false || \version_compare($this->pcreVersion, '8.13', '>='))
+				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
+		}
+		$exprs = ['(?<value>' . \implode('|', $valueExprs) . ')'];
+		if (\version_compare($this->pcreVersion, '8.13', '>='))
+		{
+			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
+			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+		}
+		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
+		$regexp = \str_replace(' ', '\\s*', $regexp);
+		$this->regexp = $regexp;
 	}
 }
 
@@ -3017,63 +5118,372 @@ class Tag implements ConfigProvider
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
+use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
-use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptimizer;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\Rendering;
-use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
-class XSLT implements RendererGenerator
+class PHP implements RendererGenerator
 {
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+	public $cacheDir;
+	public $className;
+	public $controlStructuresOptimizer;
+	public $defaultClassPrefix = 'Renderer_';
+	public $enableQuickRenderer = \false;
+	public $filepath;
+	public $lastClassName;
+	public $lastFilepath;
 	public $optimizer;
-	public function __construct()
+	public $serializer;
+	public $useMultibyteStringFunctions;
+	public function __construct($cacheDir = \null)
 	{
-		$this->optimizer = new Optimizer;
+		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : \sys_get_temp_dir();
+		if (\extension_loaded('tokenizer'))
+		{
+			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
+			$this->optimizer = new Optimizer;
+		}
+		$this->useMultibyteStringFunctions = \extension_loaded('mbstring');
+		$this->serializer = new Serializer;
 	}
 	public function getRenderer(Rendering $rendering)
 	{
-		return new XSLTRenderer($this->getXSL($rendering));
+		$php = $this->generate($rendering);
+		if (isset($this->filepath))
+			$filepath = $this->filepath;
+		else
+			$filepath = $this->cacheDir . '/' . \str_replace('\\', '_', $this->lastClassName) . '.php';
+		\file_put_contents($filepath, "<?php\n" . $php);
+		$this->lastFilepath = \realpath($filepath);
+		if (!\class_exists($this->lastClassName, \false))
+			include $filepath;
+		$renderer = new $this->lastClassName;
+		$renderer->source = $php;
+		return $renderer;
 	}
-	public function getXSL(Rendering $rendering)
+	public function generate(Rendering $rendering)
 	{
+		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
+		$templates = $rendering->getTemplates();
 		$groupedTemplates = [];
-		$prefixes         = [];
-		$templates        = $rendering->getTemplates();
-		TemplateHelper::replaceHomogeneousTemplates($templates, 3);
 		foreach ($templates as $tagName => $template)
-		{
-			$template = $this->optimizer->optimizeTemplate($template);
 			$groupedTemplates[$template][] = $tagName;
-			$pos = \strpos($tagName, ':');
-			if ($pos !== \false)
-				$prefixes[\substr($tagName, 0, $pos)] = 1;
-		}
-		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
-		$prefixes = \array_keys($prefixes);
-		\sort($prefixes);
-		foreach ($prefixes as $prefix)
-			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
-		if (!empty($prefixes))
-			$xsl .= ' exclude-result-prefixes="' . \implode(' ', $prefixes) . '"';
-		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';
-		$xsl .= '/>';
-		foreach ($rendering->getAllParameters() as $paramName => $paramValue)
-		{
-			$xsl .= '<xsl:param name="' . \htmlspecialchars($paramName) . '"';
-			if ($paramValue === '')
-				$xsl .= '/>';
-			else
-				$xsl .= '>' . \htmlspecialchars($paramValue) . '</xsl:param>';
-		}
+		$hasApplyTemplatesSelect = \false;
+		$tagBranch   = 0;
+		$tagBranches = [];
+		$compiledTemplates = [];
+		$branchTables = [];
 		foreach ($groupedTemplates as $template => $tagNames)
 		{
-			$xsl .= '<xsl:template match="' . \implode('|', $tagNames) . '"';
-			if ($template === '')
-				$xsl .= '/>';
-			else
-				$xsl .= '>' . $template . '</xsl:template>';
+			$ir = TemplateParser::parse($template);
+			if (!$hasApplyTemplatesSelect)
+				foreach ($ir->getElementsByTagName('applyTemplates') as $applyTemplates)
+					if ($applyTemplates->hasAttribute('select'))
+						$hasApplyTemplatesSelect = \true;
+			$templateSource = $this->serializer->serialize($ir->documentElement);
+			if (isset($this->optimizer))
+				$templateSource = $this->optimizer->optimize($templateSource);
+			$branchTables += $this->serializer->branchTables;
+			$compiledTemplates[$tagBranch] = $templateSource;
+			foreach ($tagNames as $tagName)
+				$tagBranches[$tagName] = $tagBranch;
+			++$tagBranch;
 		}
-		$xsl .= '</xsl:stylesheet>';
-		return $xsl;
+		unset($groupedTemplates, $ir, $quickRender);
+		$quickSource = \false;
+		if ($this->enableQuickRenderer)
+		{
+			$quickRender = [];
+			foreach ($tagBranches as $tagName => $tagBranch)
+				$quickRender[$tagName] = $compiledTemplates[$tagBranch];
+			$quickSource = Quick::getSource($quickRender);
+			unset($quickRender);
+		}
+		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
+		unset($compiledTemplates);
+		if ($hasApplyTemplatesSelect)
+			$needsXPath = \true;
+		elseif (\strpos($templatesSource, '$this->getParamAsXPath') !== \false)
+			$needsXPath = \true;
+		elseif (\strpos($templatesSource, '$this->xpath') !== \false)
+			$needsXPath = \true;
+		else
+			$needsXPath = \false;
+		$php = [];
+		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
+		$php[] = '{';
+		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
+		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
+		foreach ($branchTables as $varName => $branchTable)
+			$php[] = '	protected static $' . $varName . '=' . self::export($branchTable) . ';';
+		if ($needsXPath)
+			$php[] = '	protected $xpath;';
+		$php[] = '	public function __sleep()';
+		$php[] = '	{';
+		$php[] = '		$props = get_object_vars($this);';
+		$php[] = "		unset(\$props['out'], \$props['proc'], \$props['source']" . (($needsXPath) ? ", \$props['xpath']" : '') . ');';
+		$php[] = '		return array_keys($props);';
+		$php[] = '	}';
+		$php[] = '	public function renderRichText($xml)';
+		$php[] = '	{';
+		if ($quickSource !== \false)
+		{
+			$php[] = '		if (!isset($this->quickRenderingTest) || !preg_match($this->quickRenderingTest, $xml))';
+			$php[] = '		{';
+			$php[] = '			try';
+			$php[] = '			{';
+			$php[] = '				return $this->renderQuick($xml);';
+			$php[] = '			}';
+			$php[] = '			catch (\\Exception $e)';
+			$php[] = '			{';
+			$php[] = '			}';
+			$php[] = '		}';
+		}
+		$php[] = '		$dom = $this->loadXML($xml);';
+		if ($needsXPath)
+			$php[] = '		$this->xpath = new \\DOMXPath($dom);';
+		$php[] = "		\$this->out = '';";
+		$php[] = '		$this->at($dom->documentElement);';
+		if ($needsXPath)
+			$php[] = '		$this->xpath = null;';
+		$php[] = '		return $this->out;';
+		$php[] = '	}';
+		if ($hasApplyTemplatesSelect)
+			$php[] = '	protected function at(\\DOMNode $root, $xpath = null)';
+		else
+			$php[] = '	protected function at(\\DOMNode $root)';
+		$php[] = '	{';
+		$php[] = '		if ($root->nodeType === 3)';
+		$php[] = '		{';
+		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . \ENT_NOQUOTES . ');';
+		$php[] = '		}';
+		$php[] = '		else';
+		$php[] = '		{';
+		if ($hasApplyTemplatesSelect)
+			$php[] = '			foreach (isset($xpath) ? $this->xpath->query($xpath, $root) : $root->childNodes as $node)';
+		else
+			$php[] = '			foreach ($root->childNodes as $node)';
+		$php[] = '			{';
+		$php[] = '				if (!isset(self::$tagBranches[$node->nodeName]))';
+		$php[] = '				{';
+		$php[] = '					$this->at($node);';
+		$php[] = '				}';
+		$php[] = '				else';
+		$php[] = '				{';
+		$php[] = '					$tb = self::$tagBranches[$node->nodeName];';
+		$php[] = '					' . $templatesSource;
+		$php[] = '				}';
+		$php[] = '			}';
+		$php[] = '		}';
+		$php[] = '	}';
+		if (\strpos($templatesSource, '$this->getParamAsXPath') !== \false)
+		{
+			$php[] = '	protected function getParamAsXPath($k)';
+			$php[] = '	{';
+			$php[] = '		if (!isset($this->params[$k]))';
+			$php[] = '		{';
+			$php[] = '			return "\'\'";';
+			$php[] = '		}';
+			$php[] = '		$str = $this->params[$k];';
+			$php[] = '		if (strpos($str, "\'") === false)';
+			$php[] = '		{';
+			$php[] = '			return "\'$str\'";';
+			$php[] = '		}';
+			$php[] = '		if (strpos($str, \'"\') === false)';
+			$php[] = '		{';
+			$php[] = '			return "\\"$str\\"";';
+			$php[] = '		}';
+			$php[] = '		$toks = [];';
+			$php[] = '		$c = \'"\';';
+			$php[] = '		$pos = 0;';
+			$php[] = '		while ($pos < strlen($str))';
+			$php[] = '		{';
+			$php[] = '			$spn = strcspn($str, $c, $pos);';
+			$php[] = '			if ($spn)';
+			$php[] = '			{';
+			$php[] = '				$toks[] = $c . substr($str, $pos, $spn) . $c;';
+			$php[] = '				$pos += $spn;';
+			$php[] = '			}';
+			$php[] = '			$c = ($c === \'"\') ? "\'" : \'"\';';
+			$php[] = '		}';
+			$php[] = '		return \'concat(\' . implode(\',\', $toks) . \')\';';
+			$php[] = '	}';
+		}
+		if ($quickSource !== \false)
+			$php[] = $quickSource;
+		$php[] = '}';
+		$php = \implode("\n", $php);
+		if (isset($this->controlStructuresOptimizer))
+			$php = $this->controlStructuresOptimizer->optimize($php);
+		$className = (isset($this->className))
+		           ? $this->className
+		           : $this->defaultClassPrefix . \sha1($php);
+		$this->lastClassName = $className;
+		$header = "/**\n* @package   s9e\TextFormatter\n* @copyright Copyright (c) 2010-2015 The s9e Authors\n* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n*/\n\n";
+		$pos = \strrpos($className, '\\');
+		if ($pos !== \false)
+		{
+			$header .= 'namespace ' . \substr($className, 0, $pos) . ";\n\n";
+			$className = \substr($className, 1 + $pos);
+		}
+		$php = $header . 'class ' . $className . $php;
+		return $php;
+	}
+	protected static function export(array $value)
+	{
+		$pairs = [];
+		foreach ($value as $k => $v)
+			$pairs[] = \var_export($k, \true) . '=>' . \var_export($v, \true);
+		return '[' . \implode(',', $pairs) . ']';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
+class ControlStructuresOptimizer extends AbstractOptimizer
+{
+	protected $braces;
+	protected $context;
+	protected function blockEndsWithIf()
+	{
+		return \in_array($this->context['lastBlock'], [\T_IF, \T_ELSEIF], \true);
+	}
+	protected function isControlStructure()
+	{
+		return \in_array(
+			$this->tokens[$this->i][0],
+			[\T_ELSE, \T_ELSEIF, \T_FOR, \T_FOREACH, \T_IF, \T_WHILE],
+			\true
+		);
+	}
+	protected function isFollowedByElse()
+	{
+		if ($this->i > $this->cnt - 4)
+			return \false;
+		$k = $this->i + 1;
+		if ($this->tokens[$k][0] === \T_WHITESPACE)
+			++$k;
+		return \in_array($this->tokens[$k][0], [\T_ELSEIF, \T_ELSE], \true);
+	}
+	protected function mustPreserveBraces()
+	{
+		return ($this->blockEndsWithIf() && $this->isFollowedByElse());
+	}
+	protected function optimizeTokens()
+	{
+		while (++$this->i < $this->cnt)
+			if ($this->tokens[$this->i] === ';')
+				++$this->context['statements'];
+			elseif ($this->tokens[$this->i] === '{')
+				++$this->braces;
+			elseif ($this->tokens[$this->i] === '}')
+			{
+				if ($this->context['braces'] === $this->braces)
+					$this->processEndOfBlock();
+				--$this->braces;
+			}
+			elseif ($this->isControlStructure())
+				$this->processControlStructure();
+	}
+	protected function processControlStructure()
+	{
+		$savedIndex = $this->i;
+		if (!\in_array($this->tokens[$this->i][0], [\T_ELSE, \T_ELSEIF], \true))
+			++$this->context['statements'];
+		if ($this->tokens[$this->i][0] !== \T_ELSE)
+			$this->skipCondition();
+		$this->skipWhitespace();
+		if ($this->tokens[$this->i] !== '{')
+		{
+			$this->i = $savedIndex;
+			return;
+		}
+		++$this->braces;
+		$replacement = [\T_WHITESPACE, ''];
+		if ($this->tokens[$savedIndex][0]  === \T_ELSE
+		 && $this->tokens[$this->i + 1][0] !== \T_VARIABLE
+		 && $this->tokens[$this->i + 1][0] !== \T_WHITESPACE)
+			$replacement = [\T_WHITESPACE, ' '];
+		$this->context['lastBlock'] = $this->tokens[$savedIndex][0];
+		$this->context = [
+			'braces'      => $this->braces,
+			'index'       => $this->i,
+			'lastBlock'   => \null,
+			'parent'      => $this->context,
+			'replacement' => $replacement,
+			'savedIndex'  => $savedIndex,
+			'statements'  => 0
+		];
+	}
+	protected function processEndOfBlock()
+	{
+		if ($this->context['statements'] < 2 && !$this->mustPreserveBraces())
+			$this->removeBracesInCurrentContext();
+		$this->context = $this->context['parent'];
+		$this->context['parent']['lastBlock'] = $this->context['lastBlock'];
+	}
+	protected function removeBracesInCurrentContext()
+	{
+		$this->tokens[$this->context['index']] = $this->context['replacement'];
+		$this->tokens[$this->i] = ($this->context['statements']) ? [\T_WHITESPACE, ''] : ';';
+		foreach ([$this->context['index'] - 1, $this->i - 1] as $tokenIndex)
+			if ($this->tokens[$tokenIndex][0] === \T_WHITESPACE)
+				$this->tokens[$tokenIndex][1] = '';
+		if ($this->tokens[$this->context['savedIndex']][0] === \T_ELSE)
+		{
+			$j = 1 + $this->context['savedIndex'];
+			while ($this->tokens[$j][0] === \T_WHITESPACE
+			    || $this->tokens[$j][0] === \T_COMMENT
+			    || $this->tokens[$j][0] === \T_DOC_COMMENT)
+				++$j;
+			if ($this->tokens[$j][0] === \T_IF)
+			{
+				$this->tokens[$j] = [\T_ELSEIF, 'elseif'];
+				$j = $this->context['savedIndex'];
+				$this->tokens[$j] = [\T_WHITESPACE, ''];
+				if ($this->tokens[$j - 1][0] === \T_WHITESPACE)
+					$this->tokens[$j - 1][1] = '';
+				$this->unindentBlock($j, $this->i - 1);
+				$this->tokens[$this->context['index']] = [\T_WHITESPACE, ''];
+			}
+		}
+		$this->changed = \true;
+	}
+	protected function reset($php)
+	{
+		parent::reset($php);
+		$this->braces  = 0;
+		$this->context = [
+			'braces'      => 0,
+			'index'       => -1,
+			'parent'      => [],
+			'preventElse' => \false,
+			'savedIndex'  => 0,
+			'statements'  => 0
+		];
+	}
+	protected function skipCondition()
+	{
+		$this->skipToString('(');
+		$parens = 0;
+		while (++$this->i < $this->cnt)
+			if ($this->tokens[$this->i] === ')')
+				if ($parens)
+					--$parens;
+				else
+					break;
+			elseif ($this->tokens[$this->i] === '(')
+				++$parens;
 	}
 }
 
@@ -4328,132 +6738,6 @@ class InlineXPathLiterals extends TemplateNormalization
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class MergeConsecutiveCopyOf extends TemplateNormalization
-{
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-			$this->mergeCopyOfSiblings($node);
-	}
-	protected function mergeCopyOfSiblings(DOMElement $node)
-	{
-		while ($this->nextSiblingIsCopyOf($node))
-		{
-			$node->setAttribute('select', $node->getAttribute('select') . '|' . $node->nextSibling->getAttribute('select'));
-			$node->parentNode->removeChild($node->nextSibling);
-		}
-	}
-	protected function nextSiblingIsCopyOf(DOMElement $node)
-	{
-		return ($node->nextSibling && $node->nextSibling->localName === 'copy-of' && $node->nextSibling->namespaceURI === self::XMLNS_XSL);
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMNode;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class MergeIdenticalConditionalBranches extends TemplateNormalization
-{
-	public function normalize(DOMElement $template)
-	{
-		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'choose') as $choose)
-		{
-			self::mergeCompatibleBranches($choose);
-			self::mergeConsecutiveBranches($choose);
-		}
-	}
-	protected static function mergeCompatibleBranches(DOMElement $choose)
-	{
-		$node = $choose->firstChild;
-		while ($node)
-		{
-			$nodes = self::collectCompatibleBranches($node);
-			if (\count($nodes) > 1)
-			{
-				$node = \end($nodes)->nextSibling;
-				self::mergeBranches($nodes);
-			}
-			else
-				$node = $node->nextSibling;
-		}
-	}
-	protected static function mergeConsecutiveBranches(DOMElement $choose)
-	{
-		$nodes = [];
-		foreach ($choose->childNodes as $node)
-			if (self::isXslWhen($node))
-				$nodes[] = $node;
-		$i = \count($nodes);
-		while (--$i > 0)
-			self::mergeBranches([$nodes[$i - 1], $nodes[$i]]);
-	}
-	protected static function collectCompatibleBranches(DOMNode $node)
-	{
-		$nodes  = [];
-		$key    = \null;
-		$values = [];
-		while ($node && self::isXslWhen($node))
-		{
-			$branch = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
-			if ($branch === \false || \count($branch) !== 1)
-				break;
-			if (isset($key) && \key($branch) !== $key)
-				break;
-			if (\array_intersect($values, \end($branch)))
-				break;
-			$key    = \key($branch);
-			$values = \array_merge($values, \end($branch));
-			$nodes[] = $node;
-			$node    = $node->nextSibling;
-		}
-		return $nodes;
-	}
-	protected static function mergeBranches(array $nodes)
-	{
-		$sortedNodes = [];
-		foreach ($nodes as $node)
-		{
-			$outerXML = $node->ownerDocument->saveXML($node);
-			$innerXML = \preg_replace('([^>]+>(.*)<[^<]+)s', '$1', $outerXML);
-			$sortedNodes[$innerXML][] = $node;
-		}
-		foreach ($sortedNodes as $identicalNodes)
-		{
-			if (\count($identicalNodes) < 2)
-				continue;
-			$expr = [];
-			foreach ($identicalNodes as $i => $node)
-			{
-				$expr[] = $node->getAttribute('test');
-				if ($i > 0)
-					$node->parentNode->removeChild($node);
-			}
-			$identicalNodes[0]->setAttribute('test', \implode(' or ', $expr));
-		}
-	}
-	protected static function isXslWhen(DOMNode $node)
-	{
-		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'when');
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
@@ -4665,32 +6949,6 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 				$if->removeChild($valueOf),
 				$if
 			);
-		}
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class OptimizeNestedConditionals extends TemplateNormalization
-{
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//xsl:choose/xsl:otherwise[count(node()) = 1]/xsl:choose';
-		foreach ($xpath->query($query) as $innerChoose)
-		{
-			$otherwise   = $innerChoose->parentNode;
-			$outerChoose = $otherwise->parentNode;
-			while ($innerChoose->firstChild)
-				$outerChoose->appendChild($innerChoose->removeChild($innerChoose->firstChild));
-			$outerChoose->removeChild($otherwise);
 		}
 	}
 }
