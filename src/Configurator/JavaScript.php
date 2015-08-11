@@ -320,6 +320,13 @@ class JavaScript
 	*/
 	protected function getSource()
 	{
+		// Get the stylesheet used for rendering
+		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
+
+		// Start with the generated HINTs
+		$src = $this->getHints();
+
+		// Add the parser files
 		$files = [
 			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
@@ -333,22 +340,11 @@ class JavaScript
 		if (in_array('preview', $this->exportMethods, true))
 		{
 			$files[] = 'render.js';
+			$src .= '/** @const */ var xsl=' . json_encode($this->xsl) . ";\n";
 		}
-
-		// Get the stylesheet used for rendering
-		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
-
-		// Start with the generated HINTs
-		$src = $this->getHints();
 
 		foreach ($files as $filename)
 		{
-			if ($filename === 'render.js')
-			{
-				// Insert the stylesheet if we include the renderer
-				$src .= '/** @const */ var xsl=' . json_encode($this->xsl) . ";\n";
-			}
-
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= file_get_contents($filepath) . "\n";
 		}
