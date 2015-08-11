@@ -13,6 +13,7 @@ use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
+use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -35,7 +36,7 @@ class JavaScript
 		'setParameter',
 		'setTagLimit'
 	];
-	protected $hints;
+	protected $hintGenerator;
 	protected $minifier;
 	protected $xsl;
 	public function __construct(Configurator $configurator)
@@ -43,6 +44,7 @@ class JavaScript
 		$this->callbackGenerator = new CallbackGenerator;
 		$this->configurator      = $configurator;
 		$this->encoder           = new Encoder;
+		$this->hintGenerator     = new HintGenerator;
 	}
 	public function getMinifier()
 	{
@@ -87,15 +89,9 @@ class JavaScript
 	}
 	protected function getHints()
 	{
-		$this->hints = [];
-		$this->setRenderingHints();
-		$this->setRulesHints();
-		$this->setTagsHints();
-		\ksort($this->hints);
-		$js = "/** @const */ var HINT={};\n";
-		foreach ($this->hints as $hintName => $hintValue)
-			$js .= '/** @const */ HINT.' . $hintName . '=' . $this->encode($hintValue) . ";\n";
-		return $js;
+		$this->hintGenerator->setConfig($this->config);
+		$this->hintGenerator->setXSL($this->xsl);
+		return $this->hintGenerator->getHints();
 	}
 	protected function getPluginsConfig()
 	{
@@ -157,6 +153,8 @@ class JavaScript
 	}
 	protected function getSource()
 	{
+		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
+		$src = $this->getHints();
 		$files = [
 			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
@@ -165,13 +163,12 @@ class JavaScript
 			'Parser.js'
 		];
 		if (\in_array('preview', $this->exportMethods, \true))
+		{
 			$files[] = 'render.js';
-		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
-		$src = $this->getHints();
+			$src .= '/** @const */ var xsl=' . \json_encode($this->xsl) . ";\n";
+		}
 		foreach ($files as $filename)
 		{
-			if ($filename === 'render.js')
-				$src .= '/** @const */ var xsl=' . \json_encode($this->xsl) . ";\n";
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= \file_get_contents($filepath) . "\n";
 		}
@@ -210,49 +207,5 @@ class JavaScript
 		);
 		$src .= "\n" . \implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
 		return $src;
-	}
-	protected function setRulesHints()
-	{
-		$this->hints['closeAncestor']   = 0;
-		$this->hints['closeParent']     = 0;
-		$this->hints['fosterParent']    = 0;
-		$this->hints['requireAncestor'] = 0;
-		$flags = 0;
-		foreach ($this->config['tags'] as $tagConfig)
-		{
-			foreach (\array_intersect_key($tagConfig['rules'], $this->hints) as $k => $v)
-				$this->hints[$k] = 1;
-			$flags |= $tagConfig['rules']['flags'];
-		}
-		$flags |= $this->config['rootContext']['flags'];
-		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
-		foreach ($parser->getConstants() as $constName => $constValue)
-			if (\substr($constName, 0, 5) === 'RULE_')
-				$this->hints[$constName] = ($flags & $constValue) ? 1 : 0;
-	}
-	protected function setTagAttributesHints(array $tagConfig)
-	{
-		if (empty($tagConfig['attributes']))
-			return;
-		foreach ($tagConfig['attributes'] as $attrConfig)
-		{
-			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
-			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
-		}
-	}
-	protected function setTagsHints()
-	{
-		$this->hints['attributeGenerator']    = 0;
-		$this->hints['attributeDefaultValue'] = 0;
-		$this->hints['namespaces']            = 0;
-		foreach ($this->config['tags'] as $tagName => $tagConfig)
-		{
-			$this->hints['namespaces'] |= (\strpos($tagName, ':') !== \false);
-			$this->setTagAttributesHints($tagConfig);
-		}
-	}
-	protected function setRenderingHints()
-	{
-		$this->hints['postProcessing'] = (int) (\strpos($this->xsl, 'data-s9e-livepreview-postprocess') !== \false);
 	}
 }
