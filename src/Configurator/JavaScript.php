@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
@@ -22,6 +23,7 @@ class JavaScript
 {
 	protected $callbackGenerator;
 	protected $config;
+	protected $configOptimizer;
 	protected $configurator;
 	public $encoder;
 	public $exportMethods = array(
@@ -42,6 +44,7 @@ class JavaScript
 	public function __construct(Configurator $configurator)
 	{
 		$this->callbackGenerator = new CallbackGenerator;
+		$this->configOptimizer   = new ConfigOptimizer;
 		$this->configurator      = $configurator;
 		$this->encoder           = new Encoder;
 		$this->hintGenerator     = new HintGenerator;
@@ -177,12 +180,13 @@ class JavaScript
 	}
 	protected function getTagsConfig()
 	{
+		$methodName = (\count(\array_intersect(array('disableTag', 'setNestingLimit', 'setTagLimit'), $this->exportMethods))) ? 'optimizeObjectContent' : 'optimizeObject';
 		$tags = new Dictionary;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
 			if (isset($tagConfig['attributes']))
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
-			$tags[$tagName] = $tagConfig;
+			$tags[$tagName] = $this->configOptimizer->$methodName($tagConfig);
 		}
 		return $this->encode($tags);
 	}
@@ -192,6 +196,7 @@ class JavaScript
 	}
 	protected function injectConfig($src)
 	{
+		$this->configOptimizer->reset();
 		$config = array(
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
@@ -206,6 +211,7 @@ class JavaScript
 			},
 			$src
 		);
+		$src = $this->configOptimizer->getObjects() . $src;
 		$src .= "\n" . \implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
 		return $src;
 	}
