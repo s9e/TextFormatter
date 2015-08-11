@@ -57,18 +57,14 @@ class JavaScript
 	}
 	public function getParser(array $config = \null)
 	{
+		$this->configOptimizer->reset();
+		$rendererGenerator = new XSLT;
+		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
-		$src = $this->getSource();
-		$src = $this->injectConfig($src);
-		if (!empty($this->exportMethods))
-		{
-			$methods = array();
-			foreach ($this->exportMethods as $method)
-				$methods[] = "'" . $method . "':" . $method;
-			$src .= "window['s9e'] = { 'TextFormatter': {" . \implode(',', $methods) . "} }\n";
-		}
+		$src = $this->getHints() . $this->injectConfig($this->getSource());
+		$src .= $this->getExports();
 		$src = $this->getMinifier()->get($src);
 		$src = '(function(){' . $src . '})()';
 		return $src;
@@ -89,6 +85,19 @@ class JavaScript
 		}
 		$this->minifier = $minifier;
 		return $minifier;
+	}
+	protected function encode($value)
+	{
+		return $this->encoder->encode($value);
+	}
+	protected function getExports()
+	{
+		if (empty($this->exportMethods))
+			return '';
+		$methods = array();
+		foreach ($this->exportMethods as $method)
+			$methods[] = "'" . $method . "':" . $method;
+		return "window['s9e'] = { 'TextFormatter': {" . \implode(',', $methods) . "} }\n";
 	}
 	protected function getHints()
 	{
@@ -156,9 +165,7 @@ class JavaScript
 	}
 	protected function getSource()
 	{
-		$rendererGenerator = new XSLT;
-		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
-		$src = $this->getHints();
+		$src = '';
 		$files = array(
 			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
@@ -190,13 +197,8 @@ class JavaScript
 		}
 		return $this->encode($tags);
 	}
-	public function encode($value)
-	{
-		return $this->encoder->encode($value);
-	}
 	protected function injectConfig($src)
 	{
-		$this->configOptimizer->reset();
 		$config = array(
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),

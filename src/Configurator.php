@@ -2316,6 +2316,7 @@ class Optimizer
 	{
 		$this->normalizer = new TemplateNormalizer;
 		$this->normalizer->clear();
+		$this->normalizer->append('MergeConsecutiveCopyOf');
 		$this->normalizer->append('MergeIdenticalConditionalBranches');
 		$this->normalizer->append('OptimizeNestedConditionals');
 	}
@@ -2438,7 +2439,6 @@ class Rendering
 	{
 		$this->configurator = $configurator;
 		$this->parameters   = new TemplateParameterCollection;
-		$this->setEngine('XSLT');
 	}
 	public function getAllParameters()
 	{
@@ -2451,9 +2451,15 @@ class Rendering
 		\ksort($params);
 		return $params;
 	}
+	public function getEngine()
+	{
+		if (!isset($this->engine))
+			$this->setEngine('XSLT');
+		return $this->engine;
+	}
 	public function getRenderer()
 	{
-		return $this->engine->getRenderer($this);
+		return $this->getEngine()->getRenderer($this);
 	}
 	public function getTemplates()
 	{
@@ -4608,6 +4614,37 @@ class InlineXPathLiterals extends TemplateNormalization
 			$valueOf->ownerDocument->createTextNode($textContent),
 			$valueOf
 		);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class MergeConsecutiveCopyOf extends TemplateNormalization
+{
+	public function normalize(DOMElement $template)
+	{
+		$xpath = new DOMXPath($template->ownerDocument);
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+			$this->mergeCopyOfSiblings($node);
+	}
+	protected function mergeCopyOfSiblings(DOMElement $node)
+	{
+		while ($this->nextSiblingIsCopyOf($node))
+		{
+			$node->setAttribute('select', $node->getAttribute('select') . '|' . $node->nextSibling->getAttribute('select'));
+			$node->parentNode->removeChild($node->nextSibling);
+		}
+	}
+	protected function nextSiblingIsCopyOf(DOMElement $node)
+	{
+		return ($node->nextSibling && $node->nextSibling->localName === 'copy-of' && $node->nextSibling->namespaceURI === self::XMLNS_XSL);
 	}
 }
 
