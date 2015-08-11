@@ -21,5 +21,5 @@ The default values are meant to be set high enough not to be reached by legitima
 	<dt>maxFixingCost</dt>
 	<dd><i>(default: 10000)</i></dd>
 	<dd>Works at the parser level, e.g. <code>$parser->maxFixingCost = 0;</code></dd>
-	<dd>This arbitrary value controls how hard the parser will attempt to fix quirky markup. For instance, in the sequence <code>[b][i][/b]</code>, there's still an open <code>[i]</code> BBCode when its parent <code>[b]</code> gets closed. The parser fixes this situation by automatically closing <code>[i]</code>. This action would be considered to cost 1. Other actions, such as fixing misnested tags such as in <code>[b][i][/b][/i]</code> are estimated to cost another 1 or 2. If this limit is exceeded, an exception will be thrown.</dd>
+	<dd>This arbitrary value controls how hard the parser will attempt to fix quirky markup. For instance, in the sequence <code>[b][i][/b]</code>, there's still an open <code>[i]</code> BBCode when its parent <code>[b]</code> gets closed. The parser fixes this situation by automatically closing <code>[i]</code>. This action would be considered to cost 1. Other actions, such as fixing misnested tags such as in <code>[b][i][/b][/i]</code> are estimated to cost another 1 or 2. Once this limit is exceeded, the parser stops trying to fix bad markup and an error is logged.</dd>
 </dl>
