@@ -6,6 +6,7 @@ $configurator = new s9e\TextFormatter\Configurator;
 $tag = $configurator->tags->add('X');
 $tag->attributes->add('x')->filterChain->append('#url');
 $tag->template = '<a href="{@url}"><xsl:apply-templates/></a>';
+$configurator->rendering->engine = 'PHP';
 $configurator->finalize();
 
 $scores = $relations = array();
