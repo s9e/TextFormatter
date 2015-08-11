@@ -1066,6 +1066,10 @@ s9e\TextFormatter\Tests\Configurator\CallbackGenerator
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 
+s9e\TextFormatter\Tests\Configurator\ConfigOptimizer
+ [x] reset() clears the stored objects
+ [x] OptimizeObject tests
+
 s9e\TextFormatter\Tests\Configurator\Encoder
  [x] encode() tests
  [x] encode() does not quote legal property names
@@ -1704,6 +1708,10 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The normal Logger is present by default
  [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
+ [x] Tag config is not wholly deduplicated if disableTag() is exported
+ [x] Tag config is not wholly deduplicated if setNestingLimit() is exported
+ [x] Tag config is not wholly deduplicated if setTagLimit() is exported
+ [x] Tag config is wholly deduplicated otherwise
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator

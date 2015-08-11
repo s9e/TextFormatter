@@ -12,6 +12,7 @@ use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
@@ -31,6 +32,11 @@ class JavaScript
 	* @var array Configuration, filtered for JavaScript
 	*/
 	protected $config;
+
+	/**
+	* @var ConfigOptimizer
+	*/
+	protected $configOptimizer;
 
 	/**
 	* @var Configurator Configurator this instance belongs to
@@ -82,6 +88,7 @@ class JavaScript
 	public function __construct(Configurator $configurator)
 	{
 		$this->callbackGenerator = new CallbackGenerator;
+		$this->configOptimizer   = new ConfigOptimizer;
 		$this->configurator      = $configurator;
 		$this->encoder           = new Encoder;
 		$this->hintGenerator     = new HintGenerator;
@@ -350,6 +357,8 @@ class JavaScript
 	*/
 	protected function getTagsConfig()
 	{
+		$methodName = (count(array_intersect(['disableTag', 'setNestingLimit', 'setTagLimit'], $this->exportMethods))) ? 'optimizeObjectContent' : 'optimizeObject';
+
 		// Prepare a Dictionary that will preserve tags' names
 		$tags = new Dictionary;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
@@ -360,7 +369,7 @@ class JavaScript
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
 			}
 
-			$tags[$tagName] = $tagConfig;
+			$tags[$tagName] = $this->configOptimizer->$methodName($tagConfig);
 		}
 
 		return $this->encode($tags);
@@ -385,6 +394,8 @@ class JavaScript
 	*/
 	protected function injectConfig($src)
 	{
+		$this->configOptimizer->reset();
+
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
@@ -399,6 +410,9 @@ class JavaScript
 			},
 			$src
 		);
+
+		// Prepend the deduplicated objects
+		$src = $this->configOptimizer->getObjects() . $src;
 
 		// Append the functions from filters and generators
 		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";

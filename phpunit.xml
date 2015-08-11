@@ -92,6 +92,7 @@
 			<file>tests/Configurator/Items/VariantTest.php</file>
 			<file>tests/Configurator/JavaScript/CallbackGeneratorTest.php</file>
 			<file>tests/Configurator/JavaScript/CodeTest.php</file>
+			<file>tests/Configurator/JavaScript/ConfigOptimizerTest.php</file>
 			<file>tests/Configurator/JavaScript/EncoderTest.php</file>
 			<file>tests/Configurator/JavaScript/FunctionProviderTest.php</file>
 			<file>tests/Configurator/JavaScript/HintGeneratorTest.php</file>
