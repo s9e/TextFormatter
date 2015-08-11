@@ -1078,6 +1078,42 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will return the source from the filesystem if applicable
  [x] get() will throw an exception if the function can't be sourced
 
+s9e\TextFormatter\Tests\Configurator\HintGenerator
+ [x] HINT.attributeGenerator=0 by default
+ [x] HINT.attributeGenerator=1 if any attribute has a generator
+ [x] HINT.attributeDefaultValue=0 by default
+ [x] HINT.attributeDefaultValue=1 if any attribute has a defaultValue
+ [x] HINT.closeAncestor=0 by default
+ [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
+ [x] HINT.closeParent=0 by default
+ [x] HINT.closeParent=1 if any tag has a closeParent rule
+ [x] HINT.fosterParent=0 by default
+ [x] HINT.fosterParent=1 if any tag has a fosterParent rule
+ [x] HINT.namespaces=0 by default
+ [x] HINT.namespaces=1 if any tag has a namespaces rule
+ [x] HINT.postProcessing=0 by default
+ [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+ [x] HINT.requireAncestor=0 by default
+ [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
+ [x] HINT.RULE_AUTO_CLOSE=0 by default
+ [x] HINT.RULE_AUTO_CLOSE=1 if any tag has an autoClose rule
+ [x] HINT.RULE_AUTO_REOPEN=0 by default
+ [x] HINT.RULE_AUTO_REOPEN=1 if any tag has an autoReopen rule
+ [x] HINT.RULE_BREAK_PARAGRAPH=0 by default
+ [x] HINT.RULE_BREAK_PARAGRAPH=1 if any tag has a breakParagraph rule
+ [x] HINT.RULE_CREATE_PARAGRAPHS=0 by default
+ [x] HINT.RULE_CREATE_PARAGRAPHS=1 if any tag has a createParagraphs rule
+ [x] HINT.RULE_CREATE_PARAGRAPHS=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_IGNORE_TEXT=0 by default
+ [x] HINT.RULE_IGNORE_TEXT=1 if any tag has an ignoreText rule
+ [x] HINT.RULE_IGNORE_TEXT=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_IGNORE_WHITESPACE=0 by default
+ [x] HINT.RULE_IGNORE_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
+ [x] HINT.RULE_IS_TRANSPARENT=0 by default
+ [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
+ [x] HINT.RULE_TRIM_FIRST_LINE=0 by default
+ [x] HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
  [x] toJS() can convert plain regexps
@@ -1668,40 +1704,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The normal Logger is present by default
  [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
- [x] HINT.attributeGenerator=0 by default
- [x] HINT.attributeGenerator=1 if any attribute has a generator
- [x] HINT.attributeDefaultValue=0 by default
- [x] HINT.attributeDefaultValue=1 if any attribute has a defaultValue
- [x] HINT.closeAncestor=0 by default
- [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
- [x] HINT.closeParent=0 by default
- [x] HINT.closeParent=1 if any tag has a closeParent rule
- [x] HINT.fosterParent=0 by default
- [x] HINT.fosterParent=1 if any tag has a fosterParent rule
- [x] HINT.namespaces=0 by default
- [x] HINT.namespaces=1 if any tag has a namespaces rule
- [x] HINT.postProcessing=0 by default
- [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
- [x] HINT.requireAncestor=0 by default
- [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
- [x] HINT.RULE_AUTO_CLOSE=0 by default
- [x] HINT.RULE_AUTO_CLOSE=1 if any tag has an autoClose rule
- [x] HINT.RULE_AUTO_REOPEN=0 by default
- [x] HINT.RULE_AUTO_REOPEN=1 if any tag has an autoReopen rule
- [x] HINT.RULE_BREAK_PARAGRAPH=0 by default
- [x] HINT.RULE_BREAK_PARAGRAPH=1 if any tag has a breakParagraph rule
- [x] HINT.RULE_CREATE_PARAGRAPHS=0 by default
- [x] HINT.RULE_CREATE_PARAGRAPHS=1 if any tag has a createParagraphs rule
- [x] HINT.RULE_CREATE_PARAGRAPHS=1 if the root rules have a createParagraphs rule
- [x] HINT.RULE_IGNORE_TEXT=0 by default
- [x] HINT.RULE_IGNORE_TEXT=1 if any tag has an ignoreText rule
- [x] HINT.RULE_IGNORE_TEXT=1 if the root rules have a createParagraphs rule
- [x] HINT.RULE_IGNORE_WHITESPACE=0 by default
- [x] HINT.RULE_IGNORE_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
- [x] HINT.RULE_IS_TRANSPARENT=0 by default
- [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
- [x] HINT.RULE_TRIM_FIRST_LINE=0 by default
- [x] HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator

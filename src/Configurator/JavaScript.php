@@ -14,6 +14,7 @@ use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
+use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -58,9 +59,9 @@ class JavaScript
 	];
 
 	/**
-	* @var array Associative array of [hint name => 1 or 0]
+	* @var HintGenerator
 	*/
-	protected $hints;
+	protected $hintGenerator;
 
 	/**
 	* @var Minifier Instance of Minifier used to minify the JavaScript parser
@@ -83,6 +84,7 @@ class JavaScript
 		$this->callbackGenerator = new CallbackGenerator;
 		$this->configurator      = $configurator;
 		$this->encoder           = new Encoder;
+		$this->hintGenerator     = new HintGenerator;
 	}
 
 	/**
@@ -185,21 +187,10 @@ class JavaScript
 	*/
 	protected function getHints()
 	{
-		$this->hints = [];
-		$this->setRenderingHints();
-		$this->setRulesHints();
-		$this->setTagsHints();
+		$this->hintGenerator->setConfig($this->config);
+		$this->hintGenerator->setXSL($this->xsl);
 
-		// Build the source. Note that Closure Compiler seems to require that each of HINT's
-		// properties be declared as a const
-		ksort($this->hints);
-		$js = "/** @const */ var HINT={};\n";
-		foreach ($this->hints as $hintName => $hintValue)
-		{
-			$js .= '/** @const */ HINT.' . $hintName . '=' . $this->encode($hintValue) . ";\n";
-		}
-
-		return $js;
+		return $this->hintGenerator->getHints();
 	}
 
 	/**
@@ -413,90 +404,5 @@ class JavaScript
 		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
 
 		return $src;
-	}
-
-	/**
-	* Set hints related to rules
-	*
-	* @return void
-	*/
-	protected function setRulesHints()
-	{
-		$this->hints['closeAncestor']   = 0;
-		$this->hints['closeParent']     = 0;
-		$this->hints['fosterParent']    = 0;
-		$this->hints['requireAncestor'] = 0;
-
-		$flags = 0;
-		foreach ($this->config['tags'] as $tagConfig)
-		{
-			// Test which rules are in use
-			foreach (array_intersect_key($tagConfig['rules'], $this->hints) as $k => $v)
-			{
-				$this->hints[$k] = 1;
-			}
-			$flags |= $tagConfig['rules']['flags'];
-		}
-		$flags |= $this->config['rootContext']['flags'];
-
-		// Iterate over Parser::RULE_* constants and test which flags are set
-		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
-		foreach ($parser->getConstants() as $constName => $constValue)
-		{
-			if (substr($constName, 0, 5) === 'RULE_')
-			{
-				// This will set HINT.RULE_AUTO_CLOSE and others
-				$this->hints[$constName] = ($flags & $constValue) ? 1 : 0;
-			}
-		}
-	}
-
-	/**
-	* Set hints based on given tag's attributes config
-	*
-	* @param  array $tagConfig
-	* @return void
-	*/
-	protected function setTagAttributesHints(array $tagConfig)
-	{
-		if (empty($tagConfig['attributes']))
-		{
-			return;
-		}
-
-		foreach ($tagConfig['attributes'] as $attrConfig)
-		{
-			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
-			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
-		}
-	}
-
-	/**
-	* Set hints related to tags config
-	*
-	* @return void
-	*/
-	protected function setTagsHints()
-	{
-		$this->hints['attributeGenerator']    = 0;
-		$this->hints['attributeDefaultValue'] = 0;
-		$this->hints['namespaces']            = 0;
-		foreach ($this->config['tags'] as $tagName => $tagConfig)
-		{
-			$this->hints['namespaces'] |= (strpos($tagName, ':') !== false);
-			$this->setTagAttributesHints($tagConfig);
-		}
-	}
-
-	/**
-	* Set hints related to rendering
-	*
-	* @return void
-	*/
-	protected function setRenderingHints()
-	{
-		// Test for post-processing in templates. Theorically allows for false positives and
-		// false negatives, but not in any realistic setting
-		$this->hints['postProcessing'] = (int) (strpos($this->xsl, 'data-s9e-livepreview-postprocess') !== false);
 	}
 }
