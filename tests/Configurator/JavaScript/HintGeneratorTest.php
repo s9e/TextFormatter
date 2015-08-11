@@ -21,6 +21,8 @@ class HintGeneratorTest extends Test
 		$generator = new HintGenerator;
 		$generator->setConfig($config);
 		$generator->setXSL($xsl);
+
+		$this->assertContains($str, $generator->getHints());
 	}
 
 	/**
