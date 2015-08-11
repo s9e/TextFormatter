@@ -8,7 +8,6 @@ Current things
 - Move AttributeProcessor instances to Attribute
 - Replace AttributePreprocessorCollection with AttributePreprocessorList
 - Refactor BBCodeMonkey, create a token class
-- Add MergeConsecutiveCopyOf to the XSLT renderer's optimizations
 
 Long-term goals (?)
 -------------------

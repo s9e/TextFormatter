@@ -25,6 +25,7 @@ class Optimizer
 	{
 		$this->normalizer = new TemplateNormalizer;
 		$this->normalizer->clear();
+		$this->normalizer->append('MergeConsecutiveCopyOf');
 		$this->normalizer->append('MergeIdenticalConditionalBranches');
 		$this->normalizer->append('OptimizeNestedConditionals');
 	}

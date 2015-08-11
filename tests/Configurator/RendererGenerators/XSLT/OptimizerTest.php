@@ -51,6 +51,10 @@ class OptimizerTest extends Test
 					</xsl:choose>'
 				),
 			],
+			[
+				'<div><xsl:copy-of select="@class"/><xsl:copy-of select="@title"/><xsl:apply-templates/></div>',
+				'<div><xsl:copy-of select="@class|@title"/><xsl:apply-templates/></div>'
+			],
 		];
 	}
 }
