@@ -47,8 +47,6 @@ class Rendering
 	{
 		$this->configurator = $configurator;
 		$this->parameters   = new TemplateParameterCollection;
-
-		$this->setEngine('XSLT');
 	}
 
 	/**
@@ -82,13 +80,28 @@ class Rendering
 	}
 
 	/**
+	* Return the renderer generator used by this instance
+	*
+	* @return RendererGenerator
+	*/
+	public function getEngine()
+	{
+		if (!isset($this->engine))
+		{
+			$this->setEngine('XSLT');
+		}
+
+		return $this->engine;
+	}
+
+	/**
 	* Return an instance of Renderer based on the current config
 	*
 	* @return Renderer
 	*/
 	public function getRenderer()
 	{
-		return $this->engine->getRenderer($this);
+		return $this->getEngine()->getRenderer($this);
 	}
 
 	/**
