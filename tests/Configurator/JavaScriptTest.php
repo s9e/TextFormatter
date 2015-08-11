@@ -436,6 +436,24 @@ class JavaScriptTest extends Test
 		$this->assertContains('"X":o66D78614', $js);
 		$this->assertContains('"Y":o66D78614', $js);
 	}
+
+	/**
+	* @testdox The public API is created if any method is exported
+	*/
+	public function testExport()
+	{
+		$this->configurator->javascript->exportMethods = ['preview'];
+		$this->assertContains("window['s9e']", $this->configurator->javascript->getParser());
+	}
+
+	/**
+	* @testdox The public API is not created if no method is exported
+	*/
+	public function testNoExport()
+	{
+		$this->configurator->javascript->exportMethods = [];
+		$this->assertNotContains("window['s9e']", $this->configurator->javascript->getParser());
+	}
 }
 
 class NonScalarConfigThing implements ConfigProvider

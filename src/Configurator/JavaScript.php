@@ -117,30 +117,21 @@ class JavaScript
 	*/
 	public function getParser(array $config = null)
 	{
-		// Store the parser's config
+		$this->configOptimizer->reset();
+
+		// Get the stylesheet used for rendering
+		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
+
+		// Prepare the parser's config
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		ConfigHelper::filterVariants($this->config, 'JS');
-
-		// Replace callback arrays with JavaScript code
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 
-		// Get parser's source
-		$src = $this->getSource();
-
-		// Inject the parser config
-		$src = $this->injectConfig($src);
+		// Get the parser's source and inject its config
+		$src = $this->getHints() . $this->injectConfig($this->getSource());
 
 		// Export the public API
-		if (!empty($this->exportMethods))
-		{
-			$methods = [];
-			foreach ($this->exportMethods as $method)
-			{
-				$methods[] = "'" . $method . "':" . $method;
-			}
-
-			$src .= "window['s9e'] = { 'TextFormatter': {" . implode(',', $methods) . "} }\n";
-		}
+		$src .= $this->getExports();
 
 		// Minify the source
 		$src = $this->getMinifier()->get($src);
@@ -186,6 +177,38 @@ class JavaScript
 	//==========================================================================
 	// Internal
 	//==========================================================================
+
+	/**
+	* Encode a PHP value into an equivalent JavaScript representation
+	*
+	* @param  mixed  $value Original value
+	* @return string        JavaScript representation
+	*/
+	protected function encode($value)
+	{
+		return $this->encoder->encode($value);
+	}
+
+	/**
+	* Generate and return the public API
+	*
+	* @return string JavaScript Code
+	*/
+	protected function getExports()
+	{
+		if (empty($this->exportMethods))
+		{
+			return '';
+		}
+
+		$methods = [];
+		foreach ($this->exportMethods as $method)
+		{
+			$methods[] = "'" . $method . "':" . $method;
+		}
+
+		return "window['s9e'] = { 'TextFormatter': {" . implode(',', $methods) . "} }\n";
+	}
 
 	/**
 	* Generate a HINT object that contains informations about the configuration
@@ -318,11 +341,7 @@ class JavaScript
 	*/
 	protected function getSource()
 	{
-		// Get the stylesheet used for rendering
-		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
-
-		// Start with the generated HINTs
-		$src = $this->getHints();
+		$src = '';
 
 		// Add the parser files
 		$files = [
@@ -376,17 +395,6 @@ class JavaScript
 	}
 
 	/**
-	* Encode a PHP value into an equivalent JavaScript representation
-	*
-	* @param  mixed  $value Original value
-	* @return string        JavaScript representation
-	*/
-	public function encode($value)
-	{
-		return $this->encoder->encode($value);
-	}
-
-	/**
 	* Inject the parser config into given source
 	*
 	* @param  string $src Parser's source
@@ -394,8 +402,6 @@ class JavaScript
 	*/
 	protected function injectConfig($src)
 	{
-		$this->configOptimizer->reset();
-
 		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),

@@ -1712,6 +1712,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Tag config is not wholly deduplicated if setNestingLimit() is exported
  [x] Tag config is not wholly deduplicated if setTagLimit() is exported
  [x] Tag config is wholly deduplicated otherwise
+ [x] The public API is created if any method is exported
+ [x] The public API is not created if no method is exported
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator
