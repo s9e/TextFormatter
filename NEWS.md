@@ -1,3 +1,10 @@
+###### August 2015
+
+- Refactored the JavaScript generator [[1](https://github.com/s9e/TextFormatter/commit/aba3ed71b2536a7e8e5df7b3e8272e45adb08fff)] [[2](https://github.com/s9e/TextFormatter/commit/259c03233337378365d02ef6eec383edcbade6a8)] [[3](https://github.com/s9e/TextFormatter/commit/f2db84d51c471f6fd6247c2fb3138216ac3c51c4)]
+- [Reduced the size of the JavaScript config through deduplication](https://github.com/s9e/TextFormatter/commit/c70adbc182a2a6291b1ca0d01dff612f570b54ab)
+- Reduced the size of some XSLT templates [[1](https://github.com/s9e/TextFormatter/commit/b897952c6976ecc741ee1d56238cf2d03e9e3e3f)] [[2](https://github.com/s9e/TextFormatter/commit/a648a552c8f0677f707820c2111acbd1b6dc9746)]
+- [Improved Litedown's inline links](https://github.com/s9e/TextFormatter/commit/745810d187be81ec4601e8fa8cf9ae3cf7e53d02)
+
 ###### July 2015
 
 - Fixed two memory leaks that could happen on some versions of PHP [[1](https://github.com/s9e/TextFormatter/commit/0ca302b992697b2f85da85d323588884c50cdbb1)] [[2](https://github.com/s9e/TextFormatter/commit/844420e217a0dbd01341e3f027048f3962ccfd12)]
