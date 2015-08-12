@@ -843,8 +843,32 @@ class ParserTest extends Test
 				'<r><p>This is <URL title="&quot;Link title&quot;" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ ""Link title"")</e></URL> inline link.</p></r>'
 			],
 			[
+				'.. [link](http://example.com/ ")") ..',
+				'<r><p>.. <URL title=")" url="http://example.com/"><s>[</s>link<e>](http://example.com/ ")")</e></URL> ..</p></r>'
+			],
+			[
+				'.. [link](http://example.com/ "") ..',
+				'<r><p>.. <URL url="http://example.com/"><s>[</s>link<e>](http://example.com/ "")</e></URL> ..</p></r>'
+			],
+			[
+				'.. [link](http://example.com/ "0") ..',
+				'<r><p>.. <URL title="0" url="http://example.com/"><s>[</s>link<e>](http://example.com/ "0")</e></URL> ..</p></r>'
+			],
+			[
 				'[not a link]',
 				'<t><p>[not a link]</p></t>'
+			],
+			[
+				'.. [..](http://example.org/foo_(bar)) ..',
+				'<r><p>.. <URL url="http://example.org/foo_%28bar%29"><s>[</s>..<e>](http://example.org/foo_(bar))</e></URL> ..</p></r>'
+			],
+			[
+				'.. [..](http://example.org/foo_(bar)_baz) ..',
+				'<r><p>.. <URL url="http://example.org/foo_%28bar%29_baz"><s>[</s>..<e>](http://example.org/foo_(bar)_baz)</e></URL> ..</p></r>'
+			],
+			[
+				'.. [..](http://example.org/() ..',
+				'<r><p>.. <URL url="http://example.org/%28"><s>[</s>..<e>](http://example.org/()</e></URL> ..</p></r>'
 			],
 			// Images
 			[

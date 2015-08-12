@@ -28,6 +28,7 @@ foreach (range('a', 'z') as $c)
 	$knownVars[$c . 'a'] = 1;
 	$knownVars[$c . 'b'] = 1;
 	$knownVars[$c . 'c'] = 1;
+	$knownVars[$c . 'd'] = 1;
 }
 foreach (range('A', 'Z') as $c)
 {

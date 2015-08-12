@@ -838,7 +838,7 @@ function matchInlineLinks()
 		return;
 	}
 
-	var m, regexp = /\[([^\x17\]]+)] ?\(([^\x17)]+)\)/g;
+	var m, regexp = /\[([^\x17\]]+)] ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)(?: "(.*?)")?\)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -849,21 +849,12 @@ function matchInlineLinks()
 			endTagPos   = startTagPos + startTagLen + contentLen,
 			endTagLen   = matchLen - startTagLen - contentLen;
 
-		// Split the URL from the title if applicable
-		var url   = m[2],
-			title = '';
-		if (m = /^(.+?) "(.*?)"$/.exec(url))
-		{
-			url   = m[1];
-			title = m[2];
-		}
-
 		var tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
-		tag.setAttribute('url', decode(url));
+		tag.setAttribute('url', decode(m[2]));
 
-		if (title !== '')
+		if (m[3] > '')
 		{
-			tag.setAttribute('title', decode(title));
+			tag.setAttribute('title', decode(m[3]));
 		}
 
 		// Overwrite the markup without touching the link's text

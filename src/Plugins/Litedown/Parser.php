@@ -861,13 +861,12 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
+			'/\\[([^\\x17\\]]+)] ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)(?: "(.*?)")?\\)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
 			$pos
 		);
-
 		foreach ($matches as $m)
 		{
 			$matchPos    = $m[0][1];
@@ -878,21 +877,12 @@ class Parser extends ParserBase
 			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
 			$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
-			// Split the URL from the title if applicable
-			$url   = $m[2][0];
-			$title = '';
-			if (preg_match('/^(.+?) "(.*?)"$/', $url, $m))
-			{
-				$url   = $m[1];
-				$title = $m[2];
-			}
-
 			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$tag->setAttribute('url', $this->decode($url));
+			$tag->setAttribute('url', $this->decode($m[2][0]));
 
-			if ($title !== '')
+			if (isset($m[3]) && $m[3][0] !== '')
 			{
-				$tag->setAttribute('title', $this->decode($title));
+				$tag->setAttribute('title', $this->decode($m[3][0]));
 			}
 
 			// Overwrite the markup without touching the link's text
