@@ -508,7 +508,7 @@ class Parser extends ParserBase
 		if ($pos === \false)
 			return;
 		\preg_match_all(
-			'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
+			'/\\[([^\\x17\\]]+)] ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)(?: "(.*?)")?\\)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
@@ -523,17 +523,10 @@ class Parser extends ParserBase
 			$startTagLen = 1;
 			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
 			$endTagLen   = $matchLen - $startTagLen - $contentLen;
-			$url   = $m[2][0];
-			$title = '';
-			if (\preg_match('/^(.+?) "(.*?)"$/', $url, $m))
-			{
-				$url   = $m[1];
-				$title = $m[2];
-			}
 			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$tag->setAttribute('url', $this->decode($url));
-			if ($title !== '')
-				$tag->setAttribute('title', $this->decode($title));
+			$tag->setAttribute('url', $this->decode($m[2][0]));
+			if (isset($m[3]) && $m[3][0] !== '')
+				$tag->setAttribute('title', $this->decode($m[3][0]));
 			$this->overwrite($startTagPos, $startTagLen);
 			$this->overwrite($endTagPos,   $endTagLen);
 		}
