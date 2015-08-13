@@ -689,23 +689,15 @@ function matchEmphasisByCharacter(character, regexp)
 				--remaining;
 			}
 
-			if (!remaining)
+			// Buffer the remaining characters
+			buffered = Math.min(remaining, 3);
+			if (buffered & 1)
 			{
-				buffered = 0;
+				emPos = matchPos + matchLen - buffered;
 			}
-			else
+			if (buffered & 2)
 			{
-				buffered = Math.min(remaining, 3);
-
-				if (buffered & 1)
-				{
-					emPos = matchPos + matchLen - buffered; 
-				}
-
-				if (buffered & 2)
-				{
-					strongPos = matchPos + matchLen - buffered; 
-				}
+				strongPos = matchPos + matchLen - buffered;
 			}
 		}
 		else if (matchLen === 2)
