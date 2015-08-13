@@ -642,24 +642,21 @@ class Parser extends ParserBase
 				// Number of characters left unconsumed
 				$remaining = $matchLen;
 
-				if ($buffered < 3)
-				{
-					$strongEndPos = $emEndPos = $matchPos;
-				}
-				else
+				// Both em and strong will end here
+				$emEndPos = $strongEndPos = $matchPos;
+
+				if ($buffered > 2)
 				{
 					// Determine the order of strong's and em's end tags
 					if ($emPos < $strongPos)
 					{
 						// If em starts before strong, it must end after it
-						$strongEndPos = $matchPos;
-						$emEndPos     = $matchPos + 2;
+						$emEndPos = $matchPos + 2;
 					}
 					else
 					{
 						// Make strong end after em
 						$strongEndPos = $matchPos + 1;
-						$emEndPos     = $matchPos;
 
 						// If the buffer holds three consecutive characters and the order of
 						// strong and em is not defined we push em inside of strong
@@ -670,16 +667,14 @@ class Parser extends ParserBase
 					}
 				}
 
-				// 2 or 3 means a strong is buffered
-				// Strong uses the outer characters
+				// 2 or 3 means a strong is buffered. Strong uses the outer characters
 				if ($buffered & 2)
 				{
 					$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
 					$remaining -= 2;
 				}
 
-				// 1 or 3 means an em is buffered
-				// Em uses the inner characters
+				// 1 or 3 means an em is buffered. Em uses the inner characters
 				if ($buffered & 1)
 				{
 					$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
@@ -699,7 +694,7 @@ class Parser extends ParserBase
 			}
 			elseif ($matchLen === 2)
 			{
-				if ($buffered === 3 && $strongPos === $emPos)
+				if ($buffered > 2 && $strongPos === $emPos)
 				{
 					$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
 					$buffered = 1;
@@ -726,7 +721,7 @@ class Parser extends ParserBase
 					 continue;
 				}
 
-				if ($buffered === 3 && $strongPos === $emPos)
+				if ($buffered > 2 && $strongPos === $emPos)
 				{
 					$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
 					$buffered = 2;
