@@ -187,6 +187,8 @@
 			<file>tests/Plugins/ParserBaseTest.php</file>
 			<file>tests/Plugins/Autoemail/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Autoemail/ParserTest.php</file>
+			<file>tests/Plugins/Autoimage/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Autoimage/ParserTest.php</file>
 			<file>tests/Plugins/Autolink/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Autolink/ParserTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/AttributeValueCollectionTest.php</file>
