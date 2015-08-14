@@ -288,7 +288,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1',
-				'<r><COLBERTNATION id="mgid:arc:video:colbertnation.com:676d3a42-4c19-47e0-9509-f333fa76b4eb" url="http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1">http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</COLBERTNATION></r>',
+				'<r><COLBERTNATION id="mgid:arc:video:comedycentral.com:676d3a42-4c19-47e0-9509-f333fa76b4eb" url="http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1">http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</COLBERTNATION></r>',
 				[],
 				function ($configurator)
 				{

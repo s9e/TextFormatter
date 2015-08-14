@@ -6,7 +6,7 @@
 	<host>thecolbertreport.cc.com</host>
 	<scrape>
 		<match>!thecolbertreport\.cc\.com/videos/!</match>
-		<extract>!(?'id'mgid:arc:video:colbertnation\.com:[-0-9a-f]+)!</extract>
+		<extract>!(?'id'mgid:arc:video:comedycentral\.com:[-0-9a-f]+)!</extract>
 	</scrape>
 	<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
 </site>
