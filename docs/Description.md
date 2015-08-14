@@ -164,6 +164,10 @@
 
 	* Turns email addresses in plain text into mailto: links
 
+* [Autoimage](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Autoimage)
+
+	* Turns image URLs in plain text into images
+
 * [Autolink](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Autolink)
 
 	* Turns URLs in plain text into links

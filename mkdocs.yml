@@ -38,6 +38,8 @@ pages:
   - Plugins:
     - Autoemail:
       - Synopsis: Plugins/Autoemail/Synopsis.md
+    - Autoimage:
+      - Synopsis: Plugins/Autoimage/Synopsis.md
     - Autolink:
       - Synopsis: Plugins/Autolink/Synopsis.md
     - BBCodes:
