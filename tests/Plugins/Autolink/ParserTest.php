@@ -150,6 +150,15 @@ class ParserTest extends Test
 				'<t>... www._ ..</t>',
 				['matchWww' => true]
 			],
+			[
+				'http://example.org http://example.com',
+				'<r><URL url="http://example.org">http://example.org</URL> <PREG_5DE80F89>http://example.com</PREG_5DE80F89></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Preg->replace('#http://example\\.com#', '...');
+				}
+			],
 		];
 	}
 

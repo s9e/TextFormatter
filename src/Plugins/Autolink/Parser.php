@@ -59,6 +59,10 @@ class Parser extends ParserBase
 		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0);
 		$startTag->setAttribute($this->config['attrName'], $url);
 
+		// Give this tag a slightly lower priority than default to allow specialized plugins
+		// to use the URL instead
+		$startTag->setSortPriority(1);
+
 		// Pair the tags together
 		$startTag->pairWith($endTag);
 	}
