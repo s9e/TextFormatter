@@ -365,20 +365,16 @@ class Parser extends ParserBase
 			if ($matchLen >= 3)
 			{
 				$remaining = $matchLen;
-				if ($buffered < 3)
-					$strongEndPos = $emEndPos = $matchPos;
-				elseif ($emPos < $strongPos)
-				{
-					$strongEndPos = $matchPos;
-					$emEndPos     = $matchPos + 2;
-				}
-				else
-				{
-					$strongEndPos = $matchPos + 1;
-					$emEndPos     = $matchPos;
-					if ($strongPos === $emPos)
-						$emPos += 2;
-				}
+				$emEndPos = $strongEndPos = $matchPos;
+				if ($buffered > 2)
+					if ($emPos < $strongPos)
+						$emEndPos = $matchPos + 2;
+					else
+					{
+						$strongEndPos = $matchPos + 1;
+						if ($strongPos === $emPos)
+							$emPos += 2;
+					}
 				if ($buffered & 2)
 				{
 					$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
@@ -389,19 +385,14 @@ class Parser extends ParserBase
 					$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
 					--$remaining;
 				}
-				if (!$remaining)
-					$buffered = 0;
-				else
-				{
-					$buffered = \min($remaining, 3);
-					if ($buffered & 1)
-						$emPos = $matchPos + $matchLen - $buffered;
-					if ($buffered & 2)
-						$strongPos = $matchPos + $matchLen - $buffered;
-				}
+				$buffered = \min($remaining, 3);
+				if ($buffered & 1)
+					$emPos = $matchPos + $matchLen - $buffered;
+				if ($buffered & 2)
+					$strongPos = $matchPos + $matchLen - $buffered;
 			}
 			elseif ($matchLen === 2)
-				if ($buffered === 3 && $strongPos === $emPos)
+				if ($buffered > 2 && $strongPos === $emPos)
 				{
 					$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
 					$buffered = 1;
@@ -423,7 +414,7 @@ class Parser extends ParserBase
 				 && \strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos - 1]) > 0
 				 && \strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos + 1]) > 0)
 					 continue;
-				if ($buffered === 3 && $strongPos === $emPos)
+				if ($buffered > 2 && $strongPos === $emPos)
 				{
 					$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
 					$buffered = 2;
