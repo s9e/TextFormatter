@@ -645,24 +645,21 @@ function matchEmphasisByCharacter(character, regexp)
 			// Number of characters left unconsumed
 			var remaining = matchLen;
 
-			if (buffered < 3)
-			{
-				strongEndPos = emEndPos = matchPos;
-			}
-			else
+			// Both em and strong will end here
+			emEndPos = strongEndPos = matchPos;
+
+			if (buffered > 2)
 			{
 				// Determine the order of strong's and em's end tags
 				if (emPos < strongPos)
 				{
 					// If em starts before strong, it must end after it
-					strongEndPos = matchPos;
-					emEndPos     = matchPos + 2;
+					emEndPos = matchPos + 2;
 				}
 				else
 				{
 					// Make strong end after em
 					strongEndPos = matchPos + 1;
-					emEndPos     = matchPos;
 
 					// If the buffer holds three consecutive characters and the order of
 					// strong and em is not defined we push em inside of strong
@@ -673,44 +670,34 @@ function matchEmphasisByCharacter(character, regexp)
 				}
 			}
 
-			// 2 or 3 means a strong is buffered
-			// Strong uses the outer characters
+			// 2 or 3 means a strong is buffered. Strong uses the outer characters
 			if (buffered & 2)
 			{
 				addTagPair('STRONG', strongPos, 2, strongEndPos, 2);
 				remaining -= 2;
 			}
 
-			// 1 or 3 means an em is buffered
-			// Em uses the inner characters
+			// 1 or 3 means an em is buffered. Em uses the inner characters
 			if (buffered & 1)
 			{
 				addTagPair('EM', emPos, 1, emEndPos, 1);
 				--remaining;
 			}
 
-			if (!remaining)
+			// Buffer the remaining characters
+			buffered = Math.min(remaining, 3);
+			if (buffered & 1)
 			{
-				buffered = 0;
+				emPos = matchPos + matchLen - buffered;
 			}
-			else
+			if (buffered & 2)
 			{
-				buffered = Math.min(remaining, 3);
-
-				if (buffered & 1)
-				{
-					emPos = matchPos + matchLen - buffered; 
-				}
-
-				if (buffered & 2)
-				{
-					strongPos = matchPos + matchLen - buffered; 
-				}
+				strongPos = matchPos + matchLen - buffered;
 			}
 		}
 		else if (matchLen === 2)
 		{
-			if (buffered === 3 && strongPos === emPos)
+			if (buffered > 2 && strongPos === emPos)
 			{
 				addTagPair('STRONG', emPos + 1, 2, matchPos, 2);
 				buffered = 1;
@@ -737,7 +724,7 @@ function matchEmphasisByCharacter(character, regexp)
 				 continue;
 			}
 
-			if (buffered === 3 && strongPos === emPos)
+			if (buffered > 2 && strongPos === emPos)
 			{
 				addTagPair('EM', strongPos + 2, 1, matchPos, 1);
 				buffered = 2;
