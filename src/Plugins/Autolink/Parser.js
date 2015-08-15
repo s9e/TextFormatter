@@ -41,6 +41,10 @@ function linkifyUrl(tagPos, url)
 	var startTag = addStartTag(config.tagName, tagPos, 0);
 	startTag.setAttribute(config.attrName, url);
 
+	// Give this tag a slightly lower priority than default to allow specialized plugins
+	// to use the URL instead
+	startTag.setSortPriority(1);
+
 	// Pair the tags together
 	startTag.pairWith(endTag);
 };
