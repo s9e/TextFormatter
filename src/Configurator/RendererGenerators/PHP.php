@@ -50,7 +50,7 @@ class PHP implements RendererGenerator
 	/**
 	* @var bool Whether to enable the Quick renderer
 	*/
-	public $enableQuickRenderer = false;
+	public $enableQuickRenderer = true;
 
 	/**
 	* @var string If set, path to the file where the renderer will be saved
