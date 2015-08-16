@@ -98,3 +98,4 @@ pages:
     - Introduction: JavaScript/Introduction.md
   - Internals:
     - Limits: Internals/Limits.md
+    - PHP renderer: Internals/PHP_renderer.md
