@@ -5134,7 +5134,7 @@ class PHP implements RendererGenerator
 	public $className;
 	public $controlStructuresOptimizer;
 	public $defaultClassPrefix = 'Renderer_';
-	public $enableQuickRenderer = \false;
+	public $enableQuickRenderer = \true;
 	public $filepath;
 	public $lastClassName;
 	public $lastFilepath;
