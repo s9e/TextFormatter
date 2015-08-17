@@ -697,10 +697,7 @@ function matchEmphasisByCharacter(character, regexp)
 		return;
 	}
 
-	getEmphasisByBlock(regexp, pos).forEach(function(block)
-	{
-		processEmphasisBlock(block);
-	});
+	getEmphasisByBlock(regexp, pos).forEach(processEmphasisBlock);
 }
 
 /**
