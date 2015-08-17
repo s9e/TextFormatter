@@ -60,6 +60,12 @@ class Parser extends ParserBase
 			]
 		);
 	}
+	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	{
+		$content = \substr($this->text, $startPos, $endPos - $startPos);
+		\preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
+		return \strlen($m[0]);
+	}
 	protected function getSetextLines()
 	{
 		$setextLines = [];
@@ -81,11 +87,33 @@ class Parser extends ParserBase
 			}
 		return $setextLines;
 	}
-	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	protected function getEmphasisByBlock($regexp, $pos)
 	{
-		$content = \substr($this->text, $startPos, $endPos - $startPos);
-		\preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
-		return \strlen($m[0]);
+		$block    = [];
+		$blocks   = [];
+		$breakPos = \strpos($this->text, "\x17", $pos);
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
+		foreach ($matches[0] as $m)
+		{
+			$matchPos = $m[1];
+			$matchLen = \strlen($m[0]);
+			if ($matchPos > $breakPos)
+			{
+				$blocks[] = $block;
+				$block    = [];
+				$breakPos = \strpos($this->text, "\x17", $matchPos);
+			}
+			if (!$this->ignoreEmphasis($matchPos, $matchLen))
+				$block[] = [$matchPos, $matchLen];
+		}
+		$blocks[] = $block;
+		return $blocks;
+	}
+	protected function ignoreEmphasis($matchPos, $matchLen)
+	{
+		if ($this->text[$matchPos] === '_' && $matchLen === 1 && $this->isSurroundedByAlnum($matchPos, $matchLen))
+			return \true;
+		return \false;
 	}
 	protected function init($text)
 	{
@@ -98,6 +126,14 @@ class Parser extends ParserBase
 		}
 		$text .= "\n\n\x17";
 		$this->text = $text;
+	}
+	protected function isAlnum($chr)
+	{
+		return (\strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $chr) > 0);
+	}
+	protected function isSurroundedByAlnum($matchPos, $matchLen)
+	{
+		return ($matchPos > 0 && $this->isAlnum($this->text[$matchPos - 1]) && $this->isAlnum($this->text[$matchPos + $matchLen]));
 	}
 	protected function matchBlockLevelMarkup()
 	{
@@ -351,86 +387,8 @@ class Parser extends ParserBase
 		$pos = \strpos($this->text, $character);
 		if ($pos === \false)
 			return;
-		$buffered = 0;
-		$breakPos = \strpos($this->text, "\x17", $pos);
-		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE, $pos);
-		foreach ($matches[0] as list($match, $matchPos))
-		{
-			$matchLen = \strlen($match);
-			if ($matchPos > $breakPos)
-			{
-				$buffered = 0;
-				$breakPos = \strpos($this->text, "\x17", $matchPos);
-			}
-			if ($matchLen >= 3)
-			{
-				$remaining = $matchLen;
-				$emEndPos = $strongEndPos = $matchPos;
-				if ($buffered > 2)
-					if ($emPos < $strongPos)
-						$emEndPos = $matchPos + 2;
-					else
-					{
-						$strongEndPos = $matchPos + 1;
-						if ($strongPos === $emPos)
-							$emPos += 2;
-					}
-				if ($buffered & 2)
-				{
-					$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
-					$remaining -= 2;
-				}
-				if ($buffered & 1)
-				{
-					$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
-					--$remaining;
-				}
-				$buffered = \min($remaining, 3);
-				if ($buffered & 1)
-					$emPos = $matchPos + $matchLen - $buffered;
-				if ($buffered & 2)
-					$strongPos = $matchPos + $matchLen - $buffered;
-			}
-			elseif ($matchLen === 2)
-				if ($buffered > 2 && $strongPos === $emPos)
-				{
-					$this->parser->addTagPair('STRONG', $emPos + 1, 2, $matchPos, 2);
-					$buffered = 1;
-				}
-				elseif ($buffered & 2)
-				{
-					$this->parser->addTagPair('STRONG', $strongPos, 2, $matchPos, 2);
-					$buffered -= 2;
-				}
-				else
-				{
-					$buffered += 2;
-					$strongPos = $matchPos;
-				}
-			else
-			{
-				if ($character === '_'
-				 && $matchPos > 0
-				 && \strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos - 1]) > 0
-				 && \strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $this->text[$matchPos + 1]) > 0)
-					 continue;
-				if ($buffered > 2 && $strongPos === $emPos)
-				{
-					$this->parser->addTagPair('EM', $strongPos + 2, 1, $matchPos, 1);
-					$buffered = 2;
-				}
-				elseif ($buffered & 1)
-				{
-					$this->parser->addTagPair('EM', $emPos, 1, $matchPos, 1);
-					--$buffered;
-				}
-				else
-				{
-					++$buffered;
-					$emPos = $matchPos;
-				}
-			}
-		}
+		foreach ($this->getEmphasisByBlock($regexp, $pos) as $block)
+			$this->processEmphasisBlock($block);
 	}
 	protected function matchForcedLineBreaks()
 	{
@@ -567,5 +525,48 @@ class Parser extends ParserBase
 	protected function overwrite($pos, $len)
 	{
 		$this->text = \substr($this->text, 0, $pos) . \str_repeat("\x1A", $len) . \substr($this->text, $pos + $len);
+	}
+	protected function processEmphasisBlock(array $block)
+	{
+		$buffered  = 0;
+		$emPos     = -1;
+		$strongPos = -1;
+		foreach ($block as list($matchPos, $matchLen))
+		{
+			$closeLen     = \min(3, $matchLen);
+			$closeEm      = $closeLen & $buffered & 1;
+			$closeStrong  = $closeLen & $buffered & 2;
+			$emEndPos     = $matchPos;
+			$strongEndPos = $matchPos;
+			if ($buffered > 2 && $emPos === $strongPos)
+				if ($closeEm)
+					$emPos += 2;
+				else
+					++$strongPos;
+			if ($closeEm && $closeStrong)
+				if ($emPos < $strongPos)
+					$emEndPos += 2;
+				else
+					++$strongEndPos;
+			$remaining = $matchLen;
+			if ($closeEm)
+			{
+				--$buffered;
+				--$remaining;
+				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+			}
+			if ($closeStrong)
+			{
+				$buffered  -= 2;
+				$remaining -= 2;
+				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+			}
+			$remaining = \min(3, $remaining);
+			if ($remaining & 1)
+				$emPos = $matchPos + $matchLen - $remaining;
+			if ($remaining & 2)
+				$strongPos = $matchPos + $matchLen - $remaining;
+			$buffered += $remaining;
+		}
 	}
 }
