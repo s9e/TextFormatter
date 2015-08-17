@@ -118,6 +118,21 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Return the length of the markup at the end of an ATX header
+	*
+	* @param  integer $startPos Start of the header's text
+	* @param  integer $endPos   End of the header's text
+	* @return integer
+	*/
+	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	{
+		$content = substr($this->text, $startPos, $endPos - $startPos);
+		preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
+
+		return strlen($m[0]);
+	}
+
+	/**
 	* Capture lines that contain a Setext-tyle header
 	*
 	* @return array
@@ -160,18 +175,41 @@ class Parser extends ParserBase
 	}
 
 	/**
-	* Return the length of the markup at the end of an ATX header
+	* Get emphasis markup split by block
 	*
-	* @param  integer $startPos Start of the header's text
-	* @param  integer $endPos   End of the header's text
-	* @return integer
+	* @param  string  $regexp Regexp used to match emphasis
+	* @param  integer $pos    Position in the text of the first emphasis character
+	* @return array[]         Each array contains a list of [matchPos, matchLen] pairs
 	*/
-	protected function getAtxHeaderEndTagLen($startPos, $endPos)
+	protected function getEmphasisByBlock($regexp, $pos)
 	{
-		$content = substr($this->text, $startPos, $endPos - $startPos);
-		preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
+		$block    = [];
+		$blocks   = [];
+		$breakPos = strpos($this->text, "\x17", $pos);
 
-		return strlen($m[0]);
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE, $pos);
+		foreach ($matches[0] as $m)
+		{
+			$matchPos = $m[1];
+			$matchLen = strlen($m[0]);
+
+			// Test whether we've just passed the limits of a block
+			if ($matchPos > $breakPos)
+			{
+				$blocks[] = $block;
+				$block    = [];
+				$breakPos = strpos($this->text, "\x17", $matchPos);
+			}
+
+			// Test whether we should ignore this markup
+			if (!$this->ignoreEmphasis($matchPos, $matchLen))
+			{
+				$block[] = [$matchPos, $matchLen];
+			}
+		}
+		$blocks[] = $block;
+
+		return $blocks;
 	}
 
 	/**
@@ -662,83 +700,9 @@ class Parser extends ParserBase
 			return;
 		}
 
-		$buffered  = 0;
-		$breakPos  = strpos($this->text, "\x17", $pos);
-		$emPos     = -1;
-		$strongPos = -1;
-
-		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE, $pos);
-		foreach ($matches[0] as list($match, $matchPos))
+		foreach ($this->getEmphasisByBlock($regexp, $pos) as $block)
 		{
-			// Test whether we've just passed the limits of a block
-			if ($matchPos > $breakPos)
-			{
-				// Reset the buffer then look for the next break
-				$buffered = 0;
-				$breakPos = strpos($this->text, "\x17", $matchPos);
-			}
-
-			$matchLen     = strlen($match);
-			$closeLen     = min(3, $matchLen);
-			$closeEm      = $closeLen & $buffered & 1;
-			$closeStrong  = $closeLen & $buffered & 2;
-			$emEndPos     = $matchPos;
-			$strongEndPos = $matchPos;
-
-			// Test whether we should ignore this markup
-			if ($this->ignoreEmphasis($matchPos, $matchLen))
-			{
-				continue;
-			}
-
-			if ($buffered > 2 && $emPos === $strongPos)
-			{
-				if ($closeEm)
-				{
-					$emPos += 2;
-				}
-				else
-				{
-					++$strongPos;
-				}
-			}
-
-			if ($closeEm && $closeStrong)
-			{
-				if ($emPos < $strongPos)
-				{
-					$emEndPos += 2;
-				}
-				else
-				{
-					++$strongEndPos;
-				}
-			}
-
-			$remaining = $matchLen;
-			if ($closeEm)
-			{
-				--$buffered;
-				--$remaining;
-				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
-			}
-			if ($closeStrong)
-			{
-				$buffered  -= 2;
-				$remaining -= 2;
-				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
-			}
-
-			$remaining = min(3, $remaining);
-			if ($remaining & 1)
-			{
-				$emPos = $matchPos + $matchLen - $remaining;
-			}
-			if ($remaining & 2)
-			{
-				$strongPos = $matchPos + $matchLen - $remaining;
-			}
-			$buffered += $remaining;
+			$this->processEmphasisBlock($block);
 		}
 	}
 
@@ -957,5 +921,75 @@ class Parser extends ParserBase
 	protected function overwrite($pos, $len)
 	{
 		$this->text = substr($this->text, 0, $pos) . str_repeat("\x1A", $len) . substr($this->text, $pos + $len);
+	}
+
+	/**
+	* Process a list of emphasis markup strings
+	*
+	* @param  array[] $block List of [matchPos, matchLen] pairs
+	* @return void
+	*/
+	protected function processEmphasisBlock(array $block)
+	{
+		$buffered  = 0;
+		$emPos     = -1;
+		$strongPos = -1;
+		foreach ($block as list($matchPos, $matchLen))
+		{
+			$closeLen     = min(3, $matchLen);
+			$closeEm      = $closeLen & $buffered & 1;
+			$closeStrong  = $closeLen & $buffered & 2;
+			$emEndPos     = $matchPos;
+			$strongEndPos = $matchPos;
+
+			if ($buffered > 2 && $emPos === $strongPos)
+			{
+				if ($closeEm)
+				{
+					$emPos += 2;
+				}
+				else
+				{
+					++$strongPos;
+				}
+			}
+
+			if ($closeEm && $closeStrong)
+			{
+				if ($emPos < $strongPos)
+				{
+					$emEndPos += 2;
+				}
+				else
+				{
+					++$strongEndPos;
+				}
+			}
+
+			$remaining = $matchLen;
+			if ($closeEm)
+			{
+				--$buffered;
+				--$remaining;
+				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+			}
+			if ($closeStrong)
+			{
+				$buffered  -= 2;
+				$remaining -= 2;
+				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+			}
+
+			$remaining = min(3, $remaining);
+			if ($remaining & 1)
+			{
+				$emPos = $matchPos + $matchLen - $remaining;
+			}
+			if ($remaining & 2)
+			{
+				$strongPos = $matchPos + $matchLen - $remaining;
+			}
+			$buffered += $remaining;
+		}
 	}
 }
