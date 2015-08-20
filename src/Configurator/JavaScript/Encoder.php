@@ -74,7 +74,7 @@ class Encoder
 	*/
 	protected function encodeArray(array $array)
 	{
-		return (array_keys($array) === range(0, count($array) - 1)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
+		return (empty($array) || array_keys($array) === range(0, count($array) - 1)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
 	}
 
 	/**
