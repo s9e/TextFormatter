@@ -267,26 +267,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725',
-				'<r><BLIP id="AYOW3REC" url="http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725">http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725</BLIP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('blip');
-				}
-			],
-			[
-				'http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104',
-				'<r><BLIP id="zEiCvv1cAg" url="http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104">http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104</BLIP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('blip');
-				}
-			],
-			[
 				'http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1',
 				'<r><COLBERTNATION id="mgid:arc:video:comedycentral.com:676d3a42-4c19-47e0-9509-f333fa76b4eb" url="http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1">http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</COLBERTNATION></r>',
 				[],
@@ -1507,33 +1487,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('audiomack');
-				}
-			],
-			[
-				'http://blip.tv/play/AYKn_x0A',
-				'<r><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('blip');
-				}
-			],
-			[
-				'http://blip.tv/play/AYGJ%2BSkC',
-				'<r><BLIP id="AYGJ%2BSkC" url="http://blip.tv/play/AYGJ%2BSkC">http://blip.tv/play/AYGJ%2BSkC</BLIP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('blip');
-				}
-			],
-			[
-				'http://blip.tv/play/AYGJ+SkC',
-				'<r><BLIP id="AYGJ+SkC" url="http://blip.tv/play/AYGJ+SkC">http://blip.tv/play/AYGJ+SkC</BLIP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('blip');
 				}
 			],
 			[

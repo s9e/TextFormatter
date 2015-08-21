@@ -42,11 +42,6 @@
 		<td>http://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
 	</tr>
 	<tr>
-		<td><code>blip</code></td>
-		<td>Blip</td>
-		<td>http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104<br/>http://blip.tv/play/g6VTgpjxbQA</td>
-	</tr>
-	<tr>
 		<td><code>break</code></td>
 		<td>Break</td>
 		<td>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
