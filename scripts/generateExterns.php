@@ -6,10 +6,10 @@ $externs = [
 		'var punycode',
 		'punycode.toASCII'
 	],
-	'deprecated.js' => [
+	'externs/browser/deprecated.js' => [
 		'function XSLTProcessor('
 	],
-	'es3.js' => [
+	'externs/es3.js' => [
 		'var Infinity',
 		'var undefined',
 
@@ -66,18 +66,18 @@ $externs = [
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	],
-	'gecko_dom.js' => [
+	'externs/browser/gecko_dom.js' => [
 		'Document.prototype.importNode',
 		'Element.prototype.innerHTML'
 	],
-	'gecko_xml.js' => [
+	'externs/browser/gecko_xml.js' => [
 		'function DOMParser(',
 		'DOMParser.prototype.parseFromString'
 	],
-	'ie_dom.js' => [
+	'externs/browser/ie_dom.js' => [
 		'var window'
 	],
-	'w3c_dom1.js' => [
+	'externs/browser/w3c_dom1.js' => [
 		'function Document(',
 		'Document.prototype.createDocumentFragment',
 		'Document.prototype.createElement',
@@ -108,11 +108,11 @@ $externs = [
 
 		'function Window(',
 	],
-	'w3c_dom2.js' => [
+	'externs/browser/w3c_dom2.js' => [
 		'function HTMLDocument(',
 		'function HTMLElement',
 	],
-	'w3c_dom3.js' => [
+	'externs/browser/w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
 		'Element.prototype.hasAttributeNS',
 		'Element.prototype.removeAttributeNS',
@@ -122,7 +122,7 @@ $externs = [
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
 	],
-	'window.js' => [
+	'externs/browser/window.js' => [
 		'var document;'
 	]
 ];
@@ -131,13 +131,8 @@ $out  = '';
 
 foreach ($externs as $filename => $names)
 {
-	if (strpos($filename, 'contrib/') === false)
-	{
-		$filename = 'externs/' . $filename;
-	}
-
 	$file = file_get_contents(
-		'compress.zlib://https://github.com/google/closure-compiler/raw/master/' . $filename,
+		'compress.zlib://https://raw.githubusercontent.com/google/closure-compiler/master/' . $filename,
 		false,
 		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);

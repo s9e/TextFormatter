@@ -86,15 +86,15 @@ function parseInt(num, base) {}
 /**
  * @constructor
  * @param {...*} var_args
- * @return {!Array.<?>}
+ * @return {!Array<?>}
  * @nosideeffects
  * @template T
  */
 function Array(var_args) {}
 /**
- * @param {?function(this:S, T, number, !Array.<T>): ?} callback
+ * @param {?function(this:S, T, number, !Array<T>): ?} callback
  * @param {S=} opt_thisobj
- * @this {{length: number}|Array.<T>|string}
+ * @this {{length: number}|Array<T>|string}
  * @template T,S
  */
 Array.prototype.forEach = function(callback, opt_thisobj) {};
@@ -102,7 +102,7 @@ Array.prototype.forEach = function(callback, opt_thisobj) {};
  * @param {T} obj
  * @param {number=} opt_fromIndex
  * @return {number}
- * @this {{length: number}|Array.<T>|string}
+ * @this {{length: number}|Array<T>|string}
  * @nosideeffects
  * @template T
  */
@@ -120,7 +120,7 @@ Array.prototype.join = function(opt_separator) {};
 Array.prototype.length;
 /**
  * @return {T}
- * @this {{length: number}|Array.<T>}
+ * @this {{length: number}|Array<T>}
  * @modifies {this}
  * @template T
  */
@@ -128,7 +128,7 @@ Array.prototype.pop = function() {};
 /**
  * @param {...T} var_args
  * @return {number} The new length of the array.
- * @this {{length: number}|Array.<T>}
+ * @this {{length: number}|Array<T>}
  * @template T
  * @modifies {this}
  */
@@ -139,7 +139,7 @@ Array.prototype.push = function(var_args) {};
  */
 Array.prototype.reverse = function() {};
 /**
- * @this {{length: number}|Array.<T>}
+ * @this {{length: number}|Array<T>}
  * @modifies {this}
  * @return {T}
  * @template T
@@ -148,15 +148,15 @@ Array.prototype.shift = function() {};
 /**
  * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
  * @param {*=} opt_end Zero-based index at which to end extraction.  slice
- * @return {!Array.<T>}
- * @this {{length: number}|Array.<T>|string}
+ * @return {!Array<T>}
+ * @this {{length: number}|Array<T>|string}
  * @template T
  * @nosideeffects
  */
 Array.prototype.slice = function(opt_begin, opt_end) {};
 /**
  * @param {function(T,T):number=} opt_compareFunction Specifies a function that
- * @this {{length: number}|Array.<T>}
+ * @this {{length: number}|Array<T>}
  * @template T
  */
 Array.prototype.sort = function(opt_compareFunction) {};
@@ -164,8 +164,8 @@ Array.prototype.sort = function(opt_compareFunction) {};
  * @param {*=} opt_index Index at which to start changing the array. If negative,  *     will begin that many elements from the end.  A non-number type will be
  * @param {*=} opt_howMany An integer indicating the number of old array elements
  * @param {...T} var_args
- * @return {!Array.<T>}
- * @this {{length: number}|Array.<T>}
+ * @return {!Array<T>}
+ * @this {{length: number}|Array<T>}
  * @modifies {this}
  * @template T
  */
@@ -261,7 +261,7 @@ Object.prototype.toString = function() {};
 function RegExp(opt_pattern, opt_flags) {}
 /**
  * @param {*} str The string to search.
- * @return {Array.<string>} This should really return an Array with a few
+ * @return {Array<string>} This should really return an Array with a few
  */
 RegExp.prototype.exec = function(str) {};
 /**
@@ -324,7 +324,7 @@ String.prototype.replace = function(regex, str, opt_flags) {};
  * @this {String|string}
  * @param {*=} opt_separator
  * @param {number=} opt_limit
- * @return {!Array.<string>}
+ * @return {!Array<string>}
  * @nosideeffects
  */
 String.prototype.split = function(opt_separator, opt_limit) {};
