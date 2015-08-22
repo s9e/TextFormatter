@@ -267,16 +267,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1',
-				'<r><COLBERTNATION id="mgid:arc:video:comedycentral.com:676d3a42-4c19-47e0-9509-f333fa76b4eb" url="http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1">http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</COLBERTNATION></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('colbertnation');
-				}
-			],
-			[
 				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
 				[],
@@ -294,26 +284,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
-			[
-				'http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy',
-				'<r><DAILYSHOW id="mgid:arc:video:thedailyshow.com:e2ed81f7-a322-4ef9-82d9-12ba07e5c319" url="http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy">http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</DAILYSHOW></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('dailyshow');
-				}
-			],
-			[
-				'http://thedailyshow.cc.com/extended-interviews/rpgevm/exclusive-matt-taibbi-extended-interview',
-				'<r><DAILYSHOW id="mgid:arc:playlist:thedailyshow.com:85ebd39c-9fea-44f3-9da2-f3088cab195d" url="http://thedailyshow.cc.com/extended-interviews/rpgevm/exclusive-matt-taibbi-extended-interview">http://thedailyshow.cc.com/extended-interviews/rpgevm/exclusive-matt-taibbi-extended-interview</DAILYSHOW></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('dailyshow');
 				}
 			],
 			[

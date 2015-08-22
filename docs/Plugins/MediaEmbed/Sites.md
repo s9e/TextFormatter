@@ -67,11 +67,6 @@
 		<td>http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</td>
 	</tr>
 	<tr>
-		<td><code>colbertnation</code></td>
-		<td>Colbert Nation</td>
-		<td>http://thecolbertreport.cc.com/videos/gh6urb/neil-degrasse-tyson-pt--1</td>
-	</tr>
-	<tr>
 		<td><code>collegehumor</code></td>
 		<td>CollegeHumor</td>
 		<td>http://www.collegehumor.com/video/1181601/more-than-friends</td>
@@ -90,11 +85,6 @@
 		<td><code>dailymotion</code></td>
 		<td>Dailymotion</td>
 		<td>http://www.dailymotion.com/video/x222z1<br/>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1<br/>http://games.dailymotion.com/live/x15gjhi</td>
-	</tr>
-	<tr>
-		<td><code>dailyshow</code></td>
-		<td>The Daily Show with Jon Stewart</td>
-		<td>http://thedailyshow.cc.com/videos/elvsf4/what-not-to-buy</td>
 	</tr>
 	<tr>
 		<td><code>democracynow</code></td>
