@@ -15,12 +15,8 @@
  */
 
 // This file was auto-generated.
-// See https://github.com/google/closure-compiler/raw/master/externs/ for the original source.
+// See https://github.com/google/closure-compiler for the original source.
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
-
-/**
- * @fileoverview Definitions for node's punycode module.
- */
 
 /**
  * @const
@@ -31,16 +27,6 @@ var punycode = {};
  * @return {string}
  */
 punycode.toASCII;
-/**
- * @fileoverview JavaScript Built-Ins that are not
- * @externs
- */
-
-// Do we need an opera.js?
-var opera;
-Window.prototype.opera;
-Window.prototype.opera.postError;
-
 /** @constructor */ function XSLTProcessor() {}
 /**
  * @type {number}
