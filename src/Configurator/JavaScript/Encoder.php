@@ -44,6 +44,7 @@ class Encoder
 	}
 	protected function encodeAssociativeArray(array $array, $preserveNames = \false)
 	{
+		\ksort($array);
 		$src = '{';
 		$sep = '';
 		foreach ($array as $k => $v)
