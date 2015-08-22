@@ -53,7 +53,7 @@ class EncoderTest extends Test
 			],
 			[
 				['foo' => 'bar', 'baz' => 'quux'],
-				'{foo:"bar",baz:"quux"}'
+				'{baz:"quux",foo:"bar"}'
 			],
 			[
 				['' => 'bar', 'baz' => 'quux'],
@@ -61,7 +61,7 @@ class EncoderTest extends Test
 			],
 			[
 				new Dictionary(['foo' => 'bar', 'baz' => 'quux']),
-				'{"foo":"bar","baz":"quux"}'
+				'{"baz":"quux","foo":"bar"}'
 			],
 			[
 				new Dictionary(['' => 'bar', 'baz' => 'quux']),

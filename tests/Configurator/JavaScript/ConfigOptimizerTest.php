@@ -42,10 +42,10 @@ class ConfigOptimizerTest extends Test
 					'foo' => [12345, 54321],
 					'bar' => [12345, 54321]
 				],
-				'o66699550',
+				'o5D6AC35D',
 				[
 					'/** @const */ var o3D7424E0=[12345,54321];',
-					'/** @const */ var o66699550={foo:o3D7424E0,bar:o3D7424E0};'
+					'/** @const */ var o5D6AC35D={bar:o3D7424E0,foo:o3D7424E0};'
 				]
 			],
 			[
@@ -53,10 +53,10 @@ class ConfigOptimizerTest extends Test
 					'foo' => [12345, 54321],
 					'bar' => [12345, 54321]
 				]),
-				'oEE749F80',
+				'oCA6E6DE0',
 				[
 					'/** @const */ var o3D7424E0=[12345,54321];',
-					'/** @const */ var oEE749F80={"foo":o3D7424E0,"bar":o3D7424E0};'
+					'/** @const */ var oCA6E6DE0={"bar":o3D7424E0,"foo":o3D7424E0};'
 				]
 			],
 			[
@@ -65,9 +65,9 @@ class ConfigOptimizerTest extends Test
 					'foo' => [0],
 					'bar' => [0]
 				],
-				'oC5C69F9F',
+				'o46F1E3B8',
 				[
-					'/** @const */ var oC5C69F9F={foo:[0],bar:[0]};'
+					'/** @const */ var o46F1E3B8={bar:[0],foo:[0]};'
 				]
 			],
 		];
