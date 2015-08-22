@@ -127,21 +127,33 @@ $externs = [
 	]
 ];
 
-$out  = '';
+function wget($url)
+{
+	$filepath = sys_get_temp_dir() . '/' . basename($url);
+	if (!file_exists($filepath))
+	{
+		copy(
+			'compress.zlib://' . $url,
+			$filepath,
+			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+		);
+	}
 
+	return file_get_contents($filepath);
+}
+
+$out  = '';
 foreach ($externs as $filename => $names)
 {
-	$file = file_get_contents(
-		'compress.zlib://https://raw.githubusercontent.com/google/closure-compiler/master/' . $filename,
-		false,
-		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
-	);
+	$url = 'https://raw.githubusercontent.com/google/closure-compiler/master/' . $filename;
 
 	// Concat multiline definitions
-	$file = preg_replace('#, *\n#', ', ', $file);
+	$file = preg_replace('#, *\n#', ', ', wget($url));
 
-	preg_match_all('#/\\*\\*.*?\\*/\\s*(\\w[^\\n]+)#s', $file, $m);
+	// Remove the file header
+	$file = preg_replace('(/\\*\\*.*?@fileoverview.*?\\*/)s', '', $file);
 
+	preg_match_all('(/\\*\\*.*?\\*/\\s*(\\w[^\\n]+))s', $file, $m);
 	foreach ($names as $name)
 	{
 		$len = strlen($name);
@@ -186,7 +198,7 @@ $out = '/*
  */
 
 // This file was auto-generated.
-// See https://github.com/google/closure-compiler/raw/master/externs/ for the original source.
+// See https://github.com/google/closure-compiler for the original source.
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 ' . $out;
