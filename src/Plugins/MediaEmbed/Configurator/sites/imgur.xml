@@ -16,6 +16,7 @@
 	<scrape>
 		<match>!imgur\.com/(?:a|gallery)/\w!</match>
 		<extract>!&lt;div id="(?'type'album)-!</extract>
+		<extract>!class="(?'type'album)-image!</extract>
 	</scrape>
 	<scrape url="http://i.imgur.com/{@id}.gifv">
 		<match>!imgur\.com/\w+\.(?:gifv|mp4|webm)!</match>

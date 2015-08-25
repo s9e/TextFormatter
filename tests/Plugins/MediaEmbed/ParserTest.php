@@ -490,6 +490,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://imgur.com/gallery/j3HXR',
+				'<r><IMGUR id="j3HXR" type="album" url="https://imgur.com/gallery/j3HXR">https://imgur.com/gallery/j3HXR</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://imgur.com/gallery/49H5yU8',
 				'<r><IMGUR id="49H5yU8" url="http://imgur.com/gallery/49H5yU8">http://imgur.com/gallery/49H5yU8</IMGUR></r>',
 				[],
