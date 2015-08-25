@@ -17,9 +17,6 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\Rendering;
 
-/**
-* @see docs/DifferencesInRendering.md
-*/
 class PHP implements RendererGenerator
 {
 	/**
