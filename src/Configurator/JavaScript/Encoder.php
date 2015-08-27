@@ -34,10 +34,12 @@ class Encoder
 	*/
 	public function __construct()
 	{
+		$ns = 's9e\\TextFormatter\\Configurator\\';
 		$this->objectEncoders = [
-			's9e\\TextFormatter\\Configurator\\Items\\Regexp'          => [$this, 'encodeRegexp'],
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code'       => [$this, 'encodeCode'],
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary' => [$this, 'encodeDictionary']
+			$ns . 'Items\\Regexp'           => [$this, 'encodeRegexp'],
+			$ns . 'JavaScript\\Code'        => [$this, 'encodeCode'],
+			$ns . 'JavaScript\\ConfigValue' => [$this, 'encodeConfigValue'],
+			$ns . 'JavaScript\\Dictionary'  => [$this, 'encodeDictionary']
 		];
 		$this->typeEncoders = [
 			'array'   => [$this, 'encodeArray'],
@@ -119,6 +121,17 @@ class Encoder
 	protected function encodeCode(Code $code)
 	{
 		return (string) $code;
+	}
+
+	/**
+	* Encode a ConfigValue instance into JavaScript
+	*
+	* @param  ConfigValue $configValue
+	* @return string
+	*/
+	protected function encodeConfigValue(ConfigValue $configValue)
+	{
+		return ($configValue->isDeduplicated()) ? $configValue->getVarName() : $this->encode($configValue->getValue());
 	}
 
 	/**

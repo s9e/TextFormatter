@@ -223,8 +223,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('var oAF7AB7D4=[cDF617284];', $js);
-		$this->assertContains('filterChain:oAF7AB7D4', $js);
+		$this->assertContains('filterChain:[cDF617284]', $js);
 		$this->assertContains(
 			'function cDF617284(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}',
 			$js
@@ -242,8 +241,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('var o0ABD4128=[c2503AA6D];', $js);
-		$this->assertContains('filterChain:o0ABD4128', $js);
+		$this->assertContains('filterChain:[c2503AA6D]', $js);
 		$this->assertContains(
 			'function c2503AA6D(tag,tagConfig){return filterAttributes(tag,tagConfig,registeredVars,logger);}',
 			$js
@@ -261,8 +259,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('var o78DE79D0=[cB5061B9F];', $js);
-		$this->assertContains('filterChain:o78DE79D0', $js);
+		$this->assertContains('filterChain:[cB5061B9F]', $js);
 		$this->assertContains(
 			'function cB5061B9F(attrValue,attrName){return returnFalse(attrValue);}',
 			$js
@@ -380,49 +377,7 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox Tag config is not wholly deduplicated if disableTag() is exported
-	*/
-	public function testNoOptimizeDisableTag()
-	{
-		$this->configurator->tags->add('X');
-		$this->configurator->tags->add('Y');
-		$this->configurator->javascript->exportMethods = ['disableTag'];
-		$js = $this->configurator->javascript->getParser();
-
-		$this->assertContains('"X":{', $js);
-		$this->assertContains('"Y":{', $js);
-	}
-
-	/**
-	* @testdox Tag config is not wholly deduplicated if setNestingLimit() is exported
-	*/
-	public function testNoOptimizeSetNestingLimit()
-	{
-		$this->configurator->tags->add('X');
-		$this->configurator->tags->add('Y');
-		$this->configurator->javascript->exportMethods = ['setNestingLimit'];
-		$js = $this->configurator->javascript->getParser();
-
-		$this->assertContains('"X":{', $js);
-		$this->assertContains('"Y":{', $js);
-	}
-
-	/**
-	* @testdox Tag config is not wholly deduplicated if setTagLimit() is exported
-	*/
-	public function testNoOptimizeSetTagLimit()
-	{
-		$this->configurator->tags->add('X');
-		$this->configurator->tags->add('Y');
-		$this->configurator->javascript->exportMethods = ['setTagLimit'];
-		$js = $this->configurator->javascript->getParser();
-
-		$this->assertContains('"X":{', $js);
-		$this->assertContains('"Y":{', $js);
-	}
-
-	/**
-	* @testdox Tag config is wholly deduplicated otherwise
+	* @testdox Tag config is wholly deduplicated
 	*/
 	public function testOptimizeWholeTag()
 	{
@@ -433,8 +388,8 @@ class JavaScriptTest extends Test
 
 		$this->assertNotContains('"X":{', $js);
 		$this->assertNotContains('"Y":{', $js);
-		$this->assertContains('"X":o57D9840D', $js);
-		$this->assertContains('"Y":o57D9840D', $js);
+		$this->assertContains('"X":o54244453', $js);
+		$this->assertContains('"Y":o54244453', $js);
 	}
 
 	/**

@@ -8,60 +8,107 @@
 namespace s9e\TextFormatter\Configurator\JavaScript;
 
 /**
-* This class creates local variables to deduplicate complex objects
+* This class creates local variables to deduplicate complex configValues
 */
 class ConfigOptimizer
 {
+	/**
+	* @var array Associative array of ConfigValue instances
+	*/
+	protected $configValues;
+
 	/**
 	* @var Encoder
 	*/
 	protected $encoder;
 
 	/**
-	* @var integer Minimum size of the JavaScript literal to be deduplicated
+	* @var array Associative array with the length of the JavaScript representation of each value
 	*/
-	protected $minSize = 8;
-
-	/**
-	* @var array Associative array containing the JavaScript representation of deduplicated
-	*            data structures
-	*/
-	protected $objects;
+	protected $jsLengths;
 
 	/**
 	* Constructor
+	*
+	* @param Encoder $encoder
 	*/
-	public function __construct()
+	public function __construct(Encoder $encoder)
 	{
-		$this->encoder = new Encoder;
+		$this->encoder = $encoder;
 		$this->reset();
 	}
 
 	/**
-	* Return the var declarations for all deduplicated objects
+	* Return the var declarations for all deduplicated config values
 	*
 	* @return string JavaScript code
 	*/
-	public function getObjects()
+	public function getVarDeclarations()
 	{
+		asort($this->jsLengths);
+
 		$src = '';
-		foreach ($this->objects as $varName => $js)
+		foreach (array_keys($this->jsLengths) as $varName)
 		{
-			$src .= '/** @const */ var ' . $varName . '=' . $js . ";\n";
+			$configValue = $this->configValues[$varName];
+			if ($configValue->isDeduplicated())
+			{
+				$src .= '/** @const */ var ' . $varName . '=' . $this->encoder->encode($configValue->getValue()) . ";\n";
+			}
 		}
 
 		return $src;
 	}
 
 	/**
-	* Optimize given object
+	* Optimize given config object
 	*
-	* @param  array|Dictionary      $object Original object
-	* @return array|Code|Dictionary         Original object or a JavaScript variable
+	* @param  array|Dictionary $object Original config object
+	* @return array|Dictionary         Modified config object
 	*/
-	public function optimizeObject($object)
+	public function optimize($object)
 	{
-		return $this->deduplicateObject($this->optimizeObjectContent($object));
+		return current($this->optimizeObjectContent([$object]))->getValue();
+	}
+
+	/**
+	* Clear the deduplicated config values stored in this instance
+	*
+	* @return void
+	*/
+	public function reset()
+	{
+		$this->configValues = [];
+		$this->jsLengths    = [];
+	}
+
+	/**
+	* Mark ConfigValue instances that have been used multiple times
+	*
+	* @return void
+	*/
+	protected function deduplicateConfigValues()
+	{
+		arsort($this->jsLengths);
+		foreach (array_keys($this->jsLengths) as $varName)
+		{
+			$configValue = $this->configValues[$varName];
+			if ($configValue->getUseCount() > 1)
+			{
+				$configValue->deduplicate();
+			}
+		}
+	}
+
+	/**
+	* Return the name of the variable that will a given value
+	*
+	* @param  string $js JavaScript representation of the value
+	* @return string
+	*/
+	protected function getVarName($js)
+	{
+		return sprintf('o%08X', crc32($js));
 	}
 
 	/**
@@ -70,50 +117,52 @@ class ConfigOptimizer
 	* @param  array|Dictionary $object Original object
 	* @return array|Dictionary         Modified object
 	*/
-	public function optimizeObjectContent($object)
+	protected function optimizeObjectContent($object)
+	{
+		$object = $this->recordObject($object);
+		$this->deduplicateConfigValues();
+
+		return $object->getValue();
+	}
+
+	/**
+	* Record a given config object as a ConfigValue instance
+	*
+	* @param  array|Dictionary $object Original object
+	* @return ConfigValue              Stored ConfigValue instance
+	*/
+	protected function recordObject($object)
+	{
+		$js      = $this->encoder->encode($object);
+		$varName = $this->getVarName($js);
+		$object  = $this->recordObjectContent($object);
+
+		if (!isset($this->configValues[$varName]))
+		{
+			$this->configValues[$varName]       = new ConfigValue($object, $varName);
+			$this->jsLengths[$varName] = strlen($js);
+		}
+		$this->configValues[$varName]->incrementUseCount();
+
+		return $this->configValues[$varName];
+	}
+
+	/**
+	* Record the content of given config object
+	*
+	* @param  array|Dictionary $object Original object
+	* @return array|Dictionary         Modified object containing ConfigValue instances
+	*/
+	protected function recordObjectContent($object)
 	{
 		foreach ($object as $k => $v)
 		{
 			if (is_array($v) || $v instanceof Dictionary)
 			{
-				$object[$k] = $this->optimizeObject($v);
+				$object[$k] = $this->recordObject($v);
 			}
 		}
 
 		return $object;
-	}
-
-	/**
-	* Clear the deduplicated objects stored in this instance
-	*
-	* @return void
-	*/
-	public function reset()
-	{
-		$this->objects = [];
-	}
-
-	/**
-	* Deduplicate given object
-	*
-	* The object will be encoded into JavaScript. If the size of its representation exceeds
-	* $this->minSize it will be stored in a variable and the name of the variable will be returned.
-	* Otherwise, the source for the object is returned
-	*
-	* @param  array|Dictionary $object Original object
-	* @return Code                     Object's source or variable holding the object's value
-	*/
-	protected function deduplicateObject($object)
-	{
-		$js = $this->encoder->encode($object);
-		$k  = sprintf('o%08X', crc32($js));
-
-		if (strlen($js) >= $this->minSize)
-		{
-			$this->objects[$k] = $js;
-			$js = $k;
-		}
-
-		return new Code($js);
 	}
 }

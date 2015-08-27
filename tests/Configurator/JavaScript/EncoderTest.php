@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator;
 
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\ConfigValue;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Tests\Test;
@@ -91,6 +92,10 @@ class EncoderTest extends Test
 				new Dictionary(['foo' => "bar\xE2\x80\xA9"]),
 				'{"foo":"bar\\u2029"}'
 			],
+			[
+				new ConfigValue([0, 0], 'o82015558'),
+				'[0,0]'
+			],
 		];
 	}
 
@@ -115,7 +120,6 @@ class EncoderTest extends Test
 			$this->assertContains($name . ':', $js);
 		}
 	}
-
 
 	/**
 	* @testdox encode() quotes illegal property names
@@ -165,5 +169,19 @@ class EncoderTest extends Test
 	{
 		$encoder = new Encoder;
 		$encoder->encode(function(){});
+	}
+
+	/**
+	* @testdox encode() properly encodes deduplicated config values
+	*/
+	public function testEncodeDeduplicatedConfigValue()
+	{
+		$configValue = new ConfigValue([0, 0], 'o82015558');
+		$configValue->incrementUseCount();
+		$configValue->incrementUseCount();
+		$configValue->deduplicate();
+
+		$encoder = new Encoder;
+		$this->assertSame('o82015558', $encoder->encode($configValue));
 	}
 }

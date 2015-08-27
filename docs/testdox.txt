@@ -1070,12 +1070,23 @@ s9e\TextFormatter\Tests\Configurator\ConfigOptimizer
  [x] reset() clears the stored objects
  [x] OptimizeObject tests
 
+s9e\TextFormatter\Tests\Configurator\JavaScript\ConfigValue
+ [x] getUseCount() returns 0 by default
+ [x] getValue() returns the original value
+ [x] getVarName() returns the assigned variable name
+ [x] incrementUseCount() increments the use count by 1
+ [x] deduplicate() doesn't do anything if the use count is 1
+ [x] deduplicate() marks the value as deduplicated if the use count is 2
+ [x] deduplicate() sets the use counter of the instance to 1
+ [x] deduplicate() decrements the use counter of config values contained in the instance
+
 s9e\TextFormatter\Tests\Configurator\Encoder
  [x] encode() tests
  [x] encode() does not quote legal property names
  [x] encode() quotes illegal property names
  [x] encode() throws an exception on unsupported types
  [x] encode() throws an exception on unsupported objects
+ [x] encode() properly encodes deduplicated config values
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will return the source from cache if available
@@ -1708,10 +1719,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The normal Logger is present by default
  [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
- [x] Tag config is not wholly deduplicated if disableTag() is exported
- [x] Tag config is not wholly deduplicated if setNestingLimit() is exported
- [x] Tag config is not wholly deduplicated if setTagLimit() is exported
- [x] Tag config is wholly deduplicated otherwise
+ [x] Tag config is wholly deduplicated
  [x] The public API is created if any method is exported
  [x] The public API is not created if no method is exported
 

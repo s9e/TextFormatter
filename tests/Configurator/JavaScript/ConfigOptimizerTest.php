@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator;
 
 use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -16,11 +17,11 @@ class ConfigOptimizerTest extends Test
 	*/
 	public function testReset()
 	{
-		$optimizer = new ConfigOptimizer;
-		$optimizer->optimizeObject(['xxxxxxxx']);
-		$this->assertNotEmpty($optimizer->getObjects());
+		$optimizer = new ConfigOptimizer(new Encoder);
+		$optimizer->optimize([['xyz'],['xyz']]);
+		$this->assertNotEmpty($optimizer->getVarDeclarations());
 		$optimizer->reset();
-		$this->assertEmpty($optimizer->getObjects());
+		$this->assertEmpty($optimizer->getVarDeclarations());
 	}
 
 	/**
@@ -29,9 +30,12 @@ class ConfigOptimizerTest extends Test
 	*/
 	public function testOptimizeObject($original, $expected, $objects)
 	{
-		$optimizer = new ConfigOptimizer;
-		$this->assertEquals($expected, $optimizer->optimizeObject($original));
-		$this->assertEquals(implode("\n", $objects), rtrim($optimizer->getObjects()));
+		$encoder   = new Encoder;
+		$optimizer = new ConfigOptimizer($encoder);
+		$config    = $optimizer->optimize($original);
+
+		$this->assertSame($expected, $encoder->encode($config));
+		$this->assertSame(implode("\n", $objects), rtrim($optimizer->getVarDeclarations()));
 	}
 
 	public function getOptimizeObjectTests()
@@ -42,10 +46,9 @@ class ConfigOptimizerTest extends Test
 					'foo' => [12345, 54321],
 					'bar' => [12345, 54321]
 				],
-				'o5D6AC35D',
+				'{bar:o3D7424E0,foo:o3D7424E0}',
 				[
-					'/** @const */ var o3D7424E0=[12345,54321];',
-					'/** @const */ var o5D6AC35D={bar:o3D7424E0,foo:o3D7424E0};'
+					'/** @const */ var o3D7424E0=[12345,54321];'
 				]
 			],
 			[
@@ -53,22 +56,18 @@ class ConfigOptimizerTest extends Test
 					'foo' => [12345, 54321],
 					'bar' => [12345, 54321]
 				]),
-				'oCA6E6DE0',
+				'{"bar":o3D7424E0,"foo":o3D7424E0}',
 				[
-					'/** @const */ var o3D7424E0=[12345,54321];',
-					'/** @const */ var oCA6E6DE0={"bar":o3D7424E0,"foo":o3D7424E0};'
+					'/** @const */ var o3D7424E0=[12345,54321];'
 				]
 			],
 			[
-				// Small literals are preserved
 				[
-					'foo' => [0],
-					'bar' => [0]
+					'foo' => [12345, ],
+					'bar' => [54321, 12345]
 				],
-				'o46F1E3B8',
-				[
-					'/** @const */ var o46F1E3B8={bar:[0],foo:[0]};'
-				]
+				'{bar:[54321,12345],foo:[12345]}',
+				[]
 			],
 		];
 	}

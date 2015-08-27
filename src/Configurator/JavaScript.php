@@ -87,10 +87,10 @@ class JavaScript
 	*/
 	public function __construct(Configurator $configurator)
 	{
-		$this->callbackGenerator = new CallbackGenerator;
-		$this->configOptimizer   = new ConfigOptimizer;
-		$this->configurator      = $configurator;
 		$this->encoder           = new Encoder;
+		$this->callbackGenerator = new CallbackGenerator;
+		$this->configOptimizer   = new ConfigOptimizer($this->encoder);
+		$this->configurator      = $configurator;
 		$this->hintGenerator     = new HintGenerator;
 	}
 
@@ -224,9 +224,9 @@ class JavaScript
 	}
 
 	/**
-	* Get the JavaScript representation of the plugins
+	* Return the plugins' config
 	*
-	* @return string JavaScript code
+	* @return Dictionary
 	*/
 	protected function getPluginsConfig()
 	{
@@ -305,13 +305,13 @@ class JavaScript
 			$plugins[$pluginName] = $globalConfig;
 		}
 
-		return $this->encode($plugins);
+		return $plugins;
 	}
 
 	/**
-	* Generate a JavaScript representation of the registered vars
+	* Return the registeredVars config
 	*
-	* @return string JavaScript source code
+	* @return Dictionary
 	*/
 	protected function getRegisteredVarsConfig()
 	{
@@ -321,17 +321,17 @@ class JavaScript
 		// leak some informations about the server
 		unset($registeredVars['cacheDir']);
 
-		return $this->encode(new Dictionary($registeredVars));
+		return new Dictionary($registeredVars);
 	}
 
 	/**
-	* Generate a JavaScript representation of the root context
+	* Return the root context config
 	*
-	* @return string JavaScript source code
+	* @return array
 	*/
 	protected function getRootContext()
 	{
-		return $this->encode($this->config['rootContext']);
+		return $this->config['rootContext'];
 	}
 
 	/**
@@ -370,14 +370,12 @@ class JavaScript
 	}
 
 	/**
-	* Generate a JavaScript representation of the tags' config
+	* Return the tags' config
 	*
-	* @return string JavaScript source code
+	* @return Dictionary
 	*/
 	protected function getTagsConfig()
 	{
-		$methodName = (count(array_intersect(['disableTag', 'setNestingLimit', 'setTagLimit'], $this->exportMethods))) ? 'optimizeObjectContent' : 'optimizeObject';
-
 		// Prepare a Dictionary that will preserve tags' names
 		$tags = new Dictionary;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)
@@ -388,10 +386,10 @@ class JavaScript
 				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
 			}
 
-			$tags[$tagName] = $this->configOptimizer->$methodName($tagConfig);
+			$tags[$tagName] = $tagConfig;
 		}
 
-		return $this->encode($tags);
+		return $tags;
 	}
 
 	/**
@@ -402,12 +400,18 @@ class JavaScript
 	*/
 	protected function injectConfig($src)
 	{
-		$config = [
-			'plugins'        => $this->getPluginsConfig(),
-			'registeredVars' => $this->getRegisteredVarsConfig(),
-			'rootContext'    => $this->getRootContext(),
-			'tagsConfig'     => $this->getTagsConfig()
-		];
+		$config = array_map(
+			[$this, 'encode'],
+			$this->configOptimizer->optimize(
+				[
+					'plugins'        => $this->getPluginsConfig(),
+					'registeredVars' => $this->getRegisteredVarsConfig(),
+					'rootContext'    => $this->getRootContext(),
+					'tagsConfig'     => $this->getTagsConfig()
+				]
+			)
+		);
+
 		$src = preg_replace_callback(
 			'/(\\nvar (' . implode('|', array_keys($config)) . '))(;)/',
 			function ($m) use ($config)
@@ -418,7 +422,7 @@ class JavaScript
 		);
 
 		// Prepend the deduplicated objects
-		$src = $this->configOptimizer->getObjects() . $src;
+		$src = $this->configOptimizer->getVarDeclarations() . $src;
 
 		// Append the functions from filters and generators
 		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
