@@ -8,45 +8,73 @@
 namespace s9e\TextFormatter\Configurator\JavaScript;
 class ConfigOptimizer
 {
+	protected $configValues;
 	protected $encoder;
-	protected $minSize = 8;
-	protected $objects;
-	public function __construct()
+	protected $jsLengths;
+	public function __construct(Encoder $encoder)
 	{
-		$this->encoder = new Encoder;
+		$this->encoder = $encoder;
 		$this->reset();
 	}
-	public function getObjects()
+	public function getVarDeclarations()
 	{
+		\asort($this->jsLengths);
 		$src = '';
-		foreach ($this->objects as $varName => $js)
-			$src .= '/** @const */ var ' . $varName . '=' . $js . ";\n";
+		foreach (\array_keys($this->jsLengths) as $varName)
+		{
+			$configValue = $this->configValues[$varName];
+			if ($configValue->isDeduplicated())
+				$src .= '/** @const */ var ' . $varName . '=' . $this->encoder->encode($configValue->getValue()) . ";\n";
+		}
 		return $src;
 	}
-	public function optimizeObject($object)
+	public function optimize($object)
 	{
-		return $this->deduplicateObject($this->optimizeObjectContent($object));
-	}
-	public function optimizeObjectContent($object)
-	{
-		foreach ($object as $k => $v)
-			if (\is_array($v) || $v instanceof Dictionary)
-				$object[$k] = $this->optimizeObject($v);
-		return $object;
+		return \current($this->optimizeObjectContent([$object]))->getValue();
 	}
 	public function reset()
 	{
-		$this->objects = [];
+		$this->configValues = [];
+		$this->jsLengths    = [];
 	}
-	protected function deduplicateObject($object)
+	protected function deduplicateConfigValues()
 	{
-		$js = $this->encoder->encode($object);
-		$k  = \sprintf('o%08X', \crc32($js));
-		if (\strlen($js) >= $this->minSize)
+		\arsort($this->jsLengths);
+		foreach (\array_keys($this->jsLengths) as $varName)
 		{
-			$this->objects[$k] = $js;
-			$js = $k;
+			$configValue = $this->configValues[$varName];
+			if ($configValue->getUseCount() > 1)
+				$configValue->deduplicate();
 		}
-		return new Code($js);
+	}
+	protected function getVarName($js)
+	{
+		return \sprintf('o%08X', \crc32($js));
+	}
+	protected function optimizeObjectContent($object)
+	{
+		$object = $this->recordObject($object);
+		$this->deduplicateConfigValues();
+		return $object->getValue();
+	}
+	protected function recordObject($object)
+	{
+		$js      = $this->encoder->encode($object);
+		$varName = $this->getVarName($js);
+		$object  = $this->recordObjectContent($object);
+		if (!isset($this->configValues[$varName]))
+		{
+			$this->configValues[$varName]       = new ConfigValue($object, $varName);
+			$this->jsLengths[$varName] = \strlen($js);
+		}
+		$this->configValues[$varName]->incrementUseCount();
+		return $this->configValues[$varName];
+	}
+	protected function recordObjectContent($object)
+	{
+		foreach ($object as $k => $v)
+			if (\is_array($v) || $v instanceof Dictionary)
+				$object[$k] = $this->recordObject($v);
+		return $object;
 	}
 }
