@@ -5,6 +5,7 @@
 - Reduced the size of some XSLT templates [[1](https://github.com/s9e/TextFormatter/commit/b897952c6976ecc741ee1d56238cf2d03e9e3e3f)] [[2](https://github.com/s9e/TextFormatter/commit/a648a552c8f0677f707820c2111acbd1b6dc9746)]
 - [Improved Litedown's inline links](https://github.com/s9e/TextFormatter/commit/745810d187be81ec4601e8fa8cf9ae3cf7e53d02)
 - [Added the Autoimage plugin](https://github.com/s9e/TextFormatter/commit/b7bcb10574b6cc258a13e05e7c887391a54ca7bc)
+- [Improved JavaScript minification](https://github.com/s9e/TextFormatter/commit/4ab7e9c815ba298f6df770605a9dde6e39dacbdc)
 
 ###### July 2015
 
