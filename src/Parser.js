@@ -161,7 +161,7 @@ function disableTag(tagName)
 {
 	if (tagsConfig[tagName])
 	{
-		tagsConfig[tagName].isDisabled = true;
+		copyTagConfig(tagName).isDisabled = true;
 	}
 }
 
@@ -174,7 +174,7 @@ function enableTag(tagName)
 {
 	if (tagsConfig[tagName])
 	{
-		tagsConfig[tagName].isDisabled = false;
+		copyTagConfig(tagName).isDisabled = false;
 	}
 }
 
@@ -288,7 +288,7 @@ function setTagLimit(tagName, tagLimit)
 {
 	if (tagsConfig[tagName])
 	{
-		tagsConfig[tagName].tagLimit = tagLimit;
+		copyTagConfig(tagName).tagLimit = tagLimit;
 	}
 }
 
@@ -304,8 +304,28 @@ function setNestingLimit(tagName, nestingLimit)
 {
 	if (tagsConfig[tagName])
 	{
-		tagsConfig[tagName].nestingLimit = nestingLimit;
+		copyTagConfig(tagName).nestingLimit = nestingLimit;
 	}
+}
+
+/**
+* Copy a tag's config
+*
+* This method ensures that the tag's config is its own object and not shared with another
+* identical tag
+*
+* @param  {!string} tagName Tag's name
+* @return {!Object}         Tag's config
+*/
+function copyTagConfig(tagName)
+{
+	var tagConfig = {}, k;
+	for (k in tagsConfig[tagName])
+	{
+		tagConfig[k] = tagsConfig[tagName][k];
+	}
+
+	return tagsConfig[tagName] = tagConfig;
 }
 
 //==========================================================================
