@@ -4,21 +4,31 @@ This plugin allows the user to embed content from allowed sites using a `[media]
 
 It is designed to be able to parse any of the following forms:
 
- * `[media]http://www.youtube.com/watch?v=-cEzsCAzTak[/media]` *(simplest form)*
- * `[media=youtube]-cEzsCAzTak[/media]` *(from [XenForo's BB Code Media Sites](http://xenforo.com/help/bb-code-media-sites/))*
- * `[youtube]http://youtu.be/watch?v=-cEzsCAzTak[/youtube]` *(from various forum softwares such as [phpBB](https://www.phpbb.com/customise/db/bbcode/youtube/))*
- * `[youtube=http://www.youtube.com/watch?v=-cEzsCAzTak]` *(from [WordPress's YouTube short code](http://en.support.wordpress.com/videos/youtube/))*
- * `[youtube]-cEzsCAzTak[/youtube]` *(from various forum softwares such as [vBulletin](http://www.vbulletin.com/forum/forum/vbulletin-3-8/vbulletin-3-8-questions-problems-and-troubleshooting/vbulletin-quick-tips-and-customizations/204206-how-to-make-a-youtube-bb-code))*
- * `http://www.youtube.com/watch?v=-cEzsCAzTak` *(plain URLs are turned into embedded content)*
+ * `[media]http://www.youtube.com/watch?v=-cEzsCAzTak[/media]`  
+   _(simplest form)_
+ * `[media=youtube]-cEzsCAzTak[/media]`  
+   _(from [XenForo's BB Code Media Sites](http://xenforo.com/help/bb-code-media-sites/))_
+ * `[youtube]http://youtu.be/watch?v=-cEzsCAzTak[/youtube]`  
+   _(from various forum softwares such as [phpBB](https://www.phpbb.com/customise/db/bbcode/youtube/))_
+ * `[youtube=http://www.youtube.com/watch?v=-cEzsCAzTak]`  
+   _(from [WordPress's YouTube short code](http://en.support.wordpress.com/videos/youtube/))_
+ * `[youtube]-cEzsCAzTak[/youtube]`  
+   _(from various forum softwares such as [vBulletin](http://www.vbulletin.com/forum/forum/vbulletin-3-8/vbulletin-3-8-questions-problems-and-troubleshooting/vbulletin-quick-tips-and-customizations/204206-how-to-make-a-youtube-bb-code))_
+ * `http://www.youtube.com/watch?v=-cEzsCAzTak`  
+   _(plain URLs are turned into embedded content)_
 
-Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites/).
+Has built-in support for Dailymotion, Facebook, Instagram, Twitch, Twitter, YouTube [and more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites/).
 
 ## Example
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
+// We want to create individual BBCodes such as [youtube] in
+// addition to the default [media] BBCode
 $configurator->MediaEmbed->createIndividualBBCodes = true;
+
+// Add the sites we want to support
 $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');
@@ -57,7 +67,7 @@ $configurator->MediaEmbed->add(
 	'youtube',
 	[
 		'host'    => 'youtube.com',
-		'extract' => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
+		'extract' => "!youtube\\.com/watch\\?v=(?'id'[-\\w]+)!",
 		'iframe'  => [
 			'width'  => 560,
 			'height' => 315,
