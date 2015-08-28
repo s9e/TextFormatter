@@ -307,6 +307,11 @@
 		<td>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</td>
 	</tr>
 	<tr>
+		<td><code>oddshot</code></td>
+		<td>Oddshot</td>
+		<td>http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956<br/>http://oddshot.tv/shot/spunj-2015082711414891</td>
+	</tr>
+	<tr>
 		<td><code>pastebin</code></td>
 		<td>Pastebin</td>
 		<td>http://pastebin.com/9jEf44nc</td>

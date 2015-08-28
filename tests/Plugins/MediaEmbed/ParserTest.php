@@ -2249,6 +2249,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956',
+				'<r><ODDSHOT id="PlayHearthstone_694_201507222254380956" url="http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956">http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956</ODDSHOT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('oddshot');
+				}
+			],
+			[
+				'http://oddshot.tv/shot/spunj-2015082711414891',
+				'<r><ODDSHOT id="spunj-2015082711414891" url="http://oddshot.tv/shot/spunj-2015082711414891">http://oddshot.tv/shot/spunj-2015082711414891</ODDSHOT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('oddshot');
+				}
+			],
+			[
 				'http://pastebin.com/9jEf44nc',
 				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
 				[],
