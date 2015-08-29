@@ -149,6 +149,10 @@ class TemplateNormalizerTest extends Test
 				</div>',
 				'<div title="x{@foo}y"/>'
 			],
+			[
+				'<iframe height="{300 + 20}"/>',
+				'<iframe height="320"/>',
+			],
 		];
 	}
 }

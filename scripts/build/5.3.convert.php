@@ -82,6 +82,12 @@ function convertCustom($filepath, &$file)
 				'public function isAllowed($word)'
 			)
 		),
+		'FoldConstants.php' => array(
+			array(
+				'protected function evaluateExpression($expr)',
+				'public function evaluateExpression($expr)',
+			)
+		),
 		'InlineXPathLiterals.php' => array(
 			array(
 				'protected function getTextContent($expr)',
