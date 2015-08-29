@@ -4963,6 +4963,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
+		$this->collection->append('FoldConstants');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
@@ -6780,6 +6781,47 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 			),
 			\ENT_NOQUOTES,
 			'UTF-8'
+		);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class FoldConstants extends TemplateNormalization
+{
+	public function normalize(DOMElement $template)
+	{
+		$xpath = new DOMXPath($template->ownerDocument);
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]';
+		foreach ($xpath->query($query) as $attribute)
+			$this->replaceAVT($attribute);
+	}
+	public function evaluateExpression($expr)
+	{
+		if (\preg_match('(^(\\d+)\\s*\\+\\s*(\\d+)$)', $expr, $m))
+			return $m[1] + $m[2];
+		return $expr;
+	}
+	protected function replaceAVT(DOMAttr $attribute)
+	{
+		$_this = $this;
+		AVTHelper::replace(
+			$attribute,
+			function ($token) use ($_this)
+			{
+				if ($token[0] === 'expression')
+					$token[1] = $_this->evaluateExpression($token[1]);
+				return $token;
+			}
 		);
 	}
 }
