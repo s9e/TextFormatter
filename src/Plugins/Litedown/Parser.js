@@ -274,6 +274,8 @@ function matchBlockLevelMarkup()
 		continuation,
 		endTag,
 		ignoreLen,
+		indentStr,
+		indentLen,
 		lfPos,
 		listIndex,
 		maxIndent,
@@ -361,13 +363,12 @@ function matchBlockLevelMarkup()
 
 		// Compute the width of the indentation
 		var indentWidth = 0,
-			indentPos   = 0,
-			indentStr,
-			indentLen;
+			indentPos   = 0;
 		if (m[2])
 		{
 			indentStr = m[2];
 			indentLen = indentStr.length;
+			maxIndent = (codeFence) ? 0 : codeIndent;
 
 			do
 			{
@@ -380,7 +381,7 @@ function matchBlockLevelMarkup()
 					indentWidth = (indentWidth + 4) & ~3;
 				}
 			}
-			while (++indentPos < indentLen && indentWidth < codeIndent);
+			while (++indentPos < indentLen && indentWidth < maxIndent);
 		}
 
 		// Test whether we're out of a code block

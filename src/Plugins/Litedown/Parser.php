@@ -366,6 +366,7 @@ class Parser extends ParserBase
 			{
 				$indentStr = $m[2][0];
 				$indentLen = strlen($indentStr);
+				$maxIndent = ($codeFence) ? 0 : $codeIndent;
 
 				do
 				{
@@ -378,7 +379,7 @@ class Parser extends ParserBase
 						$indentWidth = ($indentWidth + 4) & ~3;
 					}
 				}
-				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
+				while (++$indentPos < $indentLen && $indentWidth < $maxIndent);
 			}
 
 			// Test whether we're out of a code block

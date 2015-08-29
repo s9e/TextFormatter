@@ -1313,6 +1313,18 @@ class ParserTest extends Test
 					'<HR>***</HR></r>'
 				]
 			],
+			[
+				[
+					'```',
+					'    code',
+					'```'
+				],
+				[
+					'<r><CODE><s>```</s><i>',
+					'</i>    code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
 		]);
 	}
 
