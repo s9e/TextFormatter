@@ -838,6 +838,10 @@ class Parser extends ParserBase
 				$tag->setAttribute('title', $this->decode($m[3][0]));
 			}
 
+			// Give the link a slightly better priority to give it precedence over
+			// possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
+			$tag->setSortPriority(-1);
+
 			// Overwrite the markup without touching the link's text
 			$this->overwrite($startTagPos, $startTagLen);
 			$this->overwrite($endTagPos,   $endTagLen);

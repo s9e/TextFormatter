@@ -870,6 +870,15 @@ class ParserTest extends Test
 				'.. [..](http://example.org/() ..',
 				'<r><p>.. <URL url="http://example.org/%28"><s>[</s>..<e>](http://example.org/()</e></URL> ..</p></r>'
 			],
+			[
+				'[b](https://en.wikipedia.org/wiki/B) [b]..[/b]',
+				'<r><p><URL url="https://en.wikipedia.org/wiki/B"><s>[</s>b<e>](https://en.wikipedia.org/wiki/B)</e></URL> <STRONG><s>[b]</s>..<e>[/b]</e></STRONG></p></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->add('B')->tagName = 'STRONG';
+				}
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
