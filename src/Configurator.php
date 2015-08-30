@@ -2459,10 +2459,9 @@ abstract class XPathHelper
 	}
 	public static function isExpressionNumeric($expr)
 	{
-		$expr = \trim($expr);
-		$expr = \strrev(\preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', '', \strrev($expr)));
-		$expr = \str_replace(')', '', $expr);
-		if (\preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++$)', $expr))
+		$expr = \strrev(\preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', \strrev($expr)));
+		$expr = \str_replace(')', ' ', $expr);
+		if (\preg_match('(^\\s*([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
 			return \true;
 		return \false;
 	}
