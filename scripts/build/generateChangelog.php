@@ -1,26 +1,22 @@
 <?php
 
-$oldVersion = $_SERVER['argv'][1];
-$newVersion = $_SERVER['argv'][2];
+$newVersion  = $_SERVER['argv'][1];
+$oldCommitId = $_SERVER['argv'][2];
+$newCommitId = $_SERVER['argv'][3];
 
 $entries = [];
 $lines   = explode("\n", trim(file_get_contents('php://stdin')));
 
 $types = [
-	'Ignore'  => '((?:#ignore|#tests|ci skip|(?:build|travis) script)(?<subject>))i',
-	'New'     => '(^Added:?\\s*(?<subject>.*))i',
-	'Fixed'   => '(^Fixed:?\\s*(?<subject>.*))i',
-	'Removed' => '(^Removed:?\\s*(?<subject>.*))i',
-	'Changed' => '(^(?:Updated:?\\s*)?(?<subject>.*))'
+	'Ignore'  => '((?:#ignore|#tests|ci skip|(?:build|release|travis) script))i',
+	'New'     => '(\\bAdded\\b)i',
+	'Fixed'   => '(\\bFixed\\b)i',
+	'Removed' => '(\\bFixed\\b)i',
+	'Changed' => '()'
 ];
 
 foreach ($lines as $line)
 {
-	if (strpos($line, '[ci skip]') !== false)
-	{
-		continue;
-	}
-
 	$pos     = strpos($line, ' ');
 	$sha1    = substr($line, 0, $pos);
 	$subject = substr($line, $pos + 1);
@@ -29,7 +25,6 @@ foreach ($lines as $line)
 	{
 		if (preg_match($regexp, $subject, $m))
 		{
-			$subject = ucfirst($m['subject']);
 			break;
 		}
 	}
@@ -37,13 +32,10 @@ foreach ($lines as $line)
 	$entries[$type][$sha1] = $subject;
 }
 
-$version = json_decode(file_get_contents(__DIR__ . '/../../composer.json'))->version;
-$date    = gmdate('Y-m-d');
+$header = $newVersion . ' (' . gmdate('Y-m-d') . ')';
+echo $header, "\n", str_repeat('=', strlen($header)), "\n\n";
 
-$file = $version . ' (' . $date . ')';
-$file .= "\n" . str_repeat('=', strlen($file)) . "\n\n";
-
-$file .= "[Full commit log](https://github.com/s9e/TextFormatter/compare/$oldVersion...$newVersion)\n";
+echo "[Full commit log](https://github.com/s9e/TextFormatter/compare/$oldCommitId...$newCommitId)\n";
 
 foreach (['New', 'Changed', 'Fixed'] as $type)
 {
@@ -52,15 +44,12 @@ foreach (['New', 'Changed', 'Fixed'] as $type)
 		continue;
 	}
 
-	$file .= "\n" . $type . "\n" . str_repeat('-', strlen($type)) . "\n\n";
+	echo "\n### ", $type, "\n\n";
 
 	asort($entries[$type]);
 	foreach ($entries[$type] as $sha1 => $subject)
 	{
-		$file .= " - $sha1 $subject\n";
+		echo " - `$sha1` $subject\n";
 	}
 }
-$file .= "\n" . str_repeat('*', 80) . "\n\n";
-
-$filepath = __DIR__ . '/../../CHANGELOG.md';
-file_put_contents($filepath, $file . file_get_contents($filepath));
+echo "\n";
