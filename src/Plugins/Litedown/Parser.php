@@ -194,6 +194,7 @@ class Parser extends ParserBase
 			{
 				$indentStr = $m[2][0];
 				$indentLen = \strlen($indentStr);
+				$maxIndent = ($codeFence) ? 0 : $codeIndent;
 				do
 				{
 					if ($indentStr[$indentPos] === ' ')
@@ -201,7 +202,7 @@ class Parser extends ParserBase
 					else
 						$indentWidth = ($indentWidth + 4) & ~3;
 				}
-				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
+				while (++$indentPos < $indentLen && $indentWidth < $maxIndent);
 			}
 			if (isset($codeTag) && !$codeFence && $indentWidth < $codeIndent && !$lineIsEmpty)
 				$newContext = \true;
@@ -474,6 +475,7 @@ class Parser extends ParserBase
 			$tag->setAttribute('url', $this->decode($m[2][0]));
 			if (isset($m[3]) && $m[3][0] !== '')
 				$tag->setAttribute('title', $this->decode($m[3][0]));
+			$tag->setSortPriority(-1);
 			$this->overwrite($startTagPos, $startTagLen);
 			$this->overwrite($endTagPos,   $endTagLen);
 		}
