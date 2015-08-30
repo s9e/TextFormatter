@@ -16,12 +16,12 @@
 
  - `6a44f9f` Litedown: fixed incorrect indentation inside fenced code blocks
 
+
 0.2.0 (2015-08-27)
 ==================
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/0.1.0...0.2.0)
 
-********************************************************************************
 
 0.1.0 (2015-08-12)
 ==================

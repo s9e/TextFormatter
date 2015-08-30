@@ -52,4 +52,4 @@ foreach (['New', 'Changed', 'Fixed'] as $type)
 		echo " - `$sha1` $subject\n";
 	}
 }
-echo "\n";
+echo "\n\n";
