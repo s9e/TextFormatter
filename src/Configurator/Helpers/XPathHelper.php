@@ -83,10 +83,9 @@ abstract class XPathHelper
 		// Trim the expression and remove parentheses that are not part of a function call. PCRE
 		// does not support lookbehind assertions of variable length so we have to flip the string.
 		// We exclude the XPath operator "div" (flipped into "vid") to avoid false positives
-		$expr = trim($expr);
-		$expr = strrev(preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', '', strrev($expr)));
-		$expr = str_replace(')', '', $expr);
-		if (preg_match('(^([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++$)', $expr))
+		$expr = strrev(preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', strrev($expr)));
+		$expr = str_replace(')', ' ', $expr);
+		if (preg_match('(^\\s*([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
 		{
 			return true;
 		}
