@@ -3445,7 +3445,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://vine.co/v/bYwPIluIipH',
-				'<iframe width="480" height="480" src="https://vine.co/v/bYwPIluIipH/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"></iframe><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>',
+				'<iframe width="480" height="480" src="https://vine.co/v/bYwPIluIipH/embed/simple?audio=1" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

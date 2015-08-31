@@ -1,5 +1,13 @@
 Current things
 --------------
+- Remove custom templates from MediaEmbed
+- Make variable-height embeds like Twitter 100% wide in responsive mode
+- Use CSS to dimension iframes and possibly Flash embeds too
+- Add support for responsive embeds of variable ratio in MediaEmbed via CSS calc()
+
+
+Next in line
+------------
 - ~~Add RegexpParser::getCaptureNames()~~
 - ~~Modify the Preg plugin to use getCaptureNames()~~
 - ~~Modify AttributePreprocessor to use getCaptureNames()~~
@@ -8,6 +16,7 @@ Current things
 - Move AttributeProcessor instances to Attribute
 - Replace AttributePreprocessorCollection with AttributePreprocessorList
 - Refactor BBCodeMonkey, create a token class
+
 
 Long-term goals (?)
 -------------------
