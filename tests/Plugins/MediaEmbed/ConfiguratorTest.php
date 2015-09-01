@@ -88,9 +88,13 @@ class ConfiguratorTest extends Test
 			$this->configurator->MediaEmbed->add(
 				'youtube',
 				[
-					'host'     => 'youtube.com',
-					'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-					'template' => 'YouTube!'
+					'host'    => 'youtube.com',
+					'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+					'iframe'  => [
+						'width'  => 560,
+						'height' => 315,
+						'src'    => '//localhost'
+					]
 				]
 			)
 		);
@@ -104,9 +108,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -122,12 +130,16 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					'match'   => '#/\\d+#',
 					'extract' => "#/(?'vid'(?'id'\\d+))#"
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -143,13 +155,17 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					'url'     => 'http://example.org/{@id}',
 					'match'   => "#/(?'id'\\d+)#",
 					'extract' => "#/(?'vid'\\d+)#"
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -176,9 +192,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -194,9 +214,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!(?'url'youtube\\.com/.+)!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!(?'url'youtube\\.com/.+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 	}
@@ -209,9 +233,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!(?'url'youtube\\.com/.+)!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!(?'url'youtube\\.com/.+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -229,9 +257,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -246,9 +278,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -265,9 +301,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => $r1,
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => $r1,
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -295,9 +335,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => 'youtube.com',
-				'extract'  => [$r1, $r2],
-				'template' => 'YouTube!'
+				'host'    => 'youtube.com',
+				'extract' => [$r1, $r2],
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -325,9 +369,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'     => $hosts,
-				'extract'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'template' => 'YouTube!'
+				'host'    => $hosts,
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -345,7 +393,7 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					[
 						'match'   => '#/v/\\d+#',
@@ -356,7 +404,11 @@ class ConfiguratorTest extends Test
 						'extract' => "#id=(?'id'\\d+)#"
 					]
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -379,14 +431,18 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					[
 						'match'   => ['#/v/\\d+#', '#/V/\\d+#'],
 						'extract' => "#id=(?'id'\\d+)#"
 					]
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -412,13 +468,17 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					[
 						'extract' => "#id=(?'id'\\d+)#"
 					]
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -444,7 +504,7 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
+				'host'    => 'example.org',
 				'scrape'   => [
 					[
 						'match'   => '#/v/\\d+#',
@@ -454,7 +514,11 @@ class ConfiguratorTest extends Test
 						]
 					]
 				],
-				'template' => 'Example!'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -473,23 +537,6 @@ class ConfiguratorTest extends Test
 			],
 			$tag->filterChain[1]->getVars()
 		);
-	}
-
-	/**
-	* @testdox add() sets the tag's default template to the "template" element if available
-	*/
-	public function testAddTemplate()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'     => 'youtu.be',
-				'extract'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'template' => 'YouTube!'
-			]
-		);
-
-		$this->assertEquals('YouTube!', $tag->template);
 	}
 
 	/**
@@ -691,7 +738,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox add() checks the tag's safety before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage disable-output-escaping
+	* @expectedExceptionMessage Attribute 'id' is not properly sanitized
 	*/
 	public function testAddUnsafe()
 	{
@@ -700,9 +747,14 @@ class ConfiguratorTest extends Test
 			$this->configurator->MediaEmbed->add(
 				'youtube',
 				[
-					'host'     => 'youtube.com',
-					'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-					'template' => '<xsl:value-of select="." disable-output-escaping="yes"/>'
+					'host'    => 'youtube.com',
+					'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+					'iframe'  => [
+						'width'  => 560,
+						'height' => 315,
+						'src'    => '//localhost',
+						'onload' => '{@id}'
+					]
 				]
 			);
 		}
@@ -725,12 +777,16 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.com',
-				'extract'  => [
+				'host'    => 'example.com',
+				'extract' => [
 					"!example\\.com/(?<foo>\\d+)!",
 					"!example\\.com/(?<bar>\\D+)!"
 				],
-				'template' => 'foo'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -754,12 +810,16 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.com',
-				'extract'  => [
+				'host'    => 'example.com',
+				'extract' => [
 					"!example\\.com/(?<id>\\d+)!",
 					"!example\\.com/(?<bar>\\D+)!"
 				],
-				'template' => 'foo'
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				]
 			]
 		);
 
@@ -783,7 +843,11 @@ class ConfiguratorTest extends Test
 			[
 				'host'       => 'youtube.com',
 				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template'   => 'YouTube!',
+				'iframe'     => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				],
 				'attributes' => [
 					'id' => ['required' => false],
 					'xx' => ['type' => 'number']
@@ -807,9 +871,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'       => 'youtube.com',
-				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template'   => 'YouTube!',
+				'host'      => 'youtube.com',
+				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				],
 				'attributes' => [
 					'id' => ['required' => false],
 					'xx' => ['type' => 'number', 'preFilter' => 'hexdec']
@@ -837,9 +905,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'       => 'youtube.com',
-				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template'   => 'YouTube!',
+				'host'      => 'youtube.com',
+				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				],
 				'attributes' => [
 					'id' => ['required' => false],
 					'xx' => ['type' => 'number', 'preFilter' => 'eval']
@@ -856,9 +928,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'       => 'youtube.com',
-				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template'   => 'YouTube!',
+				'host'      => 'youtube.com',
+				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				],
 				'attributes' => [
 					'id' => ['required' => false],
 					'xx' => ['type' => 'number', 'postFilter' => 'hexdec']
@@ -886,9 +962,13 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'       => 'youtube.com',
-				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'template'   => 'YouTube!',
+				'host'      => 'youtube.com',
+				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'iframe'  => [
+					'width'  => 560,
+					'height' => 315,
+					'src'    => '//localhost'
+				],
 				'attributes' => [
 					'id' => ['required' => false],
 					'xx' => ['type' => 'number', 'postFilter' => 'eval']
@@ -905,8 +985,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'localhost',
 			[
-				'host'       => 'localhost',
-				'extract'    => "!localhost/(?'id'\\d+)!",
+				'host'      => 'localhost',
+				'extract'   => "!localhost/(?'id'\\d+)!",
 				'template'   => '',
 				'attributes' => [
 					'id' => ['required' => false],
@@ -929,8 +1009,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'../youtube',
 			[
-				'host'       => 'youtube.com',
-				'extract'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'host'      => 'youtube.com',
+				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 				'template'   => 'YouTube!'
 			]
 		);
@@ -1015,8 +1095,8 @@ class ConfiguratorTest extends Test
 		$this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => ''
 			]
 		);
@@ -1038,7 +1118,7 @@ class ConfiguratorTest extends Test
 			'foo',
 			[
 				'scheme'   => 'bar',
-				'extract'  => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => ''
 			]
 		);
@@ -1059,9 +1139,9 @@ class ConfiguratorTest extends Test
 		$this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => ['example.com', 'example.org'],
+				'host'    => ['example.com', 'example.org'],
 				'scheme'   => ['bar', 'baz'],
-				'extract'  => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => ''
 			]
 		);
@@ -1083,7 +1163,7 @@ class ConfiguratorTest extends Test
 			'foo',
 			[
 				'scheme'   => ['bar', 'baz'],
-				'extract'  => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => ''
 			]
 		);
@@ -1101,8 +1181,8 @@ class ConfiguratorTest extends Test
 		$this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => ''
 			]
 		);
@@ -1121,8 +1201,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => 560,
 					'height' => 315,
@@ -1150,8 +1230,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => '100%',
 					'height' => 315,
@@ -1172,8 +1252,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => '@width',
 					'height' => '@height',
@@ -1201,8 +1281,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => '{@width+12}',
 					'height' => '{@height+34}',
@@ -1230,8 +1310,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => '10<xsl:if test="@foo">0</xsl:if>',
 					'height' => '100',
@@ -1252,8 +1332,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => '10',
 					'height' => '10<xsl:if test="@foo">0</xsl:if>',
@@ -1274,8 +1354,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => 560,
 					'height' => 315,
@@ -1304,8 +1384,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'flash'  => [
 					'width'  => 560,
 					'height' => 315,
@@ -1334,8 +1414,8 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'foo',
 			[
-				'host'     => 'example.org',
-				'extract'  => "!(?'id'\\d+)!",
+				'host'    => 'example.org',
+				'extract' => "!(?'id'\\d+)!",
 				'iframe'  => [
 					'width'  => 560,
 					'height' => 315,

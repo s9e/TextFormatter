@@ -136,12 +136,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'    => 'example.invalid',
-							'scrape'  => [
+							'host'   => 'example.invalid',
+							'scrape' => [
 								'match'   => ['/XXX/', '/123/'],
 								'extract' => "!^(?'id'[0-9]+)$!"
 							],
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -160,12 +164,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'    => 'example.invalid',
-							'scrape'  => [
+							'host'   => 'example.invalid',
+							'scrape' => [
 								'match'   => '/./',
 								'extract' => ['/foo/', "!^(?'id'[0-9]+)$!"]
 							],
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -184,8 +192,8 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'    => 'example.invalid',
-							'scrape'  => [
+							'host'   => 'example.invalid',
+							'scrape' => [
 								[
 									'match'   => '/./',
 									'extract' => '/foo/'
@@ -195,7 +203,11 @@ class ParserTest extends Test
 									'extract' => "!^(?'id'[0-9]+)$!"
 								]
 							],
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1174,9 +1186,9 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'    => 'example.invalid',
+							'host'   => 'example.invalid',
 							'extract' => "#/(?'id'[0-9]{2})#",
-							'scrape'  => [
+							'scrape' => [
 								'match'   => '/./',
 								'extract' => "/(?'id'[0-9]+)/"
 							],
@@ -1194,17 +1206,25 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'x1',
 						[
-							'host'     => 'example.org',
+							'host'    => 'example.org',
 							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 					$configurator->MediaEmbed->add(
 						'x2',
 						[
-							'host'     => 'foo.example.org',
+							'host'    => 'foo.example.org',
 							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1219,9 +1239,13 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'x2',
 						[
-							'host'     => 'foo.example.org',
+							'host'    => 'foo.example.org',
 							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1236,9 +1260,13 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
-							'host'     => 'foo.example.org',
+							'host'    => 'foo.example.org',
 							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1252,12 +1280,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
-							'host'     => 'example.com',
+							'host'    => 'example.com',
 							'extract'  => [
 								"!example\\.com/(?<foo>foo)!",
 								"!example\\.com/(?<bar>bar)!"
 							],
-							'template' => 'foo'
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1271,12 +1303,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
-							'host'     => 'example.com',
+							'host'    => 'example.com',
 							'extract'  => [
 								"!example\\.com/(?<foo>foo)!",
 								"!example\\.com/(?<bar>bar)!"
 							],
-							'template' => 'foo'
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1291,12 +1327,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
-							'host'     => 'example.com',
+							'host'    => 'example.com',
 							'extract'  => [
 								"!example\\.com/(?<foo>foo)!",
 								"!example\\.com/(?<bar>bar)!"
 							],
-							'template' => 'foo'
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}
@@ -1312,12 +1352,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add(
 						'foo',
 						[
-							'host'     => 'example.com',
+							'host'    => 'example.com',
 							'extract'  => [
 								"!example\\.com/(?<foo>foo)!",
 								"!example\\.com/(?<bar>bar)!"
 							],
-							'template' => 'foo'
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
 						]
 					);
 				}

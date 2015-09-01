@@ -19,7 +19,6 @@ foreach ($provider->getIds() as $siteId)
 			'scrape'       => 1,
 			'iframe'       => 1,
 			'flash'        => 1,
-			'template'     => 1,
 		]
 	);
 

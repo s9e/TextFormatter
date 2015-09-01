@@ -2434,7 +2434,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() accepts multiple "match" elements in "scrape"
  [x] add() accepts zero "match" elements in "scrape"
  [x] add() accepts multiple "extract" elements in "scrape"
- [x] add() sets the tag's default template to the "template" element if available
  [x] add() sets the tag's default template to the iframe defined in the "iframe" element if available
  [x] add() treats iframe attributes as attribute value templates
  [x] Extra attributes can be added to an iframe

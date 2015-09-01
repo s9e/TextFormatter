@@ -62,7 +62,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var array List of rendering methods in order of preference, descending
 	*/
-	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
+	protected $preferredRenderingMethods = ['iframe', 'flash'];
 
 	/**
 	* @var bool Whether to enable responsive embeds
@@ -623,17 +623,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $template;
-	}
-
-	/**
-	* Build a tag's template based on its template config
-	*
-	* @param  array  $siteConfig
-	* @return string
-	*/
-	protected function buildTemplate(array $siteConfig)
-	{
-		return $siteConfig['template'];
 	}
 
 	/**

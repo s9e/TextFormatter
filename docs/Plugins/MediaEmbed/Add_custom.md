@@ -113,51 +113,6 @@ echo $html;
 <object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" data="http://www.dailymotion.com/swf/x222z1"><param name="allowfullscreen" value="true"><embed type="application/x-shockwave-flash" width="560" height="315" src="http://www.dailymotion.com/swf/x222z1" allowfullscreen=""></object>
 ```
 
-### How to configure a custom `template`
-
-By using a custom template, you have access to more options at the price of increased complexity. Generally, it should only be used if the default `iframe` or `flash` method does not work. Below is the reproduction of the default code used for Twitch links, which uses 3 different kinds of links and 2 different players.
-
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-
-$configurator->MediaEmbed->add(
-	'twitch',
-	[
-		'host'     => 'twitch.tv',
-		'extract'  => "!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!",
-		'template' => <<<'EOT'
-			<object type="application/x-shockwave-flash"
-			        typemustmatch=""
-			        width="620"
-			        height="378"
-			        data="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
-			>
-				<param name="flashvars">
-					<xsl:attribute name="value">channel=<xsl:value-of select="@channel"/><xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if><xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if></xsl:attribute>
-				</param>
-				<embed type="application/x-shockwave-flash"
-				       width="620"
-				       height="378"
-				       src="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
-				/>
-			</object>
-EOT
-	]
-);
-
-// Get an instance of the parser and the renderer
-extract($configurator->finalize());
-
-$text = '[media]http://www.twitch.tv/minigolf2000/b/419320018[/media]';
-$xml  = $parser->parse($text);
-$html = $renderer->render($xml);
-
-echo $html;
-```
-```html
-<object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="http://www.twitch.tv/widgets/archive_embed_player.swf"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=419320018"><embed type="application/x-shockwave-flash" width="620" height="378" src="http://www.twitch.tv/widgets/archive_embed_player.swf"></object>
-```
-
 ### How to scrape content
 
 Some media sites don't put all of the necessary data (e.g. the ID of a video) in the URL. In that case, you may have to retrieve it from the page itself.
