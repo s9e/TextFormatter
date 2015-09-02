@@ -1,4 +1,4 @@
-<site name="audioBoom" homepage="https://audioboom.com/" unresponsive="1">
+<site name="audioBoom" homepage="https://audioboom.com/">
 	<example>http://audioboo.fm/boos/2439994-deadline-day-update</example>
 	<example>http://audioboom.com/boos/2493448-robert-patrick</example>
 
@@ -7,5 +7,5 @@
 	<host>audioboo.fm</host>
 	<host>audioboom.com</host>
 	<extract>!audioboo(?:\.f|m\.co)m/boos/(?'id'\d+)!</extract>
-	<iframe width="100%" height="150" src="//audioboom.com/boos/{@id}/embed/v3" style="max-width:700px"/>
+	<iframe unresponsive="1" width="100%" height="150" src="//audioboom.com/boos/{@id}/embed/v3" style="max-width:700px"/>
 </site>

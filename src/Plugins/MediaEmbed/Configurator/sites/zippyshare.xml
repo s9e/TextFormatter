@@ -1,4 +1,4 @@
-<site name="Zippyshare audio files" homepage="http://www.zippyshare.com/" unresponsive="1">
+<site name="Zippyshare audio files" homepage="http://www.zippyshare.com/">
 	<example>http://www17.zippyshare.com/v/EtPLaXGE/file.html</example>
 
 	<tags><tag>file sharing</tag></tags>
@@ -8,5 +8,5 @@
 		<match>!/v/!</match>
 		<extract>!file=(?'file'\w+)&amp;amp;server=(?'server'\d+)!</extract>
 	</scrape>
-	<flash width="100%" height="80" style="max-width:900px" src="//api.zippyshare.com/api/player.swf" flashvars="file={@file}&amp;server={@server}&amp;autostart=false"/>
+	<flash unresponsive="1" width="100%" height="80" style="max-width:900px" src="//api.zippyshare.com/api/player.swf" flashvars="file={@file}&amp;server={@server}&amp;autostart=false"/>
 </site>

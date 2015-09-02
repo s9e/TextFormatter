@@ -1,4 +1,4 @@
-<site name="Audiomack" homepage="http://www.audiomack.com/" unresponsive="1">
+<site name="Audiomack" homepage="http://www.audiomack.com/">
 	<example>http://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1</example>
 	<example>http://www.audiomack.com/album/chance-the-rapper/acid-rap</example>
 
@@ -6,7 +6,7 @@
 
 	<host>audiomack.com</host>
 	<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
-	<iframe width="100%" style="max-width:900px">
+	<iframe unresponsive="1" width="100%" style="max-width:900px">
 		<height><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@mode='album'">340</xsl:when>

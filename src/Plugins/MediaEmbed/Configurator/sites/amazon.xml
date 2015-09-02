@@ -1,4 +1,4 @@
-<site name="Amazon Product" homepage="http://affiliate-program.amazon.com/" unresponsive="1">
+<site name="Amazon Product" homepage="http://affiliate-program.amazon.com/">
 	<example>http://www.amazon.ca/gp/product/B00GQT1LNO/</example>
 	<example>http://www.amazon.co.jp/gp/product/B003AKZ6I8/</example>
 	<example>http://www.amazon.co.uk/gp/product/B00BET0NR6/</example>
@@ -20,7 +20,7 @@
 	<host>amazon.it</host>
 	<extract>#/(?:dp|gp/product)/(?'id'[A-Z0-9]+)#</extract>
 	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|es|fr|it|jp|uk)#</extract>
-	<iframe width="120" height="240">
+	<iframe unresponsive="1" width="120" height="240">
 		<src><![CDATA[
 			<xsl:text>//rcm-</xsl:text>
 			<xsl:choose>

@@ -1,4 +1,4 @@
-<site name="Twitter" homepage="https://twitter.com/" unresponsive="1">
+<site name="Twitter" homepage="https://twitter.com/">
 	<example>https://twitter.com/IJasonAlexander/statuses/526635414338023424</example>
 	<example>https://mobile.twitter.com/DerekTVShow/status/463372588690202624</example>
 	<example>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</example>
@@ -21,5 +21,5 @@
 		var origin = src.substr(0, src.indexOf('/', 8));
 		contentWindow.postMessage('s9e:' + id, origin);
 	-->
-	<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+	<iframe unresponsive="1" width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 </site>

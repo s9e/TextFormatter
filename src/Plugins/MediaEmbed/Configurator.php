@@ -551,7 +551,7 @@ class Configurator extends ConfiguratorBase
 			$attributes['style'] = $siteConfig['flash']['style'];
 		}
 
-		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
 		if ($isResponsive)
 		{
 			$attributes = $this->addResponsiveStyle($attributes);
@@ -614,7 +614,7 @@ class Configurator extends ConfiguratorBase
 		];
 
 		// Build the template
-		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
 		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
 
 		if ($isResponsive)
@@ -633,6 +633,11 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function canBeResponsive(array $attributes)
 	{
+		if (!empty($attributes['unresponsive']))
+		{
+			return false;
+		}
+
 		// Cannot be responsive if dimensions contain a percentage of an XSL element
 		return !preg_match('([%<])', $attributes['width'] . $attributes['height']);
 	}
@@ -650,6 +655,8 @@ class Configurator extends ConfiguratorBase
 		{
 			$attributes = $this->addResponsiveStyle($attributes);
 		}
+
+		unset($attributes['unresponsive']);
 
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)

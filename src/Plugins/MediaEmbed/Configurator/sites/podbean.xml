@@ -1,4 +1,4 @@
-<site name="Podbean" homepage="http://www.podbean.com/" unresponsive="1">
+<site name="Podbean" homepage="http://www.podbean.com/">
 	<example>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</example>
 
 	<tags><tag>podcasts</tag></tags>
@@ -9,5 +9,5 @@
 		<match>!podbean\.com/e/!</match>
 		<extract>!embed/postId/(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="100" style="max-width:900px" src="//www.podbean.com/media/player/audio/postId/{@id}"/>
+	<iframe unresponsive="1" width="100%" height="100" style="max-width:900px" src="//www.podbean.com/media/player/audio/postId/{@id}"/>
 </site>

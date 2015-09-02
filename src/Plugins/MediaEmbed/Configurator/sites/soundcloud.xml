@@ -1,4 +1,4 @@
-<site name="SoundCloud" homepage="https://soundcloud.com/" unresponsive="1">
+<site name="SoundCloud" homepage="https://soundcloud.com/">
 	<source>https://soundcloud.com/pages/widgets</source>
 	<example>http://api.soundcloud.com/tracks/98282116</example>
 	<example>https://soundcloud.com/andrewbird/three-white-horses</example>
@@ -14,7 +14,7 @@
 		<match>@/sets/@</match>
 		<extract>@api.soundcloud.com/playlists/(?'playlist_id'\d+)@</extract>
 	</scrape>
-	<iframe width="100%" style="max-width:900px">
+	<iframe unresponsive="1" width="100%" style="max-width:900px">
 		<height><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@playlist_id">450</xsl:when>

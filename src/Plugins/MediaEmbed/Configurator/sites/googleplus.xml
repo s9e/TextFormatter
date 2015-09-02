@@ -1,4 +1,4 @@
-<site name="Google+" homepage="https://plus.google.com/" unresponsive="1">
+<site name="Google+" homepage="https://plus.google.com/">
 	<source>https://developers.google.com/+/web/embedded-post/</source>
 	<example>https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd</example>
 	<example>https://plus.google.com/106189723444098348646/posts/V8AojCoTzxV</example>
@@ -7,7 +7,7 @@
 
 	<host>plus.google.com</host>
 	<extract>!//plus\.google\.com/(?:u/\d+/)?(?:\+(?'name'\w+)|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
-	<iframe width="450" height="240" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))">
+	<iframe unresponsive="1" width="450" height="240" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))">
 		<src><![CDATA[
 			<xsl:text>//s9e.github.io/iframe/googleplus.min.html#</xsl:text>
 			<xsl:choose>

@@ -1,9 +1,9 @@
-<site name="Scribd" homepage="http://www.scribd.com/" unresponsive="1">
+<site name="Scribd" homepage="http://www.scribd.com/">
 	<example>http://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review?in_collection=5291376</example>
 
 	<tags><tag>documents</tag><tag>presentations</tag></tags>
 
 	<host>scribd.com</host>
 	<extract>!scribd\.com/doc/(?'id'\d+)!</extract>
-	<iframe width="100%" height="500" style="resize:both" src="//www.scribd.com/embeds/{@id}/content?view_mode=scroll&amp;show_recommendations=false"/>
+	<iframe unresponsive="1" width="100%" height="500" style="resize:both" src="//www.scribd.com/embeds/{@id}/content?view_mode=scroll&amp;show_recommendations=false"/>
 </site>
