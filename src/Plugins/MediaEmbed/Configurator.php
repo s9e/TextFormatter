@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
@@ -17,6 +16,8 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
 class Configurator extends ConfiguratorBase
 {
 	public $allowedFilters = [
@@ -29,8 +30,8 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;
 	public $defaultSites;
-	protected $preferredRenderingMethods = ['iframe', 'flash'];
 	protected $responsiveEmbeds = \false;
+	protected $templateGenerators = [];
 	protected function setUp()
 	{
 		$this->collection = new MediaSiteCollection;
@@ -48,6 +49,8 @@ class Configurator extends ConfiguratorBase
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 		if (!isset($this->defaultSites))
 			$this->defaultSites = new CachedSiteDefinitionProvider;
+		$this->templateGenerators['flash']  = new Flash;
+		$this->templateGenerators['iframe'] = new Iframe;
 	}
 	public function asConfig()
 	{
@@ -141,12 +144,12 @@ class Configurator extends ConfiguratorBase
 			$tag->filterChain
 				->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
-		foreach ($this->preferredRenderingMethods as $renderingMethod)
+		foreach ($this->templateGenerators as $type => $generator)
 		{
-			if (!isset($siteConfig[$renderingMethod]))
+			if (!isset($siteConfig[$type]))
 				continue;
-			$methodName = 'build' . \ucfirst($renderingMethod);
-			$tag->template = $this->$methodName($siteConfig) . $this->appendTemplate;
+			$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
+			$tag->template = $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
 			break;
 		}
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -173,33 +176,6 @@ class Configurator extends ConfiguratorBase
 	public function enableResponsiveEmbeds()
 	{
 		$this->responsiveEmbeds = \true;
-	}
-	protected function addResponsiveStyle(array $attributes)
-	{
-		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
-		if (isset($attributes['style']))
-			$attributes['style'] .= ';' . $css;
-		else
-			$attributes['style'] = $css;
-		return $attributes;
-	}
-	protected function addResponsiveWrapper($template, array $attributes)
-	{
-		$height = \trim($attributes['height'], '{}');
-		$width  = \trim($attributes['width'], '{}');
-		$isFixedHeight = (bool) \preg_match('(^\\d+$)D', $height);
-		$isFixedWidth  = (bool) \preg_match('(^\\d+$)D', $width);
-		if ($isFixedHeight && $isFixedWidth)
-			$padding = \round(100 * $height / $width, 2);
-		else
-		{
-			if (!\preg_match('(^[@$]?[-\\w]+$)D', $height))
-				$height = '(' . $height . ')';
-			if (!\preg_match('(^[@$]?[-\\w]+$)D', $width))
-				$width = '(' . $width . ')';
-			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
-		}
-		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
 	}
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
@@ -240,85 +216,6 @@ class Configurator extends ConfiguratorBase
 		if (!\in_array($filter, $this->allowedFilters, \true))
 			throw new RuntimeException("Filter '" . $filter . "' is not allowed");
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
-	}
-	protected function buildFlash(array $siteConfig)
-	{
-		$attributes = [
-			'width'  => $siteConfig['flash']['width'],
-			'height' => $siteConfig['flash']['height'],
-			'data'   => $siteConfig['flash']['src']
-		];
-		if (isset($siteConfig['flash']['base']))
-			$attributes['base'] = $siteConfig['flash']['base'];
-		if (isset($siteConfig['flash']['style']))
-			$attributes['style'] = $siteConfig['flash']['style'];
-		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
-		if ($isResponsive)
-			$attributes = $this->addResponsiveStyle($attributes);
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes, $isResponsive);
-		$template .= '<param name="allowfullscreen" value="true"/>';
-		if (isset($siteConfig['flash']['flashvars']))
-		{
-			$template .= '<param name="flashvars">';
-			$template .= $this->generateAttributes([
-				'value' => $siteConfig['flash']['flashvars']
-			]);
-			$template .= '</param>';
-		}
-		$template .= '<embed type="application/x-shockwave-flash">';
-		$attributes['src'] = $attributes['data'];
-		$attributes['allowfullscreen'] = '';
-		unset($attributes['data']);
-		if (isset($siteConfig['flash']['flashvars']))
-			$attributes['flashvars'] = $siteConfig['flash']['flashvars'];
-		$template .= $this->generateAttributes($attributes);
-		$template .= '</embed></object>';
-		if ($isResponsive)
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		return $template;
-	}
-	protected function buildIframe(array $siteConfig)
-	{
-		$attributes = $siteConfig['iframe'];
-		$attributes += [
-			'allowfullscreen' => '',
-			'frameborder'     => '0',
-			'scrolling'       => 'no'
-		];
-		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
-		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
-		if ($isResponsive)
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		return $template;
-	}
-	protected function canBeResponsive(array $attributes)
-	{
-		if (!empty($attributes['unresponsive']))
-			return \false;
-		return !\preg_match('([%<])', $attributes['width'] . $attributes['height']);
-	}
-	protected function generateAttributes(array $attributes, $addResponsive = \false)
-	{
-		if ($addResponsive)
-			$attributes = $this->addResponsiveStyle($attributes);
-		unset($attributes['unresponsive']);
-		$xsl = '';
-		foreach ($attributes as $attrName => $innerXML)
-		{
-			if (\strpos($innerXML, '<') === \false)
-			{
-				$tokens   = AVTHelper::parse($innerXML);
-				$innerXML = '';
-				foreach ($tokens as list($type, $content))
-					if ($type === 'literal')
-						$innerXML .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
-					else
-						$innerXML .= '<xsl:value-of select="' . \htmlspecialchars($content, \ENT_QUOTES, 'UTF-8') . '"/>';
-			}
-			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, \ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
-		}
-		return $xsl;
 	}
 	protected function normalizeId($siteId)
 	{
