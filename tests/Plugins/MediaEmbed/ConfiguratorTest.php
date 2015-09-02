@@ -8,6 +8,9 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe
 */
 class ConfiguratorTest extends Test
 {
@@ -705,7 +708,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo" base="http://localhost/"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" base="http://localhost/" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" base="http://localhost/" src="foo" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}
@@ -730,7 +733,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" data="foo" style="max-width:900px"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" style="max-width:900px" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" style="max-width:900px" src="foo" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}

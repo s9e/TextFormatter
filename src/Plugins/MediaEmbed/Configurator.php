@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
@@ -18,6 +17,8 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
 
 class Configurator extends ConfiguratorBase
 {
@@ -60,14 +61,14 @@ class Configurator extends ConfiguratorBase
 	public $defaultSites;
 
 	/**
-	* @var array List of rendering methods in order of preference, descending
-	*/
-	protected $preferredRenderingMethods = ['iframe', 'flash'];
-
-	/**
 	* @var bool Whether to enable responsive embeds
 	*/
 	protected $responsiveEmbeds = false;
+
+	/**
+	* @var array Template generators
+	*/
+	protected $templateGenerators = [];
 
 	/**
 	* {@inheritdoc}
@@ -105,6 +106,9 @@ class Configurator extends ConfiguratorBase
 		{
 			$this->defaultSites = new CachedSiteDefinitionProvider;
 		}
+
+		$this->templateGenerators['flash']  = new Flash;
+		$this->templateGenerators['iframe'] = new Iframe;
 	}
 
 	/**
@@ -309,18 +313,17 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		foreach ($this->preferredRenderingMethods as $renderingMethod)
+		foreach ($this->templateGenerators as $type => $generator)
 		{
-			if (!isset($siteConfig[$renderingMethod]))
+			if (!isset($siteConfig[$type]))
 			{
 				continue;
 			}
 
-			// 'flash' => 'buildFlash'
-			$methodName = 'build' . ucfirst($renderingMethod);
+			$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
 
 			// Set the tag's default template then exit the loop
-			$tag->template = $this->$methodName($siteConfig) . $this->appendTemplate;
+			$tag->template = $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
 
 			break;
 		}
@@ -383,64 +386,6 @@ class Configurator extends ConfiguratorBase
 	//==========================================================================
 	// Internal methods
 	//==========================================================================
-
-	/**
-	* Add the attributes required for responsive embeds
-	*
-	* @param  array $attributes Array of [name => value] where value can be XSL code
-	* @return array             Modified attributes
-	*/
-	protected function addResponsiveStyle(array $attributes)
-	{
-		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
-		if (isset($attributes['style']))
-		{
-			$attributes['style'] .= ';' . $css;
-		}
-		else
-		{
-			$attributes['style'] = $css;
-		}
-
-		return $attributes;
-	}
-
-	/**
-	* Add the attributes required for responsive embeds
-	*
-	* @param  string $template   Original template
-	* @param  array  $attributes Array of [name => value] where value can be XSL code
-	* @return string             Modified template
-	*/
-	protected function addResponsiveWrapper($template, array $attributes)
-	{
-		// Remove braces from the values
-		$height = trim($attributes['height'], '{}');
-		$width  = trim($attributes['width'], '{}');
-
-		$isFixedHeight = (bool) preg_match('(^\\d+$)D', $height);
-		$isFixedWidth  = (bool) preg_match('(^\\d+$)D', $width);
-
-		if ($isFixedHeight && $isFixedWidth)
-		{
-			$padding = round(100 * $height / $width, 2);
-		}
-		else
-		{
-			if (!preg_match('(^[@$]?[-\\w]+$)D', $height))
-			{
-				$height = '(' . $height . ')';
-			}
-			if (!preg_match('(^[@$]?[-\\w]+$)D', $width))
-			{
-				$width = '(' . $width . ')';
-			}
-
-			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
-		}
-
-		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
-	}
 
 	/**
 	* Add the defined scrapes to given tag
@@ -525,164 +470,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
-	}
-
-	/**
-	* Build a tag's template based on its flash config
-	*
-	* @param  array  $siteConfig
-	* @return string
-	*/
-	protected function buildFlash(array $siteConfig)
-	{
-		// Gather the attributes for the object element
-		$attributes = [
-			'width'  => $siteConfig['flash']['width'],
-			'height' => $siteConfig['flash']['height'],
-			'data'   => $siteConfig['flash']['src']
-		];
-
-		if (isset($siteConfig['flash']['base']))
-		{
-			$attributes['base'] = $siteConfig['flash']['base'];
-		}
-		if (isset($siteConfig['flash']['style']))
-		{
-			$attributes['style'] = $siteConfig['flash']['style'];
-		}
-
-		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
-		if ($isResponsive)
-		{
-			$attributes = $this->addResponsiveStyle($attributes);
-		}
-
-		/**
-		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
-		*/
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes, $isResponsive);
-		$template .= '<param name="allowfullscreen" value="true"/>';
-		if (isset($siteConfig['flash']['flashvars']))
-		{
-			/**
-			* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
-			*/
-			$template .= '<param name="flashvars">';
-			$template .= $this->generateAttributes([
-				'value' => $siteConfig['flash']['flashvars']
-			]);
-			$template .= '</param>';
-		}
-		$template .= '<embed type="application/x-shockwave-flash">';
-
-		// Update the attributes for the embed element
-		$attributes['src'] = $attributes['data'];
-		$attributes['allowfullscreen'] = '';
-		unset($attributes['data']);
-		if (isset($siteConfig['flash']['flashvars']))
-		{
-			$attributes['flashvars'] = $siteConfig['flash']['flashvars'];
-		}
-		$template .= $this->generateAttributes($attributes);
-		$template .= '</embed></object>';
-
-		if ($isResponsive)
-		{
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		}
-
-		return $template;
-	}
-
-	/**
-	* Build a tag's template based on its iframe config
-	*
-	* @param  array  $siteConfig
-	* @return string
-	*/
-	protected function buildIframe(array $siteConfig)
-	{
-		// Get attributes from the original definition
-		$attributes = $siteConfig['iframe'];
-
-		// Add the default attributes
-		$attributes += [
-			'allowfullscreen' => '',
-			'frameborder'     => '0',
-			'scrolling'       => 'no'
-		];
-
-		// Build the template
-		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
-		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
-
-		if ($isResponsive)
-		{
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		}
-
-		return $template;
-	}
-
-	/**
-	* Test whether given dimensions can be made repsonsive
-	*
-	* @param  array $attributes Array of [name => value] where value can be XSL code
-	* @return bool
-	*/
-	protected function canBeResponsive(array $attributes)
-	{
-		if (!empty($attributes['unresponsive']))
-		{
-			return false;
-		}
-
-		// Cannot be responsive if dimensions contain a percentage of an XSL element
-		return !preg_match('([%<])', $attributes['width'] . $attributes['height']);
-	}
-
-	/**
-	* Generate xsl:attributes elements from an array
-	*
-	* @param  array  $attributes    Array of [name => value] where value can be XSL code
-	* @param  bool   $addResponsive Whether to add the responsive style attributes
-	* @return string                XSL source
-	*/
-	protected function generateAttributes(array $attributes, $addResponsive = false)
-	{
-		if ($addResponsive)
-		{
-			$attributes = $this->addResponsiveStyle($attributes);
-		}
-
-		unset($attributes['unresponsive']);
-
-		$xsl = '';
-		foreach ($attributes as $attrName => $innerXML)
-		{
-			// If the value does not look like XSL, we reconstruct it as XSL
-			if (strpos($innerXML, '<') === false)
-			{
-				$tokens   = AVTHelper::parse($innerXML);
-				$innerXML = '';
-				foreach ($tokens as list($type, $content))
-				{
-					if ($type === 'literal')
-					{
-						$innerXML .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
-					}
-					else
-					{
-						$innerXML .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_QUOTES, 'UTF-8') . '"/>';
-					}
-				}
-			}
-
-			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName, ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
-		}
-
-		return $xsl;
 	}
 
 	/**

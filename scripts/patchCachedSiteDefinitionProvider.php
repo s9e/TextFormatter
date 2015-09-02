@@ -11,7 +11,6 @@ foreach ($provider->getIds() as $siteId)
 	$siteConfig = array_intersect_key(
 		$provider->get($siteId),
 		[
-			'unresponsive' => 1,
 			'attributes'   => 1,
 			'host'         => 1,
 			'scheme'       => 1,
