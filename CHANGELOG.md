@@ -1,3 +1,20 @@
+0.3.0 (2015-09-02)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/eab904365c31bb87a016d2c0876e0c149faf93a3...ce1d116ccbc15868856cb2fd65dc9897afd38360)
+
+### Changed
+
+ - `ce1d116` MediaEmbed: moved template generation to its own class
+ - `be478e7` MediaEmbed: moved the 'unresponsive' attribute into the iframe/flash definition
+ - `3f5e499` MediaEmbed: removed support for custom templates
+ - `15e8ece` MediaEmbed: updated Vine
+
+### Fixed
+
+ - `c089b4a` XPathHelper: fixed false negative in isExpressionNumeric()
+
+
 0.2.1 (2015-08-30)
 ==================
 
