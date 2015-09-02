@@ -29,7 +29,7 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;
 	public $defaultSites;
-	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
+	protected $preferredRenderingMethods = ['iframe', 'flash'];
 	protected $responsiveEmbeds = \false;
 	protected function setUp()
 	{
@@ -252,7 +252,7 @@ class Configurator extends ConfiguratorBase
 			$attributes['base'] = $siteConfig['flash']['base'];
 		if (isset($siteConfig['flash']['style']))
 			$attributes['style'] = $siteConfig['flash']['style'];
-		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
 		if ($isResponsive)
 			$attributes = $this->addResponsiveStyle($attributes);
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
@@ -286,24 +286,23 @@ class Configurator extends ConfiguratorBase
 			'frameborder'     => '0',
 			'scrolling'       => 'no'
 		];
-		$isResponsive = $this->responsiveEmbeds && empty($siteConfig['unresponsive']) && $this->canBeResponsive($attributes);
+		$isResponsive = $this->responsiveEmbeds && $this->canBeResponsive($attributes);
 		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
 		if ($isResponsive)
 			$template = $this->addResponsiveWrapper($template, $attributes);
 		return $template;
 	}
-	protected function buildTemplate(array $siteConfig)
-	{
-		return $siteConfig['template'];
-	}
 	protected function canBeResponsive(array $attributes)
 	{
+		if (!empty($attributes['unresponsive']))
+			return \false;
 		return !\preg_match('([%<])', $attributes['width'] . $attributes['height']);
 	}
 	protected function generateAttributes(array $attributes, $addResponsive = \false)
 	{
 		if ($addResponsive)
 			$attributes = $this->addResponsiveStyle($attributes);
+		unset($attributes['unresponsive']);
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)
 		{
