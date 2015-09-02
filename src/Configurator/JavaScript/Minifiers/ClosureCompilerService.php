@@ -28,6 +28,11 @@ class ClosureCompilerService extends Minifier
 	public $externs;
 
 	/**
+	* @var integer Read timeout in seconds
+	*/
+	public $timeout = 10;
+
+	/**
 	* @var string Closure Compiler Service's URL
 	*/
 	public $url = 'http://closure-compiler.appspot.com/compile';
@@ -88,6 +93,7 @@ class ClosureCompilerService extends Minifier
 			stream_context_create([
 				'http' => [
 					'method'  => 'POST',
+					'timeout' => $this->timeout,
 					'header'  => "Connection: close\r\n"
 					           . "Content-length: " . strlen($content) . "\r\n"
 					           . "Content-type: application/x-www-form-urlencoded",
