@@ -89,30 +89,17 @@ class Regexp extends Variant implements ConfigProvider
 		$captures   = [];
 		$regexpInfo = RegexpParser::parse($this->regexp);
 
-		// Ensure that we use the D modifier
+		// Prepare the start/end of the regexp and ensure that we use the D modifier
+		$start = $regexpInfo['delimiter'] . '^';
+		$end   = '$' . $regexpInfo['delimiter'] . $regexpInfo['modifiers'];
 		if (strpos($regexpInfo['modifiers'], 'D') === false)
 		{
-			$regexpInfo['modifiers'] .= 'D';
+			$end .= 'D';
 		}
 
-		foreach ($regexpInfo['tokens'] as $token)
+		foreach ($this->getNamedCapturesExpressions($regexpInfo['tokens']) as $name => $expr)
 		{
-			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
-			{
-				continue;
-			}
-
-			$name = $token['name'];
-			if (!isset($captures[$name]))
-			{
-				$expr = $token['content'];
-				if (strpos($expr, '|') !== false)
-				{
-					$expr = '(?:' . $expr . ')';
-				}
-
-				$captures[$name] = $regexpInfo['delimiter'] . '^' . $expr . '$' . $regexpInfo['delimiter'] . $regexpInfo['modifiers'];
-			}
+			$captures[$name] = $start . $expr . $end;
 		}
 
 		return $captures;
@@ -126,5 +113,33 @@ class Regexp extends Variant implements ConfigProvider
 	public function toJS()
 	{
 		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+	}
+
+	/**
+	* Return the expression used in each named capture
+	*
+	* @param  array[] $tokens
+	* @return array
+	*/
+	protected function getNamedCapturesExpressions(array $tokens)
+	{
+		$exprs = [];
+		foreach ($tokens as $token)
+		{
+			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
+			{
+				continue;
+			}
+
+			$expr = $token['content'];
+			if (strpos($expr, '|') !== false)
+			{
+				$expr = '(?:' . $expr . ')';
+			}
+
+			$exprs[$token['name']] = $expr;
+		}
+
+		return $exprs;
 	}
 }
