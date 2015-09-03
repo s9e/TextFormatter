@@ -434,10 +434,10 @@ class Configurator extends ConfiguratorBase
 		// since scraping is impossible in JavaScript without a PHP proxy, we just make it
 		// return true in order to keep the tag valid
 		$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
-						 ->addParameterByName('scrapeConfig')
-						 ->addParameterByName('cacheDir')
-						 ->setVar('scrapeConfig', $scrapeConfig)
-						 ->setJS('function(){return true;}');
+		                 ->addParameterByName('scrapeConfig')
+		                 ->addParameterByName('cacheDir')
+		                 ->setVar('scrapeConfig', $scrapeConfig)
+		                 ->setJS('function(){return true;}');
 
 		return $attributes;
 	}
