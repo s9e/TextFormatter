@@ -486,7 +486,7 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'bar' => [
-								'filterChain' => [new RegexpFilter('/^(?:.)$/D')]
+								'filterChain' => [new RegexpFilter('/^.$/D')]
 							]
 						],
 						'template' => ''
@@ -509,10 +509,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\d+$/D')]
 							],
 							'bar' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\D+$/D')]
 							]
 						],
 						'template' => ''
@@ -533,7 +533,7 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^\\d+$/uD')]
 							]
 						],
 						'template' => ''
@@ -556,10 +556,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\d+$/D')]
 							],
 							'bar' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\D+$/D')]
 							]
 						],
 						'template' => ''
@@ -581,10 +581,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'foo' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\d+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^\\d+$/uD')]
 							],
 							'bar' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\D+)$/uD')]
+								'filterChain' => [new RegexpFilter('/^\\D+$/uD')]
 							]
 						],
 						'template' => ''
@@ -606,10 +606,10 @@ class BBCodeMonkeyTest extends Test
 						],
 						'attributes' => [
 							'first' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\w+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\w+$/D')]
 							],
 							'last' => [
-								'filterChain' => [new RegexpFilter('/^(?:\\w+)$/D')]
+								'filterChain' => [new RegexpFilter('/^\\w+$/D')]
 							]
 						],
 						'template' => ''

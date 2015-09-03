@@ -993,6 +993,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
  [x] The JS regexp has a global flag if isGlobal is true
  [x] getNamedCaptures() returns an array where keys are the name of the named captures and values are regexps that exactly match them
+ [x] getNamedCaptures() puts the expression in a non-capturing subpattern if it contains any alternations
  [x] getNamedCaptures() preserves the original's regexp "i", "s" and "u" flags
  [x] getCaptureNames() returns the names of all captures
 

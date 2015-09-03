@@ -112,9 +112,22 @@ class RegexpTest extends Test
 
 		$this->assertSame(
 			[
-				'year' => '#^(?:\\d{4})$#D',
-				'name' => '#^(?:[a-z]+)$#D'
+				'year' => '#^\\d{4}$#D',
+				'name' => '#^[a-z]+$#D'
 			],
+			$ap->getNamedCaptures()
+		);
+	}
+
+	/**
+	* @testdox getNamedCaptures() puts the expression in a non-capturing subpattern if it contains any alternations
+	*/
+	public function testGetNamedCapturesAltern()
+	{
+		$ap = new Regexp('#(?<foo>foo|bar)#');
+
+		$this->assertSame(
+			['foo' => '#^(?:foo|bar)$#D'],
 			$ap->getNamedCaptures()
 		);
 	}
@@ -128,8 +141,8 @@ class RegexpTest extends Test
 
 		$this->assertSame(
 			[
-				'year' => '#^(?:\\d{4})$#Disu',
-				'name' => '#^(?:[a-z]+)$#Disu'
+				'year' => '#^\\d{4}$#Disu',
+				'name' => '#^[a-z]+$#Disu'
 			],
 			$ap->getNamedCaptures()
 		);

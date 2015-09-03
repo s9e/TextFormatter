@@ -105,12 +105,13 @@ class Regexp extends Variant implements ConfigProvider
 			$name = $token['name'];
 			if (!isset($captures[$name]))
 			{
-				$regexp = $regexpInfo['delimiter']
-				        . '^(?:' . $token['content'] . ')$'
-				        . $regexpInfo['delimiter']
-				        . $regexpInfo['modifiers'];
+				$expr = $token['content'];
+				if (strpos($expr, '|') !== false)
+				{
+					$expr = '(?:' . $expr . ')';
+				}
 
-				$captures[$name] = $regexp;
+				$captures[$name] = $regexpInfo['delimiter'] . '^' . $expr . '$' . $regexpInfo['delimiter'] . $regexpInfo['modifiers'];
 			}
 		}
 

@@ -29,8 +29,8 @@ class AttributePreprocessorTest extends Test
 
 		$this->assertSame(
 			[
-				'year' => '#^(?:\\d{4})$#D',
-				'name' => '#^(?:[a-z]+)$#D'
+				'year' => '#^\\d{4}$#D',
+				'name' => '#^[a-z]+$#D'
 			],
 			$ap->getAttributes()
 		);
@@ -45,8 +45,8 @@ class AttributePreprocessorTest extends Test
 
 		$this->assertSame(
 			[
-				'year' => '#^(?:\\d{4})$#Disu',
-				'name' => '#^(?:[a-z]+)$#Disu'
+				'year' => '#^\\d{4}$#Disu',
+				'name' => '#^[a-z]+$#Disu'
 			],
 			$ap->getAttributes()
 		);
