@@ -739,6 +739,22 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() sets an empty template if none is specified
+	*/
+	public function testAddNoTemplate()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!"
+			]
+		);
+
+		$this->assertEquals('', $tag->template);
+	}
+
+	/**
 	* @testdox add() checks the tag's safety before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'id' is not properly sanitized

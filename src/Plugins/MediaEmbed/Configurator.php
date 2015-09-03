@@ -313,20 +313,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		foreach ($this->templateGenerators as $type => $generator)
-		{
-			if (!isset($siteConfig[$type]))
-			{
-				continue;
-			}
-
-			$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
-
-			// Set the tag's default template then exit the loop
-			$tag->template = $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
-
-			break;
-		}
+		$tag->template = $this->getTemplate($siteConfig);
 
 		// Normalize the tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -470,6 +457,27 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
+	}
+
+	/**
+	* Generate and return a template for given site
+	*
+	* @param  array  $siteConfig
+	* @return string
+	*/
+	protected function getTemplate(array $siteConfig)
+	{
+		foreach ($this->templateGenerators as $type => $generator)
+		{
+			if (isset($siteConfig[$type]))
+			{
+				$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
+
+				return $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
+			}
+		}
+
+		return '';
 	}
 
 	/**
