@@ -683,7 +683,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" flashvars="foo=1&amp;bar=2" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}
@@ -708,7 +708,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" base="http://localhost/" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" base="http://localhost/" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}
@@ -733,7 +733,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" style="max-width:900px" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" src="foo" style="max-width:900px" allowfullscreen=""/></object>',
 			$tag->template
 		);
 	}

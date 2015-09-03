@@ -16,52 +16,75 @@ class Flash extends TemplateGenerator
 	*/
 	public function getTemplate(array $attributes)
 	{
-		// Gather the attributes for the object element
-		$attributes['data'] = $attributes['src'];
-		unset($attributes['src']);
-
 		$isResponsive = $this->canBeResponsive($attributes);
 		if ($isResponsive)
 		{
 			$attributes = $this->addResponsiveStyle($attributes);
 		}
 
-		$flashVars = (isset($attributes['flashvars'])) ? $attributes['flashvars'] : '';
-		unset($attributes['flashvars']);
-
-		/**
-		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
-		*/
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes, $isResponsive);
-		$template .= '<param name="allowfullscreen" value="true"/>';
-		if (!empty($flashVars))
-		{
-			/**
-			* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
-			*/
-			$template .= '<param name="flashvars">';
-			$template .= $this->generateAttributes(['value' => $flashVars]);
-			$template .= '</param>';
-		}
-		$template .= '<embed type="application/x-shockwave-flash">';
-
-		// Update the attributes for the embed element
-		$attributes['src'] = $attributes['data'];
-		$attributes['allowfullscreen'] = '';
-		unset($attributes['data']);
-		if (!empty($flashVars))
-		{
-			$attributes['flashvars'] = $flashVars;
-		}
-		$template .= $this->generateAttributes($attributes);
-		$template .= '</embed></object>';
-
+		$template = $this->generateObjectStartTag($attributes, $isResponsive) . $this->generateEmbedElement($attributes) . '</object>';
 		if ($isResponsive)
 		{
 			$template = $this->addResponsiveWrapper($template, $attributes);
 		}
 
 		return $template;
+	}
+
+	/**
+	* Generate a complete embed element
+	*
+	* @param  array $attributes
+	* @return string
+	*/
+	protected function generateEmbedElement(array $attributes)
+	{
+		$attributes['allowfullscreen'] = '';
+
+		return '<embed type="application/x-shockwave-flash">' . $this->generateAttributes($attributes) . '</embed>';
+	}
+
+	/**
+	* Generate the start tag of an object element
+	*
+	* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
+	* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
+	*
+	* @param  array  $attributes
+	* @param  bool   $isResponsive
+	* @return string
+	*/
+	protected function generateObjectStartTag(array $attributes, $isResponsive)
+	{
+		$attributes['data']          = $attributes['src'];
+		$attributes['type']          = 'application/x-shockwave-flash';
+		$attributes['typemustmatch'] = '';
+		unset($attributes['src']);
+
+		$flashVarsParam = '';
+		if (isset($attributes['flashvars']))
+		{
+			$flashVarsParam = $this->generateParamElement('flashvars', $attributes['flashvars']);
+			unset($attributes['flashvars']);
+		}
+
+		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
+		          . $this->generateAttributes($attributes)
+		          . $this->generateParamElement('allowfullscreen', 'true')
+		          . $flashVarsParam;
+
+		return $template;
+	}
+
+	/**
+	* Generate a param element to be used inside of an object element
+	*
+	* @param  string $paramName
+	* @param  string $paramValue
+	* @return string
+	*/
+	protected function generateParamElement($paramName, $paramValue)
+	{
+		return '<param name="' . htmlspecialchars($paramName) . '">' . $this->generateAttributes(['value' => $paramValue]) . '</param>';
 	}
 }
