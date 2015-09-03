@@ -44,7 +44,7 @@ class ClosureCompilerService extends Minifier
 	*/
 	public function __construct()
 	{
-		$this->externs = file_get_contents(__DIR__ . '/../externs.js');
+		$this->externs = file_get_contents(__DIR__ . '/../externs.service.js');
 	}
 
 	/**

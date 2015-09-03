@@ -89,7 +89,7 @@ class ClosureCompilerServiceTest extends Test
 	public function testCustomExterns()
 	{
 		$params  = $this->getQueryParams('');
-		$externs = file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.js');
+		$externs = file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.service.js');
 
 		$this->assertContains(
 			['js_externs', $externs],

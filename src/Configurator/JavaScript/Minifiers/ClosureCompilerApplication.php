@@ -67,7 +67,7 @@ class ClosureCompilerApplication extends Minifier
 
 		if ($this->excludeDefaultExterns)
 		{
-			$key[] = file_get_contents(__DIR__ . '/../externs.js');
+			$key[] = file_get_contents(__DIR__ . '/../externs.application.js');
 		}
 
 		return $key;
@@ -86,7 +86,7 @@ class ClosureCompilerApplication extends Minifier
 		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 		{
-			$options .= ' --externs ' . __DIR__ . '/../externs.js --env=CUSTOM -W QUIET';
+			$options .= ' --externs ' . __DIR__ . '/../externs.application.js --env=CUSTOM';
 		}
 
 		$crc     = crc32($src);

@@ -115,7 +115,7 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->excludeDefaultExterns = true;
 
 		$this->assertTrue(in_array(
-			file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.js'),
+			file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.application.js'),
 			$minifier->getCacheDifferentiator(),
 			true
 		));
@@ -176,7 +176,7 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->javaBin = 'php ' . escapeshellarg(__DIR__ . '/echo.php') . ' --';
 
 		$this->assertRegexp(
-			'#--externs \\S*externs.js --env=CUSTOM#',
+			'#--externs \\S*externs.application.js --env=CUSTOM#',
 			$minifier->minify('/**/')
 		);
 	}
