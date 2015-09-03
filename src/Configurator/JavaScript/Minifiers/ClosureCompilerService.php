@@ -13,10 +13,11 @@ class ClosureCompilerService extends Minifier
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 	public $excludeDefaultExterns = \true;
 	public $externs;
+	public $timeout = 10;
 	public $url = 'http://closure-compiler.appspot.com/compile';
 	public function __construct()
 	{
-		$this->externs = \file_get_contents(__DIR__ . '/../externs.js');
+		$this->externs = \file_get_contents(__DIR__ . '/../externs.service.js');
 	}
 	public function getCacheDifferentiator()
 	{
@@ -45,6 +46,7 @@ class ClosureCompilerService extends Minifier
 			\stream_context_create([
 				'http' => [
 					'method'  => 'POST',
+					'timeout' => $this->timeout,
 					'header'  => "Connection: close\r\nContent-length: " . \strlen($content) . "\r\nContent-type: application/x-www-form-urlencoded",
 					'content' => $content
 				]

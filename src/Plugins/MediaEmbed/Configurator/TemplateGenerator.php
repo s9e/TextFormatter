@@ -39,7 +39,7 @@ abstract class TemplateGenerator
 	}
 	protected function canBeResponsive(array $attributes)
 	{
-		if (!empty($attributes['unresponsive']) || empty($attributes['responsive']))
+		if (empty($attributes['responsive']))
 			return \false;
 		return !\preg_match('([%<])', $attributes['width'] . $attributes['height']);
 	}
@@ -48,7 +48,6 @@ abstract class TemplateGenerator
 		if ($addResponsive)
 			$attributes = $this->addResponsiveStyle($attributes);
 		unset($attributes['responsive']);
-		unset($attributes['unresponsive']);
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)
 		{

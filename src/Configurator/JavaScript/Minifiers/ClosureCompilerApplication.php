@@ -30,14 +30,14 @@ class ClosureCompilerApplication extends Minifier
 			\crc32(\file_get_contents($this->closureCompilerBin))
 		];
 		if ($this->excludeDefaultExterns)
-			$key[] = \file_get_contents(__DIR__ . '/../externs.js');
+			$key[] = \file_get_contents(__DIR__ . '/../externs.application.js');
 		return $key;
 	}
 	public function minify($src)
 	{
 		$options = ($this->options) ? ' ' . $this->options : '';
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
-			$options .= ' --externs ' . __DIR__ . '/../externs.js --use_only_custom_externs';
+			$options .= ' --externs ' . __DIR__ . '/../externs.application.js --env=CUSTOM';
 		$crc     = \crc32($src);
 		$inFile  = \sys_get_temp_dir() . '/' . $crc . '.js';
 		$outFile = \sys_get_temp_dir() . '/' . $crc . '.min.js';
