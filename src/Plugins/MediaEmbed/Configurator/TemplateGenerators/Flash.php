@@ -11,32 +11,39 @@ class Flash extends TemplateGenerator
 {
 	public function getTemplate(array $attributes)
 	{
-		$attributes['data'] = $attributes['src'];
-		unset($attributes['src']);
 		$isResponsive = $this->canBeResponsive($attributes);
 		if ($isResponsive)
 			$attributes = $this->addResponsiveStyle($attributes);
-		$flashVars = (isset($attributes['flashvars'])) ? $attributes['flashvars'] : '';
-		unset($attributes['flashvars']);
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-		$template .= $this->generateAttributes($attributes, $isResponsive);
-		$template .= '<param name="allowfullscreen" value="true"/>';
-		if (!empty($flashVars))
-		{
-			$template .= '<param name="flashvars">';
-			$template .= $this->generateAttributes(array('value' => $flashVars));
-			$template .= '</param>';
-		}
-		$template .= '<embed type="application/x-shockwave-flash">';
-		$attributes['src'] = $attributes['data'];
-		$attributes['allowfullscreen'] = '';
-		unset($attributes['data']);
-		if (!empty($flashVars))
-			$attributes['flashvars'] = $flashVars;
-		$template .= $this->generateAttributes($attributes);
-		$template .= '</embed></object>';
+		$template = $this->generateObjectStartTag($attributes, $isResponsive) . $this->generateEmbedElement($attributes) . '</object>';
 		if ($isResponsive)
 			$template = $this->addResponsiveWrapper($template, $attributes);
 		return $template;
+	}
+	protected function generateEmbedElement(array $attributes)
+	{
+		$attributes['allowfullscreen'] = '';
+		return '<embed type="application/x-shockwave-flash">' . $this->generateAttributes($attributes) . '</embed>';
+	}
+	protected function generateObjectStartTag(array $attributes, $isResponsive)
+	{
+		$attributes['data']          = $attributes['src'];
+		$attributes['type']          = 'application/x-shockwave-flash';
+		$attributes['typemustmatch'] = '';
+		unset($attributes['src']);
+		$flashVarsParam = '';
+		if (isset($attributes['flashvars']))
+		{
+			$flashVarsParam = $this->generateParamElement('flashvars', $attributes['flashvars']);
+			unset($attributes['flashvars']);
+		}
+		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
+		          . $this->generateAttributes($attributes, $isResponsive)
+		          . $this->generateParamElement('allowfullscreen', 'true')
+		          . $flashVarsParam;
+		return $template;
+	}
+	protected function generateParamElement($paramName, $paramValue)
+	{
+		return '<param name="' . \htmlspecialchars($paramName) . '">' . $this->generateAttributes(array('value' => $paramValue)) . '</param>';
 	}
 }

@@ -144,14 +144,7 @@ class Configurator extends ConfiguratorBase
 			$tag->filterChain
 				->append(array(__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'))
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
-		foreach ($this->templateGenerators as $type => $generator)
-		{
-			if (!isset($siteConfig[$type]))
-				continue;
-			$siteConfig[$type] += array('responsive' => $this->responsiveEmbeds);
-			$tag->template = $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
-			break;
-		}
+		$tag->template = $this->getTemplate($siteConfig);
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
@@ -216,6 +209,16 @@ class Configurator extends ConfiguratorBase
 		if (!\in_array($filter, $this->allowedFilters, \true))
 			throw new RuntimeException("Filter '" . $filter . "' is not allowed");
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
+	}
+	protected function getTemplate(array $siteConfig)
+	{
+		foreach ($this->templateGenerators as $type => $generator)
+			if (isset($siteConfig[$type]))
+			{
+				$siteConfig[$type] += array('responsive' => $this->responsiveEmbeds);
+				return $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
+			}
+		return '';
 	}
 	protected function normalizeId($siteId)
 	{
