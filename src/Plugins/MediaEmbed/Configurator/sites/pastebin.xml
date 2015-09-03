@@ -3,5 +3,5 @@
 
 	<host>pastebin.com</host>
 	<extract>!pastebin\.com/(?:\w+\.php\?i=)?(?'id'\w+)!</extract>
-	<iframe unresponsive="1" width="100%" height="300" src="//pastebin.com/embed_iframe.php?i={@id}" scrolling="" style="resize:both"/>
+	<iframe responsive="0" width="100%" height="300" src="//pastebin.com/embed_iframe.php?i={@id}" scrolling="" style="resize:both"/>
 </site>

@@ -5,5 +5,5 @@
 
 	<host>github.com</host>
 	<extract>!gist\.github\.com/(?'id'(?:\w+/)?[\da-f]+(?:/[\da-f]+)?)!</extract>
-	<iframe unresponsive="1" width="100%" height="180" src="//s9e.github.io/iframe/gist.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+	<iframe responsive="0" width="100%" height="180" src="//s9e.github.io/iframe/gist.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 </site>

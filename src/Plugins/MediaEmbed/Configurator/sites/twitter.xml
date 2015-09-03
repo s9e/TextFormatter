@@ -21,5 +21,5 @@
 		var origin = src.substr(0, src.indexOf('/', 8));
 		contentWindow.postMessage('s9e:' + id, origin);
 	-->
-	<iframe unresponsive="1" width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+	<iframe responsive="0" width="500" height="186" src="//s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 </site>

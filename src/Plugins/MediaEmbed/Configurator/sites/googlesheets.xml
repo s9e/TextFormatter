@@ -6,5 +6,5 @@
 
 	<host>docs.google.com</host>
 	<extract>!docs\.google\.com/spreadsheet(?:/ccc\?key=|s/d/)(?'id'[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?!</extract>
-	<iframe unresponsive="1" width="100%" height="500" style="resize:both" src="https://docs.google.com/spreadsheet/ccc?key={@id}&amp;widget=true&amp;headers=false&amp;rm=minimal#gid={@gid}"/>
+	<iframe responsive="0" width="100%" height="500" style="resize:both" src="https://docs.google.com/spreadsheet/ccc?key={@id}&amp;widget=true&amp;headers=false&amp;rm=minimal#gid={@gid}"/>
 </site>

@@ -7,5 +7,5 @@
 	<host>audioboo.fm</host>
 	<host>audioboom.com</host>
 	<extract>!audioboo(?:\.f|m\.co)m/boos/(?'id'\d+)!</extract>
-	<iframe unresponsive="1" width="100%" height="150" src="//audioboom.com/boos/{@id}/embed/v3" style="max-width:700px"/>
+	<iframe responsive="0" width="100%" height="150" src="//audioboom.com/boos/{@id}/embed/v3" style="max-width:700px"/>
 </site>

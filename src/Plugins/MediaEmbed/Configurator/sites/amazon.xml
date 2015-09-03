@@ -20,7 +20,7 @@
 	<host>amazon.it</host>
 	<extract>#/(?:dp|gp/product)/(?'id'[A-Z0-9]+)#</extract>
 	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|es|fr|it|jp|uk)#</extract>
-	<iframe unresponsive="1" width="120" height="240">
+	<iframe responsive="0" width="120" height="240">
 		<src><![CDATA[
 			<xsl:text>//rcm-</xsl:text>
 			<xsl:choose>

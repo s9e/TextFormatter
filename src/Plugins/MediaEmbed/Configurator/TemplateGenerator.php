@@ -85,7 +85,7 @@ abstract class TemplateGenerator
 	*/
 	protected function canBeResponsive(array $attributes)
 	{
-		if (!empty($attributes['unresponsive']) || empty($attributes['responsive']))
+		if (empty($attributes['responsive']))
 		{
 			return false;
 		}
@@ -109,7 +109,6 @@ abstract class TemplateGenerator
 		}
 
 		unset($attributes['responsive']);
-		unset($attributes['unresponsive']);
 
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)

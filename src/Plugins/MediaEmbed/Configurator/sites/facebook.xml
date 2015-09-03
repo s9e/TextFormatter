@@ -8,5 +8,5 @@
 
 	<host>www.facebook.com</host>
 	<extract>@(?:m|www)\.facebook\.com/(?:[\w/]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
-	<iframe unresponsive="1" width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+	<iframe responsive="0" width="560" height="315" src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 </site>
