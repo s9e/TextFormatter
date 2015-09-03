@@ -7,7 +7,7 @@
 	<host>video.khl.ru</host>
 	<scrape>
 		<match>!video\.khl\.ru/(?:event|quote)s/\d!</match>
-		<extract>!/feed/start/(?'id'[\w/]+)!</extract>
+		<extract>!/feed/start/(?'id'[/\w]+)!</extract>
 	</scrape>
 	<iframe width="560" height="315" src="//video.khl.ru/iframe/feed/start/{@id}?type_id=18&amp;width=560&amp;height=315"/>
 </site>

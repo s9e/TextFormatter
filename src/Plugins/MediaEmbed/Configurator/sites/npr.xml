@@ -7,7 +7,7 @@
 	<host>npr.org</host>
 	<host>n.pr</host>
 	<scrape>
-		<match>!npr\.org/[\w/]+/\d+!</match>
+		<match>!npr\.org/[/\w]+/\d+!</match>
 		<match>!n\.pr/\w!</match>
 		<extract>!openPlayer\((?'i'\d+), (?'m'\d+)!</extract>
 	</scrape>

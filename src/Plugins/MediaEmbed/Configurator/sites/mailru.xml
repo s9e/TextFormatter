@@ -8,7 +8,7 @@
 	<host>my.mail.ru</host>
 	<scrape>
 		<match>!my\.mail\.ru/\w+/\w+/video/\w+/\d!</match>
-		<extract>!mail\.ru/video/(?'id'[\w/]+)\.html!</extract>
+		<extract>!mail\.ru/video/(?'id'[/\w]+)\.html!</extract>
 	</scrape>
 	<iframe width="560" height="342" src="http://videoapi.my.mail.ru/videos/embed/{@id}.html"/>
 </site>
