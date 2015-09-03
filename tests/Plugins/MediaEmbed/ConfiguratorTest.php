@@ -1413,12 +1413,8 @@ class ConfiguratorTest extends Test
 			]
 		);
 
-		$this->assertContains(
-			'<div style="height:0;position:relative;padding-top:56.25%">',
-			(string) $tag->template
-		);
-		$this->assertContains(
-			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
+		$this->assertSame(
+			'<div style="display:inline-block;width:100%;max-width:560px"><div style="height:0;position:relative;padding-top:56.25%"><object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" style="position:absolute;top:0;left:0;width:100%;height:100%;position:absolute;top:0;left:0;width:100%;height:100%" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="560" height="315" src="foo" style="position:absolute;top:0;left:0;width:100%;height:100%" allowfullscreen=""/></object></div></div>',
 			(string) $tag->template
 		);
 	}

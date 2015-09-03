@@ -69,7 +69,7 @@ class Flash extends TemplateGenerator
 		}
 
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
-		          . $this->generateAttributes($attributes)
+		          . $this->generateAttributes($attributes, $isResponsive)
 		          . $this->generateParamElement('allowfullscreen', 'true')
 		          . $flashVarsParam;
 
