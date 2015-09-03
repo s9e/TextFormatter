@@ -437,7 +437,7 @@ class Configurator extends ConfiguratorBase
 		                 ->addParameterByName('scrapeConfig')
 		                 ->addParameterByName('cacheDir')
 		                 ->setVar('scrapeConfig', $scrapeConfig)
-		                 ->setJS('function(){return true;}');
+		                 ->setJS('returnTrue');
 
 		return $attributes;
 	}
