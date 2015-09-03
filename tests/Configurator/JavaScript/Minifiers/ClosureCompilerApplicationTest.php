@@ -135,7 +135,7 @@ class ClosureCompilerApplicationTest extends Test
 
 		$minifier = new ClosureCompilerApplication($closureCompilerBin);
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
-		$minifier->options = '--use_only_custom_externs';
+		$minifier->options = '--env=CUSTOM';
 
 		$this->assertSame(
 			'alert("Hello world");',
@@ -159,7 +159,7 @@ class ClosureCompilerApplicationTest extends Test
 
 		$minifier = new ClosureCompilerApplication($closureCompilerBin);
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
-		$minifier->options = '--use_only_custom_externs';
+		$minifier->options = '--env=CUSTOM';
 		$minifier->minify('%error%');
 	}
 
@@ -176,7 +176,7 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->javaBin = 'php ' . escapeshellarg(__DIR__ . '/echo.php') . ' --';
 
 		$this->assertRegexp(
-			'#--externs \\S*externs.js --use_only_custom_externs#',
+			'#--externs \\S*externs.js --env=CUSTOM#',
 			$minifier->minify('/**/')
 		);
 	}

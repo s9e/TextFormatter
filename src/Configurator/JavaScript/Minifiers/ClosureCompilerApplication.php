@@ -86,7 +86,7 @@ class ClosureCompilerApplication extends Minifier
 		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 		{
-			$options .= ' --externs ' . __DIR__ . '/../externs.js --use_only_custom_externs';
+			$options .= ' --externs ' . __DIR__ . '/../externs.js --env=CUSTOM -W QUIET';
 		}
 
 		$crc     = crc32($src);
