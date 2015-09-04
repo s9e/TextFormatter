@@ -122,6 +122,32 @@ class CallbackGeneratorTest extends Test
 					'c1FD39C63' => "/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction c1FD39C63(tag,tagConfig){return (function(v){return v})(registeredVars[\"registered\"]);}"
 				]
 			],
+			[
+				[
+					'tags' => [
+						'X' => ['filterChain' => [['js' => 'returnFalse']]]
+					]
+				],
+				[
+					'tags' => [
+						'X' => ['filterChain' => [new Code('returnFalse')]]
+					]
+				],
+				[]
+			],
+			[
+				[
+					'tags' => [
+						'X' => ['filterChain' => [['js' => 'returnTrue']]]
+					]
+				],
+				[
+					'tags' => [
+						'X' => ['filterChain' => [new Code('returnTrue')]]
+					]
+				],
+				[]
+			],
 		];
 	}
 }
