@@ -33,12 +33,16 @@ ob_start();
 			border: dashed 1px #ddd;
 			border-radius: 5px;
 		}
-		code
+		pre, code
 		{
 			padding: 2px;
 			background-color: #fff;
 			border-radius: 3px;
 			border: solid 1px #ddd;
+		}
+		pre code
+		{
+			border: 0;
 		}
 		blockquote
 		{
