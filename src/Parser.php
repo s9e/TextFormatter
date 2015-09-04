@@ -285,7 +285,7 @@ class Parser
 		$this->outputText($this->textLen, 0, \true);
 		do
 		{
-			$this->output = \preg_replace('(<(?!/)[^>]+></[\\w:]+>)', '', $this->output, -1, $cnt);
+			$this->output = \preg_replace('(<([^ />]+)></\\1>)', '', $this->output, -1, $cnt);
 		}
 		while ($cnt > 0);
 		if (\strpos($this->output, '</i><i>') !== \false)

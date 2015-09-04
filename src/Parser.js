@@ -599,7 +599,7 @@ function finalizeOutput()
 	do
 	{
 		tmp = output;
-		output = output.replace(/<(?!\/)[^>]+><\/[\w:]+>/g, '');
+		output = output.replace(/<([^ />]+)><\/\1>/g, '');
 	}
 	while (output !== tmp);
 
