@@ -4979,27 +4979,31 @@ class Regexp extends Variant implements ConfigProvider
 	{
 		$captures   = [];
 		$regexpInfo = RegexpParser::parse($this->regexp);
+		$start = $regexpInfo['delimiter'] . '^';
+		$end   = '$' . $regexpInfo['delimiter'] . $regexpInfo['modifiers'];
 		if (\strpos($regexpInfo['modifiers'], 'D') === \false)
-			$regexpInfo['modifiers'] .= 'D';
-		foreach ($regexpInfo['tokens'] as $token)
-		{
-			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
-				continue;
-			$name = $token['name'];
-			if (!isset($captures[$name]))
-			{
-				$regexp = $regexpInfo['delimiter']
-				        . '^(?:' . $token['content'] . ')$'
-				        . $regexpInfo['delimiter']
-				        . $regexpInfo['modifiers'];
-				$captures[$name] = $regexp;
-			}
-		}
+			$end .= 'D';
+		foreach ($this->getNamedCapturesExpressions($regexpInfo['tokens']) as $name => $expr)
+			$captures[$name] = $start . $expr . $end;
 		return $captures;
 	}
 	public function toJS()
 	{
 		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+	}
+	protected function getNamedCapturesExpressions(array $tokens)
+	{
+		$exprs = [];
+		foreach ($tokens as $token)
+		{
+			if ($token['type'] !== 'capturingSubpatternStart' || !isset($token['name']))
+				continue;
+			$expr = $token['content'];
+			if (\strpos($expr, '|') !== \false)
+				$expr = '(?:' . $expr . ')';
+			$exprs[$token['name']] = $expr;
+		}
+		return $exprs;
 	}
 }
 

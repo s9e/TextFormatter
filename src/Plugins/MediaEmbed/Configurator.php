@@ -137,7 +137,7 @@ class Configurator extends ConfiguratorBase
 		}
 		if (isset($attributes['id']['regexp']))
 		{
-			$attrRegexp = \preg_replace('/\\^\\(\\?[:>]/', "^(?'id'", $attributes['id']['regexp']);
+			$attrRegexp = \preg_replace('(\\^(.*)\\$)s', "^(?'id'$1)$", $attributes['id']['regexp']);
 			$tag->attributePreprocessors->add('url', $attrRegexp);
 		}
 		if (!$hasRequiredAttribute)
@@ -198,10 +198,10 @@ class Configurator extends ConfiguratorBase
 			$scrapeConfig[] = $entry;
 		}
 		$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
-						 ->addParameterByName('scrapeConfig')
-						 ->addParameterByName('cacheDir')
-						 ->setVar('scrapeConfig', $scrapeConfig)
-						 ->setJS('function(){return true;}');
+		                 ->addParameterByName('scrapeConfig')
+		                 ->addParameterByName('cacheDir')
+		                 ->setVar('scrapeConfig', $scrapeConfig)
+		                 ->setJS('returnTrue');
 		return $attributes;
 	}
 	protected function appendFilter(Attribute $attribute, $filter)
