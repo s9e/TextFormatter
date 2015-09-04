@@ -528,6 +528,19 @@ xxx',
 					       ->setAttributes(['foo' => 1, 'bar' => 2, 'baz' => 3]);
 				}
 			],
+			[
+				'...',
+				'<r><X>...<br/></X></r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('X', 0, 0, 3, 0);
+					$parser->addBrTag(3)->setSortPriority(-1);
+				}
+			],
 		];
 	}
 }
