@@ -67,3 +67,11 @@ function returnFalse()
 {
 	return false;
 }
+
+/**
+* @return {!boolean}
+*/
+function returnTrue()
+{
+	return true;
+}
