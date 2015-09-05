@@ -116,60 +116,21 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		if (!$this->captureURLs)
+		if (!$this->captureURLs || !count($this->collection))
 		{
 			return;
 		}
 
-		// Unicode char used as a placeholder for the regular expression that marks the beginning of
-		// a URL
-		$char = "\xEE\x80\x80";
-
-		$hasSchemes = false;
-		$patterns   = [];
-		foreach ($this->collection as $site)
+		$regexp  = 'https?:\\/\\/';
+		$schemes = $this->getSchemes();
+		if (!empty($schemes))
 		{
-			if (isset($site['host']))
-			{
-				foreach ((array) $site['host'] as $host)
-				{
-					$patterns[] = $char . $host . '/';
-				}
-			}
-
-			if (isset($site['scheme']))
-			{
-				foreach ((array) $site['scheme'] as $scheme)
-				{
-					$hasSchemes = true;
-					$patterns[] = $scheme . ':';
-				}
-			}
+			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		}
-
-		if (empty($patterns))
-		{
-			return;
-		}
-
-		// Merge all the patterns
-		$regexp = RegexpBuilder::fromList(
-			$patterns,
-			[
-				'delimiter'    => '#',
-				'specialChars' => [$char => 'https?://(?:[-.\\w]+\\.)?']
-			]
-		);
-
-		// Replace the non-capturing subpattern at the start with an atomic group
-		$regexp = preg_replace('(^\\(\\?:)', '(?>', $regexp);
-
-		// Build the final regexp
-		$regexp = '#\\b' . $regexp . '[^["\'\\s]+' . '(?!\\S)' . '#S';
 
 		return [
-			'quickMatch' => ($hasSchemes) ? ':' : '://',
-			'regexp'     => $regexp
+			'quickMatch' => (empty($schemes)) ? '://' : ':',
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/S'
 		];
 	}
 
@@ -457,6 +418,28 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
+	}
+
+	/**
+	* Return the list of custom schemes supported via media sites
+	*
+	* @return string[]
+	*/
+	protected function getSchemes()
+	{
+		$schemes = [];
+		foreach ($this->collection as $site)
+		{
+			if (isset($site['scheme']))
+			{
+				foreach ((array) $site['scheme'] as $scheme)
+				{
+					$schemes[] = $scheme;
+				}
+			}
+		}
+
+		return $schemes;
 	}
 
 	/**
