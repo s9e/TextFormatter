@@ -433,6 +433,111 @@ abstract class AVTHelper
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
+class CharacterClassBuilder
+{
+	protected $chars;
+	public $delimiter = '/';
+	protected $ranges;
+	public function fromList(array $chars)
+	{
+		$this->chars = $chars;
+		$this->unescapeLiterals();
+		\sort($this->chars);
+		$this->storeRanges();
+		$this->reorderDash();
+		$this->fixCaret();
+		$this->escapeSpecialChars();
+		return $this->buildCharacterClass();
+	}
+	protected function buildCharacterClass()
+	{
+		$str = '[';
+		foreach ($this->ranges as $_b7914274)
+		{
+			list($start, $end) = $_b7914274;
+			if ($end > $start + 2)
+				$str .= $this->chars[$start] . '-' . $this->chars[$end];
+			else
+				$str .= \implode('', \array_slice($this->chars, $start, $end + 1 - $start));
+		}
+		$str .= ']';
+		return $str;
+	}
+	protected function escapeSpecialChars()
+	{
+		$specialChars = ['\\', ']', $this->delimiter];
+		foreach (\array_intersect($this->chars, $specialChars) as $k => $v)
+			$this->chars[$k] = '\\' . $v;
+	}
+	protected function fixCaret()
+	{
+		$k = \array_search('^', $this->chars, \true);
+		if ($this->ranges[0][0] !== $k)
+			return;
+		if (isset($this->ranges[1]))
+		{
+			$range           = $this->ranges[0];
+			$this->ranges[0] = $this->ranges[1];
+			$this->ranges[1] = $range;
+		}
+		else
+			$this->chars[$k] = '\\^';
+	}
+	protected function reorderDash()
+	{
+		$dashIndex = \array_search('-', $this->chars, \true);
+		if ($dashIndex === \false)
+			return;
+		$k = \array_search([$dashIndex, $dashIndex], $this->ranges, \true);
+		if ($k > 0)
+		{
+			unset($this->ranges[$k]);
+			\array_unshift($this->ranges, [$dashIndex, $dashIndex]);
+		}
+		$commaIndex = \array_search(',', $this->chars);
+		$range      = [$commaIndex, $dashIndex];
+		$k          = \array_search($range, $this->ranges, \true);
+		if ($k !== \false)
+		{
+			$this->ranges[$k] = [$commaIndex, $commaIndex];
+			\array_unshift($this->ranges, [$dashIndex, $dashIndex]);
+		}
+	}
+	protected function storeRanges()
+	{
+		$values = [];
+		foreach ($this->chars as $char)
+			if (\strlen($char) === 1)
+				$values[] = \ord($char);
+			else
+				$values[] = \false;
+		$i = \count($values) - 1;
+		$ranges = [];
+		while ($i >= 0)
+		{
+			$start = $i;
+			$end   = $i;
+			while ($start > 0 && $values[$start - 1] === $values[$end] - ($end + 1 - $start))
+				--$start;
+			$ranges[] = [$start, $end];
+			$i = $start - 1;
+		}
+		$this->ranges = \array_reverse($ranges);
+	}
+	protected function unescapeLiterals()
+	{
+		foreach ($this->chars as $k => $char)
+			if ($char[0] === '\\' && \preg_match('(^\\\\[^a-z]$)Di', $char))
+				$this->chars[$k] = \substr($char, 1);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -539,6 +644,7 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 abstract class RegexpBuilder
 {
+	protected static $characterClassBuilder;
 	public static function fromList(array $words, array $options = [])
 	{
 		if (empty($words))
@@ -589,6 +695,8 @@ abstract class RegexpBuilder
 			}
 			$splitWords[] = $splitWord;
 		}
+		self::$characterClassBuilder            = new CharacterClassBuilder;
+		self::$characterClassBuilder->delimiter = $options['delimiter'];
 		$regexp = self::assemble([self::mergeChains($splitWords)]);
 		if ($options['useLookahead']
 		 && \count($initials) > 1
@@ -865,23 +973,7 @@ abstract class RegexpBuilder
 	}
 	protected static function generateCharacterClass(array $chars)
 	{
-		$chars = \array_flip($chars);
-		$unescape = \str_split('$()*+.?[{|^', 1);
-		foreach ($unescape as $c)
-			if (isset($chars['\\' . $c]))
-			{
-				unset($chars['\\' . $c]);
-				$chars[$c] = 1;
-			}
-		\ksort($chars);
-		if (isset($chars['-']))
-			$chars = ['-' => 1] + $chars;
-		if (isset($chars['^']))
-		{
-			unset($chars['^']);
-			$chars['^'] = 1;
-		}
-		return '[' . \implode('', \array_keys($chars)) . ']';
+		return self::$characterClassBuilder->fromList($chars);
 	}
 	protected static function canBeUsedInCharacterClass($char)
 	{
