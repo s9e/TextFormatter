@@ -116,17 +116,17 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
-	* @testdox fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\/\\\\\\]{|}^]'
+	* @testdox fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[!#$(-+-.\\/:<-?[-^{|}]'
 	*/
-	public function test_F8AE8B35()
+	public function test_5F057A01()
 	{
 		$this->fromListTestCase(13);
 	}
 
 	/**
-	* @testdox fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()[\\/\\\\\\]|]'
+	* @testdox fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()\\/[\\\\\\]|]'
 	*/
-	public function test_C1DA5669()
+	public function test_84CEA669()
 	{
 		$this->fromListTestCase(14);
 	}
@@ -1044,11 +1044,11 @@ class RegexpBuilderTest extends Test
 				['ax', 'axed']
 			],
 			[
-				'[-!#$()*+.:<=>?[\\/\\\\\\]{|}^]',
+				'[!#$(-+-.\\/:<-?[-^{|}]',
 				str_split('!#$()*+-./:<=>?[\\]^{|}', 1)
 			],
 			[
-				':[()[\\/\\\\\\]|]',
+				':[()\\/[\\\\\\]|]',
 				[':)', ':(', ':]', ':[', ':|', ':/', ':\\']
 			],
 			[

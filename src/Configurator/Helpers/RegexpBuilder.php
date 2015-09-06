@@ -12,6 +12,11 @@ use RuntimeException;
 abstract class RegexpBuilder
 {
 	/**
+	* @var CharacterClassBuilder
+	*/
+	protected static $characterClassBuilder;
+
+	/**
 	* Create a regexp pattern that matches a list of words
 	*
 	* @param  array  $words   Words to sort (must be UTF-8)
@@ -105,6 +110,8 @@ abstract class RegexpBuilder
 			$splitWords[] = $splitWord;
 		}
 
+		self::$characterClassBuilder            = new CharacterClassBuilder;
+		self::$characterClassBuilder->delimiter = $options['delimiter'];
 		$regexp = self::assemble([self::mergeChains($splitWords)]);
 
 		if ($options['useLookahead']
@@ -701,38 +708,7 @@ abstract class RegexpBuilder
 	*/
 	protected static function generateCharacterClass(array $chars)
 	{
-		// Flip for convenience
-		$chars = array_flip($chars);
-
-		// Those characters do not need to be escaped inside of a character class.
-		$unescape = str_split('$()*+.?[{|^', 1);
-
-		foreach ($unescape as $c)
-		{
-			if (isset($chars['\\' . $c]))
-			{
-				unset($chars['\\' . $c]);
-				$chars[$c] = 1;
-			}
-		}
-
-		// Sort characters so that class with the same content produce the same representation
-		ksort($chars);
-
-		// "-" should be the first character of the class to avoid ambiguity
-		if (isset($chars['-']))
-		{
-			$chars = ['-' => 1] + $chars;
-		}
-
-		// Ensure that ^ is at the end of the class to prevent it from negating the class
-		if (isset($chars['^']))
-		{
-			unset($chars['^']);
-			$chars['^'] = 1;
-		}
-
-		return '[' . implode('', array_keys($chars)) . ']';
+		return self::$characterClassBuilder->fromList($chars);
 	}
 
 	/**

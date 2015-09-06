@@ -422,6 +422,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\AVTHelper
  [x] serialize() tests
  [x] replace() tests
 
+s9e\TextFormatter\Tests\Configurator\Helpers\CharacterClassBuilder
+ [x] Special characters are properly matched
+ [x] fromList() tests
+
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] filterVariants() filters the right variant
  [x] filterVariants() recurses into deep arrays
@@ -545,8 +549,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['bar', 'baz']) returns 'ba[rz]'
  [x] fromList(['foo', 'fool']) returns 'fool?'
  [x] fromList(['ax', 'axed']) returns 'ax(?>ed)?'
- [x] fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\/\\\\\\]{|}^]'
- [x] fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()[\\/\\\\\\]|]'
+ [x] fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[!#$(-+-.\\/:<-?[-^{|}]'
+ [x] fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()\\/[\\\\\\]|]'
  [x] fromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?>x|^)y'
  [x] fromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?>y|$)'
  [x] fromList(['foo', 'bar']) returns '(?>bar|foo)'
