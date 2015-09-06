@@ -54,37 +54,15 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		if (!$this->captureURLs)
+		if (!$this->captureURLs || !\count($this->collection))
 			return;
-		$char = "\xEE\x80\x80";
-		$hasSchemes = \false;
-		$patterns   = array();
-		foreach ($this->collection as $site)
-		{
-			if (isset($site['host']))
-				foreach ((array) $site['host'] as $host)
-					$patterns[] = $char . $host . '/';
-			if (isset($site['scheme']))
-				foreach ((array) $site['scheme'] as $scheme)
-				{
-					$hasSchemes = \true;
-					$patterns[] = $scheme . ':';
-				}
-		}
-		if (empty($patterns))
-			return;
-		$regexp = RegexpBuilder::fromList(
-			$patterns,
-			array(
-				'delimiter'    => '#',
-				'specialChars' => array($char => 'https?://(?:[-.\\w]+\\.)?')
-			)
-		);
-		$regexp = \preg_replace('(^\\(\\?:)', '(?>', $regexp);
-		$regexp = '#\\b' . $regexp . '[^["\'\\s]+(?!\\S)#S';
+		$regexp  = 'https?:\\/\\/';
+		$schemes = $this->getSchemes();
+		if (!empty($schemes))
+			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		return array(
-			'quickMatch' => ($hasSchemes) ? ':' : '://',
-			'regexp'     => $regexp
+			'quickMatch' => (empty($schemes)) ? '://' : ':',
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/S'
 		);
 	}
 	public function add($siteId, array $siteConfig = \null)
@@ -209,6 +187,15 @@ class Configurator extends ConfiguratorBase
 		if (!\in_array($filter, $this->allowedFilters, \true))
 			throw new RuntimeException("Filter '" . $filter . "' is not allowed");
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
+	}
+	protected function getSchemes()
+	{
+		$schemes = array();
+		foreach ($this->collection as $site)
+			if (isset($site['scheme']))
+				foreach ((array) $site['scheme'] as $scheme)
+					$schemes[] = $scheme;
+		return $schemes;
 	}
 	protected function getTemplate(array $siteConfig)
 	{

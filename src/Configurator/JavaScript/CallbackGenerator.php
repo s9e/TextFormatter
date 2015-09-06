@@ -55,6 +55,8 @@ class CallbackGenerator
 	}
 	protected function generateFunction(array $config, array $params)
 	{
+		if ($config['js'] === 'returnFalse' || $config['js'] === 'returnTrue')
+			return new Code($config['js']);
 		$config += array('params' => array());
 		$src = '(' . \implode(',', \array_keys($params)) . '){return ';
 		$src .= $this->parenthesizeCallback($config['js']);
