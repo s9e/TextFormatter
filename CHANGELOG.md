@@ -1,3 +1,18 @@
+0.3.2 (2015-09-06)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/c6fad331e64aeea041ce2da4c5f0e0521bc76afc...dd3fe8c881856bb6279302932912cc8ab957efd1)
+
+### New
+
+ - `dd3fe8c` Added CharacterClassBuilder helper
+
+### Changed
+
+ - `c3f08fb` JavaScript: use returnFalse and returnTrue callbacks as-is
+ - `0f5051d` MediaEmbed: simplified the regexp that matches text links
+
+
 0.3.1 (2015-09-04)
 ==================
 
