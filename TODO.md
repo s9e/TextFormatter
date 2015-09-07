@@ -1,6 +1,7 @@
 Current things
 --------------
 - ~~Remove custom templates from MediaEmbed~~
+- Remove the embed element from Flash embeds
 - Make variable-height embeds like Twitter 100% wide in responsive mode
 - Use CSS to dimension iframes and possibly Flash embeds too
 - Add support for responsive embeds of variable ratio in MediaEmbed via CSS calc()
