@@ -11,7 +11,7 @@ $types = [
 	'Ignore'  => '((?:#ignore|#tests|ci skip|(?:build|release|travis) script))i',
 	'New'     => '(\\bAdded\\b)i',
 	'Fixed'   => '(\\bFixed\\b)i',
-	'Removed' => '(\\bFixed\\b)i',
+	'Removed' => '(\\bRemoved\\b)i',
 	'Changed' => '()'
 ];
 
