@@ -29,6 +29,7 @@ pages:
   - Filters:
     - Built-in filters: Filters/Built-in_filters.md
     - Add/replace filters: Filters/Custom_filters.md
+    - Attribute filters: Filters/Attribute_filters.md
     - Tag filters: Filters/Tag_filters.md
     - Callback signature: Filters/Callback_signature.md
     - URL features:

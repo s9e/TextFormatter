@@ -1,6 +1,6 @@
 ### How tag filters work
 
-Tag filters are callbacks. During parsing, they are called a tag and their return value indicates whether this tag is valid. Tag filters can be used to validate tags and modify their attributes.
+Tag filters are callbacks. During parsing, they are called for each tag using the tag as the callback's sole argument and their return value indicates whether this tag is valid. Tag filters can be used to validate tags and modify their attributes.
 
 ### Add a custom tag filter
 
