@@ -26,48 +26,9 @@ class Parser extends ParserBase
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
 		if ($tag->hasAttribute('media'))
-		{
-			$siteId = \strtolower($tag->getAttribute('media'));
-			if (!\in_array($siteId, $sites, \true))
-				return \false;
-			$tagName = $siteId;
-			if (!$tag->hasAttribute('id')
-			 && $tag->hasAttribute('url')
-			 && \strpos($tag->getAttribute('url'), '://') === \false)
-				$tag->setAttribute('id', $tag->getAttribute('url'));
-		}
+			self::addTagFromMediaId($tag, $tagStack, $sites);
 		elseif ($tag->hasAttribute('url'))
-		{
-			$p = \parse_url($tag->getAttribute('url'));
-			if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
-				$tagName = $sites[$p['scheme'] . ':'];
-			elseif (isset($p['host']))
-			{
-				$host = $p['host'];
-				do
-				{
-					if (isset($sites[$host]))
-					{
-						$tagName = $sites[$host];
-						break;
-					}
-					$pos = \strpos($host, '.');
-					if ($pos === \false)
-						break;
-					$host = \substr($host, 1 + $pos);
-				}
-				while ($host > '');
-			}
-		}
-		if (isset($tagName))
-		{
-			$endTag = $tag->getEndTag() ?: $tag;
-			$lpos = $tag->getPos();
-			$rpos = $endTag->getPos() + $endTag->getLen();
-			$newTag = $tagStack->addSelfClosingTag(\strtoupper($tagName), $lpos, $rpos - $lpos);
-			$newTag->setAttributes($tag->getAttributes());
-			$newTag->setSortPriority($tag->getSortPriority());
-		}
+			self::addTagFromMediaUrl($tag, $tagStack, $sites);
 		return \false;
 	}
 	public static function hasNonDefaultAttribute(Tag $tag)
@@ -87,6 +48,47 @@ class Parser extends ParserBase
 		foreach ($scrapeConfig as $scrape)
 			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
 		return \true;
+	}
+	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
+	{
+		$endTag = $tag->getEndTag() ?: $tag;
+		$lpos = $tag->getPos();
+		$rpos = $endTag->getPos() + $endTag->getLen();
+		$newTag = $tagStack->addSelfClosingTag(\strtoupper($siteId), $lpos, $rpos - $lpos);
+		$newTag->setAttributes($tag->getAttributes());
+		$newTag->setSortPriority($tag->getSortPriority());
+	}
+	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
+	{
+		if (!$tag->hasAttribute('id') && $tag->hasAttribute('url') && \strpos($tag->getAttribute('url'), '://') === \false)
+			$tag->setAttribute('id', $tag->getAttribute('url'));
+		$siteId = \strtolower($tag->getAttribute('media'));
+		if (\in_array($siteId, $sites, \true))
+			self::addSiteTag($tag, $tagStack, $siteId);
+	}
+	protected static function addTagFromMediaUrl(Tag $tag, TagStack $tagStack, array $sites)
+	{
+		$p = \parse_url($tag->getAttribute('url'));
+		if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
+			$siteId = $sites[$p['scheme'] . ':'];
+		elseif (isset($p['host']))
+			$siteId = self::findSiteIdByHost($p['host'], $sites);
+		if (!empty($siteId))
+			self::addSiteTag($tag, $tagStack, $siteId);
+	}
+	protected static function findSiteIdByHost($host, array $sites)
+	{
+		do
+		{
+			if (isset($sites[$host]))
+				return $sites[$host];
+			$pos = \strpos($host, '.');
+			if ($pos === \false)
+				break;
+			$host = \substr($host, 1 + $pos);
+		}
+		while ($host > '');
+		return \false;
 	}
 	protected static function replaceTokens($url, array $vars)
 	{
