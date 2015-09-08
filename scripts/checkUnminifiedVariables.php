@@ -4,7 +4,7 @@
 $regexps = [
 	// varName.foo() or varName= or varName,
 	'/\\w{2,}+(?=\\.\\w+[(=,])/S',
-	// varName= preceeded by any of ; ( ) { }
+	// varName= preceded by any of ; ( ) { }
 	'/(?<=[;(){}])(?<!&amp;)\\w{2,}+(?==)/S'
 ];
 
@@ -53,8 +53,9 @@ $knownVars['url']           = 1;
 $knownVars['window']        = 1;
 
 // Known false positives
-$knownVars['id']  = 1;
-$knownVars['pok'] = 1;
+$knownVars['id']    = 1;
+$knownVars['media'] = 1;
+$knownVars['pok']   = 1;
 
 // Those are intentionally preserved
 $knownVars['host']   = 1;

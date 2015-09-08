@@ -107,7 +107,7 @@ class ParserTest extends Test
 		$tag->setAttribute('media', 'foo');
 		$tag->setSortPriority(123);
 
-		Parser::filterTag($tag, $tagStack, []);
+		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
 	}
 
 	/**
@@ -1364,6 +1364,17 @@ class ParserTest extends Test
 							]
 						]
 					);
+				}
+			],
+			[
+				'[media=x]..[/media]',
+				'<t>[media=x]..[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes;
+					$configurator->MediaEmbed->add('foo', ['host' => 'example.invalid']);
+					$configurator->tags->add('X');
 				}
 			],
 			// =================================================================

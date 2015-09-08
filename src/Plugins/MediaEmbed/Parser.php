@@ -48,7 +48,12 @@ class Parser extends ParserBase
 		if ($tag->hasAttribute('media'))
 		{
 			// [media=youtube]xxxxxxx[/media]
-			$tagName = $tag->getAttribute('media');
+			$siteId = strtolower($tag->getAttribute('media'));
+			if (!in_array($siteId, $sites, true))
+			{
+				return false;
+			}
+			$tagName = $siteId;
 
 			// If this tag doesn't have an id attribute and the url attribute doesn't really look
 			// like an URL, copy the value of the url attribute, so that the tag acts like
