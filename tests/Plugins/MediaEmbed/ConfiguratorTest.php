@@ -634,7 +634,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/></object>',
 			$tag->template
 		);
 	}
@@ -658,7 +658,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="{@width}" height="{@height}" src="foo" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/></object>',
 			$tag->template
 		);
 	}
@@ -683,7 +683,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" flashvars="foo=1&amp;bar=2" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/></object>',
 			$tag->template
 		);
 	}
@@ -708,7 +708,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="123" height="456" src="foo" base="http://localhost/" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/></object>',
 			$tag->template
 		);
 	}
@@ -733,7 +733,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="100%" height="456" src="foo" style="max-width:900px" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/></object>',
 			$tag->template
 		);
 	}
@@ -1414,7 +1414,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertSame(
-			'<div style="display:inline-block;width:100%;max-width:560px"><div style="height:0;position:relative;padding-top:56.25%"><object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" style="position:absolute;top:0;left:0;width:100%;height:100%;position:absolute;top:0;left:0;width:100%;height:100%" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" width="560" height="315" src="foo" style="position:absolute;top:0;left:0;width:100%;height:100%" allowfullscreen=""/></object></div></div>',
+			'<div style="display:inline-block;width:100%;max-width:560px"><div style="height:0;position:relative;padding-top:56.25%"><object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" style="position:absolute;top:0;left:0;width:100%;height:100%;position:absolute;top:0;left:0;width:100%;height:100%" data="foo"><param name="allowfullscreen" value="true"/></object></div></div>',
 			(string) $tag->template
 		);
 	}

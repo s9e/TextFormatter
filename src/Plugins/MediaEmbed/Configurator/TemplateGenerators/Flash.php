@@ -22,7 +22,7 @@ class Flash extends TemplateGenerator
 			$attributes = $this->addResponsiveStyle($attributes);
 		}
 
-		$template = $this->generateObjectStartTag($attributes, $isResponsive) . $this->generateEmbedElement($attributes) . '</object>';
+		$template = $this->generateObjectElement($attributes, $isResponsive);
 		if ($isResponsive)
 		{
 			$template = $this->addResponsiveWrapper($template, $attributes);
@@ -32,20 +32,7 @@ class Flash extends TemplateGenerator
 	}
 
 	/**
-	* Generate a complete embed element
-	*
-	* @param  array $attributes
-	* @return string
-	*/
-	protected function generateEmbedElement(array $attributes)
-	{
-		$attributes['allowfullscreen'] = '';
-
-		return '<embed type="application/x-shockwave-flash">' . $this->generateAttributes($attributes) . '</embed>';
-	}
-
-	/**
-	* Generate the start tag of an object element
+	* Generate an object element
 	*
 	* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
 	* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
@@ -54,7 +41,7 @@ class Flash extends TemplateGenerator
 	* @param  bool   $isResponsive
 	* @return string
 	*/
-	protected function generateObjectStartTag(array $attributes, $isResponsive)
+	protected function generateObjectElement(array $attributes, $isResponsive)
 	{
 		$attributes['data']          = $attributes['src'];
 		$attributes['type']          = 'application/x-shockwave-flash';
@@ -71,7 +58,8 @@ class Flash extends TemplateGenerator
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
 		          . $this->generateAttributes($attributes, $isResponsive)
 		          . $this->generateParamElement('allowfullscreen', 'true')
-		          . $flashVarsParam;
+		          . $flashVarsParam
+		          . '</object>';
 
 		return $template;
 	}
