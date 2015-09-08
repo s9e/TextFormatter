@@ -27,7 +27,10 @@ class Parser extends ParserBase
 	{
 		if ($tag->hasAttribute('media'))
 		{
-			$tagName = $tag->getAttribute('media');
+			$siteId = \strtolower($tag->getAttribute('media'));
+			if (!\in_array($siteId, $sites, \true))
+				return \false;
+			$tagName = $siteId;
 			if (!$tag->hasAttribute('id')
 			 && $tag->hasAttribute('url')
 			 && \strpos($tag->getAttribute('url'), '://') === \false)
