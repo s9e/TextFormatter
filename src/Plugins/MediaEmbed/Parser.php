@@ -47,71 +47,11 @@ class Parser extends ParserBase
 	{
 		if ($tag->hasAttribute('media'))
 		{
-			// [media=youtube]xxxxxxx[/media]
-			$siteId = strtolower($tag->getAttribute('media'));
-			if (!in_array($siteId, $sites, true))
-			{
-				return false;
-			}
-			$tagName = $siteId;
-
-			// If this tag doesn't have an id attribute and the url attribute doesn't really look
-			// like an URL, copy the value of the url attribute, so that the tag acts like
-			// [media=youtube id=xxxx]xxxx[/media]
-			if (!$tag->hasAttribute('id')
-			 && $tag->hasAttribute('url')
-			 && strpos($tag->getAttribute('url'), '://') === false)
-			{
-				$tag->setAttribute('id', $tag->getAttribute('url'));
-			}
+			self::addTagFromMediaId($tag, $tagStack, $sites);
 		}
 		elseif ($tag->hasAttribute('url'))
 		{
-			// Capture the scheme and (if applicable) host of the URL
-			$p = parse_url($tag->getAttribute('url'));
-
-			if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
-			{
-				$tagName = $sites[$p['scheme'] . ':'];
-			}
-			elseif (isset($p['host']))
-			{
-				$host = $p['host'];
-
-				// Start with the full host then pop domain labels off the start until we get a
-				// match
-				do
-				{
-					if (isset($sites[$host]))
-					{
-						$tagName = $sites[$host];
-						break;
-					}
-
-					$pos = strpos($host, '.');
-					if ($pos === false)
-					{
-						break;
-					}
-
-					$host = substr($host, 1 + $pos);
-				}
-				while ($host > '');
-			}
-		}
-
-		if (isset($tagName))
-		{
-			$endTag = $tag->getEndTag() ?: $tag;
-
-			// Compute the boundaries of our new tag
-			$lpos = $tag->getPos();
-			$rpos = $endTag->getPos() + $endTag->getLen();
-
-			// Create a new tag and copy this tag's attributes and priority
-			$newTag = $tagStack->addSelfClosingTag(strtoupper($tagName), $lpos, $rpos - $lpos);
-			$newTag->setAttributes($tag->getAttributes());
-			$newTag->setSortPriority($tag->getSortPriority());
+			self::addTagFromMediaUrl($tag, $tagStack, $sites);
 		}
 
 		return false;
@@ -171,6 +111,111 @@ class Parser extends ParserBase
 	//==============================================================================================
 	// Internals
 	//==============================================================================================
+
+	/**
+	* Add a site tag
+	*
+	* @param  Tag      $tag      The original tag
+	* @param  TagStack $tagStack Parser instance, so that we can add the new tag to the stack
+	* @param  string   $siteId   Site ID
+	* @return void
+	*/
+	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
+	{
+		$endTag = $tag->getEndTag() ?: $tag;
+
+		// Compute the boundaries of our new tag
+		$lpos = $tag->getPos();
+		$rpos = $endTag->getPos() + $endTag->getLen();
+
+		// Create a new tag and copy this tag's attributes and priority
+		$newTag = $tagStack->addSelfClosingTag(strtoupper($siteId), $lpos, $rpos - $lpos);
+		$newTag->setAttributes($tag->getAttributes());
+		$newTag->setSortPriority($tag->getSortPriority());
+	}
+
+	/**
+	* Add a media site tag based on the attributes of a MEDIA tag
+	*
+	* @param  Tag      $tag      The original tag
+	* @param  TagStack $tagStack Parser instance
+	* @param  array    $sites    Map of [host => siteId]
+	* @return void
+	*/
+	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
+	{
+		// If this tag doesn't have an id attribute and the url attribute doesn't really look
+		// like an URL, copy the value of the url attribute, so that the tag acts like
+		// [media=youtube id=xxxx]xxxx[/media]
+		if (!$tag->hasAttribute('id') && $tag->hasAttribute('url') && strpos($tag->getAttribute('url'), '://') === false)
+		{
+			$tag->setAttribute('id', $tag->getAttribute('url'));
+		}
+
+		// [media=youtube]xxxxxxx[/media]
+		$siteId = strtolower($tag->getAttribute('media'));
+		if (in_array($siteId, $sites, true))
+		{
+			self::addSiteTag($tag, $tagStack, $siteId);
+		}
+	}
+
+	/**
+	* Add a media site tag based on the url attribute of a MEDIA tag
+	*
+	* @param  Tag      $tag      The original tag
+	* @param  TagStack $tagStack Parser instance
+	* @param  array    $sites    Map of [host => siteId]
+	* @return void
+	*/
+	protected static function addTagFromMediaUrl(Tag $tag, TagStack $tagStack, array $sites)
+	{
+		// Capture the scheme and (if applicable) host of the URL
+		$p = parse_url($tag->getAttribute('url'));
+		if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
+		{
+			$siteId = $sites[$p['scheme'] . ':'];
+		}
+		elseif (isset($p['host']))
+		{
+			$siteId = self::findSiteIdByHost($p['host'], $sites);
+		}
+
+		if (!empty($siteId))
+		{
+			self::addSiteTag($tag, $tagStack, $siteId);
+		}
+	}
+
+	/**
+	* Match a given host to a site ID
+	*
+	* @param  string      $host  Host
+	* @param  array       $sites Map of [host => siteId]
+	* @return string|bool        Site ID or FALSE
+	*/
+	protected static function findSiteIdByHost($host, array $sites)
+	{
+		// Start with the full host then pop domain labels off the start until we get a match
+		do
+		{
+			if (isset($sites[$host]))
+			{
+				return $sites[$host];
+			}
+
+			$pos = strpos($host, '.');
+			if ($pos === false)
+			{
+				break;
+			}
+
+			$host = substr($host, 1 + $pos);
+		}
+		while ($host > '');
+
+		return false;
+	}
 
 	/**
 	* Replace {@var} tokens in given URL
