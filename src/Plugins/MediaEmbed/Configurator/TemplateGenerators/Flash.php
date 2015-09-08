@@ -14,17 +14,12 @@ class Flash extends TemplateGenerator
 		$isResponsive = $this->canBeResponsive($attributes);
 		if ($isResponsive)
 			$attributes = $this->addResponsiveStyle($attributes);
-		$template = $this->generateObjectStartTag($attributes, $isResponsive) . $this->generateEmbedElement($attributes) . '</object>';
+		$template = $this->generateObjectElement($attributes, $isResponsive);
 		if ($isResponsive)
 			$template = $this->addResponsiveWrapper($template, $attributes);
 		return $template;
 	}
-	protected function generateEmbedElement(array $attributes)
-	{
-		$attributes['allowfullscreen'] = '';
-		return '<embed type="application/x-shockwave-flash">' . $this->generateAttributes($attributes) . '</embed>';
-	}
-	protected function generateObjectStartTag(array $attributes, $isResponsive)
+	protected function generateObjectElement(array $attributes, $isResponsive)
 	{
 		$attributes['data']          = $attributes['src'];
 		$attributes['type']          = 'application/x-shockwave-flash';
@@ -39,7 +34,8 @@ class Flash extends TemplateGenerator
 		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
 		          . $this->generateAttributes($attributes, $isResponsive)
 		          . $this->generateParamElement('allowfullscreen', 'true')
-		          . $flashVarsParam;
+		          . $flashVarsParam
+		          . '</object>';
 		return $template;
 	}
 	protected function generateParamElement($paramName, $paramValue)
