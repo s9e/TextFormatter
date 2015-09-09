@@ -113,22 +113,9 @@ abstract class TemplateGenerator
 		$xsl = '';
 		foreach ($attributes as $attrName => $innerXML)
 		{
-			// If the value does not look like XSL, we reconstruct it as XSL
 			if (strpos($innerXML, '<') === false)
 			{
-				$tokens   = AVTHelper::parse($innerXML);
-				$innerXML = '';
-				foreach ($tokens as list($type, $content))
-				{
-					if ($type === 'literal')
-					{
-						$innerXML .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
-					}
-					else
-					{
-						$innerXML .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_QUOTES, 'UTF-8') . '"/>';
-					}
-				}
+				$innerXML = AVTHelper::toXSL($innerXML);
 			}
 
 			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName, ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';

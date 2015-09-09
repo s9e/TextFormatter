@@ -225,4 +225,51 @@ class AVTHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox toXSL() tests
+	* @dataProvider getToXSLTests
+	*/
+	public function testToXSL($attrValue, $expected)
+	{
+		$this->assertSame($expected, AVTHelper::toXSL($attrValue));
+	}
+
+	public function getToXSLTests()
+	{
+		return [
+			[
+				'',
+				''
+			],
+			[
+				'foo',
+				'foo'
+			],
+			[
+				'{@foo}',
+				'<xsl:value-of select="@foo"/>'
+			],
+			[
+				'{@foo}bar',
+				'<xsl:value-of select="@foo"/>bar'
+			],
+			[
+				"{'\"'}",
+				'<xsl:value-of select="\'&quot;\'"/>'
+			],
+			[
+				'{"\'"}',
+				'<xsl:value-of select="&quot;\'&quot;"/>'
+			],
+			[
+				"{'<>'}",
+				'<xsl:value-of select="\'&lt;&gt;\'"/>'
+			],
+			[
+				'<"\'>',
+				'&lt;"\'&gt;'
+			],
+		];
+	}
 }

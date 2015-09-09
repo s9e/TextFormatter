@@ -152,4 +152,28 @@ abstract class AVTHelper
 
 		return $attrValue;
 	}
+
+	/**
+	* Transform given attribute value template into an XSL fragment
+	*
+	* @param  string $attrValue
+	* @return string
+	*/
+	public static function toXSL($attrValue)
+	{
+		$xsl = '';
+		foreach (self::parse($attrValue) as list($type, $content))
+		{
+			if ($type === 'literal')
+			{
+				$xsl .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
+			}
+			else
+			{
+				$xsl .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_COMPAT, 'UTF-8') . '"/>';
+			}
+		}
+
+		return $xsl;
+	}
 }

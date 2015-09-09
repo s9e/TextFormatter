@@ -421,6 +421,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\AVTHelper
  [x] parse() tests
  [x] serialize() tests
  [x] replace() tests
+ [x] toXSL() tests
 
 s9e\TextFormatter\Tests\Configurator\Helpers\CharacterClassBuilder
  [x] Special characters are properly matched
