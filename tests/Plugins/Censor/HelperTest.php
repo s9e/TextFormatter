@@ -259,6 +259,21 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox reparse() does not escape single quotes in replacements
+	*/
+	public function testReparseReplacementSingleQuote()
+	{
+		$this->configurator->Censor->add('bar', "<'BAR'>");
+
+		$xml = '<r>foo bar baz</r>';
+
+		$this->assertSame(
+			'<r>foo <CENSOR with="&lt;\'BAR\'&gt;">bar</CENSOR> baz</r>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
 	* @testdox reparse() replace the "pt" root node with "rt" if a new match is found
 	*/
 	public function testReparseNewRoot()

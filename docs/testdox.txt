@@ -2182,6 +2182,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] reparse() add new tags
  [x] reparse() uses replacements in new tags
  [x] reparse() escapes replacements
+ [x] reparse() does not escape single quotes in replacements
  [x] reparse() replace the "pt" root node with "rt" if a new match is found
  [x] reparse() does not replace tag names
  [x] reparse() does not replace attribute names
