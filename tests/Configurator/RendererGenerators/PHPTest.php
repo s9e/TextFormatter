@@ -700,6 +700,38 @@ class PHPTest extends Test
 						= '<xsl:value-of select="substring-before(@x,\'&amp;\')"/>';
 				}
 			],
+			[
+				'<r><X foo="\'"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:if test="@foo = &quot;\'&quot;">ok</xsl:if>';
+				}
+			],
+			[
+				'<r><X foo="\'"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:if test="&quot;\'&quot; = @foo">ok</xsl:if>';
+				}
+			],
+			[
+				'<r><X foo="\'"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:if test="contains(@foo, &quot;\'&quot;)">ok</xsl:if>';
+				}
+			],
+			[
+				'<r><X foo="\'"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:if test="contains(&quot;\'&quot;, @foo)">ok</xsl:if>';
+				}
+			],
 		];
 	}
 
