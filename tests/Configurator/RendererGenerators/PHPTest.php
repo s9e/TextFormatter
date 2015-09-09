@@ -732,6 +732,16 @@ class PHPTest extends Test
 						= '<xsl:if test="contains(&quot;\'&quot;, @foo)">ok</xsl:if>';
 				}
 			],
+			[
+				// NOTE: this XML cannot be produced by the parser as it does not escape
+				//       single quotes. It would have to be generated or modified manually
+				'<r><X foo="&#39;&quot;"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:value-of select="@foo"/><xsl:if test="contains(@foo, &quot;\'&quot;) and contains(@foo, \'&quot;\')">ok</xsl:if>';
+				}
+			],
 		];
 	}
 

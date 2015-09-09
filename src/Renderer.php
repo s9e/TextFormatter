@@ -177,6 +177,6 @@ abstract class Renderer
 	*/
 	protected static function decodeEntity(array $m)
 	{
-		return htmlspecialchars(html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8'), ENT_QUOTES);
+		return htmlspecialchars(html_entity_decode($m[0], ENT_QUOTES, 'UTF-8'), ENT_COMPAT);
 	}
 }
