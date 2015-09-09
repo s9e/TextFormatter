@@ -10,7 +10,7 @@ foreach (json_decode(wget($url)) as $entry)
 		continue;
 	}
 	$utf8 = str_replace("\xEF\xB8\x8F", '', $entry->emoji);
-	$seq = utf8ToSeq($utf8);
+	$seq  = utf8ToSeq($utf8);
 	foreach ($entry->aliases as $alias)
 	{
 		$map[$alias] = $seq;
@@ -186,7 +186,7 @@ function getJSRegexp($imgEmoji, $textEmoji)
 	);
 
 	// Not if followed by U+FE0E, optionally followed by U+FE0F
-	$regexp .= '(?!\\uFE0E)(?:\\uFE0F)?';
+	$regexp .= '(?!\\uFE0E)\\uFE0F?';
 
 	// Add emoji that require a variant selector
 	$regexp .= '|' . getJSRegexpSubpattern($textEmoji) . '\\uFE0F';
