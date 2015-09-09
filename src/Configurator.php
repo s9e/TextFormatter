@@ -3718,34 +3718,34 @@ class Quick
 			$php
 		);
 		$php = \preg_replace_callback(
-			'(' . $getAttribute . "==='(.*?(?<!\\\\)(?:\\\\\\\\)*)')s",
+			'(' . $getAttribute . "===('.*?(?<!\\\\)(?:\\\\\\\\)*'))s",
 			function ($m)
 			{
-				return '$attributes[' . $m[1] . "]==='" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "'";
+				return '$attributes[' . $m[1] . ']===' . \htmlspecialchars($m[2], \ENT_COMPAT);
 			},
 			$php
 		);
 		$php = \preg_replace_callback(
-			"('(.*?(?<!\\\\)(?:\\\\\\\\)*)'===" . $getAttribute . ')s',
+			"(('.*?(?<!\\\\)(?:\\\\\\\\)*')===" . $getAttribute . ')s',
 			function ($m)
 			{
-				return "'" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "'===\$attributes[" . $m[2] . ']';
+				return \htmlspecialchars($m[1], \ENT_COMPAT) . '===$attributes[' . $m[2] . ']';
 			},
 			$php
 		);
 		$php = \preg_replace_callback(
-			'(strpos\\(' . $getAttribute . ",'(.*?(?<!\\\\)(?:\\\\\\\\)*)'\\)([!=]==(?:0|false)))s",
+			'(strpos\\(' . $getAttribute . ",('.*?(?<!\\\\)(?:\\\\\\\\)*')\\)([!=]==(?:0|false)))s",
 			function ($m)
 			{
-				return 'strpos($attributes[' . $m[1] . "],'" . \htmlspecialchars(\stripslashes($m[2]), \ENT_QUOTES) . "')" . $m[3];
+				return 'strpos($attributes[' . $m[1] . "]," . \htmlspecialchars($m[2], \ENT_COMPAT) . ')' . $m[3];
 			},
 			$php
 		);
 		$php = \preg_replace_callback(
-			"(strpos\\('(.*?(?<!\\\\)(?:\\\\\\\\)*)'," . $getAttribute . '\\)([!=]==(?:0|false)))s',
+			"(strpos\\(('.*?(?<!\\\\)(?:\\\\\\\\)*')," . $getAttribute . '\\)([!=]==(?:0|false)))s',
 			function ($m)
 			{
-				return "strpos('" . \htmlspecialchars(\stripslashes($m[1]), \ENT_QUOTES) . "',\$attributes[" . $m[2] . '])' . $m[3];
+				return 'strpos(' . \htmlspecialchars($m[1], \ENT_COMPAT) . ',$attributes[' . $m[2] . '])' . $m[3];
 			},
 			$php
 		);
