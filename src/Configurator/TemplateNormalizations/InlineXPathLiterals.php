@@ -72,7 +72,7 @@ class InlineXPathLiterals extends TemplateNormalization
 			return substr($expr, 1, -1);
 		}
 
-		if (preg_match('(^0*([0-9]+)$)', $expr, $m))
+		if (preg_match('(^0*([0-9]+(?:\\.[0-9]+)?)$)', $expr, $m))
 		{
 			// NOTE: we specifically ignore leading zeros
 			return $m[1];

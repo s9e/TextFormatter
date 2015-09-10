@@ -27,6 +27,10 @@ class InlineXPathLiteralsTest extends AbstractTest
 				'Answer is 42.'
 			],
 			[
+				'Answer is <xsl:value-of select="4.2"/>.',
+				'Answer is 4.2.'
+			],
+			[
 				'Answer is <xsl:value-of select=" 00042 "/>.',
 				'Answer is 42.'
 			],
