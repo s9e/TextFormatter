@@ -8,7 +8,9 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe
 */

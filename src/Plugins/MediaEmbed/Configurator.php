@@ -17,8 +17,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 
 class Configurator extends ConfiguratorBase
 {
@@ -61,14 +60,9 @@ class Configurator extends ConfiguratorBase
 	public $defaultSites;
 
 	/**
-	* @var bool Whether to enable responsive embeds
+	* @var TemplateBuilder
 	*/
-	protected $responsiveEmbeds = false;
-
-	/**
-	* @var array Template generators
-	*/
-	protected $templateGenerators = [];
+	protected $templateBuilder;
 
 	/**
 	* {@inheritdoc}
@@ -107,8 +101,7 @@ class Configurator extends ConfiguratorBase
 			$this->defaultSites = new CachedSiteDefinitionProvider;
 		}
 
-		$this->templateGenerators['flash']  = new Flash;
-		$this->templateGenerators['iframe'] = new Iframe;
+		$this->templateBuilder = new TemplateBuilder;
 	}
 
 	/**
@@ -274,7 +267,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		$tag->template = $this->getTemplate($siteConfig) . $this->appendTemplate;
+		$tag->template = $this->templateBuilder->getTemplate($siteConfig) . $this->appendTemplate;
 
 		// Normalize the tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -318,7 +311,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function disableResponsiveEmbeds()
 	{
-		$this->responsiveEmbeds = false;
+		$this->templateBuilder->responsiveEmbeds = false;
 	}
 
 	/**
@@ -328,7 +321,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function enableResponsiveEmbeds()
 	{
-		$this->responsiveEmbeds = true;
+		$this->templateBuilder->responsiveEmbeds = true;
 	}
 
 	//==========================================================================
@@ -421,46 +414,6 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Generate a multiple choice template
-	*
-	* @param  array  $choose
-	* @return string
-	*/
-	protected function chooseTemplate(array $choose)
-	{
-		$branches = (isset($choose['when'][0])) ? $choose['when'] : [$choose['when']];
-		$template = '<xsl:choose>';
-		foreach ($branches as $when)
-		{
-			$template .= '<xsl:when test="' . htmlspecialchars($when['test'], ENT_COMPAT, 'UTF-8') . '">' . $this->getTemplate($when) . '</xsl:when>';
-		}
-		$template .= '<xsl:otherwise>' . $this->getTemplate($choose['otherwise']) . '</xsl:otherwise></xsl:choose>';
-
-		return $template;
-	}
-
-	/**
-	* Generate and return a template based on given config
-	*
-	* @param  array  $config
-	* @return string
-	*/
-	protected function generateTemplate(array $config)
-	{
-		foreach ($this->templateGenerators as $type => $generator)
-		{
-			if (isset($config[$type]))
-			{
-				$config[$type] += ['responsive' => $this->responsiveEmbeds];
-
-				return $generator->getTemplate($config[$type]);
-			}
-		}
-
-		return '';
-	}
-
-	/**
 	* Return the list of custom schemes supported via media sites
 	*
 	* @return string[]
@@ -480,17 +433,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $schemes;
-	}
-
-	/**
-	* Generate and return a template for given site config
-	*
-	* @param  array  $config
-	* @return string
-	*/
-	protected function getTemplate(array $config)
-	{
-		return (isset($config['choose'])) ? $this->chooseTemplate($config['choose']) : $this->generateTemplate($config);
 	}
 
 	/**
