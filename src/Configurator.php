@@ -425,6 +425,19 @@ abstract class AVTHelper
 				throw new RuntimeException('Unknown token type');
 		return $attrValue;
 	}
+	public static function toXSL($attrValue)
+	{
+		$xsl = '';
+		foreach (self::parse($attrValue) as $_f6b3b659)
+		{
+			list($type, $content) = $_f6b3b659;
+			if ($type === 'literal')
+				$xsl .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
+			else
+				$xsl .= '<xsl:value-of select="' . \htmlspecialchars($content, \ENT_COMPAT, 'UTF-8') . '"/>';
+		}
+		return $xsl;
+	}
 }
 
 /*
@@ -6893,18 +6906,51 @@ use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 class FoldConstants extends TemplateNormalization
 {
+	protected $operations = array(
+		'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+		'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
+		'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
+		'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
+		'(\\( (\\d+(?>\\.\\d+)?) \\))'           => 'removeParentheses'
+	);
 	public function normalize(DOMElement $template)
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]';
 		foreach ($xpath->query($query) as $attribute)
 			$this->replaceAVT($attribute);
+		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'value-of') as $valueOf)
+			$this->replaceValueOf($valueOf);
 	}
 	public function evaluateExpression($expr)
 	{
-		if (\preg_match('(^(\\d+)\\s*\\+\\s*(\\d+)$)', $expr, $m))
-			return $m[1] + $m[2];
-		return $expr;
+		$original = $expr;
+		foreach ($this->operations as $regexp => $methodName)
+		{
+			$regexp = \str_replace(' ', '\\s*', $regexp);
+			$expr   = \preg_replace_callback($regexp, array($this, $methodName), $expr);
+		}
+		return ($expr === $original) ? $expr : $this->evaluateExpression($expr);
+	}
+	protected function foldAddition(array $m)
+	{
+		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
+	}
+	protected function foldDivision(array $m)
+	{
+		return $m[1] . ($m[2] / $m[3]);
+	}
+	protected function foldMultiplication(array $m)
+	{
+		return $m[1] . ($m[2] * $m[3]);
+	}
+	protected function foldSubExpression(array $m)
+	{
+		return '(' . $this->evaluateExpression(\trim(\substr($m[0], 1, -1))) . ')';
+	}
+	protected function removeParentheses(array $m)
+	{
+		return $m[1];
 	}
 	protected function replaceAVT(DOMAttr $attribute)
 	{
@@ -6918,6 +6964,10 @@ class FoldConstants extends TemplateNormalization
 				return $token;
 			}
 		);
+	}
+	protected function replaceValueOf(DOMElement $valueOf)
+	{
+		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
 	}
 }
 
@@ -7152,7 +7202,7 @@ class InlineXPathLiterals extends TemplateNormalization
 		$expr = \trim($expr);
 		if (\preg_match('(^(?:\'[^\']*\'|"[^"]*")$)', $expr))
 			return \substr($expr, 1, -1);
-		if (\preg_match('(^0*([0-9]+)$)', $expr, $m))
+		if (\preg_match('(^0*([0-9]+(?:\\.[0-9]+)?)$)', $expr, $m))
 			return $m[1];
 		return \false;
 	}

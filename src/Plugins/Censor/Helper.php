@@ -100,7 +100,7 @@ class Helper
 		$startTag = '<' . $this->tagName;
 		$replacement = $this->getReplacement($word);
 		if ($replacement !== $this->defaultReplacement)
-			$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_QUOTES) . '"';
+			$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_COMPAT) . '"';
 		return $startTag . '>' . $word . '</' . $this->tagName . '>';
 	}
 	public function getReplacement($word)
