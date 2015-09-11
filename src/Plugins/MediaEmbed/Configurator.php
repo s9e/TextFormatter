@@ -16,8 +16,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 class Configurator extends ConfiguratorBase
 {
 	public $allowedFilters = [
@@ -30,8 +29,7 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;
 	public $defaultSites;
-	protected $responsiveEmbeds = \false;
-	protected $templateGenerators = [];
+	protected $templateBuilder;
 	protected function setUp()
 	{
 		$this->collection = new MediaSiteCollection;
@@ -49,8 +47,7 @@ class Configurator extends ConfiguratorBase
 			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
 		if (!isset($this->defaultSites))
 			$this->defaultSites = new CachedSiteDefinitionProvider;
-		$this->templateGenerators['flash']  = new Flash;
-		$this->templateGenerators['iframe'] = new Iframe;
+		$this->templateBuilder = new TemplateBuilder;
 	}
 	public function asConfig()
 	{
@@ -122,7 +119,7 @@ class Configurator extends ConfiguratorBase
 			$tag->filterChain
 				->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
-		$tag->template = $this->getTemplate($siteConfig);
+		$tag->template = $this->templateBuilder->getTemplate($siteConfig) . $this->appendTemplate;
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
@@ -142,11 +139,11 @@ class Configurator extends ConfiguratorBase
 	}
 	public function disableResponsiveEmbeds()
 	{
-		$this->responsiveEmbeds = \false;
+		$this->templateBuilder->responsiveEmbeds = \false;
 	}
 	public function enableResponsiveEmbeds()
 	{
-		$this->responsiveEmbeds = \true;
+		$this->templateBuilder->responsiveEmbeds = \true;
 	}
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
@@ -196,16 +193,6 @@ class Configurator extends ConfiguratorBase
 				foreach ((array) $site['scheme'] as $scheme)
 					$schemes[] = $scheme;
 		return $schemes;
-	}
-	protected function getTemplate(array $siteConfig)
-	{
-		foreach ($this->templateGenerators as $type => $generator)
-			if (isset($siteConfig[$type]))
-			{
-				$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
-				return $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
-			}
-		return '';
 	}
 	protected function normalizeId($siteId)
 	{

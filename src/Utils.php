@@ -99,7 +99,7 @@ abstract class Utils
 		$xml = '';
 		\ksort($attributes);
 		foreach ($attributes as $attrName => $attrValue)
-			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . self::encodeUnicodeSupplementaryCharacters(\htmlspecialchars($attrValue, \ENT_QUOTES)) . '"';
+			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . self::encodeUnicodeSupplementaryCharacters(\htmlspecialchars($attrValue, \ENT_COMPAT)) . '"';
 		return $xml;
 	}
 }
