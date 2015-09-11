@@ -755,6 +755,66 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() handles multiple-choice templates
+	*/
+	public function testAddChoose()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'   => 'foo.invalid',
+				'choose' => [
+					'when'      => [
+						'test'   => '@foo',
+						'iframe' => ['width' => '100', 'height' => '100', 'src' => 'foo']
+					],
+					'otherwise' => [
+						'iframe' => ['width' => '200', 'height' => '200', 'src' => 'bar']
+					]
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<xsl:choose><xsl:when test="@foo"><iframe width="100" height="100" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:otherwise><iframe width="200" height="200" src="bar" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:otherwise></xsl:choose>',
+			$tag->template
+		);
+	}
+
+	/**
+	* @testdox add() handles multiple-choice templates with more than 2 branches
+	*/
+	public function testAddChooseMultiple()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'   => 'foo.invalid',
+				'choose' => [
+					'when'      => [
+						[
+							'test'   => '@foo',
+							'iframe' => ['width' => '100', 'height' => '100', 'src' => 'foo']
+						],
+						[
+							'test'   => '@bar',
+							'iframe' => ['width' => '200', 'height' => '200', 'src' => 'bar']
+						],
+					],
+					'otherwise' => [
+						'iframe' => ['width' => '300', 'height' => '300', 'src' => 'baz']
+					]
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<xsl:choose><xsl:when test="@foo"><iframe width="100" height="100" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:when test="@bar"><iframe width="200" height="200" src="bar" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:otherwise><iframe width="300" height="300" src="baz" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:otherwise></xsl:choose>',
+			$tag->template
+		);
+	}
+
+	/**
 	* @testdox add() checks the tag's safety before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'id' is not properly sanitized

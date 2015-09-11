@@ -274,7 +274,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		$tag->template = $this->getTemplate($siteConfig);
+		$tag->template = $this->getTemplate($siteConfig) . $this->appendTemplate;
 
 		// Normalize the tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -421,6 +421,46 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* Generate a multiple choice template
+	*
+	* @param  array  $choose
+	* @return string
+	*/
+	protected function chooseTemplate(array $choose)
+	{
+		$branches = (isset($choose['when'][0])) ? $choose['when'] : [$choose['when']];
+		$template = '<xsl:choose>';
+		foreach ($branches as $when)
+		{
+			$template .= '<xsl:when test="' . htmlspecialchars($when['test'], ENT_COMPAT, 'UTF-8') . '">' . $this->getTemplate($when) . '</xsl:when>';
+		}
+		$template .= '<xsl:otherwise>' . $this->getTemplate($choose['otherwise']) . '</xsl:otherwise></xsl:choose>';
+
+		return $template;
+	}
+
+	/**
+	* Generate and return a template based on given config
+	*
+	* @param  array  $config
+	* @return string
+	*/
+	protected function generateTemplate(array $config)
+	{
+		foreach ($this->templateGenerators as $type => $generator)
+		{
+			if (isset($config[$type]))
+			{
+				$config[$type] += ['responsive' => $this->responsiveEmbeds];
+
+				return $generator->getTemplate($config[$type]);
+			}
+		}
+
+		return '';
+	}
+
+	/**
 	* Return the list of custom schemes supported via media sites
 	*
 	* @return string[]
@@ -443,24 +483,14 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Generate and return a template for given site
+	* Generate and return a template for given site config
 	*
-	* @param  array  $siteConfig
+	* @param  array  $config
 	* @return string
 	*/
-	protected function getTemplate(array $siteConfig)
+	protected function getTemplate(array $config)
 	{
-		foreach ($this->templateGenerators as $type => $generator)
-		{
-			if (isset($siteConfig[$type]))
-			{
-				$siteConfig[$type] += ['responsive' => $this->responsiveEmbeds];
-
-				return $generator->getTemplate($siteConfig[$type]) . $this->appendTemplate;
-			}
-		}
-
-		return '';
+		return (isset($config['choose'])) ? $this->chooseTemplate($config['choose']) : $this->generateTemplate($config);
 	}
 
 	/**

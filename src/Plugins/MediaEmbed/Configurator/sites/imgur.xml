@@ -25,44 +25,33 @@
 		<extract>!(?'type'gifv)!</extract>
 	</scrape>
 
-	<iframe>
-		<width><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@type='gifv' and @width"><xsl:value-of select="@width"/></xsl:when>
-				<xsl:otherwise>100%</xsl:otherwise>
-			</xsl:choose>
-		]]></width>
-		<height><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@type='gifv' and @height"><xsl:value-of select="@height"/></xsl:when>
-				<xsl:otherwise>550</xsl:otherwise>
-			</xsl:choose>
-		]]></height>
-		<src><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@type='gifv'">//i.imgur.com/<xsl:value-of select="@id"/>.gifv#embed</xsl:when>
-				<xsl:when test="starts-with(@id,'a/')">//imgur.com/<xsl:value-of select="@id"/>/embed</xsl:when>
-				<xsl:when test="@type='album'">//imgur.com/a/<xsl:value-of select="@id"/>/embed</xsl:when>
-				<xsl:otherwise>//s9e.github.io/iframe/imgur.min.html#<xsl:value-of select="@id"/></xsl:otherwise>
-			</xsl:choose>
-		]]></src>
-		<!--
-			var id = Math.random();
-			window.addEventListener('message', function(e)
-			{
-				// NOTE: e.data.id is a string whereas id is a number
-				if (e.data.id == id)
+	<choose>
+		<when test="@type='gifv' and @width and @height">
+			<iframe width="{@width}" height="{@height}" src="//i.imgur.com/{@id}.gifv#embed"/>
+		</when>
+		<when test="starts-with(@id, 'a/')">
+			<iframe width="100%" height="550" src="//imgur.com/{@id}/embed"/>
+		</when>
+		<when test="@type='album'">
+			<iframe width="100%" height="550" src="//imgur.com/a/{@id}/embed"/>
+		</when>
+		<otherwise>
+			<!--
+				var id = Math.random();
+				window.addEventListener('message', function(e)
 				{
-					style.height = e.data.height + 'px';
-					style.width = e.data.width + 'px';
-				}
-			});
+					// NOTE: e.data.id is a string whereas id is a number
+					if (e.data.id == id)
+					{
+						style.height = e.data.height + 'px';
+						style.width = e.data.width + 'px';
+					}
+				});
 
-			var origin = src.substr(0, src.indexOf('/', 8));
-			contentWindow.postMessage('s9e:' + id, origin);
-		-->
-		<onload><![CDATA[
-			<xsl:if test="not(@type='gifv' or @type='album')">var b=Math.random();window.addEventListener('message',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')});contentWindow.postMessage('s9e:'+b,src.substr(0,src.indexOf('/',8)))</xsl:if>
-		]]></onload>
-	</iframe>
+				var origin = src.substr(0, src.indexOf('/', 8));
+				contentWindow.postMessage('s9e:' + id, origin);
+			-->
+			<iframe width="100%" height="550" src="//s9e.github.io/iframe/imgur.min.html#{@id}" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,src.substr(0,src.indexOf('/',8)))"/>
+		</otherwise>
+	</choose>
 </site>

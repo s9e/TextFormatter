@@ -12,12 +12,13 @@ foreach ($provider->getIds() as $siteId)
 		$provider->get($siteId),
 		[
 			'attributes'   => 1,
-			'host'         => 1,
-			'scheme'       => 1,
+			'choose'       => 1,
 			'extract'      => 1,
-			'scrape'       => 1,
-			'iframe'       => 1,
 			'flash'        => 1,
+			'host'         => 1,
+			'iframe'       => 1,
+			'scheme'       => 1,
+			'scrape'       => 1
 		]
 	);
 

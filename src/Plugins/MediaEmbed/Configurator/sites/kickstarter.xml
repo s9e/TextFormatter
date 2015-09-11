@@ -7,18 +7,13 @@
 
 	<host>kickstarter.com</host>
 	<extract>!kickstarter\.com/projects/(?'id'[^/]+/[^/?]+)(?:/widget/(?:(?'card'card)|(?'video'video)))?!</extract>
-	<iframe>
-		<width><![CDATA[<xsl:choose>
-			<xsl:when test="@video">480</xsl:when>
-			<xsl:otherwise>220</xsl:otherwise>
-		</xsl:choose>]]></width>
-		<height><![CDATA[<xsl:choose>
-			<xsl:when test="@video">360</xsl:when>
-			<xsl:otherwise>420</xsl:otherwise>
-		</xsl:choose>]]></height>
-		<src><![CDATA[//www.kickstarter.com/projects/<xsl:value-of select="@id"/>/widget/<xsl:choose>
-			<xsl:when test="@video">video</xsl:when>
-			<xsl:otherwise>card</xsl:otherwise>
-		</xsl:choose>.html]]></src>
-	</iframe>
+
+	<choose>
+		<when test="@video">
+			<iframe width="480" height="360" src="//www.kickstarter.com/projects/{@id}/widget/video.html"/>
+		</when>
+		<otherwise>
+			<iframe width="220" height="420" src="//www.kickstarter.com/projects/{@id}/widget/card.html"/>
+		</otherwise>
+	</choose>
 </site>
