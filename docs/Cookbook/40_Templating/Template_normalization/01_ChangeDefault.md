@@ -17,7 +17,7 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 1	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
 2	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
 3	s9e\TextFormatter\Configurator\TemplateNormalizations\FixUnescapedCurlyBracesInHtmlAttributes
-4	s9e\TextFormatter\Configurator\TemplateNormalizations\FoldConstants
+4	s9e\TextFormatter\Configurator\TemplateNormalizations\FoldArithmeticConstants
 5	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 6	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineCDATA
 7	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineElements

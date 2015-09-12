@@ -3,9 +3,10 @@
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
 /**
-* @covers s9e\TextFormatter\Configurator\TemplateNormalizations\FoldConstants
+* @covers s9e\TextFormatter\Configurator\TemplateNormalizations\FoldArithmeticConstants
+* @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractConstantFolding
 */
-class FoldConstantsTest extends AbstractTest
+class FoldArithmeticConstantsTest extends AbstractTest
 {
 	public function getData()
 	{

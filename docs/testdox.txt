@@ -1307,7 +1307,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBracesInHtmlAttributes
  [x] Works
 
-s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstants
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes

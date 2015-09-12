@@ -37,6 +37,12 @@ function convertCustom($filepath, &$file)
 {
 	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
 	$replacements = array(
+		'AbstractConstantFolding.php' => array(
+			array(
+				'protected function evaluateExpression($expr)',
+				'public function evaluateExpression($expr)',
+			)
+		),
 		'BBCodeMonkey.php' => array(
 			array(
 				'protected function isFilter($tokenId)',
@@ -80,12 +86,6 @@ function convertCustom($filepath, &$file)
 			array(
 				'protected function isAllowed($word)',
 				'public function isAllowed($word)'
-			)
-		),
-		'FoldConstants.php' => array(
-			array(
-				'protected function evaluateExpression($expr)',
-				'public function evaluateExpression($expr)',
 			)
 		),
 		'InlineXPathLiterals.php' => array(
