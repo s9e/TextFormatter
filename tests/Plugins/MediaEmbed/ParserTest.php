@@ -1071,7 +1071,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
+				'<iframe width="100%" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3089,7 +3089,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="340" src="//www.audiomack.com/embed4-album/hz-global/double-a-side-vol3"></iframe>',
+				'<iframe width="100%" height="340" src="//www.audiomack.com/embed4-album/hz-global/double-a-side-vol3" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3098,7 +3098,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="110" src="//www.audiomack.com/embed4/random-2/buy-the-world-final-1"></iframe>',
+				'<iframe width="100%" height="110" src="//www.audiomack.com/embed4/random-2/buy-the-world-final-1" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3324,7 +3324,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116"></iframe>',
+				'<iframe width="100%" height="166" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3334,7 +3334,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
+				'<iframe width="100%" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3343,7 +3343,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974"></iframe>',
+				'<iframe width="100%" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3354,7 +3354,7 @@ class ParserTest extends Test
 			[
 				// http://xenforo.com/community/threads/s9e-media-bbcodes-pack.61883/page-16#post-741750
 				'[media=soundcloud]nruau/nruau-mix2[/media]',
-				'<iframe width="100%" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no" height="166" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nruau/nruau-mix2"></iframe>',
+				'<iframe width="100%" height="166" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nruau/nruau-mix2" style="max-width:900px" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

@@ -6,18 +6,12 @@
 
 	<host>audiomack.com</host>
 	<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
-	<iframe responsive="0" width="100%" style="max-width:900px">
-		<height><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@mode='album'">340</xsl:when>
-				<xsl:otherwise>110</xsl:otherwise>
-			</xsl:choose>
-		]]></height>
-		<src><![CDATA[
-			<xsl:text>//www.audiomack.com/embed4</xsl:text>
-			<xsl:if test="@mode='album'">-album</xsl:if>
-			<xsl:text>/</xsl:text>
-			<xsl:value-of select="@id"/>
-		]]></src>
-	</iframe>
+	<choose>
+		<when test="@mode='album'">
+			<iframe responsive="0" width="100%" height="340" src="//www.audiomack.com/embed4-album/{@id}" style="max-width:900px"/>
+		</when>
+		<otherwise>
+			<iframe responsive="0" width="100%" height="110" src="//www.audiomack.com/embed4/{@id}" style="max-width:900px"/>
+		</otherwise>
+	</choose>
 </site>

@@ -14,31 +14,18 @@
 		<match>@/sets/@</match>
 		<extract>@api.soundcloud.com/playlists/(?'playlist_id'\d+)@</extract>
 	</scrape>
-	<iframe responsive="0" width="100%" style="max-width:900px">
-		<height><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@playlist_id">450</xsl:when>
-				<xsl:otherwise>166</xsl:otherwise>
-			</xsl:choose>
-		]]></height>
-		<src><![CDATA[
-			<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
-			<xsl:choose>
-				<xsl:when test="@playlist_id">
-					<xsl:text>https%3A//api.soundcloud.com/playlists/</xsl:text>
-					<xsl:value-of select="@playlist_id"/>
-				</xsl:when>
-				<xsl:when test="@track_id">
-					<xsl:text>https%3A//api.soundcloud.com/tracks/</xsl:text>
-					<xsl:value-of select="@track_id"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:if test="not(contains(@id, '://'))">
-						<xsl:text>https%3A//soundcloud.com/</xsl:text>
-					</xsl:if>
-					<xsl:value-of select="@id"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		]]></src>
-	</iframe>
+	<choose>
+		<when test="@playlist_id">
+			<iframe responsive="0" width="100%" height="450" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/{@playlist_id}" style="max-width:900px"/>
+		</when>
+		<when test="@track_id">
+			<iframe responsive="0" width="100%" height="166" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{@track_id}" style="max-width:900px"/>
+		</when>
+		<when test="not(contains(@id, '://'))">
+			<iframe responsive="0" width="100%" height="166" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/{@id}" style="max-width:900px"/>
+		</when>
+		<otherwise>
+			<iframe responsive="0" width="100%" height="166" src="https://w.soundcloud.com/player/?url={@id}" style="max-width:900px"/>
+		</otherwise>
+	</choose>
 </site>
