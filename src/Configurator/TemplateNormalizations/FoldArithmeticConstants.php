@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
 	/**
-	* {@inheritdoc} 
+	* {@inheritdoc}
 	*/
 	protected function getOptimizationPasses()
 	{
