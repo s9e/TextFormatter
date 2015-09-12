@@ -394,17 +394,6 @@ class XPathConvertor
 
 	protected function math($expr1, $operator, $expr2)
 	{
-		if (is_numeric($expr1) && is_numeric($expr2))
-		{
-			$result = (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
-
-			// Protect against scientific notation
-			if (preg_match('(^[.0-9]+$)D', $result))
-			{
-				return $result;
-			}
-		}
-
 		if (!is_numeric($expr1))
 		{
 			$expr1 = $this->convertXPath($expr1);
@@ -421,39 +410,6 @@ class XPathConvertor
 		}
 
 		return $expr1 . $operator . $expr2;
-	}
-
-	/**
-	* Calculate the result of a constant math expression
-	*
-	* @param  mixed $expr1    Left operand, must be a number
-	* @param  mixed $operator Operator
-	* @param  mixed $expr2    Right operand, must be a number
-	* @return mixed           Result
-	*/
-	protected function resolveConstantMathExpression($expr1, $operator, $expr2)
-	{
-		if ($operator === '+')
-		{
-			return $expr1 + $expr2;
-		}
-
-		if ($operator === '-')
-		{
-			return $expr1 - $expr2;
-		}
-
-		if ($operator === '*')
-		{
-			return $expr1 * $expr2;
-		}
-
-		if ($operator === 'div')
-		{
-			return $expr1 / $expr2;
-		}
-
-		throw new LogicException;
 	}
 
 	/**

@@ -258,32 +258,6 @@ class XPathConvertorTest extends Test
 				"\$node->getAttribute('x')/\$node->getAttribute('y')",
 				"\$this->xpath->evaluate('string(@x div@y)',\$node)"
 			],
-			// Constant math
-			[
-				'12+34',
-				'46',
-				"\$this->xpath->evaluate('string(12+34)',\$node)"
-			],
-			[
-				'44-11',
-				'33',
-				"\$this->xpath->evaluate('string(44-11)',\$node)"
-			],
-			[
-				'7*9',
-				'63',
-				"\$this->xpath->evaluate('string(7*9)',\$node)"
-			],
-			[
-				'10div2',
-				'5',
-				"\$this->xpath->evaluate('string(10div2)',\$node)"
-			],
-			[
-				'1div100000',
-				'1/100000',
-				"\$this->xpath->evaluate('string(1div100000)',\$node)"
-			],
 		];
 	}
 
@@ -444,18 +418,6 @@ class XPathConvertorTest extends Test
 				"\$this->xpath->evaluate('starts-with(@type,'.'\'decimal-\''.') or starts-with(@type,'.'\'lower-\''.') or starts-with(@type,'.'\'upper-\''.')',\$node)"
 			],
 		];
-	}
-
-	/**
-	* @testdox Covering test for resolveConstantMathExpression()
-	* @expectedException LogicException
-	*/
-	public function testResolveConstantMathExpressionException()
-	{
-		$className = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\PHP\\XPathConvertor';
-		$method = new ReflectionMethod($className, 'resolveConstantMathExpression');
-		$method->setAccessible(true);
-		$method->invoke(new XPathConvertor, 1, '**', 2);
 	}
 
 	/**
