@@ -3299,7 +3299,6 @@ class Optimizer
 			if ($this->tokens[$this->i] === '(')
 			{
 				++$this->i;
-				$this->replaceHtmlspecialcharsNumber();
 				$this->replaceHtmlspecialcharsLiteral() || $this->removeHtmlspecialcharsSafeVar();
 			}
 	}
@@ -3335,11 +3334,6 @@ class Optimizer
 		unset($this->tokens[++$this->i]);
 		unset($this->tokens[++$this->i]);
 		return \true;
-	}
-	protected function replaceHtmlspecialcharsNumber()
-	{
-		if ($this->tokens[$this->i][0] === \T_LNUMBER && $this->tokens[$this->i + 1] === ',')
-			$this->tokens[$this->i] = [\T_CONSTANT_ENCAPSED_STRING, "'" . $this->tokens[$this->i][1] . "'"];
 	}
 	protected function skipPast($token)
 	{
@@ -4371,12 +4365,6 @@ class XPathConvertor
 	}
 	protected function math($expr1, $operator, $expr2)
 	{
-		if (\is_numeric($expr1) && \is_numeric($expr2))
-		{
-			$result = (string) $this->resolveConstantMathExpression($expr1, $operator, $expr2);
-			if (\preg_match('(^[.0-9]+$)D', $result))
-				return $result;
-		}
 		if (!\is_numeric($expr1))
 			$expr1 = $this->convertXPath($expr1);
 		if (!\is_numeric($expr2))
@@ -4384,18 +4372,6 @@ class XPathConvertor
 		if ($operator === 'div')
 			$operator = '/';
 		return $expr1 . $operator . $expr2;
-	}
-	protected function resolveConstantMathExpression($expr1, $operator, $expr2)
-	{
-		if ($operator === '+')
-			return $expr1 + $expr2;
-		if ($operator === '-')
-			return $expr1 - $expr2;
-		if ($operator === '*')
-			return $expr1 * $expr2;
-		if ($operator === 'div')
-			return $expr1 / $expr2;
-		throw new LogicException;
 	}
 	protected function exportXPath($expr)
 	{
