@@ -3305,6 +3305,7 @@ class Optimizer
 			if ($this->tokens[$this->i] === '(')
 			{
 				++$this->i;
+				$this->replaceHtmlspecialcharsNumber();
 				$this->replaceHtmlspecialcharsLiteral() || $this->removeHtmlspecialcharsSafeVar();
 			}
 	}
@@ -3340,6 +3341,11 @@ class Optimizer
 		unset($this->tokens[++$this->i]);
 		unset($this->tokens[++$this->i]);
 		return \true;
+	}
+	protected function replaceHtmlspecialcharsNumber()
+	{
+		if ($this->tokens[$this->i][0] === \T_LNUMBER && $this->tokens[$this->i + 1] === ',')
+			$this->tokens[$this->i] = [\T_CONSTANT_ENCAPSED_STRING, "'" . $this->tokens[$this->i][1] . "'"];
 	}
 	protected function skipPast($token)
 	{
@@ -6568,6 +6574,57 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+abstract class AbstractConstantFolding extends TemplateNormalization
+{
+	abstract protected function getOptimizationPasses();
+	public function normalize(DOMElement $template)
+	{
+		$xpath = new DOMXPath($template->ownerDocument);
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]';
+		foreach ($xpath->query($query) as $attribute)
+			$this->replaceAVT($attribute);
+		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'value-of') as $valueOf)
+			$this->replaceValueOf($valueOf);
+	}
+	protected function evaluateExpression($expr)
+	{
+		$original = $expr;
+		foreach ($this->getOptimizationPasses() as $regexp => $methodName)
+		{
+			$regexp = \str_replace(' ', '\\s*', $regexp);
+			$expr   = \preg_replace_callback($regexp, [$this, $methodName], $expr);
+		}
+		return ($expr === $original) ? $expr : $this->evaluateExpression($expr);
+	}
+	protected function replaceAVT(DOMAttr $attribute)
+	{
+		AVTHelper::replace(
+			$attribute,
+			function ($token)
+			{
+				if ($token[0] === 'expression')
+					$token[1] = $this->evaluateExpression($token[1]);
+				return $token;
+			}
+		);
+	}
+	protected function replaceValueOf(DOMElement $valueOf)
+	{
+		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+use DOMXPath;
 use s9e\TextFormatter\Configurator\TemplateNormalization;
 class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 {
@@ -6593,83 +6650,6 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 			\ENT_NOQUOTES,
 			'UTF-8'
 		);
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMAttr;
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class FoldConstants extends TemplateNormalization
-{
-	protected $operations = [
-		'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
-		'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
-		'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
-		'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
-		'(\\( (\\d+(?>\\.\\d+)?) \\))'           => 'removeParentheses'
-	];
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]';
-		foreach ($xpath->query($query) as $attribute)
-			$this->replaceAVT($attribute);
-		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'value-of') as $valueOf)
-			$this->replaceValueOf($valueOf);
-	}
-	protected function evaluateExpression($expr)
-	{
-		$original = $expr;
-		foreach ($this->operations as $regexp => $methodName)
-		{
-			$regexp = \str_replace(' ', '\\s*', $regexp);
-			$expr   = \preg_replace_callback($regexp, [$this, $methodName], $expr);
-		}
-		return ($expr === $original) ? $expr : $this->evaluateExpression($expr);
-	}
-	protected function foldAddition(array $m)
-	{
-		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
-	}
-	protected function foldDivision(array $m)
-	{
-		return $m[1] . ($m[2] / $m[3]);
-	}
-	protected function foldMultiplication(array $m)
-	{
-		return $m[1] . ($m[2] * $m[3]);
-	}
-	protected function foldSubExpression(array $m)
-	{
-		return '(' . $this->evaluateExpression(\trim(\substr($m[0], 1, -1))) . ')';
-	}
-	protected function removeParentheses(array $m)
-	{
-		return $m[1];
-	}
-	protected function replaceAVT(DOMAttr $attribute)
-	{
-		AVTHelper::replace(
-			$attribute,
-			function ($token)
-			{
-				if ($token[0] === 'expression')
-					$token[1] = $this->evaluateExpression($token[1]);
-				return $token;
-			}
-		);
-	}
-	protected function replaceValueOf(DOMElement $valueOf)
-	{
-		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
 	}
 }
 
@@ -7228,7 +7208,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
-		$this->collection->append('FoldConstants');
+		$this->collection->append('FoldArithmeticConstants');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
@@ -7826,6 +7806,46 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 		'samedomain' => 2,
 		'never'      => 1
 	];
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+class FoldArithmeticConstants extends AbstractConstantFolding
+{
+	protected function getOptimizationPasses()
+	{
+		return [
+			'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
+			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
+			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
+			'(\\( (\\d+(?>\\.\\d+)?) \\))'           => 'removeParentheses'
+		];
+	}
+	protected function foldAddition(array $m)
+	{
+		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
+	}
+	protected function foldDivision(array $m)
+	{
+		return $m[1] . ($m[2] / $m[3]);
+	}
+	protected function foldMultiplication(array $m)
+	{
+		return $m[1] . ($m[2] * $m[3]);
+	}
+	protected function foldSubExpression(array $m)
+	{
+		return '(' . $this->evaluateExpression(\trim(\substr($m[0], 1, -1))) . ')';
+	}
+	protected function removeParentheses(array $m)
+	{
+		return $m[1];
+	}
 }
 
 /*
