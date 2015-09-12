@@ -793,16 +793,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
-			[
-				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
-				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('traileraddict');
-				}
-			],
+//			[
+//				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
+//				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('traileraddict');
+//				}
+//			],
 			[
 				'http://mrbenvey.tumblr.com/post/104191225637',
 				'<r><TUMBLR did="5f3b4bc6718317df9c2b1e77c20839ab94f949cd" id="104191225637" key="uFhWDPKj-bGU0ZlDAnUyxg" name="mrbenvey" url="http://mrbenvey.tumblr.com/post/104191225637">http://mrbenvey.tumblr.com/post/104191225637</TUMBLR></r>',
@@ -2540,15 +2540,15 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tmz');
 				}
 			],
-			[
-				'http://www.traileraddict.com/tags/musical',
-				'<t>http://www.traileraddict.com/tags/musical</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('traileraddict');
-				}
-			],
+//			[
+//				'http://www.traileraddict.com/tags/musical',
+//				'<t>http://www.traileraddict.com/tags/musical</t>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->MediaEmbed->add('traileraddict');
+//				}
+//			],
 			[
 				'http://www.twitch.tv/minigolf2000',
 				'<r><TWITCH channel="minigolf2000" url="http://www.twitch.tv/minigolf2000">http://www.twitch.tv/minigolf2000</TWITCH></r>',
