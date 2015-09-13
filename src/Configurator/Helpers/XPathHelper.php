@@ -106,7 +106,7 @@ abstract class XPathHelper
 
 		// Trim the surrounding whitespace then temporarily remove literal strings
 		$expr = preg_replace_callback(
-			'/(?:"[^"]*"|\'[^\']*\')/',
+			'/"[^"]*"|\'[^\']*\'/',
 			function ($m) use (&$strings)
 			{
 				$uniqid = '(' . sha1(uniqid()) . ')';
@@ -134,6 +134,9 @@ abstract class XPathHelper
 
 		// Remove the space between a - and a word character, as long as there's a space before -
 		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+
+		// Remove the space between the div operator the next token
+		$expr = preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 
 		// Restore the literals
 		$expr = strtr($expr, $strings);
