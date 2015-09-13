@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-$match   = ['(,\\s*"scripts"[^}]+\\})'];
-$replace = [''];
+$match   = array('(,\\s*"scripts"[^}]+\\})');
+$replace = array('');
 
 if (isset($_SERVER['argv'][1]))
 {
