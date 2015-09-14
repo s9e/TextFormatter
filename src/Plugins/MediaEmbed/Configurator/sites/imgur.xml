@@ -15,6 +15,7 @@
 	<extract>!imgur\.com/(?:gallery/)?(?'id'(?:a/)?\w+)!</extract>
 	<scrape>
 		<match>!imgur\.com/(?:a|gallery)/\w!</match>
+		<extract>!"is_(?'type'album)":true!</extract>
 		<extract>!&lt;div id="(?'type'album)-!</extract>
 		<extract>!class="(?'type'album)-image!</extract>
 	</scrape>
