@@ -2569,7 +2569,7 @@ abstract class XPathHelper
 		$old     = $expr;
 		$strings = [];
 		$expr = \preg_replace_callback(
-			'/(?:"[^"]*"|\'[^\']*\')/',
+			'/"[^"]*"|\'[^\']*\'/',
 			function ($m) use (&$strings)
 			{
 				$uniqid = '(' . \sha1(\uniqid()) . ')';
@@ -2585,6 +2585,7 @@ abstract class XPathHelper
 		$expr = \preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
 		$expr = \preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
 		$expr = \preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+		$expr = \preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 		$expr = \strtr($expr, $strings);
 		return $expr;
 	}
