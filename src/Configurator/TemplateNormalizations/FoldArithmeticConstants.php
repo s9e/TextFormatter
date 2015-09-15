@@ -20,7 +20,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
 			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
 			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
-			'(\\( (\\d+(?>\\.\\d+)?) \\))'           => 'removeParentheses'
+			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|\\d+(?>\\.\\d+)?) \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
 		];
 	}
 
@@ -113,6 +113,6 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function removeParentheses(array $m)
 	{
-		return $m[1];
+		return ' ' . $m[1] . ' ';
 	}
 }
