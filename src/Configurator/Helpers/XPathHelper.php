@@ -135,6 +135,9 @@ abstract class XPathHelper
 		// Remove the space between a - and a word character, as long as there's a space before -
 		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
 
+		// Remove the spaces between a number and the div operator and the next token
+		$expr = preg_replace('/((?:^|[ \\(])\\d+) div ?/', '$1div', $expr);
+
 		// Remove the space between the div operator the next token
 		$expr = preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 

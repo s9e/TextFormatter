@@ -182,6 +182,10 @@ class XPathHelperTest extends Test
 				'@div or @div',
 				'@div or@div'
 			],
+			[
+				'333 div 111',
+				'333div111'
+			],
 		];
 	}
 }
