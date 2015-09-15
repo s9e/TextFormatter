@@ -58,7 +58,7 @@ abstract class AbstractConstantFolding extends TemplateNormalization
 			$expr   = preg_replace_callback($regexp, [$this, $methodName], $expr);
 		}
 
-		return ($expr === $original) ? $expr : $this->evaluateExpression($expr);
+		return ($expr === $original) ? $expr : $this->evaluateExpression(trim($expr));
 	}
 
 	/**

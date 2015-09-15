@@ -16,6 +16,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	{
 		return [
 			'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
 			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
 			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
 			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
@@ -32,6 +33,17 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	protected function foldAddition(array $m)
 	{
 		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
+	}
+
+	/**
+	* Remove "+ 0" additions
+	*
+	* @param  array  $m
+	* @return string
+	*/
+	protected function foldAdditiveIdentity(array $m)
+	{
+		return '';
 	}
 
 	/**
