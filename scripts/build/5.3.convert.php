@@ -90,6 +90,10 @@ function convertCustom($filepath, &$file)
 		),
 		'FoldArithmeticConstants.php' => array(
 			array(
+				'protected function evaluateExpression($expr)',
+				'public function evaluateExpression($expr)',
+			),
+			array(
 				'return $m[1] . hex2bin($m[2]) . $m[1];',
 				'return $m[1] . pack(\'H*\', $m[2]) . $m[1];'
 			)
