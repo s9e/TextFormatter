@@ -25,6 +25,32 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected function evaluateExpression($expr)
+	{
+		$expr = preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . bin2hex($m[2]) . $m[1];
+			},
+			$expr
+		);
+		$expr = parent::evaluateExpression($expr);
+		$expr = preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . hex2bin($m[2]) . $m[1];
+			},
+			$expr
+		);
+
+		return $expr;
+	}
+
+	/**
 	* Evaluate and replace a sequence of additions
 	*
 	* @param  array  $m
