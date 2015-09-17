@@ -136,6 +136,18 @@ function convertCustom($filepath, &$file)
 				"\$configurator->registeredVars['cacheDir'] = ParserTest::populateCache(["
 			)
 		),
+		'OptimizeChoose.php' => array(
+			array(
+				'return iterator_to_array($this->xpath->query($query, $this->choose));',
+				'$nodes = array();
+		foreach ($this->xpath->query($query, $this->choose) as $node)
+		{
+			$nodes[] = $node;
+		}
+
+		return $nodes;'
+			)
+		),
 		'PHP.php' => array(
 			array(
 				"return '[' . implode(',', \$pairs) . ']';",

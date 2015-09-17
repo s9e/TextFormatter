@@ -137,6 +137,7 @@
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalValueOfTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeNestedConditionalsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/OptimizeChooseTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/PreserveSingleSpacesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RemoveCommentsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RemoveInterElementWhitespaceTest.php</file>

@@ -157,6 +157,13 @@ class TemplateNormalizerTest extends Test
 				'<div style="padding-top:{100 * 315 div 560}%"/>',
 				'<div style="padding-top:56.25%"/>'
 			],
+			[
+				'<xsl:choose>
+					<xsl:when test="@foo">foo</xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>',
+				'<xsl:if test="@foo">foo</xsl:if>'
+			],
 		];
 	}
 }

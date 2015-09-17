@@ -30,6 +30,7 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 14	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
 15	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
 16	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+17	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChoose
 ```
 
 ### Remove a normalization
