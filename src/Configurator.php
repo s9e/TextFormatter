@@ -2591,6 +2591,7 @@ abstract class XPathHelper
 		$expr = \preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
 		$expr = \preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
 		$expr = \preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+		$expr = \preg_replace('/((?:^|[ \\(])\\d+) div ?/', '$1div', $expr);
 		$expr = \preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 		$expr = \strtr($expr, $strings);
 		return $expr;
@@ -5063,6 +5064,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('NormalizeUrls');
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
+		$this->collection->append('OptimizeChoose');
 	}
 	public function normalizeTag(Tag $tag)
 	{
@@ -6870,7 +6872,7 @@ abstract class AbstractConstantFolding extends TemplateNormalization
 			$regexp = \str_replace(' ', '\\s*', $regexp);
 			$expr   = \preg_replace_callback($regexp, array($this, $methodName), $expr);
 		}
-		return ($expr === $original) ? $expr : $this->evaluateExpression($expr);
+		return ($expr === $original) ? $expr : $this->evaluateExpression(\trim($expr));
 	}
 	protected function replaceAVT(DOMAttr $attribute)
 	{
@@ -7337,6 +7339,172 @@ class NormalizeUrls extends TemplateNormalization
 	protected function unescapeBrackets($url)
 	{
 		return \preg_replace('#^(\\w+://)%5B([-\\w:._%]+)%5D#i', '$1[$2]', $url);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMNode;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class OptimizeChoose extends TemplateNormalization
+{
+	protected $choose;
+	protected $xpath;
+	public function normalize(DOMElement $template)
+	{
+		$this->xpath = new DOMXPath($template->ownerDocument);
+		$query       = '//xsl:choose';
+		foreach ($this->xpath->query($query) as $choose)
+		{
+			$this->choose = $choose;
+			$this->optimizeChooseElement();
+		}
+	}
+	protected function adoptChildren(DOMElement $branch)
+	{
+		foreach ($branch->firstChild->childNodes as $childNode)
+			$branch->appendChild($branch->firstChild->removeChild($childNode));
+		$branch->removeChild($branch->firstChild);
+	}
+	protected function getAttributes(DOMElement $element)
+	{
+		$attributes = array();
+		foreach ($element->attributes as $attribute)
+		{
+			$key = $attribute->namespaceURI . '#' . $attribute->nodeName;
+			$attributes[$key] = $attribute->nodeValue;
+		}
+		return $attributes;
+	}
+	protected function getBranches()
+	{
+		$query = 'xsl:when|xsl:otherwise';
+		$nodes = array();
+		foreach ($this->xpath->query($query, $this->choose) as $node)
+			$nodes[] = $node;
+		return $nodes;
+	}
+	protected function hasNoContent()
+	{
+		$query = 'count(xsl:when/node() | xsl:otherwise/node())';
+		return !$this->xpath->evaluate($query, $this->choose);
+	}
+	protected function hasOtherwise()
+	{
+		return (bool) $this->xpath->evaluate('count(xsl:otherwise)', $this->choose);
+	}
+	protected function isEqualNode(DOMNode $node1, DOMNode $node2)
+	{
+		return ($node1->ownerDocument->saveXML($node1) === $node2->ownerDocument->saveXML($node2));
+	}
+	protected function isEqualTag(DOMElement $el1, DOMElement $el2)
+	{
+		return ($el1->namespaceURI === $el2->namespaceURI && $el1->nodeName === $el2->nodeName && $this->getAttributes($el1) === $this->getAttributes($el2));
+	}
+	protected function matchBranches($childType)
+	{
+		$branches = $this->getBranches();
+		if (!isset($branches[0]->$childType))
+			return \false;
+		$childNode = $branches[0]->$childType;
+		foreach ($branches as $branch)
+			if (!isset($branch->$childType) || !$this->isEqualNode($childNode, $branch->$childType))
+				return \false;
+		return \true;
+	}
+	protected function matchOnlyChild()
+	{
+		$branches = $this->getBranches();
+		if (!isset($branches[0]->firstChild))
+			return \false;
+		$firstChild = $branches[0]->firstChild;
+		foreach ($branches as $branch)
+		{
+			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
+				return \false;
+			if (!$this->isEqualTag($firstChild, $branch->firstChild))
+				return \false;
+		}
+		return \true;
+	}
+	protected function moveFirstChildBefore()
+	{
+		$branches = $this->getBranches();
+		$this->choose->parentNode->insertBefore(\array_pop($branches)->firstChild, $this->choose);
+		foreach ($branches as $branch)
+			$branch->removeChild($branch->firstChild);
+	}
+	protected function moveLastChildAfter()
+	{
+		$branches = $this->getBranches();
+		$node     = \array_pop($branches)->lastChild;
+		if (isset($this->choose->nextSibling))
+			$this->choose->parentNode->insertBefore($node, $this->choose->nextSibling);
+		else
+			$this->choose->parentNode->appendChild($node);
+		foreach ($branches as $branch)
+			$branch->removeChild($branch->lastChild);
+	}
+	protected function optimizeChooseElement()
+	{
+		$this->optimizeCommonFirstChild();
+		$this->optimizeCommonLastChild();
+		$this->optimizeCommonOnlyChild();
+		$this->optimizeEmptyOtherwise();
+		if ($this->hasNoContent())
+			$this->choose->parentNode->removeChild($this->choose);
+		else
+			$this->optimizeSingleBranch();
+	}
+	protected function optimizeCommonFirstChild()
+	{
+		if ($this->hasOtherwise())
+			while ($this->matchBranches('firstChild'))
+				$this->moveFirstChildBefore();
+	}
+	protected function optimizeCommonLastChild()
+	{
+		if ($this->hasOtherwise())
+			while ($this->matchBranches('lastChild'))
+				$this->moveLastChildAfter();
+	}
+	protected function optimizeCommonOnlyChild()
+	{
+		if ($this->hasOtherwise())
+			while ($this->matchOnlyChild())
+				$this->reparentChild();
+	}
+	protected function optimizeEmptyOtherwise()
+	{
+		$query = 'xsl:otherwise[count(node()) = 0]';
+		foreach ($this->xpath->query($query, $this->choose) as $otherwise)
+			$this->choose->removeChild($otherwise);
+	}
+	protected function optimizeSingleBranch()
+	{
+		$query = 'count(xsl:when) = 1 and not(xsl:otherwise)';
+		if (!$this->xpath->evaluate($query, $this->choose))
+			return;
+		$when = $this->xpath->query('xsl:when', $this->choose)->item(0);
+		$if   = $this->choose->ownerDocument->createElementNS(self::XMLNS_XSL, 'xsl:if');
+		$if->setAttribute('test', $when->getAttribute('test'));
+		while ($when->firstChild)
+			$if->appendChild($when->removeChild($when->firstChild));
+		$this->choose->parentNode->replaceChild($if, $this->choose);
+	}
+	protected function reparentChild()
+	{
+		$branches  = $this->getBranches();
+		$childNode = $branches[0]->firstChild->cloneNode();
+		$childNode->appendChild($this->choose->parentNode->replaceChild($childNode, $this->choose));
+		foreach ($branches as $branch)
+			$this->adoptChildren($branch);
 	}
 }
 
@@ -8032,15 +8200,41 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	{
 		return array(
 			'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
 			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
 			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
 			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
-			'(\\( (\\d+(?>\\.\\d+)?) \\))'           => 'removeParentheses'
+			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|\\d+(?>\\.\\d+)?) \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
 		);
+	}
+	public function evaluateExpression($expr)
+	{
+		$expr = \preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . \bin2hex($m[2]) . $m[1];
+			},
+			$expr
+		);
+		$expr = parent::evaluateExpression($expr);
+		$expr = \preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . \pack('H*', $m[2]) . $m[1];
+			},
+			$expr
+		);
+		return $expr;
 	}
 	protected function foldAddition(array $m)
 	{
 		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
+	}
+	protected function foldAdditiveIdentity(array $m)
+	{
+		return '';
 	}
 	protected function foldDivision(array $m)
 	{
@@ -8056,7 +8250,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function removeParentheses(array $m)
 	{
-		return $m[1];
+		return ' ' . $m[1] . ' ';
 	}
 }
 
