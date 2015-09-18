@@ -1085,7 +1085,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<iframe width="480" height="302" allowfullscreen="" frameborder="0" scrolling="no" src="//www.ustream.tv/embed/16234409"></iframe>',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.ustream.tv/embed/16234409?html5ui"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -3454,7 +3454,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/recorded/40771396',
-				'<iframe width="480" height="302" allowfullscreen="" frameborder="0" scrolling="no" src="//www.ustream.tv/embed/recorded/40771396"></iframe>',
+				'<iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.ustream.tv/embed/recorded/40771396?html5ui"></iframe>',
 				[],
 				function ($configurator)
 				{
