@@ -5,6 +5,6 @@
       <output escape="attribute" type="literal">foo</output>
     </attribute>
     <closeTag id="1"/>
-	<output escape="text" type="literal">...</output>
+    <output escape="text" type="literal">...</output>
   </element>
 </template>

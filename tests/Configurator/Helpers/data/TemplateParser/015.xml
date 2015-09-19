@@ -1,15 +1,15 @@
 <template>
-	<comment>
-		<output escape="text" type="literal">[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</output>
-	</comment>
-	<comment>
-		<output escape="text" type="literal">[if !IE]&gt;&lt;!</output>
-	</comment>
-	<element name="p" id="1">
-		<closeTag id="1"/>
-		<output escape="text" type="literal">You are not using Internet Explorer.</output>
-	</element>
-	<comment>
-		<output escape="text" type="literal">&lt;![endif]</output>
-	</comment>
+  <comment>
+    <output escape="text" type="literal">[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</output>
+  </comment>
+  <comment>
+    <output escape="text" type="literal">[if !IE]&gt;&lt;!</output>
+  </comment>
+  <element name="p" id="1">
+    <closeTag id="1"/>
+    <output escape="text" type="literal">You are not using Internet Explorer.</output>
+  </element>
+  <comment>
+    <output escape="text" type="literal">&lt;![endif]</output>
+  </comment>
 </template>

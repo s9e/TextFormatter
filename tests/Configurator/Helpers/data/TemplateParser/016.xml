@@ -1,16 +1,16 @@
 <template>
-	<element name="a" id="1" empty="maybe">
-		<attribute name="href">
-			<output escape="attribute" type="xpath">@href</output>
-		</attribute>
-		<switch>
-			<case test="@title">
-				<attribute name="title">
-					<output escape="attribute" type="xpath">@title</output>
-				</attribute>
-			</case>
-		</switch>
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
+  <element name="a" id="1" empty="maybe">
+    <attribute name="href">
+      <output escape="attribute" type="xpath">@href</output>
+    </attribute>
+    <switch>
+      <case test="@title">
+        <attribute name="title">
+          <output escape="attribute" type="xpath">@title</output>
+        </attribute>
+      </case>
+    </switch>
+    <closeTag id="1"/>
+    <applyTemplates/>
+  </element>
 </template>

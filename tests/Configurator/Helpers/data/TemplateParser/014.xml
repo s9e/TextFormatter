@@ -1,13 +1,13 @@
 <template>
-	<switch>
-		<case test="@a">
-			<output escape="text" type="literal">A</output>
-		</case>
-		<case test="@b">
-			<output escape="text" type="literal">B</output>
-		</case>
-		<case>
-			<output escape="text" type="literal">C</output>
-		</case>
-	</switch>
+  <switch>
+    <case test="@a">
+      <output escape="text" type="literal">A</output>
+    </case>
+    <case test="@b">
+      <output escape="text" type="literal">B</output>
+    </case>
+    <case>
+      <output escape="text" type="literal">C</output>
+    </case>
+  </switch>
 </template>

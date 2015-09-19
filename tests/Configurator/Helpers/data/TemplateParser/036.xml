@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <template>
-	<switch>
-		<case test=".=':)'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case test=".=':('">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case test=".=':p'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case test="@foo=';)'">
-			<output escape="text" type="literal">.</output>
-		</case>
-	</switch>
+  <switch>
+    <case test=".=':)'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test=".=':('">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test=".=':p'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test="@foo=';)'">
+      <output escape="text" type="literal">.</output>
+    </case>
+  </switch>
 </template>

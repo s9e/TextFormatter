@@ -1,5 +1,5 @@
 <template>
-	<element name="b" id="1" empty="yes">
-		<closeTag id="1"/>
-	</element>
+  <element name="b" id="1" empty="yes">
+    <closeTag id="1"/>
+  </element>
 </template>

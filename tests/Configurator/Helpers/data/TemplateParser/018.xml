@@ -1,18 +1,18 @@
 <template>
-	<element empty="maybe"  id="1" name="b">
-		<attribute name="title">
-			<switch>
-				<case test="@foo">
-					<output escape="attribute" type="literal">foo</output>
-				</case>
-			</switch>
-			<switch>
-				<case test="@bar">
-					<output escape="attribute" type="literal">bar</output>
-				</case>
-			</switch>
-		</attribute>
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
+  <element empty="maybe"  id="1" name="b">
+    <attribute name="title">
+      <switch>
+        <case test="@foo">
+          <output escape="attribute" type="literal">foo</output>
+        </case>
+      </switch>
+      <switch>
+        <case test="@bar">
+          <output escape="attribute" type="literal">bar</output>
+        </case>
+      </switch>
+    </attribute>
+    <closeTag id="1"/>
+    <applyTemplates/>
+  </element>
 </template>

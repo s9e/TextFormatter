@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <template>
-	<switch branch-key=".">
-		<case branch-values='a:1:{i:0;s:2:":)";}' test=".=':)'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case branch-values='a:1:{i:0;s:2:":(";}' test=".=':('">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case branch-values='a:1:{i:0;s:2:":p";}' test=".=':p'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case branch-values='a:1:{i:0;s:2:";)";}' test=".=';)'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case>
-			<output escape="text" type="literal">X</output>
-		</case>
-	</switch>
+  <switch branch-key=".">
+    <case branch-values='a:1:{i:0;s:2:":)";}' test=".=':)'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case branch-values='a:1:{i:0;s:2:":(";}' test=".=':('">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case branch-values='a:1:{i:0;s:2:":p";}' test=".=':p'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case branch-values='a:1:{i:0;s:2:";)";}' test=".=';)'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case>
+      <output escape="text" type="literal">X</output>
+    </case>
+  </switch>
 </template>

@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <template>
-	<switch>
-		<case test="$STYLE_ID=2">
-			<switch>
-				<case test="@author">
-					<output escape="text" type="literal">xxx</output>
-				</case>
-				<case>
-					<output escape="text" type="literal">yyy</output>
-				</case>
-			</switch>
-		</case>
-		<case>
-			<switch>
-				<case test="@author">
-					<output escape="text" type="literal">aaa</output>
-				</case>
-				<case>
-					<output escape="text" type="literal">bbb</output>
-				</case>
-			</switch>
-		</case>
-	</switch>
+  <switch>
+    <case test="$STYLE_ID=2">
+      <switch>
+        <case test="@author">
+          <output escape="text" type="literal">xxx</output>
+        </case>
+        <case>
+          <output escape="text" type="literal">yyy</output>
+        </case>
+      </switch>
+    </case>
+    <case>
+      <switch>
+        <case test="@author">
+          <output escape="text" type="literal">aaa</output>
+        </case>
+        <case>
+          <output escape="text" type="literal">bbb</output>
+        </case>
+      </switch>
+    </case>
+  </switch>
 </template>

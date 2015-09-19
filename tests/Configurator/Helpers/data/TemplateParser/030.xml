@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <template>
-	<element name="div" id="1">
-		<closeTag id="1"/>
-		<comment>
-			<output escape="text" type="literal"> ... </output>
-		</comment>
-		<output escape="text" type="literal">foo</output>
-	</element>
+  <element name="div" id="1">
+    <closeTag id="1"/>
+    <comment>
+      <output escape="text" type="literal"> ... </output>
+    </comment>
+    <output escape="text" type="literal">foo</output>
+  </element>
 </template>

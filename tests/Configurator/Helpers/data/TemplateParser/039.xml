@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <template>
-	<switch>
-		<case test="@foo='a'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case test=".='c'">
-			<output escape="text" type="literal">.</output>
-		</case>
-		<case test=".='d'">
-			<output escape="text" type="literal">.</output>
-		</case>
-	</switch>
+  <switch>
+    <case test="@foo='a'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test=".='c'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test=".='d'">
+      <output escape="text" type="literal">.</output>
+    </case>
+  </switch>
 </template>

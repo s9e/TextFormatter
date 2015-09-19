@@ -1,7 +1,7 @@
 <template>
-	<element name="{local-name()}" id="1" void="maybe" empty="maybe">
-		<copyOfAttributes/>
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
+  <element name="{local-name()}" id="1" void="maybe" empty="maybe">
+    <copyOfAttributes/>
+    <closeTag id="1"/>
+    <applyTemplates/>
+  </element>
 </template>

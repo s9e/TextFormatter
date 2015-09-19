@@ -33,25 +33,25 @@ foreach ($void as $iVoid => $elName)
 
 		$xml =
 			'<template>
-				<element name="' . $elName . '" id="1"' . $voidAttr[$iVoid] . $emptyAttr[$iEmpty] . '>
-					<attribute name="id">
-						<output escape="attribute" type="literal">foo</output>
-					</attribute>
-					<closeTag id="1"/>';
+			  <element name="' . $elName . '" id="1"' . $voidAttr[$iVoid] . $emptyAttr[$iEmpty] . '>
+			    <attribute name="id">
+			      <output escape="attribute" type="literal">foo</output>
+			    </attribute>
+			    <closeTag id="1"/>';
 
 		// Content of void elements is removed in HTML mode
 		if ($iVoid !== 'Y' && $xmlContent !== '')
 		{
-			$xml .= "\n\t\t\t\t\t\t" . $xmlContent;
+			$xml .= "\n\t\t\t    " . $xmlContent;
 		}
 
 		$xml .= '
-				</element>
+			  </element>
 			</template>';
 
 		// Remove the extra indentation
-		$xml = str_replace("\n\t\t\t\t", "\n", $xml);
-		$template = str_replace("\n\t\t\t\t", "\n", $template);
+		$xml = str_replace("\n\t\t\t", "\n", $xml);
+		$template = str_replace("\n\t\t\t", "\n", $template);
 
 		// Save the result
 		file_put_contents($dirpath . '/' . $i . '.template', $template);

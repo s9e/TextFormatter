@@ -1,4 +1,4 @@
 <template>
-	<output escape="text" type="xpath">'Hello '</output>
-	<output escape="text" type="literal">World</output>
+  <output escape="text" type="xpath">'Hello '</output>
+  <output escape="text" type="literal">World</output>
 </template>

@@ -1,13 +1,13 @@
 <template>
-	<element name="b" id="1" empty="maybe">
-		<switch>
-			<case test="@foo">
-				<attribute name="title">
-					<output escape="attribute" type="xpath">@bar</output>
-				</attribute>
-			</case>
-		</switch>
-		<closeTag id="1"/>
-		<applyTemplates/>
-	</element>
+  <element name="b" id="1" empty="maybe">
+    <switch>
+      <case test="@foo">
+        <attribute name="title">
+          <output escape="attribute" type="xpath">@bar</output>
+        </attribute>
+      </case>
+    </switch>
+    <closeTag id="1"/>
+    <applyTemplates/>
+  </element>
 </template>

@@ -1,8 +1,8 @@
 <template>
-<element name="div" id="1" empty="yes">
-	<attribute name="id">
-		<output escape="attribute" type="literal">foo</output>
-	</attribute>
-	<closeTag id="1"/>
-</element>
-			</template>
+  <element name="div" id="1" empty="yes">
+    <attribute name="id">
+      <output escape="attribute" type="literal">foo</output>
+    </attribute>
+    <closeTag id="1"/>
+  </element>
+</template>

@@ -1,9 +1,9 @@
 <template>
-<element name="div" id="1" empty="maybe">
-	<attribute name="id">
-		<output escape="attribute" type="literal">foo</output>
-	</attribute>
-	<closeTag id="1"/>
-		<applyTemplates/>
-</element>
-			</template>
+  <element name="div" id="1" empty="maybe">
+    <attribute name="id">
+      <output escape="attribute" type="literal">foo</output>
+    </attribute>
+    <closeTag id="1"/>
+    <applyTemplates/>
+  </element>
+</template>

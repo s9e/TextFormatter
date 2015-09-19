@@ -1,9 +1,9 @@
 <template>
-<element name="{local-name()}" id="1" void="maybe">
-	<attribute name="id">
-		<output escape="attribute" type="literal">foo</output>
-	</attribute>
-	<closeTag id="1"/>
-		<output escape="text" type="literal">foo</output>
-</element>
-			</template>
+  <element name="{local-name()}" id="1" void="maybe">
+    <attribute name="id">
+      <output escape="attribute" type="literal">foo</output>
+    </attribute>
+    <closeTag id="1"/>
+    <output escape="text" type="literal">foo</output>
+  </element>
+</template>
