@@ -258,6 +258,16 @@ class XPathConvertorTest extends Test
 				"\$node->getAttribute('x')/\$node->getAttribute('y')",
 				"\$this->xpath->evaluate('string(@x div@y)',\$node)"
 			],
+			[
+				'(@height + 49)',
+				"(\$node->getAttribute('height')+49)",
+				"\$this->xpath->evaluate('string((@height + 49))',\$node)"
+			],
+			[
+				'100 * (@height + 49) div @width',
+				"100*(\$node->getAttribute('height')+49)/\$node->getAttribute('width')",
+				"\$this->xpath->evaluate('string(100 * (@height + 49) div @width)',\$node)"
+			],
 		];
 	}
 

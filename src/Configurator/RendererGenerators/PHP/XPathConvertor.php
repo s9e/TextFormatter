@@ -557,6 +557,28 @@ class XPathConvertor
 			]
 		];
 
+		$exprs = [];
+		if (version_compare($this->pcreVersion, '8.13', '>='))
+		{
+			// Create a regexp that matches a comparison such as "@foo = 1"
+			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
+			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+
+			// Create a regexp that matches a parenthesized expression
+			// NOTE: could be expanded to support any expression
+			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)|(?&math)) \\))';
+
+			// Create a regexp that matches boolean operations
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
+
+			// Create a regexp that matches not() expressions
+			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+
+			// Modify the math pattern to accept parenthesized expressions
+			$patterns['math'][0] = str_replace('))', ')|(?&parens))', $patterns['math'][0]);
+			$patterns['math'][1] = str_replace('))', ')|(?&parens))', $patterns['math'][1]);
+		}
+
 		// Create a regexp that matches values, such as "@foo" or "42"
 		$valueExprs = [];
 		foreach ($patterns as $name => $pattern)
@@ -571,24 +593,8 @@ class XPathConvertor
 				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 			}
 		}
+		array_unshift($exprs, '(?<value>' . implode('|', $valueExprs) . ')');
 
-		$exprs = ['(?<value>' . implode('|', $valueExprs) . ')'];
-		if (version_compare($this->pcreVersion, '8.13', '>='))
-		{
-			// Create a regexp that matches a comparison such as "@foo = 1"
-			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
-			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
-
-			// Create a regexp that matches a parenthesized expression
-			// NOTE: could be expanded to support any expression
-			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
-
-			// Create a regexp that matches boolean operations
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
-
-			// Create a regexp that matches not() expressions
-			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
-		}
 
 		// Assemble the final regexp
 		$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
