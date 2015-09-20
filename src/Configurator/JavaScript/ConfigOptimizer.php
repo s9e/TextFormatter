@@ -139,8 +139,8 @@ class ConfigOptimizer
 
 		if (!isset($this->configValues[$varName]))
 		{
-			$this->configValues[$varName]       = new ConfigValue($object, $varName);
-			$this->jsLengths[$varName] = strlen($js);
+			$this->configValues[$varName] = new ConfigValue($object, $varName);
+			$this->jsLengths[$varName]    = strlen($js);
 		}
 		$this->configValues[$varName]->incrementUseCount();
 
