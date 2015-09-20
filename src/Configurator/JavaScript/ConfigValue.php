@@ -74,7 +74,7 @@ class ConfigValue
 	/**
 	* Return the PHP value held by this instance
 	*
-	* @return array|Dictionary
+	* @return array|Code|Dictionary
 	*/
 	public function getValue()
 	{
