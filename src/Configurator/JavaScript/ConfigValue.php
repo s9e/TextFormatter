@@ -25,7 +25,7 @@ class ConfigValue
 	protected $useCount = 0;
 
 	/**
-	* @var array|Dictionary Original value
+	* @var array|Code|Dictionary Original value
 	*/
 	protected $value;
 
@@ -37,8 +37,8 @@ class ConfigValue
 	/**
 	* Constructor
 	*
-	* @param  array|Dictionary $value   Original value
-	* @param  string           $varName
+	* @param  array|Code|Dictionary $value   Original value
+	* @param  string                $varName
 	* @return void
 	*/
 	public function __construct($value, $varName)

@@ -16,18 +16,16 @@ class CallbackGeneratorTest extends Test
 	* @testdox replaceCallbacks() tests
 	* @dataProvider getReplaceCallbacksTests
 	*/
-	public function testReplaceCallbacks($original, $expected, $functions)
+	public function testReplaceCallbacks($original, $expected)
 	{
 		$generator = new CallbackGenerator;
 		$this->assertEquals($expected, $generator->replaceCallbacks($original));
-		$this->assertEquals($functions, $generator->getFunctions());
 	}
 
 	public function getReplaceCallbacksTests()
 	{
 		return [
 			[
-				[],
 				[],
 				[]
 			],
@@ -51,13 +49,10 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => [
 							'filterChain' => [
-								new Code('c0FD361FA')
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return executeAttributePreprocessors(tag,tagConfig);}")
 							]
 						]
 					]
-				],
-				[
-					'c0FD361FA' => "/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction c0FD361FA(tag,tagConfig){return executeAttributePreprocessors(tag,tagConfig);}"
 				]
 			],
 			[
@@ -83,15 +78,12 @@ class CallbackGeneratorTest extends Test
 							'attributes' => [
 								'x' => [
 									'filterChain' => [
-										new Code('c5E0742FA')
+										new Code("/**\n* @param {*} attrValue\n* @param {!string} attrName\n*/\nfunction(attrValue,attrName){return (function(z){return z})(\"FOO\");}")
 									]
 								]
 							]
 						]
 					]
-				],
-				[
-					'c5E0742FA' => "/**\n* @param {*} attrValue\n* @param {!string} attrName\n*/\nfunction c5E0742FA(attrValue,attrName){return (function(z){return z})(\"FOO\");}"
 				]
 			],
 			[
@@ -113,13 +105,10 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => [
 							'filterChain' => [
-								new Code('c1FD39C63')
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return (function(v){return v})(registeredVars[\"registered\"]);}")
 							]
 						]
 					]
-				],
-				[
-					'c1FD39C63' => "/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction c1FD39C63(tag,tagConfig){return (function(v){return v})(registeredVars[\"registered\"]);}"
 				]
 			],
 			[
@@ -132,8 +121,7 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => ['filterChain' => [new Code('returnFalse')]]
 					]
-				],
-				[]
+				]
 			],
 			[
 				[
@@ -145,8 +133,7 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => ['filterChain' => [new Code('returnTrue')]]
 					]
-				],
-				[]
+				]
 			],
 		];
 	}

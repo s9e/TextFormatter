@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator;
 
 use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 use s9e\TextFormatter\Tests\Test;
@@ -63,11 +64,21 @@ class ConfigOptimizerTest extends Test
 			],
 			[
 				[
-					'foo' => [12345, ],
+					'foo' => [12345],
 					'bar' => [54321, 12345]
 				],
 				'{bar:[54321,12345],foo:[12345]}',
 				[]
+			],
+			[
+				[
+					'foo' => [new Code('function(){return false;}')],
+					'bar' => [new Code('function(){return false;}')]
+				],
+				'{bar:oBDF6D802,foo:oBDF6D802}',
+				[
+					'/** @const */ var oBDF6D802=[function(){return false;}];'
+				]
 			],
 		];
 	}

@@ -424,9 +424,6 @@ class JavaScript
 		// Prepend the deduplicated objects
 		$src = $this->configOptimizer->getVarDeclarations() . $src;
 
-		// Append the functions from filters and generators
-		$src .= "\n" . implode("\n", $this->callbackGenerator->getFunctions()) . "\n";
-
 		return $src;
 	}
 }

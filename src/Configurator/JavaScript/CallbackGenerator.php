@@ -32,28 +32,11 @@ class CallbackGenerator
 	protected $encoder;
 
 	/**
-	* @var array Associative array of functions [name => function definition]
-	*/
-	protected $functions;
-
-	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
 		$this->encoder = new Encoder;
-	}
-
-	/**
-	* Return the functions created from the last replacements
-	*
-	* @return array Function names as keys, function definitions as values
-	*/
-	public function getFunctions()
-	{
-		ksort($this->functions);
-
-		return $this->functions;
 	}
 
 	/**
@@ -64,7 +47,6 @@ class CallbackGenerator
 	*/
 	public function replaceCallbacks(array $config)
 	{
-		$this->functions = [];
 		foreach ($this->callbacks as $path => $params)
 		{
 			$config = $this->mapArray($config, explode('.', $path), $params);
@@ -128,21 +110,12 @@ class CallbackGenerator
 		// Add an empty list of params if none is set
 		$config += ['params' => []];
 
-		// Start the source at the function signature, after the function name
-		$src = '(' . implode(',', array_keys($params)) . '){return ';
-		$src .= $this->parenthesizeCallback($config['js']);
+		$src  = $this->getHeader($params);
+		$src .= 'function(' . implode(',', array_keys($params)) . '){';
+		$src .= 'return ' . $this->parenthesizeCallback($config['js']);
 		$src .= '(' . $this->buildCallbackArguments($config['params'], $params) . ');}';
 
-		// Compute the function's name
-		$funcName = sprintf('c%08X', crc32($src));
-
-		// Prepend the function header and fill the missing part of the function definition
-		$src = $this->getHeader($params) . 'function ' . $funcName . $src;
-
-		// Save the function definition
-		$this->functions[$funcName] = $src;
-
-		return new Code($funcName);
+		return new Code($src);
 	}
 
 	/**

@@ -83,6 +83,17 @@ class ConfigOptimizer
 	}
 
 	/**
+	* Test whether given value can be deduplicated
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	protected function canDeduplicate($value)
+	{
+		return (is_array($value) || $value instanceof Code || $value instanceof Dictionary);
+	}
+
+	/**
 	* Mark ConfigValue instances that have been used multiple times
 	*
 	* @return void
@@ -112,6 +123,17 @@ class ConfigOptimizer
 	}
 
 	/**
+	* Test whether given value is iterable
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	protected function isIterable($value)
+	{
+		return (is_array($value) || $value instanceof Dictionary);
+	}
+
+	/**
 	* Optimize given object's content
 	*
 	* @param  array|Dictionary $object Original object
@@ -128,14 +150,18 @@ class ConfigOptimizer
 	/**
 	* Record a given config object as a ConfigValue instance
 	*
-	* @param  array|Dictionary $object Original object
-	* @return ConfigValue              Stored ConfigValue instance
+	* @param  array|Code|Dictionary $object Original object
+	* @return ConfigValue                   Stored ConfigValue instance
 	*/
 	protected function recordObject($object)
 	{
 		$js      = $this->encoder->encode($object);
 		$varName = $this->getVarName($js);
-		$object  = $this->recordObjectContent($object);
+
+		if ($this->isIterable($object))
+		{
+			$object = $this->recordObjectContent($object);
+		}
 
 		if (!isset($this->configValues[$varName]))
 		{
@@ -157,7 +183,7 @@ class ConfigOptimizer
 	{
 		foreach ($object as $k => $v)
 		{
-			if (is_array($v) || $v instanceof Dictionary)
+			if ($this->canDeduplicate($v))
 			{
 				$object[$k] = $this->recordObject($v);
 			}

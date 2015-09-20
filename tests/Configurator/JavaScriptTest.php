@@ -223,9 +223,8 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('filterChain:[cDF617284]', $js);
 		$this->assertContains(
-			'function cDF617284(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}',
+			'function(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}',
 			$js
 		);
 	}
@@ -241,9 +240,8 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('filterChain:[c2503AA6D]', $js);
 		$this->assertContains(
-			'function c2503AA6D(tag,tagConfig){return filterAttributes(tag,tagConfig,registeredVars,logger);}',
+			'function(tag,tagConfig){return filterAttributes(tag,tagConfig,registeredVars,logger);}',
 			$js
 		);
 	}
@@ -384,8 +382,8 @@ class JavaScriptTest extends Test
 
 		$this->assertNotContains('"X":{', $js);
 		$this->assertNotContains('"Y":{', $js);
-		$this->assertContains('"X":o54244453', $js);
-		$this->assertContains('"Y":o54244453', $js);
+		$this->assertContains('"X":o051B0AF4', $js);
+		$this->assertContains('"Y":o051B0AF4', $js);
 	}
 
 	/**
