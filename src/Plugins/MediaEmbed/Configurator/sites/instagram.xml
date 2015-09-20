@@ -5,6 +5,6 @@
 	<tags><tag>social</tag></tags>
 
 	<host>instagram.com</host>
-	<extract>!instagram\.com/p/(?'id'[-_\w]+)!</extract>
+	<extract>!instagram\.com/p/(?'id'[-\w]+)!</extract>
 	<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
 </site>
