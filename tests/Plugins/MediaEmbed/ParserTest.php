@@ -1950,6 +1950,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing',
+				'<r><GOOGLEDRIVE id="0B_4NRUjxLBejNjVmeG5MUzA3Q3M" url="https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing">https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing</GOOGLEDRIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googledrive');
+				}
+			],
+			[
 				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
 				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW">https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
 				[],

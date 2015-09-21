@@ -1,0 +1,9 @@
+<site name="Google Drive" homepage="https://drive.google.com">
+	<example>https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing</example>
+
+	<tags><tag>documents</tag><tag>images</tag><tag>videos</tag></tags>
+
+	<host>drive.google.com</host>
+	<extract>!drive\.google\.com/file/d/(?'id'\w+)!</extract>
+	<iframe width="640" height="480" src="//drive.google.com/file/d/{@id}/preview"/>
+</site>
