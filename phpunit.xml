@@ -103,6 +103,7 @@
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerApplicationTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
+			<file>tests/Configurator/JavaScript/StylesheetCompressorTest.php</file>
 			<file>tests/Configurator/RenderingTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoCloseIfVoidTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoReopenFormattingElementsTest.php</file>
