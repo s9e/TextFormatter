@@ -4,6 +4,6 @@
 	<tags><tag>documents</tag><tag>images</tag><tag>videos</tag></tags>
 
 	<host>drive.google.com</host>
-	<extract>!drive\.google\.com/file/d/(?'id'\w+)!</extract>
+	<extract>!drive\.google\.com/file/d/(?'id'[-\w]+)!</extract>
 	<iframe width="640" height="480" src="//drive.google.com/file/d/{@id}/preview"/>
 </site>
