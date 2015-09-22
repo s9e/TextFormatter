@@ -70,12 +70,14 @@
 				<xsl:apply-templates />
 			</code></pre>
 			<!--
-				if (typeof hljs === 'undefined')
+				if (typeof hljs === typeof hljsLoading)
 				{
+					hljsLoading = true;
+
 					var head = document.getElementsByTagName('head')[0],
 						el   = document.createElement('link'),
-						stylesheetUrl = ']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</var><![CDATA[',
-						scriptUrl = ']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</var><![CDATA[';
+						stylesheetUrl = ']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</var><![CDATA[',
+						scriptUrl = ']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</var><![CDATA[';
 
 					el.type = 'text/css';
 					el.rel  = 'stylesheet';
@@ -89,6 +91,7 @@
 					{
 						hljs['_'] = {};
 						hljs['initHighlighting']();
+						delete hljsLoading;
 					};
 					el.async = true;
 					el.src   = scriptUrl;
@@ -96,7 +99,7 @@
 					head.appendChild(el);
 				}
 			-->
-			<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href=']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</var><![CDATA[';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src=']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</var><![CDATA[';a.appendChild(b)}</script>
+			<script>if(typeof hljs===typeof hljsLoading){hljsLoading=!0;var head=document.getElementsByTagName("head")[0],el=document.createElement("link"),stylesheetUrl=']]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</var><![CDATA[',scriptUrl=']]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</var><![CDATA[';el.type="text/css";el.rel="stylesheet";el.href=stylesheetUrl;head.appendChild(el);el=document.createElement("script");el.type="text/javascript";el.onload=function(){hljs._={};hljs.initHighlighting();delete hljsLoading};el.async=!0;el.src=scriptUrl;head.appendChild(el)}</script>
 		]]></template>
 	</bbcode>
 

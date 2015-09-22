@@ -103,12 +103,14 @@ __CODE__
 	<xsl:apply-templates />
 </code></pre>
 <!--
-	if (typeof hljs === 'undefined')
+	if (typeof hljs === typeof hljsLoading)
 	{
+		hljsLoading = true;
+
 		var head = document.getElementsByTagName('head')[0],
 			el   = document.createElement('link'),
-			stylesheetUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css',
-			scriptUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js';
+			stylesheetUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css',
+			scriptUrl = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js';
 
 		el.type = 'text/css';
 		el.rel  = 'stylesheet';
@@ -122,6 +124,7 @@ __CODE__
 		{
 			hljs['_'] = {};
 			hljs['initHighlighting']();
+			delete hljsLoading;
 		};
 		el.async = true;
 		el.src   = scriptUrl;
@@ -129,7 +132,7 @@ __CODE__
 		head.appendChild(el);
 	}
 -->
-<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css';a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js';a.appendChild(b)}</script>
+<script>if(typeof hljs===typeof hljsLoading){hljsLoading=!0;var head=document.getElementsByTagName("head")[0],el=document.createElement("link"),stylesheetUrl='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css',scriptUrl='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js';el.type="text/css";el.rel="stylesheet";el.href=stylesheetUrl;head.appendChild(el);el=document.createElement("script");el.type="text/javascript";el.onload=function(){hljs._={};hljs.initHighlighting();delete hljsLoading};el.async=!0;el.src=scriptUrl;head.appendChild(el)}</script>
 ```
 <table>
 	<tr>
@@ -139,22 +142,22 @@ __CODE__
 	</tr>
 	<tr>
 		<td><code>stylesheetUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td><code>scriptUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td><code>stylesheetUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td><code>scriptUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js</td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</td>
 		<td></td>
 	</tr>
 </table>
