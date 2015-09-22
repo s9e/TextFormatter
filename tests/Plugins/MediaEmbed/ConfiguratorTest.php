@@ -1119,20 +1119,4 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame('://', $config['quickMatch']);
 	}
-
-	/**
-	* @testdox disableResponsiveEmbeds() is callable
-	*/
-	public function testDisableResponsiveEmbeds()
-	{
-		$this->assertTrue(is_callable([$this->configurator->MediaEmbed, 'disableResponsiveEmbeds']));
-	}
-
-	/**
-	* @testdox enableResponsiveEmbeds() is callable
-	*/
-	public function testEnableResponsiveEmbeds()
-	{
-		$this->assertTrue(is_callable([$this->configurator->MediaEmbed, 'enableResponsiveEmbeds']));
-	}
 }

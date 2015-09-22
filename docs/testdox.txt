@@ -2487,8 +2487,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] asConfig() creates a regexp if a site has both "host" and "scheme"
  [x] asConfig() returns ':' as quickMatch if it has a site with a "scheme"
  [x] asConfig() returns '://' as quickMatch if it has no site with a "scheme"
- [x] disableResponsiveEmbeds() is callable
- [x] enableResponsiveEmbeds() is callable
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute

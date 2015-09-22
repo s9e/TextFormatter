@@ -304,26 +304,6 @@ class Configurator extends ConfiguratorBase
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
-	/**
-	* Deprecated
-	*
-	* @return void
-	*/
-	public function disableResponsiveEmbeds()
-	{
-		// Do nothing
-	}
-
-	/**
-	* Deprecated
-	*
-	* @return void
-	*/
-	public function enableResponsiveEmbeds()
-	{
-		// Do nothing
-	}
-
 	//==========================================================================
 	// Internal methods
 	//==========================================================================
