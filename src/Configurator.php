@@ -4494,6 +4494,16 @@ class XPathConvertor
 				'\\)'
 			]
 		];
+		$exprs = [];
+		if (\version_compare($this->pcreVersion, '8.13', '>='))
+		{
+			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)|(?&math)) \\))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
+			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
+			$patterns['math'][0] = \str_replace('))', ')|(?&parens))', $patterns['math'][0]);
+			$patterns['math'][1] = \str_replace('))', ')|(?&parens))', $patterns['math'][1]);
+		}
 		$valueExprs = [];
 		foreach ($patterns as $name => $pattern)
 		{
@@ -4502,14 +4512,8 @@ class XPathConvertor
 			if (\strpos($pattern, '?&') === \false || \version_compare($this->pcreVersion, '8.13', '>='))
 				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 		}
-		$exprs = ['(?<value>' . \implode('|', $valueExprs) . ')'];
-		if (\version_compare($this->pcreVersion, '8.13', '>='))
-		{
-			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
-			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
-			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
-		}
+		\array_unshift($exprs, '(?<value>' . \implode('|', $valueExprs) . ')');
+
 		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
 		$regexp = \str_replace(' ', '\\s*', $regexp);
 		$this->regexp = $regexp;
