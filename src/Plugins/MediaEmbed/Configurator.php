@@ -119,7 +119,7 @@ class Configurator extends ConfiguratorBase
 			$tag->filterChain
 				->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
-		$tag->template = $this->templateBuilder->getTemplate($siteConfig) . $this->appendTemplate;
+		$tag->template = $this->templateBuilder->build($siteId, $siteConfig) . $this->appendTemplate;
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
@@ -136,14 +136,6 @@ class Configurator extends ConfiguratorBase
 	public function appendTemplate($template = '')
 	{
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
-	}
-	public function disableResponsiveEmbeds()
-	{
-		$this->templateBuilder->responsiveEmbeds = \false;
-	}
-	public function enableResponsiveEmbeds()
-	{
-		$this->templateBuilder->responsiveEmbeds = \true;
 	}
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{

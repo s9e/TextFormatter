@@ -6,12 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
 class TemplateBuilder
 {
-	public $responsiveEmbeds = \false;
 	protected $templateGenerators = [];
 	public function __construct()
 	{
@@ -19,14 +20,24 @@ class TemplateBuilder
 		$this->templateGenerators['flash']  = new Flash;
 		$this->templateGenerators['iframe'] = new Iframe;
 	}
+	public function build($siteId, array $siteConfig)
+	{
+		return $this->addSiteId($siteId, $this->getTemplate($siteConfig));
+	}
 	public function getTemplate(array $config)
 	{
 		foreach ($this->templateGenerators as $type => $generator)
 			if (isset($config[$type]))
-			{
-				$config[$type] += ['responsive' => $this->responsiveEmbeds];
 				return $generator->getTemplate($config[$type]);
-			}
 		return '';
+	}
+	protected function addSiteId($siteId, $template)
+	{
+		$dom   = TemplateHelper::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+		$query = '//*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"][not(ancestor::*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"])]';
+		foreach ($xpath->query($query) as $element)
+			$element->setAttribute('data-s9e-mediaembed', $siteId);
+		return TemplateHelper::saveTemplate($dom);
 	}
 }

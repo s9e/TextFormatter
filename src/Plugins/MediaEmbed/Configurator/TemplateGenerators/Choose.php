@@ -15,13 +15,17 @@ class Choose extends TemplateGenerator
 	{
 		$this->templateBuilder = $templateBuilder;
 	}
-	public function getTemplate(array $attributes)
+	protected function needsWrapper()
 	{
-		$branches = (isset($attributes['when'][0])) ? $attributes['when'] : [$attributes['when']];
+		return \false;
+	}
+	protected function getContentTemplate()
+	{
+		$branches = (isset($this->attributes['when'][0])) ? $this->attributes['when'] : [$this->attributes['when']];
 		$template = '<xsl:choose>';
 		foreach ($branches as $when)
 			$template .= '<xsl:when test="' . \htmlspecialchars($when['test'], \ENT_COMPAT, 'UTF-8') . '">' . $this->templateBuilder->getTemplate($when) . '</xsl:when>';
-		$template .= '<xsl:otherwise>' . $this->templateBuilder->getTemplate($attributes['otherwise']) . '</xsl:otherwise></xsl:choose>';
+		$template .= '<xsl:otherwise>' . $this->templateBuilder->getTemplate($this->attributes['otherwise']) . '</xsl:otherwise></xsl:choose>';
 		return $template;
 	}
 }

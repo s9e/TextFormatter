@@ -9,17 +9,19 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator;
 class Iframe extends TemplateGenerator
 {
-	public function getTemplate(array $attributes)
+	protected $defaultIframeAttributes = [
+		'allowfullscreen' => '',
+		'scrolling'       => 'no',
+		'style'           => ['border' => '0']
+	];
+	protected $iframeAttributes = ['onload', 'scrolling', 'src', 'style'];
+	protected function getContentTemplate()
 	{
-		$attributes += [
-			'allowfullscreen' => '',
-			'frameborder'     => '0',
-			'scrolling'       => 'no'
-		];
-		$isResponsive = $this->canBeResponsive($attributes);
-		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
-		if ($isResponsive)
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		return $template;
+		$attributes = $this->mergeAttributes($this->defaultIframeAttributes, $this->getFilteredAttributes());
+		return '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+	}
+	protected function getFilteredAttributes()
+	{
+		return \array_intersect_key($this->attributes, \array_flip($this->iframeAttributes));
 	}
 }
