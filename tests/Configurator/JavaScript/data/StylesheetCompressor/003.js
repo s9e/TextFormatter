@@ -1,0 +1,1 @@
+"<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http:\/\/www.w3.org\/1999\/XSL\/Transform\"><xsl:output method=\"html\" encoding=\"utf-8\" indent=\"no\"\/>$qX\">..$r$qY\">..$r$qZ\">$a$b$c$d$e$f$g$h$i$j$k$l$m$n$o$p$r<\/xsl:stylesheet>".replace(/\$[qr]/g,function(k){return{"$q":"<xsl:template match=\"","$r":"<\/xsl:template>"}[k]})

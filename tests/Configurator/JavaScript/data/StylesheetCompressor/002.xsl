@@ -1,0 +1,1 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="html" encoding="utf-8" indent="no"/><xsl:template match="X">..</xsl:template><xsl:template match="Y">..</xsl:template><xsl:template match="Z">..</xsl:template></xsl:stylesheet>

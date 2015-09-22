@@ -19,6 +19,7 @@ use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\StylesheetCompressor;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 
 class JavaScript
@@ -75,6 +76,11 @@ class JavaScript
 	protected $minifier;
 
 	/**
+	* @var StylesheetCompressor
+	*/
+	protected $stylesheetCompressor;
+
+	/**
 	* @var string Stylesheet used for rendering
 	*/
 	protected $xsl;
@@ -87,11 +93,12 @@ class JavaScript
 	*/
 	public function __construct(Configurator $configurator)
 	{
-		$this->encoder           = new Encoder;
-		$this->callbackGenerator = new CallbackGenerator;
-		$this->configOptimizer   = new ConfigOptimizer($this->encoder);
-		$this->configurator      = $configurator;
-		$this->hintGenerator     = new HintGenerator;
+		$this->encoder              = new Encoder;
+		$this->callbackGenerator    = new CallbackGenerator;
+		$this->configOptimizer      = new ConfigOptimizer($this->encoder);
+		$this->configurator         = $configurator;
+		$this->hintGenerator        = new HintGenerator;
+		$this->stylesheetCompressor = new StylesheetCompressor;
 	}
 
 	/**
@@ -357,7 +364,7 @@ class JavaScript
 		if (in_array('preview', $this->exportMethods, true))
 		{
 			$files[] = 'render.js';
-			$src .= '/** @const */ var xsl=' . json_encode($this->xsl) . ";\n";
+			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";
 		}
 
 		foreach ($files as $filename)
@@ -367,6 +374,16 @@ class JavaScript
 		}
 
 		return $src;
+	}
+
+	/**
+	* Return the JavaScript representation of the stylesheet
+	*
+	* @return string
+	*/
+	protected function getStylesheet()
+	{
+		return $this->stylesheetCompressor->encode($this->xsl);
 	}
 
 	/**
