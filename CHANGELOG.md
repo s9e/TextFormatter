@@ -3,7 +3,7 @@
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/5a50dab7662d4083129287bd1c895e2aaf884e9a...5863c4cb5df880d315188b17145410105ba71773)
 
-### New
+### Added
 
  - `7abbe26` Added AVTHelper::toXSL()
  - `5863c4c` Added JavaScript\StylesheetCompressor
@@ -22,6 +22,12 @@
  - `e20df9f` MediaEmbed: removed enableResponsiveEmbeds() and disabledResponsiveEmbeds()
  - `4e7f087` MediaEmbed: removed the embed element from Flash templates
  - `b1500b6` PHP renderer generator: removed constant math evaluation which was made redundant by the FoldArithmeticConstants template normalization pass
+
+### Fixed
+
+ - `9c8eaa0` MediaEmbed: fixed the MEDIA tag filter to not create a tag if it does not match a known site
+ - `a5feb09` Quick renderer: fixed a potential issue with string comparison against single quotes
+ - `80f2c9a` Quick renderer: fixed incorrect comparison against literals that contain a single quote
 
 ### Changed
 
@@ -43,12 +49,6 @@
  - `0765165` Utils: updated serializeAttributes() to escape quotes in a manner consistent with the parser
  - `caf1dc2` XPathHelper: updated minify() to remove more space around the div operator
  - `38a9c89` XPathHelper: updated minify() to remove spaces after a div operator
-
-### Fixed
-
- - `9c8eaa0` MediaEmbed: fixed the MEDIA tag filter to not create a tag if it does not match a known site
- - `a5feb09` Quick renderer: fixed a potential issue with string comparison against single quotes
- - `80f2c9a` Quick renderer: fixed incorrect comparison against literals that contain a single quote
 
 
 0.3.2 (2015-09-06)

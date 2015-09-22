@@ -9,7 +9,7 @@ $lines   = explode("\n", trim(file_get_contents('php://stdin')));
 
 $types = [
 	'Ignore'  => '((?:#ignore|#tests|ci skip|(?:build|release|travis) script))i',
-	'New'     => '(\\bAdded\\b)i',
+	'Added'   => '(\\bAdded\\b)i',
 	'Fixed'   => '(\\bFixed\\b)i',
 	'Removed' => '(\\bRemoved\\b)i',
 	'Changed' => '()'
@@ -37,7 +37,7 @@ echo $header, "\n", str_repeat('=', strlen($header)), "\n\n";
 
 echo "[Full commit log](https://github.com/s9e/TextFormatter/compare/$oldCommitId...$newCommitId)\n";
 
-foreach (['New', 'Removed', 'Changed', 'Fixed'] as $type)
+foreach (['Added', 'Removed', 'Fixed', 'Changed'] as $type)
 {
 	if (empty($entries[$type]))
 	{
