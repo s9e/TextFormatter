@@ -9,52 +9,90 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 abstract class TemplateGenerator
 {
-	abstract public function getTemplate(array $attributes);
-	protected function addResponsiveStyle(array $attributes)
+	protected $attributes;
+	protected $defaultAttributes = array(
+		'height'         => 360,
+		'padding-height' => 0,
+		'style'          => array(),
+		'width'          => 640
+	);
+	abstract protected function getContentTemplate();
+	public function getTemplate(array $attributes)
 	{
-		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
-		if (isset($attributes['style']))
-			$attributes['style'] .= ';' . $css;
-		else
-			$attributes['style'] = $css;
-		return $attributes;
-	}
-	protected function addResponsiveWrapper($template, array $attributes)
-	{
-		$height = \trim($attributes['height'], '{}');
-		$width  = \trim($attributes['width'], '{}');
-		$isFixedHeight = (bool) \preg_match('(^\\d+$)D', $height);
-		$isFixedWidth  = (bool) \preg_match('(^\\d+$)D', $width);
-		if ($isFixedHeight && $isFixedWidth)
-			$padding = \round(100 * $height / $width, 2);
-		else
+		$this->attributes = $attributes + $this->defaultAttributes;
+		$prepend = $append = '';
+		if ($this->needsWrapper())
 		{
-			if (!\preg_match('(^[@$]?[-\\w]+$)D', $height))
-				$height = '(' . $height . ')';
-			if (!\preg_match('(^[@$]?[-\\w]+$)D', $width))
-				$width = '(' . $width . ')';
-			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
+			$this->attributes['style']['width']    = '100%';
+			$this->attributes['style']['height']   = '100%';
+			$this->attributes['style']['position'] = 'absolute';
+			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
+			$innerStyle = 'position:relative;' . $this->getResponsivePadding();
+			$prepend .= '<div>' . $this->generateAttributes(array('style' => $outerStyle));
+			$prepend .= '<div>' . $this->generateAttributes(array('style' => $innerStyle));
+			$append  .= '</div></div>';
 		}
-		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
-	}
-	protected function canBeResponsive(array $attributes)
-	{
-		if (empty($attributes['responsive']))
-			return \false;
-		return !\preg_match('([%<])', $attributes['width'] . $attributes['height']);
-	}
-	protected function generateAttributes(array $attributes, $addResponsive = \false)
-	{
-		if ($addResponsive)
-			$attributes = $this->addResponsiveStyle($attributes);
-		unset($attributes['responsive']);
-		$xsl = '';
-		foreach ($attributes as $attrName => $innerXML)
+		else
 		{
-			if (\strpos($innerXML, '<') === \false)
-				$innerXML = AVTHelper::toXSL($innerXML);
+			$this->attributes['style']['width']  = '100%';
+			$this->attributes['style']['height'] = $this->attributes['height'] . 'px';
+			if (isset($this->attributes['max-width']))
+				$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
+			elseif ($this->attributes['width'] !== '100%')
+				$this->attributes['style']['max-width'] = $this->attributes['width'] . 'px';
+		}
+		return $prepend . $this->getContentTemplate() . $append;
+	}
+	protected function expr($expr)
+	{
+		$expr = \trim($expr, '{}');
+		return (\preg_match('(^[@$]?[-\\w]+$)D', $expr)) ? $expr : "($expr)";
+	}
+	protected function getResponsivePadding()
+	{
+		$height        = $this->expr($this->attributes['height']);
+		$paddingHeight = $this->expr($this->attributes['padding-height']);
+		$width         = $this->expr($this->attributes['width']);
+		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
+		
+		if (!empty($this->attributes['padding-height']))
+			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
+		return $css;
+	}
+	protected function generateAttributes(array $attributes)
+	{
+		if (isset($attributes['style']) && \is_array($attributes['style']))
+			$attributes['style'] = $this->generateStyle($attributes['style']);
+		\ksort($attributes);
+		$xsl = '';
+		foreach ($attributes as $attrName => $attrValue)
+		{
+			$innerXML = (\strpos($attrValue, '<') !== \false) ? $attrValue : AVTHelper::toXSL($attrValue);
 			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, \ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
 		}
 		return $xsl;
+	}
+	protected function generateStyle(array $properties)
+	{
+		\ksort($properties);
+		$style = '';
+		foreach ($properties as $name => $value)
+			$style .= $name . ':' . $value . ';';
+		return \trim($style, ';');
+	}
+	protected function mergeAttributes(array $defaultAttributes, array $newAttributes)
+	{
+		$attributes = \array_merge($defaultAttributes, $newAttributes);
+		if (isset($defaultAttributes['style'], $newAttributes['style']))
+			$attributes['style'] += $defaultAttributes['style'];
+		return $attributes;
+	}
+	protected function needsWrapper()
+	{
+		if ($this->attributes['width'] === '100%')
+			return \false;
+		if (isset($this->attributes['onload']) && \strpos($this->attributes['onload'], '.height') !== \false)
+			return \false;
+		return \true;
 	}
 }

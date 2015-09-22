@@ -37,6 +37,10 @@ class ConfigOptimizer
 		$this->configValues = array();
 		$this->jsLengths    = array();
 	}
+	protected function canDeduplicate($value)
+	{
+		return (\is_array($value) || $value instanceof Code || $value instanceof Dictionary);
+	}
 	protected function deduplicateConfigValues()
 	{
 		\arsort($this->jsLengths);
@@ -51,6 +55,10 @@ class ConfigOptimizer
 	{
 		return \sprintf('o%08X', \crc32($js));
 	}
+	protected function isIterable($value)
+	{
+		return (\is_array($value) || $value instanceof Dictionary);
+	}
 	protected function optimizeObjectContent($object)
 	{
 		$object = $this->recordObject($object);
@@ -61,11 +69,12 @@ class ConfigOptimizer
 	{
 		$js      = $this->encoder->encode($object);
 		$varName = $this->getVarName($js);
-		$object  = $this->recordObjectContent($object);
+		if ($this->isIterable($object))
+			$object = $this->recordObjectContent($object);
 		if (!isset($this->configValues[$varName]))
 		{
-			$this->configValues[$varName]       = new ConfigValue($object, $varName);
-			$this->jsLengths[$varName] = \strlen($js);
+			$this->configValues[$varName] = new ConfigValue($object, $varName);
+			$this->jsLengths[$varName]    = \strlen($js);
 		}
 		$this->configValues[$varName]->incrementUseCount();
 		return $this->configValues[$varName];
@@ -73,7 +82,7 @@ class ConfigOptimizer
 	protected function recordObjectContent($object)
 	{
 		foreach ($object as $k => $v)
-			if (\is_array($v) || $v instanceof Dictionary)
+			if ($this->canDeduplicate($v))
 				$object[$k] = $this->recordObject($v);
 		return $object;
 	}

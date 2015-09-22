@@ -22,19 +22,12 @@ class CallbackGenerator
 		)
 	);
 	protected $encoder;
-	protected $functions;
 	public function __construct()
 	{
 		$this->encoder = new Encoder;
 	}
-	public function getFunctions()
-	{
-		\ksort($this->functions);
-		return $this->functions;
-	}
 	public function replaceCallbacks(array $config)
 	{
-		$this->functions = array();
 		foreach ($this->callbacks as $path => $params)
 			$config = $this->mapArray($config, \explode('.', $path), $params);
 		return $config;
@@ -58,13 +51,11 @@ class CallbackGenerator
 		if ($config['js'] === 'returnFalse' || $config['js'] === 'returnTrue')
 			return new Code($config['js']);
 		$config += array('params' => array());
-		$src = '(' . \implode(',', \array_keys($params)) . '){return ';
-		$src .= $this->parenthesizeCallback($config['js']);
+		$src  = $this->getHeader($params);
+		$src .= 'function(' . \implode(',', \array_keys($params)) . '){';
+		$src .= 'return ' . $this->parenthesizeCallback($config['js']);
 		$src .= '(' . $this->buildCallbackArguments($config['params'], $params) . ');}';
-		$funcName = \sprintf('c%08X', \crc32($src));
-		$src = $this->getHeader($params) . 'function ' . $funcName . $src;
-		$this->functions[$funcName] = $src;
-		return new Code($funcName);
+		return new Code($src);
 	}
 	protected function getHeader(array $params)
 	{
