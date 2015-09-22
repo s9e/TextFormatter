@@ -1,3 +1,48 @@
+0.4.0 (2015-09-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/5a50dab7662d4083129287bd1c895e2aaf884e9a...5863c4cb5df880d315188b17145410105ba71773)
+
+### New
+
+ - `7abbe26` Added AVTHelper::toXSL()
+ - `5863c4c` Added JavaScript\StylesheetCompressor
+ - `257a413` MediaEmbed: added support for Google Drive
+ - `a6f99bb` MediaEmbed: added support for multiple-choice templates
+ - `82f06e3` TemplateNormalizations: added OptimizeChoose
+ - `bc8e764` TemplateNormalizations: added additive identity optimization to FoldArithmeticConstants
+ - `9548cee` TemplateNormalizations: added support for decimal values in InlineXPathLiterals
+ - `0a6ff7a` TemplateNormalizations: added support for multiplications, divisions and sub expressions in FoldConstants
+ - `7a439ff` XPathConvertor: added support for parenthesized math expressions
+
+### Changed
+
+ - `e1809c3` BBCodes: updated Highlight.js in CODE BBCode
+ - `c3f79fb` Censor: do not escape single quotes in Helper::reparse()
+ - `050b051` MediaEmbed: overhauled responsive embeds
+ - `2ac29f1` MediaEmbed: reorganized filterTag()
+ - `5ff9c1e` MediaEmbed: reorganized template generation
+ - `7ede2a7` MediaEmbed: updated Audiomack and SoundCloud
+ - `1b8956f` MediaEmbed: updated Google Drive
+ - `493ac00` MediaEmbed: updated IMDb
+ - `455723e` MediaEmbed: updated Imgur
+ - `4680bb5` MediaEmbed: updated Ustream
+ - `5552810` Moved JavaScript callbacks deduplication to ConfigOptimizer
+ - `2bc612c` TemplateNormalizations: improved parentheses removal in FoldArithmeticConstants
+ - `361212f` TemplateNormalizations: preserve strings content in FoldArithmeticConstants
+ - `679f0d3` TemplateNormalizations: renamed FoldConstants to FoldArithmeticConstants
+ - `470c1da` Updated docblock
+ - `0765165` Utils: updated serializeAttributes() to escape quotes in a manner consistent with the parser
+ - `caf1dc2` XPathHelper: updated minify() to remove more space around the div operator
+ - `38a9c89` XPathHelper: updated minify() to remove spaces after a div operator
+
+### Fixed
+
+ - `9c8eaa0` MediaEmbed: fixed the MEDIA tag filter to not create a tag if it does not match a known site
+ - `a5feb09` Quick renderer: fixed a potential issue with string comparison against single quotes
+ - `80f2c9a` Quick renderer: fixed incorrect comparison against literals that contain a single quote
+
+
 0.3.2 (2015-09-06)
 ==================
 
