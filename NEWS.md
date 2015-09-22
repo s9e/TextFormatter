@@ -1,3 +1,5 @@
+See [CHANGELOG.md](CHANGELOG.md) for current news.
+
 ###### August 2015
 
 - Refactored the JavaScript generator [[1](https://github.com/s9e/TextFormatter/commit/aba3ed71b2536a7e8e5df7b3e8272e45adb08fff)] [[2](https://github.com/s9e/TextFormatter/commit/259c03233337378365d02ef6eec383edcbade6a8)] [[3](https://github.com/s9e/TextFormatter/commit/f2db84d51c471f6fd6247c2fb3138216ac3c51c4)]
