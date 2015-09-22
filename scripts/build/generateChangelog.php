@@ -37,7 +37,7 @@ echo $header, "\n", str_repeat('=', strlen($header)), "\n\n";
 
 echo "[Full commit log](https://github.com/s9e/TextFormatter/compare/$oldCommitId...$newCommitId)\n";
 
-foreach (['New', 'Changed', 'Fixed'] as $type)
+foreach (['New', 'Removed', 'Changed', 'Fixed'] as $type)
 {
 	if (empty($entries[$type]))
 	{

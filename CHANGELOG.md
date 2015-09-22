@@ -15,6 +15,14 @@
  - `0a6ff7a` TemplateNormalizations: added support for multiplications, divisions and sub expressions in FoldConstants
  - `7a439ff` XPathConvertor: added support for parenthesized math expressions
 
+### Removed
+
+ - `dc8a261` Emoji: removed unnecessary parentheses in JavaScript regexp
+ - `edacfa8` MediaEmbed: removed ESPN Deportes
+ - `e20df9f` MediaEmbed: removed enableResponsiveEmbeds() and disabledResponsiveEmbeds()
+ - `4e7f087` MediaEmbed: removed the embed element from Flash templates
+ - `b1500b6` PHP renderer generator: removed constant math evaluation which was made redundant by the FoldArithmeticConstants template normalization pass
+
 ### Changed
 
  - `e1809c3` BBCodes: updated Highlight.js in CODE BBCode
