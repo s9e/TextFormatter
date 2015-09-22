@@ -5,5 +5,5 @@
 
 	<host>xboxclips.com</host>
 	<extract>!xboxclips\.com/(?'user'[^/]+)/(?'id'[-0-9a-f]+)!</extract>
-	<iframe width="560" height="315" src="//xboxclips.com/{@user}/{@id}/embed"/>
+	<iframe src="//xboxclips.com/{@user}/{@id}/embed"/>
 </site>

@@ -7,11 +7,6 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
-if (!empty($_SERVER['argv'][2]))
-{
-	$configurator->MediaEmbed->enableResponsiveEmbeds();
-}
-
 $siteId = $_SERVER['argv'][1];
 $configurator->MediaEmbed->add($siteId);
 

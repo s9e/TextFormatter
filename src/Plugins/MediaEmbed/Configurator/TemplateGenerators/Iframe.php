@@ -12,26 +12,36 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator;
 class Iframe extends TemplateGenerator
 {
 	/**
+	* @var array Default iframe attributes
+	*/
+	protected $defaultIframeAttributes = [
+		'allowfullscreen' => '',
+		'scrolling'       => 'no',
+		'style'           => ['border' => '0']
+	];
+
+	/**
+	* @var string[] List of attributes to be passed to the iframe
+	*/
+	protected $iframeAttributes = ['onload', 'scrolling', 'src', 'style'];
+
+	/**
 	* {@inheritdoc}
 	*/
-	public function getTemplate(array $attributes)
+	protected function getContentTemplate()
 	{
-		// Add the default attributes
-		$attributes += [
-			'allowfullscreen' => '',
-			'frameborder'     => '0',
-			'scrolling'       => 'no'
-		];
+		$attributes = $this->mergeAttributes($this->defaultIframeAttributes, $this->getFilteredAttributes());
 
-		// Build the template
-		$isResponsive = $this->canBeResponsive($attributes);
-		$template = '<iframe>' . $this->generateAttributes($attributes, $isResponsive) . '</iframe>';
+		return '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+	}
 
-		if ($isResponsive)
-		{
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		}
-
-		return $template;
+	/**
+	* Filter the attributes to keep only those that can be used in an iframe
+	*
+	* @return array
+	*/
+	protected function getFilteredAttributes()
+	{
+		return array_intersect_key($this->attributes, array_flip($this->iframeAttributes));
 	}
 }

@@ -14,7 +14,7 @@
 		<match>!twitch\.tv/m/\d+!</match>
 		<extract>!channel=(?'channel'\w+).*?videoId=a(?'archive_id'\d+)!</extract>
 	</scrape>
-	<iframe width="620" height="378">
+	<iframe padding-height="30">
 		<src><![CDATA[
 			<xsl:text>//s9e.github.io/iframe/twitch.min.html#channel=</xsl:text>
 			<xsl:value-of select="@channel"/>

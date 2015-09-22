@@ -9,5 +9,5 @@
 		<extract>!data-eid="(?'eid'\d+)!</extract>
 		<extract>!data-fid="(?'fid'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="150" style="max-width:900px" src="//app.stitcher.com/splayer/f/{@fid}/{@eid}"/>
+	<iframe width="100%" height="150" max-width="900" src="//app.stitcher.com/splayer/f/{@fid}/{@eid}"/>
 </site>

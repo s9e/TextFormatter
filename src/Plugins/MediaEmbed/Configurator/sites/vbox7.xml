@@ -5,5 +5,5 @@
 
 	<host>vbox7.com</host>
 	<extract>!vbox7\.com/play:(?'id'[\da-f]+)!</extract>
-	<iframe width="560" height="315" src="http://vbox7.com/emb/external.php?vid={@id}"/>
+	<iframe src="http://vbox7.com/emb/external.php?vid={@id}"/>
 </site>

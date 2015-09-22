@@ -5,5 +5,5 @@
 
 	<host>videomega.tv</host>
 	<extract>!videomega\.tv/\?ref=(?'id'\w+)!</extract>
-	<iframe width="560" height="315" src="http://videomega.tv/iframe.php?ref={@id}"/>
+	<iframe src="http://videomega.tv/iframe.php?ref={@id}"/>
 </site>

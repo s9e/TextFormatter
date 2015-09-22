@@ -5,5 +5,5 @@
 
 	<host>metacafe.com</host>
 	<extract>!metacafe\.com/watch/(?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="//www.metacafe.com/embed/{@id}/"/>
+	<iframe src="//www.metacafe.com/embed/{@id}/"/>
 </site>

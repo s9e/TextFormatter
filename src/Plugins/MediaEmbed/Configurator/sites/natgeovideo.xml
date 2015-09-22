@@ -9,5 +9,5 @@
 		<match>@video\.nationalgeographic\.com/(?:tv|video)/\w@</match>
 		<extract>@guid="(?'id'[-\w]+)"@</extract>
 	</scrape>
-	<iframe width="560" height="315" src="//player.d.nationalgeographic.com/players/ngsvideo/share/?guid={@id}"/>
+	<iframe src="//player.d.nationalgeographic.com/players/ngsvideo/share/?guid={@id}"/>
 </site>

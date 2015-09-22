@@ -6,5 +6,5 @@
 
 	<host>cnn.com</host>
 	<extract>!cnn\.com/video/data/2\.0/video/(?'id'.*\.cnn)!</extract>
-	<iframe width="560" height="315" src="http://edition.cnn.com/video/api/embed.html#/video/{@id}"/>
+	<iframe src="http://edition.cnn.com/video/api/embed.html#/video/{@id}"/>
 </site>

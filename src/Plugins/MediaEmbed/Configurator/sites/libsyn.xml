@@ -8,5 +8,5 @@
 		<match>@(?!\.mp3)....$@</match>
 		<extract>!embed/episode/id/(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="45" style="max-width:900px" src="//html5-player.libsyn.com/embed/episode/id/{@id}/height/45/width/900/theme/standard/direction/no/autoplay/no/autonext/no/thumbnail/no/preload/no/no_addthis/no/"/>
+	<iframe width="100%" height="45" max-width="900" src="//html5-player.libsyn.com/embed/episode/id/{@id}/height/45/width/900/theme/standard/direction/no/autoplay/no/autonext/no/thumbnail/no/preload/no/no_addthis/no/"/>
 </site>

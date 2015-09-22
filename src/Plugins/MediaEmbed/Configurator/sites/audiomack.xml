@@ -8,10 +8,10 @@
 	<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
 	<choose>
 		<when test="@mode='album'">
-			<iframe responsive="0" width="100%" height="340" src="//www.audiomack.com/embed4-album/{@id}" style="max-width:900px"/>
+			<iframe width="100%" height="340" max-width="900" src="//www.audiomack.com/embed4-album/{@id}"/>
 		</when>
 		<otherwise>
-			<iframe responsive="0" width="100%" height="110" src="//www.audiomack.com/embed4/{@id}" style="max-width:900px"/>
+			<iframe width="100%" height="110" max-width="900" src="//www.audiomack.com/embed4/{@id}"/>
 		</otherwise>
 	</choose>
 </site>

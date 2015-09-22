@@ -5,5 +5,5 @@
 
 	<host>izlesene.com</host>
 	<extract>!izlesene\.com/video/[-\w]+/(?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="//www.izlesene.com/embedplayer/{@id}"/>
+	<iframe src="//www.izlesene.com/embedplayer/{@id}"/>
 </site>

@@ -30,5 +30,5 @@
 		<extract>!et=(?'et'[-=\w]+)!</extract>
 		<extract>!sig=(?'sig'[-=\w]+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{49+@height}" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;sig={@sig}"/>
+	<iframe width="{@width}" height="{@height}" padding-height="49" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;sig={@sig}"/>
 </site>

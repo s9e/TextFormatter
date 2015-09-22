@@ -6,5 +6,7 @@
 
 	<host>instagram.com</host>
 	<extract>!instagram\.com/p/(?'id'[-\w]+)!</extract>
-	<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
+	<iframe width="640" height="640" padding-height="80" src="//instagram.com/p/{@id}/embed/">
+		<style box-shadow="rgba(0,0,0,.5) 0 0 1px 0,rgba(0,0,0,.15) 0 1px 10px 0"/>
+	</iframe>
 </site>

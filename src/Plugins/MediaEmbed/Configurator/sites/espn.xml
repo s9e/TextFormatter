@@ -8,5 +8,5 @@
 
 	<host>espn.go.com</host>
 	<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?|video\?v|clipDeportes\?)id=(?:\w+:)?(?'id'\d+)#</extract>
-	<iframe width="560" height="315" src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
+	<iframe src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
 </site>

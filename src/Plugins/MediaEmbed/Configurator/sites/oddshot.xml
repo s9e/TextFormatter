@@ -6,5 +6,5 @@
 
 	<host>oddshot.tv</host>
 	<extract>!oddshot.tv/shot/(?'id'[-\w]+)!</extract>
-	<iframe width="560" height="315" src="//oddshot.tv/shot/{@id}/embed"/>
+	<iframe src="//oddshot.tv/shot/{@id}/embed"/>
 </site>

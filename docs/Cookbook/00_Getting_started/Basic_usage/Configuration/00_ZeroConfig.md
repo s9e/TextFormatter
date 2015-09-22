@@ -33,7 +33,7 @@ To-do list:
   <li> Say hello to the world <img src="/smile.png" alt=":)"></li>
   <li> Go to <a href="http://example.com">http://example.com</a></li>
   <li> Try to trip the parser with <b>mis<i>nes</i></b><i>ted<u> tags</u></i></li>
-  <li> Watch this video: <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/QH2-TGUlwu4"></iframe></li>
+  <li> Watch this video: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/QH2-TGUlwu4"></iframe></div></div></li>
 </ul>
 ```
 
@@ -67,5 +67,5 @@ assert(TextFormatter::unparse($xml) === $text);
   <ul><li>Say hello to the world :)</li>
   <li>Go to <a href="http://example.com">http://example.com</a></li>
   <li>Try to trip the parser with <strong>mis<em>nes</em></strong><em>ted<u> tags</u></em></li>
-  <li>Watch this video: <iframe width="560" height="315" allowfullscreen="" frameborder="0" scrolling="no" src="//www.youtube.com/embed/QH2-TGUlwu4"></iframe></li></ul>
+  <li>Watch this video: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/QH2-TGUlwu4"></iframe></div></div></li></ul>
 ```

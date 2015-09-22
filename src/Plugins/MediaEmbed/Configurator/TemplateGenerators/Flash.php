@@ -13,50 +13,27 @@ class Flash extends TemplateGenerator
 {
 	/**
 	* {@inheritdoc}
-	*/
-	public function getTemplate(array $attributes)
-	{
-		$isResponsive = $this->canBeResponsive($attributes);
-		if ($isResponsive)
-		{
-			$attributes = $this->addResponsiveStyle($attributes);
-		}
-
-		$template = $this->generateObjectElement($attributes, $isResponsive);
-		if ($isResponsive)
-		{
-			$template = $this->addResponsiveWrapper($template, $attributes);
-		}
-
-		return $template;
-	}
-
-	/**
-	* Generate an object element
 	*
 	* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
 	* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
-	*
-	* @param  array  $attributes
-	* @param  bool   $isResponsive
-	* @return string
 	*/
-	protected function generateObjectElement(array $attributes, $isResponsive)
+	protected function getContentTemplate()
 	{
-		$attributes['data']          = $attributes['src'];
-		$attributes['type']          = 'application/x-shockwave-flash';
-		$attributes['typemustmatch'] = '';
-		unset($attributes['src']);
+		$attributes = [
+			'data'          => $this->attributes['src'],
+			'style'         => $this->attributes['style'],
+			'type'          => 'application/x-shockwave-flash',
+			'typemustmatch' => ''
+		];
 
 		$flashVarsParam = '';
-		if (isset($attributes['flashvars']))
+		if (isset($this->attributes['flashvars']))
 		{
-			$flashVarsParam = $this->generateParamElement('flashvars', $attributes['flashvars']);
-			unset($attributes['flashvars']);
+			$flashVarsParam = $this->generateParamElement('flashvars', $this->attributes['flashvars']);
 		}
 
-		$template = '<object type="application/x-shockwave-flash" typemustmatch="">'
-		          . $this->generateAttributes($attributes, $isResponsive)
+		$template = '<object>'
+		          . $this->generateAttributes($attributes)
 		          . $this->generateParamElement('allowfullscreen', 'true')
 		          . $flashVarsParam
 		          . '</object>';

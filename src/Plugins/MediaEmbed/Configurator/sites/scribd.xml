@@ -5,5 +5,7 @@
 
 	<host>scribd.com</host>
 	<extract>!scribd\.com/doc/(?'id'\d+)!</extract>
-	<iframe responsive="0" width="100%" height="500" style="resize:both" src="//www.scribd.com/embeds/{@id}/content?view_mode=scroll&amp;show_recommendations=false"/>
+	<iframe width="100%" height="500" src="//www.scribd.com/embeds/{@id}/content?view_mode=scroll&amp;show_recommendations=false">
+		<style resize="vertical"/>
+	</iframe>
 </site>

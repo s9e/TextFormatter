@@ -7,17 +7,14 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
+use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
 
 class TemplateBuilder
 {
-	/**
-	* @var bool Whether to enable responsive embeds
-	*/
-	public $responsiveEmbeds = false;
-
 	/**
 	* @var array Generator names as keys, generators as values
 	*/
@@ -36,7 +33,19 @@ class TemplateBuilder
 	}
 
 	/**
-	* Generate and return a template for given site config
+	* Generate and return a template for given site
+	*
+	* @param  string $siteId
+	* @param  array  $siteConfig
+	* @return string
+	*/
+	public function build($siteId, array $siteConfig)
+	{
+		return $this->addSiteId($siteId, $this->getTemplate($siteConfig));
+	}
+
+	/**
+	* Generate and return a template based on given config
 	*
 	* @param  array  $config
 	* @return string
@@ -47,12 +56,31 @@ class TemplateBuilder
 		{
 			if (isset($config[$type]))
 			{
-				$config[$type] += ['responsive' => $this->responsiveEmbeds];
-
 				return $generator->getTemplate($config[$type]);
 			}
 		}
 
 		return '';
+	}
+
+	/**
+	* Added the siteId value to given template in a data-s9e-mediaembed attribute
+	*
+	* @param  string $siteId   Site ID
+	* @param  string $template Original template
+	* @return string           Modified template
+	*/
+	protected function addSiteId($siteId, $template)
+	{
+		$dom   = TemplateHelper::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+		$query = '//*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"]'
+		       . '[not(ancestor::*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"])]';
+		foreach ($xpath->query($query) as $element)
+		{
+			$element->setAttribute('data-s9e-mediaembed', $siteId);
+		}
+
+		return TemplateHelper::saveTemplate($dom);
 	}
 }

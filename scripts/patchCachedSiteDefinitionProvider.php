@@ -28,15 +28,16 @@ foreach ($provider->getIds() as $siteId)
 		{
 			continue;
 		}
-		foreach ($siteConfig[$type] as $attrName => $attrValue)
-		{
-			if (strpos($attrValue, '<xsl:') === false)
+		array_walk_recursive(
+			$siteConfig[$type],
+			function (&$attrValue) use ($normalizer)
 			{
-				continue;
+				if (strpos($attrValue, '<xsl:') !== false)
+				{
+					$attrValue = $normalizer->normalizeTemplate($attrValue);
+				}
 			}
-
-			$siteConfig[$type][$attrName] = $normalizer->normalizeTemplate($attrValue);
-		}
+		);
 	}
 
 	$cache[$siteId] = $siteConfig;

@@ -5,5 +5,5 @@
 
 	<host>video.foxnews.com</host>
 	<extract>!video\.foxnews\.com/v/(?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="//video.foxnews.com/v/video-embed.html?video_id={@id}"/>
+	<iframe src="//video.foxnews.com/v/video-embed.html?video_id={@id}"/>
 </site>

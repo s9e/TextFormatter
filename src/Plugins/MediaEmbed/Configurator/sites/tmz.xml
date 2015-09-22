@@ -5,5 +5,5 @@
 
 	<host>tmz.com</host>
 	<extract>@tmz\.com/videos/(?'id'\w+)@</extract>
-	<iframe width="560" height="315" src="//www.kaltura.com/index.php/kwidget/cache_st/133592691/wid/_591531/partner_id/591531/uiconf_id/9071262/entry_id/{@id}"/>
+	<iframe src="//www.kaltura.com/index.php/kwidget/cache_st/133592691/wid/_591531/partner_id/591531/uiconf_id/9071262/entry_id/{@id}"/>
 </site>

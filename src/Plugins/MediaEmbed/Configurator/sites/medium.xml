@@ -5,5 +5,12 @@
 
 	<host>medium.com</host>
 	<extract>!medium\.com/[^/]*/(?:[-\w]+-)?(?'id'[\da-f]+)!</extract>
-	<iframe width="400" height="454" src="https://api.medium.com/embed?type=story&amp;path=//{@id}" style="border:solid 1px;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,0.15) 0px 1px 3px"/>
+	<iframe width="400" height="454" src="https://api.medium.com/embed?type=story&amp;path=//{@id}">
+		<style
+			border="solid 1px"
+			border-color="#eee #ddd #bbb"
+			border-radius="5px"
+			box-shadow="rgba(0,0,0,0.15) 0px 1px 3px"
+		/>
+	</iframe>
 </site>

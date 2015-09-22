@@ -7,7 +7,7 @@
 
 	<host>ted.com</host>
 	<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"?]+)!i</extract>
-	<iframe width="560" height="315">
+	<iframe>
 		<src><![CDATA[
 			<xsl:text>//embed.ted.com/</xsl:text>
 			<xsl:value-of select="@id"/>

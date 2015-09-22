@@ -5,5 +5,5 @@
 
 	<host>coub.com</host>
 	<extract>!coub\.com/view/(?'id'\w+)!</extract>
-	<iframe width="560" height="315" src="//coub.com/embed/{@id}"/>
+	<iframe src="//coub.com/embed/{@id}"/>
 </site>

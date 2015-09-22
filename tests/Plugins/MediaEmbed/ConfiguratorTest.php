@@ -8,11 +8,6 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe
 */
 class ConfiguratorTest extends Test
 {
@@ -555,64 +550,15 @@ class ConfiguratorTest extends Test
 				'host'    => 'youtu.be',
 				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
 				'iframe'  => [
-					'width'  => 123,
-					'height' => 456,
+					'width'  => 800,
+					'height' => 450,
 					'src'    => 'foo'
 				]
 			]
 		);
 
 		$this->assertEquals(
-			'<iframe width="123" height="456" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox add() treats iframe attributes as attribute value templates
-	*/
-	public function testAddIframeDynamic()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtu.be',
-				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'iframe'  => [
-					'width'  => '{@width}',
-					'height' => '{@height}',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<iframe width="{@width}" height="{@height}" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox Extra attributes can be added to an iframe
-	*/
-	public function testAddIframeAttributes()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtu.be',
-				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'iframe'  => [
-					'width'  => '{@width}',
-					'height' => '{@height}',
-					'src'    => 'foo',
-					'onload' => "this.foo='bar'"
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<iframe width="{@width}" height="{@height}" src="foo" onload="this.foo=\'bar\'" allowfullscreen="" frameborder="0" scrolling="no"/>',
+			'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:800px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div>',
 			$tag->template
 		);
 	}
@@ -628,114 +574,15 @@ class ConfiguratorTest extends Test
 				'host'    => 'youtu.be',
 				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
 				'flash'   => [
-					'width'  => 123,
-					'height' => 456,
+					'width'  => 800,
+					'height' => 450,
 					'src'    => 'foo'
 				]
 			]
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/></object>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox add() treats flash attributes as attribute value templates
-	*/
-	public function testAddFlashDynamic()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtu.be',
-				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'flash'   => [
-					'width'  => '{@width}',
-					'height' => '{@height}',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/></object>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox add() sets flashvars if applicable
-	*/
-	public function testAddFlashVars()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'foo.invalid',
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'flash'   => [
-					'width'     => 123,
-					'height'    => 456,
-					'src'       => 'foo',
-					'flashvars' => 'foo=1&bar=2'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/></object>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox add() sets the Flash base attribute if applicable
-	*/
-	public function testAddFlashBase()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'foo.invalid',
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'flash'   => [
-					'width'  => 123,
-					'height' => 456,
-					'src'    => 'foo',
-					'base'   => 'http://localhost/'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" base="http://localhost/" data="foo"><param name="allowfullscreen" value="true"/></object>',
-			$tag->template
-		);
-	}
-
-	/**
-	* @testdox add() sets the style attribute on objects if applicable
-	*/
-	public function testAddFlashStyle()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'foo.invalid',
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'flash'   => [
-					'width'  => '100%',
-					'height' => 456,
-					'src'    => 'foo',
-					'style'  => 'max-width:900px'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="100%" height="456" style="max-width:900px" data="foo"><param name="allowfullscreen" value="true"/></object>',
+			'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:800px"><div style="position:relative;padding-bottom:56.25%"><object data="foo" style="height:100%;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"/></object></div></div>',
 			$tag->template
 		);
 	}
@@ -768,17 +615,17 @@ class ConfiguratorTest extends Test
 				'choose' => [
 					'when'      => [
 						'test'   => '@foo',
-						'iframe' => ['width' => '100', 'height' => '100', 'src' => 'foo']
+						'iframe' => ['width' => '560', 'height' => '315', 'src' => 'foo']
 					],
 					'otherwise' => [
-						'iframe' => ['width' => '200', 'height' => '200', 'src' => 'bar']
+						'iframe' => ['width' => '800', 'height' => '450', 'src' => 'bar']
 					]
 				]
 			]
 		);
 
 		$this->assertEquals(
-			'<xsl:choose><xsl:when test="@foo"><iframe width="100" height="100" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:otherwise><iframe width="200" height="200" src="bar" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:otherwise></xsl:choose>',
+			'<xsl:choose><xsl:when test="@foo"><div data-s9e-mediaembed="foo" style="display:inline-block;width:100%;max-width:560px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div></xsl:when><xsl:otherwise><div data-s9e-mediaembed="foo" style="display:inline-block;width:100%;max-width:800px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="bar" style="border:0;height:100%;position:absolute;width:100%"/></div></div></xsl:otherwise></xsl:choose>',
 			$tag->template
 		);
 	}
@@ -811,7 +658,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<xsl:choose><xsl:when test="@foo"><iframe width="100" height="100" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:when test="@bar"><iframe width="200" height="200" src="bar" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:when><xsl:otherwise><iframe width="300" height="300" src="baz" allowfullscreen="" frameborder="0" scrolling="no"/></xsl:otherwise></xsl:choose>',
+			'<xsl:choose><xsl:when test="@foo"><div data-s9e-mediaembed="foo" style="display:inline-block;width:100%;max-width:100px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div></xsl:when><xsl:when test="@bar"><div data-s9e-mediaembed="foo" style="display:inline-block;width:100%;max-width:200px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="bar" style="border:0;height:100%;position:absolute;width:100%"/></div></div></xsl:when><xsl:otherwise><div data-s9e-mediaembed="foo" style="display:inline-block;width:100%;max-width:300px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="baz" style="border:0;height:100%;position:absolute;width:100%"/></div></div></xsl:otherwise></xsl:choose>',
 			$tag->template
 		);
 	}
@@ -1274,250 +1121,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Iframes with fixed dimensions can be made responsive
-	*/
-	public function testResponsiveIframeFixed()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertContains(
-			'<div style="height:0;position:relative;padding-top:56.25%">',
-			(string) $tag->template
-		);
-		$this->assertContains(
-			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
-			(string) $tag->template
-		);
-	}
-
-	/**
-	* @testdox Iframes with 100% width cannot be made responsive
-	*/
-	public function testResponsiveIframeFullWidth()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => '100%',
-					'height' => 315,
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertNotContains('style', (string) $tag->template);
-	}
-
-	/**
-	* @testdox Iframes with variable width and height can be made responsive
-	*/
-	public function testResponsiveIframeVariable()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => '@width',
-					'height' => '@height',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertContains(
-			'<div style="height:0;position:relative;padding-top:{100*@height div@width}%">',
-			(string) $tag->template
-		);
-		$this->assertContains(
-			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
-			(string) $tag->template
-		);
-	}
-
-	/**
-	* @testdox Iframes with variable width and height expressed an as XPath operation can be made responsive
-	*/
-	public function testResponsiveIframeXPath()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => '{@width+12}',
-					'height' => '{@height+34}',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertContains(
-			'<div style="height:0;position:relative;padding-top:{100*(@height+34)div(@width+12)}%">',
-			(string) $tag->template
-		);
-		$this->assertContains(
-			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
-			(string) $tag->template
-		);
-	}
-
-	/**
-	* @testdox Iframes with width expressed in XSL cannot be made responsive
-	*/
-	public function testResponsiveIframeXSLWidth()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => '10<xsl:if test="@foo">0</xsl:if>',
-					'height' => '100',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertNotContains('style', (string) $tag->template);
-	}
-
-	/**
-	* @testdox Iframes with height expressed in XSL cannot be made responsive
-	*/
-	public function testResponsiveIframeXSLHeight()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => '10',
-					'height' => '10<xsl:if test="@foo">0</xsl:if>',
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertNotContains('style', (string) $tag->template);
-	}
-
-	/**
-	* @testdox CSS required for responsive iframes is added to the iframe's style
-	*/
-	public function testResponsiveIframeStyle()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => 'foo',
-					'style'  => 'margin:10px'
-				]
-			]
-		);
-
-		$this->assertContains(
-			'<div style="height:0;position:relative;padding-top:56.25%">',
-			(string) $tag->template
-		);
-		$this->assertContains(
-			'style="margin:10px;position:absolute;top:0;left:0;width:100%;height:100%"',
-			(string) $tag->template
-		);
-	}
-
-	/**
-	* @testdox Flash objects with fixed dimensions can be made responsive
-	*/
-	public function testResponsiveFlashFixed()
-	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'flash'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertSame(
-			'<div style="display:inline-block;width:100%;max-width:560px"><div style="height:0;position:relative;padding-top:56.25%"><object type="application/x-shockwave-flash" typemustmatch="" width="560" height="315" style="position:absolute;top:0;left:0;width:100%;height:100%;position:absolute;top:0;left:0;width:100%;height:100%" data="foo"><param name="allowfullscreen" value="true"/></object></div></div>',
-			(string) $tag->template
-		);
-	}
-
-	/**
-	* @testdox Responsive embeds can be disabled
+	* @testdox disableResponsiveEmbeds() is callable
 	*/
 	public function testDisableResponsiveEmbeds()
 	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$this->configurator->MediaEmbed->disableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.org',
-				'extract' => "!(?'id'\\d+)!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => 'foo'
-				]
-			]
-		);
-
-		$this->assertNotContains(
-			'<div style="height:0;position:relative;padding-top:56.25%">',
-			(string) $tag->template
-		);
-		$this->assertNotContains(
-			'style="position:absolute;top:0;left:0;width:100%;height:100%"',
-			(string) $tag->template
-		);
+		$this->assertTrue(is_callable([$this->configurator->MediaEmbed, 'disableResponsiveEmbeds']));
 	}
 
 	/**
-	* @testdox Default sites marked as unreponsive do not get the responsive wrapper
+	* @testdox enableResponsiveEmbeds() is callable
 	*/
-	public function testUnresponsiveDefaultSite()
+	public function testEnableResponsiveEmbeds()
 	{
-		$this->configurator->MediaEmbed->enableResponsiveEmbeds();
-		$tag = $this->configurator->MediaEmbed->add('twitter');
-		$this->assertNotContains('padding', (string) $tag->template);
+		$this->assertTrue(is_callable([$this->configurator->MediaEmbed, 'enableResponsiveEmbeds']));
 	}
 }

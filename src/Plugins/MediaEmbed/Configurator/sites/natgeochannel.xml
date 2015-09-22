@@ -4,5 +4,5 @@
 
 	<host>channel.nationalgeographic.com</host>
 	<extract>@channel\.nationalgeographic\.com/(?'id'[-/\w]+/videos/[-\w]+)@</extract>
-	<iframe width="560" height="315" src="//channel.nationalgeographic.com/{@id}/embed/"/>
+	<iframe src="//channel.nationalgeographic.com/{@id}/embed/"/>
 </site>

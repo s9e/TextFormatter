@@ -2420,6 +2420,24 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] The config contains a map of ['scheme:' => 'site id']
  [x] Accept "host" as a string or an array of strings
 
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateBuilder
+ [x] getTemplate() returns an empty string by default
+ [x] Supports Flash objects
+ [x] Supports iframes
+ [x] Supports multiple choice templates
+ [x] build() adds the data-s9e-mediaembed attribute on the wrapper if applicable
+ [x] build() does not add the data-s9e-mediaembed attribute on XSL elements
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose
+ [x] getTemplate() with one when / one otherwise
+ [x] getTemplate() with two when / one otherwise
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash
+ [x] getTemplate() tests
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe
+ [x] getTemplate() tests
+
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] Registers mediasites as a variable for the parser
  [x] Creates a [media] BBCode by default
@@ -2445,13 +2463,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() accepts zero "match" elements in "scrape"
  [x] add() accepts multiple "extract" elements in "scrape"
  [x] add() sets the tag's default template to the iframe defined in the "iframe" element if available
- [x] add() treats iframe attributes as attribute value templates
- [x] Extra attributes can be added to an iframe
  [x] add() sets the tag's default template to the object defined in the "flash" element if available
- [x] add() treats flash attributes as attribute value templates
- [x] add() sets flashvars if applicable
- [x] add() sets the Flash base attribute if applicable
- [x] add() sets the style attribute on objects if applicable
  [x] add() sets an empty template if none is specified
  [x] add() handles multiple-choice templates
  [x] add() handles multiple-choice templates with more than 2 branches
@@ -2475,16 +2487,8 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] asConfig() creates a regexp if a site has both "host" and "scheme"
  [x] asConfig() returns ':' as quickMatch if it has a site with a "scheme"
  [x] asConfig() returns '://' as quickMatch if it has no site with a "scheme"
- [x] Iframes with fixed dimensions can be made responsive
- [x] Iframes with 100% width cannot be made responsive
- [x] Iframes with variable width and height can be made responsive
- [x] Iframes with variable width and height expressed an as XPath operation can be made responsive
- [x] Iframes with width expressed in XSL cannot be made responsive
- [x] Iframes with height expressed in XSL cannot be made responsive
- [x] CSS required for responsive iframes is added to the iframe's style
- [x] Flash objects with fixed dimensions can be made responsive
- [x] Responsive embeds can be disabled
- [x] Default sites marked as unreponsive do not get the responsive wrapper
+ [x] disableResponsiveEmbeds() is callable
+ [x] enableResponsiveEmbeds() is callable
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute

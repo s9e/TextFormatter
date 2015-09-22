@@ -267,7 +267,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		$tag->template = $this->templateBuilder->getTemplate($siteConfig) . $this->appendTemplate;
+		$tag->template = $this->templateBuilder->build($siteId, $siteConfig) . $this->appendTemplate;
 
 		// Normalize the tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -305,23 +305,23 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Disable responsive embeds
+	* Deprecated
 	*
 	* @return void
 	*/
 	public function disableResponsiveEmbeds()
 	{
-		$this->templateBuilder->responsiveEmbeds = false;
+		// Do nothing
 	}
 
 	/**
-	* Enable responsive embeds
+	* Deprecated
 	*
 	* @return void
 	*/
 	public function enableResponsiveEmbeds()
 	{
-		$this->templateBuilder->responsiveEmbeds = true;
+		// Do nothing
 	}
 
 	//==========================================================================

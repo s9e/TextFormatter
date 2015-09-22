@@ -8,6 +8,6 @@
 
 	<host>dailymotion.com</host>
 	<extract>!dailymotion\.com/(?:live/|user/[^#]+#video=|video/)(?'id'[A-Za-z0-9]+)!</extract>
-	<iframe width="560" height="315" src="//www.dailymotion.com/embed/video/{@id}"/>
+	<iframe src="//www.dailymotion.com/embed/video/{@id}"/>
 	<oembed url="http://www.dailymotion.com/services/oembed"/>
 </site>

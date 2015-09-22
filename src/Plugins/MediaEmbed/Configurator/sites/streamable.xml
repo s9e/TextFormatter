@@ -5,5 +5,5 @@
 
 	<host>streamable.com</host>
 	<extract>!streamable\.com/(?'id'\w+)!</extract>
-	<iframe width="560" height="315" src="//streamable.com/e/{@id}"/>
+	<iframe src="//streamable.com/e/{@id}"/>
 </site>

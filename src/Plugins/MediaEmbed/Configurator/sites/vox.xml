@@ -3,5 +3,5 @@
 
 	<host>vox.com</host>
 	<extract>!vox.com/.*#ooid=(?'id'[-\w]+)!</extract>
-	<iframe width="560" height="315" src="//player.ooyala.com/iframe.html#pbid=a637d53c5c0a43c7bf4e342886b9d8b0&amp;ec={@id}"/>
+	<iframe src="//player.ooyala.com/iframe.html#pbid=a637d53c5c0a43c7bf4e342886b9d8b0&amp;ec={@id}"/>
 </site>

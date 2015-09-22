@@ -13,7 +13,7 @@
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>![#&amp;?]t=(?:(?:(?'h'\d+)h)?(?'m'\d+)m(?'s'\d+)|(?'t'\d+))!</extract>
 	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
-	<iframe width="560" height="315">
+	<iframe>
 		<src><![CDATA[
 			<xsl:text>//www.youtube.com/embed/</xsl:text>
 			<xsl:value-of select="@id"/>

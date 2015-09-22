@@ -11,14 +11,12 @@
 		<match>#ustream\.tv/(?!explore/|platform/|recorded/|search\?|upcoming$|user/)(?:channel/)?[-\w]+#</match>
 		<extract>!embed/(?'cid'\d+)!</extract>
 	</scrape>
-	<iframe width="560" height="315">
-		<src><![CDATA[
-			<xsl:text>//www.ustream.tv/embed/</xsl:text>
-			<xsl:choose>
-				<xsl:when test="@vid">recorded/<xsl:value-of select="@vid"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="@cid"/></xsl:otherwise>
-			</xsl:choose>
-			<xsl:text>?html5ui</xsl:text>
-		]]></src>
-	</iframe>
+	<choose>
+		<when test="@vid">
+			<iframe src="//www.ustream.tv/embed/recorded/{@vid}?html5ui"/>
+		</when>
+		<otherwise>
+			<iframe src="//www.ustream.tv/embed/{@cid}?html5ui"/>
+		</otherwise>
+	</choose>
 </site>

@@ -8,5 +8,5 @@
 		<extract>/vid(?:eoId)?=(?'id'\d+)/</extract>
 		<extract>/param name="@videoPlayer" value="(?'id'\d+)"/</extract>
 	</scrape>
-	<iframe width="560" height="315" src="https://images.rogersdigitalmedia.com/video_service.php?videoId={@id}&amp;playerKey=AQ~~,AAAAAGWRwLc~,cRCmKE8Utf7OFWP38XQcokFZ80fR-u_y&amp;autoStart=false&amp;width=100%25&amp;height=100%25"/>
+	<iframe src="https://images.rogersdigitalmedia.com/video_service.php?videoId={@id}&amp;playerKey=AQ~~,AAAAAGWRwLc~,cRCmKE8Utf7OFWP38XQcokFZ80fR-u_y&amp;autoStart=false&amp;width=100%25&amp;height=100%25"/>
 </site>

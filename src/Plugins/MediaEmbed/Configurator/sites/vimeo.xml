@@ -7,5 +7,5 @@
 
 	<host>vimeo.com</host>
 	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="//player.vimeo.com/video/{@id}"/>
+	<iframe src="//player.vimeo.com/video/{@id}"/>
 </site>

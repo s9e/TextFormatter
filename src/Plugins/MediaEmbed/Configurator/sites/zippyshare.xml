@@ -8,5 +8,5 @@
 		<match>!/v/!</match>
 		<extract>!file=(?'file'\w+)&amp;amp;server=(?'server'\d+)!</extract>
 	</scrape>
-	<flash responsive="0" width="100%" height="80" style="max-width:900px" src="//api.zippyshare.com/api/player.swf" flashvars="file={@file}&amp;server={@server}&amp;autostart=false"/>
+	<flash width="100%" height="80" max-width="900" src="//api.zippyshare.com/api/player.swf" flashvars="file={@file}&amp;server={@server}&amp;autostart=false"/>
 </site>

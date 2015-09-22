@@ -154,8 +154,8 @@ class TemplateNormalizerTest extends Test
 				'<iframe height="320"/>',
 			],
 			[
-				'<div style="padding-top:{100 * 315 div 560}%"/>',
-				'<div style="padding-top:56.25%"/>'
+				'<div style="padding-bottom:{100 * 315 div 560}%"/>',
+				'<div style="padding-bottom:56.25%"/>'
 			],
 			[
 				'<xsl:choose>

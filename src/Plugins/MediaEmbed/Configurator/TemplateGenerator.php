@@ -12,115 +12,186 @@ use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 abstract class TemplateGenerator
 {
 	/**
+	* @var array Attributes used to generate current template
+	*/
+	protected $attributes;
+
+	/**
+	* @var array Default attributes
+	*/
+	protected $defaultAttributes = [
+		'height'         => 360,
+		'padding-height' => 0,
+		'style'          => [],
+		'width'          => 640
+	];
+
+	/**
+	* Build the template representing the embedded content
+	*
+	* @return string
+	*/
+	abstract protected function getContentTemplate();
+
+	/**
 	* Build a template based on a list of attributes
 	*
 	* @param  array  $attributes
 	* @return string
 	*/
-	abstract public function getTemplate(array $attributes);
-
-	/**
-	* Add the attributes required for responsive embeds
-	*
-	* @param  array $attributes Array of [name => value] where value can be XSL code
-	* @return array             Modified attributes
-	*/
-	protected function addResponsiveStyle(array $attributes)
+	public function getTemplate(array $attributes)
 	{
-		$css = 'position:absolute;top:0;left:0;width:100%;height:100%';
-		if (isset($attributes['style']))
+		$this->attributes = $attributes + $this->defaultAttributes;
+
+		$prepend = $append = '';
+		if ($this->needsWrapper())
 		{
-			$attributes['style'] .= ';' . $css;
+			$this->attributes['style']['width']    = '100%';
+			$this->attributes['style']['height']   = '100%';
+			$this->attributes['style']['position'] = 'absolute';
+
+			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
+			$innerStyle = 'position:relative;' . $this->getResponsivePadding();
+
+			$prepend .= '<div>' . $this->generateAttributes(['style' => $outerStyle]);
+			$prepend .= '<div>' . $this->generateAttributes(['style' => $innerStyle]);
+			$append  .= '</div></div>';
 		}
 		else
 		{
-			$attributes['style'] = $css;
+			$this->attributes['style']['width']  = '100%';
+			$this->attributes['style']['height'] = $this->attributes['height'] . 'px';
+
+			if (isset($this->attributes['max-width']))
+			{
+				$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
+			}
+			elseif ($this->attributes['width'] !== '100%')
+			{
+				$this->attributes['style']['max-width'] = $this->attributes['width'] . 'px';
+			}
+		}
+
+		return $prepend . $this->getContentTemplate() . $append;
+	}
+
+	/**
+	* Format an attribute value to be used in an XPath expression
+	*
+	* @param  string $expr Original value
+	* @return string       Formatted value
+	*/
+	protected function expr($expr)
+	{
+		$expr = trim($expr, '{}');
+
+		return (preg_match('(^[@$]?[-\\w]+$)D', $expr)) ? $expr : "($expr)";
+	}
+
+	/**
+	* Generate and return the padding declaration used in the responsive wrapper
+	*
+	* @return string
+	*/
+	protected function getResponsivePadding()
+	{
+		$height        = $this->expr($this->attributes['height']);
+		$paddingHeight = $this->expr($this->attributes['padding-height']);
+		$width         = $this->expr($this->attributes['width']);
+
+		// Create the padding declaration for the fixed ratio
+		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
+		
+		// Add the padding declaration for the computed ratio if applicable
+		if (!empty($this->attributes['padding-height']))
+		{
+			// NOTE: there needs to be whitespace around tokens in calc()
+			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
+		}
+
+		return $css;
+	}
+
+	/**
+	* Generate xsl:attributes elements from an array
+	*
+	* @param  array  $attributes Array of [name => value] where value can be XSL code
+	* @return string             XSL source
+	*/
+	protected function generateAttributes(array $attributes)
+	{
+		if (isset($attributes['style']) && is_array($attributes['style']))
+		{
+			$attributes['style'] = $this->generateStyle($attributes['style']);
+		}
+
+		ksort($attributes);
+		$xsl = '';
+		foreach ($attributes as $attrName => $attrValue)
+		{
+			$innerXML = (strpos($attrValue, '<') !== false) ? $attrValue : AVTHelper::toXSL($attrValue);
+
+			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName, ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
+		}
+
+		return $xsl;
+	}
+
+	/**
+	* Generate a CSS declaration based on an array of CSS properties
+	*
+	* @param  array  $properties Property name => property value
+	* @return string
+	*/
+	protected function generateStyle(array $properties)
+	{
+		ksort($properties);
+
+		$style = '';
+		foreach ($properties as $name => $value)
+		{
+			$style .= $name . ':' . $value . ';';
+		}
+
+		return trim($style, ';');
+	}
+
+	/**
+	* Merge two array of attributes
+	*
+	* @param  array $defaultAttributes
+	* @param  array $newAttributes
+	* @return array
+	*/
+	protected function mergeAttributes(array $defaultAttributes, array $newAttributes)
+	{
+		$attributes = array_merge($defaultAttributes, $newAttributes);
+		if (isset($defaultAttributes['style'], $newAttributes['style']))
+		{
+			// Re-add the default attributes that were lost (but not replaced) in the merge
+			$attributes['style'] += $defaultAttributes['style'];
 		}
 
 		return $attributes;
 	}
 
 	/**
-	* Add the attributes required for responsive embeds
+	* Test whether current template needs a wrapper to be responsive
 	*
-	* @param  string $template   Original template
-	* @param  array  $attributes Array of [name => value] where value can be XSL code
-	* @return string             Modified template
-	*/
-	protected function addResponsiveWrapper($template, array $attributes)
-	{
-		// Remove braces from the values
-		$height = trim($attributes['height'], '{}');
-		$width  = trim($attributes['width'], '{}');
-
-		$isFixedHeight = (bool) preg_match('(^\\d+$)D', $height);
-		$isFixedWidth  = (bool) preg_match('(^\\d+$)D', $width);
-
-		if ($isFixedHeight && $isFixedWidth)
-		{
-			$padding = round(100 * $height / $width, 2);
-		}
-		else
-		{
-			if (!preg_match('(^[@$]?[-\\w]+$)D', $height))
-			{
-				$height = '(' . $height . ')';
-			}
-			if (!preg_match('(^[@$]?[-\\w]+$)D', $width))
-			{
-				$width = '(' . $width . ')';
-			}
-
-			$padding = '<xsl:value-of select="100*' . $height . ' div'. $width . '"/>';
-		}
-
-		return '<div><xsl:attribute name="style">display:inline-block;width:100%;max-width:' . $width . 'px</xsl:attribute><div><xsl:attribute name="style">height:0;position:relative;padding-top:' . $padding . '%</xsl:attribute>' . $template . '</div></div>';
-	}
-
-	/**
-	* Test whether given dimensions can be made repsonsive
-	*
-	* @param  array $attributes Array of [name => value] where value can be XSL code
 	* @return bool
 	*/
-	protected function canBeResponsive(array $attributes)
+	protected function needsWrapper()
 	{
-		if (empty($attributes['responsive']))
+		if ($this->attributes['width'] === '100%')
 		{
 			return false;
 		}
 
-		// Cannot be responsive if dimensions contain a percentage of an XSL element
-		return !preg_match('([%<])', $attributes['width'] . $attributes['height']);
-	}
-
-	/**
-	* Generate xsl:attributes elements from an array
-	*
-	* @param  array  $attributes    Array of [name => value] where value can be XSL code
-	* @param  bool   $addResponsive Whether to add the responsive style attributes
-	* @return string                XSL source
-	*/
-	protected function generateAttributes(array $attributes, $addResponsive = false)
-	{
-		if ($addResponsive)
+		if (isset($this->attributes['onload']) && strpos($this->attributes['onload'], '.height') !== false)
 		{
-			$attributes = $this->addResponsiveStyle($attributes);
+			return false;
 		}
 
-		unset($attributes['responsive']);
-
-		$xsl = '';
-		foreach ($attributes as $attrName => $innerXML)
-		{
-			if (strpos($innerXML, '<') === false)
-			{
-				$innerXML = AVTHelper::toXSL($innerXML);
-			}
-
-			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName, ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
-		}
-
-		return $xsl;
+		return true;
 	}
 }

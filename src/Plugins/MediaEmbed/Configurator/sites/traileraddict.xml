@@ -8,5 +8,5 @@
 		<match>@traileraddict\.com/(?!tags/)[^/]+/.@</match>
 		<extract>@v\.traileraddict\.com/(?'id'\d+)@</extract>
 	</scrape>
-	<iframe width="560" height="315" src="//v.traileraddict.com/{@id}"/>
+	<iframe src="//v.traileraddict.com/{@id}"/>
 </site>

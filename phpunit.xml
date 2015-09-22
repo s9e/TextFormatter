@@ -229,6 +229,10 @@
 			<file>tests/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProviderTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/LiveSiteDefinitionProviderTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/TemplateBuilderTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/ChooseTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/FlashTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/IframeTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ConfiguratorTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>
 			<file>tests/Plugins/Preg/ConfiguratorTest.php</file>

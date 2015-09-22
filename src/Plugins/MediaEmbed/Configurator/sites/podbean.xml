@@ -9,5 +9,5 @@
 		<match>!podbean\.com/e/!</match>
 		<extract>!embed/postId/(?'id'\d+)!</extract>
 	</scrape>
-	<iframe responsive="0" width="100%" height="100" style="max-width:900px" src="//www.podbean.com/media/player/audio/postId/{@id}"/>
+	<iframe width="100%" height="100" max-width="900" src="//www.podbean.com/media/player/audio/postId/{@id}"/>
 </site>

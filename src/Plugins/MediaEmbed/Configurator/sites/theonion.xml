@@ -6,5 +6,5 @@
 
 	<host>theonion.com</host>
 	<extract>!theonion\.com/video/[-\w]+[-,](?'id'\d+)!</extract>
-	<iframe width="560" height="315" src="http://www.theonion.com/video_embed/?id={@id}"/>
+	<iframe src="http://www.theonion.com/video_embed/?id={@id}"/>
 </site>
