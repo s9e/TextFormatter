@@ -1,8 +1,19 @@
 <h2>Installation</h2>
 
-s9e\\TextFormatter is developed on the latest version of PHP and is compatible with PHP 5.3.3 and above. In the following examples, you should replace `php5.3` with the lowest version of PHP you want to support: `php5.3`, `php5.4`, `php5.5` or `php5.6`. All versions are functionally identical.
+s9e\\TextFormatter is developed on the latest version of PHP and is compatible with PHP 5.3.3 and above.
 
 Once installed, you can try this [basic example](https://github.com/s9e/TextFormatter/blob/master/docs/examples/00_quick.php).
+
+### Via Composer
+
+Add the following to your `composer.json`. It will use Composer's autoloader normally.
+```json
+{
+    "require": {
+        "s9e/text-formatter": "*"
+    }
+}
+```
 
 ### Direct download
 
@@ -12,20 +23,9 @@ Download a snapshot of the library from GitHub directly: [php5.3](https://github
 include 'TextFormatter/src/autoloader.php';
 ```
 
-### Via Composer
-
-Add the following to your `composer.json`. It will use Composer's autoloader normally.
-```json
-{
-    "require": {
-        "s9e/text-formatter": "dev-release/php5.3"
-    }
-}
-```
-
 ### Via Git
 
-Clone this repository and use the bundled autoloader.
+Clone this repository and use the bundled autoloader. Replace `php5.3` with the lowest version of PHP you want to support: `php5.3`, `php5.4`, `php5.5` or `php5.6`. All versions are functionally identical.
 
 ```bash
 git clone https://github.com/s9e/TextFormatter.git -b release/php5.3
