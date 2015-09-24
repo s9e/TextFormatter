@@ -1213,6 +1213,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
  [x] getCacheDifferentiator() returns a unique string
 
+s9e\TextFormatter\Tests\Configurator\StylesheetCompressor
+ [x] encode() tests
+
 s9e\TextFormatter\Tests\Configurator\Rendering
  [x] Default engine is XSLT
  [x] setEngine('PHP') sets the engine to a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP

@@ -71,6 +71,16 @@ class IframeTest extends AbstractTest
 				],
 				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div>'
 			],
+			[
+				[
+					'width'          => '640',
+					'height'         => '360',
+					'padding-height' => '30',
+					'src'            => 'foo',
+					'onload'         => '0<1'
+				],
+				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" onload="0&lt;1" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div>'
+			],
 		];
 	}
 }
