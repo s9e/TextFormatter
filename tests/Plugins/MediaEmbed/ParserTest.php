@@ -748,20 +748,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/" playlist_id="1919974" url="https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/">https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					if (version_compare(PHP_VERSION, '5.4', '<'))
-					{
-						$this->markTestSkipped('This test fails on PHP 5.3 because of the lack of SSL');
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
 				'(<r><SPORTSNET id="4\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
@@ -1067,20 +1053,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974" style="border:0;height:450px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					if (version_compare(PHP_VERSION, '5.4', '<'))
-					{
-						$this->markTestSkipped('This test fails on PHP 5.3 because of the lack of SSL');
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
 			[
