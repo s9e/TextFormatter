@@ -424,7 +424,7 @@
 	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
-		<td>http://www.twitch.tv/minigolf2000<br/>http://www.twitch.tv/amazhs/c/4493103<br/>http://www.twitch.tv/minigolf2000/b/497929990<br/>http://www.twitch.tv/m/57217<br/>http://www.twitch.tv/playstation/v/3589809</td>
+		<td>http://www.twitch.tv/amazhs<br/>http://www.twitch.tv/amazhs/c/4493103<br/>http://www.twitch.tv/minigolf2000/b/497929990<br/>http://www.twitch.tv/m/57217<br/>http://www.twitch.tv/playstation/v/3589809</td>
 	</tr>
 	<tr>
 		<td><code>twitter</code></td>
