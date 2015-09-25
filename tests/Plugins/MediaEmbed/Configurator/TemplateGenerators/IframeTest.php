@@ -22,7 +22,7 @@ class IframeTest extends AbstractTest
 				[
 					'src' => '/embed/{@id}'
 				],
-				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="/embed/{@id}" style="border:0;height:100%;position:absolute;width:100%"/></div></div>'
+				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="/embed/{@id}" style="border:0;height:100%;left:0;position:absolute;width:100%"/></div></div>'
 			],
 			[
 				[
@@ -34,7 +34,7 @@ class IframeTest extends AbstractTest
 						'box-shadow' => '10px 5px 5px black'
 					]
 				],
-				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" onload="alert(1)" scrolling="" src="/embed/{@id}" style="border:solid green 2px;box-shadow:10px 5px 5px black;height:100%;position:absolute;width:100%"/></div></div>'
+				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" onload="alert(1)" scrolling="" src="/embed/{@id}" style="border:solid green 2px;box-shadow:10px 5px 5px black;height:100%;left:0;position:absolute;width:100%"/></div></div>'
 			],
 			[
 				[
@@ -69,7 +69,7 @@ class IframeTest extends AbstractTest
 					'padding-height' => '30',
 					'src'            => 'foo'
 				],
-				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div>'
+				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></div></div>'
 			],
 			[
 				[
@@ -79,7 +79,7 @@ class IframeTest extends AbstractTest
 					'src'            => 'foo',
 					'onload'         => '0<1'
 				],
-				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" onload="0&lt;1" scrolling="no" src="foo" style="border:0;height:100%;position:absolute;width:100%"/></div></div>'
+				'<div style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" onload="0&lt;1" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></div></div>'
 			],
 		];
 	}

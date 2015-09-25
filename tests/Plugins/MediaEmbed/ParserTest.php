@@ -936,7 +936,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></div></div>',
+				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -946,7 +946,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></div></div>',
+				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -956,7 +956,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://therunons.bandcamp.com/track/still-feel',
-				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></div></div>',
+				'<div data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -966,7 +966,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.cbsnews.com/videos/is-the-us-stock-market-rigged',
-				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=W4MVSOaNEYMq"></object></div></div>',
+				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=W4MVSOaNEYMq"></object></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -976,7 +976,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:512px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:512px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -986,7 +986,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
-				'<div data-s9e-mediaembed="dumpert" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.dumpert.nl/embed/6622577/4652b140/" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="dumpert" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.dumpert.nl/embed/6622577/4652b140/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -996,7 +996,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
-				'(<div data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><div style="position:relative;padding-bottom:75\\.4208754208754%;padding-bottom:calc\\(67\\.1717171717172% \\+ 49px\\)"><iframe allowfullscreen="" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\\w]{22}&amp;sig=[-\\w]{43}=" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>)',
+				'(<div data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><div style="position:relative;padding-bottom:75\\.4208754208754%;padding-bottom:calc\\(67\\.1717171717172% \\+ 49px\\)"><iframe allowfullscreen="" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\\w]{22}&amp;sig=[-\\w]{43}=" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>)',
 				[],
 				function ($configurator)
 				{
@@ -1007,7 +1007,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://gfycat.com/SereneIllfatedCapybara',
-				'<div data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><div style="position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><div style="position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -1037,7 +1037,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.gifv',
-				'<div data-s9e-mediaembed="imgur" style="display:inline-block;width:100%;max-width:915px"><div style="position:relative;padding-bottom:42.5136612021858%"><iframe allowfullscreen="" scrolling="no" src="//i.imgur.com/u7Yo0Vy.gifv#embed" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="imgur" style="display:inline-block;width:100%;max-width:915px"><div style="position:relative;padding-bottom:42.5136612021858%"><iframe allowfullscreen="" scrolling="no" src="//i.imgur.com/u7Yo0Vy.gifv#embed" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -1047,7 +1047,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.mp4',
-				'<div data-s9e-mediaembed="imgur" style="display:inline-block;width:100%;max-width:915px"><div style="position:relative;padding-bottom:42.5136612021858%"><iframe allowfullscreen="" scrolling="no" src="//i.imgur.com/u7Yo0Vy.gifv#embed" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="imgur" style="display:inline-block;width:100%;max-width:915px"><div style="position:relative;padding-bottom:42.5136612021858%"><iframe allowfullscreen="" scrolling="no" src="//i.imgur.com/u7Yo0Vy.gifv#embed" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -1057,7 +1057,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<div data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.ustream.tv/embed/16234409?html5ui" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.ustream.tv/embed/16234409?html5ui" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -2976,7 +2976,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -2985,7 +2985,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -2995,7 +2995,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/ http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe></div></div> <div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=bar-20"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00GQT1LNO&amp;o=15&amp;t=foo-20"></iframe></div></div> <div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=bar-20"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3006,7 +3006,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B003AKZ6I8&amp;o=9&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B003AKZ6I8&amp;o=9&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3015,7 +3015,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00BET0NR6&amp;o=2&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00BET0NR6&amp;o=2&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3024,7 +3024,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/dp/B002MUC0ZY',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B002MUC0ZY&amp;o=1&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-na.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B002MUC0ZY&amp;o=1&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3033,7 +3033,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00ET2LTE6&amp;o=3&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3042,7 +3042,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B000R3QPEA&amp;o=30&amp;t=es-20"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B000R3QPEA&amp;o=30&amp;t=es-20"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3052,7 +3052,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B005NIKPAY&amp;o=8&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B005NIKPAY&amp;o=8&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3061,7 +3061,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.it/gp/product/B00JGOMIP6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00JGOMIP6&amp;o=29&amp;t=_"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=B00JGOMIP6&amp;o=29&amp;t=_"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3088,7 +3088,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
-				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.5%;padding-bottom:calc(56.25% + 40px)"><object data="//i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" style="height:100%;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501"></object></div></div>',
+				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.5%;padding-bottom:calc(56.25% + 40px)"><object data="//i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501"></object></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3097,7 +3097,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
-				'<div data-s9e-mediaembed="collegehumor" style="display:inline-block;width:100%;max-width:600px"><div style="position:relative;padding-bottom:61.5%"><iframe allowfullscreen="" scrolling="no" src="//www.collegehumor.com/e/1181601" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="collegehumor" style="display:inline-block;width:100%;max-width:600px"><div style="position:relative;padding-bottom:61.5%"><iframe allowfullscreen="" scrolling="no" src="//www.collegehumor.com/e/1181601" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3106,7 +3106,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<div data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.dailymotion.com/embed/video/x222z1" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.dailymotion.com/embed/video/x222z1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3115,7 +3115,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
-				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.democracynow.org/embed/story/2014/7/2/dn_at_almedalen_week_at_swedens"></iframe></div></div>',
+				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/story/2014/7/2/dn_at_almedalen_week_at_swedens"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3124,7 +3124,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the',
-				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.democracynow.org/embed/blog/2015/3/13/part_2_bruce_schneier_on_the"></iframe></div></div>',
+				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/blog/2015/3/13/part_2_bruce_schneier_on_the"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3133,7 +3133,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/shows/2006/2/20',
-				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.democracynow.org/embed/show/2006/2/20"></iframe></div></div>',
+				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/show/2006/2/20"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3142,7 +3142,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/2015/5/21/headlines',
-				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.democracynow.org/embed/headlines/2015/5/21"></iframe></div></div>',
+				'<div data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/headlines/2015/5/21"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3151,7 +3151,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://espn.go.com/video/clip?id=10315344',
-				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=espn&amp;id=10315344" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=espn&amp;id=10315344" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3160,7 +3160,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
-				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=deportes&amp;id=2002850" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=deportes&amp;id=2002850" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3187,7 +3187,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
-				'<div data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3196,7 +3196,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<div data-s9e-mediaembed="gamespot" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.5%"><iframe allowfullscreen="" scrolling="no" src="//www.gamespot.com/videos/embed/6415176/" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="gamespot" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.5%"><iframe allowfullscreen="" scrolling="no" src="//www.gamespot.com/videos/embed/6415176/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3232,7 +3232,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="position:relative;padding-bottom:56.196581196581%"><iframe allowfullscreen="" scrolling="no" src="http://widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="position:relative;padding-bottom:56.196581196581%"><iframe allowfullscreen="" scrolling="no" src="http://widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3241,7 +3241,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:224px"><div style="position:relative;padding-bottom:216.96428571429%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/widget" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:224px"><div style="position:relative;padding-bottom:216.96428571429%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/widget" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3250,7 +3250,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><div style="position:relative;padding-bottom:190.90909090909%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><div style="position:relative;padding-bottom:190.90909090909%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3259,7 +3259,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:480px"><div style="position:relative;padding-bottom:75%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:480px"><div style="position:relative;padding-bottom:75%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3268,7 +3268,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
-				'<div data-s9e-mediaembed="liveleak" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.liveleak.com/ll_embed?i=3dd_1366238099" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="liveleak" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.liveleak.com/ll_embed?i=3dd_1366238099" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3277,7 +3277,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
-				'<div data-s9e-mediaembed="metacafe" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.metacafe.com/embed/10785282/" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="metacafe" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.metacafe.com/embed/10785282/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3286,7 +3286,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<div data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:720px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//rutube.ru/play/embed/4118278" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:720px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//rutube.ru/play/embed/4118278" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3295,7 +3295,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="position:relative;padding-bottom:83.372365339578%"><iframe allowfullscreen="" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="position:relative;padding-bottom:83.372365339578%"><iframe allowfullscreen="" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3344,7 +3344,7 @@ class ParserTest extends Test
 			],
 			[
 				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
-				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe></div></div>',
+				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3354,7 +3354,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
-				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe></div></div>',
+				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3363,7 +3363,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
-				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe></div></div>',
+				'<div data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><div style="position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3372,7 +3372,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<div data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3381,7 +3381,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk',
-				'<div data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3390,7 +3390,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000"></iframe></div></div>',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3399,7 +3399,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/amazhs/c/4493103',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=amazhs&amp;videoId=c4493103"></iframe></div></div>',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=amazhs&amp;videoId=c4493103"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3408,7 +3408,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000/b/497929990',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000&amp;videoId=a497929990"></iframe></div></div>',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=minigolf2000&amp;videoId=a497929990"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3417,7 +3417,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/playstation/v/3589809',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=playstation&amp;videoId=v3589809"></iframe></div></div>',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//s9e.github.io/iframe/twitch.min.html#channel=playstation&amp;videoId=v3589809"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3435,7 +3435,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/recorded/40771396',
-				'<div data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.ustream.tv/embed/recorded/40771396?html5ui" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.ustream.tv/embed/recorded/40771396?html5ui" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3444,7 +3444,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<div data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//player.vimeo.com/video/67207222" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//player.vimeo.com/video/67207222" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3453,7 +3453,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://vine.co/v/bYwPIluIipH',
-				'<div data-s9e-mediaembed="vine" style="display:inline-block;width:100%;max-width:480px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="https://vine.co/v/bYwPIluIipH/embed/simple?audio=1" style="border:0;height:100%;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="vine" style="display:inline-block;width:100%;max-width:480px"><div style="position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="https://vine.co/v/bYwPIluIipH/embed/simple?audio=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3462,7 +3462,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media=youtube]-cEzsCAzTak[/media]',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3471,7 +3471,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3480,7 +3480,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3490,7 +3490,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3500,7 +3500,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE=http://www.youtube.com/watch?v=-cEzsCAzTak]Hi!',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>Hi!',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>Hi!',
 				[],
 				function ($configurator)
 				{
@@ -3510,7 +3510,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak',
-				'Check this: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
+				'Check this: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3519,7 +3519,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'Check this: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div> and that: <a href="http://example.com">http://example.com</a>',
+				'Check this: <div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/-cEzsCAzTak"></iframe></div></div> and that: <a href="http://example.com">http://example.com</a>',
 				[],
 				function ($configurator)
 				{
@@ -3529,7 +3529,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?feature=player_detailpage&v=9bZkp7q19f0#t=113',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/9bZkp7q19f0?start=113"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/9bZkp7q19f0?start=113"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3538,7 +3538,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3547,7 +3547,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA&amp;start=123"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA&amp;start=123"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3556,7 +3556,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=1h23m45s',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/wZZ7oFKsKzY?start=5025"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/wZZ7oFKsKzY?start=5025"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3565,7 +3565,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
-				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;position:absolute;width:100%" src="//www.youtube.com/embed/wZZ7oFKsKzY?start=1425"></iframe></div></div>',
+				'<div data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.youtube.com/embed/wZZ7oFKsKzY?start=1425"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
