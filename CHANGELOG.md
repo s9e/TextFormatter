@@ -1,3 +1,19 @@
+0.4.1 (2015-09-27)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/15b0005595cc38c76355f376cc5576968db79de6...30ca6acb15a467777f6229bacf4158a8199a38cd)
+
+### Fixed
+
+ - `b6dd56b` MediaEmbed: fixed malformed XSL when an attribute value contains an angle bracket but is not XSL
+ - `0d4675c` MediaEmbed: fixed responsive embeds alignment
+
+### Changed
+
+ - `30ca6ac` MediaEmbed: updated Medium
+ - `7887f79` MediaEmbed: updated SoundCloud
+
+
 0.4.0 (2015-09-22)
 ==================
 
