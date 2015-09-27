@@ -80,6 +80,15 @@ class ConfigOptimizerTest extends Test
 					'/** @const */ var oBDF6D802=[function(){return false;}];'
 				]
 			],
+			[
+				// Test that returnFalse is stored as-is. No need for a config value
+				[
+					'foo' => new Code('returnFalse'),
+					'bar' => new Code('returnFalse')
+				],
+				'{bar:returnFalse,foo:returnFalse}',
+				[]
+			],
 		];
 	}
 }

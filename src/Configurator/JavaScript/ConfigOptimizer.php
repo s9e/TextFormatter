@@ -183,12 +183,24 @@ class ConfigOptimizer
 	{
 		foreach ($object as $k => $v)
 		{
-			if ($this->canDeduplicate($v))
+			if ($this->canDeduplicate($v) && !$this->shouldPreserve($v))
 			{
 				$object[$k] = $this->recordObject($v);
 			}
 		}
 
 		return $object;
+	}
+
+	/**
+	* Test whether given value should be preserved and not deduplicated
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	protected function shouldPreserve($value)
+	{
+		// Simple variables should be kept as-is
+		return ($value instanceof Code && preg_match('(^\\w+$)', $value));
 	}
 }
