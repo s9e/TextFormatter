@@ -26,6 +26,7 @@ abstract class TemplateGenerator
 			$this->attributes['style']['width']    = '100%';
 			$this->attributes['style']['height']   = '100%';
 			$this->attributes['style']['position'] = 'absolute';
+			$this->attributes['style']['left'] = '0';
 			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
 			$innerStyle = 'position:relative;' . $this->getResponsivePadding();
 			$prepend .= '<div>' . $this->generateAttributes(['style' => $outerStyle]);
@@ -67,7 +68,7 @@ abstract class TemplateGenerator
 		$xsl = '';
 		foreach ($attributes as $attrName => $attrValue)
 		{
-			$innerXML = (\strpos($attrValue, '<') !== \false) ? $attrValue : AVTHelper::toXSL($attrValue);
+			$innerXML = (\strpos($attrValue, '<xsl:') !== \false) ? $attrValue : AVTHelper::toXSL($attrValue);
 			$xsl .= '<xsl:attribute name="' . \htmlspecialchars($attrName, \ENT_QUOTES, 'UTF-8') . '">' . $innerXML . '</xsl:attribute>';
 		}
 		return $xsl;
