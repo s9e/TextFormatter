@@ -1,3 +1,7 @@
+TODO: general
+------------------
+- Consider an helper that identify anchored text in regexp to automatically generate a quickMatch
+
 TODO: BBCodeMonkey
 ------------------
 - ~~Add RegexpParser::getCaptureNames()~~
