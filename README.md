@@ -14,7 +14,7 @@ You can use s9e\\TextFormatter via Composer or by cloning this repository. See [
 
 ## Demo
 
-You can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html). No PHP demo online yet, try the PHP examples below.
+You can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html).
 
 ## Examples
 
