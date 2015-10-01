@@ -742,6 +742,22 @@ class PHPTest extends Test
 						= '<xsl:value-of select="@foo"/><xsl:if test="contains(@foo, &quot;\'&quot;) and contains(@foo, \'&quot;\')">ok</xsl:if>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<script>0&lt;1 &amp;&amp; 1&lt;0 &amp;&amp; alert(1)</script>';
+				}
+			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<script><xsl:value-of select="\'0&lt;1 &amp;&amp; 1&lt;0 &amp;&amp; alert(1)\'"/></script>';
+				}
+			],
 		];
 	}
 

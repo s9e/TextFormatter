@@ -103,6 +103,44 @@ class Serializer
 	}
 
 	/**
+	* Escape given literal
+	*
+	* @param  string $text    Literal
+	* @param  string $context Either "raw", "text" or "attribute"
+	* @return string          Escaped literal
+	*/
+	protected function escapeLiteral($text, $context)
+	{
+		if ($context === 'raw')
+		{
+			return $text;
+		}
+
+		$escapeMode = ($context === 'attribute') ? ENT_COMPAT : ENT_NOQUOTES;
+
+		return htmlspecialchars($text, $escapeMode);
+	}
+
+	/**
+	* Escape the output of given PHP expression
+	*
+	* @param  string $php     PHP expression
+	* @param  string $context Either "raw", "text" or "attribute"
+	* @return string          PHP expression, including escaping mechanism
+	*/
+	protected function escapePHPOutput($php, $context)
+	{
+		if ($context === 'raw')
+		{
+			return $php;
+		}
+
+		$escapeMode = ($context === 'attribute') ? ENT_COMPAT : ENT_NOQUOTES;
+
+		return 'htmlspecialchars(' . $php . ',' . $escapeMode . ')';
+	}
+
+	/**
 	* Serialize an <applyTemplates/> node
 	*
 	* @param  DOMElement $applyTemplates <applyTemplates/> node
@@ -368,24 +406,18 @@ class Serializer
 	*/
 	protected function serializeOutput(DOMElement $output)
 	{
-		$php        = '';
-		$escapeMode = ($output->getAttribute('escape') === 'attribute')
-		            ? ENT_COMPAT
-		            : ENT_NOQUOTES;
+		$context = $output->getAttribute('escape');
 
+		$php = '$this->out.=';
 		if ($output->getAttribute('type') === 'xpath')
 		{
-			$php .= '$this->out.=htmlspecialchars(';
-			$php .= $this->convertXPath($output->textContent);
-			$php .= ',' . $escapeMode . ');';
+			$php .= $this->escapePHPOutput($this->convertXPath($output->textContent), $context);
 		}
 		else
 		{
-			// Literal
-			$php .= '$this->out.=';
-			$php .= var_export(htmlspecialchars($output->textContent, $escapeMode), true);
-			$php .= ';';
+			$php .= var_export($this->escapeLiteral($output->textContent, $context), true);
 		}
+		$php .= ';';
 
 		return $php;
 	}
