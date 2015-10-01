@@ -87,6 +87,20 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox loadTemplate() can load '<script>0<1 && 1>0 && alert(1)</script>'
+	*/
+	public function testLoadHTMLSpecialChars()
+	{
+		$html = '<script>0<1 && 1>0 && alert(1)</script>';
+		$xml  = '<script><![CDATA[0<1 && 1>0 && alert(1)]]></script>';
+
+		$dom = TemplateHelper::loadTemplate($html);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertContains($xml, $dom->saveXML());
+	}
+
+	/**
 	* @testdox loadTemplate() can load '<ul><li>one<li>two</ul>'
 	* @depends testLoadHTML
 	*/

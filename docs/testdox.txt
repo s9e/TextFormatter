@@ -726,6 +726,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] saveTemplate() correctly handles '<xsl:value-of select="@foo"/>'
  [x] saveTemplate() correctly handles an empty string
  [x] loadTemplate() can load '<ul><li>one<li>two</ul>'
+ [x] loadTemplate() can load '<script>0<1 && 1>0 && alert(1)</script>'
  [x] loadTemplate() accepts unescaped ampersands
  [x] loadTemplate() converts HTML entities
  [x] loadTemplate() does not break numeric character references
@@ -2139,6 +2140,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] asConfig() returns predefinedAttributes in a Dictionary
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
+ [x] End tags added from lookahead are not duplicated
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 
