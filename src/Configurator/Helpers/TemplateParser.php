@@ -559,6 +559,28 @@ class TemplateParser
 	}
 
 	/**
+	* Get the context type for given output element
+	*
+	* @param  DOMNode $output
+	* @return string
+	*/
+	protected static function getOutputContext(DOMNode $output)
+	{
+		$xpath = new DOMXPath($output->ownerDocument);
+		if ($xpath->evaluate('boolean(ancestor::attribute)', $output))
+		{
+			return 'attribute';
+		}
+
+		if ($xpath->evaluate('boolean(ancestor::element[@name="script"])', $output))
+		{
+			return 'raw';
+		}
+
+		return 'text';
+	}
+
+	/**
 	* Get the ID of the closest "element" ancestor
 	*
 	* @param  DOMNode     $node Context node
@@ -585,14 +607,9 @@ class TemplateParser
 	*/
 	protected static function setOutputContext(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		foreach ($ir->getElementsByTagName('output') as $output)
 		{
-			$escape = ($xpath->evaluate('boolean(ancestor::attribute)', $output))
-			        ? 'attribute'
-			        : 'text';
-
-			$output->setAttribute('escape', $escape);
+			$output->setAttribute('escape', self::getOutputContext($output));
 		}
 	}
 
