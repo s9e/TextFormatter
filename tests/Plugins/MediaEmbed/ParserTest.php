@@ -748,6 +748,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
+				'<r><SOUNDCLOUD id="https://soundcloud.com/topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
 				'(<r><SPORTSNET id="4\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
@@ -2404,6 +2414,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd',
+				'<r><SOUNDCLOUD id="https://api.soundcloud.com/tracks/168988860" secret_token="s-GT9Cd" track_id="168988860" url="https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'spotify:track:5JunxkcjfCYcY7xJ29tLai',
 				'<r><SPOTIFY uri="spotify:track:5JunxkcjfCYcY7xJ29tLai">spotify:track:5JunxkcjfCYcY7xJ29tLai</SPOTIFY></r>',
 				[],
@@ -3314,7 +3333,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
