@@ -204,7 +204,7 @@ class ParserTest extends Test
 			],
 			[
 				'😀',
-				'<img alt="😀" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
+				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -213,7 +213,7 @@ class ParserTest extends Test
 			],
 			[
 				'😀',
-				'<img alt="😀" class="emoji" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
+				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -223,7 +223,7 @@ class ParserTest extends Test
 			],
 			[
 				'#️⃣1️⃣2️⃣',
-				'<img alt="#️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2️⃣" class="emoji" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
+				'<img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20E3.png"><img alt="1️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20E3.png"><img alt="2️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20E3.png">',
 				[],
 				function ($configurator, $plugin)
 				{
