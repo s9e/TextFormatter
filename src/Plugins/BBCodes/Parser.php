@@ -15,12 +15,14 @@ class Parser extends ParserBase
 	protected $bbcodeConfig;
 	protected $bbcodeName;
 	protected $bbcodeSuffix;
+	protected $endTags;
 	protected $pos;
 	protected $startPos;
 	protected $text;
 	protected $textLen;
 	public function parse($text, array $matches)
 	{
+		$this->endTags = array();
 		$this->text = $text;
 		$this->textLen = \strlen($text);
 		foreach ($matches as $m)
@@ -31,6 +33,8 @@ class Parser extends ParserBase
 			$this->bbcodeConfig = $this->config['bbcodes'][$this->bbcodeName];
 			$this->startPos     = $m[0][1];
 			$this->pos          = $this->startPos + \strlen($m[0][0]);
+			if (isset($this->endTags[$this->startPos]))
+				continue;
 			try
 			{
 				$this->parseBBCode();
@@ -62,6 +66,7 @@ class Parser extends ParserBase
 		$endTagPos = \stripos($this->text, $match, $this->pos);
 		if ($endTagPos === \false)
 			return;
+		$this->endTags[$endTagPos] = 1;
 		return $this->parser->addEndTag($this->getTagName(), $endTagPos, \strlen($match));
 	}
 	protected function getTagName()

@@ -82,8 +82,12 @@ class ConfigOptimizer
 	protected function recordObjectContent($object)
 	{
 		foreach ($object as $k => $v)
-			if ($this->canDeduplicate($v))
+			if ($this->canDeduplicate($v) && !$this->shouldPreserve($v))
 				$object[$k] = $this->recordObject($v);
 		return $object;
+	}
+	protected function shouldPreserve($value)
+	{
+		return ($value instanceof Code && \preg_match('(^\\w+$)', $value));
 	}
 }

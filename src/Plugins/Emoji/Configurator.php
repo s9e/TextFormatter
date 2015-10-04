@@ -97,7 +97,7 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getEmojiOneTemplate()
 	{
-		$template = '<img alt="{.}" class="emoji"';
+		$template = '<img alt="{.}" class="emoji" draggable="false"';
 		if ($this->forceImageSize)
 			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
 		$template .= '>
