@@ -1,3 +1,23 @@
+0.4.2 (2015-10-04)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/50c790c1bcb80d8ed5a5cb9b81c6a6fbb6a1d0f4...a8d84fb8a2d6150862531ed8622d6c1a64b1fb90)
+
+### Added
+
+ - `73e14ab` BBCodes: ensure that end tags added by lookahead are not duplicated
+ - `fd6bd30` Emoji: added draggable="false" to Emoji One images
+ - `d32e93d` MediaEmbed: added support for private tracks in SoundCloud
+ - `0dd8a61` PHP renderer generator: added support for raw output
+
+### Changed
+
+ - `ce681ae` BBCodes: updated the default CODE definition
+ - `627d41c` JavaScript\ConfigOptimizer: do not attempt to deduplicate simple variables
+ - `7afa5f9` MediaEmbed: updated wget() to send a User-agent header
+ - `31e3b26` TemplateParser: set the escape value of literal text in script elements to "raw"
+
+
 0.4.1 (2015-09-27)
 ==================
 
