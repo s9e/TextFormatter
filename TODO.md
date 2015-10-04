@@ -1,6 +1,9 @@
 TODO: general
 ------------------
 - Consider an helper that identify anchored text in regexp to automatically generate a quickMatch
+- Consider adding a plugin that retrieves OpenGraph data and adds it to the URL tag / template
+- Consider adding an onerror fallback to Emoji's template
+
 
 TODO: BBCodeMonkey
 ------------------
