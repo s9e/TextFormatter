@@ -2315,6 +2315,15 @@ class TemplateParser
 				$element->setAttribute('empty', $isEmpty);
 		}
 	}
+	protected static function getOutputContext(DOMNode $output)
+	{
+		$xpath = new DOMXPath($output->ownerDocument);
+		if ($xpath->evaluate('boolean(ancestor::attribute)', $output))
+			return 'attribute';
+		if ($xpath->evaluate('boolean(ancestor::element[@name="script"])', $output))
+			return 'raw';
+		return 'text';
+	}
 	protected static function getParentElementId(DOMNode $node)
 	{
 		$parentNode = $node->parentNode;
@@ -2327,14 +2336,8 @@ class TemplateParser
 	}
 	protected static function setOutputContext(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		foreach ($ir->getElementsByTagName('output') as $output)
-		{
-			$escape = ($xpath->evaluate('boolean(ancestor::attribute)', $output))
-			        ? 'attribute'
-			        : 'text';
-			$output->setAttribute('escape', $escape);
-		}
+			$output->setAttribute('escape', self::getOutputContext($output));
 	}
 	protected static function optimize(DOMDocument $ir)
 	{
@@ -3990,6 +3993,20 @@ class Serializer
 		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 		return $this->convertor->convertXPath($expr);
 	}
+	protected function escapeLiteral($text, $context)
+	{
+		if ($context === 'raw')
+			return $text;
+		$escapeMode = ($context === 'attribute') ? \ENT_COMPAT : \ENT_NOQUOTES;
+		return \htmlspecialchars($text, $escapeMode);
+	}
+	protected function escapePHPOutput($php, $context)
+	{
+		if ($context === 'raw')
+			return $php;
+		$escapeMode = ($context === 'attribute') ? \ENT_COMPAT : \ENT_NOQUOTES;
+		return 'htmlspecialchars(' . $php . ',' . $escapeMode . ')';
+	}
 	protected function serializeApplyTemplates(DOMElement $applyTemplates)
 	{
 		$php = '$this->at($node';
@@ -4105,22 +4122,13 @@ class Serializer
 	}
 	protected function serializeOutput(DOMElement $output)
 	{
-		$php        = '';
-		$escapeMode = ($output->getAttribute('escape') === 'attribute')
-		            ? \ENT_COMPAT
-		            : \ENT_NOQUOTES;
+		$context = $output->getAttribute('escape');
+		$php = '$this->out.=';
 		if ($output->getAttribute('type') === 'xpath')
-		{
-			$php .= '$this->out.=htmlspecialchars(';
-			$php .= $this->convertXPath($output->textContent);
-			$php .= ',' . $escapeMode . ');';
-		}
+			$php .= $this->escapePHPOutput($this->convertXPath($output->textContent), $context);
 		else
-		{
-			$php .= '$this->out.=';
-			$php .= \var_export(\htmlspecialchars($output->textContent, $escapeMode), \true);
-			$php .= ';';
-		}
+			$php .= \var_export($this->escapeLiteral($output->textContent, $context), \true);
+		$php .= ';';
 		return $php;
 	}
 	protected function serializeSwitch(DOMElement $switch)
