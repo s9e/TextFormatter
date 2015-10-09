@@ -8,8 +8,8 @@
 	<host>cc.com</host>
 	<host>comedycentral.com</host>
 	<scrape>
-		<match>!c(?:c|omedycentral)\.com/video-clips/!</match>
-		<extract>!(?'id'mgid:arc:video:[.\w]+:[-\w]+)!</extract>
+		<match>!c(?:c|omedycentral)\.com/(?:full-episode|video-clip)s/!</match>
+		<extract>!(?'id'mgid:arc:\w+:[.\w]+:[-\w]+)!</extract>
 	</scrape>
-	<iframe width="512" height="288" src="//media.mtvnservices.com/embed/{@id}"/>
+	<iframe width="640" height="360" src="//media.mtvnservices.com/embed/{@id}"/>
 </site>

@@ -289,6 +289,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007',
+				'<r><COMEDYCENTRAL id="mgid:arc:episode:comedycentral.com:3aba0ada-1d79-4500-aea8-1a90746faf2b" url="http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007">http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007</COMEDYCENTRAL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('comedycentral');
+				}
+			],
+			[
 				'http://tosh.cc.com/video-clips/aet4lh/rc-car-crash',
 				'<r><COMEDYCENTRAL id="mgid:arc:video:tosh.comedycentral.com:3b516128-7054-4439-a01e-0aa9c0b020ac" url="http://tosh.cc.com/video-clips/aet4lh/rc-car-crash">http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</COMEDYCENTRAL></r>',
 				[],
@@ -986,7 +996,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:512px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
