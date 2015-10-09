@@ -2041,6 +2041,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://i.imgur.com/AsQ0K3P.jpg',
+				'<t>http://i.imgur.com/AsQ0K3P.jpg</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/513633',
 				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></r>',
 				[],

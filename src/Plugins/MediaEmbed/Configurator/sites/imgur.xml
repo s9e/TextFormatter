@@ -12,7 +12,7 @@
 	</attributes>
 
 	<host>imgur.com</host>
-	<extract>!imgur\.com/(?:gallery/)?(?'id'(?:a/)?\w+)!</extract>
+	<extract>@imgur\.com/(?:gallery/)?(?'id'(?:a/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
 	<scrape>
 		<match>!imgur\.com/(?:a|gallery)/\w!</match>
 		<extract>!image\s*:\s*.*?"is_(?'type'album)":true!</extract>
