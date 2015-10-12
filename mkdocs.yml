@@ -90,7 +90,6 @@ pages:
       - Add a link to the original URL: Plugins/MediaEmbed/Append_template.md
       - Change a template: Plugins/MediaEmbed/Change_template.md
       - Configure a cache dir: Plugins/MediaEmbed/Performance_cache_dir.md
-      - Responsive embeds: Plugins/MediaEmbed/Responsive_embeds.md
     - Preg:
       - Synopsis: Plugins/Preg/Synopsis.md
     - Your own plugin:
