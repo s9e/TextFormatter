@@ -209,27 +209,18 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Get the template used to display EmojiOne's images
+	* Get the content of the src attribute used to display EmojiOne's images
 	*
 	* @return string
 	*/
-	protected function getEmojiOneTemplate()
+	protected function getEmojiOneSrc()
 	{
-		$template = '<img alt="{.}" class="emoji" draggable="false"';
-		if ($this->forceImageSize)
-		{
-			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
-		}
-		$template .= '>
-			<xsl:attribute name="src">
-				<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
-				<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
-				<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
-				<xsl:text>.' . $this->imageType . '</xsl:text>
-			</xsl:attribute>
-		</img>';
+		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';
+		$src .= "<xsl:if test=\"contains(@seq, '-20e3') or @seq = 'a9' or @seq = 'ae'\">00</xsl:if>";
+		$src .= "<xsl:value-of select=\"translate(@seq, 'abcdef', 'ABCDEF')\"/>";
+		$src .= '.' . $this->imageType;
 
-		return $template;
+		return $src;
 	}
 
 	/**
@@ -259,34 +250,38 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getTemplate()
 	{
-		return ($this->imageSet === 'emojione') ? $this->getEmojiOneTemplate() :  $this->getTwemojiTemplate();
-	}
-
-	/**
-	* Get the template used to display Twemoji's images
-	*
-	* @return string
-	*/
-	protected function getTwemojiTemplate()
-	{
 		$template = '<img alt="{.}" class="emoji" draggable="false"';
 		if ($this->forceImageSize)
 		{
 			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
 		}
-		$template .= ' src="//twemoji.maxcdn.com/';
+		$template .= '><xsl:attribute name="src">';
+		$template .= ($this->imageSet === 'emojione') ? $this->getEmojiOneSrc() :  $this->getTwemojiSrc();
+		$template .= '</xsl:attribute></img>';
+
+		return $template;
+	}
+
+	/**
+	* Get the content of the src attribute used to display Twemoji's images
+	*
+	* @return string
+	*/
+	protected function getTwemojiSrc()
+	{
+		$src = '//twemoji.maxcdn.com/';
 		if ($this->imageType === 'svg')
 		{
-			$template .= 'svg';
+			$src .= 'svg';
 		}
 		else
 		{
 			$size = $this->getTargetSize([16, 36, 72]);
-			$template .= $size . 'x' . $size;
+			$src .= $size . 'x' . $size;
 		}
-		$template .= '/{@seq}.' . $this->imageType . '"/>';
+		$src .= '/<xsl:value-of select="@seq"/>.' . $this->imageType;
 
-		return $template;
+		return $src;
 	}
 
 	/**
