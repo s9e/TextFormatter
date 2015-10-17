@@ -819,35 +819,35 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tumblr');
 				}
 			],
-			[
-				'http://www.twitch.tv/m/57217',
-				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
-				[],
-				function ($configurator)
-				{
-					// Run this test without cache on Travis
-					if (!isset($_SERVER['TRAVIS']))
-					{
-						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					}
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
-				'http://www.twitch.tv/m/57217',
-				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
-				[],
-				function ($configurator)
-				{
-					// Skip during cache preload
-					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
-					{
-						$this->markTestSkipped();
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
+//			[
+//				'http://www.twitch.tv/m/57217',
+//				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					// Run this test without cache on Travis
+//					if (!isset($_SERVER['TRAVIS']))
+//					{
+//						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					}
+//					$configurator->MediaEmbed->add('twitch');
+//				}
+//			],
+//			[
+//				'http://www.twitch.tv/m/57217',
+//				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					// Skip during cache preload
+//					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+//					{
+//						$this->markTestSkipped();
+//					}
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('twitch');
+//				}
+//			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
 				'<r><USTREAM cid="16234409" url="http://www.ustream.tv/channel/ps4-ustream-gameplay">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></r>',
@@ -934,6 +934,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					// Skip during cache preload
+					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+					{
+						$this->markTestSkipped();
+					}
+
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('wsj');
 				}
