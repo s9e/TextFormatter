@@ -85,33 +85,6 @@ __CODE__
 </code></pre>
 <script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js";a.appendChild(e)}</script>
 ```
-<table>
-	<tr>
-		<th>Var name</th>
-		<th>Default</th>
-		<th>Description</th>
-	</tr>
-	<tr>
-		<td><code>stylesheetUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><code>scriptUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><code>stylesheetUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><code>scriptUrl</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js</td>
-		<td></td>
-	</tr>
-</table>
 
 __COLOR__  
 `[COLOR={COLOR}]{TEXT}[/COLOR]`
