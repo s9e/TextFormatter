@@ -144,15 +144,6 @@ class Parser extends ParserBase
 	*/
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		// If this tag doesn't have an id attribute and the url attribute doesn't really look
-		// like an URL, copy the value of the url attribute, so that the tag acts like
-		// [media=youtube id=xxxx]xxxx[/media]
-		if (!$tag->hasAttribute('id') && $tag->hasAttribute('url') && strpos($tag->getAttribute('url'), '://') === false)
-		{
-			$tag->setAttribute('id', $tag->getAttribute('url'));
-		}
-
-		// [media=youtube]xxxxxxx[/media]
 		$siteId = strtolower($tag->getAttribute('media'));
 		if (in_array($siteId, $sites, true))
 		{
