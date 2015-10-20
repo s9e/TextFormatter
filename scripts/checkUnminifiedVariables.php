@@ -44,6 +44,7 @@ $knownVars['contentWindow'] = 1;
 $knownVars['data']          = 1;
 $knownVars['document']      = 1;
 $knownVars['hljs']          = 1;
+$knownVars['hljsLoading']   = 1;
 $knownVars['prototype']     = 1;
 $knownVars['punycode']      = 1;
 $knownVars['src']           = 1;
