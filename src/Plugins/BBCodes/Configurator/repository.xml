@@ -43,7 +43,7 @@
 		]]></template>
 	</bbcode>
 
-	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: http://softwaremaniacs.org/soft/highlight/en/ -->
+	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: https://highlightjs.org/ -->
 	<bbcode name="CODE">
 		<usage>[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]</usage>
 		<template><![CDATA[

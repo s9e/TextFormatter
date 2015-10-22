@@ -71,15 +71,6 @@ function (tag, sites)
 	*/
 	function addTagFromMediaId(tag, sites)
 	{
-		// If this tag doesn't have an id attribute and the url attribute doesn't really look
-		// like an URL, copy the value of the url attribute, so that the tag acts like
-		// [media=youtube id=xxxx]xxxx[/media]
-		if (!tag.hasAttribute('id') && tag.hasAttribute('url') && tag.getAttribute('url').indexOf('://') < 0)
-		{
-			tag.setAttribute('id', tag.getAttribute('url'));
-		}
-
-		// [media=youtube]xxxxxxx[/media]
 		var siteId = tag.getAttribute('media').toLowerCase();
 		if (in_array(siteId, sites))
 		{

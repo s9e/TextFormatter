@@ -60,8 +60,6 @@ class Parser extends ParserBase
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		if (!$tag->hasAttribute('id') && $tag->hasAttribute('url') && \strpos($tag->getAttribute('url'), '://') === \false)
-			$tag->setAttribute('id', $tag->getAttribute('url'));
 		$siteId = \strtolower($tag->getAttribute('media'));
 		if (\in_array($siteId, $sites, \true))
 			self::addSiteTag($tag, $tagStack, $siteId);
