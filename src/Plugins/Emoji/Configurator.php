@@ -95,20 +95,13 @@ class Configurator extends ConfiguratorBase
 		}
 		return $config;
 	}
-	protected function getEmojiOneTemplate()
+	protected function getEmojiOneSrc()
 	{
-		$template = '<img alt="{.}" class="emoji" draggable="false"';
-		if ($this->forceImageSize)
-			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
-		$template .= '>
-			<xsl:attribute name="src">
-				<xsl:text>//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/</xsl:text>
-				<xsl:if test="contains(@seq, \'-20e3\') or @seq = \'a9\' or @seq = \'ae\'">00</xsl:if>
-				<xsl:value-of select="translate(@seq, \'abcdef\', \'ABCDEF\')"/>
-				<xsl:text>.' . $this->imageType . '</xsl:text>
-			</xsl:attribute>
-		</img>';
-		return $template;
+		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';
+		$src .= "<xsl:if test=\"contains(@seq, '-20e3') or @seq = 'a9' or @seq = 'ae'\">00</xsl:if>";
+		$src .= "<xsl:value-of select=\"translate(@seq, 'abcdef', 'ABCDEF')\"/>";
+		$src .= '.' . $this->imageType;
+		return $src;
 	}
 	protected function getTargetSize(array $sizes)
 	{
@@ -120,23 +113,26 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getTemplate()
 	{
-		return ($this->imageSet === 'emojione') ? $this->getEmojiOneTemplate() :  $this->getTwemojiTemplate();
-	}
-	protected function getTwemojiTemplate()
-	{
 		$template = '<img alt="{.}" class="emoji" draggable="false"';
 		if ($this->forceImageSize)
 			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
-		$template .= ' src="//twemoji.maxcdn.com/';
+		$template .= '><xsl:attribute name="src">';
+		$template .= ($this->imageSet === 'emojione') ? $this->getEmojiOneSrc() :  $this->getTwemojiSrc();
+		$template .= '</xsl:attribute></img>';
+		return $template;
+	}
+	protected function getTwemojiSrc()
+	{
+		$src = '//twemoji.maxcdn.com/';
 		if ($this->imageType === 'svg')
-			$template .= 'svg';
+			$src .= 'svg';
 		else
 		{
 			$size = $this->getTargetSize(array(16, 36, 72));
-			$template .= $size . 'x' . $size;
+			$src .= $size . 'x' . $size;
 		}
-		$template .= '/{@seq}.' . $this->imageType . '"/>';
-		return $template;
+		$src .= '/<xsl:value-of select="@seq"/>.' . $this->imageType;
+		return $src;
 	}
 	protected function resetTemplate()
 	{
