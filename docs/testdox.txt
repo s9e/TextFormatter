@@ -2746,8 +2746,14 @@ s9e\TextFormatter\Tests\Bundle
  [x] reset() removes the cached parser and renderer
 
 s9e\TextFormatter\Tests\Bundles\Fatdown
+ [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a new instance of s9e\TextFormatter\Parser
+ [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getCachedRenderer() returns the same instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] The quick renderer can handle unknown tags
  [x] The quick renderer can handle unknown self-closing tags
@@ -2757,8 +2763,14 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests (quick renderer)
 
 s9e\TextFormatter\Tests\Bundles\Forum
+ [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a new instance of s9e\TextFormatter\Parser
+ [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getCachedRenderer() returns the same instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] The quick renderer can handle unknown tags
  [x] The quick renderer can handle unknown self-closing tags
@@ -2768,8 +2780,14 @@ s9e\TextFormatter\Tests\Bundles\Forum
  [x] Rendering tests (quick renderer)
 
 s9e\TextFormatter\Tests\Bundles\MediaPack
+ [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a new instance of s9e\TextFormatter\Parser
+ [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getCachedRenderer() returns the same instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
+ [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] The quick renderer can handle unknown tags
  [x] The quick renderer can handle unknown self-closing tags

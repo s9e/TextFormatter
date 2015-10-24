@@ -29,13 +29,37 @@ abstract class AbstractTest extends Test
 		$className::reset();
 		$className::parse('');
 		$className::render('<t></t>');
-		$className::$parser->registeredVars['cacheDir'] = __DIR__ . '/../.cache';
+		$className::getCachedParser()->registeredVars['cacheDir'] = __DIR__ . '/../.cache';
 	}
 
 	public static function tearDownAfterClass()
 	{
 		$className = static::getClassName();
 		$className::reset();
+	}
+
+	/**
+	* @testdox getCachedParser() returns an instance of s9e\TextFormatter\Parser
+	*/
+	public function testGetCachedParser()
+	{
+		$className = static::getClassName();
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Parser',
+			$className::getCachedParser()
+		);
+	}
+
+	/**
+	* @testdox getCachedParser() returns the same instance of s9e\TextFormatter\Parser
+	*/
+	public function testGetCachedParserSame()
+	{
+		$className = static::getClassName();
+		$this->assertSame(
+			$className::getCachedParser(),
+			$className::getCachedParser()
+		);
 	}
 
 	/**
@@ -51,6 +75,42 @@ abstract class AbstractTest extends Test
 	}
 
 	/**
+	* @testdox getParser() returns a new instance of s9e\TextFormatter\Parser
+	*/
+	public function testGetParserNew()
+	{
+		$className = static::getClassName();
+		$this->assertNotSame(
+			$className::getParser(),
+			$className::getParser()
+		);
+	}
+
+	/**
+	* @testdox getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
+	*/
+	public function testGetCachedRenderer()
+	{
+		$className = static::getClassName();
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Renderer',
+			$className::getCachedRenderer()
+		);
+	}
+
+	/**
+	* @testdox getCachedRenderer() returns the same instance of s9e\TextFormatter\Renderer
+	*/
+	public function testGetCachedRendererNew()
+	{
+		$className = static::getClassName();
+		$this->assertSame(
+			$className::getCachedRenderer(),
+			$className::getCachedRenderer()
+		);
+	}
+
+	/**
 	* @testdox getRenderer() returns an instance of s9e\TextFormatter\Renderer
 	*/
 	public function testGetRenderer()
@@ -58,6 +118,18 @@ abstract class AbstractTest extends Test
 		$className = static::getClassName();
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Renderer',
+			$className::getRenderer()
+		);
+	}
+
+	/**
+	* @testdox getRenderer() returns a new instance of s9e\TextFormatter\Renderer
+	*/
+	public function testGetRendererNew()
+	{
+		$className = static::getClassName();
+		$this->assertNotSame(
+			$className::getRenderer(),
 			$className::getRenderer()
 		);
 	}
@@ -78,7 +150,7 @@ abstract class AbstractTest extends Test
 	public function testQuickRendererUnknownTag()
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '((?!))';
+		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
 		$this->assertSame('unknown', $className::render('<r><UNKNOWN>unknown</UNKNOWN></r>'));
 	}
 
@@ -88,7 +160,7 @@ abstract class AbstractTest extends Test
 	public function testQuickRendererUnknownSelfClosingTag()
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '((?!))';
+		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
 		$this->assertSame('unknown', $className::render('<r><UNKNOWN/>unknown</r>'));
 	}
 
@@ -99,7 +171,7 @@ abstract class AbstractTest extends Test
 	public function testQuickRendererComment()
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '((?!))';
+		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
 		$this->assertSame('unknown', $className::render('<r><!---->unknown</r>'));
 	}
 
@@ -110,7 +182,7 @@ abstract class AbstractTest extends Test
 	public function testQuickRendererProcessingInstruction()
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '((?!))';
+		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
 		$this->assertSame('unknown', $className::render('<r><?x ?>unknown</r>'));
 	}
 
@@ -121,15 +193,14 @@ abstract class AbstractTest extends Test
 	public function testRender($text, $html, $params = [])
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '()';
+		$className::getCachedRenderer()->quickRenderingTest = '()';
 
 		$this->assertSame($html, $className::render($className::parse($text), $params));
 
 		// Reset the renderer if params were set
 		if ($params)
 		{
-			$className::$renderer = null;
-			$className::render('<t></t>');
+			$className::reset();
 		}
 	}
 
@@ -140,15 +211,14 @@ abstract class AbstractTest extends Test
 	public function testRenderQuick($text, $html, $params = [])
 	{
 		$className = static::getClassName();
-		$className::$renderer->quickRenderingTest = '((?!))';
+		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
 
 		$this->assertSame($html, $className::render($className::parse($text), $params));
 
 		// Reset the renderer if params were set
 		if ($params)
 		{
-			$className::$renderer = null;
-			$className::render('<t></t>');
+			$className::reset();
 		}
 	}
 

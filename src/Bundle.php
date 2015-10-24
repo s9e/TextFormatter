@@ -14,14 +14,33 @@ namespace s9e\TextFormatter;
 abstract class Bundle
 {
 	/**
-	* Reset the cached parser and renderer
+	* Return a cached instance of the parser
 	*
-	* @return void
+	* @return Parser
 	*/
-	public static function reset()
+	public static function getCachedParser()
 	{
-		static::$parser   = null;
-		static::$renderer = null;
+		if (!isset(static::$parser))
+		{
+			static::$parser = static::getParser();
+		}
+
+		return static::$parser;
+	}
+
+	/**
+	* Return a cached instance of the renderer
+	*
+	* @return Renderer
+	*/
+	public static function getCachedRenderer()
+	{
+		if (!isset(static::$renderer))
+		{
+			static::$renderer = static::getRenderer();
+		}
+
+		return static::$renderer;
 	}
 
 	/**
@@ -32,17 +51,12 @@ abstract class Bundle
 	*/
 	public static function parse($text)
 	{
-		if (!isset(static::$parser))
-		{
-			static::$parser = static::getParser();
-		}
-
 		if (isset(static::$beforeParse))
 		{
 			$text = call_user_func(static::$beforeParse, $text);
 		}
 
-		$xml = static::$parser->parse($text);
+		$xml = static::getCachedParser()->parse($text);
 
 		if (isset(static::$afterParse))
 		{
@@ -61,14 +75,11 @@ abstract class Bundle
 	*/
 	public static function render($xml, array $params = [])
 	{
-		if (!isset(static::$renderer))
-		{
-			static::$renderer = static::getRenderer();
-		}
+		$renderer = static::getCachedRenderer();
 
 		if (!empty($params))
 		{
-			static::$renderer->setParameters($params);
+			$renderer->setParameters($params);
 		}
 
 		if (isset(static::$beforeRender))
@@ -76,7 +87,7 @@ abstract class Bundle
 			$xml = call_user_func(static::$beforeRender, $xml);
 		}
 
-		$output = static::$renderer->render($xml);
+		$output = $renderer->render($xml);
 
 		if (isset(static::$afterRender))
 		{
@@ -84,6 +95,17 @@ abstract class Bundle
 		}
 
 		return $output;
+	}
+
+	/**
+	* Reset the cached parser and renderer
+	*
+	* @return void
+	*/
+	public static function reset()
+	{
+		static::$parser   = null;
+		static::$renderer = null;
 	}
 
 	/**

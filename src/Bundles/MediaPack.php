@@ -12,12 +12,12 @@ abstract class MediaPack extends \s9e\TextFormatter\Bundle
 	/**
 	* @var s9e\TextFormatter\Parser Singleton instance used by parse()
 	*/
-	public static $parser;
+	protected static $parser;
 
 	/**
 	* @var s9e\TextFormatter\Renderer Singleton instance used by render()
 	*/
-	public static $renderer;
+	protected static $renderer;
 
 	/**
 	* Return a new instance of s9e\TextFormatter\Parser
