@@ -9,7 +9,7 @@
 	<scrape>
 		<match>!npr\.org/[/\w]+/\d+!</match>
 		<match>!n\.pr/\w!</match>
-		<extract>!openPlayer\((?'i'\d+), (?'m'\d+)!</extract>
+		<extract>!player/embed/(?'i'\d+)/(?'m'\d+)!</extract>
 	</scrape>
 	<iframe width="100%" height="228" max-width="800" src="//www.npr.org/player/embed/{@i}/{@m}"/>
 </site>
