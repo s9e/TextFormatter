@@ -8,34 +8,43 @@
 namespace s9e\TextFormatter;
 abstract class Bundle
 {
-	public static function reset()
-	{
-		static::$parser   = \null;
-		static::$renderer = \null;
-	}
-	public static function parse($text)
+	public static function getCachedParser()
 	{
 		if (!isset(static::$parser))
 			static::$parser = static::getParser();
+		return static::$parser;
+	}
+	public static function getCachedRenderer()
+	{
+		if (!isset(static::$renderer))
+			static::$renderer = static::getRenderer();
+		return static::$renderer;
+	}
+	public static function parse($text)
+	{
 		if (isset(static::$beforeParse))
 			$text = \call_user_func(static::$beforeParse, $text);
-		$xml = static::$parser->parse($text);
+		$xml = static::getCachedParser()->parse($text);
 		if (isset(static::$afterParse))
 			$xml = \call_user_func(static::$afterParse, $xml);
 		return $xml;
 	}
 	public static function render($xml, array $params = [])
 	{
-		if (!isset(static::$renderer))
-			static::$renderer = static::getRenderer();
+		$renderer = static::getCachedRenderer();
 		if (!empty($params))
-			static::$renderer->setParameters($params);
+			$renderer->setParameters($params);
 		if (isset(static::$beforeRender))
 			$xml = \call_user_func(static::$beforeRender, $xml);
-		$output = static::$renderer->render($xml);
+		$output = $renderer->render($xml);
 		if (isset(static::$afterRender))
 			$output = \call_user_func(static::$afterRender, $output);
 		return $output;
+	}
+	public static function reset()
+	{
+		static::$parser   = \null;
+		static::$renderer = \null;
 	}
 	public static function unparse($xml)
 	{
