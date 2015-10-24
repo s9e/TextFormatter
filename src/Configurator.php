@@ -234,12 +234,12 @@ class BundleGenerator
 		$php[] = '	/**';
 		$php[] = '	* @var s9e\\TextFormatter\\Parser Singleton instance used by parse()';
 		$php[] = '	*/';
-		$php[] = '	public static $parser;';
+		$php[] = '	protected static $parser;';
 		$php[] = '';
 		$php[] = '	/**';
 		$php[] = '	* @var s9e\\TextFormatter\\Renderer Singleton instance used by render()';
 		$php[] = '	*/';
-		$php[] = '	public static $renderer;';
+		$php[] = '	protected static $renderer;';
 		$php[] = '';
 		$events = [
 			'beforeParse'
