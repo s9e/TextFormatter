@@ -19,6 +19,17 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	protected $onDuplicateAction = 'error';
 
 	/**
+	* {@inheritdoc}
+	*/
+	public function asConfig()
+	{
+		$config = parent::asConfig();
+		ksort($config);
+
+		return $config;
+	}
+
+	/**
 	* Query and set the action to take when add() is called with a key that already exists
 	*
 	* @param  string|null $action If specified: either "error", "ignore" or "replace"

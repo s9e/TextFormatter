@@ -11,7 +11,7 @@ TODO: BBCodeMonkey
 - ~~Modify the Preg plugin to use getCaptureNames()~~
 - ~~Modify AttributePreprocessor to use getCaptureNames()~~
 - ~~Move AttributePreprocessor::getAttributes() functionality to Regexp. Make AttributePreprocessor extend Regexp~~
-- Modify NormalizedCollection::asConfig() to order items in lexical order
+- ~~Modify NormalizedCollection::asConfig() to order items in lexical order~~
 - Move AttributeProcessor instances to Attribute
 - Replace AttributePreprocessorCollection with AttributePreprocessorList
 - Refactor BBCodeMonkey, create a token class

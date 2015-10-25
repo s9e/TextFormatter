@@ -44,6 +44,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] add() returns the original element when trying to add a duplicate and the onDuplicate action is "ignore"
  [x] add() replaces the original element if the onDuplicate action is "replace"
  [x] add() throws a RuntimeException on duplicate elements if the onDuplicate action is "error"
+ [x] asConfig() returns the elements in lexical order
 
 s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] append() adds the value at the end of the list

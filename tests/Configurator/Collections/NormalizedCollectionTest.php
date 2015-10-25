@@ -414,6 +414,18 @@ class NormalizedCollectionTest extends Test
 		$collection->add('foo', 'bar');
 		$collection->add('foo', 'baz');
 	}
+
+	/**
+	* @testdox asConfig() returns the elements in lexical order
+	*/
+	public function testAsConfigLexicalOrder()
+	{
+		$collection = new NormalizedCollection;
+		$collection->add('foo', 'foo');
+		$collection->add('bar', 'bar');
+
+		$this->assertSame(['bar' => 'bar', 'foo' => 'foo'], $collection->asConfig());
+	}
 }
 
 class DummyNormalizedCollection extends NormalizedCollection
