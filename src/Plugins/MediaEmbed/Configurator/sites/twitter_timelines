@@ -1,0 +1,23 @@
+<site name="Twitter Timeline" homepage="https://twitter.com/">
+	<example>https://twitter.com/TwitterMusic/timelines/39377326680165990</example>
+
+	<tags><tag>social</tag></tags>
+
+	<host>twitter.com</host>
+	<extract>@twitter\.com/(?:#!/)?\w+/timelines/(?'id'\d+)@</extract>
+	<!--
+		var id = Math.random();
+		window.addEventListener('message', function(e)
+		{
+			// NOTE: e.data.id is a string whereas id is a number
+			if (e.data.id == id)
+			{
+				style.height = e.data.height + 'px';
+			}
+		});
+
+		var origin = src.substr(0, src.indexOf('/', 8));
+		contentWindow.postMessage('s9e:' + id, origin);
+	-->
+	<iframe width="500" height="186" src="//s9e.github.io/iframe/twitter_timeline.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+</site>
