@@ -562,6 +562,26 @@ class ParserTest extends Test
 				'# foo # #',
 				'<r><H1><s># </s>foo #<e> #</e></H1></r>'
 			],
+			[
+				[
+					'# H1',
+					'1. list'
+				],
+				[
+					'<r><H1><s># </s>H1</H1>',
+					'<LIST type="decimal"><LI><s>1. </s>list</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'# H1 #',
+					'1. list'
+				],
+				[
+					'<r><H1><s># </s>H1<e> #</e></H1>',
+					'<LIST type="decimal"><LI><s>1. </s>list</LI></LIST></r>'
+				]
+			],
 			// Setext-style headers
 			[
 				[
@@ -720,6 +740,32 @@ class ParserTest extends Test
 					'<p>===</p></r>'
 				]
 			],
+			[
+				[
+					'foo',
+					'===',
+					'> xxx'
+				],
+				[
+					'<r><H1>foo<e>',
+					'===</e></H1>',
+					'<QUOTE><i>&gt; </i><p>xxx</p></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'foo',
+					'===',
+					'1. first',
+					'2. second'
+				],
+				[
+					'<r><H1>foo<e>',
+					'===</e></H1>',
+					'<LIST type="decimal"><LI><s>1. </s>first</LI>',
+					'<LI><s>2. </s>second</LI></LIST></r>'
+				]
+			],
 			// Horizontal rules
 			[
 				[
@@ -812,6 +858,18 @@ class ParserTest extends Test
 			[
 				'>  *** ',
 				'<r><QUOTE><i>&gt; </i><HR> *** </HR></QUOTE></r>'
+			],
+			[
+				[
+					'***',
+					'1. one',
+					'2. two'
+				],
+				[
+					'<r><HR>***</HR>',
+					'<LIST type="decimal"><LI><s>1. </s>one</LI>',
+					'<LI><s>2. </s>two</LI></LIST></r>'
+				]
 			],
 			// Links
 			[

@@ -464,8 +464,9 @@ class Parser extends ParserBase
 				elseif (!$listsCnt)
 				{
 					// We're not inside of a list already, we can start one if there's a list item
-					// and it's not in continuation of a paragraph
-					if (!$continuation && $hasListItem)
+					// and it's either not in continuation of a paragraph or immediately after a
+					// block
+					if ($hasListItem && (!$continuation || $this->text[$matchPos - 1] === "\x17"))
 					{
 						// Start of a new list
 						$listIndex = 0;
@@ -594,7 +595,7 @@ class Parser extends ParserBase
 
 					// Mark the start and the end of the header as boundaries
 					$this->markBoundary($startTagPos);
-					$this->markBoundary($endTagPos);
+					$this->markBoundary($lfPos);
 
 					if ($continuation)
 					{
@@ -644,8 +645,8 @@ class Parser extends ParserBase
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = true;
 
-				// Overwrite the LF to prevent forced line breaks from matching
-				$this->overwrite($lfPos, 1);
+				// Mark the end of the line as a boundary
+				$this->markBoundary($lfPos);
 			}
 			elseif (isset($setextLines[$lfPos]) && $setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
 			{
@@ -660,6 +661,9 @@ class Parser extends ParserBase
 
 				// Overwrite the LF to prevent forced line breaks from matching
 				$this->overwrite($lfPos, 1);
+
+				// Mark the end of the Setext line
+				$this->markBoundary($setextLines[$lfPos]['endTagPos'] + $setextLines[$lfPos]['endTagLen']);
 			}
 
 			if ($breakParagraph)
