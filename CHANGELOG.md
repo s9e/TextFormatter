@@ -1,3 +1,28 @@
+0.4.3 (2015-10-29)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/4ac91c44d353e8fb1b2ce5639a9ee71d92bad27d...d7547abecab3ac9d1b91f5e4c5e15e04883299f1)
+
+### Added
+
+ - `3abcb7d` Bundles: added getCachedParser() and getCachedRenderer()
+
+### Removed
+
+ - `5925a64` MediaEmbed: removed redundant code
+
+### Changed
+
+ - `b0ab098` Emoji: simplified template generation
+ - `f624086` Litedown: allow lists to start immediately after a header or horizontal rule
+ - `a871f19` Litedown: replaced the way block boundaries are set
+ - `3c8c61d` MediaEmbed: updated Comedy Central
+ - `ce982d7` MediaEmbed: updated Imgur
+ - `df9e944` MediaEmbed: updated Imgur to not transform links to static images
+ - `e5c72df` MediaEmbed: updated NPR
+ - `cd24826` NormalizedCollection: save items in the lexical order of their keys
+
+
 0.4.2 (2015-10-04)
 ==================
 
