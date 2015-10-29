@@ -135,9 +135,12 @@ class Parser extends ParserBase
 	{
 		return ($matchPos > 0 && $this->isAlnum($this->text[$matchPos - 1]) && $this->isAlnum($this->text[$matchPos + $matchLen]));
 	}
+	protected function markBoundary($pos)
+	{
+		$this->text[$pos] = "\x17";
+	}
 	protected function matchBlockLevelMarkup()
 	{
-		$boundaries   = [];
 		$codeFence    = \null;
 		$codeIndent   = 4;
 		$codeTag      = \null;
@@ -223,7 +226,7 @@ class Parser extends ParserBase
 				$lists    = [];
 				$listsCnt = 0;
 				if ($matchPos)
-					$boundaries[] = $matchPos - 1;
+					$this->markBoundary($matchPos - 1);
 			}
 			if ($indentWidth >= $codeIndent)
 			{
@@ -243,7 +246,7 @@ class Parser extends ParserBase
 				elseif ($continuation && !$hasListItem)
 					$listIndex = $listsCnt - 1;
 				elseif (!$listsCnt)
-					if (!$continuation && $hasListItem)
+					if ($hasListItem && (!$continuation || $this->text[$matchPos - 1] === "\x17"))
 						$listIndex = 0;
 					else
 						$listIndex = -1;
@@ -318,8 +321,8 @@ class Parser extends ParserBase
 					$endTagLen   = $this->getAtxHeaderEndTagLen($matchPos + $matchLen, $lfPos);
 					$endTagPos   = $lfPos - $endTagLen;
 					$this->parser->addTagPair('H' . \strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-					$boundaries[] = $startTagPos;
-					$boundaries[] = $endTagPos;
+					$this->markBoundary($startTagPos);
+					$this->markBoundary($lfPos);
 					if ($continuation)
 						$breakParagraph = \true;
 				}
@@ -352,7 +355,7 @@ class Parser extends ParserBase
 			{
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = \true;
-				$this->overwrite($lfPos, 1);
+				$this->markBoundary($lfPos);
 			}
 			elseif (isset($setextLines[$lfPos]) && $setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
 			{
@@ -364,19 +367,18 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagLen']
 				);
 				$this->overwrite($lfPos, 1);
+				$this->markBoundary($setextLines[$lfPos]['endTagPos'] + $setextLines[$lfPos]['endTagLen']);
 			}
 			if ($breakParagraph)
 			{
 				$this->parser->addParagraphBreak($textBoundary);
-				$boundaries[] = $textBoundary;
+				$this->markBoundary($textBoundary);
 			}
 			if (!$lineIsEmpty)
 				$textBoundary = $lfPos;
 			if ($ignoreLen)
 				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
 		}
-		foreach ($boundaries as $pos)
-			$this->text[$pos] = "\x17";
 	}
 	protected function matchEmphasis()
 	{

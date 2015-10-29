@@ -254,12 +254,21 @@ function isSurroundedByAlnum(matchPos, matchLen)
 }
 
 /**
+* Mark the boundary of a block in the original text
+*
+* @param {!number} pos
+*/
+function markBoundary(pos)
+{
+	text = text.substr(0, pos) + "\x17" + text.substr(pos + 1);
+}
+
+/**
 * Match block-level markup, as well as forced line breaks and headers
 */
 function matchBlockLevelMarkup()
 {
-	var boundaries   = [],
-		codeFence,
+	var codeFence,
 		codeIndent   = 4,
 		codeTag,
 		lineIsEmpty  = true,
@@ -418,7 +427,7 @@ function matchBlockLevelMarkup()
 			// Mark the block boundary
 			if (matchPos)
 			{
-				boundaries.push(matchPos - 1);
+				markBoundary(matchPos - 1);
 			}
 		}
 
@@ -456,8 +465,9 @@ function matchBlockLevelMarkup()
 			else if (!listsCnt)
 			{
 				// We're not inside of a list already, we can start one if there's a list item
-				// and it's not in continuation of a paragraph
-				if (!continuation && hasListItem)
+				// and it's either not in continuation of a paragraph or immediately after a
+				// block
+				if (hasListItem && (!continuation || text.charAt(matchPos - 1) === "\x17"))
 				{
 					// Start of a new list
 					listIndex = 0;
@@ -583,8 +593,8 @@ function matchBlockLevelMarkup()
 				addTagPair('H' + /#{1,6}/.exec(m[5])[0].length, startTagPos, startTagLen, endTagPos, endTagLen);
 
 				// Mark the start and the end of the header as boundaries
-				boundaries.push(startTagPos);
-				boundaries.push(endTagPos);
+				markBoundary(startTagPos);
+				markBoundary(lfPos);
 
 				if (continuation)
 				{
@@ -634,8 +644,8 @@ function matchBlockLevelMarkup()
 			addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
 			breakParagraph = true;
 
-			// Overwrite the LF to prevent forced line breaks from matching
-			overwrite(lfPos, 1);
+			// Mark the end of the line as a boundary
+			markBoundary(lfPos);
 		}
 		else if (setextLines[lfPos] && setextLines[lfPos].quoteDepth === quoteDepth && !lineIsEmpty && !listsCnt && !codeTag)
 		{
@@ -650,12 +660,15 @@ function matchBlockLevelMarkup()
 
 			// Overwrite the LF to prevent forced line breaks from matching
 			overwrite(lfPos, 1);
+
+			// Mark the end of the Setext line
+			markBoundary(setextLines[lfPos].endTagPos + setextLines[lfPos].endTagLen);
 		}
 
 		if (breakParagraph)
 		{
 			addParagraphBreak(textBoundary);
-			boundaries.push(textBoundary);
+			markBoundary(textBoundary);
 		}
 
 		if (!lineIsEmpty)
@@ -667,11 +680,6 @@ function matchBlockLevelMarkup()
 		{
 			addIgnoreTag(matchPos, ignoreLen).setSortPriority(1000);
 		}
-	});
-
-	boundaries.forEach(function(pos)
-	{
-		text = text.substr(0, pos) + "\x17" + text.substr(1 + pos);
 	});
 }
 
