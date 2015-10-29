@@ -254,12 +254,21 @@ function isSurroundedByAlnum(matchPos, matchLen)
 }
 
 /**
+* Mark the boundary of a block in the original text
+*
+* @param {!number} pos
+*/
+function markBoundary(pos)
+{
+	text = text.substr(0, pos) + "\x17" + text.substr(pos + 1);
+}
+
+/**
 * Match block-level markup, as well as forced line breaks and headers
 */
 function matchBlockLevelMarkup()
 {
-	var boundaries   = [],
-		codeFence,
+	var codeFence,
 		codeIndent   = 4,
 		codeTag,
 		lineIsEmpty  = true,
@@ -418,7 +427,7 @@ function matchBlockLevelMarkup()
 			// Mark the block boundary
 			if (matchPos)
 			{
-				boundaries.push(matchPos - 1);
+				markBoundary(matchPos - 1);
 			}
 		}
 
@@ -583,8 +592,8 @@ function matchBlockLevelMarkup()
 				addTagPair('H' + /#{1,6}/.exec(m[5])[0].length, startTagPos, startTagLen, endTagPos, endTagLen);
 
 				// Mark the start and the end of the header as boundaries
-				boundaries.push(startTagPos);
-				boundaries.push(endTagPos);
+				markBoundary(startTagPos);
+				markBoundary(endTagPos);
 
 				if (continuation)
 				{
@@ -655,7 +664,7 @@ function matchBlockLevelMarkup()
 		if (breakParagraph)
 		{
 			addParagraphBreak(textBoundary);
-			boundaries.push(textBoundary);
+			markBoundary(textBoundary);
 		}
 
 		if (!lineIsEmpty)
@@ -667,11 +676,6 @@ function matchBlockLevelMarkup()
 		{
 			addIgnoreTag(matchPos, ignoreLen).setSortPriority(1000);
 		}
-	});
-
-	boundaries.forEach(function(pos)
-	{
-		text = text.substr(0, pos) + "\x17" + text.substr(1 + pos);
 	});
 }
 

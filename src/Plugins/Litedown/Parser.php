@@ -282,13 +282,23 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Mark the boundary of a block in the original text
+	*
+	* @param  integer $pos
+	* @return void
+	*/
+	protected function markBoundary($pos)
+	{
+		$this->text[$pos] = "\x17";
+	}
+
+	/**
 	* Match block-level markup, as well as forced line breaks and headers
 	*
 	* @return void
 	*/
 	protected function matchBlockLevelMarkup()
 	{
-		$boundaries   = [];
 		$codeFence    = null;
 		$codeIndent   = 4;
 		$codeTag      = null;
@@ -416,7 +426,7 @@ class Parser extends ParserBase
 				// Mark the block boundary
 				if ($matchPos)
 				{
-					$boundaries[] = $matchPos - 1;
+					$this->markBoundary($matchPos - 1);
 				}
 			}
 
@@ -583,8 +593,8 @@ class Parser extends ParserBase
 					$this->parser->addTagPair('H' . strspn($m[5][0], '#', 0, 6), $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 
 					// Mark the start and the end of the header as boundaries
-					$boundaries[] = $startTagPos;
-					$boundaries[] = $endTagPos;
+					$this->markBoundary($startTagPos);
+					$this->markBoundary($endTagPos);
 
 					if ($continuation)
 					{
@@ -655,7 +665,7 @@ class Parser extends ParserBase
 			if ($breakParagraph)
 			{
 				$this->parser->addParagraphBreak($textBoundary);
-				$boundaries[] = $textBoundary;
+				$this->markBoundary($textBoundary);
 			}
 
 			if (!$lineIsEmpty)
@@ -667,11 +677,6 @@ class Parser extends ParserBase
 			{
 				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
 			}
-		}
-
-		foreach ($boundaries as $pos)
-		{
-			$this->text[$pos] = "\x17";
 		}
 	}
 
