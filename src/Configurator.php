@@ -7534,6 +7534,12 @@ use RuntimeException;
 class NormalizedCollection extends Collection implements ArrayAccess
 {
 	protected $onDuplicateAction = 'error';
+	public function asConfig()
+	{
+		$config = parent::asConfig();
+		\ksort($config);
+		return $config;
+	}
 	public function onDuplicate($action = \null)
 	{
 		$old = $this->onDuplicateAction;
