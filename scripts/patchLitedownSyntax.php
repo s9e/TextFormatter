@@ -33,5 +33,6 @@ $configurator->Litedown;
 extract($configurator->finalize());
 
 patchFile(__DIR__ . '/../src/Plugins/Litedown/Syntax.md');
+patchFile(__DIR__ . '/../docs/Plugins/Litedown/Syntax.md');
 
 die("Done.\n");

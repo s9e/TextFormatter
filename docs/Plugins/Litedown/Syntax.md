@@ -38,9 +38,37 @@ If a list has any of its text content or list items separated with a blank line,
 <li>Profit</li></ol>
 ```
 
+```md
+- Milk
+- Bread
+- Nutella
+```
+```html
+<ul><li>Milk</li>
+<li>Bread</li>
+<li>Nutella</li></ul>
+```
+
 ### Indented code blocks
 
 A series of lines indented by at least 4 spaces or a tab, preceded with an empty line.
+
+```
+Check out this program:
+
+    10 PRINT "Hello"
+	20 GOTO 10
+```
+
+### Fenced code blocks
+
+A series of lines between two <code>&#96;&#96;&#96;</code> or `~~~` markers. The name of the programming language can be appended to the first marker.
+
+~~~html
+```html
+<div class="banner">...</div>
+```
+~~~
 
 ### Headers
 
@@ -132,6 +160,19 @@ Second line</p>
 
 ## Formatting elements
 
+### Links
+
+```md
+[Link text](http://example.org)
+[Link text](http://example.org "Link title")
+[Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation\))
+```
+```html
+<p><a href="http://example.org">Link text</a>
+<a href="http://example.org" title="Link title">Link text</a>
+<a href="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29">Mars</a></p>
+```
+
 ### Emphasis
 
 A pair of `*` or `_` marks emphasis (`<em>`) while a pair of `**` or `__` marks strong emphasis (`<strong>`). One exception: a single `_` between two ASCII alphanumerical characters is kept as-is.
@@ -193,4 +234,21 @@ Single `print("``")` or double ``print("`")``
 ```
 ```html
 <p>Single <code>print("``")</code> or double <code>print("`")</code></p>
+```
+
+## Inline elements
+
+### Images
+
+```md
+![](http://example.org/img.png)
+![Alt text](http://example.org/img.png)
+![Alt text](http://example.org/img.png "Image (title)")
+[![Alt text](http://example.org/img.png)](http://example.org/)
+```
+```html
+<p><img src="http://example.org/img.png" alt="">
+<img src="http://example.org/img.png" alt="Alt text">
+<img src="http://example.org/img.png" alt="Alt text" title="Image (title)">
+<a href="http://example.org/"><img src="http://example.org/img.png" alt="Alt text"></a></p>
 ```
