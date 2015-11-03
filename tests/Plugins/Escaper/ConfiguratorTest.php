@@ -67,6 +67,24 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Automatically creates an "ESC" tag
+	*/
+	public function testCreatesTag()
+	{
+		$this->configurator->plugins->load('Escaper');
+		$this->assertTrue($this->configurator->tags->exists('ESC'));
+	}
+
+	/**
+	* @testdox The name of the tag used can be changed through the "tagName" constructor option
+	*/
+	public function testCustomTagName()
+	{
+		$this->configurator->plugins->load('Escaper', ['tagName' => 'FOO']);
+		$this->assertTrue($this->configurator->tags->exists('FOO'));
+	}
+
+	/**
 	* @testdox Has a quickMatch
 	*/
 	public function testConfigQuickMatch()
@@ -85,6 +103,30 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey(
 			'regexp',
 			$this->configurator->plugins->load('Escaper')->asConfig()
+		);
+	}
+
+	/**
+	* @testdox The config array contains the name of the tag
+	*/
+	public function testConfigTagName()
+	{
+		$this->assertArrayHasKey(
+			'tagName',
+			$this->configurator->plugins->load('Escaper')->asConfig()
+		);
+	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Escaper');
+
+		$this->assertSame(
+			$this->configurator->tags['ESC'],
+			$plugin->getTag()
 		);
 	}
 }
