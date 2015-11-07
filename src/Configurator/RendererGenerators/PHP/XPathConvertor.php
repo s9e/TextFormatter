@@ -304,7 +304,7 @@ class XPathConvertor
 				$operators['=']  = '==';
 				$operators['!='] = '!=';
 
-				$operands[] = ltrim($expr, '0');
+				$operands[] = preg_replace('(^0(.+))', '$1', $expr);
 			}
 			else
 			{

@@ -361,6 +361,10 @@ class XPathConvertorTest extends Test
 				"\$node->textContent==3"
 			],
 			[
+				'.=0',
+				"\$node->textContent==0"
+			],
+			[
 				'.=022',
 				"\$node->textContent==22"
 			],
