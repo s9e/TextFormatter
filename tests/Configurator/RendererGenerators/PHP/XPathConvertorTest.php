@@ -394,6 +394,15 @@ class XPathConvertorTest extends Test
 				"\$this->xpath->evaluate('.='.'\'x\''.'or.='.'\'y\''.'or.='.'\'z\'',\$node)"
 			],
 			[
+				"@x and @y and @z and @a",
+				"\$node->hasAttribute('x')&&\$node->hasAttribute('y')&&\$node->hasAttribute('z')&&\$node->hasAttribute('a')"
+			],
+			[
+				"@type='gifv' and @width and @height and @height != 0",
+				"\$node->getAttribute('type')==='gifv'&&\$node->hasAttribute('width')&&\$node->hasAttribute('height')&&\$node->getAttribute('height')!=0",
+				"\$this->xpath->evaluate('@type='.'\'gifv\''.' and @width and @height and @height != 0',\$node)"
+			],
+			[
 				"contains(@foo,'x')",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)",
 				"\$this->xpath->evaluate('contains(@foo,'.'\'x\''.')',\$node)"
