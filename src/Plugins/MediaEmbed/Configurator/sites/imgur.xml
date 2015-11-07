@@ -27,7 +27,7 @@
 	</scrape>
 
 	<choose>
-		<when test="@type='gifv' and @width and @height">
+		<when test="@type='gifv' and @width and @height and @height != 0">
 			<iframe width="{@width}" height="{@height}" src="//i.imgur.com/{@id}.gifv#embed"/>
 		</when>
 		<when test="starts-with(@id, 'a/')">
