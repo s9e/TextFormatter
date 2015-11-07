@@ -4323,7 +4323,7 @@ class XPathConvertor
 			{
 				$operators['=']  = '==';
 				$operators['!='] = '!=';
-				$operands[] = \ltrim($expr, '0');
+				$operands[] = \preg_replace('(^0(.+))', '$1', $expr);
 			}
 			else
 				$operands[] = $this->convertXPath($expr);
@@ -4500,7 +4500,7 @@ class XPathConvertor
 		{
 			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)|(?&math)) \\))';
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&not)|(?&value)|(?&bool)|(?&parens)))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&bool)|(?&cmp)|(?&not)|(?&value)|(?&parens)))';
 			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
 			$patterns['math'][0] = \str_replace('))', ')|(?&parens))', $patterns['math'][0]);
 			$patterns['math'][1] = \str_replace('))', ')|(?&parens))', $patterns['math'][1]);
