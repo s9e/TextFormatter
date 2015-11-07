@@ -1813,6 +1813,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://web.facebook.com/VijayTelevision/videos/948642131881684/',
+				'<r><FACEBOOK id="948642131881684" url="https://web.facebook.com/VijayTelevision/videos/948642131881684/">https://web.facebook.com/VijayTelevision/videos/948642131881684/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
 				'<r><FLICKR id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
 				[],
