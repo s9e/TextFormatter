@@ -7,6 +7,6 @@
 	<tags><tag>social</tag></tags>
 
 	<host>facebook.com</host>
-	<extract>@/(?!apps\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
+	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
 	<iframe src="//s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
 </site>
