@@ -1741,6 +1741,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553',
+				'<r><FACEBOOK id="10151471074398553" url="https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553">https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://www.facebook.com/photo.php?fbid=10152476416772631',
 				'<r><FACEBOOK id="10152476416772631" url="https://www.facebook.com/photo.php?fbid=10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
 				[],
