@@ -549,6 +549,12 @@ class Parser extends ParserBase
 						if (strpos($m[4][0], '.') !== false)
 						{
 							$listTag->setAttribute('type', 'decimal');
+
+							$start = (int) $m[4][0];
+							if ($start !== 1)
+							{
+								$listTag->setAttribute('start', $start);
+							}
 						}
 
 						// Record the new list depth

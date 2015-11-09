@@ -478,6 +478,16 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'2. two',
+					'3. three'
+				],
+				[
+					'<r><LIST start="2" type="decimal"><LI><s>2. </s>two</LI>',
+					'<LI><s>3. </s>three</LI></LIST></r>'
+				]
+			],
+			[
+				[
 					'* foo',
 					'',
 					'> bar'
@@ -1459,6 +1469,16 @@ class ParserTest extends Test
 				[
 					'<ol><li>one</li>',
 					'<li>two</li></ol>'
+				]
+			],
+			[
+				[
+					' 21. twenty-one',
+					' 22. twenty-two'
+				],
+				[
+					' <ol start="21"><li>twenty-one</li>',
+					' <li>twenty-two</li></ol>'
 				]
 			],
 			[
