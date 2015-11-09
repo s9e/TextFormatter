@@ -359,6 +359,10 @@ class BBCodesTest extends Test
 				'<ol style="list-style-type:decimal"><li>one</li><li>two</li></ol>'
 			],
 			[
+				'[LIST=1 start=2][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal" start="2"><li>one</li><li>two</li></ol>'
+			],
+			[
 				'[LIST=a][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:lower-alpha"><li>one</li><li>two</li></ol>'
 			],

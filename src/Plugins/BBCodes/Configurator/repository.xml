@@ -284,14 +284,14 @@
 	</bbcode>
 
 	<bbcode name="LIST">
-		<usage>[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext}]{TEXT}[/LIST]</usage>
+		<usage>[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext} start={UINT;optional}]{TEXT}[/LIST]</usage>
 		<template><![CDATA[
 			<xsl:choose>
 				<xsl:when test="not(@type)">
 					<ul><xsl:apply-templates /></ul>
 				</xsl:when>
 				<xsl:when test="starts-with(@type,'decimal') or starts-with(@type,'lower') or starts-with(@type,'upper')">
-					<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+					<ol style="list-style-type:{@type}"><xsl:copy-of select="@start"/><xsl:apply-templates /></ol>
 				</xsl:when>
 				<xsl:otherwise>
 					<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
