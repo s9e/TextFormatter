@@ -19,8 +19,7 @@ TODO: BBCodeMonkey
 
 Long-term goals (?)
 -------------------
-- Extend Litedown: perhaps reference links
-- Have a piece of utilities that converts a parsed text to BBCodes or Markdown
+- Create a tool that converts a parsed text to BBCodes or Markdown
 - RTE
 
 
