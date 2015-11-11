@@ -1287,6 +1287,15 @@ class TagProcessingTest extends Test
 					$parser->addVerbatim(1, 1)->setFlags(Parser::RULE_ENABLE_AUTO_BR);
 				}
 			],
+			[
+				'xxx',
+				'<r><i>xxx</i></r>',
+				null,
+				function ($parser)
+				{
+					$parser->addIgnoreTag(0, 99);
+				}
+			],
 		];
 	}
 }
