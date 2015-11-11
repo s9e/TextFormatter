@@ -991,8 +991,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.cbsnews.com/videos/is-the-us-stock-market-rigged',
-				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=W4MVSOaNEYMq"></object></div></div>',
+				'http://www.cbsnews.com/videos/is-carbonated-water-a-healthy-option/',
+				'<div data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><div style="position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=B2AtjLUWB4Vj"></object></div></div>',
 				[],
 				function ($configurator)
 				{
