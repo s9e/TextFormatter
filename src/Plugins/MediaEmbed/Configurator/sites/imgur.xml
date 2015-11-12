@@ -27,9 +27,10 @@
 	</scrape>
 
 	<choose>
-		<when test="@type='gifv' and @width and @height and @height != 0">
+		<!-- Disabled until Imgur fix their layout -->
+		<!--when test="@type='gifv' and @width and @height and @height != 0">
 			<iframe width="{@width}" height="{@height}" src="//i.imgur.com/{@id}.gifv#embed"/>
-		</when>
+		</when-->
 		<when test="starts-with(@id, 'a/')">
 			<iframe width="100%" height="550" src="//imgur.com/{@id}/embed"/>
 		</when>
