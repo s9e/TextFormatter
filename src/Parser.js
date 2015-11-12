@@ -1951,7 +1951,7 @@ function addBrTag(pos)
 */
 function addIgnoreTag(pos, len)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, Math.min(len, textLen - pos));
 }
 
 /**
