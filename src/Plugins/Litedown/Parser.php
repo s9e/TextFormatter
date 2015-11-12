@@ -293,7 +293,12 @@ class Parser extends ParserBase
 						}
 						$listTag = $this->parser->addStartTag('LIST', $tagPos, 0);
 						if (\strpos($m[4][0], '.') !== \false)
+						{
 							$listTag->setAttribute('type', 'decimal');
+							$start = (int) $m[4][0];
+							if ($start !== 1)
+								$listTag->setAttribute('start', $start);
+						}
 						$lists[] = [
 							'listTag'   => $listTag,
 							'itemTag'   => $itemTag,
