@@ -45,6 +45,10 @@ class Configurator extends ConfiguratorBase
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => array(
 			'attributes' => array(
+				'start' => array(
+					'filterChain' => array('#uint'),
+					'required'    => \false
+				),
 				'type' => array(
 					'filterChain' => array('#simpletext'),
 					'required'    => \false
@@ -56,7 +60,7 @@ class Configurator extends ConfiguratorBase
 						<ul><xsl:apply-templates/></ul>
 					</xsl:when>
 					<xsl:otherwise>
-						<ol><xsl:apply-templates/></ol>
+						<ol><xsl:copy-of select="@start"/><xsl:apply-templates/></ol>
 					</xsl:otherwise>
 				</xsl:choose>'
 		),

@@ -938,7 +938,7 @@ class Parser
 	}
 	public function addIgnoreTag($pos, $len)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, $len);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, \min($len, $this->textLen - $pos));
 	}
 	public function addParagraphBreak($pos)
 	{

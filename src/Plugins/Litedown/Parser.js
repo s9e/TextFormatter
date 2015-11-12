@@ -549,6 +549,12 @@ function matchBlockLevelMarkup()
 					if (m[4].indexOf('.') > -1)
 					{
 						listTag.setAttribute('type', 'decimal');
+
+						var start = +m[4];
+						if (start !== 1)
+						{
+							listTag.setAttribute('start', start);
+						}
 					}
 
 					// Record the new list depth
