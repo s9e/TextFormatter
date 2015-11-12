@@ -504,7 +504,7 @@
 	<tr>
 		<td><code>xboxdvr</code></td>
 		<td>Xbox DVR</td>
-		<td>http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc</td>
+		<td>http://xboxdvr.com/gamer/LOXITANE/video/12463958</td>
 	</tr>
 	<tr>
 		<td><code>yahooscreen</code></td>

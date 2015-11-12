@@ -1,9 +1,9 @@
 <site name="Xbox DVR" homepage="http://xboxdvr.com/">
-	<example>http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc</example>
+	<example>http://xboxdvr.com/gamer/LOXITANE/video/12463958</example>
 
 	<tags><tag>gaming</tag></tags>
 
 	<host>xboxdvr.com</host>
-	<extract>!xboxdvr\.com/(?'user'[^/]+)/(?'id'[-0-9a-f]+)!</extract>
-	<iframe width="560" height="430" src="//xboxdvr.com/{@user}/{@id}/embed"/>
+	<extract>!xboxdvr\.com/gamer/(?'user'[^/]+)/video/(?'id'\d+)!</extract>
+	<iframe width="640" height="360" src="//xboxdvr.com/gamer/{@user}/video/{@id}/embed"/>
 </site>

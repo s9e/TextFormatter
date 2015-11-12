@@ -2854,8 +2854,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc',
-				'<r><XBOXDVR id="fd9b395c-1750-438f-94f6-df921d1e4fdc" url="http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc" user="oDinZu">http://xboxdvr.com/oDinZu/fd9b395c-1750-438f-94f6-df921d1e4fdc</XBOXDVR></r>',
+				'http://xboxdvr.com/gamer/LOXITANE/video/12463958',
+				'<r><XBOXDVR id="12463958" url="http://xboxdvr.com/gamer/LOXITANE/video/12463958" user="LOXITANE">http://xboxdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
 				[],
 				function ($configurator)
 				{
