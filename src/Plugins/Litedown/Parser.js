@@ -70,6 +70,17 @@ function decode(str)
 }
 
 /**
+* Decode the optional attribute portion of a link
+*
+* @param  {!string} str Encoded string, possibly surrounded by quotes and whitespace
+* @return {!string}     Decoded string
+*/
+function decodeQuotedString(str)
+{
+	return decode(str.replace(/^\s*(.*?)\s*$/, '$1').replace(/^(['"])(.*)\1$/, '$2'));
+}
+
+/**
 * Encode escaped literals that have a special meaning
 *
 * @param  {!string}  str Original text
@@ -738,7 +749,7 @@ function matchImages()
 		return;
 	}
 
-	var m, regexp = /!\[([^\x17\]]*)] ?\(([^\x17 ")]+)(?: "([^\x17"]*)")?\)/g;
+	var m, regexp = /!\[([^\x17\]]*)] ?\(([^\x17 ")]+)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -749,13 +760,17 @@ function matchImages()
 			endTagPos   = startTagPos + startTagLen + contentLen,
 			endTagLen   = matchLen - startTagLen - contentLen;
 
-		var startTag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		startTag.setAttribute('alt', decode(m[1]));
-		startTag.setAttribute('src', decode(m[2]));
+		var tag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
+		tag.setAttribute('alt', decode(m[1]));
+		tag.setAttribute('src', decode(m[2]));
 
-		if (m[3] > '')
+		if (m[3])
 		{
-			startTag.setAttribute('title', decode(m[3]));
+			var title = decodeQuotedString(m[3]);
+			if (title > '')
+			{
+				tag.setAttribute('title', title);
+			}
 		}
 
 		// Overwrite the markup
@@ -797,7 +812,7 @@ function matchInlineLinks()
 		return;
 	}
 
-	var m, regexp = /\[([^\x17\]]+)] ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)(?: "(.*?)")?\)/g;
+	var m, regexp = /\[([^\x17\]]+)] ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -811,9 +826,13 @@ function matchInlineLinks()
 		var tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
 		tag.setAttribute('url', decode(m[2]));
 
-		if (m[3] > '')
+		if (m[3])
 		{
-			tag.setAttribute('title', decode(m[3]));
+			var title = decodeQuotedString(m[3]);
+			if (title > '')
+			{
+				tag.setAttribute('title', title);
+			}
 		}
 
 		// Give the link a slightly better priority to give it precedence over

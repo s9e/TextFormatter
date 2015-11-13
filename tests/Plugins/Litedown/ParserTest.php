@@ -923,6 +923,18 @@ class ParserTest extends Test
 				'<r><p>.. <URL title="0" url="http://example.com/"><s>[</s>link<e>](http://example.com/ "0")</e></URL> ..</p></r>'
 			],
 			[
+				'.. [link](http://example.com/ "Link title") ..',
+				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ "Link title")</e></URL> ..</p></r>'
+			],
+			[
+				".. [link](http://example.com/ 'Link title') ..",
+				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ \'Link title\')</e></URL> ..</p></r>'
+			],
+			[
+				'.. [link](http://example.com/ Link title) ..',
+				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ Link title)</e></URL> ..</p></r>'
+			],
+			[
 				'[not a link]',
 				'<t><p>[not a link]</p></t>'
 			],
@@ -955,6 +967,10 @@ class ParserTest extends Test
 			[
 				'.. ![Alt text](http://example.org/img.png "Image title") ..',
 				'<r><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><s>![</s>Alt text<e>](http://example.org/img.png "Image title")</e></IMG> ..</p></r>'
+			],
+			[
+				".. ![Alt text](http://example.org/img.png 'Image title') ..",
+				'<r><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><s>![</s>Alt text<e>](http://example.org/img.png \'Image title\')</e></IMG> ..</p></r>'
 			],
 			[
 				'.. ![Alt \\[text\\]](http://example.org/img.png "\\"Image title\\"") ..',

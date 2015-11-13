@@ -99,6 +99,17 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Decode the optional attribute portion of a link
+	*
+	* @param  string $str Encoded string, possibly surrounded by quotes and whitespace
+	* @return string      Decoded string
+	*/
+	protected function decodeQuotedString($str)
+	{
+		return $this->decode(preg_replace('/^([\'"])(.*)\\1$/', '$2', trim($str)));
+	}
+
+	/**
 	* Encode escaped literals that have a special meaning
 	*
 	* @param  string $str Original text
@@ -751,7 +762,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/!\\[([^\\x17\\]]*+)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
+			'/!\\[([^\\x17\\]]*)] ?\\(([^\\x17 ")]+)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -768,13 +779,17 @@ class Parser extends ParserBase
 			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
 			$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
-			$startTag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$startTag->setAttribute('alt', $this->decode($m[1][0]));
-			$startTag->setAttribute('src', $this->decode($m[2][0]));
+			$tag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+			$tag->setAttribute('alt', $this->decode($m[1][0]));
+			$tag->setAttribute('src', $this->decode($m[2][0]));
 
-			if (isset($m[3]))
+			if (!empty($m[3]))
 			{
-				$startTag->setAttribute('title', $this->decode($m[3][0]));
+				$title = $this->decodeQuotedString($m[3][0]);
+				if ($title > '')
+				{
+					$tag->setAttribute('title', $title);
+				}
 			}
 
 			// Overwrite the markup
@@ -830,7 +845,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/\\[([^\\x17\\]]+)] ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)(?: "(.*?)")?\\)/',
+			'/\\[([^\\x17\\]]+)] ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -849,9 +864,13 @@ class Parser extends ParserBase
 			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 			$tag->setAttribute('url', $this->decode($m[2][0]));
 
-			if (isset($m[3]) && $m[3][0] !== '')
+			if (!empty($m[3]))
 			{
-				$tag->setAttribute('title', $this->decode($m[3][0]));
+				$title = $this->decodeQuotedString($m[3][0]);
+				if ($title > '')
+				{
+					$tag->setAttribute('title', $title);
+				}
 			}
 
 			// Give the link a slightly better priority to give it precedence over
