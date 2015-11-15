@@ -8,7 +8,7 @@ $entries = [];
 $lines   = explode("\n", trim(file_get_contents('php://stdin')));
 
 $types = [
-	'Ignore'  => '((?:#ignore|#tests|ci skip|: added \w*\s*test|(?:build|release|travis) script))i',
+	'Ignore'  => '((?:#ignore|#tests?|ci skip|: added \w*\s*test|(?:build|release|travis) script))i',
 	'Added'   => '(\\bAdded\\b)i',
 	'Fixed'   => '(\\bFixed\\b)i',
 	'Removed' => '(\\bRemoved\\b)i',
