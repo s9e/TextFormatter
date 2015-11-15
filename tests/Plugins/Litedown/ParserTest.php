@@ -881,7 +881,7 @@ class ParserTest extends Test
 					'<LI><s>2. </s>two</LI></LIST></r>'
 				]
 			],
-			// Links
+			// Inline links
 			[
 				'Go to [that site](http://example.org) now!',
 				'<r><p>Go to <URL url="http://example.org"><s>[</s>that site<e>](http://example.org)</e></URL> now!</p></r>'
@@ -959,6 +959,137 @@ class ParserTest extends Test
 					$configurator->BBCodes->add('B')->tagName = 'STRONG';
 				}
 			],
+			// Reference links
+			[
+				[
+					'[foo][1]',
+					'',
+					' [1]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i> [1]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'> [foo][1]',
+					'>',
+					'> [1]: http://example.org'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'<i>&gt;</i>',
+					'<i>&gt; [1]: http://example.org</i></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'> [foo][1]',
+					'>',
+					'> [1]: http://example.org',
+					'',
+					'[foo][1]',
+					'',
+					'[1]: http://example.com'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'<i>&gt;</i>',
+					'<i>&gt; [1]: http://example.org</i></QUOTE>',
+					'',
+					'<p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.com</i></r>'
+				]
+			],
+			[
+				[
+					'[foo][1]',
+					'',
+					'[1]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'[foo][1]',
+					'',
+					'[1]: http://example.org "Title goes here"'
+				],
+				[
+					'<r><p><URL title="Title goes here" url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org "Title goes here"</i></r>'
+				]
+			],
+			[
+				[
+					'[foo][1]',
+					'',
+					'[1]: http://example.org "\\"Title goes here\\""'
+				],
+				[
+					'<r><p><URL title="&quot;Title goes here&quot;" url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org "\\"Title goes here\\""</i></r>'
+				]
+			],
+			[
+				[
+					'[foo] bar',
+					'',
+					'[foo]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>]</e></URL> bar</p>',
+					'',
+					'<i>[foo]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'[Foo] bar',
+					'',
+					'[foo]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>Foo<e>]</e></URL> bar</p>',
+					'',
+					'<i>[foo]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'[foo] bar',
+					'',
+					'[Foo]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>]</e></URL> bar</p>',
+					'',
+					'<i>[Foo]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'[foo] bar',
+					'',
+					'[foo]: http://example.org',
+					'[foo]: http://example.com'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>]</e></URL> bar</p>',
+					'',
+					'<i>[foo]: http://example.org',
+					'[foo]: http://example.com</i></r>'
+				]
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
@@ -988,6 +1119,103 @@ class ParserTest extends Test
 			[
 				'.. [![Alt text](http://example.org/img.png)](http://example.org/) ..',
 				'<r><p>.. <URL url="http://example.org/"><s>[</s><IMG alt="Alt text" src="http://example.org/img.png"><s>![</s>Alt text<e>](http://example.org/img.png)</e></IMG><e>](http://example.org/)</e></URL> ..</p></r>'
+			],
+			// Reference-style images
+			[
+				[
+					'![][1]',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'![][1]',
+					'',
+					'[1]: http://example.org/img.png "Title goes there"'
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					'<i>[1]: http://example.org/img.png "Title goes there"</i></r>'
+				]
+			],
+			[
+				[
+					'![][1]',
+					'',
+					"[1]: http://example.org/img.png 'Title goes there'"
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					"<i>[1]: http://example.org/img.png 'Title goes there'</i></r>"
+				]
+			],
+			[
+				[
+					'![][1]',
+					'',
+					'[1]: http://example.org/img.png Title goes there'
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					'<i>[1]: http://example.org/img.png Title goes there</i></r>'
+				]
+			],
+			[
+				[
+					'... ![1] ...',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p>... <IMG alt="1" src="http://example.org/img.png"><s>![</s>1<e>]</e></IMG> ...</p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'![Alt text][1]',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p><IMG alt="Alt text" src="http://example.org/img.png"><s>![</s>Alt text<e>][1]</e></IMG></p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'[![][1]][1]',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p><URL url="http://example.org/img.png"><s>[</s><IMG alt="" src="http://example.org/img.png"><s>![</s><e>][1]</e></IMG><e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'[![1]][1]',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p><URL url="http://example.org/img.png"><s>[</s><IMG alt="1" src="http://example.org/img.png"><s>![</s>1<e>]</e></IMG><e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
 			],
 			// Inline code
 			[

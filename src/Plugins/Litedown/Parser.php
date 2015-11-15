@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins\Litedown;
 
 use s9e\TextFormatter\Parser as Rules;
+use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
@@ -16,6 +17,11 @@ class Parser extends ParserBase
 	* @var bool Whether current text contains escape characters
 	*/
 	protected $hasEscapedChars;
+
+	/**
+	* @var array Array of [label => attributes]
+	*/
+	protected $links;
 
 	/**
 	* @var string Text being parsed
@@ -39,7 +45,7 @@ class Parser extends ParserBase
 		$this->matchImages();
 
 		// Do the rest of inline markup
-		$this->matchInlineLinks();
+		$this->matchLinks();
 		$this->matchStrikethrough();
 		$this->matchSuperscript();
 		$this->matchEmphasis();
@@ -144,6 +150,24 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Get the attribute values from given reference
+	*
+	* @param  string   $label Link label
+	* @return string[]
+	*/
+	protected function getReferenceLinkAttributes($label)
+	{
+		if (!isset($this->links))
+		{
+			$this->matchLinkReferences();
+		}
+
+		$label = strtolower($label);
+
+		return (isset($this->links[$label])) ? $this->links[$label] : [];
+	}
+
+	/**
 	* Capture lines that contain a Setext-tyle header
 	*
 	* @return array
@@ -224,6 +248,27 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Get the attribute values of an inline link or image
+	*
+	* @param  array    $m Regexp captures
+	* @return string[]    List of attribute values
+	*/
+	protected function getInlineLinkAttributes(array $m)
+	{
+		$attrValues = [$this->decode($m[3][0])];
+		if (!empty($m[4][0]))
+		{
+			$title = $this->decodeQuotedString($m[4][0]);
+			if ($title > '')
+			{
+				$attrValues[] = $title;
+			}
+		}
+
+		return $attrValues;
+	}
+
+	/**
 	* Test whether emphasis should be ignored at the given position in the text
 	*
 	* @param  integer $matchPos Position of the emphasis in the text
@@ -267,6 +312,7 @@ class Parser extends ParserBase
 		$text .= "\n\n\x17";
 
 		$this->text = $text;
+		unset($this->links);
 	}
 
 	/**
@@ -762,7 +808,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/!\\[([^\\x17\\]]*)] ?\\(([^\\x17 ")]+)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\)/',
+			'/!\\[([^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ")]+)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -781,16 +827,7 @@ class Parser extends ParserBase
 
 			$tag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 			$tag->setAttribute('alt', $this->decode($m[1][0]));
-			$tag->setAttribute('src', $this->decode($m[2][0]));
-
-			if (!empty($m[3]))
-			{
-				$title = $this->decodeQuotedString($m[3][0]);
-				if ($title > '')
-				{
-					$tag->setAttribute('title', $title);
-				}
-			}
+			$this->setLinkAttributes($tag, $m, ['src', 'title']);
 
 			// Overwrite the markup
 			$this->overwrite($matchPos, $matchLen);
@@ -832,11 +869,42 @@ class Parser extends ParserBase
 	}
 
 	/**
-	* Match inline links
+	* Capture link reference definitions in current text
 	*
 	* @return void
 	*/
-	protected function matchInlineLinks()
+	protected function matchLinkReferences()
+	{
+		$this->links = [];
+
+		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)([^\\n\\x17]*)\\n?/m';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+		foreach ($matches as $m)
+		{
+			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]))->setSortPriority(-2);
+
+			// Ignore the reference if it already exists
+			$label = strtolower($m[1][0]);
+			if (isset($this->links[$label]))
+			{
+				continue;
+			}
+
+			$this->links[$label] = [$this->decode($m[2][0])];
+			$title = $this->decodeQuotedString($m[3][0]);
+			if ($title > '')
+			{
+				$this->links[$label][] = $title;
+			}
+		}
+	}
+
+	/**
+	* Match inline and reference links
+	*
+	* @return void
+	*/
+	protected function matchLinks()
 	{
 		$pos = strpos($this->text, '[');
 		if ($pos === false)
@@ -845,7 +913,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/\\[([^\\x17\\]]+)] ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\)/',
+			'/\\[([^\\x17\\]]+)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -862,16 +930,7 @@ class Parser extends ParserBase
 			$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
 			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$tag->setAttribute('url', $this->decode($m[2][0]));
-
-			if (!empty($m[3]))
-			{
-				$title = $this->decodeQuotedString($m[3][0]);
-				if ($title > '')
-				{
-					$tag->setAttribute('title', $title);
-				}
-			}
+			$this->setLinkAttributes($tag, $m, ['url', 'title']);
 
 			// Give the link a slightly better priority to give it precedence over
 			// possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
@@ -1029,6 +1088,32 @@ class Parser extends ParserBase
 				$strongPos = $matchPos + $matchLen - $remaining;
 			}
 			$buffered += $remaining;
+		}
+	}
+
+	/**
+	* Set a URL or IMG tag's attributes
+	*
+	* @param  Tag      $tag       URL or IMG tag
+	* @param  array    $m         Regexp captures
+	* @param  string[] $attrNames List of attribute names
+	* @return void
+	*/
+	protected function setLinkAttributes(Tag $tag, array $m, array $attrNames)
+	{
+		if (isset($m[3]))
+		{
+			$attrValues = $this->getInlineLinkAttributes($m);
+		}
+		else
+		{
+			$label      = (isset($m[2])) ? $m[2][0] : $m[1][0];
+			$attrValues = $this->getReferenceLinkAttributes($label);
+		}
+
+		foreach ($attrValues as $k => $attrValue)
+		{
+			$tag->setAttribute($attrNames[$k], $attrValue);
 		}
 	}
 }
