@@ -814,7 +814,6 @@ class Parser extends ParserBase
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
 			$pos
 		);
-
 		foreach ($matches as $m)
 		{
 			$matchPos    = $m[0][1];
