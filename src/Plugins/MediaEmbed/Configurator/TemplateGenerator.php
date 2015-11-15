@@ -28,7 +28,7 @@ abstract class TemplateGenerator
 			$this->attributes['style']['position'] = 'absolute';
 			$this->attributes['style']['left'] = '0';
 			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
-			$innerStyle = 'position:relative;' . $this->getResponsivePadding();
+			$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
 			$prepend .= '<div>' . $this->generateAttributes(array('style' => $outerStyle));
 			$prepend .= '<div>' . $this->generateAttributes(array('style' => $innerStyle));
 			$append  .= '</div></div>';

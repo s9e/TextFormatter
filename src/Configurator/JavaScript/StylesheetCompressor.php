@@ -17,7 +17,7 @@ class StylesheetCompressor
 		'<param name="allowfullscreen" value="true"/>',
 		'<xsl:value-of select="',
 		'<xsl:copy-of select="@',
-		'position:relative;padding-bottom:',
+		'overflow:hidden;position:relative;padding-bottom:',
 		'display:inline-block;width:100%;max-width:',
 		' [-:\\w]++="',
 		'(?<=<)[-:\\w]++',

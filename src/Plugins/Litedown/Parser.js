@@ -1,4 +1,4 @@
-var hasEscapedChars, startTagLen, startTagPos, endTagPos, endTagLen;
+var hasEscapedChars, links, startTagLen, startTagPos, endTagPos, endTagLen;
 
 // Unlike the PHP parser, init() must not take an argument
 init();
@@ -13,7 +13,7 @@ matchInlineCode();
 matchImages();
 
 // Do the rest of inline markup
-matchInlineLinks();
+matchLinks();
 matchStrikethrough();
 matchSuperscript();
 matchEmphasis();
@@ -67,6 +67,17 @@ function decode(str)
 	}
 
 	return str;
+}
+
+/**
+* Decode the optional attribute portion of a link
+*
+* @param  {!string} str Encoded string, possibly surrounded by quotes and whitespace
+* @return {!string}     Decoded string
+*/
+function decodeQuotedString(str)
+{
+	return decode(str.replace(/^\s*(.*?)\s*$/, '$1').replace(/^(['"])(.*)\1$/, '$2'));
 }
 
 /**
@@ -143,6 +154,45 @@ function getEmphasisByBlock(regexp, pos)
 	blocks.push(block);
 
 	return blocks;
+}
+
+/**
+* Get the attribute values of an inline link or image
+*
+* @param  {!Object}         m Regexp captures
+* @return {!Array<!string>}   List of attribute values
+*/
+function getInlineLinkAttributes(m)
+{
+	var attrValues = [decode(m[3])];
+	if (m[4])
+	{
+		var title = decodeQuotedString(m[4]);
+		if (title > '')
+		{
+			attrValues.push(title);
+		}
+	}
+
+	return attrValues;
+}
+
+/**
+* Get the attribute values from given reference
+*
+* @param  {!string}          label Link label
+* @return {!Array.<!string>}
+*/
+function getReferenceLinkAttributes(label)
+{
+	if (typeof links === 'undefined')
+	{
+		matchLinkReferences();
+	}
+
+	label = label.toLowerCase();
+
+	return links[label] || [];
 }
 
 /**
@@ -228,6 +278,8 @@ function init()
 	// We append a couple of lines and a non-whitespace character at the end of the text in
 	// order to trigger the closure of all open blocks such as quotes and lists
 	text += "\n\n\x17";
+
+	links = undefined;
 }
 
 /**
@@ -738,7 +790,7 @@ function matchImages()
 		return;
 	}
 
-	var m, regexp = /!\[([^\x17\]]*)] ?\(([^\x17 ")]+)(?: "([^\x17"]*)")?\)/g;
+	var m, regexp = /!\[([^\x17\]]*)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ")]+)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -749,14 +801,9 @@ function matchImages()
 			endTagPos   = startTagPos + startTagLen + contentLen,
 			endTagLen   = matchLen - startTagLen - contentLen;
 
-		var startTag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		startTag.setAttribute('alt', decode(m[1]));
-		startTag.setAttribute('src', decode(m[2]));
-
-		if (m[3] > '')
-		{
-			startTag.setAttribute('title', decode(m[3]));
-		}
+		var tag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
+		tag.setAttribute('alt', decode(m[1]));
+		setLinkAttributes(tag, m, ['src', 'title']);
 
 		// Overwrite the markup
 		overwrite(matchPos, matchLen);
@@ -788,16 +835,44 @@ function matchInlineCode()
 }
 
 /**
-* Match inline links
+* Capture link reference definitions in current text
 */
-function matchInlineLinks()
+function matchLinkReferences()
+{
+	links = {};
+
+	var m, regexp = /^(?:> ?)* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)([^\n\x17]*)\n?/gm;
+	while (m = regexp.exec(text))
+	{
+		addIgnoreTag(m['index'], m[0].length).setSortPriority(-2);
+
+		// Ignore the reference if it already exists
+		var label = m[1].toLowerCase();
+		if (links[label])
+		{
+			continue;
+		}
+
+		links[label] = [decode(m[2])];
+		var title = decodeQuotedString(m[3]);
+		if (title > '')
+		{
+			links[label].push(title);
+		}
+	}
+}
+
+/**
+* Match inline and reference links
+*/
+function matchLinks()
 {
 	if (text.indexOf('[') === -1)
 	{
 		return;
 	}
 
-	var m, regexp = /\[([^\x17\]]+)] ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)(?: "(.*?)")?\)/g;
+	var m, regexp = /\[([^\x17\]]+)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -809,12 +884,7 @@ function matchInlineLinks()
 			endTagLen   = matchLen - startTagLen - contentLen;
 
 		var tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
-		tag.setAttribute('url', decode(m[2]));
-
-		if (m[3] > '')
-		{
-			tag.setAttribute('title', decode(m[3]));
-		}
+		setLinkAttributes(tag, m, ['url', 'title']);
 
 		// Give the link a slightly better priority to give it precedence over
 		// possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
@@ -959,5 +1029,31 @@ function processEmphasisBlock(block)
 			strongPos = matchPos + matchLen - remaining;
 		}
 		buffered += remaining;
+	});
+}
+
+/**
+* Set a URL tag's attributes
+*
+* @param {!Tag}             tag       URL tag
+* @param {!Object}          m         Regexp captures
+* @param {!Array.<!string>} attrNames List of attribute names
+*/
+function setLinkAttributes(tag, m, attrNames)
+{
+	var attrValues;
+	if (m[3])
+	{
+		attrValues = getInlineLinkAttributes(m);
+	}
+	else
+	{
+		var label  = m[2] || m[1];
+		attrValues = getReferenceLinkAttributes(label);
+	}
+
+	attrValues.forEach(function(attrValue, k)
+	{
+		tag.setAttribute(attrNames[k], attrValue);
 	});
 }
