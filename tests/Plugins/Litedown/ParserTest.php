@@ -959,6 +959,10 @@ class ParserTest extends Test
 					$configurator->BBCodes->add('B')->tagName = 'STRONG';
 				}
 			],
+			[
+				'[](http://example.org/)',
+				'<r><p><URL url="http://example.org/"><s>[</s><e>](http://example.org/)</e></URL></p></r>'
+			],
 			// Reference links
 			[
 				[
