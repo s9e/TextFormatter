@@ -1,3 +1,38 @@
+0.4.4 (2015-11-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/1a6cb0f14f0e368c973976afb7d0ac015c635d80...63dae49a256a8f3f263809c1a3e1f29e2b86a994)
+
+### Added
+
+ - `b6d4c3e` BBCodes: added support for lists that start at an arbitrary number
+ - `72d8236` Litedown: added support for empty links
+ - `c466adf` Litedown: added support for ordered lists that start at an arbitrary number
+ - `54b40b8` Litedown: added support for reference links and images
+ - `d26f829` Litedown: added support for single quoted and unquoted titles in links and images
+ - `22426da` Litedown: added support for unescaped brackets in link text and image alt text
+ - `76c7f6a` MediaEmbed: added support for country-specific Facebook links
+ - `58d8541` XPathConvertor: added support for conditions with more than 3 boolean operations
+
+### Fixed
+
+ - `d1ce37e` MediaEmbed: fixed CSS overflow on iOS Safari
+ - `10cfa29` XPathConvertor: fixed comparison to 0
+
+### Changed
+
+ - `845279a` Escaper: reverted to using a custom tag
+ - `a94a625` MediaEmbed: updated Facebook
+ - `13c9015` MediaEmbed: updated Facebook
+ - `c742fa7` MediaEmbed: updated Imgur
+ - `d7edfed` MediaEmbed: updated Imgur
+ - `ff60c99` MediaEmbed: updated Instagram
+ - `4e138d7` MediaEmbed: updated Xbox DVR
+ - `048e433` MediaEmbed: updated vidme
+ - `bb56400` Parser: automatically correct the length of ignore tags
+ - `0676a8d` Updated Fatdown
+
+
 0.4.3 (2015-10-29)
 ==================
 
