@@ -963,6 +963,10 @@ class ParserTest extends Test
 				'[](http://example.org/)',
 				'<r><p><URL url="http://example.org/"><s>[</s><e>](http://example.org/)</e></URL></p></r>'
 			],
+			[
+				'[[foo]](http://example.org/) [[foo]](http://example.org/)',
+				'<r><p><URL url="http://example.org/"><s>[</s>[foo]<e>](http://example.org/)</e></URL> <URL url="http://example.org/"><s>[</s>[foo]<e>](http://example.org/)</e></URL></p></r>'
+			],
 			// Reference links
 			[
 				[
@@ -1118,6 +1122,10 @@ class ParserTest extends Test
 			[
 				'.. ![](http://example.org/img.png) ..',
 				'<r><p>.. <IMG alt="" src="http://example.org/img.png"><s>![</s><e>](http://example.org/img.png)</e></IMG> ..</p></r>'
+			],
+			[
+				'.. ![[foo]](http://example.org/img.png) ..',
+				'<r><p>.. <IMG alt="[foo]" src="http://example.org/img.png"><s>![</s>[foo]<e>](http://example.org/img.png)</e></IMG> ..</p></r>'
 			],
 			// Images in links
 			[
