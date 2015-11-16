@@ -4,7 +4,7 @@ s9e\\TextFormatter is developed on the latest version of PHP and is compatible w
 
 Once installed, you can try this [basic example](https://github.com/s9e/TextFormatter/blob/master/docs/examples/00_quick.php).
 
-### Via Composer
+### Via Composer (preferred)
 
 Add the following to your `composer.json`. It will use Composer's autoloader normally.
 ```json
