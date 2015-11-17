@@ -1,10 +1,11 @@
 <site name="CNN" homepage="http://edition.cnn.com/video/">
-	<example>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</example>
+	<example>http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</example>
 	<example>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
 
 	<tags><tag>news</tag></tags>
 
 	<host>cnn.com</host>
+	<extract>!cnn.com/videos/(?'id'.*\.cnn)!</extract>
 	<extract>!cnn\.com/video/data/2\.0/video/(?'id'.*\.cnn)!</extract>
 	<iframe src="http://edition.cnn.com/video/api/embed.html#/video/{@id}"/>
 </site>

@@ -59,7 +59,7 @@
 	<tr>
 		<td><code>cnn</code></td>
 		<td>CNN</td>
-		<td>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html<br/>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>
+		<td>http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn<br/>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>
 	</tr>
 	<tr>
 		<td><code>cnnmoney</code></td>

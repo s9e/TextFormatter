@@ -1540,8 +1540,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html',
-				'<r><CNN id="showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn" url="http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html">http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</CNN></r>',
+				'http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn',
+				'<r><CNN id="tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn" url="http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn">http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</CNN></r>',
 				[],
 				function ($configurator)
 				{
