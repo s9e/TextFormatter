@@ -6,7 +6,16 @@ Once installed, you can try this [basic example](https://github.com/s9e/TextForm
 
 ### Via Composer (preferred)
 
-Add the following to your `composer.json`. It will use Composer's autoloader normally.
+Install s9e\\TextFormatter using Composer's command line or by editing your `composer.json`. It will use Composer's autoloader normally.
+
+#### Command-line
+
+```bash
+composer require s9e/text-formatter
+```
+
+#### composer.json
+
 ```json
 {
     "require": {

@@ -12,6 +12,10 @@ s9e\\TextFormatter is a text formatting library that supports BBCode, Markdown, 
 
 The best way to install s9e\\TextFormatter is via Composer. See [Installation](http://s9etextformatter.readthedocs.org/Getting_started/Installation/).
 
+```bash
+composer require s9e/text-formatter
+```
+
 ## Demo
 
 You can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html).
