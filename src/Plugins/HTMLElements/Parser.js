@@ -70,7 +70,7 @@ function captureAttributes(tag, elName, str)
 		attrValue = attrMatch[0].substr(1 + pos).replace(/^\s+/, '').replace('/\s+$/', '');
 
 		// Use the attribute's alias if applicable
-		if (config.aliases && config.aliases[elName] && config.aliases[elName][attrName])
+		if (HINT.HTMLELEMENTS_HAS_ALIASES && config.aliases && config.aliases[elName] && config.aliases[elName][attrName])
 		{
 			attrName = config.aliases[elName][attrName];
 		}

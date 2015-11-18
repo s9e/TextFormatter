@@ -358,4 +358,12 @@ class Configurator extends ConfiguratorBase
 
 		return $config;
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function getJSHints()
+	{
+		return ['HTMLELEMENTS_HAS_ALIASES' => (int) !empty($this->aliases)];
+	}
 }

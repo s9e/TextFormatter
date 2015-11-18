@@ -336,4 +336,31 @@ class ConfiguratorTest extends Test
 			$pluginConfig['aliases']
 		);
 	}
+
+	/**
+	* @testdox getJSHints() returns ['HTMLELEMENTS_HAS_ALIASES' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->HTMLElements;
+		$plugin->allowElement('A');
+		$this->assertSame(
+			['HTMLELEMENTS_HAS_ALIASES' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['HTMLELEMENTS_HAS_ALIASES' => 1] if any alias is set
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->HTMLElements;
+		$plugin->allowElement('A');
+		$plugin->aliasElement('A', 'url');
+		$this->assertSame(
+			['HTMLELEMENTS_HAS_ALIASES' => 1],
+			$plugin->getJSHints()
+		);
+	}
 }

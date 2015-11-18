@@ -2357,6 +2357,8 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] Generates a regexp for its config array
  [x] asConfig() preserves aliased elements' keys in a JS variant
  [x] asConfig() preserves aliased attributes' keys in a JS variant
+ [x] getJSHints() returns ['HTMLELEMENTS_HAS_ALIASES' => 0] by default
+ [x] getJSHints() returns ['HTMLELEMENTS_HAS_ALIASES' => 1] if any alias is set
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Parser
  [x] Parsing tests
