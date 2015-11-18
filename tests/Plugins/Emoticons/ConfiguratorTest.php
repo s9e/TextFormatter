@@ -305,4 +305,29 @@ class ConfiguratorTest extends Test
 			$this->configurator->Emoticons->getTemplate()
 		);
 	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOTICONS_NOT_AFTER' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->Emoticons;
+		$this->assertSame(
+			['EMOTICONS_NOT_AFTER' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOTICONS_NOT_AFTER' => 1] if notAfter is set
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->Emoticons;
+		$plugin->notAfter = '\\w';
+		$this->assertSame(
+			['EMOTICONS_NOT_AFTER' => 1],
+			$plugin->getJSHints()
+		);
+	}
 }

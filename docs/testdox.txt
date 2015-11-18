@@ -2271,6 +2271,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] finalize() sets the tag's template
  [x] getTag() returns the tag that is associated with this plugin
  [x] notIfCondition appears first in the template
+ [x] getJSHints() returns ['EMOTICONS_NOT_AFTER' => 0] by default
+ [x] getJSHints() returns ['EMOTICONS_NOT_AFTER' => 1] if notAfter is set
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
