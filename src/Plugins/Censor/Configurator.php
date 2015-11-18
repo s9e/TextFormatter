@@ -159,7 +159,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function asConfig()
 	{
-		$words = array_diff_key(iterator_to_array($this->collection), $this->allowed);
+		$words = $this->getWords();
 
 		if (empty($words))
 		{
@@ -199,6 +199,32 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		return $config;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function getJSHints()
+	{
+		foreach ($this->getWords() as $replacement)
+		{
+			if (isset($replacement) && $replacement !== $this->defaultReplacement)
+			{
+				return ['CENSOR_HAS_REPLACEMENTS' => 1];
+			}
+		}
+
+		return ['CENSOR_HAS_REPLACEMENTS' => 0];
+	}
+
+	/**
+	* Return a list of censored words
+	*
+	* @return string[]
+	*/
+	protected function getWords()
+	{
+		return array_diff_key(iterator_to_array($this->collection), $this->allowed);
 	}
 
 	/**

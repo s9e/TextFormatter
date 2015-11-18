@@ -279,4 +279,30 @@ class ConfiguratorTest extends Test
 		$this->configurator->Censor->allow('foo');
 		$this->assertNull($this->configurator->Censor->asConfig());
 	}
+
+	/**
+	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->Censor;
+		$plugin->add('foo');
+		$this->assertSame(
+			['CENSOR_HAS_REPLACEMENTS' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] if any replacement is set
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->Censor;
+		$plugin->add('foo', 'bar');
+		$this->assertSame(
+			['CENSOR_HAS_REPLACEMENTS' => 1],
+			$plugin->getJSHints()
+		);
+	}
 }
