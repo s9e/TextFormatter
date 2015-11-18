@@ -49,7 +49,7 @@ function closeList(list, textBoundary)
 */
 function decode(str)
 {
-	if (config.decodeHtmlEntities && str.indexOf('&') > -1)
+	if (HINT.LITEDOWN_DECODE_HTML_ENTITIES && config.decodeHtmlEntities && str.indexOf('&') > -1)
 	{
 		str = html_entity_decode(str);
 	}

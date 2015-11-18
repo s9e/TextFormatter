@@ -2398,6 +2398,8 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
  [x] Automatically creates a "URL" tag
  [x] Does not overwrite the "URL" tag if it already exists
  [x] asConfig() returns an array
+ [x] getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 0] by default
+ [x] getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 1] if decodeHtmlEntities is true
 
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests

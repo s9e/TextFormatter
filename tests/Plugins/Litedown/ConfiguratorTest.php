@@ -49,4 +49,28 @@ class ConfiguratorTest extends Test
 	{
 		$this->assertInternalType('array', $this->configurator->Litedown->asConfig());
 	}
+
+	/**
+	* @testdox getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->Litedown;
+		$this->assertSame(
+			['LITEDOWN_DECODE_HTML_ENTITIES' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 1] if decodeHtmlEntities is true
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->plugins->load('Litedown', ['decodeHtmlEntities' => true]);
+		$this->assertSame(
+			['LITEDOWN_DECODE_HTML_ENTITIES' => 1],
+			$plugin->getJSHints()
+		);
+	}
 }

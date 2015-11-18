@@ -143,4 +143,12 @@ class Configurator extends ConfiguratorBase
 	{
 		return ['decodeHtmlEntities' => $this->decodeHtmlEntities];
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function getJSHints()
+	{
+		return ['LITEDOWN_DECODE_HTML_ENTITIES' => (int) $this->decodeHtmlEntities];
+	}
 }
