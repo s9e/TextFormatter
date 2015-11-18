@@ -12,6 +12,11 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	/**
+	* @var bool Whether to decode HTML entities in attribute values
+	*/
+	protected $decodeHtmlEntities = false;
+
+	/**
 	* @var array Default tags
 	*/
 	protected $tags = [
@@ -136,6 +141,6 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		return [];
+		return ['decodeHtmlEntities' => $this->decodeHtmlEntities];
 	}
 }

@@ -19,11 +19,11 @@ class Fatdown extends Bundle
 	{
 		$configurator->urlConfig->allowScheme('ftp');
 
-		$configurator->Litedown;
 		$configurator->Autoemail;
 		$configurator->Autolink;
 		$configurator->Escaper;
 		$configurator->FancyPants;
+		$configurator->plugins->load('Litedown', ['decodeHtmlEntities' => true]);
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 

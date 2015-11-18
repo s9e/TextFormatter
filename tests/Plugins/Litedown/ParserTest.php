@@ -967,6 +967,15 @@ class ParserTest extends Test
 				'[[foo]](http://example.org/) [[foo]](http://example.org/)',
 				'<r><p><URL url="http://example.org/"><s>[</s>[foo]<e>](http://example.org/)</e></URL> <URL url="http://example.org/"><s>[</s>[foo]<e>](http://example.org/)</e></URL></p></r>'
 			],
+			[
+				'[](http://example.org/?a=1&b=1)[](http://example.org/?a=1&amp;b=1)',
+				'<r><p><URL url="http://example.org/?a=1&amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;b=1)</e></URL><URL url="http://example.org/?a=1&amp;amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;amp;b=1)</e></URL></p></r>'
+			],
+			[
+				'[](http://example.org/?a=1&b=1)[](http://example.org/?a=1&amp;b=1)',
+				'<r><p><URL url="http://example.org/?a=1&amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;b=1)</e></URL><URL url="http://example.org/?a=1&amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;amp;b=1)</e></URL></p></r>',
+				['decodeHtmlEntities' => true]
+			],
 			// Reference links
 			[
 				[
