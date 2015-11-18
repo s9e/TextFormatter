@@ -255,6 +255,15 @@ class ConfiguratorBaseTest extends Test
 
 		$dummy->getTag();
 	}
+
+	/**
+	* @testdox getJSHints() returns an empty array by default
+	*/
+	public function testGetJSHints()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$this->assertSame([], $dummy->getJSHints());
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

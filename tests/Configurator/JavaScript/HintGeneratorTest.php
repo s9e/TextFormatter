@@ -20,6 +20,7 @@ class HintGeneratorTest extends Test
 
 		$generator = new HintGenerator;
 		$generator->setConfig($config);
+		$generator->setPlugins($this->configurator->plugins);
 		$generator->setXSL($xsl);
 
 		$this->assertContains($str, $generator->getHints());
@@ -315,5 +316,22 @@ class HintGeneratorTest extends Test
 	{
 		$this->configurator->tags->add('X')->rules->trimFirstLine();
 		$this->assertHintsContain('HINT.RULE_TRIM_FIRST_LINE=1');
+	}
+
+	/**
+	* @testdox Contains hints from plugins
+	*/
+	public function testPluginHints()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\ConfiguratorBase')
+		             ->disableOriginalConstructor()
+		             ->getMock();
+		$mock->expects($this->atLeastOnce())
+		     ->method('getJSHints')
+		     ->will($this->returnValue(['FOO' => 1, 'BAR' => false]));
+
+		$this->configurator->plugins['Foo'] = $mock;
+		$this->assertHintsContain('HINT.BAR=false');
+		$this->assertHintsContain('HINT.FOO=1');
 	}
 }

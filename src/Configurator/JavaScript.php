@@ -225,6 +225,7 @@ class JavaScript
 	protected function getHints()
 	{
 		$this->hintGenerator->setConfig($this->config);
+		$this->hintGenerator->setPlugins($this->configurator->plugins);
 		$this->hintGenerator->setXSL($this->xsl);
 
 		return $this->hintGenerator->getHints();

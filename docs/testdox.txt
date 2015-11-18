@@ -1136,6 +1136,7 @@ s9e\TextFormatter\Tests\Configurator\HintGenerator
  [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
  [x] HINT.RULE_TRIM_FIRST_LINE=0 by default
  [x] HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
+ [x] Contains hints from plugins
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
@@ -1997,6 +1998,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] getJSParser() returns NULL if there's no Parser.js for a stock plugin
  [x] getTag() returns the tag that is associated with this plugin
  [x] getTag() throws an exception if the plugin does not have a tagName property set
+ [x] getJSHints() returns an empty array by default
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Has a default empty setUp() method

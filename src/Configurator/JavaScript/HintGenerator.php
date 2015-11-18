@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\JavaScript;
 
 use ReflectionClass;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
 
 class HintGenerator
 {
@@ -22,6 +23,11 @@ class HintGenerator
 	protected $hints;
 
 	/**
+	* @var PluginCollection Configured plugins
+	*/
+	protected $plugins;
+
+	/**
 	* @var string XSL stylesheet on which hints are based
 	*/
 	protected $xsl;
@@ -34,6 +40,7 @@ class HintGenerator
 	public function getHints()
 	{
 		$this->hints = [];
+		$this->setPluginsHints();
 		$this->setRenderingHints();
 		$this->setRulesHints();
 		$this->setTagsHints();
@@ -44,7 +51,7 @@ class HintGenerator
 		ksort($this->hints);
 		foreach ($this->hints as $hintName => $hintValue)
 		{
-			$js .= '/** @const */ HINT.' . $hintName . '=' . $hintValue . ";\n";
+			$js .= '/** @const */ HINT.' . $hintName . '=' . json_encode($hintValue) . ";\n";
 		}
 
 		return $js;
@@ -62,6 +69,17 @@ class HintGenerator
 	}
 
 	/**
+	* Set the collection of plugins
+	*
+	* @param  PluginCollection $plugins
+	* @return void
+	*/
+	public function setPlugins(PluginCollection $plugins)
+	{
+		$this->plugins = $plugins;
+	}
+
+	/**
 	* Set the XSL on which hints are based
 	*
 	* @param  string $xsl
@@ -70,6 +88,19 @@ class HintGenerator
 	public function setXSL($xsl)
 	{
 		$this->xsl = $xsl;
+	}
+
+	/**
+	* Set custom hints from plugins
+	*
+	* @return void
+	*/
+	protected function setPluginsHints()
+	{
+		foreach ($this->plugins as $plugins)
+		{
+			$this->hints += $plugins->getJSHints();
+		}
 	}
 
 	/**

@@ -115,6 +115,16 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
+	* Return additional hints used in the JavaScript parser
+	*
+	* @return array Hint names and values
+	*/
+	public function getJSHints()
+	{
+		return [];
+	}
+
+	/**
 	* Return this plugin's JavaScript parser
 	*
 	* This is the base implementation, meant to be overridden by custom plugins. By default it
