@@ -6,11 +6,16 @@ function html_entity_decode(str)
 {
 	var b = document.createElement('b');
 
-	// We escape left brackets so that we don't inadvertently evaluate some nasty HTML such as
-	// <img src=... onload=evil() />
-	b.innerHTML = str.replace(/</g, '&lt;');
+	html_entity_decode = function (str)
+	{
+		// We escape left brackets so that we don't inadvertently evaluate some nasty HTML such as
+		// <img src=... onload=evil() />
+		b.innerHTML = str.replace(/</g, '&lt;');
 
-	return b.textContent;
+		return b.textContent;
+	}
+
+	return html_entity_decode(str);
 }
 
 /**

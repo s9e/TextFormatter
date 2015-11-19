@@ -53,6 +53,10 @@ abstract class ConfiguratorBase implements ConfigProvider
 			'regexpLimit' => $this->regexpLimit
 		];
 	}
+	public function getJSHints()
+	{
+		return [];
+	}
 	public function getJSParser()
 	{
 		$className = \get_class($this);

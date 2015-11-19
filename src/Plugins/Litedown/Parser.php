@@ -37,6 +37,8 @@ class Parser extends ParserBase
 	}
 	protected function decode($str)
 	{
+		if ($this->config['decodeHtmlEntities'] && \strpos($str, '&') !== \false)
+			$str = \html_entity_decode($str, \ENT_QUOTES, 'UTF-8');
 		$str = \stripslashes(\str_replace("\x1A", '', $str));
 		if ($this->hasEscapedChars)
 			$str = \strtr(
