@@ -24,7 +24,7 @@ $imgEmoji  = ['1f1e6'];
 $textEmoji = [];
 $utf8Emoji = [];
 
-$url = 'http://unicode.org/Public/emoji/latest/emoji-data.txt';
+$url = 'http://unicode.org/Public/emoji/1.0/emoji-data.txt';
 $regexp = '(^([0-9A-F][0-9A-F ]+[0-9A-F])\\s*;\\s*(emoji|text)\\s*;\\s*L1\\s*;\\s*(?:none|primary|secondary))m';
 preg_match_all($regexp, wget($url), $matches, PREG_SET_ORDER);
 foreach ($matches as list(, $seq, $style))
