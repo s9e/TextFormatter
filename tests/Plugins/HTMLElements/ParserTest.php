@@ -176,6 +176,16 @@ class ParserTest extends Test
 					$configurator->HTMLElements->allowAttribute('img', 'data-crc32');
 				}
 			],
+			[
+				'<a href=http://example.org/>...</a>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:a href="http://example.org/"><s>&lt;a href=http://example.org/&gt;</s>...<e>&lt;/a&gt;</e></html:a></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->HTMLElements->allowElement('a');
+					$configurator->HTMLElements->allowAttribute('a', 'href');
+				}
+			],
 		];
 	}
 

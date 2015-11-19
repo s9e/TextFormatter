@@ -25,7 +25,7 @@ matches.forEach(function(m)
 	// A self-closing tag will become one start tag consuming all of the text followed by a
 	// 0-width end tag. Alternatively, it could be replaced by a pair of 0-width tags plus
 	// an ignore tag to prevent the text in between from being output
-	var tag = (m[0][0].substr(len - 2) === '/>')
+	var tag = (/(<\S+|['"\s])\/>$/.test(m[0][0]))
 			? addTagPair(tagName, pos, len, pos + len, 0)
 			: addStartTag(tagName, pos, len);
 
