@@ -95,6 +95,11 @@ class Configurator extends ConfiguratorBase
 		}
 		return $config;
 	}
+	public function getJSHints()
+	{
+		$quickMatch = ConfigHelper::generateQuickMatchFromList(\array_keys($this->aliases));
+		return ['EMOJI_HAS_ALIAS_QUICKMATCH' => (int) ($quickMatch !== \false)];
+	}
 	protected function getEmojiOneSrc()
 	{
 		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';

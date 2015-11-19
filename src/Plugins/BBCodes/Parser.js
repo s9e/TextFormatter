@@ -19,11 +19,6 @@ var bbcodeName;
 var bbcodeSuffix;
 
 /**
-* @type {!Object} Object where the keys are the offsets of end tags that were added by captureEndTag()
-*/
-var endTags = {};
-
-/**
 * @type {!number} Position of the cursor in the original text
 */
 var pos;
@@ -48,12 +43,6 @@ matches.forEach(function(m)
 	bbcodeConfig = config.bbcodes[bbcodeName];
 	startPos     = m[0][1];
 	pos          = startPos + m[0][0].length;
-
-	// Skip this tag if it's already been added
-	if (endTags[startPos])
-	{
-		return;
-	}
 
 	try
 	{
@@ -114,8 +103,6 @@ function captureEndTag()
 	{
 		return null;
 	}
-
-	endTags[endTagPos] = 1;
 
 	return addEndTag(getTagName(), endTagPos, match.length);
 }

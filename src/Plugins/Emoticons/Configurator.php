@@ -71,6 +71,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$config['quickMatch'] = ConfigHelper::generateQuickMatchFromList($codes);
 		return $config;
 	}
+	public function getJSHints()
+	{
+		return ['EMOTICONS_NOT_AFTER' => (int) !empty($this->notAfter)];
+	}
 	public function getTemplate()
 	{
 		$xsl = '<xsl:choose>';
