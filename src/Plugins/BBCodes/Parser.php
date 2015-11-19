@@ -34,11 +34,6 @@ class Parser extends ParserBase
 	protected $bbcodeSuffix;
 
 	/**
-	* @var array Array where the keys are the offsets of end tags that were added by captureEndTag()
-	*/
-	protected $endTags;
-
-	/**
 	* @var integer Position of the cursor in the original text
 	*/
 	protected $pos;
@@ -63,7 +58,6 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$this->endTags = [];
 		$this->text = $text;
 		$this->textLen = strlen($text);
 
@@ -77,12 +71,6 @@ class Parser extends ParserBase
 			$this->bbcodeConfig = $this->config['bbcodes'][$this->bbcodeName];
 			$this->startPos     = $m[0][1];
 			$this->pos          = $this->startPos + strlen($m[0][0]);
-
-			// Skip this tag if it's already been added
-			if (isset($this->endTags[$this->startPos]))
-			{
-				continue;
-			}
 
 			try
 			{
@@ -144,8 +132,6 @@ class Parser extends ParserBase
 		{
 			return;
 		}
-
-		$this->endTags[$endTagPos] = 1;
 
 		return $this->parser->addEndTag($this->getTagName(), $endTagPos, strlen($match));
 	}

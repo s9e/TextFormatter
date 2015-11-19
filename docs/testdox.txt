@@ -2143,7 +2143,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] asConfig() returns predefinedAttributes in a Dictionary
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
- [x] End tags added from lookahead are not duplicated
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
 

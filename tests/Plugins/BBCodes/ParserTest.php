@@ -16,23 +16,6 @@ class ParserTest extends Test
 	use ParsingTestsRunner;
 	use ParsingTestsJavaScriptRunner;
 
-	/**
-	* @testdox End tags added from lookahead are not duplicated
-	*/
-	public function testLookaheadBBCodes()
-	{
-		$this->configurator->BBCodes->add('B')->forceLookahead = true;
-		$this->configurator->tags->add('B');
-
-		$parser = $this->configurator->getParser();
-		$this->assertSame(
-			'<r><B><s>[b]</s>...<e>[/b]</e></B></r>',
-			$parser->parse('[b]...[/b]')
-		);
-
-		$this->assertEmpty($parser->getLogger()->get());
-	}
-
 	public function getParsingTests()
 	{
 		return [
@@ -579,6 +562,17 @@ class ParserTest extends Test
 					$tag = $configurator->tags->add('X');
 					$tag->attributes->add('foo');
 					$tag->attributes->add('bar');
+				}
+			],
+			[
+				'[c][url][/c][url=http://example.org]...[/url]',
+				'<r><C><s>[c]</s>[url]<e>[/c]</e></C><URL url="http://example.org"><s>[url=http://example.org]</s>...<e>[/url]</e></URL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('C');
+					$configurator->BBCodes->addFromRepository('URL');
+					$configurator->addHTML5Rules();
 				}
 			],
 		];
