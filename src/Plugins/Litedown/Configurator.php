@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Plugins\Litedown;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
+	protected $decodeHtmlEntities = \false;
 	protected $tags = array(
 		'C'      => '<code><xsl:apply-templates /></code>',
 		'CODE'   => array(
@@ -105,6 +106,10 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		return array();
+		return array('decodeHtmlEntities' => $this->decodeHtmlEntities);
+	}
+	public function getJSHints()
+	{
+		return array('LITEDOWN_DECODE_HTML_ENTITIES' => (int) $this->decodeHtmlEntities);
 	}
 }

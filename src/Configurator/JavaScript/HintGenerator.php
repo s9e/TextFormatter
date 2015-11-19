@@ -7,30 +7,42 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
 use ReflectionClass;
+use s9e\TextFormatter\Configurator\Collections\PluginCollection;
 class HintGenerator
 {
 	protected $config;
 	protected $hints;
+	protected $plugins;
 	protected $xsl;
 	public function getHints()
 	{
 		$this->hints = array();
+		$this->setPluginsHints();
 		$this->setRenderingHints();
 		$this->setRulesHints();
 		$this->setTagsHints();
 		$js = "/** @const */ var HINT={};\n";
 		\ksort($this->hints);
 		foreach ($this->hints as $hintName => $hintValue)
-			$js .= '/** @const */ HINT.' . $hintName . '=' . $hintValue . ";\n";
+			$js .= '/** @const */ HINT.' . $hintName . '=' . \json_encode($hintValue) . ";\n";
 		return $js;
 	}
 	public function setConfig(array $config)
 	{
 		$this->config = $config;
 	}
+	public function setPlugins(PluginCollection $plugins)
+	{
+		$this->plugins = $plugins;
+	}
 	public function setXSL($xsl)
 	{
 		$this->xsl = $xsl;
+	}
+	protected function setPluginsHints()
+	{
+		foreach ($this->plugins as $plugins)
+			$this->hints += $plugins->getJSHints();
 	}
 	protected function setRenderingHints()
 	{
