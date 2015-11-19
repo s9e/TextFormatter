@@ -329,4 +329,30 @@ class ConfiguratorTest extends Test
 			$plugin->getAliases()
 		);
 	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->Emoji;
+		$this->assertSame(
+			['EMOJI_HAS_ALIAS_QUICKMATCH' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 1] if notAfter is set
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$this->assertSame(
+			['EMOJI_HAS_ALIAS_QUICKMATCH' => 1],
+			$plugin->getJSHints()
+		);
+	}
 }

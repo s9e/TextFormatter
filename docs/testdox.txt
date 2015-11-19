@@ -2243,6 +2243,8 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] Twemoji uses 36x36 assets if the image size is 36
  [x] Twemoji uses 72x72 assets if the image size is 72
  [x] removeAlias() removes given alias
+ [x] getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 0] by default
+ [x] getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 1] if notAfter is set
 
 s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests

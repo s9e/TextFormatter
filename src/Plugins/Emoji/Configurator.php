@@ -209,6 +209,16 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	public function getJSHints()
+	{
+		$quickMatch = ConfigHelper::generateQuickMatchFromList(array_keys($this->aliases));
+
+		return ['EMOJI_HAS_ALIAS_QUICKMATCH' => (int) ($quickMatch !== false)];
+	}
+
+	/**
 	* Get the content of the src attribute used to display EmojiOne's images
 	*
 	* @return string
