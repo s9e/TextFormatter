@@ -68,7 +68,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 	public function asConfig()
 	{
-		$words = \array_diff_key(\iterator_to_array($this->collection), $this->allowed);
+		$words = $this->getWords();
 		if (empty($words))
 			return;
 		$config = [
@@ -90,6 +90,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!empty($this->allowed))
 			$config['allowed'] = $this->getWordsRegexp(\array_keys($this->allowed));
 		return $config;
+	}
+	public function getJSHints()
+	{
+		foreach ($this->getWords() as $replacement)
+			if (isset($replacement) && $replacement !== $this->defaultReplacement)
+				return ['CENSOR_HAS_REPLACEMENTS' => 1];
+		return ['CENSOR_HAS_REPLACEMENTS' => 0];
+	}
+	protected function getWords()
+	{
+		return \array_diff_key(\iterator_to_array($this->collection), $this->allowed);
 	}
 	protected function getWordsRegexp(array $words)
 	{

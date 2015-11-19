@@ -65,7 +65,7 @@ function parseAliases(text)
 	}
 
 	var matchPos = 0, m;
-	if (config.aliasesQuickMatch)
+	if (HINT.EMOJI_HAS_ALIAS_QUICKMATCH && config.aliasesQuickMatch)
 	{
 		matchPos = text.indexOf(config.aliasesQuickMatch);
 		if (matchPos < 0)

@@ -49,6 +49,10 @@ function closeList(list, textBoundary)
 */
 function decode(str)
 {
+	if (HINT.LITEDOWN_DECODE_HTML_ENTITIES && config.decodeHtmlEntities && str.indexOf('&') > -1)
+	{
+		str = html_entity_decode(str);
+	}
 	str = str.replace(/[\\\x1A]/g, '');
 
 	if (hasEscapedChars)
