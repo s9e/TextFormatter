@@ -51,6 +51,10 @@ class ParserTest extends Test
 				'Some &unknown; entity',
 				'<t>Some &amp;unknown; entity</t>'
 			],
+			[
+				'&#00;&#32;',
+				'<r>&amp;#00;<HE char=" ">&amp;#32;</HE></r>'
+			],
 		];
 	}
 

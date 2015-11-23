@@ -24,9 +24,10 @@ class Parser extends ParserBase
 			$entity = $m[0][0];
 			$chr    = html_entity_decode($entity, ENT_QUOTES, 'UTF-8');
 
-			if ($chr === $entity)
+			if ($chr === $entity || ord($chr) < 32)
 			{
-				// The entity was not decoded, so we assume it's not valid and we ignore it
+				// If the entity was not decoded, we assume it's not valid and we ignore it.
+				// Same thing if it's a control character
 				continue;
 			}
 

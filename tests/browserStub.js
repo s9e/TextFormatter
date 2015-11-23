@@ -19,7 +19,9 @@ document = {
 								'&quot;'   : '"',
 								'&hearts;' : '♥',
 								'&#x2665;' : '♥',
-								'&#9829;'  : '♥'
+								'&#9829;'  : '♥',
+								'&#32;'    : ' ',
+								'&#00;'    : '\0'
 							};
 
 							return (entity in table) ? table[entity] : entity;
