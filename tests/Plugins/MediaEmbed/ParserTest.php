@@ -340,7 +340,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-',
-				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
+				'<r><GAMETRAILERS id="2950629" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
 				[],
 				function ($configurator)
 				{
@@ -350,7 +350,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review',
-				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:31c93ab8-fe77-4db2-bfee-ff37837e6704" url="http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review">http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review</GAMETRAILERS></r>',
+				'<r><GAMETRAILERS id="2953195" url="http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review">http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review</GAMETRAILERS></r>',
 				[],
 				function ($configurator)
 				{
@@ -360,7 +360,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village',
-				'<r><GAMETRAILERS id="mgid:arc:episode:gametrailers.com:1e287a4e-b795-4c7f-9d48-1926eafb5740" url="http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village">http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</GAMETRAILERS></r>',
+				'<r><GAMETRAILERS id="2947037" url="http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village">http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</GAMETRAILERS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1018,6 +1018,16 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('dumpert');
+				}
+			],
+			[
+				'http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review',
+				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2953195?embed=1&amp;suppressBumper=1"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gametrailers');
 				}
 			],
 			[
@@ -3641,6 +3651,30 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+		];
+	}
+
+	/**
+	* @testdox Legacy rendering tests
+	* @dataProvider getLegacyRenderingTests
+	*/
+	public function testLegacyRendering($xml, $html, $setup = null)
+	{
+		$setup($this->configurator);
+		$this->assertSame($html, $this->configurator->getRenderer()->render($xml));
+	}
+
+	public function getLegacyRenderingTests()
+	{
+		return [
+			[
+				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
+				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></div></div>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gametrailers');
 				}
 			],
 		];

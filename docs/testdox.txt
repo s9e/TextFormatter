@@ -2515,6 +2515,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Abstract tests (not tied to bundled sites)
  [x] Scraping tests
  [x] Scraping+rendering tests
+ [x] Legacy rendering tests
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
