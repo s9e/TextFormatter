@@ -206,15 +206,20 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function getJSHints()
 	{
+		$hints = [
+			'CENSOR_HAS_ALLOWED'      => !empty($this->allowed),
+			'CENSOR_HAS_REPLACEMENTS' => false
+		];
 		foreach ($this->getWords() as $replacement)
 		{
 			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 			{
-				return ['CENSOR_HAS_REPLACEMENTS' => 1];
+				$hints['CENSOR_HAS_REPLACEMENTS'] = true;
+				break;
 			}
 		}
 
-		return ['CENSOR_HAS_REPLACEMENTS' => 0];
+		return $hints;
 	}
 
 	/**

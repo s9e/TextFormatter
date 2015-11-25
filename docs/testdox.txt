@@ -2173,8 +2173,10 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] asConfig() does not return an entry for "allowed" by default
  [x] asConfig() returns an entry for "allowed" if any word was allowed with allow()
  [x] asConfig() returns NULL if all censored words are also on the allowed list
- [x] getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] by default
- [x] getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] if any replacement is set
+ [x] getJSHints() returns ['CENSOR_HAS_ALLOWED' => false] by default
+ [x] getJSHints() returns ['CENSOR_HAS_ALLOWED' => true] if any replacement is set
+ [x] getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => false] by default
+ [x] getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => true] if any replacement is set
 
 s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() censors text nodes in HTML

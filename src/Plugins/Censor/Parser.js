@@ -38,5 +38,5 @@ matches.forEach(function(m)
 */
 function isAllowed(word)
 {
-	return (config.allowed && config.allowed.test(word));
+	return (HINT.CENSOR_HAS_ALLOWED && config.allowed && config.allowed.test(word));
 }

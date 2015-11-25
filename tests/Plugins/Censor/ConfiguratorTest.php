@@ -281,27 +281,54 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] by default
+	* @testdox getJSHints() returns ['CENSOR_HAS_ALLOWED' => false] by default
 	*/
-	public function testGetJSHintsFalse()
+	public function testGetJSHintsAllowedFalse()
 	{
 		$plugin = $this->configurator->Censor;
 		$plugin->add('foo');
-		$this->assertSame(
-			['CENSOR_HAS_REPLACEMENTS' => 0],
+		$this->assertArrayMatches(
+			['CENSOR_HAS_ALLOWED' => false],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => 0] if any replacement is set
+	* @testdox getJSHints() returns ['CENSOR_HAS_ALLOWED' => true] if any replacement is set
 	*/
-	public function testGetJSHintsTrue()
+	public function testGetJSHintsAllowedTrue()
 	{
 		$plugin = $this->configurator->Censor;
 		$plugin->add('foo', 'bar');
-		$this->assertSame(
-			['CENSOR_HAS_REPLACEMENTS' => 1],
+		$plugin->allow('fool');
+		$this->assertArrayMatches(
+			['CENSOR_HAS_ALLOWED' => true],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => false] by default
+	*/
+	public function testGetJSHintsReplacementsFalse()
+	{
+		$plugin = $this->configurator->Censor;
+		$plugin->add('foo');
+		$this->assertArrayMatches(
+			['CENSOR_HAS_REPLACEMENTS' => false],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['CENSOR_HAS_REPLACEMENTS' => true] if any replacement is set
+	*/
+	public function testGetJSHintsReplacementsTrue()
+	{
+		$plugin = $this->configurator->Censor;
+		$plugin->add('foo', 'bar');
+		$this->assertArrayMatches(
+			['CENSOR_HAS_REPLACEMENTS' => true],
 			$plugin->getJSHints()
 		);
 	}
