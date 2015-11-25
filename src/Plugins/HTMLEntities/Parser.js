@@ -6,9 +6,10 @@ matches.forEach(function(m)
 	var entity = m[0][0],
 		chr    = html_entity_decode(entity);
 
-	if (chr === entity)
+	if (chr === entity || chr.charCodeAt(0) < 32)
 	{
-		// The entity was not decoded, so we assume it's not valid and we ignore it
+		// If the entity was not decoded, we assume it's not valid and we ignore it.
+		// Same thing if it's a control character
 		return;
 	}
 

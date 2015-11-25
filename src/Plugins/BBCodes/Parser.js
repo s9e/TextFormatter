@@ -269,16 +269,13 @@ function parseBBCode()
 	var contentAttributes = [];
 	if (bbcodeConfig.contentAttributes)
 	{
-		if (bbcodeConfig.contentAttributes)
+		bbcodeConfig.contentAttributes.forEach(function(attrName)
 		{
-			bbcodeConfig.contentAttributes.forEach(function(attrName)
+			if (!(attrName in attributes))
 			{
-				if (!(attrName in attributes))
-				{
-					contentAttributes.push(attrName);
-				}
-			});
-		}
+				contentAttributes.push(attrName);
+			}
+		});
 	}
 
 	// Look ahead and parse the end tag that matches this tag, if applicable
