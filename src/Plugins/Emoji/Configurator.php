@@ -215,7 +215,10 @@ class Configurator extends ConfiguratorBase
 	{
 		$quickMatch = ConfigHelper::generateQuickMatchFromList(array_keys($this->aliases));
 
-		return ['EMOJI_HAS_ALIAS_QUICKMATCH' => (int) ($quickMatch !== false)];
+		return [
+			'EMOJI_HAS_ALIASES'          => !empty($this->aliases),
+			'EMOJI_HAS_ALIAS_QUICKMATCH' => ($quickMatch !== false)
+		];
 	}
 
 	/**

@@ -331,27 +331,52 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 0] by default
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
 	*/
-	public function testGetJSHintsFalse()
+	public function testGetJSHintsAliasesFalse()
 	{
 		$plugin = $this->configurator->Emoji;
-		$this->assertSame(
-			['EMOJI_HAS_ALIAS_QUICKMATCH' => 0],
+		$this->assertArrayMatches(
+			['EMOJI_HAS_ALIASES' => false],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => 1] if notAfter is set
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists
 	*/
-	public function testGetJSHintsTrue()
+	public function testGetJSHintsAliasesTrue()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$this->assertArrayMatches(
+			['EMOJI_HAS_ALIASES' => true],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => false] by default
+	*/
+	public function testGetJSHintsAliasQuickmatchFalse()
+	{
+		$plugin = $this->configurator->Emoji;
+		$this->assertArrayMatches(
+			['EMOJI_HAS_ALIAS_QUICKMATCH' => false],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => true] if an alias quick match exists
+	*/
+	public function testGetJSHintsAliasQuickmatchTrue()
 	{
 		$plugin = $this->configurator->Emoji;
 		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
 		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
-		$this->assertSame(
-			['EMOJI_HAS_ALIAS_QUICKMATCH' => 1],
+		$this->assertArrayMatches(
+			['EMOJI_HAS_ALIAS_QUICKMATCH' => true],
 			$plugin->getJSHints()
 		);
 	}
