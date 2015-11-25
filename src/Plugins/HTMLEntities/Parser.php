@@ -17,7 +17,7 @@ class Parser extends ParserBase
 		{
 			$entity = $m[0][0];
 			$chr    = \html_entity_decode($entity, \ENT_QUOTES, 'UTF-8');
-			if ($chr === $entity)
+			if ($chr === $entity || \ord($chr) < 32)
 				continue;
 			$this->parser->addSelfClosingTag($tagName, $m[0][1], \strlen($entity))->setAttribute($attrName, $chr);
 		}
