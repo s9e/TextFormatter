@@ -2556,6 +2556,8 @@ s9e\TextFormatter\Tests\Plugins\Preg\Configurator
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>,<map>]
  [x] asConfig() returns regexp in a Regexp object
  [x] match() uses the last catch-all expression as passthrough
+ [x] getJSHints() returns ['PREG_HAS_PASSTHROUGH' => false] by default
+ [x] getJSHints() returns ['PREG_HAS_PASSTHROUGH' => true] if any replacement is passthrough
 
 s9e\TextFormatter\Tests\Plugins\Preg\Parser
  [x] Parsing tests

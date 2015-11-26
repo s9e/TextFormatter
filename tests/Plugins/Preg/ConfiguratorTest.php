@@ -460,6 +460,30 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(1, $generics[0][2]);
 	}
+
+	/**
+	* @testdox getJSHints() returns ['PREG_HAS_PASSTHROUGH' => false] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$this->configurator->Preg->replace('/@(\\w+)/i', '@$1');
+		$this->assertSame(
+			['PREG_HAS_PASSTHROUGH' => false],
+			$this->configurator->Preg->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['PREG_HAS_PASSTHROUGH' => true] if any replacement is passthrough
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$this->configurator->Preg->replace('/\\*(.*?)\\*/i', '<em>$1</em>');
+		$this->assertSame(
+			['PREG_HAS_PASSTHROUGH' => true],
+			$this->configurator->Preg->getJSHints()
+		);
+	}
 }
 
 class FakeToken implements \ArrayAccess
