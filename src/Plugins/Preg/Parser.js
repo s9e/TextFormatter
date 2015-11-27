@@ -15,7 +15,7 @@ config.generics.forEach(function(entry)
 			matchLen    = m[0].length,
 			tag;
 
-		if (passthroughIdx && m[passthroughIdx] !== '')
+		if (HINT.PREG_HAS_PASSTHROUGH && passthroughIdx && m[passthroughIdx] !== '')
 		{
 			// Compute the position and length of the start tag, end tag, and the content in
 			// between. m.index gives us the position of the start tag but we don't know its length.

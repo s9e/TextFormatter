@@ -98,7 +98,10 @@ class Configurator extends ConfiguratorBase
 	public function getJSHints()
 	{
 		$quickMatch = ConfigHelper::generateQuickMatchFromList(\array_keys($this->aliases));
-		return array('EMOJI_HAS_ALIAS_QUICKMATCH' => (int) ($quickMatch !== \false));
+		return array(
+			'EMOJI_HAS_ALIASES'          => !empty($this->aliases),
+			'EMOJI_HAS_ALIAS_QUICKMATCH' => ($quickMatch !== \false)
+		);
 	}
 	protected function getEmojiOneSrc()
 	{
