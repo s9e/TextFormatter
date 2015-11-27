@@ -37,6 +37,17 @@ class Configurator extends ConfiguratorBase
 		}
 		return ['generics' => $pregs];
 	}
+	public function getJSHints()
+	{
+		$hasPassthrough = \false;
+		foreach ($this->collection as list($tagName, $regexp, $passthroughIdx))
+			if ($passthroughIdx)
+			{
+				$hasPassthrough = \true;
+				break;
+			}
+		return ['PREG_HAS_PASSTHROUGH' => $hasPassthrough];
+	}
 	public function match($regexp, $tagName)
 	{
 		$passthrough = 0;

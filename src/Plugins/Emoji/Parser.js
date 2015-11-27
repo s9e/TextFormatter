@@ -59,7 +59,7 @@ function getSequence(str)
 */
 function parseAliases(text)
 {
-	if (!config.aliases)
+	if (!HINT.EMOJI_HAS_ALIASES || !config.aliases)
 	{
 		return;
 	}
