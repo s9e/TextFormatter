@@ -16,7 +16,7 @@
 	</scrape>
 	<iframe padding-height="30">
 		<src><![CDATA[
-			<xsl:text>//s9e.github.io/iframe/twitch.min.html#channel=</xsl:text>
+			<xsl:text>https://s9e.github.io/iframe/twitch.min.html#channel=</xsl:text>
 			<xsl:value-of select="@channel"/>
 			<xsl:choose>
 				<xsl:when test="@archive_id">

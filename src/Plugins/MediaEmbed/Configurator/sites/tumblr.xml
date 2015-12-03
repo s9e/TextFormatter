@@ -10,5 +10,5 @@
 		<extract>!"embed_did":"(?'did'[-\w]+)!</extract>
 		<extract>!"embed_key":"(?'key'[-\w]+)!</extract>
 	</scrape>
-	<iframe width="520" height="180" src="//s9e.github.io/iframe/tumblr.min.html#{@key}/{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,src.substr(0,src.indexOf('/',8)))"/>
+	<iframe width="520" height="180" src="https://s9e.github.io/iframe/tumblr.min.html#{@key}/{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
 </site>
