@@ -339,28 +339,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-',
-				'<r><GAMETRAILERS id="2950629" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gametrailers');
-				}
-			],
-			[
-				'http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review',
-				'<r><GAMETRAILERS id="2953195" url="http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review">http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review</GAMETRAILERS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gametrailers');
-				}
-			],
-			[
-				'http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village',
-				'<r><GAMETRAILERS id="2947037" url="http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village">http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</GAMETRAILERS></r>',
+				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
+				'<r><GAMETRAILERS id="2954127" url="http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1021,8 +1001,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review',
-				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2953195?embed=1&amp;suppressBumper=1"></iframe></div></div>',
+				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
+				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2954127?embed=1&amp;suppressBumper=1"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{

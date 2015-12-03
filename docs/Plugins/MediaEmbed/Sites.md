@@ -134,7 +134,7 @@
 	<tr>
 		<td><code>gametrailers</code></td>
 		<td>GameTrailers</td>
-		<td>http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-<br/>http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review<br/>http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</td>
+		<td>http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</td>
 	</tr>
 	<tr>
 		<td><code>getty</code></td>
