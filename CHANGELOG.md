@@ -1,3 +1,40 @@
+0.4.5 (2015-12-04)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/c60a76996bd97733b2fe8ca14289237e43ce94f9...eb8ca6fc21770129b9244f6c544111f64f1a47f8)
+
+### Added
+
+ - `c40350b` Censor: added JavaScript hint
+ - `650adb0` Censor: added JavaScript hint
+ - `68fe6d6` Emoji: added JavaScript hint
+ - `491042c` Emoji: added JavaScript hint
+ - `23e84ac` Emoticons: added JavaScript hint
+ - `7ec97e6` HTMLElements: added JavaScript hint
+ - `5b5a6c4` JavaScript: added support for custom hints set by plugins
+ - `fe484da` Litedown: added JavaScript hint for skipping HTML entity decoding
+ - `0971ef0` Litedown: added support for decoding HTML entities in attribute values
+ - `993f5cc` Preg: added JavaScript hint
+
+### Removed
+
+ - `3484b60` BBCodes: removed duplicate condition
+
+### Fixed
+
+ - `d0b6396` BBCodes: fixed improper pairing during parsing
+ - `080d7aa` HTMLElements: fixed detection of empty elements
+
+### Changed
+
+ - `58dd013` HTMLEntities: ignore control characters encoded as HTML entities
+ - `ffcdd48` MediaEmbed: replaced protocol-relative iframe URLs from GitHub to use HTTPS
+ - `95b72d7` MediaEmbed: updated CNN
+ - `ec41c55` MediaEmbed: updated GameTrailers
+ - `2209d3c` Updated emoji script
+ - `4ce201a` utils.js: cache the element used in html_entity_decode()
+
+
 0.4.4 (2015-11-15)
 ==================
 
