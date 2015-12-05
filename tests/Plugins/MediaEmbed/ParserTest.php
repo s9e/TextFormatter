@@ -2327,6 +2327,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://pastebin.com/u/username',
+				'<t>http://pastebin.com/u/username</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pastebin');
+				}
+			],
+			[
 				'http://pastebin.com/raw.php?i=9jEf44nc',
 				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/raw.php?i=9jEf44nc">http://pastebin.com/raw.php?i=9jEf44nc</PASTEBIN></r>',
 				[],
