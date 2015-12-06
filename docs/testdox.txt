@@ -52,6 +52,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] prepend() adds the value at the beginning of the list
  [x] insert() inserts the value at given offset
  [x] insert() can insert value that is an array
+ [x] Negative offsets count from the end of the list
  [x] insert() throws an exception if the offset is out of bounds
  [x] $normalizedList[0] = 'foo' replaces the first value of the list if it exists
  [x] $normalizedList[0] = 'foo' appends to the list if it's empty

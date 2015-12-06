@@ -76,7 +76,9 @@ class NormalizedList extends NormalizedCollection
 	}
 
 	/**
-	* Ensure that the key is a valid offset, ranging from 0 to count($this->items)
+	* Ensure that the key is a valid offset
+	*
+	* Negative values count from the end of the list
 	*
 	* @param  mixed   $key
 	* @return integer
@@ -84,7 +86,7 @@ class NormalizedList extends NormalizedCollection
 	public function normalizeKey($key)
 	{
 		$normalizedKey = filter_var(
-			$key,
+			(preg_match('(^-\\d+$)D', $key)) ? count($this->items) + $key : $key,
 			FILTER_VALIDATE_INT,
 			[
 				'options' => [

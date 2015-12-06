@@ -87,6 +87,26 @@ class NormalizedListTest extends Test
 	}
 
 	/**
+	* @testdox Negative offsets count from the end of the list
+	*/
+	public function testNegativeOffsets()
+	{
+		$this->normalizedList->append(1);
+		$this->normalizedList->append(3);
+		$this->normalizedList->append(4);
+		$this->normalizedList->insert(-2, 2);
+
+		$this->assertSame(1, $this->normalizedList[0]);
+		$this->assertSame(2, $this->normalizedList[1]);
+		$this->assertSame(3, $this->normalizedList[2]);
+		$this->assertSame(4, $this->normalizedList[3]);
+		$this->assertSame(4, $this->normalizedList[-1]);
+		$this->assertSame(3, $this->normalizedList[-2]);
+		$this->assertSame(2, $this->normalizedList[-3]);
+		$this->assertSame(1, $this->normalizedList[-4]);
+	}
+
+	/**
 	* @testdox insert() throws an exception if the offset is out of bounds
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid offset '3'
