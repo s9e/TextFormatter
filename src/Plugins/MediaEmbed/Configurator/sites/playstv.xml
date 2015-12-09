@@ -1,0 +1,9 @@
+<site name="Plays.tv" homepage="http://plays.tv/">
+	<example>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</example>
+
+	<tags><tag>gaming</tag></tags>
+
+	<host>plays.tv</host>
+	<extract>!plays.tv/video/(?'id'\w+)!</extract>
+	<iframe src="//plays.tv/embeds/{@id}"/>
+</site>

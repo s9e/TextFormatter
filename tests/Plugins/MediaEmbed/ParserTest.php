@@ -2345,6 +2345,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that',
+				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that">http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('playstv');
+				}
+			],
+			[
 				'http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/',
 				'<r><PREZI id="5ye8po_hmikp" url="http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
 				[],

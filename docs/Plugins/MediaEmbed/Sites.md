@@ -317,6 +317,11 @@
 		<td>http://pastebin.com/9jEf44nc</td>
 	</tr>
 	<tr>
+		<td><code>playstv</code></td>
+		<td>Plays.tv</td>
+		<td>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
+	</tr>
+	<tr>
 		<td><code>podbean</code></td>
 		<td>Podbean</td>
 		<td>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</td>
