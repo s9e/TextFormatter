@@ -353,7 +353,7 @@ function matchBlockLevelMarkup()
 	// further matches
 	var matches = [],
 		m,
-		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+.*|~~~+.*)?)?/gm;
+		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+[^`\n]*$|~~~+[^~\n]*$)?)?/gm;
 	while (m = regexp.exec(text))
 	{
 		matches.push(m);
@@ -692,7 +692,7 @@ function matchBlockLevelMarkup()
 					addIgnoreTag(tagPos + tagLen, 1);
 
 					// Add the language if present, e.g. ```php
-					var lang = m[5].replace(/^[`~]*/, '');
+					var lang = m[5].replace(/^[`~\s]*/, '').replace(/\s+$/, '');
 					if (lang !== '')
 					{
 						codeTag.setAttribute('lang', lang);
@@ -824,14 +824,15 @@ function matchInlineCode()
 		return;
 	}
 
-	var m, regexp = /(``?)[^\x17]*?[^`]\1(?!`)/g;
+	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17]*?[^`\s])?(\s*\2)(?!`)/g;
 	while (m = regexp.exec(text))
 	{
-		var matchPos = m['index'],
-			matchLen = m[0].length,
-			tagLen   = m[1].length;
+		var matchPos    = m['index'],
+			matchLen    = m[0].length,
+			startTagLen = m[1].length,
+			endTagLen   = m[3].length;
 
-		addTagPair('C', matchPos, tagLen, matchPos + matchLen - tagLen, tagLen);
+		addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
 
 		// Overwrite the markup
 		overwrite(matchPos, matchLen);
