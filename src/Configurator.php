@@ -8137,7 +8137,7 @@ class NormalizedList extends NormalizedCollection
 	public function normalizeKey($key)
 	{
 		$normalizedKey = \filter_var(
-			$key,
+			(\preg_match('(^-\\d+$)D', $key)) ? \count($this->items) + $key : $key,
 			\FILTER_VALIDATE_INT,
 			[
 				'options' => [

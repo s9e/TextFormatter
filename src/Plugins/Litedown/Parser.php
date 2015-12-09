@@ -179,7 +179,7 @@ class Parser extends ParserBase
 		$quotesCnt    = 0;
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+.*|~~~+.*)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*$)?)?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
@@ -377,7 +377,7 @@ class Parser extends ParserBase
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
 						$codeFence = $m[5][0][0];
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
-						$lang = \ltrim($m[5][0], '`~');
+						$lang = \trim(\trim($m[5][0], '`~'));
 						if ($lang !== '')
 							$codeTag->setAttribute('lang', $lang);
 					}
@@ -467,7 +467,7 @@ class Parser extends ParserBase
 		if ($pos === \false)
 			return;
 		\preg_match_all(
-			'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
+			'/((`+)(?!`)\\s*)(?:[^\\x17]*?[^`\\s])?(\\s*\\2)(?!`)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
@@ -475,10 +475,11 @@ class Parser extends ParserBase
 		);
 		foreach ($matches as $m)
 		{
-			$matchLen = \strlen($m[0][0]);
-			$matchPos = $m[0][1];
-			$tagLen   = \strlen($m[1][0]);
-			$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
+			$matchLen    = \strlen($m[0][0]);
+			$matchPos    = $m[0][1];
+			$startTagLen = \strlen($m[1][0]);
+			$endTagLen   = \strlen($m[3][0]);
+			$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
 			$this->overwrite($matchPos, $matchLen);
 		}
 	}
