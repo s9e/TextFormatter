@@ -1280,12 +1280,32 @@ class ParserTest extends Test
 				'<r><p>.. <C><s>``</s>x<e>``</e></C> ..</p></r>'
 			],
 			[
+				'.. ```x``` ..',
+				'<r><p>.. <C><s>```</s>x<e>```</e></C> ..</p></r>'
+			],
+			[
 				"`foo\nbar`",
 				"<r><p><C><s>`</s>foo\nbar<e>`</e></C></p></r>"
 			],
 			[
 				"`foo\n\nbar`",
 				"<t><p>`foo</p>\n\n<p>bar`</p></t>"
+			],
+			[
+				'```code```',
+				'<r><p><C><s>```</s>code<e>```</e></C></p></r>'
+			],
+			[
+				'``` code ```',
+				'<r><p><C><s>``` </s>code<e> ```</e></C></p></r>'
+			],
+			[
+				'``` co````de ```',
+				'<r><p><C><s>``` </s>co````de<e> ```</e></C></p></r>'
+			],
+			[
+				'``` ```',
+				'<r><p><C><s>``` </s><e>```</e></C></p></r>'
 			],
 			// Strikethrough
 			[

@@ -372,7 +372,7 @@ class Parser extends ParserBase
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*$)?)?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
@@ -851,7 +851,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/(``?)[^\\x17]*?[^`]\\1(?!`)/',
+			'/((`+)(?!`)\\s*)(?:[^\\x17]*?[^`\\s])?(\\s*\\2)(?!`)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -860,11 +860,12 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$matchLen = strlen($m[0][0]);
-			$matchPos = $m[0][1];
-			$tagLen   = strlen($m[1][0]);
+			$matchLen    = strlen($m[0][0]);
+			$matchPos    = $m[0][1];
+			$startTagLen = strlen($m[1][0]);
+			$endTagLen   = strlen($m[3][0]);
 
-			$this->parser->addTagPair('C', $matchPos, $tagLen, $matchPos + $matchLen - $tagLen, $tagLen);
+			$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
 
 			// Overwrite the markup
 			$this->overwrite($matchPos, $matchLen);
