@@ -353,7 +353,7 @@ function matchBlockLevelMarkup()
 	// further matches
 	var matches = [],
 		m,
-		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+.*|~~~+.*)?)?/gm;
+		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+[^`\n]*|~~~+[^~\n]*)?)?/gm;
 	while (m = regexp.exec(text))
 	{
 		matches.push(m);
@@ -692,7 +692,7 @@ function matchBlockLevelMarkup()
 					addIgnoreTag(tagPos + tagLen, 1);
 
 					// Add the language if present, e.g. ```php
-					var lang = m[5].replace(/^[`~]*/, '');
+					var lang = m[5].replace(/^[`~\s]*/, '').replace(/\s+$/, '');
 					if (lang !== '')
 					{
 						codeTag.setAttribute('lang', lang);

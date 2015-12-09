@@ -372,7 +372,7 @@ class Parser extends ParserBase
 		$setextLines  = $this->getSetextLines();
 		$textBoundary = 0;
 
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+.*|~~~+.*)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*)?)?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
 		foreach ($matches as $m)
@@ -698,7 +698,7 @@ class Parser extends ParserBase
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
 
 						// Add the language if present, e.g. ```php
-						$lang = ltrim($m[5][0], '`~');
+						$lang = trim(trim($m[5][0], '`~'));
 						if ($lang !== '')
 						{
 							$codeTag->setAttribute('lang', $lang);

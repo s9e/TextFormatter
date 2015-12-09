@@ -1604,6 +1604,18 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'``` php ',
+					'code',
+					'```'
+				],
+				[
+					'<r><CODE lang="php"><s>``` php </s><i>',
+					'</i>code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
+			[
+				[
 					'> ```',
 					'> code',
 					'> ```'
