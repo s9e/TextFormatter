@@ -3,12 +3,13 @@
 	<example>http://www.twitch.tv/twitch</example>
 	<example>http://www.twitch.tv/twitch/b/557643505</example>
 	<example>http://www.twitch.tv/twitch/c/5965727</example>
-	<example>http://www.twitch.tv/twitch/v/29415830</example>
+	<example>http://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
 
 	<tags><tag>gaming</tag></tags>
 
 	<host>twitch.tv</host>
 	<extract>#twitch\.tv/(?'channel'\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+)|/v/(?'video_id'\d+))?#</extract>
+	<extract>#t=(?'t'(?:(?:\d+h)?\d+m)?\d+s)#</extract>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>//player.twitch.tv/?autoplay=false&amp;</xsl:text>
@@ -30,6 +31,10 @@
 					<xsl:value-of select="@channel"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:if test="@t">
+				<xsl:text>&amp;time=</xsl:text>
+				<xsl:value-of select="@t"/>
+			</xsl:if>
 		]]></src>
 	</iframe>
 </site>
