@@ -1,36 +1,34 @@
 <site name="Twitch" homepage="http://www.twitch.tv/">
-	<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
-	<example>http://www.twitch.tv/amazhs</example>
-	<example>http://www.twitch.tv/amazhs/c/4493103</example>
-	<example>http://www.twitch.tv/minigolf2000/b/497929990</example>
-	<example>http://www.twitch.tv/m/57217</example>
-	<example>http://www.twitch.tv/playstation/v/3589809</example>
+	<source>https://github.com/justintv/Twitch-API/blob/master/embed-video.md</source>
+	<example>http://www.twitch.tv/twitch</example>
+	<example>http://www.twitch.tv/twitch/b/557643505</example>
+	<example>http://www.twitch.tv/twitch/c/5965727</example>
+	<example>http://www.twitch.tv/twitch/v/29415830</example>
 
 	<tags><tag>gaming</tag></tags>
 
 	<host>twitch.tv</host>
-	<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+)|/v/(?'video_id'\d+))?#</extract>
-	<scrape>
-		<match>!twitch\.tv/m/\d+!</match>
-		<extract>!channel=(?'channel'\w+).*?videoId=a(?'archive_id'\d+)!</extract>
-	</scrape>
-	<iframe padding-height="30">
+	<extract>#twitch\.tv/(?'channel'\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+)|/v/(?'video_id'\d+))?#</extract>
+	<iframe>
 		<src><![CDATA[
-			<xsl:text>https://s9e.github.io/iframe/twitch.min.html#channel=</xsl:text>
-			<xsl:value-of select="@channel"/>
+			<xsl:text>//player.twitch.tv/?autoplay=false&amp;</xsl:text>
 			<xsl:choose>
 				<xsl:when test="@archive_id">
-					<xsl:text>&amp;videoId=a</xsl:text>
+					<xsl:text>video=a</xsl:text>
 					<xsl:value-of select="@archive_id"/>
 				</xsl:when>
 				<xsl:when test="@chapter_id">
-					<xsl:text>&amp;videoId=c</xsl:text>
+					<xsl:text>video=c</xsl:text>
 					<xsl:value-of select="@chapter_id"/>
 				</xsl:when>
 				<xsl:when test="@video_id">
-					<xsl:text>&amp;videoId=v</xsl:text>
+					<xsl:text>video=v</xsl:text>
 					<xsl:value-of select="@video_id"/>
 				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>channel=</xsl:text>
+					<xsl:value-of select="@channel"/>
+				</xsl:otherwise>
 			</xsl:choose>
 		]]></src>
 	</iframe>

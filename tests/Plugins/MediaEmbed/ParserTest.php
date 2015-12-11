@@ -799,35 +799,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tumblr');
 				}
 			],
-//			[
-//				'http://www.twitch.tv/m/57217',
-//				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					// Run this test without cache on Travis
-//					if (!isset($_SERVER['TRAVIS']))
-//					{
-//						$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					}
-//					$configurator->MediaEmbed->add('twitch');
-//				}
-//			],
-//			[
-//				'http://www.twitch.tv/m/57217',
-//				'<r><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					// Skip during cache preload
-//					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
-//					{
-//						$this->markTestSkipped();
-//					}
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('twitch');
-//				}
-//			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
 				'<r><USTREAM cid="16234409" url="http://www.ustream.tv/channel/ps4-ustream-gameplay">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></r>',
@@ -3468,8 +3439,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/minigolf2000',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://s9e.github.io/iframe/twitch.min.html#channel=minigolf2000"></iframe></div></div>',
+				'http://www.twitch.tv/twitch',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;channel=twitch"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3477,8 +3448,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/amazhs/c/4493103',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://s9e.github.io/iframe/twitch.min.html#channel=amazhs&amp;videoId=c4493103"></iframe></div></div>',
+				'http://www.twitch.tv/twitch/c/5965727',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=c5965727"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3486,8 +3457,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/minigolf2000/b/497929990',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://s9e.github.io/iframe/twitch.min.html#channel=minigolf2000&amp;videoId=a497929990"></iframe></div></div>',
+				'http://www.twitch.tv/twitch/b/557643505',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=a557643505"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3495,8 +3466,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/playstation/v/3589809',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:60.9375%;padding-bottom:calc(56.25% + 30px)"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://s9e.github.io/iframe/twitch.min.html#channel=playstation&amp;videoId=v3589809"></iframe></div></div>',
+				'http://www.twitch.tv/twitch/v/29415830',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
