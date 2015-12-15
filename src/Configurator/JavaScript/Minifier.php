@@ -24,7 +24,7 @@ abstract class Minifier
 	/**
 	* Return a value that uniquely identify this minifier's configuration
 	*
-	* @return string Any unique value
+	* @return array|string
 	*/
 	abstract public function getCacheDifferentiator();
 
