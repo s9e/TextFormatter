@@ -240,6 +240,13 @@ s9e\TextFormatter\Tests\Configurator\Collections\HostnameList
  [x] add('example.*') matches 'example.org'
  [x] add('example') does not match 'example.org'
 
+s9e\TextFormatter\Tests\Configurator\Collections\MinifierList
+ [x] add() normalizes minifier names to instances of s9e\TextFormatter\Configurator\JavaScript\Minifiers if applicable
+ [x] add() throws an exception when the value is neither a Minifier instance nor a known minifier
+ [x] add() throws an exception when the value is a boolean
+ [x] add() accepts an array
+ [x] add() accepts an array that contains the minifier's name followed by any number of arguments to be passed to the constructor
+
 s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] load() can load a stock plugin
  [x] load() throws an exception if the stock plugin does not exist
@@ -1185,6 +1192,14 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() returns the cached result if applicable
  [x] get() rethrows exception thrown during minification by default
  [x] get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\FirstAvailable
+ [x] Constructor accepts any number of known minifiers
+ [x] getCacheDifferentiator() is constant
+ [x] minify() returns the result of the first minification if applicable
+ [x] minify() returns the result of the second minification if the first throws an exception
+ [x] minify() throws an exception if no minifier is set
+ [x] minify() throws an exception if no minifier success
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
  [x] Throws an exception if the filename passed to the constructor does not exist
