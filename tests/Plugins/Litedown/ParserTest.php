@@ -1690,6 +1690,30 @@ class ParserTest extends Test
 					'</i><e>```</e></CODE></r>'
 				]
 			],
+			[
+				[
+					'```',
+					'	code',
+					'```'
+				],
+				[
+					'<r><CODE><s>```</s><i>',
+					'</i>	code<i>',
+					'</i><e>```</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'> ```',
+					'> 	code',
+					'> ```'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><CODE><s>```</s><i>',
+					'&gt; </i>	code<i>',
+					'&gt; </i><e>```</e></CODE></QUOTE></r>'
+				]
+			],
 		]);
 	}
 

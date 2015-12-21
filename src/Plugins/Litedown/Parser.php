@@ -433,12 +433,10 @@ class Parser extends ParserBase
 			// Compute the width of the indentation
 			$indentWidth = 0;
 			$indentPos   = 0;
-			if (!empty($m[2][0]))
+			if (!empty($m[2][0]) && !$codeFence)
 			{
 				$indentStr = $m[2][0];
 				$indentLen = strlen($indentStr);
-				$maxIndent = ($codeFence) ? 0 : $codeIndent;
-
 				do
 				{
 					if ($indentStr[$indentPos] === ' ')
@@ -450,7 +448,7 @@ class Parser extends ParserBase
 						$indentWidth = ($indentWidth + 4) & ~3;
 					}
 				}
-				while (++$indentPos < $indentLen && $indentWidth < $maxIndent);
+				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
 			}
 
 			// Test whether we're out of a code block
