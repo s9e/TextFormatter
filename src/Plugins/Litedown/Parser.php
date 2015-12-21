@@ -221,11 +221,10 @@ class Parser extends ParserBase
 			}
 			$indentWidth = 0;
 			$indentPos   = 0;
-			if (!empty($m[2][0]))
+			if (!empty($m[2][0]) && !$codeFence)
 			{
 				$indentStr = $m[2][0];
 				$indentLen = \strlen($indentStr);
-				$maxIndent = ($codeFence) ? 0 : $codeIndent;
 				do
 				{
 					if ($indentStr[$indentPos] === ' ')
@@ -233,7 +232,7 @@ class Parser extends ParserBase
 					else
 						$indentWidth = ($indentWidth + 4) & ~3;
 				}
-				while (++$indentPos < $indentLen && $indentWidth < $maxIndent);
+				while (++$indentPos < $indentLen && $indentWidth < $codeIndent);
 			}
 			if (isset($codeTag) && !$codeFence && $indentWidth < $codeIndent && !$lineIsEmpty)
 				$newContext = \true;
