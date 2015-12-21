@@ -1,3 +1,27 @@
+0.4.6 (2015-12-21)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/4a6c4967cc506397d08053213dc1075d5bca9ec8...4dab11faae6382607c3b12612b274261ba110cc8)
+
+### Added
+
+ - `8e4706d` Added support for negative offsets in NormalizedList
+ - `faeafd6` JavaScript: added FirstAvailable minifier
+ - `1ec2d62` MediaEmbed: added Plays.tv
+ - `853e63b` MediaEmbed: added support for timestamps in Twitch videos
+
+### Fixed
+
+ - `4dab11f` Litedown: fixed incorrect indentation in fenced code blocks
+
+### Changed
+
+ - `8bc9340` Litedown: trim whitespace around the language name in fenced code blocks
+ - `19ee41c` Litedown: updated inline code syntax to bring it closer to Markdown's
+ - `1f6e375` MediaEmbed: updated Pastebin
+ - `299996e` MediaEmbed: updated Twitch to use their new player
+
+
 0.4.5 (2015-12-04)
 ==================
 
