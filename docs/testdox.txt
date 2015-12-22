@@ -1184,6 +1184,10 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() converts literal ASCII line terminators \r and \n
  [x] toJS() converts literal Unicode line terminators \u2028 and \u2029
  [x] toJS() escapes backslashes that precede literal line terminators
+ [x] toJS() replaces \x{27bf} with \u27bf
+ [x] toJS() replaces \x{27BF} with \u27BF
+ [x] toJS() replaces \\\x{27BF} with \\\u27BF
+ [x] toJS() preserves \\x{27BF}
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result

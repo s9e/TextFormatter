@@ -32,7 +32,7 @@ abstract class RegexpConvertor
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
-			$regexp .= self::unfoldUnicodeProperties(
+			$regexp .= self::convertUnicodeCharacters(
 				substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
 				false,
 				$dotAll
@@ -67,7 +67,7 @@ abstract class RegexpConvertor
 
 				case 'characterClass':
 					$regexp .= '[';
-					$regexp .= self::unfoldUnicodeProperties($tok['content'], true, false);
+					$regexp .= self::convertUnicodeCharacters($tok['content'], true, false);
 					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
 					break;
 
@@ -91,7 +91,7 @@ abstract class RegexpConvertor
 			$pos = $tok['pos'] + $tok['len'];
 		}
 
-		$regexp .= self::unfoldUnicodeProperties(substr($regexpInfo['regexp'], $pos), false, $dotAll);
+		$regexp .= self::convertUnicodeCharacters(substr($regexpInfo['regexp'], $pos), false, $dotAll);
 
 		if ($regexpInfo['delimiter'] !== '/')
 		{
@@ -105,6 +105,29 @@ abstract class RegexpConvertor
 		}
 
 		return new Code('/' . self::escapeLineTerminators($regexp) . '/' . $modifiers);
+	}
+
+	/**
+	* Replace Unicode characters and properties in a string
+	*
+	* NOTE: does not support \X
+	*
+	* @link http://docs.php.net/manual/en/regexp.reference.unicode.php
+	*
+	* @param  string $str              Original string
+	* @param  bool   $inCharacterClass Whether this string is in a character class
+	* @param  bool   $dotAll           Whether PCRE_DOTALL is set
+	* @return string                   Modified string
+	*/
+	protected static function convertUnicodeCharacters($str, $inCharacterClass, $dotAll)
+	{
+		// Replace \x{....} with \u{....} -- Note that only BMP characters are supported
+		$str = preg_replace('((?<!\\\\)(?:\\\\\\\\)*\\K\\\\x\\{([0-9a-f]{4})\\})i', '\\u$1', $str);
+
+		// Unfold Unicode properties such as \pL
+		$str = self::unfoldUnicodeProperties($str, $inCharacterClass, $dotAll);
+
+		return $str;
 	}
 
 	/**
@@ -170,9 +193,7 @@ abstract class RegexpConvertor
 
 				if ($propName[1] === '^')
 				{
-					/**
-					* Replace p^L with PL
-					*/
+					// Replace p^L with PL
 					$propName = (($propName[0] === 'p') ? 'P' : 'p') . substr($propName, 2);
 				}
 

@@ -429,4 +429,36 @@ class RegexpConvertorTest extends Test
 			RegexpConvertor::toJS("/\\\n/")
 		);
 	}
+
+	/**
+	* @testdox toJS() replaces \x{27bf} with \u27bf
+	*/
+	public function testConvertUnicodeCharacterLowercase()
+	{
+		$this->assertEquals('/\\u27bf/', RegexpConvertor::toJS('/\\x{27bf}/u'));
+	}
+
+	/**
+	* @testdox toJS() replaces \x{27BF} with \u27BF
+	*/
+	public function testConvertUnicodeCharacterUppercase()
+	{
+		$this->assertEquals('/\\u27BF/', RegexpConvertor::toJS('/\\x{27BF}/u'));
+	}
+
+	/**
+	* @testdox toJS() replaces \\\x{27BF} with \\\u27BF
+	*/
+	public function testConvertUnicodeCharacterUppercaseEscapedBackslash()
+	{
+		$this->assertEquals('/\\\\\\u27BF/', RegexpConvertor::toJS('/\\\\\\x{27BF}/u'));
+	}
+
+	/**
+	* @testdox toJS() preserves \\x{27BF}
+	*/
+	public function testConvertEscapedBackslashNoUnicodeCharacter()
+	{
+		$this->assertEquals('/\\\\x{27BF}/', RegexpConvertor::toJS('/\\\\x{27BF}/u'));
+	}
 }
