@@ -121,7 +121,7 @@ abstract class RegexpConvertor
 	*/
 	protected static function convertUnicodeCharacters($str, $inCharacterClass, $dotAll)
 	{
-		// Replace \x{....} with \u{....} -- Note that only BMP characters are supported
+		// Replace \x{....} with \u.... -- Note that only BMP characters are supported
 		$str = preg_replace('((?<!\\\\)(?:\\\\\\\\)*\\K\\\\x\\{([0-9a-f]{4})\\})i', '\\u$1', $str);
 
 		// Unfold Unicode properties such as \pL
