@@ -332,11 +332,6 @@
 		<td>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</td>
 	</tr>
 	<tr>
-		<td><code>rdio</code></td>
-		<td>Rdio</td>
-		<td>http://rd.io/x/QcD7oTdeWevg/<br/>https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</td>
-	</tr>
-	<tr>
 		<td><code>reddit</code></td>
 		<td>Reddit comment permalink</td>
 		<td>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</td>

@@ -708,16 +708,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/',
-				'<r><RDIO id="QitDVOn7" url="https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/">https://www.rdio.com/artist/Hannibal_Buress/album/Animal_Furnace/track/Hands-Free/</RDIO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('rdio');
-				}
-			],
-			[
 				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
 				'<r><RUTUBE id="6613980" url="http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
 				[],
@@ -2349,15 +2339,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('prezi');
-				}
-			],
-			[
-				'http://rd.io/x/QcD7oTdeWevg/',
-				'<r><RDIO id="QcD7oTdeWevg" url="http://rd.io/x/QcD7oTdeWevg/">http://rd.io/x/QcD7oTdeWevg/</RDIO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('rdio');
 				}
 			],
 			[
