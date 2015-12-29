@@ -1196,6 +1196,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() returns the cached result if applicable
  [x] get() rethrows exception thrown during minification by default
  [x] get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE
+ [x] getCacheDifferentiator() returns a default constant
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\FirstAvailable
  [x] Constructor accepts any number of known minifiers
@@ -1234,7 +1235,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
- [x] getCacheDifferentiator() returns a unique string
+ [x] getCacheDifferentiator() is constant
 
 s9e\TextFormatter\Tests\Configurator\StylesheetCompressor
  [x] encode() tests

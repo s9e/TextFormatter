@@ -40,14 +40,6 @@ class FirstAvailable extends Minifier implements ArrayAccess
 	/**
 	* {@inheritdoc}
 	*/
-	public function getCacheDifferentiator()
-	{
-		return '';
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
 	public function minify($src)
 	{
 		foreach ($this->collection as $minifier)

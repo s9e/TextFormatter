@@ -28,14 +28,14 @@ class NoopTest extends Test
 	}
 
 	/**
-	* @testdox getCacheDifferentiator() returns a unique string
+	* @testdox getCacheDifferentiator() is constant
 	*/
 	public function testGetCacheDifferentiator()
 	{
 		$minifier = new Noop;
-		$this->assertNotSame(
-			$minifier->getCacheDifferentiator(''),
-			$minifier->getCacheDifferentiator('')
+		$this->assertSame(
+			$minifier->getCacheDifferentiator(),
+			$minifier->getCacheDifferentiator()
 		);
 	}
 }

@@ -22,13 +22,6 @@ abstract class Minifier
 	public $keepGoing = false;
 
 	/**
-	* Return a value that uniquely identify this minifier's configuration
-	*
-	* @return array|string
-	*/
-	abstract public function getCacheDifferentiator();
-
-	/**
 	* Minify given JavaScript source
 	*
 	* @param  string $src JavaScript source
@@ -59,6 +52,15 @@ abstract class Minifier
 		return $src;
 	}
 
+	/**
+	* Return a value that uniquely identifies this minifier's configuration
+	*
+	* @return array|string
+	*/
+	public function getCacheDifferentiator()
+	{
+		return '';
+	}
 
 	/**
 	* Get the minified source from cache, or minify and cache the result

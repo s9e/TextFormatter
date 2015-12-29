@@ -51,7 +51,7 @@ class MinifierTest extends Test
 	*/
 	public function testNoCache()
 	{
-		$minifier = new DummyNonCachingMinifier;
+		$minifier = new DummyMinifier;
 
 		$minifier->get("alert('Hello world')");
 
@@ -63,7 +63,7 @@ class MinifierTest extends Test
 	*/
 	public function testCache()
 	{
-		$minifier = new DummyCachingMinifier;
+		$minifier = new DummyMinifier;
 		$minifier->cacheDir = sys_get_temp_dir();
 
 		$minifier->get("alert('Hello world')");
@@ -77,11 +77,11 @@ class MinifierTest extends Test
 	public function testFromCache()
 	{
 		file_put_contents(
-			sys_get_temp_dir() . '/minifier.35939e11e190f97da4cc7f5eee7b86e056812f93.js',
+			sys_get_temp_dir() . '/minifier.c356d10073f41560dc691043ebecfccdecb402c0.js',
 			'alert("From cache")'
 		);
 
-		$minifier = new DummyCachingMinifier;
+		$minifier = new DummyMinifier;
 		$minifier->cacheDir = sys_get_temp_dir();
 
 		$this->assertSame(
@@ -113,31 +113,25 @@ class MinifierTest extends Test
 			$minifier->get('alert("Hi")')
 		);
 	}
+
+	/**
+	* @testdox getCacheDifferentiator() returns a default constant
+	*/
+	public function testGetCacheDifferentiator()
+	{
+		$minifier = new DummyMinifier;
+		$this->assertSame(
+			$minifier->getCacheDifferentiator(),
+			$minifier->getCacheDifferentiator()
+		);
+	}
 }
 
-class DummyNonCachingMinifier extends Minifier
+class DummyMinifier extends Minifier
 {
 	public function minify($src)
 	{
 		return $src;
-	}
-
-	public function getCacheDifferentiator()
-	{
-		return 'foo';
-	}
-}
-
-class DummyCachingMinifier extends Minifier
-{
-	public function minify($src)
-	{
-		return $src;
-	}
-
-	public function getCacheDifferentiator()
-	{
-		return 'foo';
 	}
 }
 
@@ -146,10 +140,5 @@ class DummyThrowingMinifier extends Minifier
 	public function minify($src)
 	{
 		throw new Exception('foo');
-	}
-
-	public function getCacheDifferentiator()
-	{
-		return 'foo';
 	}
 }
