@@ -21,6 +21,29 @@ class ClosureCompilerApplicationTest extends Test
 	}
 
 	/**
+	* @testdox Throws an exception if the Closure Compiler's filepath is not set at minification time
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage No path set for Closure Compiler
+	*/
+	public function testNoPathRuntime()
+	{
+		$minifier = new ClosureCompilerApplication;
+		$minifier->minify('alert(1)');
+	}
+
+	/**
+	* @testdox Throws an exception if the Closure Compiler's file does not exist at minification time
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Cannot find Closure Compiler at /does/not/exist
+	*/
+	public function testInvalidPathRuntime()
+	{
+		$minifier = new ClosureCompilerApplication;
+		$minifier->closureCompilerBin = '/does/not/exist';
+		$minifier->minify('alert(1)');
+	}
+
+	/**
 	* @testdox Allows caching
 	*/
 	public function testAllowsCaching()

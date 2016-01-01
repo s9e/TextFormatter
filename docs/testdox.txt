@@ -1208,6 +1208,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\FirstAvailable
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
  [x] Throws an exception if the filename passed to the constructor does not exist
+ [x] Throws an exception if the Closure Compiler's filepath is not set at minification time
+ [x] Throws an exception if the Closure Compiler's file does not exist at minification time
  [x] Allows caching
  [x] The cache key depends on the compilation level
  [x] The cache key depends on the extra options

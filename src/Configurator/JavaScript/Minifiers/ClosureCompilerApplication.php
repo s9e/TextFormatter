@@ -43,14 +43,13 @@ class ClosureCompilerApplication extends Minifier
 	* @param  string $filepath Path to the Closure Compiler .jar
 	* @return void
 	*/
-	public function __construct($filepath)
+	public function __construct($filepath = null)
 	{
-		if (!file_exists($filepath))
+		if (isset($filepath))
 		{
-			throw new RuntimeException('Cannot find Closure Compiler at ' . $filepath);
+			$this->closureCompilerBin = $filepath;
+			$this->testFilepaths();
 		}
-
-		$this->closureCompilerBin = $filepath;
 	}
 
 	/**
@@ -81,6 +80,7 @@ class ClosureCompilerApplication extends Minifier
 	*/
 	public function minify($src)
 	{
+		$this->testFilepaths();
 		$options = ($this->options) ? ' ' . $this->options : '';
 
 		// Add our custom externs if default externs are disabled
@@ -117,5 +117,22 @@ class ClosureCompilerApplication extends Minifier
 		}
 
 		return $src;
+	}
+
+	/**
+	* Test that the Closure Compiler file exists
+	*
+	* @return void
+	*/
+	protected function testFilepaths()
+	{
+		if (!isset($this->closureCompilerBin))
+		{
+			throw new RuntimeException('No path set for Closure Compiler');
+		}
+		if (!file_exists($this->closureCompilerBin))
+		{
+			throw new RuntimeException('Cannot find Closure Compiler at ' . $this->closureCompilerBin);
+		}
 	}
 }
