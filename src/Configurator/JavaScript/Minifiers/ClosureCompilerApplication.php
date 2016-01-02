@@ -61,7 +61,7 @@ class ClosureCompilerApplication extends Minifier
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
 			$this->options,
-			crc32(file_get_contents($this->closureCompilerBin))
+			$this->getClosureCompilerBinHash()
 		];
 
 		if ($this->excludeDefaultExterns)
@@ -117,6 +117,23 @@ class ClosureCompilerApplication extends Minifier
 		}
 
 		return $src;
+	}
+
+	/**
+	* Compute and return the hash for current Closure Compiler binary
+	*
+	* @return string
+	*/
+	protected function getClosureCompilerBinHash()
+	{
+		// Caching the value saves time during testing but has little to no real-world impact
+		static $cache = [];
+		if (!isset($cache[$this->closureCompilerBin]))
+		{
+			$cache[$this->closureCompilerBin] = md5_file($this->closureCompilerBin);
+		}
+
+		return $cache[$this->closureCompilerBin];
 	}
 
 	/**
