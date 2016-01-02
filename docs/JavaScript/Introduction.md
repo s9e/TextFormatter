@@ -46,15 +46,7 @@ $configurator->enableJavaScript();
 $configurator->javascript->setMinifier('ClosureCompilerService');
 ```
 
-### Minify the JavaScript parser with the Google Closure Compiler application
-
-Alternatively, the [Google Closure Compiler application](https://developers.google.com/closure/compiler/docs/gettingstarted_app) can be used. This require PHP to be able to use `exec()` and for the `java` executable and `compiler.jar` to be available locally. Like the Google Closure Compiler service, configuration is automatic.
-
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->enableJavaScript();
-$configurator->javascript->setMinifier('ClosureCompilerApplication', '/usr/local/bin/compiler.jar');
-```
+[Other minifiers are available.](Minifiers.md)
 
 ### Speed up minification with a cache
 
