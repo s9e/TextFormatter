@@ -8,12 +8,12 @@ then
 	echo "zend.enable_gc=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 fi
 
+echo "Installing Composer dependencies"
+sh -c "./installComposer.sh 2>&1 &" >/dev/null 2>&1 &
+
 # Install code coverage tools if applicable and disable XDebug otherwise
 if [ -n "$COVERAGE" ]
 then
-	echo "Installing Composer dependencies"
-	sh -c "./installComposer.sh 2>&1 &" >/dev/null 2>&1 &
-
 	# Install Scrutinizer's external code coverage tool
 	echo "Installing Scrutinizer"
 	sh -c "./installScrutinizer.sh 2>&1 &" >/dev/null 2>&1 &

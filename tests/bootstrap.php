@@ -2,6 +2,11 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
+if (file_exists(__DIR__ . '/../vendor/autoload.php'))
+{
+	include __DIR__ . '/../vendor/autoload.php';
+}
+
 spl_autoload_register(
 	function($className)
 	{

@@ -24,6 +24,16 @@ $configurator->javascript
 	->closureCompilerBin = '/usr/local/bin/compiler.jar';
 ```
 
+### MatthiasMullie\\Minify
+
+[Minify](http://www.minifier.org/) is a JavaScript minifier written in PHP. Its minification is not as extensive as Google's Closure Compiler but it is fast and does not use any external service. In order to use this minifier you must have Minify already installed.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->enableJavaScript();
+$configurator->javascript->setMinifier('MatthiasMullieMinify');
+```
+
 ## Meta-minifiers
 
 ### Noop
@@ -34,7 +44,7 @@ As the name implies, the no-op minifier will preserve the original source as-is.
 
 The FirstAvailable strategy allows multiple minifiers to be set. They are executed in order and the result of the first successful minification is returned.
 
-In the following example, we set up the ClosureCompilerService minifier to handle minification. If it fails, the ClosureCompilerApplication will be executed. If it fails too, the Noop (no-op) minifier is executed as a fail-safe and the original source is returned.
+In the following example, we set up the ClosureCompilerService minifier to handle minification. If it fails, the MatthiasMullieMinify minifier will be executed. If it fails too, the Noop (no-op) minifier is executed as a fail-safe and the original source is returned.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -42,6 +52,6 @@ $configurator->enableJavaScript();
 
 $minifier = $configurator->javascript->setMinifier('FirstAvailable');
 $minifier->add('ClosureCompilerService');
-$minifier->add('ClosureCompilerApplication')->closureCompilerBin = '/usr/local/bin/compiler.jar';
+$minifier->add('MatthiasMullieMinify');
 $minifier->add('Noop');
 ```
