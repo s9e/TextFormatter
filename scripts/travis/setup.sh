@@ -8,9 +8,6 @@ then
 	echo "zend.enable_gc=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 fi
 
-echo "Installing Composer dependencies"
-sh -c "./installComposer.sh 2>&1 &" >/dev/null 2>&1 &
-
 # Install code coverage tools if applicable and disable XDebug otherwise
 if [ -n "$COVERAGE" ]
 then
@@ -21,6 +18,10 @@ else
 	echo "Removing XDebug"
 	phpenv config-rm xdebug.ini
 fi
+
+# Install Composer dependencies after XDebug has been removed
+echo "Installing Composer dependencies"
+./installComposer.sh 2>&1 &
 
 # Install Closure Compiler
 echo "Installing Closure Compiler"
