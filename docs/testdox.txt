@@ -1235,12 +1235,20 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] Throws an exception in case of a server error
  [x] Throws an exception in case of a compilation error
 
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\HostedMinifier
+ [x] minify() works
+ [x] Throws an exception if the minification fails
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\MatthiasMullieMinify
  [x] minify() works
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
  [x] getCacheDifferentiator() is constant
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\RemoteCache
+ [x] minify() works
+ [x] Throws an exception if the minification fails
 
 s9e\TextFormatter\Tests\Configurator\StylesheetCompressor
  [x] encode() tests
