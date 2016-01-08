@@ -1,3 +1,26 @@
+0.4.7 (2016-01-08)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/2b837825cac2da9ddf06867038c19096ffacc4dd...932f6f16738fad1d32e44a96a37347a0aa12635e)
+
+### Added
+
+ - `fd08fc1` Added support for MatthiasMullie\Minify
+ - `8eda0fb` JavaScript: added support for converting \x{....} in regexps
+ - `932f6f1` Minifiers: added experimental minifiers HostedMinifier and RemoteCache
+
+### Removed
+
+ - `e06bc52` MediaEmbed: removed Rdio
+
+### Changed
+
+ - `2c76bb3` BBCodes: updated Highlight.js to 9.0.0
+ - `4be9a3f` ClosureCompilerApplication: cache the binary's hash for performance
+ - `b730287` ClosureCompilerApplication: made constructor argument optional
+ - `43b9f74` Minifier: use a default constant used as cache differentiator
+
+
 0.4.6 (2015-12-21)
 ==================
 
