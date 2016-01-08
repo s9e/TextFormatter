@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
@@ -15,11 +15,13 @@ class ClosureCompilerApplication extends Minifier
 	public $excludeDefaultExterns = \true;
 	public $javaBin = 'java';
 	public $options = '--use_types_for_optimization';
-	public function __construct($filepath)
+	public function __construct($filepath = \null)
 	{
-		if (!\file_exists($filepath))
-			throw new RuntimeException('Cannot find Closure Compiler at ' . $filepath);
-		$this->closureCompilerBin = $filepath;
+		if (isset($filepath))
+		{
+			$this->closureCompilerBin = $filepath;
+			$this->testFilepaths();
+		}
 	}
 	public function getCacheDifferentiator()
 	{
@@ -27,7 +29,7 @@ class ClosureCompilerApplication extends Minifier
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
 			$this->options,
-			\crc32(\file_get_contents($this->closureCompilerBin))
+			$this->getClosureCompilerBinHash()
 		);
 		if ($this->excludeDefaultExterns)
 			$key[] = \file_get_contents(__DIR__ . '/../externs.application.js');
@@ -35,6 +37,7 @@ class ClosureCompilerApplication extends Minifier
 	}
 	public function minify($src)
 	{
+		$this->testFilepaths();
 		$options = ($this->options) ? ' ' . $this->options : '';
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 			$options .= ' --externs ' . __DIR__ . '/../externs.application.js --env=CUSTOM';
@@ -58,5 +61,19 @@ class ClosureCompilerApplication extends Minifier
 		if (!empty($return))
 			throw new RuntimeException('An error occured during minification');
 		return $src;
+	}
+	protected function getClosureCompilerBinHash()
+	{
+		static $cache = array();
+		if (!isset($cache[$this->closureCompilerBin]))
+			$cache[$this->closureCompilerBin] = \md5_file($this->closureCompilerBin);
+		return $cache[$this->closureCompilerBin];
+	}
+	protected function testFilepaths()
+	{
+		if (!isset($this->closureCompilerBin))
+			throw new RuntimeException('No path set for Closure Compiler');
+		if (!\file_exists($this->closureCompilerBin))
+			throw new RuntimeException('Cannot find Closure Compiler at ' . $this->closureCompilerBin);
 	}
 }

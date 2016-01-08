@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2015 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
@@ -64,10 +64,6 @@ class FirstAvailable extends Minifier implements ArrayAccess
 		$this->collection = new MinifierList;
 		foreach (\func_get_args() as $minifier)
 			$this->collection->add($minifier);
-	}
-	public function getCacheDifferentiator()
-	{
-		return '';
 	}
 	public function minify($src)
 	{
