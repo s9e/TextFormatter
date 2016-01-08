@@ -6,11 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
+use MatthiasMullie\Minify;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
-class Noop extends Minifier
+class MatthiasMullieMinify extends Minifier
 {
 	public function minify($src)
 	{
-		return $src;
+		$minifier = new Minify\JS($src);
+		return $minifier->minify();
 	}
 }
