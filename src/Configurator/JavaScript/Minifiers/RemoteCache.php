@@ -28,7 +28,7 @@ class RemoteCache extends Minifier
 			$url = 'compress.zlib://' . $url . '.gz';
 		}
 
-		$contextOptions = ['http' => ['ignore_errors'  => true]];
+		$contextOptions = ['http' => ['ignore_errors' => true]];
 		$content = file_get_contents($url, false, stream_context_create($contextOptions));
 		if (empty($http_response_header[0]) || strpos($http_response_header[0], '200') === false)
 		{
