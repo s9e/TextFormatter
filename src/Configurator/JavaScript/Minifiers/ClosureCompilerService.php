@@ -68,43 +68,24 @@ class ClosureCompilerService extends Minifier
 	*/
 	public function minify($src)
 	{
-		$params = [
-			'compilation_level' => $this->compilationLevel,
-			'js_code'           => $src,
-			'output_format'     => 'json',
-			'output_info'       => 'compiled_code'
-		];
-
-		// Add our custom externs if default externs are disabled
-		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
-		{
-			$params['exclude_default_externs'] = 'true';
-			$params['js_externs'] = $this->externs;
-		}
-
-		// Got to add dupe variables by hand
-		$content = http_build_query($params) . '&output_info=errors';
-
-		$response = file_get_contents(
-			$this->url,
-			false,
-			stream_context_create([
-				'http' => [
-					'method'  => 'POST',
-					'timeout' => $this->timeout,
-					'header'  => "Connection: close\r\n"
-					           . "Content-length: " . strlen($content) . "\r\n"
-					           . "Content-type: application/x-www-form-urlencoded",
-					'content' => $content
-				]
-			])
-		);
-
+		$body     = $this->generateRequestBody($src);
+		$response = $this->query($body);
 		if (!$response)
 		{
 			throw new RuntimeException('Could not contact the Closure Compiler service');
 		}
 
+		return $this->decodeResponse($response);
+	}
+
+	/**
+	* Decode the response returned by the Closure Compiler service
+	*
+	* @param  string $response Response body
+	* @return string           Minified code
+	*/
+	protected function decodeResponse($response)
+	{
 		$response = json_decode($response, true);
 		if (is_null($response))
 		{
@@ -126,5 +107,57 @@ class ClosureCompilerService extends Minifier
 		}
 
 		return $response['compiledCode'];
+	}
+
+	/**
+	* Generate the request body for given code
+	*
+	* @param  string $src JavaScript source
+	* @return string      Compiled source
+	*/
+	protected function generateRequestBody($src)
+	{
+		$params = [
+			'compilation_level' => $this->compilationLevel,
+			'js_code'           => $src,
+			'output_format'     => 'json',
+			'output_info'       => 'compiled_code'
+		];
+
+		// Add our custom externs if default externs are disabled
+		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
+		{
+			$params['exclude_default_externs'] = 'true';
+			$params['js_externs'] = $this->externs;
+		}
+
+		// Add dupe variables by hand
+		$body = http_build_query($params) . '&output_info=errors';
+
+		return $body;
+	}
+
+	/**
+	* Query the Closure Compiler service
+	*
+	* @param  string       $body Request body
+	* @return string|false       Response body, or FALSE
+	*/
+	protected function query($body)
+	{
+		return file_get_contents(
+			$this->url,
+			false,
+			stream_context_create([
+				'http' => [
+					'method'  => 'POST',
+					'timeout' => $this->timeout,
+					'header'  => "Connection: close\r\n"
+					           . "Content-length: " . strlen($body) . "\r\n"
+					           . "Content-type: application/x-www-form-urlencoded",
+					'content' => $body
+				]
+			])
+		);
 	}
 }
