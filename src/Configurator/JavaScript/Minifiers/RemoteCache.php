@@ -15,20 +15,21 @@ class RemoteCache extends Minifier
 	/**
 	* @var string
 	*/
-	public $url = 'http://s9e-textformatter.rhcloud.com/minifier/cache/';
+	public $url = 'http://s9e-textformatter.rhcloud.com/minifier/';
 
 	/**
 	* {@inheritdoc}
 	*/
 	public function minify($src)
 	{
-		$url = $this->url . $this->getHash($src);
+		$contextOptions = ['http' => ['ignore_errors' => true]];
+		$url = $this->url . '?hash=' . $this->getHash($src);
 		if (extension_loaded('zlib'))
 		{
-			$url = 'compress.zlib://' . $url . '.gz';
+			$url = 'compress.zlib://' . $url;
+			$contextOptions['http']['header'] = 'Accept-Encoding: gzip';
 		}
 
-		$contextOptions = ['http' => ['ignore_errors' => true]];
 		$content = file_get_contents($url, false, stream_context_create($contextOptions));
 		if (empty($http_response_header[0]) || strpos($http_response_header[0], '200') === false)
 		{
