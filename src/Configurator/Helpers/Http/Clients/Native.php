@@ -66,7 +66,12 @@ class Native extends Client
 	*/
 	protected function request($method, $url, $headers, $body = null)
 	{
-		$contextOptions = ['http' => ['method' => $method]];
+		$contextOptions = [
+			'http' => [
+				'method'  => $method,
+				'timeout' => $this->timeout
+			]
+		];
 		if ($this->gzipEnabled)
 		{
 			$headers[] = 'Accept-Encoding: gzip';

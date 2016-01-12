@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\Configurator\Helpers\Http;
 abstract class Client
 {
 	/**
+	* @var integer Request timeout
+	*/
+	public $timeout = 10;
+
+	/**
 	* Execute a GET request and return the response's body
 	*
 	* @param  string      $url     Request URL

@@ -24,6 +24,7 @@ class Curl extends Client
 		$handle = $this->getHandle();
 		curl_setopt($handle, CURLOPT_HTTPGET,    true);
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($handle, CURLOPT_TIMEOUT,    $this->timeout);
 		curl_setopt($handle, CURLOPT_URL,        $url);
 
 		return curl_exec($handle);
@@ -40,6 +41,7 @@ class Curl extends Client
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($handle, CURLOPT_POST,       true);
 		curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
+		curl_setopt($handle, CURLOPT_TIMEOUT,    $this->timeout);
 		curl_setopt($handle, CURLOPT_URL,        $url);
 
 		return curl_exec($handle);
