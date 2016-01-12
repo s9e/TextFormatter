@@ -12,9 +12,13 @@ abstract class AbstractTest extends Test
 
 	public function setUp()
 	{
+		if (!empty($_SERVER['TRAVIS']))
+		{
+			$this->url = str_replace('localhost', 'localhost:8000', $this->url);
+		}
 		if (!@file_get_contents($this->url))
 		{
-			$this->markTestSkipped('Cannot access http://localhost/reflect.php');
+			$this->markTestSkipped('Cannot access ' . $this->url);
 		}
 	}
 
