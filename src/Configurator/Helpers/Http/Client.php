@@ -26,5 +26,5 @@ abstract class Client
 	* @param  string      $body    Request body
 	* @return string|bool          Response body or FALSE
 	*/
-	abstract public function post($url, $headers = [], $body = null);
+	abstract public function post($url, $headers = [], $body = '');
 }

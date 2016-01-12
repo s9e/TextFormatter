@@ -35,7 +35,7 @@ class Native extends Client
 	/**
 	* {@inheritdoc}
 	*/
-	public function post($url, $headers = [], $body = null)
+	public function post($url, $headers = [], $body = '')
 	{
 		return $this->request('POST', $url, $headers, $body);
 	}

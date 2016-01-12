@@ -32,16 +32,14 @@ class Curl extends Client
 	/**
 	* {@inheritdoc}
 	*/
-	public function post($url, $headers = [], $body = null)
+	public function post($url, $headers = [], $body = '')
 	{
+		$headers[] = 'Content-Length: ' . strlen($body);
+
 		$handle = $this->getHandle();
-		if (isset($body))
-		{
-			curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
-			$headers[] = 'Content-Length: ' . strlen($body);
-		}
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($handle, CURLOPT_POST,       true);
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
 		curl_setopt($handle, CURLOPT_URL,        $url);
 
 		return curl_exec($handle);

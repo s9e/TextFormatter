@@ -58,6 +58,24 @@ abstract class AbstractTest extends Test
 	}
 
 	/**
+	* @testdox post() sends no request body if not set
+	*/
+	public function testPostSendsNoRequestBody()
+	{
+		$client = $this->getInstance();
+		$client->post(
+			$this->url,
+			['Content-Type: application/octet-stream'],
+			'Foo'
+		);
+		$vars = unserialize($client->post(
+			$this->url,
+			['Content-Type: application/octet-stream']
+		));
+		$this->assertSame('', $vars['input']);
+	}
+
+	/**
 	* @testdox post() automatically sets Content-Length if a request body is set
 	*/
 	public function testPostContentLength()

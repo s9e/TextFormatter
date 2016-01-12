@@ -471,6 +471,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Curl
  [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] post() sends the request body if set
+ [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
  [x] get() returns FALSE on error
 
@@ -478,6 +479,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Native
  [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] post() sends the request body if set
+ [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
  [x] get() returns FALSE on error
 
