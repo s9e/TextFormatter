@@ -464,6 +464,21 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ContextSafeness
  [x] getDisallowedCharactersInCSS() returns a list of strings
  [x] getDisallowedCharactersInJS() returns a list of strings
 
+s9e\TextFormatter\Tests\Configurator\Helpers\Http
+ [x] getClient() returns an instance of s9e\TextFormatter\Configurator\Helpers\Http\Client
+
+s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Curl
+ [x] Uses gzip by default if ext/zlib is availble
+ [x] Sends custom headers
+ [x] post() sends the request body if set
+ [x] post() automatically sets Content-Length if a request body is set
+
+s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Native
+ [x] Uses gzip by default if ext/zlib is availble
+ [x] Sends custom headers
+ [x] post() sends the request body if set
+ [x] post() automatically sets Content-Length if a request body is set
+
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] getDOM() returns the template as a DOMDocument
  [x] <span> does not allow <div> as child

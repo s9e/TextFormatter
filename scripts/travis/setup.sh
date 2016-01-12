@@ -34,3 +34,9 @@ mkdir ../../tests/.cache
 ../build/prepareFiles.sh
 
 wait
+
+# Start a local webserver for the Http helper's tests
+if [ "$TRAVIS_PHP_VERSION" != '5.3.3' ]
+then
+	php -S localhost:80 -t ../../tests &
+fi
