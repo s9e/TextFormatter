@@ -41,7 +41,6 @@ class ClosureCompilerApplication extends Minifier
 	* Constructor
 	*
 	* @param  string $filepath Path to the Closure Compiler .jar
-	* @return void
 	*/
 	public function __construct($filepath = null)
 	{

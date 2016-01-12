@@ -41,7 +41,6 @@ class Rendering
 	* Constructor
 	*
 	* @param  Configurator $configurator
-	* @return void
 	*/
 	public function __construct(Configurator $configurator)
 	{

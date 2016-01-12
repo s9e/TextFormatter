@@ -31,7 +31,6 @@ class XSLT extends Renderer
 	* Constructor
 	*
 	* @param  string $stylesheet The stylesheet used to render intermediate representations
-	* @return void
 	*/
 	public function __construct($stylesheet)
 	{

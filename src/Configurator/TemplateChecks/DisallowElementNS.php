@@ -29,7 +29,6 @@ class DisallowElementNS extends TemplateCheck
 	*
 	* @param  string $namespaceURI Namespace URI of the disallowed element
 	* @param  string $elName       Local name of the disallowed element
-	* @return void
 	*/
 	public function __construct($namespaceURI, $elName)
 	{

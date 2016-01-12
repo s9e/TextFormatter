@@ -23,8 +23,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

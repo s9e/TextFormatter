@@ -25,8 +25,6 @@ class FirstAvailable extends Minifier implements ArrayAccess
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

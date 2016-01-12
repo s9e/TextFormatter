@@ -13,8 +13,6 @@ class NumberFilter extends AttributeFilter
 {
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -13,7 +13,6 @@ class TagFilter extends Filter
 	* Constructor
 	*
 	* @param  callable $callback
-	* @return void
 	*/
 	public function __construct($callback)
 	{

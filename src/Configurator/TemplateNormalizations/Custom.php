@@ -21,7 +21,6 @@ class Custom extends TemplateNormalization
 	* Constructor
 	*
 	* @param  callback $callback Normalization callback
-	* @return void
 	*/
 	public function __construct(callable $callback)
 	{

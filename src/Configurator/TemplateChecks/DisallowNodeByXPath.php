@@ -24,7 +24,6 @@ class DisallowNodeByXPath extends TemplateCheck
 	* Constructor
 	*
 	* @param  string $query XPath query used for locating nodes
-	* @return void
 	*/
 	public function __construct($query)
 	{

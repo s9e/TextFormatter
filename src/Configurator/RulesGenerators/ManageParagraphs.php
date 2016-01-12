@@ -21,8 +21,6 @@ class ManageParagraphs implements BooleanRulesGenerator
 	* Constructor
 	*
 	* Prepares the TemplateForensics for <p/>
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

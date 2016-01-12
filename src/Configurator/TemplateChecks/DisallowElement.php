@@ -24,7 +24,6 @@ class DisallowElement extends TemplateCheck
 	* Constructor
 	*
 	* @param  string $elName Local name of the disallowed element
-	* @return void
 	*/
 	public function __construct($elName)
 	{

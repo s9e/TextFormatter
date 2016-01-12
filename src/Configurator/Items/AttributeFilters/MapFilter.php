@@ -22,7 +22,6 @@ class MapFilter extends AttributeFilter
 	* @param  array $map           Associative array in the form [word => replacement]
 	* @param  bool  $caseSensitive Whether this map is case-sensitive
 	* @param  bool  $strict        Whether this map is strict (values with no match are invalid)
-	* @return void
 	*/
 	public function __construct(array $map = null, $caseSensitive = false, $strict = false)
 	{

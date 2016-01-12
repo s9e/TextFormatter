@@ -33,7 +33,6 @@ class Template
 	* Constructor
 	*
 	* @param  string $template This template's content
-	* @return void
 	*/
 	public function __construct($template)
 	{

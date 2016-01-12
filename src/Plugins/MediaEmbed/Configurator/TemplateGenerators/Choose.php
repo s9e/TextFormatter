@@ -21,7 +21,6 @@ class Choose extends TemplateGenerator
 	* Constructor
 	*
 	* @param  TemplateBuilder $templateBuilder
-	* @return void
 	*/
 	public function __construct(TemplateBuilder $templateBuilder)
 	{

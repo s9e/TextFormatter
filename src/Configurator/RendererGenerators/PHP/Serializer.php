@@ -37,8 +37,6 @@ class Serializer
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

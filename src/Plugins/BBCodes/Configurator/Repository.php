@@ -30,7 +30,6 @@ class Repository
 	*
 	* @param  mixed        $value        Either a DOMDocument or the path to a repository's XML file
 	* @param  BBCodeMonkey $bbcodeMonkey Instance of BBCodeMonkey used to parse definitions
-	* @return void
 	*/
 	public function __construct($value, BBCodeMonkey $bbcodeMonkey)
 	{

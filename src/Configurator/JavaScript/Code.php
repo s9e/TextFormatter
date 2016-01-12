@@ -21,7 +21,6 @@ class Code
 	* Constructor
 	*
 	* @param  string $code JavaScript source code
-	* @return void
 	*/
 	public function __construct($code)
 	{

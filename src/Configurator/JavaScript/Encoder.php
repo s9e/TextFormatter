@@ -29,8 +29,6 @@ class Encoder
 	* Constructor
 	*
 	* Will set up the default encoders
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

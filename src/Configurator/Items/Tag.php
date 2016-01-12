@@ -70,7 +70,6 @@ class Tag implements ConfigProvider
 	* Constructor
 	*
 	* @param  array $options This tag's options
-	* @return void
 	*/
 	public function __construct(array $options = null)
 	{

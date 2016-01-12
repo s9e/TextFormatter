@@ -22,8 +22,6 @@ class XSLT implements RendererGenerator
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

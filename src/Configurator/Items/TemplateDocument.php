@@ -21,7 +21,6 @@ class TemplateDocument extends DOMDocument
 	* Constructor
 	*
 	* @param Template Template instance that created this document
-	* @return void
 	*/
 	public function __construct(Template $template)
 	{

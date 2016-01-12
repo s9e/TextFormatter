@@ -22,8 +22,6 @@ class TemplateBuilder
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -58,8 +58,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 	* Constructor
 	*
 	* Will load the default rule generators
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

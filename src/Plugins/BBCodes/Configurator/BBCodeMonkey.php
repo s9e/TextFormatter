@@ -88,7 +88,6 @@ class BBCodeMonkey
 	* Constructor
 	*
 	* @param  Configurator $configurator Instance of Configurator
-	* @return void
 	*/
 	public function __construct(Configurator $configurator)
 	{

@@ -130,7 +130,6 @@ class TemplateForensics
 	* Constructor
 	*
 	* @param  string $template Template content
-	* @return void
 	*/
 	public function __construct($template)
 	{

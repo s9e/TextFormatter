@@ -43,7 +43,6 @@ class Helper
 	* Constructor
 	*
 	* @param  array $config Helper's config
-	* @return void
 	*/
 	public function __construct(array $config)
 	{

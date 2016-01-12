@@ -60,7 +60,6 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 	* @param  string $maxSetting    Max setting allowed
 	* @param  bool   $onlyIfDynamic Whether this restriction applies only to elements using any kind
 	*                               of dynamic markup: XSL elements or attribute value templates
-	* @return void
 	*/
 	public function __construct($maxSetting, $onlyIfDynamic = false)
 	{

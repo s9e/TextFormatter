@@ -21,7 +21,6 @@ class RepositoryCollection extends NormalizedCollection
 	* Constructor
 	*
 	* @param  BBCodeMonkey $bbcodeMonkey Instance of BBCodeMonkey used to parse definitions
-	* @return void
 	*/
 	public function __construct(BBCodeMonkey $bbcodeMonkey)
 	{

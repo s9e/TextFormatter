@@ -18,8 +18,6 @@ class Native extends Client
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

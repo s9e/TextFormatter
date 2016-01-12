@@ -25,7 +25,6 @@ class DisallowXPathFunction extends TemplateCheck
 	* Constructor
 	*
 	* @param  string $funcName Name of the disallowed function
-	* @return void
 	*/
 	public function __construct($funcName)
 	{

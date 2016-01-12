@@ -13,8 +13,6 @@ class Ipv6Filter extends AttributeFilter
 {
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -13,8 +13,6 @@ class SimpletextFilter extends AttributeFilter
 {
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -39,8 +39,6 @@ class ClosureCompilerService extends Minifier
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

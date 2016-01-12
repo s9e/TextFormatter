@@ -18,7 +18,6 @@ class RangeFilter extends AttributeFilter
 	*
 	* @param  integer $min Minimum value for this range
 	* @param  integer $max Maximum value for this range
-	* @return void
 	*/
 	public function __construct($min = null, $max = null)
 	{

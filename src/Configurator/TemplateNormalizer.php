@@ -55,8 +55,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	* Constructor
 	*
 	* Will load the default normalization rules
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

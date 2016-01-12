@@ -19,7 +19,6 @@ class HashmapFilter extends AttributeFilter
 	*
 	* @param  array $map    Associative array in the form [key => value]
 	* @param  bool  $strict Whether this map is strict (values with no match are invalid)
-	* @return void
 	*/
 	public function __construct(array $map = null, $strict = false)
 	{

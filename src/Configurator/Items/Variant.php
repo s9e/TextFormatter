@@ -26,7 +26,6 @@ class Variant
 	*
 	* @param  mixed $value    Default value
 	* @param  array $variants Associative array of variants ([name => value])
-	* @return void
 	*/
 	public function __construct($value = null, array $variants = [])
 	{

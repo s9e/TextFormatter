@@ -20,7 +20,6 @@ class RegexpFilter extends AttributeFilter
 	* Constructor
 	*
 	* @param  string $regexp PCRE regexp
-	* @return void
 	*/
 	public function __construct($regexp = null)
 	{

@@ -29,8 +29,6 @@ class XPathConvertor
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -13,8 +13,6 @@ class UrlFilter extends AttributeFilter
 {
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

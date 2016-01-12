@@ -31,8 +31,6 @@ class UrlConfig implements ConfigProvider
 
 	/**
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

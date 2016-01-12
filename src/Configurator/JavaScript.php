@@ -89,7 +89,6 @@ class JavaScript
 	* Constructor
 	*
 	* @param  Configurator $configurator Configurator
-	* @return void
 	*/
 	public function __construct(Configurator $configurator)
 	{

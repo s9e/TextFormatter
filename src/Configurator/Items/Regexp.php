@@ -29,7 +29,6 @@ class Regexp extends Variant implements ConfigProvider
 	* Constructor
 	*
 	* @param  string $regexp PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
-	* @return void
 	*/
 	public function __construct($regexp, $isGlobal = false)
 	{

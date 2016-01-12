@@ -64,8 +64,6 @@ class TemplateChecker implements ArrayAccess, Iterator
 	* Constructor
 	*
 	* Will load the default checks
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

@@ -22,8 +22,6 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	* Constructor
 	*
 	* Prepares the TemplateForensics for <br/>
-	*
-	* @return void
 	*/
 	public function __construct()
 	{

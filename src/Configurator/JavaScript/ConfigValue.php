@@ -39,7 +39,6 @@ class ConfigValue
 	*
 	* @param  array|Code|Dictionary $value   Original value
 	* @param  string                $varName
-	* @return void
 	*/
 	public function __construct($value, $varName)
 	{

@@ -23,7 +23,6 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 	* Constructor
 	*
 	* @param  string $path Path to site definitions' dir
-	* @return void
 	*/
 	public function __construct($path)
 	{

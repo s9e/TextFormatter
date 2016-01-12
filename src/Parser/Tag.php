@@ -87,7 +87,6 @@ class Tag
 	* @param  string  $name Name of the tag
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
-	* @return void
 	*/
 	public function __construct($type, $name, $pos, $len)
 	{

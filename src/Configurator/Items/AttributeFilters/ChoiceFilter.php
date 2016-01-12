@@ -17,7 +17,6 @@ class ChoiceFilter extends RegexpFilter
 	*
 	* @param  array $values        List of allowed values
 	* @param  bool  $caseSensitive Whether the choice is case-sensitive
-	* @return void
 	*/
 	public function __construct(array $values = null, $caseSensitive = false)
 	{
