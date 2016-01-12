@@ -70,4 +70,12 @@ abstract class AbstractTest extends Test
 		));
 		$this->assertEquals(3, $vars['_SERVER']['HTTP_CONTENT_LENGTH']);
 	}
+
+	/**
+	* @testdox get() returns FALSE on error
+	*/
+	public function testReturnsFalse()
+	{
+		$this->assertFalse($this->getInstance()->get('http://localhost:8000/404'));
+	}
 }

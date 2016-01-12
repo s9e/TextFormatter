@@ -83,6 +83,6 @@ class Native extends Client
 			$contextOptions['http']['header'] = $headers;
 		}
 
-		return $this->decompress(file_get_contents($url, false, stream_context_create($contextOptions)));
+		return $this->decompress(@file_get_contents($url, false, stream_context_create($contextOptions)));
 	}
 }
