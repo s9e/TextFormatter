@@ -3,7 +3,7 @@
 PACKAGES=matthiasmullie/minify
 if [ -n "$COVERAGE" ]
 then
-	PACKAGES="$PACKAGES satooshi/php-coveralls:*"
+	PACKAGES="$PACKAGES satooshi/php-coveralls"
 fi
 
 cd $(dirname "$0")
