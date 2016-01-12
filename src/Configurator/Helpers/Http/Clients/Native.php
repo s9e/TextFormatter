@@ -81,10 +81,7 @@ class Native extends Client
 			$headers[] = 'Content-Length: ' . strlen($body);
 			$contextOptions['http']['content'] = $body;
 		}
-		if (!empty($headers))
-		{
-			$contextOptions['http']['header'] = $headers;
-		}
+		$contextOptions['http']['header'] = $headers;
 
 		return $this->decompress(@file_get_contents($url, false, stream_context_create($contextOptions)));
 	}
