@@ -140,10 +140,7 @@ class ClosureCompilerService extends OnlineMinifier
 	*/
 	protected function query($body)
 	{
-		$client = $this->getHttpClient();
-		$client->timeout = $this->timeout;
-
-		return $client->post(
+		return $this->getHttpClient()->post(
 			$this->url,
 			['Content-Type: application/x-www-form-urlencoded'],
 			$body

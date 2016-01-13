@@ -32,6 +32,7 @@ abstract class OnlineMinifier extends Minifier
 		{
 			$this->client = Http::getClient();
 		}
+		$this->client->timeout = $this->timeout;
 
 		return $this->client;
 	}
