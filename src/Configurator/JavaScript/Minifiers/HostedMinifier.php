@@ -8,9 +8,9 @@
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 
 use RuntimeException;
-use s9e\TextFormatter\Configurator\JavaScript\Minifier;
+use s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier;
 
-class HostedMinifier extends Minifier
+class HostedMinifier extends OnlineMinifier
 {
 	/**
 	* @var integer Compression level used to compress the request's payload
@@ -18,12 +18,7 @@ class HostedMinifier extends Minifier
 	public $gzLevel = 5;
 
 	/**
-	* @var integer
-	*/
-	public $timeout = 20;
-
-	/**
-	* @var string
+	* @var string Minifier service's URL
 	*/
 	public $url = 'http://s9e-textformatter.rhcloud.com/minifier/';
 
@@ -32,44 +27,20 @@ class HostedMinifier extends Minifier
 	*/
 	public function minify($src)
 	{
-		$url     = $this->url;
-		$headers = ['Connection: close', 'Content-Type: application/octet-stream'];
-		$content = $src;
+		$headers = ['Content-Type: application/octet-stream'];
+		$body    = $src;
 		if (extension_loaded('zlib'))
 		{
-			$url       = 'compress.zlib://' . $url;
 			$headers[] = 'Content-Encoding: gzip';
-			$headers[] = 'Accept-Encoding: gzip';
-			$content   = gzencode($content, $this->gzLevel);
+			$body      = gzencode($body, $this->gzLevel);
 		}
-		$headers[] = 'Content-Length: ' . strlen($content);
 
-		$content = file_get_contents($url, false, $this->getContext($headers, $content));
-		if (empty($http_response_header[0]) || strpos($http_response_header[0], '200') === false)
+		$code = $this->getHttpClient()->post($this->url, $headers, $body);
+		if ($code === false)
 		{
-			throw new RuntimeException($content);
+			throw new RuntimeException;
 		}
 
-		return $content;
-	}
-
-	/**
-	* Create the HTTP stream context for given request
-	*
-	* @param  string[] $headers Request headers
-	* @param  string   $content Request body
-	* @return resource
-	*/
-	protected function getContext(array $headers, $content)
-	{
-		return stream_context_create([
-			'http' => [
-				'method'        => 'POST',
-				'header'        => implode("\r\n", $headers),
-				'content'       => $content,
-				'timeout'       => $this->timeout,
-				'ignore_errors' => true
-			]
-		]);
+		return $code;
 	}
 }
