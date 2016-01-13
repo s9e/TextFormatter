@@ -2,28 +2,20 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers;
 
+use s9e\TextFormatter\Configurator\Helpers\Http\Client;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Tests\Test;
 
 /**
 * @requires extension json
+* @covers s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier
 * @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService
 */
 class ClosureCompilerServiceTest extends Test
 {
-	public function setUp()
-	{
-		stream_wrapper_unregister('http');
-		stream_wrapper_register('http', __NAMESPACE__ . '\\ClosureCompilerServiceProxy');
-	}
-
-	public function tearDown()
-	{
-		stream_wrapper_restore('http');
-	}
-
 	/**
 	* @testdox Works
+	* @group needs-network
 	*/
 	public function testBasic()
 	{
@@ -39,34 +31,18 @@ class ClosureCompilerServiceTest extends Test
 		$this->assertSame($expected, $minifier->minify($original));
 	}
 
-	protected function getQueryParams($src)
-	{
-		$minifier = new ClosureCompilerService;
-		$minifier->minify('');
-
-		$content = ClosureCompilerServiceProxy::$lastContext['http']['content'];
-		$params  = [];
-		foreach (explode('&', $content) as $pair)
-		{
-			$pair    = explode('=', $pair);
-			$pair[1] = urldecode($pair[1]);
-
-			$params[] = $pair;
-		}
-
-		return $params;
-	}
-
 	/**
 	* @testdox Compilation level is ADVANCED_OPTIMIZATIONS by default
 	*/
 	public function testCompilationLevelDefault()
 	{
-		$params = $this->getQueryParams('');
+		$minifier = new ClosureCompilerService;
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->minify('');
 
 		$this->assertContains(
-			['compilation_level', 'ADVANCED_OPTIMIZATIONS'],
-			$params
+			'compilation_level=ADVANCED_OPTIMIZATIONS',
+			$minifier->client->body
 		);
 	}
 
@@ -75,11 +51,13 @@ class ClosureCompilerServiceTest extends Test
 	*/
 	public function testExcludesDefaultExternsByDefault()
 	{
-		$params = $this->getQueryParams('');
+		$minifier = new ClosureCompilerService;
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->minify('');
 
 		$this->assertContains(
-			['exclude_default_externs', 'true'],
-			$params
+			'exclude_default_externs=true',
+			$minifier->client->body
 		);
 	}
 
@@ -88,12 +66,15 @@ class ClosureCompilerServiceTest extends Test
 	*/
 	public function testCustomExterns()
 	{
-		$params  = $this->getQueryParams('');
 		$externs = file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.service.js');
 
+		$minifier = new ClosureCompilerService;
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->minify('');
+
 		$this->assertContains(
-			['js_externs', $externs],
-			$params
+			'js_externs=' . urlencode($externs),
+			$minifier->client->body
 		);
 	}
 
@@ -158,9 +139,9 @@ class ClosureCompilerServiceTest extends Test
 	public function testRequestFailure()
 	{
 		$minifier = new ClosureCompilerService;
-		$minifier->url = 'data:text/plain,';
-
-		$minifier->minify('alert()');
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->client->willReturn = false;
+		$minifier->minify('');
 	}
 
 	/**
@@ -171,9 +152,9 @@ class ClosureCompilerServiceTest extends Test
 	public function testJSONError()
 	{
 		$minifier = new ClosureCompilerService;
-		$minifier->url = 'data:text/plain,foo';
-
-		$minifier->minify('alert()');
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->client->willReturn = 'not JSON';
+		$minifier->minify('');
 	}
 
 	/**
@@ -185,6 +166,8 @@ class ClosureCompilerServiceTest extends Test
 	{
 		$minifier = new ClosureCompilerService;
 		$minifier->compilationLevel = 'UNKNOWN';
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->client->willReturn = '{"serverErrors":[{"code":4,"error":"Unknown compression level: UNKNOWN."}]}';
 
 		$minifier->minify('alert()');
 	}
@@ -197,53 +180,34 @@ class ClosureCompilerServiceTest extends Test
 	public function testCompilationError()
 	{
 		$minifier = new ClosureCompilerService;
+		$minifier->client = new ClosureCompilerServiceTestClient;
+		$minifier->client->willReturn = '{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":5,"error":"Parse error. Semi-colon expected","line":"This should fail"}]}';
 
 		$minifier->minify('This should fail');
 	}
 }
 
-class ClosureCompilerServiceProxy
+class ClosureCompilerServiceTestClient extends Client
 {
-	public static $lastContext;
-	protected $response;
+	public $body;
+	public $headers;
+	public $url;
+	public $willReturn = '{"compiledCode":""}';
 
-	public function stream_open($url)
+	public function get($url, $headers = [])
 	{
-		self::$lastContext = stream_context_get_options($this->context);
+		$this->url     = $url;
+		$this->headers = $headers;
 
-		$id        = sprintf('%08X', crc32(serialize(self::$lastContext)));
-		$cacheFile = __DIR__ . '/cache/' . $id;
-
-		if (file_exists($cacheFile))
-		{
-			$this->response = unserialize(file_get_contents($cacheFile));
-		}
-		else
-		{
-			stream_wrapper_restore('http');
-
-			$this->response = file_get_contents($url, false, $this->context);
-			file_put_contents($cacheFile, serialize($this->response));
-		}
-
-		return true;
+		return $this->willReturn;
 	}
 
-	public function stream_stat()
+	public function post($url, $headers = [], $body = '')
 	{
-		return false;
-	}
+		$this->url     = $url;
+		$this->headers = $headers;
+		$this->body    = $body;
 
-	public function stream_read($maxLen)
-	{
-		$chunk = substr($this->response, 0, $maxLen);
-		$this->response = substr($this->response, $maxLen);
-
-		return $chunk;
-	}
-
-	public function stream_eof()
-	{
-		return ($this->response === false);
+		return $this->willReturn;
 	}
 }

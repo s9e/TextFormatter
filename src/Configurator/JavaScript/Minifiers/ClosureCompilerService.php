@@ -8,9 +8,9 @@
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 
 use RuntimeException;
-use s9e\TextFormatter\Configurator\JavaScript\Minifier;
+use s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier;
 
-class ClosureCompilerService extends Minifier
+class ClosureCompilerService extends OnlineMinifier
 {
 	/**
 	* @var string Closure Compiler's compilation level
@@ -26,11 +26,6 @@ class ClosureCompilerService extends Minifier
 	* @var string Externs used for compilation
 	*/
 	public $externs;
-
-	/**
-	* @var integer Read timeout in seconds
-	*/
-	public $timeout = 10;
 
 	/**
 	* @var string Closure Compiler Service's URL
@@ -70,7 +65,7 @@ class ClosureCompilerService extends Minifier
 	{
 		$body     = $this->generateRequestBody($src);
 		$response = $this->query($body);
-		if (!$response)
+		if ($response === false)
 		{
 			throw new RuntimeException('Could not contact the Closure Compiler service');
 		}
@@ -145,19 +140,13 @@ class ClosureCompilerService extends Minifier
 	*/
 	protected function query($body)
 	{
-		return file_get_contents(
+		$client = $this->getHttpClient();
+		$client->timeout = $this->timeout;
+
+		return $client->post(
 			$this->url,
-			false,
-			stream_context_create([
-				'http' => [
-					'method'  => 'POST',
-					'timeout' => $this->timeout,
-					'header'  => "Connection: close\r\n"
-					           . "Content-length: " . strlen($body) . "\r\n"
-					           . "Content-type: application/x-www-form-urlencoded",
-					'content' => $body
-				]
-			])
+			['Content-Type: application/x-www-form-urlencoded'],
+			$body
 		);
 	}
 }
