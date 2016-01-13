@@ -4,10 +4,6 @@
 	<tags><tag>fundraising</tag></tags>
 
 	<host>indiegogo.com</host>
-	<extract>!indiegogo\.com/projects/(?'id'\d+)$!</extract>
-	<scrape>
-		<match>!indiegogo\.com/projects/.!</match>
-		<extract>!indiegogo\.com/projects/(?'id'\d+)/!</extract>
-	</scrape>
-	<iframe width="224" height="486" src="//www.indiegogo.com/project/{@id}/widget"/>
+	<extract>!indiegogo\.com/projects/(?'id'[-\w]+)!</extract>
+	<iframe width="222" height="445" src="//www.indiegogo.com/project/{@id}/embedded"/>
 </site>

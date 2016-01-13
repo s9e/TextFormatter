@@ -532,26 +532,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.indiegogo.com/projects/gameheart-redesigned',
-				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('indiegogo');
-				}
-			],
-			[
-				'http://www.indiegogo.com/projects/5050-years-a-documentary',
-				'<r><INDIEGOGO id="535215" url="http://www.indiegogo.com/projects/5050-years-a-documentary">http://www.indiegogo.com/projects/5050-years-a-documentary</INDIEGOGO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('indiegogo');
-				}
-			],
-			[
 				'https://archive.org/details/BillGate99',
 				'<r><INTERNETARCHIVE height="240" id="BillGate99" url="https://archive.org/details/BillGate99" width="320">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
 				[],
@@ -2034,6 +2014,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.indiegogo.com/projects/gameheart-redesigned',
+				'<r><INDIEGOGO id="gameheart-redesigned" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
+				}
+			],
+			[
+				'http://www.indiegogo.com/projects/5050-years-a-documentary',
+				'<r><INDIEGOGO id="5050-years-a-documentary" url="http://www.indiegogo.com/projects/5050-years-a-documentary">http://www.indiegogo.com/projects/5050-years-a-documentary</INDIEGOGO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
+				}
+			],
+			[
 				'http://instagram.com/p/gbGaIXBQbn/',
 				'<r><INSTAGRAM id="gbGaIXBQbn" url="http://instagram.com/p/gbGaIXBQbn/">http://instagram.com/p/gbGaIXBQbn/</INSTAGRAM></r>',
 				[],
@@ -3263,7 +3261,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:224px"><div style="overflow:hidden;position:relative;padding-bottom:216.96428571429%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/widget" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:222px"><div style="overflow:hidden;position:relative;padding-bottom:200.45045045045%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/embedded" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
