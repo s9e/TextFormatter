@@ -7,12 +7,12 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
 
-use s9e\TextFormatter\Configurator\Helpers\Http;
+use s9e\TextFormatter\Utils\Http;
 
 abstract class OnlineMinifier extends Minifier
 {
 	/**
-	* @var \s9e\TextFormatter\Configurator\Helpers\Http\Client Client used to perform HTTP request
+	* @var \s9e\TextFormatter\Utils\Http\Client Client used to perform HTTP request
 	*/
 	public $client;
 
@@ -24,7 +24,7 @@ abstract class OnlineMinifier extends Minifier
 	/**
 	* Return a cached instance of the HTTP client
 	*
-	* @return \s9e\TextFormatter\Configurator\Helpers\Http\Client
+	* @return \s9e\TextFormatter\Utils\Http\Client
 	*/
 	protected function getHttpClient()
 	{

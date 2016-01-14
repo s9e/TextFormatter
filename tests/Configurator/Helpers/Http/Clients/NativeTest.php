@@ -1,8 +1,8 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients;
+namespace s9e\TextFormatter\Tests\Utils\Http\Clients;
 
-use s9e\TextFormatter\Configurator\Helpers\Http\Clients\Native;
+use s9e\TextFormatter\Utils\Http\Clients\Native;
 
 class NativeTest extends AbstractTest
 {
