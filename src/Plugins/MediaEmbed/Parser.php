@@ -7,12 +7,18 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
+use s9e\TextFormatter\Utils\Http;
 use s9e\TextFormatter\Parser as TagStack;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
 {
+	/**
+	* @var \s9e\TextFormatter\Utils\Http\Client Client used to perform HTTP request
+	*/
+	protected static $client;
+
 	/**
 	* {@inheritdoc}
 	*/
@@ -209,6 +215,22 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Return a cached instance of the HTTP client
+	*
+	* @return \s9e\TextFormatter\Utils\Http\Client
+	*/
+	protected static function getHttpClient()
+	{
+		if (!isset(self::$client))
+		{
+			self::$client = Http::getClient();
+		}
+		self::$client->timeout = 10;
+
+		return self::$client;
+	}
+
+	/**
 	* Replace {@var} tokens in given URL
 	*
 	* @param  string   $url  Original URL
@@ -329,24 +351,17 @@ class Parser extends ParserBase
 	*/
 	protected static function wget($url, $cacheDir = null)
 	{
-		$contextOptions = [
-			'http' => ['user_agent'  => 'PHP (not Mozilla)'],
-			'ssl'  => ['verify_peer' => false]
-		];
-
-		$prefix = $suffix = '';
-		if (extension_loaded('zlib'))
-		{
-			$prefix = 'compress.zlib://';
-			$suffix = '.gz';
-			$contextOptions['http']['header'] = 'Accept-Encoding: gzip';
-		}
+		$prefix = '';
 
 		// Return the content from the cache if applicable
 		if (isset($cacheDir) && file_exists($cacheDir))
 		{
-			$cacheFile = $cacheDir . '/http.' . crc32($url) . $suffix;
-
+			$cacheFile = $cacheDir . '/http.' . crc32($url);
+			if (extension_loaded('zlib'))
+			{
+				$prefix     = 'compress.zlib://';
+				$cacheFile .= '.gz';
+			}
 			if (file_exists($cacheFile))
 			{
 				return file_get_contents($prefix . $cacheFile);
@@ -354,10 +369,10 @@ class Parser extends ParserBase
 		}
 
 		// Retrieve the external content from the source
-		$content = @file_get_contents($prefix . $url, false, stream_context_create($contextOptions));
+		$content = @self::getHttpClient()->get($url, ['User-Agent: PHP (not Mozilla)']);
 
 		// Save to the cache if applicable
-		if (isset($cacheFile) && $content !== false)
+		if (isset($cacheFile) && !empty($content))
 		{
 			file_put_contents($prefix . $cacheFile, $content);
 		}
