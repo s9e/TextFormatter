@@ -41,10 +41,32 @@ class Native extends Client
 	}
 
 	/**
+	* Create a stream context for given request
+	*
+	* @param  string   $method  Request method
+	* @param  string[] $headers Request headers
+	* @param  string   $body    Request body
+	* @return resource
+	*/
+	protected function createContext($method, array $headers, $body)
+	{
+		$contextOptions = [
+			'http' => [
+				'method'  => $method,
+				'timeout' => $this->timeout,
+				'header'  => $this->generateHeaders($headers, $body),
+				'content' => $body
+			]
+		];
+
+		return stream_context_create($contextOptions);
+	}
+
+	/**
 	* Decompress given page if applicable
 	*
-	* @param  string|bool $content Request's response body or FALSE
-	* @return string|bool
+	* @param  string $content Response body, potentially compressed
+	* @return string          Response body, uncompressed
 	*/
 	protected function decompress($content)
 	{
@@ -57,6 +79,24 @@ class Native extends Client
 	}
 
 	/**
+	* Generate a list of headers for given request
+	*
+	* @param  string[] $headers Request headers
+	* @param  string   $body    Request body
+	* @return string[]
+	*/
+	protected function generateHeaders(array $headers, $body)
+	{
+		if ($this->gzipEnabled)
+		{
+			$headers[] = 'Accept-Encoding: gzip';
+		}
+		$headers[] = 'Content-Length: ' . strlen($body);
+
+		return $headers;
+	}
+
+	/**
 	* Execute an HTTP request
 	*
 	* @param  string      $method  Request method
@@ -64,25 +104,10 @@ class Native extends Client
 	* @param  string[]    $headers Request headers
 	* @return string|bool          Response body or FALSE
 	*/
-	protected function request($method, $url, $headers, $body = null)
+	protected function request($method, $url, $headers, $body = '')
 	{
-		$contextOptions = [
-			'http' => [
-				'method'  => $method,
-				'timeout' => $this->timeout
-			]
-		];
-		if ($this->gzipEnabled)
-		{
-			$headers[] = 'Accept-Encoding: gzip';
-		}
-		if (isset($body))
-		{
-			$headers[] = 'Content-Length: ' . strlen($body);
-			$contextOptions['http']['content'] = $body;
-		}
-		$contextOptions['http']['header'] = $headers;
+		$response = @file_get_contents($url, false, $this->createContext($method, $headers, $body));
 
-		return $this->decompress(@file_get_contents($url, false, stream_context_create($contextOptions)));
+		return (is_string($response)) ? $this->decompress($response) : $response;
 	}
 }
