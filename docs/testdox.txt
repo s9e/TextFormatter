@@ -476,6 +476,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Curl
  [x] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Configurator\Helpers\Http\Clients\Native
+ [x] Does not send "Accept-Encoding: gzip" if gzip is disabled
  [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] post() sends the request body if set
