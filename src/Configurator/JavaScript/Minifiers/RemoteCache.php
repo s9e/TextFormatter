@@ -7,20 +7,17 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\JavaScript\Minifier;
-class RemoteCache extends Minifier
+use s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier;
+class RemoteCache extends OnlineMinifier
 {
-	public $url = 'http://s9e-textformatter.rhcloud.com/minifier/cache/';
+	public $url = 'http://s9e-textformatter.rhcloud.com/minifier/';
 	public function minify($src)
 	{
-		$url = $this->url . $this->getHash($src);
-		if (\extension_loaded('zlib'))
-			$url = 'compress.zlib://' . $url . '.gz';
-		$contextOptions = array('http' => array('ignore_errors'  => \true));
-		$content = \file_get_contents($url, \false, \stream_context_create($contextOptions));
-		if (empty($http_response_header[0]) || \strpos($http_response_header[0], '200') === \false)
+		$url  = $this->url . '?hash=' . $this->getHash($src);
+		$code = $this->getHttpClient()->get($url);
+		if ($code === \false)
 			throw new RuntimeException;
-		return $content;
+		return $code;
 	}
 	protected function getHash($src)
 	{

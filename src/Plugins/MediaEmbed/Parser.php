@@ -6,11 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
+use s9e\TextFormatter\Utils\Http;
 use s9e\TextFormatter\Parser as TagStack;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
+	protected static $client;
 	public function parse($text, array $matches)
 	{
 		foreach ($matches as $m)
@@ -88,6 +90,13 @@ class Parser extends ParserBase
 		while ($host > '');
 		return \false;
 	}
+	protected static function getHttpClient()
+	{
+		if (!isset(self::$client))
+			self::$client = Http::getClient();
+		self::$client->timeout = 10;
+		return self::$client;
+	}
 	protected static function replaceTokens($url, array $vars)
 	{
 		return \preg_replace_callback(
@@ -136,25 +145,20 @@ class Parser extends ParserBase
 	}
 	protected static function wget($url, $cacheDir = \null)
 	{
-		$contextOptions = array(
-			'http' => array('user_agent'  => 'PHP (not Mozilla)'),
-			'ssl'  => array('verify_peer' => \false)
-		);
-		$prefix = $suffix = '';
-		if (\extension_loaded('zlib'))
-		{
-			$prefix = 'compress.zlib://';
-			$suffix = '.gz';
-			$contextOptions['http']['header'] = 'Accept-Encoding: gzip';
-		}
+		$prefix = '';
 		if (isset($cacheDir) && \file_exists($cacheDir))
 		{
-			$cacheFile = $cacheDir . '/http.' . \crc32($url) . $suffix;
+			$cacheFile = $cacheDir . '/http.' . \crc32($url);
+			if (\extension_loaded('zlib'))
+			{
+				$prefix     = 'compress.zlib://';
+				$cacheFile .= '.gz';
+			}
 			if (\file_exists($cacheFile))
 				return \file_get_contents($prefix . $cacheFile);
 		}
-		$content = @\file_get_contents($prefix . $url, \false, \stream_context_create($contextOptions));
-		if (isset($cacheFile) && $content !== \false)
+		$content = @self::getHttpClient()->get($url, array('User-Agent: PHP (not Mozilla)'));
+		if (isset($cacheFile) && !empty($content))
 			\file_put_contents($prefix . $cacheFile, $content);
 		return $content;
 	}
