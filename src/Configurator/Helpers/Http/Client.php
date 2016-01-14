@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\Configurator\Helpers\Http;
 abstract class Client
 {
 	/**
+	* @var bool Whether to verify the peer's SSL certificate
+	*/
+	public $sslVerifyPeer = false;
+
+	/**
 	* @var integer Request timeout
 	*/
 	public $timeout = 10;

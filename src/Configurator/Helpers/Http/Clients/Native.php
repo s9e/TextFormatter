@@ -51,6 +51,7 @@ class Native extends Client
 	protected function createContext($method, array $headers, $body)
 	{
 		$contextOptions = [
+			'ssl'  => ['verify_peer' => $this->sslVerifyPeer],
 			'http' => [
 				'method'  => $method,
 				'timeout' => $this->timeout,
