@@ -30,6 +30,7 @@ abstract class AbstractTest extends Test
 	{
 		$client = $this->getInstance();
 		$vars = unserialize($client->get($this->url));
+		$this->assertArrayHasKey('HTTP_ACCEPT_ENCODING', $vars['_SERVER']);
 		$this->assertContains('gzip', $vars['_SERVER']['HTTP_ACCEPT_ENCODING']);
 	}
 
