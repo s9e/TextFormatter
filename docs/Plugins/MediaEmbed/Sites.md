@@ -37,6 +37,11 @@
 		<td>http://www.bbc.com/news/science-environment-29232523</td>
 	</tr>
 	<tr>
+		<td><code>blab</code></td>
+		<td>Blab</td>
+		<td>https://blab.im/05b6ce88279f40798069bb6227a04fce</td>
+	</tr>
+	<tr>
 		<td><code>bleacherreport</code></td>
 		<td>Bleacher Report videos</td>
 		<td>http://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>

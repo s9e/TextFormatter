@@ -1,0 +1,9 @@
+<site name="Blab" homepage="https://blab.im/">
+	<example>https://blab.im/05b6ce88279f40798069bb6227a04fce</example>
+
+	<tags><tag>social</tag></tags>
+
+	<host>blab.im</host>
+	<extract>#blab\.im/(?!about$|live$|replay$|scheduled$|search\?)(?'id'[-\w]+)#</extract>
+	<iframe width="400" height="400" src="https://blab.im/{@id}"/>
+</site>

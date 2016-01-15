@@ -1444,6 +1444,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics',
+				'<r><BLAB id="thenewabc-what-difficulty-have-you-experienced-in-ethics" url="https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics">https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics</BLAB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blab');
+				}
+			],
+			[
+				'https://blab.im/about',
+				'<t>https://blab.im/about</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blab');
+				}
+			],
+			[
+				'https://blab.im/search?q=key',
+				'<t>https://blab.im/search?q=key</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blab');
+				}
+			],
+			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
 				'<r><BREAK id="2278131" url="http://www.break.com/video/video-game-playing-frog-wants-more-2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></r>',
 				[],
