@@ -1,3 +1,33 @@
+0.4.8 (2016-01-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a7a66e4afae0ccebe729e8ea4b4b60c48bb41dfc...1050f78b5b2ebc4fe09a17b21d49d2d100a4f0ca)
+
+### Added
+
+ - `e98b8a0` Added an HTTP helper with support for cURL and native streams
+ - `19ecb28` Added support for customisable timeout in HTTP clients
+ - `88562c2` Added support for toggling SSL peer verification in HTTP clients
+ - `c4e0a99` ClosureCompilerService: added support for configurable HTTP client
+ - `ff15e3a` HostedMinifier: added support for configurable HTTP client
+ - `8509ded` MediaEmbed: added Blab
+ - `5feeae6` MediaEmbed: added support for HTTP client used for scraping
+ - `e2cae50` RemoteCache: added support for configurable HTTP client
+
+### Changed
+
+ - `39139c3` ClosureCompilerService: reorganized code
+ - `0c2b5aa` Curl: reset the request body when doing POST requests
+ - `48d08f6` MediaEmbed: moved all GitHub iframes to RawGit
+ - `c73392e` MediaEmbed: moved hosted iframes back to GitHub
+ - `4e55063` MediaEmbed: updated Indiegogo
+ - `6444043` Moved Http helper to the Utils namespace
+ - `9973077` OnlineMinifier: automatically set timeout in getHttpClient()
+ - `ab2c9f1` RemoteCache: updated for new API
+ - `b2481cd` Reorganized native HTTP client's code
+ - `0489bb8` Set headers unconditionally in native HTTP client
+
+
 0.4.7 (2016-01-08)
 ==================
 
