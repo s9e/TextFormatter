@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers;
 
+use RuntimeException;
 use s9e\TextFormatter\Utils\Http\Client;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Tests\Test;
@@ -28,7 +29,18 @@ class ClosureCompilerServiceTest extends Test
 		$expected = 'alert("Hello, New user");';
 
 		$minifier = new ClosureCompilerService;
-		$this->assertSame($expected, $minifier->minify($original));
+		try
+		{
+			$this->assertSame($expected, $minifier->minify($original));
+		}
+		catch (RuntimeException $e)
+		{
+			if (strpos($e->getMessage(), 'Too many compiles performed recently') === false)
+			{
+				throw $e;
+			}
+			$this->markTestSkipped($e->getMessage());
+		}
 	}
 
 	/**
