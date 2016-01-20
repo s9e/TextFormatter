@@ -34,6 +34,7 @@ abstract class RegexpBuilder
 			'delimiter'       => '/',
 			'caseInsensitive' => false,
 			'specialChars'    => [],
+			'unicode'         => true,
 			'useLookahead'    => false
 		];
 
@@ -85,7 +86,8 @@ abstract class RegexpBuilder
 
 		foreach ($words as $word)
 		{
-			if (preg_match_all('#.#us', $word, $matches) === false)
+			$regexp = ($options['unicode']) ? '(.)us' : '(.)s';
+			if (preg_match_all($regexp, $word, $matches) === false)
 			{
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
 			}

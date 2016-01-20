@@ -54,6 +54,12 @@ foreach ($test->getWordsLists() as $k => $case)
 		$php .= ', ' . $options . '';
 	}
 
+	// Special case for handling the non-UTF test case
+	if ($regexp === "'\xC2[\xBC\xBD]'")
+	{
+		$regexp = '"\\xC2[\\xBC\\xBD]"';
+	}
+
 	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_" . strtoupper(dechex(crc32(serialize($case)))) . "()\n\t{\n\t\t\$this->fromListTestCase(" . $k . ");\n\t}\n";
 }
 
