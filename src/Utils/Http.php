@@ -12,6 +12,6 @@ abstract class Http
 {
 	public static function getClient()
 	{
-		return (\extension_loaded('curl')) ? new Curl : new Native;
+		return (\extension_loaded('curl') && !\ini_get('safe_mode')) ? new Curl : new Native;
 	}
 }

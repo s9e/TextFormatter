@@ -666,6 +666,7 @@ abstract class RegexpBuilder
 			'delimiter'       => '/',
 			'caseInsensitive' => \false,
 			'specialChars'    => array(),
+			'unicode'         => \true,
 			'useLookahead'    => \false
 		);
 		if ($options['caseInsensitive'])
@@ -695,7 +696,8 @@ abstract class RegexpBuilder
 		$splitWords = array();
 		foreach ($words as $word)
 		{
-			if (\preg_match_all('#.#us', $word, $matches) === \false || !\preg_match('/^(?:[[:ascii:]]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3})*$/D', $word))
+			$regexp = ($options['unicode']) ? '(.)us' : '(.)s';
+			if (\preg_match_all($regexp, $word, $matches) === \false || ($options['unicode'] && !\preg_match('/^(?:[[:ascii:]]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3})*$/D', $word)))
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
 			$splitWord = array();
 			foreach ($matches[0] as $pos => $c)
