@@ -1,13 +1,17 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
+
 class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 {
+	/**
+	* @var array Array of [siteId => siteConfig]
+	*/
 	protected $cache = [
 		'abcnews'=>'a:3:{s:4:"host";s:14:"abcnews.go.com";s:7:"extract";s:47:"!abcnews\\.go\\.com/[^/]+/video/[^/]+-(?\'id\'\\d+)!";s:6:"iframe";a:3:{s:5:"width";s:3:"640";s:6:"height";s:3:"360";s:3:"src";s:37:"//abcnews.go.com/video/embed?id={@id}";}}',
 		'amazon'=>'a:3:{s:4:"host";a:8:{i:0;s:9:"amazon.ca";i:1;s:12:"amazon.co.uk";i:2;s:12:"amazon.co.jp";i:3;s:10:"amazon.com";i:4;s:9:"amazon.de";i:5;s:9:"amazon.es";i:6;s:9:"amazon.fr";i:7;s:9:"amazon.it";}s:7:"extract";a:2:{i:0;s:37:"#/(?:dp|gp/product)/(?\'id\'[A-Z0-9]+)#";i:1;s:47:"#amazon\\.(?:co\\.)?(?\'tld\'ca|de|es|fr|it|jp|uk)#";}s:6:"iframe";a:3:{s:5:"width";s:3:"120";s:6:"height";s:3:"240";s:3:"src";s:1631:"//rcm-<xsl:choose><xsl:when test="@tld=\'jp\'">fe</xsl:when><xsl:when test="@tld and contains(\'desfrituk\',@tld)">eu</xsl:when><xsl:otherwise>na</xsl:otherwise></xsl:choose>.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=<xsl:value-of select="@id"/>&amp;o=<xsl:choose><xsl:when test="@tld=\'ca\'">15</xsl:when><xsl:when test="@tld=\'de\'">3</xsl:when><xsl:when test="@tld=\'es\'">30</xsl:when><xsl:when test="@tld=\'fr\'">8</xsl:when><xsl:when test="@tld=\'it\'">29</xsl:when><xsl:when test="@tld=\'jp\'">9</xsl:when><xsl:when test="@tld=\'uk\'">2</xsl:when><xsl:otherwise>1</xsl:otherwise></xsl:choose>&amp;t=<xsl:choose><xsl:when test="@tld=\'ca\'and$AMAZON_ASSOCIATE_TAG_CA"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when><xsl:when test="@tld=\'de\'and$AMAZON_ASSOCIATE_TAG_DE"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when><xsl:when test="@tld=\'es\'and$AMAZON_ASSOCIATE_TAG_ES"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/></xsl:when><xsl:when test="@tld=\'fr\'and$AMAZON_ASSOCIATE_TAG_FR"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when><xsl:when test="@tld=\'it\'and$AMAZON_ASSOCIATE_TAG_IT"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/></xsl:when><xsl:when test="@tld=\'jp\'and$AMAZON_ASSOCIATE_TAG_JP"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when><xsl:when test="@tld=\'uk\'and$AMAZON_ASSOCIATE_TAG_UK"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when><xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when><xsl:otherwise>_</xsl:otherwise></xsl:choose>";}}',
@@ -115,14 +119,26 @@ class CachedSiteDefinitionProvider extends SiteDefinitionProvider
 		'youtube'=>'a:3:{s:4:"host";a:2:{i:0;s:11:"youtube.com";i:1;s:8:"youtu.be";}s:7:"extract";a:4:{i:0;s:45:"!youtube\\.com/(?:watch.*?v=|v/)(?\'id\'[-\\w]+)!";i:1;s:25:"!youtu\\.be/(?\'id\'[-\\w]+)!";i:2;s:57:"![#&?]t=(?:(?:(?\'h\'\\d+)h)?(?\'m\'\\d+)m(?\'s\'\\d+)|(?\'t\'\\d+))!";i:3;s:23:"!&list=(?\'list\'[-\\w]+)!";}s:6:"iframe";a:1:{s:3:"src";s:471:"//www.youtube.com/embed/<xsl:value-of select="@id"/><xsl:if test="@list">?list=<xsl:value-of select="@list"/></xsl:if><xsl:if test="@t or@m"><xsl:choose><xsl:when test="@list">&amp;</xsl:when><xsl:otherwise>?</xsl:otherwise></xsl:choose>start=<xsl:choose><xsl:when test="@t"><xsl:value-of select="@t"/></xsl:when><xsl:when test="@h"><xsl:value-of select="@h*3600+@m*60+@s"/></xsl:when><xsl:otherwise><xsl:value-of select="@m*60+@s"/></xsl:otherwise></xsl:choose></xsl:if>";}}',
 		'zippyshare'=>'a:3:{s:4:"host";s:14:"zippyshare.com";s:6:"scrape";a:2:{s:5:"match";s:5:"!/v/!";s:7:"extract";s:45:"!file=(?\'file\'\\w+)&amp;server=(?\'server\'\\d+)!";}s:5:"flash";a:5:{s:5:"width";s:4:"100%";s:6:"height";s:2:"80";s:9:"max-width";s:3:"900";s:3:"src";s:35:"//api.zippyshare.com/api/player.swf";s:9:"flashvars";s:45:"file={@file}&server={@server}&autostart=false";}}'
 	];
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function getIds()
 	{
-		return \array_keys($this->cache);
+		return array_keys($this->cache);
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function getSiteConfig($siteId)
 	{
-		return \unserialize($this->cache[$siteId]);
+		return unserialize($this->cache[$siteId]);
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function hasSiteConfig($siteId)
 	{
 		return isset($this->cache[$siteId]);

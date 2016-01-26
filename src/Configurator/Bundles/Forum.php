@@ -1,18 +1,24 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
+
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Bundle;
+
 class Forum extends Bundle
 {
+	/**
+	* {@inheritdoc}
+	*/
 	public function configure(Configurator $configurator)
 	{
 		$configurator->rootRules->enableAutoLineBreaks();
+
 		$configurator->BBCodes->addFromRepository('B');
 		$configurator->BBCodes->addFromRepository('CENTER');
 		$configurator->BBCodes->addFromRepository('CODE');
@@ -36,12 +42,14 @@ class Forum extends Bundle
 		]);
 		$configurator->BBCodes->addFromRepository('U');
 		$configurator->BBCodes->addFromRepository('URL');
+
 		$configurator->rendering->parameters = [
 			'L_WROTE'   => 'wrote:',
 			'L_HIDE'    => 'Hide',
 			'L_SHOW'    => 'Show',
 			'L_SPOILER' => 'Spoiler'
 		];
+
 		$emoticons = [
 			':)'  => 'smile',
 			':-)' => 'smile',
@@ -63,12 +71,16 @@ class Forum extends Bundle
 			':o'  => 'shock',
 			':lol:' => 'laugh'
 		];
+
 		foreach ($emoticons as $code => $filename)
+		{
 			$configurator->Emoticons->add(
 				$code,
 				'<img src="{$EMOTICONS_PATH}/' . $filename . '.png" alt="' . $code . '"/>'
 			);
-		$configurator->MediaEmbed->createIndividualBBCodes = \true;
+		}
+
+		$configurator->MediaEmbed->createIndividualBBCodes = true;
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');
@@ -83,6 +95,7 @@ class Forum extends Bundle
 		$configurator->MediaEmbed->add('vine');
 		$configurator->MediaEmbed->add('wshh');
 		$configurator->MediaEmbed->add('youtube');
+
 		$configurator->Autoemail;
 		$configurator->Autolink;
 	}

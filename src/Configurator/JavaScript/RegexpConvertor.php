@@ -1,83 +1,144 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
+
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
+
+/**
+* @todo create a method that replaces capturing subpatterns with non-capturing subpatterns, and perhaps even no subpattern at all. Unless backreferences are used
+*/
 abstract class RegexpConvertor
 {
-	public static function toJS($regexp, $isGlobal = \false)
+	/**
+	* Convert a PCRE regexp to a JavaScript regexp
+	*
+	* @param  string $regexp   PCRE regexp
+	* @param  bool   $isGlobal Whether the global flag should be set
+	* @return Code             JavaScript regexp
+	*/
+	public static function toJS($regexp, $isGlobal = false)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
-		$dotAll     = (\strpos($regexpInfo['modifiers'], 's') !== \false);
+		$dotAll     = (strpos($regexpInfo['modifiers'], 's') !== false);
+
 		$regexp = '';
 		$pos = 0;
+
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
 			$regexp .= self::convertUnicodeCharacters(
-				\substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
-				\false,
+				substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
+				false,
 				$dotAll
 			);
+
 			switch ($tok['type'])
 			{
 				case 'option':
 					if ($tok['options'] !== 'J')
+					{
 						throw new RuntimeException('Regexp options are not supported');
+					}
 					break;
+
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
 					break;
+
 				case 'nonCapturingSubpatternStart':
 					if (!empty($tok['options']))
+					{
 						throw new RuntimeException('Subpattern options are not supported');
+					}
+
 					$regexp .= '(?:';
 					break;
+
 				case 'capturingSubpatternEnd':
 				case 'nonCapturingSubpatternEnd':
-					$regexp .= ')' . \substr($tok['quantifiers'], 0, 1);
+					$regexp .= ')' . substr($tok['quantifiers'], 0, 1);
 					break;
+
 				case 'characterClass':
 					$regexp .= '[';
-					$regexp .= self::convertUnicodeCharacters($tok['content'], \true, \false);
-					$regexp .= ']' . \substr($tok['quantifiers'], 0, 1);
+					$regexp .= self::convertUnicodeCharacters($tok['content'], true, false);
+					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
 					break;
+
 				case 'lookaheadAssertionStart':
 					$regexp .= '(?=';
 					break;
+
 				case 'negativeLookaheadAssertionStart':
 					$regexp .= '(?!';
 					break;
+
 				case 'lookaheadAssertionEnd':
 				case 'negativeLookaheadAssertionEnd':
 					$regexp .= ')';
 					break;
+
 				default:
 					throw new RuntimeException("Unsupported token type '" . $tok['type'] . "'");
 			}
+
 			$pos = $tok['pos'] + $tok['len'];
 		}
-		$regexp .= self::convertUnicodeCharacters(\substr($regexpInfo['regexp'], $pos), \false, $dotAll);
+
+		$regexp .= self::convertUnicodeCharacters(substr($regexpInfo['regexp'], $pos), false, $dotAll);
+
 		if ($regexpInfo['delimiter'] !== '/')
-			$regexp = \preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
-		$modifiers = \preg_replace('#[^im]#', '', $regexpInfo['modifiers']);
+		{
+			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
+		}
+
+		$modifiers = preg_replace('#[^im]#', '', $regexpInfo['modifiers']);
 		if ($isGlobal)
+		{
 			$modifiers .= 'g';
+		}
+
 		return new Code('/' . self::escapeLineTerminators($regexp) . '/' . $modifiers);
 	}
+
+	/**
+	* Replace Unicode characters and properties in a string
+	*
+	* NOTE: does not support \X
+	*
+	* @link http://docs.php.net/manual/en/regexp.reference.unicode.php
+	*
+	* @param  string $str              Original string
+	* @param  bool   $inCharacterClass Whether this string is in a character class
+	* @param  bool   $dotAll           Whether PCRE_DOTALL is set
+	* @return string                   Modified string
+	*/
 	protected static function convertUnicodeCharacters($str, $inCharacterClass, $dotAll)
 	{
-		$str = \preg_replace('((?<!\\\\)(?:\\\\\\\\)*\\K\\\\x\\{([0-9a-f]{4})\\})i', '\\u$1', $str);
+		// Replace \x{....} with \u.... -- Note that only BMP characters are supported
+		$str = preg_replace('((?<!\\\\)(?:\\\\\\\\)*\\K\\\\x\\{([0-9a-f]{4})\\})i', '\\u$1', $str);
+
+		// Unfold Unicode properties such as \pL
 		$str = self::unfoldUnicodeProperties($str, $inCharacterClass, $dotAll);
+
 		return $str;
 	}
+
+	/**
+	* Escape line terminators in given regexp
+	*
+	* @param  string $regexp Original regexp
+	* @return string         Modified regexp
+	*/
 	protected static function escapeLineTerminators($regexp)
 	{
-		return \preg_replace_callback(
+		return preg_replace_callback(
 			"/(\\\\*)([\\r\\n]|\xE2\x80\xA8|\xE2\x80\xA9)/",
 			function ($m)
 			{
@@ -87,44 +148,77 @@ abstract class RegexpConvertor
 					"\xE2\x80\xA8" => '\\u2028',
 					"\xE2\x80\xA9" => '\\u2029'
 				];
-				if (\strlen($m[1]) & 1)
+
+				// Ensure we have an even number of backslashes
+				if (strlen($m[1]) & 1)
+				{
 					$m[1] .= '\\';
+				}
+
 				return $m[1] . $table[$m[2]];
 			},
 			$regexp
 		);
 	}
+
+	/**
+	* Replace Unicode properties in a string
+	*
+	* NOTE: does not support \X
+	*
+	* @link http://docs.php.net/manual/en/regexp.reference.unicode.php
+	*
+	* @param  string $str              Original string
+	* @param  bool   $inCharacterClass Whether this string is in a character class
+	* @param  bool   $dotAll           Whether PCRE_DOTALL is set
+	* @return string                   Modified string
+	*/
 	protected static function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
 	{
 		$unicodeProps = self::$unicodeProps;
+
 		$propNames = [];
-		foreach (\array_keys($unicodeProps) as $propName)
+		foreach (array_keys($unicodeProps) as $propName)
 		{
 			$propNames[] = $propName;
-			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
-			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
+			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
+			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
 		}
-		$str = \preg_replace_callback(
-			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . \implode('|', $propNames) . ')#',
+
+		$str = preg_replace_callback(
+			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . implode('|', $propNames) . ')#',
 			function ($m) use ($inCharacterClass, $unicodeProps)
 			{
-				$propName = \preg_replace('#[\\{\\}]#', '', $m[2]);
+				$propName = preg_replace('#[\\{\\}]#', '', $m[2]);
+
 				if ($propName[1] === '^')
-					$propName = (($propName[0] === 'p') ? 'P' : 'p') . \substr($propName, 2);
+				{
+					// Replace p^L with PL
+					$propName = (($propName[0] === 'p') ? 'P' : 'p') . substr($propName, 2);
+				}
+
 				return (($inCharacterClass) ? '' : '[')
 				     . $unicodeProps[$propName]
 				     . (($inCharacterClass) ? '' : ']');
 			},
 			$str
 		);
+
 		if ($dotAll)
-			$str = \preg_replace(
+		{
+			$str = preg_replace(
 				'#(?<!\\\\)((?:\\\\\\\\)*+)\\.#',
 				'$1[\\s\\S]',
 				$str
 			);
+		}
+
 		return $str;
 	}
+
+	/**
+	* Ranges to be used in JavaScript regexps in place of PCRE's Unicode properties
+	*/
 	protected static $unicodeProps = [
 		'PL' => 'A-Za-z\\u00C0-\\u02C1\\u02C6-\\u02D1\\u02E0-\\u02E4\\u02EC-\\u02EE\\u0370-\\u0377\\u037A-\\u037F\\u0386-\\u0481\\u048A-\\u0556\\u0561-\\u0587\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0620-\\u064A\\u066E-\\u06D5\\u06E5\\u06E6\\u06EE\\u06EF\\u06FA-\\u06FC\\u0710-\\u072F\\u074D-\\u07A5\\u07CA-\\u07EA\\u07F4\\u07F5\\u0800-\\u0815\\u0840-\\u0858\\u08A0-\\u08B4\\u0904-\\u0939\\u0958-\\u0961\\u0971-\\u0980\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09B2\\u09B6-\\u09B9\\u09DC-\\u09E1\\u09F0\\u09F1\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A39\\u0A59-\\u0A5E\\u0A72-\\u0A74\\u0A85-\\u0AB9\\u0AE0\\u0AE1\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B39\\u0B5C-\\u0B61\\u0B83-\\u0B8A\\u0B8E-\\u0B95\\u0B99-\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0C05-\\u0C39\\u0C58-\\u0C5A\\u0C60\\u0C61\\u0C85-\\u0CB9\\u0CDE-\\u0CE1\\u0CF1\\u0CF2\\u0D05-\\u0D3A\\u0D5F-\\u0D61\\u0D7A-\\u0D7F\\u0D85-\\u0D96\\u0D9A-\\u0DBD\\u0DC0-\\u0DC6\\u0E01-\\u0E33\\u0E40-\\u0E46\\u0E81-\\u0E84\\u0E87-\\u0E8A\\u0E94-\\u0EA7\\u0EAA-\\u0EB3\\u0EC0-\\u0EC6\\u0EDC-\\u0EDF\\u0F40-\\u0F6C\\u0F88-\\u0F8C\\u1000-\\u102A\\u1050-\\u1055\\u105A-\\u105D\\u1065\\u1066\\u106E-\\u1070\\u1075-\\u1081\\u10A0-\\u10C7\\u10D0-\\u124D\\u1250-\\u125D\\u1260-\\u128D\\u1290-\\u12B5\\u12B8-\\u12C5\\u12C8-\\u1315\\u1318-\\u135A\\u1380-\\u138F\\u13A0-\\u13F5\\u13F8-\\u13FD\\u1401-\\u166C\\u166F-\\u169A\\u16A0-\\u16EA\\u16F1-\\u16F8\\u1700-\\u1711\\u1720-\\u1731\\u1740-\\u1751\\u1760-\\u1770\\u1780-\\u17B3\\u1820-\\u1877\\u1880-\\u18AA\\u18B0-\\u18F5\\u1900-\\u191E\\u1950-\\u196D\\u1970-\\u1974\\u1980-\\u19AB\\u19B0-\\u19C9\\u1A00-\\u1A16\\u1A20-\\u1A54\\u1B05-\\u1B33\\u1B45-\\u1B4B\\u1B83-\\u1BA0\\u1BAE\\u1BAF\\u1BBA-\\u1BE5\\u1C00-\\u1C23\\u1C4D-\\u1C4F\\u1C5A-\\u1C7D\\u1CE9-\\u1CF1\\u1CF5\\u1CF6\\u1D00-\\u1DBF\\u1E00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F7D\\u1F80-\\u1FBE\\u1FC2-\\u1FCC\\u1FD0-\\u1FD3\\u1FD6-\\u1FDB\\u1FE0-\\u1FEC\\u1FF2-\\u1FFC\\u2090-\\u209C\\u210A-\\u2115\\u2119-\\u211D\\u2124-\\u2139\\u213C-\\u213F\\u2145-\\u2149\\u2183\\u2184\\u2C00-\\u2CE4\\u2CEB-\\u2CEE\\u2CF2\\u2CF3\\u2D00-\\u2D27\\u2D30-\\u2D67\\u2D80-\\u2D96\\u2DA0-\\u2DDE\\u3005\\u3006\\u3031-\\u3035\\u303B\\u303C\\u3041-\\u3096\\u309D-\\u30FF\\u3105-\\u312D\\u3131-\\u318E\\u31A0-\\u31BA\\u31F0-\\u31FF\\u3400-\\u4DB5\\u4E00-\\u9FD5\\uA000-\\uA48C\\uA4D0-\\uA4FD\\uA500-\\uA60C\\uA610-\\uA61F\\uA62A\\uA62B\\uA640-\\uA66E\\uA67F-\\uA69D\\uA6A0-\\uA6E5\\uA717-\\uA71F\\uA722-\\uA788\\uA78B-\\uA7AD\\uA7B0-\\uA7B7\\uA7F7-\\uA822\\uA840-\\uA873\\uA882-\\uA8B3\\uA8F2-\\uA8F7\\uA8FB-\\uA8FD\\uA90A-\\uA925\\uA930-\\uA946\\uA960-\\uA97C\\uA984-\\uA9B2\\uA9E0-\\uA9EF\\uA9FA-\\uAA28\\uAA40-\\uAA4B\\uAA60-\\uAA76\\uAA7E-\\uAAB1\\uAAB5\\uAAB6\\uAAB9-\\uAABD\\uAAC0-\\uAAC2\\uAADB-\\uAADD\\uAAE0-\\uAAEA\\uAAF2-\\uAAF4\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB65\\uAB70-\\uABE2\\uAC00-\\uD7A3\\uD7B0-\\uD7C6\\uD7CB-\\uD7FB\\uF900-\\uFA6D\\uFA70-\\uFAD9\\uFB00-\\uFB06\\uFB13-\\uFB17\\uFB1D-\\uFBB1\\uFBD3-\\uFD3D\\uFD50-\\uFD8F\\uFD92-\\uFDC7\\uFDF0-\\uFDFB\\uFE70-\\uFEFC\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\uFF66-\\uFFBE\\uFFC2-\\uFFC7\\uFFCA-\\uFFCF\\uFFD2-\\uFFD7\\uFFDA-\\uFFDC',
 		'PLm' => '\\u02B0-\\u02C1\\u02C6-\\u02D1\\u02E0-\\u02E4\\u02EC-\\u02EE\\u06E5\\u06E6\\u07F4\\u07F5\\u1C78-\\u1C7D\\u1D2C-\\u1D6A\\u1D9B-\\u1DBF\\u2090-\\u209C\\u2C7C\\u2C7D\\u3031-\\u3035\\u309D\\u309E\\u30FC-\\u30FE\\uA4F8-\\uA4FD\\uA69C\\uA69D\\uA717-\\uA71F\\uA7F8\\uA7F9\\uAAF3\\uAAF4\\uAB5C-\\uAB5F\\uFF9E\\uFF9F',
