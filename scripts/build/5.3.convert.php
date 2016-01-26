@@ -98,6 +98,12 @@ function convertCustom($filepath, &$file)
 				'return $m[1] . pack(\'H*\', $m[2]) . $m[1];'
 			)
 		),
+		'Http.php' => array(
+			array(
+				"return (extension_loaded('curl')) ? new Curl : new Native;",
+				"return (extension_loaded('curl') && !ini_get('safe_mode')) ? new Curl : new Native;",
+			)
+		),
 		'InlineXPathLiterals.php' => array(
 			array(
 				'protected function getTextContent($expr)',
