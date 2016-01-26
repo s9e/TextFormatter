@@ -7,7 +7,7 @@
 	"keywords": ["bbcode","bbcodes","blog","censor","embed","emoji","emoticons","engine","forum","html","markdown","markup","media","parser","shortcodes"],
 	"license": "MIT",
 	"require": {
-		"php":        ">=5.3.3",
+		"php":        ">=5.6.0",
 		"ext-dom":    "*",
 		"ext-filter": "*",
 		"lib-pcre":   ">=7.2"
@@ -25,9 +25,5 @@
 		"psr-4": {
 			"s9e\\TextFormatter\\": "src"
 		}
-	},
-	"scripts": {
-		"post-install-cmd": "php scripts/build/patchSources.php",
-		"post-update-cmd":  "php scripts/build/patchSources.php"
 	}
 }

@@ -1,31 +1,22 @@
 <?php
 
-/**
+/*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
-
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-
 class Configurator extends ConfiguratorBase
 {
-	/**
-	* @var bool Whether to decode HTML entities in attribute values
-	*/
-	protected $decodeHtmlEntities = false;
-
-	/**
-	* @var array Default tags
-	*/
+	protected $decodeHtmlEntities = \false;
 	protected $tags = [
 		'C'      => '<code><xsl:apply-templates /></code>',
 		'CODE'   => [
 			'attributes' => [
 				'lang' => [
 					'filterChain' => ['#simpletext'],
-					'required'    => false
+					'required'    => \false
 				]
 			],
 			'template' =>
@@ -46,9 +37,9 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => [
 			'attributes' => [
-				'alt'   => ['required' => false],
+				'alt'   => ['required' => \false],
 				'src'   => ['filterChain' => ['#url']],
-				'title' => ['required' => false]
+				'title' => ['required' => \false]
 			],
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
@@ -57,11 +48,11 @@ class Configurator extends ConfiguratorBase
 			'attributes' => [
 				'start' => [
 					'filterChain' => ['#uint'],
-					'required'    => false
+					'required'    => \false
 				],
 				'type' => [
 					'filterChain' => ['#simpletext'],
-					'required'    => false
+					'required'    => \false
 				]
 			],
 			'template' =>
@@ -80,7 +71,7 @@ class Configurator extends ConfiguratorBase
 		'URL'    => [
 			'attributes' => [
 				'title' => [
-					'required' => false
+					'required' => \false
 				],
 				'url'   => [
 					'filterChain' => ['#url']
@@ -89,64 +80,34 @@ class Configurator extends ConfiguratorBase
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		]
 	];
-
-	/**
-	* {@inheritdoc}
-	*/
 	protected function setUp()
 	{
 		$this->configurator->rulesGenerator->append('ManageParagraphs');
-
 		foreach ($this->tags as $tagName => $tagConfig)
 		{
-			// Skip this tag if it already exists
 			if (isset($this->configurator->tags[$tagName]))
-			{
 				continue;
-			}
-
-			// If the tag's config is a single string, it's really its default template
-			if (is_string($tagConfig))
-			{
+			if (\is_string($tagConfig))
 				$tagConfig = ['template' => $tagConfig];
-			}
-
-			// Replace default filters in the definition
 			if (isset($tagConfig['attributes']))
 			{
 				foreach ($tagConfig['attributes'] as &$attributeConfig)
-				{
 					if (isset($attributeConfig['filterChain']))
 					{
 						foreach ($attributeConfig['filterChain'] as &$filter)
-						{
-							if (is_string($filter) && $filter[0] === '#')
-							{
+							if (\is_string($filter) && $filter[0] === '#')
 								$filter = $this->configurator->attributeFilters[$filter];
-							}
-						}
 						unset($filter);
 					}
-				}
 				unset($attributeConfig);
 			}
-
-			// Add this tag
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
 	}
-
-	/**
-	* {@inheritdoc}
-	*/
 	public function asConfig()
 	{
 		return ['decodeHtmlEntities' => $this->decodeHtmlEntities];
 	}
-
-	/**
-	* {@inheritdoc}
-	*/
 	public function getJSHints()
 	{
 		return ['LITEDOWN_DECODE_HTML_ENTITIES' => (int) $this->decodeHtmlEntities];
