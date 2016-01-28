@@ -1,14 +1,9 @@
 <site name="Mixcloud" homepage="http://www.mixcloud.com/">
 	<example>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</example>
-	<example>http://i.mixcloud.com/CH9VU9</example>
 
 	<tags><tag>music</tag></tags>
 
 	<host>mixcloud.com</host>
 	<extract>@mixcloud\.com/(?!categories|tag)(?'id'[-\w]+/[^/&amp;]+)/@</extract>
-	<scrape>
-		<match>@//i\.mixcloud\.com/\w+$@</match>
-		<extract>@link rel="canonical" href="https?://[^/]+/(?'id'[-\w]+/[^/&amp;]+)/@</extract>
-	</scrape>
 	<iframe width="400" height="400" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
 </site>

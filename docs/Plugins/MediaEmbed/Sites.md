@@ -279,7 +279,7 @@
 	<tr>
 		<td><code>mixcloud</code></td>
 		<td>Mixcloud</td>
-		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/<br/>http://i.mixcloud.com/CH9VU9</td>
+		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
 	<tr>
 		<td><code>msnbc</code></td>

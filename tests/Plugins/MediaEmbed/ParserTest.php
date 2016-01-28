@@ -606,16 +606,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://i.mixcloud.com/CH9VU9',
-				'<r><MIXCLOUD id="Butjes/third-mix" url="http://i.mixcloud.com/CH9VU9">http://i.mixcloud.com/CH9VU9</MIXCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('mixcloud');
-				}
-			],
-			[
 				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
 				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
 				[],
