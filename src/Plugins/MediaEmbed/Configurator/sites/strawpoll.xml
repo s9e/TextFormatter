@@ -3,5 +3,5 @@
 
 	<host>strawpoll.me</host>
 	<extract>!strawpoll\.me/(?'id'\d+)!</extract>
-	<iframe width="600" height="310" src="http://strawpoll.me/embed_1/{@id}"/>
+	<iframe width="600" height="310" src="//strawpoll.me/embed_1/{@id}" scrolling=""/>
 </site>
