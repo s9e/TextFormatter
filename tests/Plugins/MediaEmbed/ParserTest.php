@@ -2022,6 +2022,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://imgur.com/r/animals',
+				'<t>http://imgur.com/r/animals</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://imgur.com/user/foo',
+				'<t>http://imgur.com/user/foo</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/513633',
 				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></r>',
 				[],
