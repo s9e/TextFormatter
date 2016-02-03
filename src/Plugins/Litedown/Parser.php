@@ -77,6 +77,24 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Compute the amount of text to ignore at the start of a quote line
+	*
+	* @param  string  $str           Original quote markup
+	* @param  integer $maxQuoteDepth Maximum quote depth
+	* @return integer                Number of characters to ignore
+	*/
+	protected function computeQuoteIgnoreLen($str, $maxQuoteDepth)
+	{
+		$remaining = $str;
+		while (--$maxQuoteDepth >= 0)
+		{
+			$remaining = preg_replace('/^ *> ?/', '', $remaining);
+		}
+
+		return strlen($str) - strlen($remaining);
+	}
+
+	/**
 	* Decode a chunk of encoded text to be used as an attribute value
 	*
 	* Decodes escaped literals and removes slashes and 0x1A characters
@@ -377,9 +395,10 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$matchPos  = $m[0][1];
-			$matchLen  = strlen($m[0][0]);
-			$ignoreLen = 0;
+			$matchPos   = $m[0][1];
+			$matchLen   = strlen($m[0][0]);
+			$ignoreLen  = 0;
+			$quoteDepth = 0;
 
 			// If the last line was empty then this is not a continuation, and vice-versa
 			$continuation = !$lineIsEmpty;
@@ -396,10 +415,11 @@ class Parser extends ParserBase
 			{
 				$quoteDepth = substr_count($m[1][0], '>');
 				$ignoreLen  = strlen($m[1][0]);
-			}
-			else
-			{
-				$quoteDepth = 0;
+				if (isset($codeTag) && $codeTag->hasAttribute('quoteDepth'))
+				{
+					$quoteDepth = min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
+					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
+				}
 			}
 
 			// Close supernumerary quotes
@@ -691,6 +711,7 @@ class Parser extends ParserBase
 						// Create code block
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
 						$codeFence = $m[5][0][0];
+						$codeTag->setAttribute('quoteDepth', $quoteDepth);
 
 						// Ignore the next character, which should be a newline
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
