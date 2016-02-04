@@ -40,6 +40,24 @@ function closeList(list, textBoundary)
 }
 
 /**
+* Compute the amount of text to ignore at the start of a quote line
+*
+* @param  {!string} str           Original quote markup
+* @param  {!number} maxQuoteDepth Maximum quote depth
+* @return {!number}               Number of characters to ignore
+*/
+function computeQuoteIgnoreLen(str, maxQuoteDepth)
+{
+	var remaining = str;
+	while (--maxQuoteDepth >= 0)
+	{
+		remaining = remaining.replace(/^ *> ?/, '');
+	}
+
+	return str.length - remaining.length;
+}
+
+/**
 * Decode a chunk of encoded text to be used as an attribute value
 *
 * Decodes escaped literals and removes slashes and 0x1A characters
@@ -367,10 +385,11 @@ function matchBlockLevelMarkup()
 
 	matches.forEach(function(m)
 	{
-		var matchPos  = m['index'],
-			matchLen  = m[0].length;
+		var matchPos = m['index'],
+			matchLen = m[0].length;
 
-		ignoreLen = 0;
+		ignoreLen  = 0;
+		quoteDepth = 0;
 
 		// If the last line was empty then this is not a continuation, and vice-versa
 		continuation = !lineIsEmpty;
@@ -393,10 +412,11 @@ function matchBlockLevelMarkup()
 		{
 			quoteDepth = m[1].length - m[1].replace(/>/g, '').length;
 			ignoreLen  = m[1].length;
-		}
-		else
-		{
-			quoteDepth = 0;
+			if (codeTag && codeTag.hasAttribute('quoteDepth'))
+			{
+				quoteDepth = Math.min(quoteDepth, codeTag.getAttribute('quoteDepth'));
+				ignoreLen  = computeQuoteIgnoreLen(m[1], quoteDepth);
+			}
 		}
 
 		// Close supernumerary quotes
@@ -686,6 +706,7 @@ function matchBlockLevelMarkup()
 					// Create code block
 					codeTag   = addStartTag('CODE', tagPos, tagLen);
 					codeFence = m[5].charAt(0);
+					codeTag.setAttribute('quoteDepth', quoteDepth);
 
 					// Ignore the next character, which should be a newline
 					addIgnoreTag(tagPos + tagLen, 1);
