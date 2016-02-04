@@ -35,6 +35,13 @@ class Parser extends ParserBase
 			foreach ($list['itemTags'] as $itemTag)
 				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 	}
+	protected function computeQuoteIgnoreLen($str, $maxQuoteDepth)
+	{
+		$remaining = $str;
+		while (--$maxQuoteDepth >= 0)
+			$remaining = \preg_replace('/^ *> ?/', '', $remaining);
+		return \strlen($str) - \strlen($remaining);
+	}
 	protected function decode($str)
 	{
 		if ($this->config['decodeHtmlEntities'] && \strpos($str, '&') !== \false)
@@ -183,9 +190,10 @@ class Parser extends ParserBase
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$matchPos  = $m[0][1];
-			$matchLen  = \strlen($m[0][0]);
-			$ignoreLen = 0;
+			$matchPos   = $m[0][1];
+			$matchLen   = \strlen($m[0][0]);
+			$ignoreLen  = 0;
+			$quoteDepth = 0;
 			$continuation = !$lineIsEmpty;
 			$lfPos       = \strpos($this->text, "\n", $matchPos);
 			$lineIsEmpty = ($lfPos === $matchPos + $matchLen && empty($m[3][0]) && empty($m[4][0]) && empty($m[5][0]));
@@ -194,9 +202,12 @@ class Parser extends ParserBase
 			{
 				$quoteDepth = \substr_count($m[1][0], '>');
 				$ignoreLen  = \strlen($m[1][0]);
+				if (isset($codeTag) && $codeTag->hasAttribute('quoteDepth'))
+				{
+					$quoteDepth = \min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
+					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
+				}
 			}
-			else
-				$quoteDepth = 0;
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
 			{
 				$newContext = \true;
@@ -375,6 +386,7 @@ class Parser extends ParserBase
 					{
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
 						$codeFence = $m[5][0][0];
+						$codeTag->setAttribute('quoteDepth', $quoteDepth);
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
 						$lang = \trim(\trim($m[5][0], '`~'));
 						if ($lang !== '')
