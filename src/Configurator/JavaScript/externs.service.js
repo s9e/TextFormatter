@@ -27,7 +27,8 @@ var punycode = {};
  * @return {string}
  */
 punycode.toASCII;
-/** @constructor */ function XSLTProcessor() {}
+/** @constructor */
+function XSLTProcessor() {}
 /**
  * @type {number}
  * @const
@@ -71,6 +72,7 @@ function isNaN(num) {}
 function parseInt(num, base) {}
 /**
  * @constructor
+ * @implements {IArrayLike<T>}
  * @param {...*} var_args
  * @return {!Array<?>}
  * @nosideeffects
@@ -80,7 +82,7 @@ function Array(var_args) {}
 /**
  * @param {?function(this:S, T, number, !Array<T>): ?} callback
  * @param {S=} opt_thisobj
- * @this {{length: number}|Array<T>|string}
+ * @this {IArrayLike<T>|string}
  * @template T,S
  */
 Array.prototype.forEach = function(callback, opt_thisobj) {};
@@ -88,7 +90,7 @@ Array.prototype.forEach = function(callback, opt_thisobj) {};
  * @param {T} obj
  * @param {number=} opt_fromIndex
  * @return {number}
- * @this {{length: number}|Array<T>|string}
+ * @this {IArrayLike<T>|string}
  * @nosideeffects
  * @template T
  */
@@ -96,7 +98,7 @@ Array.prototype.indexOf = function(obj, opt_fromIndex) {};
 /**
  * @param {*=} opt_separator Specifies a string to separate each element of the
  * @return {string}
- * @this {{length: number}|string}
+ * @this {IArrayLike<?>|string}
  * @nosideeffects
  */
 Array.prototype.join = function(opt_separator) {};
@@ -106,7 +108,7 @@ Array.prototype.join = function(opt_separator) {};
 Array.prototype.length;
 /**
  * @return {T}
- * @this {{length: number}|Array<T>}
+ * @this {IArrayLike<T>}
  * @modifies {this}
  * @template T
  */
@@ -114,18 +116,18 @@ Array.prototype.pop = function() {};
 /**
  * @param {...T} var_args
  * @return {number} The new length of the array.
- * @this {{length: number}|Array<T>}
+ * @this {IArrayLike<T>}
  * @template T
  * @modifies {this}
  */
 Array.prototype.push = function(var_args) {};
 /**
- * @this {{length: number}}
+ * @this {IArrayLike<?>}
  * @modifies {this}
  */
 Array.prototype.reverse = function() {};
 /**
- * @this {{length: number}|Array<T>}
+ * @this {IArrayLike<T>}
  * @modifies {this}
  * @return {T}
  * @template T
@@ -135,14 +137,14 @@ Array.prototype.shift = function() {};
  * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
  * @param {*=} opt_end Zero-based index at which to end extraction.  slice
  * @return {!Array<T>}
- * @this {{length: number}|Array<T>|string}
+ * @this {IArrayLike<T>|string}
  * @template T
  * @nosideeffects
  */
 Array.prototype.slice = function(opt_begin, opt_end) {};
 /**
  * @param {function(T,T):number=} opt_compareFunction Specifies a function that
- * @this {{length: number}|Array<T>}
+ * @this {IArrayLike<T>}
  * @template T
  */
 Array.prototype.sort = function(opt_compareFunction) {};
@@ -151,7 +153,7 @@ Array.prototype.sort = function(opt_compareFunction) {};
  * @param {*=} opt_howMany An integer indicating the number of old array elements
  * @param {...T} var_args
  * @return {!Array<T>}
- * @this {{length: number}|Array<T>}
+ * @this {IArrayLike<T>}
  * @modifies {this}
  * @template T
  */
@@ -187,19 +189,19 @@ function Function(var_args) {}
  */
 var Math = {};
 /**
- * @param {*} x
+ * @param {?} x
  * @return {number}
  * @nosideeffects
  */
 Math.floor = function(x) {};
 /**
- * @param {...*} var_args
+ * @param {...?} var_args
  * @return {number}
  * @nosideeffects
  */
 Math.max = function(var_args) {};
 /**
- * @param {...*} var_args
+ * @param {...?} var_args
  * @return {number}
  * @nosideeffects
  */
@@ -334,6 +336,13 @@ String.prototype.toLowerCase = function() {};
  * @nosideeffects
  */
 String.prototype.toUpperCase = function() {};
+/** @typedef {?} */
+var symbol;
+/**
+ * @param {string} description
+ * @return {symbol}
+ */
+function Symbol(description) {}
 /**
  * @param {Node} externalNode
  * @param {boolean} deep
@@ -383,6 +392,9 @@ Document.prototype.createElement = function(tagName, opt_typeExtension) {};
 function DocumentFragment() {}
 /**
  * @constructor
+ * @implements {IObject<(string|number), T>}
+ * @implements {IArrayLike<T>}
+ * @template T
  */
 function NamedNodeMap() {}
 /**
@@ -405,7 +417,7 @@ function Node() {}
  */
 Node.prototype.appendChild = function(newChild) {};
 /**
- * @type {!NodeList}
+ * @type {!NodeList<!Node>}
  */
 Node.prototype.childNodes;
 /**
@@ -451,6 +463,8 @@ Node.prototype.parentNode;
 Node.prototype.removeChild = function(oldChild) {};
 /**
  * @constructor
+ * @implements {IArrayLike<T>}
+ * @template T
  */
 function NodeList() {}
 /**
