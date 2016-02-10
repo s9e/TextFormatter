@@ -5,10 +5,10 @@
 
 	<host>tumblr.com</host>
 	<extract>!(?'name'[-\w]+)\.tumblr\.com/post/(?'id'\d+)!</extract>
-	<scrape url="http://{@name}.tumblr.com/post/{@id}/embed">
+	<scrape url="http://www.tumblr.com/oembed/1.0?url=http://{@name}.tumblr.com/post/{@id}">
 		<match>!\w\.tumblr\.com/post/\d!</match>
-		<extract>!"embed_did":"(?'did'[-\w]+)!</extract>
-		<extract>!"embed_key":"(?'key'[-\w]+)!</extract>
+		<extract>!did=\\u0022(?'did'[-\w]+)!</extract>
+		<extract>!embed\\/post\\/(?'key'[-\w]+)!</extract>
 	</scrape>
 	<iframe width="520" height="180" src="https://s9e.github.io/iframe/tumblr.min.html#{@key}/{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
 </site>
