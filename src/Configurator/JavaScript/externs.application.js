@@ -27,7 +27,8 @@ var punycode = {};
  * @return {string}
  */
 punycode.toASCII;
-/** @constructor */ function XSLTProcessor() {}
+/** @constructor */
+function XSLTProcessor() {}
 /**
  * @param {Node} externalNode
  * @param {boolean} deep
@@ -77,6 +78,9 @@ Document.prototype.createElement = function(tagName, opt_typeExtension) {};
 function DocumentFragment() {}
 /**
  * @constructor
+ * @implements {IObject<(string|number), T>}
+ * @implements {IArrayLike<T>}
+ * @template T
  */
 function NamedNodeMap() {}
 /**
@@ -99,7 +103,7 @@ function Node() {}
  */
 Node.prototype.appendChild = function(newChild) {};
 /**
- * @type {!NodeList}
+ * @type {!NodeList<!Node>}
  */
 Node.prototype.childNodes;
 /**
@@ -145,6 +149,8 @@ Node.prototype.parentNode;
 Node.prototype.removeChild = function(oldChild) {};
 /**
  * @constructor
+ * @implements {IArrayLike<T>}
+ * @template T
  */
 function NodeList() {}
 /**

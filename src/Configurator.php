@@ -7382,8 +7382,8 @@ class OptimizeChoose extends TemplateNormalization
 	}
 	protected function adoptChildren(DOMElement $branch)
 	{
-		foreach ($branch->firstChild->childNodes as $childNode)
-			$branch->appendChild($branch->firstChild->removeChild($childNode));
+		while ($branch->firstChild->firstChild)
+			$branch->appendChild($branch->firstChild->removeChild($branch->firstChild->firstChild));
 		$branch->removeChild($branch->firstChild);
 	}
 	protected function getAttributes(DOMElement $element)
