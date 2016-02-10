@@ -42,4 +42,28 @@ class BlockElementsFosterFormattingElementsTest extends AbstractTest
 			[]
 		);
 	}
+
+	/**
+	* @testdox <div><br></div> does not have a fosterParent rule for <b>
+	*/
+	public function testBlockVoidNoFoster()
+	{
+		$this->assertTargetedRules(
+			'<div><br/></div>',
+			'<b><xsl:apply-templates/></b>',
+			[]
+		);
+	}
+
+	/**
+	* @testdox <div><iframe></div> does not have a fosterParent rule for <b>
+	*/
+	public function testBlockEmbedNoFoster()
+	{
+		$this->assertTargetedRules(
+			'<div><iframe/></div>',
+			'<b><xsl:apply-templates/></b>',
+			[]
+		);
+	}
 }

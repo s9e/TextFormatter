@@ -1286,6 +1286,8 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsFosterFormatti
  [x] <div> has a fosterParent rule for <b>
  [x] <div> does not have a fosterParent rule for <div>
  [x] <b> does not have a fosterParent rule for <b>
+ [x] <div><br></div> does not have a fosterParent rule for <b>
+ [x] <div><iframe></div> does not have a fosterParent rule for <b>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewLinesArePreserved
  [x] Does not generate a disableAutoLineBreaks rule for <ol>
