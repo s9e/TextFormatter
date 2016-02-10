@@ -1,3 +1,31 @@
+0.4.9 (2016-02-10)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/350bb8c63660d888e62796567a3b6479f34a68dc...7c279935ae7e3360776dca6c5f512fa320433f6c)
+
+### Added
+
+ - `8a13fb4` RegexpBuilder: added support for non-Unicode strings
+
+### Removed
+
+ - `7bafcde` MediaEmbed: removed support for discontinued Mixcloud short links
+
+### Fixed
+
+ - `9f2b080` Litedown: fixed quote markup interpreted inside of fenced code blocks
+ - `e56f871` OptimizeChoose: fixed an issue with node iteration over a live tree
+
+### Changed
+
+ - `09bc408` Http: prefer native stream to cURL if safe mode is on (PHP 5.3 only)
+ - `9398ee9` MediaEmbed: updated ComedyCentral
+ - `93a6a9b` MediaEmbed: updated Imgur
+ - `5de2c70` MediaEmbed: updated Straw Poll
+ - `bbabbb9` MediaEmbed: updated Tumblr
+ - `5ac0294` Updated externs files for Closure Compiler v20160208
+
+
 0.4.8 (2016-01-15)
 ==================
 
