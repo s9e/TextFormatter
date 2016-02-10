@@ -66,6 +66,10 @@ $externs = [
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	],
+	'externs/es6.js' => [
+		'var symbol',
+		'function Symbol('
+	],
 	'externs/browser/gecko_dom.js' => [
 		'Document.prototype.importNode',
 		'Element.prototype.innerHTML'
@@ -211,6 +215,7 @@ function getExterns($externs)
 $dir = __DIR__ . '/../src/Configurator/JavaScript/';
 file_put_contents($dir . 'externs.service.js', getExterns($externs));
 unset($externs['externs/es3.js']);
+unset($externs['externs/es6.js']);
 file_put_contents($dir . 'externs.application.js', getExterns($externs));
 
 die("Done.\n");
