@@ -95,6 +95,6 @@ abstract class AbstractTest extends Test
 	*/
 	public function testReturnsFalse()
 	{
-		$this->assertFalse($this->getInstance()->get('http://localhost:8000/404'));
+		$this->assertFalse($this->getInstance()->get(str_replace('reflect.php', '404', $this->url)));
 	}
 }
