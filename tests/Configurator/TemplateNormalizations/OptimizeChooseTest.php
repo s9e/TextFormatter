@@ -117,6 +117,22 @@ class OptimizeChooseTest extends AbstractTest
 					<xsl:otherwise><hr/></xsl:otherwise>
 				</xsl:choose>'
 			],
+			[
+				'<xsl:choose>
+					<xsl:when><blockquote><br id="a"/></blockquote></xsl:when>
+					<xsl:otherwise><blockquote><br id="b"/><xsl:choose>
+						<xsl:when><br id="c"/></xsl:when>
+						<xsl:otherwise><br id="d"/></xsl:otherwise>
+					</xsl:choose></blockquote></xsl:otherwise>
+				</xsl:choose>',
+				'<blockquote><xsl:choose>
+					<xsl:when><br id="a"/></xsl:when>
+					<xsl:otherwise><br id="b"/><xsl:choose>
+						<xsl:when><br id="c"/></xsl:when>
+						<xsl:otherwise><br id="d"/></xsl:otherwise>
+					</xsl:choose></xsl:otherwise>
+				</xsl:choose></blockquote>'
+			],
 		];
 	}
 }
