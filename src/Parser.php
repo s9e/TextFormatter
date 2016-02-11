@@ -1393,8 +1393,9 @@ class Parser
 					// Reinsert current tag
 					$this->tagStack[] = $tag;
 
-					// And finally close its parent
-					$this->addMagicEndTag($parent, $tag->getPos());
+					// And finally close its parent with a priority that ensures it is processed
+					// before this tag
+					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
 
 					return true;
 				}
@@ -1445,7 +1446,7 @@ class Parser
 	*
 	* @param  Tag     $startTag Start tag
 	* @param  integer $tagPos   End tag's position (will be adjusted for whitespace if applicable)
-	* @return void
+	* @return Tag
 	*/
 	protected function addMagicEndTag(Tag $startTag, $tagPos)
 	{
@@ -1458,7 +1459,10 @@ class Parser
 		}
 
 		// Add a 0-width end tag that is paired with the given start tag
-		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
+		$endTag = $this->addEndTag($tagName, $tagPos, 0);
+		$endTag->pairWith($startTag);
+
+		return $endTag;
 	}
 
 	/**
