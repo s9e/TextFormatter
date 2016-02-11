@@ -1,3 +1,19 @@
+0.4.10 (2016-02-11)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/98836fa362a0ba24a8a3ff6be1db484067d8d8f2...0eeecb35d9934a454250e367b9eb3e5916494b88)
+
+### Fixed
+
+ - `9ca5270` Parser: fixed an issue with fosterParent and high-priority tags
+ - `0eeecb3` Parser: fixed an issue with fosterParent and low-priority tags
+
+### Changed
+
+ - `11bdbe7` BlockElementsFosterFormattingElements: do not create a fosterParent rule if the template is not passthrough
+ - `5bb3b77` Parser: adjusted the cost of fixing tags in fosterParent
+
+
 0.4.9 (2016-02-10)
 ==================
 
