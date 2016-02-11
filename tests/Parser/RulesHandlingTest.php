@@ -281,6 +281,21 @@ class RulesHandlingTest extends Test
 				}
 			],
 			[
+				'XXX',
+				'<r><B><s>X</s><B><s>X</s></B></B><Q><B><B>X</B></B></Q></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('Q')->rules->fosterParent('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 0, 1);
+					$parser->addStartTag('B', 1, 1);
+					$parser->addStartTag('Q', 2, 0)->setSortPriority(10);
+				}
+			],
+			[
 				"[code]\n...[/code]",
 				"<r><X><s>[code]</s><i>\n</i>...<e>[/code]</e></X></r>",
 				function ($configurator)

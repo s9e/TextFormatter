@@ -1382,10 +1382,11 @@ class Parser
 				{
 					if ($parentName !== $tagName && $this->currentFixingCost < $this->maxFixingCost)
 					{
-						// Add a 0-width copy of the parent tag right after this tag, and make it
-						// depend on this tag
+						// Add a 0-width copy of the parent tag right after this tag, with a worse
+						// priority and make it depend on this tag
 						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0);
 						$tag->cascadeInvalidationTo($child);
+						$child->setSortPriority($tag->getSortPriority() + 1);
 					}
 
 					// Reinsert current tag
