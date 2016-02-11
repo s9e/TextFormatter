@@ -1388,14 +1388,16 @@ class Parser
 						$tag->cascadeInvalidationTo($child);
 					}
 
-					++$this->currentFixingCost;
-
 					// Reinsert current tag
 					$this->tagStack[] = $tag;
 
 					// And finally close its parent with a priority that ensures it is processed
 					// before this tag
 					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
+
+					// Adjust the fixing cost commensurately with the size of the tag stack which
+					// has to be sorted
+					$this->currentFixingCost += count($this->tagStack);
 
 					return true;
 				}
