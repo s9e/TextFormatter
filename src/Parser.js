@@ -1295,14 +1295,16 @@ function fosterParent(tag)
 					tag.cascadeInvalidationTo(child);
 				}
 
-				++currentFixingCost;
-
 				// Reinsert current tag
 				tagStack.push(tag);
 
 				// And finally close its parent with a priority that ensures it is processed
 				// before this tag
 				addMagicEndTag(parent, tag.getPos()).setSortPriority(tag.getSortPriority() - 1);
+
+				// Adjust the fixing cost commensurately with the size of the tag stack which
+				// has to be sorted
+				currentFixingCost += tagStack.length;
 
 				return true;
 			}
