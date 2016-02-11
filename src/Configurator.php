@@ -6172,7 +6172,7 @@ class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? array('fosterParent') : array();
+		return ($src->isBlock() && $src->isPassthrough() && $trg->isFormattingElement()) ? array('fosterParent') : array();
 	}
 }
 
