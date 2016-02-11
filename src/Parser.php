@@ -619,6 +619,7 @@ class Parser
 					{
 						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0);
 						$tag->cascadeInvalidationTo($child);
+						$child->setSortPriority($tag->getSortPriority() + 1);
 					}
 					$this->tagStack[] = $tag;
 					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
