@@ -623,7 +623,7 @@ class Parser
 					}
 					++$this->currentFixingCost;
 					$this->tagStack[] = $tag;
-					$this->addMagicEndTag($parent, $tag->getPos());
+					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
 					return \true;
 				}
 			}
@@ -652,7 +652,9 @@ class Parser
 		$tagName = $startTag->getName();
 		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			$tagPos = $this->getMagicPos($tagPos);
-		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
+		$endTag = $this->addEndTag($tagName, $tagPos, 0);
+		$endTag->pairWith($startTag);
+		return $endTag;
 	}
 	protected function getMagicPos($tagPos)
 	{
