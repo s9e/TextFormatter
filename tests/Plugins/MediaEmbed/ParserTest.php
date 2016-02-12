@@ -2139,6 +2139,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA',
+				'<r><LIVECAP channel="esl_sc2" id="uZoEz6RR1eA" url="https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA">https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA</LIVECAP></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('livecap');
+				}
+			],
+			[
+				'https://www.livecap.tv/t/riotgames/uLxUzBTBs7u',
+				'<r><LIVECAP channel="riotgames" id="uLxUzBTBs7u" url="https://www.livecap.tv/t/riotgames/uLxUzBTBs7u">https://www.livecap.tv/t/riotgames/uLxUzBTBs7u</LIVECAP></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('livecap');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<r><LIVELEAK id="3dd_1366238099" url="http://www.liveleak.com/view?i=3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></r>',
 				[],

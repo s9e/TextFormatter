@@ -252,6 +252,11 @@
 		<td>http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
 	</tr>
 	<tr>
+		<td><code>livecap</code></td>
+		<td>LiveCap</td>
+		<td>https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA<br/>https://www.livecap.tv/t/riotgames/uLxUzBTBs7u</td>
+	</tr>
+	<tr>
 		<td><code>liveleak</code></td>
 		<td>LiveLeak</td>
 		<td>http://www.liveleak.com/view?i=3dd_1366238099</td>
