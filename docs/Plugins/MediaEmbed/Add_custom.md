@@ -13,7 +13,6 @@ To add a site, you'll need to pass as a second argument to `add()` an array that
   * plus at least one of the following:
     * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
     * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*
-    * `template`: a string that contains a custom template
 
 You can specify multiple `host`, `scheme`, `scrape`, `extract` or `match` values using arrays.
 
