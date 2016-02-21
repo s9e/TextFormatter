@@ -1,3 +1,17 @@
+0.4.11 (2016-02-21)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b455eb19d389a67f576ab4cb8e9e25aae0609cb3...ec154ed850e8665afd1df50dc2a11bb78247e178)
+
+### Added
+
+ - `eb234d7` MediaEmbed: added support for LiveCap
+
+### Fixed
+
+ - `7e8fb2a` OptimizeChoose: fixed an issue when removing nested conditionals
+
+
 0.4.10 (2016-02-11)
 ===================
 
