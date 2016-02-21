@@ -7063,8 +7063,7 @@ class OptimizeChoose extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		$this->xpath = new DOMXPath($template->ownerDocument);
-		$query       = '//xsl:choose';
-		foreach ($this->xpath->query($query) as $choose)
+		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'choose') as $choose)
 		{
 			$this->choose = $choose;
 			$this->optimizeChooseElement();
