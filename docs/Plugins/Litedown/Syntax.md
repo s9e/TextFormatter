@@ -62,7 +62,7 @@ Check out this program:
 
 ### Fenced code blocks
 
-A series of lines between two <code>&#96;&#96;&#96;</code> or `~~~` markers. The name of the programming language can be appended to the first marker.
+A series of lines between two markers composed of at least 3 consecutive <code>&#96;</code> or `~` and identical in length. The name of the programming language can be appended to the first marker.
 
 ~~~html
 ```html

@@ -693,7 +693,7 @@ class Parser extends ParserBase
 					$tagPos = $matchPos + $ignoreLen;
 					$tagLen = $lfPos - $tagPos;
 
-					if (isset($codeTag) && $m[5][0][0] === $codeFence)
+					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
 						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
 						$endTag->pairWith($codeTag);
@@ -710,7 +710,7 @@ class Parser extends ParserBase
 					{
 						// Create code block
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
-						$codeFence = $m[5][0][0];
+						$codeFence = substr($m[5][0], 0, strspn($m[5][0], '`~'));
 						$codeTag->setAttribute('quoteDepth', $quoteDepth);
 
 						// Ignore the next character, which should be a newline
