@@ -688,7 +688,7 @@ function matchBlockLevelMarkup()
 				tagPos = matchPos + ignoreLen;
 				tagLen = lfPos - tagPos;
 
-				if (codeTag && m[5].charAt(0) === codeFence)
+				if (codeTag && m[5] === codeFence)
 				{
 					endTag = addEndTag('CODE', tagPos, tagLen);
 					endTag.pairWith(codeTag);
@@ -705,7 +705,7 @@ function matchBlockLevelMarkup()
 				{
 					// Create code block
 					codeTag   = addStartTag('CODE', tagPos, tagLen);
-					codeFence = m[5].charAt(0);
+					codeFence = m[5].replace(/[^`~]+/, '');
 					codeTag.setAttribute('quoteDepth', quoteDepth);
 
 					// Ignore the next character, which should be a newline
