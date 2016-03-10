@@ -2751,6 +2751,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.videodetective.com/movies/deadpool/38876',
+				'<r><VIDEODETECTIVE id="38876" url="http://www.videodetective.com/movies/deadpool/38876">http://www.videodetective.com/movies/deadpool/38876</VIDEODETECTIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('videodetective');
+				}
+			],
+			[
+				'http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm',
+				'<r><VIDEODETECTIVE id="5250" url="http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm">http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm</VIDEODETECTIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('videodetective');
+				}
+			],
+			[
 				'http://videomega.tv/?ref=aPRKXgQdaD',
 				'<r><VIDEOMEGA id="aPRKXgQdaD" url="http://videomega.tv/?ref=aPRKXgQdaD">http://videomega.tv/?ref=aPRKXgQdaD</VIDEOMEGA></r>',
 				[],

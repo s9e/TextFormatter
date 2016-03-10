@@ -1,0 +1,7 @@
+<site name="Video Detective" homepage="http://www.videodetective.com/">
+	<example>http://www.videodetective.com/movies/zootopia/658596</example>
+
+	<host>videodetective.com</host>
+	<extract>!videodetective\.com/\w+/[-\w]+/(?:trailer/P0*)?(?'id'\d+)!</extract>
+	<iframe src="//www.videodetective.com/embed/video/?options=false&amp;autostart=false&amp;playlist=none&amp;publishedid={@id}"/>
+</site>

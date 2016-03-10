@@ -472,6 +472,11 @@
 		<td>http://www.viagame.com/channels/hearthstone-championship/405177</td>
 	</tr>
 	<tr>
+		<td><code>videodetective</code></td>
+		<td>Video Detective</td>
+		<td>http://www.videodetective.com/movies/zootopia/658596</td>
+	</tr>
+	<tr>
 		<td><code>videomega</code></td>
 		<td>Videomega</td>
 		<td>http://videomega.tv/?ref=aPRKXgQdaD</td>
