@@ -1,0 +1,13 @@
+<site name="Brightcove" homepage="https://www.brightcove.com/">
+	<example>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001</example>
+	<example>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>link.brightcove.com</host>
+	<scrape>
+		<match>!link\.brightcove\.com/services/player/!</match>
+		<extract>!meta name="twitter:player" content=".*?bcpid(?'bcpid'\d+).*?bckey=(?'bckey'[-,~\w]+).*?bctid=(?'bctid'\d+)!</extract>
+	</scrape>
+	<iframe src="https://link.brightcove.com/services/player/bcpid{@bcpid}?bckey={@bckey}&amp;bctid={@bctid}&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=100%25&amp;width=100%25"/>
+</site>

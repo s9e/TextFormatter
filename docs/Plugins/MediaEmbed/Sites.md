@@ -52,6 +52,11 @@
 		<td>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
 	</tr>
 	<tr>
+		<td><code>brightcove</code></td>
+		<td>Brightcove</td>
+		<td>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001<br/>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001</td>
+	</tr>
+	<tr>
 		<td><code>cbsnews</code></td>
 		<td>CBS News Video</td>
 		<td>http://www.cbsnews.com/video/watch/?id=50156501n<br/>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</td>

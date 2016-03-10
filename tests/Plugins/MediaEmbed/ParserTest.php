@@ -279,6 +279,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001',
+				'<r><BRIGHTCOVE bckey="AQ~~,AAAAB_wnNRk~,WN9MweAQd_tph1IXNFcwfQg_Iu_Aq-oV" bcpid="2862111174001" bctid="66379363001" url="http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001">http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001</BRIGHTCOVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('brightcove');
+				}
+			],
+			[
 				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
 				[],
