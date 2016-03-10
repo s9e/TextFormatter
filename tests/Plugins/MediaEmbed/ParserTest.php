@@ -708,6 +708,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers',
+				'<r><NYTIMES id="100000003313949" url="http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers">http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers</NYTIMES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
+				'http://movies.nytimes.com/movie/131154/Crooklyn/trailers',
+				'<r><NYTIMES id="100000003313949" url="http://movies.nytimes.com/movie/131154/Crooklyn/trailers">http://movies.nytimes.com/movie/131154/Crooklyn/trailers</NYTIMES></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],

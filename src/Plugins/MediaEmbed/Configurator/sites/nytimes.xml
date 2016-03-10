@@ -2,11 +2,16 @@
 	<example>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html</example>
 	<example>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</example>
 	<example>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</example>
+	<example>http://movies.nytimes.com/movie/131154/Crooklyn/trailers</example>
 
-	<tags><tag>news</tag></tags>
+	<tags><tag>movies</tag><tag>news</tag></tags>
 
 	<host>nytimes.com</host>
 	<extract>!nytimes\.com/video/[a-z]+/(?:[a-z]+/)?(?'id'\d+)!</extract>
 	<extract>!nytimes\.com/video/\d+/\d+/\d+/[a-z]+/(?'id'\d+)!</extract>
-	<iframe width="480" height="373" src="http://graphics8.nytimes.com/bcvideo/1.0/iframe/embed.html?videoId={@id}&amp;playerType=embed"/>
+	<scrape url="http://www.nytimes.com/svc/video/api/playlist/{@playlist}?externalId=true">
+		<match>!nytimes\.com/movie(?:s/movie)?/(?'playlist'\d+)/[-\w]+/trailers!</match>
+		<extract>!/video/movies/(?'id'\d+)!</extract>
+	</scrape>
+	<iframe width="585" height="400" src="http://graphics8.nytimes.com/video/players/offsite/index.html?videoId={@id}"/>
 </site>
