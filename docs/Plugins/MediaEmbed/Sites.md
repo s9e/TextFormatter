@@ -292,6 +292,11 @@
 		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
 	<tr>
+		<td><code>mrctv</code></td>
+		<td>MRCTV</td>
+		<td>http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
+	</tr>
+	<tr>
 		<td><code>msnbc</code></td>
 		<td>MSNBC</td>
 		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725<br/>http://on.msnbc.com/1qkH62o</td>

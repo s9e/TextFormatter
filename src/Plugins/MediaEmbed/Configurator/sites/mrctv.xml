@@ -1,0 +1,10 @@
+<site name="MRCTV" homepage="http://www.mrctv.org/">
+	<example>http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</example>
+
+	<host>mrctv.org</host>
+	<scrape>
+		<match>!mrctv\.org/videos/.!</match>
+		<extract>!mrctv\.org/embed/(?'id'\d+)!</extract>
+	</scrape>
+	<iframe src="https://www.mrctv.org/embed/{@id}"/>
+</site>
