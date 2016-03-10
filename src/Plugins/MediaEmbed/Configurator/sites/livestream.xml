@@ -1,23 +1,40 @@
 <site name="Livestream" homepage="http://new.livestream.com/">
 	<example>http://new.livestream.com/jbtvlive/musicmarathon</example>
 	<example>http://livestream.com/ccscsl/USChessChampionships/videos/83267610</example>
+	<example>http://livestre.am/58XNV</example>
 
 	<tags><tag>videos</tag></tags>
 
+	<host>livestre.am</host>
 	<host>livestream.com</host>
 	<extract>!livestream\.com/accounts/(?'account_id'\d+)/events/(?'event_id'\d+)!</extract>
 	<extract>!/videos/(?'video_id'\d+)!</extract>
+	<extract>!original\.livestream\.com/(?'channel'\w+)/video\?clipId=(?'clip_id'[-\w]+)!</extract>
 	<scrape>
 		<extract>!accounts/(?'account_id'\d+)/events/(?'event_id'\d+)!</extract>
 	</scrape>
+	<scrape>
+		<match>!livestre.am!</match>
+		<extract>!//original\.livestream\.com/(?'channel'\w+)/video/(?'clip_id'[-\w]+)!</extract>
+	</scrape>
 	<iframe width="640" height="360">
 		<src><![CDATA[
-			<xsl:text>//new.livestream.com/accounts/</xsl:text>
-			<xsl:value-of select="@account_id"/>
-			<xsl:text>/events/</xsl:text>
-			<xsl:value-of select="@event_id"/>
-			<xsl:if test="@video_id">/videos/<xsl:value-of select="@video_id"/></xsl:if>
-			<xsl:text>/player?autoPlay=false</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@clip_id">
+					<xsl:text>//cdn.livestream.com/embed/</xsl:text>
+					<xsl:value-of select="@channel"/>
+					<xsl:text>?layout=4&amp;autoplay=false&amp;clip=</xsl:text>
+					<xsl:value-of select="@clip_id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>//livestream.com/accounts/</xsl:text>
+					<xsl:value-of select="@account_id"/>
+					<xsl:text>/events/</xsl:text>
+					<xsl:value-of select="@event_id"/>
+					<xsl:if test="@video_id">/videos/<xsl:value-of select="@video_id"/></xsl:if>
+					<xsl:text>/player?autoPlay=false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
 		]]></src>
 	</iframe>
 </site>

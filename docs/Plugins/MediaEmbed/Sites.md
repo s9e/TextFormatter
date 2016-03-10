@@ -264,7 +264,7 @@
 	<tr>
 		<td><code>livestream</code></td>
 		<td>Livestream</td>
-		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://livestream.com/ccscsl/USChessChampionships/videos/83267610</td>
+		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://livestream.com/ccscsl/USChessChampionships/videos/83267610<br/>http://livestre.am/58XNV</td>
 	</tr>
 	<tr>
 		<td><code>mailru</code></td>
