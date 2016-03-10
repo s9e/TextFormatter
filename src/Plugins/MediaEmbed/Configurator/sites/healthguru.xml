@@ -1,0 +1,12 @@
+<site name="Healthguru" homepage="http://www.healthguru.com/">
+	<example>http://mental.healthguru.com/video/internet-addiction-signs-you-need-to-shut-down</example>
+
+	<tags><tag>health</tag></tags>
+
+	<host>healthguru.com</host>
+	<scrape>
+		<match>!healthguru\.com/(?:content/)?video/.!</match>
+		<extract>!healthguru\.com/embed/(?'id'\w+)!</extract>
+	</scrape>
+	<iframe src="//www.healthguru.com/embed/{@id}"/>
+</site>

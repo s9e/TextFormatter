@@ -182,6 +182,11 @@
 		<td>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA<br/>https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70</td>
 	</tr>
 	<tr>
+		<td><code>healthguru</code></td>
+		<td>Healthguru</td>
+		<td>http://mental.healthguru.com/video/internet-addiction-signs-you-need-to-shut-down</td>
+	</tr>
+	<tr>
 		<td><code>hudl</code></td>
 		<td>Hudl</td>
 		<td>http://www.hudl.com/athlete/2067184/highlights/163744377<br/>http://www.hudl.com/v/CVmja</td>
