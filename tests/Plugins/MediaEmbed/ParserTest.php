@@ -338,6 +338,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('eighttracks');
 				}
 			],
+			[
+				'http://fora.tv/2009/07/30/Marijuana_Economics',
+				'<r><FORATV id="9677" url="http://fora.tv/2009/07/30/Marijuana_Economics">http://fora.tv/2009/07/30/Marijuana_Economics</FORATV></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('foratv');
+				}
+			],
 //			[
 //				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
 //				'<r><GAMETRAILERS id="2954127" url="http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
