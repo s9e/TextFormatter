@@ -299,16 +299,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://tosh.cc.com/video-clips/aet4lh/rc-car-crash',
-				'<r><COMEDYCENTRAL id="mgid:arc:video:tosh.comedycentral.com:3b516128-7054-4439-a01e-0aa9c0b020ac" url="http://tosh.cc.com/video-clips/aet4lh/rc-car-crash">http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</COMEDYCENTRAL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
-			[
 				'http://m.democracynow.org/stories/15236',
 				'<r><DEMOCRACYNOW id="2015/5/22/neil_young_premieres_new_anti_gmo" url="http://m.democracynow.org/stories/15236">http://m.democracynow.org/stories/15236</DEMOCRACYNOW></r>',
 				[],
