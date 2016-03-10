@@ -7,7 +7,7 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>dailymotion.com</host>
-	<extract>!dailymotion\.com/(?:live/|user/[^#]+#video=|video/)(?'id'[A-Za-z0-9]+)!</extract>
+	<extract>!dailymotion\.com/(?:live/|swf/|user/[^#]+#video=|(?:related/\d+/)?video/)(?'id'[A-Za-z0-9]+)!</extract>
 	<iframe src="//www.dailymotion.com/embed/video/{@id}"/>
 	<oembed url="http://www.dailymotion.com/services/oembed"/>
 </site>

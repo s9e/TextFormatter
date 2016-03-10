@@ -1600,6 +1600,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun',
+				'<r><DAILYMOTION id="x12w88" url="http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun">http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun</DAILYMOTION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
 				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
 				'<r><DEMOCRACYNOW id="2014/7/2/dn_at_almedalen_week_at_swedens" url="http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens">http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</DEMOCRACYNOW></r>',
 				[],
