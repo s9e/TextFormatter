@@ -26,5 +26,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://example.org" target="_blank">http://example.org</a>
+<a href="http://example.org" target="_blank" rel="noreferrer">http://example.org</a>
 ```

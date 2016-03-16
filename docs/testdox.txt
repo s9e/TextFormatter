@@ -1413,6 +1413,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveComments
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
  [x] Works
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SortAttributesByName
  [x] Works
 

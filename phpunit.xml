@@ -147,6 +147,7 @@
 			<file>tests/Configurator/TemplateNormalizations/PreserveSingleSpacesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RemoveCommentsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RemoveInterElementWhitespaceTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/SetRelNoreferrerOnTargetedLinksTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/SortAttributesByNameTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/TransposeCommentsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizerTest.php</file>

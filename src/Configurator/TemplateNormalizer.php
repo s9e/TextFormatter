@@ -78,6 +78,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
+		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
 	}
 
 	/**

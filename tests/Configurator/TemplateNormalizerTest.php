@@ -164,6 +164,10 @@ class TemplateNormalizerTest extends Test
 				</xsl:choose>',
 				'<xsl:if test="@foo">foo</xsl:if>'
 			],
+			[
+				'<a href="{@url}" target="_blank">...</a>',
+				'<a href="{@url}" target="_blank" rel="noreferrer">...</a>'
+			],
 		];
 	}
 }
