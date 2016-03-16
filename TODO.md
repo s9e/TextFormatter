@@ -4,7 +4,6 @@ TODO: general
 - Consider adding a plugin that retrieves OpenGraph data and adds it to the URL tag / template
 - Consider adding an onerror fallback to Emoji's template
 - Consider rounding up the position to the first leading byte (first byte of a UTF-8 sequence) in Parser::addTag() -- Alternatively, invalidate tags that start or end in the middle of a sequence
-- Make the text being parsed available to filter callbacks via its own named parameter. (currently already accessible via $parser->getText())
 
 
 TODO: BBCodeMonkey

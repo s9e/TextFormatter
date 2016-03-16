@@ -17,6 +17,7 @@ By default, an attribute filter or a tag filter only receives one argument: the 
  * `registeredVars` - all of the registered variables in an array
  * `tag` - the current tag
  * `tagConfig` - the current tag's configuration
+ * `text` - the text being parsed
 
 <span style="color:red">⚠</span> The `openTags` and `tagConfig` are subject to change.
 

@@ -352,6 +352,33 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox filterTag() can pass the text being parsed via the 'text' parameter
+	*/
+	public function testFilterTagPassesText()
+	{
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->once())
+			     ->method('foo')
+			     ->with('...');
+
+		$tag    = $this->configurator->tags->add('X');
+		$filter = $tag->filterChain->append([$mock, 'foo']);
+		$filter->resetParameters();
+		$filter->addParameterByName('text');
+
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 0);
+			}
+		);
+
+		$parser->parse('...');
+	}
+
+	/**
 	* @testdox filterAttributes() removes the tag's attributes if none were configured
 	*/
 	public function testFilterAttributesNukesAttributes()

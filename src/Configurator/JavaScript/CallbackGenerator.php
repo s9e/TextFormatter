@@ -68,7 +68,7 @@ class CallbackGenerator
 		unset($params['parser']);
 
 		// Add global vars to the list of vars in scope
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1];
+		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1, 'text' => 1];
 
 		$args = [];
 		foreach ($params as $k => $v)
