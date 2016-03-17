@@ -888,7 +888,7 @@ class ParserTest extends Test
 			],
 			[
 				'Go to [that site] (http://example.org) now!',
-				'<r><p>Go to <URL url="http://example.org"><s>[</s>that site<e>] (http://example.org)</e></URL> now!</p></r>'
+				'<t><p>Go to [that site] (http://example.org) now!</p></t>'
 			],
 			[
 				'En route to [Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation\))!',
@@ -1029,6 +1029,18 @@ class ParserTest extends Test
 				],
 				[
 					'<r><p><URL url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org</i></r>'
+				]
+			],
+			[
+				[
+					'[foo] [1]',
+					'',
+					'[1]: http://example.org'
+				],
+				[
+					'<r><p><URL url="http://example.org"><s>[</s>foo<e>] [1]</e></URL></p>',
 					'',
 					'<i>[1]: http://example.org</i></r>'
 				]
