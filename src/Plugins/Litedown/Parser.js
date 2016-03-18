@@ -720,7 +720,7 @@ function matchBlockLevelMarkup()
 				}
 			}
 		}
-		else if (m[3] && !listsCnt)
+		else if (m[3] && !listsCnt && text.charAt(matchPos) !== "\x1A")
 		{
 			// Horizontal rule
 			addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
@@ -740,8 +740,9 @@ function matchBlockLevelMarkup()
 				setextLines[lfPos].endTagLen
 			);
 
-			// Overwrite the LF to prevent forced line breaks from matching
-			overwrite(lfPos, 1);
+			// Overwrite the LF and the Setext line to prevent forced line breaks and horizontal
+			// rules from matching
+			overwrite(setextLines[lfPos].endTagPos, setextLines[lfPos].endTagLen);
 
 			// Mark the end of the Setext line
 			markBoundary(setextLines[lfPos].endTagPos + setextLines[lfPos].endTagLen);
