@@ -7332,6 +7332,46 @@ class RemoveInterElementWhitespace extends TemplateNormalization
 /*
 * @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMNodeList;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class SetRelNoreferrerOnTargetedLinks extends TemplateNormalization
+{
+	public function normalize(DOMElement $template)
+	{
+		$this->normalizeElements($template->ownerDocument->getElementsByTagName('a'));
+		$this->normalizeElements($template->ownerDocument->getElementsByTagName('area'));
+	}
+	protected function addRelAttribute(DOMElement $element)
+	{
+		$rel = $element->getAttribute('rel');
+		if (\preg_match('(\\S$)', $rel))
+			$rel .= ' ';
+		$rel .= 'noreferrer';
+		$element->setAttribute('rel', $rel);
+	}
+	protected function linkTargetCanAccessOpener(DOMElement $element)
+	{
+		if (!$element->hasAttribute('target'))
+			return \false;
+		if (\preg_match('(\\bno(?:open|referr)er\\b)', $element->getAttribute('rel')))
+			return \false;
+		return \true;
+	}
+	protected function normalizeElements(DOMNodeList $elements)
+	{
+		foreach ($elements as $element)
+			if ($this->linkTargetCanAccessOpener($element))
+				$this->addRelAttribute($element);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license'); The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -7366,6 +7406,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
+		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
 	}
 	public function normalizeTag(Tag $tag)
 	{
