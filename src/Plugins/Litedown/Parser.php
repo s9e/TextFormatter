@@ -394,7 +394,7 @@ class Parser extends ParserBase
 					}
 				}
 			}
-			elseif (!empty($m[3][0]) && !$listsCnt && $this->text[$matchPos] !== "\x1A")
+			elseif (!empty($m[3][0]) && !$listsCnt && $this->text[$matchPos + $matchLen] !== "\x17")
 			{
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = \true;
@@ -409,7 +409,6 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagPos'],
 					$setextLines[$lfPos]['endTagLen']
 				);
-				$this->overwrite($setextLines[$lfPos]['endTagPos'], $setextLines[$lfPos]['endTagLen']);
 				$this->markBoundary($setextLines[$lfPos]['endTagPos'] + $setextLines[$lfPos]['endTagLen']);
 			}
 			if ($breakParagraph)
