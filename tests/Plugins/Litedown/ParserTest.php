@@ -1890,6 +1890,22 @@ class ParserTest extends Test
 				'[Link text](http://example.org "Link title")',
 				'<p><a href="http://example.org" title="Link title">Link text</a></p>'
 			],
+			[
+				[
+					'```',
+					'code',
+					'```'
+				],
+				'<pre><code>code</code></pre>'
+			],
+			[
+				[
+					'```html',
+					'code',
+					'```'
+				],
+				'<pre><code class="language-html">code</code></pre>'
+			],
 		]);
 	}
 
