@@ -725,7 +725,7 @@ class Parser extends ParserBase
 					}
 				}
 			}
-			elseif (!empty($m[3][0]) && !$listsCnt)
+			elseif (!empty($m[3][0]) && !$listsCnt && $this->text[$matchPos + $matchLen] !== "\x17")
 			{
 				// Horizontal rule
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
@@ -744,9 +744,6 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagPos'],
 					$setextLines[$lfPos]['endTagLen']
 				);
-
-				// Overwrite the LF to prevent forced line breaks from matching
-				$this->overwrite($lfPos, 1);
 
 				// Mark the end of the Setext line
 				$this->markBoundary($setextLines[$lfPos]['endTagPos'] + $setextLines[$lfPos]['endTagLen']);
