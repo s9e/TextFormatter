@@ -35,7 +35,7 @@ class CallbackGenerator
 	protected function buildCallbackArguments(array $params, array $localVars)
 	{
 		unset($params['parser']);
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1];
+		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1, 'text' => 1];
 		$args = [];
 		foreach ($params as $k => $v)
 			if (isset($v))
