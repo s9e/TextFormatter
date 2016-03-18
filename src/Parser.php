@@ -268,7 +268,8 @@ class Parser
 				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
-				'tagConfig'      => $tagConfig
+				'tagConfig'      => $tagConfig,
+				'text'           => $this->text
 			);
 			foreach ($tagConfig['filterChain'] as $filter)
 				if (!self::executeFilter($filter, $vars))
