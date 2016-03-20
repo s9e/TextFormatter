@@ -1,3 +1,35 @@
+0.4.12 (2016-03-20)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/ac3fc397cfbbf1083da75c9df5fcc3eac38fbbfb...acb855967860a9c095cd338f7383c247f88aa928)
+
+### Added
+
+ - `266ccf8` Added support for named parameter 'text' in tag filters
+ - `e5d1b85` MediaEmbed: added Brightcove
+ - `5c5206c` MediaEmbed: added Healthguru
+ - `34a49c1` MediaEmbed: added MRCTV
+ - `04d14f1` MediaEmbed: added Video Detective
+ - `ae8cc70` MediaEmbed: added support for FORA.tv
+ - `9a741c3` MediaEmbed: added support for Livestream short links and old site
+ - `bdc62e8` TemplateNormalizations: added SetRelNoreferrerOnTargetedLinks (enabled by default)
+
+### Removed
+
+ - `3b0682f` Litedown: removed support for space in inline links markup
+
+### Fixed
+
+ - `71064bb` Litedown: fixed an issue with Setext headers causing the next line to be ignored
+
+### Changed
+
+ - `f038f28` Litedown: prefix the class name used to identify the language of a code block
+ - `7606ab6` Litedown: require code fences' length to match
+ - `d2ff237` MediaEmbed: updated Dailymotion
+ - `55ca396` MediaEmbed: updated NYTimes
+
+
 0.4.11 (2016-02-21)
 ===================
 
