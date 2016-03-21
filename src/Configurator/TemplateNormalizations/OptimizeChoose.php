@@ -233,10 +233,13 @@ class OptimizeChoose extends TemplateNormalization
 	*/
 	protected function optimizeChooseElement()
 	{
-		$this->optimizeCommonFirstChild();
-		$this->optimizeCommonLastChild();
-		$this->optimizeCommonOnlyChild();
-		$this->optimizeEmptyOtherwise();
+		if ($this->hasOtherwise())
+		{
+			$this->optimizeCommonFirstChild();
+			$this->optimizeCommonLastChild();
+			$this->optimizeCommonOnlyChild();
+			$this->optimizeEmptyOtherwise();
+		}
 		if ($this->hasNoContent())
 		{
 			$this->choose->parentNode->removeChild($this->choose);
@@ -254,12 +257,9 @@ class OptimizeChoose extends TemplateNormalization
 	*/
 	protected function optimizeCommonFirstChild()
 	{
-		if ($this->hasOtherwise())
+		while ($this->matchBranches('firstChild'))
 		{
-			while ($this->matchBranches('firstChild'))
-			{
-				$this->moveFirstChildBefore();
-			}
+			$this->moveFirstChildBefore();
 		}
 	}
 
@@ -270,12 +270,9 @@ class OptimizeChoose extends TemplateNormalization
 	*/
 	protected function optimizeCommonLastChild()
 	{
-		if ($this->hasOtherwise())
+		while ($this->matchBranches('lastChild'))
 		{
-			while ($this->matchBranches('lastChild'))
-			{
-				$this->moveLastChildAfter();
-			}
+			$this->moveLastChildAfter();
 		}
 	}
 
@@ -289,12 +286,9 @@ class OptimizeChoose extends TemplateNormalization
 	*/
 	protected function optimizeCommonOnlyChild()
 	{
-		if ($this->hasOtherwise())
+		while ($this->matchOnlyChild())
 		{
-			while ($this->matchOnlyChild())
-			{
-				$this->reparentChild();
-			}
+			$this->reparentChild();
 		}
 	}
 
