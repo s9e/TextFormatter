@@ -1,11 +1,14 @@
 <site name="Brightcove" homepage="https://www.brightcove.com/">
 	<example>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001</example>
 	<example>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001</example>
+	<example>http://bcove.me/rpuseykd</example>
 
 	<tags><tag>videos</tag></tags>
 
+	<host>bcove.me</host>
 	<host>link.brightcove.com</host>
 	<scrape>
+		<match>!bcove\.me/.!</match>
 		<match>!link\.brightcove\.com/services/player/!</match>
 		<extract>!meta name="twitter:player" content=".*?bcpid(?'bcpid'\d+).*?bckey=(?'bckey'[-,~\w]+).*?bctid=(?'bctid'\d+)!</extract>
 	</scrape>

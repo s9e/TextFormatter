@@ -54,7 +54,7 @@
 	<tr>
 		<td><code>brightcove</code></td>
 		<td>Brightcove</td>
-		<td>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001<br/>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001</td>
+		<td>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001<br/>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001<br/>http://bcove.me/rpuseykd</td>
 	</tr>
 	<tr>
 		<td><code>cbsnews</code></td>
