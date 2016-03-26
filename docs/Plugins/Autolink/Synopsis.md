@@ -48,7 +48,7 @@ By default, only valid URLs that start with a scheme (e.g. `http://`) are matche
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->plugins->load('Autolink', ['matchWww' => true]);
+$configurator->Autolink->matchWww = true;
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
