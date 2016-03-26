@@ -2085,6 +2085,8 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] The matchWww can be read
+ [x] The matchWww can be written
  [x] Has a quickMatch if matchWww is disabled
  [x] Does not have a quickMatch if matchWww is enabled
  [x] Generates a regexp for its config array

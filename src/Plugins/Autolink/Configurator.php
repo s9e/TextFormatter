@@ -20,7 +20,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var bool Whether to match strings that start with "www."
 	*/
-	protected $matchWww = false;
+	public $matchWww = false;
 
 	/**
 	* @var string Name of the tag used to represent links

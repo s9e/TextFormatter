@@ -55,6 +55,24 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The matchWww can be read
+	*/
+	public function testMatchWwwRead()
+	{
+		$this->assertFalse($this->configurator->Autolink->matchWww);
+	}
+
+	/**
+	* @testdox The matchWww can be written
+	*/
+	public function testMatchWwwWrite()
+	{
+		$this->assertFalse($this->configurator->Autolink->matchWww);
+		$this->configurator->Autolink->matchWww = true;
+		$this->assertTrue($this->configurator->Autolink->matchWww);
+	}
+
+	/**
 	* @testdox Has a quickMatch if matchWww is disabled
 	*/
 	public function testConfigQuickMatch()
