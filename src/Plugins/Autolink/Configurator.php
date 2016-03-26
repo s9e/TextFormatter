@@ -58,12 +58,12 @@ class Configurator extends ConfiguratorBase
 		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
 		if ($this->matchWww)
 		{
-			$anchor = '(?:' . $anchor . '|www\.)';
+			$anchor = '(?:' . $anchor . '|www\\.)';
 		}
 
 		$config = [
 			'attrName'   => $this->attrName,
-			'regexp'     => '#' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
+			'regexp'     => '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		];
 		if (!$this->matchWww)

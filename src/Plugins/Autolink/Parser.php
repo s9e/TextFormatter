@@ -16,18 +16,10 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		foreach ($matches as $m)
 		{
-			// Make sure that the URL is not preceded by an alphanumeric character
-			$matchPos = $m[0][1];
-			if ($matchPos > 0 && strpos($chars, $text[$matchPos - 1]) !== false)
-			{
-				continue;
-			}
-
 			// Linkify the trimmed URL
-			$this->linkifyUrl($matchPos, $this->trimUrl($m[0][0]));
+			$this->linkifyUrl($m[0][1], $this->trimUrl($m[0][0]));
 		}
 	}
 

@@ -1,17 +1,7 @@
-/** @const */
-var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
 matches.forEach(function(m)
 {
-	// Make sure that the URL is not preceded by an alphanumeric character
-	var matchPos = m[0][1];
-	if (matchPos > 0 && chars.indexOf(text.charAt(matchPos - 1)) > -1)
-	{
-		return;
-	}
-
 	// Linkify the trimmed URL
-	linkifyUrl(matchPos, trimUrl(m[0][0]));
+	linkifyUrl(m[0][1], trimUrl(m[0][0]));
 });
 
 /**
