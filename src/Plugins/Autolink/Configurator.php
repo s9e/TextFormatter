@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'url';
-	protected $matchWww = \false;
+	public $matchWww = \false;
 	protected $tagName = 'URL';
 	protected function setUp()
 	{
