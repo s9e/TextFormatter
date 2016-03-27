@@ -5,22 +5,26 @@ cd "$ROOT"
 
 if [[ -n `git diff --cached --name-only -b src` ]]
 then
+	if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
+	then
+		./scripts/patchCachedSiteDefinitionProvider.php
+	fi
+
+	./scripts/generateBundles.php
 	./scripts/patchDocs.php
 	./scripts/patchExamples.php
+
 	git add "docs"
+	git update-index --add src/Bundles/*.php
+	git update-index --add src/Bundles/*/Renderer.php
+	git update-index --add "src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 then
-	./scripts/patchCachedSiteDefinitionProvider.php
-	./scripts/generateBundles.php
 	./scripts/patchMediaEmbedDoc.php
 
 	git update-index --add "docs/Plugins/MediaEmbed/Sites.md"
-	git update-index --add src/Bundles/*.php
-	git update-index --add src/Bundles/*/Renderer.php
-	git update-index --add "src/Plugins/MediaEmbed/Configurator.php"
-	git update-index --add "src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repository.xml` ]]
