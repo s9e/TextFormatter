@@ -35,7 +35,7 @@ class HostedMinifier extends OnlineMinifier
 			$body      = gzencode($body, $this->gzLevel);
 		}
 
-		$code = $this->getHttpClient()->post($this->url, $headers, $body);
+		$code = $this->httpClient->post($this->url, $headers, $body);
 		if ($code === false)
 		{
 			throw new RuntimeException;

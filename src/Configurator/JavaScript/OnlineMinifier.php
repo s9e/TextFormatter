@@ -17,23 +17,12 @@ abstract class OnlineMinifier extends Minifier
 	public $httpClient;
 
 	/**
-	* @var integer Timeout in seconds
-	*/
-	public $timeout = 10;
-
-	/**
-	* Return a cached instance of the HTTP client
+	* Constructor
 	*
-	* @return \s9e\TextFormatter\Utils\Http\Client
+	* @return void
 	*/
-	protected function getHttpClient()
+	public function __construct()
 	{
-		if (!isset($this->httpClient))
-		{
-			$this->httpClient = Http::getClient();
-		}
-		$this->httpClient->timeout = $this->timeout;
-
-		return $this->httpClient;
+		$this->httpClient = Http::getClient();
 	}
 }

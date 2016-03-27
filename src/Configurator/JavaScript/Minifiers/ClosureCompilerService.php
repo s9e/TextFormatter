@@ -37,6 +37,7 @@ class ClosureCompilerService extends OnlineMinifier
 	*/
 	public function __construct()
 	{
+		parent::__construct();
 		$this->externs = file_get_contents(__DIR__ . '/../externs.service.js');
 	}
 
@@ -140,7 +141,7 @@ class ClosureCompilerService extends OnlineMinifier
 	*/
 	protected function query($body)
 	{
-		return $this->getHttpClient()->post(
+		return $this->httpClient->post(
 			$this->url,
 			['Content-Type: application/x-www-form-urlencoded'],
 			$body
