@@ -14,7 +14,7 @@ abstract class OnlineMinifier extends Minifier
 	/**
 	* @var \s9e\TextFormatter\Utils\Http\Client Client used to perform HTTP request
 	*/
-	public $client;
+	public $httpClient;
 
 	/**
 	* @var integer Timeout in seconds
@@ -28,12 +28,12 @@ abstract class OnlineMinifier extends Minifier
 	*/
 	protected function getHttpClient()
 	{
-		if (!isset($this->client))
+		if (!isset($this->httpClient))
 		{
-			$this->client = Http::getClient();
+			$this->httpClient = Http::getClient();
 		}
-		$this->client->timeout = $this->timeout;
+		$this->httpClient->timeout = $this->timeout;
 
-		return $this->client;
+		return $this->httpClient;
 	}
 }
