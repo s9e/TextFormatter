@@ -472,6 +472,11 @@
 		<td>http://vbox7.com/play:3975300ec6</td>
 	</tr>
 	<tr>
+		<td><code>veoh</code></td>
+		<td>Veoh</td>
+		<td>http://www.veoh.com/watch/v6335577TeB8kyNR</td>
+	</tr>
+	<tr>
 		<td><code>vevo</code></td>
 		<td>VEVO</td>
 		<td>http://www.vevo.com/watch/USUV71400682<br/>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>

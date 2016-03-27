@@ -1,0 +1,9 @@
+<site name="Veoh" homepage="http://www.veoh.com/">
+	<example>http://www.veoh.com/watch/v6335577TeB8kyNR</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>veoh.com</host>
+	<extract>!veoh\.com/(?:m/watch\.php\?v=|watch/)v(?'id'\w+)!</extract>
+	<flash padding-height="40" src="//www.veoh.com/swf/webplayer/WebPlayer.swf?version=AFrontend.5.7.0.1509&amp;permalinkId=v{@id}&amp;player=videodetailsembedded&amp;videoAutoPlay=0&amp;id=anonymous"/>
+</site>

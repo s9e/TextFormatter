@@ -2863,6 +2863,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.veoh.com/watch/v6335577TeB8kyNR',
+				'<r><VEOH id="6335577TeB8kyNR" url="http://www.veoh.com/watch/v6335577TeB8kyNR">http://www.veoh.com/watch/v6335577TeB8kyNR</VEOH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('veoh');
+				}
+			],
+			[
+				'http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR',
+				'<r><VEOH id="6335577TeB8kyNR" url="http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR">http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR</VEOH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('veoh');
+				}
+			],
+			[
 				'http://vimeo.com/channels/staffpicks/67207222',
 				'<r><VIMEO id="67207222" url="http://vimeo.com/channels/staffpicks/67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></r>',
 				[],
