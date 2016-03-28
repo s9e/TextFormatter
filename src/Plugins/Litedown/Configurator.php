@@ -14,7 +14,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var bool Whether to decode HTML entities in attribute values
 	*/
-	protected $decodeHtmlEntities = false;
+	public $decodeHtmlEntities = false;
 
 	/**
 	* @var array Default tags
@@ -147,7 +147,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		return ['decodeHtmlEntities' => $this->decodeHtmlEntities];
+		return ['decodeHtmlEntities' => (bool) $this->decodeHtmlEntities];
 	}
 
 	/**

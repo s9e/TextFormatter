@@ -51,6 +51,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() returns decodeHtmlEntities is saved as a boolean
+	*/
+	public function testAsConfigDecodeHtmlEntities()
+	{
+		$this->configurator->Litedown->decodeHtmlEntities = 1;
+		$this->assertArrayMatches(
+			['decodeHtmlEntities' => true],
+			$this->configurator->Litedown->asConfig()
+		);
+	}
+
+	/**
 	* @testdox getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 0] by default
 	*/
 	public function testGetJSHintsFalse()

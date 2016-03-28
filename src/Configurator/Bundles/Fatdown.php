@@ -23,7 +23,7 @@ class Fatdown extends Bundle
 		$configurator->Autolink;
 		$configurator->Escaper;
 		$configurator->FancyPants;
-		$configurator->plugins->load('Litedown', ['decodeHtmlEntities' => true]);
+		$configurator->Litedown->decodeHtmlEntities = true;
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 
