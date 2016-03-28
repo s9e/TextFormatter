@@ -963,10 +963,6 @@ class ParserTest extends Test
 				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ \'Link title\')</e></URL> ..</p></r>'
 			],
 			[
-				'.. [link](http://example.com/ Link title) ..',
-				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ Link title)</e></URL> ..</p></r>'
-			],
-			[
 				'[not a link]',
 				'<t><p>[not a link]</p></t>'
 			],
@@ -1220,18 +1216,6 @@ class ParserTest extends Test
 					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
 					'',
 					"<i>[1]: http://example.org/img.png 'Title goes there'</i></r>"
-				]
-			],
-			[
-				[
-					'![][1]',
-					'',
-					'[1]: http://example.org/img.png Title goes there'
-				],
-				[
-					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
-					'',
-					'<i>[1]: http://example.org/img.png Title goes there</i></r>'
 				]
 			],
 			[

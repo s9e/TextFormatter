@@ -127,14 +127,14 @@ class Parser extends ParserBase
 	}
 
 	/**
-	* Decode the optional attribute portion of a link
+	* Decode the optional attribute portion of a link or image
 	*
-	* @param  string $str Encoded string, possibly surrounded by quotes and whitespace
+	* @param  string $str Encoded string in quotes, potentially surrounded by whitespace
 	* @return string      Decoded string
 	*/
-	protected function decodeQuotedString($str)
+	protected function decodeTitle($str)
 	{
-		return $this->decode(preg_replace('/^([\'"])(.*)\\1$/', '$2', trim($str)));
+		return $this->decode(substr(trim($str), 1, -1));
 	}
 
 	/**
@@ -280,7 +280,7 @@ class Parser extends ParserBase
 		$attrValues = [$this->decode($m[3][0])];
 		if (!empty($m[4][0]))
 		{
-			$title = $this->decodeQuotedString($m[4][0]);
+			$title = $this->decodeTitle($m[4][0]);
 			if ($title > '')
 			{
 				$attrValues[] = $title;
@@ -828,7 +828,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/!\\[([^\\x17]*?(?=] ?\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ")]+)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
+			'/!\\[([^\\x17]*?(?=] ?\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ")]+)( *(?:"[^\\x17]*?"|\'[^\\x17]*?\'))?\\))?/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
@@ -897,7 +897,7 @@ class Parser extends ParserBase
 	{
 		$this->links = [];
 
-		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)([^\\n\\x17]*)\\n?/m';
+		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
@@ -911,10 +911,9 @@ class Parser extends ParserBase
 			}
 
 			$this->links[$label] = [$this->decode($m[2][0])];
-			$title = $this->decodeQuotedString($m[3][0]);
-			if ($title > '')
+			if (isset($m[3]) && strlen($m[3][0]) > 2)
 			{
-				$this->links[$label][] = $title;
+				$this->links[$label][] = $this->decodeTitle($m[3][0]);
 			}
 		}
 	}
@@ -933,7 +932,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/\\[([^\\x17]*?(?=]\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]|\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
+			'/\\[([^\\x17]*?(?=]\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]|\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17]*?"|\'[^\\x17]*?\'))?\\))?/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
