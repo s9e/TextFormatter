@@ -92,14 +92,14 @@ function decode(str)
 }
 
 /**
-* Decode the optional attribute portion of a link
+* Decode the optional attribute portion of a link or image
 *
-* @param  {!string} str Encoded string, possibly surrounded by quotes and whitespace
+* @param  {!string} str Encoded string in quotes, potentially surrounded by whitespace
 * @return {!string}     Decoded string
 */
-function decodeQuotedString(str)
+function decodeTitle(str)
 {
-	return decode(str.replace(/^\s*(.*?)\s*$/, '$1').replace(/^(['"])(.*)\1$/, '$2'));
+	return decode(str.replace(/^\s*.(.*?).\s*$/, '$1'));
 }
 
 /**
@@ -189,7 +189,7 @@ function getInlineLinkAttributes(m)
 	var attrValues = [decode(m[3])];
 	if (m[4])
 	{
-		var title = decodeQuotedString(m[4]);
+		var title = decodeTitle(m[4]);
 		if (title > '')
 		{
 			attrValues.push(title);
@@ -811,7 +811,7 @@ function matchImages()
 		return;
 	}
 
-	var m, regexp = /!\[([^\x17]*?(?=] ?\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ")]+)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
+	var m, regexp = /!\[([^\x17]*?(?=] ?\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ")]+)( *(?:"[^\x17]*?"|\'[^\x17]*?\'))?\))?/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -863,7 +863,7 @@ function matchLinkReferences()
 {
 	links = {};
 
-	var m, regexp = /^(?:> ?)* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)([^\n\x17]*)\n?/gm;
+	var m, regexp = /^(?:> ?)* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)\s*("[^\x17]*?"|'[^\x17]*?')?[^\x17]*\n?/gm;
 	while (m = regexp.exec(text))
 	{
 		addIgnoreTag(m['index'], m[0].length).setSortPriority(-2);
@@ -876,10 +876,9 @@ function matchLinkReferences()
 		}
 
 		links[label] = [decode(m[2])];
-		var title = decodeQuotedString(m[3]);
-		if (title > '')
+		if (m[3] && m[3].length > 2)
 		{
-			links[label].push(title);
+			links[label].push(decodeTitle(m[3]));
 		}
 	}
 }
@@ -894,7 +893,7 @@ function matchLinks()
 		return;
 	}
 
-	var m, regexp = /\[([^\x17]*?(?=]\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]|\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
+	var m, regexp = /\[([^\x17]*?(?=]\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]|\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17]*?"|\'[^\x17]*?\'))?\))?/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
