@@ -30,6 +30,7 @@ class Forum extends Bundle
 		$configurator->BBCodes->addFromRepository('LIST');
 		$configurator->BBCodes->addFromRepository('*');
 		$configurator->BBCodes->add('LI');
+		$configurator->BBCodes->addFromRepository('OL');
 		$configurator->BBCodes->addFromRepository('QUOTE', 'default', [
 			'authorStr' => '<xsl:value-of select="@author"/> <xsl:value-of select="$L_WROTE"/>'
 		]);
@@ -41,6 +42,7 @@ class Forum extends Bundle
 			'spoilerStr' => '{L_SPOILER}',
 		]);
 		$configurator->BBCodes->addFromRepository('U');
+		$configurator->BBCodes->addFromRepository('UL');
 		$configurator->BBCodes->addFromRepository('URL');
 
 		$configurator->rendering->parameters = [

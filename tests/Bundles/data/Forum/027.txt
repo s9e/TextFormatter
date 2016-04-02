@@ -1,0 +1,15 @@
+Ordered list
+[ol]
+    [li]Item one[/li]
+    [li]Item two[/li]
+[/ol]
+Unordered list
+[ul]
+    [li]Item one[/li]
+    [li]Item two[/li]
+[/ul]
+Another variant
+[list]
+    [li]Item one[/li]
+    [li]Item two[/li]
+[/list]
