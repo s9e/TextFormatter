@@ -291,6 +291,12 @@ __NOPARSE__
 {TEXT}
 ```
 
+__OL__  
+`[OL]{TEXT}[/OL]`
+```xsl
+<ol>{TEXT}</ol>
+```
+
 __QUOTE__  
 `[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]`
 ```xsl
@@ -428,6 +434,12 @@ __U__
 `[U]{TEXT}[/U]`
 ```xsl
 <u>{TEXT}</u>
+```
+
+__UL__  
+`[UL]{TEXT}[/UL]`
+```xsl
+<ul>{TEXT}</ul>
 ```
 
 __URL__  
