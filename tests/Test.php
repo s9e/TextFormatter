@@ -190,9 +190,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	}
 
 	protected static $tmpFiles = [];
-	public function tempnam($suffix = '.tmp')
+	public function tempnam()
 	{
-		$filepath = sys_get_temp_dir() . '/' . uniqid() . $suffix;
+		$filepath = sys_get_temp_dir() . '/s9e_' . uniqid() . '.tmp';
 		self::$tmpFiles[] = $filepath;
 
 		return $filepath;

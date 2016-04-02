@@ -85,4 +85,5 @@ rm -f \
 	/tmp/MyRenderer.php \
 	/tmp/parser.txt     \
 	/tmp/Renderer_*.php \
-	/tmp/renderer.txt
+	/tmp/renderer.txt   \
+	/tmp/s9e_*.tmp
