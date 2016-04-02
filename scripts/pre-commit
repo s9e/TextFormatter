@@ -31,7 +31,7 @@ if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repo
 then
 	./scripts/patchBundledBBCodesCookbook.php
 
-	git update-index --add "src/Plugins/BBCodes/README.md"
+	git update-index --add "docs/Cookbook/30_Plugins/BBCodes/AddFromRepository.md"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]
