@@ -5,5 +5,5 @@
 
 	<host>theatlantic.com</host>
 	<extract>!theatlantic\.com/video/index/(?'id'\d+)!</extract>
-	<iframe width="640" height="360" src="http://www.theatlantic.com/video/iframe/{@id}/"/>
+	<iframe width="640" height="360" src="//www.theatlantic.com/video/iframe/{@id}/"/>
 </site>

@@ -3374,7 +3374,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
-				'<div data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3419,7 +3419,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="overflow:hidden;position:relative;padding-bottom:56.196581196581%"><iframe allowfullscreen="" scrolling="no" src="http://widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="overflow:hidden;position:relative;padding-bottom:56.196581196581%"><iframe allowfullscreen="" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3455,7 +3455,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
-				'<div data-s9e-mediaembed="liveleak" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.liveleak.com/ll_embed?i=3dd_1366238099" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="liveleak" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.liveleak.com/ll_embed?i=3dd_1366238099" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{

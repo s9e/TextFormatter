@@ -5,5 +5,5 @@
 
 	<host>humortv.vara.nl</host>
 	<extract>!humortv\.vara\.nl/\w+\.(?'id'[-.\w]+)\.html!</extract>
-	<iframe src="http://humortv.vara.nl/embed.{@id}.html"/>
+	<iframe src="//humortv.vara.nl/embed.{@id}.html"/>
 </site>

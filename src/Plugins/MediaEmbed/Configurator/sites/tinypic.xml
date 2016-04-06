@@ -5,5 +5,5 @@
 
 	<host>tinypic.com</host>
 	<extract>!tinypic\.com/player\.php\?v=(?'id'\w+)&amp;s=(?'s'\d+)!</extract>
-	<flash width="560" height="345" src="http://tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
+	<flash width="560" height="345" src="//tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
 </site>

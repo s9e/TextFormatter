@@ -13,5 +13,5 @@
 		<match>!nytimes\.com/movie(?:s/movie)?/(?'playlist'\d+)/[-\w]+/trailers!</match>
 		<extract>!/video/movies/(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="585" height="400" src="http://graphics8.nytimes.com/video/players/offsite/index.html?videoId={@id}"/>
+	<iframe width="585" height="400" src="//graphics8.nytimes.com/video/players/offsite/index.html?videoId={@id}"/>
 </site>

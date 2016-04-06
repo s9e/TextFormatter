@@ -6,5 +6,5 @@
 
 	<host>vevo.com</host>
 	<extract>!vevo\.com/watch/([-/\w]+/)?(?'id'[A-Z0-9]+)!</extract>
-	<iframe width="575" height="324" src="http://cache.vevo.com/m/html/embed.html?video={@id}"/>
+	<iframe width="575" height="324" src="//cache.vevo.com/m/html/embed.html?video={@id}"/>
 </site>

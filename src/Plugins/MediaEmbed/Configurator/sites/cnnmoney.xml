@@ -5,5 +5,5 @@
 
 	<host>money.cnn.com</host>
 	<extract>!money\.cnn\.com/video/(?'id'.*\.cnnmoney)!</extract>
-	<iframe width="560" height="360" src="http://money.cnn.com/.element/ssi/video/7.0/players/embed.player.html?videoid=video/{@id}&amp;width=560&amp;height=360"/>
+	<iframe width="560" height="360" src="//money.cnn.com/.element/ssi/video/7.0/players/embed.player.html?videoid=video/{@id}&amp;width=560&amp;height=360"/>
 </site>

@@ -5,5 +5,5 @@
 
 	<host>globalnews.ca</host>
 	<extract>!globalnews\.ca/video/(?'id'\d+)!</extract>
-	<iframe width="560" height="377" src="http://globalnews.ca/video/embed/{@id}/"/>
+	<iframe width="560" height="377" src="//globalnews.ca/video/embed/{@id}/"/>
 </site>
