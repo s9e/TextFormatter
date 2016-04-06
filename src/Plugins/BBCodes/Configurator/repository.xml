@@ -320,6 +320,13 @@
 		<template>{TEXT}</template>
 	</bbcode>
 
+	<bbcode name="OL">
+		<usage>[OL]{TEXT}[/OL]</usage>
+		<template><![CDATA[
+			<ol>{TEXT}</ol>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="QUOTE">
 		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
 		<template><![CDATA[
@@ -414,6 +421,13 @@
 		<usage>[U]{TEXT}[/U]</usage>
 		<template><![CDATA[
 			<u>{TEXT}</u>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="UL">
+		<usage>[UL]{TEXT}[/UL]</usage>
+		<template><![CDATA[
+			<ul>{TEXT}</ul>
 		]]></template>
 	</bbcode>
 
