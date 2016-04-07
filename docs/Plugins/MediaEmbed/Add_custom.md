@@ -191,5 +191,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<div data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><div style="overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>
+<div data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:500px"><div style="overflow:hidden;position:relative;padding-bottom:56.2%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>
 ```
