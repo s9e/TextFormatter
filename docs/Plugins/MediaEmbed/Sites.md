@@ -427,6 +427,11 @@
 		<td>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
 	</tr>
 	<tr>
+		<td><code>theguardian</code></td>
+		<td>The Guardian</td>
+		<td>http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</td>
+	</tr>
+	<tr>
 		<td><code>theonion</code></td>
 		<td>The Onion</td>
 		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>http://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>

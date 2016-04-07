@@ -2637,6 +2637,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video',
+				'<r><THEGUARDIAN id="world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video" url="http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video">http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</THEGUARDIAN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('theguardian');
+				}
+			],
+			[
 				'http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/',
 				'<r><THEONION id="35998" url="http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/">http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</THEONION></r>',
 				[],
