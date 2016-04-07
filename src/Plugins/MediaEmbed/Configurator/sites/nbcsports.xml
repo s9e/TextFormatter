@@ -1,0 +1,12 @@
+<site name="NBC Sports" homepage="http://www.nbcsports.com/video">
+	<example>http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</example>
+
+	<tags><tag>sports</tag></tags>
+
+	<host>nbcsports.com</host>
+	<scrape>
+		<match>!nbcsports\.com/video/.!</match>
+		<extract>!select/media/(?'id'\w+)!</extract>
+	</scrape>
+	<iframe src="//vplayer.nbcsports.com/p/BxmELC/nbcsports_embed/select/media/{@id}?parentUrl="/>
+</site>

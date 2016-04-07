@@ -322,6 +322,11 @@
 		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
 	</tr>
 	<tr>
+		<td><code>nbcsports</code></td>
+		<td>NBC Sports</td>
+		<td>http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</td>
+	</tr>
+	<tr>
 		<td><code>nhl</code></td>
 		<td>NHL VideoCenter</td>
 		<td>http://video.nhl.com/videocenter/console?id=783647&amp;catid=35<br/>http://video.nhl.com/videocenter/console?id=2014021049-387-h</td>

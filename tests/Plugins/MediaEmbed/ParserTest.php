@@ -698,6 +698,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance',
+				'<r><NBCSPORTS id="fTQA2MMyx9YO" url="http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('nbcsports');
+				}
+			],
+			[
 				'http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
 				'<r><NPR i="385396431" m="385396432" url="http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world">http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
 				[],
