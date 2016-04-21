@@ -9,6 +9,17 @@ use s9e\TextFormatter\Tests\Test;
 
 abstract class AbstractTest extends Test
 {
+	protected function getNormalizer()
+	{
+		$className  = preg_replace(
+			'/.*\\\\(.*?)Test$/',
+			's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\\\$1',
+			get_class($this)
+		);
+
+		return new $className;
+	}
+
 	/**
 	* @testdox Works
 	* @dataProvider getData
@@ -27,14 +38,7 @@ abstract class AbstractTest extends Test
 		$dom = new DOMDocument;
 		$dom->loadXML($xml);
 
-		$className  = preg_replace(
-			'/.*\\\\(.*?)Test$/',
-			's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\\\$1',
-			get_class($this)
-		);
-
-		$normalizer = new $className;
-		$normalizer->normalize($dom->documentElement);
+		$this->getNormalizer()->normalize($dom->documentElement);
 
 		$this->assertSame(
 			$expected,
