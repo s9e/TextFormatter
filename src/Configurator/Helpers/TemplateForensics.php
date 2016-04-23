@@ -617,6 +617,16 @@ class TemplateForensics
 	*/
 	protected function elementIsBlock($elName, DOMElement $node)
 	{
+		$style = $this->getStyle($node);
+		if (preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
+		{
+			return true;
+		}
+		if (preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+		{
+			return false;
+		}
+
 		return $this->hasProperty($elName, 'b', $node);
 	}
 
@@ -630,6 +640,28 @@ class TemplateForensics
 	protected function evaluate($query, DOMElement $node)
 	{
 		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
+	}
+
+	/**
+	* Retrieve and return the inline style assigned to given element
+	*
+	* @param  DOMElement $node Context node
+	* @return string
+	*/
+	protected function getStyle(DOMElement $node)
+	{
+		// Start with the inline attribute
+		$style = $node->getAttribute('style');
+
+		// Add the content of any xsl:attribute named "style". This will miss optional attributes
+		$xpath = new DOMXPath($node->ownerDocument);
+		$query = 'xsl:attribute[@name="style"]';
+		foreach ($xpath->query($query, $node) as $attribute)
+		{
+			$style .= ';' . $attribute->textContent;
+		}
+
+		return $style;
 	}
 
 	/**
