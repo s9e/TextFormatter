@@ -40,5 +40,6 @@
 				</xsl:choose>
 			</xsl:if>
 		]]></src>
+		<style background="url(https://i.ytimg.com/vi/{@id}/hqdefault.jpg) 50% 50% / cover"/>
 	</iframe>
 </site>
