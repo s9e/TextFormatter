@@ -367,7 +367,7 @@ class TemplateForensics
 			}
 
 			// If any root node is a block-level element, we'll mark the template as such
-			if ($this->hasProperty($elName, 'b', $node))
+			if ($this->elementIsBlock($elName, $node))
 			{
 				$this->isBlock = true;
 			}
@@ -606,6 +606,18 @@ class TemplateForensics
 				$this->isFormattingElement = $isFormattingElement;
 			}
 		}
+	}
+
+	/**
+	* Test whether given element is a block-level element
+	*
+	* @param  string     $elName Element name
+	* @param  DOMElement $node   Context node
+	* @return bool
+	*/
+	protected function elementIsBlock($elName, DOMElement $node)
+	{
+		return $this->hasProperty($elName, 'b', $node);
 	}
 
 	/**
