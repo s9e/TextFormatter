@@ -5,5 +5,5 @@
 
 	<host>youku.com</host>
 	<extract>!youku\.com/v_show/id_(?'id'\w+)!</extract>
-	<iframe width="512" height="328" src="//player.youku.com/embed/{@id}"/>
+	<flash padding-height="40" src="https://players.youku.com/player.php/sid/{@id}/v.swf"/>
 </site>
