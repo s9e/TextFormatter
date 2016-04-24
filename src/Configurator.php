@@ -1440,7 +1440,7 @@ class TemplateForensics
 			$this->rootNodes[] = $elName;
 			if (!isset(self::$htmlElements[$elName]))
 				$elName = 'span';
-			if ($this->hasProperty($elName, 'b', $node))
+			if ($this->elementIsBlock($elName, $node))
 				$this->isBlock = \true;
 			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
 		}
@@ -1532,9 +1532,27 @@ class TemplateForensics
 				$this->isFormattingElement = $isFormattingElement;
 		}
 	}
+	protected function elementIsBlock($elName, DOMElement $node)
+	{
+		$style = $this->getStyle($node);
+		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
+			return \true;
+		if (\preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+			return \false;
+		return $this->hasProperty($elName, 'b', $node);
+	}
 	protected function evaluate($query, DOMElement $node)
 	{
 		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
+	}
+	protected function getStyle(DOMElement $node)
+	{
+		$style = $node->getAttribute('style');
+		$xpath = new DOMXPath($node->ownerDocument);
+		$query = 'xsl:attribute[@name="style"]';
+		foreach ($xpath->query($query, $node) as $attribute)
+			$style .= ';' . $attribute->textContent;
+		return $style;
 	}
 	protected function getXSLElements($elName)
 	{
