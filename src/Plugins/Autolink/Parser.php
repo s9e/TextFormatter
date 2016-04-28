@@ -30,7 +30,7 @@ class Parser extends ParserBase
 	{
 		while (1)
 		{
-			$url = \preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
+			$url = \preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
 			if (\substr($url, -1) === ')' && \substr_count($url, '(') < \substr_count($url, ')'))
 			{
 				$url = \substr($url, 0, -1);
