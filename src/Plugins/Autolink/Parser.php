@@ -73,10 +73,13 @@ class Parser extends ParserBase
 	{
 		while (1)
 		{
-			// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
-			// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
-			// and parentheses, which are balanced separately
-			$url = preg_replace('#(?![-=/)])[>\\pP]+$#Du', '', $url);
+			// We remove most ASCII non-letters and Unicode punctuation from the end of the string.
+			// Exceptions:
+			//  - dashes (some YouTube URLs end with a dash due to the video ID)
+			//  - equal signs (because of "foo?bar="),
+			//  - trailing slashes,
+			//  - closing parentheses are balanced separately.
+			$url = preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
 
 			if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
 			{

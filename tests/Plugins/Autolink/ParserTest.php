@@ -118,6 +118,19 @@ class ParserTest extends Test
 				'<r>Link in angle brackets: &lt;<URL url="http://example.com/foo">http://example.com/foo</URL>&gt;</r>'
 			],
 			[
+				'http://example.com/foo~ http://example.com/~foo',
+				'<r><URL url="http://example.com/foo">http://example.com/foo</URL>~ <URL url="http://example.com/~foo">http://example.com/~foo</URL></r>'
+			],
+			[
+				'~~http://example.com/~foo http://example.com/~foo~~',
+				'<r><DEL><s>~~</s><URL url="http://example.com/~foo">http://example.com/~foo</URL> <URL url="http://example.com/~foo">http://example.com/~foo</URL><e>~~</e></DEL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown;
+				}
+			],
+			[
 				'WWW address: www.example.org',
 				'<r>WWW address: <URL url="http://www.example.org">www.example.org</URL></r>',
 				['matchWww' => true]

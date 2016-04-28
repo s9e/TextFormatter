@@ -56,9 +56,13 @@ function trimUrl(url)
 	//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 	while (1)
 	{
-		// We remove some common ASCII punctuation and whitespace. We don't have access to Unicode
-		// properties, so we try to cover the most common usage
-		url = url.replace(/[\s!"',.<>?]+$/, '');
+		// We remove most ASCII non-letters from the end of the string.
+		// Exceptions:
+		//  - dashes (some YouTube URLs end with a dash due to the video ID)
+		//  - equal signs (because of "foo?bar="),
+		//  - trailing slashes,
+		//  - closing parentheses are balanced separately.
+		url = url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
 
 		if (url.substr(-1) === ')' && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
