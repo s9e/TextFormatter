@@ -10,7 +10,7 @@ s9e\\TextFormatter is a text formatting library that supports BBCode, Markdown, 
 
 ## Installation
 
-The best way to install s9e\\TextFormatter is via Composer. See [Installation](http://s9etextformatter.readthedocs.org/Getting_started/Installation/).
+The best way to install s9e\\TextFormatter is via Composer. See [Installation](http://s9etextformatter.readthedocs.io/Getting_started/Installation/).
 
 ```bash
 composer require s9e/text-formatter
@@ -22,6 +22,6 @@ You can try the JavaScript version in this [BBCodes + other stuff demo](http://s
 
 ## Examples
 
-If you can only read one example, [read how to use a bundle](http://s9etextformatter.readthedocs.org/Getting_started/Using_predefined_bundles/).
+If you can only read one example, [read how to use a bundle](http://s9etextformatter.readthedocs.io/Getting_started/Using_predefined_bundles/).
 
-You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), you can look into the [manual](http://s9etextformatter.readthedocs.org/) for a description of each plugin and other examples.
+You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples), you can look into the [manual](http://s9etextformatter.readthedocs.io/) for a description of each plugin and other examples.

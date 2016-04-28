@@ -1,1 +1,1 @@
-Moved to http://s9etextformatter.readthedocs.org/Plugins/Litedown/Syntax/
+Moved to http://s9etextformatter.readthedocs.io/Plugins/Litedown/Syntax/
