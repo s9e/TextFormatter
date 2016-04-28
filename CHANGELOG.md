@@ -1,3 +1,45 @@
+0.5.0 (2016-04-28)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/efd5915ca5bf74f938fce40c8837d7fc781b642d...fe3dec1725bf870e4437b20e6be0d17652be87ea)
+
+### Added
+
+ - `64f3ee0` Added OL and UL to the Forum bundle
+ - `794d664` BBCodes: added OL and UL to the default repository
+ - `794127a` MediaEmbed: added NBC Sports
+ - `8c6aa1e` MediaEmbed: added The Guardian
+ - `7714ae9` MediaEmbed: added Veoh
+ - `630ad0a` MediaEmbed: added a background image to YouTube and Twitter
+
+### Removed
+
+ - `c2a3a1c` Litedown: removed support for unquoted titles in links and images
+
+### Fixed
+
+ - `a13416c` Fatdown: fixed missing title in links
+
+### Changed
+
+ - `c032937` Autolink: made ->Autolink->matchWww public
+ - `11633f8` Autolink: remove most non-letters at the end of the URL
+ - `2a7de09` Autolink: replaced manual check with word boundary assertion
+ - `90eaf86` BBCodes: updated Highlight.js to 9.3.0
+ - `1608c79` Litedown: made the decodeHtmlEntities property public
+ - `94f07bd` MediaEmbed: replaced all HTTP URLs with protocol-relative URLs in src attributes
+ - `8b0a31d` MediaEmbed: updated Brightcove
+ - `76638c6` MediaEmbed: updated Gfycat
+ - `16038df` MediaEmbed: updated Gist
+ - `ab22f0b` MediaEmbed: updated VBOX7
+ - `b0b717a` MediaEmbed: updated Youku
+ - `d9f1608` MediaEmbed: updated dumpert
+ - `e49d6c9` OnlineMinifier: instantiate the HTTP client in the constructor
+ - `15e3223` OnlineMinifier: renamed HTTP client property
+ - `4f10e67` OptimizeChoose: streamlined conditional
+ - `c6fd225` TemplateForensics: inspect an element's style to determine whether it's a block-level element
+
+
 0.4.12 (2016-03-20)
 ===================
 
