@@ -20,14 +20,14 @@ cd ../..
 cat CHANGELOG.md >> /tmp/CHANGELOG.md
 mv /tmp/CHANGELOG.md CHANGELOG.md
 
-git add composer.json CHANGELOG.md                        && \
-git commit --no-verify -m"Release $new_version [ci skip]" && \
-./scripts/build/syncBranches.sh                           && \
-git checkout release/php5.3                               && \
-git tag "$new_version"                                    && \
-git push origin "$new_version"                            && \
-git checkout master                                       && \
-php scripts/build/patchComposerVersion.php dev            && \
-git add composer.json                                     && \
-git commit --no-verify -m"Updated dev version [ci skip]"  && \
+git add composer.json CHANGELOG.md                           && \
+git commit -S --no-verify -m"Release $new_version [ci skip]" && \
+./scripts/build/syncBranches.sh                              && \
+git checkout release/php5.3                                  && \
+git tag -s -m "$new_version" "$new_version"                  && \
+git push origin "$new_version"                               && \
+git checkout master                                          && \
+php scripts/build/patchComposerVersion.php dev               && \
+git add composer.json                                        && \
+git commit --no-verify -m"Updated dev version [ci skip]"     && \
 git push
