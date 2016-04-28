@@ -40,30 +40,23 @@ function linkifyUrl(tagPos, url)
 };
 
 /**
-* Trim any trailing punctuation from given URL
+* Remove trailing punctuation from given URL
 *
-* Removes trailing punctuation and right angle brackets. We preserve right parentheses
-* if there's a balanced number of parentheses in the URL, e.g.
-*   http://en.wikipedia.org/wiki/Mars_(disambiguation)
+* We remove most ASCII non-letters from the end of the string.
+* Exceptions:
+*  - dashes (some YouTube URLs end with a dash due to the video ID)
+*  - equal signs (because of "foo?bar="),
+*  - trailing slashes,
+*  - closing parentheses are balanced separately.
 *
 * @param  {!string} url Original URL
 * @return {!string}     Trimmed URL
 */
 function trimUrl(url)
 {
-	// Remove trailing punctuation and right angle brackets. We preserve right parentheses
-	// if there's a balanced number of parentheses in the URL, e.g.
-	//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 	while (1)
 	{
-		// We remove most ASCII non-letters from the end of the string.
-		// Exceptions:
-		//  - dashes (some YouTube URLs end with a dash due to the video ID)
-		//  - equal signs (because of "foo?bar="),
-		//  - trailing slashes,
-		//  - closing parentheses are balanced separately.
 		url = url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
-
 		if (url.substr(-1) === ')' && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);
