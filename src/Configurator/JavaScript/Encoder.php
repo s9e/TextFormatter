@@ -74,7 +74,7 @@ class Encoder
 	*/
 	protected function encodeArray(array $array)
 	{
-		return (empty($array) || array_keys($array) === range(0, count($array) - 1)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
+		return ($this->isIndexedArray($array)) ? $this->encodeIndexedArray($array) : $this->encodeAssociativeArray($array);
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Encoder
 		$sep = '';
 		foreach ($array as $k => $v)
 		{
-			$src .= $sep . $this->encodePropertyName($k, $preserveNames) . ':' . $this->encode($v);
+			$src .= $sep . $this->encodePropertyName("$k", $preserveNames) . ':' . $this->encode($v);
 			$sep = ',';
 		}
 		$src .= '}';
@@ -208,6 +208,27 @@ class Encoder
 	}
 
 	/**
+	* Test whether given array is a numerically indexed array
+	*
+	* @param  array $array
+	* @return bool
+	*/
+	protected function isIndexedArray(array $array)
+	{
+		if (empty($array))
+		{
+			return true;
+		}
+
+		if (isset($array[0]) && array_keys($array) === range(0, count($array) - 1))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	* Test whether a string can be used as a property name, unquoted
 	*
 	* @link http://es5.github.io/#A.1
@@ -228,6 +249,6 @@ class Encoder
 			return false;
 		}
 
-		return (bool) preg_match('#^[$_\\pL][$_\\pL\\pNl]+$#Du', $name);
+		return (bool) preg_match('#^(?![0-9])[$_\\pL][$_\\pL\\pNl]+$#Du', $name);
 	}
 }

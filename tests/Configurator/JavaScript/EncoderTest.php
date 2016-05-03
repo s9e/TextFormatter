@@ -53,6 +53,14 @@ class EncoderTest extends Test
 				'[1,2]'
 			],
 			[
+				[1 => 1, 0 => 0],
+				'{"0":0,"1":1}'
+			],
+			[
+				[false, 2],
+				'[!1,2]'
+			],
+			[
 				['foo' => 'bar', 'baz' => 'quux'],
 				'{baz:"quux",foo:"bar"}'
 			],
