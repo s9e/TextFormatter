@@ -16,6 +16,11 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 abstract class RegexpConvertor
 {
 	/**
+	* Regexp that matches Unicode properties escape sequences
+	*/
+	protected static $unicodePropsRegexp = '((?<!\\\\)((?:\\\\\\\\)*+)\\\\([Pp](?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?|\\{(?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?|\\^(?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?))})))';
+
+	/**
 	* Convert a PCRE regexp to a JavaScript regexp
 	*
 	* @param  string $regexp   PCRE regexp
@@ -177,16 +182,8 @@ abstract class RegexpConvertor
 	{
 		$unicodeProps = self::$unicodeProps;
 
-		$propNames = [];
-		foreach (array_keys($unicodeProps) as $propName)
-		{
-			$propNames[] = $propName;
-			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
-			$propNames[] = preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
-		}
-
 		$str = preg_replace_callback(
-			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . implode('|', $propNames) . ')#',
+			self::$unicodePropsRegexp,
 			function ($m) use ($inCharacterClass, $unicodeProps)
 			{
 				$propName = preg_replace('#[\\{\\}]#', '', $m[2]);

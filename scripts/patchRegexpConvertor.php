@@ -1,6 +1,9 @@
 #!/usr/bin/php
 <?php
 
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+include __DIR__ . '/../src/autoloader.php';
+
 $filepath = __DIR__ . '/../src/Configurator/JavaScript/RegexpConvertor.php';
 
 function generateRange($start, $end)
@@ -164,14 +167,34 @@ $php = " = [\n\t\t" . $php . "\n\t]";
 
 $file = file_get_contents($filepath);
 $file = preg_replace(
-	'#(protected static \\$unicodeProps)(.*?)\\n\\t[\\])];#s',
+	'#(protected static \\$unicodeProps(?!Regexp))(.*?)\\n\\t[\\])];#s',
 	'$1;',
 	$file
 );
-
 $file = str_replace(
 	'protected static $unicodeProps;',
 	'protected static $unicodeProps' . $php . ';',
+	$file
+);
+
+
+$propNames = [];
+foreach (array_keys($props) as $propName)
+{
+	$propNames[] = $propName;
+	$propNames[] = preg_replace('#(.)(.+)#', '$1{$2}', $propName);
+	$propNames[] = preg_replace('#(.)(.+)#', '$1{^$2}', $propName);
+}
+
+$regexp = '((?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . RegexpBuilder::fromList($propNames) . '))';
+$file = preg_replace(
+	'#(protected static \\$unicodePropsRegexp)[^;]++;#s',
+	'$1;',
+	$file
+);
+$file = str_replace(
+	'protected static $unicodePropsRegexp;',
+	'protected static $unicodePropsRegexp = ' . var_export($regexp, true) . ';',
 	$file
 );
 
