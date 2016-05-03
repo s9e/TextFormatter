@@ -10,6 +10,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 abstract class RegexpConvertor
 {
+	protected static $unicodePropsRegexp = '((?<!\\\\)((?:\\\\\\\\)*+)\\\\([Pp](?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?|\\{(?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?|\\^(?:L[mo]?|N[dlo]?|P[c-fios]?|S[ckmo]?|Z[lps]?))})))';
 	public static function toJS($regexp, $isGlobal = \false)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
@@ -97,15 +98,8 @@ abstract class RegexpConvertor
 	protected static function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
 	{
 		$unicodeProps = self::$unicodeProps;
-		$propNames = array();
-		foreach (\array_keys($unicodeProps) as $propName)
-		{
-			$propNames[] = $propName;
-			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{$2\\}', $propName);
-			$propNames[] = \preg_replace('#(.)(.+)#', '$1\\{\\^$2\\}', $propName);
-		}
 		$str = \preg_replace_callback(
-			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . \implode('|', $propNames) . ')#',
+			self::$unicodePropsRegexp,
 			function ($m) use ($inCharacterClass, $unicodeProps)
 			{
 				$propName = \preg_replace('#[\\{\\}]#', '', $m[2]);
