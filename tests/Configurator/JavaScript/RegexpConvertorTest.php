@@ -221,19 +221,6 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
-	* @testdox toJS() replaces \p{^L} with a character class containing the full character range
-	*/
-	public function testConvertRegexp8c()
-	{
-		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
-
-		$this->assertRegExp(
-			'#^/\\[' . $unicodeRange . '\\]/$#D',
-			(string) RegexpConvertor::toJS('#\\p{^L}#')
-		);
-	}
-
-	/**
 	* @testdox toJS() replaces \p{^L} with a character class equivalent to \PL
 	*/
 	public function testConvertRegexp8d()
@@ -252,6 +239,17 @@ class RegexpConvertorTest extends Test
 		$this->assertEquals(
 			RegexpConvertor::toJS('#\\pL#'),
 			RegexpConvertor::toJS('#\\P{^L}#')
+		);
+	}
+
+	/**
+	* @testdox toJS() replaces \PZl with the opposite character range of \pZl
+	*/
+	public function testConvertRegexp9()
+	{
+		$this->assertEquals(
+			'/[\u0000-\u2027\u2029-\uFFFF]+/',
+			RegexpConvertor::toJS('/\\PZl+/')
 		);
 	}
 

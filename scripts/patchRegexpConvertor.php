@@ -70,7 +70,6 @@ foreach ($lines as $line)
 	}
 
 	$propName = substr($line, strpos($line, '# ') + 2, 2);
-
 	if (!isset($supportedProperties[$propName]))
 	{
 		continue;
@@ -84,17 +83,20 @@ foreach ($lines as $line)
 
 unset($ranges['pL&']);
 
-/**
-* Sort ranges and create anti-ranges for \P properties
-*/
-foreach ($ranges as $propName => &$propRanges)
+// Sort ranges
+foreach ($ranges as &$propRanges)
 {
 	ksort($propRanges, SORT_STRING);
+}
+unset($propRanges);
 
+// Create anti-ranges for \P properties
+foreach ($ranges as $propName => $propRanges)
+{
 	$nextCp = 0;
 	$tmp = [];
 
-	foreach ($propRanges as $range => $void)
+	foreach (array_keys($propRanges) as $range)
 	{
 		$startCp = hexdec(substr($range, 0, 4));
 
@@ -114,7 +116,6 @@ foreach ($ranges as $propName => &$propRanges)
 	$propName[0] = 'P';
 	$ranges[$propName] = $tmp;
 }
-unset($propRanges);
 
 $props = [];
 foreach ($ranges as $propName => $propRanges)

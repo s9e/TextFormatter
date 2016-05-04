@@ -1172,9 +1172,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() replaces \p{L} with the full character range in character classes
  [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
  [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
- [x] toJS() replaces \p{^L} with a character class containing the full character range
  [x] toJS() replaces \p{^L} with a character class equivalent to \PL
  [x] toJS() replaces \P{^L} with a character class equivalent to \pL
+ [x] toJS() replaces \PZl with the opposite character range of \pZl
  [x] toJS() can convert regexps with lookahead assertions
  [x] toJS() can convert regexps with negative lookahead assertions
  [x] toJS() throws a RuntimeException on lookbehind assertions
