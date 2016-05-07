@@ -299,16 +299,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007',
-				'<r><COMEDYCENTRAL id="mgid:arc:episode:comedycentral.com:3aba0ada-1d79-4500-aea8-1a90746faf2b" url="http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007">http://www.cc.com/full-episodes/nut019/the-daily-show-with-trevor-noah-october-7--2015---evgeny-afineevsky-season-21-ep-21007</COMEDYCENTRAL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
-			[
 				'http://m.democracynow.org/stories/15236',
 				'<r><DEMOCRACYNOW id="2015/5/22/neil_young_premieres_new_anti_gmo" url="http://m.democracynow.org/stories/15236">http://m.democracynow.org/stories/15236</DEMOCRACYNOW></r>',
 				[],
