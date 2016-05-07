@@ -6,6 +6,11 @@
 
 	<tags><tag>images</tag></tags>
 
+	<attributes>
+		<height defaultValue="360"/>
+		<width defaultValue="640"/>
+	</attributes>
+
 	<host>gettyimages.be</host>
 	<host>gettyimages.cn</host>
 	<host>gettyimages.co.jp</host>
