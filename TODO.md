@@ -5,6 +5,7 @@ TODO: general
 - Consider adding an onerror fallback to Emoji's template
 - Consider rounding up the position to the first leading byte (first byte of a UTF-8 sequence) in Parser::addTag() -- Alternatively, invalidate tags that start or end in the middle of a sequence
 - Add memoization to RegexpConverter. Maybe add strpos() checks for \\p, \\P, \\u and "."
+- MediaEmbed: update site definitions to make @width and @height required in sites that define them
 
 
 TODO: BBCodeMonkey

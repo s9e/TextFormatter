@@ -46,6 +46,14 @@ class IframeTest extends AbstractTest
 			],
 			[
 				[
+					'width'  => '{@width}',
+					'height' => '{@height}',
+					'src'    => 'foo'
+				],
+				'<div style="display:inline-block;width:100%;max-width:{@width}px"><div><xsl:attribute name="style">overflow:hidden;position:relative;<xsl:if test="@width&gt;0">padding-bottom:<xsl:value-of select="100*@height div@width"/>%</xsl:if></xsl:attribute><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></div></div>'
+			],
+			[
+				[
 					'width'     => '100%',
 					'max-width' => '800',
 					'height'    => '186',

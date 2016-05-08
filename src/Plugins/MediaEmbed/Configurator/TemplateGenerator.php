@@ -110,6 +110,12 @@ abstract class TemplateGenerator
 			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
 		}
 
+		// If the width is dynamic, use a conditional to protect against divisions by zero
+		if (strpos($width, '@') !== false)
+		{
+			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
+		}
+
 		return $css;
 	}
 
