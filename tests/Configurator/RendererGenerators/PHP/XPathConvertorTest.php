@@ -325,6 +325,10 @@ class XPathConvertorTest extends Test
 				'not($foo)',
 				"empty(\$this->params['foo'])"
 			],
+			[
+				'@width > 0',
+				"\$node->getAttribute('width')>0"
+			],
 		];
 	}
 

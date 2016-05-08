@@ -76,6 +76,13 @@ class XPathConvertor
 			return 'empty($this->params[' . var_export($m[1], true) . '])';
 		}
 
+		// XSL: <xsl:if test="@foo > 1">
+		// PHP: if ($node->getAttribute('foo') > 1)
+		if (preg_match('#^([$@][-\\w]+)\\s*([<>])\\s*(\\d+)$#', $expr, $m))
+		{
+			return $this->convertXPath($m[1]) . $m[2] . $m[3];
+		}
+
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a boolean() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
