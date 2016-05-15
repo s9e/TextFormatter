@@ -605,16 +605,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('libsyn');
 				}
 			],
-			[
-				'http://livestre.am/1aHRU',
-				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae" url="http://livestre.am/1aHRU">http://livestre.am/1aHRU</LIVESTREAM></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('livestream');
-				}
-			],
+//			[
+//				'http://livestre.am/1aHRU',
+//				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae" url="http://livestre.am/1aHRU">http://livestre.am/1aHRU</LIVESTREAM></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('livestream');
+//				}
+//			],
 			[
 				'http://livestream.com/ccscsl/USChessChampionships/videos/83267610',
 				'<r><LIVESTREAM account_id="3913412" event_id="3933674" url="http://livestream.com/ccscsl/USChessChampionships/videos/83267610" video_id="83267610">http://livestream.com/ccscsl/USChessChampionships/videos/83267610</LIVESTREAM></r>',
