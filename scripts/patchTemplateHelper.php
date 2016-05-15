@@ -4,11 +4,12 @@
 use s9e\SimpleDOM\SimpleDOM;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
-include 's9e/SimpleDOM/src/SimpleDOM.php';
 include __DIR__ . '/../src/autoloader.php';
 
-function getPage($filepath, $url)
+function loadPage($url)
 {
+	$filepath = sys_get_temp_dir() . '/' . basename($url);
+
 	if (!file_exists($filepath))
 	{
 		copy(
@@ -18,36 +19,40 @@ function getPage($filepath, $url)
 		);
 	}
 
-	return SimpleDOM::loadHTMLFile($filepath);
+	$page = new DOMDocument;
+	$page->preserveWhiteSpace = false;
+	@$page->loadHTMLFile($filepath, LIBXML_COMPACT | LIBXML_NOBLANKS);
+
+	return $page;
 }
 
 $attributes = [];
 
 $query = '/html/body/table/tr/td[@title = "Type"]/a';
-$page  = getPage(
+$page  = loadPage(
 	'/tmp/html40attributes.html',
 	'http://www.w3.org/TR/html4/index/attributes.html'
 );
-foreach ($page->xpath($query) as $a)
+$xpath = new DOMXPath($page);
+foreach ($xpath->query($query) as $a)
 {
-	if (strpos($a->textContent(), 'URI') !== false)
+	if (strpos($a->textContent, 'URI') !== false)
 	{
-		$attributes['URL'][] = trim($a->parentNode()->parentNode()->firstChild()->textContent());
+		$attributes['URL'][] = trim($a->parentNode->parentNode->firstChild->textContent);
 	}
 }
 
-$query = '/html/body/section/section/table[@id="attributes-1"]/tbody/tr';
-$page  = getPage(
-	'/tmp/html51attributes.html',
-	'http://www.w3.org/html/wg/drafts/html/master/index.html'
-);
-foreach ($page->xpath($query) as $tr)
+$page  = loadPage('http://w3c.github.io/html/fullindex.html');
+$xpath = new DOMXPath ($page);
+$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr';
+foreach ($xpath->query($query) as $tr)
 {
 	foreach (['CSS', 'URL'] as $type)
 	{
-		if (strpos($tr->td[2]->textContent(), $type) !== false)
+		if (strpos($tr->textContent, $type) !== false)
 		{
-			foreach (preg_split('/[;\\s]+/', $tr->th->textContent(), -1, PREG_SPLIT_NO_EMPTY) as $attrName)
+			$th = $tr->getElementsByTagName('th')->item(0);
+			foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
 			{
 				$attributes[$type][] = $attrName;
 			}
