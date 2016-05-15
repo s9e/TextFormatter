@@ -39,5 +39,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1F600.png">
+Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">
 ```
