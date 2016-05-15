@@ -21,10 +21,12 @@ function loadPage($url)
 	return $page;
 }
 
-$page = loadPage('http://www.w3.org/html/wg/drafts/html/master/index.html');
+$page  = loadPage('http://w3c.github.io/html/fullindex.html');
+$xpath = new DOMXPath ($page);
+$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr';
 
 $filters = [];
-foreach ($page->getElementById('attributes-1')->getElementsByTagName('tr') as $tr)
+foreach ($xpath->query($query) as $tr)
 {
 	if (strpos($tr->textContent, 'URL') === false)
 	{
