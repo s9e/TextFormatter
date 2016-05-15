@@ -115,6 +115,12 @@ class ParserTest extends Test
 				}
 			],
 			[
+				// :copyright: is in gemoji, not emojione
+				// :unicorn: is in emojione, not gemoji
+				':copyright: :unicorn:',
+				'<r><EMOJI seq="00a9">:copyright:</EMOJI> <EMOJI seq="1f984">:unicorn:</EMOJI></r>'
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],

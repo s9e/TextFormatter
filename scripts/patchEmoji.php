@@ -1,9 +1,10 @@
 #!/usr/bin/php
 <?php
 
-$url = 'https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json';
 $map = [];
-foreach (json_decode(wget($url)) as $entry)
+
+$url = 'https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json';
+foreach (json_decode(wget($url, 'gemoji-')) as $entry)
 {
 	if (!isset($entry->emoji))
 	{
@@ -15,6 +16,12 @@ foreach (json_decode(wget($url)) as $entry)
 	{
 		$map[$alias] = $seq;
 	}
+}
+
+$url = 'https://raw.githubusercontent.com/Ranks/emojione/master/emoji.json';
+foreach (json_decode(wget($url, 'emojione-')) as $alias => $entry)
+{
+	$map[$alias] = $entry->unicode;
 }
 
 $allText = '';
@@ -334,9 +341,9 @@ function getXml($utf8, $seq)
 	return '<EMOJI seq="' . ltrim(strtolower($seq), '0') . '">' . $utf8 . '</EMOJI>';
 }
 
-function wget($url)
+function wget($url, $prefix = '')
 {
-	$filepath = sys_get_temp_dir() . '/' . basename($url);
+	$filepath = sys_get_temp_dir() . '/' . $prefix . basename($url);
 	if (!file_exists($filepath))
 	{
 		copy(
