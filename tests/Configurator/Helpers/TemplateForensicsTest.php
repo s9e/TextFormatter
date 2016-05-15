@@ -253,8 +253,8 @@ class TemplateForensicsTest extends Test
 	/** @testdox <span style="display:block"> is a block-level element */
 	public function test0A65DD61() { $this->runCase(69); }
 
-	/** @testdox <div><xsl:attribute name="style">inline</xsl:attribute></div> is not a block-level element */
-	public function test871F8642() { $this->runCase(70); }
+	/** @testdox <div><xsl:attribute name="style">display:inline</xsl:attribute></div> is not a block-level element */
+	public function test8B747006() { $this->runCase(70); }
 
 	/** @testdox <br/> is not passthrough */
 	public function test56F3372F() { $this->runCase(71); }

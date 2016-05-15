@@ -536,7 +536,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <span> is not a block-level element
  [x] <div style="display:inline"> is not a block-level element
  [x] <span style="display:block"> is a block-level element
- [x] <div><xsl:attribute name="style">inline</xsl:attribute></div> is not a block-level element
+ [x] <div><xsl:attribute name="style">display:inline</xsl:attribute></div> is not a block-level element
  [x] <br/> is not passthrough
  [x] <b/> is not passthrough
  [x] <b><xsl:apply-templates/></b> is passthrough
