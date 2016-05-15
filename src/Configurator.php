@@ -1909,7 +1909,7 @@ abstract class TemplateHelper
 	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?:^(?:background|c(?>ite|lassid|odebase)|data|href|i(?>con|tem(?>id|prop|type))|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap|(?>form)?action)|src)$/i';
+		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
 		{
@@ -4210,6 +4210,8 @@ class XPathConvertor
 			return '!empty($this->params[' . \var_export($m[1], \true) . '])';
 		if (\preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
 			return 'empty($this->params[' . \var_export($m[1], \true) . '])';
+		if (\preg_match('#^([$@][-\\w]+)\\s*([<>])\\s*(\\d+)$#', $expr, $m))
+			return $this->convertXPath($m[1]) . $m[2] . $m[3];
 		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
 			$expr = 'boolean(' . $expr . ')';
 		return $this->convertXPath($expr);

@@ -107,7 +107,7 @@ class Configurator extends ConfiguratorBase
 	{
 		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';
 		$src .= "<xsl:if test=\"contains(@seq, '-20e3') or @seq = 'a9' or @seq = 'ae'\">00</xsl:if>";
-		$src .= "<xsl:value-of select=\"translate(@seq, 'abcdef', 'ABCDEF')\"/>";
+		$src .= '<xsl:value-of select="@seq"/>';
 		$src .= '.' . $this->imageType;
 		return $src;
 	}
