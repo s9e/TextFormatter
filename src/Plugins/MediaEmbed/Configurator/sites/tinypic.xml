@@ -1,9 +1,11 @@
 <site name="TinyPic videos" homepage="http://tinypic.com/">
 	<example>http://tinypic.com/player.php?v=29x86j9&amp;s=8</example>
+	<example>http://tinypic.com/r/29x86j9/8</example>
 
 	<tags><tag>images</tag></tags>
 
 	<host>tinypic.com</host>
 	<extract>!tinypic\.com/player\.php\?v=(?'id'\w+)&amp;s=(?'s'\d+)!</extract>
-	<flash width="560" height="345" src="//tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
+	<extract>!tinypic\.com/r/(?'id'\w+)/(?'s'\d+)!</extract>
+	<flash padding-height="30" src="//tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
 </site>

@@ -2664,6 +2664,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://tinypic.com/r/29x86j9/8',
+				'<r><TINYPIC id="29x86j9" s="8" url="http://tinypic.com/r/29x86j9/8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tinypic');
+				}
+			],
+			[
 				'http://www.tmz.com/videos/0_2pr9x3rb/',
 				'<r><TMZ id="0_2pr9x3rb" url="http://www.tmz.com/videos/0_2pr9x3rb/">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
 				[],

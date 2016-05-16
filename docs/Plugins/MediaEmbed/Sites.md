@@ -444,7 +444,7 @@
 	<tr>
 		<td><code>tinypic</code></td>
 		<td>TinyPic videos</td>
-		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8</td>
+		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8<br/>http://tinypic.com/r/29x86j9/8</td>
 	</tr>
 	<tr>
 		<td><code>tmz</code></td>
