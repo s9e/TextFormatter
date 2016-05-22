@@ -2,6 +2,11 @@
 	<example>https://archive.org/details/BillGate99</example>
 	<example>https://archive.org/details/DFTS2014-05-30</example>
 
+	<attributes>
+		<height defaultValue="360"/>
+		<width defaultValue="640"/>
+	</attributes>
+
 	<host>archive.org</host>
 	<scrape>
 		<match>!archive\.org/details/!</match>
