@@ -1,3 +1,29 @@
+0.5.1 (2016-05-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b89e5b2db384a14a164db66871eac2ceab1e2832...253fbb59fbdbf0d664c93128b399fd157e955d7a)
+
+### Added
+
+ - `ff775b7` Emoji: added support for more aliases
+ - `b573086` XPathConvertor: added support for less-than and greater-then comparisons
+
+### Fixed
+
+ - `558f34e` JavaScript\Encoder: fixed a potential issue with property names that start with a digit
+ - `448e167` RegexpConvertor: fixed an issue with incorrect ranges used for \P properties
+
+### Changed
+
+ - `81106df` Emoji: updated EmojiOne's template to use lowercase filenames
+ - `50e85d6` MediaEmbed: prevent division by zero in variable-sized embeds
+ - `43acb03` MediaEmbed: updated Facebook
+ - `3912aa9` MediaEmbed: updated Getty
+ - `253fbb5` MediaEmbed: updated Internet Archive
+ - `a579d85` RegexpConvertor: precompute the regexp that matches Unicode properties for performance
+ - `e22a808` Updated Tinypic
+
+
 0.5.0 (2016-04-28)
 ==================
 
