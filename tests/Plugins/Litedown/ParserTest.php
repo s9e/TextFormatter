@@ -1343,6 +1343,14 @@ class ParserTest extends Test
 				'` `` `',
 				'<r><p><C><s>` </s>``<e> `</e></C></p></r>'
 			],
+			[
+				'``` x ``',
+				'<t><p>``` x ``</p></t>'
+			],
+			[
+				'x ``` x ``',
+				'<t><p>x ``` x ``</p></t>'
+			],
 			// Strikethrough
 			[
 				'.. ~~foo~~ ~~bar~~ ..',

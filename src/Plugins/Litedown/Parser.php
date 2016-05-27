@@ -881,10 +881,14 @@ class Parser extends ParserBase
 			$startTagLen = strlen($m[1][0]);
 			$endTagLen   = strlen($m[3][0]);
 
-			$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
+			// Ensure that the match isn't preceded by a backtick
+			if (!$matchPos || $this->text[$matchPos - 1] !== '`')
+			{
+				$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
 
-			// Overwrite the markup
-			$this->overwrite($matchPos, $matchLen);
+				// Overwrite the markup
+				$this->overwrite($matchPos, $matchLen);
+			}
 		}
 	}
 

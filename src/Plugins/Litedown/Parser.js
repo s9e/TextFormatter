@@ -849,10 +849,14 @@ function matchInlineCode()
 			startTagLen = m[1].length,
 			endTagLen   = m[3].length;
 
-		addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
+		// Ensure that the match isn't preceded by a backtick
+		if (!matchPos || text.charAt(matchPos - 1) !== '`')
+		{
+			addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
 
-		// Overwrite the markup
-		overwrite(matchPos, matchLen);
+			// Overwrite the markup
+			overwrite(matchPos, matchLen);
+		}
 	}
 }
 
