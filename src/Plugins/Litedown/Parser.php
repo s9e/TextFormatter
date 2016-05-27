@@ -478,7 +478,7 @@ class Parser extends ParserBase
 		if ($pos === \false)
 			return;
 		\preg_match_all(
-			'/((`+)(?!`)\\s*)(?:[^\\x17]*?[^`\\s])?(\\s*\\2)(?!`)/',
+			'/((`+)(?!`)\\s*)(?:[^\\x17`]*?(?:(?!\\2(?!`))`+(?!`))?)*?(\\s*\\2)(?!`)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
@@ -490,8 +490,11 @@ class Parser extends ParserBase
 			$matchPos    = $m[0][1];
 			$startTagLen = \strlen($m[1][0]);
 			$endTagLen   = \strlen($m[3][0]);
-			$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
-			$this->overwrite($matchPos, $matchLen);
+			if (!$matchPos || $this->text[$matchPos - 1] !== '`')
+			{
+				$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
+				$this->overwrite($matchPos, $matchLen);
+			}
 		}
 	}
 	protected function matchLinkReferences()
