@@ -841,7 +841,7 @@ function matchInlineCode()
 		return;
 	}
 
-	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17]*?[^`\s])?(\s*\2)(?!`)/g;
+	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17`]*?(?:(?!\2(?!`))`+(?!`))?)*?(\s*\2)(?!`)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],
@@ -849,10 +849,14 @@ function matchInlineCode()
 			startTagLen = m[1].length,
 			endTagLen   = m[3].length;
 
-		addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
+		// Ensure that the match isn't preceded by a backtick
+		if (!matchPos || text.charAt(matchPos - 1) !== '`')
+		{
+			addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
 
-		// Overwrite the markup
-		overwrite(matchPos, matchLen);
+			// Overwrite the markup
+			overwrite(matchPos, matchLen);
+		}
 	}
 }
 
