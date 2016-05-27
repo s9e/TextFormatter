@@ -841,7 +841,7 @@ function matchInlineCode()
 		return;
 	}
 
-	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17]*?[^`\s])?(\s*\2)(?!`)/g;
+	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17`]*?(?:(?!\2(?!`))`+(?!`))?)*?(\s*\2)(?!`)/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],

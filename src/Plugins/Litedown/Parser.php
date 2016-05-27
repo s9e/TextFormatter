@@ -867,7 +867,7 @@ class Parser extends ParserBase
 		}
 
 		preg_match_all(
-			'/((`+)(?!`)\\s*)(?:[^\\x17]*?[^`\\s])?(\\s*\\2)(?!`)/',
+			'/((`+)(?!`)\\s*)(?:[^\\x17`]*?(?:(?!\\2(?!`))`+(?!`))?)*?(\\s*\\2)(?!`)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
