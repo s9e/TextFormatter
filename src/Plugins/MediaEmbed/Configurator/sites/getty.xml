@@ -29,6 +29,7 @@
 	<host>gty.im</host>
 	<extract>!gty\.im/(?'id'\d+)!</extract>
 	<extract>!gettyimages\.[.\w]+/detail(?=/).*?/(?'id'\d+)!</extract>
+	<extract>!#[-\w]*picture-id(?'id'\d+)$!</extract>
 	<scrape url="http://embed.gettyimages.com/preview/{@id}">
 		<extract>!"height":[ "]*(?'height'\d+)!</extract>
 		<extract>!"width":[ "]*(?'width'\d+)!</extract>
