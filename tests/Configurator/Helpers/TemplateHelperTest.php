@@ -179,6 +179,20 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox loadTemplate() reads HTML as UTF-8
+	*/
+	public function testLoadUnicodeHTML()
+	{
+		$template = '<b title=foo>Pokémon</b>';
+		$xml      = '<b title="foo">Pokémon</b>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
 	* @testdox getParametersFromXSL() tests
 	* @dataProvider getParametersTests
 	*/

@@ -747,6 +747,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() does not break numeric character references
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
+ [x] loadTemplate() reads HTML as UTF-8
  [x] getParametersFromXSL() tests
  [x] getObjectParamsByRegexp() tests
  [x] getCSSNodes() tests

@@ -79,7 +79,7 @@ abstract class TemplateHelper
 		}
 
 		// Fall back to loading it inside a div, as HTML
-		$html = '<html><body><div>' . $template . '</div></body></html>';
+		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
 		$dom->loadHTML($html);
