@@ -1,10 +1,11 @@
-<site name="Reddit comment permalink" homepage="http://www.reddit.com/">
+<site name="Reddit thread and comments" homepage="http://www.reddit.com/">
 	<source>https://www.reddit.com/wiki/embeds</source>
+	<example>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/</example>
 	<example>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>reddit.com</host>
-	<extract>!(?'path'/r/\w+/comments/\w+/\w+/\w+)!</extract>
+	<extract>!(?'path'/r/\w+/comments/\w+/(?:\w+/\w+)?)!</extract>
 	<iframe width="800" height="165" src="https://s9e.github.io/iframe/reddit.min.html#{@path}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
 </site>
