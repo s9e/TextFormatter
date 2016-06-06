@@ -1,3 +1,20 @@
+0.5.2 (2016-06-06)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/702e6fdd6d7874ac25a721173c22435eb03fdc08...c66c9404a0d9ac29bc71d26df0f9c89d31679739)
+
+### Fixed
+
+ - `0c704d7` Litedown: fixed an issue with backticks inside inline code spans
+ - `6e536e6` Litedown: fixed an issue with unbalanced inline code markers
+ - `c66c940` TemplateHelper: fixed an issue with UTF-8 characters in HTML-to-XML conversion
+
+### Changed
+
+ - `bad5c74` BBCodes: updated Highlight.js to 9.4.0
+ - `6e8c811` MediaEmbed: updated Getty Images
+
+
 0.5.1 (2016-05-22)
 ==================
 
