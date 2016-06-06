@@ -1769,7 +1769,7 @@ abstract class TemplateHelper
 			$error = \libxml_get_last_error();
 			throw new InvalidXslException($error->message);
 		}
-		$html = '<html><body><div>' . $template . '</div></body></html>';
+		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 		$useErrors = \libxml_use_internal_errors(\true);
 		$dom->loadHTML($html);
 		\libxml_use_internal_errors($useErrors);
