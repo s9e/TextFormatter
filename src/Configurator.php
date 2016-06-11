@@ -3430,7 +3430,7 @@ class Quick
 			$php[] = '		self::$attributes = [];';
 		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
-		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
+		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s';
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . \var_export($regexp, \true) . ',';
 		$php[] = "			[\$this, 'quick'],";
@@ -3493,7 +3493,7 @@ class Quick
 			$php[] = '		if (isset(self::$dynamic[$id]))';
 			$php[] = '		{';
 			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
-			$php[] = '			return preg_replace($match, $replace, $m[0], 1, $cnt);';
+			$php[] = '			return preg_replace($match, $replace, $m[0], 1);';
 			$php[] = '		}';
 			$php[] = '';
 		}

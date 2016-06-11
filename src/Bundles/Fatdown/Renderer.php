@@ -54,7 +54,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		$xml = $this->decodeSMP($xml);
 		self::$attributes = [];
 		$html = \preg_replace_callback(
-			'(<(?:(?!/)((?>BANDCAMP|DAILYMOTION|F(?>P|ACEBOOK)|H[CER]|IMG|LIVELEAK|S(?>OUNDCLOUD|POTIFY)|TWITCH|VI(?>MEO|NE)|YOUTUBE|html:(?>br|img)))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
+			'(<(?:(?!/)((?>BANDCAMP|DAILYMOTION|F(?>P|ACEBOOK)|H[CER]|IMG|LIVELEAK|S(?>OUNDCLOUD|POTIFY)|TWITCH|VI(?>MEO|NE)|YOUTUBE|html:(?>br|img)))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s',
 			[$this, 'quick'],
 			\preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
@@ -95,7 +95,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		if (isset(self::$dynamic[$id]))
 		{
 			list($match, $replace) = self::$dynamic[$id];
-			return \preg_replace($match, $replace, $m[0], 1, $cnt);
+			return \preg_replace($match, $replace, $m[0], 1);
 		}
 		if (!isset(self::$quickBranches[$id]))
 		{
