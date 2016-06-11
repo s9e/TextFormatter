@@ -420,6 +420,9 @@ class Parser extends ParserBase
 					$quoteDepth = min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
 					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
 				}
+
+				// Overwrite quote markup
+				$this->overwrite($matchPos, $ignoreLen);
 			}
 
 			// Close supernumerary quotes
@@ -901,7 +904,7 @@ class Parser extends ParserBase
 	{
 		$this->links = [];
 
-		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{

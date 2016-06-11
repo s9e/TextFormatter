@@ -99,7 +99,7 @@ function decode(str)
 */
 function decodeTitle(str)
 {
-	return decode(str.replace(/^\s*.(.*?).\s*$/, '$1'));
+	return decode(str.replace(/^\s*.([\s\S]*?).\s*$/, '$1'));
 }
 
 /**
@@ -417,6 +417,9 @@ function matchBlockLevelMarkup()
 				quoteDepth = Math.min(quoteDepth, codeTag.getAttribute('quoteDepth'));
 				ignoreLen  = computeQuoteIgnoreLen(m[1], quoteDepth);
 			}
+
+			// Overwrite quote markup
+			overwrite(matchPos, ignoreLen);
 		}
 
 		// Close supernumerary quotes
@@ -867,7 +870,7 @@ function matchLinkReferences()
 {
 	links = {};
 
-	var m, regexp = /^(?:> ?)* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)\s*("[^\x17]*?"|'[^\x17]*?')?[^\x17]*\n?/gm;
+	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)\s*("[^\x17]*?"|'[^\x17]*?')?[^\x17]*\n?/gm;
 	while (m = regexp.exec(text))
 	{
 		addIgnoreTag(m['index'], m[0].length).setSortPriority(-2);

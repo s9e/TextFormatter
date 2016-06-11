@@ -1008,6 +1008,26 @@ class ParserTest extends Test
 				'[x](x "\\a\\b\\\\\\c\\*\\`")',
 				'<r><p><URL title="\\a\\b\\\\c*`" url="x"><s>[</s>x<e>](x "\\a\\b\\\\\\c\\*\\`")</e></URL></p></r>'
 			],
+			[
+				[
+					'[x](x "a',
+					'b")'
+				],
+				[
+					'<r><p><URL title="a&#10;b" url="x"><s>[</s>x<e>](x "a',
+					'b")</e></URL></p></r>'
+				]
+			],
+			[
+				[
+					'> [x](x "a',
+					'> b")'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p><URL title="a&#10;b" url="x"><s>[</s>x<e>](x "a',
+					'&gt; b")</e></URL></p></QUOTE></r>'
+				]
+			],
 			// Reference links
 			[
 				[
