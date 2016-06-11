@@ -89,7 +89,7 @@ class Quick
 		// Build the regexp that matches all the tags
 		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
-		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
+		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s';
 
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . var_export($regexp, true) . ',';

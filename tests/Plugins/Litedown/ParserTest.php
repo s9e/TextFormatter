@@ -1938,6 +1938,16 @@ class ParserTest extends Test
 				],
 				'<pre><code class="language-html">code</code></pre>'
 			],
+			[
+				[
+					'![alt',
+					'text](img)'
+				],
+				[
+					'<p><img src="img" alt="alt',
+					'text"></p>'
+				]
+			],
 		]);
 	}
 

@@ -57,7 +57,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		$xml = $this->decodeSMP($xml);
 		self::$attributes = [];
 		$html = preg_replace_callback(
-			'(<(?:(?!/)((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|I(?>MG|N(?>DIEGOGO|STAGRAM))|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWIT(?>CH|TER)|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)',
+			'(<(?:(?!/)((?>E|BANDCAMP|DAILYMOTION|FACEBOOK|I(?>MG|N(?>DIEGOGO|STAGRAM))|KICKSTARTER|LIVELEAK|SOUNDCLOUD|TWIT(?>CH|TER)|VI(?>MEO|NE)|WSHH|YOUTUBE))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s',
 			[$this, 'quick'],
 			preg_replace(
 				'(<[eis]>[^<]*</[eis]>)',
