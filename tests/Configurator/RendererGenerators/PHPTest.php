@@ -1443,6 +1443,7 @@ class PHPTest extends Test
 	public function testPlugins($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
 	{
 		$this->configurator->rendering->engine = 'PHP';
+		$this->configurator->rendering->engine->enableQuickRenderer = false;
 		$plugin = $this->configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
