@@ -155,7 +155,7 @@ class Quick
 			$php[] = '		if (isset(self::$dynamic[$id]))';
 			$php[] = '		{';
 			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
-			$php[] = '			return preg_replace($match, $replace, $m[0], 1, $cnt);';
+			$php[] = '			return preg_replace($match, $replace, $m[0], 1);';
 			$php[] = '		}';
 			$php[] = '';
 		}
