@@ -46,7 +46,7 @@ class Parser extends ParserBase
 	{
 		if ($this->config['decodeHtmlEntities'] && \strpos($str, '&') !== \false)
 			$str = \html_entity_decode($str, \ENT_QUOTES, 'UTF-8');
-		$str = \stripslashes(\str_replace("\x1A", '', $str));
+		$str = \str_replace("\x1A", '', $str);
 		if ($this->hasEscapedChars)
 			$str = \strtr(
 				$str,
@@ -208,6 +208,7 @@ class Parser extends ParserBase
 					$quoteDepth = \min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
 					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
 				}
+				$this->overwrite($matchPos, $ignoreLen);
 			}
 			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
 			{
@@ -500,7 +501,7 @@ class Parser extends ParserBase
 	protected function matchLinkReferences()
 	{
 		$this->links = array();
-		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
