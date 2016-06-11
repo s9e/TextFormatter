@@ -71,7 +71,7 @@ function decode(str)
 	{
 		str = html_entity_decode(str);
 	}
-	str = str.replace(/[\\\x1A]/g, '');
+	str = str.replace(/\x1A/g, '');
 
 	if (hasEscapedChars)
 	{

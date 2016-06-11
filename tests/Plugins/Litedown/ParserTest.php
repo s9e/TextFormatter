@@ -1004,6 +1004,10 @@ class ParserTest extends Test
 				'<r><p><URL url="http://example.org/?a=1&amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;b=1)</e></URL><URL url="http://example.org/?a=1&amp;b=1"><s>[</s><e>](http://example.org/?a=1&amp;amp;b=1)</e></URL></p></r>',
 				['decodeHtmlEntities' => true]
 			],
+			[
+				'[x](x "\\a\\b\\\\\\c\\*\\`")',
+				'<r><p><URL title="\\a\\b\\\\c*`" url="x"><s>[</s>x<e>](x "\\a\\b\\\\\\c\\*\\`")</e></URL></p></r>'
+			],
 			// Reference links
 			[
 				[

@@ -108,7 +108,7 @@ class Parser extends ParserBase
 		{
 			$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 		}
-		$str = stripslashes(str_replace("\x1A", '', $str));
+		$str = str_replace("\x1A", '', $str);
 
 		if ($this->hasEscapedChars)
 		{
