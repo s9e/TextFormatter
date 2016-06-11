@@ -710,7 +710,7 @@ function outputTag(tag)
 		attributeNames.forEach(
 			function(attrName)
 			{
-				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()) + '"';
+				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()).replace(/\n/g, '&#10;') + '"';
 			}
 		);
 
