@@ -167,6 +167,19 @@ class OutputHandlingTest extends Test
 				}
 			],
 			[
+				'.',
+				'<r><X x="x&#10;x"/>.</r>',
+				function ($configurator)
+				{
+					$tag = $configurator->tags->add('X');
+					$tag->attributes->add('x');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 0)->setAttribute('x', "x\nx");
+				}
+			],
+			[
 				'foo bar',
 				'<r><X><i>foo</i></X> bar</r>',
 				function ($configurator)
