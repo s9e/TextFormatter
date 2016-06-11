@@ -333,7 +333,7 @@ class Parser
 			$attributes = $tag->getAttributes();
 			\ksort($attributes);
 			foreach ($attributes as $attrName => $attrValue)
-				$this->output .= ' ' . $attrName . '="' . \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8') . '"';
+				$this->output .= ' ' . $attrName . '="' . \str_replace("\n", '&#10;', \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8')) . '"';
 			if ($tag->isSelfClosingTag())
 				if ($tagLen)
 					$this->output .= '>' . $tagText . '</' . $tagName . '>';
