@@ -1,3 +1,24 @@
+0.5.3 (2016-06-14)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/4a7bda3e0ecd74b2d67106695ff9d292a0afa2ff...65d80c1ff686489dfc57a29a18bae1edfca9890a)
+
+### Removed
+
+ - `a55119c` Litedown: removed excessive slash stripping from attributes
+ - `722763d` Removed unused variable from PHP renderers
+
+### Fixed
+
+ - `7ea7d29` Fixed an issue with newlines in attribute values in Quick rendering
+ - `efd1ce3` Litedown: fixed an issue with quote markup inside of multiline attributes
+
+### Changed
+
+ - `65d80c1` Litedown: refactored inline code spans matching
+ - `665444d` Parser: output LF characters as HTML entities in attribute values
+
+
 0.5.2 (2016-06-06)
 ==================
 
