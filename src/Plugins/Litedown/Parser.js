@@ -20,6 +20,22 @@ matchEmphasis();
 matchForcedLineBreaks();
 
 /**
+* Add the tag pair for an inline code span
+*
+* @param {!Object} left  Left marker
+* @param {!Object} right Right marker
+*/
+function addInlineCodeTags(left, right)
+{
+	var startTagPos = left.pos,
+		startTagLen = left.len + left.trimAfter,
+		endTagPos   = right.pos - right.trimBefore,
+		endTagLen   = right.len + right.trimBefore;
+	addTagPair('C', startTagPos, startTagLen, endTagPos, endTagLen);
+	overwrite(startTagPos, endTagPos + endTagLen - startTagPos);
+}
+
+/**
 * Close a list at given offset
 *
 * @param  {!Array}  list
@@ -176,6 +192,39 @@ function getEmphasisByBlock(regexp, pos)
 	blocks.push(block);
 
 	return blocks;
+}
+
+/**
+* Capture and return inline code markers
+*
+* @return {!Array<!Object>}
+*/
+function getInlineCodeMarkers()
+{
+	var pos = text.indexOf('`');
+	if (pos < 0)
+	{
+		return [];
+	}
+
+	var regexp   = /(`+)(\s*)[^\x17`]*/g,
+		trimNext = 0,
+		markers  = [],
+		m;
+	regexp.lastIndex = pos;
+	while (m = regexp.exec(text))
+	{
+		markers.push({
+			pos        : m['index'],
+			len        : m[1].length,
+			trimBefore : trimNext,
+			trimAfter  : m[2].length,
+			next       : m['index'] + m[0].length
+		});
+		trimNext = m[0].length - m[0].replace(/\s+$/, '').length;
+	}
+
+	return markers;
 }
 
 /**
@@ -834,31 +883,28 @@ function matchImages()
 	}
 }
 
+
 /**
-* Match inline code
+* Match inline code spans
 */
 function matchInlineCode()
 {
-	if (text.indexOf('`') === -1)
+	var markers = getInlineCodeMarkers(),
+		i       = -1,
+		cnt     = markers.length;
+	while (++i < (cnt - 1))
 	{
-		return;
-	}
-
-	var m, regexp = /((`+)(?!`)\s*)(?:[^\x17`]*?(?:(?!\2(?!`))`+(?!`))?)*?(\s*\2)(?!`)/g;
-	while (m = regexp.exec(text))
-	{
-		var matchPos    = m['index'],
-			matchLen    = m[0].length,
-			startTagLen = m[1].length,
-			endTagLen   = m[3].length;
-
-		// Ensure that the match isn't preceded by a backtick
-		if (!matchPos || text.charAt(matchPos - 1) !== '`')
+		var pos = markers[i].next,
+			j   = i;
+		while (++j < cnt && markers[j].pos === pos)
 		{
-			addTagPair('C', matchPos, startTagLen, matchPos + matchLen - endTagLen, endTagLen);
-
-			// Overwrite the markup
-			overwrite(matchPos, matchLen);
+			pos = markers[j].next;
+			if (markers[j].len === markers[i].len)
+			{
+				addInlineCodeTags(markers[i], markers[j]);
+				i = j;
+				break;
+			}
 		}
 	}
 }

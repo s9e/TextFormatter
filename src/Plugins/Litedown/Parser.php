@@ -27,6 +27,15 @@ class Parser extends ParserBase
 		$this->matchForcedLineBreaks();
 		unset($this->text);
 	}
+	protected function addInlineCodeTags($left, $right)
+	{
+		$startTagPos = $left['pos'];
+		$startTagLen = $left['len'] + $left['trimAfter'];
+		$endTagPos   = $right['pos'] - $right['trimBefore'];
+		$endTagLen   = $right['len'] + $right['trimBefore'];
+		$this->parser->addTagPair('C', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+		$this->overwrite($startTagPos, $endTagPos + $endTagLen - $startTagPos);
+	}
 	protected function closeList(array $list, $textBoundary)
 	{
 		$this->parser->addEndTag('LIST', $textBoundary, 0)->pairWith($list['listTag']);
@@ -131,6 +140,33 @@ class Parser extends ParserBase
 		}
 		$blocks[] = $block;
 		return $blocks;
+	}
+	protected function getInlineCodeMarkers()
+	{
+		$pos = \strpos($this->text, '`');
+		if ($pos === \false)
+			return array();
+		\preg_match_all(
+			'/(`+)(\\s*)[^\\x17`]*/',
+			$this->text,
+			$matches,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
+			$pos
+		);
+		$trimNext = 0;
+		$markers  = array();
+		foreach ($matches as $m)
+		{
+			$markers[] = array(
+				'pos'        => $m[0][1],
+				'len'        => \strlen($m[1][0]),
+				'trimBefore' => $trimNext,
+				'trimAfter'  => \strlen($m[2][0]),
+				'next'       => $m[0][1] + \strlen($m[0][0])
+			);
+			$trimNext = \strlen($m[0][0]) - \strlen(\rtrim($m[0][0]));
+		}
+		return $markers;
 	}
 	protected function getInlineLinkAttributes(array $m)
 	{
@@ -475,26 +511,22 @@ class Parser extends ParserBase
 	}
 	protected function matchInlineCode()
 	{
-		$pos = \strpos($this->text, '`');
-		if ($pos === \false)
-			return;
-		\preg_match_all(
-			'/((`+)(?!`)\\s*)(?:[^\\x17`]*?(?:(?!\\2(?!`))`+(?!`))?)*?(\\s*\\2)(?!`)/',
-			$this->text,
-			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
-			$pos
-		);
-		foreach ($matches as $m)
+		$markers = $this->getInlineCodeMarkers();
+		$i       = -1;
+		$cnt     = \count($markers);
+		while (++$i < ($cnt - 1))
 		{
-			$matchLen    = \strlen($m[0][0]);
-			$matchPos    = $m[0][1];
-			$startTagLen = \strlen($m[1][0]);
-			$endTagLen   = \strlen($m[3][0]);
-			if (!$matchPos || $this->text[$matchPos - 1] !== '`')
+			$pos = $markers[$i]['next'];
+			$j   = $i;
+			while (++$j < $cnt && $markers[$j]['pos'] === $pos)
 			{
-				$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
-				$this->overwrite($matchPos, $matchLen);
+				$pos = $markers[$j]['next'];
+				if ($markers[$j]['len'] === $markers[$i]['len'])
+				{
+					$this->addInlineCodeTags($markers[$i], $markers[$j]);
+					$i = $j;
+					break;
+				}
 			}
 		}
 	}
