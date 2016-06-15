@@ -227,7 +227,7 @@ foo^bar^baz
 
 ### Inline code
 
-Any text between two markers of same length, entirely composed of backticks <code>&#96;</code> and neither preceded or followed by a backtick. Leading and trailing whitespace is removed.
+Any text between two markers of same length, entirely composed of backticks <code>&#96;</code> and neither preceded or followed by a backtick. Leading and trailing whitespace is removed. The backslash does not escape characters inside of a code span.
 
 ```md
 Single `print("``")` or double ``print("`")``
