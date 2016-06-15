@@ -148,7 +148,7 @@ class Parser extends ParserBase
 			return [];
 		\preg_match_all(
 			'/(`+)(\\s*)[^\\x17`]*/',
-			$this->text,
+			\str_replace("\x1B9", '\\`', $this->text),
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
 			$pos
@@ -518,15 +518,20 @@ class Parser extends ParserBase
 		{
 			$pos = $markers[$i]['next'];
 			$j   = $i;
+			if ($this->text[$markers[$i]['pos']] !== '`')
+			{
+				++$markers[$i]['pos'];
+				--$markers[$i]['len'];
+			}
 			while (++$j < $cnt && $markers[$j]['pos'] === $pos)
 			{
-				$pos = $markers[$j]['next'];
 				if ($markers[$j]['len'] === $markers[$i]['len'])
 				{
 					$this->addInlineCodeTags($markers[$i], $markers[$j]);
 					$i = $j;
 					break;
 				}
+				$pos = $markers[$j]['next'];
 			}
 		}
 	}
