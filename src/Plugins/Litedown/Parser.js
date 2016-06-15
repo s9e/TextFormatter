@@ -210,9 +210,10 @@ function getInlineCodeMarkers()
 	var regexp   = /(`+)(\s*)[^\x17`]*/g,
 		trimNext = 0,
 		markers  = [],
+		_text    = text.replace(/\x1B9/g, '\\`'),
 		m;
 	regexp.lastIndex = pos;
-	while (m = regexp.exec(text))
+	while (m = regexp.exec(_text))
 	{
 		markers.push({
 			pos        : m['index'],
@@ -896,15 +897,21 @@ function matchInlineCode()
 	{
 		var pos = markers[i].next,
 			j   = i;
+		if (text.charAt(markers[i].pos) !== '`')
+		{
+			// Adjust the left marker if its first backtick was escaped
+			++markers[i].pos;
+			--markers[i].len;
+		}
 		while (++j < cnt && markers[j].pos === pos)
 		{
-			pos = markers[j].next;
 			if (markers[j].len === markers[i].len)
 			{
 				addInlineCodeTags(markers[i], markers[j]);
 				i = j;
 				break;
 			}
+			pos = markers[j].next;
 		}
 	}
 }
