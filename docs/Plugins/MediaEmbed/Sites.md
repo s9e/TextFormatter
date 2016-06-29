@@ -368,7 +368,7 @@
 	</tr>
 	<tr>
 		<td><code>reddit</code></td>
-		<td>Reddit thread and comments</td>
+		<td>Reddit threads and comments</td>
 		<td>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/<br/>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</td>
 	</tr>
 	<tr>

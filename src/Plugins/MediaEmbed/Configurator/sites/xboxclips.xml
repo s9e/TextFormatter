@@ -4,6 +4,6 @@
 	<tags><tag>gaming</tag></tags>
 
 	<host>xboxclips.com</host>
-	<extract>!xboxclips\.com/(?'user'[^/]+)/(?'id'[-0-9a-f]+)!</extract>
+	<extract>@xboxclips\.com/(?'user'[^/]+)/(?!screenshots/)(?'id'[-0-9a-f]+)@</extract>
 	<iframe src="//xboxclips.com/{@user}/{@id}/embed"/>
 </site>

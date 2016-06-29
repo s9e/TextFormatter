@@ -3009,6 +3009,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://xboxclips.com/Spl0inker/screenshots/ab54bfa2-b1c8-444f-94da-466b8283ffb9',
+				'<t>http://xboxclips.com/Spl0inker/screenshots/ab54bfa2-b1c8-444f-94da-466b8283ffb9</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('xboxclips');
+				}
+			],
+			[
 				'http://xboxdvr.com/gamer/LOXITANE/video/12463958',
 				'<r><XBOXDVR id="12463958" url="http://xboxdvr.com/gamer/LOXITANE/video/12463958" user="LOXITANE">http://xboxdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
 				[],
