@@ -791,7 +791,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
-				'(<r><SPORTSNET id="4\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
+				'(<r><SPORTSNET id="\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
 				function ($configurator)
 				{
