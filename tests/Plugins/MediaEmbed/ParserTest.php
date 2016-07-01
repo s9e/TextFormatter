@@ -2067,6 +2067,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.hudl.com/video/3/323679/57719969842eb243e47883f8',
+				'<r><HUDL athlete="323679" highlight="57719969842eb243e47883f8" url="http://www.hudl.com/video/3/323679/57719969842eb243e47883f8">http://www.hudl.com/video/3/323679/57719969842eb243e47883f8</HUDL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('hudl');
+				}
+			],
+			[
 				'http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html',
 				'<r><HUMORTVNL id="344063.de-klusjesmannen-zijn-weer-van-de-partij" url="http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html">http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html</HUMORTVNL></r>',
 				[],

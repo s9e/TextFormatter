@@ -199,7 +199,7 @@
 	<tr>
 		<td><code>hudl</code></td>
 		<td>Hudl</td>
-		<td>http://www.hudl.com/athlete/2067184/highlights/163744377<br/>http://www.hudl.com/v/CVmja</td>
+		<td>http://www.hudl.com/athlete/2067184/highlights/163744377<br/>http://www.hudl.com/v/CVmja<br/>http://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>
 	</tr>
 	<tr>
 		<td><code>hulu</code></td>
