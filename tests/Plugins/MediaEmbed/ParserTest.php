@@ -212,6 +212,33 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				// Ensure that the hash is ignored when scraping
+				'http://example.invalid/123#hash',
+				'<r><EXAMPLE id="success" url="http://example.invalid/123#hash">http://example.invalid/123#hash</EXAMPLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
+						'http://example.invalid/123'      => 'success',
+						'http://example.invalid/123#hash' => 'error'
+					]);
+
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'scrape' => [
+								[
+									'match'   => '/./',
+									'extract' => '/(?<id>\\w+)/'
+								],
+							],
+							'iframe' => []
+						]
+					);
+				}
+			],
 		];
 	}
 

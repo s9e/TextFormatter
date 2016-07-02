@@ -352,6 +352,7 @@ class Parser extends ParserBase
 	protected static function wget($url, $cacheDir = null)
 	{
 		$prefix = '';
+		$url    = preg_replace('(#.*)s', '', $url);
 
 		// Return the content from the cache if applicable
 		if (isset($cacheDir) && file_exists($cacheDir))
