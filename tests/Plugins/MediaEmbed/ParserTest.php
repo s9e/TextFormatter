@@ -2202,6 +2202,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html',
+				'<r><JWPLATFORM id="X6tRZpKj-7Y21S9TB" url="http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html">http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html</JWPLATFORM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('jwplatform');
+				}
+			],
+			[
+				'http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi',
+				'<r><JWPLATFORM id="8YYjnBKd-plsZnDJi" url="http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi">http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi</JWPLATFORM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('jwplatform');
+				}
+			],
+			[
+				'http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4',
+				'<r><JWPLATFORM id="5W1gTgdo-wevz73lD" url="http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4">http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4</JWPLATFORM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('jwplatform');
+				}
+			],
+			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
 				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></r>',
 				[],

@@ -247,6 +247,11 @@
 		<td>http://www.izlesene.com/video/lily-allen-url-badman/7600704</td>
 	</tr>
 	<tr>
+		<td><code>jwplatform</code></td>
+		<td>JW Platform</td>
+		<td>http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html<br/>http://content.jwplatform.com/previews/YfTSAegE-L0l35Tsd</td>
+	</tr>
+	<tr>
 		<td><code>khl</code></td>
 		<td>Kontinental Hockey League (КХЛ)</td>
 		<td>http://video.khl.ru/events/233677<br/>http://video.khl.ru/quotes/251237</td>
