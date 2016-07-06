@@ -37,7 +37,9 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testCustomSerializer()
 	{
-		$mock = $this->getMock('stdClass', ['serialize']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['serialize'])
+		             ->getMock();
 		$mock->expects($this->any())
 		     ->method('serialize')
 		     ->will($this->returnValue('O:8:"stdClass":1:{s:6:"foobar";i:1;}'));
@@ -64,7 +66,9 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testParserCallback()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
@@ -105,7 +109,9 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testRendererCallback()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));

@@ -669,7 +669,9 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFinalizeAddHTML5Rules()
 	{
-		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator = $this->getMockBuilder('s9e\\TextFormatter\\Configurator')
+		                     ->setMethods(['addHTML5Rules'])
+		                     ->getMock();
 		$configurator->expects($this->once())
 		             ->method('addHTML5Rules');
 
@@ -681,7 +683,9 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFinalizeAddHTML5RulesOptions()
 	{
-		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator = $this->getMockBuilder('s9e\\TextFormatter\\Configurator')
+		                     ->setMethods(['addHTML5Rules'])
+		                     ->getMock();
 		$configurator->expects($this->once())
 		             ->method('addHTML5Rules')
 		             ->with($this->arrayHasKey('foo'));
@@ -694,7 +698,9 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFinalizeNoAddHTML5Rules()
 	{
-		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator = $this->getMockBuilder('s9e\\TextFormatter\\Configurator')
+		                     ->setMethods(['addHTML5Rules'])
+		                     ->getMock();
 		$configurator->expects($this->never())
 		             ->method('addHTML5Rules');
 
@@ -706,7 +712,9 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFinalizeParserCallback()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
@@ -719,7 +727,9 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFinalizeRendererCallback()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));

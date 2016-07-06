@@ -45,10 +45,9 @@ class ChoiceFilterTest extends Test
 	*/
 	public function testSetValues()
 	{
-		$filter = $this->getMock(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter',
-			['setRegexp']
-		);
+		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
+		             ->setMethods(['setRegexp'])
+		             ->getMock();
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
@@ -62,10 +61,9 @@ class ChoiceFilterTest extends Test
 	*/
 	public function testSetValuesCaseSensitive()
 	{
-		$filter = $this->getMock(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter',
-			['setRegexp']
-		);
+		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
+		             ->setMethods(['setRegexp'])
+		             ->getMock();
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
@@ -79,10 +77,9 @@ class ChoiceFilterTest extends Test
 	*/
 	public function testSetValuesUnicode()
 	{
-		$filter = $this->getMock(
-			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter',
-			['setRegexp']
-		);
+		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
+		             ->setMethods(['setRegexp'])
+		             ->getMock();
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')

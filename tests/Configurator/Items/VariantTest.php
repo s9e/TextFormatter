@@ -104,7 +104,9 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicNoRead()
 	{
-		$callback = $this->getMock('stdClass', ['foo']);
+		$callback = $this->getMockBuilder('stdClass')
+		                 ->setMethods(['foo'])
+		                 ->getMock();
 		$callback->expects($this->never())
 		         ->method('foo');
 
@@ -119,7 +121,9 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicRead()
 	{
-		$callback = $this->getMock('stdClass', ['foo']);
+		$callback = $this->getMockBuilder('stdClass')
+		                 ->setMethods(['foo'])
+		                 ->getMock();
 		$callback->expects($this->once())
 		         ->method('foo')
 		         ->will($this->returnValue(42));
@@ -135,7 +139,9 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicReads()
 	{
-		$callback = $this->getMock('stdClass', ['foo']);
+		$callback = $this->getMockBuilder('stdClass')
+		                 ->setMethods(['foo'])
+		                 ->getMock();
 		$callback->expects($this->exactly(2))
 		         ->method('foo')
 		         ->will($this->onConsecutiveCalls(42, 55));

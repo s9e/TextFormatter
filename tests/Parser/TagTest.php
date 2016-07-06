@@ -297,11 +297,10 @@ class TagTest extends Test
 	public function testInvalidateCascade()
 	{
 		$tag1 = new Tag(Tag::START_TAG, 'X', 0, 0);
-		$tag2 = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Tag',
-			['invalidate'],
-			[Tag::START_TAG, 'X', 0, 0]
-		);
+		$tag2 = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
+		             ->setMethods(['invalidate'])
+		             ->setConstructorArgs([Tag::START_TAG, 'X', 0, 0])
+		             ->getMock();
 		$tag2->expects($this->once())
 		     ->method('invalidate');
 
@@ -314,11 +313,10 @@ class TagTest extends Test
 	*/
 	public function testInvalidateCascadeNotReciprocal()
 	{
-		$tag1 = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Tag',
-			['invalidate'],
-			[Tag::START_TAG, 'X', 0, 0]
-		);
+		$tag1 = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
+		             ->setMethods(['invalidate'])
+		             ->setConstructorArgs([Tag::START_TAG, 'X', 0, 0])
+		             ->getMock();
 		$tag1->expects($this->never())
 		     ->method('invalidate');
 		$tag2 = new Tag(Tag::START_TAG, 'X', 0, 0);
@@ -333,11 +331,10 @@ class TagTest extends Test
 	public function testInvalidateCascadeImmediate()
 	{
 		$tag1 = new Tag(Tag::START_TAG, 'X', 0, 0);
-		$tag2 = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Tag',
-			['invalidate'],
-			[Tag::START_TAG, 'X', 0, 0]
-		);
+		$tag2 = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
+		             ->setMethods(['invalidate'])
+		             ->setConstructorArgs([Tag::START_TAG, 'X', 0, 0])
+		             ->getMock();
 		$tag2->expects($this->once())
 		     ->method('invalidate');
 

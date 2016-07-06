@@ -34,10 +34,9 @@ class MinifierTest extends Test
 		$original = "alert('Hello world')";
 		$expected = "alert('Sup world')";
 
-		$stub = $this->getMock(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Minifier',
-			['getCacheDifferentiator', 'minify']
-		);
+		$stub = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		             ->setMethods(['getCacheDifferentiator', 'minify'])
+		             ->getMock();
 		$stub->expects($this->once())
 		     ->method('minify')
 		     ->with($original)

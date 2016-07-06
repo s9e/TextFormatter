@@ -19,7 +19,9 @@ class CustomTest extends Test
 		$dom = new DOMDocument;
 		$dom->loadXML('<x/>');
 
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($dom->documentElement);

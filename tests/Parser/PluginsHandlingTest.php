@@ -77,17 +77,21 @@ class PluginsHandlingTest extends Test
 		$this->assertArrayNotHasKey('Unknown', $dummy->pluginsConfig);
 	}
 
+	protected function getMockPlugin(Parser $parser)
+	{
+		return $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\ParserBase')
+		            ->setMethods(['parse'])
+		            ->setConstructorArgs([$parser, []])
+		            ->getMock();
+	}
+
 	/**
 	* @testdox executePluginParsers() executes plugins' parse() method
 	*/
 	public function testExecutePluginParsers()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
@@ -102,11 +106,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersDisabledPlugin()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -122,11 +122,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersQuickMatchPass()
 	{
 		$dummy  = new PluginsHandlingDummy('[.....');
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
@@ -142,11 +138,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersQuickMatchFail()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -162,11 +154,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersRegexpPass()
 	{
 		$dummy  = new PluginsHandlingDummy('...foo...');
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
@@ -183,11 +171,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersRegexpFail()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -210,11 +194,7 @@ class PluginsHandlingTest extends Test
 		];
 
 		$dummy  = new PluginsHandlingDummy($text);
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->once())
 		       ->method('parse')
 		       ->with($text, $matches);
@@ -238,11 +218,7 @@ class PluginsHandlingTest extends Test
 		];
 
 		$dummy  = new PluginsHandlingDummy($text);
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 		$plugin->expects($this->once())
 		       ->method('parse')
 		       ->with($text, $matches);
@@ -260,11 +236,7 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersCustomClass()
 	{
 		$dummy  = new PluginsHandlingDummy('...foo...');
-		$plugin = $this->getMock(
-			's9e\\TextFormatter\\Plugins\\ParserBase',
-			['parse'],
-			[$dummy, []]
-		);
+		$plugin = $this->getMockPlugin($dummy);
 
 		$className = get_class($plugin);
 		$dummy->pluginsConfig['Test']['className'] = $className;
@@ -282,7 +254,9 @@ class PluginsHandlingTest extends Test
 	public function testRegisterParserExisting()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$parser = $this->getMock('stdClass', ['foo']);
+		$parser = $this->getMockBuilder('stdClass')
+		               ->setMethods(['foo'])
+		               ->getMock();
 		$parser->expects($this->once())
 		       ->method('foo');
 
@@ -299,7 +273,9 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$dummy->pluginsConfig = [];
 
-		$parser = $this->getMock('stdClass', ['foo']);
+		$parser = $this->getMockBuilder('stdClass')
+		               ->setMethods(['foo'])
+		               ->getMock();
 		$parser->expects($this->once())
 		       ->method('foo');
 

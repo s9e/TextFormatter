@@ -16,9 +16,10 @@ class FirstAvailableTest extends Test
 	*/
 	public function testConstructor()
 	{
-		$minifier1 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
-		$minifier2 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
-
+		$minifier1 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
+		$minifier2 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier = new FirstAvailable($minifier1, $minifier2);
 
 		$this->assertSame($minifier1, $minifier[0]);
@@ -42,12 +43,14 @@ class FirstAvailableTest extends Test
 	*/
 	public function testFirst()
 	{
-		$minifier1 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier1 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier1->expects($this->once())
 		          ->method('minify')
 		          ->will($this->returnValue('/**/'));
 
-		$minifier2 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier2 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier2->expects($this->never())
 		          ->method('minify')
 		          ->will($this->throwException(new Exception));
@@ -64,12 +67,14 @@ class FirstAvailableTest extends Test
 	*/
 	public function testSecond()
 	{
-		$minifier1 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier1 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier1->expects($this->once())
 		          ->method('minify')
 		          ->will($this->throwException(new Exception));
 
-		$minifier2 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier2 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier2->expects($this->once())
 		          ->method('minify')
 		          ->will($this->returnValue('/**/'));
@@ -99,12 +104,14 @@ class FirstAvailableTest extends Test
 	*/
 	public function testAllMinifiersFail()
 	{
-		$minifier1 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier1 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier1->expects($this->once())
 		          ->method('minify')
 		          ->will($this->throwException(new Exception));
 
-		$minifier2 = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$minifier2 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		                  ->getMock();
 		$minifier2->expects($this->once())
 		          ->method('minify')
 		          ->will($this->throwException(new Exception));

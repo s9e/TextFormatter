@@ -153,7 +153,9 @@ class XSLTTest extends Test
 	*/
 	public function testOptimizerCalls()
 	{
-		$mock = $this->getMock('stdClass', ['optimizeTemplate']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['optimizeTemplate'])
+		             ->getMock();
 		$mock->expects($this->at(0))
 		     ->method('optimizeTemplate')
 		     ->with('<b>X</b>')

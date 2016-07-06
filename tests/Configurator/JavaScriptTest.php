@@ -99,7 +99,8 @@ class JavaScriptTest extends Test
 	*/
 	public function testMinifierReturn()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('get')
 		     ->will($this->returnValue('/**/'));

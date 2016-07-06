@@ -900,7 +900,9 @@ class PHPTest extends Test
 	*/
 	public function testCallsOptimizer()
 	{
-		$mock = $this->getMock('stdClass', ['optimize']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['optimize'])
+		             ->getMock();
 		$mock->expects($this->atLeastOnce())
 		     ->method('optimize')
 		     ->will($this->returnArgument(0));
@@ -923,7 +925,9 @@ class PHPTest extends Test
 	*/
 	public function testCallsControlStructuresOptimizer()
 	{
-		$mock = $this->getMock('stdClass', ['optimize']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['optimize'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('optimize')
 		     ->will($this->returnArgument(0));

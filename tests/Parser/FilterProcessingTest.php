@@ -225,7 +225,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTag()
 	{
-		$mock = $this->getMock('stdClass', ['foo', 'bar']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo', 'bar'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(true));
@@ -248,7 +250,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagReturnsFalse()
 	{
-		$mock = $this->getMock('stdClass', ['foo', 'bar']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo', 'bar'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(false));
@@ -270,7 +274,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagCallsLoggerSetTag()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(false));
@@ -281,10 +287,10 @@ class FilterProcessingTest extends Test
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		$dummy->logger = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Logger',
-			['setTag', 'unsetTag']
-		);
+
+		$dummy->logger = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Logger')
+		                      ->setMethods(['setTag', 'unsetTag'])
+		                      ->getMock();
 		$dummy->logger->expects($this->once())
 		              ->method('setTag')
 		              ->with($this->identicalTo($tag));
@@ -299,7 +305,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesParser()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 
 		$tag    = $this->configurator->tags->add('X');
 		$filter = $tag->filterChain->append([$mock, 'foo']);
@@ -322,7 +330,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesOpenTags()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->at(0))
 		     ->method('foo')
 		     ->with([])
@@ -356,7 +366,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesText()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 			     ->method('foo')
 			     ->with('...');
@@ -437,7 +449,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesExecutesFilterChain()
 	{
-		$mock = $this->getMock('stdClass', ['foo', 'bar']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo', 'bar'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -468,7 +482,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesReturnsFalse()
 	{
-		$mock = $this->getMock('stdClass', ['foo', 'bar']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo', 'bar'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -492,7 +508,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesRemovesInvalid()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -518,7 +536,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesReplacesInvalid()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -564,10 +584,9 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesCallsLoggerSetAttribute()
 	{
-		$logger = $this->getMock(
-			's9e\\TextFormatter\\Parser\\Logger',
-			['setAttribute', 'unsetAttribute']
-		);
+		$logger = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Logger')
+		               ->setMethods(['setAttribute', 'unsetAttribute'])
+		               ->getMock();
 		$logger->expects($this->at(0))
 		       ->method('setAttribute')
 		       ->with('foo');
