@@ -15,18 +15,37 @@
 		<match>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/s-@</match>
 		<extract>@soundcloud:tracks:(?'track_id'\d+)@</extract>
 	</scrape>
-	<choose>
-		<when test="@playlist_id">
-			<iframe width="100%" height="450" max-width="900" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/{@playlist_id}"/>
-		</when>
-		<when test="@track_id">
-			<iframe width="100%" height="166" max-width="900" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{@track_id}&amp;secret_token={@secret_token}"/>
-		</when>
-		<when test="not(contains(@id, '://'))">
-			<iframe width="100%" height="166" max-width="900" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/{@id}"/>
-		</when>
-		<otherwise>
-			<iframe width="100%" height="166" max-width="900" src="https://w.soundcloud.com/player/?url={@id}"/>
-		</otherwise>
-	</choose>
+	<scrape>
+		<match>@soundcloud\.com/\w+/sets/@</match>
+		<extract>@soundcloud://playlists:(?'playlist_id'\d+)@</extract>
+	</scrape>
+	<iframe width="100%" max-width="900">
+		<height><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@playlist_id or contains(@id,'/sets/')">450</xsl:when>
+				<xsl:otherwise>166</xsl:otherwise>
+			</xsl:choose>
+		]]></height>
+		<src><![CDATA[
+			<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@playlist_id">
+					<xsl:text>https%3A//api.soundcloud.com/playlists/</xsl:text>
+					<xsl:value-of select="@playlist_id"/>
+				</xsl:when>
+				<xsl:when test="@track_id">
+					<xsl:text>https%3A//api.soundcloud.com/tracks/</xsl:text>
+					<xsl:value-of select="@track_id"/>
+					<xsl:text>&amp;secret_token=</xsl:text>
+					<xsl:value-of select="@secret_token"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="not(contains(@id, '://'))">
+						<xsl:text>https%3A//soundcloud.com/</xsl:text>
+					</xsl:if>
+					<xsl:value-of select="@id"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
 </site>
