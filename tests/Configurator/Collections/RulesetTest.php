@@ -425,6 +425,46 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox createChild() throws an exception on invalid tag name
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
+	*/
+	public function testCreateChildInvalidTagName()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->createChild('foo#bar');
+	}
+
+	/**
+	* @testdox createChild() normalizes tag names
+	*/
+	public function testCreateChildNormalizesTagName()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->createChild('b');
+
+		$this->assertEquals(
+			[
+				'defaultChildRule'      => 'allow',
+				'defaultDescendantRule' => 'allow',
+				'createChild'           => ['B']
+			],
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox createChild() is chainable
+	*/
+	public function testCreateChildChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->createChild('B'));
+	}
+
+	/**
 	* @testdox createParagraphs() accepts a boolean
 	*/
 	public function testCreateParagraphsValid()

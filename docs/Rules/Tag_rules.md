@@ -61,6 +61,10 @@ Forces all ancestor tags X to be closed when this tag is encountered.</dd>
 <dd><i>Example:</i> <code>$tag->rules->closeParent('LI');</code><br/>
 Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following <code>&lt;LI&gt;one&lt;LI&gt;two</code> is interpreted as <code>&lt;LI&gt;one&lt;/LI&gt;&lt;LI&gt;two</code>.</dd>
 
+<dt>createChild</dt>
+<dd><i>Example:</i> <code>$tag->rules->createChild('LI');</code><br/>
+Automatically creates a LI tag at the first non-whitespace position after current tag.</dd>
+
 <dt>createParagraphs</dt>
 <dd><i>Example:</i> <code>$configurator->rootRules->createParagraphs();</code><br/>
 Automatically creates paragraphs (HTML element <code>&lt;p&gt;</code>) to host content. Using two consecutive new lines indicates a paragraph break in content.</dd>

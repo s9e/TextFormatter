@@ -327,6 +327,10 @@ class BBCodesTest extends Test
 				'<ul><li>one</li><li>two</li></ul>'
 			],
 			[
+				'[LIST]one[*]two[/LIST]',
+				'<ul><li>one</li><li>two</li></ul>'
+			],
+			[
 				'[LIST]
 					[*]one
 					[*]two
@@ -338,7 +342,35 @@ class BBCodesTest extends Test
 			],
 			[
 				'[LIST]
+					one
+					[*]two
+				[/LIST]',
+				'<ul>
+					<li>one</li>
+					<li>two</li>
+				</ul>'
+			],
+			[
+				'[LIST]
 					[*][LIST]
+						[*]one.one
+						[*]one.two
+					[/LIST]
+
+					[*]two
+				[/LIST]',
+				'<ul>
+					<li><ul>
+						<li>one.one</li>
+						<li>one.two</li>
+					</ul></li>
+
+					<li>two</li>
+				</ul>'
+			],
+			[
+				'[LIST]
+					[LIST]
 						[*]one.one
 						[*]one.two
 					[/LIST]

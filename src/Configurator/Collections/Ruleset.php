@@ -332,6 +332,17 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add a createChild rule
+	*
+	* @param  string $tagName Name of the target tag
+	* @return self
+	*/
+	public function createChild($tagName)
+	{
+		return $this->addTargetedRule('createChild', $tagName);
+	}
+
+	/**
 	* Add a createParagraphs rule
 	*
 	* @param  bool $bool Whether or not paragraphs should automatically be created to handle content

@@ -297,6 +297,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] closeAncestor() normalizes tag names
  [x] closeParent() normalizes tag names
  [x] closeParent() is chainable
+ [x] createChild() throws an exception on invalid tag name
+ [x] createChild() normalizes tag names
+ [x] createChild() is chainable
  [x] createParagraphs() accepts a boolean
  [x] createParagraphs() throws an exception if its argument is not a boolean
  [x] createParagraphs() is chainable
@@ -1125,6 +1128,8 @@ s9e\TextFormatter\Tests\Configurator\HintGenerator
  [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
  [x] HINT.closeParent=0 by default
  [x] HINT.closeParent=1 if any tag has a closeParent rule
+ [x] HINT.createChild=0 by default
+ [x] HINT.createChild=1 if any tag has a createChild rule
  [x] HINT.fosterParent=0 by default
  [x] HINT.fosterParent=1 if any tag has a fosterParent rule
  [x] HINT.namespaces=0 by default

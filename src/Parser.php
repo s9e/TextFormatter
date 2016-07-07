@@ -1355,6 +1355,26 @@ class Parser
 	}
 
 	/**
+	* Apply the createChild rules associated with given tag
+	*
+	* @param  Tag  $tag Tag
+	* @return void
+	*/
+	protected function createChild(Tag $tag)
+	{
+		$tagConfig = $this->tagsConfig[$tag->getName()];
+		if (isset($tagConfig['rules']['createChild']))
+		{
+			$priority = -1000;
+			$tagPos   = $this->pos + strspn($this->text, " \n\r\t", $this->pos);
+			foreach ($tagConfig['rules']['createChild'] as $tagName)
+			{
+				$this->addStartTag($tagName, $tagPos, 0)->setSortPriority(++$priority);
+			}
+		}
+	}
+
+	/**
 	* Apply fosterParent rules associated with given tag
 	*
 	* NOTE: this rule has the potential for creating an unbounded loop, either if a tag tries to
@@ -1752,6 +1772,9 @@ class Parser
 		// This tag is valid, output it and update the context
 		$this->outputTag($tag);
 		$this->pushContext($tag);
+
+		// Apply the createChild rules if applicable
+		$this->createChild($tag);
 	}
 
 	/**

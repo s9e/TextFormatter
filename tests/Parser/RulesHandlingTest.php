@@ -111,6 +111,47 @@ class RulesHandlingTest extends Test
 				}
 			],
 			[
+				'xy',
+				'<r><X><Y>xy</Y></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->createChild('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+				}
+			],
+			[
+				'x y',
+				'<r><X><s>x</s> <Y>y</Y></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->createChild('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+				}
+			],
+			[
+				'x z',
+				'<r><X><s>x</s> <Y><Z>z</Z></Y></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->createChild('Y');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Z', 2, 0);
+				}
+			],
+			[
 				'xx',
 				'<t>xx</t>',
 				function ($configurator)

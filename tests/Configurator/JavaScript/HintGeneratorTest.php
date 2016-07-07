@@ -95,6 +95,23 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox HINT.createChild=0 by default
+	*/
+	public function testHintCreateChildFalse()
+	{
+		$this->assertHintsContain('HINT.createChild=0');
+	}
+
+	/**
+	* @testdox HINT.createChild=1 if any tag has a createChild rule
+	*/
+	public function testHintCreateChildTrue()
+	{
+		$this->configurator->tags->add('X')->rules->createChild('Y');
+		$this->assertHintsContain('HINT.createChild=1');
+	}
+
+	/**
 	* @testdox HINT.fosterParent=0 by default
 	*/
 	public function testHintFosterParentFalse()
