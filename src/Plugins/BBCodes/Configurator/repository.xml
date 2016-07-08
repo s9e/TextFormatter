@@ -284,7 +284,7 @@
 	</bbcode>
 
 	<bbcode name="LIST">
-		<usage>[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext} start={UINT;optional}]{TEXT}[/LIST]</usage>
+		<usage>[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext} start={UINT;optional} #createChild=LI]{TEXT}[/LIST]</usage>
 		<template><![CDATA[
 			<xsl:choose>
 				<xsl:when test="not(@type)">
