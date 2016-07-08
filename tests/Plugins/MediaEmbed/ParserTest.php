@@ -482,7 +482,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.hudl.com/v/CVmja',
-				'<r><HUDL athlete="2122944" highlight="206727383" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
+				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
 				[],
 				function ($configurator)
 				{
