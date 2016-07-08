@@ -1746,55 +1746,110 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 abstract class TemplateHelper
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
-	public static function loadTemplate($template)
+	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$dom = new DOMDocument;
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$success   = $dom->loadXML($xml);
-		\libxml_use_internal_errors($useErrors);
-		if ($success)
-			return $dom;
-		$tmp = \preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template);
-		$tmp = \preg_replace_callback(
-			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
-			function ($m)
-			{
-				return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
-			},
-			$tmp
-		);
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $tmp . '</xsl:template>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$success   = $dom->loadXML($xml);
-		\libxml_use_internal_errors($useErrors);
-		if ($success)
-			return $dom;
-		if (\strpos($template, '<xsl:') !== \false)
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach ($xpath->query('//@*') as $attribute)
+			if (\preg_match($regexp, $attribute->name))
+				$nodes[] = $attribute;
+		foreach ($xpath->query('//xsl:attribute') as $attribute)
+			if (\preg_match($regexp, $attribute->getAttribute('name')))
+				$nodes[] = $attribute;
+		foreach ($xpath->query('//xsl:copy-of') as $node)
 		{
-			$error = \libxml_get_last_error();
-			throw new InvalidXslException($error->message);
+			$expr = $node->getAttribute('select');
+			if (\preg_match('/^@(\\w+)$/', $expr, $m)
+			 && \preg_match($regexp, $m[1]))
+				$nodes[] = $node;
 		}
-		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$dom->loadHTML($html);
-		\libxml_use_internal_errors($useErrors);
-		$xml = self::innerXML($dom->documentElement->firstChild->firstChild);
-		return self::loadTemplate($xml);
+		return $nodes;
 	}
-	public static function saveTemplate(DOMDocument $dom)
+	public static function getCSSNodes(DOMDocument $dom)
 	{
-		return self::innerXML($dom->documentElement);
+		$regexp = '/^style$/i';
+		$nodes  = \array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^style$/i')
+		);
+		return $nodes;
 	}
-	protected static function innerXML(DOMElement $element)
+	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xml = $element->ownerDocument->saveXML($element);
-		$pos = 1 + \strpos($xml, '>');
-		$len = \strrpos($xml, '<') - $pos;
-		if ($len < 1)
-			return '';
-		$xml = \substr($xml, $pos, $len);
-		return $xml;
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach ($xpath->query('//*') as $element)
+			if (\preg_match($regexp, $element->localName))
+				$nodes[] = $element;
+		foreach ($xpath->query('//xsl:element') as $element)
+			if (\preg_match($regexp, $element->getAttribute('name')))
+				$nodes[] = $element;
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+		{
+			$expr = $node->getAttribute('select');
+			if (\preg_match('/^\\w+$/', $expr)
+			 && \preg_match($regexp, $expr))
+				$nodes[] = $node;
+		}
+		return $nodes;
+	}
+	public static function getJSNodes(DOMDocument $dom)
+	{
+		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
+		$nodes  = \array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^script$/i')
+		);
+		return $nodes;
+	}
+	public static function getMetaElementsRegexp(array $templates)
+	{
+		$exprs = array();
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . \implode('', $templates) . '</xsl:template>';
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+		$xpath = new DOMXPath($dom);
+		$query = '//xsl:*/@*[contains("matchselectest", name())]';
+		foreach ($xpath->query($query) as $attribute)
+			$exprs[] = $attribute->value;
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
+		foreach ($xpath->query($query) as $attribute)
+			foreach (AVTHelper::parse($attribute->value) as $token)
+				if ($token[0] === 'expression')
+					$exprs[] = $token[1];
+		$tagNames = array(
+			'e' => \true,
+			'i' => \true,
+			's' => \true
+		);
+		foreach (\array_keys($tagNames) as $tagName)
+			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
+				unset($tagNames[$tagName]);
+		$regexp = '(\\b(?<![$@])(' . \implode('|', \array_keys($tagNames)) . ')(?!-)\\b)';
+		\preg_match_all($regexp, \implode("\n", $exprs), $m);
+		foreach ($m[0] as $tagName)
+			unset($tagNames[$tagName]);
+		if (empty($tagNames))
+			return '((?!))';
+		return '(<' . RegexpBuilder::fromList(\array_keys($tagNames)) . '>[^<]*</[^>]+>)';
+	}
+	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
+	{
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
+			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
+			{
+				if (\strtolower($attribute->parentNode->localName) === 'embed')
+					$nodes[] = $attribute;
+			}
+			elseif ($xpath->evaluate('ancestor::embed', $attribute))
+				$nodes[] = $attribute;
+		foreach ($dom->getElementsByTagName('object') as $object)
+			foreach ($object->getElementsByTagName('param') as $param)
+				if (\preg_match($regexp, $param->getAttribute('name')))
+					$nodes[] = $param;
+		return $nodes;
 	}
 	public static function getParametersFromXSL($xsl)
 	{
@@ -1833,80 +1888,6 @@ abstract class TemplateHelper
 		\sort($paramNames);
 		return $paramNames;
 	}
-	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach ($xpath->query('//@*') as $attribute)
-			if (\preg_match($regexp, $attribute->name))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-			if (\preg_match($regexp, $attribute->getAttribute('name')))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^@(\\w+)$/', $expr, $m)
-			 && \preg_match($regexp, $m[1]))
-				$nodes[] = $node;
-		}
-		return $nodes;
-	}
-	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach ($xpath->query('//*') as $element)
-			if (\preg_match($regexp, $element->localName))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:element') as $element)
-			if (\preg_match($regexp, $element->getAttribute('name')))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^\\w+$/', $expr)
-			 && \preg_match($regexp, $expr))
-				$nodes[] = $node;
-		}
-		return $nodes;
-	}
-	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
-			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
-			{
-				if (\strtolower($attribute->parentNode->localName) === 'embed')
-					$nodes[] = $attribute;
-			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
-				$nodes[] = $attribute;
-		foreach ($dom->getElementsByTagName('object') as $object)
-			foreach ($object->getElementsByTagName('param') as $param)
-				if (\preg_match($regexp, $param->getAttribute('name')))
-					$nodes[] = $param;
-		return $nodes;
-	}
-	public static function getCSSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^style$/i';
-		$nodes  = \array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^style$/i')
-		);
-		return $nodes;
-	}
-	public static function getJSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
-		$nodes  = \array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^script$/i')
-		);
-		return $nodes;
-	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
 		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap)|src)$/i';
@@ -1918,6 +1899,79 @@ abstract class TemplateHelper
 				$nodes[] = $node;
 		}
 		return $nodes;
+	}
+	public static function highlightNode(DOMNode $node, $prepend, $append)
+	{
+		$uniqid = \uniqid('_');
+		if ($node instanceof DOMAttr)
+			$node->value .= $uniqid;
+		elseif ($node instanceof DOMElement)
+			$node->setAttribute($uniqid, '');
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+			$node->data .= $uniqid;
+		$dom = $node->ownerDocument;
+		$dom->formatOutput = \true;
+		$docXml = self::innerXML($dom->documentElement);
+		$docXml = \trim(\str_replace("\n  ", "\n", $docXml));
+		$nodeHtml = \htmlspecialchars(\trim($dom->saveXML($node)));
+		$docHtml  = \htmlspecialchars($docXml);
+		$html = \str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
+		if ($node instanceof DOMAttr)
+		{
+			$node->value = \substr($node->value, 0, -\strlen($uniqid));
+			$html = \str_replace($uniqid, '', $html);
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->removeAttribute($uniqid);
+			$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+			$html = \str_replace($uniqid, '', $html);
+		}
+		return $html;
+	}
+	public static function loadTemplate($template)
+	{
+		$dom = self::loadTemplateAsXML($template);
+		if ($dom)
+			return $dom;
+		$dom = self::loadTemplateAsXML(self::fixEntities($template));
+		if ($dom)
+			return $dom;
+		if (\strpos($template, '<xsl:') !== \false)
+		{
+			$error = \libxml_get_last_error();
+			throw new InvalidXslException($error->message);
+		}
+		return self::loadTemplateAsHTML($template);
+	}
+	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
+	{
+		$tagNames = array();
+		$expr = 'name()';
+		foreach ($templates as $tagName => $template)
+		{
+			$elName = \strtolower(\preg_replace('/^[^:]+:/', '', $tagName));
+			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+			{
+				$tagNames[] = $tagName;
+				if (\strpos($tagName, ':') !== \false)
+					$expr = 'local-name()';
+			}
+		}
+		if (\count($tagNames) < $minCount)
+			return;
+		$chars = \preg_replace('/[^A-Z]+/', '', \count_chars(\implode('', $tagNames), 3));
+		if (\is_string($chars) && $chars !== '')
+			$expr = 'translate(' . $expr . ",'" . $chars . "','" . \strtolower($chars) . "')";
+		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
+		foreach ($tagNames as $tagName)
+			$templates[$tagName] = $template;
 	}
 	public static function replaceTokens($template, $regexp, $fn)
 	{
@@ -1992,94 +2046,61 @@ abstract class TemplateHelper
 		}
 		return self::saveTemplate($dom);
 	}
-	public static function highlightNode(DOMNode $node, $prepend, $append)
+	public static function saveTemplate(DOMDocument $dom)
 	{
-		$uniqid = \uniqid('_');
-		if ($node instanceof DOMAttr)
-			$node->value .= $uniqid;
-		elseif ($node instanceof DOMElement)
-			$node->setAttribute($uniqid, '');
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-			$node->data .= $uniqid;
-		$dom = $node->ownerDocument;
-		$dom->formatOutput = \true;
-		$docXml = self::innerXML($dom->documentElement);
-		$docXml = \trim(\str_replace("\n  ", "\n", $docXml));
-		$nodeHtml = \htmlspecialchars(\trim($dom->saveXML($node)));
-		$docHtml  = \htmlspecialchars($docXml);
-		$html = \str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
-		if ($node instanceof DOMAttr)
-		{
-			$node->value = \substr($node->value, 0, -\strlen($uniqid));
-			$html = \str_replace($uniqid, '', $html);
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->removeAttribute($uniqid);
-			$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
-		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-			$html = \str_replace($uniqid, '', $html);
-		}
-		return $html;
+		return self::innerXML($dom->documentElement);
 	}
-	public static function getMetaElementsRegexp(array $templates)
+	protected static function fixEntities($template)
 	{
-		$exprs = array();
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . \implode('', $templates) . '</xsl:template>';
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-		$xpath = new DOMXPath($dom);
-		$query = '//xsl:*/@*[contains("matchselectest", name())]';
-		foreach ($xpath->query($query) as $attribute)
-			$exprs[] = $attribute->value;
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
-		foreach ($xpath->query($query) as $attribute)
-			foreach (AVTHelper::parse($attribute->value) as $token)
-				if ($token[0] === 'expression')
-					$exprs[] = $token[1];
-		$tagNames = array(
-			'e' => \true,
-			'i' => \true,
-			's' => \true
-		);
-		foreach (\array_keys($tagNames) as $tagName)
-			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
-				unset($tagNames[$tagName]);
-		$regexp = '(\\b(?<![$@])(' . \implode('|', \array_keys($tagNames)) . ')(?!-)\\b)';
-		\preg_match_all($regexp, \implode("\n", $exprs), $m);
-		foreach ($m[0] as $tagName)
-			unset($tagNames[$tagName]);
-		if (empty($tagNames))
-			return '((?!))';
-		return '(<' . RegexpBuilder::fromList(\array_keys($tagNames)) . '>[^<]*</[^>]+>)';
-	}
-	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
-	{
-		$tagNames = array();
-		$expr = 'name()';
-		foreach ($templates as $tagName => $template)
-		{
-			$elName = \strtolower(\preg_replace('/^[^:]+:/', '', $tagName));
-			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+		return \preg_replace_callback(
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
+			function ($m)
 			{
-				$tagNames[] = $tagName;
-				if (\strpos($tagName, ':') !== \false)
-					$expr = 'local-name()';
-			}
-		}
-		if (\count($tagNames) < $minCount)
-			return;
-		$chars = \preg_replace('/[^A-Z]+/', '', \count_chars(\implode('', $tagNames), 3));
-		if (\is_string($chars) && $chars !== '')
-			$expr = 'translate(' . $expr . ",'" . $chars . "','" . \strtolower($chars) . "')";
-		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
-		foreach ($tagNames as $tagName)
-			$templates[$tagName] = $template;
+				return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
+			},
+			\preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
+		);
+	}
+	protected static function innerXML(DOMElement $element)
+	{
+		$xml = $element->ownerDocument->saveXML($element);
+		$pos = 1 + \strpos($xml, '>');
+		$len = \strrpos($xml, '<') - $pos;
+		if ($len < 1)
+			return '';
+		$xml = \substr($xml, $pos, $len);
+		return $xml;
+	}
+	protected static function loadTemplateAsHTML($template)
+	{
+		$dom  = new DOMDocument;
+		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom->loadHTML($html);
+		self::removeInvalidAttributes($dom);
+		\libxml_use_internal_errors($useErrors);
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . self::innerXML($dom->documentElement->firstChild->firstChild) . '</xsl:template>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom->loadXML($xml);
+		\libxml_use_internal_errors($useErrors);
+		return $dom;
+	}
+	protected static function loadTemplateAsXML($template)
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom       = new DOMDocument;
+		$success   = $dom->loadXML($xml);
+		self::removeInvalidAttributes($dom);
+		\libxml_use_internal_errors($useErrors);
+		return ($success) ? $dom : \false;
+	}
+	protected static function removeInvalidAttributes(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//@*') as $attribute)
+			if (!\preg_match('(^(?:[-\\w]+:)?(?!\\d)[-\\w]+$)D', $attribute->nodeName))
+				$attribute->parentNode->removeAttributeNode($attribute);
 	}
 }
 
@@ -8073,6 +8094,10 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function closeParent($tagName)
 	{
 		return $this->addTargetedRule('closeParent', $tagName);
+	}
+	public function createChild($tagName)
+	{
+		return $this->addTargetedRule('createChild', $tagName);
 	}
 	public function createParagraphs($bool = \true)
 	{
