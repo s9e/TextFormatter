@@ -26,107 +26,249 @@ abstract class TemplateHelper
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* Load a template as an xsl:template node
+	* Return all attributes (literal or generated) that match given regexp
 	*
-	* Will attempt to load it as XML first, then as HTML as a fallback. Either way, an xsl:template
-	* node is returned
-	*
-	* @param  string      $template
-	* @return DOMDocument
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp Regexp
+	* @return array               Array of DOMNode instances
 	*/
-	public static function loadTemplate($template)
+	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$dom = new DOMDocument;
+		$xpath = new DOMXPath($dom);
+		$nodes = [];
 
-		// First try as XML
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$success   = $dom->loadXML($xml);
-		libxml_use_internal_errors($useErrors);
-
-		if ($success)
+		// Get literal attributes
+		foreach ($xpath->query('//@*') as $attribute)
 		{
-			return $dom;
-		}
-
-		// Try fixing unescaped ampersands and replacing HTML entities
-		$tmp = preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template);
-		$tmp = preg_replace_callback(
-			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
-			function ($m)
+			if (preg_match($regexp, $attribute->name))
 			{
-				return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
-			},
-			$tmp
+				$nodes[] = $attribute;
+			}
+		}
+
+		// Get generated attributes
+		foreach ($xpath->query('//xsl:attribute') as $attribute)
+		{
+			if (preg_match($regexp, $attribute->getAttribute('name')))
+			{
+				$nodes[] = $attribute;
+			}
+		}
+
+		// Get attributes created with <xsl:copy-of/>
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+		{
+			$expr = $node->getAttribute('select');
+
+			if (preg_match('/^@(\\w+)$/', $expr, $m)
+			 && preg_match($regexp, $m[1]))
+			{
+				$nodes[] = $node;
+			}
+		}
+
+		return $nodes;
+	}
+
+	/**
+	* Return all DOMNodes whose content is CSS
+	*
+	* @param  DOMDocument $dom Document
+	* @return array            Array of DOMNode instances
+	*/
+	public static function getCSSNodes(DOMDocument $dom)
+	{
+		$regexp = '/^style$/i';
+		$nodes  = array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^style$/i')
 		);
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $tmp . '</xsl:template>';
 
-		$useErrors = libxml_use_internal_errors(true);
-		$success   = $dom->loadXML($xml);
-		libxml_use_internal_errors($useErrors);
-
-		if ($success)
-		{
-			return $dom;
-		}
-
-		// If the template contains an XSL element, abort now. Otherwise, try reparsing it as HTML
-		if (strpos($template, '<xsl:') !== false)
-		{
-			$error = libxml_get_last_error();
-			throw new InvalidXslException($error->message);
-		}
-
-		// Fall back to loading it inside a div, as HTML
-		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$dom->loadHTML($html);
-		libxml_use_internal_errors($useErrors);
-
-		// Now dump the thing as XML and reload it with the proper namespace declaration
-		$xml = self::innerXML($dom->documentElement->firstChild->firstChild);
-
-		return self::loadTemplate($xml);
+		return $nodes;
 	}
 
 	/**
-	* Serialize a loaded template back into a string
+	* Return all elements (literal or generated) that match given regexp
 	*
-	* NOTE: removes the root node created by loadTemplate()
-	*
-	* @param  DOMDocument $dom
-	* @return string
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp Regexp
+	* @return array               Array of DOMNode instances
 	*/
-	public static function saveTemplate(DOMDocument $dom)
+	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		return self::innerXML($dom->documentElement);
+		$xpath = new DOMXPath($dom);
+		$nodes = [];
+
+		// Get literal attributes
+		foreach ($xpath->query('//*') as $element)
+		{
+			if (preg_match($regexp, $element->localName))
+			{
+				$nodes[] = $element;
+			}
+		}
+
+		// Get generated elements
+		foreach ($xpath->query('//xsl:element') as $element)
+		{
+			if (preg_match($regexp, $element->getAttribute('name')))
+			{
+				$nodes[] = $element;
+			}
+		}
+
+		// Get elements created with <xsl:copy-of/>
+		// NOTE: this method of creating elements is disallowed by default
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+		{
+			$expr = $node->getAttribute('select');
+
+			if (preg_match('/^\\w+$/', $expr)
+			 && preg_match($regexp, $expr))
+			{
+				$nodes[] = $node;
+			}
+		}
+
+		return $nodes;
 	}
 
 	/**
-	* Get the XML content of an element
+	* Return all DOMNodes whose content is JavaScript
 	*
-	* @param  DOMElement $element
+	* @param  DOMDocument $dom Document
+	* @return array            Array of DOMNode instances
+	*/
+	public static function getJSNodes(DOMDocument $dom)
+	{
+		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
+		$nodes  = array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^script$/i')
+		);
+
+		return $nodes;
+	}
+
+	/**
+	* Get the regexp used to remove meta elements from the intermediate representation
+	*
+	* @param  array  $templates
 	* @return string
 	*/
-	protected static function innerXML(DOMElement $element)
+	public static function getMetaElementsRegexp(array $templates)
 	{
-		// Serialize the XML then remove the outer element
-		$xml = $element->ownerDocument->saveXML($element);
+		$exprs = [];
 
-		$pos = 1 + strpos($xml, '>');
-		$len = strrpos($xml, '<') - $pos;
+		// Coalesce all templates and load them into DOM
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . implode('', $templates) . '</xsl:template>';
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+		$xpath = new DOMXPath($dom);
 
-		// If the template is empty, return an empty string
-		if ($len < 1)
+		// Collect the values of all the "match", "select" and "test" attributes of XSL elements
+		$query = '//xsl:*/@*[contains("matchselectest", name())]';
+		foreach ($xpath->query($query) as $attribute)
 		{
-			return '';
+			$exprs[] = $attribute->value;
 		}
 
-		$xml = substr($xml, $pos, $len);
+		// Collect the XPath expressions used in all the attributes of non-XSL elements
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			foreach (AVTHelper::parse($attribute->value) as $token)
+			{
+				if ($token[0] === 'expression')
+				{
+					$exprs[] = $token[1];
+				}
+			}
+		}
 
-		return $xml;
+		// Names of the meta elements
+		$tagNames = [
+			'e' => true,
+			'i' => true,
+			's' => true
+		];
+
+		// In the highly unlikely event the meta elements are rendered, we remove them from the list
+		foreach (array_keys($tagNames) as $tagName)
+		{
+			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
+			{
+				unset($tagNames[$tagName]);
+			}
+		}
+
+		// Create a regexp that matches the tag names used as element names, e.g. "s" in "//s" but
+		// not in "@s" or "$s"
+		$regexp = '(\\b(?<![$@])(' . implode('|', array_keys($tagNames)) . ')(?!-)\\b)';
+
+		// Now look into all of the expressions that we've collected
+		preg_match_all($regexp, implode("\n", $exprs), $m);
+
+		foreach ($m[0] as $tagName)
+		{
+			unset($tagNames[$tagName]);
+		}
+
+		if (empty($tagNames))
+		{
+			// Always-false regexp
+			return '((?!))';
+		}
+
+		return '(<' . RegexpBuilder::fromList(array_keys($tagNames)) . '>[^<]*</[^>]+>)';
+	}
+
+	/**
+	* Return all elements (literal or generated) that match given regexp
+	*
+	* Will return all <param/> descendants of <object/> and all attributes of <embed/> whose name
+	* matches given regexp. This method will NOT catch <param/> elements whose 'name' attribute is
+	* set via an <xsl:attribute/>
+	*
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp
+	* @return array               Array of DOMNode instances
+	*/
+	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
+	{
+		$xpath = new DOMXPath($dom);
+		$nodes = [];
+
+		// Collect attributes from <embed/> elements
+		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
+		{
+			if ($attribute->nodeType === XML_ATTRIBUTE_NODE)
+			{
+				if (strtolower($attribute->parentNode->localName) === 'embed')
+				{
+					$nodes[] = $attribute;
+				}
+			}
+			elseif ($xpath->evaluate('ancestor::embed', $attribute))
+			{
+				// Assuming <xsl:attribute/> or <xsl:copy-of/>
+				$nodes[] = $attribute;
+			}
+		}
+
+		// Collect <param/> descendants of <object/> elements
+		foreach ($dom->getElementsByTagName('object') as $object)
+		{
+			foreach ($object->getElementsByTagName('param') as $param)
+			{
+				if (preg_match($regexp, $param->getAttribute('name')))
+				{
+					$nodes[] = $param;
+				}
+			}
+		}
+
+		return $nodes;
 	}
 
 	/**
@@ -204,179 +346,6 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Return all attributes (literal or generated) that match given regexp
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//@*') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->name))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get generated attributes
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->getAttribute('name')))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get attributes created with <xsl:copy-of/>
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-
-			if (preg_match('/^@(\\w+)$/', $expr, $m)
-			 && preg_match($regexp, $m[1]))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
-	}
-
-	/**
-	* Return all elements (literal or generated) that match given regexp
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//*') as $element)
-		{
-			if (preg_match($regexp, $element->localName))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get generated elements
-		foreach ($xpath->query('//xsl:element') as $element)
-		{
-			if (preg_match($regexp, $element->getAttribute('name')))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get elements created with <xsl:copy-of/>
-		// NOTE: this method of creating elements is disallowed by default
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-
-			if (preg_match('/^\\w+$/', $expr)
-			 && preg_match($regexp, $expr))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
-	}
-
-	/**
-	* Return all elements (literal or generated) that match given regexp
-	*
-	* Will return all <param/> descendants of <object/> and all attributes of <embed/> whose name
-	* matches given regexp. This method will NOT catch <param/> elements whose 'name' attribute is
-	* set via an <xsl:attribute/>
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Collect attributes from <embed/> elements
-		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
-		{
-			if ($attribute->nodeType === XML_ATTRIBUTE_NODE)
-			{
-				if (strtolower($attribute->parentNode->localName) === 'embed')
-				{
-					$nodes[] = $attribute;
-				}
-			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
-			{
-				// Assuming <xsl:attribute/> or <xsl:copy-of/>
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Collect <param/> descendants of <object/> elements
-		foreach ($dom->getElementsByTagName('object') as $object)
-		{
-			foreach ($object->getElementsByTagName('param') as $param)
-			{
-				if (preg_match($regexp, $param->getAttribute('name')))
-				{
-					$nodes[] = $param;
-				}
-			}
-		}
-
-		return $nodes;
-	}
-
-	/**
-	* Return all DOMNodes whose content is CSS
-	*
-	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
-	*/
-	public static function getCSSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^style$/i';
-		$nodes  = array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^style$/i')
-		);
-
-		return $nodes;
-	}
-
-	/**
-	* Return all DOMNodes whose content is JavaScript
-	*
-	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
-	*/
-	public static function getJSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
-		$nodes  = array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^script$/i')
-		);
-
-		return $nodes;
-	}
-
-	/**
 	* Return all DOMNodes whose content is an URL
 	*
 	* NOTE: it will also return HTML4 nodes whose content is an URI
@@ -403,6 +372,166 @@ abstract class TemplateHelper
 		}
 
 		return $nodes;
+	}
+
+	/**
+	* Highlight the source of a node inside of a template
+	*
+	* @param  DOMNode $node    Node to highlight
+	* @param  string  $prepend HTML to prepend
+	* @param  string  $append  HTML to append
+	* @return string           Template's source, as HTML
+	*/
+	public static function highlightNode(DOMNode $node, $prepend, $append)
+	{
+		// Add a unique token to the node
+		$uniqid = uniqid('_');
+		if ($node instanceof DOMAttr)
+		{
+			$node->value .= $uniqid;
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->setAttribute($uniqid, '');
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+		}
+
+		$dom = $node->ownerDocument;
+		$dom->formatOutput = true;
+
+		$docXml = self::innerXML($dom->documentElement);
+		$docXml = trim(str_replace("\n  ", "\n", $docXml));
+
+		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
+		$docHtml  = htmlspecialchars($docXml);
+
+		// Enclose the node's representation in our hilighting HTML
+		$html = str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
+
+		// Remove the unique token from HTML and from the node
+		if ($node instanceof DOMAttr)
+		{
+			$node->value = substr($node->value, 0, -strlen($uniqid));
+			$html = str_replace($uniqid, '', $html);
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->removeAttribute($uniqid);
+			$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+			$html = str_replace($uniqid, '', $html);
+		}
+
+		return $html;
+	}
+
+	/**
+	* Load a template as an xsl:template node
+	*
+	* Will attempt to load it as XML first, then as HTML as a fallback. Either way, an xsl:template
+	* node is returned
+	*
+	* @param  string      $template
+	* @return DOMDocument
+	*/
+	public static function loadTemplate($template)
+	{
+		$dom = self::loadTemplateAsXML($template);
+		if ($dom)
+		{
+			return $dom;
+		}
+
+		$dom = self::loadTemplateAsXML(self::fixEntities($template));
+		if ($dom)
+		{
+			return $dom;
+		}
+
+		// If the template contains an XSL element, abort now. Otherwise, try reparsing it as HTML
+		if (strpos($template, '<xsl:') !== false)
+		{
+			$error = libxml_get_last_error();
+			throw new InvalidXslException($error->message);
+		}
+
+		return self::loadTemplateAsHTML($template);
+	}
+
+	/**
+	* Replace simple templates (in an array, in-place) with a common template
+	*
+	* In some situations, renderers can take advantage of multiple tags having the same template. In
+	* any configuration, there's almost always a number of "simple" tags that are rendered as an
+	* HTML element of the same name with no HTML attributes. For instance, the system tag "p" used
+	* for paragraphs, "B" tags used for "b" HTML elements, etc... This method replaces those
+	* templates with a common template that uses a dynamic element name based on the tag's name,
+	* either its nodeName or localName depending on whether the tag is namespaced, and normalized to
+	* lowercase using XPath's translate() function
+	*
+	* @param  array<string> &$templates Associative array of [tagName => template]
+	* @param  integer       $minCount
+	* @return void
+	*/
+	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
+	{
+		$tagNames = [];
+
+		// Prepare the XPath expression used for the element's name
+		$expr = 'name()';
+
+		// Identify "simple" tags, whose template is one element of the same name. Their template
+		// can be replaced with a dynamic template shared by all the simple tags
+		foreach ($templates as $tagName => $template)
+		{
+			// Generate the element name based on the tag's localName, lowercased
+			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
+
+			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+			{
+				$tagNames[] = $tagName;
+
+				// Use local-name() if any of the tags are namespaced
+				if (strpos($tagName, ':') !== false)
+				{
+					$expr = 'local-name()';
+				}
+			}
+		}
+
+		// We only bother replacing their template if there are at least $minCount simple tags.
+		// Otherwise it only makes the stylesheet bigger
+		if (count($tagNames) < $minCount)
+		{
+			return;
+		}
+
+		// Generate a list of uppercase characters from the tags' names
+		$chars = preg_replace('/[^A-Z]+/', '', count_chars(implode('', $tagNames), 3));
+
+		if (is_string($chars) && $chars !== '')
+		{
+			$expr = 'translate(' . $expr . ",'" . $chars . "','" . strtolower($chars) . "')";
+		}
+
+		// Prepare the common template
+		$template = '<xsl:element name="{' . $expr . '}">'
+		          . '<xsl:apply-templates/>'
+		          . '</xsl:element>';
+
+		// Replace the templates
+		foreach ($tagNames as $tagName)
+		{
+			$templates[$tagName] = $template;
+		}
 	}
 
 	/**
@@ -555,202 +684,101 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Highlight the source of a node inside of a template
+	* Serialize a loaded template back into a string
 	*
-	* @param  DOMNode $node    Node to highlight
-	* @param  string  $prepend HTML to prepend
-	* @param  string  $append  HTML to append
-	* @return string           Template's source, as HTML
-	*/
-	public static function highlightNode(DOMNode $node, $prepend, $append)
-	{
-		// Add a unique token to the node
-		$uniqid = uniqid('_');
-		if ($node instanceof DOMAttr)
-		{
-			$node->value .= $uniqid;
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->setAttribute($uniqid, '');
-		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-		}
-
-		$dom = $node->ownerDocument;
-		$dom->formatOutput = true;
-
-		$docXml = self::innerXML($dom->documentElement);
-		$docXml = trim(str_replace("\n  ", "\n", $docXml));
-
-		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
-		$docHtml  = htmlspecialchars($docXml);
-
-		// Enclose the node's representation in our hilighting HTML
-		$html = str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
-
-		// Remove the unique token from HTML and from the node
-		if ($node instanceof DOMAttr)
-		{
-			$node->value = substr($node->value, 0, -strlen($uniqid));
-			$html = str_replace($uniqid, '', $html);
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->removeAttribute($uniqid);
-			$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
-		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-			$html = str_replace($uniqid, '', $html);
-		}
-
-		return $html;
-	}
-
-	/**
-	* Get the regexp used to remove meta elements from the intermediate representation
+	* NOTE: removes the root node created by loadTemplate()
 	*
-	* @param  array  $templates
+	* @param  DOMDocument $dom
 	* @return string
 	*/
-	public static function getMetaElementsRegexp(array $templates)
+	public static function saveTemplate(DOMDocument $dom)
 	{
-		$exprs = [];
-
-		// Coalesce all templates and load them into DOM
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . implode('', $templates) . '</xsl:template>';
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-		$xpath = new DOMXPath($dom);
-
-		// Collect the values of all the "match", "select" and "test" attributes of XSL elements
-		$query = '//xsl:*/@*[contains("matchselectest", name())]';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			$exprs[] = $attribute->value;
-		}
-
-		// Collect the XPath expressions used in all the attributes of non-XSL elements
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			foreach (AVTHelper::parse($attribute->value) as $token)
-			{
-				if ($token[0] === 'expression')
-				{
-					$exprs[] = $token[1];
-				}
-			}
-		}
-
-		// Names of the meta elements
-		$tagNames = [
-			'e' => true,
-			'i' => true,
-			's' => true
-		];
-
-		// In the highly unlikely event the meta elements are rendered, we remove them from the list
-		foreach (array_keys($tagNames) as $tagName)
-		{
-			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
-			{
-				unset($tagNames[$tagName]);
-			}
-		}
-
-		// Create a regexp that matches the tag names used as element names, e.g. "s" in "//s" but
-		// not in "@s" or "$s"
-		$regexp = '(\\b(?<![$@])(' . implode('|', array_keys($tagNames)) . ')(?!-)\\b)';
-
-		// Now look into all of the expressions that we've collected
-		preg_match_all($regexp, implode("\n", $exprs), $m);
-
-		foreach ($m[0] as $tagName)
-		{
-			unset($tagNames[$tagName]);
-		}
-
-		if (empty($tagNames))
-		{
-			// Always-false regexp
-			return '((?!))';
-		}
-
-		return '(<' . RegexpBuilder::fromList(array_keys($tagNames)) . '>[^<]*</[^>]+>)';
+		return self::innerXML($dom->documentElement);
 	}
 
 	/**
-	* Replace simple templates (in an array, in-place) with a common template
+	* Replace HTML entities and unescaped ampersands in given template
 	*
-	* In some situations, renderers can take advantage of multiple tags having the same template. In
-	* any configuration, there's almost always a number of "simple" tags that are rendered as an
-	* HTML element of the same name with no HTML attributes. For instance, the system tag "p" used
-	* for paragraphs, "B" tags used for "b" HTML elements, etc... This method replaces those
-	* templates with a common template that uses a dynamic element name based on the tag's name,
-	* either its nodeName or localName depending on whether the tag is namespaced, and normalized to
-	* lowercase using XPath's translate() function
-	*
-	* @param  array<string> &$templates Associative array of [tagName => template]
-	* @param  integer       $minCount
-	* @return void
+	* @param  string $template
+	* @return string
 	*/
-	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
+	protected static function fixEntities($template)
 	{
-		$tagNames = [];
-
-		// Prepare the XPath expression used for the element's name
-		$expr = 'name()';
-
-		// Identify "simple" tags, whose template is one element of the same name. Their template
-		// can be replaced with a dynamic template shared by all the simple tags
-		foreach ($templates as $tagName => $template)
-		{
-			// Generate the element name based on the tag's localName, lowercased
-			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
-
-			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+		return preg_replace_callback(
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
+			function ($m)
 			{
-				$tagNames[] = $tagName;
+				return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
+			},
+			preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
+		);
+	}
 
-				// Use local-name() if any of the tags are namespaced
-				if (strpos($tagName, ':') !== false)
-				{
-					$expr = 'local-name()';
-				}
-			}
-		}
+	/**
+	* Get the XML content of an element
+	*
+	* @param  DOMElement $element
+	* @return string
+	*/
+	protected static function innerXML(DOMElement $element)
+	{
+		// Serialize the XML then remove the outer element
+		$xml = $element->ownerDocument->saveXML($element);
 
-		// We only bother replacing their template if there are at least $minCount simple tags.
-		// Otherwise it only makes the stylesheet bigger
-		if (count($tagNames) < $minCount)
+		$pos = 1 + strpos($xml, '>');
+		$len = strrpos($xml, '<') - $pos;
+
+		// If the template is empty, return an empty string
+		if ($len < 1)
 		{
-			return;
+			return '';
 		}
 
-		// Generate a list of uppercase characters from the tags' names
-		$chars = preg_replace('/[^A-Z]+/', '', count_chars(implode('', $tagNames), 3));
+		$xml = substr($xml, $pos, $len);
 
-		if (is_string($chars) && $chars !== '')
-		{
-			$expr = 'translate(' . $expr . ",'" . $chars . "','" . strtolower($chars) . "')";
-		}
+		return $xml;
+	}
 
-		// Prepare the common template
-		$template = '<xsl:element name="{' . $expr . '}">'
-		          . '<xsl:apply-templates/>'
-		          . '</xsl:element>';
+	/**
+	* Load given HTML template in a DOM document
+	*
+	* @param  string      $template Original template
+	* @return DOMDocument
+	*/
+	protected static function loadTemplateAsHTML($template)
+	{
+		$dom  = new DOMDocument;
+		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 
-		// Replace the templates
-		foreach ($tagNames as $tagName)
-		{
-			$templates[$tagName] = $template;
-		}
+		$useErrors = libxml_use_internal_errors(true);
+		$dom->loadHTML($html);
+		libxml_use_internal_errors($useErrors);
+
+		// Now dump the thing as XML then reload it with the proper root element
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . self::innerXML($dom->documentElement->firstChild->firstChild) . '</xsl:template>';
+
+		$useErrors = libxml_use_internal_errors(true);
+		$dom->loadXML($xml);
+		libxml_use_internal_errors($useErrors);
+
+		return $dom;
+	}
+
+	/**
+	* Load given XSL template in a DOM document
+	*
+	* @param  string           $template Original template
+	* @return bool|DOMDocument           DOMDocument on success, FALSE otherwise
+	*/
+	protected static function loadTemplateAsXML($template)
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
+
+		$useErrors = libxml_use_internal_errors(true);
+		$dom       = new DOMDocument;
+		$success   = $dom->loadXML($xml);
+		libxml_use_internal_errors($useErrors);
+
+		return ($success) ? $dom : false;
 	}
 }
