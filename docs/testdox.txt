@@ -748,6 +748,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() accepts unescaped ampersands
  [x] loadTemplate() converts HTML entities
  [x] loadTemplate() does not break numeric character references
+ [x] loadTemplate() removes attributes with an invalid name
+ [x] loadTemplate() removes attributes with an invalid namespace in XML
+ [x] loadTemplate() removes attributes with an invalid namespace in HTML
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
  [x] loadTemplate() reads HTML as UTF-8

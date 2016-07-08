@@ -752,6 +752,7 @@ abstract class TemplateHelper
 
 		$useErrors = libxml_use_internal_errors(true);
 		$dom->loadHTML($html);
+		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
 
 		// Now dump the thing as XML then reload it with the proper root element
@@ -777,8 +778,27 @@ abstract class TemplateHelper
 		$useErrors = libxml_use_internal_errors(true);
 		$dom       = new DOMDocument;
 		$success   = $dom->loadXML($xml);
+		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
 
 		return ($success) ? $dom : false;
+	}
+
+	/**
+	* Remove attributes with an invalid name from given DOM document
+	*
+	* @param  DOMDocument $dom
+	* @return void
+	*/
+	protected static function removeInvalidAttributes(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//@*') as $attribute)
+		{
+			if (!preg_match('(^(?:[-\\w]+:)?(?!\\d)[-\\w]+$)D', $attribute->nodeName))
+			{
+				$attribute->parentNode->removeAttributeNode($attribute);
+			}
+		}
 	}
 }

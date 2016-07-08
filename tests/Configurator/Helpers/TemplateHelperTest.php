@@ -157,6 +157,52 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox loadTemplate() removes attributes with an invalid name
+	*/
+	public function testLoadTemplateAttributeInvalidName()
+	{
+		$template = '<div class="inline" padding:0>..</div>';
+		$xml      = '<div class="inline">..</div>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
+	* @testdox loadTemplate() removes attributes with an invalid namespace in XML
+	*/
+	public function testLoadTemplateAttributeInvalidNamespaceXML()
+	{
+		$template = '<div foo:bar:baz="1" title="" x:y:z="1">..</div>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$xml = $dom->saveXML($dom->documentElement->firstChild);
+
+		$this->assertInstanceOf('DOMDocument', $dom);
+		$this->assertContains('title=""',       $xml);
+		$this->assertNotContains('foo:bar:baz', $xml);
+		$this->assertNotContains('x:y:z',       $xml);
+	}
+
+	/**
+	* @testdox loadTemplate() removes attributes with an invalid namespace in HTML
+	*/
+	public function testLoadTemplateAttributeInvalidNamespaceHTML()
+	{
+		$template = '<div foo:bar:baz="1" title="" x:y:z="1"><br></div>';
+
+		$dom = TemplateHelper::loadTemplate($template);
+		$xml = $dom->saveXML($dom->documentElement->firstChild);
+
+		$this->assertInstanceOf('DOMDocument', $dom);
+		$this->assertContains('title=""',       $xml);
+		$this->assertNotContains('foo:bar:baz', $xml);
+		$this->assertNotContains('x:y:z',       $xml);
+	}
+
+	/**
 	* @testdox saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
 	*/
 	public function testSaveHTML()
