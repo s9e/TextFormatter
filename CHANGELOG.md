@@ -1,3 +1,27 @@
+0.5.4 (2016-07-08)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/3122029dcaf12dc95ce584d43fa84ad92ad9619a...96a5a67eb3681b9f89d15dc6affd5896c3d877c6)
+
+### Added
+
+ - `d081f95` Added new rule type: createChild
+ - `413fbeb` MediaEmbed: added support for Google Drive links that contain a domain name
+ - `bfad6cc` MediaEmbed: added support for JW Platform
+
+### Changed
+
+ - `8a53870` Litedown: suspended escaping inside inline code spans
+ - `afbbcd5` MediaEmbed: ignore the hash part of URLs when scraping
+ - `2683928` MediaEmbed: updated Hudl
+ - `0aff031` MediaEmbed: updated Hudl
+ - `38ad33f` MediaEmbed: updated Reddit
+ - `41967d0` MediaEmbed: updated SoundCloud
+ - `d7526a4` MediaEmbed: updated XboxClips to exclude screenshots
+ - `e141f0b` TemplateHelper: refactored some code and reformatted sources
+ - `96a5a67` TemplateHelper: remove invalid attributes in loadTemplate()
+
+
 0.5.3 (2016-06-14)
 ==================
 
