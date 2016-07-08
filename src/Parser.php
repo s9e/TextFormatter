@@ -605,6 +605,17 @@ class Parser
 		}
 		return \false;
 	}
+	protected function createChild(Tag $tag)
+	{
+		$tagConfig = $this->tagsConfig[$tag->getName()];
+		if (isset($tagConfig['rules']['createChild']))
+		{
+			$priority = -1000;
+			$tagPos   = $this->pos + \strspn($this->text, " \n\r\t", $this->pos);
+			foreach ($tagConfig['rules']['createChild'] as $tagName)
+				$this->addStartTag($tagName, $tagPos, 0)->setSortPriority(++$priority);
+		}
+	}
 	protected function fosterParent(Tag $tag)
 	{
 		if (!empty($this->openTags))
@@ -809,6 +820,7 @@ class Parser
 			$this->addIgnoreTag($tag->getPos() + $tag->getLen(), 1);
 		$this->outputTag($tag);
 		$this->pushContext($tag);
+		$this->createChild($tag);
 	}
 	protected function processEndTag(Tag $tag)
 	{
