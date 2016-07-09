@@ -54,224 +54,6 @@ class BuiltInFiltersTest extends Test
 	}
 
 	/**
-	* @testdox parseUrl() tests
-	* @dataProvider getParseUrlTests
-	*/
-	public function testParseUrl($url, $expected, $setup = null)
-	{
-		if (isset($setup))
-		{
-			$setup();
-		}
-
-		$default = [
-			'scheme'   => '',
-			'user'     => '',
-			'pass'     => '',
-			'host'     => '',
-			'port'     => '',
-			'path'     => '',
-			'query'    => '',
-			'fragment' => ''
-		];
-
-		$this->assertSame(array_merge($default, $expected), BuiltInFilters::parseUrl($url));
-	}
-
-	public function getParseUrlTests()
-	{
-		return [
-			[
-				'',
-				[]
-			],
-			[
-				// parse_url() identifies reddit.com as host, browsers think it's localhost
-				'http://localhost#foo@reddit.com/bar',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'fragment' => 'foo@reddit.com/bar'
-				]
-			],
-			[
-				'http://@localhost',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost'
-				]
-			],
-			[
-				'javascript:alert(1)',
-				[
-					'scheme'   => 'javascript',
-					'path'     => 'alert(1)'
-				]
-			],
-			[
-				'http://us3r@localhost',
-				[
-					'scheme'   => 'http',
-					'user'     => 'us3r',
-					'host'     => 'localhost'
-				]
-			],
-			[
-				'http://us3r:p4ss@localhost',
-				[
-					'scheme'   => 'http',
-					'user'     => 'us3r',
-					'pass'     => 'p4ss',
-					'host'     => 'localhost'
-				]
-			],
-			[
-				'http://localhost:80',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'port'     => '80'
-				]
-			],
-			[
-				'http://localhost/:80',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'path'     => '/:80'
-				]
-			],
-			[
-				'http://localhost/foo?bar=1',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'path'     => '/foo',
-					'query'    => 'bar=1'
-				]
-			],
-			[
-				'http://localhost/foo#?bar=1',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'path'     => '/foo',
-					'fragment' => '?bar=1'
-				]
-			],
-			[
-				'http://user@example.org@localhost',
-				[
-					'scheme'   => 'http',
-					'host'     => 'localhost',
-					'user'     => 'user@example.org'
-				]
-			],
-			[
-				'//example.org/:foo',
-				[
-					'host'     => 'example.org',
-					'path'     => '/:foo'
-				]
-			],
-			[
-				'/foo?k=1',
-				[
-					'path'     => '/foo',
-					'query'    => 'k=1'
-				]
-			],
-			[
-				'foo?k=1',
-				[
-					'path'     => 'foo',
-					'query'    => 'k=1'
-				]
-			],
-			[
-				'#foo',
-				[
-					'fragment' => 'foo'
-				]
-			],
-			[
-				'https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/',
-				[
-					'scheme'   => 'https',
-					'host'     => '[2001:db8:85a3:8d3:1319:8a2e:370:7348]',
-					'port'     => '443',
-					'path'     => '/'
-				]
-			],
-			[
-				'http:///example.org',
-				[
-					'scheme'   => 'http',
-					'host'     => '',
-					'path'     => '/example.org'
-				]
-			],
-			[
-				'file:///example.org',
-				[
-					'scheme'   => 'file',
-					'host'     => '',
-					'path'     => '/example.org'
-				]
-			],
-			[
-				'HTTP://example.org',
-				[
-					'scheme'   => 'http',
-					'host'     => 'example.org'
-				]
-			],
-			[
-				'http://^*!example.org',
-				[
-					'scheme'   => 'http',
-					'host'     => '^*!example.org'
-				]
-			],
-			[
-				'http://www.älypää.com',
-				[
-					'scheme'   => 'http',
-					'host'     => 'www.xn--lyp-plada.com'
-				],
-				function ()
-				{
-					if (!function_exists('idn_to_ascii'))
-					{
-						$this->markTestSkipped('idn_to_ascii() is required.');
-					}
-				}
-			],
-			[
-				"http://evil\xEF\xBD\xA1example.com.\xEF\xBD\xA1./",
-				[
-					'scheme'   => 'http',
-					'host'     => 'evil.example.com',
-					'path'     => '/'
-				]
-			],
-			[
-				'mailto:joe@example.org',
-				[
-					'scheme'   => 'mailto',
-					'path'     => 'joe@example.org'
-				]
-			],
-			[
-				'0',
-				[
-					'path'     => '0'
-				]
-			],
-		];
-	}
-
-	/**
 	* @testdox Filters work
 	* @dataProvider getData
 	*/
@@ -835,6 +617,85 @@ class BuiltInFiltersTest extends Test
 				function ($configurator)
 				{
 					$configurator->urlConfig->restrictHost('example.org');
+				}
+			],
+			[
+				new UrlFilter,
+				// PHP's parse_url() identifies example.com as host, browsers think it's localhost
+				'http://localhost#foo@example.com/bar',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'localhost',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => 'foo@example.com/bar',
+							'attrValue' => 'http://localhost#foo@example.com/bar'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('localhost');
+				}
+			],
+			[
+				new UrlFilter,
+				'http://@localhost',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => 'localhost',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://@localhost'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('localhost');
+				}
+			],
+			[
+				new UrlFilter,
+				'http://user@example.org@localhost',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'scheme'    => 'http',
+							'user'      => 'user@example.org',
+							'pass'      => '',
+							'host'      => 'localhost',
+							'port'      => '',
+							'path'      => '',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http://user@example.org@localhost'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('localhost');
 				}
 			],
 			[

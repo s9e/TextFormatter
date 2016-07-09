@@ -1904,7 +1904,6 @@ s9e\TextFormatter\Tests\Parser\Tag
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
- [x] parseUrl() tests
  [x] Filters work
  [x] filterRange() can be called without a logger
  [x] filterUrl() can be called without a logger

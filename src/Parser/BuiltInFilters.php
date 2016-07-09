@@ -349,7 +349,7 @@ class BuiltInFilters
 	* @param  string $url Original URL
 	* @return array
 	*/
-	public static function parseUrl($url)
+	protected static function parseUrl($url)
 	{
 		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
 
