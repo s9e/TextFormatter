@@ -159,7 +159,7 @@ class BuiltInFilters
 		}
 		return self::rebuildUrl($p);
 	}
-	public static function parseUrl($url)
+	protected static function parseUrl($url)
 	{
 		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
 		\preg_match($regexp, $url, $m);
