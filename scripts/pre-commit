@@ -18,6 +18,7 @@ then
 	git update-index --add src/Bundles/*.php
 	git update-index --add src/Bundles/*/Renderer.php
 	git update-index --add "src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php"
+	git update-index --add "src/Plugins/MediaEmbed/README.md"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
