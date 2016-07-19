@@ -15,7 +15,7 @@
 	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
 	<iframe>
 		<src><![CDATA[
-			<xsl:text>//www.youtube.com/embed/</xsl:text>
+			<xsl:text>https://www.youtube.com/embed/</xsl:text>
 			<xsl:value-of select="@id"/>
 			<xsl:if test="@list">
 				<xsl:text>?list=</xsl:text>
