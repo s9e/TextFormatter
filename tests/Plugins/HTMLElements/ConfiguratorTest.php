@@ -83,6 +83,19 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox allowElement() can be called multiple times with the same element
+	*/
+	public function testAllowElementMultiple()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+
+		$this->assertSame(
+			$plugin->allowElement('b'),
+			$plugin->allowElement('b')
+		);
+	}
+
+	/**
 	* @testdox The prefix can be customized at loading time through the 'prefix' property
 	*/
 	public function testCustomPrefix()

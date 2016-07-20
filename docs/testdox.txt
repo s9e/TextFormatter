@@ -2397,6 +2397,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'
  [x] allowElement() returns an instance of Tag
+ [x] allowElement() can be called multiple times with the same element
  [x] The prefix can be customized at loading time through the 'prefix' property
  [x] allowElement('script') throws an exception
  [x] allowUnsafeElement('script') allows the 'script' element
