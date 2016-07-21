@@ -2573,6 +2573,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376',
+				'<r><SCRIBD id="237147661" url="https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376">https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376</SCRIBD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('scribd');
+				}
+			],
+			[
+				'https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8',
+				'<r><SCRIBD id="318498911" url="https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8">https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8</SCRIBD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('scribd');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
 				'<r><SLIDESHARE id="23431564" url="http://www.slideshare.net/Slideshare/how-23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
 				[],
