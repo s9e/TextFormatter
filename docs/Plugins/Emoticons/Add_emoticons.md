@@ -19,3 +19,22 @@ echo $html;
 ```html
 Hello world <img src="happy.png" alt=":)" title="Happy"> <img src="sad.png" alt=":(" title="Sad">
 ```
+
+### Alternative syntax
+
+`$configurator->Emoticons` can be accessed as an array where keys are the emoticons and values are their templates.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Emoticons[':)'] = '<img src="happy.png" alt=":)" title="Happy">';
+$configurator->Emoticons[':('] = '<img src="sad.png" alt=":(" title="Sad">';
+
+foreach ($configurator->Emoticons as $emoticon => $template)
+{
+	echo "$emoticon is for $template\n";
+}
+```
+```html
+:) is for <img src="happy.png" alt=":)" title="Happy"/>
+:( is for <img src="sad.png" alt=":(" title="Sad"/>
+```
