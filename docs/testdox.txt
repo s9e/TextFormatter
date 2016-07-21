@@ -2340,6 +2340,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
+ [x] Has a customized exception message on duplicate emoticon
+ [x] Has a customized exception message on uninitialized access
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests

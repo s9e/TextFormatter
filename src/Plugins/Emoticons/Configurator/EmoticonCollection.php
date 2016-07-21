@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\Emoticons\Configurator;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
@@ -23,5 +24,21 @@ class EmoticonCollection extends NormalizedCollection
 	public function normalizeValue($value)
 	{
 		return TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($value));
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getAlreadyExistsException($key)
+	{
+		return new RuntimeException("Emoticon '" . $key . "' already exists");
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getNotExistException($key)
+	{
+		return new RuntimeException("Emoticon '" . $key . "' does not exist");
 	}
 }

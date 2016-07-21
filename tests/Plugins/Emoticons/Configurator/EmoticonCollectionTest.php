@@ -30,4 +30,28 @@ class EmoticonCollectionTest extends Test
 		$collection = new EmoticonCollection;
 		$collection->set(':)', '<xsl:foo>');
 	}
+
+	/**
+	* @testdox Has a customized exception message on duplicate emoticon
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Emoticon ':)' already exists
+	*/
+	public function testExceptionDuplicate()
+	{
+		$collection = new EmoticonCollection;
+		$collection->onDuplicate('error');
+		$collection->add(':)', ':)');
+		$collection->add(':)', ':)');
+	}
+
+	/**
+	* @testdox Has a customized exception message on uninitialized access
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Emoticon ':)' does not exist
+	*/
+	public function testExceptionMissing()
+	{
+		$collection = new EmoticonCollection;
+		$collection->get(':)');
+	}
 }
