@@ -2,13 +2,13 @@
 
 From posting to displaying to editing, s9e\\TextFormatter separates its operations in 4 distinct phases:
 
-  * __Configuration__: configure s9e\\TextFormatter and the plugins you want to use, or [use a preconfigured bundle](Using_predefined_bundles.md)
+  * __Configuration__: configure s9e\\TextFormatter and the plugins you want to use, or [use a preconfigured bundle](Using_predefined_bundles.md).
 
-  * __Parsing__: the text is parsed and can be stored as an XML document
+  * __Parsing__: the text is parsed and can be stored as an XML document.
 
-  * __Rendering__: the XML document is transformed into HTML
+  * __Rendering__: the XML document is transformed into HTML.
 
-  * __Unparsing__: the XML document is transformed back into plain text
+  * __Unparsing__: the XML document is transformed back into plain text.
 
 ```
                 Parsing 
