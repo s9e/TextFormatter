@@ -359,7 +359,7 @@
 	<tr>
 		<td><code>playstv</code></td>
 		<td>Plays.tv</td>
-		<td>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
+		<td>http://plays.tv/s/Kt4onQhyyVyz<br/>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
 	</tr>
 	<tr>
 		<td><code>podbean</code></td>

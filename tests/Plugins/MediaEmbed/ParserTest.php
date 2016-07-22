@@ -777,6 +777,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://plays.tv/s/Kt4onQhyyVyz',
+				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/s/Kt4onQhyyVyz">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('playstv');
+				}
+			],
+			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
 				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
