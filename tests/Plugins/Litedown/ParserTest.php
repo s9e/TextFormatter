@@ -1171,6 +1171,11 @@ class ParserTest extends Test
 					'[foo]: http://example.com</i></r>'
 				]
 			],
+			[
+				// http://stackoverflow.com/a/20885980
+				'[//]: # (This may be the most platform independent comment)',
+				'<r><i>[//]: # (This may be the most platform independent comment)</i></r>'
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
