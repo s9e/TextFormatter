@@ -1205,6 +1205,26 @@ class ParserTest extends Test
 				'.. ![[foo]](http://example.org/img.png) ..',
 				'<r><p>.. <IMG alt="[foo]" src="http://example.org/img.png"><s>![</s>[foo]<e>](http://example.org/img.png)</e></IMG> ..</p></r>'
 			],
+			[
+				[
+					'![alt\\',
+					'text](foo.png)'
+				],
+				[
+					'<r><p><IMG alt="alt\\&#10;text" src="foo.png"><s>![</s>alt\\',
+					'text<e>](foo.png)</e></IMG></p></r>'
+				]
+			],
+			[
+				[
+					'![alt](foo.png "line1',
+					'line2")'
+				],
+				[
+					'<r><p><IMG alt="alt" src="foo.png" title="line1&#10;line2"><s>![</s>alt<e>](foo.png "line1',
+					'line2")</e></IMG></p></r>'
+				]
+			],
 			// Images in links
 			[
 				'.. [![Alt text](http://example.org/img.png)](http://example.org/) ..',
