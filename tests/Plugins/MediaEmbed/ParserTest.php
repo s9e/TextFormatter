@@ -2006,7 +2006,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gofundme.com/2p37ao#',
-				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao">http://www.gofundme.com/2p37ao#</GOFUNDME></r>',
+				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao#">http://www.gofundme.com/2p37ao#</GOFUNDME></r>',
 				[],
 				function ($configurator)
 				{

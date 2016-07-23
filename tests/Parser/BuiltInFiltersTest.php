@@ -196,7 +196,9 @@ class BuiltInFiltersTest extends Test
 			[new UrlFilter, '//foo', '//foo'],
 			[new UrlFilter, '/foo', '/foo'],
 			[new UrlFilter, '?foo', '?foo'],
+			[new UrlFilter, '?', '?'],
 			[new UrlFilter, '#bar', '#bar'],
+			[new UrlFilter, '#', '#'],
 			[new UrlFilter, '://bar', '%3A//bar'],
 			[new UrlFilter, '*://bar', '*%3A//bar'],
 			[new UrlFilter, '/:foo/:bar', '/:foo/:bar'],
@@ -636,7 +638,7 @@ class BuiltInFiltersTest extends Test
 							'port'      => '',
 							'path'      => '',
 							'query'     => '',
-							'fragment'  => 'foo@example.com/bar',
+							'fragment'  => '#foo@example.com/bar',
 							'attrValue' => 'http://localhost#foo@example.com/bar'
 						]
 					]
@@ -735,7 +737,7 @@ class BuiltInFiltersTest extends Test
 							'host'      => '',
 							'port'      => '',
 							'path'      => '',
-							'query'     => 'foo',
+							'query'     => '?foo',
 							'fragment'  => '',
 							'attrValue' => 'http:?foo'
 						]
@@ -758,7 +760,7 @@ class BuiltInFiltersTest extends Test
 							'port'      => '',
 							'path'      => '',
 							'query'     => '',
-							'fragment'  => 'foo',
+							'fragment'  => '#foo',
 							'attrValue' => 'http:#foo'
 						]
 					]

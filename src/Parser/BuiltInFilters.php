@@ -351,7 +351,7 @@ class BuiltInFilters
 	*/
 	protected static function parseUrl($url)
 	{
-		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
+		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(\\?[^#]*)?(#.*)?$)Di';
 
 		// NOTE: this regexp always matches because of the last three captures
 		preg_match($regexp, $url, $m);
@@ -438,15 +438,7 @@ class BuiltInFilters
 		}
 
 		// Build the path, including the query and fragment parts
-		$path = $p['path'];
-		if ($p['query'] !== '')
-		{
-			$path .= '?' . $p['query'];
-		}
-		if ($p['fragment'] !== '')
-		{
-			$path .= '#' . $p['fragment'];
-		}
+		$path = $p['path'] . $p['query'] . $p['fragment'];
 
 		/**
 		* "For consistency, URI producers and normalizers should use uppercase hexadecimal digits
