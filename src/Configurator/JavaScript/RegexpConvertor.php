@@ -109,7 +109,7 @@ abstract class RegexpConvertor
 			$modifiers .= 'g';
 		}
 
-		return new Code('/' . self::escapeLineTerminators($regexp) . '/' . $modifiers);
+		return '/' . self::escapeLineTerminators($regexp) . '/' . $modifiers;
 	}
 
 	/**

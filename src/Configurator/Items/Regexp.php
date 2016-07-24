@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class Regexp extends Variant implements ConfigProvider
@@ -107,11 +108,11 @@ class Regexp extends Variant implements ConfigProvider
 	/**
 	* Return this regexp as JavaScript code
 	*
-	* @return \s9e\TextFormatter\Configurator\JavaScript\Code
+	* @return Code
 	*/
 	public function toJS()
 	{
-		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+		return new Code(RegexpConvertor::toJS($this->regexp, $this->isGlobal));
 	}
 
 	/**

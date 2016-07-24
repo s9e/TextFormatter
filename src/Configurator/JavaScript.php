@@ -293,7 +293,7 @@ class JavaScript
 
 			if (isset($globalConfig['regexp']) && !($globalConfig['regexp'] instanceof Code))
 			{
-				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp'], true);
+				$globalConfig['regexp'] = new Code(RegexpConvertor::toJS($globalConfig['regexp'], true));
 			}
 
 			$globalConfig['parser'] = new Code(

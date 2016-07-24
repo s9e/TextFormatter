@@ -13,22 +13,11 @@ include_once __DIR__ . '/../../bootstrap.php';
 class RegexpConvertorTest extends Test
 {
 	/**
-	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
-	*/
-	public function testReturnInstance()
-	{
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			RegexpConvertor::toJS('//')
-		);
-	}
-
-	/**
 	* @testdox toJS() can convert plain regexps
 	*/
 	public function testConvertRegexp1()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/foo/',
 			RegexpConvertor::toJS('#foo#')
 		);
@@ -39,7 +28,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpEscape()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/fo\\/o/',
 			RegexpConvertor::toJS('#fo/o#')
 		);
@@ -50,7 +39,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpNoDoubleEscape()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/fo\\/o/',
 			RegexpConvertor::toJS('#fo\\/o#')
 		);
@@ -61,7 +50,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpDoesNotEatEscapedBackslashes()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/fo\\\\\\/o/',
 			RegexpConvertor::toJS('#fo\\\\/o#')
 		);
@@ -72,7 +61,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp2()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/foo/i',
 			RegexpConvertor::toJS('#foo#i')
 		);
@@ -83,7 +72,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp3()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/f(o)o/',
 			RegexpConvertor::toJS('#f(o)o#')
 		);
@@ -94,7 +83,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp4()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/f(?:o)o/',
 			RegexpConvertor::toJS('#f(?:o)o#')
 		);
@@ -105,7 +94,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp5()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/f(?:oo)+/',
 			RegexpConvertor::toJS('#f(?:oo)+#')
 		);
@@ -116,7 +105,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp5b()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/f(?:o)+(?:o)*/',
 			RegexpConvertor::toJS('#f(?:o)++(?:o)*+#')
 		);
@@ -137,7 +126,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpOption()
 	{
-		$this->assertEquals('/x/', RegexpConvertor::toJS('/(?J)x/'));
+		$this->assertSame('/x/', RegexpConvertor::toJS('/(?J)x/'));
 	}
 
 	/**
@@ -155,7 +144,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp6()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/[a-z]+/',
 			RegexpConvertor::toJS('#[a-z]+#')
 		);
@@ -166,7 +155,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp6b()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/[a-z]+[a-z]*/',
 			RegexpConvertor::toJS('/[a-z]++[a-z]*+/')
 		);
@@ -225,7 +214,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp8d()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			RegexpConvertor::toJS('#\\PL#'),
 			RegexpConvertor::toJS('#\\p{^L}#')
 		);
@@ -236,7 +225,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp8e()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			RegexpConvertor::toJS('#\\pL#'),
 			RegexpConvertor::toJS('#\\P{^L}#')
 		);
@@ -247,7 +236,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp9()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/[\u0000-\u2027\u2029-\uFFFF]+/',
 			RegexpConvertor::toJS('/\\PZl+/')
 		);
@@ -258,7 +247,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpLookahead()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/(?=foo)|(?=bar)/',
 			RegexpConvertor::toJS('#(?=foo)|(?=bar)#')
 		);
@@ -269,7 +258,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpNegativeLookahead()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/(?!foo)|(?!bar)/',
 			RegexpConvertor::toJS('#(?!foo)|(?!bar)#')
 		);
@@ -300,7 +289,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpDotAll()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/foo([\\s\\S]*)bar/',
 			RegexpConvertor::toJS('#foo(.*)bar#s')
 		);
@@ -311,7 +300,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpDotWithoutDotAll()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/foo(.*)bar/',
 			RegexpConvertor::toJS('#foo(.*)bar#')
 		);
@@ -322,7 +311,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpDotInCharacterClasses()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/foo[.]+bar/',
 			RegexpConvertor::toJS('#foo[.]+bar#s')
 		);
@@ -333,7 +322,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpNamedCaptures()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/x([0-9]+)([a-z]+)x/',
 			RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#')
 		);
@@ -345,7 +334,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertNamedSubatternAfterNormalSubpattern()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/(?:foo)(bar)/',
 			RegexpConvertor::toJS('/(?:foo)(?<z>bar)/')
 		);
@@ -356,7 +345,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertAtomicGrouping()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/(?:foo|bar)/',
 			RegexpConvertor::toJS('#(?>foo|bar)#')
 		);
@@ -367,7 +356,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertDefaultNotGlobal()
 	{
-		$this->assertEquals('/x/', RegexpConvertor::toJS('/x/'));
+		$this->assertSame('/x/', RegexpConvertor::toJS('/x/'));
 	}
 
 	/**
@@ -375,7 +364,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertGlobal()
 	{
-		$this->assertEquals('/x/g', RegexpConvertor::toJS('/x/', true));
+		$this->assertSame('/x/g', RegexpConvertor::toJS('/x/', true));
 	}
 
 	public static function dummyParse()
@@ -400,7 +389,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testLiteralASCIILineTerminators()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/\\r\\n/',
 			RegexpConvertor::toJS("/\r\n/")
 		);
@@ -411,7 +400,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testLiteralUnicodeLineTerminators()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/\\u2028\\u2029/',
 			RegexpConvertor::toJS("/\xE2\x80\xA8\xE2\x80\xA9/")
 		);
@@ -422,7 +411,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testBackslashBeforeLiteralLineTerminators()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'/\\\\\\n/',
 			RegexpConvertor::toJS("/\\\n/")
 		);
@@ -433,7 +422,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertUnicodeCharacterLowercase()
 	{
-		$this->assertEquals('/\\u27bf/', RegexpConvertor::toJS('/\\x{27bf}/u'));
+		$this->assertSame('/\\u27bf/', RegexpConvertor::toJS('/\\x{27bf}/u'));
 	}
 
 	/**
@@ -441,7 +430,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertUnicodeCharacterUppercase()
 	{
-		$this->assertEquals('/\\u27BF/', RegexpConvertor::toJS('/\\x{27BF}/u'));
+		$this->assertSame('/\\u27BF/', RegexpConvertor::toJS('/\\x{27BF}/u'));
 	}
 
 	/**
@@ -449,7 +438,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertUnicodeCharacterUppercaseEscapedBackslash()
 	{
-		$this->assertEquals('/\\\\\\u27BF/', RegexpConvertor::toJS('/\\\\\\x{27BF}/u'));
+		$this->assertSame('/\\\\\\u27BF/', RegexpConvertor::toJS('/\\\\\\x{27BF}/u'));
 	}
 
 	/**
@@ -457,6 +446,6 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertEscapedBackslashNoUnicodeCharacter()
 	{
-		$this->assertEquals('/\\\\x{27BF}/', RegexpConvertor::toJS('/\\\\x{27BF}/u'));
+		$this->assertSame('/\\\\x{27BF}/', RegexpConvertor::toJS('/\\\\x{27BF}/u'));
 	}
 }

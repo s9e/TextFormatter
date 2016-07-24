@@ -1162,7 +1162,6 @@ s9e\TextFormatter\Tests\Configurator\HintGenerator
  [x] Contains hints from plugins
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
- [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\Code
  [x] toJS() can convert plain regexps
  [x] toJS() escapes forward slashes
  [x] toJS() does not double-escape forward slashes that are already escaped

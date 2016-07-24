@@ -14,6 +14,7 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -187,7 +188,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			$regexp   = '/^' . RegexpBuilder::fromList($words, $this->regexpOptions) . '$/Diu';
 			$jsRegexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
-			$variant  = new Variant($regexp, ['JS' => RegexpConvertor::toJS($jsRegexp)]);
+			$variant  = new Variant($regexp, ['JS' => new Code(RegexpConvertor::toJS($jsRegexp))]);
 
 			$config['replacements'][] = [$variant, $replacement];
 		}
@@ -251,6 +252,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$regexp   = '/(?<![\\pL\\pN])' . $expr . '(?![\\pL\\pN])/Siu';
 		$jsRegexp = '/(?:^|\\W)' . str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $expr) . '(?!\\w)/gi';
 
-		return new Variant($regexp, ['JS' => RegexpConvertor::toJS($jsRegexp, true)]);
+		return new Variant($regexp, ['JS' => new Code(RegexpConvertor::toJS($jsRegexp, true))]);
 	}
 }
