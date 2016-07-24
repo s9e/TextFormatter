@@ -213,16 +213,14 @@ class Quick
 	*/
 	protected static function export(array $arr)
 	{
+		$exportKeys = (array_keys($arr) !== range(0, count($arr) - 1));
 		ksort($arr);
-		$entries = [];
 
-		$naturalKey = 0;
+		$entries = [];
 		foreach ($arr as $k => $v)
 		{
-			$entries[] = (($k === $naturalKey) ? '' : var_export($k, true) . '=>')
+			$entries[] = (($exportKeys) ? var_export($k, true) . '=>' : '')
 			           . ((is_array($v)) ? self::export($v) : var_export($v, true));
-
-			$naturalKey = $k + 1;
 		}
 
 		return '[' . implode(',', $entries) . ']';
