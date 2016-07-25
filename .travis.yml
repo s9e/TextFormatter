@@ -19,6 +19,8 @@ matrix:
       env: OPTIMIZE=1
     - php: hhvm
       env: OPTIMIZE=1
+  allow_failures:
+    - php: 7.1
 branches:
   except:
     - /^dist/
