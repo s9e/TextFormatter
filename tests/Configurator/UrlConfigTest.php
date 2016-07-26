@@ -16,21 +16,17 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns a JavaScript variant for disallowedHosts
+	* @testdox asConfig() returns a Regexp instance for disallowedHosts
 	*/
-	public function testAsConfigDisallowedHostsVariant()
+	public function testAsConfigDisallowedHostsRegexp()
 	{
 		$this->urlConfig->disallowHost('pаypal.com');
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
 			$urlConfig['disallowedHosts']
-		);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$urlConfig['disallowedHosts']->get('JS')
 		);
 	}
 
@@ -44,7 +40,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
-		$this->assertContains('xn--pypal-4ve\\.com', $urlConfig['disallowedHosts']->get());
+		$this->assertContains('xn--pypal-4ve\\.com', (string) $urlConfig['disallowedHosts']);
 	}
 
 	/**
@@ -54,7 +50,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'example.org');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'example.org');
 	}
 
 	/**
@@ -64,7 +60,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'EXAMPLE.ORG');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'EXAMPLE.ORG');
 	}
 
 	/**
@@ -74,7 +70,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.example.org');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -84,7 +80,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp($urlConfig['disallowedHosts']->get(), 'myexample.org');
+		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'myexample.org');
 	}
 
 	/**
@@ -94,7 +90,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org', false);
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp($urlConfig['disallowedHosts']->get(), 'www.example.org');
+		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -104,7 +100,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.example.org');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -114,7 +110,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.xxx.example.org');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.xxx.example.org');
 	}
 
 	/**
@@ -124,7 +120,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp($urlConfig['disallowedHosts']->get(), 'example.org');
+		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'example.org');
 	}
 
 	/**
@@ -134,7 +130,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp($urlConfig['disallowedHosts']->get(), 'example.org.org');
+		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'example.org.org');
 	}
 
 	/**
@@ -144,7 +140,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'xxx.com');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'xxx.com');
 	}
 
 	/**
@@ -154,7 +150,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'foo.xxx');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'foo.xxx');
 	}
 
 	/**
@@ -164,7 +160,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'myxxxsite.com');
+		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'myxxxsite.com');
 	}
 
 	/**
@@ -174,7 +170,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->restrictHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp($urlConfig['restrictedHosts']->get(), 'www.example.org');
+		$this->assertRegExp((string) $urlConfig['restrictedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -184,7 +180,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->restrictHost('example.org', false);
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp($urlConfig['restrictedHosts']->get(), 'www.example.org');
+		$this->assertNotRegExp((string) $urlConfig['restrictedHosts'], 'www.example.org');
 	}
 
 	/**

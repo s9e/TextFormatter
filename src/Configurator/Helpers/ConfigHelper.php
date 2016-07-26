@@ -10,7 +10,9 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 abstract class ConfigHelper
@@ -40,6 +42,11 @@ abstract class ConfigHelper
 
 					continue 2;
 				}
+			}
+
+			if ($value instanceof Regexp)
+			{
+				$value = ($variant === 'JS') ? new Code($value->getJS()) : (string) $value;
 			}
 
 			if ($value instanceof Dictionary && $variant !== 'JS')

@@ -343,25 +343,21 @@ class RegexpFilterTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JS variant for the regexp
+	* @testdox asConfig() creates a Regexp instance
 	*/
-	public function testAsConfigVariant()
+	public function testAsConfigRegexp()
 	{
 		$filter = new RegexpFilter;
 		$filter->setRegexp('/x/');
 
 		$config = $filter->asConfig();
+
 		$slice  = array_slice($config['params'], 1, 1);
 		$variant = end($slice);
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
 			$variant
-		);
-		$this->assertTrue($variant->has('JS'));
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$variant->get('JS')
 		);
 	}
 }

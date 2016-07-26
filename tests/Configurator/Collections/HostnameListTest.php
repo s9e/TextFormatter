@@ -22,29 +22,29 @@ class HostnameListTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns a Variant
-	*/
-	public function testAsConfigVariant()
-	{
-		$list = new HostnameList;
-		$list->add('example.org');
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$list->asConfig()
-		);
-	}
-
-	/**
-	* @testdox asConfig() returns a Variant that contains a regexp that matches its hostnames
+	* @testdox asConfig() returns a Regexp
 	*/
 	public function testAsConfigRegexp()
 	{
 		$list = new HostnameList;
 		$list->add('example.org');
 
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$list->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() returns a regexp that matches its hostnames
+	*/
+	public function testAsConfigRegexpMatch()
+	{
+		$list = new HostnameList;
+		$list->add('example.org');
+
 		$this->assertRegexp(
-			$list->asConfig()->get(),
+			(string) $list->asConfig(),
 			'example.org'
 		);
 	}
@@ -60,7 +60,7 @@ class HostnameListTest extends Test
 
 		$this->assertContains(
 			'xn--pypal-4ve\\.com',
-			$list->asConfig()->get()
+			(string) $list->asConfig()
 		);
 	}
 
@@ -73,7 +73,7 @@ class HostnameListTest extends Test
 		$list->add('*.example.org');
 
 		$this->assertRegexp(
-			$list->asConfig()->get(),
+			(string) $list->asConfig(),
 			'www.example.org'
 		);
 	}
@@ -87,7 +87,7 @@ class HostnameListTest extends Test
 		$list->add('example.org');
 
 		$this->assertNotRegexp(
-			$list->asConfig()->get(),
+			(string) $list->asConfig(),
 			'www.example.org'
 		);
 	}
@@ -101,7 +101,7 @@ class HostnameListTest extends Test
 		$list->add('example.*');
 
 		$this->assertRegexp(
-			$list->asConfig()->get(),
+			(string) $list->asConfig(),
 			'example.org'
 		);
 	}
@@ -115,7 +115,7 @@ class HostnameListTest extends Test
 		$list->add('example');
 
 		$this->assertNotRegexp(
-			$list->asConfig()->get(),
+			(string) $list->asConfig(),
 			'example.org'
 		);
 	}

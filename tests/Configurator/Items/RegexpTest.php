@@ -32,16 +32,24 @@ class RegexpTest extends Test
 	}
 
 	/**
-	* @testdox toJS() returns a JavaScript Code
+	* @testdox getJS() returns the regexp as a string
 	*/
-	public function testToJS()
+	public function testGetJS()
 	{
 		$regexp = new Regexp('/foo/i');
 
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$regexp->toJS()
-		);
+		$this->assertSame('/foo/i', $regexp->getJS());
+	}
+
+	/**
+	* @testdox setJS() replaces the regexp returned by getJS()
+	*/
+	public function testSetJS()
+	{
+		$regexp = new Regexp('/foo\\pL/i');
+		$regexp->setJS('/foo\\w/i');
+
+		$this->assertSame('/foo\\w/i', $regexp->getJS());
 	}
 
 	/**
@@ -63,44 +71,12 @@ class RegexpTest extends Test
 	}
 
 	/**
-	* @testdox Is an instance of Variant
-	*/
-	public function testIsVariant()
-	{
-		$regexp = new Regexp('//');
-		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\Items\\Variant', $regexp);
-	}
-
-	/**
-	* @testdox Has a JS variant
-	*/
-	public function testJSVariant()
-	{
-		$regexp = new Regexp('//');
-
-		$this->assertTrue($regexp->has('JS'));
-	}
-
-	/**
-	* @testdox The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
-	*/
-	public function testJSVariantInstance()
-	{
-		$regexp = new Regexp('//');
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$regexp->get('JS')
-		);
-	}
-
-	/**
 	* @testdox The JS regexp has a global flag if isGlobal is true
 	*/
 	public function testJSVariantGlobal()
 	{
 		$regexp = new Regexp('/x/', true);
-		$this->assertEquals('/x/g', $regexp->get('JS'));
+		$this->assertEquals('/x/g', $regexp->getJS());
 	}
 
 	/**

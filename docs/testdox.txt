@@ -232,8 +232,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
 
 s9e\TextFormatter\Tests\Configurator\Collections\HostnameList
  [x] asConfig() returns null if the collection is empty
- [x] asConfig() returns a Variant
- [x] asConfig() returns a Variant that contains a regexp that matches its hostnames
+ [x] asConfig() returns a Regexp
+ [x] asConfig() returns a regexp that matches its hostnames
  [x] IDNs are punycoded if idn_to_ascii() is available
  [x] add('*.example.org') matches 'www.example.org'
  [x] add('example.org') does not match 'www.example.org'
@@ -376,9 +376,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
  [x] add() throws an exception on invalid values
 
 s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
- [x] asConfig() returns an instance of Variant
+ [x] asConfig() returns an instance of Regexp
  [x] asConfig() returns a regexp that matches all the allowed schemes in the default variant
- [x] asConfig() returns an instance of Code as the JS variant
  [x] asConfig() creates a case-insensitive regexp that matches the schemes in the collection
  [x] add('*invalid*') throws an exception
  [x] add() normalizes schemes to lowercase
@@ -992,7 +991,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] setRegexp() throws an exception if the regexp is invalid
  [x] asConfig() returns an array
  [x] asConfig() throws an exception if the 'regexp' var is missing
- [x] asConfig() creates a JS variant for the regexp
+ [x] asConfig() creates a Regexp instance
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()
@@ -1013,12 +1012,10 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UrlFilter
 s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
- [x] toJS() returns a JavaScript Code
+ [x] getJS() returns the regexp as a string
+ [x] setJS() replaces the regexp returned by getJS()
  [x] Is a config provider
  [x] Returns itself as config
- [x] Is an instance of Variant
- [x] Has a JS variant
- [x] The JS variant is an instance of s9e\TextFormatter\Configurator\JavaScript\Code
  [x] The JS regexp has a global flag if isGlobal is true
  [x] getNamedCaptures() returns an array where keys are the name of the named captures and values are regexps that exactly match them
  [x] getNamedCaptures() puts the expression in a non-capturing subpattern if it contains any alternations
@@ -1694,7 +1691,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] enable() re-enables all checks
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
- [x] asConfig() returns a JavaScript variant for disallowedHosts
+ [x] asConfig() returns a Regexp instance for disallowedHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
  [x] disallowHost('example.org') disallows "EXAMPLE.ORG"
@@ -2219,8 +2216,8 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Returns the replacements in its config in the form [[regexp, replacement]]
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
- [x] asConfig() creates a JavaScript variant for the plugin's regexp
- [x] asConfig() creates a JavaScript variant for the regexps used in replacements
+ [x] asConfig() creates a Regexp object for the plugin's regexp
+ [x] asConfig() creates Regexp objects for the regexps used in replacements
  [x] getTag() returns the tag that is associated with this plugin
  [x] getHelper() returns a configured instance of Helper
  [x] getHelper() returns an instance of Helper even if no words were added

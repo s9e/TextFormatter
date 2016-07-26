@@ -166,7 +166,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant for the plugin's regexp
+	* @testdox asConfig() creates a Regexp object for the plugin's regexp
 	*/
 	public function testAsConfigJavaScriptRegexp()
 	{
@@ -176,17 +176,13 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
 			$config['regexp']
-		);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$config['regexp']->get('JS')
 		);
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant for the regexps used in replacements
+	* @testdox asConfig() creates Regexp objects for the regexps used in replacements
 	*/
 	public function testAsConfigJavaScriptReplacements()
 	{
@@ -196,12 +192,8 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
 			$config['replacements'][0][0]
-		);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
-			$config['replacements'][0][0]->get('JS')
 		);
 	}
 

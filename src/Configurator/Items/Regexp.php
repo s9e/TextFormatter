@@ -10,16 +10,19 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
-class Regexp extends Variant implements ConfigProvider
+class Regexp implements ConfigProvider
 {
 	/**
 	* @var bool Whether this regexp should have the global flag set in JavaScript
 	*/
 	protected $isGlobal;
+
+	/**
+	* @var string JavaScript regexp, with delimiters and modifiers, e.g. "/foo/i"
+	*/
+	protected $jsRegexp;
 
 	/**
 	* @var string PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
@@ -37,15 +40,6 @@ class Regexp extends Variant implements ConfigProvider
 		{
 			throw new InvalidArgumentException('Invalid regular expression ' . var_export($regexp, true));
 		}
-
-		parent::__construct($regexp);
-		$this->setDynamic(
-			'JS',
-			function ()
-			{
-				return $this->toJS();
-			}
-		);
 
 		$this->regexp   = $regexp;
 		$this->isGlobal = $isGlobal;
@@ -80,6 +74,21 @@ class Regexp extends Variant implements ConfigProvider
 	}
 
 	/**
+	* Return this regexp's JavaScript representation
+	*
+	* @return string
+	*/
+	public function getJS()
+	{
+		if (!isset($this->jsRegexp))
+		{
+			$this->jsRegexp = RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+		}
+
+		return $this->jsRegexp;
+	}
+
+	/**
 	* Return all the named captures with a standalone regexp that matches them
 	*
 	* @return array Array of [capture name => regexp]
@@ -103,16 +112,6 @@ class Regexp extends Variant implements ConfigProvider
 		}
 
 		return $captures;
-	}
-
-	/**
-	* Return this regexp as JavaScript code
-	*
-	* @return Code
-	*/
-	public function toJS()
-	{
-		return new Code(RegexpConvertor::toJS($this->regexp, $this->isGlobal));
 	}
 
 	/**
@@ -141,5 +140,16 @@ class Regexp extends Variant implements ConfigProvider
 		}
 
 		return $exprs;
+	}
+
+	/**
+	* Set this regexp's JavaScript representation
+	*
+	* @param  string $jsRegexp
+	* @return void
+	*/
+	public function setJS($jsRegexp)
+	{
+		$this->jsRegexp = $jsRegexp;
 	}
 }

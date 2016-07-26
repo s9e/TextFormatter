@@ -13,15 +13,15 @@ use s9e\TextFormatter\Tests\Test;
 class SchemeListTest extends Test
 {
 	/**
-	* @testdox asConfig() returns an instance of Variant
+	* @testdox asConfig() returns an instance of Regexp
 	*/
-	public function testAsConfigVariant()
+	public function testAsConfigRegexp()
 	{
 		$list = new SchemeList;
 		$list->add('http');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
 			$list->asConfig()
 		);
 	}
@@ -29,34 +29,19 @@ class SchemeListTest extends Test
 	/**
 	* @testdox asConfig() returns a regexp that matches all the allowed schemes in the default variant
 	*/
-	public function testAsConfigVariantDefault()
+	public function testAsConfigRegexpDefault()
 	{
 		$list = new SchemeList;
 		$list->add('http');
 		$list->add('https');
 
-		$this->assertSame('/^https?$/Di', $list->asConfig()->get());
-	}
-
-	/**
-	* @testdox asConfig() returns an instance of Code as the JS variant
-	*/
-	public function testAsConfigVariantJS()
-	{
-		$list = new SchemeList;
-		$list->add('http');
-		$list->add('https');
-
-		$this->assertEquals(
-			new Code('/^https?$/i'),
-			$list->asConfig()->get('JS')
-		);
+		$this->assertEquals('/^https?$/Di', $list->asConfig());
 	}
 
 	/**
 	* @testdox asConfig() creates a case-insensitive regexp that matches the schemes in the collection
 	*/
-	public function testAsConfigRegexp()
+	public function testAsConfigRegexpMatch()
 	{
 		$list = new SchemeList;
 		$list->add('http');
