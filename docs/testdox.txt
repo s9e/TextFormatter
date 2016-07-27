@@ -142,11 +142,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] asConfig() adds allowedChildren and allowedDescendants bitfields to each tag
- [x] getParser() returns an instance of s9e\TextFormatter\Parser
- [x] getParser() removes JavaScript-specific data from tag filters
- [x] getParser() removes JavaScript-specific data from attribute filters
- [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
- [x] getRenderer() invokes $this->rendering->getRenderer()
+ [x] Removes JavaScript-specific data from tag filters
+ [x] Removes JavaScript-specific data from attribute filters
  [x] $configurator->BBCodes returns an instance of the BBCodes plugin's configurator, and loads it if applicable
  [x] isset($configurator->BBCodes) returns whether the BBCodes plugin is loaded
  [x] unset($configurator->BBCodes) unloads the BBCodes plugin

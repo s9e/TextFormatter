@@ -13,8 +13,7 @@ $configurator->MediaEmbed->add($siteId);
 $dirpath  = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
 $siteFile = $dirpath . '/' . $siteId . '.xml';
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+extract($configurator->finalize());
 
 $html = '';
 $site = simplexml_load_file($siteFile);

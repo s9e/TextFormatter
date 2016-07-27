@@ -33,7 +33,7 @@ class PHPTest extends Test
 	{
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Renderer',
-			$this->configurator->getRenderer()
+			$this->configurator->rendering->getRenderer()
 		);
 	}
 
@@ -42,8 +42,8 @@ class PHPTest extends Test
 	*/
 	public function testMultipleGetRenderer()
 	{
-		$renderer1 = $this->configurator->getRenderer();
-		$renderer2 = $this->configurator->getRenderer();
+		$renderer1 = $this->configurator->rendering->getRenderer();
+		$renderer2 = $this->configurator->rendering->getRenderer();
 
 		$this->assertEquals($renderer1, $renderer2);
 		$this->assertNotSame($renderer1, $renderer2);
@@ -54,7 +54,7 @@ class PHPTest extends Test
 	*/
 	public function testInstanceSource()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertObjectHasAttribute('source', $renderer);
 		$this->assertContains('class Renderer', $renderer->source);
@@ -67,7 +67,7 @@ class PHPTest extends Test
 	{
 		$this->assertRegexp(
 			'/class Renderer_\\w{40}/',
-			$this->configurator->getRenderer()->source
+			$this->configurator->rendering->getRenderer()->source
 		);
 	}
 
@@ -80,7 +80,7 @@ class PHPTest extends Test
 
 		$this->assertRegexp(
 			'/class Bar_renderer_\\w{40}/',
-			$this->configurator->getRenderer()->source
+			$this->configurator->rendering->getRenderer()->source
 		);
 	}
 
@@ -94,7 +94,7 @@ class PHPTest extends Test
 
 		$this->assertInstanceOf(
 			$className,
-			$this->configurator->getRenderer()
+			$this->configurator->rendering->getRenderer()
 		);
 	}
 
@@ -106,7 +106,7 @@ class PHPTest extends Test
 		$className = uniqid('foo\\bar\\renderer_');
 		$this->configurator->rendering->engine->className = $className;
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertInstanceOf($className, $renderer);
 		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $renderer->source);
@@ -120,7 +120,7 @@ class PHPTest extends Test
 		$filepath = $this->tempnam();
 		$this->configurator->rendering->engine->filepath = $filepath;
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertFileExists($filepath);
 		$this->assertContains($renderer->source, file_get_contents($filepath));
@@ -153,7 +153,7 @@ class PHPTest extends Test
 	{
 		$cacheDir = sys_get_temp_dir();
 		$this->configurator->rendering->engine->cacheDir = $cacheDir;
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$filepath = $cacheDir . '/' . get_class($renderer) . '.php';
 
 		$this->assertFileExists($filepath);
@@ -168,7 +168,7 @@ class PHPTest extends Test
 		$cacheDir = sys_get_temp_dir();
 		$this->configurator->rendering->engine->cacheDir  = $cacheDir;
 		$this->configurator->rendering->engine->className = 'Foo\\Bar';
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 
 		$this->assertFileExists($cacheDir . '/Foo_Bar.php');
 		unlink($cacheDir . '/Foo_Bar.php');
@@ -185,7 +185,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->cacheDir = $cacheDir;
 		$this->configurator->rendering->engine->filepath = $filepath;
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists($cacheDir . '/' . get_class($renderer) . '.php');
@@ -197,7 +197,7 @@ class PHPTest extends Test
 	public function testLastClassName()
 	{
 		$this->assertSame(
-			get_class($this->configurator->getRenderer()),
+			get_class($this->configurator->rendering->getRenderer()),
 			$this->configurator->rendering->engine->lastClassName
 		);
 	}
@@ -210,7 +210,7 @@ class PHPTest extends Test
 		$cacheDir = sys_get_temp_dir();
 		$this->configurator->rendering->engine->cacheDir  = $cacheDir;
 
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 
 		$this->assertRegexp(
 			'(^' . preg_quote($cacheDir) . '/Renderer_\\w{40}\\.php$)',
@@ -227,7 +227,7 @@ class PHPTest extends Test
 
 		$this->assertNotContains(
 			'Nothing',
-			$this->configurator->getRenderer()->source
+			$this->configurator->rendering->getRenderer()->source
 		);
 	}
 
@@ -238,7 +238,7 @@ class PHPTest extends Test
 	public function testPI()
 	{
 		$this->configurator->tags->add('X')->template = '<?pi ?>';
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -249,7 +249,7 @@ class PHPTest extends Test
 	public function testUnsupported()
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:foo/>';
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -260,7 +260,7 @@ class PHPTest extends Test
 	public function testUnsupportedNamespace()
 	{
 		$this->configurator->tags->add('X')->template = '<x:x xmlns:x="urn:x"/>';
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -271,7 +271,7 @@ class PHPTest extends Test
 	public function testUnsupportedCopyOf()
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:copy-of select="current()"/>';
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -299,11 +299,11 @@ class PHPTest extends Test
 		call_user_func($configuratorSetup, $this->configurator, $this);
 
 		$this->configurator->rendering->engine = 'XSLT';
-		$xsltRenderer = $this->configurator->getRenderer();
+		$xsltRenderer = $this->configurator->rendering->getRenderer();
 
 		$this->configurator->rendering->engine = 'PHP';
 		$this->configurator->rendering->engine->enableQuickRenderer = $enableQuickRenderer;
-		$phpRenderer  = $this->configurator->getRenderer();
+		$phpRenderer  = $this->configurator->rendering->getRenderer();
 
 		if ($rendererSetup)
 		{
@@ -770,7 +770,7 @@ class PHPTest extends Test
 			call_user_func($setup, $this->configurator->rendering->engine, $this);
 		}
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		if (isset($contains))
 		{
@@ -908,7 +908,7 @@ class PHPTest extends Test
 		     ->will($this->returnArgument(0));
 
 		$this->configurator->rendering->engine->optimizer = $mock;
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -917,7 +917,7 @@ class PHPTest extends Test
 	public function testNoOptimizer()
 	{
 		unset($this->configurator->rendering->engine->optimizer);
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -933,7 +933,7 @@ class PHPTest extends Test
 		     ->will($this->returnArgument(0));
 
 		$this->configurator->rendering->engine->controlStructuresOptimizer = $mock;
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -942,7 +942,7 @@ class PHPTest extends Test
 	public function testNoControlStructuresOptimizer()
 	{
 		unset($this->configurator->rendering->engine->controlStructuresOptimizer);
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
@@ -1546,7 +1546,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertContains('renderQuick', $renderer->source);
 	}
@@ -1559,7 +1559,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = false;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertNotContains('renderQuick', $renderer->source);
 	}
@@ -1582,7 +1582,7 @@ class PHPTest extends Test
 				<xsl:when test="@foo=8">8</xsl:when>
 			</xsl:choose>';
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertContains(
 			'protected static $bt13027555=[1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7];',

@@ -77,7 +77,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			call_user_func($setup, $configurator);
 		}
 
-		$parser = $configurator->getParser();
+		$parser = $this->getParser($configurator);
 		$parser->registerParser(
 			'Test',
 			function () use ($callback, $parser)
@@ -206,5 +206,23 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	protected static function ws($template)
 	{
 		return preg_replace('(>\\n\\s*<)', '><', trim($template));
+	}
+
+	protected function getParser($configurator = null)
+	{
+		if (!isset($configurator))
+		{
+			$configurator = $this->configurator;
+		}
+
+		$objects = $configurator->finalize([
+			'addHTML5Rules'  => false,
+			'optimizeConfig' => false,
+			'returnJS'       => false,
+			'returnParser'   => true,
+			'returnRenderer' => false
+		]);
+
+		return $objects['parser'];
 	}
 }

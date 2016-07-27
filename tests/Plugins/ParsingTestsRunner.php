@@ -13,15 +13,13 @@ trait ParsingTestsRunner
 	public function testParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = null, $assertMethod = 'assertSame')
 	{
 		$pluginName = preg_replace('/.*\\\\([^\\\\]+)\\\\.*/', '$1', get_class($this));
-
-		$configurator = new Configurator;
-		$plugin = $configurator->plugins->load($pluginName, $pluginOptions);
+		$plugin     = $this->configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
 		{
-			$setup($configurator, $plugin);
+			$setup($this->configurator, $plugin);
 		}
 
-		$this->$assertMethod($expected, $configurator->getParser()->parse($original));
+		$this->$assertMethod($expected, $this->getParser()->parse($original));
 	}
 }

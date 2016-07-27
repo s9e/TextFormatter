@@ -116,7 +116,7 @@ class BBCodesTest extends Test
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertJSParsing($original, $this->configurator->getParser()->parse($original));
+		$this->assertJSParsing($original, $this->getParser()->parse($original));
 	}
 
 	public function getPredefinedBBCodesTests()

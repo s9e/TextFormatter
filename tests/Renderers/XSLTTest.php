@@ -19,7 +19,7 @@ class XSLTTest extends Test
 	*/
 	public function testSerializable()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertEquals(
 			$renderer,
@@ -32,7 +32,7 @@ class XSLTTest extends Test
 	*/
 	public function testSerializableNoProc()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->render('<r>..</r>');
 
 		$this->assertNotContains(
@@ -46,7 +46,7 @@ class XSLTTest extends Test
 	*/
 	public function testSerializableCustomProps()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->foo = 'bar';
 
 		$this->assertAttributeEquals(
@@ -63,7 +63,7 @@ class XSLTTest extends Test
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('foo');
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$values = [
 			'"\'...\'"',
@@ -90,7 +90,7 @@ class XSLTTest extends Test
 
 		$this->assertSame(
 			'<object><embed src="foo"></object>',
-			$this->configurator->getRenderer()->render('<r><X/></r>')
+			$this->configurator->rendering->getRenderer()->render('<r><X/></r>')
 		);
 	}
 }

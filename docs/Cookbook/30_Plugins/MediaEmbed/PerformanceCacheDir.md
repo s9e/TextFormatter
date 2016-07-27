@@ -17,7 +17,9 @@ $configurator->registeredVars['cacheDir'] = '/path/to/cache';
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$parser       = $configurator->getParser();
+
+// Create $parser and $renderer
+extract($configurator->finalize());
 
 $parser->registeredVars['cacheDir'] = '/path/to/cache';
 ```

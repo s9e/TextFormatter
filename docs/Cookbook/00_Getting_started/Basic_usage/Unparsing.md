@@ -10,8 +10,11 @@ $configurator->BBCodes->addFromRepository('B');
 // Original text
 $text = 'Hello [b]world[/b]!';
 
+// Create $parser and $renderer
+extract($configurator->finalize());
+
 // Parsed text: <r>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</r>
-$xml = $configurator->getParser()->parse($text);
+$xml = $parser->parse($text);
 
 // Here's how to unparse the XML back to plain text
 echo s9e\TextFormatter\Unparser::unparse($xml);

@@ -16,8 +16,7 @@ class ParserTest extends Test
 	*/
 	public function testSerialize()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertStringStartsWith(
 			'O:24:"s9e\\TextFormatter\\Parser"',
@@ -30,8 +29,7 @@ class ParserTest extends Test
 	*/
 	public function testUnserialize()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertEquals(
 			$parser,
@@ -46,7 +44,7 @@ class ParserTest extends Test
 	{
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Parser\\Logger',
-			$this->configurator->getParser()->getLogger()
+			$this->getParser()->getLogger()
 		);
 	}
 
@@ -55,7 +53,7 @@ class ParserTest extends Test
 	*/
 	public function testLoggerIsClearedAtStart()
 	{
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$logger = $parser->getLogger();
 
 		$logger->debug('debug');
@@ -68,7 +66,7 @@ class ParserTest extends Test
 	*/
 	public function testGetText()
 	{
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$text   = 'Hello world';
 
 		$parser->parse($text);
@@ -81,7 +79,7 @@ class ParserTest extends Test
 	*/
 	public function testGetTextNormalized()
 	{
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$text   = "Hello world\r\n";
 
 		$parser->parse($text);
@@ -94,8 +92,7 @@ class ParserTest extends Test
 	*/
 	public function testParse()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertSame(
 			'<t>Plain text</t>',
@@ -108,8 +105,7 @@ class ParserTest extends Test
 	*/
 	public function testParseIsClean()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$parser->parse('Foo');
 
@@ -124,8 +120,7 @@ class ParserTest extends Test
 	*/
 	public function testParseCR()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertSame(
 			"<t>Plain\ntext</t>",
@@ -138,8 +133,7 @@ class ParserTest extends Test
 	*/
 	public function testParseCRLF()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertSame(
 			"<t>Plain\ntext</t>",
@@ -152,8 +146,7 @@ class ParserTest extends Test
 	*/
 	public function testParseFiltersLowAscii()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$this->assertSame(
 			"<t>Plain\t\n\n text</t>",
@@ -166,9 +159,8 @@ class ParserTest extends Test
 	*/
 	public function testDisableTag()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('FOO');
-		$parser       = $configurator->getParser();
+		$this->configurator->tags->add('FOO');
+		$parser = $this->getParser();
 
 		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
 		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
@@ -205,9 +197,8 @@ class ParserTest extends Test
 	*/
 	public function testEnableTag()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('FOO');
-		$parser       = $configurator->getParser();
+		$this->configurator->tags->add('FOO');
+		$parser = $this->getParser();
 
 		$parser->disableTag('FOO');
 
@@ -227,8 +218,7 @@ class ParserTest extends Test
 	*/
 	public function testResetException()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
+		$parser = $this->getParser();
 
 		$parser->registerParser(
 			'Test',
@@ -251,7 +241,7 @@ class ParserTest extends Test
 	{
 		$this->configurator->tags->add('X')->tagLimit = 3;
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 
 		$parser->registerParser(
 			'Test',
@@ -306,7 +296,7 @@ class ParserTest extends Test
 	{
 		$this->configurator->tags->add('X')->nestingLimit = 3;
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 
 		$parser->registerParser(
 			'Test',
@@ -360,7 +350,7 @@ class ParserTest extends Test
 	public function testUnicodeSMP()
 	{
 		$text = '😀';
-		$xml  = $this->configurator->getParser()->parse($text);
+		$xml  = $this->getParser()->parse($text);
 		$this->assertSame('<t>&#128512;</t>', $xml);
 	}
 

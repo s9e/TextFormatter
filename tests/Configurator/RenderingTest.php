@@ -73,7 +73,7 @@ class RenderingTest extends Test
 		     ->with($this->configurator->rendering);
 
 		$this->configurator->rendering->engine = $mock;
-		$this->configurator->getRenderer();
+		$this->configurator->rendering->getRenderer();
 	}
 
 	/**

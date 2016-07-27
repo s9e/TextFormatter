@@ -3926,7 +3926,7 @@ class ParserTest extends Test
 	public function testLegacyRendering($xml, $html, $setup = null)
 	{
 		$setup($this->configurator);
-		$this->assertSame($html, $this->configurator->getRenderer()->render($xml));
+		$this->assertSame($html, $this->configurator->rendering->getRenderer()->render($xml));
 	}
 
 	public function getLegacyRenderingTests()

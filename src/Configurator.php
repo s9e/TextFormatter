@@ -255,7 +255,7 @@ class Configurator implements ConfigProvider
 		if ($options['returnRenderer'])
 		{
 			// Create a renderer
-			$renderer = $this->getRenderer();
+			$renderer = $this->rendering->getRenderer();
 
 			// Execute the renderer callback if applicable
 			if (isset($options['finalizeRenderer']))
@@ -299,26 +299,6 @@ class Configurator implements ConfigProvider
 		}
 
 		return $return;
-	}
-
-	/**
-	* Return an instance of Parser based on the current config
-	*
-	* @return \s9e\TextFormatter\Parser
-	*/
-	public function getParser()
-	{
-		return new Parser(ConfigHelper::filterConfig($this->asConfig(), 'PHP'));
-	}
-
-	/**
-	* Return an instance of Renderer based on the current config
-	*
-	* @return \s9e\TextFormatter\Renderer
-	*/
-	public function getRenderer()
-	{
-		return $this->rendering->getRenderer();
 	}
 
 	/**

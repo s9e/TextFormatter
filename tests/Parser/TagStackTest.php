@@ -421,7 +421,7 @@ class TagStackTest extends Test
 		$this->configurator->tags->add('X');
 		$this->configurator->tags->add('Y');
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$parser->registerParser(
 			'Test',
 			function () use ($parser)
@@ -435,7 +435,7 @@ class TagStackTest extends Test
 			$parser->parse('')
 		);
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$parser->registerParser(
 			'Test',
 			function () use ($parser)

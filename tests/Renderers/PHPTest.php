@@ -24,7 +24,7 @@ class PHPTest extends Test
 	public function testSerializable()
 	{
 		$this->configurator->rendering->parameters->add('foo', "'bar'");
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		unset($renderer->source);
 
 		$this->assertEquals(
@@ -38,7 +38,7 @@ class PHPTest extends Test
 	*/
 	public function testNoSourceSerialize()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertNotContains('source', serialize($renderer));
 	}
@@ -48,7 +48,7 @@ class PHPTest extends Test
 	*/
 	public function testNoOutputSerialize()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->render('<r>xxx</r>');
 
 		$this->assertNotContains('out', serialize($renderer));
@@ -59,7 +59,7 @@ class PHPTest extends Test
 	*/
 	public function testSerializePreserveCustom()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->foo = 'bar';
 
 		$renderer = unserialize(serialize($renderer));
@@ -76,7 +76,7 @@ class PHPTest extends Test
 		// Create a template that requires XPath
 		$this->configurator->tags->add('FOO')->template = '<xsl:value-of select="lang()"/>';
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->render('<r>xxx</r>');
 
 		$reflection = new ReflectionObject($renderer);

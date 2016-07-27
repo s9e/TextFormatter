@@ -15,7 +15,7 @@ class UnformattedTest extends Test
 	public function testRichText()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame(
 			'[b]bold[/b]',
@@ -29,7 +29,7 @@ class UnformattedTest extends Test
 	public function testNl2brHTML()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame(
 			"a<br>\nb",
@@ -43,7 +43,7 @@ class UnformattedTest extends Test
 	public function testPreservesSpecialChars()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame(
 			'AT&amp;T &lt;b&gt;',
@@ -57,7 +57,7 @@ class UnformattedTest extends Test
 	public function testEncodesSpecialChars()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame(
 			'AT&amp;T &lt;b&gt; &amp; &lt; &gt;',
@@ -71,6 +71,6 @@ class UnformattedTest extends Test
 	public function testSetParameter()
 	{
 		$this->configurator->rendering->engine = 'Unformatted';
-		$this->configurator->getRenderer()->setParameter('foo', 'bar');
+		$this->configurator->rendering->getRenderer()->setParameter('foo', 'bar');
 	}
 }

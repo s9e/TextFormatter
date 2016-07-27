@@ -311,18 +311,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getParser() returns an instance of s9e\TextFormatter\Parser
-	*/
-	public function testGetParser()
-	{
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Parser',
-			$this->configurator->getParser()
-		);
-	}
-
-	/**
-	* @testdox getParser() removes JavaScript-specific data from tag filters
+	* @testdox Removes JavaScript-specific data from tag filters
 	*/
 	public function testAsConfigRemovesJavaScriptTagFilters()
 	{
@@ -331,7 +320,7 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->tags->add('A')->filterChain->append($pc);
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
 
 		$this->assertArrayNotHasKey(
@@ -341,7 +330,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getParser() removes JavaScript-specific data from attribute filters
+	* @testdox Removes JavaScript-specific data from attribute filters
 	*/
 	public function testAsConfigRemovesJavaScriptAttributeFilters()
 	{
@@ -350,39 +339,13 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($filter);
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
 
 		$this->assertArrayNotHasKey(
 			'js',
 			$tagsConfig['A']['attributes']['a']['filterChain'][0]
 		);
-	}
-
-	/**
-	* @testdox getRenderer() returns an instance of s9e\TextFormatter\Renderer
-	*/
-	public function testGetRenderer()
-	{
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Renderer',
-			$this->configurator->getRenderer()
-		);
-	}
-
-	/**
-	* @testdox getRenderer() invokes $this->rendering->getRenderer()
-	*/
-	public function testGetRendererInvokesGenerator()
-	{
-		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Rendering')
-		             ->disableOriginalConstructor()
-		             ->getMock();
-		$mock->expects($this->once())
-		     ->method('getRenderer');
-
-		$this->configurator->rendering = $mock;
-		$this->configurator->getRenderer();
 	}
 
 	/**

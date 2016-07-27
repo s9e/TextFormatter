@@ -16,7 +16,7 @@ trait RendererTests
 
 		$this->assertSame(
 			'Plain text',
-			$this->configurator->getRenderer()->render($xml)
+			$this->configurator->rendering->getRenderer()->render($xml)
 		);
 	}
 
@@ -29,7 +29,7 @@ trait RendererTests
 
 		$this->assertSame(
 			'One<br>two',
-			$this->configurator->getRenderer()->render($xml)
+			$this->configurator->rendering->getRenderer()->render($xml)
 		);
 	}
 
@@ -44,7 +44,7 @@ trait RendererTests
 
 		$this->assertSame(
 			'Hello <b>world</b>!',
-			$this->configurator->getRenderer()->render($xml)
+			$this->configurator->rendering->getRenderer()->render($xml)
 		);
 	}
 
@@ -56,7 +56,7 @@ trait RendererTests
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('foo', 'bar');
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame('bar', $renderer->getParameter('foo'));
 	}
@@ -69,7 +69,7 @@ trait RendererTests
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('foo', 'bar');
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->setParameter('foo', 'baz');
 
 		$this->assertSame('baz', $renderer->getParameter('foo'));
@@ -80,7 +80,7 @@ trait RendererTests
 	*/
 	public function testGetParameterUndefined()
 	{
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertSame('', $renderer->getParameter('foo'));
 	}
@@ -93,7 +93,7 @@ trait RendererTests
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('bar', 'BAR');
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->setParameter('baz', 'BAZ');
 
 		$this->assertEquals(
@@ -110,7 +110,7 @@ trait RendererTests
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('foo');
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->setParameter('foo', 'bar');
 
 		$this->assertSame(
@@ -129,7 +129,7 @@ trait RendererTests
 		$this->configurator->rendering->parameters->add('foo');
 		$this->configurator->rendering->parameters->add('bar');
 
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->setParameters([
 			'foo' => 'FOO',
 			'bar' => 'BAR'
@@ -148,7 +148,7 @@ trait RendererTests
 	{
 		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->rendering->parameters->add('foo');
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 
 		$values = [
 			'"\'...\'"',
@@ -168,7 +168,7 @@ trait RendererTests
 	public function testGetParameterUnserialized()
 	{
 		$this->configurator->rendering->parameters['x'] = 'y';
-		$renderer = $this->configurator->getRenderer();
+		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->setParameter('foo', 'xxx');
 
 		$this->assertEquals(
@@ -186,7 +186,7 @@ trait RendererTests
 		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY foo "FOO">]>'
 		     . '<r>x&foo;y</r>';
 
-		$this->configurator->getRenderer()->render($xml);
+		$this->configurator->rendering->getRenderer()->render($xml);
 	}
 
 	/**
@@ -195,7 +195,7 @@ trait RendererTests
 	*/
 	public function testComment()
 	{
-		$this->configurator->getRenderer()->render('<r><!-- -->foo</r>');
+		$this->configurator->rendering->getRenderer()->render('<r><!-- -->foo</r>');
 	}
 
 	/**
@@ -204,7 +204,7 @@ trait RendererTests
 	*/
 	public function testPI()
 	{
-		$this->configurator->getRenderer()->render('<r><?pi ?>foo</r>');
+		$this->configurator->rendering->getRenderer()->render('<r><?pi ?>foo</r>');
 	}
 
 	/**
@@ -216,7 +216,7 @@ trait RendererTests
 		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
 		     . '<r>x&xxe;y</r>';
 
-		$this->configurator->getRenderer()->render($xml);
+		$this->configurator->rendering->getRenderer()->render($xml);
 	}
 
 	/**
@@ -226,7 +226,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'😀',
-			$this->configurator->getRenderer()->render('<t>&#128512;</t>')
+			$this->configurator->rendering->getRenderer()->render('<t>&#128512;</t>')
 		);
 	}
 
@@ -237,7 +237,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'😀',
-			$this->configurator->getRenderer()->render('<r>&#128512;</r>')
+			$this->configurator->rendering->getRenderer()->render('<r>&#128512;</r>')
 		);
 	}
 
@@ -248,7 +248,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'😀',
-			$this->configurator->getRenderer()->render('<r>&#x1F600;</r>')
+			$this->configurator->rendering->getRenderer()->render('<r>&#x1F600;</r>')
 		);
 	}
 
@@ -259,7 +259,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'&lt;😀&gt;',
-			$this->configurator->getRenderer()->render('<t>&lt;&#128512;&gt;</t>')
+			$this->configurator->rendering->getRenderer()->render('<t>&lt;&#128512;&gt;</t>')
 		);
 	}
 
@@ -270,7 +270,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'&lt;😀&gt;',
-			$this->configurator->getRenderer()->render('<r>&lt;&#128512;&gt;</r>')
+			$this->configurator->rendering->getRenderer()->render('<r>&lt;&#128512;&gt;</r>')
 		);
 	}
 
@@ -281,7 +281,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'&lt;😀',
-			$this->configurator->getRenderer()->render('<t>&#0060;&#128512;</t>')
+			$this->configurator->rendering->getRenderer()->render('<t>&#0060;&#128512;</t>')
 		);
 	}
 
@@ -292,7 +292,7 @@ trait RendererTests
 	{
 		$this->assertSame(
 			'&lt;😀',
-			$this->configurator->getRenderer()->render('<r>&#0060;&#128512;</r>')
+			$this->configurator->rendering->getRenderer()->render('<r>&#0060;&#128512;</r>')
 		);
 	}
 }

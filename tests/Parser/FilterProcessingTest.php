@@ -341,7 +341,7 @@ class FilterProcessingTest extends Test
 		$filter->resetParameters();
 		$filter->addParameterByName('openTags');
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$parser->registerParser(
 			'Test',
 			function () use ($parser)
@@ -372,7 +372,7 @@ class FilterProcessingTest extends Test
 		$filter->resetParameters();
 		$filter->addParameterByName('text');
 
-		$parser = $this->configurator->getParser();
+		$parser = $this->getParser();
 		$parser->registerParser(
 			'Test',
 			function () use ($parser)
