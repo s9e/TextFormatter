@@ -11,7 +11,6 @@ use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;

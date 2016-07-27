@@ -412,8 +412,7 @@ class ConfiguratorTest extends Test
 		$plugin->replace('/(?<foo>[0-9]+)/', '');
 		$plugin->replace('/(?<bar>[a-z]+)/', '');
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertEquals(
 			[
@@ -429,7 +428,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox asConfig() returns regexp in a Regexp object
 	*/
-	public function testAsConfigNoJSVariant()
+	public function testAsConfigAsRegexp()
 	{
 		$plugin = $this->configurator->plugins->load('Preg');
 		$plugin->replace('/(?<foo>[0-9]+)/', '');

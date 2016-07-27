@@ -21,8 +21,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->aliasElement('A', 'url');
 
-		$pluginConfig = $plugin->asConfig();
-		ConfigHelper::filterVariants($pluginConfig);
+		$pluginConfig = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertArrayMatches(
 			['aliases' => ['a' => ['' => 'URL']]],
@@ -38,8 +37,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->aliasAttribute('A', 'HREF', 'URL');
 
-		$pluginConfig = $plugin->asConfig();
-		ConfigHelper::filterVariants($pluginConfig);
+		$pluginConfig = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertArrayMatches(
 			['aliases' => ['a' => ['href' => 'url']]],
@@ -324,8 +322,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->aliasElement('A', 'url');
 
-		$pluginConfig = $plugin->asConfig();
-		ConfigHelper::filterVariants($pluginConfig, 'JS');
+		$pluginConfig = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertEquals(
 			new Dictionary(['a' => new Dictionary(['' => 'URL'])]),
@@ -341,8 +338,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->aliasAttribute('A', 'HREF', 'URL');
 
-		$pluginConfig = $plugin->asConfig();
-		ConfigHelper::filterVariants($pluginConfig, 'JS');
+		$pluginConfig = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertEquals(
 			new Dictionary(['a' => new Dictionary(['href' => 'url'])]),

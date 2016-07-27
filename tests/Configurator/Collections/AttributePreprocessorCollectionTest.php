@@ -38,8 +38,7 @@ class AttributePreprocessorCollectionTest extends Test
 		$collection->add('y', '#(?<y1>y1)#');
 		$collection->add('y', '#(?<y2>y2)#');
 
-		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($collection->asConfig(), 'PHP');
 
 		$this->assertSame(
 			[

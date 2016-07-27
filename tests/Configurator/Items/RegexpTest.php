@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -42,17 +43,6 @@ class RegexpTest extends Test
 	}
 
 	/**
-	* @testdox setJS() replaces the regexp returned by getJS()
-	*/
-	public function testSetJS()
-	{
-		$regexp = new Regexp('/foo\\pL/i');
-		$regexp->setJS('/foo\\w/i');
-
-		$this->assertSame('/foo\\w/i', $regexp->getJS());
-	}
-
-	/**
 	* @testdox Is a config provider
 	*/
 	public function testIsConfigProvider()
@@ -73,7 +63,7 @@ class RegexpTest extends Test
 	/**
 	* @testdox The JS regexp has a global flag if isGlobal is true
 	*/
-	public function testJSVariantGlobal()
+	public function testJSGlobal()
 	{
 		$regexp = new Regexp('/x/', true);
 		$this->assertEquals('/x/g', $regexp->getJS());
@@ -134,6 +124,32 @@ class RegexpTest extends Test
 		$this->assertSame(
 			['', 'year', 'name'],
 			$ap->getCaptureNames()
+		);
+	}
+
+	/**
+	* @testdox filterConfig('PHP') returns the regexp as a string
+	*/
+	public function testFilterConfigPHP()
+	{
+		$regexp = new Regexp('/foo/');
+
+		$this->assertSame(
+			'/foo/',
+			$regexp->filterConfig('PHP')
+		);
+	}
+
+	/**
+	* @testdox filterConfig('JS') returns a Code object
+	*/
+	public function testFilterConfigJS()
+	{
+		$regexp = new Regexp('/foo/', true);
+
+		$this->assertEquals(
+			new Code('/foo/g'),
+			$regexp->filterConfig('JS')
 		);
 	}
 }

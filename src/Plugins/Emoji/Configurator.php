@@ -10,7 +10,6 @@ namespace s9e\TextFormatter\Plugins\Emoji;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase

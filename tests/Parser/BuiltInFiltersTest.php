@@ -69,8 +69,7 @@ class BuiltInFiltersTest extends Test
 			$setup($this->configurator);
 		}
 
-		$config = $this->configurator->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($this->configurator->asConfig(), 'PHP');
 
 		$logger = new Logger;
 

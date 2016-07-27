@@ -6,10 +6,10 @@ use stdClass;
 use Traversable;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Tests\Test;
@@ -20,104 +20,90 @@ use s9e\TextFormatter\Tests\Test;
 class ConfigHelperTest extends Test
 {
 	/**
-	* @testdox filterVariants() filters the right variant
+	* @testdox filterConfig() filters for the right target
 	*/
-	public function testFilterVariants()
+	public function testFilterConfig()
 	{
-		$foo = new Variant(0);
-		$foo->set('variant', 1);
+		foreach (['PHP', 'JS'] as $target)
+		{
+			$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+			$mock->expects($this->once())
+			     ->method('filterConfig')
+			     ->with($target)
+			     ->will($this->returnValue(42));
 
-		$config = ['foo' => $foo];
-
-		ConfigHelper::filterVariants($config, 'variant');
-
-		$this->assertSame(
-			['foo' => 1],
-			$config
-		);
+			$this->assertSame(
+				['foo' => 42],
+				ConfigHelper::filterConfig(['foo' => $mock], $target)
+			);
+		}
 	}
 
 	/**
-	* @testdox filterVariants() recurses into deep arrays
+	* @testdox filterConfig() recurses into deep arrays
 	*/
-	public function testFilterVariantsDeep()
+	public function testFilterConfigDeep()
 	{
 		$config = [
-			'foo' => new Variant(42),
-			'bar' => ['baz' => new Variant(55)]
+			'foo' => new DummyConfigValue(42),
+			'bar' => ['baz' => new DummyConfigValue(55)]
 		];
-
-		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
 			[
 				'foo' => 42,
 				'bar' => ['baz' => 55]
 			],
-			$config
+			ConfigHelper::filterConfig($config, 'PHP')
 		);
 	}
 
 	/**
-	* @testdox filterVariants() recurses into variants
+	* @testdox filterConfig() recurses with the correct target
 	*/
-	public function testFilterVariantsRecursive()
+	public function testFilterConfigRecursive()
 	{
-		$foo = new Variant(0);
-		$bar = new Variant(0);
+		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+		$mock->expects($this->once())
+		     ->method('filterConfig')
+		     ->with('JS')
+		     ->will($this->returnValue(42));
 
-		$foo->set('vv', ['bar' => $bar]);
-		$bar->set('vv', ['baz' => 42]);
-
-		$config = ['foo' => $foo];
-
-		ConfigHelper::filterVariants($config, 'vv');
+		$original = ['foo' => ['bar' => $mock]];
+		$expected = ['foo' => ['bar' => 42]];
 
 		$this->assertSame(
-			['foo' => ['bar' => ['baz' => 42]]],
-			$config
+			$expected,
+			ConfigHelper::filterConfig($original, 'JS')
 		);
 	}
 
 	/**
-	* @testdox filterVariants() removes NULL variants
+	* @testdox filterConfig() ignores instances of FilterableConfigValue that return NULL
 	*/
-	public function testFilterVariantsNull()
+	public function testFilterConfigNull()
 	{
-		$foo = new Variant;
-		$foo->set('foo', 42);
+		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+		$mock->expects($this->once())
+		     ->method('filterConfig')
+		     ->will($this->returnValue(null));
 
-		$config = ['foo' => $foo];
-
-		ConfigHelper::filterVariants($config, 'vv');
+		$original = ['foo' => $mock, 'bar' => 42];
+		$expected = ['bar' => 42];
 
 		$this->assertSame(
-			[],
-			$config
+			$expected,
+			ConfigHelper::filterConfig($original, 'PHP')
 		);
 	}
 
 	/**
-	* @testdox filterVariants() replaces instances of Dictionary with an array if the variant is not JS
+	* @testdox filterConfig() preserves instances of Dictionary with an array if the variant is JS
 	*/
-	public function testFilterVariantsDictionaryNotJS()
+	public function testFilterConfigDictionaryJS()
 	{
 		$config = ['dict' => new Dictionary(['foo' => 'bar'])];
-		ConfigHelper::filterVariants($config);
-
-		$this->assertSame(
-			['dict' => ['foo' => 'bar']],
-			$config
-		);
-	}
-
-	/**
-	* @testdox filterVariants() preserves instances of Dictionary with an array if the variant is JS
-	*/
-	public function testFilterVariantsDictionaryJS()
-	{
-		$config = ['dict' => new Dictionary(['foo' => 'bar'])];
-		ConfigHelper::filterVariants($config, 'JS');
+		ConfigHelper::filterConfig($config, 'JS');
 
 		$this->assertEquals(
 			['dict' => new Dictionary(['foo' => 'bar'])],
@@ -313,7 +299,7 @@ class ConfigHelperTest extends Test
 		$configurator->BBCodes->addFromRepository('U');
 
 		$normalConfig = $configurator->asConfig();
-		ConfigHelper::filterVariants($normalConfig);
+		ConfigHelper::filterConfig($normalConfig);
 
 		$optimizedConfig = $normalConfig;
 		ConfigHelper::optimizeArray($optimizedConfig);
@@ -339,5 +325,20 @@ class NullConfigProvider implements ConfigProvider
 	public function asConfig()
 	{
 		return null;
+	}
+}
+
+class DummyConfigValue implements FilterableConfigValue
+{
+	protected $value;
+
+	public function __construct($value)
+	{
+		$this->value = $value;
+	}
+
+	public function filterConfig($target)
+	{
+		return $this->value;
 	}
 }

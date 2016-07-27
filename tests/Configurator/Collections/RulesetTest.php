@@ -1255,8 +1255,7 @@ class RulesetTest extends Test
 		$ruleset->closeAncestor('X');
 		$ruleset->closeAncestor('Y');
 
-		$config = $ruleset->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($ruleset->asConfig(), 'PHP');
 
 		$this->assertArrayHasKey('closeAncestor', $config);
 		$this->assertArrayHasKey('X', $config['closeAncestor']);
@@ -1273,8 +1272,7 @@ class RulesetTest extends Test
 		$ruleset->closeParent('X');
 		$ruleset->closeParent('Y');
 
-		$config = $ruleset->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($ruleset->asConfig(), 'PHP');
 
 		$this->assertArrayHasKey('closeParent', $config);
 		$this->assertArrayHasKey('X', $config['closeParent']);

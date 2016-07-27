@@ -301,11 +301,11 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the callback's JavaScript as a variant if available
+	* @testdox asConfig() returns the callback's JavaScript as a Code object if available
 	*/
 	public function testAsConfigJavaScript()
 	{
-		$js = new Code('function(){return "";}');
+		$js = 'function(){return "";}';
 
 		$pc = new ProgrammableCallback(function(){});
 		$pc->setJS($js);
@@ -314,30 +314,10 @@ class ProgrammableCallbackTest extends Test
 
 		$this->assertArrayHasKey('js', $config);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Code',
 			$config['js']
 		);
-		$this->assertSame($js, $config['js']->get('JS'));
-	}
-
-	/**
-	* @testdox asConfig() uses getJS() to autofill the JavaScript variant
-	*/
-	public function testAsConfigJavaScriptAutofill()
-	{
-		$pc = new ProgrammableCallback('strtolower');
-
-		$config = $pc->asConfig();
-
-		$this->assertArrayHasKey('js', $config);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$config['js']
-		);
-		$this->assertSame(
-			"function(str)\n{\n\treturn str.toLowerCase();\n}",
-			(string) $config['js']->get('JS')
-		);
+		$this->assertEquals($js, $config['js']);
 	}
 
 	/**

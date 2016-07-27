@@ -168,8 +168,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notAfter = '\\w';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame('/(?<!\\w)x/S', $config['regexp']);
 	}
@@ -184,8 +183,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('yy', 'yy');
 		$plugin->notAfter = '\\w';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertEquals(new Code('/(?:xx|yy)/g'), $config['regexp']);
 		$this->assertEquals(new Code('/\\w/'),        $config['notAfter']);
@@ -200,8 +198,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notAfter = '(?>x)';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertEquals(new Code('/x/g'),    $config['regexp']);
 		$this->assertEquals(new Code('/(?:x)/'), $config['notAfter']);
@@ -216,7 +213,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notBefore = '\\w';
 
-		$config = $plugin->asConfig();
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame('/x(?!\\w)/S', $config['regexp']);
 	}
@@ -230,8 +227,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notAfter = '\\w';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertEquals(new Code('/x/g', 'g'), $config['regexp']);
 		$this->assertEquals(new Code('/\\w/'),     $config['notAfter']);
@@ -246,8 +242,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notAfter = '\\pL';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame('/(?<!\\pL)x/Su', $config['regexp']);
 	}
@@ -261,8 +256,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('x', 'x');
 		$plugin->notBefore = '\\pL';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame('/x(?!\\pL)/Su', $config['regexp']);
 	}

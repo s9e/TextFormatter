@@ -3,7 +3,6 @@
 namespace s9e\TextFormatter\Tests\Plugins\Censor;
 
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\Censor\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -117,8 +116,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('apple', 'banana');
 		$plugin->add('lemon', 'citrus');
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame(
 			[
@@ -138,8 +136,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('apple', 'banana');
 		$plugin->add('cherry', 'banana');
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame(
 			[['/^(?>apple|cherry)$/Diu', 'banana']],
@@ -156,8 +153,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('apple', '**');
 		$plugin->add('cherry', 'banana');
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config);
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame(
 			[['/^cherry$/Diu', 'banana']],

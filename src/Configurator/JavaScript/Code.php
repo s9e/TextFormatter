@@ -7,10 +7,12 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
 
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
+
 /**
 * Wrapper used to identify strings that should be treated as JavaScript source code
 */
-class Code
+class Code implements FilterableConfigValue
 {
 	/**
 	* @var string JavaScript source code
@@ -35,5 +37,13 @@ class Code
 	public function __toString()
 	{
 		return $this->code;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? $this->code : null;
 	}
 }

@@ -10,57 +10,38 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Regexp;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\Code;
-use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 
 abstract class ConfigHelper
 {
 	/**
 	* Recursively filter a config array to replace variants with the desired value
 	*
-	* @param  array|Traversable &$config  Config array
-	* @param  string             $variant Preferred variant
-	* @return void
+	* @param  array  $config Config array
+	* @param  string $target Target parser
+	* @return array          Filtered config
 	*/
-	public static function filterVariants(&$config, $variant = null)
+	public static function filterConfig(array $config, $target = 'PHP')
 	{
+		$filteredConfig = [];
 		foreach ($config as $name => $value)
 		{
-			// Use while instead of if to handle recursive variants. This is not supposed to happen
-			// though
-			while ($value instanceof Variant)
+			if ($value instanceof FilterableConfigValue)
 			{
-				$value = $value->get($variant);
-
-				// A null value indicates that the value is not supposed to exist for given variant.
-				// This is different from having no specific value for given variant
-				if ($value === null)
+				$value = $value->filterConfig($target);
+				if (!isset($value))
 				{
-					unset($config[$name]);
-
-					continue 2;
+					continue;
 				}
 			}
-
-			if ($value instanceof Regexp)
+			if (is_array($value))
 			{
-				$value = ($variant === 'JS') ? new Code($value->getJS()) : (string) $value;
+				$value = self::filterConfig($value, $target);
 			}
-
-			if ($value instanceof Dictionary && $variant !== 'JS')
-			{
-				$value = (array) $value;
-			}
-
-			if (is_array($value) || $value instanceof Traversable)
-			{
-				self::filterVariants($value, $variant);
-			}
-
-			$config[$name] = $value;
+			$filteredConfig[$name] = $value;
 		}
+
+		return $filteredConfig;
 	}
 
 	/**

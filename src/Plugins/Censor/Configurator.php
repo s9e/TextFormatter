@@ -140,7 +140,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$config = $this->asConfig();
 		if (isset($config))
 		{
-			ConfigHelper::filterVariants($config);
+			$config = ConfigHelper::filterConfig($config, 'PHP');
 		}
 		else
 		{

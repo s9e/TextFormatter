@@ -77,7 +77,7 @@ class EncoderTest extends Test
 				'{"":"bar","baz":"quux"}'
 			],
 			[
-				new Regexp('/^foo$/'),
+				new Regexp('#^foo$#'),
 				'/^foo$/'
 			],
 			[

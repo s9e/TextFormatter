@@ -10,7 +10,6 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 
@@ -197,8 +196,7 @@ class ProgrammableCallback implements ConfigProvider
 		}
 
 		// Add the callback's JavaScript representation
-		$config['js'] = new Variant;
-		$config['js']->set('JS', $this->js);
+		$config['js'] = new Code($this->js);
 
 		return $config;
 	}

@@ -22,8 +22,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -40,8 +39,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -59,8 +57,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -76,8 +73,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<foo>(?<baz>[a-z]))$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -94,8 +90,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', 'xx');
@@ -111,8 +106,7 @@ class FilterProcessingTest extends Test
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[a-z])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
+		$tagConfig = ConfigHelper::filterConfig($tagConfig->asConfig(), 'PHP');
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 

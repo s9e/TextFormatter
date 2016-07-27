@@ -268,12 +268,6 @@ function convertCustom($filepath, &$file)
 				'public static function serializeAttributes(array $attributes)'
 			)
 		),
-		'Variant.php' => array(
-			array(
-				'return ($isDynamic) ? $value() : $value;',
-				'return ($isDynamic) ? call_user_func($value) : $value;'
-			)
-		),
 		'XSLTTest.php' => array(
 			array(
 				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes\n\t*/\n\tpublic function testSetParameterBothQuotes()",

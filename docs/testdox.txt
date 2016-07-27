@@ -439,12 +439,11 @@ s9e\TextFormatter\Tests\Configurator\Helpers\CharacterClassBuilder
  [x] fromList() tests
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
- [x] filterVariants() filters the right variant
- [x] filterVariants() recurses into deep arrays
- [x] filterVariants() recurses into variants
- [x] filterVariants() removes NULL variants
- [x] filterVariants() replaces instances of Dictionary with an array if the variant is not JS
- [x] filterVariants() preserves instances of Dictionary with an array if the variant is JS
+ [x] filterConfig() filters for the right target
+ [x] filterConfig() recurses into deep arrays
+ [x] filterConfig() recurses with the correct target
+ [x] filterConfig() ignores instances of FilterableConfigValue that return NULL
+ [x] filterConfig() preserves instances of Dictionary with an array if the variant is JS
  [x] generateQuickMatchFromList() returns the longest common substring of a list of strings
  [x] generateQuickMatchFromList() returns a string even if it contains only digit characters
  [x] generateQuickMatchFromList() returns FALSE if no common substring is found
@@ -831,8 +830,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] setJS() is chainable
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
- [x] asConfig() returns the callback's JavaScript as a variant if available
- [x] asConfig() uses getJS() to autofill the JavaScript variant
+ [x] asConfig() returns the callback's JavaScript as a Code object if available
  [x] asConfig() replaces values that implement ConfigProvider with their config value
  [x] asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
  [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
@@ -1013,7 +1011,6 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] Can be cast as a string
  [x] getJS() returns the regexp as a string
- [x] setJS() replaces the regexp returned by getJS()
  [x] Is a config provider
  [x] Returns itself as config
  [x] The JS regexp has a global flag if isGlobal is true
@@ -1021,6 +1018,8 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] getNamedCaptures() puts the expression in a non-capturing subpattern if it contains any alternations
  [x] getNamedCaptures() preserves the original's regexp "i", "s" and "u" flags
  [x] getCaptureNames() returns the names of all captures
+ [x] filterConfig('PHP') returns the regexp as a string
+ [x] filterConfig('JS') returns a Code object
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
@@ -1071,21 +1070,6 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
 s9e\TextFormatter\Tests\Configurator\Items\TemplateDocument
  [x] saveChanges() updates the document's original template
 
-s9e\TextFormatter\Tests\Configurator\Items\Variant
- [x] When cast as a string, returns its default value as a string
- [x] get() returns the default value
- [x] get('JS') returns the 'JS' variant if it exists
- [x] get('JS') returns the default value if the 'JS' variant does not exist
- [x] has('JS') returns TRUE if it has a 'JS' variant
- [x] has('JavaScript') returns FALSE if it does not have a 'JS' variant
- [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
- [x] __construct() can be called with no arguments, and the default value will be NULL
- [x] __construct() can take an associative array of variants as second argument
- [x] setDynamic() saves a dynamic variant whose callback does not get called if the variant is not read
- [x] setDynamic() saves a dynamic variant whose callback is called and its value returned when the variant is retrieved
- [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
- [x] setDynamic() throws an exception on invalid callback
-
 s9e\TextFormatter\Tests\Configurator\CallbackGenerator
  [x] replaceCallbacks() tests
 
@@ -1105,6 +1089,11 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\ConfigValue
  [x] deduplicate() marks the value as deduplicated if the use count is 2
  [x] deduplicate() sets the use counter of the instance to 1
  [x] deduplicate() decrements the use counter of config values contained in the instance
+
+s9e\TextFormatter\Tests\Configurator\Dictionary
+ [x] filterConfig('PHP') returns an array
+ [x] filterConfig('JS') returns an equal but different instance of Dictionary
+ [x] filterConfig('JS') filters the dictionary's content
 
 s9e\TextFormatter\Tests\Configurator\Encoder
  [x] encode() tests

@@ -367,8 +367,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->add('FOO')->tagName = 'BAR';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary',
@@ -385,8 +384,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->add('FOO')->predefinedAttributes['k'] = 'v';
 
-		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'JS');
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary',

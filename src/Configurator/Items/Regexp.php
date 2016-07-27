@@ -9,10 +9,12 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
-class Regexp implements ConfigProvider
+class Regexp implements ConfigProvider, FilterableConfigValue
 {
 	/**
 	* @var bool Whether this regexp should have the global flag set in JavaScript
@@ -61,6 +63,14 @@ class Regexp implements ConfigProvider
 	public function asConfig()
 	{
 		return $this;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? new Code($this->getJS()) : (string) $this;
 	}
 
 	/**

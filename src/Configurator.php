@@ -272,17 +272,13 @@ class Configurator implements ConfigProvider
 
 			if ($options['returnJS'])
 			{
-				// Copy the config before replacing variants with their JS value
-				$jsConfig = $config;
-				ConfigHelper::filterVariants($jsConfig, 'JS');
-
-				$return['js'] = $this->javascript->getParser($jsConfig);
+				$return['js'] = $this->javascript->getParser(ConfigHelper::filterConfig($config, 'JS'));
 			}
 
 			if ($options['returnParser'])
 			{
 				// Remove JS-specific data from the config
-				ConfigHelper::filterVariants($config);
+				$config = ConfigHelper::filterConfig($config, 'PHP');
 
 				if ($options['optimizeConfig'])
 				{
@@ -312,13 +308,7 @@ class Configurator implements ConfigProvider
 	*/
 	public function getParser()
 	{
-		// Generate the config array
-		$config = $this->asConfig();
-
-		// Remove variants
-		ConfigHelper::filterVariants($config);
-
-		return new Parser($config);
+		return new Parser(ConfigHelper::filterConfig($this->asConfig(), 'PHP'));
 	}
 
 	/**

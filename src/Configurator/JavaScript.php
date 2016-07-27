@@ -130,7 +130,7 @@ class JavaScript
 
 		// Prepare the parser's config
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
-		ConfigHelper::filterVariants($this->config, 'JS');
+		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 
 		// Get the parser's source and inject its config
