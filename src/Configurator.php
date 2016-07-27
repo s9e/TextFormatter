@@ -27,6 +27,7 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 
 /**
 * @property Plugins\Autoemail\Configurator $Autoemail Autoemail plugin's configurator
+* @property Plugins\Autoimage\Configurator $Autolink Autoimage plugin's configurator
 * @property Plugins\Autolink\Configurator $Autolink Autolink plugin's configurator
 * @property Plugins\BBCodes\Configurator $BBCodes BBCodes plugin's configurator
 * @property Plugins\Censor\Configurator $Censor Censor plugin's configurator
