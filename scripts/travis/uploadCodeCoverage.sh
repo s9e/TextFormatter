@@ -7,8 +7,9 @@ then
 fi
 
 cd $(dirname "$0")
-cd ../..
+php fixCloverReport.php /tmp/clover.xml
 
+cd ../..
 php /tmp/ocular.phar code-coverage:upload --format=php-clover /tmp/clover.xml
 
 if [ -f vendor/bin/coveralls ]
