@@ -241,11 +241,13 @@ class JavaScript
 
 		foreach ($this->config['plugins'] as $pluginName => $pluginConfig)
 		{
-			if (!isset($pluginConfig['parser']))
+			if (!isset($pluginConfig['js']))
 			{
 				// Skip this plugin
 				continue;
 			}
+			$js = $pluginConfig['js'];
+			unset($pluginConfig['js']);
 
 			// Not needed in JavaScript
 			unset($pluginConfig['className']);
@@ -282,7 +284,6 @@ class JavaScript
 			*            moved into the plugin's parser
 			*/
 			$globalKeys = [
-				'parser'      => 1,
 				'quickMatch'  => 1,
 				'regexp'      => 1,
 				'regexpLimit' => 1
@@ -305,7 +306,7 @@ class JavaScript
 				{
 					/** @const */
 					var config=' . $this->encode($localConfig) . ';
-					' . $globalConfig['parser'] . '
+					' . $js . '
 				}'
 			);
 

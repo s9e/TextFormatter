@@ -10,7 +10,6 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class PluginCollection extends NormalizedCollection
@@ -133,13 +132,6 @@ class PluginCollection extends NormalizedCollection
 			if (!isset($pluginConfig['regexp']))
 			{
 				unset($pluginConfig['regexpLimit']);
-			}
-
-			// Add the JavaScript parser (generated dynamically)
-			if (!isset($pluginConfig['parser']))
-			{
-				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('JS', [$plugin, 'getJSParser']);
 			}
 
 			// Remove className if it's a default plugin using its default name. Its class name will
