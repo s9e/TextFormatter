@@ -1031,7 +1031,6 @@ class Parser extends ParserBase
 			PREG_OFFSET_CAPTURE,
 			$pos
 		);
-
 		foreach ($matches[0] as list($match, $matchPos))
 		{
 			$matchLen = strlen($match);
@@ -1060,7 +1059,6 @@ class Parser extends ParserBase
 			PREG_OFFSET_CAPTURE,
 			$pos
 		);
-
 		foreach ($matches[0] as list($match, $matchPos))
 		{
 			$matchLen    = strlen($match);
