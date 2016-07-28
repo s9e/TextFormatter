@@ -13,6 +13,9 @@ $externs = [
 		'var Infinity',
 		'var undefined',
 
+		'var symbol',
+		'function Symbol(',
+
 		'function decodeURIComponent(',
 		'function encodeURIComponent(',
 		'function escape(',
@@ -66,12 +69,7 @@ $externs = [
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	],
-	'externs/es6.js' => [
-		'var symbol',
-		'function Symbol('
-	],
 	'externs/browser/gecko_dom.js' => [
-		'Document.prototype.importNode',
 		'Element.prototype.innerHTML'
 	],
 	'externs/browser/gecko_xml.js' => [
@@ -113,6 +111,7 @@ $externs = [
 		'function Window(',
 	],
 	'externs/browser/w3c_dom2.js' => [
+		'Document.prototype.importNode',
 		'function HTMLDocument(',
 		'function HTMLElement',
 	],
