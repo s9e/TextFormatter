@@ -321,12 +321,7 @@ function getSetextLines()
 function ignoreEmphasis(matchPos, matchLen)
 {
 	// Ignore single underscores between alphanumeric characters
-	if (text[matchPos] === '_' && matchLen === 1 && isSurroundedByAlnum(matchPos, matchLen))
-	{
-		return true;
-	}
-
-	return false;
+	return (text[matchPos] === '_' && matchLen === 1 && isSurroundedByAlnum(matchPos, matchLen));
 }
 
 /**

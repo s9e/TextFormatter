@@ -354,12 +354,7 @@ class Parser extends ParserBase
 	protected function ignoreEmphasis($matchPos, $matchLen)
 	{
 		// Ignore single underscores between alphanumeric characters
-		if ($this->text[$matchPos] === '_' && $matchLen === 1 && $this->isSurroundedByAlnum($matchPos, $matchLen))
-		{
-			return true;
-		}
-
-		return false;
+		return ($this->text[$matchPos] === '_' && $matchLen === 1 && $this->isSurroundedByAlnum($matchPos, $matchLen));
 	}
 
 	/**
