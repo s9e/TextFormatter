@@ -19,9 +19,14 @@ class Parser extends ParserBase
 	protected $hasEscapedChars;
 
 	/**
-	* @var array Array of [label => attributes]
+	* @var bool Whether current text contains references
 	*/
-	protected $links;
+	protected $hasRefs;
+
+	/**
+	* @var array Array of [label => link info]
+	*/
+	protected $refs;
 
 	/**
 	* @var string Text being parsed
@@ -38,13 +43,14 @@ class Parser extends ParserBase
 		// Match block-level markup as well as forced line breaks
 		$this->matchBlockLevelMarkup();
 
-		// Inline code must be done first to avoid false positives in other markup
+		// Capture link references after block markup as been overwritten
+		$this->matchLinkReferences();
+
+		// Inline code must be done first to avoid false positives in other inline markup
 		$this->matchInlineCode();
 
-		// Images must be matched before links
+		// Do the rest of inline markup. Images must be matched before links
 		$this->matchImages();
-
-		// Do the rest of inline markup
 		$this->matchLinks();
 		$this->matchStrikethrough();
 		$this->matchSuperscript();
@@ -53,6 +59,26 @@ class Parser extends ParserBase
 
 		// Unset the text to free its memory
 		unset($this->text);
+	}
+
+	/**
+	* Add an image tag for given text span
+	*
+	* @param  integer $startTagPos Start tag position
+	* @param  integer $endTagPos   End tag position
+	* @param  integer $endTagLen   End tag length
+	* @param  string  $linkInfo    URL optionally followed by space and a title
+	* @param  string  $alt         Value for the alt attribute
+	* @return void
+	*/
+	protected function addImageTag($startTagPos, $endTagPos, $endTagLen, $linkInfo, $alt)
+	{
+		$tag = $this->parser->addTagPair('IMG', $startTagPos, 2, $endTagPos, $endTagLen);
+		$this->setLinkAttributes($tag, $linkInfo, 'src');
+		$tag->setAttribute('alt', $this->decode($alt));
+
+		// Overwrite the markup
+		$this->overwrite($startTagPos, $endTagPos + $endTagLen - $startTagPos);
 	}
 
 	/**
@@ -70,6 +96,30 @@ class Parser extends ParserBase
 		$endTagLen   = $right['len'] + $right['trimBefore'];
 		$this->parser->addTagPair('C', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
 		$this->overwrite($startTagPos, $endTagPos + $endTagLen - $startTagPos);
+	}
+
+	/**
+	* Add an image tag for given text span
+	*
+	* @param  integer $startTagPos Start tag position
+	* @param  integer $endTagPos   End tag position
+	* @param  integer $endTagLen   End tag length
+	* @param  string  $linkInfo    URL optionally followed by space and a title
+	* @return void
+	*/
+	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
+	{
+		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen);
+		$this->setLinkAttributes($tag, $linkInfo, 'url');
+
+		// Give the link a slightly worse priority if this is a implicit reference and a slightly
+		// better priority if it's an explicit reference or an inline link or  to give it precedence
+		// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
+		$tag->setSortPriority(($endTagLen === 1) ? 1 : -1);
+
+		// Overwrite the markup without touching the link's text
+		$this->overwrite($startTagPos, 1);
+		$this->overwrite($endTagPos,   $endTagLen);
 	}
 
 	/**
@@ -144,17 +194,6 @@ class Parser extends ParserBase
 	}
 
 	/**
-	* Decode the optional attribute portion of a link or image
-	*
-	* @param  string $str Encoded string in quotes, potentially surrounded by whitespace
-	* @return string      Decoded string
-	*/
-	protected function decodeTitle($str)
-	{
-		return $this->decode(substr(trim($str), 1, -1));
-	}
-
-	/**
 	* Encode escaped literals that have a special meaning
 	*
 	* @param  string $str Original text
@@ -186,24 +225,6 @@ class Parser extends ParserBase
 		preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
 
 		return strlen($m[0]);
-	}
-
-	/**
-	* Get the attribute values from given reference
-	*
-	* @param  string   $label Link label
-	* @return string[]
-	*/
-	protected function getReferenceLinkAttributes($label)
-	{
-		if (!isset($this->links))
-		{
-			$this->matchLinkReferences();
-		}
-
-		$label = strtolower($label);
-
-		return (isset($this->links[$label])) ? $this->links[$label] : [];
 	}
 
 	/**
@@ -324,24 +345,25 @@ class Parser extends ParserBase
 	}
 
 	/**
-	* Get the attribute values of an inline link or image
+	* Capture and return labels used in current text
 	*
-	* @param  array    $m Regexp captures
-	* @return string[]    List of attribute values
+	* @return array Labels' text position as keys, lowercased text content as values
 	*/
-	protected function getInlineLinkAttributes(array $m)
+	protected function getLabels()
 	{
-		$attrValues = [$this->decode($m[3][0])];
-		if (!empty($m[4][0]))
+		preg_match_all(
+			'/\\[((?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*)\\]/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		$labels = [];
+		foreach ($matches[1] as $m)
 		{
-			$title = $this->decodeTitle($m[4][0]);
-			if ($title > '')
-			{
-				$attrValues[] = $title;
-			}
+			$labels[$m[1] - 1] = strtolower($m[0]);
 		}
 
-		return $attrValues;
+		return $labels;
 	}
 
 	/**
@@ -383,7 +405,6 @@ class Parser extends ParserBase
 		$text .= "\n\n\x17";
 
 		$this->text = $text;
-		unset($this->links);
 	}
 
 	/**
@@ -878,30 +899,73 @@ class Parser extends ParserBase
 		{
 			return;
 		}
+		if (strpos($this->text, '](', $pos) !== false)
+		{
+			$this->matchInlineImages();
+		}
+		if ($this->hasRefs)
+		{
+			$this->matchReferenceImages();
+		}
+	}
 
+	/**
+	* Match inline images markup
+	*
+	* @return void
+	*/
+	protected function matchInlineImages()
+	{
 		preg_match_all(
-			'/!\\[([^\\x17]*?(?=] ?\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ")]+)( *(?:"[^\\x17]*?"|\'[^\\x17]*?\'))?\\))?/',
+			'/!\\[(?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*\\]\\(((?:[^\\x17\\s()]*(?:\\([^\\x17\\s()]*\\))*)*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
 			$this->text,
 			$matches,
-			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
-			$pos
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER
 		);
 		foreach ($matches as $m)
 		{
-			$matchPos    = $m[0][1];
-			$matchLen    = strlen($m[0][0]);
-			$contentLen  = strlen($m[1][0]);
-			$startTagPos = $matchPos;
-			$startTagLen = 2;
-			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-			$endTagLen   = $matchLen - $startTagLen - $contentLen;
+			$linkInfo    = $m[1][0];
+			$startTagPos = $m[0][1];
+			$endTagLen   = 3 + strlen($linkInfo);
+			$endTagPos   = $startTagPos + strlen($m[0][0]) - $endTagLen;
+			$alt         = substr($m[0][0], 2, strlen($m[0][0]) - $endTagLen - 2);
 
-			$tag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$tag->setAttribute('alt', $this->decode($m[1][0]));
-			$this->setLinkAttributes($tag, $m, ['src', 'title']);
+			$this->addImageTag($startTagPos, $endTagPos, $endTagLen, $linkInfo, $alt);
+		}
+	}
 
-			// Overwrite the markup
-			$this->overwrite($matchPos, $matchLen);
+	/**
+	* Match reference images markup
+	*
+	* @return void
+	*/
+	protected function matchReferenceImages()
+	{
+		preg_match_all(
+			'/!\\[((?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*)\\](?: ?\\[([^\\x17[\\]]+)\\])?/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER
+		);
+		foreach ($matches as $m)
+		{
+			$startTagPos = $m[0][1];
+			$endTagPos   = $startTagPos + 2 + strlen($m[1][0]);
+			$endTagLen   = 1;
+			$alt         = $m[1][0];
+			$id          = $alt;
+
+			if (isset($m[2][0], $this->refs[$m[2][0]]))
+			{
+				$endTagLen = strlen($m[0][0]) - strlen($alt) - 2;
+				$id        = $m[2][0];
+			}
+			elseif (!isset($this->refs[$id]))
+			{
+				continue;
+			}
+
+			$this->addImageTag($startTagPos, $endTagPos, $endTagLen, $this->refs[$id], $alt);
 		}
 	}
 
@@ -939,32 +1003,58 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Match inline links markup
+	*
+	* @return void
+	*/
+	protected function matchInlineLinks()
+	{
+		preg_match_all(
+			'/\\[(?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*\\]\\(((?:[^\\x17\\s()]*(?:\\([^\\x17\\s()]*\\))*)*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE | PREG_SET_ORDER
+		);
+		foreach ($matches as $m)
+		{
+			$linkInfo    = $m[1][0];
+			$startTagPos = $m[0][1];
+			$endTagLen   = 3 + strlen($linkInfo);
+			$endTagPos   = $startTagPos + strlen($m[0][0]) - $endTagLen;
+
+			$this->addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo);
+		}
+	}
+
+	/**
 	* Capture link reference definitions in current text
 	*
 	* @return void
 	*/
 	protected function matchLinkReferences()
 	{
-		$this->links = [];
+		$this->hasRefs = false;
+		$this->refs    = [];
+		if (strpos($this->text, ']:') === false)
+		{
+			return;
+		}
 
-		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)\\s*("[^\\x17]*?"|\'[^\\x17]*?\')?[^\\x17]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\))?)[^\\x17\\n]*\\n?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
 			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]))->setSortPriority(-2);
 
 			// Ignore the reference if it already exists
-			$label = strtolower($m[1][0]);
-			if (isset($this->links[$label]))
+			$id = strtolower($m[1][0]);
+			if (isset($this->refs[$id]))
 			{
 				continue;
 			}
 
-			$this->links[$label] = [$this->decode($m[2][0])];
-			if (isset($m[3]) && strlen($m[3][0]) > 2)
-			{
-				$this->links[$label][] = $this->decodeTitle($m[3][0]);
-			}
+			$this->hasRefs   = true;
+			$this->refs[$id] = $m[2][0];
 		}
 	}
 
@@ -975,39 +1065,43 @@ class Parser extends ParserBase
 	*/
 	protected function matchLinks()
 	{
-		$pos = strpos($this->text, '[');
-		if ($pos === false)
+		if (strpos($this->text, '](') !== false)
 		{
-			return;
+			$this->matchInlineLinks();
 		}
-
-		preg_match_all(
-			'/\\[([^\\x17]*?(?=]\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]|\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17]*?"|\'[^\\x17]*?\'))?\\))?/',
-			$this->text,
-			$matches,
-			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
-			$pos
-		);
-		foreach ($matches as $m)
+		if ($this->hasRefs)
 		{
-			$matchPos    = $m[0][1];
-			$matchLen    = strlen($m[0][0]);
-			$contentLen  = strlen($m[1][0]);
-			$startTagPos = $matchPos;
-			$startTagLen = 1;
-			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-			$endTagLen   = $matchLen - $startTagLen - $contentLen;
+			$this->matchReferenceLinks();
+		}
+	}
 
-			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$this->setLinkAttributes($tag, $m, ['url', 'title']);
+	/**
+	* Match reference links markup
+	*
+	* @return void
+	*/
+	protected function matchReferenceLinks()
+	{
+		$labels = $this->getLabels();
+		foreach ($labels as $startTagPos => $id)
+		{
+			$labelPos  = $startTagPos + 2 + strlen($id);
+			$endTagPos = $labelPos - 1;
+			$endTagLen = 1;
 
-			// Give the link a slightly better priority to give it precedence over
-			// possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
-			$tag->setSortPriority(-1);
-
-			// Overwrite the markup without touching the link's text
-			$this->overwrite($startTagPos, $startTagLen);
-			$this->overwrite($endTagPos,   $endTagLen);
+			if ($this->text[$labelPos] === ' ')
+			{
+				++$labelPos;
+			}
+			if (isset($labels[$labelPos], $this->refs[$labels[$labelPos]]))
+			{
+				$id        = $labels[$labelPos];
+				$endTagLen = $labelPos + 2 + strlen($id) - $endTagPos;
+			}
+			if (isset($this->refs[$id]))
+			{
+				$this->addLinkTag($startTagPos, $endTagPos, $endTagLen, $this->refs[$id]);
+			}
 		}
 	}
 
@@ -1161,26 +1255,26 @@ class Parser extends ParserBase
 	/**
 	* Set a URL or IMG tag's attributes
 	*
-	* @param  Tag      $tag       URL or IMG tag
-	* @param  array    $m         Regexp captures
-	* @param  string[] $attrNames List of attribute names
+	* @param  Tag    $tag      URL or IMG tag
+	* @param  string $linkInfo Link's info: an URL optionally followed by spaces and a title
+	* @param  string $attrName Name of the URL attribute
 	* @return void
 	*/
-	protected function setLinkAttributes(Tag $tag, array $m, array $attrNames)
+	protected function setLinkAttributes(Tag $tag, $linkInfo, $attrName)
 	{
-		if (isset($m[3]))
+		$url   = $linkInfo;
+		$title = '';
+		$pos   = strpos($linkInfo, ' ');
+		if ($pos !== false)
 		{
-			$attrValues = $this->getInlineLinkAttributes($m);
-		}
-		else
-		{
-			$label      = (isset($m[2])) ? $m[2][0] : $m[1][0];
-			$attrValues = $this->getReferenceLinkAttributes($label);
+			$url   = substr($linkInfo, 0, $pos);
+			$title = substr(trim(substr($linkInfo, $pos)), 1, -1);
 		}
 
-		foreach ($attrValues as $k => $attrValue)
+		$tag->setAttribute($attrName, $this->decode($url));
+		if ($title > '')
 		{
-			$tag->setAttribute($attrNames[$k], $attrValue);
+			$tag->setAttribute('title', $this->decode($title));
 		}
 	}
 }

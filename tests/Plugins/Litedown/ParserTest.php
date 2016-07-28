@@ -923,8 +923,8 @@ class ParserTest extends Test
 				'<t><p>Go to [that site] (http://example.org) now!</p></t>'
 			],
 			[
-				'En route to [Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation\))!',
-				'<r><p>En route to <URL url="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29"><s>[</s>Mars<e>](http://en.wikipedia.org/wiki/Mars_(disambiguation\))</e></URL>!</p></r>'
+				'En route to [Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation))!',
+				'<r><p>En route to <URL url="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29"><s>[</s>Mars<e>](http://en.wikipedia.org/wiki/Mars_(disambiguation))</e></URL>!</p></r>'
 			],
 			[
 				'Go to [\\[x\\[x\\]x\\]](http://example.org/?foo[]=1&bar\\[\\]=1) now!',
@@ -937,6 +937,14 @@ class ParserTest extends Test
 			[
 				'This is [an example](http://example.com/ "Link title") inline link.',
 				'<r><p>This is <URL title="Link title" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ "Link title")</e></URL> inline link.</p></r>'
+			],
+			[
+				'This is [an example](http://example.com/ \'Link title\') inline link.',
+				'<r><p>This is <URL title="Link title" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ \'Link title\')</e></URL> inline link.</p></r>'
+			],
+			[
+				'This is [an example](http://example.com/ (Link title)) inline link.',
+				'<r><p>This is <URL title="Link title" url="http://example.com/"><s>[</s>an example<e>](http://example.com/ (Link title))</e></URL> inline link.</p></r>'
 			],
 			[
 				'This is [an example](http://example.com/ ""Link title"") inline link.',
@@ -973,10 +981,6 @@ class ParserTest extends Test
 			[
 				'.. [..](http://example.org/foo_(bar)_baz) ..',
 				'<r><p>.. <URL url="http://example.org/foo_%28bar%29_baz"><s>[</s>..<e>](http://example.org/foo_(bar)_baz)</e></URL> ..</p></r>'
-			],
-			[
-				'.. [..](http://example.org/() ..',
-				'<r><p>.. <URL url="http://example.org/%28"><s>[</s>..<e>](http://example.org/()</e></URL> ..</p></r>'
 			],
 			[
 				'[b](https://en.wikipedia.org/wiki/B) [b]..[/b]',
@@ -1176,6 +1180,44 @@ class ParserTest extends Test
 				'[//]: # (This may be the most platform independent comment)',
 				'<r><i>[//]: # (This may be the most platform independent comment)</i></r>'
 			],
+			[
+				'[center][text](/url)[/center]',
+				'<r><CENTER><s>[center]</s><p><URL url="/url"><s>[</s>text<e>](/url)</e></URL></p><e>[/center]</e></CENTER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('center');
+				}
+			],
+			[
+				[
+					'[foo](/bar)',
+					'',
+					'[foo]: /baz'
+				],
+				[
+					'<r><p><URL url="/bar"><s>[</s>foo<e>](/bar)</e></URL></p>',
+					'',
+					'<i>[foo]: /baz</i></r>'
+				]
+			],
+			[
+				[
+					'[b]bold[/b]',
+					'',
+					'[b]: /foo'
+				],
+				[
+					'<r><p><B><s>[b]</s>bold<e>[/b]</e></B></p>',
+					'',
+					'<i>[b]: /foo</i></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('b');
+				}
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
@@ -1188,6 +1230,10 @@ class ParserTest extends Test
 			[
 				".. ![Alt text](http://example.org/img.png 'Image title') ..",
 				'<r><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><s>![</s>Alt text<e>](http://example.org/img.png \'Image title\')</e></IMG> ..</p></r>'
+			],
+			[
+				'.. ![Alt text](http://example.org/img.png (Image title)) ..',
+				'<r><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><s>![</s>Alt text<e>](http://example.org/img.png (Image title))</e></IMG> ..</p></r>'
 			],
 			[
 				'.. ![Alt \\[text\\]](http://example.org/img.png "\\"Image title\\"") ..',
@@ -1245,6 +1291,18 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'![][1] ![][2] ![][1]',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png"><s>![</s><e>][1]</e></IMG> ![][2] <IMG alt="" src="http://example.org/img.png"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
 					'![][1]',
 					'',
 					'[1]: http://example.org/img.png "Title goes there"'
@@ -1269,6 +1327,18 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'![][1]',
+					'',
+					"[1]: http://example.org/img.png (Title goes there)"
+				],
+				[
+					'<r><p><IMG alt="" src="http://example.org/img.png" title="Title goes there"><s>![</s><e>][1]</e></IMG></p>',
+					'',
+					"<i>[1]: http://example.org/img.png (Title goes there)</i></r>"
+				]
+			],
+			[
+				[
 					'... ![1] ...',
 					'',
 					'[1]: http://example.org/img.png'
@@ -1277,6 +1347,32 @@ class ParserTest extends Test
 					'<r><p>... <IMG alt="1" src="http://example.org/img.png"><s>![</s>1<e>]</e></IMG> ...</p>',
 					'',
 					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'... ![1][b][/b] ...',
+					'',
+					'[1]: http://example.org/img.png'
+				],
+				[
+					'<r><p>... <IMG alt="1" src="http://example.org/img.png"><s>![</s>1<e>]</e></IMG>[b][/b] ...</p>',
+					'',
+					'<i>[1]: http://example.org/img.png</i></r>'
+				]
+			],
+			[
+				[
+					'... ![1][b][/b] ...',
+					'',
+					'[1]: http://example.org/img.png',
+					'[b]: http://example.org/b.png'
+				],
+				[
+					'<r><p>... <IMG alt="1" src="http://example.org/b.png"><s>![</s>1<e>][b]</e></IMG>[/b] ...</p>',
+					'',
+					'<i>[1]: http://example.org/img.png',
+					'[b]: http://example.org/b.png</i></r>'
 				]
 			],
 			[

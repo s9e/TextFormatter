@@ -165,7 +165,7 @@ Second line</p>
 ```md
 [Link text](http://example.org)
 [Link text](http://example.org "Link title")
-[Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation\))
+[Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation))
 ```
 ```html
 <p><a href="http://example.org">Link text</a>
@@ -243,12 +243,12 @@ Single `print("``")` or double ``print("`")``
 ```md
 ![](http://example.org/img.png)
 ![Alt text](http://example.org/img.png)
-![Alt text](http://example.org/img.png "Image (title)")
+![Alt text](http://example.org/img.png "Image title")
 [![Alt text](http://example.org/img.png)](http://example.org/)
 ```
 ```html
 <p><img src="http://example.org/img.png" alt="">
 <img src="http://example.org/img.png" alt="Alt text">
-<img src="http://example.org/img.png" alt="Alt text" title="Image (title)">
+<img src="http://example.org/img.png" alt="Alt text" title="Image title">
 <a href="http://example.org/"><img src="http://example.org/img.png" alt="Alt text"></a></p>
 ```
