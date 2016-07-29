@@ -5750,11 +5750,11 @@ class Code implements FilterableConfigValue
 	}
 	public function __toString()
 	{
-		return $this->code;
+		return (string) $this->code;
 	}
 	public function filterConfig($target)
 	{
-		return ($target === 'JS') ? $this->code : \null;
+		return ($target === 'JS') ? $this : \null;
 	}
 }
 

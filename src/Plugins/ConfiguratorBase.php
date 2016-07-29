@@ -48,12 +48,15 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 	final public function getBaseProperties()
 	{
-		return array(
+		$config = array(
 			'className'   => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
-			'js'          => new Code($this->getJSParser()),
 			'quickMatch'  => $this->quickMatch,
 			'regexpLimit' => $this->regexpLimit
 		);
+		$js = $this->getJSParser();
+		if (isset($js))
+			$config['js'] = new Code($js);
+		return $config;
 	}
 	public function getJSHints()
 	{
