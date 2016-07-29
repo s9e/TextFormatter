@@ -1,3 +1,43 @@
+0.6.0 (2016-07-29)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/3e76dc3b0ce5acad0860eb3f77dada48f6cfffc1...e3c010a09ae5236ef145e5728b8cdd7665d9dbc2)
+
+### Added
+
+ - `5e6c18a` Litedown: added support for separating blockquotes with two blank lines
+ - `636bd77` Litedown: added support for separating lists with two blank lines
+ - `d77de85` MediaEmbed: added support for Plays.tv shortlinks
+
+### Removed
+
+ - `bf77ead` BuiltInFilters: removed public access to parseUrl()
+ - `39a41bc` Configurator: removed getParser() and getRenderer()
+ - `b005a40` Removed the Variant class and related API
+
+### Fixed
+
+ - `915226a` BuiltInFilters: fixed an issue with empty query/fragment in URLs
+
+### Changed
+
+ - `52e41b9` ClosureCompilerService: updated externs
+ - `07317a1` Code: ensure that __toString() always returns a string
+ - `e3c010a` Code: filterConfig('JS') should return the instance itself to preserve its content from being encoded as a string
+ - `d4c9eca` Emoticons: customized exception message to be more meaningful
+ - `584562c` Litedown: expanded escaping to include the left parenthesis and single quote
+ - `a365537` Litedown: replaced the algorithm handling links and images
+ - `ec2f000` Litedown: simplified ignoreEmphasis()
+ - `0f533ba` MediaEmbed: updated Scribd
+ - `af8ddab` MediaEmbed: updated Straw Poll
+ - `78ca63b` MediaEmbed: updated YouTube
+ - `2ded572` Moved JS parser loading to PluginBase::getBaseProperties()
+ - `0f34747` PluginBase: getBaseProperties() should not return a 'js' element if there is no JS parser
+ - `4ecb7f2` Quick renderer: replaced the export() algorithm
+ - `fa99034` Regexp: replaced JavaScript-related API
+ - `99fbcd1` RegexpConvertor: updated toJS() to return a string rather than an instance of Code
+
+
 0.5.4 (2016-07-08)
 ==================
 
