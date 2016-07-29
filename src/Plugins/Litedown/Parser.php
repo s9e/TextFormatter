@@ -182,10 +182,10 @@ class Parser extends ParserBase
 			$str = strtr(
 				$str,
 				[
-					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')',
-					"\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\',
-					"\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_',
-					"\x1B9" => '`', "\x1BA" => '~'
+					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => "'", "\x1B3" => '(',
+					"\x1B4" => ')', "\x1B5" => '*', "\x1B6" => '[', "\x1B7" => '\\',
+					"\x1B8" => ']', "\x1B9" => '^', "\x1BA" => '_', "\x1BB" => '`',
+					"\x1BC" => '~'
 				]
 			);
 		}
@@ -204,10 +204,10 @@ class Parser extends ParserBase
 		return strtr(
 			$str,
 			[
-				'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
-				'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
-				'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
-				'\\`' => "\x1B9", '\\~' => "\x1BA"
+				'\\!' => "\x1B0", '\\"' => "\x1B1", "\\'" => "\x1B2", '\\('  => "\x1B3",
+				'\\)' => "\x1B4", '\\*' => "\x1B5", '\\[' => "\x1B6", '\\\\' => "\x1B7",
+				'\\]' => "\x1B8", '\\^' => "\x1B9", '\\_' => "\x1BA", '\\`'  => "\x1BB",
+				'\\~' => "\x1BC"
 			]
 		);
 	}
@@ -322,7 +322,7 @@ class Parser extends ParserBase
 
 		preg_match_all(
 			'/(`+)(\\s*)[^\\x17`]*/',
-			str_replace("\x1B9", '\\`', $this->text),
+			str_replace("\x1BB", '\\`', $this->text),
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
 			$pos
@@ -387,7 +387,7 @@ class Parser extends ParserBase
 	*/
 	protected function init($text)
 	{
-		if (strpos($text, '\\') === false || !preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
+		if (strpos($text, '\\') === false || !preg_match('/\\\\[!"\'()*[\\\\\\]^_`~]/', $text))
 		{
 			$this->hasEscapedChars = false;
 		}

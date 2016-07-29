@@ -139,9 +139,10 @@ function decode(str)
 			function (seq)
 			{
 				return {
-					"\x1B0": '!', "\x1B1": '"',  "\x1B2": ')', "\x1B3": '*',
-					"\x1B4": '[', "\x1B5": '\\', "\x1B6": ']', "\x1B7": '^',
-					"\x1B8": '_', "\x1B9": '`',  "\x1BA": '~'
+					"\x1B0": '!', "\x1B1": '"', "\x1B2": "'", "\x1B3": '(',
+					"\x1B4": ')', "\x1B5": '*', "\x1B6": '[', "\x1B7": '\\',
+					"\x1B8": ']', "\x1B9": '^', "\x1BA": '_', "\x1BB": '`',
+					"\x1BC": '~'
 				}[seq];
 			}
 		);
@@ -159,14 +160,14 @@ function decode(str)
 function encode(str)
 {
 	return str.replace(
-		/\\[!")*[\\\]^_`~]/g,
+		/\\[!"'()*[\\\]^_`~]/g,
 		function (str)
 		{
 			return {
-				'\\!': "\x1B0", '\\"': "\x1B1", '\\)':  "\x1B2",
-				'\\*': "\x1B3", '\\[': "\x1B4", '\\\\': "\x1B5",
-				'\\]': "\x1B6", '\\^': "\x1B7", '\\_':  "\x1B8",
-				'\\`': "\x1B9", '\\~': "\x1BA"
+				'\\!': "\x1B0", '\\"': "\x1B1", "\\'": "\x1B2", '\\(' : "\x1B3",
+				'\\)': "\x1B4", '\\*': "\x1B5", '\\[': "\x1B6", '\\\\': "\x1B7",
+				'\\]': "\x1B8", '\\^': "\x1B9", '\\_': "\x1BA", '\\`' : "\x1BB",
+				'\\~': "\x1BC"
 			}[str];
 		}
 	);
@@ -242,7 +243,7 @@ function getInlineCodeMarkers()
 	var regexp   = /(`+)(\s*)[^\x17`]*/g,
 		trimNext = 0,
 		markers  = [],
-		_text    = text.replace(/\x1B9/g, '\\`'),
+		_text    = text.replace(/\x1BB/g, '\\`'),
 		m;
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(_text))

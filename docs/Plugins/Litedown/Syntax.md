@@ -162,14 +162,22 @@ Second line</p>
 
 ### Links
 
+Note that special characters inside links can be escaped with a backslash.
+
 ```md
 [Link text](http://example.org)
 [Link text](http://example.org "Link title")
+[Link text](http://example.org 'Link title')
+[Link text](http://example.org (Link title))
 [Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation))
+[Mars](http://en.wikipedia.org/wiki/Mars_\(disambiguation\))
 ```
 ```html
 <p><a href="http://example.org">Link text</a>
 <a href="http://example.org" title="Link title">Link text</a>
+<a href="http://example.org" title="Link title">Link text</a>
+<a href="http://example.org" title="Link title">Link text</a>
+<a href="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29">Mars</a>
 <a href="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29">Mars</a></p>
 ```
 
