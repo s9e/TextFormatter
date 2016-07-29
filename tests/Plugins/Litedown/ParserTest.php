@@ -124,6 +124,48 @@ class ParserTest extends Test
 					'<p>quux</p></r>'
 				]
 			],
+			[
+				[
+					'> foo',
+					'',
+					'',
+					'> bar',
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>foo</p></QUOTE>',
+					'',
+					'',
+					'<QUOTE><i>&gt; </i><p>bar</p></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'> > foo',
+					'>',
+					'>',
+					'> > bar',
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p></QUOTE>',
+					'<i>&gt;</i>',
+					'<i>&gt;</i>',
+					'<QUOTE><i>&gt; &gt; </i><p>bar</p></QUOTE></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'> > foo',
+					'',
+					'',
+					'> > bar',
+				],
+				[
+					'<r><QUOTE><QUOTE><i>&gt; &gt; </i><p>foo</p></QUOTE></QUOTE>',
+					'',
+					'',
+					'<QUOTE><QUOTE><i>&gt; &gt; </i><p>bar</p></QUOTE></QUOTE></r>'
+				]
+			],
 			// Indented code blocks
 			[
 				[

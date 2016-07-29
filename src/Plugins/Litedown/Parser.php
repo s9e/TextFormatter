@@ -496,7 +496,7 @@ class Parser extends ParserBase
 			}
 
 			// Close supernumerary quotes
-			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
+			if ($quoteDepth < $quotesCnt && !$continuation)
 			{
 				$newContext = true;
 

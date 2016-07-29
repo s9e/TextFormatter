@@ -2,7 +2,7 @@
 
 ### Blockquotes
 
-A line that starts with a right angle bracket `>` (optionally followed by a space) is a blockquote. Blockquotes can be nested but they can't be used inside of lists.
+A line that starts with a right angle bracket `>` (optionally followed by a space) is a blockquote. Blockquotes can be nested but they can't be used inside of lists. Consecutive blockquotes can be separated with two blank lines.
 
 ```md
 > > Deep blockquote
