@@ -1,4 +1,4 @@
-var hasEscapedChars, links, startTagLen, startTagPos, endTagPos, endTagLen;
+var hasEscapedChars, hasRefs, refs, startTagLen, startTagPos, endTagPos, endTagLen;
 
 // Unlike the PHP parser, init() must not take an argument
 init();
@@ -6,18 +6,38 @@ init();
 // Match block-level markup as well as forced line breaks
 matchBlockLevelMarkup();
 
-// Inline code must be done first to avoid false positives in other markup
+// Capture link references after block markup as been overwritten
+matchLinkReferences();
+
+// Inline code must be done first to avoid false positives in other inline markup
 matchInlineCode();
 
-// Images must be matched before links
+// Do the rest of inline markup. Images must be matched before links
 matchImages();
-
-// Do the rest of inline markup
 matchLinks();
 matchStrikethrough();
 matchSuperscript();
 matchEmphasis();
 matchForcedLineBreaks();
+
+/**
+* Add an image tag for given text span
+*
+* @param {!number} startTagPos Start tag position
+* @param {!number} endTagPos   End tag position
+* @param {!number} endTagLen   End tag length
+* @param {!string} linkInfo    URL optionally followed by space and a title
+* @param {!string} alt         Value for the alt attribute
+*/
+function addImageTag(startTagPos, endTagPos, endTagLen, linkInfo, alt)
+{
+	var tag = addTagPair('IMG', startTagPos, 2, endTagPos, endTagLen);
+	setLinkAttributes(tag, linkInfo, 'src');
+	tag.setAttribute('alt', decode(alt));
+
+	// Overwrite the markup
+	overwrite(startTagPos, endTagPos + endTagLen - startTagPos);
+}
 
 /**
 * Add the tag pair for an inline code span
@@ -33,6 +53,29 @@ function addInlineCodeTags(left, right)
 		endTagLen   = right.len + right.trimBefore;
 	addTagPair('C', startTagPos, startTagLen, endTagPos, endTagLen);
 	overwrite(startTagPos, endTagPos + endTagLen - startTagPos);
+}
+
+/**
+* Add an image tag for given text span
+*
+* @param {!number} startTagPos Start tag position
+* @param {!number} endTagPos   End tag position
+* @param {!number} endTagLen   End tag length
+* @param {!string} linkInfo    URL optionally followed by space and a title
+*/
+function addLinkTag(startTagPos, endTagPos, endTagLen, linkInfo)
+{
+	var tag = addTagPair('URL', startTagPos, 1, endTagPos, endTagLen);
+	setLinkAttributes(tag, linkInfo, 'url');
+
+	// Give the link a slightly worse priority if this is a implicit reference and a slightly
+	// better priority if it's an explicit reference or an inline link or  to give it precedence
+	// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
+	tag.setSortPriority((endTagLen === 1) ? 1 : -1);
+
+	// Overwrite the markup without touching the link's text
+	overwrite(startTagPos, 1);
+	overwrite(endTagPos,   endTagLen);
 }
 
 /**
@@ -96,26 +139,16 @@ function decode(str)
 			function (seq)
 			{
 				return {
-					"\x1B0": '!', "\x1B1": '"',  "\x1B2": ')', "\x1B3": '*',
-					"\x1B4": '[', "\x1B5": '\\', "\x1B6": ']', "\x1B7": '^',
-					"\x1B8": '_', "\x1B9": '`',  "\x1BA": '~'
+					"\x1B0": '!', "\x1B1": '"', "\x1B2": "'", "\x1B3": '(',
+					"\x1B4": ')', "\x1B5": '*', "\x1B6": '[', "\x1B7": '\\',
+					"\x1B8": ']', "\x1B9": '^', "\x1BA": '_', "\x1BB": '`',
+					"\x1BC": '~'
 				}[seq];
 			}
 		);
 	}
 
 	return str;
-}
-
-/**
-* Decode the optional attribute portion of a link or image
-*
-* @param  {!string} str Encoded string in quotes, potentially surrounded by whitespace
-* @return {!string}     Decoded string
-*/
-function decodeTitle(str)
-{
-	return decode(str.replace(/^\s*.([\s\S]*?).\s*$/, '$1'));
 }
 
 /**
@@ -127,14 +160,14 @@ function decodeTitle(str)
 function encode(str)
 {
 	return str.replace(
-		/\\[!")*[\\\]^_`~]/g,
+		/\\[!"'()*[\\\]^_`~]/g,
 		function (str)
 		{
 			return {
-				'\\!': "\x1B0", '\\"': "\x1B1", '\\)':  "\x1B2",
-				'\\*': "\x1B3", '\\[': "\x1B4", '\\\\': "\x1B5",
-				'\\]': "\x1B6", '\\^': "\x1B7", '\\_':  "\x1B8",
-				'\\`': "\x1B9", '\\~': "\x1BA"
+				'\\!': "\x1B0", '\\"': "\x1B1", "\\'": "\x1B2", '\\(' : "\x1B3",
+				'\\)': "\x1B4", '\\*': "\x1B5", '\\[': "\x1B6", '\\\\': "\x1B7",
+				'\\]': "\x1B8", '\\^': "\x1B9", '\\_': "\x1BA", '\\`' : "\x1BB",
+				'\\~': "\x1BC"
 			}[str];
 		}
 	);
@@ -210,7 +243,7 @@ function getInlineCodeMarkers()
 	var regexp   = /(`+)(\s*)[^\x17`]*/g,
 		trimNext = 0,
 		markers  = [],
-		_text    = text.replace(/\x1B9/g, '\\`'),
+		_text    = text.replace(/\x1BB/g, '\\`'),
 		m;
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(_text))
@@ -229,42 +262,19 @@ function getInlineCodeMarkers()
 }
 
 /**
-* Get the attribute values of an inline link or image
+* Capture and return labels used in current text
 *
-* @param  {!Object}         m Regexp captures
-* @return {!Array<!string>}   List of attribute values
+* @return {!Object} Labels' text position as keys, lowercased text content as values
 */
-function getInlineLinkAttributes(m)
+function getLabels()
 {
-	var attrValues = [decode(m[3])];
-	if (m[4])
+	var labels = {}, m, regexp = /\[((?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*)\]/g;
+	while (m = regexp.exec(text))
 	{
-		var title = decodeTitle(m[4]);
-		if (title > '')
-		{
-			attrValues.push(title);
-		}
+		labels[m['index']] = m[1].toLowerCase();
 	}
 
-	return attrValues;
-}
-
-/**
-* Get the attribute values from given reference
-*
-* @param  {!string}          label Link label
-* @return {!Array.<!string>}
-*/
-function getReferenceLinkAttributes(label)
-{
-	if (typeof links === 'undefined')
-	{
-		matchLinkReferences();
-	}
-
-	label = label.toLowerCase();
-
-	return links[label] || [];
+	return labels;
 }
 
 /**
@@ -321,12 +331,7 @@ function getSetextLines()
 function ignoreEmphasis(matchPos, matchLen)
 {
 	// Ignore single underscores between alphanumeric characters
-	if (text[matchPos] === '_' && matchLen === 1 && isSurroundedByAlnum(matchPos, matchLen))
-	{
-		return true;
-	}
-
-	return false;
+	return (text[matchPos] === '_' && matchLen === 1 && isSurroundedByAlnum(matchPos, matchLen));
 }
 
 /**
@@ -350,8 +355,6 @@ function init()
 	// We append a couple of lines and a non-whitespace character at the end of the text in
 	// order to trigger the closure of all open blocks such as quotes and lists
 	text += "\n\n\x17";
-
-	links = undefined;
 }
 
 /**
@@ -859,31 +862,66 @@ function matchForcedLineBreaks()
 */
 function matchImages()
 {
-	if (text.indexOf('![') === -1)
+	var pos = text.indexOf('![');
+	if (pos === -1)
 	{
 		return;
 	}
-
-	var m, regexp = /!\[([^\x17]*?(?=] ?\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ")]+)( *(?:"[^\x17]*?"|\'[^\x17]*?\'))?\))?/g;
-	while (m = regexp.exec(text))
+	if (text.indexOf('](', pos) > 0)
 	{
-		var matchPos    = m['index'],
-			matchLen    = m[0].length,
-			contentLen  = m[1].length,
-			startTagPos = matchPos,
-			startTagLen = 2,
-			endTagPos   = startTagPos + startTagLen + contentLen,
-			endTagLen   = matchLen - startTagLen - contentLen;
-
-		var tag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		tag.setAttribute('alt', decode(m[1]));
-		setLinkAttributes(tag, m, ['src', 'title']);
-
-		// Overwrite the markup
-		overwrite(matchPos, matchLen);
+		matchInlineImages();
+	}
+	if (hasRefs)
+	{
+		matchReferenceImages();
 	}
 }
 
+/**
+* Match inline images markup
+*/
+function matchInlineImages()
+{
+	var m, regexp = /!\[(?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*\]\(((?:[^\x17\s()]*(?:\([^\x17\s()]*\))*)*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	while (m = regexp.exec(text))
+	{
+		var linkInfo    = m[1],
+			startTagPos = m['index'],
+			endTagLen   = 3 + linkInfo.length,
+			endTagPos   = startTagPos + m[0].length - endTagLen,
+			alt         = m[0].substr(2, m[0].length - endTagLen - 2);
+
+		addImageTag(startTagPos, endTagPos, endTagLen, linkInfo, alt);
+	}
+}
+
+/**
+* Match reference images markup
+*/
+function matchReferenceImages()
+{
+	var m, regexp = /!\[((?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*)\](?: ?\[([^\x17[\]]+)\])?/g;
+	while (m = regexp.exec(text))
+	{
+		var startTagPos = +m['index'],
+			endTagPos   = startTagPos + 2 + m[1].length,
+			endTagLen   = 1,
+			alt         = m[1],
+			id          = alt;
+
+		if (m[2] > '' && refs[m[2]])
+		{
+			endTagLen = m[0].length - alt.length - 2;
+			id        = m[2];
+		}
+		else if (!refs[id])
+		{
+			continue;
+		}
+
+		addImageTag(startTagPos, endTagPos, endTagLen, refs[id], alt);
+	}
+}
 
 /**
 * Match inline code spans
@@ -917,29 +955,48 @@ function matchInlineCode()
 }
 
 /**
+* Match inline links markup
+*/
+function matchInlineLinks()
+{
+	var m, regexp = /\[(?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*\]\(((?:[^\x17\s()]*(?:\([^\x17\s()]*\))*)*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	while (m = regexp.exec(text))
+	{
+		var linkInfo    = m[1],
+			startTagPos = m['index'],
+			endTagLen   = 3 + linkInfo.length,
+			endTagPos   = startTagPos + m[0].length - endTagLen;
+
+		addLinkTag(startTagPos, endTagPos, endTagLen, linkInfo);
+	}
+}
+
+/**
 * Capture link reference definitions in current text
 */
 function matchLinkReferences()
 {
-	links = {};
+	hasRefs = false;
+	refs    = {};
+	if (text.indexOf(']:') === -1)
+	{
+		return;
+	}
 
-	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+)\s*("[^\x17]*?"|'[^\x17]*?')?[^\x17]*\n?/gm;
+	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+ *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\))?)[^\x17\n]*\n?/gm;
 	while (m = regexp.exec(text))
 	{
 		addIgnoreTag(m['index'], m[0].length).setSortPriority(-2);
 
 		// Ignore the reference if it already exists
-		var label = m[1].toLowerCase();
-		if (links[label])
+		var id = m[1].toLowerCase();
+		if (refs[id])
 		{
 			continue;
 		}
 
-		links[label] = [decode(m[2])];
-		if (m[3] && m[3].length > 2)
-		{
-			links[label].push(decodeTitle(m[3]));
-		}
+		hasRefs  = true;
+		refs[id] = m[2];
 	}
 }
 
@@ -948,32 +1005,42 @@ function matchLinkReferences()
 */
 function matchLinks()
 {
-	if (text.indexOf('[') === -1)
+	if (text.indexOf('](') !== -1)
 	{
-		return;
+		matchInlineLinks();
 	}
-
-	var m, regexp = /\[([^\x17]*?(?=]\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]|\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17]*?"|\'[^\x17]*?\'))?\))?/g;
-	while (m = regexp.exec(text))
+	if (hasRefs)
 	{
-		var matchPos    = m['index'],
-			matchLen    = m[0].length,
-			contentLen  = m[1].length,
-			startTagPos = matchPos,
-			startTagLen = 1,
-			endTagPos   = startTagPos + startTagLen + contentLen,
-			endTagLen   = matchLen - startTagLen - contentLen;
+		matchReferenceLinks();
+	}
+}
 
-		var tag = addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen);
-		setLinkAttributes(tag, m, ['url', 'title']);
+/**
+* Match reference links markup
+*/
+function matchReferenceLinks()
+{
+	var labels = getLabels(), startTagPos;
+	for (startTagPos in labels)
+	{
+		var id        = labels[startTagPos],
+			labelPos  = +startTagPos + 2 + id.length,
+			endTagPos = labelPos - 1,
+			endTagLen = 1;
 
-		// Give the link a slightly better priority to give it precedence over
-		// possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
-		tag.setSortPriority(-1);
-
-		// Overwrite the markup without touching the link's text
-		overwrite(startTagPos, startTagLen);
-		overwrite(endTagPos,   endTagLen);
+		if (text.charAt(labelPos) === ' ')
+		{
+			++labelPos;
+		}
+		if (labels[labelPos] > '' && refs[labels[labelPos]])
+		{
+			id        = labels[labelPos];
+			endTagLen = labelPos + 2 + id.length - endTagPos;
+		}
+		if (refs[id])
+		{
+			addLinkTag(+startTagPos, endTagPos, endTagLen, refs[id]);
+		}
 	}
 }
 
@@ -1114,27 +1181,26 @@ function processEmphasisBlock(block)
 }
 
 /**
-* Set a URL tag's attributes
+* Set a URL or IMG tag's attributes
 *
-* @param {!Tag}             tag       URL tag
-* @param {!Object}          m         Regexp captures
-* @param {!Array.<!string>} attrNames List of attribute names
+* @param {!Tag}    tag      URL or IMG tag
+* @param {!string} linkInfo Link's info: an URL optionally followed by spaces and a title
+* @param {!string} attrName Name of the URL attribute
 */
-function setLinkAttributes(tag, m, attrNames)
+function setLinkAttributes(tag, linkInfo, attrName)
 {
-	var attrValues;
-	if (m[3])
+	var url   = linkInfo,
+		title = '',
+		pos   = linkInfo.indexOf(' ')
+	if (pos !== -1)
 	{
-		attrValues = getInlineLinkAttributes(m);
-	}
-	else
-	{
-		var label  = m[2] || m[1];
-		attrValues = getReferenceLinkAttributes(label);
+		url   = linkInfo.substr(0, pos);
+		title = linkInfo.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
 	}
 
-	attrValues.forEach(function(attrValue, k)
+	tag.setAttribute(attrName, decode(url));
+	if (title > '')
 	{
-		tag.setAttribute(attrNames[k], attrValue);
-	});
+		tag.setAttribute('title', decode(title));
+	}
 }

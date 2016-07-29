@@ -90,7 +90,7 @@ class Encoder
 	}
 	protected function encodeRegexp(Regexp $regexp)
 	{
-		return (string) $regexp->toJS();
+		return $regexp->getJS();
 	}
 	protected function encodeScalar($value)
 	{
