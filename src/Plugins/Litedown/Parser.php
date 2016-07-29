@@ -251,7 +251,7 @@ class Parser extends ParserBase
 				}
 				$this->overwrite($matchPos, $ignoreLen);
 			}
-			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
+			if ($quoteDepth < $quotesCnt && !$continuation)
 			{
 				$newContext = \true;
 				do
@@ -321,7 +321,7 @@ class Parser extends ParserBase
 			else
 			{
 				$hasListItem = !empty($m[4][0]);
-				if (!$indentWidth && !$continuation && !$hasListItem && !$lineIsEmpty)
+				if (!$indentWidth && !$continuation && !$hasListItem)
 					$listIndex = -1;
 				elseif ($continuation && !$hasListItem)
 					$listIndex = $listsCnt - 1;
