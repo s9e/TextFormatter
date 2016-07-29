@@ -98,7 +98,7 @@ class Configurator implements ConfigProvider
 			$this->addHTML5Rules($options);
 		if ($options['returnRenderer'])
 		{
-			$renderer = $this->getRenderer();
+			$renderer = $this->rendering->getRenderer();
 			if (isset($options['finalizeRenderer']))
 				$options['finalizeRenderer']($renderer);
 			$return['renderer'] = $renderer;
@@ -107,14 +107,10 @@ class Configurator implements ConfigProvider
 		{
 			$config = $this->asConfig();
 			if ($options['returnJS'])
-			{
-				$jsConfig = $config;
-				ConfigHelper::filterVariants($jsConfig, 'JS');
-				$return['js'] = $this->javascript->getParser($jsConfig);
-			}
+				$return['js'] = $this->javascript->getParser(ConfigHelper::filterConfig($config, 'JS'));
 			if ($options['returnParser'])
 			{
-				ConfigHelper::filterVariants($config);
+				$config = ConfigHelper::filterConfig($config, 'PHP');
 				if ($options['optimizeConfig'])
 					ConfigHelper::optimizeArray($config);
 				$parser = new Parser($config);
@@ -124,16 +120,6 @@ class Configurator implements ConfigProvider
 			}
 		}
 		return $return;
-	}
-	public function getParser()
-	{
-		$config = $this->asConfig();
-		ConfigHelper::filterVariants($config);
-		return new Parser($config);
-	}
-	public function getRenderer()
-	{
-		return $this->rendering->getRenderer();
 	}
 	public function loadBundle($bundleName)
 	{
@@ -351,6 +337,17 @@ interface ConfigProvider
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator;
+interface FilterableConfigValue
+{
+	public function filterConfig($target);
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\Helpers;
 use DOMAttr;
 use RuntimeException;
@@ -548,29 +545,25 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 abstract class ConfigHelper
 {
-	public static function filterVariants(&$config, $variant = \null)
+	public static function filterConfig(array $config, $target = 'PHP')
 	{
+		$filteredConfig = [];
 		foreach ($config as $name => $value)
 		{
-			while ($value instanceof Variant)
+			if ($value instanceof FilterableConfigValue)
 			{
-				$value = $value->get($variant);
-				if ($value === \null)
-				{
-					unset($config[$name]);
-					continue 2;
-				}
+				$value = $value->filterConfig($target);
+				if (!isset($value))
+					continue;
 			}
-			if ($value instanceof Dictionary && $variant !== 'JS')
-				$value = (array) $value;
-			if (\is_array($value) || $value instanceof Traversable)
-				self::filterVariants($value, $variant);
-			$config[$name] = $value;
+			if (\is_array($value))
+				$value = self::filterConfig($value, $target);
+			$filteredConfig[$name] = $value;
 		}
+		return $filteredConfig;
 	}
 	public static function generateQuickMatchFromList(array $strings)
 	{
@@ -2725,58 +2718,6 @@ class Template
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Items;
-use InvalidArgumentException;
-class Variant
-{
-	protected $defaultValue;
-	protected $variants = [];
-	public function __construct($value = \null, array $variants = [])
-	{
-		if ($value instanceof self)
-		{
-			$this->defaultValue = $value->defaultValue;
-			$this->variants     = $value->variants;
-		}
-		else
-			$this->defaultValue = $value;
-		foreach ($variants as $k => $v)
-			$this->set($k, $v);
-	}
-	public function __toString()
-	{
-		return (string) $this->defaultValue;
-	}
-	public function get($variant = \null)
-	{
-		if (isset($variant) && isset($this->variants[$variant]))
-		{
-			list($isDynamic, $value) = $this->variants[$variant];
-			return ($isDynamic) ? $value() : $value;
-		}
-		return $this->defaultValue;
-	}
-	public function has($variant)
-	{
-		return isset($this->variants[$variant]);
-	}
-	public function set($variant, $value)
-	{
-		$this->variants[$variant] = [\false, $value];
-	}
-	public function setDynamic($variant, $callback)
-	{
-		if (!\is_callable($callback))
-			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
-		$this->variants[$variant] = [\true, $callback];
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
 namespace s9e\TextFormatter\Configurator\JavaScript;
 use InvalidArgumentException;
 class FunctionProvider
@@ -3558,15 +3499,12 @@ class Quick
 	}
 	protected static function export(array $arr)
 	{
+		$exportKeys = (\array_keys($arr) !== \range(0, \count($arr) - 1));
 		\ksort($arr);
 		$entries = [];
-		$naturalKey = 0;
 		foreach ($arr as $k => $v)
-		{
-			$entries[] = (($k === $naturalKey) ? '' : \var_export($k, \true) . '=>')
+			$entries[] = (($exportKeys) ? \var_export($k, \true) . '=>' : '')
 			           . ((\is_array($v)) ? self::export($v) : \var_export($v, \true));
-			$naturalKey = $k + 1;
-		}
 		return '[' . \implode(',', $entries) . ']';
 	}
 	public static function getRenderingStrategy($php)
@@ -4973,7 +4911,6 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 class ProgrammableCallback implements ConfigProvider
@@ -5045,8 +4982,7 @@ class ProgrammableCallback implements ConfigProvider
 				$config['params'][$k] = \null;
 		if (isset($config['params']))
 			$config['params'] = ConfigHelper::toArray($config['params'], \true, \true);
-		$config['js'] = new Variant;
-		$config['js']->set('JS', $this->js);
+		$config['js'] = new Code($this->js);
 		return $config;
 	}
 	protected function autoloadJS()
@@ -5079,25 +5015,19 @@ class ProgrammableCallback implements ConfigProvider
 namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
-class Regexp extends Variant implements ConfigProvider
+class Regexp implements ConfigProvider, FilterableConfigValue
 {
 	protected $isGlobal;
+	protected $jsRegexp;
 	protected $regexp;
 	public function __construct($regexp, $isGlobal = \false)
 	{
 		if (@\preg_match($regexp, '') === \false)
 			throw new InvalidArgumentException('Invalid regular expression ' . \var_export($regexp, \true));
-		parent::__construct($regexp);
-		$this->setDynamic(
-			'JS',
-			function ()
-			{
-				return $this->toJS();
-			}
-		);
 		$this->regexp   = $regexp;
 		$this->isGlobal = $isGlobal;
 	}
@@ -5109,9 +5039,19 @@ class Regexp extends Variant implements ConfigProvider
 	{
 		return $this;
 	}
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? new Code($this->getJS()) : (string) $this;
+	}
 	public function getCaptureNames()
 	{
 		return RegexpParser::getCaptureNames($this->regexp);
+	}
+	public function getJS()
+	{
+		if (!isset($this->jsRegexp))
+			$this->jsRegexp = RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+		return $this->jsRegexp;
 	}
 	public function getNamedCaptures()
 	{
@@ -5124,10 +5064,6 @@ class Regexp extends Variant implements ConfigProvider
 		foreach ($this->getNamedCapturesExpressions($regexpInfo['tokens']) as $name => $expr)
 			$captures[$name] = $start . $expr . $end;
 		return $captures;
-	}
-	public function toJS()
-	{
-		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
 	}
 	protected function getNamedCapturesExpressions(array $tokens)
 	{
@@ -5142,6 +5078,10 @@ class Regexp extends Variant implements ConfigProvider
 			$exprs[$token['name']] = $expr;
 		}
 		return $exprs;
+	}
+	public function setJS($jsRegexp)
+	{
+		$this->jsRegexp = $jsRegexp;
 	}
 }
 
@@ -5250,6 +5190,30 @@ class Tag implements ConfigProvider
 	public function unsetTemplate()
 	{
 		unset($this->template);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
+class Code implements FilterableConfigValue
+{
+	public $code;
+	public function __construct($code)
+	{
+		$this->code = $code;
+	}
+	public function __toString()
+	{
+		return $this->code;
+	}
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? $this->code : \null;
 	}
 }
 
@@ -7705,7 +7669,6 @@ use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
@@ -8269,7 +8232,6 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class PluginCollection extends NormalizedCollection
 {
@@ -8318,11 +8280,6 @@ class PluginCollection extends NormalizedCollection
 				unset($pluginConfig['quickMatch']);
 			if (!isset($pluginConfig['regexp']))
 				unset($pluginConfig['regexpLimit']);
-			if (!isset($pluginConfig['parser']))
-			{
-				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('JS', [$plugin, 'getJSParser']);
-			}
 			$className = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 			if ($pluginConfig['className'] === $className)
 				unset($pluginConfig['className']);
