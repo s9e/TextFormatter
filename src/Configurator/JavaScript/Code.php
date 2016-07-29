@@ -36,7 +36,7 @@ class Code implements FilterableConfigValue
 	*/
 	public function __toString()
 	{
-		return $this->code;
+		return (string) $this->code;
 	}
 
 	/**

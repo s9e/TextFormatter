@@ -15,9 +15,20 @@ class CodeTest extends Test
 	*/
 	public function testAsString()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'alert("ok")',
-			new Code('alert("ok")')
+			(string) new Code('alert("ok")')
+		);
+	}
+
+	/**
+	* @testdox __toString() always returns a string
+	*/
+	public function testAsStringType()
+	{
+		$this->assertSame(
+			'42',
+			(string) new Code(42)
 		);
 	}
 }
