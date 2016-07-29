@@ -494,7 +494,6 @@ class ParserTest extends Test
 				[
 					' * foo',
 					'',
-					'',
 					'   bar',
 					'',
 					' * baz'
@@ -502,10 +501,27 @@ class ParserTest extends Test
 				[
 					'<r> <LIST><LI><s>* </s><p>foo</p>',
 					'',
-					'',
 					'   <p>bar</p></LI>',
 					'',
 					' <LI><s>* </s><p>baz</p></LI></LIST></r>'
+				]
+			],
+			[
+				[
+					' * foo',
+					'',
+					'',
+					'   bar',
+					'',
+					' * baz'
+				],
+				[
+					'<r> <LIST><LI><s>* </s>foo</LI></LIST>',
+					'',
+					'',
+					'   <p>bar</p>',
+					'',
+					' <LIST><LI><s>* </s>baz</LI></LIST></r>'
 				]
 			],
 			[
@@ -526,6 +542,60 @@ class ParserTest extends Test
 				[
 					'<r><LIST start="2" type="decimal"><LI><s>2. </s>two</LI>',
 					'<LI><s>3. </s>three</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					' * foo',
+					' * bar',
+					'',
+					'',
+					' 1. one',
+					' 2. two'
+				],
+				[
+					'<r> <LIST><LI><s>* </s>foo</LI>',
+					' <LI><s>* </s>bar</LI></LIST>',
+					'',
+					'',
+					' <LIST type="decimal"><LI><s>1. </s>one</LI>',
+					' <LI><s>2. </s>two</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					' * foo',
+					' * bar',
+					'',
+					'',
+					' * one',
+					' * two'
+				],
+				[
+					'<r> <LIST><LI><s>* </s>foo</LI>',
+					' <LI><s>* </s>bar</LI></LIST>',
+					'',
+					'',
+					' <LIST><LI><s>* </s>one</LI>',
+					' <LI><s>* </s>two</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'> * foo',
+					'> * bar',
+					'>',
+					'>',
+					'> 1. one',
+					'> 2. two'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><LIST><LI><s>* </s>foo</LI>',
+					'<i>&gt; </i><LI><s>* </s>bar</LI></LIST>',
+					'<i>&gt;</i>',
+					'<i>&gt;</i>',
+					'<i>&gt; </i><LIST type="decimal"><LI><s>1. </s>one</LI>',
+					'<i>&gt; </i><LI><s>2. </s>two</LI></LIST></QUOTE></r>'
 				]
 			],
 			[

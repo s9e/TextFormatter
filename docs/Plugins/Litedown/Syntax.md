@@ -21,11 +21,11 @@ No blockquote
 
 ### Lists
 
-`*`, `-` and `+` for unordered lists, or any number of digits followed by a dot such as `1.` for an ordered list. The list item must be followed by a space then at least one characters. Lists can be nested and they can be used inside of blockquotes.
+`*`, `-` and `+` for unordered lists, or any number of digits followed by a dot such as `1.` for an ordered list. The list item must be followed by a space then at least one character. Lists can be nested and can be used inside of blockquotes.
 
 The indentation inside of nested lists emulates the behaviour of the original Markdown, meaning that sublists after the first should be indented by 4 spaces or a tab.
 
-If a list has any of its text content or list items separated with a blank line, each of its items' content is wrapped in a paragraph.
+If a list has any of its text content or list items separated with a blank line, each of its items' content is wrapped in a paragraph. Consecutive lists can be separated with two blank lines.
 
 ```md
 1. Collect underpants

@@ -583,9 +583,9 @@ function matchBlockLevelMarkup()
 		{
 			var hasListItem = !!m[4];
 
-			if (!indentWidth && !continuation && !hasListItem && !lineIsEmpty)
+			if (!indentWidth && !continuation && !hasListItem)
 			{
-				// Start of a new paragraph
+				// Start of a new context
 				listIndex = -1;
 			}
 			else if (continuation && !hasListItem)
