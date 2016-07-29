@@ -1073,6 +1073,8 @@ s9e\TextFormatter\Tests\Configurator\CallbackGenerator
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
  [x] __toString() always returns a string
+ [x] filterConfig('PHP') returns null
+ [x] filterConfig('PHP') returns the Code instance
 
 s9e\TextFormatter\Tests\Configurator\ConfigOptimizer
  [x] reset() clears the stored objects

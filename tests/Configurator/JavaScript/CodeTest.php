@@ -15,10 +15,10 @@ class CodeTest extends Test
 	*/
 	public function testAsString()
 	{
-		$this->assertSame(
-			'alert("ok")',
-			(string) new Code('alert("ok")')
-		);
+		$js   = 'alert("ok")';
+		$code = new Code($js);
+
+		$this->assertSame($js, (string) $code);
 	}
 
 	/**
@@ -30,5 +30,27 @@ class CodeTest extends Test
 			'42',
 			(string) new Code(42)
 		);
+	}
+
+	/**
+	* @testdox filterConfig('PHP') returns null
+	*/
+	public function testFilterConfigPHP()
+	{
+		$js   = 'alert("ok")';
+		$code = new Code($js);
+
+		$this->assertNull($code->filterConfig('PHP'));
+	}
+
+	/**
+	* @testdox filterConfig('PHP') returns the Code instance
+	*/
+	public function testFilterConfigJS()
+	{
+		$js   = 'alert("ok")';
+		$code = new Code($js);
+
+		$this->assertSame($code, $code->filterConfig('JS'));
 	}
 }

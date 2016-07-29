@@ -44,6 +44,6 @@ class Code implements FilterableConfigValue
 	*/
 	public function filterConfig($target)
 	{
-		return ($target === 'JS') ? $this->code : null;
+		return ($target === 'JS') ? $this : null;
 	}
 }

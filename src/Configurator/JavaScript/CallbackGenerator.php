@@ -102,9 +102,9 @@ class CallbackGenerator
 	protected function generateFunction(array $config, array $params)
 	{
 		// returnFalse() and returnTrue() can be used as-is
-		if ($config['js'] === 'returnFalse' || $config['js'] === 'returnTrue')
+		if ($config['js'] == 'returnFalse' || $config['js'] == 'returnTrue')
 		{
-			return new Code($config['js']);
+			return new Code((string) $config['js']);
 		}
 
 		// Add an empty list of params if none is set
