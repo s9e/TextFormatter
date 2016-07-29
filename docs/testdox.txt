@@ -2023,6 +2023,8 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor throws an exception if we attempt to set a tag name but the property does not exist
  [x] getBaseProperties() returns the values of quickMatch and regexpLimit
  [x] getBaseProperties() returns a className value derived from the configurator's class
+ [x] getBaseProperties() does not include a "js" element if getJSParser() returns null
+ [x] getBaseProperties() includes a "js" element if getJSParser() returns a non-null value
  [x] setQuickMatch() sets the quickMatch property
  [x] setQuickMatch() throws an exception on non-strings
  [x] disableQuickMatch() sets the quickMatch property to false

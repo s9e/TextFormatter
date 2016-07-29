@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -119,6 +120,32 @@ class ConfiguratorBaseTest extends Test
 		$this->assertSame(
 			's9e\\TextFormatter\\Tests\\Plugins\\DummyPluginParser',
 			$config['className']
+		);
+	}
+
+	/**
+	* @testdox getBaseProperties() does not include a "js" element if getJSParser() returns null
+	*/
+	public function testGetBasePropertiesJSNull()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$config = $dummy->getBaseProperties();
+
+		$this->assertArrayNotHasKey('js', $config);
+	}
+
+	/**
+	* @testdox getBaseProperties() includes a "js" element if getJSParser() returns a non-null value
+	*/
+	public function testGetBasePropertiesJS()
+	{
+		$dummy = new JSPluginConfigurator($this->configurator);
+		$config = $dummy->getBaseProperties();
+
+		$this->assertArrayHasKey('js', $config);
+		$this->assertEquals(
+			new Code('alert(1)'),
+			$config['js']
 		);
 	}
 
@@ -297,6 +324,14 @@ class TagCreatingPluginConfigurator extends ConfiguratorBase
 
 class EmptyPluginConfigurator extends ConfiguratorBase
 {
+}
+
+class JSPluginConfigurator extends ConfiguratorBase
+{
+	public function getJSParser()
+	{
+		return 'alert(1)';
+	}
 }
 
 namespace s9e\TextFormatter\Plugins\TotallyFakeDummyPlugin;
