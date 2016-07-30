@@ -176,7 +176,7 @@ class Parser extends ParserBase
 	protected function getLabels()
 	{
 		\preg_match_all(
-			'/\\[((?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*)\\]/',
+			'/\\[((?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*)\\]/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE
@@ -499,7 +499,7 @@ class Parser extends ParserBase
 	protected function matchInlineImages()
 	{
 		\preg_match_all(
-			'/!\\[(?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*\\]\\(((?:[^\\x17\\s()]*(?:\\([^\\x17\\s()]*\\))*)*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
@@ -517,7 +517,7 @@ class Parser extends ParserBase
 	protected function matchReferenceImages()
 	{
 		\preg_match_all(
-			'/!\\[((?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*)\\](?: ?\\[([^\\x17[\\]]+)\\])?/',
+			'/!\\[((?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*)\\](?: ?\\[([^\\x17[\\]]+)\\])?/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
@@ -568,7 +568,7 @@ class Parser extends ParserBase
 	protected function matchInlineLinks()
 	{
 		\preg_match_all(
-			'/\\[(?:[^\\x17[\\]]*(?:\\[[^\\x17[\\]]*\\])*)*\\]\\(((?:[^\\x17\\s()]*(?:\\([^\\x17\\s()]*\\))*)*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER

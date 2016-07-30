@@ -268,7 +268,7 @@ function getInlineCodeMarkers()
 */
 function getLabels()
 {
-	var labels = {}, m, regexp = /\[((?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*)\]/g;
+	var labels = {}, m, regexp = /\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\]/g;
 	while (m = regexp.exec(text))
 	{
 		labels[m['index']] = m[1].toLowerCase();
@@ -882,7 +882,7 @@ function matchImages()
 */
 function matchInlineImages()
 {
-	var m, regexp = /!\[(?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*\]\(((?:[^\x17\s()]*(?:\([^\x17\s()]*\))*)*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /!\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
@@ -900,7 +900,7 @@ function matchInlineImages()
 */
 function matchReferenceImages()
 {
-	var m, regexp = /!\[((?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*)\](?: ?\[([^\x17[\]]+)\])?/g;
+	var m, regexp = /!\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\](?: ?\[([^\x17[\]]+)\])?/g;
 	while (m = regexp.exec(text))
 	{
 		var startTagPos = +m['index'],
@@ -959,7 +959,7 @@ function matchInlineCode()
 */
 function matchInlineLinks()
 {
-	var m, regexp = /\[(?:[^\x17[\]]*(?:\[[^\x17[\]]*\])*)*\]\(((?:[^\x17\s()]*(?:\([^\x17\s()]*\))*)*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
