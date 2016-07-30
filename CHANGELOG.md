@@ -1,3 +1,13 @@
+0.6.1 (2016-07-30)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d841d6be7838c25b586a669285c3b03bc185c498...7f3031c419ed748181a123a8b01c6945f2ae821b)
+
+### Fixed
+
+ - `7f3031c` Litedown: fixed catastrophic backtracking when matching inline links/images
+
+
 0.6.0 (2016-07-29)
 ==================
 
