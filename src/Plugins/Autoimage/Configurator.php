@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string
 	*/
-	protected $regexp = '#https?://[-.\\w]+/[-./\\w]+\\.(?:gif|jpe?g|png)(?!\\S)#';
+	protected $regexp = '#\\bhttps?://[-.\\w]+/[-./\\w]+\\.(?:gif|jpe?g|png)(?!\\S)#i';
 
 	/**
 	* @var string Name of the tag used to represent links

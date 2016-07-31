@@ -48,6 +48,14 @@ class ParserTest extends Test
 					$configurator->Autolink;
 				}
 			],
+			[
+				'.. HTTP://EXAMPLE.ORG/IMG.PNG ..',
+				'<r>.. <IMG src="http://EXAMPLE.ORG/IMG.PNG">HTTP://EXAMPLE.ORG/IMG.PNG</IMG> ..</r>'
+			],
+			[
+				'.. http://user:pass@example.org/img.png ..',
+				'<t>.. http://user:pass@example.org/img.png ..</t>'
+			],
 		];
 	}
 
