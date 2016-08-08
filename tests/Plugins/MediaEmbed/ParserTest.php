@@ -306,8 +306,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001',
-				'<r><BRIGHTCOVE bckey="AQ~~,AAAAB_wnNRk~,WN9MweAQd_tph1IXNFcwfQg_Iu_Aq-oV" bcpid="2862111174001" bctid="66379363001" url="http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001">http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001</BRIGHTCOVE></r>',
+				'http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001',
+				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001" url="http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
 				[],
 				function ($configurator)
 				{
