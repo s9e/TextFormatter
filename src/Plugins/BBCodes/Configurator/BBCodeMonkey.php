@@ -254,7 +254,7 @@ class BBCodeMonkey
 		{
 			$pos   = strpos($definition, '=');
 			$name  = substr($definition, 0, $pos);
-			$value = substr($definition, 1 + $pos);
+			$value = preg_replace('(^"(.*?)")s', '$1', substr($definition, 1 + $pos));
 
 			// Decode base64-encoded tokens
 			$value = preg_replace_callback(

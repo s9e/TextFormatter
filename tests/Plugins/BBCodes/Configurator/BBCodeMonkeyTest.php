@@ -1454,6 +1454,47 @@ class BBCodeMonkeyTest extends Test
 					])
 				]
 			],
+			[
+				'[foo="{TEXT1}"]{TEXT2}[/foo]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute' => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'foo' => []
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
+				'[foo="{NUMBER1},{NUMBER2}" foo="{NUMBER2};{NUMBER1}"/]',
+				'{NUMBER1}{NUMBER2}',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/^(?<foo0>\\d+),(?<foo1>\\d+)$/D'],
+							['foo', '/^(?<foo1>\\d+);(?<foo0>\\d+)$/D']
+						],
+						'attributes' => [
+							'foo0' => [
+								'filterChain' => [new NumberFilter]
+							],
+							'foo1' => [
+								'filterChain' => [new NumberFilter]
+							]
+						],
+						'template' => '<xsl:value-of select="@foo0"/><xsl:value-of select="@foo1"/>'
+					])
+				]
+			],
 		];
 	}
 
