@@ -812,6 +812,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('SlideShare blocks requests from Travis containers');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('slideshare');
 				}
