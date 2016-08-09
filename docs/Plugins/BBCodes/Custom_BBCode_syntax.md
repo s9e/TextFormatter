@@ -8,7 +8,7 @@ First, we need to express the typical BBCode usage. It takes the form of a mock 
 
     [b]{TEXT}[/b]
 
-Here, we see that the BBCode is named B and it contains some text. The pair of brackets with stuff in between is called a *token*. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc... They takes the form of a name in uppercase, which is either:
+Here, we see that the BBCode is named B and it contains some text. The pair of brackets with text in between is called a *token*. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc... They takes the form of a name in uppercase, which is either:
  * the name of an attribute filter optionally followed by a number, e.g. {TEXT1}
  * the name of a [template parameter](../../Templating/Template_parameters.md), e.g. {L_WROTE} or {USERNAME}
 
@@ -110,7 +110,7 @@ Here's how user input will be interpreted: (user input on top, how it's interpre
     [name first="John" last="Smith"]
 
     [name="Smith, John"]
-    [name name="John Smith" last="Smith" first="John"]
+    [name last="Smith" first="John"]
 
 While an attribute preprocessor won't overwrite other attribute values, it can overwrite its own value. It can be used to clean up an attribute value before processing. Consider the following BBCode:
 
@@ -192,7 +192,7 @@ Note that only unique tokens can be used in templates. For instance, consider th
 
     [box color={COLOR} width={NUMBER} height={NUMBER}]{TEXT}[/box]
 
-It is valid to use the following template: *(note how tokens and XPath expressions are used indiscriminately)*
+It is valid to use the following template: *(note how tokens and XPath expressions are interchangeable)*
 
     <div style="color: {COLOR}; width: {@width}px; height: {@height}px">{TEXT}</div>
 
