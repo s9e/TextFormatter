@@ -1,3 +1,14 @@
+0.6.2 (2016-08-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a2d2f3c33695ccabc1c5779abfd44736c592a6c2...6e32a09afa2a1676a81109b6fe31dd63db209e42)
+
+### Added
+
+ - `3d68336` Autoimage: added support for uppercased URLs
+ - `c8253c9` BBCodeMonkey: added support for putting BBCode attributes in quotes
+
+
 0.6.1 (2016-07-30)
 ==================
 
