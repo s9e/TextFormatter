@@ -2182,9 +2182,9 @@ class Parser
 	*
 	* @param  string  $name     Name of the tags
 	* @param  integer $startPos Position of the start tag
-	* @param  integer $startLen Length of the starttag
+	* @param  integer $startLen Length of the start tag
 	* @param  integer $endPos   Position of the start tag
-	* @param  integer $endLen   Length of the starttag
+	* @param  integer $endLen   Length of the start tag
 	* @return Tag               Start tag
 	*/
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen)

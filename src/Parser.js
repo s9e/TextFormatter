@@ -2089,9 +2089,9 @@ function addTag(type, name, pos, len)
 *
 * @param  {!string} name     Name of the tags
 * @param  {!number} startPos Position of the start tag
-* @param  {!number} startLen Length of the starttag
+* @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
-* @param  {!number} endLen   Length of the starttag
+* @param  {!number} endLen   Length of the start tag
 * @return {!Tag}             Start tag
 */
 function addTagPair(name, startPos, startLen, endPos, endLen)
