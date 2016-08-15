@@ -20,9 +20,8 @@ class Parser extends ParserBase
 			$url = $m[0][0];
 			$pos = $m[0][1];
 			$len = \strlen($url);
-			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
+			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len, -10);
 			$tag->setAttribute('url', $url);
-			$tag->setSortPriority(-10);
 		}
 	}
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
@@ -56,9 +55,8 @@ class Parser extends ParserBase
 		$endTag = $tag->getEndTag() ?: $tag;
 		$lpos = $tag->getPos();
 		$rpos = $endTag->getPos() + $endTag->getLen();
-		$newTag = $tagStack->addSelfClosingTag(\strtoupper($siteId), $lpos, $rpos - $lpos);
+		$newTag = $tagStack->addSelfClosingTag(\strtoupper($siteId), $lpos, $rpos - $lpos, $tag->getSortPriority());
 		$newTag->setAttributes($tag->getAttributes());
-		$newTag->setSortPriority($tag->getSortPriority());
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{

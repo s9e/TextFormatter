@@ -21,9 +21,8 @@ class Parser extends ParserBase
 		$endTag = $this->parser->addEndTag($this->config['tagName'], $tagPos + \strlen($url), 0);
 		if ($url[3] === '.')
 			$url = 'http://' . $url;
-		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0);
+		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0, 1);
 		$startTag->setAttribute($this->config['attrName'], $url);
-		$startTag->setSortPriority(1);
 		$startTag->pairWith($endTag);
 	}
 	protected function trimUrl($url)

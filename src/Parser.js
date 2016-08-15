@@ -1275,7 +1275,7 @@ function createChild(tag)
 			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
 		tagConfig.rules.createChild.forEach(function(tagName)
 		{
-			addStartTag(tagName, tagPos, 0).setSortPriority(++priority);
+			addStartTag(tagName, tagPos, 0, ++priority);
 		});
 	}
 }
@@ -1316,9 +1316,8 @@ function fosterParent(tag)
 				{
 					// Add a 0-width copy of the parent tag right after this tag, with a worse
 					// priority and make it depend on this tag
-					var child = addCopyTag(parent, tag.getPos() + tag.getLen(), 0);
+					var child = addCopyTag(parent, tag.getPos() + tag.getLen(), 0, tag.getSortPriority() + 1);
 					tag.cascadeInvalidationTo(child);
-					child.setSortPriority(tag.getSortPriority() + 1);
 				}
 
 				// Reinsert current tag
@@ -1326,7 +1325,7 @@ function fosterParent(tag)
 
 				// And finally close its parent with a priority that ensures it is processed
 				// before this tag
-				addMagicEndTag(parent, tag.getPos()).setSortPriority(tag.getSortPriority() - 1);
+				addMagicEndTag(parent, tag.getPos(), tag.getSortPriority() - 1);
 
 				// Adjust the fixing cost commensurately with the size of the tag stack which
 				// has to be sorted
@@ -1934,11 +1933,12 @@ function tagIsAllowed(tagName)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addStartTag(name, pos, len)
+function addStartTag(name, pos, len, prio)
 {
-	return addTag(Tag.START_TAG, name, pos, len);
+	return addTag(Tag.START_TAG, name, pos, len, prio || 0);
 }
 
 /**
@@ -1947,11 +1947,12 @@ function addStartTag(name, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addEndTag(name, pos, len)
+function addEndTag(name, pos, len, prio)
 {
-	return addTag(Tag.END_TAG, name, pos, len);
+	return addTag(Tag.END_TAG, name, pos, len, prio || 0);
 }
 
 /**
@@ -1960,22 +1961,24 @@ function addEndTag(name, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addSelfClosingTag(name, pos, len)
+function addSelfClosingTag(name, pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, name, pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, name, pos, len, prio || 0);
 }
 
 /**
 * Add a 0-width "br" tag to force a line break at given position
 *
 * @param  {!number} pos  Position of the tag in the text
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addBrTag(pos)
+function addBrTag(pos, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'br', pos, 0);
+	return addTag(Tag.SELF_CLOSING_TAG, 'br', pos, 0, prio || 0);
 }
 
 /**
@@ -1983,11 +1986,12 @@ function addBrTag(pos)
 *
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addIgnoreTag(pos, len)
+function addIgnoreTag(pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, Math.min(len, textLen - pos));
+	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, Math.min(len, textLen - pos), prio || 0);
 }
 
 /**
@@ -1996,11 +2000,12 @@ function addIgnoreTag(pos, len)
 * Uses a zero-width tag that is actually never output in the result
 *
 * @param  {!number} pos  Position of the tag in the text
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addParagraphBreak(pos)
+function addParagraphBreak(pos, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'pb', pos, 0);
+	return addTag(Tag.SELF_CLOSING_TAG, 'pb', pos, 0, prio || 0);
 }
 
 /**
@@ -2009,13 +2014,13 @@ function addParagraphBreak(pos)
 * @param  {!Tag}    tag Original tag
 * @param  {!number} pos Copy's position
 * @param  {!number} len Copy's length
-* @return {!Tag}        Copy tag
+* @param  {number}  prio Tags' priority
+* @return {!Tag}         Copy tag
 */
-function addCopyTag(tag, pos, len)
+function addCopyTag(tag, pos, len, prio)
 {
-	var copy = addTag(tag.getType(), tag.getName(), pos, len);
+	var copy = addTag(tag.getType(), tag.getName(), pos, len, tag.getSortPriority());
 	copy.setAttributes(tag.getAttributes());
-	copy.setSortPriority(tag.getSortPriority());
 
 	return copy;
 }
@@ -2027,12 +2032,13 @@ function addCopyTag(tag, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addTag(type, name, pos, len)
+function addTag(type, name, pos, len, prio)
 {
 	// Create the tag
-	var tag = new Tag(type, name, pos, len);
+	var tag = new Tag(type, name, pos, len, prio || 0);
 
 	// Keep a copy of this tag to destroy its references after processing
 	createdTags.push(tag);
@@ -2067,13 +2073,10 @@ function addTag(type, name, pos, len)
 	else
 	{
 		// If the stack is sorted we check whether this tag should be stored at a lower offset
-		// than the last tag which would mean we need to sort the stack. Note that we cannot use
-		// compareTags() to break ties here because setSortPriority() can be called *after* tags
-		// have been put on the stack, therefore we need to properly sort the stack if the
-		// positions are the same
+		// than the last tag which would mean we need to sort the stack
 		if (tagStackIsSorted
 		 && tagStack.length
-		 && tag.getPos() >= tagStack[tagStack.length - 1].getPos())
+		 && compareTags(tag, tagStack[tagStack.length - 1]) < 0)
 		{
 			tagStackIsSorted = false;
 		}
@@ -2089,15 +2092,16 @@ function addTag(type, name, pos, len)
 *
 * @param  {!string} name     Name of the tags
 * @param  {!number} startPos Position of the start tag
-* @param  {!number} startLen Length of the starttag
+* @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
-* @param  {!number} endLen   Length of the starttag
+* @param  {!number} endLen   Length of the start tag
+* @param  {number}  prio     Tags' priority
 * @return {!Tag}             Start tag
 */
-function addTagPair(name, startPos, startLen, endPos, endLen)
+function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 {
-	var tag = addStartTag(name, startPos, startLen);
-	tag.pairWith(addEndTag(name, endPos, endLen));
+	var tag = addStartTag(name, startPos, startLen, prio || 0);
+	tag.pairWith(addEndTag(name, endPos, endLen, prio || 0));
 
 	return tag;
 }
@@ -2109,9 +2113,9 @@ function addTagPair(name, startPos, startLen, endPos, endLen)
 * @param  {!number} len  Length of text consumed by the tag
 * @return {!Tag}
 */
-function addVerbatim(pos, len)
+function addVerbatim(pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len, prio || 0);
 }
 
 /**
