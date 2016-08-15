@@ -999,9 +999,10 @@ class Parser
 	}
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
-		$tag = $this->addStartTag($name, $startPos, $startLen, $prio);
-		$tag->pairWith($this->addEndTag($name, $endPos, $endLen, $prio));
-		return $tag;
+		$endTag   = $this->addEndTag($name, $endPos, $endLen);
+		$startTag = $this->addStartTag($name, $startPos, $startLen, $prio);
+		$startTag->pairWith($endTag);
+		return $startTag;
 	}
 	public function addVerbatim($pos, $len, $prio = 0)
 	{
