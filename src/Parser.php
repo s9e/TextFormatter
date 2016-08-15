@@ -2193,15 +2193,17 @@ class Parser
 	* @param  integer $startLen Length of the start tag
 	* @param  integer $endPos   Position of the start tag
 	* @param  integer $endLen   Length of the start tag
-	* @param  integer $prio     Tags' priority
+	* @param  integer $prio     Start tag's priority
 	* @return Tag               Start tag
 	*/
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
-		$tag = $this->addStartTag($name, $startPos, $startLen, $prio);
-		$tag->pairWith($this->addEndTag($name, $endPos, $endLen, $prio));
+		// NOTE: the end tag is added first to try to keep the stack in the correct order
+		$endTag   = $this->addEndTag($name, $endPos, $endLen);
+		$startTag = $this->addStartTag($name, $startPos, $startLen, $prio);
+		$startTag->pairWith($endTag);
 
-		return $tag;
+		return $startTag;
 	}
 
 	/**

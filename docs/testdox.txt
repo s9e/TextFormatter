@@ -1988,7 +1988,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addParagraphBreak() sets the tag's priority
  [x] addSelfClosingTag() sets the tag's priority
  [x] addStartTag() sets the tag's priority
- [x] addTagPair() sets the tag's priority
+ [x] addTagPair() sets the start tag's priority
  [x] addVerbatim() sets the tag's priority
 
 s9e\TextFormatter\Tests\Parser\OutputHandling

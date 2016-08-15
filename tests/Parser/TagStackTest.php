@@ -183,7 +183,7 @@ class TagStackTest extends Test
 		$startTag->pairWith($endTag);
 
 		$this->assertEquals(
-			[$startTag, $endTag],
+			[$endTag, $startTag],
 			$dummyStack->tagStack
 		);
 	}
@@ -558,7 +558,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addTagPair() sets the tag's priority 
+	* @testdox addTagPair() sets the start tag's priority 
 	*/
 	public function testAddTagPairPrio()
 	{
@@ -571,7 +571,6 @@ class TagStackTest extends Test
 				$startTag = $parser->addTagPair('X', 0, 0, 1, 0, 6);
 				$endTag   = $startTag->getEndTag();
 				$this->assertSame(6, $startTag->getSortPriority());
-				$this->assertSame(6, $endTag->getSortPriority());
 			}
 		);
 		$parser->parse(' ');
