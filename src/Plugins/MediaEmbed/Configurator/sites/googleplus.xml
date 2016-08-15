@@ -5,8 +5,12 @@
 
 	<tags><tag>social</tag></tags>
 
+	<attributes>
+		<name postFilter="urldecode"/>
+	</attributes>
+
 	<host>plus.google.com</host>
-	<extract>!//plus\.google\.com/(?:u/\d+/)?(?:\+(?'name'\w+)|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
+	<extract>!//plus\.google\.com/(?:u/\d+/)?(?:\+(?'name'[^/]+)|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
 	<iframe width="450" height="240" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')">
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/googleplus.min.html#</xsl:text>

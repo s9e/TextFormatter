@@ -2059,8 +2059,17 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd',
-				'<r><GOOGLEPLUS name="TonyHawk" pid="C5TMsDZJWBd" url="https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd">https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd</GOOGLEPLUS></r>',
+				'https://plus.google.com/+JacekMiłaszewski/posts/HJEFk3SX1sL',
+				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL" url="https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL">https://plus.google.com/+JacekMiłaszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googleplus');
+				}
+			],
+			[
+				'https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL',
+				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL" url="https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL">https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
 				[],
 				function ($configurator)
 				{
