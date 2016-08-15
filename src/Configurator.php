@@ -2824,6 +2824,10 @@ class FunctionProvider
 		}
 	);
 }',
+		'urldecode'=>'function(str)
+{
+	return decodeURIComponent(str);
+}',
 		'urlencode'=>'function(str)
 {
 	return encodeURIComponent(str);
