@@ -1859,6 +1859,7 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] $endTag->pairWith($startTag) sets $endTag->startTag if $endTag's position is greater than $startTag's
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if they share the same position
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if $endTag's position is greater than $startTag's
+ [x] Tag's sortPriority can be set in the constructor
  [x] setSortPriority() sets the tag's sortPriority
  [x] setAttribute('foo', 'bar') sets attribute 'foo' to 'bar'
  [x] setAttribute() overwrites existing attributes
@@ -1973,6 +1974,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addCopyTag() adds a copy of given tag at given position and given length
  [x] addCopyTag() copies the original tag's attributes
  [x] addCopyTag() copies the original tag's sort priority
+ [x] addCopyTag() can set a different sort priority
  [x] sortTags() sorts tags by position descending (tags processed in text order)
  [x] sortTags() tiebreaker sorts tag that start at the same position by sortPriority descending (-10 is processed before 10)
  [x] sortTags() tiebreaker sorts zero-width tags after longer tags at the same position with the same priority (zero-width tags are processed first)
@@ -1980,6 +1982,14 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
  [x] Tags occupying the same position are properly sorted regardless of the order they've been added
+ [x] addBrTag() sets the tag's priority
+ [x] addEndTag() sets the tag's priority
+ [x] addIgnoreTag() sets the tag's priority
+ [x] addParagraphBreak() sets the tag's priority
+ [x] addSelfClosingTag() sets the tag's priority
+ [x] addStartTag() sets the tag's priority
+ [x] addTagPair() sets the tag's priority
+ [x] addVerbatim() sets the tag's priority
 
 s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Works

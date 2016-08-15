@@ -30,11 +30,9 @@ class Parser extends ParserBase
 			$pos = $m[0][1];
 			$len = strlen($url);
 
-			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
-			$tag->setAttribute('url', $url);
-
 			// Give that tag priority over other tags such as Autolink's
-			$tag->setSortPriority(-10);
+			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len, -10);
+			$tag->setAttribute('url', $url);
 		}
 	}
 
@@ -135,9 +133,8 @@ class Parser extends ParserBase
 		$rpos = $endTag->getPos() + $endTag->getLen();
 
 		// Create a new tag and copy this tag's attributes and priority
-		$newTag = $tagStack->addSelfClosingTag(strtoupper($siteId), $lpos, $rpos - $lpos);
+		$newTag = $tagStack->addSelfClosingTag(strtoupper($siteId), $lpos, $rpos - $lpos, $tag->getSortPriority());
 		$newTag->setAttributes($tag->getAttributes());
-		$newTag->setSortPriority($tag->getSortPriority());
 	}
 
 	/**

@@ -68,7 +68,7 @@ class Tag
 	* @var integer Tiebreaker used when sorting identical tags
 	* @see Parser::compareTags()
 	*/
-	protected $sortPriority = 0;
+	protected $sortPriority;
 
 	/**
 	* @var Tag Start tag that is unconditionally closed this end tag
@@ -83,17 +83,19 @@ class Tag
 	/**
 	* Constructor
 	*
-	* @param  integer $type Tag's type
-	* @param  string  $name Name of the tag
-	* @param  integer $pos  Position of the tag in the text
-	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $type     Tag's type
+	* @param  string  $name     Name of the tag
+	* @param  integer $pos      Position of the tag in the text
+	* @param  integer $len      Length of text consumed by the tag
+	* @param  integer $priority This tag's sorting tiebreaker
 	*/
-	public function __construct($type, $name, $pos, $len)
+	public function __construct($type, $name, $pos, $len, $priority = 0)
 	{
 		$this->type = (int) $type;
 		$this->name = $name;
 		$this->pos  = (int) $pos;
 		$this->len  = (int) $len;
+		$this->sortPriority = (int) $priority;
 	}
 
 	//==========================================================================
@@ -217,12 +219,16 @@ class Tag
 	/**
 	* Set this tag's tiebreaker
 	*
+	* @deprecated 0.7.0 Set the priority in the constructor instead
+	*
 	* @param  integer $sortPriority
 	* @return void
 	*/
 	public function setSortPriority($sortPriority)
 	{
 		$this->sortPriority = $sortPriority;
+
+		trigger_error('setSortPriority() is deprecated. Set the priority when calling adding the tag instead. See http://s9etextformatter.readthedocs.io/Internals/API_changes/#070', E_USER_DEPRECATED);
 	}
 
 	//==========================================================================

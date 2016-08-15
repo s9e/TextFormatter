@@ -87,12 +87,8 @@ class ParserTest extends Test
 	{
 		$newTag = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
 		               ->disableOriginalConstructor()
-		               ->setMethods(['setAttributes', 'setSortPriority'])
+		               ->setMethods(['setAttributes'])
 		               ->getMock();
-
-		$newTag->expects($this->once())
-		       ->method('setSortPriority')
-		       ->with(123);
 
 		$tagStack = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
 		                 ->disableOriginalConstructor()
@@ -101,11 +97,11 @@ class ParserTest extends Test
 
 		$tagStack->expects($this->once())
 		         ->method('addSelfClosingTag')
+		         ->with('FOO', 0, 0, 123)
 		         ->will($this->returnValue($newTag));
 
-		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0);
+		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0, 123);
 		$tag->setAttribute('media', 'foo');
-		$tag->setSortPriority(123);
 
 		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
 	}

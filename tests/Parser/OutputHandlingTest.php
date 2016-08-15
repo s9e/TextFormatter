@@ -551,7 +551,7 @@ xxx',
 				function ($parser)
 				{
 					$parser->addTagPair('X', 0, 0, 3, 0);
-					$parser->addBrTag(3)->setSortPriority(-1);
+					$parser->addBrTag(3, -1);
 				}
 			],
 		];

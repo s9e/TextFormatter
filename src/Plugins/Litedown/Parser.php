@@ -109,13 +109,13 @@ class Parser extends ParserBase
 	*/
 	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
 	{
-		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen);
-		$this->setLinkAttributes($tag, $linkInfo, 'url');
-
 		// Give the link a slightly worse priority if this is a implicit reference and a slightly
 		// better priority if it's an explicit reference or an inline link or  to give it precedence
 		// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
-		$tag->setSortPriority(($endTagLen === 1) ? 1 : -1);
+		$priority = ($endTagLen === 1) ? 1 : -1;
+
+		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen, $priority);
+		$this->setLinkAttributes($tag, $linkInfo, 'url');
 
 		// Overwrite the markup without touching the link's text
 		$this->overwrite($startTagPos, 1);
@@ -515,9 +515,7 @@ class Parser extends ParserBase
 
 				do
 				{
-					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0);
-					$tag->setSortPriority($quotesCnt);
-
+					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, $quotesCnt);
 					$quotes[] = $tag;
 				}
 				while ($quoteDepth > ++$quotesCnt);
@@ -560,9 +558,8 @@ class Parser extends ParserBase
 					// Overwrite the whole block
 					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
 
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
 					$endTag->pairWith($codeTag);
-					$endTag->setSortPriority(-1);
 					$codeTag = null;
 					$codeFence = null;
 				}
@@ -768,9 +765,8 @@ class Parser extends ParserBase
 
 					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
-						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
+						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen, -1);
 						$endTag->pairWith($codeTag);
-						$endTag->setSortPriority(-1);
 
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 
@@ -835,7 +831,7 @@ class Parser extends ParserBase
 
 			if ($ignoreLen)
 			{
-				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
+				$this->parser->addIgnoreTag($matchPos, $ignoreLen, 1000);
 			}
 		}
 	}
@@ -1044,7 +1040,7 @@ class Parser extends ParserBase
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]))->setSortPriority(-2);
+			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]), -2);
 
 			// Ignore the reference if it already exists
 			$id = strtolower($m[1][0]);

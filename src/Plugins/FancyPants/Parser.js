@@ -41,14 +41,15 @@ if (text.indexOf('(') >= 0)
 /**
 * Add a fancy replacement tag
 *
-* @param  {!number} tagPos
-* @param  {!number} tagLen
-* @param  {!string} chr
+* @param  {!number} tagPos Position of the tag in the text
+* @param  {!number} tagLen Length of text consumed by the tag
+* @param  {!string} chr    Replacement character
+* @param  {number}  prio   Tag's priority
 * @return {!Tag}
 */
-function addTag(tagPos, tagLen, chr)
+function addTag(tagPos, tagLen, chr, prio)
 {
-	var tag = addSelfClosingTag(config.tagName, tagPos, tagLen);
+	var tag = addSelfClosingTag(config.tagName, tagPos, tagLen, prio || 0);
 	tag.setAttribute(config.attrName, chr);
 
 	return tag;
@@ -118,10 +119,8 @@ function parseSingleQuotes(text)
 	var m, regexp = /[a-z]'|(?:^|\s)'(?=[a-z]|[0-9]{2})/gi;
 	while (m = regexp.exec(text))
 	{
-		var tag = addTag(+m['index'] + m[0].indexOf("'"), 1, "\u2019");
-
 		// Give this tag a worse priority than default so that quote pairs take precedence
-		tag.setSortPriority(10);
+		addTag(+m['index'] + m[0].indexOf("'"), 1, "\u2019", 10);
 	}
 }
 

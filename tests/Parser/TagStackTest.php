@@ -284,11 +284,22 @@ class TagStackTest extends Test
 	public function testAddCopyTagSortPriority()
 	{
 		$dummyStack = new DummyStack;
-		$original = $dummyStack->addSelfClosingTag('X', 1, 2);
-		$original->setSortPriority(123);
+		$original = $dummyStack->addSelfClosingTag('X', 1, 2, 123);
 		$copy     = $dummyStack->addCopyTag($original, 11, 22);
 
 		$this->assertSame(123, $copy->getSortPriority());
+	}
+
+	/**
+	* @testdox addCopyTag() can set a different sort priority
+	*/
+	public function testAddCopyTagNewSortPriority()
+	{
+		$dummyStack = new DummyStack;
+		$original = $dummyStack->addSelfClosingTag('X', 1, 2, 123);
+		$copy     = $dummyStack->addCopyTag($original, 11, 22, 456);
+
+		$this->assertSame(456, $copy->getSortPriority());
 	}
 
 	/**
@@ -317,13 +328,9 @@ class TagStackTest extends Test
 	{
 		$dummyStack = new DummyStack;
 
-		$t2 = $dummyStack->addStartTag('X', 0, 2);
-		$t3 = $dummyStack->addStartTag('X', 0, 3);
-		$t1 = $dummyStack->addStartTag('X', 0, 1);
-
-		$t1->setSortPriority(-10);
-		$t2->setSortPriority(0);
-		$t3->setSortPriority(10);
+		$t2 = $dummyStack->addStartTag('X', 0, 2, 0);
+		$t3 = $dummyStack->addStartTag('X', 0, 3, 10);
+		$t1 = $dummyStack->addStartTag('X', 0, 1, -10);
 
 		$dummyStack->sortTags();
 
@@ -426,8 +433,8 @@ class TagStackTest extends Test
 			'Test',
 			function () use ($parser)
 			{
-				$parser->addSelfClosingTag('Y', 0, 0)->setSortPriority(20);
-				$parser->addSelfClosingTag('X', 0, 0)->setSortPriority(10);
+				$parser->addSelfClosingTag('Y', 0, 0, 20);
+				$parser->addSelfClosingTag('X', 0, 0, 10);
 			}
 		);
 		$this->assertSame(
@@ -440,14 +447,150 @@ class TagStackTest extends Test
 			'Test',
 			function () use ($parser)
 			{
-				$parser->addSelfClosingTag('X', 0, 0)->setSortPriority(10);
-				$parser->addSelfClosingTag('Y', 0, 0)->setSortPriority(20);
+				$parser->addSelfClosingTag('X', 0, 0, 10);
+				$parser->addSelfClosingTag('Y', 0, 0, 20);
 			}
 		);
 		$this->assertSame(
 			'<r><X/><Y/></r>',
 			$parser->parse('')
 		);
+	}
+
+	/**
+	* @testdox addBrTag() sets the tag's priority
+	*/
+	public function testAddBrTagPrio()
+	{
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(-1, $parser->addBrTag(0, -1)->getSortPriority());
+			}
+		);
+		$parser->parse('');
+	}
+
+	/**
+	* @testdox addEndTag() sets the tag's priority 
+	*/
+	public function testAddEndTagPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(-1, $parser->addEndTag('X', 0, 0, -1)->getSortPriority());
+			}
+		);
+		$parser->parse('');
+	}
+
+	/**
+	* @testdox addIgnoreTag() sets the tag's priority 
+	*/
+	public function testAddIgnoreTagPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(-1, $parser->addIgnoreTag(0, 1, -1)->getSortPriority());
+			}
+		);
+		$parser->parse(' ');
+	}
+
+	/**
+	* @testdox addParagraphBreak() sets the tag's priority 
+	*/
+	public function testAddParagraphBreakPrio()
+	{
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(9, $parser->addParagraphBreak(0, 9)->getSortPriority());
+			}
+		);
+		$parser->parse('');
+	}
+
+	/**
+	* @testdox addSelfClosingTag() sets the tag's priority 
+	*/
+	public function testAddSelfClosingTagPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(10, $parser->addSelfClosingTag('X', 0, 0, 10)->getSortPriority());
+			}
+		);
+		$parser->parse('');
+	}
+
+	/**
+	* @testdox addStartTag() sets the tag's priority 
+	*/
+	public function testAddStartTagPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(-10, $parser->addStartTag('X', 0, 0, -10)->getSortPriority());
+			}
+		);
+		$parser->parse('');
+	}
+
+	/**
+	* @testdox addTagPair() sets the tag's priority 
+	*/
+	public function testAddTagPairPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$startTag = $parser->addTagPair('X', 0, 0, 1, 0, 6);
+				$endTag   = $startTag->getEndTag();
+				$this->assertSame(6, $startTag->getSortPriority());
+				$this->assertSame(6, $endTag->getSortPriority());
+			}
+		);
+		$parser->parse(' ');
+	}
+
+	/**
+	* @testdox addVerbatim() sets the tag's priority 
+	*/
+	public function testAddVerbatimPrio()
+	{
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$this->assertSame(-99, $parser->addVerbatim(0, 1, -99)->getSortPriority());
+			}
+		);
+		$parser->parse(' ');
 	}
 }
 

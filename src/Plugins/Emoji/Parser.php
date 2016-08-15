@@ -46,9 +46,8 @@ class Parser extends ParserBase
 	*/
 	protected function addTag($tagPos, $tagLen, $seq)
 	{
-		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen);
-		$tag->setSortPriority(10);
-		$tag->setAttribute($this->config['attrName'], $seq);
+		$this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen, 10)
+		             ->setAttribute($this->config['attrName'], $seq);
 	}
 
 	/**

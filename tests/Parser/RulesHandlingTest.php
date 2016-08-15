@@ -318,7 +318,7 @@ class RulesHandlingTest extends Test
 				{
 					$parser->addStartTag('B', 0, 1);
 					$parser->addStartTag('B', 1, 1);
-					$parser->addStartTag('Q', 2, 0)->setSortPriority(-10);
+					$parser->addStartTag('Q', 2, 0, -10);
 				}
 			],
 			[
@@ -333,7 +333,7 @@ class RulesHandlingTest extends Test
 				{
 					$parser->addStartTag('B', 0, 1);
 					$parser->addStartTag('B', 1, 1);
-					$parser->addStartTag('Q', 2, 0)->setSortPriority(10);
+					$parser->addStartTag('Q', 2, 0, 10);
 				}
 			],
 			[

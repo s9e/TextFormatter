@@ -69,14 +69,15 @@ class Parser extends ParserBase
 	/**
 	* Add a fancy replacement tag
 	*
-	* @param  integer $tagPos
-	* @param  integer $tagLen
-	* @param  string  $chr
+	* @param  integer $tagPos Position of the tag in the text
+	* @param  integer $tagLen Length of text consumed by the tag
+	* @param  string  $chr    Replacement character
+	* @param  integer $prio   Tag's priority
 	* @return \s9e\TextFormatter\Parser\Tag
 	*/
-	protected function addTag($tagPos, $tagLen, $chr)
+	protected function addTag($tagPos, $tagLen, $chr, $prio = 0)
 	{
-		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen);
+		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen, $prio);
 		$tag->setAttribute($this->config['attrName'], $chr);
 
 		return $tag;
@@ -163,10 +164,8 @@ class Parser extends ParserBase
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$tag = $this->addTag($m[1], 1, "\xE2\x80\x99");
-
 			// Give this tag a worse priority than default so that quote pairs take precedence
-			$tag->setSortPriority(10);
+			$this->addTag($m[1], 1, "\xE2\x80\x99", 10);
 		}
 	}
 

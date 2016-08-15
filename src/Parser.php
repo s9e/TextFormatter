@@ -1369,7 +1369,7 @@ class Parser
 			$tagPos   = $this->pos + strspn($this->text, " \n\r\t", $this->pos);
 			foreach ($tagConfig['rules']['createChild'] as $tagName)
 			{
-				$this->addStartTag($tagName, $tagPos, 0)->setSortPriority(++$priority);
+				$this->addStartTag($tagName, $tagPos, 0, ++$priority);
 			}
 		}
 	}
@@ -1405,9 +1405,8 @@ class Parser
 					{
 						// Add a 0-width copy of the parent tag right after this tag, with a worse
 						// priority and make it depend on this tag
-						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0);
+						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0, $tag->getSortPriority() + 1);
 						$tag->cascadeInvalidationTo($child);
-						$child->setSortPriority($tag->getSortPriority() + 1);
 					}
 
 					// Reinsert current tag
@@ -1415,7 +1414,7 @@ class Parser
 
 					// And finally close its parent with a priority that ensures it is processed
 					// before this tag
-					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
+					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 
 					// Adjust the fixing cost commensurately with the size of the tag stack which
 					// has to be sorted
@@ -1470,9 +1469,10 @@ class Parser
 	*
 	* @param  Tag     $startTag Start tag
 	* @param  integer $tagPos   End tag's position (will be adjusted for whitespace if applicable)
+	* @param  integer $prio     End tag's priority
 	* @return Tag
 	*/
-	protected function addMagicEndTag(Tag $startTag, $tagPos)
+	protected function addMagicEndTag(Tag $startTag, $tagPos, $prio = 0)
 	{
 		$tagName = $startTag->getName();
 
@@ -1483,7 +1483,7 @@ class Parser
 		}
 
 		// Add a 0-width end tag that is paired with the given start tag
-		$endTag = $this->addEndTag($tagName, $tagPos, 0);
+		$endTag = $this->addEndTag($tagName, $tagPos, 0, $prio);
 		$endTag->pairWith($startTag);
 
 		return $endTag;
@@ -2027,11 +2027,12 @@ class Parser
 	* @param  string  $name Name of the tag
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addStartTag($name, $pos, $len)
+	public function addStartTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::START_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::START_TAG, $name, $pos, $len, $prio);
 	}
 
 	/**
@@ -2040,11 +2041,12 @@ class Parser
 	* @param  string  $name Name of the tag
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addEndTag($name, $pos, $len)
+	public function addEndTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::END_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::END_TAG, $name, $pos, $len, $prio);
 	}
 
 	/**
@@ -2053,22 +2055,24 @@ class Parser
 	* @param  string  $name Name of the tag
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addSelfClosingTag($name, $pos, $len)
+	public function addSelfClosingTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, $name, $pos, $len, $prio);
 	}
 
 	/**
 	* Add a 0-width "br" tag to force a line break at given position
 	*
 	* @param  integer $pos  Position of the tag in the text
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addBrTag($pos)
+	public function addBrTag($pos, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0, $prio);
 	}
 
 	/**
@@ -2076,11 +2080,12 @@ class Parser
 	*
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addIgnoreTag($pos, $len)
+	public function addIgnoreTag($pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, min($len, $this->textLen - $pos));
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, min($len, $this->textLen - $pos), $prio);
 	}
 
 	/**
@@ -2089,26 +2094,31 @@ class Parser
 	* Uses a zero-width tag that is actually never output in the result
 	*
 	* @param  integer $pos  Position of the tag in the text
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addParagraphBreak($pos)
+	public function addParagraphBreak($pos, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0, $prio);
 	}
 
 	/**
 	* Add a copy of given tag at given position and length
 	*
-	* @param  Tag     $tag Original tag
-	* @param  integer $pos Copy's position
-	* @param  integer $len Copy's length
-	* @return Tag          Copy tag
+	* @param  Tag     $tag  Original tag
+	* @param  integer $pos  Copy's position
+	* @param  integer $len  Copy's length
+	* @param  integer $prio Copy's priority (same as original by default)
+	* @return Tag           Copy tag
 	*/
-	public function addCopyTag(Tag $tag, $pos, $len)
+	public function addCopyTag(Tag $tag, $pos, $len, $prio = null)
 	{
-		$copy = $this->addTag($tag->getType(), $tag->getName(), $pos, $len);
+		if (!isset($prio))
+		{
+			$prio = $tag->getSortPriority();
+		}
+		$copy = $this->addTag($tag->getType(), $tag->getName(), $pos, $len, $prio);
 		$copy->setAttributes($tag->getAttributes());
-		$copy->setSortPriority($tag->getSortPriority());
 
 		return $copy;
 	}
@@ -2120,12 +2130,13 @@ class Parser
 	* @param  string  $name Name of the tag
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	protected function addTag($type, $name, $pos, $len)
+	protected function addTag($type, $name, $pos, $len, $prio)
 	{
 		// Create the tag
-		$tag = new Tag($type, $name, $pos, $len);
+		$tag = new Tag($type, $name, $pos, $len, $prio);
 
 		// Keep a copy of this tag to destroy its references after processing
 		$this->createdTags[] = $tag;
@@ -2160,13 +2171,10 @@ class Parser
 		else
 		{
 			// If the stack is sorted we check whether this tag should be stored at a lower offset
-			// than the last tag which would mean we need to sort the stack. Note that we cannot use
-			// compareTags() to break ties here because setSortPriority() can be called *after* tags
-			// have been put on the stack, therefore we need to properly sort the stack if the
-			// positions are the same
+			// than the last tag which would mean we need to sort the stack
 			if ($this->tagStackIsSorted
 			 && !empty($this->tagStack)
-			 && $tag->getPos() >= end($this->tagStack)->getPos())
+			 && self::compareTags($tag, end($this->tagStack)) < 0)
 			{
 				$this->tagStackIsSorted = false;
 			}
@@ -2185,12 +2193,13 @@ class Parser
 	* @param  integer $startLen Length of the start tag
 	* @param  integer $endPos   Position of the start tag
 	* @param  integer $endLen   Length of the start tag
+	* @param  integer $prio     Tags' priority
 	* @return Tag               Start tag
 	*/
-	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen)
+	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
-		$tag = $this->addStartTag($name, $startPos, $startLen);
-		$tag->pairWith($this->addEndTag($name, $endPos, $endLen));
+		$tag = $this->addStartTag($name, $startPos, $startLen, $prio);
+		$tag->pairWith($this->addEndTag($name, $endPos, $endLen, $prio));
 
 		return $tag;
 	}
@@ -2200,11 +2209,12 @@ class Parser
 	*
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
+	* @param  integer $prio Tag's priority
 	* @return Tag
 	*/
-	public function addVerbatim($pos, $len)
+	public function addVerbatim($pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len, $prio);
 	}
 
 	/**

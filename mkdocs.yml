@@ -99,5 +99,6 @@ pages:
     - Introduction: JavaScript/Introduction.md
     - Minifiers: JavaScript/Minifiers.md
   - Internals:
+    - API changes: Internals/API_changes.md
     - Limits: Internals/Limits.md
     - PHP renderer: Internals/PHP_renderer.md
