@@ -21,9 +21,7 @@ parseUnicodeEmoji(text);
 */
 function addTag(tagPos, tagLen, seq)
 {
-	var tag = addSelfClosingTag(config.tagName, tagPos, tagLen);
-	tag.setSortPriority(10);
-	tag.setAttribute(config.attrName, seq);
+	addSelfClosingTag(config.tagName, tagPos, tagLen, 10).setAttribute(config.attrName, seq);
 }
 
 /**
