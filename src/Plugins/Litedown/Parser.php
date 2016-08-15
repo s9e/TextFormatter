@@ -47,9 +47,9 @@ class Parser extends ParserBase
 	}
 	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
 	{
-		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen);
+		$priority = ($endTagLen === 1) ? 1 : -1;
+		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen, $priority);
 		$this->setLinkAttributes($tag, $linkInfo, 'url');
-		$tag->setSortPriority(($endTagLen === 1) ? 1 : -1);
 		$this->overwrite($startTagPos, 1);
 		$this->overwrite($endTagPos,   $endTagLen);
 	}
@@ -265,8 +265,7 @@ class Parser extends ParserBase
 				$newContext = \true;
 				do
 				{
-					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0);
-					$tag->setSortPriority($quotesCnt);
+					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, $quotesCnt);
 					$quotes[] = $tag;
 				}
 				while ($quoteDepth > ++$quotesCnt);
@@ -294,9 +293,8 @@ class Parser extends ParserBase
 				if (isset($codeTag))
 				{
 					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
 					$endTag->pairWith($codeTag);
-					$endTag->setSortPriority(-1);
 					$codeTag = \null;
 					$codeFence = \null;
 				}
@@ -416,9 +414,8 @@ class Parser extends ParserBase
 					$tagLen = $lfPos - $tagPos;
 					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
-						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
+						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen, -1);
 						$endTag->pairWith($codeTag);
-						$endTag->setSortPriority(-1);
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen - $codeTag->getPos());
 						$codeTag = \null;
@@ -461,7 +458,7 @@ class Parser extends ParserBase
 			if (!$lineIsEmpty)
 				$textBoundary = $lfPos;
 			if ($ignoreLen)
-				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
+				$this->parser->addIgnoreTag($matchPos, $ignoreLen, 1000);
 		}
 	}
 	protected function matchEmphasis()
@@ -592,7 +589,7 @@ class Parser extends ParserBase
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$this->parser->addIgnoreTag($m[0][1], \strlen($m[0][0]))->setSortPriority(-2);
+			$this->parser->addIgnoreTag($m[0][1], \strlen($m[0][0]), -2);
 			$id = \strtolower($m[1][0]);
 			if (isset($this->refs[$id]))
 				continue;

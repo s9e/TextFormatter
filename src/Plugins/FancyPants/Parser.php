@@ -29,9 +29,9 @@ class Parser extends ParserBase
 			$this->parseSymbolsInParentheses();
 		unset($this->text);
 	}
-	protected function addTag($tagPos, $tagLen, $chr)
+	protected function addTag($tagPos, $tagLen, $chr, $prio = 0)
 	{
-		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen);
+		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen, $prio);
 		$tag->setAttribute($this->config['attrName'], $chr);
 		return $tag;
 	}
@@ -78,10 +78,7 @@ class Parser extends ParserBase
 		$regexp = "/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS";
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
-		{
-			$tag = $this->addTag($m[1], 1, "\xE2\x80\x99");
-			$tag->setSortPriority(10);
-		}
+			$this->addTag($m[1], 1, "\xE2\x80\x99", 10);
 	}
 	protected function parseSymbolsAfterDigits()
 	{

@@ -612,7 +612,7 @@ class Parser
 			$priority = -1000;
 			$tagPos   = $this->pos + \strspn($this->text, " \n\r\t", $this->pos);
 			foreach ($tagConfig['rules']['createChild'] as $tagName)
-				$this->addStartTag($tagName, $tagPos, 0)->setSortPriority(++$priority);
+				$this->addStartTag($tagName, $tagPos, 0, ++$priority);
 		}
 	}
 	protected function fosterParent(Tag $tag)
@@ -629,12 +629,11 @@ class Parser
 				{
 					if ($parentName !== $tagName && $this->currentFixingCost < $this->maxFixingCost)
 					{
-						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0);
+						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0, $tag->getSortPriority() + 1);
 						$tag->cascadeInvalidationTo($child);
-						$child->setSortPriority($tag->getSortPriority() + 1);
 					}
 					$this->tagStack[] = $tag;
-					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
+					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 					$this->currentFixingCost += \count($this->tagStack);
 					return \true;
 				}
@@ -659,12 +658,12 @@ class Parser
 		}
 		return \false;
 	}
-	protected function addMagicEndTag(Tag $startTag, $tagPos)
+	protected function addMagicEndTag(Tag $startTag, $tagPos, $prio = 0)
 	{
 		$tagName = $startTag->getName();
 		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			$tagPos = $this->getMagicPos($tagPos);
-		$endTag = $this->addEndTag($tagName, $tagPos, 0);
+		$endTag = $this->addEndTag($tagName, $tagPos, 0, $prio);
 		$endTag->pairWith($startTag);
 		return $endTag;
 	}
@@ -934,40 +933,41 @@ class Parser
 		$n = $this->tagsConfig[$tagName]['bitNumber'];
 		return (bool) ($this->context['allowed'][$n >> 3] & (1 << ($n & 7)));
 	}
-	public function addStartTag($name, $pos, $len)
+	public function addStartTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::START_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::START_TAG, $name, $pos, $len, $prio);
 	}
-	public function addEndTag($name, $pos, $len)
+	public function addEndTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::END_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::END_TAG, $name, $pos, $len, $prio);
 	}
-	public function addSelfClosingTag($name, $pos, $len)
+	public function addSelfClosingTag($name, $pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, $name, $pos, $len);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, $name, $pos, $len, $prio);
 	}
-	public function addBrTag($pos)
+	public function addBrTag($pos, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0, $prio);
 	}
-	public function addIgnoreTag($pos, $len)
+	public function addIgnoreTag($pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, \min($len, $this->textLen - $pos));
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, \min($len, $this->textLen - $pos), $prio);
 	}
-	public function addParagraphBreak($pos)
+	public function addParagraphBreak($pos, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0, $prio);
 	}
-	public function addCopyTag(Tag $tag, $pos, $len)
+	public function addCopyTag(Tag $tag, $pos, $len, $prio = \null)
 	{
-		$copy = $this->addTag($tag->getType(), $tag->getName(), $pos, $len);
+		if (!isset($prio))
+			$prio = $tag->getSortPriority();
+		$copy = $this->addTag($tag->getType(), $tag->getName(), $pos, $len, $prio);
 		$copy->setAttributes($tag->getAttributes());
-		$copy->setSortPriority($tag->getSortPriority());
 		return $copy;
 	}
-	protected function addTag($type, $name, $pos, $len)
+	protected function addTag($type, $name, $pos, $len, $prio)
 	{
-		$tag = new Tag($type, $name, $pos, $len);
+		$tag = new Tag($type, $name, $pos, $len, $prio);
 		$this->createdTags[] = $tag;
 		if (isset($this->tagsConfig[$name]))
 			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
@@ -990,21 +990,21 @@ class Parser
 		{
 			if ($this->tagStackIsSorted
 			 && !empty($this->tagStack)
-			 && $tag->getPos() >= \end($this->tagStack)->getPos())
+			 && self::compareTags($tag, \end($this->tagStack)) < 0)
 				$this->tagStackIsSorted = \false;
 			$this->tagStack[] = $tag;
 		}
 		return $tag;
 	}
-	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen)
+	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
-		$tag = $this->addStartTag($name, $startPos, $startLen);
-		$tag->pairWith($this->addEndTag($name, $endPos, $endLen));
+		$tag = $this->addStartTag($name, $startPos, $startLen, $prio);
+		$tag->pairWith($this->addEndTag($name, $endPos, $endLen, $prio));
 		return $tag;
 	}
-	public function addVerbatim($pos, $len)
+	public function addVerbatim($pos, $len, $prio = 0)
 	{
-		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'v', $pos, $len, $prio);
 	}
 	protected function sortTags()
 	{

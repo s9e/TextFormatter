@@ -19,15 +19,16 @@ class Tag
 	protected $len;
 	protected $name;
 	protected $pos;
-	protected $sortPriority = 0;
+	protected $sortPriority;
 	protected $startTag = \null;
 	protected $type;
-	public function __construct($type, $name, $pos, $len)
+	public function __construct($type, $name, $pos, $len, $priority = 0)
 	{
 		$this->type = (int) $type;
 		$this->name = $name;
 		$this->pos  = (int) $pos;
 		$this->len  = (int) $len;
+		$this->sortPriority = (int) $priority;
 	}
 	public function addFlags($flags)
 	{
@@ -83,6 +84,7 @@ class Tag
 	public function setSortPriority($sortPriority)
 	{
 		$this->sortPriority = $sortPriority;
+		\trigger_error('setSortPriority() is deprecated. Set the priority when calling adding the tag instead. See http://s9etextformatter.readthedocs.io/Internals/API_changes/#070', \E_USER_DEPRECATED);
 	}
 	public function getAttributes()
 	{
