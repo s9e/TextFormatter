@@ -108,6 +108,26 @@ class ParserTest extends Test
 					$configurator->Preg->match('/\\[(.*?)\\]\\((?<href>[^)]+)\\)/', 'A');
 				}
 			],
+			[
+				'http://example.org/img.png',
+				'<r><PREG_80AB38C0>http://example.org/img.png</PREG_80AB38C0></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Autoimage;
+					$configurator->Preg->replace('!http://\\S+!', '<b>$0</b>');
+				}
+			],
+			[
+				'http://example.org/img.png',
+				'<r><PREG_80AB38C0>http://example.org/img.png</PREG_80AB38C0></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Autoimage;
+					$configurator->Preg->replace('!http://\\S+!', '[img]');
+				}
+			],
 		];
 	}
 

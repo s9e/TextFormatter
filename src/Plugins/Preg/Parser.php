@@ -37,17 +37,11 @@ class Parser extends ParserBase
 					$endTagPos   = $contentPos + $contentLen;
 					$endTagLen   = $matchLen - ($startTagLen + $contentLen);
 
-					$tag = $this->parser->addTagPair(
-						$tagName,
-						$startTagPos,
-						$startTagLen,
-						$endTagPos,
-						$endTagLen
-					);
+					$tag = $this->parser->addTagPair($tagName, $startTagPos, $startTagLen, $endTagPos, $endTagLen, -100);
 				}
 				else
 				{
-					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
+					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen, -100);
 				}
 
 				foreach ($map as $i => $attrName)
