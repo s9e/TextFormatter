@@ -1296,6 +1296,27 @@ class TagProcessingTest extends Test
 					$parser->addIgnoreTag(0, 99);
 				}
 			],
+			[
+				'xi',
+				'<r><X>x</X><i>i</i><br/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->filterChain
+						->append(
+							function ($tag, $parser)
+							{
+								$parser->addBrTag(2);
+								return true;
+							}
+						)
+						->addParameterByName('parser');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('X', 0, 0, 1, 0);
+					$parser->addIgnoreTag(1, 1);
+				}
+			],
 		];
 	}
 }
