@@ -34,6 +34,7 @@ $externs = [
 		'Array.prototype.slice',
 		'Array.prototype.sort',
 		'Array.prototype.splice',
+		'Array.prototype.unshift',
 
 		'function Date(',
 		'Date.parse',

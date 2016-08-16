@@ -247,7 +247,7 @@ class Parser
 		$this->output      = '';
 		$this->pos         = 0;
 		$this->tagStack    = [];
-		$this->tagStackIsSorted = true;
+		$this->tagStackIsSorted = false;
 		$this->text        = $text;
 		$this->textLen     = strlen($text);
 		$this->wsPos       = 0;
@@ -1416,9 +1416,8 @@ class Parser
 					// before this tag
 					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 
-					// Adjust the fixing cost commensurately with the size of the tag stack which
-					// has to be sorted
-					$this->currentFixingCost += count($this->tagStack);
+					// Adjust the fixing cost to account for the additional tags/processing
+					$this->currentFixingCost += 4;
 
 					return true;
 				}
@@ -2170,19 +2169,42 @@ class Parser
 		}
 		else
 		{
-			// If the stack is sorted we check whether this tag should be stored at a lower offset
-			// than the last tag which would mean we need to sort the stack
-			if ($this->tagStackIsSorted
-			 && !empty($this->tagStack)
-			 && self::compareTags($tag, end($this->tagStack)) < 0)
-			{
-				$this->tagStackIsSorted = false;
-			}
-
-			$this->tagStack[] = $tag;
+			$this->insertTag($tag);
 		}
 
 		return $tag;
+	}
+
+	/**
+	* Insert given tag in the tag stack
+	*
+	* @param  Tag  $tag
+	* @return void
+	*/
+	protected function insertTag(Tag $tag)
+	{
+		$i = count($this->tagStack) - 1;
+		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) <= 0)
+		{
+			$this->tagStack[] = $tag;
+		}
+		else
+		{
+			// Scan the stack for the top tag that should be ordered after current tag, then insert
+			// current tag after it. If none is found, prepend the tag at the bottom
+			while (--$i >= 0)
+			{
+				if (self::compareTags($this->tagStack[$i], $tag) <= 0)
+				{
+					array_splice($this->tagStack, $i + 1, 0, [$tag]);
+					break;
+				}
+			}
+			if ($i < 0)
+			{
+				array_unshift($this->tagStack, $tag);
+			}
+		}
 	}
 
 	/**

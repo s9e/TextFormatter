@@ -263,7 +263,7 @@ function reset(_text)
 	output      = '';
 	pos         = 0;
 	tagStack    = [];
-	tagStackIsSorted = true;
+	tagStackIsSorted = false;
 	text        = _text;
 	textLen     = text.length;
 	wsPos       = 0;
@@ -1327,9 +1327,8 @@ function fosterParent(tag)
 				// before this tag
 				addMagicEndTag(parent, tag.getPos(), tag.getSortPriority() - 1);
 
-				// Adjust the fixing cost commensurately with the size of the tag stack which
-				// has to be sorted
-				currentFixingCost += tagStack.length;
+				// Adjust the fixing cost to account for the additional tags/processing
+				currentFixingCost += 4;
 
 				return true;
 			}
@@ -2072,19 +2071,41 @@ function addTag(type, name, pos, len, prio)
 	}
 	else
 	{
-		// If the stack is sorted we check whether this tag should be stored at a lower offset
-		// than the last tag which would mean we need to sort the stack
-		if (tagStackIsSorted
-		 && tagStack.length
-		 && compareTags(tag, tagStack[tagStack.length - 1]) < 0)
-		{
-			tagStackIsSorted = false;
-		}
-
-		tagStack.push(tag);
+		insertTag(tag);
 	}
 
 	return tag;
+}
+
+/**
+* Insert given tag in the tag stack
+*
+* @param {!Tag} tag
+*/
+function insertTag(tag)
+{
+	var i = tagStack.length - 1;
+	if (!tagStackIsSorted || i < 0 || compareTags(tagStack[i], tag) <= 0)
+	{
+		tagStack.push(tag);
+	}
+	else
+	{
+		// Scan the stack for the top tag that should be ordered after current tag, then insert
+		// current tag after it. If none is found, prepend the tag at the bottom
+		while (--i >= 0)
+		{
+			if (compareTags(tagStack[i], tag) <= 0)
+			{
+				tagStack.splice(i + 1, 0, tag);
+				break;
+			}
+		}
+		if (i < 0)
+		{
+			tagStack.unshift(tag);
+		}
+	}
 }
 
 /**
