@@ -26,6 +26,7 @@ switch ($_SERVER['argv'][1])
 		$newVersion = implode('.', $p) . '-dev';
 		break;
 
+	case 'preview':
 	case 'release':
 		$newVersion = str_replace('-dev', '', $m[2]);
 		break;
@@ -34,6 +35,9 @@ switch ($_SERVER['argv'][1])
 		$newVersion = $_SERVER['argv'][1];
 }
 
-file_put_contents($filepath, preg_replace($regexp, '${1}' . $newVersion, $file));
+if ($_SERVER['argv'][1] !== 'preview')
+{
+	file_put_contents($filepath, preg_replace($regexp, '${1}' . $newVersion, $file));
+}
 
 die($newVersion);

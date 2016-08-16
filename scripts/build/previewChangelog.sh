@@ -3,7 +3,7 @@
 cd "$(dirname $0)"
 
 old_version=$(git tag | sort -rV | head -n1)
-new_version=dev
+new_version=$(php patchComposerVersion.php preview)
 msg=$(git log --oneline -1 "$old_version")
 old_commit_id=${msg:(-40)}
 new_commit_id=$(git rev-parse HEAD)

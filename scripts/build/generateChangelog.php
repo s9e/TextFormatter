@@ -35,6 +35,12 @@ foreach ($lines as $line)
 $header = $newVersion . ' (' . gmdate('Y-m-d') . ')';
 echo $header, "\n", str_repeat('=', strlen($header)), "\n\n";
 
+$apiChanges = file_get_contents(__DIR__ . '/../../docs/Internals/API_changes.md');
+if (strpos($apiChanges, "## $newVersion\n") !== false)
+{
+	echo "**\xE2\x9A\xA0\xEF\xB8\x8F This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#" . preg_replace('(\\D)', '', $newVersion) . ") for a description. \xE2\x9A\xA0\xEF\xB8\x8F**\n\n";
+}
+
 echo "[Full commit log](https://github.com/s9e/TextFormatter/compare/$oldCommitId...$newCommitId)\n";
 
 foreach (['Added', 'Removed', 'Fixed', 'Changed'] as $type)
