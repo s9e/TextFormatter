@@ -91,7 +91,7 @@ class Parser
 		$this->output      = '';
 		$this->pos         = 0;
 		$this->tagStack    = [];
-		$this->tagStackIsSorted = \true;
+		$this->tagStackIsSorted = \false;
 		$this->text        = $text;
 		$this->textLen     = \strlen($text);
 		$this->wsPos       = 0;
@@ -635,7 +635,7 @@ class Parser
 					}
 					$this->tagStack[] = $tag;
 					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
-					$this->currentFixingCost += \count($this->tagStack);
+					$this->currentFixingCost += 4;
 					return \true;
 				}
 			}
@@ -988,14 +988,25 @@ class Parser
 		elseif ($len < 0 || $pos < 0 || $pos + $len > $this->textLen)
 			$tag->invalidate();
 		else
-		{
-			if ($this->tagStackIsSorted
-			 && !empty($this->tagStack)
-			 && self::compareTags($tag, \end($this->tagStack)) < 0)
-				$this->tagStackIsSorted = \false;
-			$this->tagStack[] = $tag;
-		}
+			$this->insertTag($tag);
 		return $tag;
+	}
+	protected function insertTag(Tag $tag)
+	{
+		$i = \count($this->tagStack) - 1;
+		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) < 0)
+			$this->tagStack[] = $tag;
+		else
+		{
+			while (--$i >= 0)
+				if (self::compareTags($this->tagStack[$i], $tag) < 0)
+				{
+					\array_splice($this->tagStack, $i + 1, 0, [$tag]);
+					break;
+				}
+			if ($i < 0)
+				\array_unshift($this->tagStack, $tag);
+		}
 	}
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
