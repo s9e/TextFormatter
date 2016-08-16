@@ -2085,7 +2085,7 @@ function addTag(type, name, pos, len, prio)
 function insertTag(tag)
 {
 	var i = tagStack.length - 1;
-	if (!tagStackIsSorted || i < 0 || compareTags(tagStack[i], tag) < 0)
+	if (!tagStackIsSorted || i < 0 || compareTags(tagStack[i], tag) <= 0)
 	{
 		tagStack.push(tag);
 	}
@@ -2095,7 +2095,7 @@ function insertTag(tag)
 		// current tag after it. If none is found, prepend the tag at the bottom
 		while (--i >= 0)
 		{
-			if (compareTags(tagStack[i], tag) < 0)
+			if (compareTags(tagStack[i], tag) <= 0)
 			{
 				tagStack.splice(i + 1, 0, tag);
 				break;
