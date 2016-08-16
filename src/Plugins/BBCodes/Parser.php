@@ -19,10 +19,12 @@ class Parser extends ParserBase
 	protected $startPos;
 	protected $text;
 	protected $textLen;
+	protected $uppercaseText;
 	public function parse($text, array $matches)
 	{
-		$this->text = $text;
-		$this->textLen = \strlen($text);
+		$this->text          = $text;
+		$this->textLen       = \strlen($text);
+		$this->uppercaseText = '';
 		foreach ($matches as $m)
 		{
 			$this->bbcodeName = \strtoupper($m[1][0]);
@@ -58,8 +60,10 @@ class Parser extends ParserBase
 	}
 	protected function captureEndTag()
 	{
+		if (empty($this->uppercaseText))
+			$this->uppercaseText = \strtoupper($this->text);
 		$match     = '[/' . $this->bbcodeName . $this->bbcodeSuffix . ']';
-		$endTagPos = \stripos($this->text, $match, $this->pos);
+		$endTagPos = \strpos($this->uppercaseText, $match, $this->pos);
 		if ($endTagPos === \false)
 			return;
 		return $this->parser->addEndTag($this->getTagName(), $endTagPos, \strlen($match));
