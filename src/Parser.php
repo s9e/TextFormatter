@@ -995,12 +995,12 @@ class Parser
 	protected function insertTag(Tag $tag)
 	{
 		$i = \count($this->tagStack) - 1;
-		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) < 0)
+		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) <= 0)
 			$this->tagStack[] = $tag;
 		else
 		{
 			while (--$i >= 0)
-				if (self::compareTags($this->tagStack[$i], $tag) < 0)
+				if (self::compareTags($this->tagStack[$i], $tag) <= 0)
 				{
 					\array_splice($this->tagStack, $i + 1, 0, array($tag));
 					break;
