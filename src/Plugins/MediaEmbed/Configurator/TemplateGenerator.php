@@ -40,7 +40,10 @@ abstract class TemplateGenerator
 			if (isset($this->attributes['max-width']))
 				$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
 			elseif ($this->attributes['width'] !== '100%')
-				$this->attributes['style']['max-width'] = $this->attributes['width'] . 'px';
+			{
+				$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
+				$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
+			}
 		}
 		return $prepend . $this->getContentTemplate() . $append;
 	}
@@ -83,6 +86,14 @@ abstract class TemplateGenerator
 			$style .= $name . ':' . $value . ';';
 		return \trim($style, ';');
 	}
+	protected function hasDynamicHeight()
+	{
+		return (isset($this->attributes['onload']) && \strpos($this->attributes['onload'], '.height') !== \false);
+	}
+	protected function hasDynamicWidth()
+	{
+		return (isset($this->attributes['onload']) && \strpos($this->attributes['onload'], '.width') !== \false);
+	}
 	protected function mergeAttributes(array $defaultAttributes, array $newAttributes)
 	{
 		$attributes = \array_merge($defaultAttributes, $newAttributes);
@@ -92,10 +103,6 @@ abstract class TemplateGenerator
 	}
 	protected function needsWrapper()
 	{
-		if ($this->attributes['width'] === '100%')
-			return \false;
-		if (isset($this->attributes['onload']) && \strpos($this->attributes['onload'], '.height') !== \false)
-			return \false;
-		return \true;
+		return ($this->attributes['width'] !== '100%' && !$this->hasDynamicHeight());
 	}
 }
