@@ -14,46 +14,31 @@
 	<host>imgur.com</host>
 	<extract>@imgur\.com/(?!r/|user/)(?:gallery/)?(?'id'(?:a/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
 	<scrape>
-		<match>@imgur\.com/(?!r/|user/)(?:a|gallery)/\w@</match>
+		<match>@imgur\.com/gallery/\w@</match>
 		<extract>!image\s*:\s*.*?"is_(?'type'album)":true!</extract>
 		<extract>!&lt;div id="(?'type'album)-!</extract>
 		<extract>!class="(?'type'album)-image!</extract>
 	</scrape>
-	<scrape url="http://i.imgur.com/{@id}.gifv">
-		<match>!imgur\.com/\w+\.(?:gifv|mp4|webm)!</match>
-		<extract>!width:\s*(?'width'\d+)!</extract>
-		<extract>!height:\s*(?'height'\d+)!</extract>
-		<extract>!(?'type'gifv)!</extract>
-	</scrape>
+	<!--
+		var id = Math.random();
+		window.addEventListener('message', function(e)
+		{
+			// NOTE: e.data.id is a string whereas id is a number
+			if (e.data.id == id)
+			{
+				style.height = e.data.height + 'px';
+				style.width  = e.data.width + 'px';
+			}
+		});
 
-	<choose>
-		<!-- Disabled until Imgur fix their layout -->
-		<!--when test="@type='gifv' and @width and @height and @height != 0">
-			<iframe width="{@width}" height="{@height}" src="//i.imgur.com/{@id}.gifv#embed"/>
-		</when-->
-		<when test="starts-with(@id, 'a/')">
-			<iframe width="100%" height="550" src="//imgur.com/{@id}/embed"/>
-		</when>
-		<when test="@type='album'">
-			<iframe width="100%" height="550" src="//imgur.com/a/{@id}/embed"/>
-		</when>
-		<otherwise>
-			<!--
-				var id = Math.random();
-				window.addEventListener('message', function(e)
-				{
-					// NOTE: e.data.id is a string whereas id is a number
-					if (e.data.id == id)
-					{
-						style.height = e.data.height + 'px';
-						style.width = e.data.width + 'px';
-					}
-				});
-
-				var origin = src.substr(0, src.indexOf('/', 8));
-				contentWindow.postMessage('s9e:' + id, origin);
-			-->
-			<iframe width="100%" height="550" src="https://s9e.github.io/iframe/imgur.min.html#{@id}" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')"/>
-		</otherwise>
-	</choose>
+		var origin = src.substr(0, src.indexOf('/', 8));
+		contentWindow.postMessage('s9e:' + id, origin);
+	-->
+	<iframe width="568" height="450" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/imgur.min.html#</xsl:text>
+			<xsl:if test="@type='album' and not(starts-with(@id, 'a/'))">a/</xsl:if>
+			<xsl:value-of select="@id"/>
+		]]></src>
+	</iframe>
 </site>

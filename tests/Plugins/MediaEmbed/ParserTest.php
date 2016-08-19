@@ -517,16 +517,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://imgur.com/a/9UGCL',
-				'<r><IMGUR id="a/9UGCL" type="album" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
 				'http://imgur.com/gallery/9UGCL',
 				'<r><IMGUR id="9UGCL" type="album" url="http://imgur.com/gallery/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
 				[],
@@ -537,48 +527,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://imgur.com/gallery/j3HXR',
-				'<r><IMGUR id="j3HXR" type="album" url="https://imgur.com/gallery/j3HXR">https://imgur.com/gallery/j3HXR</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
 				'http://imgur.com/gallery/49H5yU8',
 				'<r><IMGUR id="49H5yU8" url="http://imgur.com/gallery/49H5yU8">http://imgur.com/gallery/49H5yU8</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'http://i.imgur.com/u7Yo0Vy.gifv',
-				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.gifv" width="915">http://i.imgur.com/u7Yo0Vy.gifv</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'http://i.imgur.com/u7Yo0Vy.mp4',
-				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.mp4" width="915">http://i.imgur.com/u7Yo0Vy.mp4</IMGUR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'http://i.imgur.com/u7Yo0Vy.webm',
-				'<r><IMGUR height="389" id="u7Yo0Vy" type="gifv" url="http://i.imgur.com/u7Yo0Vy.webm" width="915">http://i.imgur.com/u7Yo0Vy.webm</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1073,37 +1023,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/a/9UGCL',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" scrolling="no" src="//imgur.com/a/9UGCL/embed" style="border:0;height:550px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'https://imgur.com/AsQ0K3P',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/imgur.min.html#AsQ0K3P" style="border:0;height:550px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'http://i.imgur.com/u7Yo0Vy.gifv',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/imgur.min.html#u7Yo0Vy" style="border:0;height:550px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imgur');
-				}
-			],
-			[
-				'http://i.imgur.com/u7Yo0Vy.mp4',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/imgur.min.html#u7Yo0Vy" style="border:0;height:550px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" style="border:0;height:450px;width:568px" src="https://s9e.github.io/iframe/imgur.min.html#a/9UGCL"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -2178,6 +2098,15 @@ class ParserTest extends Test
 			[
 				'http://imgur.com/user/foo',
 				'<t>http://imgur.com/user/foo</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'https://imgur.com/a/9UGCL',
+				'<r><IMGUR id="a/9UGCL" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -3572,6 +3501,33 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('ign');
+				}
+			],
+			[
+				'https://imgur.com/AsQ0K3P',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" style="border:0;height:450px;width:568px" src="https://s9e.github.io/iframe/imgur.min.html#AsQ0K3P"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://i.imgur.com/u7Yo0Vy.gifv',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" style="border:0;height:450px;width:568px" src="https://s9e.github.io/iframe/imgur.min.html#u7Yo0Vy"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'http://i.imgur.com/u7Yo0Vy.mp4',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var b=Math.random();window.addEventListener(\'message\',function(a){a.data.id==b&amp;&amp;(style.height=a.data.height+\'px\',style.width=a.data.width+\'px\')});contentWindow.postMessage(\'s9e:\'+b,\'https://s9e.github.io\')" scrolling="no" style="border:0;height:450px;width:568px" src="https://s9e.github.io/iframe/imgur.min.html#u7Yo0Vy"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
 				}
 			],
 			[
