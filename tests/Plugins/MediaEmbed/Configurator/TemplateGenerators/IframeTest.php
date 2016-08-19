@@ -72,6 +72,15 @@ class IframeTest extends AbstractTest
 			],
 			[
 				[
+					'width'  => '500',
+					'height' => '300',
+					'src'    => 'foo',
+					'onload' => 'this.style.height=$height;this.style.width=$width'
+				],
+				'<iframe allowfullscreen="" onload="this.style.height=$height;this.style.width=$width" scrolling="no" src="foo" style="border:0;height:300px;width:500px"/>'
+			],
+			[
+				[
 					'width'          => '640',
 					'height'         => '360',
 					'padding-height' => '30',

@@ -69,7 +69,8 @@ abstract class TemplateGenerator
 			}
 			elseif ($this->attributes['width'] !== '100%')
 			{
-				$this->attributes['style']['max-width'] = $this->attributes['width'] . 'px';
+				$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
+				$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
 			}
 		}
 
@@ -164,6 +165,26 @@ abstract class TemplateGenerator
 	}
 
 	/**
+	* Test whether current template has a dynamic height
+	*
+	* @return bool
+	*/
+	protected function hasDynamicHeight()
+	{
+		return (isset($this->attributes['onload']) && strpos($this->attributes['onload'], '.height') !== false);
+	}
+
+	/**
+	* Test whether current template has a dynamic width
+	*
+	* @return bool
+	*/
+	protected function hasDynamicWidth()
+	{
+		return (isset($this->attributes['onload']) && strpos($this->attributes['onload'], '.width') !== false);
+	}
+
+	/**
 	* Merge two array of attributes
 	*
 	* @param  array $defaultAttributes
@@ -189,16 +210,6 @@ abstract class TemplateGenerator
 	*/
 	protected function needsWrapper()
 	{
-		if ($this->attributes['width'] === '100%')
-		{
-			return false;
-		}
-
-		if (isset($this->attributes['onload']) && strpos($this->attributes['onload'], '.height') !== false)
-		{
-			return false;
-		}
-
-		return true;
+		return ($this->attributes['width'] !== '100%' && !$this->hasDynamicHeight());
 	}
 }
