@@ -994,19 +994,17 @@ class Parser
 	}
 	protected function insertTag(Tag $tag)
 	{
-		$i = \count($this->tagStack) - 1;
-		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) <= 0)
+		if (!$this->tagStackIsSorted)
 			$this->tagStack[] = $tag;
 		else
 		{
-			while (--$i >= 0)
-				if (self::compareTags($this->tagStack[$i], $tag) <= 0)
-				{
-					\array_splice($this->tagStack, $i + 1, 0, [$tag]);
-					break;
-				}
-			if ($i < 0)
-				\array_unshift($this->tagStack, $tag);
+			$i = \count($this->tagStack);
+			while ($i > 0 && self::compareTags($this->tagStack[$i - 1], $tag) > 0)
+			{
+				$this->tagStack[$i] = $this->tagStack[$i - 1];
+				--$i;
+			}
+			$this->tagStack[$i] = $tag;
 		}
 	}
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
