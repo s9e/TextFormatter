@@ -2183,27 +2183,20 @@ class Parser
 	*/
 	protected function insertTag(Tag $tag)
 	{
-		$i = count($this->tagStack) - 1;
-		if (!$this->tagStackIsSorted || $i < 0 || self::compareTags($this->tagStack[$i], $tag) <= 0)
+		if (!$this->tagStackIsSorted)
 		{
 			$this->tagStack[] = $tag;
 		}
 		else
 		{
-			// Scan the stack for the top tag that should be ordered after current tag, then insert
-			// current tag after it. If none is found, prepend the tag at the bottom
-			while (--$i >= 0)
+			// Scan the stack and copy every tag to the next slot until we find the correct index
+			$i = count($this->tagStack);
+			while ($i > 0 && self::compareTags($this->tagStack[$i - 1], $tag) > 0)
 			{
-				if (self::compareTags($this->tagStack[$i], $tag) <= 0)
-				{
-					array_splice($this->tagStack, $i + 1, 0, [$tag]);
-					break;
-				}
+				$this->tagStack[$i] = $this->tagStack[$i - 1];
+				--$i;
 			}
-			if ($i < 0)
-			{
-				array_unshift($this->tagStack, $tag);
-			}
+			$this->tagStack[$i] = $tag;
 		}
 	}
 
