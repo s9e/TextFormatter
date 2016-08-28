@@ -22,11 +22,14 @@ class StylesheetCompressor
 		'<param name="allowfullscreen" value="true"/>',
 		'<xsl:value-of select="',
 		'<xsl:copy-of select="@',
+		'<iframe allowfullscreen="" scrolling="no"',
 		'overflow:hidden;position:relative;padding-bottom:',
 		'display:inline-block;width:100%;max-width:',
 		' [-:\\w]++="',
-		'(?<=<)[-:\\w]++',
-		'(?<==")[^"]++"'
+		'\\{[^}]++\\}',
+		'@[-\\w]{4,}+',
+		'(?<=<)[-:\\w]{4,}+',
+		'(?<==")[^"]{4,}+"'
 	];
 
 	/**
@@ -64,7 +67,7 @@ class StylesheetCompressor
 	{
 		$this->xsl = $xsl;
 
-		$this->computeSavings();
+		$this->estimateSavings();
 		$this->filterSavings();
 		$this->buildDictionary();
 
@@ -102,11 +105,11 @@ class StylesheetCompressor
 	}
 
 	/**
-	* Compute the savings of every possible string replacement
+	* Estimate the savings of every possible string replacement
 	*
 	* @return void
 	*/
-	protected function computeSavings()
+	protected function estimateSavings()
 	{
 		$this->savings = [];
 		foreach ($this->getStringsFrequency() as $str => $cnt)
@@ -192,13 +195,7 @@ class StylesheetCompressor
 		$regexp = '(' . implode('|', $this->deduplicateTargets) . ')S';
 		preg_match_all($regexp, $this->xsl, $matches);
 
-		$freq = [];
-		foreach (array_unique($matches[0]) as $str)
-		{
-			$freq[$str] = substr_count($this->xsl, $str);
-		}
-
-		return $freq;
+		return array_count_values($matches[0]);
 	}
 
 	/**
