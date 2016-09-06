@@ -1240,7 +1240,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\HostedMinifier
  [x] Throws an exception if the minification fails
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\MatthiasMullieMinify
- [x] minify() works
+ [ ] minify() works
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
@@ -2293,10 +2293,6 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] Image size can be omitted with Twemoji
  [x] Image size is forced by default with EmojiOne
  [x] Image size can be omitted with EmojiOne
- [x] Twemoji uses 16x16 assets by default
- [x] Twemoji uses 36x36 assets if the image size is 22
- [x] Twemoji uses 36x36 assets if the image size is 36
- [x] Twemoji uses 72x72 assets if the image size is 72
  [x] removeAlias() removes given alias
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists

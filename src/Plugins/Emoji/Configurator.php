@@ -236,26 +236,6 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Get the first available size that satisfies our size requirement
-	*
-	* @param  integer[] $sizes Available sizes
-	* @return integer
-	*/
-	protected function getTargetSize(array $sizes)
-	{
-		$k = 0;
-		foreach ($sizes as $k => $size)
-		{
-			if ($size >= $this->imageSize)
-			{
-				break;
-			}
-		}
-
-		return $sizes[$k];
-	}
-
-	/**
 	* Get this tag's template
 	*
 	* @return string
@@ -281,15 +261,14 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getTwemojiSrc()
 	{
-		$src = '//twemoji.maxcdn.com/';
+		$src = '//twemoji.maxcdn.com/2/';
 		if ($this->imageType === 'svg')
 		{
 			$src .= 'svg';
 		}
 		else
 		{
-			$size = $this->getTargetSize([16, 36, 72]);
-			$src .= $size . 'x' . $size;
+			$src .= '72x72';
 		}
 		$src .= '/<xsl:value-of select="@seq"/>.' . $this->imageType;
 

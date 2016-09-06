@@ -20,7 +20,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/16x16/1f600.png">
+Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/1f600.png">
 ```
 
 ### Using the EmojiOne set

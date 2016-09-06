@@ -271,49 +271,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Twemoji uses 16x16 assets by default
-	*/
-	public function testTwemojiDefaultSize()
-	{
-		$this->configurator->Emoji->useTwemoji();
-		$this->configurator->Emoji->forceImageSize();
-		$this->assertContains('16x16', (string) $this->configurator->tags['EMOJI']->template);
-	}
-
-	/**
-	* @testdox Twemoji uses 36x36 assets if the image size is 22
-	*/
-	public function testTwemojiSize22()
-	{
-		$this->configurator->Emoji->useTwemoji();
-		$this->configurator->Emoji->forceImageSize();
-		$this->configurator->Emoji->setImageSize(22);
-		$this->assertContains('36x36', (string) $this->configurator->tags['EMOJI']->template);
-	}
-
-	/**
-	* @testdox Twemoji uses 36x36 assets if the image size is 36
-	*/
-	public function testTwemojiSize36()
-	{
-		$this->configurator->Emoji->useTwemoji();
-		$this->configurator->Emoji->forceImageSize();
-		$this->configurator->Emoji->setImageSize(36);
-		$this->assertContains('36x36', (string) $this->configurator->tags['EMOJI']->template);
-	}
-
-	/**
-	* @testdox Twemoji uses 72x72 assets if the image size is 72
-	*/
-	public function testTwemojiSize72()
-	{
-		$this->configurator->Emoji->useTwemoji();
-		$this->configurator->Emoji->forceImageSize();
-		$this->configurator->Emoji->setImageSize(72);
-		$this->assertContains('72x72', (string) $this->configurator->tags['EMOJI']->template);
-	}
-
-	/**
 	* @testdox removeAlias() removes given alias
 	*/
 	public function testRemoveAlias()
