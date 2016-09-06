@@ -32,7 +32,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string Emoji set to use
 	*/
-	protected $imageSet = 'twemoji';
+	protected $imageSet = 'emojione';
 
 	/**
 	* @var integer Target size for the emoji images

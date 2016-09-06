@@ -2282,7 +2282,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Can use the EmojiOne set
  [x] Can use the Twemoji set
- [x] Uses Twemoji by default
+ [x] Uses EmojiOne by default
  [x] Twemoji set can use PNG images
  [x] Twemoji set can use SVG images
  [x] Twemoji set uses PNG images by default

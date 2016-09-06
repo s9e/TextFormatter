@@ -6,7 +6,7 @@ Emoji are a standardized set of pictographs.  They exists as Unicode characters 
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Emoji;
+$configurator->Emoji->useTwemoji();
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
