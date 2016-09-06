@@ -15,7 +15,7 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'seq';
 	protected $aliases = [];
 	protected $forceImageSize = \true;
-	protected $imageSet = 'twemoji';
+	protected $imageSet = 'emojione';
 	protected $imageSize = 16;
 	protected $imageType = 'png';
 	protected $tagName = 'EMOJI';
@@ -110,14 +110,6 @@ class Configurator extends ConfiguratorBase
 		$src .= '.' . $this->imageType;
 		return $src;
 	}
-	protected function getTargetSize(array $sizes)
-	{
-		$k = 0;
-		foreach ($sizes as $k => $size)
-			if ($size >= $this->imageSize)
-				break;
-		return $sizes[$k];
-	}
 	protected function getTemplate()
 	{
 		$template = '<img alt="{.}" class="emoji" draggable="false"';
@@ -130,14 +122,11 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getTwemojiSrc()
 	{
-		$src = '//twemoji.maxcdn.com/';
+		$src = '//twemoji.maxcdn.com/2/';
 		if ($this->imageType === 'svg')
 			$src .= 'svg';
 		else
-		{
-			$size = $this->getTargetSize([16, 36, 72]);
-			$src .= $size . 'x' . $size;
-		}
+			$src .= '72x72';
 		$src .= '/<xsl:value-of select="@seq"/>.' . $this->imageType;
 		return $src;
 	}
