@@ -13,7 +13,7 @@ $text = "Hello, [i]world[/i] :)\nFind more examples in the [url=https://github.c
 $xml  = TextFormatter::parse($text);
 
 // HTML rendering, that's what you display to the user
-$html = TextFormatter::render($xml, ['EMOTICONS_PATH' => '/path/to/emoticons']);
+$html = TextFormatter::render($xml);
 
 echo $html, "\n";
 
