@@ -1240,7 +1240,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\HostedMinifier
  [x] Throws an exception if the minification fails
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\MatthiasMullieMinify
- [ ] minify() works
+ [x] minify() works
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument

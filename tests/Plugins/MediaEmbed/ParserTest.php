@@ -766,16 +766,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
-			[
-				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
+//			[
+//				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
+//				'<r><SOUNDCLOUD id="https://soundcloud.com/topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('soundcloud');
+//				}
+//			],
 			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
 				'(<r><SPORTSNET id="\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
