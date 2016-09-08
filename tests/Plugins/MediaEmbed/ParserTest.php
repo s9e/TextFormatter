@@ -2678,6 +2678,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles/transcript',
+				'<t>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles/transcript</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ted');
+				}
+			],
+			[
 				'http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/',
 				'<r><THEATLANTIC id="358928" url="http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/">http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</THEATLANTIC></r>',
 				[],

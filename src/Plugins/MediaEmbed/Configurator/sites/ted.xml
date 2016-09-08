@@ -6,7 +6,7 @@
 	<tags><tag>presentations</tag></tags>
 
 	<host>ted.com</host>
-	<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"?]+)!i</extract>
+	<extract>#ted\.com/(?'id'(?:talk|playlist)s/[-\w]+(?:\.html)?)(?![-\w]|/transcript)#i</extract>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>//embed.ted.com/</xsl:text>
