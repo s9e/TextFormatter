@@ -1664,8 +1664,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://espn.go.com/video/clip?id=10315344',
-				'<r><ESPN cms="espn" id="10315344" url="http://espn.go.com/video/clip?id=10315344">http://espn.go.com/video/clip?id=10315344</ESPN></r>',
+				'http://www.espn.com/video/clip?id=17474659',
+				'<r><ESPN id="17474659" url="http://www.espn.com/video/clip?id=17474659">http://www.espn.com/video/clip?id=17474659</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1673,8 +1673,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://m.espn.go.com/general/video?vid=10926479',
-				'<r><ESPN cms="espn" id="10926479" url="http://m.espn.go.com/general/video?vid=10926479">http://m.espn.go.com/general/video?vid=10926479</ESPN></r>',
+				'http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308',
+				'<r><ESPN id="17474659" url="http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308">http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1682,8 +1682,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
-				'<r><ESPN cms="deportes" id="2002850" url="http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850">http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850</ESPN></r>',
+				'http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref',
+				'<r><ESPN id="13887284" url="http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref">http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1691,8 +1691,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://espn.go.com/video/clip?id=espn:11195358',
-				'<r><ESPN cms="espn" id="11195358" url="http://espn.go.com/video/clip?id=espn:11195358">http://espn.go.com/video/clip?id=espn:11195358</ESPN></r>',
+				'http://broadband.espn.go.com/video/clip?id=17481969',
+				'<r><ESPN id="17481969" url="http://broadband.espn.go.com/video/clip?id=17481969">http://broadband.espn.go.com/video/clip?id=17481969</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -3420,24 +3420,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dumpert');
-				}
-			],
-			[
-				'http://espn.go.com/video/clip?id=10315344',
-				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=espn&amp;id=10315344" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('espn');
-				}
-			],
-			[
-				'http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2002850',
-				'<div data-s9e-mediaembed="espn" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://espn.go.com/video/iframe/twitter/?cms=deportes&amp;id=2002850" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('espn');
 				}
 			],
 			[

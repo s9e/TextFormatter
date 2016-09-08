@@ -1,12 +1,12 @@
-<site name="ESPN" homepage="http://espn.go.com/">
-	<example>http://espn.go.com/video/clip?id=11255783</example>
-	<example>http://m.espn.go.com/general/video?vid=11255783</example>
-	<example>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782</example>
-	<example>http://espn.go.com/video/clip?id=espn:11195358</example>
+<site name="ESPN" homepage="http://www.espn.com/">
+	<example>http://www.espn.com/video/clip?id=17474659</example>
+	<example>http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</example>
+	<example>http://broadband.espn.go.com/video/clip?id=17481969</example>
 
 	<tags><tag>sports</tag></tags>
 
+	<host>espn.com</host>
 	<host>espn.go.com</host>
-	<extract>#(?'cms'deportes|espn(?!d)).*(?:clip\?|video\?v|clipDeportes\?)id=(?:\w+:)?(?'id'\d+)#</extract>
-	<iframe src="https://espn.go.com/video/iframe/twitter/?cms={@cms}&amp;id={@id}"/>
+	<extract>#video/(?:clip(?:\?id=|/_/id/))?(?'id'\d+)#</extract>
+	<iframe src="//www.espn.com/core/video/iframe?id={@id}"/>
 </site>

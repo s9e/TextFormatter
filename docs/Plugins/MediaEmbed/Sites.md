@@ -114,7 +114,7 @@
 	<tr>
 		<td><code>espn</code></td>
 		<td>ESPN</td>
-		<td>http://espn.go.com/video/clip?id=11255783<br/>http://m.espn.go.com/general/video?vid=11255783<br/>http://espndeportes.espn.go.com/videohub/video/clipDeportes?id=2134782<br/>http://espn.go.com/video/clip?id=espn:11195358</td>
+		<td>http://www.espn.com/video/clip?id=17474659<br/>http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref<br/>http://broadband.espn.go.com/video/clip?id=17481969</td>
 	</tr>
 	<tr>
 		<td><code>facebook</code></td>
