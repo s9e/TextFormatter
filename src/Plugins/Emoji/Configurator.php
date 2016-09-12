@@ -19,6 +19,32 @@ class Configurator extends ConfiguratorBase
 	protected $imageSize = 16;
 	protected $imageType = 'png';
 	protected $tagName = 'EMOJI';
+	protected $twemojiAliases = array(
+		'1f3f3-fe0f-200d-1f308',
+		'1f3f4-200d-2620-fe0f',
+		'1f441-200d-1f5e8',
+		'1f468-200d-1f468-200d-1f466-200d-1f466',
+		'1f468-200d-1f468-200d-1f466',
+		'1f468-200d-1f468-200d-1f467-200d-1f466',
+		'1f468-200d-1f468-200d-1f467-200d-1f467',
+		'1f468-200d-1f468-200d-1f467',
+		'1f468-200d-1f469-200d-1f466-200d-1f466',
+		'1f468-200d-1f469-200d-1f466',
+		'1f468-200d-1f469-200d-1f467-200d-1f466',
+		'1f468-200d-1f469-200d-1f467-200d-1f467',
+		'1f468-200d-1f469-200d-1f467',
+		'1f468-200d-2764-fe0f-200d-1f468',
+		'1f468-200d-2764-fe0f-200d-1f48b-200d-1f468',
+		'1f469-200d-1f469-200d-1f466-200d-1f466',
+		'1f469-200d-1f469-200d-1f466',
+		'1f469-200d-1f469-200d-1f467-200d-1f466',
+		'1f469-200d-1f469-200d-1f467-200d-1f467',
+		'1f469-200d-1f469-200d-1f467',
+		'1f469-200d-2764-fe0f-200d-1f468',
+		'1f469-200d-2764-fe0f-200d-1f469',
+		'1f469-200d-2764-fe0f-200d-1f48b-200d-1f468',
+		'1f469-200d-2764-fe0f-200d-1f48b-200d-1f469'
+	);
 	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
@@ -122,12 +148,13 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getTwemojiSrc()
 	{
-		$src = '//twemoji.maxcdn.com/2/';
-		if ($this->imageType === 'svg')
-			$src .= 'svg';
-		else
-			$src .= '72x72';
-		$src .= '/<xsl:value-of select="@seq"/>.' . $this->imageType;
+		$src  = '//twemoji.maxcdn.com/2/';
+		$src .= ($this->imageType === 'svg') ? 'svg' : '72x72';
+		$src .= '/<xsl:choose>';
+		foreach ($this->twemojiAliases as $seq)
+			$src .= '<xsl:when test="@seq=\'' . \str_replace('-200d', '', \str_replace('-fe0f', '', $seq)) . '\'">' . $seq . '</xsl:when>';
+		$src .= '<xsl:otherwise><xsl:value-of select="@seq"/></xsl:otherwise></xsl:choose>';
+		$src .= '.' . $this->imageType;
 		return $src;
 	}
 	protected function resetTemplate()
