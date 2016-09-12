@@ -1,3 +1,35 @@
+0.7.0 (2016-09-12)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#070) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/66605667be735e06ccbdf2b14c344c2b8bb84100...7cd1dfea62d9d35a40c206997e266918b9f1dfa1)
+
+### Added
+
+ - `7cd1dfe` Emoji: added support for UTR #51 Unicode Emoji, Version 3.0
+ - `e1701fd` Forum bundle: added support for emoji
+ - `646c85b` JavaScript: added support for urldecode() as a callback
+ - `3626b16` MediaEmbed: added support for non-ASCII usernames in Google+
+
+### Changed
+
+ - `f654a16` BBCodes: replaced stripos() calls for performance
+ - `3352264` Emoji: made EmojiOne the default image set
+ - `aee1add` Emoji: updated path to Twemoji assets
+ - `27d1b6b` MediaEmbed: improved support for embeds whose dimensions are fully dynamic
+ - `76e4641` MediaEmbed: updated ESPN
+ - `8a77784` MediaEmbed: updated Imgur
+ - `ce36a47` MediaEmbed: updated TED Talks
+ - `f3a0f52` MediaEmbed: updated VK
+ - `2fc4807` Parser: improved the performance of out-of-order insertions in the tag stack
+ - `4d3b0b0` Parser: simplified out-of-order insertion algorithm
+ - `2507bfc` Parser: tweaked addTagPair() to reduce the need for additional sorting
+ - `36c544e` Preg: set a higher priority to replacements over default plugins
+ - `d0543dd` StylesheetCompressor: improved heuristics
+ - `cda5b1f` Tag: setSortPriority() has been deprecated and will emit a warning
+
+
 0.6.2 (2016-08-09)
 ==================
 
