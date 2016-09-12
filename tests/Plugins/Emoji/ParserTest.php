@@ -121,6 +121,10 @@ class ParserTest extends Test
 				'<r><EMOJI seq="00a9">:copyright:</EMOJI> <EMOJI seq="1f984">:unicorn:</EMOJI></r>'
 			],
 			[
+				'👩‍❤️‍👨',
+				'<r><EMOJI seq="1f469-2764-1f468">&#128105;‍❤️‍&#128104;</EMOJI></r>'
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],
@@ -234,6 +238,24 @@ class ParserTest extends Test
 				function ($configurator, $plugin)
 				{
 					$plugin->useEmojiOne();
+				}
+			],
+			[
+				'👨‍👩‍👦‍👦',
+				'<img alt="👨‍👩‍👦‍👦" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f468-1f469-1f466-1f466.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useEmojiOne();
+				}
+			],
+			[
+				'👨‍👩‍👦‍👦',
+				'<img alt="👨‍👩‍👦‍👦" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/1f468-200d-1f469-200d-1f466-200d-1f466.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useTwemoji();
 				}
 			],
 		];
