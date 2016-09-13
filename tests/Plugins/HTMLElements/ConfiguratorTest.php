@@ -106,7 +106,8 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowElement('script') throws an exception
-	* @expectedException RuntimeException unsafe
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage elements are unsafe
 	*/
 	public function testUnsafeElement()
 	{
@@ -201,7 +202,8 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowAttribute('span', 'onmouseover') throws an exception
-	* @expectedException RuntimeException unsafe
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage attributes are unsafe
 	*/
 	public function testUnsafeAttribute()
 	{
@@ -212,7 +214,8 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowAttribute('span', 'style') throws an exception
-	* @expectedException RuntimeException unsafe
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage attributes are unsafe
 	*/
 	public function testUnsafeAttribute2()
 	{
