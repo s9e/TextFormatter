@@ -1,8 +1,13 @@
 <h2>Built-in filters</h2>
 
+[Up-to-date API doc](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Items/AttributeFilters.html).
+
 <dl>
 <dt>#alnum</dt>
 <dd>Alphanumeric value. Matches <code>/^[0-9A-Za-z]+$/</code>.</dd>
+
+<dt>#choice</dt>
+<dd>A white list of case-sensitive (optionally insensitive) values.</dd>
 
 <dt>#color</dt>
 <dd>Any string that looks like a CSS color. Matches hex values such as <code>#123</code> or <code>#123456</code>, color names such as <code>red</code> (or any string composed of letters from a to z) and CSS rgb() values such as <code>rgb(12, 34, 56)</code>.</dd>
@@ -10,11 +15,20 @@
 <dt>#email</dt>
 <dd>A well-formed email address. Uses ext/filter's FILTER_VALIDATE_EMAIL filter. The JavaScript version is much more lenient.</dd>
 
+<dt>#false</dt>
+<dd>Dummy filter that systematically invalidates the attribute value.</dd>
+
+<dt>#float</dt>
+<dd>A decimal value. Uses ext/filter's FILTER_VALIDATE_FLOAT filter. Returns a float, not a string.</dd>
+
 <dt>#hashmap</dt>
 <dd>Requires an associative array that maps strings to their replacement. Case-sensitive. Preserves unknown values by default.</dd>
 
 <dt>#identifier</dt>
 <dd>A string of letters, numbers, dashes and underscores. Matches <code>/^[-0-9A-Za-z_]+$/</code>.</dd>
+
+<dt>#int</dt>
+<dd>An integer value. Uses ext/filter's FILTER_VALIDATE_INT filter. Returns an integer, not a string.</dd>
 
 <dt>#ip</dt>
 <dd>A valid IPv4 or IPv6 address. Uses ext/filter's FILTER_VALIDATE_IP filter.</dd>
@@ -27,9 +41,6 @@
 
 <dt>#ipv6</dt>
 <dd>A valid IPv6 address. Uses ext/filter's FILTER_VALIDATE_IP filter with the FILTER_FLAG_IPV6 flag.</dd>
-
-<dt>#int</dt>
-<dd>An integer value. Uses ext/filter's FILTER_VALIDATE_INT filter. Returns an integer, not a string.</dd>
 
 <dt>#map</dt>
 <dd>Requires an associative array that maps strings to their replacement. Case-insensitive by default. Preserves unknown values by default.</dd>
