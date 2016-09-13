@@ -52,7 +52,7 @@ catch (Exception $e)
 ```
 ```html
 'script' elements are unsafe and are disabled by default. Please use s9e\TextFormatter\Plugins\HTMLElements\Configurator::allowUnsafeElement() to bypass this security measure
-'img' elements are unsafe and are disabled by default. Please use s9e\TextFormatter\Plugins\HTMLElements\Configurator::allowUnsafeAttribute() to bypass this security measure
+'onerror' attributes are unsafe and are disabled by default. Please use s9e\TextFormatter\Plugins\HTMLElements\Configurator::allowUnsafeAttribute() to bypass this security measure
 ```
 Unsafe HTML can still be allowed using `allowUnsafeElement()` and `allowUnsafeAttribute()`.
 ```php
