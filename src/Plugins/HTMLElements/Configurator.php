@@ -95,7 +95,7 @@ class Configurator extends ConfiguratorBase
 		if (!$allowUnsafe)
 			if (\substr($attrName, 0, 2) === 'on'
 			 || \in_array($attrName, $this->unsafeAttributes))
-				throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
+				throw new RuntimeException("'" . $attrName . "' attributes are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
 		$tag = $this->configurator->tags->get($tagName);
 		if (!isset($tag->attributes[$attrName]))
 		{
