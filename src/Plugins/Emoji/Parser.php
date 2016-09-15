@@ -66,17 +66,17 @@ class Parser extends ParserBase
 		do
 		{
 			$cp = ord($str[$i]);
-			if ($cp >= 0b11110000)
+			if ($cp >= 0xF0)
 			{
-				$cp = (($cp & 7) << 18) | ((ord($str[++$i]) & 63) << 12) | ((ord($str[++$i]) & 63) << 6) | (ord($str[++$i]) & 63);
+				$cp = ($cp << 18) + (ord($str[++$i]) << 12) + (ord($str[++$i]) << 6) + ord($str[++$i]) - 0x3C82080;
 			}
-			elseif ($cp >= 0b11100000)
+			elseif ($cp >= 0xE0)
 			{
-				$cp = (($cp & 15) << 12) | ((ord($str[++$i]) & 63) << 6) | (ord($str[++$i]) & 63);
+				$cp = ($cp << 12) + (ord($str[++$i]) << 6) + ord($str[++$i]) - 0xE2080;
 			}
-			elseif ($cp >= 0b11000000)
+			elseif ($cp >= 0xC0)
 			{
-				$cp = (($cp & 15) << 6) | (ord($str[++$i]) & 63);
+				$cp = ($cp << 6) + ord($str[++$i]) - 0x3080;
 			}
 			$seq[] = dechex($cp);
 		}
