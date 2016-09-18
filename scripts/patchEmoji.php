@@ -196,7 +196,7 @@ function utf8ToSeq($str)
 		{
 			$cp = (($cp & 15) << 6) | (ord($str[++$i]) & 63);
 		}
-		$seq[] = dechex($cp);
+		$seq[] = sprintf('%04x', $cp);
 	}
 	while (++$i < strlen($str));
 

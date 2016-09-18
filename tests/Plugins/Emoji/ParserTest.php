@@ -69,7 +69,7 @@ class ParserTest extends Test
 			],
 			[
 				'#️⃣1️⃣2️⃣',
-				'<r><EMOJI seq="23-20e3">#️⃣</EMOJI><EMOJI seq="31-20e3">1️⃣</EMOJI><EMOJI seq="32-20e3">2️⃣</EMOJI></r>'
+				'<r><EMOJI seq="0023-20e3">#️⃣</EMOJI><EMOJI seq="0031-20e3">1️⃣</EMOJI><EMOJI seq="0032-20e3">2️⃣</EMOJI></r>'
 			],
 			[
 				':bouquet:',
@@ -252,6 +252,24 @@ class ParserTest extends Test
 			[
 				'👨‍👩‍👦‍👦',
 				'<img alt="👨‍👩‍👦‍👦" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/1f468-200d-1f469-200d-1f466-200d-1f466.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useTwemoji();
+				}
+			],
+			[
+				':copyright::registered:#️⃣',
+				'<img alt=":copyright:" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/00a9.png"><img alt=":registered:" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/00ae.png"><img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20e3.png">',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->useEmojiOne();
+				}
+			],
+			[
+				':copyright::registered:#️⃣',
+				'<img alt=":copyright:" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/a9.png"><img alt=":registered:" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/ae.png"><img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/23-20e3.png">',
 				[],
 				function ($configurator, $plugin)
 				{

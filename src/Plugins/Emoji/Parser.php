@@ -78,7 +78,7 @@ class Parser extends ParserBase
 			{
 				$cp = ($cp << 6) + ord($str[++$i]) - 0x3080;
 			}
-			$seq[] = dechex($cp);
+			$seq[] = sprintf('%04x', $cp);
 		}
 		while (++$i < strlen($str));
 
