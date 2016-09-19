@@ -43,7 +43,7 @@ function getSequence(str)
 		{
 			cp = (cp << 10) + str.charCodeAt(++i) - 56613888;
 		}
-		seq.push(cp.toString(16));
+		seq.push(('000' + cp.toString(16)).replace(/^0+(.{4,})$/, '$1'));
 	}
 	while (++i < str.length);
 

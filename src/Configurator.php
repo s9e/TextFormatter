@@ -8089,6 +8089,7 @@ use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 class AttributeCollection extends NormalizedCollection
 {
+	protected $onDuplicateAction = 'replace';
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("Attribute '" . $key . "' already exists");
@@ -8304,6 +8305,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 class TagCollection extends NormalizedCollection
 {
+	protected $onDuplicateAction = 'replace';
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("Tag '" . $key . "' already exists");
