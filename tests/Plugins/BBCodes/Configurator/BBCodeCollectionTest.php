@@ -143,13 +143,27 @@ class BBCodeCollectionTest extends Test
 	}
 
 	/**
-	* @testdox Throws an exception when creating a BBCode that already exists
+	* @testdox Replaces duplicates by default
+	*/
+	public function testDuplicateDefault()
+	{
+		$collection = new BBCodeCollection;
+		$bbcode1 = $collection->add('X');
+		$bbcode2 = $collection->add('X');
+
+		$this->assertSame($bbcode2, $collection->get('X'));
+		$this->assertNotSame($bbcode1, $bbcode2);
+	}
+
+	/**
+	* @testdox Throws an meaningful exception message when creating a BBCode that already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage BBCode 'X' already exists
 	*/
-	public function testAlreadyExist()
+	public function testDuplicateError()
 	{
 		$collection = new BBCodeCollection;
+		$collection->onDuplicate('error');
 		$collection->add('X');
 		$collection->add('X');
 	}

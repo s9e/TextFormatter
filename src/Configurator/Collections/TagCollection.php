@@ -16,6 +16,11 @@ class TagCollection extends NormalizedCollection
 	/**
 	* {@inheritdoc}
 	*/
+	protected $onDuplicateAction = 'replace';
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("Tag '" . $key . "' already exists");

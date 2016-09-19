@@ -14,6 +14,11 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 class EmoticonCollection extends NormalizedCollection
 {
 	/**
+	* {@inheritdoc}
+	*/
+	protected $onDuplicateAction = 'replace';
+
+	/**
 	* Normalize an emoticon's template
 	*
 	* NOTE: this allows the HTML syntax to be used for individual emoticons

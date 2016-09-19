@@ -109,27 +109,28 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox addFromRepository() throws an exception if the BBCode already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage BBCode 'B' already exists
+	* @testdox addFromRepository() replaces the BBCode if it already exists
 	*/
 	public function testAddFromRepositoryBBCodeExists()
 	{
 		$plugin = $this->configurator->plugins->load('BBCodes');
-		$plugin->add('B');
-		$plugin->addFromRepository('B');
+		$bbcode1 = $plugin->add('B');
+		$bbcode2 = $plugin->addFromRepository('B');
+
+		$this->assertSame($bbcode2, $plugin->get('B'));
+		$this->assertNotSame($bbcode1, $bbcode2);
 	}
 
 	/**
-	* @testdox addFromRepository() throws an exception if the tag already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Tag 'B' already exists
+	* @testdox addFromRepository() replaces the tag if it already exists
 	*/
 	public function testAddFromRepositoryTagExists()
 	{
-		$this->configurator->tags->add('B');
+		$tag1 = $this->configurator->tags->add('B');
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->addFromRepository('B');
+		$tag2 = $this->configurator->tags->get('B');
+		$this->assertNotSame($tag1, $tag2);
 	}
 
 	/**

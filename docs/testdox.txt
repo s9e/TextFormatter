@@ -184,8 +184,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] exists() normalizes the attribute name
  [x] get() normalizes the attribute name
  [x] set() normalizes the attribute name
- [x] Throws an exception when creating a Attribute that already exists
- [x] Throws an exception when accessing a Attribute that does not exist
+ [x] Replaces duplicates by default
+ [x] Throws an meaningful exception message when creating an Attribute that already exists
+ [x] Throws an exception when accessing an Attribute that does not exist
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] append() throws an InvalidArgumentException on invalid callbacks
@@ -386,7 +387,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] exists() normalizes the tag name
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
- [x] Throws an exception when creating a Tag that already exists
+ [x] Replaces duplicates by default
+ [x] Throws an meaningful exception message when creating a Tag that already exists
  [x] Throws an exception when accessing a Tag that does not exist
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
@@ -2139,7 +2141,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] asConfig() returns a Dictionary
  [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
- [x] Throws an exception when creating a BBCode that already exists
+ [x] Replaces duplicates by default
+ [x] Throws an meaningful exception message when creating a BBCode that already exists
  [x] Throws an exception when accessing a BBCode that does not exist
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
@@ -2177,8 +2180,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('MYBOLD', 'foo') adds BBCode B and its tag from the 'foo' repository
  [x] addFromRepository('B', 'foo', ['title' => 'bar']) adds BBCode B and its tag from the 'foo' repository with variable 'title' replaced with content 'bar'
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
- [x] addFromRepository() throws an exception if the BBCode already exists
- [x] addFromRepository() throws an exception if the tag already exists
+ [x] addFromRepository() replaces the BBCode if it already exists
+ [x] addFromRepository() replaces the tag if it already exists
  [x] addFromRepository() respects onDuplicate() setting on tags
  [x] addFromRepository() normalizes the tag's templates
  [x] addFromRepository() checks that the tag is safe before adding it
@@ -2333,7 +2336,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
- [x] Has a customized exception message on duplicate emoticon
+ [x] Replaces duplicates by default
+ [x] Throws an meaningful exception message when creating an emoticon that already exists
  [x] Has a customized exception message on uninitialized access
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser

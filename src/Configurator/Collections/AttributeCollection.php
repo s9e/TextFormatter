@@ -16,6 +16,11 @@ class AttributeCollection extends NormalizedCollection
 	/**
 	* {@inheritdoc}
 	*/
+	protected $onDuplicateAction = 'replace';
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("Attribute '" . $key . "' already exists");

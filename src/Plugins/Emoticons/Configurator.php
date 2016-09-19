@@ -68,6 +68,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $notIfCondition;
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $onDuplicateAction = 'replace';
+
+	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';

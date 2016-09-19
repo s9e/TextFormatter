@@ -81,19 +81,33 @@ class AttributeCollectionTest extends Test
 	}
 
 	/**
-	* @testdox Throws an exception when creating a Attribute that already exists
+	* @testdox Replaces duplicates by default
+	*/
+	public function testDuplicateDefault()
+	{
+		$collection = new AttributeCollection;
+		$attr1 = $collection->add('x');
+		$attr2 = $collection->add('x');
+
+		$this->assertSame($attr2, $collection->get('x'));
+		$this->assertNotSame($attr1, $attr2);
+	}
+
+	/**
+	* @testdox Throws an meaningful exception message when creating an Attribute that already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Attribute 'x' already exists
 	*/
-	public function testAlreadyExist()
+	public function testDuplicateError()
 	{
 		$collection = new AttributeCollection;
+		$collection->onDuplicate('error');
 		$collection->add('x');
 		$collection->add('x');
 	}
 
 	/**
-	* @testdox Throws an exception when accessing a Attribute that does not exist
+	* @testdox Throws an exception when accessing an Attribute that does not exist
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Attribute 'x' does not exist
 	*/

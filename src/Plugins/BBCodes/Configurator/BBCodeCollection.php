@@ -18,6 +18,11 @@ class BBCodeCollection extends NormalizedCollection
 	/**
 	* {@inheritdoc}
 	*/
+	protected $onDuplicateAction = 'replace';
+
+	/**
+	* {@inheritdoc}
+	*/
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("BBCode '" . $key . "' already exists");

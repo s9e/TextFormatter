@@ -81,13 +81,27 @@ class TagCollectionTest extends Test
 	}
 
 	/**
-	* @testdox Throws an exception when creating a Tag that already exists
+	* @testdox Replaces duplicates by default
+	*/
+	public function testDuplicateDefault()
+	{
+		$collection = new TagCollection;
+		$tag1 = $collection->add('X');
+		$tag2 = $collection->add('X');
+
+		$this->assertSame($tag2, $collection->get('X'));
+		$this->assertNotSame($tag1, $tag2);
+	}
+
+	/**
+	* @testdox Throws an meaningful exception message when creating a Tag that already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Tag 'X' already exists
 	*/
-	public function testAlreadyExist()
+	public function testDuplicateError()
 	{
 		$collection = new TagCollection;
+		$collection->onDuplicate('error');
 		$collection->add('X');
 		$collection->add('X');
 	}

@@ -32,15 +32,28 @@ class EmoticonCollectionTest extends Test
 	}
 
 	/**
-	* @testdox Has a customized exception message on duplicate emoticon
+	* @testdox Replaces duplicates by default
+	*/
+	public function testDuplicateDefault()
+	{
+		$collection = new EmoticonCollection;
+		$emoticon1 = $collection->add(':)', ':(');
+		$emoticon2 = $collection->add(':)', ':)');
+
+		$this->assertSame($emoticon2, $collection->get(':)'));
+		$this->assertNotSame($emoticon1, $emoticon2);
+	}
+
+	/**
+	* @testdox Throws an meaningful exception message when creating an emoticon that already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Emoticon ':)' already exists
 	*/
-	public function testExceptionDuplicate()
+	public function testDuplicateError()
 	{
 		$collection = new EmoticonCollection;
 		$collection->onDuplicate('error');
-		$collection->add(':)', ':)');
+		$collection->add(':)', ':(');
 		$collection->add(':)', ':)');
 	}
 
