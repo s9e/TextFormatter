@@ -13,6 +13,7 @@ use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 class BBCodeCollection extends NormalizedCollection
 {
+	protected $onDuplicateAction = 'replace';
 	protected function getAlreadyExistsException($key)
 	{
 		return new RuntimeException("BBCode '" . $key . "' already exists");
