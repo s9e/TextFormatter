@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 class EmoticonCollection extends NormalizedCollection
 {
+	protected $onDuplicateAction = 'replace';
 	public function normalizeValue($value)
 	{
 		return TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($value));
