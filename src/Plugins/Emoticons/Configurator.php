@@ -67,6 +67,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $notAfter = '';
 	public $notBefore = '';
 	public $notIfCondition;
+	protected $onDuplicateAction = 'replace';
 	protected $tagName = 'E';
 	protected function setUp()
 	{
