@@ -64,12 +64,17 @@ abstract class Utils
 	public static function removeFormatting($xml)
 	{
 		$dom = self::loadXML($xml);
-		foreach ($dom->getElementsByTagName('s') as $tag)
+		// Traverse backwards because the indices change as we remove items
+		$s = $dom->getElementsByTagName('s');
+		for ($i = $s->length - 1; $i > -1; $i--)
 		{
+			$tag = $s->item($i);
 			$tag->parentNode->removeChild($tag);
 		}
-		foreach ($dom->getElementsByTagName('e') as $tag)
+		$e = $dom->getElementsByTagName('e');
+		for ($i = $e->length - 1; $i > -1; $i--)
 		{
+			$tag = $e->item($i);
 			$tag->parentNode->removeChild($tag);
 		}
 

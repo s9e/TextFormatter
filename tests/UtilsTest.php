@@ -121,6 +121,10 @@ class UtilsTest extends Test
 				'<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>',
 				'Rich text :)'
 			],
+			[
+				'<r><B><s>[b]</s>Bold tag<e>[/b]</e></B> more than <B><s>[b]</s>once<e>[/b]</e></B></r>',
+				'Bold tag more than once'
+			],
 		];
 	}
 
