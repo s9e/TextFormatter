@@ -2642,6 +2642,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://store.steampowered.com/app/517160/',
+				'<r><STEAMSTORE id="517160" url="http://store.steampowered.com/app/517160/">http://store.steampowered.com/app/517160/</STEAMSTORE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('steamstore');
+				}
+			],
+			[
 				'http://strawpoll.me/738091',
 				'<r><STRAWPOLL id="738091" url="http://strawpoll.me/738091">http://strawpoll.me/738091</STRAWPOLL></r>',
 				[],

@@ -1,0 +1,9 @@
+<site name="Steam store" homepage="http://store.steampowered.com/">
+	<example>http://store.steampowered.com/app/250520/</example>
+
+	<tags><tag>gaming</tag></tags>
+
+	<host>store.steampowered.com</host>
+	<extract>!store.steampowered.com/app/(?'id'\d+)!</extract>
+	<iframe width="100%" height="190" max-width="900" src="//store.steampowered.com/widget/{@id}"/>
+</site>

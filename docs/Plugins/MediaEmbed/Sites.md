@@ -407,6 +407,11 @@
 		<td>spotify:track:5JunxkcjfCYcY7xJ29tLai<br/>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<br/>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
 	</tr>
 	<tr>
+		<td><code>steamstore</code></td>
+		<td>Steam store</td>
+		<td>http://store.steampowered.com/app/250520/</td>
+	</tr>
+	<tr>
 		<td><code>stitcher</code></td>
 		<td>Stitcher</td>
 		<td>http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</td>
