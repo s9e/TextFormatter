@@ -63,14 +63,11 @@ abstract class Utils
 	*/
 	public static function removeFormatting($xml)
 	{
-		$dom = self::loadXML($xml);
-		foreach ($dom->getElementsByTagName('s') as $tag)
+		$dom   = self::loadXML($xml);
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//e | //s') as $node)
 		{
-			$tag->parentNode->removeChild($tag);
-		}
-		foreach ($dom->getElementsByTagName('e') as $tag)
-		{
-			$tag->parentNode->removeChild($tag);
+			$node->parentNode->removeChild($node);
 		}
 
 		return $dom->documentElement->textContent;

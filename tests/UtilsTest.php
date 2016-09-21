@@ -121,6 +121,14 @@ class UtilsTest extends Test
 				'<r><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></r>',
 				'Rich text :)'
 			],
+			[
+				'<r><B><s>[b]</s>bold<e>[/b]</e></B> <B><s>[b]</s>text<e>[/b]</e></B></r>',
+				'bold text'
+			],
+			[
+				'<r><C><s>`</s>&#128512;<e>`</e></C></r>',
+				'😀'
+			],
 		];
 	}
 
