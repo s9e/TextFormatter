@@ -876,15 +876,12 @@ class TemplateForensics
 		}
 
 		$bitfield = self::$htmlElements[$elName][$k];
-
 		foreach (str_split($bitfield, 1) as $byteNumber => $char)
 		{
 			$byteValue = ord($char);
-
 			for ($bitNumber = 0; $bitNumber < 8; ++$bitNumber)
 			{
 				$bitValue = 1 << $bitNumber;
-
 				if (!($byteValue & $bitValue))
 				{
 					// The bit is not set
