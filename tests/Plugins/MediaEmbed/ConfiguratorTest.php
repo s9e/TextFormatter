@@ -1032,7 +1032,7 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->MediaEmbed->asConfig();
 
 		$this->assertSame(
-			'/\\bhttps?:\\/\\/[^["\'\\s]+/S',
+			'/\\bhttps?:\\/\\/[^["\'\\s]+/Si',
 			$config['regexp']
 		);
 	}
@@ -1054,7 +1054,7 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->MediaEmbed->asConfig();
 
 		$this->assertSame(
-			'/\\b(?>bar:|https?:\\/\\/)[^["\'\\s]+/S',
+			'/\\b(?>bar:|https?:\\/\\/)[^["\'\\s]+/Si',
 			$config['regexp']
 		);
 	}
@@ -1077,7 +1077,7 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->MediaEmbed->asConfig();
 
 		$this->assertSame(
-			'/\\b(?>ba[rz]:|https?:\\/\\/)[^["\'\\s]+/S',
+			'/\\b(?>ba[rz]:|https?:\\/\\/)[^["\'\\s]+/Si',
 			$config['regexp']
 		);
 	}

@@ -123,7 +123,7 @@ class Configurator extends ConfiguratorBase
 
 		return [
 			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/S'
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si'
 		];
 	}
 

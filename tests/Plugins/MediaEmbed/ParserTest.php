@@ -517,6 +517,22 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				'HTTP://example.com/123',
+				'<r><FOO id="123" url="http://example.com/123">HTTP://example.com/123</FOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'example.com',
+							'extract' => '!example\\.com/(?<id>\\d+)!',
+							'iframe'  => ['src' => '//localhost/embed/{@id}']
+						]
+					);
+				}
+			],
 		];
 	}
 
