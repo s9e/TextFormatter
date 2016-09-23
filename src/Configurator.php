@@ -1521,7 +1521,10 @@ class TemplateForensics
 				$this->preservesNewLines = \true;
 		}
 		if (empty($branchBitfields))
-			$this->isTransparent = \false;
+		{
+			$this->allowsChildElements = \false;
+			$this->isTransparent       = \false;
+		}
 		else
 		{
 			$this->allowChildBitfield = $branchBitfields[0];
@@ -1570,113 +1573,117 @@ class TemplateForensics
 		return \true;
 	}
 	protected static $htmlElements = array(
-		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'fe'=>1),
+		'a'=>array('c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1),
 		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
-		'address'=>array('c'=>"\3\10",'ac'=>"\1",'dd'=>"\100\12",'b'=>1,'cp'=>array('p')),
-		'area'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
-		'article'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'aside'=>array('c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>array('p')),
-		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1),
+		'address'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>array('p')),
+		'article'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
 		'b'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
 		'base'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
 		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
 		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
-		'blockquote'=>array('c'=>"\3\1",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'body'=>array('c'=>"\0\1\2",'ac'=>"\1",'b'=>1),
+		'blockquote'=>array('c'=>"\203",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'body'=>array('c'=>"\200\0\4",'ac'=>"\1",'b'=>1),
 		'br'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
-		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
+		'button'=>array('c'=>"\117",'ac'=>"\4",'dd'=>"\10"),
 		'canvas'=>array('c'=>"\47",'ac'=>"\0",'t'=>1),
-		'caption'=>array('c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1),
+		'caption'=>array('c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1),
 		'cite'=>array('c'=>"\7",'ac'=>"\4"),
 		'code'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'col'=>array('c'=>"\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'colgroup'=>array('c'=>"\200",'ac'=>"\0\0\4",'ac18'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
+		'col'=>array('c'=>"\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'colgroup'=>array('c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
 		'data'=>array('c'=>"\7",'ac'=>"\4"),
-		'datalist'=>array('c'=>"\5",'ac'=>"\4\0\0\1"),
-		'dd'=>array('c'=>"\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
+		'datalist'=>array('c'=>"\5",'ac'=>"\4\200\0\10"),
+		'dd'=>array('c'=>"\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
 		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
-		'dfn'=>array('c'=>"\7\0\0\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
+		'details'=>array('c'=>"\213",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>array('p')),
+		'dfn'=>array('c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"),
 		'div'=>array('c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'dl'=>array('c'=>"\3",'ac'=>"\0\40\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'dt'=>array('c'=>"\0\0\20",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>array('dd','dt')),
+		'dl'=>array('c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('dd','dt')),
 		'em'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
 		'embed'=>array('c'=>"\57",'nt'=>1,'e'=>1,'v'=>1),
-		'fieldset'=>array('c'=>"\3\1",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>array('p')),
-		'figcaption'=>array('c'=>"\0\0\0\0\40",'ac'=>"\1",'b'=>1),
-		'figure'=>array('c'=>"\3\1",'ac'=>"\1\0\0\0\40",'b'=>1),
-		'footer'=>array('c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>array('p')),
-		'form'=>array('c'=>"\3\0\0\0\1",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>array('p')),
-		'h1'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h2'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h3'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h4'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h5'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h6'=>array('c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'head'=>array('c'=>"\0\0\2",'ac'=>"\20",'nt'=>1,'b'=>1),
-		'header'=>array('c'=>"\3\30\1",'ac'=>"\1",'dd'=>"\0\20",'b'=>1,'cp'=>array('p')),
-		'hr'=>array('c'=>"\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
-		'html'=>array('c'=>"\0",'ac'=>"\0\0\2",'nt'=>1,'b'=>1),
+		'fieldset'=>array('c'=>"\303",'ac'=>"\1\0\0\20",'b'=>1,'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'figure'=>array('c'=>"\203",'ac'=>"\1\0\0\0\0\4",'b'=>1,'cp'=>array('p')),
+		'footer'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>array('p')),
+		'h1'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h2'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h3'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h4'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h5'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h6'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'head'=>array('c'=>"\0\0\4",'ac'=>"\20",'nt'=>1,'b'=>1),
+		'header'=>array('c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
+		'html'=>array('c'=>"\0",'ac'=>"\0\0\4",'nt'=>1,'b'=>1),
 		'i'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'iframe'=>array('c'=>"\57",'nt'=>1,'e'=>1,'to'=>1),
-		'img'=>array('c'=>"\57",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1),
-		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1),
+		'iframe'=>array('c'=>"\57",'ac'=>"\4"),
+		'img'=>array('c'=>"\57\20\10",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1),
+		'input'=>array('c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1),
 		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
 		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
-		'keygen'=>array('c'=>"\17",'nt'=>1,'e'=>1,'v'=>1),
-		'label'=>array('c'=>"\17\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\100"),
-		'legend'=>array('c'=>"\0\0\0\2",'ac'=>"\4",'b'=>1),
-		'li'=>array('c'=>"\0\0\0\0\20",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
+		'keygen'=>array('c'=>"\117",'nt'=>1,'e'=>1,'v'=>1),
+		'label'=>array('c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"),
+		'legend'=>array('c'=>"\0\0\0\20",'ac'=>"\4",'b'=>1),
+		'li'=>array('c'=>"\0\0\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
 		'link'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'main'=>array('c'=>"\3\20\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'map'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'main'=>array('c'=>"\3\0\0\0\10",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'mark'=>array('c'=>"\7",'ac'=>"\4"),
+		'media element'=>array('c'=>"\0\0\0\0\0\2",'nt'=>1,'b'=>1),
+		'menu'=>array('c'=>"\1\100",'ac'=>"\0\300",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'menuitem'=>array('c'=>"\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
 		'meta'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'meter'=>array('c'=>"\7\100\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"),
-		'nav'=>array('c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1,'cp'=>array('p')),
-		'noscript'=>array('c'=>"\25\0\100",'ac'=>"\0",'dd'=>"\0\0\100",'t'=>1),
-		'object'=>array('c'=>"\57",'c3'=>'@usemap','ac'=>"\0\0\0\20",'t'=>1),
-		'ol'=>array('c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'optgroup'=>array('c'=>"\0\200",'ac'=>"\0\40\0\1",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>"\0\200\0\1",'e'=>1,'e0'=>'@label and @value','to'=>1,'b'=>1,'cp'=>array('option')),
-		'output'=>array('c'=>"\7",'ac'=>"\4"),
+		'meter'=>array('c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
+		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'noscript'=>array('c'=>"\25",'nt'=>1),
+		'object'=>array('c'=>"\147",'ac'=>"\0\0\0\0\1",'t'=>1),
+		'ol'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\0\2",'ac'=>"\0\200\0\10",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\0\2\10",'b'=>1,'cp'=>array('option')),
+		'output'=>array('c'=>"\107",'ac'=>"\4"),
 		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'param'=>array('c'=>"\0\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'param'=>array('c'=>"\0\0\0\0\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'picture'=>array('c'=>"\45",'ac'=>"\0\200\10",'nt'=>1),
 		'pre'=>array('c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>array('p')),
-		'progress'=>array('c'=>"\7\100\40",'ac'=>"\4",'dd'=>"\0\0\40"),
+		'progress'=>array('c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"),
 		'q'=>array('c'=>"\7",'ac'=>"\4"),
-		'rb'=>array('c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rt','rtc')),
-		'rp'=>array('c'=>"\0\4",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rtc')),
-		'rt'=>array('c'=>"\0\4\0\0\10",'ac'=>"\4",'b'=>1,'cp'=>array('rb','rp','rt')),
-		'rtc'=>array('c'=>"\0\4",'ac'=>"\4\0\0\0\10",'b'=>1,'cp'=>array('rb','rp','rt','rtc')),
-		'ruby'=>array('c'=>"\7",'ac'=>"\4\4"),
+		'rb'=>array('c'=>"\0\10",'ac'=>"\4",'b'=>1),
+		'rp'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
+		'rt'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
+		'rtc'=>array('c'=>"\0\10",'ac'=>"\4\0\100",'b'=>1),
+		'ruby'=>array('c'=>"\7",'ac'=>"\4\10"),
 		's'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
 		'samp'=>array('c'=>"\7",'ac'=>"\4"),
-		'script'=>array('c'=>"\25\40",'e'=>1,'e0'=>'@src','to'=>1),
-		'section'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'select'=>array('c'=>"\17",'ac'=>"\0\240",'nt'=>1),
+		'script'=>array('c'=>"\25\200",'to'=>1),
+		'section'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'select'=>array('c'=>"\117",'ac'=>"\0\200\2",'nt'=>1),
 		'small'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'source'=>array('c'=>"\0\0\200",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'source'=>array('c'=>"\0\0\10\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
 		'span'=>array('c'=>"\7",'ac'=>"\4"),
 		'strong'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
 		'style'=>array('c'=>"\20",'to'=>1,'b'=>1),
 		'sub'=>array('c'=>"\7",'ac'=>"\4"),
+		'summary'=>array('c'=>"\0\0\0\2",'ac'=>"\4\1",'b'=>1),
 		'sup'=>array('c'=>"\7",'ac'=>"\4"),
-		'table'=>array('c'=>"\3\0\0\10",'ac'=>"\200\40",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'tbody'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>array('tbody','tfoot','thead')),
-		'td'=>array('c'=>"\0\1\10",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
-		'template'=>array('c'=>"\25\40\4",'ac'=>"\21"),
-		'textarea'=>array('c'=>"\17",'pre'=>1),
-		'tfoot'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1,'cp'=>array('tbody','thead')),
-		'th'=>array('c'=>"\0\0\10",'ac'=>"\1",'dd'=>"\100\2\1",'b'=>1,'cp'=>array('td','th')),
-		'thead'=>array('c'=>"\200",'ac'=>"\0\40\0\0\4",'nt'=>1,'b'=>1),
-		'time'=>array('c'=>"\7",'ac'=>"\4"),
+		'table'=>array('c'=>"\3\0\0\200",'ac'=>"\0\202",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'tbody'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','tfoot','thead')),
+		'td'=>array('c'=>"\200\0\40",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
+		'template'=>array('c'=>"\25\200\20",'nt'=>1),
+		'textarea'=>array('c'=>"\117",'pre'=>1,'to'=>1),
+		'tfoot'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','thead')),
+		'th'=>array('c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1),
+		'time'=>array('c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime'),
 		'title'=>array('c'=>"\20",'to'=>1,'b'=>1),
-		'tr'=>array('c'=>"\200\0\0\0\4",'ac'=>"\0\40\10",'nt'=>1,'b'=>1,'cp'=>array('tr')),
-		'track'=>array('c'=>"\0\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'tr'=>array('c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'nt'=>1,'b'=>1,'cp'=>array('tr')),
+		'track'=>array('c'=>"\0\0\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
 		'u'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'ul'=>array('c'=>"\3",'ac'=>"\0\40\0\0\20",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'ul'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
 		'var'=>array('c'=>"\7",'ac'=>"\4"),
-		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1),
+		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
 		'wbr'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1)
 	);
 	protected function getBitfield($elName, $k, DOMElement $node)
@@ -1695,7 +1702,7 @@ class TemplateForensics
 				$n = $byteNumber * 8 + $bitNumber;
 				if (isset(self::$htmlElements[$elName][$k . $n]))
 				{
-					$xpath = self::$htmlElements[$elName][$k . $n];
+					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
 					if (!$this->evaluate($xpath, $node))
 					{
 						$byteValue ^= $bitValue;
@@ -6213,9 +6220,11 @@ use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGener
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
 {
 	protected $br;
+	protected $span;
 	public function __construct()
 	{
-		$this->br = new TemplateForensics('<br/>');
+		$this->br   = new TemplateForensics('<br/>');
+		$this->span = new TemplateForensics('<span><xsl:apply-templates/></span>');
 	}
 	public function generateBooleanRules(TemplateForensics $src)
 	{
@@ -6236,6 +6245,8 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	}
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
+		if (!$src->allowsChildElements())
+			$src = $this->span;
 		$rules = array();
 		if (!$src->allowsChild($trg))
 			$rules[] = 'denyChild';

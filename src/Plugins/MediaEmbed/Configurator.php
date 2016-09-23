@@ -36,7 +36,7 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
 		$tag = $this->configurator->tags->add('MEDIA');
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild('MEDIA');
 		$tag->filterChain->clear();
 		$tag->filterChain
 		    ->append(array(__NAMESPACE__ . '\\Parser', 'filterTag'))
@@ -70,7 +70,8 @@ class Configurator extends ConfiguratorBase
 		$this->collection[$siteId] = $siteConfig;
 		$tag = new Tag;
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild($siteId);
+		$tag->rules->denyChild('MEDIA');
 		$attributes = array(
 			'url' => array('type' => 'url')
 		);
