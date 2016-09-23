@@ -92,15 +92,15 @@ class ParserTest extends Test
 
 		$tagStack = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
 		                 ->disableOriginalConstructor()
-		                 ->setMethods(['addSelfClosingTag'])
+		                 ->setMethods(['addTagPair'])
 		                 ->getMock();
 
 		$tagStack->expects($this->once())
-		         ->method('addSelfClosingTag')
-		         ->with('FOO', 0, 0, 123)
+		         ->method('addTagPair')
+		         ->with('FOO', 0, 0, 1, 0, 123)
 		         ->will($this->returnValue($newTag));
 
-		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0, 123);
+		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 1, 123);
 		$tag->setAttribute('media', 'foo');
 
 		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
@@ -498,6 +498,23 @@ class ParserTest extends Test
 					$configurator->BBCodes;
 					$configurator->MediaEmbed->add('foo', ['host' => 'example.invalid']);
 					$configurator->tags->add('X');
+				}
+			],
+			[
+				'http://localhost/video/123',
+				'<r><FOO id="123" url="http://localhost/video/123"><URL url="http://localhost/video/123">http://localhost/video/123</URL></FOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Autolink;
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'localhost',
+							'extract' => "!localhost/video/(?'id'\\d+)!",
+							'iframe'  => ['src' => '//localhost/embed/{@id}']
+						]
+					);
 				}
 			],
 		];
@@ -3155,7 +3172,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'<r>Check this: <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak">http://www.youtube.com/watch?v=-cEzsCAzTak</YOUTUBE> and that: <URL url="http://example.com">http://example.com</URL></r>',
+				'<r>Check this: <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak"><URL url="http://www.youtube.com/watch?v=-cEzsCAzTak">http://www.youtube.com/watch?v=-cEzsCAzTak</URL></YOUTUBE> and that: <URL url="http://example.com">http://example.com</URL></r>',
 				[],
 				function ($configurator)
 				{

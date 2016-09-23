@@ -58,8 +58,7 @@ function (tag, sites)
 			rpos = endTag.getPos() + endTag.getLen();
 
 		// Create a new tag and copy this tag's attributes and priority
-		var newTag = addSelfClosingTag(siteId.toUpperCase(), lpos, rpos - lpos, tag.getSortPriority());
-		newTag.setAttributes(tag.getAttributes());
+		addTagPair(siteId.toUpperCase(), lpos, 0, rpos, 0, tag.getSortPriority()).setAttributes(tag.getAttributes());
 	}
 
 	/**

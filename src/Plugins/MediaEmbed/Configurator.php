@@ -78,9 +78,9 @@ class Configurator extends ConfiguratorBase
 		// Create a MEDIA tag
 		$tag = $this->configurator->tags->add('MEDIA');
 
-		// This tag should not need to be closed, and shouldn't have any descendants
+		// This tag should not need to be closed and should not contain itself
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild('MEDIA');
 
 		// Empty this tag's filter chain and add our tag filter
 		$tag->filterChain->clear();
@@ -155,9 +155,10 @@ class Configurator extends ConfiguratorBase
 		// Create the tag for this site
 		$tag = new Tag;
 
-		// This tag should not need to be closed, and shouldn't have any descendants
+		// This tag should not need to be closed and should not contain itself or the MEDIA tag
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild($siteId);
+		$tag->rules->denyChild('MEDIA');
 
 		// Store attributes' configuration, starting with a default "url" attribute to store the
 		// original URL if applicable
