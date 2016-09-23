@@ -44,6 +44,30 @@ class EnforceContentModelsTest extends AbstractTest
 	}
 
 	/**
+	* @testdox <iframe> with no <xsl:apply-templates/> has a denyChild rule for <div>
+	*/
+	public function testIframeDeniesDiv()
+	{
+		$this->assertTargetedRules(
+			'<iframe/>',
+			'<div/>',
+			['denyChild']
+		);
+	}
+
+	/**
+	* @testdox <iframe> with no <xsl:apply-templates/> has no rules for <span>
+	*/
+	public function testIframeAllowsSpan()
+	{
+		$this->assertTargetedRules(
+			'<iframe/>',
+			'<span/>',
+			[]
+		);
+	}
+
+	/**
 	* @testdox Generates an isTransparent rule for <a>
 	*/
 	public function testIsTransparent()

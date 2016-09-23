@@ -19,13 +19,19 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	protected $br;
 
 	/**
+	* @var TemplateForensics
+	*/
+	protected $span;
+
+	/**
 	* Constructor
 	*
-	* Prepares the TemplateForensics for <br/>
+	* Prepares the TemplateForensics for <br/> and <span>
 	*/
 	public function __construct()
 	{
-		$this->br = new TemplateForensics('<br/>');
+		$this->br   = new TemplateForensics('<br/>');
+		$this->span = new TemplateForensics('<span><xsl:apply-templates/></span>');
 	}
 
 	/**
@@ -57,6 +63,13 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	*/
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
+		if (!$src->allowsChildElements())
+		{
+			// If this template does not allow child elements, we use the same content model as a
+			// span element to allow for some fallback content if this template is disabled
+			$src = $this->span;
+		}
+
 		$rules = [];
 		if (!$src->allowsChild($trg))
 		{

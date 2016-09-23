@@ -1216,6 +1216,8 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] <b> has a denyChild rule for <div>
  [x] <a> has a denyChild and a denyDescendant rule for <a>
  [x] <p> does not have a rule for <p>
+ [x] <iframe> with no <xsl:apply-templates/> has a denyChild rule for <div>
+ [x] <iframe> with no <xsl:apply-templates/> has no rules for <span>
  [x] Generates an isTransparent rule for <a>
  [x] Generates an isTransparent rule for a template composed entirely of <xsl:apply-templates/>
  [x] Does not generate any boolean rules for <b>
