@@ -235,6 +235,271 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				// Ensure that non-HTTP URLs don't get scraped
+				'[media]invalid://example.org/123[/media]',
+				'<t>[media]invalid://example.org/123[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.org',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that invalid URLs don't get scraped
+				'[media]http://example.invalid/123?x"> foo="bar[/media]',
+				'<t>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</t>',
+				['captureURLs' => false],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
+						'http://example.invalid/123?x"> foo="bar' => '456'
+					]);
+
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape the URL if it doesn't match
+				'[media]http://example.invalid/123[/media]',
+				'<t>[media]http://example.invalid/123[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'scrape' => [
+								'match'   => '/XXX/',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape if the attributes are already filled
+				'http://example.invalid/123',
+				'<r><EXAMPLE id="12" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'extract' => "#/(?'id'[0-9]{2})#",
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				'[media]http://foo.example.org/123[/media]',
+				'<r><X2 id="123" url="http://foo.example.org/123">[media]http://foo.example.org/123[/media]</X2></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'x1',
+						[
+							'host'    => 'example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+					$configurator->MediaEmbed->add(
+						'x2',
+						[
+							'host'    => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				// Ensure no bad things(tm) happen when there's no match
+				'[media]http://example.org/123[/media]',
+				'<t>[media]http://example.org/123[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'x2',
+						[
+							'host'    => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				// Test that we don't replace the "id" attribute with an URL
+				'[media=foo]http://example.org/123[/media]',
+				'<r><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				'[media]http://example.com/baz[/media]',
+				'<t>[media]http://example.com/baz[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				'[media]http://example.com/foo[/media]',
+				'<r><FOO foo="foo" url="http://example.com/foo">[media]http://example.com/foo[/media]</FOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				// @bar is invalid, no match == tag is invalidated
+				'[foo bar=BAR]http://example.com/baz[/foo]',
+				'<t>[foo bar=BAR]http://example.com/baz[/foo]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				// No match on URL but @bar is valid == tag is kept
+				'[foo bar=bar]http://example.com/baz[/foo]',
+				'<r><FOO bar="bar" url="http://example.com/baz"><s>[foo bar=bar]</s>http://example.com/baz<e>[/foo]</e></FOO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->createIndividualBBCodes = true;
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'    => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'iframe' => [
+								'width'  => 560,
+								'height' => 315,
+								'src'    => '//localhost'
+							]
+						]
+					);
+				}
+			],
+			[
+				'[media=x]..[/media]',
+				'<t>[media=x]..[/media]</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes;
+					$configurator->MediaEmbed->add('foo', ['host' => 'example.invalid']);
+					$configurator->tags->add('X');
+				}
+			],
 		];
 	}
 
@@ -1047,277 +1312,6 @@ class ParserTest extends Test
 	public function getParsingTests()
 	{
 		return [
-			// =================================================================
-			// Abstract tests
-			// =================================================================
-			[
-				// Ensure that non-HTTP URLs don't get scraped
-				'[media]invalid://example.org/123[/media]',
-				'<t>[media]invalid://example.org/123[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.org',
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that invalid URLs don't get scraped
-				'[media]http://example.invalid/123?x"> foo="bar[/media]',
-				'<t>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</t>',
-				['captureURLs' => false],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = self::populateCache([
-						'http://example.invalid/123?x"> foo="bar' => '456'
-					]);
-
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that we don't scrape the URL if it doesn't match
-				'[media]http://example.invalid/123[/media]',
-				'<t>[media]http://example.invalid/123[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'scrape' => [
-								'match'   => '/XXX/',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that we don't scrape if the attributes are already filled
-				'http://example.invalid/123',
-				'<r><EXAMPLE id="12" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'extract' => "#/(?'id'[0-9]{2})#",
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				'[media]http://foo.example.org/123[/media]',
-				'<r><X2 id="123" url="http://foo.example.org/123">[media]http://foo.example.org/123[/media]</X2></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'x1',
-						[
-							'host'    => 'example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-					$configurator->MediaEmbed->add(
-						'x2',
-						[
-							'host'    => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				// Ensure no bad things(tm) happen when there's no match
-				'[media]http://example.org/123[/media]',
-				'<t>[media]http://example.org/123[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'x2',
-						[
-							'host'    => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				// Test that we don't replace the "id" attribute with an URL
-				'[media=foo]http://example.org/123[/media]',
-				'<r><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				'[media]http://example.com/baz[/media]',
-				'<t>[media]http://example.com/baz[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'example.com',
-							'extract'  => [
-								"!example\\.com/(?<foo>foo)!",
-								"!example\\.com/(?<bar>bar)!"
-							],
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				'[media]http://example.com/foo[/media]',
-				'<r><FOO foo="foo" url="http://example.com/foo">[media]http://example.com/foo[/media]</FOO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'example.com',
-							'extract'  => [
-								"!example\\.com/(?<foo>foo)!",
-								"!example\\.com/(?<bar>bar)!"
-							],
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				// @bar is invalid, no match == tag is invalidated
-				'[foo bar=BAR]http://example.com/baz[/foo]',
-				'<t>[foo bar=BAR]http://example.com/baz[/foo]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'example.com',
-							'extract'  => [
-								"!example\\.com/(?<foo>foo)!",
-								"!example\\.com/(?<bar>bar)!"
-							],
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				// No match on URL but @bar is valid == tag is kept
-				'[foo bar=bar]http://example.com/baz[/foo]',
-				'<r><FOO bar="bar" url="http://example.com/baz"><s>[foo bar=bar]</s>http://example.com/baz<e>[/foo]</e></FOO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->createIndividualBBCodes = true;
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'example.com',
-							'extract'  => [
-								"!example\\.com/(?<foo>foo)!",
-								"!example\\.com/(?<bar>bar)!"
-							],
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
-				'[media=x]..[/media]',
-				'<t>[media=x]..[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes;
-					$configurator->MediaEmbed->add('foo', ['host' => 'example.invalid']);
-					$configurator->tags->add('X');
-				}
-			],
-			// =================================================================
-			// Bundled sites tests
-			// =================================================================
 			[
 				'http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799',
 				'<r><ABCNEWS id="22880799" url="http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799">http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799</ABCNEWS></r>',
