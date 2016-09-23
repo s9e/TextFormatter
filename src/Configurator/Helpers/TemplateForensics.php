@@ -586,8 +586,9 @@ class TemplateForensics
 
 		if (empty($branchBitfields))
 		{
-			// No branches => not transparent
-			$this->isTransparent = false;
+			// No branches => not transparent and no child elements
+			$this->allowsChildElements = false;
+			$this->isTransparent       = false;
 		}
 		else
 		{
