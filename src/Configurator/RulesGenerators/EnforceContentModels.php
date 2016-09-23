@@ -34,18 +34,15 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$rules = [];
-
 		if ($src->isTransparent())
 		{
 			$rules['isTransparent'] = true;
 		}
-
 		if (!$src->allowsChild($this->br))
 		{
 			$rules['preventLineBreaks'] = true;
 			$rules['suspendAutoLineBreaks'] = true;
 		}
-
 		if (!$src->allowsDescendant($this->br))
 		{
 			$rules['disableAutoLineBreaks'] = true;
@@ -61,12 +58,10 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		$rules = [];
-
 		if (!$src->allowsChild($trg))
 		{
 			$rules[] = 'denyChild';
 		}
-
 		if (!$src->allowsDescendant($trg))
 		{
 			$rules[] = 'denyDescendant';

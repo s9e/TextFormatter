@@ -166,7 +166,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 			'root' => $this->generateRuleset($rootForensics, $templateForensics),
 			'tags' => []
 		];
-
 		foreach ($templateForensics as $tagName => $src)
 		{
 			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
@@ -185,7 +184,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 	protected function generateRuleset(TemplateForensics $src, array $targets)
 	{
 		$rules = [];
-
 		foreach ($this->collection as $rulesGenerator)
 		{
 			if ($rulesGenerator instanceof BooleanRulesGenerator)
