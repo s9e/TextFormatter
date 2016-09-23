@@ -32,11 +32,10 @@ abstract class Utils
 	}
 	public static function removeFormatting($xml)
 	{
-		$dom = self::loadXML($xml);
-		foreach ($dom->getElementsByTagName('s') as $tag)
-			$tag->parentNode->removeChild($tag);
-		foreach ($dom->getElementsByTagName('e') as $tag)
-			$tag->parentNode->removeChild($tag);
+		$dom   = self::loadXML($xml);
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//e | //s') as $node)
+			$node->parentNode->removeChild($node);
 		return $dom->documentElement->textContent;
 	}
 	public static function removeTag($xml, $tagName, $nestingLevel = 0)
@@ -66,10 +65,7 @@ abstract class Utils
 	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
 	{
 		$utf8 = $m[0];
-		$cp   = ((\ord($utf8[0]) & 7)  << 18)
-		      | ((\ord($utf8[1]) & 63) << 12)
-		      | ((\ord($utf8[2]) & 63) << 6)
-		      | (\ord($utf8[3]) & 63);
+		$cp   = (\ord($utf8[0]) << 18) + (\ord($utf8[1]) << 12) + (\ord($utf8[2]) << 6) + \ord($utf8[3]) - 0x3C82080;
 		return '&#' . $cp . ';';
 	}
 	protected static function loadXML($xml)
