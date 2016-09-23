@@ -593,7 +593,6 @@ class TemplateForensics
 		{
 			// Take the bitfield of each branch and reduce them to a single ANDed bitfield
 			$this->allowChildBitfield = $branchBitfields[0];
-
 			foreach ($branchBitfields as $branchBitfield)
 			{
 				$this->allowChildBitfield &= $branchBitfield;
