@@ -172,6 +172,10 @@ class ParserTest extends Test
 					$configurator->Preg->replace('#http://example\\.com#', '...');
 				}
 			],
+			[
+				'“极·致·轻”，没有如果，你就是英雄！车库源码（http://src.cool）与您共同进步！',
+				'<r>“极·致·轻”，没有如果，你就是英雄！车库源码（<URL url="http://src.cool">http://src.cool</URL>）与您共同进步！</r>'
+			],
 		];
 	}
 

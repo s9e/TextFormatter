@@ -95,11 +95,11 @@ class BundleGeneratorTest extends Test
 		);
 
 		$this->assertRegexp(
-			'/\\"Autolink\\";[^}]*s:10:\\"isDisabled\\";b:1;/',
+			'/\\"Autolink\\";.*?s:10:\\"isDisabled\\";b:1;/',
 			$bundle
 		);
 		$this->assertRegexp(
-			'/\\"URL\\";[^}]*s:10:\\"isDisabled\\";b:1;/',
+			'/\\"URL\\";.*?s:10:\\"isDisabled\\";b:1;/',
 			$bundle
 		);
 	}
