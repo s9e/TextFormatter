@@ -55,8 +55,7 @@ class Parser extends ParserBase
 		$endTag = $tag->getEndTag() ?: $tag;
 		$lpos = $tag->getPos();
 		$rpos = $endTag->getPos() + $endTag->getLen();
-		$newTag = $tagStack->addSelfClosingTag(\strtoupper($siteId), $lpos, $rpos - $lpos, $tag->getSortPriority());
-		$newTag->setAttributes($tag->getAttributes());
+		$tagStack->addTagPair(\strtoupper($siteId), $lpos, 0, $rpos, 0, $tag->getSortPriority())->setAttributes($tag->getAttributes());
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
