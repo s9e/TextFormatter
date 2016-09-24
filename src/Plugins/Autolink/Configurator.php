@@ -24,16 +24,21 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
-		if ($this->matchWww)
-			$anchor = '(?:' . $anchor . '|www\\.)';
 		$config = [
 			'attrName'   => $this->attrName,
-			'regexp'     => '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
+			'regexp'     => $this->getRegexp(),
 			'tagName'    => $this->tagName
 		];
 		if (!$this->matchWww)
 			$config['quickMatch'] = '://';
 		return $config;
+	}
+	protected function getRegexp()
+	{
+		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
+		if ($this->matchWww)
+			$anchor = '(?:' . $anchor . '|www\\.)';
+		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]\\x{FF01}-\\x{FF0F}\\x{FF1A}-\\x{FF20}\\x{FF3B}-\\x{FF40}\\x{FF5B}-\\x{FF65}]|\\[\\w*\\])++#Siu';
+		return $regexp;
 	}
 }
