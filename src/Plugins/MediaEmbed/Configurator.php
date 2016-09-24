@@ -59,7 +59,7 @@ class Configurator extends ConfiguratorBase
 			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		return array(
 			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/S'
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si'
 		);
 	}
 	public function add($siteId, array $siteConfig = \null)
