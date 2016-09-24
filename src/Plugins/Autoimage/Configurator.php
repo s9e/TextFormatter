@@ -13,7 +13,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	/**
-	* @var string Name of attribute that stores the link's URL
+	* @var string Name of attribute that stores the image's URL
 	*/
 	protected $attrName = 'src';
 
@@ -28,7 +28,7 @@ class Configurator extends ConfiguratorBase
 	protected $regexp = '#\\bhttps?://[-.\\w]+/[-./\\w]+\\.(?:gif|jpe?g|png)(?!\\S)#i';
 
 	/**
-	* @var string Name of the tag used to represent links
+	* @var string Name of the tag used to represent images
 	*/
 	protected $tagName = 'IMG';
 
