@@ -1,3 +1,38 @@
+0.7.1 (2016-09-24)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/64c95e0c84183a46a9bffaa85bea546671b85b21...3c2ff8143055f7998d1cdab428157eaa67a44645)
+
+### Added
+
+ - `3c2ff81` Added Autovideo plugin
+ - `8608895` Autoimage: added support for fallback link via Autolink
+ - `ca3cc4e` MediaEmbed: added Steam store
+ - `64bc419` MediaEmbed: added support for fallback link via Autolink
+ - `2a7b9ff` MediaEmbed: added support for uppercase scheme
+
+### Fixed
+
+ - `0693ad7` BuiltInFilters.js: fixed unchecked access to undefined var
+ - `dfa0e66` HTMLElements: fixed exception's message
+ - `ba79789` TemplateForensics: fixed allowsChildElements() on a template with no xsl:apply-templates element
+ - `8371057` Utils: fixed an issue with removeFormatting() where some tags were skipped
+
+### Changed
+
+ - `411f753` Autolink: excluded fullwidth and halfwidth punctuation from links
+ - `02360fa` Emoji: simplified UTF-8 to codepoint algorithm
+ - `a0a2546` Emoji: store hexadecimal codepoints padded to 4 characters
+ - `31b88d0` Emoji: updated JavaScript regexp. No functional change
+ - `b3b9e7b` EnforceContentModels: allow for some fallback content in templates with no xsl:apply-templates element
+ - `f1fb0c3` HTMLElements: updated the list of URL attributes
+ - `7f67345` MediaEmbed: updated Amazon
+ - `9388645` RegexpConvertor: updated Unicode properties
+ - `2023bfb` Replaced the default behaviour on duplicates in AttributeCollection, BBCodeCollection, EmoticonCollection and TagCollection
+ - `e66f291` TemplateForensics: updated specs to HTML 5.1
+ - `2c8bbf0` Utils: simplified the UTF-8 to codepoint algorithm
+
+
 0.7.0 (2016-09-12)
 ==================
 
