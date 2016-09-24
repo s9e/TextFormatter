@@ -3,6 +3,5 @@ var tagName  = config.tagName,
 
 matches.forEach(function(m)
 {
-	var tag = addSelfClosingTag(tagName, m[0][1], m[0][0].length, -1);
-	tag.setAttribute(attrName, m[0][0]);
+	addTagPair(tagName, m[0][1], 0, m[0][1] + m[0][0].length, 0, -1).setAttribute(attrName, m[0][0]);
 });
