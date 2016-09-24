@@ -172,6 +172,10 @@
 
 	* Turns URLs in plain text into links
 
+* [Autovideo](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Autovideo)
+
+	* Turns video URLs in plain text into playable videos
+
 * [BBCodes](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/BBCodes)
 
 	* Flexible BBCode parser

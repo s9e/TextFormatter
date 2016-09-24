@@ -2036,6 +2036,22 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\Autovideo\Configurator
+ [x] Automatically creates a "VIDEO" tag with a "src" attribute with a "#url" filter
+ [x] Does not attempt to create a tag if it already exists
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] Has a quickMatch
+ [x] The config array contains a regexp
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+ [x] getTag() returns the tag that is associated with this plugin
+
+s9e\TextFormatter\Tests\Plugins\Autovideo\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
  [x] Throws an exception on invalid attribute name
 

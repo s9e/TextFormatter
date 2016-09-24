@@ -44,6 +44,8 @@ pages:
       - Synopsis: Plugins/Autoimage/Synopsis.md
     - Autolink:
       - Synopsis: Plugins/Autolink/Synopsis.md
+    - Autovideo:
+      - Synopsis: Plugins/Autovideo/Synopsis.md
     - BBCodes:
       - Synopsis: Plugins/BBCodes/Synopsis.md
       - Add from the repository: Plugins/BBCodes/Add_from_the_repository.md
