@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\Autoimage;
 
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
