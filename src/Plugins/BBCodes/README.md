@@ -85,4 +85,4 @@ Attribute 'title' is not properly sanitized to be used in this context
 
 ### More examples
 
-You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).
+You can find more examples [in the plugin's documentation](http://s9etextformatter.readthedocs.io/Plugins/BBCodes/Synopsis/).

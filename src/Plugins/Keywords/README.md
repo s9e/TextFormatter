@@ -4,7 +4,7 @@ This plugin serves to capture keywords in plain text and render them as a rich e
 
 Examples of use cases:
 
-  * [Card names from Magic: The Gathering](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook/30_Plugins/Keywords/MTG.md) or Hearthstone *(concept known as "autocard")*
+  * [Card names from Magic: The Gathering](http://s9etextformatter.readthedocs.io/Plugins/Keywords/MTG/) or Hearthstone *(concept known as "autocard")*
   * Heroes names and abilities from League of Legends or Dota 2
 
 This plugin can handle an arbitrary large number of keywords. As a rule of thumb, on PHP 5.5 with OPcache running on commodity hardware it takes about 1.5 ms to search for the names of 13,638 Magic: The Gathering cards in a text of a thousand characters. However, performance is highly dependent on the list of keywords and the content of the text and it is recommended to benchmark your application accordingly.
@@ -79,4 +79,4 @@ My <a href="http://bulbapedia.bulbagarden.net/wiki/Pikachu">Pikachu</a> is the b
 
 ### More examples
 
-You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).
+You can find more examples [in the plugin's documentation](http://s9etextformatter.readthedocs.io/Plugins/Keywords/Synopsis/).

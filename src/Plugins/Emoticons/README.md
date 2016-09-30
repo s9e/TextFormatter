@@ -24,4 +24,4 @@ Hello world <img src="happy.png" alt=":)" title="Happy">
 
 ### More examples
 
-You can find more examples [in the Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook#plugins).
+You can find more examples [in the plugin's documentation](http://s9etextformatter.readthedocs.io/Plugins/Emoticons/Synopsis/).

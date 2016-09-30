@@ -58,7 +58,7 @@ foreach ($examples as $text)
 
 ### Configure a site manually
 
-In addition to the sites that are directly available by name, you can define new, custom sites. More examples are available in the [Cookbook](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/README.md).
+In addition to the sites that are directly available by name, you can define new, custom sites.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
