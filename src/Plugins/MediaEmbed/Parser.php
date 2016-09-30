@@ -90,23 +90,17 @@ class Parser extends ParserBase
 	*/
 	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = null)
 	{
-		if (!$tag->hasAttribute('url'))
+		if ($tag->hasAttribute('url'))
 		{
-			return true;
-		}
-
-		$url = $tag->getAttribute('url');
-
-		// Ensure that the URL actually looks like a URL
-		if (!preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
-		{
-			// A bad URL means we don't scrape, but it doesn't necessarily invalidate the tag
-			return true;
-		}
-
-		foreach ($scrapeConfig as $scrape)
-		{
-			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+			// Ensure that the URL actually looks like a URL if we want to use it to scrape
+			$url = $tag->getAttribute('url');
+			if (preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
+			{
+				foreach ($scrapeConfig as $scrape)
+				{
+					self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+				}
+			}
 		}
 
 		return true;
