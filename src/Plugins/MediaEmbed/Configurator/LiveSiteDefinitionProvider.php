@@ -79,33 +79,15 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 		$childNodes = [];
 		foreach ($element->childNodes as $childNode)
 		{
-			if ($childNode->nodeType !== XML_ELEMENT_NODE)
+			if ($childNode instanceof DOMElement)
 			{
-				continue;
+				$childNodes[$childNode->nodeName][] = $this->getValueFromElement($childNode);
 			}
-
-			if (!$childNode->attributes->length && $childNode->childNodes->length === 1)
-			{
-				$value = $childNode->nodeValue;
-			}
-			else
-			{
-				$value = $this->getElementConfig($childNode);
-			}
-
-			$childNodes[$childNode->nodeName][] = $value;
 		}
 
-		foreach ($childNodes as $nodeName => $childNodes)
+		foreach ($childNodes as $nodeName => $values)
 		{
-			if (count($childNodes) === 1)
-			{
-				$config[$nodeName] = end($childNodes);
-			}
-			else
-			{
-				$config[$nodeName] = $childNodes;
-			}
+			$config[$nodeName] = (count($values) === 1) ? end($values) : $values;
 		}
 
 		return $config;
@@ -120,6 +102,19 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 	protected function getFilePath($siteId)
 	{
 		return $this->path . '/' . $siteId . '.xml';
+	}
+
+	/**
+	* Extract a value from given element
+	*
+	* @param  DOMElement $element
+	* @return mixed
+	*/
+	protected function getValueFromElement(DOMElement $element)
+	{
+		return (!$element->attributes->length && $element->childNodes->length === 1)
+		     ? $element->nodeValue
+		     : $this->getElementConfig($element);
 	}
 
 	/**
