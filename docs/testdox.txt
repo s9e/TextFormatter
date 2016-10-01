@@ -2413,33 +2413,38 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider
- [x] has('youtube') returns TRUE
- [x] has('unknown') returns FALSE
- [x] has('*invalid*') throws an exception
- [x] getIds() returns a list of siteIds
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollection
+ [x] isset('youtube') returns TRUE
+ [x] isset('unknown') returns FALSE
+ [x] get('*invalid*') throws an exception
+ [x] Is iterable
  [x] get('youtube') returns a configuration
  [x] get('unknown') returns FALSE
- [x] get('*invalid*') throws an exception
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
- [x] has() returns TRUE if the site config exists
- [x] has('unknown') returns FALSE
- [x] has('*invalid*') throws an exception
- [x] getIds() returns a list of siteIds
- [x] get('foo') returns a configuration if foo.xml exists
- [x] get('unknown') throws an exception
- [x] get('*invalid*') throws an exception
- [x] The constructor throws an exception if the dir does not exist
- [x] get() correctly interprets multiple nodes of the same name in XML
-
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteCollection
  [x] Extends ArrayObject
  [x] Implements ConfigProvider
  [x] asConfig() returns a Dictionary
  [x] The config contains a map of ['host.tld' => 'site id']
  [x] The config contains a map of ['scheme:' => 'site id']
  [x] Accept "host" as a string or an array of strings
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
+ [x] Can set and retrieve definitions
+ [x] get() throws a meaningful exception if the site ID does not exist
+ [x] Throws an exception if the site ID is not valid
+ [x] set() throws an exception if the site config is not an array
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollection
+ [x] isset() returns TRUE if the site config exists
+ [x] isset('unknown') returns FALSE
+ [x] isset('*invalid*') throws an exception
+ [x] Is iterable
+ [x] get('foo') returns a configuration if foo.xml exists
+ [x] get('unknown') throws an exception
+ [x] get('*invalid*') throws an exception
+ [x] The constructor throws an exception if the dir does not exist
+ [x] get() correctly interprets multiple nodes of the same name in XML
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateBuilder
  [x] getTemplate() returns an empty string by default

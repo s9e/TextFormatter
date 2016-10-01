@@ -235,9 +235,10 @@
 			<file>tests/Plugins/Keywords/ParserTest.php</file>
 			<file>tests/Plugins/Litedown/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Litedown/ParserTest.php</file>
-			<file>tests/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProviderTest.php</file>
-			<file>tests/Plugins/MediaEmbed/Configurator/LiveSiteDefinitionProviderTest.php</file>
-			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteDefinitionCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/Collections/XmlFileDefinitionCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/TemplateBuilderTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/ChooseTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/FlashTest.php</file>

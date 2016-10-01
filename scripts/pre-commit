@@ -7,7 +7,7 @@ if [[ -n `git diff --cached --name-only -b src` ]]
 then
 	if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 	then
-		./scripts/patchCachedSiteDefinitionProvider.php
+		./scripts/patchCachedSiteDefinitionCollection.php
 	fi
 
 	./scripts/generateBundles.php
@@ -17,7 +17,7 @@ then
 	git add "docs"
 	git update-index --add src/Bundles/*.php
 	git update-index --add src/Bundles/*/Renderer.php
-	git update-index --add "src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php"
+	git update-index --add "src/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollection.php"
 	git update-index --add "src/Plugins/MediaEmbed/README.md"
 
 elif [[ -n `git diff --cached --name-only -b docs` ]]

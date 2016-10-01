@@ -2,14 +2,14 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator;
 
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteDefinitionProvider
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteDefinitionCollection
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection
 */
-class LiveSiteDefinitionProviderTest extends Test
+class XmlFileDefinitionCollectionTest extends Test
 {
 	protected function generateDefinition()
 	{
@@ -28,46 +28,46 @@ class LiveSiteDefinitionProviderTest extends Test
 	}
 
 	/**
-	* @testdox has() returns TRUE if the site config exists
+	* @testdox isset() returns TRUE if the site config exists
 	*/
-	public function testHas()
+	public function testIssetTrue()
 	{
-		$siteId   = $this->generateDefinition();
-		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$this->assertTrue($provider->has($siteId));
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$this->assertTrue(isset($collection[$siteId]));
 	}
 
 	/**
-	* @testdox has('unknown') returns FALSE
+	* @testdox isset('unknown') returns FALSE
 	*/
-	public function testHasFalse()
+	public function testIssetFalse()
 	{
-		$siteId   = $this->generateDefinition();
-		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$this->assertFalse($provider->has('unknown'));
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$this->assertFalse(isset($collection['unknown']));
 	}
 
 	/**
-	* @testdox has('*invalid*') throws an exception
+	* @testdox isset('*invalid*') throws an exception
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid site ID
 	*/
-	public function testHasInvalid()
+	public function testIssetInvalid()
 	{
-		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$provider->has('*invalid*');
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		isset($collection['*invalid*']);
 	}
 
 	/**
-	* @testdox getIds() returns a list of siteIds
+	* @testdox Is iterable
 	*/
-	public function testGetIds()
+	public function testIsIterable()
 	{
-		$siteId   = $this->generateDefinition();
-		$provider = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteIds  = $provider->getIds();
-		$this->assertInternalType('array', $siteIds);
-		$this->assertContains($siteId, $siteIds);
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$sites      = iterator_to_array($collection);
+		$this->assertInternalType('array', $sites);
+		$this->assertArrayHasKey($siteId, $sites);
 	}
 
 	/**
@@ -76,8 +76,8 @@ class LiveSiteDefinitionProviderTest extends Test
 	public function testGet()
 	{
 		$siteId     = $this->generateDefinition();
-		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteConfig = $provider->get($siteId);
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
 		$this->assertInternalType('array', $siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('localhost', $siteConfig['host']);
@@ -86,12 +86,12 @@ class LiveSiteDefinitionProviderTest extends Test
 	/**
 	* @testdox get('unknown') throws an exception
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown media site
+	* @expectedExceptionMessage Media site 'unknown' does not exist
 	*/
 	public function testGetUnknown()
 	{
-		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteConfig = $provider->get('unknown');
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get('unknown');
 	}
 
 	/**
@@ -101,8 +101,8 @@ class LiveSiteDefinitionProviderTest extends Test
 	*/
 	public function testGetInvalid()
 	{
-		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteConfig = $provider->get('*invalid*');
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get('*invalid*');
 	}
 
 	/**
@@ -112,7 +112,7 @@ class LiveSiteDefinitionProviderTest extends Test
 	*/
 	public function testPathInvalid()
 	{
-		new LiveSiteDefinitionProvider('/invalid/path');
+		new XmlFileDefinitionCollection('/invalid/path');
 	}
 
 	/**
@@ -121,8 +121,8 @@ class LiveSiteDefinitionProviderTest extends Test
 	public function testGetMultipleNodes()
 	{
 		$siteId     = $this->generateDefinition();
-		$provider   = new LiveSiteDefinitionProvider(sys_get_temp_dir());
-		$siteConfig = $provider->get($siteId);
+		$collection   = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
 		$this->assertInternalType('array', $siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('localhost', $siteConfig['host']);

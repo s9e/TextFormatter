@@ -2,20 +2,20 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator;
 
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteCollection;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection
+* @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteCollection
 */
-class MediaSiteCollectionTest extends Test
+class SiteCollectionTest extends Test
 {
 	/**
 	* @testdox Extends ArrayObject
 	*/
 	public function testExtendsArrayObject()
 	{
-		$this->assertInstanceOf('ArrayObject', new MediaSiteCollection);
+		$this->assertInstanceOf('ArrayObject', new SiteCollection);
 	}
 
 	/**
@@ -25,7 +25,7 @@ class MediaSiteCollectionTest extends Test
 	{
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\ConfigProvider',
-			new MediaSiteCollection
+			new SiteCollection
 		);
 	}
 
@@ -34,7 +34,7 @@ class MediaSiteCollectionTest extends Test
 	*/
 	public function testAsConfigDictionary()
 	{
-		$collection = new MediaSiteCollection;
+		$collection = new SiteCollection;
 		$config     = $collection->asConfig();
 
 		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary', $config);
@@ -45,7 +45,7 @@ class MediaSiteCollectionTest extends Test
 	*/
 	public function testAsConfigHost()
 	{
-		$collection = new MediaSiteCollection;
+		$collection = new SiteCollection;
 		$collection['foo'] = ['host' => 'foo.tld'];
 
 		$config = $collection->asConfig();
@@ -61,7 +61,7 @@ class MediaSiteCollectionTest extends Test
 	*/
 	public function testAsConfigScheme()
 	{
-		$collection = new MediaSiteCollection;
+		$collection = new SiteCollection;
 		$collection['foo'] = ['scheme' => 'bar'];
 
 		$config = $collection->asConfig();
@@ -77,7 +77,7 @@ class MediaSiteCollectionTest extends Test
 	*/
 	public function testAsConfigHosts()
 	{
-		$collection = new MediaSiteCollection;
+		$collection = new SiteCollection;
 		$collection['foo'] = ['host' => 'foo.tld'];
 		$collection['bar'] = ['host' => ['bar.tld', 'bar.example']];
 

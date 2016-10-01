@@ -60,7 +60,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox add('inexistent') throws an exception
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown media site 'inexistent'
+	* @expectedExceptionMessage Media site 'inexistent' does not exist
 	*/
 	public function testAddInexistent()
 	{

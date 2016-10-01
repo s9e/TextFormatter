@@ -5,20 +5,14 @@
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
+namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections;
 
 use DOMDocument;
 use DOMElement;
-use DOMXPath;
 use InvalidArgumentException;
 
-class LiveSiteDefinitionProvider extends SiteDefinitionProvider
+class XmlFileDefinitionCollection extends SiteDefinitionCollection
 {
-	/**
-	* @var string Path to site definitions' dir
-	*/
-	protected $path;
-
 	/**
 	* Constructor
 	*
@@ -30,21 +24,30 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 		{
 			throw new InvalidArgumentException('Invalid site directory');
 		}
-		$this->path = $path;
+		foreach (glob($path . '/*.xml') as $filepath)
+		{
+			$siteId = basename($filepath, '.xml');
+			$this->items[$siteId] = $this->getConfigFromXmlFile($filepath);
+		}
 	}
 
 	/**
-	* {@inheritdoc}
+	* Replace arrays that contain a single element with the element itself
+	*
+	* @param  array $config
+	* @return array
 	*/
-	public function getIds()
+	protected function flattenConfig(array $config)
 	{
-		$siteIds = [];
-		foreach (glob($this->path . '/*.xml') as $filepath)
+		foreach ($config as $k => $v)
 		{
-			$siteIds[] = basename($filepath, '.xml');
+			if (is_array($v) && count($v) === 1)
+			{
+				$config[$k] = end($v);
+			}
 		}
 
-		return $siteIds;
+		return $config;
 	}
 
 	/**
@@ -72,36 +75,17 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 		$config = [];
 		foreach ($element->attributes as $attribute)
 		{
-			$config[$attribute->name] = $attribute->value;
+			$config[$attribute->name][] = $attribute->value;
 		}
-
-		// Group child nodes by name
-		$childNodes = [];
 		foreach ($element->childNodes as $childNode)
 		{
 			if ($childNode instanceof DOMElement)
 			{
-				$childNodes[$childNode->nodeName][] = $this->getValueFromElement($childNode);
+				$config[$childNode->nodeName][] = $this->getValueFromElement($childNode);
 			}
 		}
 
-		foreach ($childNodes as $nodeName => $values)
-		{
-			$config[$nodeName] = (count($values) === 1) ? end($values) : $values;
-		}
-
-		return $config;
-	}
-
-	/**
-	* Return the path that corresponds to given siteId
-	*
-	* @param  string $siteId
-	* @return string
-	*/
-	protected function getFilePath($siteId)
-	{
-		return $this->path . '/' . $siteId . '.xml';
+		return $this->flattenConfig($config);
 	}
 
 	/**
@@ -115,22 +99,5 @@ class LiveSiteDefinitionProvider extends SiteDefinitionProvider
 		return (!$element->attributes->length && $element->childNodes->length === 1)
 		     ? $element->nodeValue
 		     : $this->getElementConfig($element);
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	protected function getSiteConfig($siteId)
-	{
-		// Extract the site info from the node and put it into an array
-		return $this->getConfigFromXmlFile($this->getFilePath($siteId));
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	protected function hasSiteConfig($siteId)
-	{
-		return file_exists($this->getFilePath($siteId));
 	}
 }

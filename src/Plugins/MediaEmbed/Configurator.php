@@ -15,8 +15,8 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteCollection;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 
 class Configurator extends ConfiguratorBase
@@ -40,7 +40,7 @@ class Configurator extends ConfiguratorBase
 	protected $captureURLs = true;
 
 	/**
-	* @var MediaSiteCollection MediaSite collection
+	* @var SiteCollection Site collection
 	*/
 	protected $collection;
 
@@ -55,7 +55,7 @@ class Configurator extends ConfiguratorBase
 	public $createIndividualBBCodes = false;
 
 	/**
-	* @var Configurator\SiteDefinitionProvider Default sites
+	* @var Configurator\Collections\SiteDefinitionCollection Default sites
 	*/
 	public $defaultSites;
 
@@ -70,7 +70,7 @@ class Configurator extends ConfiguratorBase
 	protected function setUp()
 	{
 		// Create a collection to store the configured sites
-		$this->collection = new MediaSiteCollection;
+		$this->collection = new SiteCollection;
 
 		// Register the collection as a variable to be used during parsing
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
@@ -98,7 +98,7 @@ class Configurator extends ConfiguratorBase
 
 		if (!isset($this->defaultSites))
 		{
-			$this->defaultSites = new CachedSiteDefinitionProvider;
+			$this->defaultSites = new CachedDefinitionCollection;
 		}
 
 		$this->templateBuilder = new TemplateBuilder;

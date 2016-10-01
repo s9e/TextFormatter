@@ -1,15 +1,33 @@
 #!/usr/bin/php
 <?php
 
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection;
+
 include __DIR__ . '/../src/autoloader.php';
 
+function export(array $arr)
+{
+	$exportKeys = (array_keys($arr) !== range(0, count($arr) - 1));
+	ksort($arr);
+
+	$entries = [];
+	foreach ($arr as $k => $v)
+	{
+		$entries[] = (($exportKeys) ? var_export($k, true) . '=>' : '')
+				   . ((is_array($v)) ? export($v) : var_export($v, true));
+	}
+
+	return '[' . implode(',', $entries) . ']';
+}
+
+$path       = __DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites';
+$cache      = iterator_to_array(new XmlFileDefinitionCollection($path));
 $normalizer = new s9e\TextFormatter\Configurator\TemplateNormalizer;
-$provider = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\LiveSiteDefinitionProvider(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
-$cache = [];
-foreach ($provider->getIds() as $siteId)
+foreach ($cache as $siteId => $siteConfig)
 {
 	$siteConfig = array_intersect_key(
-		$provider->get($siteId),
+		$siteConfig,
 		[
 			'attributes'   => 1,
 			'choose'       => 1,
@@ -21,7 +39,6 @@ foreach ($provider->getIds() as $siteId)
 			'scrape'       => 1
 		]
 	);
-
 	foreach (['flash', 'iframe'] as $type)
 	{
 		if (!isset($siteConfig[$type]))
@@ -47,14 +64,14 @@ ksort($cache);
 $php = '';
 foreach ($cache as $siteId => $siteConfig)
 {
-	$php .= "\n\t\t" . var_export($siteId, true) . '=>' . var_export(serialize($siteConfig), true) . ',';
+	$php .= "\n\t\t" . var_export($siteId, true) . '=>' . export($siteConfig) . ',';
 }
 $php = rtrim($php, ',');
 
-$filepath = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php');
+$filepath = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollection.php');
 $oldFile = file_get_contents($filepath);
 $newFile = preg_replace_callback(
-	'((?<=\\$cache = \\[).*?(?=\\n\\t\\];))s',
+	'((?<=\\$items = \\[).*?(?=\\n\\t\\];))s',
 	function () use ($php)
 	{
 		return $php;
