@@ -271,6 +271,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Image size can be omitted then forced back on
+	*/
+	public function testForceImageSize()
+	{
+		$this->configurator->Emoji->omitImageSize();
+		$this->configurator->Emoji->forceImageSize();
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertContains('width="',  $template);
+		$this->assertContains('height="', $template);
+	}
+
+	/**
 	* @testdox removeAlias() removes given alias
 	*/
 	public function testRemoveAlias()

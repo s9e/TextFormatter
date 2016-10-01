@@ -2234,6 +2234,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] Image size can be omitted with Twemoji
  [x] Image size is forced by default with EmojiOne
  [x] Image size can be omitted with EmojiOne
+ [x] Image size can be omitted then forced back on
  [x] removeAlias() removes given alias
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists
