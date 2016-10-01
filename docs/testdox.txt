@@ -2434,6 +2434,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
  [x] get() throws a meaningful exception if the site ID does not exist
  [x] Throws an exception if the site ID is not valid
  [x] set() throws an exception if the site config is not an array
+ [x] add() throws a meaningful exception if the site ID already exists
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollection
  [x] isset() returns TRUE if the site config exists

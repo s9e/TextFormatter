@@ -52,4 +52,17 @@ class SiteDefinitionCollectionTest extends Test
 		$collection = new SiteDefinitionCollection;
 		$collection->set('x', '<site/>');
 	}
+
+	/**
+	* @testdox add() throws a meaningful exception if the site ID already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Media site 'foo' already exists
+	*/
+	public function testAlreadyExists()
+	{
+		$collection = new SiteDefinitionCollection;
+		$collection->onDuplicate('error');
+		$collection->add('foo', []);
+		$collection->add('foo', []);
+	}
 }
