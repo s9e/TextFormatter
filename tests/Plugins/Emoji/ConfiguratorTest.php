@@ -283,6 +283,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Image size can be changed
+	*/
+	public function testSetImageSize()
+	{
+		$this->configurator->Emoji->setImageSize(111);
+		$template = (string) $this->configurator->tags['EMOJI']->template;
+		$this->assertContains('width="111"',  $template);
+		$this->assertContains('height="111"', $template);
+	}
+
+	/**
 	* @testdox removeAlias() removes given alias
 	*/
 	public function testRemoveAlias()
