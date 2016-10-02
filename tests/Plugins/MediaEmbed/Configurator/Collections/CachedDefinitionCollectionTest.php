@@ -84,4 +84,26 @@ class CachedDefinitionCollectionTest extends Test
 		$collection = new CachedDefinitionCollection;
 		$siteConfig = $collection->get('*invalid*');
 	}
+
+	/**
+	* @testdox Site definitions contain the site's name
+	*/
+	public function testMetadataName()
+	{
+		$collection = new CachedDefinitionCollection;
+		$siteConfig = $collection->get('youtube');
+		$this->assertArrayHasKey('name', $siteConfig);
+		$this->assertSame('YouTube', $siteConfig['name']);
+	}
+
+	/**
+	* @testdox Site definitions contain the site's tags
+	*/
+	public function testMetadataTags()
+	{
+		$collection = new CachedDefinitionCollection;
+		$siteConfig = $collection->get('scribd');
+		$this->assertArrayHasKey('tags', $siteConfig);
+		$this->assertEquals(['documents', 'presentations'], $siteConfig['tags']);
+	}
 }

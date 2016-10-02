@@ -2421,6 +2421,8 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollecti
  [x] Is iterable
  [x] get('youtube') returns a configuration
  [x] get('unknown') returns FALSE
+ [x] Site definitions contain the site's name
+ [x] Site definitions contain the site's tags
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteCollection
  [x] Extends ArrayObject

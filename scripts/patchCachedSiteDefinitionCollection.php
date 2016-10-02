@@ -35,10 +35,17 @@ foreach ($cache as $siteId => $siteConfig)
 			'flash'        => 1,
 			'host'         => 1,
 			'iframe'       => 1,
+			'name'         => 1,
 			'scheme'       => 1,
-			'scrape'       => 1
+			'scrape'       => 1,
+			'tags'         => 1
 		]
 	);
+	if (isset($siteConfig['tags']))
+	{
+		$siteConfig['tags'] = (array) $siteConfig['tags'];
+		$siteConfig['tags'] = (array) end($siteConfig['tags']);
+	}
 	foreach (['flash', 'iframe'] as $type)
 	{
 		if (!isset($siteConfig[$type]))
