@@ -7,15 +7,31 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use DOMDocument;
+use DOMXPath;
+
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
+	/**
+	* @var DOMXPath
+	*/
+	protected $xpath;
+
+	/**
+	* Constructor
+	*/
+	public function __construct()
+	{
+		$this->xpath = new DOMXPath(new DOMDocument);
+	}
+
 	/**
 	* {@inheritdoc}
 	*/
 	protected function getOptimizationPasses()
 	{
 		return [
-			'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+			'(^[-+0-9\\s]+$)'                        => 'foldOperation',
 			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
 			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
 			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
@@ -51,17 +67,6 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 
 	/**
-	* Evaluate and replace a sequence of additions
-	*
-	* @param  array  $m
-	* @return string
-	*/
-	protected function foldAddition(array $m)
-	{
-		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
-	}
-
-	/**
 	* Remove "+ 0" additions
 	*
 	* @param  array  $m
@@ -92,6 +97,17 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	protected function foldMultiplication(array $m)
 	{
 		return $m[1] . ($m[2] * $m[3]);
+	}
+
+	/**
+	* Evaluate and replace a constant operation
+	*
+	* @param  array  $m
+	* @return string
+	*/
+	protected function foldOperation(array $m)
+	{
+		return (string) $this->xpath->evaluate($m[0]);
 	}
 
 	/**
