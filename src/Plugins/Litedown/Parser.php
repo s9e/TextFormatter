@@ -913,7 +913,7 @@ class Parser extends ParserBase
 	protected function matchInlineImages()
 	{
 		preg_match_all(
-			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(( *(?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?=[ )]) *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))? *)\\)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER
@@ -1006,7 +1006,7 @@ class Parser extends ParserBase
 	protected function matchInlineLinks()
 	{
 		preg_match_all(
-			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(( *(?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?=[ )]) *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))? *)\\)/',
 			$this->text,
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER
@@ -1036,7 +1036,7 @@ class Parser extends ParserBase
 			return;
 		}
 
-		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\))?)[^\\x17\\n]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))?)[^\\x17\\n]*\\n?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
@@ -1258,13 +1258,13 @@ class Parser extends ParserBase
 	*/
 	protected function setLinkAttributes(Tag $tag, $linkInfo, $attrName)
 	{
-		$url   = $linkInfo;
+		$url   = trim($linkInfo);
 		$title = '';
-		$pos   = strpos($linkInfo, ' ');
+		$pos   = strpos($url, ' ');
 		if ($pos !== false)
 		{
-			$url   = substr($linkInfo, 0, $pos);
-			$title = substr(trim(substr($linkInfo, $pos)), 1, -1);
+			$title = substr(trim(substr($url, $pos)), 1, -1);
+			$url   = substr($url, 0, $pos);
 		}
 
 		$tag->setAttribute($attrName, $this->decode($url));

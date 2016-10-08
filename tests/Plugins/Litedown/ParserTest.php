@@ -1156,6 +1156,10 @@ class ParserTest extends Test
 					'&gt; b")</e></URL></p></QUOTE></r>'
 				]
 			],
+			[
+				'[..]( http://example.org )',
+				'<r><p><URL url="http://example.org"><s>[</s>..<e>]( http://example.org )</e></URL></p></r>'
+			],
 			// Reference links
 			[
 				[
@@ -1342,6 +1346,18 @@ class ParserTest extends Test
 					$configurator->BBCodes->addFromRepository('b');
 				}
 			],
+			[
+				[
+					'[foo][1]',
+					'',
+					'[1]:  http://example.org  "Title" '
+				],
+				[
+					'<r><p><URL title="Title" url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]:  http://example.org  "Title" </i></r>'
+				]
+			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
@@ -1394,6 +1410,10 @@ class ParserTest extends Test
 					'<r><p><IMG alt="alt" src="foo.png" title="line1&#10;line2"><s>![</s>alt<e>](foo.png "line1',
 					'line2")</e></IMG></p></r>'
 				]
+			],
+			[
+				'![]( http://example.org/img.png "Title" )',
+				'<r><p><IMG alt="" src="http://example.org/img.png" title="Title"><s>![</s><e>]( http://example.org/img.png "Title" )</e></IMG></p></r>'
 			],
 			// Images in links
 			[
