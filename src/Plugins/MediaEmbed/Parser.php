@@ -6,10 +6,10 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
-use s9e\TextFormatter\Utils\Http;
 use s9e\TextFormatter\Parser as TagStack;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
+use s9e\TextFormatter\Utils\Http;
 class Parser extends ParserBase
 {
 	protected static $client;
