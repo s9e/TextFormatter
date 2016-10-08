@@ -168,6 +168,10 @@ class TemplateNormalizerTest extends Test
 				'<a href="{@url}" target="_blank">...</a>',
 				'<a href="{@url}" target="_blank" rel="noreferrer">...</a>'
 			],
+			[
+				'<xsl:value-of select="translate(\'abcdef\', \'abc\', \'ABC\')"/>',
+				'ABCdef'
+			],
 		];
 	}
 }

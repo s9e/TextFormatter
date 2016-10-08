@@ -1276,6 +1276,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBra
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants
  [x] Works
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExpressions
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
  [x] Works
 

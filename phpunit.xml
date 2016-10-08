@@ -128,6 +128,7 @@
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/FixUnescapedCurlyBracesInHtmlAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/FoldArithmeticConstantsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/FoldConstantXPathExpressionsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineCDATATest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineElementsTest.php</file>
