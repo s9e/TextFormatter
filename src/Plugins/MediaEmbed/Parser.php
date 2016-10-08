@@ -41,13 +41,13 @@ class Parser extends ParserBase
 	}
 	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = \null)
 	{
-		if (!$tag->hasAttribute('url'))
-			return \true;
-		$url = $tag->getAttribute('url');
-		if (!\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
-			return \true;
-		foreach ($scrapeConfig as $scrape)
-			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+		if ($tag->hasAttribute('url'))
+		{
+			$url = $tag->getAttribute('url');
+			if (\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
+				foreach ($scrapeConfig as $scrape)
+					self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+		}
 		return \true;
 	}
 	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
