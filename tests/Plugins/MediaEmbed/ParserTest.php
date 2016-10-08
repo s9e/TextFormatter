@@ -81,7 +81,7 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @testdox The [MEDIA] tag transfers its priority to the tag it creates
+	* @testdox The MEDIA tag transfers its priority to the tag it creates
 	*/
 	public function testTagPriority()
 	{
@@ -104,6 +104,33 @@ class ParserTest extends Test
 		$tag->setAttribute('media', 'foo');
 
 		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
+	}
+
+	/**
+	* @testdox The MEDIA tag can be effectively disabled
+	*/
+	public function testDisableTag()
+	{
+		$this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'    => 'localhost',
+				'extract' => "!localhost/video/(?'id'\\d+)!",
+				'iframe'  => ['src' => '//localhost/embed/{@id}']
+			]
+		);
+
+		$text = 'http://localhost/video/123';
+		$parser = $this->getParser();
+		$this->assertSame(
+			'<r><FOO id="123" url="http://localhost/video/123">http://localhost/video/123</FOO></r>',
+			$parser->parse($text)
+		);
+		$parser->disableTag('MEDIA');
+		$this->assertSame(
+			'<t>http://localhost/video/123</t>',
+			$parser->parse($text)
+		);
 	}
 
 	/**
