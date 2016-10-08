@@ -767,6 +767,28 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new UrlFilter,
+				'http:///example.org',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => '/example.org',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http:///example.org'
+						]
+					]
+				]
+			],
+			[
+				new UrlFilter,
 				'file:///foo.txt',
 				'file:///foo.txt',
 				[],
