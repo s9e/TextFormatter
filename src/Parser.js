@@ -32,11 +32,6 @@ var RULES_INHERITANCE = RULE_ENABLE_AUTO_BR;
 var WHITESPACE = " \n\t";
 
 /**
-* @type {!Array.<Tag>} Every tag created by this parser, used for garbage collection
-*/
-var createdTags;
-
-/**
 * @type {!Object.<string,!number>} Number of open tags for each tag name
 */
 var cntOpen;
@@ -204,9 +199,6 @@ function parse(_text)
 	executePluginParsers();
 	processTags();
 
-	// Remove old references
-	gc();
-
 	// Finalize the document
 	finalizeOutput();
 
@@ -226,18 +218,6 @@ function parse(_text)
 }
 
 /**
-* Remove old references to tags
-*/
-function gc()
-{
-	createdTags.forEach(function(tag)
-	{
-		tag.gc();
-	});
-	createdTags = [];
-}
-
-/**
 * Reset the parser for a new parsing
 *
 * @param {!string} _text Text to be parsed
@@ -252,21 +232,20 @@ function reset(_text)
 	logger.clear();
 
 	// Initialize the rest
-	cntOpen     = {};
-	cntTotal    = {};
-	createdTags = [];
+	cntOpen           = {};
+	cntTotal          = {};
 	currentFixingCost = 0;
-	currentTag  = null;
-	isRich      = false;
-	namespaces  = {};
-	openTags    = [];
-	output      = '';
-	pos         = 0;
-	tagStack    = [];
-	tagStackIsSorted = false;
-	text        = _text;
-	textLen     = text.length;
-	wsPos       = 0;
+	currentTag        = null;
+	isRich            = false;
+	namespaces        = {};
+	openTags          = [];
+	output            = '';
+	pos               = 0;
+	tagStack          = [];
+	tagStackIsSorted  = false;
+	text              = _text;
+	textLen           = text.length;
+	wsPos             = 0;
 
 	// Initialize the root context
 	context = rootContext;
@@ -2038,9 +2017,6 @@ function addTag(type, name, pos, len, prio)
 {
 	// Create the tag
 	var tag = new Tag(type, name, pos, len, prio || 0);
-
-	// Keep a copy of this tag to destroy its references after processing
-	createdTags.push(tag);
 
 	// Set this tag's rules bitfield
 	if (tagsConfig[name])
