@@ -5056,6 +5056,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
 		$this->collection->append('FoldArithmeticConstants');
+		$this->collection->append('FoldConstantXPathExpressions');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
@@ -8276,12 +8277,19 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMDocument;
+use DOMXPath;
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
+	protected $xpath;
+	public function __construct()
+	{
+		$this->xpath = new DOMXPath(new DOMDocument);
+	}
 	protected function getOptimizationPasses()
 	{
 		return array(
-			'(^(\\d+) \\+ (\\d+)((?> \\+ \\d+)*)$)'  => 'foldAddition',
+			'(^[-+0-9\\s]+$)'                        => 'foldOperation',
 			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
 			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
 			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
@@ -8310,10 +8318,6 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 		);
 		return $expr;
 	}
-	protected function foldAddition(array $m)
-	{
-		return ($m[1] + $m[2]) . (empty($m[3]) ? '' : $this->evaluateExpression($m[3]));
-	}
 	protected function foldAdditiveIdentity(array $m)
 	{
 		return '';
@@ -8326,6 +8330,10 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	{
 		return $m[1] . ($m[2] * $m[3]);
 	}
+	protected function foldOperation(array $m)
+	{
+		return (string) $this->xpath->evaluate($m[0]);
+	}
 	protected function foldSubExpression(array $m)
 	{
 		return '(' . $this->evaluateExpression(\trim(\substr($m[0], 1, -1))) . ')';
@@ -8333,6 +8341,46 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	protected function removeParentheses(array $m)
 	{
 		return ' ' . $m[1] . ' ';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMDocument;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+class FoldConstantXPathExpressions extends AbstractConstantFolding
+{
+	protected $xpath;
+	public function __construct()
+	{
+		$this->xpath = new DOMXPath(new DOMDocument);
+	}
+	protected function getOptimizationPasses()
+	{
+		return array(
+			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:<=>@[\\]])++$)' => 'foldConstantXPathExpression'
+		);
+	}
+	protected function containsUnsupportedExpression($expr)
+	{
+		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
+		return (bool) \preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()', $expr);
+	}
+	protected function foldConstantXPathExpression(array $m)
+	{
+		$expr = $m[0];
+		if (!$this->containsUnsupportedExpression($expr))
+		{
+			$foldedExpr = XPathHelper::export($this->xpath->evaluate($expr));
+			if (\strlen($foldedExpr) < \strlen($expr))
+				$expr = $foldedExpr;
+		}
+		return $expr;
 	}
 }
 

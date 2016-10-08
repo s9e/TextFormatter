@@ -14,8 +14,8 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteCollection;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 class Configurator extends ConfiguratorBase
 {
@@ -32,7 +32,7 @@ class Configurator extends ConfiguratorBase
 	protected $templateBuilder;
 	protected function setUp()
 	{
-		$this->collection = new MediaSiteCollection;
+		$this->collection = new SiteCollection;
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
 		$tag = $this->configurator->tags->add('MEDIA');
 		$tag->rules->autoClose();
@@ -46,7 +46,7 @@ class Configurator extends ConfiguratorBase
 		if ($this->createMediaBBCode)
 			$this->configurator->BBCodes->set('MEDIA', array('contentAttributes' => array('url')));
 		if (!isset($this->defaultSites))
-			$this->defaultSites = new CachedSiteDefinitionProvider;
+			$this->defaultSites = new CachedDefinitionCollection;
 		$this->templateBuilder = new TemplateBuilder;
 	}
 	public function asConfig()
