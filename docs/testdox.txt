@@ -1813,7 +1813,6 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] addFlags() adds given flags to the tag's
  [x] removeFlags() removes given flags from the tag's
  [x] removeFlags() can be called on flags that haven't been set
- [x] gc() removes a paired tag's reference
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests

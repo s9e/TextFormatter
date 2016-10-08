@@ -812,23 +812,4 @@ class TagTest extends Test
 
 		$this->assertSame(2, $tag->getFlags());
 	}
-
-	/**
-	* @testdox gc() removes a paired tag's reference
-	*/
-	public function testGc()
-	{
-		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
-		$endTag   = new Tag(Tag::END_TAG, 'X', 1, 0);
-
-		$startTag->pairWith($endTag);
-		$this->assertSame($endTag, $startTag->getEndTag());
-		$this->assertSame($startTag, $endTag->getStartTag());
-
-		$startTag->gc();
-		$this->assertNull($startTag->getEndTag());
-
-		$endTag->gc();
-		$this->assertNull($endTag->getStartTag());
-	}
 }

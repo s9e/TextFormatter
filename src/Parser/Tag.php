@@ -131,20 +131,6 @@ class Tag
 	}
 
 	/**
-	* Destroy all references contained in this tag
-	*
-	* Can be used after a tag has been processed to help with garbage collection
-	*
-	* @return void
-	*/
-	public function gc()
-	{
-		$this->cascade  = [];
-		$this->endTag   = null;
-		$this->startTag = null;
-	}
-
-	/**
 	* Invalidate this tag, as well as tags bound to this tag
 	*
 	* @return void

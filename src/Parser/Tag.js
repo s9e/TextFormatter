@@ -115,18 +115,6 @@ Tag.prototype.cascadeInvalidationTo = function(tag)
 };
 
 /**
-* Destroy all references contained in this tag
-*
-* Can be used after a tag has been processed to help with garbage collection
-*/
-Tag.prototype.gc = function()
-{
-	this.cascade = [];
-	delete this.endTag;
-	delete this.startTag;
-}
-
-/**
 * Invalidate this tag, as well as tags bound to this tag
 */
 Tag.prototype.invalidate = function()

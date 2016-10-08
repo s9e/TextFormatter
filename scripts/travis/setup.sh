@@ -2,12 +2,6 @@
 
 cd $(dirname "$0")
 
-if [ "$TRAVIS_PHP_VERSION" != 'hhvm' ]
-then
-	echo "Disabling Zend GC"
-	echo "zend.enable_gc=0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-fi
-
 # Install code coverage tools if applicable and disable XDebug otherwise
 if [ -n "$COVERAGE" ]
 then

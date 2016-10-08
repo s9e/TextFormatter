@@ -63,11 +63,6 @@ class Parser
 	protected $context;
 
 	/**
-	* @var Tag[] Every tag created by this parser, used for garbage collection
-	*/
-	protected $createdTags;
-
-	/**
 	* @var integer How hard the parser has worked on fixing bad markup so far
 	*/
 	protected $currentFixingCost;
@@ -207,20 +202,6 @@ class Parser
 	}
 
 	/**
-	* Remove old references to tags
-	*
-	* @return void
-	*/
-	protected function gc()
-	{
-		foreach ($this->createdTags as $tag)
-		{
-			$tag->gc();
-		}
-		$this->createdTags = [];
-	}
-
-	/**
 	* Reset the parser for a new parsing
 	*
 	* @param  string $text Text to be parsed
@@ -236,21 +217,20 @@ class Parser
 		$this->logger->clear();
 
 		// Initialize the rest
-		$this->cntOpen     = [];
-		$this->cntTotal    = [];
-		$this->createdTags = [];
+		$this->cntOpen           = [];
+		$this->cntTotal          = [];
 		$this->currentFixingCost = 0;
-		$this->currentTag  = null;
-		$this->isRich      = false;
-		$this->namespaces  = [];
-		$this->openTags    = [];
-		$this->output      = '';
-		$this->pos         = 0;
-		$this->tagStack    = [];
-		$this->tagStackIsSorted = false;
-		$this->text        = $text;
-		$this->textLen     = strlen($text);
-		$this->wsPos       = 0;
+		$this->currentTag        = null;
+		$this->isRich            = false;
+		$this->namespaces        = [];
+		$this->openTags          = [];
+		$this->output            = '';
+		$this->pos               = 0;
+		$this->tagStack          = [];
+		$this->tagStackIsSorted  = false;
+		$this->text              = $text;
+		$this->textLen           = strlen($text);
+		$this->wsPos             = 0;
 
 		// Initialize the root context
 		$this->context = $this->rootContext;
@@ -356,9 +336,6 @@ class Parser
 		// Do the heavy lifting
 		$this->executePluginParsers();
 		$this->processTags();
-
-		// Remove old references
-		$this->gc();
 
 		// Finalize the document
 		$this->finalizeOutput();
@@ -2136,9 +2113,6 @@ class Parser
 	{
 		// Create the tag
 		$tag = new Tag($type, $name, $pos, $len, $prio);
-
-		// Keep a copy of this tag to destroy its references after processing
-		$this->createdTags[] = $tag;
 
 		// Set this tag's rules bitfield
 		if (isset($this->tagsConfig[$name]))
