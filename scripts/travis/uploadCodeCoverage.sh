@@ -7,7 +7,7 @@ then
 fi
 
 cd $(dirname "$0")
-php fixCloverReport.php /tmp/clover.xml
+#php fixCloverReport.php /tmp/clover.xml
 
 cd ../..
 php /tmp/ocular.phar code-coverage:upload --format=php-clover /tmp/clover.xml
