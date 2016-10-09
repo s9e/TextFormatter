@@ -878,7 +878,7 @@ function matchImages()
 */
 function matchInlineImages()
 {
-	var m, regexp = /!\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /!\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:[^\x17\s()]|\([^\x17\s()]*\))*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
@@ -955,7 +955,7 @@ function matchInlineCode()
 */
 function matchInlineLinks()
 {
-	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:[^\x17\s()]|\([^\x17\s()]*\))*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
@@ -979,7 +979,7 @@ function matchLinkReferences()
 		return;
 	}
 
-	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+ *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\))?)[^\x17\n]*\n?/gm;
+	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+ *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))?)[^\x17\n]*\n?/gm;
 	while (m = regexp.exec(text))
 	{
 		addIgnoreTag(m['index'], m[0].length, -2);
@@ -1185,13 +1185,13 @@ function processEmphasisBlock(block)
 */
 function setLinkAttributes(tag, linkInfo, attrName)
 {
-	var url   = linkInfo,
+	var url   = linkInfo.replace(/^\s*/, '').replace(/\s*$/, ''),
 		title = '',
-		pos   = linkInfo.indexOf(' ')
+		pos   = url.indexOf(' ')
 	if (pos !== -1)
 	{
-		url   = linkInfo.substr(0, pos);
-		title = linkInfo.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
+		title = url.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
+		url   = url.substr(0, pos);
 	}
 
 	tag.setAttribute(attrName, decode(url));
