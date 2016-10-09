@@ -1,3 +1,17 @@
+0.8.1 (2016-10-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/97125c831c206f6b0c597a5ed1c8df7a3510da6c...d26e62b0369ef7bfedb94a26708a1f1f87bbd050)
+
+### Fixed
+
+ - `e82316c` FoldConstantXPathExpressions: fixed detection of XPath node tests in uppercase
+
+### Changed
+
+ - `d26e62b` FoldConstantXPathExpressions: improved detection of nonfoldable expressions
+
+
 0.8.0 (2016-10-09)
 ==================
 
