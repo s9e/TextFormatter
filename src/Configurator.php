@@ -8366,19 +8366,34 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:<=>@[\\]])++$)' => 'foldConstantXPathExpression'
 		);
 	}
+	protected function canBeSerialized($value)
+	{
+		return (\is_string($value) || \is_integer($value) || \is_float($value));
+	}
 	protected function containsUnsupportedExpression($expr)
 	{
 		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
-		return (bool) \preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()', $expr);
+		return (bool) \preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()i', $expr);
+	}
+	protected function evaluate($expr)
+	{
+		$useErrors = \libxml_use_internal_errors(\true);
+		$result    = $this->xpath->evaluate($expr);
+		\libxml_use_internal_errors($useErrors);
+		return $result;
 	}
 	protected function foldConstantXPathExpression(array $m)
 	{
 		$expr = $m[0];
 		if (!$this->containsUnsupportedExpression($expr))
 		{
-			$foldedExpr = XPathHelper::export($this->xpath->evaluate($expr));
-			if (\strlen($foldedExpr) < \strlen($expr))
-				$expr = $foldedExpr;
+			$result = $this->evaluate($expr);
+			if ($this->canBeSerialized($result))
+			{
+				$foldedExpr = XPathHelper::export($result);
+				if (\strlen($foldedExpr) < \strlen($expr))
+					$expr = $foldedExpr;
+			}
 		}
 		return $expr;
 	}
