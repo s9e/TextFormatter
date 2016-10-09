@@ -53,7 +53,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		// Remove strings to avoid false-positives
 		$expr = preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
 
-		return (bool) preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()', $expr);
+		return (bool) preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()i', $expr);
 	}
 
 	/**

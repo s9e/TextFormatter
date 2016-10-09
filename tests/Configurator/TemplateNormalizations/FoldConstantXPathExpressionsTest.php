@@ -24,6 +24,10 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:value-of select="foo"/>'
 			],
 			[
+				'<xsl:value-of select="FOO"/>',
+				'<xsl:value-of select="FOO"/>'
+			],
+			[
 				'<xsl:value-of select="@foo"/>',
 				'<xsl:value-of select="@foo"/>'
 			],
