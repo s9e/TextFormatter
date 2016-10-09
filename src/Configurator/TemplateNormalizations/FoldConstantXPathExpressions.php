@@ -37,6 +37,17 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	}
 
 	/**
+	* Test whether a value can be serialized to an XPath literal
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	protected function canBeSerialized($value)
+	{
+		return (is_string($value) || is_integer($value) || is_float($value));
+	}
+
+	/**
 	* Test whether given string contains an unsupported expression
 	*
 	* Will test for keywords, nodes and node functions as well as a few unsupported functions
@@ -57,6 +68,21 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	}
 
 	/**
+	* Evaluate given expression without raising any warnings
+	*
+	* @param  string $expr
+	* @return mixed
+	*/
+	protected function evaluate($expr)
+	{
+		$useErrors = libxml_use_internal_errors(true);
+		$result    = $this->xpath->evaluate($expr);
+		libxml_use_internal_errors($useErrors);
+
+		return $result;
+	}
+
+	/**
 	* Evaluate and replace a constant XPath expression
 	*
 	* @param  array  $m
@@ -67,10 +93,14 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		$expr = $m[0];
 		if (!$this->containsUnsupportedExpression($expr))
 		{
-			$foldedExpr = XPathHelper::export($this->xpath->evaluate($expr));
-			if (strlen($foldedExpr) < strlen($expr))
+			$result = $this->evaluate($expr);
+			if ($this->canBeSerialized($result))
 			{
-				$expr = $foldedExpr;
+				$foldedExpr = XPathHelper::export($result);
+				if (strlen($foldedExpr) < strlen($expr))
+				{
+					$expr = $foldedExpr;
+				}
 			}
 		}
 

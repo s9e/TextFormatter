@@ -56,6 +56,14 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:value-of select="document()"/>'
 			],
 			[
+				'<xsl:value-of select="foo()"/>',
+				'<xsl:value-of select="foo()"/>'
+			],
+			[
+				'<xsl:value-of select="false()"/>',
+				'<xsl:value-of select="false()"/>'
+			],
+			[
 				'<xsl:value-of select="1 and 1"/>',
 				'<xsl:value-of select="1 and 1"/>'
 			],
