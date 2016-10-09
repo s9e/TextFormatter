@@ -1,3 +1,28 @@
+0.8.0 (2016-10-09)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#080) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7d08b19a0573b0b459a1206a0142da370bccda42...dc20ca832b5abbac7f24b65912b897b1a37f9197)
+
+### Added
+
+ - `f3ce808` FoldArithmeticConstants: added support for folding substractions
+ - `83a3468` Litedown: added support for spaces in inline links' info
+ - `7cb65e0` MediaEmbed: added 'name' and 'tags' metadata to CachedDefinitionCollection items
+ - `4602feb` TemplateNormalizer: added FoldConstantXPathExpressions pass
+
+### Removed
+
+ - `8b2e036` Parser: removed manual garbage collection
+
+### Changed
+
+ - `dc20ca8` BBCodes: updated default [CODE]
+ - `75b28f9` MediaEmbed: replaced the SiteDefinitionProvider API
+ - `6d1d7c0` MediaEmbed: simplified the XML configuration reader
+
+
 0.7.1 (2016-09-24)
 ==================
 
