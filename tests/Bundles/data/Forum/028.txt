@@ -1,0 +1,10 @@
+[table]
+	[tr]
+		[th]Col 1
+		[th]Col 2
+	[/tr]
+	[tr]
+		[td]Cell 1
+		[td]Cell 2
+	[/tr]
+[/table]

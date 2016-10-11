@@ -41,6 +41,10 @@ class Forum extends Bundle
 			'showStr'    => '{L_SHOW}',
 			'spoilerStr' => '{L_SPOILER}',
 		]);
+		$configurator->BBCodes->addFromRepository('TABLE');
+		$configurator->BBCodes->addFromRepository('TD');
+		$configurator->BBCodes->addFromRepository('TH');
+		$configurator->BBCodes->addFromRepository('TR');
 		$configurator->BBCodes->addFromRepository('U');
 		$configurator->BBCodes->addFromRepository('UL');
 		$configurator->BBCodes->addFromRepository('URL');
