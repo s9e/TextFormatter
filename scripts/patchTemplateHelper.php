@@ -6,9 +6,13 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 include __DIR__ . '/../src/autoloader.php';
 
-function loadPage($url)
+function loadPage($url, $filename = null)
 {
 	$filepath = sys_get_temp_dir() . '/' . basename($url);
+	if (!isset($filename))
+	{
+		$filename = basename($url);
+	}
 
 	if (!file_exists($filepath))
 	{
@@ -29,10 +33,7 @@ function loadPage($url)
 $attributes = [];
 
 $query = '/html/body/table/tr/td[@title = "Type"]/a';
-$page  = loadPage(
-	'/tmp/html40attributes.html',
-	'http://www.w3.org/TR/html4/index/attributes.html'
-);
+$page  = loadPage('http://www.w3.org/TR/html4/index/attributes.html', 'html40attributes.html');
 $xpath = new DOMXPath($page);
 foreach ($xpath->query($query) as $a)
 {
