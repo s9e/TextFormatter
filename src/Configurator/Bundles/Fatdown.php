@@ -110,6 +110,8 @@ class Fatdown extends Bundle
 
 		$configurator->tags['html:dd']->rules->createParagraphs(false);
 		$configurator->tags['html:dt']->rules->createParagraphs(false);
+		$configurator->tags['html:td']->rules->createParagraphs(false);
+		$configurator->tags['html:th']->rules->createParagraphs(false);
 
 		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => false]);
 		$sites = [
