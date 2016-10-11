@@ -442,7 +442,7 @@
 	</bbcode>
 
 	<bbcode name="TR">
-		<usage>[TR #closeParent=TD,TH]{ANYTHING}[/TR]</usage>
+		<usage>[TR]{ANYTHING}[/TR]</usage>
 		<template><![CDATA[
 			<tr>{ANYTHING}</tr>
 		]]></template>

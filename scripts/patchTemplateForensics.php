@@ -62,7 +62,8 @@ foreach ($nodes as $node)
 
 $node = $page->getElementById('optional-tags');
 
-$closeParent = [];
+$closeParent  = [];
+$closeIfEmpty = [];
 while (isset($node->nextSibling))
 {
 	$node = $node->nextSibling;
@@ -85,7 +86,11 @@ while (isset($node->nextSibling))
 	$elName = $m[1];
 
 	$text = substr($text, strlen($m[0]));
-	$text = preg_replace('# or if there is no more content in the parent element\\.$#', '', $text);
+	if (strpos($text, ' or if there is no more content in the parent element.') !== false)
+	{
+		$closeIfEmpty[$elName] = 1;
+		$text = str_replace(' or if there is no more content in the parent element.', '', $text);
+	}
 	$text = rtrim($text, ' .,');
 
 	if (preg_match('#^([a-z]+) element$#', $text, $m))
@@ -111,7 +116,6 @@ while (isset($node->nextSibling))
 		die("Could not interpret '$text'\n");
 	}
 }
-
 
 //==============================================================================
 // Content models
@@ -727,6 +731,68 @@ foreach ($elements as $elName => $element)
 	}
 
 	$arr[$elName] = $el;
+}
+
+//==============================================================================
+// Elements with optional end tag if empty
+//==============================================================================
+
+// The HTML specs mention that some elements' end tag is optional "if there is no more content in
+// the parent element." But how can we determine whether there is still some content and what
+// elements would cause their parent to end. Here, we infer that an element E that automatically
+// closes an element P (as per the rules stored in $closeParent) will also close element C if it's
+// a child of E and both E and P's end tags are optional. This is not strictly true but in practice
+// this is good enough to cover most (all?) actual interactions.
+function getAllowedParents($arr, $elName)
+{
+	$parents = [];
+	$c = $arr[$elName]['c'];
+	foreach ($arr as $parentName => $el)
+	{
+		if (isset($el['ac']) && ($el['ac'] & $c))
+		{
+			$parents[] = $parentName;
+		}
+	}
+
+	return $parents;
+}
+function getClosedIfEmptyClosers($arr, $elName)
+{
+	global $closeIfEmpty, $closeParent;
+
+	$parentNames = [];
+	foreach (getAllowedParents($arr, $elName) as $parentName)
+	{
+		foreach ($closeParent as $srcName => $targets)
+		{
+			if (isset($targets[$parentName]))
+			{
+				$parentNames[] = $srcName;
+			}
+		}
+		if (isset($closeIfEmpty[$parentName]))
+		{
+			$parentNames[] = $parentName;
+		}
+	}
+
+	// We do not recurse as it does not find more parent names and could theoretically lead to an
+	// infinite loop in a future version of the specs
+//	foreach (array_unique($parentNames) as $parentName)
+//	{
+//		$parentNames = array_merge($parentNames, getClosedIfEmptyClosers($arr, $parentName));
+//	}
+
+	return array_unique($parentNames);
+}
+foreach (array_keys($closeIfEmpty) as $targetName)
+{
+	$closerNames = getClosedIfEmptyClosers($arr, $targetName);
+	foreach ($closerNames as $closerName)
+	{
+		$closeParent[$closerName][$targetName] = 1;
+	}
 }
 
 // Sort the elements so that their order remain consistent across revisions

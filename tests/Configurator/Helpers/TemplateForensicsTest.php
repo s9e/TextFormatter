@@ -89,6 +89,36 @@ class TemplateForensicsTest extends Test
 				'<span><xsl:apply-templates/></span>'
 			],
 			[
+				'<td> closes parent <td>',
+				'<td><xsl:apply-templates/></td>',
+				'closesParent',
+				'<td><xsl:apply-templates/></td>'
+			],
+			[
+				'<tr> closes parent <td>',
+				'<tr><xsl:apply-templates/></tr>',
+				'closesParent',
+				'<td><xsl:apply-templates/></td>'
+			],
+			[
+				'<tr> closes parent <th>',
+				'<tr><xsl:apply-templates/></tr>',
+				'closesParent',
+				'<th><xsl:apply-templates/></th>'
+			],
+			[
+				'<tbody> closes parent <th>',
+				'<tbody><xsl:apply-templates/></tbody>',
+				'closesParent',
+				'<th><xsl:apply-templates/></th>'
+			],
+			[
+				'<table> does not close parent <td>',
+				'<table><xsl:apply-templates/></table>',
+				'!closesParent',
+				'<td><xsl:apply-templates/></td>'
+			],
+			[
 				'<a> denies <a> as descendant',
 				'<a><xsl:apply-templates/></a>',
 				'!allowsDescendant',

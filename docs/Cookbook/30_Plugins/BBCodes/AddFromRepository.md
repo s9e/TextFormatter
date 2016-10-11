@@ -452,7 +452,7 @@ __TH__
 ```
 
 __TR__  
-`[TR #closeParent=TD,TH]{ANYTHING}[/TR]`
+`[TR]{ANYTHING}[/TR]`
 ```xsl
 <tr>{ANYTHING}</tr>
 ```
