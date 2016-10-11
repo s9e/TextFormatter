@@ -186,22 +186,30 @@ abstract class AbstractTest extends Test
 		$this->assertSame('unknown', $className::render('<r><?x ?>unknown</r>'));
 	}
 
+	protected function runRenderingTest($text, $expected, $params, $quick)
+	{
+		$className = static::getClassName();
+		$className::getCachedRenderer()->quickRenderingTest = ($quick) ? '((?!))' : '()';
+
+		$xml  = $className::parse($text);
+		$html = $className::render($xml, $params);
+
+		// Reset the renderer if params were set
+		if (!empty($params))
+		{
+			$className::reset();
+		}
+
+		$this->assertSame($expected, $html);
+	}
+
 	/**
 	* @testdox Rendering tests
 	* @dataProvider getRenderingTests
 	*/
 	public function testRender($text, $html, $params = [])
 	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '()';
-
-		$this->assertSame($html, $className::render($className::parse($text), $params));
-
-		// Reset the renderer if params were set
-		if ($params)
-		{
-			$className::reset();
-		}
+		$this->runRenderingTest($text, $html, $params, false);
 	}
 
 	/**
@@ -210,16 +218,7 @@ abstract class AbstractTest extends Test
 	*/
 	public function testRenderQuick($text, $html, $params = [])
 	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
-
-		$this->assertSame($html, $className::render($className::parse($text), $params));
-
-		// Reset the renderer if params were set
-		if ($params)
-		{
-			$className::reset();
-		}
+		$this->runRenderingTest($text, $html, $params, true);
 	}
 
 	public function getRenderingTests()
