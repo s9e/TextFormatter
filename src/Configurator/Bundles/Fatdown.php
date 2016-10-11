@@ -91,6 +91,8 @@ class Fatdown extends Bundle
 		}
 		$configurator->tags['html:dd']->rules->createParagraphs(\false);
 		$configurator->tags['html:dt']->rules->createParagraphs(\false);
+		$configurator->tags['html:td']->rules->createParagraphs(\false);
+		$configurator->tags['html:th']->rules->createParagraphs(\false);
 		$configurator->plugins->load('MediaEmbed', array('createMediaBBCode' => \false));
 		$sites = array(
 			'bandcamp',
