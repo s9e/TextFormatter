@@ -433,6 +433,30 @@ __SUP__
 <sup>{TEXT}</sup>
 ```
 
+__TABLE__  
+`[TABLE]{ANYTHING}[/TABLE]`
+```xsl
+<table>{ANYTHING}</table>
+```
+
+__TD__  
+`[TD]{TEXT}[/TD]`
+```xsl
+<td>{TEXT}</td>
+```
+
+__TH__  
+`[TH]{TEXT}[/TH]`
+```xsl
+<th>{TEXT}</th>
+```
+
+__TR__  
+`[TR #closeParent=TD,TH]{ANYTHING}[/TR]`
+```xsl
+<tr>{ANYTHING}</tr>
+```
+
 __U__  
 `[U]{TEXT}[/U]`
 ```xsl

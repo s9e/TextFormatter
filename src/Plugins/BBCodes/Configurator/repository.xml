@@ -420,6 +420,34 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="TABLE">
+		<usage>[TABLE]{ANYTHING}[/TABLE]</usage>
+		<template><![CDATA[
+			<table>{ANYTHING}</table>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="TD">
+		<usage>[TD]{TEXT}[/TD]</usage>
+		<template><![CDATA[
+			<td>{TEXT}</td>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="TH">
+		<usage>[TH]{TEXT}[/TH]</usage>
+		<template><![CDATA[
+			<th>{TEXT}</th>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="TR">
+		<usage>[TR #closeParent=TD,TH]{ANYTHING}[/TR]</usage>
+		<template><![CDATA[
+			<tr>{ANYTHING}</tr>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="U">
 		<usage>[U]{TEXT}[/U]</usage>
 		<template><![CDATA[

@@ -585,6 +585,10 @@ class BBCodesTest extends Test
 				'x <sup>sup</sup> y'
 			],
 			[
+				'[table][tr][th]head[tr][td]cell[/table]',
+				'<table><tr><th>head</th></tr><tr><td>cell</td></tr></table>'
+			],
+			[
 				'x [u]underline[/u] y',
 				'x <u>underline</u> y'
 			],
