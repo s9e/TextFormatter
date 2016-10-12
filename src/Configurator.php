@@ -8118,6 +8118,23 @@ use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class FoldConstantXPathExpressions extends AbstractConstantFolding
 {
+	protected $supportedFunctions = [
+		'ceiling',
+		'concat',
+		'contains',
+		'floor',
+		'normalize-space',
+		'number',
+		'round',
+		'starts-with',
+		'string',
+		'string-length',
+		'substring',
+		'substring-after',
+		'substring-before',
+		'sum',
+		'translate'
+	];
 	protected $xpath;
 	public function __construct()
 	{
@@ -8133,11 +8150,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	{
 		return (\is_string($value) || \is_integer($value) || \is_float($value));
 	}
-	protected function containsUnsupportedExpression($expr)
-	{
-		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
-		return (bool) \preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()i', $expr);
-	}
 	protected function evaluate($expr)
 	{
 		$useErrors = \libxml_use_internal_errors(\true);
@@ -8148,7 +8160,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	protected function foldConstantXPathExpression(array $m)
 	{
 		$expr = $m[0];
-		if (!$this->containsUnsupportedExpression($expr))
+		if ($this->isConstantExpression($expr))
 		{
 			$result = $this->evaluate($expr);
 			if ($this->canBeSerialized($result))
@@ -8159,6 +8171,14 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 			}
 		}
 		return $expr;
+	}
+	protected function isConstantExpression($expr)
+	{
+		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
+		\preg_match_all('(\\w[-\\w]+(?=\\())', $expr, $m);
+		if (\count(\array_diff($m[0], $this->supportedFunctions)) > 0)
+			return \false;
+		return !\preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\())i', $expr);
 	}
 }
 
