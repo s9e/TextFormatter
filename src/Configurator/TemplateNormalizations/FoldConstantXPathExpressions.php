@@ -14,6 +14,27 @@ use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class FoldConstantXPathExpressions extends AbstractConstantFolding
 {
 	/**
+	* @var string[] List of supported XPath functions
+	*/
+	protected $supportedFunctions = [
+		'ceiling',
+		'concat',
+		'contains',
+		'floor',
+		'normalize-space',
+		'number',
+		'round',
+		'starts-with',
+		'string',
+		'string-length',
+		'substring',
+		'substring-after',
+		'substring-before',
+		'sum',
+		'translate'
+	];
+
+	/**
 	* @var DOMXPath
 	*/
 	protected $xpath;
@@ -48,26 +69,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	}
 
 	/**
-	* Test whether given string contains an unsupported expression
-	*
-	* Will test for keywords, nodes and node functions as well as a few unsupported functions
-	* such as format-number()
-	*
-	* @link https://www.w3.org/TR/xpath/#section-Node-Set-Functions
-	* @link https://www.w3.org/TR/xslt#add-func
-	*
-	* @param  string $expr
-	* @return bool
-	*/
-	protected function containsUnsupportedExpression($expr)
-	{
-		// Remove strings to avoid false-positives
-		$expr = preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
-
-		return (bool) preg_match('([a-z](?![a-z\\(])|(?:comment|text|processing-instruction|node|last|position|count|id|local-name|namespace-uri|name|document|key|format-number|current|unparsed-entity-uri|generate-id|system-property)\\()i', $expr);
-	}
-
-	/**
 	* Evaluate given expression without raising any warnings
 	*
 	* @param  string $expr
@@ -91,7 +92,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	protected function foldConstantXPathExpression(array $m)
 	{
 		$expr = $m[0];
-		if (!$this->containsUnsupportedExpression($expr))
+		if ($this->isConstantExpression($expr))
 		{
 			$result = $this->evaluate($expr);
 			if ($this->canBeSerialized($result))
@@ -105,5 +106,27 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		}
 
 		return $expr;
+	}
+
+	/**
+	* Test whether given expression seems to be constant
+	*
+	* @param  string $expr
+	* @return bool
+	*/
+	protected function isConstantExpression($expr)
+	{
+		// Remove strings to avoid false-positives
+		$expr = preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
+
+		// Match function calls against the list of supported functions
+		preg_match_all('(\\w[-\\w]+(?=\\())', $expr, $m);
+		if (count(array_diff($m[0], $this->supportedFunctions)) > 0)
+		{
+			return false;
+		}
+
+		// Match unsupported characters and keywords
+		return !preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\())i', $expr);
 	}
 }

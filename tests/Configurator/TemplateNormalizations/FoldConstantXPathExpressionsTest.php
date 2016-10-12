@@ -68,8 +68,20 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:value-of select="1 and 1"/>'
 			],
 			[
-				'<xsl:value-of select="translate(\'document()\',\'d\',\'D\')"/>',
-				'<xsl:value-of select="\'Document()\'"/>'
+				'<xsl:value-of select="5 div 0"/>',
+				'<xsl:value-of select="5 div 0"/>'
+			],
+			[
+				"<xsl:value-of select=\"translate('document()','d','D')\"/>",
+				"<xsl:value-of select=\"'Document()'\"/>"
+			],
+			[
+				"<xsl:value-of select=\"translate('concat()','c','C')\"/>",
+				"<xsl:value-of select=\"'ConCat()'\"/>"
+			],
+			[
+				"<xsl:value-of select=\"substring-after('foobar', 'foo')\"/>",
+				"<xsl:value-of select=\"'bar'\"/>"
 			],
 		];
 	}
