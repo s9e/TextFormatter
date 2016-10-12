@@ -93,6 +93,11 @@ class ParserTest extends Test
 				}
 			],
 			[
+				// :cooking: is set as an alias to :egg: in gemoji
+				':cooking:',
+				'<r><EMOJI seq="1f373">:cooking:</EMOJI></r>'
+			],
+			[
 				'🇯🇵',
 				'<r><EMOJI seq="1f1ef-1f1f5">&#127471;&#127477;</EMOJI></r>'
 			],

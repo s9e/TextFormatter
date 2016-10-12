@@ -3,6 +3,14 @@
 
 $version = 'latest';
 $map = [];
+$images = [];
+
+$url = 'https://raw.githubusercontent.com/Ranks/emojione/master/emoji.json';
+foreach (json_decode(wget($url, 'emojione-')) as $alias => $entry)
+{
+	$map[$alias] = $entry->unicode;
+	$images[$entry->unicode] = 1;
+}
 
 $url = 'https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json';
 foreach (json_decode(wget($url, 'gemoji-')) as $entry)
@@ -11,18 +19,18 @@ foreach (json_decode(wget($url, 'gemoji-')) as $entry)
 	{
 		continue;
 	}
-	$utf8 = str_replace("\xEF\xB8\x8F", '', $entry->emoji);
-	$seq  = utf8ToSeq($utf8);
+	$seq = utf8ToSeq($entry->emoji);
+	if (!isset($images[$seq]))
+	{
+		continue;
+	}
 	foreach ($entry->aliases as $alias)
 	{
-		$map[$alias] = $seq;
+		if (!isset($map[$alias]))
+		{
+			$map[$alias] = $seq;
+		}
 	}
-}
-
-$url = 'https://raw.githubusercontent.com/Ranks/emojione/master/emoji.json';
-foreach (json_decode(wget($url, 'emojione-')) as $alias => $entry)
-{
-	$map[$alias] = $entry->unicode;
 }
 
 $url = 'http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt';
