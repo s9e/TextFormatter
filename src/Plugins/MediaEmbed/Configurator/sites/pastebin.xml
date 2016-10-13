@@ -2,7 +2,7 @@
 	<example>http://pastebin.com/9jEf44nc</example>
 
 	<host>pastebin.com</host>
-	<extract>@pastebin\.com/(?!u/)(?:\w+\.php\?i=)?(?'id'\w+)@</extract>
+	<extract>@pastebin\.com/(?!u/)(?:\w+(?:\.php\?i=|/))?(?'id'\w+)@</extract>
 	<iframe width="100%" height="300" src="//pastebin.com/embed_iframe.php?i={@id}" scrolling="">
 		<style resize="vertical"/>
 	</iframe>

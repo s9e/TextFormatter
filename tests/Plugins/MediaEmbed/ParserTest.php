@@ -2512,6 +2512,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://pastebin.com/raw/9jEf44nc',
+				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/raw/9jEf44nc">http://pastebin.com/raw/9jEf44nc</PASTEBIN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pastebin');
+				}
+			],
+			[
 				'http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that',
 				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that">http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
 				[],
