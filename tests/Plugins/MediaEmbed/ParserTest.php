@@ -636,16 +636,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('brightcove');
 				}
 			],
-			[
-				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
+//			[
+//				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
+//				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('comedycentral');
+//				}
+//			],
 			[
 				'http://m.democracynow.org/stories/15236',
 				'<r><DEMOCRACYNOW id="2015/5/22/neil_young_premieres_new_anti_gmo" url="http://m.democracynow.org/stories/15236">http://m.democracynow.org/stories/15236</DEMOCRACYNOW></r>',
@@ -1305,16 +1305,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('cbsnews');
 				}
 			],
-			[
-				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('comedycentral');
-				}
-			],
+//			[
+//				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
+//				'<div data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('comedycentral');
+//				}
+//			],
 //			[
 //				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
 //				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2954127?embed=1&amp;suppressBumper=1"></iframe></div></div>',
