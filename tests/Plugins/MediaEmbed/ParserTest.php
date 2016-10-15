@@ -2422,6 +2422,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834',
+				'<r><NBCNEWS id="785193027834" url="http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834">http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</NBCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nbcnews');
+				}
+			],
+			[
+				'http://www.nbcnews.com/widget/video-embed/785160259969',
+				'<r><NBCNEWS id="785160259969" url="http://www.nbcnews.com/widget/video-embed/785160259969">http://www.nbcnews.com/widget/video-embed/785160259969</NBCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nbcnews');
+				}
+			],
+			[
 				'http://video.predators.nhl.com/videocenter/?id=783382',
 				'<r><NHL id="783382" url="http://video.predators.nhl.com/videocenter/?id=783382">http://video.predators.nhl.com/videocenter/?id=783382</NHL></r>',
 				[],

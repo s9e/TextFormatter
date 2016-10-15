@@ -1,0 +1,9 @@
+<site name="NBC News" homepage="http://www.nbcnews.com/video/">
+	<example>http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</example>
+
+	<tags><tag>news</tag></tags>
+
+	<host>nbcnews.com</host>
+	<extract>!nbcnews\.com/(?:widget/video-embed/|video/[-\w]+?-)(?'id'\d+)!</extract>
+	<iframe src="//www.nbcnews.com/widget/video-embed/{@id}"/>
+</site>

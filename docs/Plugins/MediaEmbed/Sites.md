@@ -327,6 +327,11 @@
 		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
 	</tr>
 	<tr>
+		<td><code>nbcnews</code></td>
+		<td>NBC News</td>
+		<td>http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</td>
+	</tr>
+	<tr>
 		<td><code>nbcsports</code></td>
 		<td>NBC Sports</td>
 		<td>http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</td>
