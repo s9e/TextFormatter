@@ -3074,6 +3074,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b',
+				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b" url="https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b">https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b</WASHINGTONPOST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('washingtonpost');
+				}
+			],
+			[
+				'http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html',
+				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b" url="http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html">http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</WASHINGTONPOST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('washingtonpost');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/featured/71630',
 				'<r><WSHH id="71630" url="http://www.worldstarhiphop.com/featured/71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],

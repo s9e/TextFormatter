@@ -1,0 +1,11 @@
+<site name="Washington Post Video" homepage="https://www.washingtonpost.com/video/">
+	<example>https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b</example>
+	<example>https://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</example>
+
+	<tags><tag>news</tag></tags>
+
+	<host>washingtonpost.com</host>
+	<extract>#washingtonpost\.com/video/c/\w+/(?'id'[-0-9a-f]+)#</extract>
+	<extract>#washingtonpost\.com/video/[-/\w]+/(?'id'[-0-9a-f]+)_video\.html#</extract>
+	<iframe src="//www.washingtonpost.com/video/c/embed/{@id}"/>
+</site>

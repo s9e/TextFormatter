@@ -552,6 +552,11 @@
 		<td>http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</td>
 	</tr>
 	<tr>
+		<td><code>washingtonpost</code></td>
+		<td>Washington Post Video</td>
+		<td>https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b<br/>https://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</td>
+	</tr>
+	<tr>
 		<td><code>wshh</code></td>
 		<td>WorldStarHipHop</td>
 		<td>http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>http://www.worldstarhiphop.com/featured/71630</td>
