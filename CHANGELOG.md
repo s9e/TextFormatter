@@ -1,3 +1,24 @@
+0.8.2 (2016-10-16)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/ea6e4e1fac53527769c19b81bed8aac94b59c562...de73726c19a13d17f48216ba013094b23b221a5f)
+
+### Added
+
+ - `4048a68` BBCodes: added [table], [tr], [th] and [td] to repository
+ - `1e44987` Forum bundle: added [table], [tr], [th] and [td]
+ - `90fcbce` MediaEmbed: added support for NBC News videos
+ - `de73726` MediaEmbed: added support for Washington Post Video
+ - `426e103` MediaEmbed: added support for new Pastebin URLs
+ - `fd1094a` TemplateForensics: added support for more optional end tags
+
+### Changed
+
+ - `2805fba` Emoji: updated aliases
+ - `915a281` Fatdown: disabled paragraphs inside of <td> and <th>
+ - `3b8b047` FoldConstantXPathExpressions: replaced the blacklist of unsupported functions with a whitelist of supported functions
+
+
 0.8.1 (2016-10-09)
 ==================
 
