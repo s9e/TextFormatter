@@ -31,7 +31,7 @@ class Parser extends ParserBase
 			$len = strlen($url);
 
 			// Give that tag priority over other tags such as Autolink's
-			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len, -10);
+			$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $pos, $len, -10);
 			$tag->setAttribute('url', $url);
 		}
 	}
@@ -49,7 +49,7 @@ class Parser extends ParserBase
 	*/
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		if ($tag->hasAttribute('media'))
+		if ($tag->hasAttribute('site'))
 		{
 			self::addTagFromMediaId($tag, $tagStack, $sites);
 		}
@@ -140,7 +140,7 @@ class Parser extends ParserBase
 	*/
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		$siteId = strtolower($tag->getAttribute('media'));
+		$siteId = strtolower($tag->getAttribute('site'));
 		if (in_array($siteId, $sites, true))
 		{
 			self::addSiteTag($tag, $tagStack, $siteId);

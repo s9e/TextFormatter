@@ -54,9 +54,9 @@ $knownVars['window']        = 1;
 $knownVars['hljs']        = 1;
 $knownVars['hljsLoading'] = 1;
 $knownVars['id']          = 1;
-$knownVars['media']       = 1;
 $knownVars['pok']         = 1;
 $knownVars['punycode']    = 1;
+$knownVars['site']        = 1;
 
 // Those are intentionally preserved
 $knownVars['host']   = 1;

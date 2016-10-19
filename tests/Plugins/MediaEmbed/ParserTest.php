@@ -101,7 +101,7 @@ class ParserTest extends Test
 		         ->will($this->returnValue($newTag));
 
 		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 1, 123);
-		$tag->setAttribute('media', 'foo');
+		$tag->setAttribute('site', 'foo');
 
 		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
 	}
@@ -556,6 +556,22 @@ class ParserTest extends Test
 							'host'    => 'example.com',
 							'extract' => '!example\\.com/(?<id>\\d+)!',
 							'iframe'  => ['src' => '//localhost/embed/{@id}']
+						]
+					);
+				}
+			],
+			[
+				'[video]http://example.org/123[/video]',
+				'<r><EXAMPLE id="123" url="http://example.org/123">[video]http://example.org/123[/video]</EXAMPLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->plugins->load('MediaEmbed', ['tagName' => 'video'])->add(
+						'example',
+						[
+							'host'    => 'example.org',
+							'extract' => "/(?'id'\\d+)/",
+							'iframe'  => ['src' => '//localhost']
 						]
 					);
 				}

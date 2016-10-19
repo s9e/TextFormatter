@@ -60,6 +60,11 @@ class Configurator extends ConfiguratorBase
 	public $defaultSites;
 
 	/**
+	* @var string Name of the tag used to handle embeddable URLs
+	*/
+	protected $tagName = 'MEDIA';
+
+	/**
 	* @var TemplateBuilder
 	*/
 	protected $templateBuilder;
@@ -76,11 +81,11 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
 
 		// Create a MEDIA tag
-		$tag = $this->configurator->tags->add('MEDIA');
+		$tag = $this->configurator->tags->add($this->tagName);
 
 		// This tag should not need to be closed and should not contain itself
 		$tag->rules->autoClose();
-		$tag->rules->denyChild('MEDIA');
+		$tag->rules->denyChild($this->tagName);
 
 		// Empty this tag's filter chain and add our tag filter
 		$tag->filterChain->clear();
@@ -93,7 +98,13 @@ class Configurator extends ConfiguratorBase
 		// Create a [MEDIA] BBCode if applicable
 		if ($this->createMediaBBCode)
 		{
-			$this->configurator->BBCodes->set('MEDIA', ['contentAttributes' => ['url']]);
+			$this->configurator->BBCodes->set(
+				$this->tagName,
+				[
+					'contentAttributes' => ['url'],
+					'defaultAttribute'  => 'site'
+				]
+			);
 		}
 
 		if (!isset($this->defaultSites))
@@ -123,7 +134,8 @@ class Configurator extends ConfiguratorBase
 
 		return [
 			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si'
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si',
+			'tagName'    => $this->tagName
 		];
 	}
 
@@ -158,7 +170,7 @@ class Configurator extends ConfiguratorBase
 		// This tag should not need to be closed and should not contain itself or the MEDIA tag
 		$tag->rules->autoClose();
 		$tag->rules->denyChild($siteId);
-		$tag->rules->denyChild('MEDIA');
+		$tag->rules->denyChild($this->tagName);
 
 		// Store attributes' configuration, starting with a default "url" attribute to store the
 		// original URL if applicable
