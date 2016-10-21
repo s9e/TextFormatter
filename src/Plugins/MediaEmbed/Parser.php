@@ -20,13 +20,13 @@ class Parser extends ParserBase
 			$url = $m[0][0];
 			$pos = $m[0][1];
 			$len = \strlen($url);
-			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len, -10);
+			$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $pos, $len, -10);
 			$tag->setAttribute('url', $url);
 		}
 	}
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		if ($tag->hasAttribute('media'))
+		if ($tag->hasAttribute('site'))
 			self::addTagFromMediaId($tag, $tagStack, $sites);
 		elseif ($tag->hasAttribute('url'))
 			self::addTagFromMediaUrl($tag, $tagStack, $sites);
@@ -59,7 +59,7 @@ class Parser extends ParserBase
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		$siteId = \strtolower($tag->getAttribute('media'));
+		$siteId = \strtolower($tag->getAttribute('site'));
 		if (\in_array($siteId, $sites, \true))
 			self::addSiteTag($tag, $tagStack, $siteId);
 	}

@@ -29,14 +29,15 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;
 	public $defaultSites;
+	protected $tagName = 'MEDIA';
 	protected $templateBuilder;
 	protected function setUp()
 	{
 		$this->collection = new SiteCollection;
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
-		$tag = $this->configurator->tags->add('MEDIA');
+		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->rules->autoClose();
-		$tag->rules->denyChild('MEDIA');
+		$tag->rules->denyChild($this->tagName);
 		$tag->filterChain->clear();
 		$tag->filterChain
 		    ->append(array(__NAMESPACE__ . '\\Parser', 'filterTag'))
@@ -44,7 +45,13 @@ class Configurator extends ConfiguratorBase
 		    ->addParameterByName('mediasites')
 		    ->setJS(\file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 		if ($this->createMediaBBCode)
-			$this->configurator->BBCodes->set('MEDIA', array('contentAttributes' => array('url')));
+			$this->configurator->BBCodes->set(
+				$this->tagName,
+				array(
+					'contentAttributes' => array('url'),
+					'defaultAttribute'  => 'site'
+				)
+			);
 		if (!isset($this->defaultSites))
 			$this->defaultSites = new CachedDefinitionCollection;
 		$this->templateBuilder = new TemplateBuilder;
@@ -59,7 +66,8 @@ class Configurator extends ConfiguratorBase
 			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		return array(
 			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si'
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si',
+			'tagName'    => $this->tagName
 		);
 	}
 	public function add($siteId, array $siteConfig = \null)
@@ -71,7 +79,7 @@ class Configurator extends ConfiguratorBase
 		$tag = new Tag;
 		$tag->rules->autoClose();
 		$tag->rules->denyChild($siteId);
-		$tag->rules->denyChild('MEDIA');
+		$tag->rules->denyChild($this->tagName);
 		$attributes = array(
 			'url' => array('type' => 'url')
 		);
