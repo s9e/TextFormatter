@@ -9,24 +9,22 @@ namespace s9e\TextFormatter\Plugins\FancyPants;
 use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
+	protected $hasDoubleQuote;
+	protected $hasSingleQuote;
 	protected $text;
 	public function parse($text, array $matches)
 	{
-		$this->text = $text;
-		$hasSingleQuote = (\strpos($text, "'") !== \false);
-		$hasDoubleQuote = (\strpos($text, '"') !== \false);
-		if ($hasSingleQuote)
-			$this->parseSingleQuotes();
-		if ($hasSingleQuote || $hasDoubleQuote || \strpos($text, 'x') !== \false)
-			$this->parseSymbolsAfterDigits();
-		if ($hasSingleQuote)
-			$this->parseSingleQuotePairs();
-		if ($hasDoubleQuote)
-			$this->parseDoubleQuotePairs();
-		if (\strpos($text, '...') !== \false || \strpos($text, '--')  !== \false)
-			$this->parseDashesAndEllipses();
-		if (\strpos($text, '(') !== \false)
-			$this->parseSymbolsInParentheses();
+		$this->text           = $text;
+		$this->hasSingleQuote = (\strpos($text, "'") !== \false);
+		$this->hasDoubleQuote = (\strpos($text, '"') !== \false);
+		$this->parseSingleQuotes();
+		$this->parseSymbolsAfterDigits();
+		$this->parseSingleQuotePairs();
+		$this->parseDoubleQuotePairs();
+		$this->parseDashesAndEllipses();
+		$this->parseSymbolsInParentheses();
+		$this->parseNotEqualSign();
+		$this->parseGuillemets();
 		unset($this->text);
 	}
 	protected function addTag($tagPos, $tagLen, $chr, $prio = 0)
@@ -37,6 +35,8 @@ class Parser extends ParserBase
 	}
 	protected function parseDashesAndEllipses()
 	{
+		if (\strpos($this->text, '...') === \false && \strpos($this->text, '--') === \false)
+			return;
 		$chrs = [
 			'--'  => "\xE2\x80\x93",
 			'---' => "\xE2\x80\x94",
@@ -49,11 +49,34 @@ class Parser extends ParserBase
 	}
 	protected function parseDoubleQuotePairs()
 	{
-		$this->parseQuotePairs(
-			'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS',
-			"\xE2\x80\x9C",
-			"\xE2\x80\x9D"
-		);
+		if ($this->hasDoubleQuote)
+			$this->parseQuotePairs(
+				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS',
+				"\xE2\x80\x9C",
+				"\xE2\x80\x9D"
+			);
+	}
+	protected function parseGuillemets()
+	{
+		if (\strpos($this->text, '<<') === \false)
+			return;
+		$regexp = '/<<( ?)(?! )[^\\n<>]*?[^\\n <>]\\1>>(?!>)/';
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
+		foreach ($matches[0] as $m)
+		{
+			$left  = $this->addTag($m[1],                     2, "\xC2\xAB");
+			$right = $this->addTag($m[1] + \strlen($m[0]) - 2, 2, "\xC2\xBB");
+			$left->cascadeInvalidationTo($right);
+		}
+	}
+	protected function parseNotEqualSign()
+	{
+		if (\strpos($this->text, '!=') === \false)
+			return;
+		$regexp = '/\\b !=(?= \\b)/';
+		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
+		foreach ($matches[0] as $m)
+			$this->addTag($m[1] + 1, 2, "\xE2\x89\xA0");
 	}
 	protected function parseQuotePairs($regexp, $leftQuote, $rightQuote)
 	{
@@ -67,14 +90,17 @@ class Parser extends ParserBase
 	}
 	protected function parseSingleQuotePairs()
 	{
-		$this->parseQuotePairs(
-			"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS",
-			"\xE2\x80\x98",
-			"\xE2\x80\x99"
-		);
+		if ($this->hasSingleQuote)
+			$this->parseQuotePairs(
+				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS",
+				"\xE2\x80\x98",
+				"\xE2\x80\x99"
+			);
 	}
 	protected function parseSingleQuotes()
 	{
+		if (!$this->hasSingleQuote)
+			return;
 		$regexp = "/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS";
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
@@ -82,25 +108,32 @@ class Parser extends ParserBase
 	}
 	protected function parseSymbolsAfterDigits()
 	{
-		$regexp = '/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S';
+		if (!$this->hasSingleQuote && !$this->hasDoubleQuote && \strpos($this->text, 'x') === \false)
+			return;
+		$map = [
+			"'s" => "\xE2\x80\x99",
+			"'"  => "\xE2\x80\xB2",
+			"' " => "\xE2\x80\xB2",
+			"'x" => "\xE2\x80\xB2",
+			'"'  => "\xE2\x80\xB3",
+			'" ' => "\xE2\x80\xB3",
+			'"x' => "\xE2\x80\xB3"
+		];
+		$regexp = "/[0-9](?>'s|[\"']? ?x(?= ?[0-9])|[\"'])/S";
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
 			if (\substr($m[0], -1) === 'x')
 				$this->addTag($m[1] + \strlen($m[0]) - 1, 1, "\xC3\x97");
-			$c = $m[0][1];
-			if ($c === "'" || $c === '"')
-			{
-				if (\substr($m[0], 1, 2) === "'s")
-					$chr = "\xE2\x80\x99";
-				else
-					$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
-				$this->addTag($m[1] + 1, 1, $chr);
-			}
+			$str = \substr($m[0], 1, 2);
+			if (isset($map[$str]))
+				$this->addTag($m[1] + 1, 1, $map[$str]);
 		}
 	}
 	protected function parseSymbolsInParentheses()
 	{
+		if (\strpos($this->text, '(') === \false)
+			return;
 		$chrs = [
 			'(c)'  => "\xC2\xA9",
 			'(r)'  => "\xC2\xAE",

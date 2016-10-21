@@ -1,42 +1,14 @@
 var hasSingleQuote = (text.indexOf("'") >= 0),
 	hasDoubleQuote = (text.indexOf('"') >= 0);
 
-// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
-if (hasSingleQuote)
-{
-	parseSingleQuotes(text);
-}
-
-// Do symbols found after a digit:
-//  - apostrophe ’ if it's followed by an "s" as in 80's
-//  - prime ′ and double prime ″
-//  - multiply sign × if it's followed by an optional space and another digit
-if (hasSingleQuote || hasDoubleQuote || text.indexOf('x') >= 0)
-{
-	parseSymbolsAfterDigits(text);
-}
-
-// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
-if (hasSingleQuote)
-{
-	parseSingleQuotePairs();
-}
-if (hasDoubleQuote)
-{
-	parseDoubleQuotePairs();
-}
-
-// Do en dash –, em dash — and ellipsis …
-if (text.indexOf('...') >= 0 || text.indexOf('--')  >= 0)
-{
-	parseDashesAndEllipses();
-}
-
-// Do symbols ©, ® and ™
-if (text.indexOf('(') >= 0)
-{
-	parseSymbolsInParentheses();
-}
+parseSingleQuotes();
+parseSymbolsAfterDigits();
+parseSingleQuotePairs();
+parseDoubleQuotePairs();
+parseDashesAndEllipses();
+parseSymbolsInParentheses();
+parseNotEqualSign();
+parseGuillemets();
 
 /**
 * Add a fancy replacement tag
@@ -57,9 +29,16 @@ function addTag(tagPos, tagLen, chr, prio)
 
 /**
 * Parse dashes and ellipses
+*
+* Does en dash –, em dash — and ellipsis …
 */
 function parseDashesAndEllipses()
 {
+	if (text.indexOf('...') < 0 && text.indexOf('--') < 0)
+	{
+		return;
+	}
+
 	var chrs = {
 			'--'  : "\u2013",
 			'---' : "\u2014",
@@ -75,10 +54,52 @@ function parseDashesAndEllipses()
 
 /**
 * Parse pairs of double quotes
+*
+* Does quote pairs “” -- must be done separately to handle nesting
 */
 function parseDoubleQuotePairs()
 {
-	parseQuotePairs('"', /(?:^|\W)".+?"(?!\w)/g, "\u201c", "\u201d");
+	if (hasDoubleQuote)
+	{
+		parseQuotePairs('"', /(?:^|\W)".+?"(?!\w)/g, "\u201c", "\u201d");
+	}
+}
+
+/**
+* Parse guillemets-style quotation marks
+*/
+function parseGuillemets()
+{
+	if (text.indexOf('<<') < 0)
+	{
+		return;
+	}
+
+	var m, regexp = /<<( ?)(?! )[^\n<>]*?[^\n <>]\1>>(?!>)/g;
+	while (m = regexp.exec(text))
+	{
+		var left  = addTag(+m['index'],                   2, "\u00AB"),
+			right = addTag(+m['index'] + m[0].length - 2, 2, "\u00BB");
+
+		left.cascadeInvalidationTo(right);
+	}
+}
+
+/**
+* Parse the not equal sign
+*/
+function parseNotEqualSign()
+{
+	if (text.indexOf('!=') < 0)
+	{
+		return;
+	}
+
+	var m, regexp = /\b !=(?= \b)/g;
+	while (m = regexp.exec(text))
+	{
+		addTag(+m['index'] + 1, 2, "\u2260");
+	}
 }
 
 /**
@@ -98,24 +119,36 @@ function parseQuotePairs(q, regexp, leftQuote, rightQuote)
 			right = addTag(+m['index'] + m[0].length - 1, 1, rightQuote);
 
 		// Cascade left tag's invalidation to the right so that if we skip the left quote,
-		// the right quote is left untouched
+		// the right quote remains untouched
 		left.cascadeInvalidationTo(right);
 	}
 }
 
 /**
 * Parse pairs of single quotes
+*
+* Does quote pairs ‘’ must be done separately to handle nesting
 */
 function parseSingleQuotePairs()
 {
-	parseQuotePairs("'", /(?:^|\W)'.+?'(?!\w)/g, "\u2018", "\u2019");
+	if (hasSingleQuote)
+	{
+		parseQuotePairs("'", /(?:^|\W)'.+?'(?!\w)/g, "\u2018", "\u2019");
+	}
 }
 
 /**
 * Parse single quotes in general
+*
+* Does apostrophes ’ after a letter or at the beginning of a word or a couple of digits
 */
-function parseSingleQuotes(text)
+function parseSingleQuotes()
 {
+	if (!hasSingleQuote)
+	{
+		return;
+	}
+
 	var m, regexp = /[a-z]'|(?:^|\s)'(?=[a-z]|[0-9]{2})/gi;
 	while (m = regexp.exec(text))
 	{
@@ -126,10 +159,33 @@ function parseSingleQuotes(text)
 
 /**
 * Parse symbols found after digits
+*
+* Does symbols found after a digit:
+*  - apostrophe ’ if it's followed by an "s" as in 80's
+*  - prime ′ and double prime ″
+*  - multiply sign × if it's followed by an optional space and another digit
 */
-function parseSymbolsAfterDigits(text)
+function parseSymbolsAfterDigits()
 {
-	var c, chr, m, regexp = /[0-9](?:'s|["']? ?x(?= ?[0-9])|["'])/g;
+	if (!hasSingleQuote && !hasDoubleQuote && text.indexOf('x') < 0)
+	{
+		return;
+	}
+
+	/** @const */
+	var map = {
+		// 80's -- use an apostrophe
+		"'s" : "\u2019",
+		// 12' or 12" -- use a prime
+		"'"  : "\u2032",
+		"' " : "\u2032",
+		"'x" : "\u2032",
+		'"'  : "\u2033",
+		'" ' : "\u2033",
+		'"x' : "\u2033"
+	};
+
+	var m, regexp = /[0-9](?:'s|["']? ?x(?= ?[0-9])|["'])/g;
 	while (m = regexp.exec(text))
 	{
 		// Test for a multiply sign at the end
@@ -138,31 +194,27 @@ function parseSymbolsAfterDigits(text)
 			addTag(+m['index'] + m[0].length - 1, 1, "\u00d7");
 		}
 
-		// Test for a apostrophe/prime right after the digit
-		c = m[0].charAt(1);
-		if (c === "'" || c === '"')
+		// Test for an apostrophe/prime right after the digit
+		var str = m[0].substr(1, 2);
+		if (map[str])
 		{
-			if (m[0].substr(1, 2) === "'s")
-			{
-				// 80's -- use an apostrophe
-				chr = "\u2019";
-			}
-			else
-			{
-				// 12' or 12" -- use a prime
-				chr = (c === "'") ? "\u2032" : "\u2033";
-			}
-
-			addTag(+m['index'] + 1, 1, chr);
+			addTag(+m['index'] + 1, 1, map[str]);
 		}
 	}
 }
 
 /**
 * Parse symbols found in parentheses such as (c)
+*
+* Does symbols ©, ® and ™
 */
 function parseSymbolsInParentheses()
 {
+	if (text.indexOf('(') < 0)
+	{
+		return;
+	}
+
 	var chrs = {
 			'(c)'  : "\u00A9",
 			'(r)'  : "\u00AE",
