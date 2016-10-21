@@ -41,6 +41,8 @@ class Parser extends ParserBase
 		$this->parseDoubleQuotePairs();
 		$this->parseDashesAndEllipses();
 		$this->parseSymbolsInParentheses();
+		$this->parseNotEqualSign();
+		$this->parseGuillemets();
 
 		unset($this->text);
 	}
@@ -105,6 +107,49 @@ class Parser extends ParserBase
 				"\xE2\x80\x9C",
 				"\xE2\x80\x9D"
 			);
+		}
+	}
+
+	/**
+	* Parse guillemets-style quotation marks
+	*
+	* @return void
+	*/
+	protected function parseGuillemets()
+	{
+		if (strpos($this->text, '<<') === false)
+		{
+			return;
+		}
+
+		$regexp = '/<<( ?)(?! )[^\\n<>]*?[^\\n <>]\\1>>(?!>)/';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
+		foreach ($matches[0] as $m)
+		{
+			$left  = $this->addTag($m[1],                     2, "\xC2\xAB");
+			$right = $this->addTag($m[1] + strlen($m[0]) - 2, 2, "\xC2\xBB");
+
+			$left->cascadeInvalidationTo($right);
+		}
+	}
+
+	/**
+	* Parse the not equal sign
+	*
+	* @return void
+	*/
+	protected function parseNotEqualSign()
+	{
+		if (strpos($this->text, '!=') === false)
+		{
+			return;
+		}
+
+		$regexp = '/\\b !=(?= \\b)/';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
+		foreach ($matches[0] as $m)
+		{
+			$this->addTag($m[1] + 1, 2, "\xE2\x89\xA0");
 		}
 	}
 

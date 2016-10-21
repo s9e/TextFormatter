@@ -158,7 +158,23 @@ class ParserTest extends Test
 			[
 				"O'Connor's pants",
 				'<r>O<FP char="’">\'</FP>Connor<FP char="’">\'</FP>s pants</r>'
-			]
+			],
+			[
+				'apples != oranges',
+				'<r>apples <FP char="≠">!=</FP> oranges</r>'
+			],
+			[
+				'<< Voulez-vous un sandwich, Henri ? >>',
+				'<r><FP char="«">&lt;&lt;</FP> Voulez-vous un sandwich, Henri ? <FP char="»">&gt;&gt;</FP></r>'
+			],
+			[
+				'<<A>> <<A >> << A>> << A >>',
+				'<r><FP char="«">&lt;&lt;</FP>A<FP char="»">&gt;&gt;</FP> &lt;&lt;A &gt;&gt; &lt;&lt; A&gt;&gt; <FP char="«">&lt;&lt;</FP> A <FP char="»">&gt;&gt;</FP></r>'
+			],
+			[
+				"<<A\n>>",
+				"<t>&lt;&lt;A\n&gt;&gt;</t>"
+			],
 		];
 	}
 

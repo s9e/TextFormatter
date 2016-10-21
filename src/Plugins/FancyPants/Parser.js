@@ -7,6 +7,8 @@ parseSingleQuotePairs();
 parseDoubleQuotePairs();
 parseDashesAndEllipses();
 parseSymbolsInParentheses();
+parseNotEqualSign();
+parseGuillemets();
 
 /**
 * Add a fancy replacement tag
@@ -60,6 +62,43 @@ function parseDoubleQuotePairs()
 	if (hasDoubleQuote)
 	{
 		parseQuotePairs('"', /(?:^|\W)".+?"(?!\w)/g, "\u201c", "\u201d");
+	}
+}
+
+/**
+* Parse guillemets-style quotation marks
+*/
+function parseGuillemets()
+{
+	if (text.indexOf('<<') < 0)
+	{
+		return;
+	}
+
+	var m, regexp = /<<( ?)(?! )[^\n<>]*?[^\n <>]\1>>(?!>)/g;
+	while (m = regexp.exec(text))
+	{
+		var left  = addTag(+m['index'],                   2, "\u00AB"),
+			right = addTag(+m['index'] + m[0].length - 2, 2, "\u00BB");
+
+		left.cascadeInvalidationTo(right);
+	}
+}
+
+/**
+* Parse the not equal sign
+*/
+function parseNotEqualSign()
+{
+	if (text.indexOf('!=') < 0)
+	{
+		return;
+	}
+
+	var m, regexp = /\b !=(?= \b)/g;
+	while (m = regexp.exec(text))
+	{
+		addTag(+m['index'] + 1, 2, "\u2260");
 	}
 }
 
