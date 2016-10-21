@@ -12,6 +12,16 @@ use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
 	/**
+	* @var bool Whether currrent test contains a double quote character
+	*/
+	protected $hasDoubleQuote;
+
+	/**
+	* @var bool Whether currrent test contains a single quote character
+	*/
+	protected $hasSingleQuote;
+
+	/**
 	* @var string Text being parsed
 	*/
 	protected $text;
@@ -21,47 +31,16 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$this->text = $text;
+		$this->text           = $text;
+		$this->hasSingleQuote = (strpos($text, "'") !== false);
+		$this->hasDoubleQuote = (strpos($text, '"') !== false);
 
-		$hasSingleQuote = (strpos($text, "'") !== false);
-		$hasDoubleQuote = (strpos($text, '"') !== false);
-
-		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
-		if ($hasSingleQuote)
-		{
-			$this->parseSingleQuotes();
-		}
-
-		// Do symbols found after a digit:
-		//  - apostrophe ’ if it's followed by an "s" as in 80's
-		//  - prime ′ and double prime ″
-		//  - multiply sign × if it's followed by an optional space and another digit
-		if ($hasSingleQuote || $hasDoubleQuote || strpos($text, 'x') !== false)
-		{
-			$this->parseSymbolsAfterDigits();
-		}
-
-		// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
-		if ($hasSingleQuote)
-		{
-			$this->parseSingleQuotePairs();
-		}
-		if ($hasDoubleQuote)
-		{
-			$this->parseDoubleQuotePairs();
-		}
-
-		// Do en dash –, em dash — and ellipsis …
-		if (strpos($text, '...') !== false || strpos($text, '--')  !== false)
-		{
-			$this->parseDashesAndEllipses();
-		}
-
-		// Do symbols ©, ® and ™
-		if (strpos($text, '(') !== false)
-		{
-			$this->parseSymbolsInParentheses();
-		}
+		$this->parseSingleQuotes();
+		$this->parseSymbolsAfterDigits();
+		$this->parseSingleQuotePairs();
+		$this->parseDoubleQuotePairs();
+		$this->parseDashesAndEllipses();
+		$this->parseSymbolsInParentheses();
 
 		unset($this->text);
 	}
@@ -86,10 +65,17 @@ class Parser extends ParserBase
 	/**
 	* Parse dashes and ellipses
 	*
+	* Does en dash –, em dash — and ellipsis …
+	*
 	* @return void
 	*/
 	protected function parseDashesAndEllipses()
 	{
+		if (strpos($this->text, '...') === false && strpos($this->text, '--') === false)
+		{
+			return;
+		}
+
 		$chrs = [
 			'--'  => "\xE2\x80\x93",
 			'---' => "\xE2\x80\x94",
@@ -106,15 +92,20 @@ class Parser extends ParserBase
 	/**
 	* Parse pairs of double quotes
 	*
+	* Does quote pairs “” -- must be done separately to handle nesting
+	*
 	* @return void
 	*/
 	protected function parseDoubleQuotePairs()
 	{
-		$this->parseQuotePairs(
-			'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS',
-			"\xE2\x80\x9C",
-			"\xE2\x80\x9D"
-		);
+		if ($this->hasDoubleQuote)
+		{
+			$this->parseQuotePairs(
+				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS',
+				"\xE2\x80\x9C",
+				"\xE2\x80\x9D"
+			);
+		}
 	}
 
 	/**
@@ -134,7 +125,7 @@ class Parser extends ParserBase
 			$right = $this->addTag($m[1] + strlen($m[0]) - 1, 1, $rightQuote);
 
 			// Cascade left tag's invalidation to the right so that if we skip the left quote,
-			// the right quote is left untouched
+			// the right quote remains untouched
 			$left->cascadeInvalidationTo($right);
 		}
 	}
@@ -142,24 +133,36 @@ class Parser extends ParserBase
 	/**
 	* Parse pairs of single quotes
 	*
+	* Does quote pairs ‘’ must be done separately to handle nesting
+	*
 	* @return void
 	*/
 	protected function parseSingleQuotePairs()
 	{
-		$this->parseQuotePairs(
-			"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS",
-			"\xE2\x80\x98",
-			"\xE2\x80\x99"
-		);
+		if ($this->hasSingleQuote)
+		{
+			$this->parseQuotePairs(
+				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS",
+				"\xE2\x80\x98",
+				"\xE2\x80\x99"
+			);
+		}
 	}
 
 	/**
 	* Parse single quotes in general
 	*
+	* Does apostrophes ’ after a letter or at the beginning of a word or a couple of digits
+	*
 	* @return void
 	*/
 	protected function parseSingleQuotes()
 	{
+		if (!$this->hasSingleQuote)
+		{
+			return;
+		}
+
 		$regexp = "/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS";
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
@@ -172,10 +175,20 @@ class Parser extends ParserBase
 	/**
 	* Parse symbols found after digits
 	*
+	* Does symbols found after a digit:
+	*  - apostrophe ’ if it's followed by an "s" as in 80's
+	*  - prime ′ and double prime ″
+	*  - multiply sign × if it's followed by an optional space and another digit
+	*
 	* @return void
 	*/
 	protected function parseSymbolsAfterDigits()
 	{
+		if (!$this->hasSingleQuote && !$this->hasDoubleQuote && strpos($this->text, 'x') === false)
+		{
+			return;
+		}
+
 		$regexp = '/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
@@ -209,10 +222,17 @@ class Parser extends ParserBase
 	/**
 	* Parse symbols found in parentheses such as (c)
 	*
+	* Does symbols ©, ® and ™
+	*
 	* @return void
 	*/
 	protected function parseSymbolsInParentheses()
 	{
+		if (strpos($this->text, '(') === false)
+		{
+			return;
+		}
+
 		$chrs = [
 			'(c)'  => "\xC2\xA9",
 			'(r)'  => "\xC2\xAE",
