@@ -172,7 +172,20 @@ function parseSymbolsAfterDigits()
 		return;
 	}
 
-	var c, chr, m, regexp = /[0-9](?:'s|["']? ?x(?= ?[0-9])|["'])/g;
+	/** @const */
+	var map = {
+		// 80's -- use an apostrophe
+		"'s" : "\u2019",
+		// 12' or 12" -- use a prime
+		"'"  : "\u2032",
+		"' " : "\u2032",
+		"'x" : "\u2032",
+		'"'  : "\u2033",
+		'" ' : "\u2033",
+		'"x' : "\u2033"
+	};
+
+	var m, regexp = /[0-9](?:'s|["']? ?x(?= ?[0-9])|["'])/g;
 	while (m = regexp.exec(text))
 	{
 		// Test for a multiply sign at the end
@@ -181,22 +194,11 @@ function parseSymbolsAfterDigits()
 			addTag(+m['index'] + m[0].length - 1, 1, "\u00d7");
 		}
 
-		// Test for a apostrophe/prime right after the digit
-		c = m[0].charAt(1);
-		if (c === "'" || c === '"')
+		// Test for an apostrophe/prime right after the digit
+		var str = m[0].substr(1, 2);
+		if (map[str])
 		{
-			if (m[0].substr(1, 2) === "'s")
-			{
-				// 80's -- use an apostrophe
-				chr = "\u2019";
-			}
-			else
-			{
-				// 12' or 12" -- use a prime
-				chr = (c === "'") ? "\u2032" : "\u2033";
-			}
-
-			addTag(+m['index'] + 1, 1, chr);
+			addTag(+m['index'] + 1, 1, map[str]);
 		}
 	}
 }

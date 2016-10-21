@@ -234,7 +234,19 @@ class Parser extends ParserBase
 			return;
 		}
 
-		$regexp = '/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S';
+		$map = [
+			// 80's -- use an apostrophe
+			"'s" => "\xE2\x80\x99",
+			// 12' or 12" -- use a prime
+			"'"  => "\xE2\x80\xB2",
+			"' " => "\xE2\x80\xB2",
+			"'x" => "\xE2\x80\xB2",
+			'"'  => "\xE2\x80\xB3",
+			'" ' => "\xE2\x80\xB3",
+			'"x' => "\xE2\x80\xB3"
+		];
+
+		$regexp = "/[0-9](?>'s|[\"']? ?x(?= ?[0-9])|[\"'])/S";
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
@@ -244,22 +256,11 @@ class Parser extends ParserBase
 				$this->addTag($m[1] + strlen($m[0]) - 1, 1, "\xC3\x97");
 			}
 
-			// Test for a apostrophe/prime right after the digit
-			$c = $m[0][1];
-			if ($c === "'" || $c === '"')
+			// Test for an apostrophe/prime right after the digit
+			$str = substr($m[0], 1, 2);
+			if (isset($map[$str]))
 			{
-				if (substr($m[0], 1, 2) === "'s")
-				{
-					// 80's -- use an apostrophe
-					$chr = "\xE2\x80\x99";
-				}
-				else
-				{
-					// 12' or 12" -- use a prime
-					$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
-				}
-
-				$this->addTag($m[1] + 1, 1, $chr);
+				$this->addTag($m[1] + 1, 1, $map[$str]);
 			}
 		}
 	}
