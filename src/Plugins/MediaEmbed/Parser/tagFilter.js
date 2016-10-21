@@ -31,7 +31,7 @@ function (tag, sites)
 	*/
 	function filterTag(tag, sites)
 	{
-		if (tag.hasAttribute('media'))
+		if (tag.hasAttribute('site'))
 		{
 			addTagFromMediaId(tag, sites);
 		}
@@ -69,7 +69,7 @@ function (tag, sites)
 	*/
 	function addTagFromMediaId(tag, sites)
 	{
-		var siteId = tag.getAttribute('media').toLowerCase();
+		var siteId = tag.getAttribute('site').toLowerCase();
 		if (in_array(siteId, sites))
 		{
 			addSiteTag(tag, siteId);
