@@ -143,6 +143,16 @@ class HelperTest extends Test
 		);
 	}
 
+	public function testCensorHtmlQuotes()
+	{
+		$this->configurator->Censor->add('pineapple') ;
+
+		$this->assertSame(
+			'You dirty "****"',
+			$this->configurator->Censor->getHelper()->censorHtml('You dirty "pineapple"')
+		);
+	}
+
 	/**
 	* @testdox censorText() censors plain text
 	*/
