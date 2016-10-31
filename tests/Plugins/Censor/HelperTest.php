@@ -104,6 +104,34 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() replaces text in quotes in text nodes and in attribute values
+	*/
+	public function testCensorHtmlTextInQuotesAndAttributes()
+	{
+		$this->configurator->Censor->add('title') ;
+		$html = '<span title="title">title "title"</span>';
+
+		$this->assertSame(
+			'<span title="****">**** "****"</span>',
+			$this->configurator->Censor->getHelper()->censorHtml($html, true)
+		);
+	}
+
+	/**
+	* @testdox censorHtml() replaces text in quotes in text nodes without replacing attribute values
+	*/
+	public function testCensorHtmlTextInQuotesNoAttributes()
+	{
+		$this->configurator->Censor->add('title') ;
+		$html = '<span title="title">title "title"</span>';
+
+		$this->assertSame(
+			'<span title="title">**** "****"</span>',
+			$this->configurator->Censor->getHelper()->censorHtml($html, false)
+		);
+	}
+
+	/**
 	* @testdox censorHtml() does not replace HTML entities
 	*/
 	public function testCensorHtmlEntities()
@@ -274,7 +302,22 @@ class HelperTest extends Test
 	}
 
 	/**
-	* @testdox reparse() replace the "pt" root node with "rt" if a new match is found
+	* @testdox reparse() replaces text in quotes
+	*/
+	public function testReparseInQuotes()
+	{
+		$this->configurator->Censor->add('bar', 'baz');
+
+		$xml = '<r>foo "bar" baz</r>';
+
+		$this->assertSame(
+			'<r>foo "<CENSOR with="baz">bar</CENSOR>" baz</r>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
+	* @testdox reparse() replace the "t" root node with "r" if a new match is found
 	*/
 	public function testReparseNewRoot()
 	{

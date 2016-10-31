@@ -2182,6 +2182,8 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() does not replace HTML attribute names
  [x] censorHtml() does not replace HTML attribute values by default
  [x] censorHtml() replaces HTML attribute values if its second argument is true
+ [x] censorHtml() replaces text in quotes in text nodes and in attribute values
+ [x] censorHtml() replaces text in quotes in text nodes without replacing attribute values
  [x] censorHtml() does not replace HTML entities
  [x] censorHtml() does not replace HTML numeric entities
  [x] censorHtml() ignores words on the allowed list
@@ -2194,7 +2196,8 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] reparse() uses replacements in new tags
  [x] reparse() escapes replacements
  [x] reparse() does not escape single quotes in replacements
- [x] reparse() replace the "pt" root node with "rt" if a new match is found
+ [x] reparse() replaces text in quotes
+ [x] reparse() replace the "t" root node with "r" if a new match is found
  [x] reparse() does not replace tag names
  [x] reparse() does not replace attribute names
  [x] reparse() does not replace attribute values

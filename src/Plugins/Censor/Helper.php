@@ -66,7 +66,7 @@ class Helper
 		$attributesExpr = '';
 		if ($censorAttributes)
 		{
-			$attributesExpr = '|"(?> [-\\w]+="[^"]*")*\\/?>';
+			$attributesExpr = '|[^<">]*+(?=<|$|"(?> [-\\w]+="[^"]*+")*+\\/?>)';
 		}
 
 		// Modify the original regexp so that it only matches text nodes and optionally attribute
@@ -76,7 +76,7 @@ class Helper
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
 		        . substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*(?=<|$' . $attributesExpr . '))'
+		        . '(?=[^<>]*+(?=<|$)' . $attributesExpr . ')'
 		        . substr($this->regexp, $pos);
 
 		return preg_replace_callback(
@@ -158,7 +158,7 @@ class Helper
 		$regexp = $delim
 		        . '(?<!&)'
 		        . substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*<(?!\\/(?-i)' . $this->tagName . '>))'
+		        . '(?=[^<>]*+<(?!\\/(?-i)' . $this->tagName . '>))'
 		        . substr($this->regexp, $pos);
 
 		$xml = preg_replace_callback(
