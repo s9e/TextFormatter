@@ -76,7 +76,7 @@ class Helper
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
 		        . substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*(?=<|$' . $attributesExpr . '))'
+		        . '(?=[^<>]*(?=<|$' . $attributesExpr . '))'
 		        . substr($this->regexp, $pos);
 
 		return preg_replace_callback(
