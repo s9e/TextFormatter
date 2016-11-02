@@ -24,13 +24,13 @@ class Helper
 		$_this = $this;
 		$attributesExpr = '';
 		if ($censorAttributes)
-			$attributesExpr = '|"(?> [-\\w]+="[^"]*")*\\/?>';
+			$attributesExpr = '|[^<">]*+(?=<|$|"(?> [-\\w]+="[^"]*+")*+\\/?>)';
 		$delim  = $this->regexp[0];
 		$pos    = \strrpos($this->regexp, $delim);
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
 		        . \substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*(?=<|$' . $attributesExpr . '))'
+		        . '(?=[^<>]*+(?=<|$)' . $attributesExpr . ')'
 		        . \substr($this->regexp, $pos);
 		return \preg_replace_callback(
 			$regexp,
@@ -76,7 +76,7 @@ class Helper
 		$regexp = $delim
 		        . '(?<!&)'
 		        . \substr($this->regexp, 1, $pos - 1)
-		        . '(?=[^<">]*<(?!\\/(?-i)' . $this->tagName . '>))'
+		        . '(?=[^<>]*+<(?!\\/(?-i)' . $this->tagName . '>))'
 		        . \substr($this->regexp, $pos);
 		$xml = \preg_replace_callback(
 			$regexp,
