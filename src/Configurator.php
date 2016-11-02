@@ -3550,7 +3550,7 @@ class Quick
 		if ($phpRenderings === \false)
 			return \false;
 		foreach ($phpRenderings as $i => $phpRendering)
-			if (!isset($renderings[$i]) || $renderings[$i] === \false)
+			if (!isset($renderings[$i]) || $renderings[$i] === \false || \strpos($phpRendering, 'self::$attributes[]') !== \false)
 				$renderings[$i] = ['php', $phpRendering];
 		return $renderings;
 	}
@@ -3688,6 +3688,8 @@ class Quick
 		}
 		if ($saveAttributes)
 		{
+			if (\strpos($head, '$html') === \false)
+				$head .= "\$html='';";
 			$head .= 'self::$attributes[]=$attributes;';
 			$tail  = '$attributes=array_pop(self::$attributes);' . $tail;
 		}

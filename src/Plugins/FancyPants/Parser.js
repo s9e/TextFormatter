@@ -1,5 +1,7 @@
-var hasSingleQuote = (text.indexOf("'") >= 0),
-	hasDoubleQuote = (text.indexOf('"') >= 0);
+var attrName       = config.attrName,
+	hasSingleQuote = (text.indexOf("'") >= 0),
+	hasDoubleQuote = (text.indexOf('"') >= 0),
+	tagName        = config.tagName;
 
 parseSingleQuotes();
 parseSymbolsAfterDigits();
@@ -21,8 +23,8 @@ parseGuillemets();
 */
 function addTag(tagPos, tagLen, chr, prio)
 {
-	var tag = addSelfClosingTag(config.tagName, tagPos, tagLen, prio || 0);
-	tag.setAttribute(config.attrName, chr);
+	var tag = addSelfClosingTag(tagName, tagPos, tagLen, prio || 0);
+	tag.setAttribute(attrName, chr);
 
 	return tag;
 }
