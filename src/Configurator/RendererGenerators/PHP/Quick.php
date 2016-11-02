@@ -283,7 +283,7 @@ class Quick
 		// Keep string rendering where possible, use PHP rendering wherever else
 		foreach ($phpRenderings as $i => $phpRendering)
 		{
-			if (!isset($renderings[$i]) || $renderings[$i] === false)
+			if (!isset($renderings[$i]) || $renderings[$i] === false || strpos($phpRendering, 'self::$attributes[]') !== false)
 			{
 				$renderings[$i] = ['php', $phpRendering];
 			}
@@ -531,6 +531,10 @@ class Quick
 
 		if ($saveAttributes)
 		{
+			if (strpos($head, '$html') === false)
+			{
+				$head .= "\$html='';";
+			}
 			$head .= 'self::$attributes[]=$attributes;';
 			$tail  = '$attributes=array_pop(self::$attributes);' . $tail;
 		}

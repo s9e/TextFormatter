@@ -392,6 +392,11 @@ class QuickTest extends Test
 				'<r>x<XY>y</XY>z</r>',
 				'xyz'
 			],
+			[
+				['FOO' => '<xsl:apply-templates/><xsl:value-of select="@foo"/>'],
+				'<r><FOO foo="attr">text</FOO></r>',
+				'textattr'
+			],
 		];
 	}
 
@@ -664,6 +669,45 @@ class QuickTest extends Test
 						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
 				}
+			],
+			[
+				'<div><xsl:value-of select="@foo"/><xsl:apply-templates/></div>',
+				[
+					[
+						'php',
+						'$attributes+=[\'foo\'=>null];$html=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'
+					],
+					[
+						'static',
+						'</div>'
+					]
+				]
+			],
+			[
+				'<div><xsl:apply-templates/><xsl:value-of select="@foo"/></div>',
+				[
+					[
+						'php',
+						'$attributes+=[\'foo\'=>null];$html=\'<div>\';self::$attributes[]=$attributes;'
+					],
+					[
+						'php',
+						"\$attributes=array_pop(self::\$attributes);\$html=str_replace('&quot;','\"',\$attributes['foo']).'</div>';"
+					]
+				]
+			],
+			[
+				'<xsl:apply-templates/><xsl:value-of select="@foo"/>',
+				[
+					[
+						'php',
+						'$attributes+=[\'foo\'=>null];$html=\'\';self::$attributes[]=$attributes;'
+					],
+					[
+						'php',
+						"\$attributes=array_pop(self::\$attributes);\$html=str_replace('&quot;','\"',\$attributes['foo']);"
+					]
+				]
 			],
 		];
 	}

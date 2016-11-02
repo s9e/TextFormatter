@@ -244,6 +244,18 @@ function convertCustom($filepath, &$file)
 				'"\\$static=[\'foo:bar\'=>\'foobar\']"',
 				'"\\$static=array(\'foo:bar\'=>\'foobar\')"'
 			),
+			array(
+				x('$attributes+=[\'foo\'=>null];$html=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
+				x('$attributes+=array(\'foo\'=>null);$html=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
+			),
+			array(
+				x('$attributes+=[\'foo\'=>null];$html=\'<div>\';self::$attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$html=\'<div>\';self::$attributes[]=$attributes;')
+			),
+			array(
+				x('$attributes+=[\'foo\'=>null];$html=\'\';self::$attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$html=\'\';self::$attributes[]=$attributes;')
+			),
 		),
 		'RegexpBuilder.php' => array(
 			array(
