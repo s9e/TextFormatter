@@ -1,3 +1,25 @@
+0.8.3 (2016-11-02)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8bb0409ae0f5daf0edeecfbbe0fbe18060f628e2...83f2797599180ca4223264d3f003ed7d910f2a24)
+
+### Added
+
+ - `f83eb28` FancyPants: added support for not equal sign and guillemets
+
+### Fixed
+
+ - `6d5797c` Censor\Helper: fixed an issue with text in quotes being ignored
+ - `83f2797` Quick renderer: fixed an issue where attribute values would not be saved
+
+### Changed
+
+ - `6dced78` FancyPants: cached tagName/attrName in a local variable for better JS minification
+ - `7293db8` FancyPants: reorganized code. No functional change
+ - `04a6539` FancyPants: simplified parseSymbolsAfterDigits()
+ - `0300282` MediaEmbed: made the default [media] tag's name configurable
+
+
 0.8.2 (2016-10-16)
 ==================
 
