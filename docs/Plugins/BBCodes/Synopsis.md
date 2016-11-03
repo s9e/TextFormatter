@@ -8,7 +8,7 @@ This plugin handles a very flexible flavour of the [BBCode](http://en.wikipedia.
  * BBCodes can be self-closed (`[hr/]`)
  * BBCode names can be followed by a colon and a number to uniquely identify and pair them (`[i:123][/i][/i:123]`)
 
-By default, no BBCodes are set. There are several ways to define BBCodes and their template, the easiest two are by adding the predefined BBCodes that exist in the bundled [repository](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/BBCodes/Configurator/repository.xml) or by defining them via [their custom syntax](https://github.com/s9e/TextFormatter/blob/master/docs/BBCodeMonkey.md).
+By default, no BBCodes are set. There are several ways to define BBCodes and their template, the easiest two are by adding the predefined BBCodes that exist in the bundled [repository](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/BBCodes/Configurator/repository.xml) or by defining them via [their custom syntax](Custom_BBCode_syntax/).
 
 ## Examples
 

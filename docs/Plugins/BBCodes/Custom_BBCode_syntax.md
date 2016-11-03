@@ -4,7 +4,7 @@
 
 ### BBCode usage
 
-First, we need to express the typical BBCode usage. It takes the form of a mock BBCode, such as
+First, we need to express the typical BBCode usage. It takes the form of a mock BBCode, such as the following:
 
     [b]{TEXT}[/b]
 
