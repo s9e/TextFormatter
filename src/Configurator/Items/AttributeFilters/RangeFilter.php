@@ -29,6 +29,9 @@ class RangeFilter extends AttributeFilter
 		$this->addParameterByName('max');
 		$this->addParameterByName('logger');
 		$this->setJS('BuiltInFilters.filterRange');
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 
 		if (isset($min))
 		{
@@ -83,29 +86,5 @@ class RangeFilter extends AttributeFilter
 
 		$this->vars['min'] = $min;
 		$this->vars['max'] = $max;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeInCSS()
-	{
-		return true;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeInJS()
-	{
-		return true;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeAsURL()
-	{
-		return true;
 	}
 }

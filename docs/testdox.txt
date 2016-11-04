@@ -811,6 +811,8 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\HashmapFilter
  [x] isSafeInJS() returns false if a value in the map contains \r or \n
  [x] isSafeInJS() returns false if a value in the map contains U+2028
  [x] isSafeInJS() returns false if a value in the map contains U+2029
+ [x] Changing the map's content resets the filter's safeness
+ [x] Changing the map's strictness resets the filter's safeness
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IdentifierFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
@@ -914,6 +916,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] asConfig() returns an array
  [x] asConfig() throws an exception if the 'regexp' var is missing
  [x] asConfig() creates a Regexp instance
+ [x] Changing the regexp resets the filter's safeness
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()

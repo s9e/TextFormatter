@@ -73,52 +73,72 @@ class RegexpFilter extends AttributeFilter
 		}
 
 		$this->vars['regexp'] = $regexp;
+		$this->resetSafeness();
+		$this->evaluateSafeness();
 	}
 
 	/**
-	* {@inheritdoc}
+	* Mark in which contexts values processed by this filter are safe to be used
+	*
+	* @return void
 	*/
-	public function isSafeAsURL()
+	protected function evaluateSafeness()
+	{
+		$this->evaluateSafenessAsURL();
+		$this->evaluateSafenessInCSS();
+		$this->evaluateSafenessInJS();
+	}
+
+	/**
+	* Mark whether this filter makes a value safe to be used as a URL
+	*
+	* @return void
+	*/
+	protected function evaluateSafenessAsURL()
 	{
 		try
 		{
 			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
-
-			// Match any number of "(" optionally followed by "?:"
-			$captureStart = '(?>\\((?:\\?:)?)*';
-
-			// Regexps that start with a fixed scheme are considered safe. As a special case, we
-			// allow the scheme part to end with a single ? to allow the regexp "https?"
-			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
-			if (preg_match($regexp, $regexpInfo['regexp'])
-			 && strpos($regexpInfo['modifiers'], 'm') === false)
-			{
-				return true;
-			}
-
-			// Test whether this regexp could allow any character that's disallowed in URLs
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
-			{
-				if (preg_match($regexp, $char))
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 		catch (Exception $e)
 		{
-			// If anything unexpected happens, we'll consider this filter is not safe
-			return false;
+			// If we can't parse the regexp, we'll consider this filter is not safe and do nothing
+			return;
 		}
+
+		// Match any number of "(" optionally followed by "?:"
+		$captureStart = '(?>\\((?:\\?:)?)*';
+
+		// Regexps that start with a fixed scheme are considered safe. As a special case, we
+		// allow the scheme part to end with a single ? to allow the regexp "https?"
+		$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
+		if (preg_match($regexp, $regexpInfo['regexp'])
+		 && strpos($regexpInfo['modifiers'], 'm') === false)
+		{
+			$this->markAsSafeAsURL();
+
+			return;
+		}
+
+		// Test whether this regexp could allow any character that's disallowed in URLs
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
+		{
+			if (preg_match($regexp, $char))
+			{
+				return;
+			}
+		}
+
+		$this->markAsSafeAsURL();
 	}
 
 	/**
-	* {@inheritdoc}
+	* Mark whether this filter makes a value safe to be used in CSS
+	*
+	* @return void
 	*/
-	public function isSafeInCSS()
+	protected function evaluateSafenessInCSS()
 	{
 		try
 		{
@@ -128,23 +148,24 @@ class RegexpFilter extends AttributeFilter
 			{
 				if (preg_match($regexp, $char))
 				{
-					return false;
+					return;
 				}
 			}
 
-			return true;
+			$this->markAsSafeInCSS();
 		}
 		catch (Exception $e)
 		{
 			// If anything unexpected happens, we'll consider this filter is not safe
-			return false;
 		}
 	}
 
 	/**
-	* {@inheritdoc}
+	* Mark whether this filter makes a value safe to be used in JS
+	*
+	* @return void
 	*/
-	public function isSafeInJS()
+	protected function evaluateSafenessInJS()
 	{
 		$safeExpressions = [
 			'\\d+',
@@ -159,7 +180,9 @@ class RegexpFilter extends AttributeFilter
 		        . '|'
 		        . '\\((?:\\?[:>])?(?&expr)\\)'
 		        . ')\\$(?&delim)(?=.*D)[Dis]*$)D';
-
-		return (bool) preg_match($regexp, $this->vars['regexp']);
+		if (preg_match($regexp, $this->vars['regexp']))
+		{
+			$this->markAsSafeInJS();
+		}
 	}
 }

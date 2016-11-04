@@ -18,21 +18,7 @@ class AlnumFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterAlnum');
 		$this->setJS('BuiltInFilters.filterAlnum');
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeInCSS()
-	{
-		return true;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeAsURL()
-	{
-		return true;
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
 	}
 }

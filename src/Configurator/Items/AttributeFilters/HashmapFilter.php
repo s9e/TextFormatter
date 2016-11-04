@@ -75,18 +75,23 @@ class HashmapFilter extends AttributeFilter
 		// Record this filter's variables
 		$this->vars['map']    = $map;
 		$this->vars['strict'] = $strict;
+
+		// Evaluate safeness
+		$this->resetSafeness();
+		if (!empty($this->vars['strict']))
+		{
+			$this->evaluateSafenessInCSS();
+			$this->evaluateSafenessInJS();
+		}
 	}
 
 	/**
-	* {@inheritdoc}
+	* Mark whether this filter makes a value safe to be used in CSS
+	*
+	* @return void
 	*/
-	public function isSafeInCSS()
+	protected function evaluateSafenessInCSS()
 	{
-		if (!isset($this->vars['map']) || empty($this->vars['strict']))
-		{
-			return false;
-		}
-
 		// Test each value against the list of disallowed characters
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
 		foreach ($this->vars['map'] as $value)
@@ -95,24 +100,21 @@ class HashmapFilter extends AttributeFilter
 			{
 				if (strpos($value, $char) !== false)
 				{
-					return false;
+					return;
 				}
 			}
 		}
 
-		return true;
+		$this->markAsSafeInCSS();
 	}
 
 	/**
-	* {@inheritdoc}
+	* Mark whether this filter makes a value safe to be used in JS
+	*
+	* @return void
 	*/
-	public function isSafeInJS()
+	protected function evaluateSafenessInJS()
 	{
-		if (!isset($this->vars['map']) || empty($this->vars['strict']))
-		{
-			return false;
-		}
-
 		// Test each value against the list of disallowed characters
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
 		foreach ($this->vars['map'] as $value)
@@ -121,12 +123,12 @@ class HashmapFilter extends AttributeFilter
 			{
 				if (strpos($value, $char) !== false)
 				{
-					return false;
+					return;
 				}
 			}
 		}
 
-		return true;
+		$this->markAsSafeInJS();
 	}
 
 	/**

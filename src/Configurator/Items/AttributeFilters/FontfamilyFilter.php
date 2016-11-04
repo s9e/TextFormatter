@@ -19,13 +19,6 @@ class FontfamilyFilter extends RegexpFilter
 		$regexp    = '/^' . $name . '(?:, *' . $name . ')*$/';
 
 		parent::__construct($regexp);
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeInCSS()
-	{
-		return true;
+		$this->markAsSafeInCSS();
 	}
 }

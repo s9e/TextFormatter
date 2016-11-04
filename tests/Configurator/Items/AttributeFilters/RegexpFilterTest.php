@@ -360,4 +360,19 @@ class RegexpFilterTest extends Test
 			$variant
 		);
 	}
+
+	/**
+	* @testdox Changing the regexp resets the filter's safeness
+	*/
+	public function testSetRegexpResetsSafeness()
+	{
+		$filter = new RegexpFilter('/^[0-9]+$/D');
+		$this->assertTrue($filter->isSafeInJS());
+
+		$filter->setRegexp('//');
+		$this->assertFalse($filter->isSafeInJS());
+
+		$filter->setRegexp('/^\\d+$/D');
+		$this->assertTrue($filter->isSafeInJS());
+	}
 }

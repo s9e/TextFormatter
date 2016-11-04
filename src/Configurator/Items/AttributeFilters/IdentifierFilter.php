@@ -18,21 +18,7 @@ class IdentifierFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIdentifier');
 		$this->setJS('BuiltInFilters.filterIdentifier');
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeInCSS()
-	{
-		return true;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeAsURL()
-	{
-		return true;
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
 	}
 }

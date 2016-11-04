@@ -249,4 +249,34 @@ class HashmapFilterTest extends Test
 
 		$this->assertFalse($filter->isSafeInJS());
 	}
+
+	/**
+	* @testdox Changing the map's content resets the filter's safeness
+	*/
+	public function testSetMapContentResetsSafeness()
+	{
+		$filter = new HashmapFilter(['foo' => 'bar'], true);
+		$this->assertTrue($filter->isSafeInJS());
+
+		$filter->setMap(['foo' => '"bar"'], true);
+		$this->assertFalse($filter->isSafeInJS());
+
+		$filter->setMap(['foo' => 'bar'], true);
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox Changing the map's strictness resets the filter's safeness
+	*/
+	public function testSetMapStrictnessResetsSafeness()
+	{
+		$filter = new HashmapFilter(['foo' => 'bar'], true);
+		$this->assertTrue($filter->isSafeInJS());
+
+		$filter->setMap(['foo' => 'bar'], false);
+		$this->assertFalse($filter->isSafeInJS());
+
+		$filter->setMap(['foo' => 'bar'], true);
+		$this->assertTrue($filter->isSafeInJS());
+	}
 }
