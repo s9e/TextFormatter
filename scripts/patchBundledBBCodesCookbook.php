@@ -42,6 +42,18 @@ foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 	$list[] = '';
 }
 
+$filepath = __DIR__ . '/../docs/Plugins/BBCodes/Add_from_the_repository.md';
+file_put_contents(
+	$filepath,
+	preg_replace(
+		'/(?<=### List of bundled BBCodes\\n\\n).*/s',
+		implode("\n", $list),
+		file_get_contents($filepath)
+	)
+);
+
+echo "Patched $filepath.\n";
+
 $filepath = __DIR__ . '/../docs/Cookbook/30_Plugins/BBCodes/AddFromRepository.md';
 file_put_contents(
 	$filepath,

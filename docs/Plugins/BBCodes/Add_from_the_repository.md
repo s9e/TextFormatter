@@ -80,10 +80,13 @@ __CENTER__
 __CODE__  
 `[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]`
 ```xsl
-<pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code class="{@lang}">
+<pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
+	<xsl:if test="@lang">
+		<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
+	</xsl:if>
 	<xsl:apply-templates />
 </code></pre>
-<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js";a.appendChild(e)}</script>
+<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js";a.appendChild(e)}</script>
 ```
 
 __COLOR__  
@@ -258,14 +261,14 @@ __LEFT__
 ```
 
 __LIST__  
-`[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext}]{TEXT}[/LIST]`
+`[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext} start={UINT;optional} #createChild=LI]{TEXT}[/LIST]`
 ```xsl
 <xsl:choose>
 	<xsl:when test="not(@type)">
 		<ul><xsl:apply-templates /></ul>
 	</xsl:when>
 	<xsl:when test="starts-with(@type,'decimal') or starts-with(@type,'lower') or starts-with(@type,'upper')">
-		<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+		<ol style="list-style-type:{@type}"><xsl:copy-of select="@start"/><xsl:apply-templates /></ol>
 	</xsl:when>
 	<xsl:otherwise>
 		<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
@@ -289,6 +292,12 @@ __NOPARSE__
 `[NOPARSE #ignoreTags=true]{TEXT}[/NOPARSE]`
 ```xsl
 {TEXT}
+```
+
+__OL__  
+`[OL]{TEXT}[/OL]`
+```xsl
+<ol>{TEXT}</ol>
 ```
 
 __QUOTE__  
@@ -424,10 +433,40 @@ __SUP__
 <sup>{TEXT}</sup>
 ```
 
+__TABLE__  
+`[TABLE]{ANYTHING}[/TABLE]`
+```xsl
+<table>{ANYTHING}</table>
+```
+
+__TD__  
+`[TD]{TEXT}[/TD]`
+```xsl
+<td>{TEXT}</td>
+```
+
+__TH__  
+`[TH]{TEXT}[/TH]`
+```xsl
+<th>{TEXT}</th>
+```
+
+__TR__  
+`[TR]{ANYTHING}[/TR]`
+```xsl
+<tr>{ANYTHING}</tr>
+```
+
 __U__  
 `[U]{TEXT}[/U]`
 ```xsl
 <u>{TEXT}</u>
+```
+
+__UL__  
+`[UL]{TEXT}[/UL]`
+```xsl
+<ul>{TEXT}</ul>
 ```
 
 __URL__  
