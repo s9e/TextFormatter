@@ -198,9 +198,9 @@
 	</bbcode>
 
 	<bbcode name="FONT">
-		<usage>[font={SIMPLETEXT}]{TEXT}[/font]</usage>
+		<usage>[font={FONTFAMILY}]{TEXT}[/font]</usage>
 		<template><![CDATA[
-			<span style="font-family:{SIMPLETEXT}">{TEXT}</span>
+			<span style="font-family:{FONTFAMILY}">{TEXT}</span>
 		]]></template>
 	</bbcode>
 

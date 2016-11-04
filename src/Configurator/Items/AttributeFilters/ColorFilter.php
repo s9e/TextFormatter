@@ -13,9 +13,6 @@ class ColorFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterColor');
 		$this->setJS('BuiltInFilters.filterColor');
-	}
-	public function isSafeInCSS()
-	{
-		return \true;
+		$this->markAsSafeInCSS();
 	}
 }

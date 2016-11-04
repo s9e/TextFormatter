@@ -13,17 +13,8 @@ class FloatFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat');
 		$this->setJS('BuiltInFilters.filterFloat');
-	}
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-	public function isSafeAsURL()
-	{
-		return \true;
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 	}
 }
