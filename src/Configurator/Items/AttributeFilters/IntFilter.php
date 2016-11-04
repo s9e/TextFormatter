@@ -13,17 +13,8 @@ class IntFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt');
 		$this->setJS('BuiltInFilters.filterInt');
-	}
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-	public function isSafeAsURL()
-	{
-		return \true;
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 	}
 }

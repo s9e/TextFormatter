@@ -39,50 +39,61 @@ class RegexpFilter extends AttributeFilter
 		if (\is_string($regexp))
 			$regexp = new Regexp($regexp);
 		$this->vars['regexp'] = $regexp;
+		$this->resetSafeness();
+		$this->evaluateSafeness();
 	}
-	public function isSafeAsURL()
+	protected function evaluateSafeness()
+	{
+		$this->evaluateSafenessAsURL();
+		$this->evaluateSafenessInCSS();
+		$this->evaluateSafenessInJS();
+	}
+	protected function evaluateSafenessAsURL()
 	{
 		try
 		{
 			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
-			$captureStart = '(?>\\((?:\\?:)?)*';
-			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
-			if (\preg_match($regexp, $regexpInfo['regexp'])
-			 && \strpos($regexpInfo['modifiers'], 'm') === \false)
-				return \true;
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
-				if (\preg_match($regexp, $char))
-					return \false;
-			return \true;
 		}
 		catch (Exception $e)
 		{
-			return \false;
+			return;
 		}
+		$captureStart = '(?>\\((?:\\?:)?)*';
+		$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
+		if (\preg_match($regexp, $regexpInfo['regexp'])
+		 && \strpos($regexpInfo['modifiers'], 'm') === \false)
+		{
+			$this->markAsSafeAsURL();
+			return;
+		}
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
+			if (\preg_match($regexp, $char))
+				return;
+		$this->markAsSafeAsURL();
 	}
-	public function isSafeInCSS()
+	protected function evaluateSafenessInCSS()
 	{
 		try
 		{
 			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
 			foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
 				if (\preg_match($regexp, $char))
-					return \false;
-			return \true;
+					return;
+			$this->markAsSafeInCSS();
 		}
 		catch (Exception $e)
 		{
-			return \false;
-		}
+			}
 	}
-	public function isSafeInJS()
+	protected function evaluateSafenessInJS()
 	{
 		$safeExpressions = array(
 			'\\d+',
 			'[0-9]+'
 		);
 		$regexp = '(^(?<delim>.)\\^(?:(?<expr>' . \implode('|', \array_map('preg_quote', $safeExpressions)) . ')|\\((?:\\?[:>])?(?&expr)\\))\\$(?&delim)(?=.*D)[Dis]*$)D';
-		return (bool) \preg_match($regexp, $this->vars['regexp']);
+		if (\preg_match($regexp, $this->vars['regexp']))
+			$this->markAsSafeInJS();
 	}
 }

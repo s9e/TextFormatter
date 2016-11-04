@@ -13,17 +13,8 @@ class NumberFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterNumber');
 		$this->setJS('BuiltInFilters.filterNumber');
-	}
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-	public function isSafeAsURL()
-	{
-		return \true;
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 	}
 }
