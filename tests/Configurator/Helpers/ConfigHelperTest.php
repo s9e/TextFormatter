@@ -26,7 +26,7 @@ class ConfigHelperTest extends Test
 	{
 		foreach (['PHP', 'JS'] as $target)
 		{
-			$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+			$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\FilterableConfigValue')->getMock();
 			$mock->expects($this->once())
 			     ->method('filterConfig')
 			     ->with($target)
@@ -63,7 +63,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testFilterConfigRecursive()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\FilterableConfigValue')->getMock();
 		$mock->expects($this->once())
 		     ->method('filterConfig')
 		     ->with('JS')
@@ -83,7 +83,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testFilterConfigNull()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\FilterableConfigValue')->getMock();
 		$mock->expects($this->once())
 		     ->method('filterConfig')
 		     ->will($this->returnValue(null));

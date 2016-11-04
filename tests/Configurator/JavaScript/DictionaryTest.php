@@ -39,7 +39,7 @@ class DictionaryTest extends Test
 	*/
 	public function testFilterConfigRecursive()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\FilterableConfigValue');
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\FilterableConfigValue')->getMock();
 		$mock->expects($this->once())
 		     ->method('filterConfig')
 		     ->with('JS')
