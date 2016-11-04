@@ -13,6 +13,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\ColorFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\EmailFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\FalseFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\FloatFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\FontfamilyFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\IdentifierFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\IntFilter;
@@ -855,6 +856,13 @@ class BuiltInFiltersTest extends Test
 			[new HashmapFilter(['foo' => 'bar'], true), 'bar', false],
 			[new FalseFilter, 'bar', false],
 			[new FalseFilter, 'false', false],
+			[new FontfamilyFilter, 'Arial', 'Arial'],
+			[new FontfamilyFilter, 'Arial,serif', 'Arial,serif'],
+			[new FontfamilyFilter, 'Arial, serif, sans-serif', 'Arial, serif, sans-serif'],
+			[new FontfamilyFilter, 'Arial, Times New Roman', 'Arial, Times New Roman'],
+			[new FontfamilyFilter, 'Arial, "Times New Roman"', 'Arial, "Times New Roman"'],
+			[new FontfamilyFilter, "Arial, 'Times New Roman'", "Arial, 'Times New Roman'"],
+			[new FontfamilyFilter, 'url(whatever)', false],
 		];
 	}
 

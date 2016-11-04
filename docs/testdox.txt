@@ -783,6 +783,11 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FloatFilter
  [x] Is safe in JS
  [x] Is safe in URL
 
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Fontfamily
+ [x] Is safe as URL
+ [x] Is safe in CSS
+ [x] Is not safe in JS
+
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\HashmapFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterHashmap()
  [x] __construct() forwards its arguments to setMap()

@@ -21,6 +21,9 @@
 <dt>#float</dt>
 <dd>A decimal value. Uses ext/filter's FILTER_VALIDATE_FLOAT filter. Returns a float, not a string.</dd>
 
+<dt>#fontfamily</dt>
+<dd>A CSS font-family value. More restrictive than the CSS specs. Font names can only contain ASCII letters and digits. They can be quoted and separated by a comma optionally surrounded with spaces.</dd>
+
 <dt>#hashmap</dt>
 <dd>Requires an associative array that maps strings to their replacement. Case-sensitive. Preserves unknown values by default.</dd>
 

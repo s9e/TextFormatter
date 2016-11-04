@@ -72,6 +72,7 @@
 			<file>tests/Configurator/Items/AttributeFilters/EmailFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/FalseFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/FloatFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/FontfamilyFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/HashmapFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IdentifierFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IntFilterTest.php</file>
