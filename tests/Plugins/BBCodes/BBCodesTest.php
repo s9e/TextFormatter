@@ -271,6 +271,10 @@ class BBCodesTest extends Test
 				'x <span style="font-family:Arial">Arial</span> y'
 			],
 			[
+				'[font=Lato, "Helvetica Neue", \'Helvetica\', Arial, sans-serif]...[/font]',
+				'<span style="font-family:Lato, &quot;Helvetica Neue&quot;, \'Helvetica\', Arial, sans-serif">...</span>'
+			],
+			[
 				'x [i]italic[/I] y',
 				'x <i>italic</i> y'
 			],

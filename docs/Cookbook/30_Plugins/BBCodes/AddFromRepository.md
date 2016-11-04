@@ -183,9 +183,9 @@ __FLOAT__
 ```
 
 __FONT__  
-`[font={SIMPLETEXT}]{TEXT}[/font]`
+`[font={FONTFAMILY}]{TEXT}[/font]`
 ```xsl
-<span style="font-family:{SIMPLETEXT}">{TEXT}</span>
+<span style="font-family:{FONTFAMILY}">{TEXT}</span>
 ```
 
 __H1__  
