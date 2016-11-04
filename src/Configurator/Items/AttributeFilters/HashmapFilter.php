@@ -66,13 +66,7 @@ class HashmapFilter extends AttributeFilter
 		// If the map is not strict, we can optimize away the values that are identical to their key
 		if (!$strict)
 		{
-			foreach ($map as $k => $v)
-			{
-				if ($k === $v)
-				{
-					unset($map[$k]);
-				}
-			}
+			$map = $this->optimizeLooseMap($map);
 		}
 
 		// Sort the map so it looks tidy
@@ -133,5 +127,24 @@ class HashmapFilter extends AttributeFilter
 		}
 
 		return true;
+	}
+
+	/**
+	* Optimize a non-strict map by removing values that are identical to their key
+	*
+	* @param  array $map Original map
+	* @return array      Optimized map
+	*/
+	protected function optimizeLooseMap(array $map)
+	{
+		foreach ($map as $k => $v)
+		{
+			if ($k === $v)
+			{
+				unset($map[$k]);
+			}
+		}
+
+		return $map;
 	}
 }
