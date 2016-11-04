@@ -857,6 +857,8 @@ class BuiltInFiltersTest extends Test
 			[new FalseFilter, 'bar', false],
 			[new FalseFilter, 'false', false],
 			[new FontfamilyFilter, 'Arial', 'Arial'],
+			[new FontfamilyFilter, '"Arial"', '"Arial"'],
+			[new FontfamilyFilter, '"Arial""Arial"', false],
 			[new FontfamilyFilter, 'Arial,serif', 'Arial,serif'],
 			[new FontfamilyFilter, 'Arial, serif, sans-serif', 'Arial, serif, sans-serif'],
 			[new FontfamilyFilter, 'Arial, Times New Roman', 'Arial, Times New Roman'],

@@ -12,11 +12,11 @@ class FontfamilyFilter extends RegexpFilter
 	public function __construct()
 	{
 		// This is more restrictive than the specs but safer
-		$namechar = '[- \\w]';
-		$double   = '"' . $namechar . '+"';
-		$single   = "'" . $namechar . "+'";
-		$name     = '(?:' . $single . '|' . $double . '|' . $namechar . ')+';
-		$regexp   = '/^' . $name . '(?:, *' . $name . ')*$/';
+		$namechars = '[- \\w]+';
+		$double    = '"' . $namechars . '"';
+		$single    = "'" . $namechars . "'";
+		$name      = '(?:' . $single . '|' . $double . '|' . $namechars . ')';
+		$regexp    = '/^' . $name . '(?:, *' . $name . ')*$/';
 
 		parent::__construct($regexp);
 	}
