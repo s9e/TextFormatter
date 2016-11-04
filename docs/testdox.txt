@@ -917,6 +917,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] asConfig() throws an exception if the 'regexp' var is missing
  [x] asConfig() creates a Regexp instance
  [x] Changing the regexp resets the filter's safeness
+ [x] Template safeness can be set manually
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()

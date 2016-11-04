@@ -375,4 +375,15 @@ class RegexpFilterTest extends Test
 		$filter->setRegexp('/^\\d+$/D');
 		$this->assertTrue($filter->isSafeInJS());
 	}
+
+	/**
+	* @testdox Template safeness can be set manually
+	*/
+	public function testMarkAsSafe()
+	{
+		$filter = new RegexpFilter('/^(?:0|1\\d*)$/');
+		$this->assertFalse($filter->isSafeInJS());
+		$filter->markAsSafeInJS();
+		$this->assertTrue($filter->isSafeInJS());
+	}
 }
