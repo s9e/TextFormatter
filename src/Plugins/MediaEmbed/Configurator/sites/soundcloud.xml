@@ -8,8 +8,8 @@
 
 	<host>soundcloud.com</host>
 	<extract>@(?'id'https?://(?:api\.)?soundcloud\.com/(?!pages/)[-/\w]+/[-/\w]+|^[^/]+/[^/]+$)@</extract>
-	<extract>@api.soundcloud.com/playlists/(?'playlist_id'\d+)@</extract>
-	<extract>@api.soundcloud.com/tracks/(?'track_id'\d+)(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
+	<extract>@api\.soundcloud\.com/playlists/(?'playlist_id'\d+)@</extract>
+	<extract>@api\.soundcloud\.com/tracks/(?'track_id'\d+)(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
 	<extract>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/(?=s-)(?'secret_token'[-\w]+)@</extract>
 	<scrape>
 		<match>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/s-@</match>
