@@ -1,21 +1,14 @@
 <site name="Facebook" homepage="http://www.facebook.com/">
 	<example>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</example>
-	<example>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</example>
 	<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
 	<example>https://www.facebook.com/photo.php?fbid=10152476416772631</example>
 	<example>https://www.facebook.com/ign/videos/10153762113196633/</example>
+	<example>https://www.facebook.com/southamptonfc/videos/vb.220396037973624/1357764664236750/</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>facebook.com</host>
 	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
 	<extract>#/(?'type'video)s?/#</extract>
-	<choose>
-		<when test="@type='video'">
-			<iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fuser%2Fvideos%2F{@id}%2F%3Ftype%3D3"/>
-		</when>
-		<otherwise>
-			<iframe src="https://s9e.github.io/iframe/facebook.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
-		</otherwise>
-	</choose>
+	<iframe src="https://s9e.github.io/iframe/facebook.min.html#{@type}{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
 </site>
