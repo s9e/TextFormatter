@@ -183,9 +183,9 @@ __FLOAT__
 ```
 
 __FONT__  
-`[font={SIMPLETEXT}]{TEXT}[/font]`
+`[font={FONTFAMILY}]{TEXT}[/font]`
 ```xsl
-<span style="font-family:{SIMPLETEXT}">{TEXT}</span>
+<span style="font-family:{FONTFAMILY}">{TEXT}</span>
 ```
 
 __H1__  
@@ -440,15 +440,25 @@ __TABLE__
 ```
 
 __TD__  
-`[TD]{TEXT}[/TD]`
+`[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TD]`
 ```xsl
-<td>{TEXT}</td>
+<td>
+	<xsl:if test="@align">
+		<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
+	</xsl:if>
+	<xsl:apply-templates/>
+</td>
 ```
 
 __TH__  
-`[TH]{TEXT}[/TH]`
+`[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TH]`
 ```xsl
-<th>{TEXT}</th>
+<th>
+	<xsl:if test="@align">
+		<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
+	</xsl:if>
+	<xsl:apply-templates/>
+</th>
 ```
 
 __TR__  
