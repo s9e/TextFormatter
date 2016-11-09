@@ -307,6 +307,11 @@
 		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
 	<tr>
+		<td><code>mlb</code></td>
+		<td>MLB</td>
+		<td>http://m.mlb.com/video/v1205791883<br/>http://m.mlb.com/video/topic/39049312/v1211631483/cubs-celebrate-world-series-with-historic-parade</td>
+	</tr>
+	<tr>
 		<td><code>mrctv</code></td>
 		<td>MRCTV</td>
 		<td>http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
