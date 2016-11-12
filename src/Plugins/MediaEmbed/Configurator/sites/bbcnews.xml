@@ -1,12 +1,23 @@
 <site name="BBC News" homepage="http://www.bbc.com/news/video_and_audio/">
-	<example>http://www.bbc.com/news/science-environment-29232523</example>
+	<example>http://www.bbc.com/news/science-environment-37854744</example>
 
 	<tags><tag>news</tag></tags>
 
 	<host>bbc.com</host>
 	<scrape>
 		<match>!bbc\.com/news/\w+!</match>
-		<extract>!meta name="twitter:player".*?playlist=(?'playlist'[-/\w]+)(?:&amp;poster=(?'poster'[-/.\w]+))?(?:&amp;ad_site=(?'ad_site'[/\w]+))?!</extract>
+		<extract>!bbc\.com\\/news\\/(?'id'[-\w]+)\\/embed!</extract>
 	</scrape>
-	<iframe src="https://ssl.bbc.co.uk/wwscripts/embed_player#playlist={@playlist}&amp;poster={@poster}&amp;ad_site={@ad_site}&amp;ad_keyword=&amp;source=twitter"/>
+	<iframe>
+		<src><![CDATA[
+			<xsl:text>//www.bbc.com</xsl:text>
+			<xsl:choose>
+				<xsl:when test="starts-with(@playlist, '/news/') and contains(@playlist, 'A')">
+					<xsl:value-of select="substring-before(@playlist, 'A')"/>
+				</xsl:when>
+				<xsl:otherwise>/news/<xsl:value-of select="@id"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>/embed</xsl:text>
+		]]></src>
+	</iframe>
 </site>

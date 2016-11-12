@@ -34,7 +34,7 @@
 	<tr>
 		<td><code>bbcnews</code></td>
 		<td>BBC News</td>
-		<td>http://www.bbc.com/news/science-environment-29232523</td>
+		<td>http://www.bbc.com/news/science-environment-37854744</td>
 	</tr>
 	<tr>
 		<td><code>blab</code></td>

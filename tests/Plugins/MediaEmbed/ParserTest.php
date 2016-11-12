@@ -623,8 +623,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.bbc.com/news/science-environment-29232523',
-				'<r><BBCNEWS ad_site="/news/science_and_environment" playlist="/news/science-environment-29232523A" poster="/media/images/77632000/jpg/_77632871_77632869.jpg" url="http://www.bbc.com/news/science-environment-29232523">http://www.bbc.com/news/science-environment-29232523</BBCNEWS></r>',
+				'http://www.bbc.com/news/video_and_audio/headlines/37961388',
+				'<r><BBCNEWS id="world-asia-37961388" url="http://www.bbc.com/news/video_and_audio/headlines/37961388">http://www.bbc.com/news/video_and_audio/headlines/37961388</BBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -4038,6 +4038,7 @@ class ParserTest extends Test
 	/**
 	* @testdox Legacy rendering tests
 	* @dataProvider getLegacyRenderingTests
+	* @group needs-network
 	*/
 	public function testLegacyRendering($xml, $html, $setup = null)
 	{
@@ -4048,6 +4049,14 @@ class ParserTest extends Test
 	public function getLegacyRenderingTests()
 	{
 		return [
+			[
+				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg" url="http://www.bbc.com/news/business-29149086">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
+				'<div data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></div></div>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
 			[
 				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
 				'<div data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></div></div>',
