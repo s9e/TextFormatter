@@ -11,8 +11,8 @@
 	<scheme>spotify</scheme>
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?'uri'spotify:(?:album|artist|user|track(?:set)?):[,:\w]+)!</extract>
-	<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)/[/\w]+)!</extract>
+	<extract>!(?'uri'spotify:(?:album|artist|user|track(?:set)?):[-,:\w]+)!</extract>
+	<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)/[-/\w]+)!</extract>
 	<iframe width="400" height="480">
 		<src><![CDATA[
 			<xsl:text>https://embed.spotify.com/?view=coverart&amp;uri=</xsl:text>

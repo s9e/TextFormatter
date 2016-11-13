@@ -2757,8 +2757,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt',
-				'<r><SPOTIFY path="user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt" url="http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt">http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</SPOTIFY></r>',
+				'https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA',
+				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
