@@ -2510,6 +2510,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
+				'<r><NHL c="46322103" t="283069656" url="https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103">https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/video/c-46299003',
+				'<r><NHL c="46299003" url="https://www.nhl.com/video/c-46299003">https://www.nhl.com/video/c-46299003</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&adbid=794558584411426816&adbpl=tw&adbpr=50004938',
+				'<r><NHL t="281748732" url="https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&amp;adbid=794558584411426816&amp;adbpl=tw&amp;adbpr=50004938">https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&amp;adbid=794558584411426816&amp;adbpl=tw&amp;adbpr=50004938</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203',
+				'<r><NHL c="45954203" t="277443720" url="https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203">https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203</NHL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
 				'http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html',
 				'<r><NYTIMES id="100000002907606" url="http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html">http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</NYTIMES></r>',
 				[],
@@ -3733,6 +3769,42 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('metacafe');
+				}
+			],
+			[
+				'http://video.nhl.com/videocenter/console?catid=337&id=783647&lang=en&navid=nhl:topheads',
+				'<div data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//video.nhl.com/videocenter/embed?playlist=783647"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
+				'<div data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/t-283069656/c-46322103?autostart=false"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/video/c-46299003',
+				'<div data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/c-46299003?autostart=false"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&adbid=794558584411426816&adbpl=tw&adbpr=50004938',
+				'<div data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/t-281748732?autostart=false"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nhl');
 				}
 			],
 			[
