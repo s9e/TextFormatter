@@ -484,7 +484,7 @@
 	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
-		<td>http://www.twitch.tv/twitch<br/>http://www.twitch.tv/twitch/b/557643505<br/>http://www.twitch.tv/twitch/c/5965727<br/>http://www.twitch.tv/twitch/v/29415830?t=17m17s</td>
+		<td>http://www.twitch.tv/twitch<br/>http://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</td>
 	</tr>
 	<tr>
 		<td><code>twitter</code></td>

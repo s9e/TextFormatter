@@ -2964,6 +2964,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
+				'<r><TWITCH channel="twitch" clip_id="HorribleWoodpeckerHassanChop" url="https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop">https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
 				'<r><TWITTER id="266031293945503744" url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWITTER></r>',
 				[],
@@ -3950,6 +3959,15 @@ class ParserTest extends Test
 			[
 				'http://www.twitch.tv/twitch/v/29415830?t=17m17s',
 				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830&amp;time=17m17s"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=twitch/HorribleWoodpeckerHassanChop"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
