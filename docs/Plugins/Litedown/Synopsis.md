@@ -1,18 +1,6 @@
 This plugin implements a Markdown-like syntax, inspired by modern flavors of Markdown.
 
-## Syntax
-
-```
-*italics* or _italics_
-**bold** or __bold__
-super^script
-~~strikethrough~~
-`inline code`
-[Link text](http://example.org)
-![Image alt text](http://example.org/img.png)
-> quote
-## Header
-```
+A more detailed description of the syntax in available in [Syntax](Syntax.md).
 
 ## Example
 
