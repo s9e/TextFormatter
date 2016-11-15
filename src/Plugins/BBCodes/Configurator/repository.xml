@@ -428,16 +428,26 @@
 	</bbcode>
 
 	<bbcode name="TD">
-		<usage>[TD]{TEXT}[/TD]</usage>
+		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TD]</usage>
 		<template><![CDATA[
-			<td>{TEXT}</td>
+			<td>
+				<xsl:if test="@align">
+					<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
+				</xsl:if>
+				<xsl:apply-templates/>
+			</td>
 		]]></template>
 	</bbcode>
 
 	<bbcode name="TH">
-		<usage>[TH]{TEXT}[/TH]</usage>
+		<usage>[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TH]</usage>
 		<template><![CDATA[
-			<th>{TEXT}</th>
+			<th>
+				<xsl:if test="@align">
+					<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
+				</xsl:if>
+				<xsl:apply-templates/>
+			</th>
 		]]></template>
 	</bbcode>
 
