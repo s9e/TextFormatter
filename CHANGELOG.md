@@ -1,3 +1,41 @@
+0.8.4 (2016-11-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/e3356dc6f68453ac814339a9cc1f301e13aa2c04...c5d2dbece918263151ba10d8566f4d3feeedfc01)
+
+### Added
+
+ - `29dd2ca78` Added #fontfamily attribute filter
+ - `008025df4` Added PipeTables plugin
+ - `d62d30a89` BBCodes: added align attribute to TD and TH
+ - `f7da8cd9c` Fatdown: added PipeTables
+ - `1b2a9b28f` MediaEmbed: added support for MLB.com
+ - `ba6ce5e2d` MediaEmbed: added support for Twitch clips
+ - `fffd95cde` MediaEmbed: added support for the new NHL video site
+
+### Fixed
+
+ - `3b3731fe6` FontfamilyFilter: fixed consecutive quoted strings
+
+### Changed
+
+ - `88bbafc3f` AttributeFilters: reorganized how each filter sets its own safeness
+ - `f911748d3` BBCodes: disabled paragraphs inside [TD] and [TH]
+ - `71c0fe828` BBCodes: updated default [font]
+ - `8620a49e3` ClosureCompiler: updated externs
+ - `85f6f41bb` HashmapFilter: reorganized code. No functional change
+ - `5d2eea951` Litedown: improved the priority of QUOTE start tags
+ - `ffde5aa2e` MediaEmbed: updated BBC News
+ - `f4c750adc` MediaEmbed: updated Facebook
+ - `06658f1b3` MediaEmbed: updated IMDb
+ - `ce1b411d7` MediaEmbed: updated SoundCloud. No functional change
+ - `507fcbddd` MediaEmbed: updated Spotify
+ - `8a486df0d` Parser: addTagPair() now sets the priority of the end tag to minus the given value
+ - `7db413b19` Parser: invalidate tags that are skipped
+ - `c5d2dbece` RegexpFilter: reorganized code slightly
+ - `f72332402` Ruleset: clear() should reset defaultChildRule and defaultDescendantRule rather than remove them
+
+
 0.8.3 (2016-11-02)
 ==================
 
