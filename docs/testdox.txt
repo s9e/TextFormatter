@@ -897,6 +897,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] Is not safe as URL if the regexp is /^javascriptx?:(.*)/
  [x] Is not safe as URL if the regexp allows a colon to be used
  [x] Is not safe as URL if the regexp is invalid
+ [x] Is not safe as URL if the regexp can't be parsed
  [x] Is safe in CSS if the regexp is /^(?:left|right|center)$/
  [x] Is safe in CSS if the regexp is /^[a-z]$/
  [x] Is not safe in CSS if the regexp is /^[A-z]$/ because it would allow backslashes

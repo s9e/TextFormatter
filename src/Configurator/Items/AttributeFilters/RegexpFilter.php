@@ -84,9 +84,16 @@ class RegexpFilter extends AttributeFilter
 	*/
 	protected function evaluateSafeness()
 	{
-		$this->evaluateSafenessAsURL();
-		$this->evaluateSafenessInCSS();
-		$this->evaluateSafenessInJS();
+		try
+		{
+			$this->evaluateSafenessAsURL();
+			$this->evaluateSafenessInCSS();
+			$this->evaluateSafenessInJS();
+		}
+		catch (Exception $e)
+		{
+			// If anything unexpected happens we don't try to mark this filter as safe
+		}
 	}
 
 	/**
@@ -96,15 +103,7 @@ class RegexpFilter extends AttributeFilter
 	*/
 	protected function evaluateSafenessAsURL()
 	{
-		try
-		{
-			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
-		}
-		catch (Exception $e)
-		{
-			// If we can't parse the regexp, we'll consider this filter is not safe and do nothing
-			return;
-		}
+		$regexpInfo = RegexpParser::parse($this->vars['regexp']);
 
 		// Match any number of "(" optionally followed by "?:"
 		$captureStart = '(?>\\((?:\\?:)?)*';
@@ -140,24 +139,17 @@ class RegexpFilter extends AttributeFilter
 	*/
 	protected function evaluateSafenessInCSS()
 	{
-		try
+		// Test whether this regexp could allow any character that's disallowed in URLs
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
 		{
-			// Test whether this regexp could allow any character that's disallowed in URLs
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
+			if (preg_match($regexp, $char))
 			{
-				if (preg_match($regexp, $char))
-				{
-					return;
-				}
+				return;
 			}
+		}
 
-			$this->markAsSafeInCSS();
-		}
-		catch (Exception $e)
-		{
-			// If anything unexpected happens, we'll consider this filter is not safe
-		}
+		$this->markAsSafeInCSS();
 	}
 
 	/**

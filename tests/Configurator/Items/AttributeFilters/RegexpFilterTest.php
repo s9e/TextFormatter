@@ -145,6 +145,17 @@ class RegexpFilterTest extends Test
 	}
 
 	/**
+	* @testdox Is not safe as URL if the regexp can't be parsed
+	*/
+	public function testURLUnsafeCannotParse()
+	{
+		$filter = new RegexpFilter;
+		$filter->setRegexp('/^(?|x|y)$/');
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
 	* @testdox Is safe in CSS if the regexp is /^(?:left|right|center)$/
 	*/
 	public function testCSSSafe()
