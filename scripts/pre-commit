@@ -38,6 +38,7 @@ then
 	./scripts/patchBundledBBCodesCookbook.php
 
 	git update-index --add "docs/Cookbook/30_Plugins/BBCodes/AddFromRepository.md"
+	git update-index --add "docs/Plugins/BBCodes/Add_from_the_repository.md"
 fi
 
 if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]

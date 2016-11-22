@@ -440,7 +440,7 @@ __TABLE__
 ```
 
 __TD__  
-`[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TD]`
+`[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]`
 ```xsl
 <td>
 	<xsl:if test="@align">
@@ -451,7 +451,7 @@ __TD__
 ```
 
 __TH__  
-`[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TH]`
+`[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TH]`
 ```xsl
 <th>
 	<xsl:if test="@align">
