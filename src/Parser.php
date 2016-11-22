@@ -685,10 +685,6 @@ class Parser
 				if (!$this->tagStackIsSorted)
 					$this->sortTags();
 				$this->currentTag = \array_pop($this->tagStack);
-				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
-					if (!$this->currentTag->canClose(\end($this->openTags))
-					 && !$this->currentTag->isSystemTag())
-						continue;
 				$this->processCurrentTag();
 			}
 			foreach ($this->openTags as $startTag)
@@ -698,11 +694,13 @@ class Parser
 	}
 	protected function processCurrentTag()
 	{
-		if ($this->currentTag->isInvalid())
-			return;
+		if (($this->context['flags'] & self::RULE_IGNORE_TAGS)
+		 && !$this->currentTag->canClose(\end($this->openTags))
+		 && !$this->currentTag->isSystemTag())
+			$this->currentTag->invalidate();
 		$tagPos = $this->currentTag->getPos();
 		$tagLen = $this->currentTag->getLen();
-		if ($this->pos > $tagPos)
+		if ($this->pos > $tagPos && !$this->currentTag->isInvalid())
 		{
 			$startTag = $this->currentTag->getStartTag();
 			if ($startTag && \in_array($startTag, $this->openTags, \true))
@@ -724,8 +722,9 @@ class Parser
 				}
 			}
 			$this->currentTag->invalidate();
-			return;
 		}
+		if ($this->currentTag->isInvalid())
+			return;
 		if ($this->currentTag->isIgnoreTag())
 			$this->outputIgnoreTag($this->currentTag);
 		elseif ($this->currentTag->isBrTag())
@@ -998,7 +997,7 @@ class Parser
 	}
 	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen, $prio = 0)
 	{
-		$endTag   = $this->addEndTag($name, $endPos, $endLen);
+		$endTag   = $this->addEndTag($name, $endPos, $endLen, -$prio);
 		$startTag = $this->addStartTag($name, $startPos, $startLen, $prio);
 		$startTag->pairWith($endTag);
 		return $startTag;

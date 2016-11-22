@@ -1441,18 +1441,6 @@ function processTags()
 			}
 
 			currentTag = tagStack.pop();
-
-			// Skip current tag if tags are disabled and current tag would not close the last
-			// open tag and is not a special tag such as a line/paragraph break or an ignore tag
-			if (context.flags & RULE_IGNORE_TAGS)
-			{
-				if (!currentTag.canClose(openTags[openTags.length - 1])
-				 && !currentTag.isSystemTag())
-				{
-					continue;
-				}
-			}
-
 			processCurrentTag();
 		}
 
@@ -1473,16 +1461,20 @@ function processTags()
 */
 function processCurrentTag()
 {
-	if (currentTag.isInvalid())
+	// Invalidate current tag if tags are disabled and current tag would not close the last open
+	// tag and is not a system tag
+	if ((context.flags & RULE_IGNORE_TAGS)
+	 && !currentTag.canClose(openTags[openTags.length - 1])
+	 && !currentTag.isSystemTag())
 	{
-		return;
+		currentTag.invalidate();
 	}
 
 	var tagPos = currentTag.getPos(),
 		tagLen = currentTag.getLen();
 
 	// Test whether the cursor passed this tag's position already
-	if (pos > tagPos)
+	if (pos > tagPos && !currentTag.isInvalid())
 	{
 		// Test whether this tag is paired with a start tag and this tag is still open
 		var startTag = currentTag.getStartTag();
@@ -1517,7 +1509,10 @@ function processCurrentTag()
 
 		// Skipped tags are invalidated
 		currentTag.invalidate();
+	}
 
+	if (currentTag.isInvalid())
+	{
 		return;
 	}
 
@@ -2085,13 +2080,13 @@ function insertTag(tag)
 * @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
 * @param  {!number} endLen   Length of the start tag
-* @param  {number}  prio     Start tag's priority
+* @param  {number}  prio     Start tag's priority (the end tag will be set to minus that value)
 * @return {!Tag}             Start tag
 */
 function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 {
 	// NOTE: the end tag is added first to try to keep the stack in the correct order
-	var endTag   = addEndTag(name, endPos, endLen),
+	var endTag   = addEndTag(name, endPos, endLen, -prio || 0),
 		startTag = addStartTag(name, startPos, startLen, prio || 0);
 	startTag.pairWith(endTag);
 

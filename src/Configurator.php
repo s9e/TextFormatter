@@ -7694,6 +7694,11 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
 	public function __construct()
 	{
+		$this->clear();
+	}
+	public function clear()
+	{
+		parent::clear();
 		$this->defaultChildRule('allow');
 		$this->defaultDescendantRule('allow');
 	}
