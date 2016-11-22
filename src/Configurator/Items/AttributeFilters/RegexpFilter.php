@@ -44,20 +44,19 @@ class RegexpFilter extends AttributeFilter
 	}
 	protected function evaluateSafeness()
 	{
-		$this->evaluateSafenessAsURL();
-		$this->evaluateSafenessInCSS();
-		$this->evaluateSafenessInJS();
-	}
-	protected function evaluateSafenessAsURL()
-	{
 		try
 		{
-			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
+			$this->evaluateSafenessAsURL();
+			$this->evaluateSafenessInCSS();
+			$this->evaluateSafenessInJS();
 		}
 		catch (Exception $e)
 		{
-			return;
-		}
+			}
+	}
+	protected function evaluateSafenessAsURL()
+	{
+		$regexpInfo = RegexpParser::parse($this->vars['regexp']);
 		$captureStart = '(?>\\((?:\\?:)?)*';
 		$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
 		if (\preg_match($regexp, $regexpInfo['regexp'])
@@ -74,17 +73,11 @@ class RegexpFilter extends AttributeFilter
 	}
 	protected function evaluateSafenessInCSS()
 	{
-		try
-		{
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
-				if (\preg_match($regexp, $char))
-					return;
-			$this->markAsSafeInCSS();
-		}
-		catch (Exception $e)
-		{
-			}
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
+			if (\preg_match($regexp, $char))
+				return;
+		$this->markAsSafeInCSS();
 	}
 	protected function evaluateSafenessInJS()
 	{
