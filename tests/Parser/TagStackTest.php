@@ -474,7 +474,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addEndTag() sets the tag's priority 
+	* @testdox addEndTag() sets the tag's priority
 	*/
 	public function testAddEndTagPrio()
 	{
@@ -491,7 +491,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addIgnoreTag() sets the tag's priority 
+	* @testdox addIgnoreTag() sets the tag's priority
 	*/
 	public function testAddIgnoreTagPrio()
 	{
@@ -508,7 +508,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addParagraphBreak() sets the tag's priority 
+	* @testdox addParagraphBreak() sets the tag's priority
 	*/
 	public function testAddParagraphBreakPrio()
 	{
@@ -524,7 +524,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addSelfClosingTag() sets the tag's priority 
+	* @testdox addSelfClosingTag() sets the tag's priority
 	*/
 	public function testAddSelfClosingTagPrio()
 	{
@@ -541,7 +541,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addStartTag() sets the tag's priority 
+	* @testdox addStartTag() sets the tag's priority
 	*/
 	public function testAddStartTagPrio()
 	{
@@ -558,9 +558,9 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addTagPair() sets the start tag's priority 
+	* @testdox addTagPair() sets the start tag's priority to given value
 	*/
-	public function testAddTagPairPrio()
+	public function testAddTagPairStartTagPrio()
 	{
 		$this->configurator->tags->add('X');
 		$parser = $this->getParser();
@@ -577,7 +577,26 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addVerbatim() sets the tag's priority 
+	* @testdox addTagPair() sets the end tag's priority to minus the given value
+	*/
+	public function testAddTagPairEndTagPrio()
+	{
+		$this->configurator->tags->add('X');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$startTag = $parser->addTagPair('X', 0, 0, 1, 0, 6);
+				$endTag   = $startTag->getEndTag();
+				$this->assertSame(-6, $endTag->getSortPriority());
+			}
+		);
+		$parser->parse(' ');
+	}
+
+	/**
+	* @testdox addVerbatim() sets the tag's priority
 	*/
 	public function testAddVerbatimPrio()
 	{

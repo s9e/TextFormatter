@@ -2085,13 +2085,13 @@ function insertTag(tag)
 * @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
 * @param  {!number} endLen   Length of the start tag
-* @param  {number}  prio     Start tag's priority
+* @param  {number}  prio     Start tag's priority (the end tag will be set to minus that value)
 * @return {!Tag}             Start tag
 */
 function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 {
 	// NOTE: the end tag is added first to try to keep the stack in the correct order
-	var endTag   = addEndTag(name, endPos, endLen),
+	var endTag   = addEndTag(name, endPos, endLen, -prio || 0),
 		startTag = addStartTag(name, startPos, startLen, prio || 0);
 	startTag.pairWith(endTag);
 
