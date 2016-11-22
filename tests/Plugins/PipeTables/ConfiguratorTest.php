@@ -29,5 +29,58 @@ class ConfiguratorTest extends Test
 	*/
 	public function testDoesNotCreateTag()
 	{
+		$tags     = [];
+		$tagNames = ['TABLE', 'THEAD', 'TBODY', 'TR', 'TD', 'TH'];
+		foreach ($tagNames as $tagName)
+		{
+			$tags[$tagName] = $this->configurator->tags->add($tagName);
+		}
+		$this->configurator->PipeTables;
+		foreach ($tags as $tagName => $tag)
+		{
+			$this->assertSame($tag, $this->configurator->tags[$tagName]);
+		}
+	}
+
+	/**
+	* @testdox asConfig() sets overwriteEscapes to false by default
+	*/
+	public function testAsConfigOverwriteEscapesFalse()
+	{
+		$config = $this->configurator->PipeTables->asConfig();
+		$this->assertFalse($config['overwriteEscapes']);
+	}
+
+	/**
+	* @testdox asConfig() sets overwriteEscapes to true if the Escaper plugin is loaded
+	*/
+	public function testAsConfigOverwriteEscapesTrue()
+	{
+		$this->configurator->PipeTables;
+		$this->configurator->Escaper;
+
+		$config = $this->configurator->PipeTables->asConfig();
+		$this->assertTrue($config['overwriteEscapes']);
+	}
+
+	/**
+	* @testdox asConfig() sets overwriteMarkdown to false by default
+	*/
+	public function testAsConfigOverwriteMarkdownFalse()
+	{
+		$config = $this->configurator->PipeTables->asConfig();
+		$this->assertFalse($config['overwriteMarkdown']);
+	}
+
+	/**
+	* @testdox asConfig() sets overwriteMarkdown to true if the Litedown plugin is loaded
+	*/
+	public function testAsConfigOverwriteMarkdownTrue()
+	{
+		$this->configurator->PipeTables;
+		$this->configurator->Litedown;
+
+		$config = $this->configurator->PipeTables->asConfig();
+		$this->assertTrue($config['overwriteMarkdown']);
 	}
 }

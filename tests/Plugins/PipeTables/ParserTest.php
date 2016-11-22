@@ -170,6 +170,23 @@ class ParserTest extends Test
 				[
 					'a|b',
 					'-|-',
+					'`|`|`|`'
+				],
+				[
+					'<r><TABLE><THEAD><TR><TH>a</TH><i>|</i><TH>b</TH></TR></THEAD><i>',
+					'-|-</i>',
+					'<TBODY><TR><TD><C><s>`</s>|<e>`</e></C></TD><i>|</i><TD><C><s>`</s>|<e>`</e></C></TD></TR></TBODY></TABLE></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown;
+				}
+			],
+			[
+				[
+					'a|b',
+					'-|-',
 					'c\\||d'
 				],
 				[

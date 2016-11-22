@@ -2548,6 +2548,10 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
 s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator
  [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
  [x] Does not attempt to create a tag if it already exists
+ [x] asConfig() sets overwriteEscapes to false by default
+ [x] asConfig() sets overwriteEscapes to true if the Escaper plugin is loaded
+ [x] asConfig() sets overwriteMarkdown to false by default
+ [x] asConfig() sets overwriteMarkdown to true if the Litedown plugin is loaded
 
 s9e\TextFormatter\Tests\Plugins\PipeTables\Parser
  [x] Parsing tests
