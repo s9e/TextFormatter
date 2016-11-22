@@ -428,7 +428,7 @@
 	</bbcode>
 
 	<bbcode name="TD">
-		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TD]</usage>
+		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]</usage>
 		<template><![CDATA[
 			<td>
 				<xsl:if test="@align">
@@ -440,7 +440,7 @@
 	</bbcode>
 
 	<bbcode name="TH">
-		<usage>[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower}]{TEXT}[/TH]</usage>
+		<usage>[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TH]</usage>
 		<template><![CDATA[
 			<th>
 				<xsl:if test="@align">
