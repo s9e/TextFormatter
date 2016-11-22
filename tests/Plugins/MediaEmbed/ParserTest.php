@@ -2148,6 +2148,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785',
+				'<r><IMDB id="2482677785" url="http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785">http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</IMDB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imdb');
+				}
+			],
+			[
 				'http://i.imgur.com/AsQ0K3P.jpg',
 				'<t>http://i.imgur.com/AsQ0K3P.jpg</t>',
 				[],

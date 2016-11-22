@@ -219,7 +219,7 @@
 	<tr>
 		<td><code>imdb</code></td>
 		<td>IMDb</td>
-		<td>http://www.imdb.com/video/imdb/vi2482677785/<br/>http://www.imdb.com/video/epk/vi387296537/</td>
+		<td>http://www.imdb.com/video/imdb/vi2482677785/<br/>http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</td>
 	</tr>
 	<tr>
 		<td><code>imgur</code></td>

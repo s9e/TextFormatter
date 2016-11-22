@@ -1,10 +1,10 @@
 <site name="IMDb" homepage="http://www.imdb.com/">
 	<example>http://www.imdb.com/video/imdb/vi2482677785/</example>
-	<example>http://www.imdb.com/video/epk/vi387296537/</example>
+	<example>http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</example>
 
 	<tags><tag>movies</tag></tags>
 
 	<host>imdb.com</host>
-	<extract>!imdb\.com/video/\w+/vi(?'id'\d+)!</extract>
-	<iframe src="//www.imdb.com/video/imdb/vi{@id}/imdb/embed?autoplay=false&amp;width=560"/>
+	<extract>!imdb\.com/[/\w]+/vi(?'id'\d+)!</extract>
+	<iframe src="//www.imdb.com/videoembed/vi{@id}"/>
 </site>
