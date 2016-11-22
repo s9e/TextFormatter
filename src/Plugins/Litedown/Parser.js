@@ -569,7 +569,7 @@ function matchBlockLevelMarkup()
 				if (!codeTag)
 				{
 					// Create code block
-					codeTag = addStartTag('CODE', matchPos + ignoreLen, 0);
+					codeTag = addStartTag('CODE', matchPos + ignoreLen, 0, -999);
 				}
 
 				// Clear the captures to prevent any further processing

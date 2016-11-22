@@ -312,7 +312,7 @@ class Parser extends ParserBase
 				{
 					$ignoreLen += $indentPos;
 					if (!isset($codeTag))
-						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
+						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0, -999);
 					$m = array();
 				}
 			}
