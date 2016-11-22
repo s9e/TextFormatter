@@ -64,16 +64,21 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox clear() removes all rules
+	* @testdox clear() removes all rules and resets defaultChildRule and defaultDescendantRule
 	*/
 	public function testClearAll()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->allowChild('foo');
+		$ruleset->defaultChildRule('deny');
+		$ruleset->defaultDescendantRule('deny');
 		$ruleset->clear();
 
 		$this->assertSame(
-			[],
+			[
+				'defaultChildRule'      => 'allow',
+				'defaultDescendantRule' => 'allow'
+			],
 			iterator_to_array($ruleset)
 		);
 	}

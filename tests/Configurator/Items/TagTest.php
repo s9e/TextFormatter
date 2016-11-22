@@ -135,8 +135,10 @@ class TagTest extends Test
 	public function testRulesArray()
 	{
 		$rules = [
-			'allowChild' => ['B'],
-			'denyChild'  => ['I']
+			'allowChild'            => ['B'],
+			'defaultChildRule'      => 'allow',
+			'defaultDescendantRule' => 'allow',
+			'denyChild'             => ['I']
 		];
 
 		$tag = new Tag;
@@ -167,8 +169,10 @@ class TagTest extends Test
 	public function testRulesArrayClears()
 	{
 		$rules = [
-			'allowChild' => ['B'],
-			'denyChild'  => ['I']
+			'allowChild'            => ['B'],
+			'defaultChildRule'      => 'allow',
+			'defaultDescendantRule' => 'allow',
+			'denyChild'             => ['I']
 		];
 
 		$tag = new Tag;

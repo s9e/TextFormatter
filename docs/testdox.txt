@@ -268,7 +268,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist
  [x] Trying to set rules via array access throws a RuntimeException
  [x] unset($ruleset['allowChild']) removes all allowChild rules but doesn't touch the rest
- [x] clear() removes all rules
+ [x] clear() removes all rules and resets defaultChildRule and defaultDescendantRule
  [x] remove('allowChild') removes only 'allowChild' rules
  [x] remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
  [x] remove('defaultChildRule') throws an exception
