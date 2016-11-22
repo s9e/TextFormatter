@@ -1113,6 +1113,20 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'   ',
+				'<r><NOTAGS>   </NOTAGS></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOTAGS')->rules->ignoreTags();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOTAGS', 0, 0, 3, 0);
+					$parser->addSelfClosingTag('X', 1, 0)->cascadeInvalidationTo($parser->addBrTag(2));
+				}
+			],
+			[
 				'foobar',
 				'<t><p>foo</p><p>bar</p></t>',
 				function ($configurator)

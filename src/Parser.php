@@ -1524,18 +1524,6 @@ class Parser
 				}
 
 				$this->currentTag = array_pop($this->tagStack);
-
-				// Skip current tag if tags are disabled and current tag would not close the last
-				// open tag and is not a special tag such as a line/paragraph break or an ignore tag
-				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
-				{
-					if (!$this->currentTag->canClose(end($this->openTags))
-					 && !$this->currentTag->isSystemTag())
-					{
-						continue;
-					}
-				}
-
 				$this->processCurrentTag();
 			}
 
@@ -1558,16 +1546,20 @@ class Parser
 	*/
 	protected function processCurrentTag()
 	{
-		if ($this->currentTag->isInvalid())
+		// Invalidate current tag if tags are disabled and current tag would not close the last open
+		// tag and is not a system tag
+		if (($this->context['flags'] & self::RULE_IGNORE_TAGS)
+		 && !$this->currentTag->canClose(end($this->openTags))
+		 && !$this->currentTag->isSystemTag())
 		{
-			return;
+			$this->currentTag->invalidate();
 		}
 
 		$tagPos = $this->currentTag->getPos();
 		$tagLen = $this->currentTag->getLen();
 
 		// Test whether the cursor passed this tag's position already
-		if ($this->pos > $tagPos)
+		if ($this->pos > $tagPos && !$this->currentTag->isInvalid())
 		{
 			// Test whether this tag is paired with a start tag and this tag is still open
 			$startTag = $this->currentTag->getStartTag();
@@ -1602,7 +1594,10 @@ class Parser
 
 			// Skipped tags are invalidated
 			$this->currentTag->invalidate();
+		}
 
+		if ($this->currentTag->isInvalid())
+		{
 			return;
 		}
 
