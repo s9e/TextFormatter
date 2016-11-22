@@ -26,6 +26,7 @@ class Fatdown extends Bundle
 		$configurator->FancyPants;
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
+		$configurator->PipeTables;
 
 		$htmlAliases = [
 			'a'      => ['URL', 'href' => 'url'],

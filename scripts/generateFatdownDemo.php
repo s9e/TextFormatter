@@ -55,6 +55,11 @@ ob_start();
 		{
 			margin: 0;
 		}
+		td, th
+		{
+			border: solid 1px #ddd;
+			background-color: #fff;
+		}
 	</style>
 
 </head>
@@ -73,6 +78,7 @@ ob_start();
  - **Litedown** --- a Markdown*-like* syntax
  - **MediaEmbed** --- URLs from media sites are automatically embedded:  
    http://youtu.be/QH2-TGUlwu4
+ - **PipeTables** --- ASCII-style tables are supported. See [its syntax](http://s9etextformatter.readthedocs.io/Plugins/PipeTables/Syntax/)
 
 ***
 

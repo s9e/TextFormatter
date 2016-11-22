@@ -49,6 +49,7 @@ echo $html;
  * HTMLEntities
  * Litedown
  * MediaEmbed
+ * PipeTables
 
 ### HTMLElements
 
