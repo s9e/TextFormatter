@@ -494,7 +494,7 @@ function matchBlockLevelMarkup()
 
 			do
 			{
-				var tag = addStartTag('QUOTE', matchPos, 0, quotesCnt);
+				var tag = addStartTag('QUOTE', matchPos, 0, quotesCnt - 999);
 				quotes.push(tag);
 			}
 			while (quoteDepth > ++quotesCnt);
