@@ -14,7 +14,7 @@ class Configurator extends ConfiguratorBase
 	protected $tagName = 'ESC';
 	public function escapeAll($bool = \true)
 	{
-		$this->regexp = ($bool) ? '/\\\\./su' : '/\\\\[-!#()*+.:<>@[\\\\\\]^_`{}]/';
+		$this->regexp = ($bool) ? '/\\\\./su' : '/\\\\[-!#()*+.:<>@[\\\\\\]^_`{|}]/';
 	}
 	protected function setUp()
 	{
