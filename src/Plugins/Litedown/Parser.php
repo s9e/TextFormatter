@@ -589,7 +589,7 @@ class Parser extends ParserBase
 					if (!isset($codeTag))
 					{
 						// Create code block
-						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
+						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0, -999);
 					}
 
 					// Clear the captures to prevent any further processing

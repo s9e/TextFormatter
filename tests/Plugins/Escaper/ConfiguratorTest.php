@@ -11,13 +11,13 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox By default only escapes the characters !#()*+-.:@[\]^_`{}
+	* @testdox By default only escapes the characters !#()*+-.:@[\]^_`{|}
 	*/
 	public function testDefaultEscapeSymbols()
 	{
 		$config = $this->configurator->plugins->load('Escaper')->asConfig();
 		$regexp = $config['regexp'];
-		$chars  = '!#()*+-.:<>@[\\]^_`{}';
+		$chars  = '!#()*+-.:<>@[\\]^_`{|}';
 
 		$i = 32;
 		do

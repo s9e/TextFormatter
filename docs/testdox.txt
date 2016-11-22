@@ -2301,7 +2301,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
- [x] By default only escapes the characters !#()*+-.:@[\]^_`{}
+ [x] By default only escapes the characters !#()*+-.:@[\]^_`{|}
  [x] $plugin->escapeAll() makes it escape any Unicode character
  [x] $plugin->escapeAll(false) reverts to default escape list
  [x] Automatically creates an "ESC" tag
@@ -2541,6 +2541,15 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Scraping tests
  [x] Scraping+rendering tests
  [x] Legacy rendering tests
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
+s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator
+ [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
+ [x] Does not attempt to create a tag if it already exists
+
+s9e\TextFormatter\Tests\Plugins\PipeTables\Parser
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests

@@ -247,6 +247,8 @@
 			<file>tests/Plugins/MediaEmbed/Configurator/TemplateGenerators/IframeTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ConfiguratorTest.php</file>
 			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>
+			<file>tests/Plugins/PipeTables/ConfiguratorTest.php</file>
+			<file>tests/Plugins/PipeTables/ParserTest.php</file>
 			<file>tests/Plugins/Preg/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Preg/ParserTest.php</file>
 
