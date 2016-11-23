@@ -6,5 +6,5 @@
 
 	<host>imdb.com</host>
 	<extract>!imdb\.com/[/\w]+/vi(?'id'\d+)!</extract>
-	<iframe src="//www.imdb.com/videoembed/vi{@id}"/>
+	<iframe src="//www.imdb.com/video/imdb/vi{@id}/imdb/embed?autoplay=false&amp;width=640"/>
 </site>
