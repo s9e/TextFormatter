@@ -140,10 +140,12 @@ file_put_contents(
 			function ($m) use ($emoji)
 			{
 				$builder = new s9e\RegexpBuilder\Builder([
-					'input'  => 'Utf8ToSurrogates',
-					'output' => 'JavaScript'
+					'input'         => 'Utf8',
+					'inputOptions'  => ['useSurrogates' => true],
+					'output'        => 'JavaScript',
+					'outputOptions' => ['case' => 'lower']
 				]);
-				$regexp = '/' . $builder->build($emoji) . '(?!\\uFE0E)/g';
+				$regexp = '/' . $builder->build($emoji) . '(?!\\ufe0e)/g';
 
 				return $m[1] . $regexp . ';';
 			},
