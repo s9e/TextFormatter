@@ -159,7 +159,15 @@ function createBodyTags(startPos, endPos)
 */
 function createCellTags(tagName, startPos, endPos, align)
 {
-	var tag = addTagPair(tagName, startPos, 0, endPos, 0, -1);
+	var tag;
+	if (startPos === endPos)
+	{
+		tag = addSelfClosingTag(tagName, startPos, 0, -1);
+	}
+	else
+	{
+		tag = addTagPair(tagName, startPos, 0, endPos, 0, -1);
+	}
 	if (align)
 	{
 		tag.setAttribute('align', align);
