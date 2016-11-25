@@ -338,6 +338,18 @@ class ParserTest extends Test
 					'<TR><i>| </i><TD>is</TD><i>  | </i><TD>nice</TD><i>  |</i></TR></TBODY></TABLE></r>'
 				]
 			],
+			[
+				[
+					'|||',
+					'|-|-|',
+					'|||'
+				],
+				[
+					'<r><TABLE><THEAD><TR><i>|</i><TH/><i>||</i><TH/></TR></THEAD><i>',
+					'|-|-|</i>',
+					'<TBODY><TR><i>|</i><TD/><i>||</i><TD/></TR></TBODY></TABLE></r>'
+				]
+			],
 		]);
 	}
 
@@ -381,6 +393,17 @@ class ParserTest extends Test
 				{
 					$configurator->Litedown;
 				}
+			],
+			[
+				[
+					'|||',
+					'|-|-|',
+					'|||'
+				],
+				[
+					'<table><thead><tr><th></th><th></th></tr></thead>',
+					'<tbody><tr><td></td><td></td></tr></tbody></table>'
+				]
 			],
 		]);
 	}
