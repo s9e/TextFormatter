@@ -109,7 +109,10 @@ class Parser extends ParserBase
 	}
 	protected function createCellTags($tagName, $startPos, $endPos, $align)
 	{
-		$tag = $this->parser->addTagPair($tagName, $startPos, 0, $endPos, 0, -1);
+		if ($startPos === $endPos)
+			$tag = $this->parser->addSelfClosingTag($tagName, $startPos, 0, -1);
+		else
+			$tag = $this->parser->addTagPair($tagName, $startPos, 0, $endPos, 0, -1);
 		if ($align)
 			$tag->setAttribute('align', $align);
 	}
