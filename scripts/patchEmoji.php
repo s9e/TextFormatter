@@ -59,7 +59,7 @@ $file .= wget('http://unicode.org/Public/emoji/' . $version . '/emoji-zwj-sequen
 preg_match_all('(^[0-9A-F ]+)m', $file, $matches);
 foreach ($matches[0] as $seq)
 {
-	$utf8  = seqToUtf8(trim($seq));
+	$utf8    = seqToUtf8(trim($seq));
 	$emoji[] = $utf8;
 }
 
