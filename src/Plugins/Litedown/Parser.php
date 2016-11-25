@@ -110,7 +110,7 @@ class Parser extends ParserBase
 	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
 	{
 		// Give the link a slightly worse priority if this is a implicit reference and a slightly
-		// better priority if it's an explicit reference or an inline link or  to give it precedence
+		// better priority if it's an explicit reference or an inline link or to give it precedence
 		// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
 		$priority = ($endTagLen === 1) ? 1 : -1;
 
