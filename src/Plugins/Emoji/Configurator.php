@@ -50,7 +50,7 @@ class Configurator extends ConfiguratorBase
 	protected $tagName = 'EMOJI';
 
 	/**
-	* @var string[] List of Twemoji sequences that do not match Emoji One's
+	* @var string[] List of Twemoji sequences that do not match EmojiOne's
 	*/
 	protected $twemojiAliases = [
 		'00a9'                    => 'a9',

@@ -210,7 +210,7 @@
 
 * [Emoji](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoji)
 
-	* Automatically renders emoji as images. Can use the emoji sets from [Twemoji](http://twitter.github.io/twemoji/) or [Emoji One](http://www.emojione.com/)
+	* Automatically renders emoji as images. Can use the emoji sets from [Twemoji](http://twitter.github.io/twemoji/) or [EmojiOne](http://www.emojione.com/)
 
 * [Emoticons](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Emoticons)
 
