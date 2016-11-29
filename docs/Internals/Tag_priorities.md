@@ -13,11 +13,11 @@ Litedown   | URL      |        1 | Implicit reference, e.g. `[ref]`
 Litedown   | URL      |       -1 | Reference-style, or inline
 Litedown   | *i*      |     1000 | Start-of-line markup
 Litedown   | *i*      |       -2 | References
-PipeTables | TABLE    |       -4 |
-PipeTables | THEAD    |       -3 |
-PipeTables | TBODY    |       -3 |
-PipeTables | TR       |       -2 |
-PipeTables | TD       |       -1 |
-PipeTables | TH       |       -1 |
+PipeTables | TABLE    |     -104 |
+PipeTables | THEAD    |     -103 |
+PipeTables | TBODY    |     -103 |
+PipeTables | TR       |     -102 |
+PipeTables | TD       |     -101 |
+PipeTables | TH       |     -101 |
 PipeTables | *i*      |     1000 |
 Preg       | \*       |     -100 |

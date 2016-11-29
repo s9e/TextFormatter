@@ -350,6 +350,23 @@ class ParserTest extends Test
 					'<TBODY><TR><i>|</i><TD/><i>||</i><TD/></TR></TBODY></TABLE></r>'
 				]
 			],
+			[
+				[
+					'a|b',
+					'-|-',
+					'c|d'
+				],
+				[
+					'<r><TABLE><THEAD><TR><TH><PREG_771C65C8>a</PREG_771C65C8></TH><i>|</i><TH><PREG_771C65C8>b</PREG_771C65C8></TH></TR></THEAD><i>',
+					'-|-</i>',
+					'<TBODY><TR><TD><PREG_771C65C8>c</PREG_771C65C8></TD><i>|</i><TD><PREG_771C65C8>d</PREG_771C65C8></TD></TR></TBODY></TABLE></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Preg->replace('/\\w/', '<b>$0</b>');
+				}
+			],
 		]);
 	}
 
