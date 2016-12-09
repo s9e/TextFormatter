@@ -200,6 +200,10 @@ class ParserTest extends Test
 				'<r>apples <FP char="≠">!=</FP> oranges</r>'
 			],
 			[
+				'apples =/= oranges',
+				'<r>apples <FP char="≠">=/=</FP> oranges</r>'
+			],
+			[
 				'apples != oranges',
 				'<t>apples != oranges</t>',
 				[],

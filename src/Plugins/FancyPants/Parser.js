@@ -104,18 +104,20 @@ function parseGuillemets()
 
 /**
 * Parse the not equal sign
+*
+* Supports != and =/=
 */
 function parseNotEqualSign()
 {
-	if (text.indexOf('!=') < 0)
+	if (text.indexOf('!=') < 0 && text.indexOf('=/=') < 0)
 	{
 		return;
 	}
 
-	var m, regexp = /\b !=(?= \b)/g;
+	var m, regexp = /\b (?:!|=\/)=(?= \b)/g;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'] + 1, 2, "\u2260");
+		addTag(+m['index'] + 1, m[0].length - 1, "\u2260");
 	}
 }
 

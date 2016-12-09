@@ -151,20 +151,22 @@ class Parser extends ParserBase
 	/**
 	* Parse the not equal sign
 	*
+	* Supports != and =/=
+	*
 	* @return void
 	*/
 	protected function parseNotEqualSign()
 	{
-		if (strpos($this->text, '!=') === false)
+		if (strpos($this->text, '!=') === false && strpos($this->text, '=/=') === false)
 		{
 			return;
 		}
 
-		$regexp = '/\\b !=(?= \\b)/';
+		$regexp = '/\\b (?:!|=\\/)=(?= \\b)/';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
 		foreach ($matches[0] as $m)
 		{
-			$this->addTag($m[1] + 1, 2, "\xE2\x89\xA0");
+			$this->addTag($m[1] + 1, strlen($m[0]) - 1, "\xE2\x89\xA0");
 		}
 	}
 
