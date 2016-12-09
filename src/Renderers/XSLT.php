@@ -88,8 +88,7 @@ class XSLT extends Renderer
 		/**
 		* @link https://bugs.php.net/64137
 		*/
-		if (strpos($paramValue, '"') !== false
-		 && strpos($paramValue, "'") !== false)
+		if (strpos($paramValue, '"') !== false && strpos($paramValue, "'") !== false)
 		{
 			$paramValue = str_replace('"', "\xEF\xBC\x82", $paramValue);
 		}
