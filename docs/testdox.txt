@@ -2648,6 +2648,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
+ [x] Uses double quotes for attribute values
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] serialize() tests
@@ -2718,6 +2719,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Preserves other properties during serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
+ [x] Does not improperly replace single quotes inside attribute values
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
@@ -2739,6 +2741,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
+ [x] Uses double quotes for attribute values
 
 s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
@@ -2768,6 +2771,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Does not decode special chars in a rich text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a plain text with a SMP character
  [x] Does not decode special chars encoded as numeric entities in a rich text with a SMP character
+ [x] Uses double quotes for attribute values
 
 s9e\TextFormatter\Tests\Renderers\Unformatted
  [x] Returns unformatted version of rich text

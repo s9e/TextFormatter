@@ -131,6 +131,12 @@ class XSLT extends Renderer
 			$output = substr($output, 0, -1);
 		}
 
+		// Force HTML attributes to use double quotes to be consistent with the PHP renderer
+		if (strpos($output, "='") !== false)
+		{
+			$output = $this->normalizeAttributes($output);
+		}
+
 		return $output;
 	}
 
@@ -148,5 +154,48 @@ class XSLT extends Renderer
 			$this->proc = new XSLTProcessor;
 			$this->proc->importStylesheet($xsl);
 		}
+	}
+
+	/**
+	* Normalize given attribute's value to use double quotes
+	*
+	* @param  string[] $m
+	* @return string
+	*/
+	protected function normalizeAttribute(array $m)
+	{
+		if ($m[0][0] === '"')
+		{
+			return $m[0];
+		}
+
+		return '"' . str_replace('"', '&quot;', substr($m[0], 1, -1)) . '"';
+	}
+
+	/**
+	* Normalize all attributes in given HTML to use double quotes
+	*
+	* @param  string $html
+	* @return string
+	*/
+	protected function normalizeAttributes($html)
+	{
+		return preg_replace_callback('(<\\S++ [^>]++>)', [$this, 'normalizeElement'], $html);
+	}
+
+	/**
+	* Normalize attributes in given element to use double quotes
+	*
+	* @param  string[] $m
+	* @return string
+	*/
+	protected function normalizeElement(array $m)
+	{
+		if (strpos($m[0], "='") === false)
+		{
+			return $m[0];
+		}
+
+		return preg_replace_callback('((?:"[^"]*"|\'[^\']*\'))S', [$this, 'normalizeAttribute'], $m[0]);
 	}
 }

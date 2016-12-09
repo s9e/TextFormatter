@@ -295,4 +295,19 @@ trait RendererTests
 			$this->configurator->rendering->getRenderer()->render('<r>&#0060;&#128512;</r>')
 		);
 	}
+
+	/**
+	* @testdox Uses double quotes for attribute values
+	*/
+	public function testAttributeValuesDoubleQuotes()
+	{
+		$this->configurator->tags->add('X')->template = '<b data-d="{@d}" data-s="{@s}" data-x="{@x}"></b><i title=""></i>';
+		$renderer = $this->configurator->rendering->getRenderer();
+
+		$xml      = '<r><X d="&quot;" s="\'" x="&quot;\'"/></r>';
+		$html     = $renderer->render($xml);
+		$expected = '<b data-d="&quot;" data-s="\'" data-x="&quot;\'"></b><i title=""></i>';
+
+		$this->assertSame($expected, $html);
+	}
 }

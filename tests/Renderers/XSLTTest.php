@@ -93,4 +93,18 @@ class XSLTTest extends Test
 			$this->configurator->rendering->getRenderer()->render('<r><X/></r>')
 		);
 	}
+
+	/**
+	* @testdox Does not improperly replace single quotes inside attribute values
+	*/
+	public function testAttributeValuesSingleQuotes()
+	{
+		$this->configurator->tags->add('X')->template
+			= '<b title="{@x}"></b>';
+
+		$this->assertSame(
+			'<b title="x=\'x\'"></b>',
+			$this->configurator->rendering->getRenderer()->render('<r><X x="x=\'x\'"/></r>')
+		);
+	}
 }
