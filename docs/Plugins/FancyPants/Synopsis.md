@@ -55,8 +55,8 @@ echo $html;
 		</tr>
 		<tr>
 			<td>MathSymbols</td>
-			<td>2" x 4". a != b. apples =/= oranges.</td>
-			<td>2″ × 4″. a ≠ b. apples ≠ oranges.</td>
+			<td>2" x 4". a != b. apples =/= oranges. 1/2 cup milk.</td>
+			<td>2″ × 4″. a ≠ b. apples ≠ oranges. ½ cup milk.</td>
 		</tr>
 		<tr>
 			<td>Punctuation</td>

@@ -233,6 +233,10 @@ class ParserTest extends Test
 					$configurator->FancyPants->disablePass('Guillemets');
 				}
 			],
+			[
+				'0/3 1/1 1/10 1/2 1/25 1/3 1/4 1/5 1/6 1/7 1/8 1/9 10/10 2/3 2/5 3/4 3/5 3/8 4/5 5/6 5/8 7/8',
+				'<r><FP char="↉">0/3</FP> 1/1 <FP char="⅒">1/10</FP> <FP char="½">1/2</FP> 1/25 <FP char="⅓">1/3</FP> <FP char="¼">1/4</FP> <FP char="⅕">1/5</FP> <FP char="⅙">1/6</FP> <FP char="⅐">1/7</FP> <FP char="⅛">1/8</FP> <FP char="⅑">1/9</FP> 10/10 <FP char="⅔">2/3</FP> <FP char="⅖">2/5</FP> <FP char="¾">3/4</FP> <FP char="⅗">3/5</FP> <FP char="⅜">3/8</FP> <FP char="⅘">4/5</FP> <FP char="⅚">5/6</FP> <FP char="⅝">5/8</FP> <FP char="⅞">7/8</FP></r>'
+			],
 		];
 	}
 
@@ -364,7 +368,11 @@ class ParserTest extends Test
 			[
 				"O'Connor's pants",
 				'O’Connor’s pants'
-			]
+			],
+			[
+				'1/4 x 2/3 = 1/6',
+				'¼ × ⅔ = ⅙'
+			],
 		];
 	}
 }

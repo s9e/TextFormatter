@@ -49,6 +49,7 @@ class Parser extends ParserBase
 		{
 			$this->parseNotEqualSign();
 			$this->parseSymbolsAfterDigits();
+			$this->parseFractions();
 		}
 		if (empty($this->config['disablePunctuation']))
 		{
@@ -122,6 +123,48 @@ class Parser extends ParserBase
 				"\xE2\x80\x9C",
 				"\xE2\x80\x9D"
 			);
+		}
+	}
+
+	/**
+	* Parse vulgar fractions
+	*
+	* @return void
+	*/
+	protected function parseFractions()
+	{
+		if (strpos($this->text, '/') === false)
+		{
+			return;
+		}
+
+		$map = [
+			'1/4'  => "\xC2\xBC",
+			'1/2'  => "\xC2\xBD",
+			'3/4'  => "\xC2\xBE",
+			'1/7'  => "\xE2\x85\x90",
+			'1/9'  => "\xE2\x85\x91",
+			'1/10' => "\xE2\x85\x92",
+			'1/3'  => "\xE2\x85\x93",
+			'2/3'  => "\xE2\x85\x94",
+			'1/5'  => "\xE2\x85\x95",
+			'2/5'  => "\xE2\x85\x96",
+			'3/5'  => "\xE2\x85\x97",
+			'4/5'  => "\xE2\x85\x98",
+			'1/6'  => "\xE2\x85\x99",
+			'5/6'  => "\xE2\x85\x9A",
+			'1/8'  => "\xE2\x85\x9B",
+			'3/8'  => "\xE2\x85\x9C",
+			'5/8'  => "\xE2\x85\x9D",
+			'7/8'  => "\xE2\x85\x9E",
+			'0/3'  => "\xE2\x86\x89"
+		];
+
+		$regexp = '/\\b(?:0\\/3|1\\/(?:[2-9]|10)|2\\/[35]|3\\/[458]|4\\/5|5\\/[68]|7\\/8)\\b/S';
+		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE);
+		foreach ($matches[0] as $m)
+		{
+			$this->addTag($m[1], strlen($m[0]), $map[$m[0]]);
 		}
 	}
 
