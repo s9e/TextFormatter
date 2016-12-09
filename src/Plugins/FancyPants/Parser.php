@@ -35,14 +35,29 @@ class Parser extends ParserBase
 		$this->hasSingleQuote = (strpos($text, "'") !== false);
 		$this->hasDoubleQuote = (strpos($text, '"') !== false);
 
-		$this->parseSingleQuotes();
-		$this->parseSymbolsAfterDigits();
-		$this->parseSingleQuotePairs();
-		$this->parseDoubleQuotePairs();
-		$this->parseDashesAndEllipses();
-		$this->parseSymbolsInParentheses();
-		$this->parseNotEqualSign();
-		$this->parseGuillemets();
+		if (empty($this->config['disableQuotes']))
+		{
+			$this->parseSingleQuotes();
+			$this->parseSingleQuotePairs();
+			$this->parseDoubleQuotePairs();
+		}
+		if (empty($this->config['disableGuillemets']))
+		{
+			$this->parseGuillemets();
+		}
+		if (empty($this->config['disableMathSymbols']))
+		{
+			$this->parseNotEqualSign();
+			$this->parseSymbolsAfterDigits();
+		}
+		if (empty($this->config['disablePunctuation']))
+		{
+			$this->parseDashesAndEllipses();
+		}
+		if (empty($this->config['disableSymbols']))
+		{
+			$this->parseSymbolsInParentheses();
+		}
 
 		unset($this->text);
 	}

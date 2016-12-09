@@ -2325,6 +2325,9 @@ s9e\TextFormatter\Tests\Plugins\FancyPants\Configurator
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
+ [x] The config array does not contain a disableQuotes value by default
+ [x] The config array contains a disableQuotes value if the quote pass is disabled
+ [x] The config array does not contain a disableQuotes value if the quote pass is re-enabled
 
 s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
  [x] Parsing tests

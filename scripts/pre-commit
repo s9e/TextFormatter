@@ -33,6 +33,13 @@ then
 	git update-index --add "docs/Plugins/MediaEmbed/Sites.md"
 fi
 
+if [[ -n `git diff --cached --name-only -b src/Plugins/FancyPants/Parser.php` ]]
+then
+	./scripts/patchFancyPantsDoc.php
+
+	git update-index --add "docs/Plugins/FancyPants/Synopsis.md"
+fi
+
 if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repository.xml` ]]
 then
 	./scripts/patchBundledBBCodesCookbook.php

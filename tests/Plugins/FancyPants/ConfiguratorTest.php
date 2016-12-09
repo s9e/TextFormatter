@@ -86,4 +86,40 @@ class ConfiguratorTest extends Test
 			$plugin->getTag()
 		);
 	}
+
+	/**
+	* @testdox The config array does not contain a disableQuotes value by default
+	*/
+	public function testDisableQuotesDefault()
+	{
+		$config = $this->configurator->FancyPants->asConfig();
+
+		$this->assertArrayNotHasKey('disableQuotes', $config);
+	}
+
+	/**
+	* @testdox The config array contains a disableQuotes value if the quote pass is disabled
+	*/
+	public function testDisableQuotesDisabled()
+	{
+		$this->configurator->FancyPants->disablePass('Quotes');
+
+		$config = $this->configurator->FancyPants->asConfig();
+
+		$this->assertArrayHasKey('disableQuotes', $config);
+		$this->assertTrue($config['disableQuotes']);
+	}
+
+	/**
+	* @testdox The config array does not contain a disableQuotes value if the quote pass is re-enabled
+	*/
+	public function testDisableQuotesEnabled()
+	{
+		$this->configurator->FancyPants->disablePass('Quotes');
+		$this->configurator->FancyPants->enablePass('Quotes');
+
+		$config = $this->configurator->FancyPants->asConfig();
+
+		$this->assertArrayNotHasKey('disableQuotes', $config);
+	}
 }

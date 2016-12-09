@@ -3,14 +3,29 @@ var attrName       = config.attrName,
 	hasDoubleQuote = (text.indexOf('"') >= 0),
 	tagName        = config.tagName;
 
-parseSingleQuotes();
-parseSymbolsAfterDigits();
-parseSingleQuotePairs();
-parseDoubleQuotePairs();
-parseDashesAndEllipses();
-parseSymbolsInParentheses();
-parseNotEqualSign();
-parseGuillemets();
+if (!config.disableQuotes)
+{
+	parseSingleQuotes();
+	parseSingleQuotePairs();
+	parseDoubleQuotePairs();
+}
+if (!config.disableGuillemets)
+{
+	parseGuillemets();
+}
+if (!config.disableMathSymbols)
+{
+	parseNotEqualSign();
+	parseSymbolsAfterDigits();
+}
+if (!config.disablePunctuation)
+{
+	parseDashesAndEllipses();
+}
+if (!config.disableSymbols)
+{
+	parseSymbolsInParentheses();
+}
 
 /**
 * Add a fancy replacement tag

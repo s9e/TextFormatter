@@ -27,6 +27,24 @@ class ParserTest extends Test
 			],
 			[
 				'...',
+				'<r><FP char="…">...</FP></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('Quotes');
+				}
+			],
+			[
+				'...',
+				'<t>...</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('Punctuation');
+				}
+			],
+			[
+				'...',
 				'<r><FOO char="…">...</FOO></r>',
 				['tagName' => 'FOO']
 			],
@@ -38,6 +56,15 @@ class ParserTest extends Test
 			[
 				"'Good morning, Frank,' greeted HAL.",
 				'<r><FP char="‘">\'</FP>Good morning, Frank,<FP char="’">\'</FP> greeted HAL.</r>'
+			],
+			[
+				"'Good morning, Frank,' greeted HAL.",
+				"<t>'Good morning, Frank,' greeted HAL.</t>",
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('Quotes');
+				}
 			],
 			[
 				"\"'Good morning, Frank,' greeted HAL.\" is how the book starts.",
@@ -74,6 +101,15 @@ class ParserTest extends Test
 			[
 				'(c)',
 				'<r><FP char="©">(c)</FP></r>'
+			],
+			[
+				'(c)',
+				'<t>(c)</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('Symbols');
+				}
 			],
 			[
 				'(C)',
@@ -164,6 +200,15 @@ class ParserTest extends Test
 				'<r>apples <FP char="≠">!=</FP> oranges</r>'
 			],
 			[
+				'apples != oranges',
+				'<t>apples != oranges</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('MathSymbols');
+				}
+			],
+			[
 				'<< Voulez-vous un sandwich, Henri ? >>',
 				'<r><FP char="«">&lt;&lt;</FP> Voulez-vous un sandwich, Henri ? <FP char="»">&gt;&gt;</FP></r>'
 			],
@@ -174,6 +219,15 @@ class ParserTest extends Test
 			[
 				"<<A\n>>",
 				"<t>&lt;&lt;A\n&gt;&gt;</t>"
+			],
+			[
+				'<<A>>',
+				'<t>&lt;&lt;A&gt;&gt;</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->FancyPants->disablePass('Guillemets');
+				}
 			],
 		];
 	}

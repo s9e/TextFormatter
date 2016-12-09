@@ -23,6 +23,11 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'char';
 
 	/**
+	* @var string[] List of passes that have been explicitly disabled
+	*/
+	protected $disabledPasses = [];
+
+	/**
 	* @var string Name of the tag used to mark the text to replace
 	*/
 	protected $tagName = 'FP';
@@ -45,9 +50,34 @@ class Configurator extends ConfiguratorBase
 		// Create attribute
 		$tag->attributes->add($this->attrName);
 
-		// Create a template that replaces its content with the replacement chat
+		// Create a template that replaces its content with the replacement char
 		$tag->template
 			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
+	}
+
+	/**
+	* Disable a given pass
+	*
+	* @param  string $passName
+	* @return void
+	*/
+	public function disablePass($passName)
+	{
+		$this->disabledPasses[] = $passName;
+	}
+
+	/**
+	* Enable a given pass
+	*
+	* @param  string $passName
+	* @return void
+	*/
+	public function enablePass($passName)
+	{
+		foreach (array_keys($this->disabledPasses, $passName, true) as $k)
+		{
+			unset($this->disabledPasses[$k]);
+		}
 	}
 
 	/**
@@ -55,9 +85,15 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		return [
+		$config = [
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
 		];
+		foreach ($this->disabledPasses as $passName)
+		{
+			$config['disable' . $passName] = true;
+		}
+
+		return $config;
 	}
 }
