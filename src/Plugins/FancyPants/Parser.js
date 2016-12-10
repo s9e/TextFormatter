@@ -3,14 +3,30 @@ var attrName       = config.attrName,
 	hasDoubleQuote = (text.indexOf('"') >= 0),
 	tagName        = config.tagName;
 
-parseSingleQuotes();
-parseSymbolsAfterDigits();
-parseSingleQuotePairs();
-parseDoubleQuotePairs();
-parseDashesAndEllipses();
-parseSymbolsInParentheses();
-parseNotEqualSign();
-parseGuillemets();
+if (!config.disableQuotes)
+{
+	parseSingleQuotes();
+	parseSingleQuotePairs();
+	parseDoubleQuotePairs();
+}
+if (!config.disableGuillemets)
+{
+	parseGuillemets();
+}
+if (!config.disableMathSymbols)
+{
+	parseNotEqualSign();
+	parseSymbolsAfterDigits();
+	parseFractions();
+}
+if (!config.disablePunctuation)
+{
+	parseDashesAndEllipses();
+}
+if (!config.disableSymbols)
+{
+	parseSymbolsInParentheses();
+}
 
 /**
 * Add a fancy replacement tag
@@ -68,6 +84,46 @@ function parseDoubleQuotePairs()
 }
 
 /**
+* Parse vulgar fractions
+*/
+function parseFractions()
+{
+	if (text.indexOf('/') < 0)
+	{
+		return;
+	}
+
+	/** @const */
+	var map = {
+		'0/3'  : "\u2189",
+		'1/10' : "\u2152",
+		'1/2'  : "\u00BD",
+		'1/3'  : "\u2153",
+		'1/4'  : "\u00BC",
+		'1/5'  : "\u2155",
+		'1/6'  : "\u2159",
+		'1/7'  : "\u2150",
+		'1/8'  : "\u215B",
+		'1/9'  : "\u2151",
+		'2/3'  : "\u2154",
+		'2/5'  : "\u2156",
+		'3/4'  : "\u00BE",
+		'3/5'  : "\u2157",
+		'3/8'  : "\u215C",
+		'4/5'  : "\u2158",
+		'5/6'  : "\u215A",
+		'5/8'  : "\u215D",
+		'7/8'  : "\u215E"
+	};
+
+	var m, regexp = /\b(?:0\/3|1\/(?:[2-9]|10)|2\/[35]|3\/[458]|4\/5|5\/[68]|7\/8)\b/g;
+	while (m = regexp.exec(text))
+	{
+		addTag(+m['index'], m[0].length, map[m[0]]);
+	}
+}
+
+/**
 * Parse guillemets-style quotation marks
 */
 function parseGuillemets()
@@ -89,18 +145,20 @@ function parseGuillemets()
 
 /**
 * Parse the not equal sign
+*
+* Supports != and =/=
 */
 function parseNotEqualSign()
 {
-	if (text.indexOf('!=') < 0)
+	if (text.indexOf('!=') < 0 && text.indexOf('=/=') < 0)
 	{
 		return;
 	}
 
-	var m, regexp = /\b !=(?= \b)/g;
+	var m, regexp = /\b (?:!|=\/)=(?= \b)/g;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'] + 1, 2, "\u2260");
+		addTag(+m['index'] + 1, m[0].length - 1, "\u2260");
 	}
 }
 

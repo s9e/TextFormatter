@@ -105,20 +105,20 @@ class Parser extends ParserBase
 	}
 	protected function createBodyTags($startPos, $endPos)
 	{
-		$this->parser->addTagPair('TBODY', $startPos, 0, $endPos, 0, -3);
+		$this->parser->addTagPair('TBODY', $startPos, 0, $endPos, 0, -103);
 	}
 	protected function createCellTags($tagName, $startPos, $endPos, $align)
 	{
 		if ($startPos === $endPos)
-			$tag = $this->parser->addSelfClosingTag($tagName, $startPos, 0, -1);
+			$tag = $this->parser->addSelfClosingTag($tagName, $startPos, 0, -101);
 		else
-			$tag = $this->parser->addTagPair($tagName, $startPos, 0, $endPos, 0, -1);
+			$tag = $this->parser->addTagPair($tagName, $startPos, 0, $endPos, 0, -101);
 		if ($align)
 			$tag->setAttribute('align', $align);
 	}
 	protected function createHeadTags($startPos, $endPos)
 	{
-		$this->parser->addTagPair('THEAD', $startPos, 0, $endPos, 0, -3);
+		$this->parser->addTagPair('THEAD', $startPos, 0, $endPos, 0, -103);
 	}
 	protected function createIgnoreTag($pos, $len)
 	{
@@ -126,7 +126,7 @@ class Parser extends ParserBase
 	}
 	protected function createRowTags($startPos, $endPos)
 	{
-		$this->parser->addTagPair('TR', $startPos, 0, $endPos, 0, -2);
+		$this->parser->addTagPair('TR', $startPos, 0, $endPos, 0, -102);
 	}
 	protected function createSeparatorTag(array $row)
 	{
@@ -134,7 +134,7 @@ class Parser extends ParserBase
 	}
 	protected function createTableTags($startPos, $endPos)
 	{
-		$this->tableTag = $this->parser->addTagPair('TABLE', $startPos, 0, $endPos, 0, -4);
+		$this->tableTag = $this->parser->addTagPair('TABLE', $startPos, 0, $endPos, 0, -104);
 	}
 	protected function endTable()
 	{
