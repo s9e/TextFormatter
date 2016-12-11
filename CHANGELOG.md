@@ -1,3 +1,24 @@
+0.8.5 (2016-12-11)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b2e101e62b114684d2b096167590d330fc93a7c6...92f61dc74effb788028d5055e04c2dfa60d5bc62)
+
+### Added
+
+ - `e2910c4b1` FancyPants: added =/= as an alias for the not-equal sign
+ - `a9a2f2fa2` FancyPants: added support for toggling groups of replacements
+ - `d8644729c` FancyPants: added support for vulgar fractions
+ - `5bc811858` PipeTables: added support for empty cells
+
+### Changed
+
+ - `ff0e5cf03` Emoji: updated aliases and changed JavaScript regexp to lowercase
+ - `fcbe4f120` MediaEmbed: updated IMDb
+ - `e7ad9f604` PipeTables: improved the priority of table tags
+ - `9c4eff9ab` Updated composer.json with dev dependencies
+ - `92f61dc74` XSLT: force HTML attributes to use double quotes
+
+
 0.8.4 (2016-11-22)
 ==================
 
