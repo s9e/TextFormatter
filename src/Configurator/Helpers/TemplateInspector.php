@@ -144,10 +144,10 @@ class TemplateInspector
 	/**
 	* Return whether this template allows a given child
 	*
-	* @param  self $child
+	* @param  TemplateInspector $child
 	* @return bool
 	*/
-	public function allowsChild(self $child)
+	public function allowsChild(TemplateInspector $child)
 	{
 		// Sometimes, a template can technically be allowed as a child but denied as a descendant
 		if (!$this->allowsDescendant($child))
@@ -174,10 +174,10 @@ class TemplateInspector
 	/**
 	* Return whether this template allows a given descendant
 	*
-	* @param  self $descendant
+	* @param  TemplateInspector $descendant
 	* @return bool
 	*/
-	public function allowsDescendant(self $descendant)
+	public function allowsDescendant(TemplateInspector $descendant)
 	{
 		// Test whether the descendant is explicitly disallowed
 		if (self::match($descendant->contentBitfield, $this->denyDescendantBitfield))
@@ -217,10 +217,10 @@ class TemplateInspector
 	/**
 	* Return whether this template automatically closes given parent template
 	*
-	* @param  self $parent
+	* @param  TemplateInspector $parent
 	* @return bool
 	*/
-	public function closesParent(self $parent)
+	public function closesParent(TemplateInspector $parent)
 	{
 		foreach ($this->rootNodes as $rootName)
 		{
