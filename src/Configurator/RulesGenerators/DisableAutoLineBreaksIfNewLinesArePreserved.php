@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
 class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerator
@@ -15,7 +15,7 @@ class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerat
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateBooleanRules(TemplateForensics $src)
+	public function generateBooleanRules(TemplateInspector $src)
 	{
 		return ($src->preservesNewLines()) ? ['disableAutoLineBreaks' => true] : [];
 	}

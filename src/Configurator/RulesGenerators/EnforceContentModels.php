@@ -7,37 +7,37 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
 {
 	/**
-	* @var TemplateForensics
+	* @var TemplateInspector
 	*/
 	protected $br;
 
 	/**
-	* @var TemplateForensics
+	* @var TemplateInspector
 	*/
 	protected $span;
 
 	/**
 	* Constructor
 	*
-	* Prepares the TemplateForensics for <br/> and <span>
+	* Prepares the TemplateInspector for <br/> and <span>
 	*/
 	public function __construct()
 	{
-		$this->br   = new TemplateForensics('<br/>');
-		$this->span = new TemplateForensics('<span><xsl:apply-templates/></span>');
+		$this->br   = new TemplateInspector('<br/>');
+		$this->span = new TemplateInspector('<span><xsl:apply-templates/></span>');
 	}
 
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateBooleanRules(TemplateForensics $src)
+	public function generateBooleanRules(TemplateInspector $src)
 	{
 		$rules = [];
 		if ($src->isTransparent())
@@ -61,7 +61,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
+	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
 		if (!$src->allowsChildElements())
 		{

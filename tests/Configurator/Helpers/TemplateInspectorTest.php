@@ -3,31 +3,31 @@
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Helpers\TemplateForensics
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateInspector
 */
-class TemplateForensicsTest extends Test
+class TemplateInspectorTest extends Test
 {
 	/**
 	* @testdox getDOM() returns the template as a DOMDocument
 	*/
 	public function testGetDOM()
 	{
-		$templateForensics = new TemplateForensics('<br/>');
+		$templateInspector = new TemplateInspector('<br/>');
 
-		$this->assertInstanceOf('DOMDocument', $templateForensics->getDOM());
+		$this->assertInstanceOf('DOMDocument', $templateInspector->getDOM());
 	}
 
 	/**
 	* @testdox Test cases
-	* @dataProvider getTemplateForensicsTests
+	* @dataProvider getTemplateInspectorTests
 	*/
 	public function test($title, $xslSrc, $rule, $xslTrg = null)
 	{
-		$src = new TemplateForensics($xslSrc);
-		$trg = new TemplateForensics($xslTrg);
+		$src = new TemplateInspector($xslSrc);
+		$trg = new TemplateInspector($xslTrg);
 
 		$assert = ($rule[0] === '!') ? 'assertFalse' : 'assertTrue';
 		$method = ltrim($rule, '!');
@@ -35,7 +35,7 @@ class TemplateForensicsTest extends Test
 		$this->$assert($src->$method($trg), $title);
 	}
 
-	public function getTemplateForensicsTests()
+	public function getTemplateInspectorTests()
 	{
 		return [
 			[
@@ -82,7 +82,7 @@ class TemplateForensicsTest extends Test
 			],
 			[
 				// This test mainly exist to ensure nothing bad happens with HTML tags that don't
-				// have a "cp" value in TemplateForensics::$htmlElements
+				// have a "cp" value in TemplateInspector::$htmlElements
 				'<span> does not close parent <span>',
 				'<span/>',
 				'!closesParent',

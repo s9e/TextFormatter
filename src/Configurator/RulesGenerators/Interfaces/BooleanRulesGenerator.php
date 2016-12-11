@@ -7,15 +7,15 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 
 interface BooleanRulesGenerator
 {
 	/**
-	* Generate boolean rules that apply to given template forensics
+	* Generate boolean rules that apply to given template inspector
 	*
-	* @param  TemplateForensics $src Source template forensics
+	* @param  TemplateInspector $src Source template inspector
 	* @return array                  Array of boolean rules as [ruleName => bool]
 	*/
-	public function generateBooleanRules(TemplateForensics $src);
+	public function generateBooleanRules(TemplateInspector $src);
 }

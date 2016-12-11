@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Tests\Test;
 
 abstract class AbstractTest extends Test
@@ -16,7 +16,7 @@ abstract class AbstractTest extends Test
 		$rulesGenerator = new $className;
 		$this->assertEquals(
 			$expected,
-			$rulesGenerator->generateBooleanRules(new TemplateForensics($template))
+			$rulesGenerator->generateBooleanRules(new TemplateInspector($template))
 		);
 	}
 
@@ -30,8 +30,8 @@ abstract class AbstractTest extends Test
 		$this->assertEquals(
 			$expected,
 			$rulesGenerator->generateTargetedRules(
-				new TemplateForensics($src),
-				new TemplateForensics($trg)
+				new TemplateInspector($src),
+				new TemplateInspector($trg)
 			)
 		);
 	}

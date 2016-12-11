@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 
 class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
@@ -15,7 +15,7 @@ class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
+	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
 		return ($src->isBlock() && $trg->isFormattingElement()) ? ['closeParent'] : [];
 	}

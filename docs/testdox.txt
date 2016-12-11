@@ -464,7 +464,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ContextSafeness
  [x] getDisallowedCharactersInCSS() returns a list of strings
  [x] getDisallowedCharactersInJS() returns a list of strings
 
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateInspector
  [x] getDOM() returns the template as a DOMDocument
  [x] Test cases
 
@@ -988,12 +988,12 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] isNormalized() returns true if normalize() was called
  [x] isNormalized(true) sets it to true
  [x] isNormalized(false) sets it to false
- [x] getForensics() returns an instance of TemplateForensics based on this template's content
- [x] normalize() resets the cached instance of TemplateForensics
+ [x] getInspector() returns an instance of TemplateInspector based on this template's content
+ [x] normalize() resets the cached instance of TemplateInspector
  [x] replaceTokens() performs regexp-based replacements on the template's content
- [x] replaceTokens() resets the cached instance of TemplateForensics
+ [x] replaceTokens() resets the cached instance of TemplateInspector
  [x] replaceTokens() resets isNormalized
- [x] Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateForensics instance
+ [x] Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateInspector instance
  [x] setContent() updates the template's content
 
 s9e\TextFormatter\Tests\Configurator\Items\TemplateDocument

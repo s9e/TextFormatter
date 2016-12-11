@@ -12,7 +12,7 @@ use DOMDocument;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
@@ -93,19 +93,19 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
 		// the root of the text (IOW, with no parent) or even disabled altogether
-		$rootForensics = $this->generateRootForensics($parentHTML);
+		$rootInspector = $this->generateRootInspector($parentHTML);
 
 		// Study the tags
-		$templateForensics = [];
+		$templateInspector = [];
 		foreach ($tags as $tagName => $tag)
 		{
 			// Use the tag's template if applicable or XSLT's implicit default otherwise
 			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
-			$templateForensics[$tagName] = new TemplateForensics($template);
+			$templateInspector[$tagName] = new TemplateInspector($template);
 		}
 
 		// Generate a full set of rules
-		$rules = $this->generateRulesets($templateForensics, $rootForensics);
+		$rules = $this->generateRulesets($templateInspector, $rootInspector);
 
 		// Remove root rules that wouldn't be applied anyway
 		unset($rules['root']['autoClose']);
@@ -123,12 +123,12 @@ class RulesGenerator implements ArrayAccess, Iterator
 	}
 
 	/**
-	* Generate a TemplateForensics instance for the root element
+	* Generate a TemplateInspector instance for the root element
 	*
 	* @param  string            $html Root HTML, e.g. "<div>"
-	* @return TemplateForensics
+	* @return TemplateInspector
 	*/
-	protected function generateRootForensics($html)
+	protected function generateRootInspector($html)
 	{
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
@@ -149,39 +149,39 @@ class RulesGenerator implements ArrayAccess, Iterator
 			'xsl:apply-templates'
 		));
 
-		// Finally create and return a new TemplateForensics instance
-		return new TemplateForensics($dom->saveXML($body));
+		// Finally create and return a new TemplateInspector instance
+		return new TemplateInspector($dom->saveXML($body));
 	}
 
 	/**
-	* Generate and return rules based on a set of TemplateForensics
+	* Generate and return rules based on a set of TemplateInspector
 	*
-	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
-	* @param  TemplateForensics $rootForensics     TemplateForensics for the root of the text
+	* @param  array             $templateInspector Array of [tagName => TemplateInspector]
+	* @param  TemplateInspector $rootInspector     TemplateInspector for the root of the text
 	* @return array
 	*/
-	protected function generateRulesets(array $templateForensics, TemplateForensics $rootForensics)
+	protected function generateRulesets(array $templateInspector, TemplateInspector $rootInspector)
 	{
 		$rules = [
-			'root' => $this->generateRuleset($rootForensics, $templateForensics),
+			'root' => $this->generateRuleset($rootInspector, $templateInspector),
 			'tags' => []
 		];
-		foreach ($templateForensics as $tagName => $src)
+		foreach ($templateInspector as $tagName => $src)
 		{
-			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
+			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateInspector);
 		}
 
 		return $rules;
 	}
 
 	/**
-	* Generate a set of rules for a single TemplateForensics instance
+	* Generate a set of rules for a single TemplateInspector instance
 	*
-	* @param  TemplateForensics $src     Source of the rules
-	* @param  array             $targets Array of [tagName => TemplateForensics]
+	* @param  TemplateInspector $src     Source of the rules
+	* @param  array             $targets Array of [tagName => TemplateInspector]
 	* @return array
 	*/
-	protected function generateRuleset(TemplateForensics $src, array $targets)
+	protected function generateRuleset(TemplateInspector $src, array $targets)
 	{
 		$rules = [];
 		foreach ($this->collection as $rulesGenerator)

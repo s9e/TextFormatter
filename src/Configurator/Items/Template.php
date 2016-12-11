@@ -8,16 +8,16 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use DOMDocument;
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Template
 {
 	/**
-	* @var TemplateForensics Instance of TemplateForensics based on the content of this template
+	* @var TemplateInspector Instance of TemplateInspector based on the content of this template
 	*/
-	protected $forensics;
+	protected $inspector;
 
 	/**
 	* @var bool Whether this template has been normalized
@@ -42,13 +42,13 @@ class Template
 	/**
 	* Handle calls to undefined methods
 	*
-	* Forwards calls to this template's TemplateForensics instance
+	* Forwards calls to this template's TemplateInspector instance
 	*
 	* @return mixed
 	*/
 	public function __call($methodName, $args)
 	{
-		return call_user_func_array([$this->getForensics(), $methodName], $args);
+		return call_user_func_array([$this->getInspector(), $methodName], $args);
 	}
 
 	/**
@@ -91,18 +91,18 @@ class Template
 	}
 
 	/**
-	* Return an instance of TemplateForensics based on this template's content
+	* Return an instance of TemplateInspector based on this template's content
 	*
-	* @return TemplateForensics
+	* @return TemplateInspector
 	*/
-	public function getForensics()
+	public function getInspector()
 	{
-		if (!isset($this->forensics))
+		if (!isset($this->inspector))
 		{
-			$this->forensics = new TemplateForensics($this->__toString());
+			$this->inspector = new TemplateInspector($this->__toString());
 		}
 
-		return $this->forensics;
+		return $this->inspector;
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Template
 	*/
 	public function normalize(TemplateNormalizer $templateNormalizer)
 	{
-		$this->forensics    = null;
+		$this->inspector    = null;
 		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
 		$this->isNormalized = true;
 	}
@@ -173,7 +173,7 @@ class Template
 	*/
 	public function replaceTokens($regexp, $fn)
 	{
-		$this->forensics    = null;
+		$this->inspector    = null;
 		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = false;
 	}
@@ -186,7 +186,7 @@ class Template
 	*/
 	public function setContent($template)
 	{
-		$this->forensics    = null;
+		$this->inspector    = null;
 		$this->template     = (string) $template;
 		$this->isNormalized = false;
 	}

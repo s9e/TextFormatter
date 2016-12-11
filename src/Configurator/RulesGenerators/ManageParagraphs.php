@@ -7,30 +7,30 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
 class ManageParagraphs implements BooleanRulesGenerator
 {
 	/**
-	* @var TemplateForensics
+	* @var TemplateInspector
 	*/
 	protected $p;
 
 	/**
 	* Constructor
 	*
-	* Prepares the TemplateForensics for <p/>
+	* Prepares the TemplateInspector for <p/>
 	*/
 	public function __construct()
 	{
-		$this->p = new TemplateForensics('<p><xsl:apply-templates/></p>');
+		$this->p = new TemplateInspector('<p><xsl:apply-templates/></p>');
 	}
 
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateBooleanRules(TemplateForensics $src)
+	public function generateBooleanRules(TemplateInspector $src)
 	{
 		$rules = [];
 

@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
 class AutoCloseIfVoid implements BooleanRulesGenerator
@@ -15,7 +15,7 @@ class AutoCloseIfVoid implements BooleanRulesGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateBooleanRules(TemplateForensics $src)
+	public function generateBooleanRules(TemplateInspector $src)
 	{
 		return ($src->isVoid()) ? ['autoClose' => true] : [];
 	}

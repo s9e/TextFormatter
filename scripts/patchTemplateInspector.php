@@ -843,7 +843,7 @@ foreach ($arr as $elName => $elValues)
 
 $php = substr($php, 0, -1);
 
-$filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateForensics.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateInspector.php';
 $file = file_get_contents($filepath);
 
 if (!preg_match('#(?<=static \\$htmlElements = \\[)(.*?)(?=\\n\\t\\];)#s', $file, $m, PREG_OFFSET_CAPTURE))

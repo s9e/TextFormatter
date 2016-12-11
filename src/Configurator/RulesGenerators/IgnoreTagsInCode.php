@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
 class IgnoreTagsInCode implements BooleanRulesGenerator
@@ -16,7 +16,7 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 	/**
 	* {@inheritdoc}
 	*/
-	public function generateBooleanRules(TemplateForensics $src)
+	public function generateBooleanRules(TemplateInspector $src)
 	{
 		$xpath = new DOMXPath($src->getDOM());
 

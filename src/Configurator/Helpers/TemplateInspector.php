@@ -27,9 +27,9 @@ use DOMXPath;
 *
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-* @see  /scripts/patchTemplateForensics.php
+* @see  /scripts/patchTemplateInspector.php
 */
-class TemplateForensics
+class TemplateInspector
 {
 	/**
 	* @var string allowChild bitfield (all branches)
@@ -747,7 +747,7 @@ class TemplateForensics
 	* predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*
 	* @var array
-	* @see /scripts/patchTemplateForensics.php
+	* @see /scripts/patchTemplateInspector.php
 	*/
 	protected static $htmlElements = [
 		'a'=>['c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1],

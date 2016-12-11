@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Tests\Test;
 
@@ -131,22 +131,22 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox getForensics() returns an instance of TemplateForensics based on this template's content
+	* @testdox getInspector() returns an instance of TemplateInspector based on this template's content
 	*/
-	public function testGetForensics()
+	public function testGetInspector()
 	{
 		$template = new Template('<br/>');
 
 		$this->assertEquals(
-			new TemplateForensics('<br/>'),
-			$template->getForensics()
+			new TemplateInspector('<br/>'),
+			$template->getInspector()
 		);
 	}
 
 	/**
-	* @testdox normalize() resets the cached instance of TemplateForensics
+	* @testdox normalize() resets the cached instance of TemplateInspector
 	*/
-	public function testNormalizeResetsForensics()
+	public function testNormalizeResetsInspector()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
 		             ->disableOriginalConstructor()
@@ -154,11 +154,11 @@ class TemplateTest extends Test
 
 		$template = new Template('<br/>');
 
-		$instance = $template->getForensics();
-		$this->assertSame($instance, $template->getForensics(), 'The instance was not cached');
+		$instance = $template->getInspector();
+		$this->assertSame($instance, $template->getInspector(), 'The instance was not cached');
 
 		$template->normalize($mock);
-		$this->assertNotSame($instance, $template->getForensics());
+		$this->assertNotSame($instance, $template->getInspector());
 	}
 
 	/**
@@ -180,17 +180,17 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox replaceTokens() resets the cached instance of TemplateForensics
+	* @testdox replaceTokens() resets the cached instance of TemplateInspector
 	*/
-	public function testReplaceTokensResetsForensics()
+	public function testReplaceTokensResetsInspector()
 	{
 		$template = new Template('<br/>');
 
-		$instance = $template->getForensics();
-		$this->assertSame($instance, $template->getForensics(), 'The instance was not cached');
+		$instance = $template->getInspector();
+		$this->assertSame($instance, $template->getInspector(), 'The instance was not cached');
 
 		$template->replaceTokens('//', function () {});
-		$this->assertNotSame($instance, $template->getForensics());
+		$this->assertNotSame($instance, $template->getInspector());
 	}
 
 	/**
@@ -211,9 +211,9 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateForensics instance
+	* @testdox Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateInspector instance
 	*/
-	public function testForensicsMethods()
+	public function testInspectorMethods()
 	{
 		$template = new Template('<hr/>');
 

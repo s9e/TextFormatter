@@ -7,16 +7,16 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 
 interface TargetedRulesGenerator
 {
 	/**
-	* Generate targeted rules that apply to given template forensics
+	* Generate targeted rules that apply to given template inspector
 	*
-	* @param  TemplateForensics $src Source template forensics
-	* @param  TemplateForensics $trg Target template forensics
+	* @param  TemplateInspector $src Source template inspector
+	* @param  TemplateInspector $trg Target template inspector
 	* @return array                  List of rules that apply from the source template to the target
 	*/
-	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg);
+	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg);
 }
