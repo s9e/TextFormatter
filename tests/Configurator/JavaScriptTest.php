@@ -402,7 +402,7 @@ class JavaScriptTest extends Test
 	public function testNoExport()
 	{
 		$this->configurator->javascript->exportMethods = [];
-		$this->assertNotContains("window['s9e']", $this->configurator->javascript->getParser());
+		$this->assertNotContains("window['s9e']['TextFormatter']", $this->configurator->javascript->getParser());
 	}
 }
 

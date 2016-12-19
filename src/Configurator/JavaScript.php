@@ -137,7 +137,7 @@ class JavaScript
 		$src = $this->getHints() . $this->injectConfig($this->getSource());
 
 		// Export the public API
-		$src .= $this->getExports();
+		$src .= "if (!window['s9e']) window['s9e'] = {};\n" . $this->getExports();
 
 		// Minify the source
 		$src = $this->getMinifier()->get($src);
@@ -213,7 +213,7 @@ class JavaScript
 			$methods[] = "'" . $method . "':" . $method;
 		}
 
-		return "window['s9e'] = { 'TextFormatter': {" . implode(',', $methods) . "} }\n";
+		return "window['s9e']['TextFormatter'] = {" . implode(',', $methods) . '}';
 	}
 
 	/**
