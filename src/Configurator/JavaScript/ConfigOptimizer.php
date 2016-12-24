@@ -90,7 +90,13 @@ class ConfigOptimizer
 	*/
 	protected function canDeduplicate($value)
 	{
-		return (is_array($value) || $value instanceof Code || $value instanceof Dictionary);
+		if (is_array($value) || $value instanceof Dictionary)
+		{
+			// Do not deduplicate empty arrays and dictionaries
+			return (bool) count($value);
+		}
+
+		return ($value instanceof Code);
 	}
 
 	/**

@@ -89,6 +89,22 @@ class ConfigOptimizerTest extends Test
 				'{bar:returnFalse,foo:returnFalse}',
 				[]
 			],
+			[
+				[
+					'foo' => [],
+					'bar' => []
+				],
+				'{bar:[],foo:[]}',
+				[]
+			],
+			[
+				[
+					'foo' => new Dictionary,
+					'bar' => new Dictionary
+				],
+				'{bar:{},foo:{}}',
+				[]
+			],
 		];
 	}
 }
