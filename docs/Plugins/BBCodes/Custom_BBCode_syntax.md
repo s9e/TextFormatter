@@ -47,7 +47,7 @@ In addition to the token's type, any number of filters can be added to the `filt
     [time={NUMBER;preFilter=strtotime}]
     [title={TEXT;postFilter=strtolower,ucwords}]
 
-Only the filters listed in BBCodeMonkey::$allowedFilters can be used, for obvious security reasons. `[foo={TEXT;preFilter=eval}]` will throw an exception.
+Only the filters listed in BBCodeMonkey::$allowedFilters can be used, for obvious security reasons. `[foo={TEXT;preFilter=eval}]` will throw an exception. See the [Allow custom filters](http://s9etextformatter.readthedocs.io/Plugins/BBCodes/Add_custom_BBCodes/#allow-custom-filters) for an example.
 
 Other attribute options are supported, see `s9e\TextFormatter\Configurator\Items\Attribute`:
 
