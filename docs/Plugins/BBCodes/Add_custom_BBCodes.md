@@ -25,3 +25,28 @@ echo $html;
 ```html
 <span style="font-size:10px">Small text</span>, <span style="font-size:24px">big</span>, <span style="font-size:32px">biggest</span>.
 ```
+
+### Allow custom filters
+
+By default, only a few callbacks are allowed to be used as attribute filters in custom BBCodes, for security reasons. You can enable more callbacks in the BBCodeMonkey object used to create custom BBCodes.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$configurator->BBCodes->bbcodeMonkey->allowedFilters[] = 'md5';
+$configurator->BBCodes->addCustom(
+	'[md5 hash={ALNUM;useContent;preFilter=md5}]{TEXT}[/md5]',
+	'{TEXT} becomes {ALNUM}'
+);
+
+extract($configurator->finalize());
+
+$text = '[md5]This text[/md5]';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+This text becomes e774cc9902f6011ff96e0b762630fabf
+```
