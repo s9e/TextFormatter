@@ -1075,7 +1075,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
-				'<r><PODBEAN id="5169420" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
+				'<r><PODBEAN id="qtwub-4ee10c" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2642,6 +2642,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('playstv');
+				}
+			],
+			[
+				'http://www.podbean.com/media/share/pb-qtwub-4ee10c',
+				'<r><PODBEAN id="qtwub-4ee10c" url="http://www.podbean.com/media/share/pb-qtwub-4ee10c">http://www.podbean.com/media/share/pb-qtwub-4ee10c</PODBEAN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('podbean');
 				}
 			],
 			[

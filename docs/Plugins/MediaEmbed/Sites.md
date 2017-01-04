@@ -374,7 +374,7 @@
 	<tr>
 		<td><code>podbean</code></td>
 		<td>Podbean</td>
-		<td>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</td>
+		<td>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>http://www.podbean.com/media/share/pb-qtwub-4ee10c</td>
 	</tr>
 	<tr>
 		<td><code>prezi</code></td>
