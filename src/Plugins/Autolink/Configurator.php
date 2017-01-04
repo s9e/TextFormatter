@@ -81,9 +81,9 @@ class Configurator extends ConfiguratorBase
 			$anchor = '(?:' . $anchor . '|www\\.)';
 		}
 
-		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]'
+		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s()\\[\\]'
 		        . '\\x{FF01}-\\x{FF0F}\\x{FF1A}-\\x{FF20}\\x{FF3B}-\\x{FF40}\\x{FF5B}-\\x{FF65}'
-		        . ']|\\[\\w*\\])++#Siu';
+		        . ']|\\([^\\s()]*\\)|\\[\\w*\\])++#Siu';
 
 		return $regexp;
 	}

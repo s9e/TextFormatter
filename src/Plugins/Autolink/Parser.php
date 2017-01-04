@@ -71,17 +71,6 @@ class Parser extends ParserBase
 	*/
 	protected function trimUrl($url)
 	{
-		while (1)
-		{
-			$url = preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
-			if (substr($url, -1) === ')' && substr_count($url, '(') < substr_count($url, ')'))
-			{
-				$url = substr($url, 0, -1);
-				continue;
-			}
-			break;
-		}
-
-		return $url;
+		return preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
 	}
 }
