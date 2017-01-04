@@ -56,6 +56,7 @@ $knownVars['hljsLoading'] = 1;
 $knownVars['id']          = 1;
 $knownVars['pok']         = 1;
 $knownVars['punycode']    = 1;
+$knownVars['s9e']         = 1;
 $knownVars['site']        = 1;
 
 // Those are intentionally preserved
