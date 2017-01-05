@@ -19,7 +19,7 @@ By default, an attribute filter or a tag filter only receives one argument: the 
  * `tagConfig` - the current tag's configuration
  * `text` - the text being parsed
 
-<span style="color:red">⚠</span> The `openTags` and `tagConfig` are subject to change.
+<span style="color:red">⚠</span> The `openTags` and `tagConfig` parameters are subject to change.
 
 ## Examples
 
