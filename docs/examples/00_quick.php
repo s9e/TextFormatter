@@ -1,7 +1,7 @@
 <?php
 
-// Get the autoloader (unless you have already loaded Composer's)
-include __DIR__ . '/../../src/autoloader.php';
+// Get the autoloader
+include __DIR__ . '/../../vendor/autoload.php';
 
 // Use the Forum bundle. It supports BBCodes, emoticons and autolinking
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;

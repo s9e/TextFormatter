@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/../../src/autoloader.php';
+include __DIR__ . '/../../vendor/autoload.php';
 
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 

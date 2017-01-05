@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../../src/autoloader.php';
+include __DIR__ . '/../../vendor/autoload.php';
 
 $cache = array();
 foreach (glob(realpath(__DIR__ . '/../../src/Configurator/JavaScript/functions') . '/*.js') as $filepath)

@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 $dom = new DOMDocument;
 $dom->load(__DIR__ . '/../src/Plugins/BBCodes/Configurator/repository.xml');

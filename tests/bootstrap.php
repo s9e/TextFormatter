@@ -1,25 +1,8 @@
 <?php
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
-if (file_exists(__DIR__ . '/../vendor/autoload.php'))
-{
-	include __DIR__ . '/../vendor/autoload.php';
-}
-
-spl_autoload_register(
-	function($className)
-	{
-		if (preg_match('#^s9e\\\\TextFormatter\\\\Tests(\\\\[\\w\\\\]+)$#D', $className, $m))
-		{
-			$path = __DIR__ . str_replace('\\', '/', $m[1]) . '.php';
-
-			if (file_exists($path))
-			{
-				include $path;
-			}
-		}
-	}
-);
+// Preload the Configurator and the classes that are bundled with it
+class_exists('s9e\\TextFormatter\\Configurator');
 
 date_default_timezone_set('UTC');

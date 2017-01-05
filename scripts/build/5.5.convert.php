@@ -128,6 +128,6 @@ function convertDir($dir)
 	}
 }
 
-include_once __DIR__ . '/../../src/autoloader.php';
+include_once __DIR__ . '/../../vendor/autoload.php';
 convertDir(realpath(__DIR__ . '/../../src'));
 echo "\n";

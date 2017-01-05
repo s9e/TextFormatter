@@ -4,7 +4,7 @@
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection;
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 function export(array $arr)
 {

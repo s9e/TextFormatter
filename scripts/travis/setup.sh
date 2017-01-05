@@ -24,10 +24,10 @@ echo "Installing Closure Compiler"
 # The cache dir lets the MediaEmbed plugin cache scraped content
 mkdir ../../tests/.cache
 
+wait
+
 # Prepare the files as for a release branch
 ../build/prepareFiles.sh
-
-wait
 
 # Start a local webserver for the Http helper's tests
 if [ "$TRAVIS_PHP_VERSION" != '5.3.3' ]

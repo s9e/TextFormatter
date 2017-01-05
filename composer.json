@@ -30,5 +30,10 @@
 		"psr-4": {
 			"s9e\\TextFormatter\\": "src"
 		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"s9e\\TextFormatter\\Tests\\": "tests"
+		}
 	}
 }

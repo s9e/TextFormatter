@@ -2,7 +2,7 @@
 <?php
 
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 $filepath = __DIR__ . '/../src/Configurator/JavaScript/RegexpConvertor.php';
 

@@ -27,7 +27,7 @@ function patchFile($filepath)
 	}
 }
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Litedown;
 extract($configurator->finalize());

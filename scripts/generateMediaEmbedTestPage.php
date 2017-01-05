@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);

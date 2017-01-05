@@ -22,8 +22,6 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
-			<file>tests/autoloaderTest.php</file>
-
 			<!-- Test the base classes and traits first -->
 			<file>tests/Configurator/Collections/CollectionTest.php</file>
 			<file>tests/Configurator/Collections/NormalizedCollectionTest.php</file>

@@ -4,7 +4,7 @@
 use s9e\SimpleDOM\SimpleDOM;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
-include __DIR__ . '/../src/autoloader.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 function loadPage($url, $filename = null)
 {
