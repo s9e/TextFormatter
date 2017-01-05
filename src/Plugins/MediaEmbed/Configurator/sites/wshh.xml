@@ -9,7 +9,7 @@
 	<extract>!worldstarhiphop\.com/featured/(?'id'\d+)!</extract>
 	<scrape>
 		<match>!worldstarhiphop\.com/(?:\w+/)?video\.php\?v=\w+!</match>
-		<extract>!disqus_identifier[ =']+(?'id'\d+)!</extract>
+		<extract>!v: ?"?(?'id'\d+)!</extract>
 	</scrape>
 	<iframe width="640" height="360" src="//www.worldstarhiphop.com/embed/{@id}"/>
 </site>
