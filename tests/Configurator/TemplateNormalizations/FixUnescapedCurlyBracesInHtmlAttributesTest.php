@@ -47,6 +47,22 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<xsl:value-of select="\'{}\'"/>',
 				'<xsl:value-of select="\'{}\'"/>'
 			],
+			[
+				'<hr onmouseover="foo({bar:\'\'}"/>',
+				'<hr onmouseover="foo({{bar:\'\'}"/>'
+			],
+			[
+				'<hr onmouseover="foo({bar: true}"/>',
+				'<hr onmouseover="foo({{bar: true}"/>'
+			],
+			[
+				'<hr onmouseover="foo({{bar: true}"/>',
+				'<hr onmouseover="foo({{bar: true}"/>'
+			],
+			[
+				'<hr onmouseover="foo({ \'bar\':true}"/>',
+				'<hr onmouseover="foo({{ \'bar\':true}"/>'
+			],
 		];
 	}
 }

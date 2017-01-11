@@ -52,14 +52,16 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 			return;
 		}
 
-		$attribute->value = htmlspecialchars(
-			preg_replace(
-				'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
-				'$0{',
-				$attribute->value
-			),
-			ENT_NOQUOTES,
-			'UTF-8'
-		);
+		$match = [
+			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
+		];
+		$replace = [
+			'$0{',
+			'{$0'
+		];
+
+		$attrValue        = preg_replace($match, $replace, $attribute->value);
+		$attribute->value = htmlspecialchars($attrValue, ENT_NOQUOTES, 'UTF-8');
 	}
 }
