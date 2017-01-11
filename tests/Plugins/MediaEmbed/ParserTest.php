@@ -2636,6 +2636,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.pinterest.com/pin/99360735500167749/',
+				'<r><PINTEREST id="99360735500167749" url="https://www.pinterest.com/pin/99360735500167749/">https://www.pinterest.com/pin/99360735500167749/</PINTEREST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pinterest');
+				}
+			],
+			[
+				'https://www.pinterest.com/pinterest/official-news/',
+				'<r><PINTEREST id="pinterest/official-news" url="https://www.pinterest.com/pinterest/official-news/">https://www.pinterest.com/pinterest/official-news/</PINTEREST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pinterest');
+				}
+			],
+			[
+				'https://www.pinterest.com/pin/create/button/?url=',
+				'<t>https://www.pinterest.com/pin/create/button/?url=</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('pinterest');
+				}
+			],
+			[
 				'http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that',
 				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that">http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
 				[],

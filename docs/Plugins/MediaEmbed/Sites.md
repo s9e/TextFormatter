@@ -367,6 +367,11 @@
 		<td>http://pastebin.com/9jEf44nc</td>
 	</tr>
 	<tr>
+		<td><code>pinterest</code></td>
+		<td>Pinterest</td>
+		<td>https://www.pinterest.com/pin/99360735500167749/<br/>https://www.pinterest.com/pinterest/official-news/</td>
+	</tr>
+	<tr>
 		<td><code>playstv</code></td>
 		<td>Plays.tv</td>
 		<td>http://plays.tv/s/Kt4onQhyyVyz<br/>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
