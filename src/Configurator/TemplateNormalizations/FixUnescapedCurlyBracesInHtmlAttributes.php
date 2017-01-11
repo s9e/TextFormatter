@@ -44,10 +44,8 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 	*/
 	protected function fixAttribute(DOMAttr $attribute)
 	{
-		$parentNode = $attribute->parentNode;
-
 		// Skip XSL elements
-		if ($parentNode->namespaceURI === self::XMLNS_XSL)
+		if ($attribute->parentNode->namespaceURI === self::XMLNS_XSL)
 		{
 			return;
 		}
@@ -60,7 +58,6 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 			'$0{',
 			'{$0'
 		];
-
 		$attrValue        = preg_replace($match, $replace, $attribute->value);
 		$attribute->value = htmlspecialchars($attrValue, ENT_NOQUOTES, 'UTF-8');
 	}
