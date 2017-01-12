@@ -1,0 +1,19 @@
+<site name="Gifs.com" homepage="https://gifs.com/">
+	<example>https://gifs.com/gif/zm4DLy</example>
+	<example>https://j.gifs.com/Y6YZoO.gif</example>
+
+	<tags><tag>images</tag></tags>
+
+	<attributes>
+		<height defaultValue="360"/>
+		<width defaultValue="640"/>
+	</attributes>
+
+	<host>gifs.com</host>
+	<extract>!gifs\.com/(?:gif/)?(?'id'\w+)!</extract>
+	<scrape url="https://gifs.com/gif/{@id}">
+		<extract>!meta property="og:image:width" content="(?'width'\d+)!</extract>
+		<extract>!meta property="og:image:height" content="(?'height'\d+)!</extract>
+	</scrape>
+	<iframe width="{@width}" height="{@height}" src="//gifs.com/embed/{@id}"/>
+</site>

@@ -818,6 +818,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://j.gifs.com/Y6YZoO.gif',
+				'<r><GIFS height="360" id="Y6YZoO" url="https://j.gifs.com/Y6YZoO.gif" width="360">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gifs');
+				}
+			],
+			[
 				'http://www.hudl.com/v/CVmja',
 				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
 				[],
