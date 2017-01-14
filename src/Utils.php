@@ -200,9 +200,9 @@ abstract class Utils
 		ksort($attributes);
 		foreach ($attributes as $attrName => $attrValue)
 		{
-			$xml .= ' ' . htmlspecialchars($attrName, ENT_QUOTES) . '="' . self::encodeUnicodeSupplementaryCharacters(htmlspecialchars($attrValue, ENT_COMPAT)) . '"';
+			$xml .= ' ' . htmlspecialchars($attrName, ENT_QUOTES) . '="' . str_replace("\n", '&#10;', htmlspecialchars($attrValue, ENT_COMPAT)) . '"';
 		}
 
-		return $xml;
+		return self::encodeUnicodeSupplementaryCharacters($xml);
 	}
 }
