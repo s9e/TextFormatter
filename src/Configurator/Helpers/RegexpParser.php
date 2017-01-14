@@ -256,7 +256,7 @@ abstract class RegexpParser
 					break;
 
 				case '(':
-					if (preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
+					if (preg_match('#\\(\\?([a-z]*)\\)#iA', $regexp, $m, 0, $pos))
 					{
 						// This is an option (?i) so we skip past the right parenthesis
 						$ret['tokens'][] = [

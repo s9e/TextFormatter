@@ -614,6 +614,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() parses negative lookahead assertions
  [x] parse() parses lookbehind assertions
  [x] parse() parses negative lookbehind assertions
+ [x] parse() parses escaped right parentheses
  [x] getAllowedCharacterRegexp() works
  [x] getCaptureNames() works
 

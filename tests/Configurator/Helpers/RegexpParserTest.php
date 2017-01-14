@@ -699,6 +699,38 @@ class RegexpParserTest extends Test
 	}
 
 	/**
+	* @testdox parse() parses escaped right parentheses
+	*/
+	public function testCanParseRegexps20()
+	{
+		$this->assertEquals(
+			[
+				'delimiter' => '/',
+				'modifiers' => '',
+				'regexp'    => '(\\(?)',
+				'tokens'    => [
+					[
+						'pos'      => 0,
+						'len'      => 1,
+						'type'     => 'capturingSubpatternStart',
+						'content'  => '\\(?',
+						'endToken' => 1
+					],
+					[
+						'pos'         => 4,
+						'len'         => 1,
+						'type'        => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					]
+				]
+			],
+			RegexpParser::parse(
+				'/(\(?)/'
+			)
+		);
+	}
+
+	/**
 	* @testdox getAllowedCharacterRegexp() works
 	* @dataProvider getAllowedCharacterRegexpData
 	*/
