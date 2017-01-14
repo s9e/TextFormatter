@@ -200,8 +200,13 @@ abstract class Utils
 		ksort($attributes);
 		foreach ($attributes as $attrName => $attrValue)
 		{
-			$xml .= ' ' . htmlspecialchars($attrName, ENT_QUOTES) . '="' . str_replace("\n", '&#10;', htmlspecialchars($attrValue, ENT_COMPAT)) . '"';
+			$xml .= ' ' . htmlspecialchars($attrName, ENT_QUOTES) . '="' . htmlspecialchars($attrValue, ENT_COMPAT) . '"';
 		}
+
+		// Normalize control characters to what the parser would normally produce
+		$xml = preg_replace('/\\r\\n?/', "\n", $xml);
+		$xml = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $xml);
+		$xml = str_replace("\n", '&#10;', $xml);
 
 		return self::encodeUnicodeSupplementaryCharacters($xml);
 	}

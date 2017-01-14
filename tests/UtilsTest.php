@@ -311,6 +311,15 @@ class UtilsTest extends Test
 					return ['foo' => "a\nb"];
 				}
 			],
+			[
+				'<r><X foo=""/></r>',
+				'<r><X foo="a&#10;b"/></r>',
+				'X',
+				function ($attributes)
+				{
+					return ['foo' => "a\r\nb"];
+				}
+			],
 		];
 	}
 }
