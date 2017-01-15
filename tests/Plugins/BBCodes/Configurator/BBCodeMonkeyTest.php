@@ -1140,7 +1140,7 @@ class BBCodeMonkeyTest extends Test
 					]),
 					'tag'    => new Tag([
 						'attributePreprocessors' => [
-							['content', '/^(?<content0>\\d+) \\* (?<content1>\\d+)$/D']
+							['content', '/^(?<content0>\\d+)\\s+\\*\\s+(?<content1>\\d+)$/D']
 						],
 						'attributes' => [
 							'content0' => [
@@ -1482,6 +1482,30 @@ class BBCodeMonkeyTest extends Test
 						'attributePreprocessors' => [
 							['foo', '/^(?<foo0>\\d+),(?<foo1>\\d+)$/D'],
 							['foo', '/^(?<foo1>\\d+);(?<foo0>\\d+)$/D']
+						],
+						'attributes' => [
+							'foo0' => [
+								'filterChain' => [new NumberFilter]
+							],
+							'foo1' => [
+								'filterChain' => [new NumberFilter]
+							]
+						],
+						'template' => '<xsl:value-of select="@foo0"/><xsl:value-of select="@foo1"/>'
+					])
+				]
+			],
+			[
+				'[foo={NUMBER1} {NUMBER2}]',
+				'{NUMBER1}{NUMBER2}',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/^(?<foo0>\\d+)\\s+(?<foo1>\\d+)$/D']
 						],
 						'attributes' => [
 							'foo0' => [

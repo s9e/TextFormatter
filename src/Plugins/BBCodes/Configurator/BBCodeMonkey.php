@@ -206,7 +206,7 @@ class BBCodeMonkey
 		        // [BBCODE
 		        . '\\[(?<bbcodeName>\\S+?)'
 		        // ={TOKEN}
-		        . '(?<defaultAttribute>=\\S+?)?'
+		        . '(?<defaultAttribute>=.+?)?'
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
@@ -473,8 +473,11 @@ class BBCodeMonkey
 					$table[$tokenId] = $matchName;
 				}
 
-				// Append the literal text between the last position and current position
-				$regexp .= preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				// Append the literal text between the last position and current position.
+				// Replace whitespace with a flexible whitespace pattern
+				$literal = preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$literal = preg_replace('(\\s+)', '\\s+', $literal);
+				$regexp .= $literal;
 
 				// Grab the expression that corresponds to the token type, or use a catch-all
 				// expression otherwise

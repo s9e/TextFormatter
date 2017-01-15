@@ -142,6 +142,14 @@ An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless th
 
     [flash={PARSE=/^(?<width>\d+),(?<height>\d+)$/} width={NUMBER1} height={NUMBER2}]
 
+Normal spaces in a composite attributes are converted to accept any amount of whitespace. Thus, this following definition:
+
+    [flash={NUMBER1} {NUMBER2}]
+
+...will be interpreted as:
+
+    [flash={PARSE=/^(?<flash0>\d+)\s+(?<flash1>\d+)$/}]
+
 ### BBCode options
 
 BBCode options can be specified in the opening tag like an attribute, using their name preceded with a `$`. Boolean values can be expressed as `true` and `false` (in lowercase.) For example:
