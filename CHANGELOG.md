@@ -1,3 +1,38 @@
+0.9.0 (2017-01-15)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#090) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8fefdbf95ab97316172d0f49d83c9547d0998795...d8623b088dd5ab71250fa9d842c513628bca4a89)
+
+### Added
+
+ - `8a25af9fa` FixUnescapedCurlyBracesInHtmlAttributes: added more JavaScript-related replacements
+ - `acdd16962` MediaEmbed: added support for Gifs.com
+ - `42f549035` MediaEmbed: added support for Pinterest
+
+### Removed
+
+ - `25f2c231a` Removed the custom autoloader
+
+### Fixed
+
+ - `382b31df3` RegexpParser: fixed incorrect unanchored pattern
+ - `ecf1d71e4` Utils: fixed raw newlines in replaceAttributes()
+
+### Changed
+
+ - `bd3e3edce` Autolink: simplified parentheses matching
+ - `842b02716` JavaScript: do not replace the s9e object if it already exists
+ - `19c33a310` JavaScript\ConfigOptimizer: do not deduplicate empty arrays and dictionaries
+ - `caf68b1cf` MediaEmbed: updated Podbean
+ - `9deb2f725` MediaEmbed: updated WSHH
+ - `d8623b088` RegexpParser: anchored bracket matching pattern as a precaution
+ - `f5f494fc7` TemplateForensics: renamed to TemplateInspector
+ - `2f57d0383` TemplateInspector: replaced "self" type hints with "TemplateInspector"
+ - `20c5ed80f` Utils: normalize control characters in replaceAttributes()
+
+
 0.8.5 (2016-12-11)
 ==================
 
