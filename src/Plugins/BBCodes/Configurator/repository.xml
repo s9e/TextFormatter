@@ -427,6 +427,13 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="TBODY">
+		<usage>[TBODY]{ANYTHING}[/TBODY]</usage>
+		<template><![CDATA[
+			<tbody>{ANYTHING}</tbody>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="TD">
 		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]</usage>
 		<template><![CDATA[
@@ -448,6 +455,13 @@
 				</xsl:if>
 				<xsl:apply-templates/>
 			</th>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="THEAD">
+		<usage>[THEAD]{ANYTHING}[/THEAD]</usage>
+		<template><![CDATA[
+			<thead>{ANYTHING}</thead>
 		]]></template>
 	</bbcode>
 

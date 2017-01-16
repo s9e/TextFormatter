@@ -439,6 +439,12 @@ __TABLE__
 <table>{ANYTHING}</table>
 ```
 
+__TBODY__  
+`[TBODY]{ANYTHING}[/TBODY]`
+```xsl
+<tbody>{ANYTHING}</tbody>
+```
+
 __TD__  
 `[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]`
 ```xsl
@@ -459,6 +465,12 @@ __TH__
 	</xsl:if>
 	<xsl:apply-templates/>
 </th>
+```
+
+__THEAD__  
+`[THEAD]{ANYTHING}[/THEAD]`
+```xsl
+<thead>{ANYTHING}</thead>
 ```
 
 __TR__  
