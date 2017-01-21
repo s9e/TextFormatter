@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$(dirname $(dirname $(realpath $0)))/src"
 TARGET="$(dirname $(dirname $(dirname $(realpath $0))))/s9e.github.io/TextFormatter/api"
-CONF="<?php return new Sami\\Sami('$DIR',['build_dir'=>'$TARGET','cache_dir'=>__DIR__.'/sami']);"
+CONF="<?php return new Sami\\Sami('$DIR',['build_dir'=>'$TARGET','cache_dir'=>__DIR__.'/sami','store'=>new Sami\\Store\\ArrayStore]);"
 TMP_DIR="$(dirname $TARGET)/.cache"
 
 if [ ! -d "$TMP_DIR/sami" ]
