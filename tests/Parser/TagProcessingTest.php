@@ -1375,6 +1375,38 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('B', 33, 4);
 				}
 			],
+			[
+				'[list][*][b]... [/list]',
+				'<r><LIST><s>[list]</s><LI><s>[*]</s><B><s>[b]</s>...</B></LI> <e>[/list]</e></LIST></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('LIST')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('LI');
+					$configurator->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('LIST', 0, 6, 16, 7);
+					$parser->addStartTag('LI', 6, 3);
+					$parser->addStartTag('B', 9, 3);
+				}
+			],
+			[
+				'[list][*][b]... [/list]',
+				'<r><LIST><s>[list]</s><LI><s>[*]</s><B><s>[b]</s>...</B></LI> <e>[/list]</e></LIST></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('LIST');
+					$configurator->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+					$configurator->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('LIST', 0, 6, 16, 7);
+					$parser->addStartTag('LI', 6, 3);
+					$parser->addStartTag('B', 9, 3);
+				}
+			],
 		];
 	}
 }

@@ -1838,6 +1838,14 @@ class Parser
 			return;
 		}
 
+		// Accumulate flags to determine whether whitespace should be trimmed
+		$flags = $tag->getFlags();
+		foreach ($closeTags as $openTag)
+		{
+			$flags |= $openTag->getFlags();
+		}
+		$ignoreWhitespace = (bool) ($flags & self::RULE_IGNORE_WHITESPACE);
+
 		// Only reopen tags if we haven't exceeded our "fixing" budget
 		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
 
@@ -1863,7 +1871,7 @@ class Parser
 
 			// Find the earliest position we can close this open tag
 			$tagPos = $tag->getPos();
-			if ($openTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
+			if ($ignoreWhitespace)
 			{
 				$tagPos = $this->getMagicEndPos($tagPos);
 			}

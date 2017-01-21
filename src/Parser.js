@@ -1755,6 +1755,14 @@ function processEndTag(tag)
 		return;
 	}
 
+	// Accumulate flags to determine whether whitespace should be trimmed
+	var flags = tag.getFlags();
+	closeTags.forEach(function(openTag)
+	{
+		flags |= openTag.getFlags();
+	});
+	var ignoreWhitespace = (HINT.RULE_IGNORE_WHITESPACE && (flags & RULE_IGNORE_WHITESPACE));
+
 	// Only reopen tags if we haven't exceeded our "fixing" budget
 	var keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
@@ -1777,7 +1785,7 @@ function processEndTag(tag)
 
 		// Find the earliest position we can close this open tag
 		var tagPos = tag.getPos();
-		if (HINT.RULE_IGNORE_WHITESPACE && openTag.getFlags() & RULE_IGNORE_WHITESPACE)
+		if (ignoreWhitespace)
 		{
 			tagPos = getMagicEndPos(tagPos);
 		}
