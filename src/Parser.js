@@ -1386,7 +1386,7 @@ function addMagicEndTag(startTag, tagPos)
 	var tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
-	if (HINT.RULE_IGNORE_WHITESPACE && (startTag.getFlags() & RULE_IGNORE_WHITESPACE))
+	if (HINT.RULE_IGNORE_WHITESPACE && ((currentTag.getFlags() | startTag.getFlags()) & RULE_IGNORE_WHITESPACE))
 	{
 		tagPos = getMagicEndPos(tagPos);
 	}

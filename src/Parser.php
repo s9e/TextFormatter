@@ -1466,7 +1466,7 @@ class Parser
 		$tagName = $startTag->getName();
 
 		// Adjust the end tag's position if whitespace is to be minimized
-		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
+		if (($this->currentTag->getFlags() | $startTag->getFlags()) & self::RULE_IGNORE_WHITESPACE)
 		{
 			$tagPos = $this->getMagicEndPos($tagPos);
 		}
