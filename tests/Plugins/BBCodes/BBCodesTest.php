@@ -183,6 +183,10 @@ class BBCodesTest extends Test
 				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
 			],
 			[
+				'[color=red][quote]...[/quote]',
+				'<span style="color:red"></span><blockquote class="uncited"><div><span style="color:red">...</span></div></blockquote>'
+			],
+			[
 				'our [del]great [/del]leader',
 				'our <del>great </del>leader'
 			],

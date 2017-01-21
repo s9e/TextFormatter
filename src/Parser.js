@@ -578,7 +578,7 @@ function finalizeOutput()
 	do
 	{
 		tmp = output;
-		output = output.replace(/<([^ />]+)><\/\1>/g, '');
+		output = output.replace(/<([^ />]+)[^>]*><\/\1>/g, '');
 	}
 	while (output !== tmp);
 

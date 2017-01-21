@@ -681,7 +681,7 @@ class Parser
 		// Remove empty tag pairs, e.g. <I><U></U></I> as well as empty paragraphs
 		do
 		{
-			$this->output = preg_replace('(<([^ />]+)></\\1>)', '', $this->output, -1, $cnt);
+			$this->output = preg_replace('(<([^ />]+)[^>]*></\\1>)', '', $this->output, -1, $cnt);
 		}
 		while ($cnt > 0);
 

@@ -265,6 +265,26 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'x [i][color=red][u]...[/color][/i][/u] y',
+				'<r>x <I><s>[i]</s><COLOR color="red"><s>[color=red]</s><U><s>[u]</s>...</U><e>[/color]</e></COLOR><e>[/i]</e></I><i>[/u]</i> y</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('COLOR')->rules->autoReopen();
+					$configurator->tags['COLOR']->attributes->add('color');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('I', 2, 3);
+					$parser->addStartTag('COLOR', 5, 11)->setAttribute('color', 'red');
+					$parser->addStartTag('U', 16, 3);
+					$parser->addEndTag('COLOR', 22, 8);
+					$parser->addEndTag('I', 30, 4);
+					$parser->addEndTag('U', 34, 4);
+				}
+			],
+			[
 				'foo bar',
 				'<r>foo <X>bar</X></r>',
 				function ($configurator)
