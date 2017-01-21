@@ -1380,10 +1380,7 @@ class Parser
 				{
 					if ($parentName !== $tagName && $this->currentFixingCost < $this->maxFixingCost)
 					{
-						// Add a 0-width copy of the parent tag right after this tag, with a worse
-						// priority and make it depend on this tag
-						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0, $tag->getSortPriority() + 1);
-						$tag->cascadeInvalidationTo($child);
+						$this->addFosterTag($tag, $parent);
 					}
 
 					// Reinsert current tag
@@ -1441,6 +1438,22 @@ class Parser
 	//==========================================================================
 
 	/**
+	* Create and add a copy of a tag as a child of a given tag
+	*
+	* @param  Tag  $tag       Current tag
+	* @param  Tag  $fosterTag Tag to foster
+	* @return void
+	*/
+	protected function addFosterTag(Tag $tag, Tag $fosterTag)
+	{
+		list($childPos, $childPrio) = $this->getMagicStartCoords($tag->getPos() + $tag->getLen());
+
+		// Add a 0-width copy of the parent tag after this tag and make it depend on this tag
+		$childTag = $this->addCopyTag($fosterTag, $childPos, 0, $childPrio);
+		$tag->cascadeInvalidationTo($childTag);
+	}
+
+	/**
 	* Create and add an end tag for given start tag at given position
 	*
 	* @param  Tag     $startTag Start tag
@@ -1455,7 +1468,7 @@ class Parser
 		// Adjust the end tag's position if whitespace is to be minimized
 		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 		{
-			$tagPos = $this->getMagicPos($tagPos);
+			$tagPos = $this->getMagicEndPos($tagPos);
 		}
 
 		// Add a 0-width end tag that is paired with the given start tag
@@ -1471,7 +1484,7 @@ class Parser
 	* @param  integer $tagPos Rightmost possible position for the tag
 	* @return integer
 	*/
-	protected function getMagicPos($tagPos)
+	protected function getMagicEndPos($tagPos)
 	{
 		// Back up from given position to the cursor's position until we find a character that
 		// is not whitespace
@@ -1481,6 +1494,39 @@ class Parser
 		}
 
 		return $tagPos;
+	}
+
+	/**
+	* Compute the position and priority of a magic start tag, adjusted for whitespace
+	*
+	* @param  integer   $tagPos Leftmost possible position for the tag
+	* @return integer[]         [Tag pos, priority]
+	*/
+	protected function getMagicStartCoords($tagPos)
+	{
+		if (empty($this->tagStack))
+		{
+			// Set the next position outside the text boundaries
+			$nextPos  = $this->textLen + 1;
+			$nextPrio = 0;
+		}
+		else
+		{
+			$nextTag  = end($this->tagStack);
+			$nextPos  = $nextTag->getPos();
+			$nextPrio = $nextTag->getSortPriority();
+		}
+
+		// Find the first non-whitespace position before next tag or the end of text
+		while ($tagPos < $nextPos && strpos(self::WHITESPACE, $this->text[$tagPos]) !== false)
+		{
+			++$tagPos;
+		}
+
+		// Set a priority that ensures this tag appears before the next tag
+		$prio = ($tagPos === $nextPos) ? $nextPrio - 1 : 0;
+
+		return [$tagPos, $prio];
 	}
 
 	/**
@@ -1819,7 +1865,7 @@ class Parser
 			$tagPos = $tag->getPos();
 			if ($openTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			{
-				$tagPos = $this->getMagicPos($tagPos);
+				$tagPos = $this->getMagicEndPos($tagPos);
 			}
 
 			// Output an end tag to close this start tag, then update the context

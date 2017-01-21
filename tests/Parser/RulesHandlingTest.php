@@ -194,6 +194,21 @@ class RulesHandlingTest extends Test
 				}
 			],
 			[
+				'[b]..[div] .[/div]',
+				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s> <B>.</B><e>[/div]</e></DIV></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('B');
+					$configurator->tags->add('DIV')->rules->fosterParent('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 0, 3);
+					$parser->addStartTag('DIV', 5, 5);
+					$parser->addEndTag('DIV', 12, 6);
+				}
+			],
+			[
 				'[b]..[div]..[/div]..[/b]',
 				'<r><B><s>[b]</s>..</B><DIV><s>[div]</s><B>..</B><e>[/div]</e></DIV><B>..<e>[/b]</e></B></r>',
 				function ($configurator)

@@ -187,6 +187,10 @@ class BBCodesTest extends Test
 				'<span style="color:red"></span><blockquote class="uncited"><div><span style="color:red">...</span></div></blockquote>'
 			],
 			[
+				'[color=red][quote] ..[/quote]',
+				'<span style="color:red"></span><blockquote class="uncited"><div> <span style="color:red">..</span></div></blockquote>'
+			],
+			[
 				'our [del]great [/del]leader',
 				'our <del>great </del>leader'
 			],
