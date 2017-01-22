@@ -329,6 +329,10 @@ class XPathConvertorTest extends Test
 				'@width > 0',
 				"\$node->getAttribute('width')>0"
 			],
+			[
+				'@*',
+				'$node->attributes->length'
+			],
 		];
 	}
 

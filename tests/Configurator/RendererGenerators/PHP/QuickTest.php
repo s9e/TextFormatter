@@ -949,6 +949,10 @@ class QuickTest extends Test
 					}
 				}
 			],
+			[
+				['X' => '<xsl:if test="@*">Y</xsl:if>'],
+				'if(!empty($attributes)){$html.=\'Y\';}'
+			],
 		];
 	}
 }

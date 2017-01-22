@@ -1340,6 +1340,22 @@ class PHPTest extends Test
 					$configurator->tags->add('T18')->template = '<xsl:comment><xsl:apply-templates/></xsl:comment>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				'N',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:choose><xsl:when test="@*">Y</xsl:when><xsl:otherwise>N</xsl:otherwise></xsl:choose>';
+				}
+			],
+			[
+				'<r><X a=""/></r>',
+				'Y',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:choose><xsl:when test="@*">Y</xsl:when><xsl:otherwise>N</xsl:otherwise></xsl:choose>';
+				}
+			],
 		];
 	}
 

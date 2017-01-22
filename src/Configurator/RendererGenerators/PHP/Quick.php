@@ -646,6 +646,11 @@ class Quick
 			'isset($attributes[$1])',
 			$php
 		);
+		$php = str_replace(
+			'($node->attributes->length)',
+			'(!empty($attributes))',
+			$php
+		);
 
 		// In all other situations, unescape the attribute value before use
 		$php = preg_replace(

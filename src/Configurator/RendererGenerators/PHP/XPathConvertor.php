@@ -55,6 +55,13 @@ class XPathConvertor
 			return '$node->hasAttribute(' . var_export($m[1], true) . ')';
 		}
 
+		// XSL: <xsl:if test="@*">
+		// PHP: if ($node->attributes->length)
+		if ($expr === '@*')
+		{
+			return '$node->attributes->length';
+		}
+
 		// XSL: <xsl:if test="not(@foo)">
 		// PHP: if (!$node->hasAttribute('foo'))
 		if (preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
