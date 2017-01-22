@@ -3779,6 +3779,11 @@ class Quick
 			'isset($attributes[$1])',
 			$php
 		);
+		$php = \str_replace(
+			'($node->attributes->length)',
+			'(!empty($attributes))',
+			$php
+		);
 		$php = \preg_replace(
 			"(\\\$node->getAttribute\\(('[^']+')\\))",
 			'htmlspecialchars_decode($attributes[$1])',
@@ -4176,6 +4181,8 @@ class XPathConvertor
 		$expr = \trim($expr);
 		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
 			return '$node->hasAttribute(' . \var_export($m[1], \true) . ')';
+		if ($expr === '@*')
+			return '$node->attributes->length';
 		if (\preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
 			return '!$node->hasAttribute(' . \var_export($m[1], \true) . ')';
 		if (\preg_match('#^\\$(\\w+)$#', $expr, $m))

@@ -41,6 +41,7 @@ class BBCodeMonkey
 	];
 	protected $configurator;
 	public $tokenRegexp = [
+		'ANYTHING'   => '.*?',
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
@@ -51,6 +52,7 @@ class BBCodeMonkey
 		'NUMBER'     => '\\d+',
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
+		'TEXT'       => '.*?',
 		'UINT'       => '0|[1-9]\\d*'
 	];
 	public $unfilteredTokens = [
@@ -117,7 +119,7 @@ class BBCodeMonkey
 		);
 		$regexp = '(^'
 		        . '\\[(?<bbcodeName>\\S+?)'
-		        . '(?<defaultAttribute>=\\S+?)?'
+		        . '(?<defaultAttribute>=.+?)?'
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        . '\\s*(?:/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))$)i';
 		if (!\preg_match($regexp, \trim($usage), $m))
@@ -247,7 +249,9 @@ class BBCodeMonkey
 					}
 					$table[$tokenId] = $matchName;
 				}
-				$regexp .= \preg_quote(\substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$literal = \preg_quote(\substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$literal = \preg_replace('(\\s+)', '\\s+', $literal);
+				$regexp .= $literal;
 				$expr = (isset($this->tokenRegexp[$tokenType]))
 				      ? $this->tokenRegexp[$tokenType]
 				      : '.+?';
