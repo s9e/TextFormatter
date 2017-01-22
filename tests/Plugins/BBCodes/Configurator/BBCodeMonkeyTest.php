@@ -1035,7 +1035,27 @@ class BBCodeMonkeyTest extends Test
 					]),
 					'tag'    => new Tag([
 						'attributePreprocessors' => [
-							['foo', '/^(?<foo0>.+?),(?<foo1>.+?)$/D']
+							['foo', '/^(?<foo0>.*?),(?<foo1>.*?)$/D']
+						],
+						'attributes' => [
+							'foo0' => [],
+							'foo1' => []
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
+				'[foo={ANYTHING1},{ANYTHING2}]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/^(?<foo0>.*?),(?<foo1>.*?)$/D']
 						],
 						'attributes' => [
 							'foo0' => [],

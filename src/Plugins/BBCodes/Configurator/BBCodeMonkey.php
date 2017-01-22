@@ -63,6 +63,7 @@ class BBCodeMonkey
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
 	*/
 	public $tokenRegexp = [
+		'ANYTHING'   => '.*?',
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
@@ -73,6 +74,7 @@ class BBCodeMonkey
 		'NUMBER'     => '\\d+',
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
+		'TEXT'       => '.*?',
 		'UINT'       => '0|[1-9]\\d*'
 	];
 
