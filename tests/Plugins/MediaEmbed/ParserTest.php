@@ -961,16 +961,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('livestream');
 				}
 			],
-			[
-				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
-				'<r><MAILRU id="corp/auto/testdrive/34" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('mailru');
-				}
-			],
+//			[
+//				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
+//				'<r><MAILRU id="corp/auto/testdrive/34" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('mailru');
+//				}
+//			],
 			[
 				'http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks',
 				'<r><MRCTV id="55537" url="http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
