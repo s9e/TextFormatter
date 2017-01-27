@@ -3019,6 +3019,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.twitch.tv/videos/29415830',
+				'<r><TWITCH url="https://www.twitch.tv/videos/29415830" video_id="29415830">https://www.twitch.tv/videos/29415830</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
 				'<r><TWITCH channel="twitch" clip_id="HorribleWoodpeckerHassanChop" url="https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop">https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</TWITCH></r>',
 				[],
