@@ -13,6 +13,10 @@
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>![#&amp;?]t=(?:(?:(?'h'\d+)h)?(?'m'\d+)m(?'s'\d+)|(?'t'\d+))!</extract>
 	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
+	<scrape>
+		<match>!/shared\?ci=!</match>
+		<extract>!/vi/(?'id'[-\w]+)!</extract>
+	</scrape>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>https://www.youtube.com/embed/</xsl:text>
