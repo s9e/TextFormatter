@@ -56,6 +56,14 @@ class ParserTest extends Test
 				'.. http://user:pass@example.org/vid.mp4 ..',
 				'<t>.. http://user:pass@example.org/vid.mp4 ..</t>'
 			],
+			[
+				'.. http://example.org/my%20video%20(1).mp4 ..',
+				'<r>.. <VIDEO src="http://example.org/my%20video%20%281%29.mp4">http://example.org/my%20video%20(1).mp4</VIDEO> ..</r>'
+			],
+			[
+				'.. http://example.org/2017-01-01_12:34.mp4 ..',
+				'<r>.. <VIDEO src="http://example.org/2017-01-01_12:34.mp4">http://example.org/2017-01-01_12:34.mp4</VIDEO> ..</r>'
+			],
 		];
 	}
 

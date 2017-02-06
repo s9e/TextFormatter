@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string
 	*/
-	protected $regexp = '#\\bhttps?://[-.\\w]+/[-./\\w]+\\.(?:mp4|ogg|webm)(?!\\S)#i';
+	protected $regexp = '#\\bhttps?://[-.\\w]+/(?:[-+.:/\\w]|%[0-9a-f]{2}|\\(\\w+\\))+\\.(?:mp4|ogg|webm)(?!\\S)#i';
 
 	/**
 	* @var string Name of the tag used to represent videos
