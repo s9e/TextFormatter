@@ -225,7 +225,7 @@ function getContentModel($dl, $elName)
 		'option' => ['allowText' => 1],
 		'ruby'   => [
 			'allowChildCategory' => ['phrasing content' => ['' => 1]],
-			'allowChildElement' => [
+			'allowChildElement'  => [
 				'rb'  => ['' => 1],
 				'rp'  => ['' => 1],
 				'rt'  => ['' => 1],
