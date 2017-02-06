@@ -9,7 +9,7 @@
 
 	<host>youtube.com</host>
 	<host>youtu.be</host>
-	<extract>!youtube\.com/(?:watch.*?v=|v/)(?'id'[-\w]+)!</extract>
+	<extract>!youtube\.com/(?:watch.*?v=|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>![#&amp;?]t=(?:(?:(?'h'\d+)h)?(?'m'\d+)m(?'s'\d+)|(?'t'\d+))!</extract>
 	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
