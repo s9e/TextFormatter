@@ -286,6 +286,16 @@ class TemplateInspector
 	}
 
 	/**
+	* Return whether this template represents a single iframe
+	*
+	* @return bool
+	*/
+	public function isIframe()
+	{
+		return ($this->rootNodes === ['iframe']);
+	}
+
+	/**
 	* Return whether this template lets content through via an xsl:apply-templates element
 	*
 	* @return bool

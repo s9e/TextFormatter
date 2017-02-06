@@ -512,6 +512,22 @@ class TemplateInspectorTest extends Test
 				'allowsDescendant',
 				'<br/>'
 			],
+			[
+				'<iframe/> is an iframe',
+				'<iframe/>',
+				'isIframe'
+			],
+			[
+				'<div/> is not an iframe',
+				'<div/>',
+				'!isIframe'
+			],
+			[
+				// It's *two* iframes
+				'<iframe/><iframe/> is not an iframe',
+				'<iframe/><iframe/>',
+				'!isIframe'
+			],
 		];
 	}
 }
