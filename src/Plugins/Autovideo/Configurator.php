@@ -12,7 +12,7 @@ class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'src';
 	protected $quickMatch = '://';
-	protected $regexp = '#\\bhttps?://[-.\\w]+/[-./\\w]+\\.(?:mp4|ogg|webm)(?!\\S)#i';
+	protected $regexp = '#\\bhttps?://[-.\\w]+/(?:[-+.:/\\w]|%[0-9a-f]{2}|\\(\\w+\\))+\\.(?:mp4|ogg|webm)(?!\\S)#i';
 	protected $tagName = 'VIDEO';
 	protected function setUp()
 	{
