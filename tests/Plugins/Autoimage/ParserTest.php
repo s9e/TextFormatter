@@ -56,6 +56,14 @@ class ParserTest extends Test
 				'.. http://user:pass@example.org/img.png ..',
 				'<t>.. http://user:pass@example.org/img.png ..</t>'
 			],
+			[
+				'.. http://example.org/my%20image%20(1).png ..',
+				'<r>.. <IMG src="http://example.org/my%20image%20%281%29.png">http://example.org/my%20image%20(1).png</IMG> ..</r>'
+			],
+			[
+				'.. http://example.org/2017-01-01_12:34.jpg ..',
+				'<r>.. <IMG src="http://example.org/2017-01-01_12:34.jpg">http://example.org/2017-01-01_12:34.jpg</IMG> ..</r>'
+			],
 		];
 	}
 
