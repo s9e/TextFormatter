@@ -63,10 +63,9 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	*/
 	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
-		if (!$src->allowsChildElements())
+		// Use span's content model if the source template is an iframe to allow fallback content
+		if ($src->isIframe())
 		{
-			// If this template does not allow child elements, we use the same content model as a
-			// span element to allow for some fallback content if this template is disabled
 			$src = $this->span;
 		}
 

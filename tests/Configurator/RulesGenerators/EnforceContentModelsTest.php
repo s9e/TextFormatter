@@ -125,4 +125,16 @@ class EnforceContentModelsTest extends AbstractTest
 			['preventLineBreaks' => true, 'suspendAutoLineBreaks' => true]
 		);
 	}
+
+	/**
+	* @testdox <script> has a denyChild and a denyDescendant rule for <a>
+	*/
+	public function testScriptDeniesTags()
+	{
+		$this->assertTargetedRules(
+			'<script><xsl:apply-templates/></script>',
+			'<a/>',
+			['denyChild', 'denyDescendant']
+		);
+	}
 }

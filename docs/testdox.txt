@@ -1227,6 +1227,7 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] Does not generate any boolean rules for <b>
  [x] Generates a disableAutoLineBreaks rule, a preventLineBreaks rule and a suspendAutoLineBreaks rule for <style>
  [x] Generates a preventLineBreaks rule and a suspendAutoLineBreaks rule for <ul>
+ [x] <script> has a denyChild and a denyDescendant rule for <a>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
  [x] <li> closes parent <li>
