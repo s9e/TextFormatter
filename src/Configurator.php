@@ -1781,6 +1781,10 @@ class TemplateInspector
 	{
 		return $this->isEmpty;
 	}
+	public function isIframe()
+	{
+		return ($this->rootNodes === ['iframe']);
+	}
 	public function isPassthrough()
 	{
 		return $this->isPassthrough;
@@ -5889,7 +5893,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	}
 	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
-		if (!$src->allowsChildElements())
+		if ($src->isIframe())
 			$src = $this->span;
 		$rules = [];
 		if (!$src->allowsChild($trg))
