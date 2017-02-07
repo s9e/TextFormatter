@@ -446,6 +446,11 @@ class TemplateInspectorTest extends Test
 				'!isBlock'
 			],
 			[
+				'<div style="display: none"> is not a block-level element',
+				'<div style="display: none"><xsl:apply-templates/></div>',
+				'!isBlock'
+			],
+			[
 				'<span style="display:block"> is a block-level element',
 				'<span style="display:block"><xsl:apply-templates/></span>',
 				'isBlock'

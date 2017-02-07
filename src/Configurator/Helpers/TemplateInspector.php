@@ -632,7 +632,7 @@ class TemplateInspector
 		{
 			return true;
 		}
-		if (preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+		if (preg_match('(\\bdisplay\\s*:\\s*(?:inli|no)ne)i', $style))
 		{
 			return false;
 		}
