@@ -8,9 +8,11 @@ First, we need to express the typical BBCode usage. It takes the form of a mock 
 
     [b]{TEXT}[/b]
 
-Here, we see that the BBCode is named B and it contains some text. The pair of brackets with text in between is called a *token*. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc... They takes the form of a name in uppercase, which is either:
- * the name of an attribute filter optionally followed by a number, e.g. {TEXT1}
- * the name of a [template parameter](../../Templating/Template_parameters.md), e.g. {L_WROTE} or {USERNAME}
+Here, we see that the BBCode is named B and it contains some text. The pair of brackets with text in between is called a *token*. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc... They take the form of a name in uppercase, which is either:
+
+ * the name of an attribute filter optionally followed by a number, e.g. {NUMBER1} will use the [built-in filter](Filters/Built-in_filters.md) `#number`.
+ * either `TEXT` or `ANYTHING` for an unfiltered value.
+ * the name of a [template parameter](../../Templating/Template_parameters.md), e.g. {L_WROTE} or {USERNAME}.
 
 The closing tag is optional if the BBCode isn't supposed to have one, for example:
 
