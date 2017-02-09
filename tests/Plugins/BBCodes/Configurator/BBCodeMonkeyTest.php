@@ -1035,7 +1035,7 @@ class BBCodeMonkeyTest extends Test
 					]),
 					'tag'    => new Tag([
 						'attributePreprocessors' => [
-							['foo', '/^(?<foo0>.*?),(?<foo1>.*?)$/D']
+							['foo', '/^(?<foo0>[\\s\\S]*?),(?<foo1>[\\s\\S]*?)$/D']
 						],
 						'attributes' => [
 							'foo0' => [],
@@ -1055,7 +1055,7 @@ class BBCodeMonkeyTest extends Test
 					]),
 					'tag'    => new Tag([
 						'attributePreprocessors' => [
-							['foo', '/^(?<foo0>.*?),(?<foo1>.*?)$/D']
+							['foo', '/^(?<foo0>[\\s\\S]*?),(?<foo1>[\\s\\S]*?)$/D']
 						],
 						'attributes' => [
 							'foo0' => [],
