@@ -1,3 +1,25 @@
+0.9.2 (2017-02-11)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/04b5ae0a14b3e4a5b1a85e7cfd1b2d0618861b84...d3f9ae4242e057ba5a9cae0b2b0c4e22db5cd67a)
+
+### Added
+
+ - `72091c2c4` Autoimage: added support for more punctuations
+ - `4f9aa8bcd` Autovideo: added support for more punctuations
+ - `18c63cea7` MediaEmbed: added support for attribution links from YouTube
+ - `8bbb9b089` MediaEmbed: added support for new share links from YouTube
+ - `4f5475ffe` TemplateInspector: added isIframe()
+
+### Changed
+
+ - `d3f9ae424` BBCodeMonkey: allow newlines in {TEXT} used in composite attributes
+ - `e52087874` EnforceContentModels: limit content fallback to single iframes
+ - `31f46d6cb` MediaEmbed: updated Twitch
+ - `8d0d4a82a` MediaEmbed: updated vidme
+ - `6d678d75b` TemplateInspector: elements with "display:none" won't be considered block elements
+
+
 0.9.1 (2017-01-22)
 ==================
 
