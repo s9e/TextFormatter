@@ -1920,7 +1920,7 @@ class TemplateInspector
 		$style = $this->getStyle($node);
 		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
 			return \true;
-		if (\preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+		if (\preg_match('(\\bdisplay\\s*:\\s*(?:inli|no)ne)i', $style))
 			return \false;
 		return $this->hasProperty($elName, 'b', $node);
 	}
