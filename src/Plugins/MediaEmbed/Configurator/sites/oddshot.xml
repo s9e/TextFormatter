@@ -1,10 +1,9 @@
 <site name="Oddshot" homepage="http://oddshot.tv/">
-	<example>http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956</example>
-	<example>http://oddshot.tv/shot/spunj-2015082711414891</example>
+	<example>https://oddshot.tv/s/-MrDaG</example>
 
 	<tags><tag>gaming</tag></tags>
 
 	<host>oddshot.tv</host>
-	<extract>!oddshot.tv/shot/(?'id'[-\w]+)!</extract>
-	<iframe src="//oddshot.tv/shot/{@id}/embed"/>
+	<extract>!oddshot.tv/s/(?'id'[-\w]+)!</extract>
+	<iframe src="https://oddshot.tv/s/{@id}/embed"/>
 </site>

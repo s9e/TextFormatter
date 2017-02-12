@@ -364,7 +364,7 @@
 	<tr>
 		<td><code>oddshot</code></td>
 		<td>Oddshot</td>
-		<td>http://oddshot.tv/shot/PlayHearthstone_694_201507222254380956<br/>http://oddshot.tv/shot/spunj-2015082711414891</td>
+		<td>https://oddshot.tv/s/-MrDaG</td>
 	</tr>
 	<tr>
 		<td><code>pastebin</code></td>
