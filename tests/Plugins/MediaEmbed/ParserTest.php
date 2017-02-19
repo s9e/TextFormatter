@@ -2803,6 +2803,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'Https://soundcloud.com/andrewbird/three-white-horses',
+				'<r><SOUNDCLOUD id="Https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle',
 				'<r><SOUNDCLOUD id="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle" url="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle">https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle</SOUNDCLOUD></r>',
 				[],
