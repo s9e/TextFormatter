@@ -4,6 +4,6 @@
 	<tags><tag>gaming</tag></tags>
 
 	<host>ign.com</host>
-	<extract>!(?'id'https?://.*?ign\.com/videos/.+)!</extract>
+	<extract>!(?'id'https?://.*?ign\.com/videos/.+)!i</extract>
 	<iframe width="468" height="263" src="//widgets.ign.com/video/embed/content.html?url={@id}"/>
 </site>

@@ -2169,6 +2169,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
+				'<r><IGN id="Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" url="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ign');
+				}
+			],
+			[
 				'http://www.imdb.com/video/epk/vi387296537/',
 				'<r><IMDB id="387296537" url="http://www.imdb.com/video/epk/vi387296537/">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
 				[],
