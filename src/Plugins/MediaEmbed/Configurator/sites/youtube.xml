@@ -5,7 +5,7 @@
 	<example>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
 	<example>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
 
-	<tags><tag>videos</tag></tags>
+	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 
 	<host>youtube.com</host>
 	<host>youtu.be</host>

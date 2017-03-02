@@ -4,7 +4,7 @@
 	<example>http://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
 	<example>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</example>
 
-	<tags><tag>gaming</tag><tag>streaming</tag></tags>
+	<tags><tag>gaming</tag><tag>livestreaming</tag></tags>
 
 	<host>twitch.tv</host>
 	<extract>#twitch\.tv/(?:videos|\w+/v)/(?'video_id'\d+)?#</extract>
