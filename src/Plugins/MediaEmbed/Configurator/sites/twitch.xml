@@ -4,11 +4,11 @@
 	<example>http://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
 	<example>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</example>
 
-	<tags><tag>gaming</tag></tags>
+	<tags><tag>gaming</tag><tag>streaming</tag></tags>
 
 	<host>twitch.tv</host>
-	<extract>#twitch\.tv/videos/(?'video_id'\d+)?#</extract>
-	<extract>#twitch\.tv/(?!videos/)(?'channel'\w+)(?:/b/(?'archive_id'\d+)|/c/(?'chapter_id'\d+)|/v/(?'video_id'\d+))?#</extract>
+	<extract>#twitch\.tv/(?:videos|\w+/v)/(?'video_id'\d+)?#</extract>
+	<extract>#www\.twitch\.tv/(?!videos/)(?'channel'\w+)#</extract>
 	<extract>#t=(?'t'(?:(?:\d+h)?\d+m)?\d+s)#</extract>
 	<extract>#clips\.twitch\.tv/(?'channel'\w+)/(?'clip_id'\w+)#</extract>
 	<iframe>
@@ -23,14 +23,6 @@
 				<xsl:otherwise>
 					<xsl:text>//player.twitch.tv/?autoplay=false&amp;</xsl:text>
 					<xsl:choose>
-						<xsl:when test="@archive_id">
-							<xsl:text>video=a</xsl:text>
-							<xsl:value-of select="@archive_id"/>
-						</xsl:when>
-						<xsl:when test="@chapter_id">
-							<xsl:text>video=c</xsl:text>
-							<xsl:value-of select="@chapter_id"/>
-						</xsl:when>
 						<xsl:when test="@video_id">
 							<xsl:text>video=v</xsl:text>
 							<xsl:value-of select="@video_id"/>

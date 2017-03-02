@@ -3012,33 +3012,6 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://www.twitch.tv/minigolf2000',
-				'<r><TWITCH channel="minigolf2000" url="http://www.twitch.tv/minigolf2000">http://www.twitch.tv/minigolf2000</TWITCH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
-				'http://www.twitch.tv/minigolf2000/c/2475925',
-				'<r><TWITCH channel="minigolf2000" chapter_id="2475925" url="http://www.twitch.tv/minigolf2000/c/2475925">http://www.twitch.tv/minigolf2000/c/2475925</TWITCH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
-				'http://www.twitch.tv/minigolf2000/b/497929990',
-				'<r><TWITCH archive_id="497929990" channel="minigolf2000" url="http://www.twitch.tv/minigolf2000/b/497929990">http://www.twitch.tv/minigolf2000/b/497929990</TWITCH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
 				'http://www.twitch.tv/playstation/v/3589809',
 				'<r><TWITCH channel="playstation" url="http://www.twitch.tv/playstation/v/3589809" video_id="3589809">http://www.twitch.tv/playstation/v/3589809</TWITCH></r>',
 				[],
@@ -3059,6 +3032,15 @@ class ParserTest extends Test
 			[
 				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
 				'<r><TWITCH channel="twitch" clip_id="HorribleWoodpeckerHassanChop" url="https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop">https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1',
+				'<t>https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1</t>',
 				[],
 				function ($configurator)
 				{
@@ -4025,24 +4007,6 @@ class ParserTest extends Test
 			[
 				'http://www.twitch.tv/twitch',
 				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;channel=twitch"></iframe></div></div>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
-				'http://www.twitch.tv/twitch/c/5965727',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=c5965727"></iframe></div></div>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('twitch');
-				}
-			],
-			[
-				'http://www.twitch.tv/twitch/b/557643505',
-				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=a557643505"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
