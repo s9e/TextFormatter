@@ -1437,6 +1437,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://abcnews.go.com/video/embed?id=45798660',
+				'<r><ABCNEWS id="45798660" url="http://abcnews.go.com/video/embed?id=45798660">http://abcnews.go.com/video/embed?id=45798660</ABCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('abcnews');
+				}
+			],
+			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
 				'<r><AMAZON id="B00GQT1LNO" tld="ca" url="http://www.amazon.ca/gp/product/B00GQT1LNO/">http://www.amazon.ca/gp/product/B00GQT1LNO/</AMAZON></r>',
 				[],

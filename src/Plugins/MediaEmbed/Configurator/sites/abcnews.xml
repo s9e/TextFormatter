@@ -4,6 +4,6 @@
 	<tags><tag>news</tag></tags>
 
 	<host>abcnews.go.com</host>
-	<extract>!abcnews\.go\.com/[^/]+/video/[^/]+-(?'id'\d+)!</extract>
+	<extract>!abcnews\.go\.com/(?:video/embed\?id=|[^/]+/video/[^/]+-)(?'id'\d+)!</extract>
 	<iframe width="640" height="360" src="//abcnews.go.com/video/embed?id={@id}"/>
 </site>
