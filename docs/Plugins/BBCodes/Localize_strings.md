@@ -1,6 +1,6 @@
 <h2>Localize strings in a BBCode template</h2>
 
-One way to localize a BBCode template is to use a [template parameter](../../Templating/Template_parameters.md). When creating a custom BBCode, any token that is not associated with a filter is presumed to be a template parameter. In the following example, we create a rudimentary `[spoiler]` BBCode that uses a normal token `{TEXT}` for its text and the tokens `{L_SPOILER}`, `{L_TOGGLE}` for the localized strings. Any uppercase names would work here, as long as they don't correspond to the name of a [built-in filter](../../Filters/Built-in_filters.md). Before rendering, we set the values of the localized strings.
+One way to localize a BBCode template is to use a [template parameter](/Templating/Template_parameters.md). When creating a custom BBCode, any token that is not associated with a filter is presumed to be a template parameter. In the following example, we create a rudimentary `[spoiler]` BBCode that uses a normal token `{TEXT}` for its text and the tokens `{L_SPOILER}`, `{L_TOGGLE}` for the localized strings. Any uppercase names would work here, as long as they don't correspond to the name of a [built-in filter](/Filters/Built-in_filters.md). Before rendering, we set the values of the localized strings.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;

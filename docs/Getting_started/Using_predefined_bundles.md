@@ -1,6 +1,6 @@
 <h2>Using predefined bundles</h2>
 
-Once [installed](Installation.md), he fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the [Forum bundle](../Bundles/Forum.md), which supports the same kind of BBCodes/formatting that is used in internet forums. If you prefer Markdown, try the [Fatdown](../Bundles/Fatdown.md) bundle.
+Once [installed](Installation.md), he fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the [Forum bundle](/Bundles/Forum.md), which supports the same kind of BBCodes/formatting that is used in internet forums. If you prefer Markdown, try the [Fatdown](/Bundles/Fatdown.md) bundle.
 
 ### Forum bundle (BBCodes)
 

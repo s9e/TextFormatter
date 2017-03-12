@@ -2,7 +2,7 @@
 
 The Censor plugin's helper class can be used as a standalone word filter. The censor helper doesn't use the standard parser and renderer and it has minimal dependencies. In the following example, we create an instance of the helper class that we cache in a standard file for performance.
 
-Note that the standard autoloader is still required. See [Installation](../../Getting_started/Installation.md).
+Note that the standard autoloader is still required. See [Installation](/Getting_started/Installation.md).
 
 ```php
 $cacheFile = '/tmp/censor.txt';

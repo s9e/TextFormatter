@@ -12,7 +12,7 @@ Here, we see that the BBCode is named B and it contains some text. The pair of b
 
  * the name of an attribute filter optionally followed by a number, e.g. {NUMBER1} will use the [built-in filter](/Filters/Built-in_filters.md) `#number`.
  * either `TEXT` or `ANYTHING` for an unfiltered value.
- * the name of a [template parameter](../../Templating/Template_parameters.md), e.g. {L_WROTE} or {USERNAME}.
+ * the name of a [template parameter](/Templating/Template_parameters.md), e.g. {L_WROTE} or {USERNAME}.
 
 The closing tag is optional if the BBCode isn't supposed to have one, for example:
 
@@ -161,7 +161,7 @@ BBCode options can be specified in the opening tag like an attribute, using thei
 
 ### Tag rules
 
-[Tag rules](../../Rules/Tag_rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) Multiple values can be separated with a comma. For example:
+[Tag rules](/Rules/Tag_rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) Multiple values can be separated with a comma. For example:
 
     [B #autoReopen=true]{TEXT}[/B]
     [U #denyChild=B,I]{TEXT}[/U]

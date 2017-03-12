@@ -11,7 +11,7 @@ Keywords are case-sensitive by default.
 
 ### When *not* to use this plugin
 
-In some cases, it might be preferable to use the [Preg](../Preg/Synopsis.md) plugin. For instance, in a programming forum, instead of creating a list of every function name as keywords (in order to link them to a manual, for example) you may want to use the Preg plugin and simply capture any series of valid characters immediately followed by a parenthesis.
+In some cases, it might be preferable to use the [Preg](/Plugins/Preg/Synopsis.md) plugin. For instance, in a programming forum, instead of creating a list of every function name as keywords (in order to link them to a manual, for example) you may want to use the Preg plugin and simply capture any series of valid characters immediately followed by a parenthesis.
 
 ## Examples
 
