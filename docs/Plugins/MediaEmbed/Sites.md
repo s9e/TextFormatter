@@ -194,7 +194,7 @@
 	<tr>
 		<td><code>googlesheets</code></td>
 		<td>Google Sheets</td>
-		<td>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA<br/>https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70</td>
+		<td>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</td>
 	</tr>
 	<tr>
 		<td><code>healthguru</code></td>
