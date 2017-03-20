@@ -2,17 +2,17 @@
 
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
-  * at least one of either:
-    * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
-    * `scheme` is a custom scheme handled by given site, e.g. `spotify` for handling `spotify:` URIs
   * at least one of the following:
-    * `extract` is a regexp used to extract values from the URL
+    * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
+    * `scheme` is a custom scheme handled by given site, e.g. `spotify` for handling `spotify:` URIs.
+  * at least one of the following:
+    * `extract` is a regexp used to extract values from the URL.
     * `scrape` is an array that must contain at least one `extract` and zero or more `match` where:
-      * `match` is a regexp used to determine whether to scrape the content of the URL. If it's not specified, every URL is scraped
-      * `extract` is a regexp used to extract values from the scraped page
+      * `match` is a regexp used to determine whether to scrape the content of the URL. If it's not specified, every URL is scraped.
+      * `extract` is a regexp used to extract values from the scraped page.
   * plus at least one of the following:
-    * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
-    * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*
+    * `iframe`: array that contains the `src` attribute of the iframe used to display the embedded content. `width` and `height` are optional are default to 640 × 360. Other attributes such as "allowfullscreen" are automatically added.
+    * `flash`: same as iframe but `src` is the flash object used to display the embedded content. It will create a pair of boilerplate `<object>` and `<embed>` elements.
 
 You can specify multiple `host`, `scheme`, `scrape`, `extract` or `match` values using arrays.
 
