@@ -7,5 +7,9 @@
 	<host>tinypic.com</host>
 	<extract>!tinypic\.com/player\.php\?v=(?'id'\w+)&amp;s=(?'s'\d+)!</extract>
 	<extract>!tinypic\.com/r/(?'id'\w+)/(?'s'\d+)!</extract>
+	<scrape>
+		<match>!tinypic\.com/(?:m|usermedia)/!</match>
+		<extract>!file=(?'id'\w+)&amp;amp;s=(?'s'\d+)!</extract>
+	</scrape>
 	<flash padding-height="30" src="//tinypic.com/player.swf?file={@id}&amp;s={@s}"/>
 </site>

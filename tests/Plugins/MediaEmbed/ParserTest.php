@@ -1159,6 +1159,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
+			[
+				'http://tinypic.com/m/jujsk3/4',
+				'<r><TINYPIC id="1gg7xj" s="9" url="http://tinypic.com/m/jujsk3/4">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tinypic');
+				}
+			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
