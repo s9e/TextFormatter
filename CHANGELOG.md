@@ -1,3 +1,27 @@
+0.9.3 (2017-03-27)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/5e583aae68e5fe32faefe0a4efa474c0debeaaa8...ea80c9deb417008712ba93f9e68e9273a9c19966)
+
+### Added
+
+ - `10d67eec1` MediaEmbed: added livestreaming tag
+ - `5e9de5cda` MediaEmbed: added support for ABC News embed URLs
+
+### Fixed
+
+ - `ea80c9deb` OptimizeChoose: fixed an issue where xsl:choose elements could be improperly repositioned
+
+### Changed
+
+ - `f44d2dede` MediaEmbed: accept uppercase schemes in IGN
+ - `1356d05e8` MediaEmbed: accept uppercase schemes in SoundCloud
+ - `231d1bc0e` MediaEmbed: updated Google Sheets
+ - `1041b3e88` MediaEmbed: updated Oddshot
+ - `d8ed8bf40` MediaEmbed: updated TinyPic
+ - `b14e5abb4` MediaEmbed: updated Twitch
+
+
 0.9.2 (2017-02-11)
 ==================
 
