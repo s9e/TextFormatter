@@ -7454,6 +7454,10 @@ class OptimizeChoose extends TemplateNormalization
 	{
 		return ($el1->namespaceURI === $el2->namespaceURI && $el1->nodeName === $el2->nodeName && $this->getAttributes($el1) === $this->getAttributes($el2));
 	}
+	protected function isXslChoose(DOMNode $node)
+	{
+		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'choose');
+	}
 	protected function matchBranches($childType)
 	{
 		$branches = $this->getBranches();
@@ -7471,6 +7475,8 @@ class OptimizeChoose extends TemplateNormalization
 		if (!isset($branches[0]->firstChild))
 			return \false;
 		$firstChild = $branches[0]->firstChild;
+		if ($this->isXslChoose($firstChild))
+			return \false;
 		foreach ($branches as $branch)
 		{
 			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
