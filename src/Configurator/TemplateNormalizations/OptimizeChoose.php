@@ -134,6 +134,17 @@ class OptimizeChoose extends TemplateNormalization
 	}
 
 	/**
+	* Test whether given node is an xsl:choose element
+	*
+	* @param  DOMNode $node
+	* @return bool
+	*/
+	protected function isXslChoose(DOMNode $node)
+	{
+		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'choose');
+	}
+
+	/**
 	* Test whether all branches of current xsl:choose element share a common firstChild/lastChild
 	*
 	* @param  string $childType Either firstChild or lastChild
@@ -173,6 +184,12 @@ class OptimizeChoose extends TemplateNormalization
 		}
 
 		$firstChild = $branches[0]->firstChild;
+		if ($this->isXslChoose($firstChild))
+		{
+			// Abort on xsl:choose because we can't move it without moving its children
+			return false;
+		}
+
 		foreach ($branches as $branch)
 		{
 			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
