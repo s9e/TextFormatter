@@ -29,6 +29,7 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 * @property Plugins\Autoemail\Configurator $Autoemail Autoemail plugin's configurator
 * @property Plugins\Autoimage\Configurator $Autolink Autoimage plugin's configurator
 * @property Plugins\Autolink\Configurator $Autolink Autolink plugin's configurator
+* @property Plugins\Autovideo\Configurator $Autovideo Autovideo plugin's configurator
 * @property Plugins\BBCodes\Configurator $BBCodes BBCodes plugin's configurator
 * @property Plugins\Censor\Configurator $Censor Censor plugin's configurator
 * @property Plugins\Emoji\Configurator $Emoji Emoji plugin's configurator
@@ -41,6 +42,7 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 * @property Plugins\Keywords\Configurator $Keywords Keywords plugin's configurator
 * @property Plugins\Litedown\Configurator $Litedown Litedown plugin's configurator
 * @property Plugins\MediaEmbed\Configurator $MediaEmbed MediaEmbed plugin's configurator
+* @property Plugins\PipeTables\Configurator $PipeTables PipeTables plugin's configurator
 * @property Plugins\Preg\Configurator $Preg Preg plugin's configurator
 * @property UrlConfig $urlConfig Default URL config
 */
