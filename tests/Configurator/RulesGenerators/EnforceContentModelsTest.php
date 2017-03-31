@@ -137,4 +137,28 @@ class EnforceContentModelsTest extends AbstractTest
 			['denyChild', 'denyDescendant']
 		);
 	}
+
+	/**
+	* @testdox A mixed inline/block template has a denyChild rule for <div>
+	*/
+	public function testMixedDeniesBlock()
+	{
+		$this->assertTargetedRules(
+			'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
+			'<div/>',
+			['denyChild']
+		);
+	}
+
+	/**
+	* @testdox A mixed inline/block template has no rules for <span>
+	*/
+	public function testMixedAllowsInline()
+	{
+		$this->assertTargetedRules(
+			'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
+			'<span/>',
+			[]
+		);
+	}
 }

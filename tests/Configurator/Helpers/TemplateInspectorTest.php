@@ -533,6 +533,18 @@ class TemplateInspectorTest extends Test
 				'<iframe/><iframe/>',
 				'!isIframe'
 			],
+			[
+				'Mixed inline/block template does not allow block templates',
+				'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
+				'!allowsChild',
+				'<div/>'
+			],
+			[
+				'Mixed inline/block template allows inline templates',
+				'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
+				'allowsChild',
+				'<span/>'
+			],
 		];
 	}
 }

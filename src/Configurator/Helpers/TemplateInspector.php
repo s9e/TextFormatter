@@ -32,9 +32,9 @@ use DOMXPath;
 class TemplateInspector
 {
 	/**
-	* @var string allowChild bitfield (all branches)
+	* @var string[] allowChild bitfield for each branch
 	*/
-	protected $allowChildBitfield = "\0";
+	protected $allowChildBitfields = [];
 
 	/**
 	* @var bool Whether elements are allowed as children
@@ -157,9 +157,12 @@ class TemplateInspector
 
 		foreach ($child->rootBitfields as $rootBitfield)
 		{
-			if (!self::match($rootBitfield, $this->allowChildBitfield))
+			foreach ($this->allowChildBitfields as $allowChildBitfield)
 			{
-				return false;
+				if (!self::match($rootBitfield, $allowChildBitfield))
+				{
+					return false;
+				}
 			}
 		}
 
@@ -597,17 +600,13 @@ class TemplateInspector
 		if (empty($branchBitfields))
 		{
 			// No branches => not transparent and no child elements
+			$this->allowChildBitfields = ["\0"];
 			$this->allowsChildElements = false;
 			$this->isTransparent       = false;
 		}
 		else
 		{
-			// Take the bitfield of each branch and reduce them to a single ANDed bitfield
-			$this->allowChildBitfield = $branchBitfields[0];
-			foreach ($branchBitfields as $branchBitfield)
-			{
-				$this->allowChildBitfield &= $branchBitfield;
-			}
+			$this->allowChildBitfields = $branchBitfields;
 
 			// Set the isFormattingElement property to our final value, but only if this template
 			// had any branches
