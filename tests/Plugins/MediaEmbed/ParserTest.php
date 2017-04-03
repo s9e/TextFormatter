@@ -3382,6 +3382,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://m.youku.com/video/id_XNzQwNjcxNDM2.html',
+				'<r><YOUKU id="XNzQwNjcxNDM2" url="http://m.youku.com/video/id_XNzQwNjcxNDM2.html">http://m.youku.com/video/id_XNzQwNjcxNDM2.html</YOUKU></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youku');
+				}
+			],
+			[
 				'[media=youtube]-cEzsCAzTak[/media]',
 				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></r>',
 				[],

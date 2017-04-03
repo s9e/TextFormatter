@@ -4,6 +4,6 @@
 	<tags><tag>.cn</tag></tags>
 
 	<host>youku.com</host>
-	<extract>!youku\.com/v_show/id_(?'id'\w+)!</extract>
-	<flash padding-height="40" src="https://players.youku.com/player.php/sid/{@id}/v.swf"/>
+	<extract>!youku\.com/v(?:_show|ideo)/id_(?'id'\w+)!</extract>
+	<iframe padding-height="40" src="https://players.youku.com/embed/{@id}"/>
 </site>
