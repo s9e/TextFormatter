@@ -52,6 +52,11 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	protected $collection;
 
 	/**
+	* @var integer Maximum number of iterations over a given template
+	*/
+	protected $maxIterations = 5;
+
+	/**
 	* Constructor
 	*
 	* Will load the default normalization rules
@@ -106,30 +111,26 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	{
 		$dom = TemplateHelper::loadTemplate($template);
 
-		// We'll keep track of what normalizations have been applied
-		$applied = [];
-
 		// Apply all the normalizations until no more change is made or we've reached the maximum
 		// number of loops
-		$loops = 5;
+		$i = 0;
 		do
 		{
 			$old = $template;
 
 			foreach ($this->collection as $k => $normalization)
 			{
-				if (isset($applied[$k]) && !empty($normalization->onlyOnce))
+				if ($i > 0 && !empty($normalization->onlyOnce))
 				{
 					continue;
 				}
 
 				$normalization->normalize($dom->documentElement);
-				$applied[$k] = 1;
 			}
 
 			$template = TemplateHelper::saveTemplate($dom);
 		}
-		while (--$loops && $template !== $old);
+		while (++$i < $this->maxIterations && $template !== $old);
 
 		return $template;
 	}
