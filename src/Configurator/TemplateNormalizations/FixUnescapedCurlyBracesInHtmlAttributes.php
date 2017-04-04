@@ -19,8 +19,10 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 	*
 	* Will replace
 	*     <hr onclick="if(1){alert(1)}">
+	*     <hr title="x{x">
 	* with
 	*     <hr onclick="if(1){{alert(1)}">
+	*     <hr title="x{{x">
 	*
 	* @param  DOMElement $template <xsl:template/> node
 	* @return void
@@ -52,10 +54,12 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+			'((?<!\\{)\\{[^}]*+$)',
 			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
 		];
 		$replace = [
 			'$0{',
+			'{$0',
 			'{$0'
 		];
 		$attrValue        = preg_replace($match, $replace, $attribute->value);

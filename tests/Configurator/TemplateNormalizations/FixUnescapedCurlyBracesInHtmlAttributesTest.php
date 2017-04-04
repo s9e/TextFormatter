@@ -63,6 +63,14 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<hr onmouseover="foo({ \'bar\':true}"/>',
 				'<hr onmouseover="foo({{ \'bar\':true}"/>'
 			],
+			[
+				'<hr title="{"/>',
+				'<hr title="{{"/>'
+			],
+			[
+				'<hr title="x{x"/>',
+				'<hr title="x{{x"/>'
+			],
 		];
 	}
 }
