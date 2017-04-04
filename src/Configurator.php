@@ -1693,7 +1693,7 @@ use DOMElement;
 use DOMXPath;
 class TemplateInspector
 {
-	protected $allowChildBitfield = "\0";
+	protected $allowChildBitfields = [];
 	protected $allowsChildElements = \true;
 	protected $allowsText = \true;
 	protected $contentBitfield = "\0";
@@ -1725,8 +1725,9 @@ class TemplateInspector
 		if (!$this->allowsDescendant($child))
 			return \false;
 		foreach ($child->rootBitfields as $rootBitfield)
-			if (!self::match($rootBitfield, $this->allowChildBitfield))
-				return \false;
+			foreach ($this->allowChildBitfields as $allowChildBitfield)
+				if (!self::match($rootBitfield, $allowChildBitfield))
+					return \false;
 		if (!$this->allowsText && $child->hasRootText)
 			return \false;
 		return \true;
@@ -1897,14 +1898,13 @@ class TemplateInspector
 		}
 		if (empty($branchBitfields))
 		{
+			$this->allowChildBitfields = ["\0"];
 			$this->allowsChildElements = \false;
 			$this->isTransparent       = \false;
 		}
 		else
 		{
-			$this->allowChildBitfield = $branchBitfields[0];
-			foreach ($branchBitfields as $branchBitfield)
-				$this->allowChildBitfield &= $branchBitfield;
+			$this->allowChildBitfields = $branchBitfields;
 			if (!empty($this->leafNodes))
 				$this->isFormattingElement = $isFormattingElement;
 		}
@@ -6660,10 +6660,12 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 			return;
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+			'((?<!\\{)\\{[^}]*+$)',
 			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
 		];
 		$replace = [
 			'$0{',
+			'{$0',
 			'{$0'
 		];
 		$attrValue        = \preg_replace($match, $replace, $attribute->value);
@@ -7424,6 +7426,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 	protected $collection;
+	protected $maxIterations = 5;
 	public function __construct()
 	{
 		$this->collection = new TemplateNormalizationList;
@@ -7456,21 +7459,19 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	public function normalizeTemplate($template)
 	{
 		$dom = TemplateHelper::loadTemplate($template);
-		$applied = [];
-		$loops = 5;
+		$i = 0;
 		do
 		{
 			$old = $template;
 			foreach ($this->collection as $k => $normalization)
 			{
-				if (isset($applied[$k]) && !empty($normalization->onlyOnce))
+				if ($i > 0 && !empty($normalization->onlyOnce))
 					continue;
 				$normalization->normalize($dom->documentElement);
-				$applied[$k] = 1;
 			}
 			$template = TemplateHelper::saveTemplate($dom);
 		}
-		while (--$loops && $template !== $old);
+		while (++$i < $this->maxIterations && $template !== $old);
 		return $template;
 	}
 }
