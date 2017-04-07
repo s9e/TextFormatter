@@ -1,3 +1,19 @@
+0.9.4 (2017-04-07)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8175223a3c663c5dc9d8625a03a94cc1a4534e21...4ebc635ce9f57db7f3f586b1fac24721bbd307d5)
+
+### Fixed
+
+ - `a1b60abf9` TemplateInspector: fixed an issue where templates with a mixed content model would not allow any children
+
+### Changed
+
+ - `4ebc635ce` FixUnescapedCurlyBracesInHtmlAttributes: escape left braces that are not followed by a right brace
+ - `3a3577129` MediaEmbed: updated Youku
+ - `9e1197ae1` TemplateNormalizer: replaced the way iterations are counted
+
+
 0.9.3 (2017-03-27)
 ==================
 
