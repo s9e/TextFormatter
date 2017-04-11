@@ -364,6 +364,48 @@ class RulesHandlingTest extends Test
 					$parser->addEndTag('X', 10, 7);
 				}
 			],
+			[
+				'<p>X',
+				'<r><P><s>&lt;p&gt;</s></P><X>X</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('P');
+					$configurator->tags->add('X')->rules->closeAncestor('P');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('P', 0, 3);
+					$parser->addTagPair('X', 3, 0, 4, 0, -1);
+				}
+			],
+			[
+				'<p>X',
+				'<r><P><s>&lt;p&gt;</s></P><X>X</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('P');
+					$configurator->tags->add('X')->rules->closeParent('P');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('P', 0, 3);
+					$parser->addTagPair('X', 3, 0, 4, 0, -1);
+				}
+			],
+			[
+				'<p>X',
+				'<r><P><s>&lt;p&gt;</s></P><X><P>X</P></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('P');
+					$configurator->tags->add('X')->rules->fosterParent('P');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('P', 0, 3);
+					$parser->addTagPair('X', 3, 0, 4, 0, -1);
+				}
+			],
 		];
 	}
 }

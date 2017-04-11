@@ -1285,8 +1285,8 @@ class Parser
 						// We have to close this ancestor. First we reinsert this tag...
 						$this->tagStack[] = $tag;
 
-						// ...then we add a new end tag for it
-						$this->addMagicEndTag($ancestor, $tag->getPos());
+						// ...then we add a new end tag for it with a better priority
+						$this->addMagicEndTag($ancestor, $tag->getPos(), $tag->getSortPriority() - 1);
 
 						return true;
 					}
@@ -1320,8 +1320,8 @@ class Parser
 					// We have to close that parent. First we reinsert the tag...
 					$this->tagStack[] = $tag;
 
-					// ...then we add a new end tag for it
-					$this->addMagicEndTag($parent, $tag->getPos());
+					// ...then we add a new end tag for it with a better priority
+					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 
 					return true;
 				}

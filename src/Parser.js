@@ -1183,8 +1183,8 @@ function closeAncestor(tag)
 					// We have to close this ancestor. First we reinsert this tag...
 					tagStack.push(tag);
 
-					// ...then we add a new end tag for it
-					addMagicEndTag(ancestor, tag.getPos());
+					// ...then we add a new end tag for it with a better priority
+					addMagicEndTag(ancestor, tag.getPos(), tag.getSortPriority() - 1);
 
 					return true;
 				}
@@ -1223,8 +1223,8 @@ function closeParent(tag)
 				// We have to close that parent. First we reinsert the tag...
 				tagStack.push(tag);
 
-				// ...then we add a new end tag for it
-				addMagicEndTag(parent, tag.getPos());
+				// ...then we add a new end tag for it with a better priority
+				addMagicEndTag(parent, tag.getPos(), tag.getSortPriority() - 1);
 
 				return true;
 			}
