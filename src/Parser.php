@@ -276,7 +276,7 @@ class Parser
 		$this->outputText($this->textLen, 0, \true);
 		do
 		{
-			$this->output = \preg_replace('(<([^ />]+)[^>]*></\\1>)', '', $this->output, -1, $cnt);
+			$this->output = \preg_replace('(<([^ />]++)[^>]*></\\1>)', '', $this->output, -1, $cnt);
 		}
 		while ($cnt > 0);
 		if (\strpos($this->output, '</i><i>') !== \false)
@@ -567,8 +567,9 @@ class Parser
 					$ancestorName = $ancestor->getName();
 					if (isset($tagConfig['rules']['closeAncestor'][$ancestorName]))
 					{
+						++$this->currentFixingCost;
 						$this->tagStack[] = $tag;
-						$this->addMagicEndTag($ancestor, $tag->getPos());
+						$this->addMagicEndTag($ancestor, $tag->getPos(), $tag->getSortPriority() - 1);
 						return \true;
 					}
 				}
@@ -588,8 +589,9 @@ class Parser
 				$parentName = $parent->getName();
 				if (isset($tagConfig['rules']['closeParent'][$parentName]))
 				{
+					++$this->currentFixingCost;
 					$this->tagStack[] = $tag;
-					$this->addMagicEndTag($parent, $tag->getPos());
+					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 					return \true;
 				}
 			}
@@ -784,8 +786,9 @@ class Parser
 			$tag->invalidate();
 			return;
 		}
-		if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
-			return;
+		if ($this->currentFixingCost < $this->maxFixingCost)
+			if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
+				return;
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit'])
 		{
 			$this->logger->err(
