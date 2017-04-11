@@ -1180,6 +1180,8 @@ function closeAncestor(tag)
 
 				if (tagConfig.rules.closeAncestor[ancestorName])
 				{
+					++currentFixingCost;
+
 					// We have to close this ancestor. First we reinsert this tag...
 					tagStack.push(tag);
 
@@ -1220,6 +1222,8 @@ function closeParent(tag)
 
 			if (tagConfig.rules.closeParent[parentName])
 			{
+				++currentFixingCost;
+
 				// We have to close that parent. First we reinsert the tag...
 				tagStack.push(tag);
 
@@ -1637,10 +1641,13 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (fosterParent(tag) || closeParent(tag) || closeAncestor(tag))
+	if (currentFixingCost < maxFixingCost)
 	{
-		// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
-		return;
+		if (fosterParent(tag) || closeParent(tag) || closeAncestor(tag))
+		{
+			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
+			return;
+		}
 	}
 
 	if (cntOpen[tagName] >= tagConfig.nestingLimit)

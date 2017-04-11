@@ -1282,6 +1282,8 @@ class Parser
 
 					if (isset($tagConfig['rules']['closeAncestor'][$ancestorName]))
 					{
+						++$this->currentFixingCost;
+
 						// We have to close this ancestor. First we reinsert this tag...
 						$this->tagStack[] = $tag;
 
@@ -1317,6 +1319,8 @@ class Parser
 
 				if (isset($tagConfig['rules']['closeParent'][$parentName]))
 				{
+					++$this->currentFixingCost;
+
 					// We have to close that parent. First we reinsert the tag...
 					$this->tagStack[] = $tag;
 
@@ -1721,10 +1725,13 @@ class Parser
 			return;
 		}
 
-		if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
+		if ($this->currentFixingCost < $this->maxFixingCost)
 		{
-			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
-			return;
+			if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
+			{
+				// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
+				return;
+			}
 		}
 
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit'])

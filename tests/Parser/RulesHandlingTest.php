@@ -258,7 +258,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[X][Y]..',
-				'<r><X><s>[X]</s></X><Y><s>[Y]</s>..</Y></r>',
+				'<r><X><s>[X]</s><Y><s>[Y]</s>..</Y></X></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->fosterParent('Y');
@@ -273,7 +273,7 @@ class RulesHandlingTest extends Test
 			],
 			[
 				'[X][Y]..',
-				'<r><X><s>[X]</s></X><Y><s>[Y]</s></Y><X>..</X></r>',
+				'<r><X><s>[X]</s></X><Y><s>[Y]</s><X>..</X></Y></r>',
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->rules->fosterParent('Y');
@@ -283,7 +283,7 @@ class RulesHandlingTest extends Test
 				{
 					// Two tags close each other. The winner depends on the number of times the loop
 					// is allowed to run
-					$parser->maxFixingCost = 3;
+					$parser->maxFixingCost = 1;
 					$parser->addStartTag('X', 0, 3);
 					$parser->addStartTag('Y', 3, 3);
 				}
