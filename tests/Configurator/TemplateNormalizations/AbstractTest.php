@@ -24,7 +24,7 @@ abstract class AbstractTest extends Test
 	* @testdox Works
 	* @dataProvider getData
 	*/
-	public function test($template, $expected, $preserveWhiteSpace = null)
+	public function test($template, $expected)
 	{
 		if ($expected instanceof Exception)
 		{
