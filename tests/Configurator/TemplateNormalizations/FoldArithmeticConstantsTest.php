@@ -8,6 +8,23 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 */
 class FoldArithmeticConstantsTest extends AbstractTest
 {
+	/**
+	* @testdox Ignores locale
+	* @runInSeparateProcess
+	*/
+	public function testLocale()
+	{
+		if (!setlocale(LC_NUMERIC, 'fr_FR'))
+		{
+			$this->markTestSkipped('Cannot set locale');
+		}
+
+		$this->test(
+			'<xsl:value-of select="1.5"/><xsl:value-of select="3 div 2"/><xsl:value-of select="1.1 * 1.1"/>',
+			'<xsl:value-of select="1.5"/><xsl:value-of select="1.5"/><xsl:value-of select="1.21"/>'
+		);
+	}
+
 	public function getData()
 	{
 		return [
