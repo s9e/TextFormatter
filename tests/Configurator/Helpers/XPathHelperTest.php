@@ -62,6 +62,7 @@ class XPathHelperTest extends Test
 
 	/**
 	* @testdox export(123.45) returns 123.45 regardless of locale
+	* @runInSeparateProcess
 	*/
 	public function testExportFloatLocale()
 	{
