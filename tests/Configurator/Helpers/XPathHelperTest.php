@@ -68,7 +68,7 @@ class XPathHelperTest extends Test
 	{
 		if (!setlocale(LC_ALL, 'fr_FR'))
 		{
-			$this->markTestSkipped('Cannot change locale');
+			$this->markTestSkipped('Cannot set locale');
 		}
 		$this->assertSame('123.45', XPathHelper::export(123.45));
 	}
