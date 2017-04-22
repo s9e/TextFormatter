@@ -1,3 +1,25 @@
+0.9.5 (2017-04-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b8210d933e4f10955de62d4252258736678cdbaa...e0de18cb68298028d56fd1a34e0f2b2bd3645d23)
+
+### Added
+
+ - `3159fe96a` XPathHelper: added support for ints and floats in export()
+
+### Fixed
+
+ - `284b4e08e` FoldArithmeticConstants: fixed an issue with number formatting in non-C locales
+ - `65f5721d4` Parser: fixed an unbounded loop that can occur when a tag closes an ancestor with a worse priority
+
+### Changed
+
+ - `cd0a160b3` FoldArithmeticConstants: improved the parsing of decimal and negative numbers
+ - `82abeb20c` Parser: do not apply closeAncestor/closeParent rules if maxFixingCost has been reached to mitigate against unbounded loops
+ - `a8abcf6dd` Parser: tweaked regexp for performance
+ - `b7ba9e117` XPathHelper: improved detection of numerical expressions
+
+
 0.9.4 (2017-04-07)
 ==================
 
