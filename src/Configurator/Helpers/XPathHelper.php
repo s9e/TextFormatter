@@ -85,7 +85,7 @@ abstract class XPathHelper
 		// We exclude the XPath operator "div" (flipped into "vid") to avoid false positives
 		$expr = strrev(preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', strrev($expr)));
 		$expr = str_replace(')', ' ', $expr);
-		if (preg_match('(^\\s*([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
+		if (preg_match('(^\\s*([$@][-\\w]++|-?\\.\\d++|-?\\d++(?:\\.\\d++)?)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
 		{
 			return true;
 		}
