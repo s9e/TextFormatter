@@ -30,13 +30,16 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function getOptimizationPasses()
 	{
+		// Regular expression matching a number
+		$n = '-?\\.\\d++|-?\\d++(?:\\.\\d++)?';
+
 		return [
-			'(^[-+0-9\\s]+$)'                        => 'foldOperation',
-			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
-			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
-			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
-			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
-			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|\\d+(?>\\.\\d+)?) \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
+			'(^[-+0-9\\s]+$)'                                            => 'foldOperation',
+			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
+			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
+			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
+			'(\\( (?:' . $n . ') (?>(?>[-+*]|div) (?:' . $n . ') )+\\))' => 'foldSubExpression',
+			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|' . $n . ') \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
 		];
 	}
 
