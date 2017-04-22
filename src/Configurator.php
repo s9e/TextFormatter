@@ -2578,10 +2578,21 @@ class TemplateParser
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
+use InvalidArgumentException;
 use RuntimeException;
 abstract class XPathHelper
 {
-	public static function export($str)
+	public static function export($value)
+	{
+		if (!\is_scalar($value))
+			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
+		if (\is_int($value))
+			return (string) $value;
+		if (\is_float($value))
+			return \preg_replace('(\\.?0+$)', '', \sprintf('%F', $value));
+		return self::exportString($value);
+	}
+	protected static function exportString($str)
 	{
 		if (\strpos($str, "'") === \false)
 			return "'" . $str . "'";
@@ -2614,7 +2625,7 @@ abstract class XPathHelper
 	{
 		$expr = \strrev(\preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', \strrev($expr)));
 		$expr = \str_replace(')', ' ', $expr);
-		if (\preg_match('(^\\s*([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
+		if (\preg_match('(^\\s*([$@][-\\w]++|-?\\.\\d++|-?\\d++(?:\\.\\d++)?)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
 			return \true;
 		return \false;
 	}
@@ -8067,6 +8078,7 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMDocument;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
 	protected $xpath;
@@ -8076,13 +8088,14 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function getOptimizationPasses()
 	{
+		$n = '-?\\.\\d++|-?\\d++(?:\\.\\d++)?';
 		return [
-			'(^[-+0-9\\s]+$)'                        => 'foldOperation',
-			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
-			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
-			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
-			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
-			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|\\d+(?>\\.\\d+)?) \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
+			'(^[-+0-9\\s]+$)'                                            => 'foldOperation',
+			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
+			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
+			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
+			'(\\( (?:' . $n . ') (?>(?>[-+*]|div) (?:' . $n . ') )+\\))' => 'foldSubExpression',
+			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|' . $n . ') \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
 		];
 	}
 	protected function evaluateExpression($expr)
@@ -8112,15 +8125,15 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function foldDivision(array $m)
 	{
-		return $m[1] . ($m[2] / $m[3]);
+		return $m[1] . XPathHelper::export($m[2] / $m[3]);
 	}
 	protected function foldMultiplication(array $m)
 	{
-		return $m[1] . ($m[2] * $m[3]);
+		return $m[1] . XPathHelper::export($m[2] * $m[3]);
 	}
 	protected function foldOperation(array $m)
 	{
-		return (string) $this->xpath->evaluate($m[0]);
+		return XPathHelper::export($this->xpath->evaluate($m[0]));
 	}
 	protected function foldSubExpression(array $m)
 	{
