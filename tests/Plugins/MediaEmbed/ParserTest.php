@@ -3804,7 +3804,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="overflow:hidden;position:relative;padding-bottom:56.196581196581%"><iframe allowfullscreen="" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><div style="overflow:hidden;position:relative;padding-bottom:56.196581%"><iframe allowfullscreen="" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3840,7 +3840,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:222px"><div style="overflow:hidden;position:relative;padding-bottom:200.45045045045%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/embedded" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:222px"><div style="overflow:hidden;position:relative;padding-bottom:200.45045%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/embedded" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3849,7 +3849,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><div style="overflow:hidden;position:relative;padding-bottom:190.90909090909%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><div style="overflow:hidden;position:relative;padding-bottom:190.909091%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3939,7 +3939,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="overflow:hidden;position:relative;padding-bottom:83.372365339578%"><iframe allowfullscreen="" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
+				'<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{

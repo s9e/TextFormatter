@@ -45,6 +45,43 @@ class XPathHelperTest extends Test
 	}
 
 	/**
+	* @testdox export(123) returns 123
+	*/
+	public function testExportInteger()
+	{
+		$this->assertSame('123', XPathHelper::export(123));
+	}
+
+	/**
+	* @testdox export(123.45) returns 123.45
+	*/
+	public function testExportFloat()
+	{
+		$this->assertSame('123.45', XPathHelper::export(123.45));
+	}
+
+	/**
+	* @testdox export(123.45) returns 123.45 regardless of locale
+	*/
+	public function testExportFloatLocale()
+	{
+		if (!setlocale(LC_ALL, 'fr_FR'))
+		{
+			$this->markTestSkipped('Cannot change locale');
+		}
+		$this->assertSame('123.45', XPathHelper::export(123.45));
+	}
+
+	/**
+	* @testdox export(new stdClass) throws an exception
+	* @expectedException InvalidArgumentException non-scalar
+	*/
+	public function testExportObject()
+	{
+		XPathHelper::export(new \stdClass);
+	}
+
+	/**
 	* @testdox getVariables() tests
 	* @dataProvider getGetVariablesTests
 	*/

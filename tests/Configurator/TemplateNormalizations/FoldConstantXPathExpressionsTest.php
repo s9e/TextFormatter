@@ -13,7 +13,7 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 		return [
 			[
 				'<xsl:value-of select="1 + 1"/>',
-				'<xsl:value-of select="\'2\'"/>'
+				'<xsl:value-of select="2"/>'
 			],
 			[
 				'<xsl:value-of select="concat(\'foo\', \'bar\')"/>',
@@ -41,7 +41,7 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 			],
 			[
 				'<xsl:value-of select="1.5 + 1.5"/>',
-				'<xsl:value-of select="\'3\'"/>'
+				'<xsl:value-of select="3"/>'
 			],
 			[
 				'<xsl:value-of select="3"/>',

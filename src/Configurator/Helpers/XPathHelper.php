@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 abstract class XPathHelper
@@ -14,10 +15,35 @@ abstract class XPathHelper
 	/**
 	* Export a literal as an XPath expression
 	*
+	* @param  mixed  $value Literal, e.g. "foo"
+	* @return string        XPath expression, e.g. "'foo'"
+	*/
+	public static function export($value)
+	{
+		if (!is_scalar($value))
+		{
+			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
+		}
+		if (is_int($value))
+		{
+			return (string) $value;
+		}
+		if (is_float($value))
+		{
+			// Avoid locale issues by using sprintf()
+			return preg_replace('(\\.?0+$)', '', sprintf('%F', $value));
+		}
+
+		return self::exportString($value);
+	}
+
+	/**
+	* Export a string as an XPath expression
+	*
 	* @param  string $str Literal, e.g. "foo"
 	* @return string      XPath expression, e.g. "'foo'"
 	*/
-	public static function export($str)
+	protected static function exportString($str)
 	{
 		// foo becomes 'foo'
 		if (strpos($str, "'") === false)

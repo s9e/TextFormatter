@@ -681,6 +681,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] export("d'oh") returns "d'oh"
  [x] export("'\"") returns concat("'",'"')
  [x] export('"\'') returns concat('"',"'")
+ [x] export(123) returns 123
+ [x] export(123.45) returns 123.45
+ [ ] export(123.45) returns 123.45 regardless of locale
+ [x] export(new stdClass) throws an exception
  [x] getVariables() tests 
  [x] isExpressionNumeric() tests 
  [x] minify() tests 

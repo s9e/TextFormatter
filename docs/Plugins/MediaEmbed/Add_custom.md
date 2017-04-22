@@ -150,7 +150,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="overflow:hidden;position:relative;padding-bottom:83.372365339578%"><iframe allowfullscreen="" scrolling="no" src="http://www.slideshare.net/slideshow/embed_code/21112125" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>
+<div data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><div style="overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" scrolling="no" src="http://www.slideshare.net/slideshow/embed_code/21112125" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>
 ```
 
 ### Specify a different URL for scraping
