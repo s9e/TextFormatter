@@ -66,7 +66,7 @@ class XPathHelperTest extends Test
 	*/
 	public function testExportFloatLocale()
 	{
-		if (!setlocale(LC_NUMERIC, 'en_DK', 'fr_FR'))
+		if (!setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR'))
 		{
 			$this->markTestSkipped('Cannot set locale');
 		}
