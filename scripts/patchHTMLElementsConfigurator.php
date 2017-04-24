@@ -23,18 +23,11 @@ function loadPage($url)
 
 $page  = loadPage('http://w3c.github.io/html/fullindex.html');
 $xpath = new DOMXPath ($page);
-$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr';
+$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr[contains(., "URL")]/th';
 
 $filters = [];
-foreach ($xpath->query($query) as $tr)
+foreach ($xpath->query($query) as $th)
 {
-	if (strpos($tr->textContent, 'URL') === false)
-	{
-		continue;
-	}
-
-	$th = $tr->getElementsByTagName('th')->item(0);
-
 	foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
 	{
 		// We manually ignore itemprop because it accepts plain text as well as URLs.
