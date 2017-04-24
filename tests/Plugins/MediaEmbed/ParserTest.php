@@ -971,16 +971,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('mailru');
 //				}
 //			],
-			[
-				'http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks',
-				'<r><MRCTV id="55537" url="http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('mrctv');
-				}
-			],
+//			[
+//				'http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks',
+//				'<r><MRCTV id="55537" url="http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('mrctv');
+//				}
+//			],
 			[
 				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
 				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
