@@ -1184,6 +1184,19 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[foo $nestingLimit=123 $tagLimit=456]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'nestingLimit' => 123,
+						'tagLimit'     => 456,
+						'template'     => ''
+					])
+				]
+			],
+			[
 				'[B $forceLookahead=false]{TEXT}[/B]',
 				'',
 				[

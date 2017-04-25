@@ -159,6 +159,10 @@ BBCode options can be specified in the opening tag like an attribute, using thei
     [B $forceLookahead=true]{TEXT}[/B]
     [* $tagName=LI]{TEXT}[/*]
 
+[Tag options](/Internals/Limits.md) `nestingLimit` and `tagLimit` can be set the same way.
+
+    [QUOTE $nestingLimit=3]{TEXT}[/QUOTE]
+
 ### Tag rules
 
 [Tag rules](/Rules/Tag_rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) Multiple values can be separated with a comma. For example:

@@ -268,12 +268,17 @@ class BBCodeMonkey
 				$value
 			);
 
-			// If name starts with $ then it's a BBCode options, if it starts with # it's a rule and
-			// otherwise it's an attribute definition
+			// If name starts with $ then it's a BBCode/tag option. If it starts with # it's a rule.
+			// Otherwise, it's an attribute definition
 			if ($name[0] === '$')
 			{
 				$optionName = substr($name, 1);
-				$bbcode->$optionName = $this->convertValue($value);
+
+				// Allow nestingLimit and tagLimit to be set on the tag itself. We don't necessarily
+				// want every other tag property to be modifiable this way, though
+				$object = ($optionName === 'nestingLimit' || $optionName === 'tagLimit') ? $tag : $bbcode;
+
+				$object->$optionName = $this->convertValue($value);
 			}
 			elseif ($name[0] === '#')
 			{
