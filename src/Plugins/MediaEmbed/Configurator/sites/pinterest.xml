@@ -11,7 +11,7 @@
 
 	<host>pinterest.com</host>
 	<extract>@pinterest.com/pin/(?'id'\d+)@</extract>
-	<extract>@pinterest.com/(?!explore/|pin/)(?'id'[-\w]+/[-\w]+)@</extract>
+	<extract>@pinterest.com/(?!_/|discover/|explore/|news_hub/|pin/|search/)(?'id'[-\w]+/[-\w]+)@</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)
