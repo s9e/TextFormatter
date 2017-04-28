@@ -1084,8 +1084,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/',
-				'<r><PODBEAN id="qtwub-4ee10c" url="http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/">http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/</PODBEAN></r>',
+				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
+				'<r><PODBEAN id="gupid-6a18d0" url="https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
