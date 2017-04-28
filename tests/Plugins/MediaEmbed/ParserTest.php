@@ -623,8 +623,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.bbc.com/news/video_and_audio/headlines/37961388',
-				'<r><BBCNEWS id="world-asia-37961388" url="http://www.bbc.com/news/video_and_audio/headlines/37961388">http://www.bbc.com/news/video_and_audio/headlines/37961388</BBCNEWS></r>',
+				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
+				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
 				[],
 				function ($configurator)
 				{

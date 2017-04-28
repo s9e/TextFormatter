@@ -26,6 +26,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public $allowedFilters = [
 		'hexdec',
+		'stripslashes',
 		'urldecode'
 	];
 

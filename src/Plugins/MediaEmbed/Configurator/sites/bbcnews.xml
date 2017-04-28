@@ -3,10 +3,14 @@
 
 	<tags><tag>news</tag></tags>
 
+	<attributes>
+		<id postFilter="stripslashes"/>
+	</attributes>
+
 	<host>bbc.com</host>
 	<scrape>
-		<match>!bbc\.com/news/\w+!</match>
-		<extract>!bbc\.com\\/news\\/(?'id'[-\w]+)\\/embed!</extract>
+		<match>!bbc\.com/news/\w!</match>
+		<extract>!bbc\.com\\/news\\/(?'id'[-\\\w/]+)\\/embed!</extract>
 	</scrape>
 	<iframe>
 		<src><![CDATA[
