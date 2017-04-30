@@ -53,6 +53,7 @@ pages:
       - Custom BBCode syntax: Plugins/BBCodes/Custom_BBCode_syntax.md
       - Localize strings: Plugins/BBCodes/Localize_strings.md
       - Use template parameters: Plugins/BBCodes/Use_template_parameters.md
+      - Add unsafe BBCodes: Plugins/BBCodes/Add_unsafe_BBCodes.md
     - Censor:
       - Synopsis: Plugins/Censor/Synopsis.md
       - Whitelist: Plugins/Censor/Whitelist.md
