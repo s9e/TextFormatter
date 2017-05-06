@@ -26,6 +26,7 @@ class Configurator extends ConfiguratorBase
 		'href'       => '#url',
 		'icon'       => '#url',
 		'longdesc'   => '#url',
+		'manifest'   => '#url',
 		'poster'     => '#url',
 		'src'        => '#url'
 	];
