@@ -156,7 +156,8 @@ class BBCodeMonkey
 			if ($name[0] === '$')
 			{
 				$optionName = \substr($name, 1);
-				$bbcode->$optionName = $this->convertValue($value);
+				$object = ($optionName === 'nestingLimit' || $optionName === 'tagLimit') ? $tag : $bbcode;
+				$object->$optionName = $this->convertValue($value);
 			}
 			elseif ($name[0] === '#')
 			{
