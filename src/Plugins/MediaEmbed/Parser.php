@@ -44,9 +44,12 @@ class Parser extends ParserBase
 		if ($tag->hasAttribute('url'))
 		{
 			$url = $tag->getAttribute('url');
-			if (\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
+			if (\preg_match('#^https?://[^<>"\'\\s]+$#Di', $url))
+			{
+				$url = \strtolower(\substr($url, 0, 5)) . \substr($url, 5);
 				foreach ($scrapeConfig as $scrape)
 					self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+			}
 		}
 		return \true;
 	}

@@ -21,6 +21,7 @@ class Configurator extends ConfiguratorBase
 {
 	public $allowedFilters = array(
 		'hexdec',
+		'stripslashes',
 		'urldecode'
 	);
 	protected $appendTemplate = '';
