@@ -1433,6 +1433,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/andrewbird/three-white-horses',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
 				'<div data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.ustream.tv/embed/16234409?html5ui" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></div></div>',
 				[],
@@ -3960,31 +3970,12 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
 				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974" style="border:0;height:450px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->createIndividualBBCodes = true;
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				// http://xenforo.com/community/threads/s9e-media-bbcodes-pack.61883/page-16#post-741750
-				'[media=soundcloud]nruau/nruau-mix2[/media]',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nruau/nruau-mix2" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
