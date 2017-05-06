@@ -12,7 +12,7 @@
 	<extract>@api\.soundcloud\.com/tracks/(?'track_id'\d+)(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
 	<extract>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/(?=s-)(?'secret_token'[-\w]+)@</extract>
 	<scrape>
-		<match>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/s-@</match>
+		<match>@soundcloud\.com/(?!playlists/\d|tracks/\d)[-\w]+/[-\w]@</match>
 		<extract>@soundcloud:tracks:(?'track_id'\d+)@</extract>
 	</scrape>
 	<scrape>

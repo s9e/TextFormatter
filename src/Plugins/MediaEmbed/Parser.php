@@ -94,8 +94,9 @@ class Parser extends ParserBase
 		{
 			// Ensure that the URL actually looks like a URL if we want to use it to scrape
 			$url = $tag->getAttribute('url');
-			if (preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
+			if (preg_match('#^https?://[^<>"\'\\s]+$#Di', $url))
 			{
+				$url = strtolower(substr($url, 0, 5)) . substr($url, 5);
 				foreach ($scrapeConfig as $scrape)
 				{
 					self::scrapeEntry($url, $tag, $scrape, $cacheDir);

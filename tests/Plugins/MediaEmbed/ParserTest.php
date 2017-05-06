@@ -1128,6 +1128,26 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'https://soundcloud.com/andrewbird/three-white-horses',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'Https://soundcloud.com/andrewbird/three-white-horses',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
 				'(<r><SPORTSNET id="\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
@@ -2831,33 +2851,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'Https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle',
-				'<r><SOUNDCLOUD id="three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle" url="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle">https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
 				'<r><SOUNDCLOUD id="playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
@@ -3968,7 +3961,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
