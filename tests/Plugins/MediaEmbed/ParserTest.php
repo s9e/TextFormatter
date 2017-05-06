@@ -1119,7 +1119,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
-//				'<r><SOUNDCLOUD id="https://soundcloud.com/topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
+//				'<r><SOUNDCLOUD id="topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -2822,7 +2822,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<r><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2832,7 +2832,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2841,7 +2841,7 @@ class ParserTest extends Test
 			],
 			[
 				'Https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="Https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2850,7 +2850,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle',
-				'<r><SOUNDCLOUD id="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle" url="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle">https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle" url="https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle">https://soundcloud.com/three-amigos-podcast/number-007-feat-dr-annmaria-de-mars-james-krause-jake-shields-marlon-moraes-mike-kyle</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2859,7 +2859,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<r><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2869,7 +2869,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd',
-				'<r><SOUNDCLOUD id="https://api.soundcloud.com/tracks/168988860" secret_token="s-GT9Cd" track_id="168988860" url="https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="tracks/168988860" secret_token="s-GT9Cd" track_id="168988860" url="https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -3968,7 +3968,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4256,6 +4256,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gametrailers');
+				}
+			],
+			[
+				'<r><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
 		];
