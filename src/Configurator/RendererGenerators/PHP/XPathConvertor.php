@@ -120,7 +120,7 @@ class XPathConvertor
 			$methodName = null;
 			foreach ($m as $k => $v)
 			{
-				if (is_numeric($k) || $v === '' || !method_exists($this, $k))
+				if (is_numeric($k) || $v === '' || $v === null || !method_exists($this, $k))
 				{
 					continue;
 				}
