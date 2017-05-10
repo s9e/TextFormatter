@@ -65,7 +65,8 @@ class HostnameList extends NormalizedList
 	{
 		if (preg_match('#[\\x80-\xff]#', $host) && function_exists('idn_to_ascii'))
 		{
-			$host = idn_to_ascii($host);
+			$variant = (defined('INTL_IDNA_VARIANT_UTS46')) ? INTL_IDNA_VARIANT_UTS46 : 0;
+			$host = idn_to_ascii($host, 0, $variant);
 		}
 
 		if (substr($host, 0, 1) === '*')
