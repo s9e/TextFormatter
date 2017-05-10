@@ -1,3 +1,32 @@
+0.9.6 (2017-05-10)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/da98196db2b0490c62d4f5ba4ce559a0921e3200...7d7e16ebfaa3ecc59093970f2a3a6ed72a9c2f46)
+
+### Added
+
+ - `dc754f8d9` BBCodeMonkey: added support for setting nestingLimit and tagLimit in definitions
+ - `c6edaf190` BuiltInFilters: added support for PHP 7.2
+ - `739fa2ee9` HotnameList: added support for PHP 7.2
+ - `bd9a5d697` XPathConvertor: added support for PHP 7.2
+
+### Removed
+
+ - `07abb3413` MediaEmbed: removed the authoritative part of SoundCloud URLs used as id
+
+### Fixed
+
+ - `ed780e3b9` FixUnescapedCurlyBracesInHtmlAttributes: fixed an issue where properly escaped braces would get incorrectly escaped again
+
+### Changed
+
+ - `7d7e16ebf` FixUnescapedCurlyBracesInHtmlAttributes: improved support for HTML attributes that end with an odd number of left braces
+ - `76b806e92` HTMLElements: updated list of URL attributes
+ - `6aba111ff` MediaEmbed: systematically scrape track_id from SoundCloud URLs
+ - `935381522` MediaEmbed: updated BBC News
+ - `d8f6c0573` MediaEmbed: updated Pinterest to exclude "explore" links
+
+
 0.9.5 (2017-04-22)
 ==================
 
