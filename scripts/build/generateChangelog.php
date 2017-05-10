@@ -9,8 +9,8 @@ $lines   = explode("\n", trim(file_get_contents('php://stdin')));
 
 $types = [
 	'Ignore'  => '((?:#ignore|#tests?|ci skip|(?:^|: )\w+ed \w*\s*test|(?:build|pre-commit|release|travis) script)|travis config)i',
-	'Added'   => '(\\bAdded\\b)i',
 	'Fixed'   => '(\\bFixed\\b)i',
+	'Added'   => '(\\bAdded\\b)i',
 	'Removed' => '(\\bRemoved\\b)i',
 	'Changed' => '()'
 ];
