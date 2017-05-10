@@ -54,7 +54,7 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
-			'((?<!\\{)\\{(?!\\{)[^}]*+$)',
+			'((?<!\\{)(?:\\{\\{)*\\{(?!\\{)[^}]*+$)',
 			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
 		];
 		$replace = [
