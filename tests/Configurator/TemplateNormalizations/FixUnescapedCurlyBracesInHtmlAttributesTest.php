@@ -71,6 +71,10 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<hr title="x{x"/>',
 				'<hr title="x{{x"/>'
 			],
+			[
+				'<hr title="x{{x"/>',
+				'<hr title="x{{x"/>'
+			],
 		];
 	}
 }
