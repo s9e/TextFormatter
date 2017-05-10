@@ -43,6 +43,12 @@ function convertCustom($filepath, &$file)
 				'public function evaluateExpression($expr)',
 			)
 		),
+		'BuiltInFilters.php' => array(
+			array(
+				"\$parts['host'] = idn_to_ascii(\$parts['host'], 0, \$variant);",
+				"\$parts['host'] = idn_to_ascii(\$parts['host'], 0);"
+			)
+		),
 		'BBCodeMonkey.php' => array(
 			array(
 				'protected function isFilter($tokenId)',
@@ -96,6 +102,12 @@ function convertCustom($filepath, &$file)
 			array(
 				'return $m[1] . hex2bin($m[2]) . $m[1];',
 				'return $m[1] . pack(\'H*\', $m[2]) . $m[1];'
+			)
+		),
+		'HostnameList.php' => array(
+			array(
+				"\$host = idn_to_ascii(\$host, 0, \$variant);",
+				"\$host = idn_to_ascii(\$host, 0);"
 			)
 		),
 		'Http.php' => array(
