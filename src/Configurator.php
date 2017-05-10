@@ -4219,7 +4219,7 @@ class XPathConvertor
 			$methodName = \null;
 			foreach ($m as $k => $v)
 			{
-				if (\is_numeric($k) || $v === '' || !\method_exists($this, $k))
+				if (\is_numeric($k) || $v === '' || $v === \null || !\method_exists($this, $k))
 					continue;
 				$methodName = $k;
 				break;
@@ -8869,7 +8869,10 @@ class HostnameList extends NormalizedList
 	protected function normalizeHostmask($host)
 	{
 		if (\preg_match('#[\\x80-\xff]#', $host) && \function_exists('idn_to_ascii'))
-			$host = \idn_to_ascii($host);
+		{
+			$variant = (\defined('INTL_IDNA_VARIANT_UTS46')) ? \INTL_IDNA_VARIANT_UTS46 : 0;
+			$host = \idn_to_ascii($host, 0);
+		}
 		if (\substr($host, 0, 1) === '*')
 			$host = \ltrim($host, '*');
 		else
