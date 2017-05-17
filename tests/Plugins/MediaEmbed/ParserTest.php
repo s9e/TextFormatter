@@ -624,7 +624,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
-				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
+				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
