@@ -19,7 +19,7 @@
 	<tr>
 		<td><code>audioboom</code></td>
 		<td>audioBoom</td>
-		<td>http://audioboo.fm/boos/2439994-deadline-day-update<br/>http://audioboom.com/boos/2493448-robert-patrick</td>
+		<td>http://audioboo.fm/boos/2439994-deadline-day-update<br/>http://audioboom.com/posts/2493448-robert-patrick</td>
 	</tr>
 	<tr>
 		<td><code>audiomack</code></td>

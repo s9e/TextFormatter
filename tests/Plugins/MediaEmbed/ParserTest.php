@@ -1585,8 +1585,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://audioboom.com/boos/2493448-robert-patrick',
-				'<r><AUDIOBOOM id="2493448" url="http://audioboom.com/boos/2493448-robert-patrick">http://audioboom.com/boos/2493448-robert-patrick</AUDIOBOOM></r>',
+				'https://audioboom.com/posts/2493448-robert-patrick',
+				'<r><AUDIOBOOM id="2493448" url="https://audioboom.com/posts/2493448-robert-patrick">https://audioboom.com/posts/2493448-robert-patrick</AUDIOBOOM></r>',
 				[],
 				function ($configurator)
 				{

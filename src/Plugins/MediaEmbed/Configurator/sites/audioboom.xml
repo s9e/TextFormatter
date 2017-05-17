@@ -1,11 +1,11 @@
 <site name="audioBoom" homepage="https://audioboom.com/">
 	<example>http://audioboo.fm/boos/2439994-deadline-day-update</example>
-	<example>http://audioboom.com/boos/2493448-robert-patrick</example>
+	<example>http://audioboom.com/posts/2493448-robert-patrick</example>
 
 	<tags><tag>podcasts</tag></tags>
 
 	<host>audioboo.fm</host>
 	<host>audioboom.com</host>
-	<extract>!audioboo(?:\.f|m\.co)m/boos/(?'id'\d+)!</extract>
-	<iframe width="100%" height="150" max-width="700" src="//audioboom.com/boos/{@id}/embed/v3"/>
+	<extract>!audioboo(?:\.f|m\.co)m/(?:boo|post)s/(?'id'\d+)!</extract>
+	<iframe width="100%" height="150" max-width="700" src="//audioboom.com/posts/{@id}/embed/v3"/>
 </site>
