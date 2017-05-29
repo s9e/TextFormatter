@@ -3070,6 +3070,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG',
+				'<r><TWITCH clip_id="AcceptableCooperativeYogurtTwitchRPG" url="https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG">https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1',
 				'<t>https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1</t>',
 				[],
@@ -4055,6 +4064,15 @@ class ParserTest extends Test
 			[
 				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
 				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=twitch/HorribleWoodpeckerHassanChop"></iframe></div></div>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG',
+				'<div data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><div style="overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=AcceptableCooperativeYogurtTwitchRPG"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{

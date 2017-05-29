@@ -10,14 +10,16 @@
 	<extract>#twitch\.tv/(?:videos|\w+/v)/(?'video_id'\d+)?#</extract>
 	<extract>#www\.twitch\.tv/(?!videos/)(?'channel'\w+)#</extract>
 	<extract>#t=(?'t'(?:(?:\d+h)?\d+m)?\d+s)#</extract>
-	<extract>#clips\.twitch\.tv/(?'channel'\w+)/(?'clip_id'\w+)#</extract>
+	<extract>#clips\.twitch\.tv/(?:(?'channel'\w+)/)?(?'clip_id'\w+)#</extract>
 	<iframe>
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@clip_id">
 					<xsl:text>//clips.twitch.tv/embed?autoplay=false&amp;clip=</xsl:text>
-					<xsl:value-of select="@channel"/>
-					<xsl:text>/</xsl:text>
+					<xsl:if test="@channel">
+						<xsl:value-of select="@channel"/>
+						<xsl:text>/</xsl:text>
+					</xsl:if>
 					<xsl:value-of select="@clip_id"/>
 				</xsl:when>
 				<xsl:otherwise>
