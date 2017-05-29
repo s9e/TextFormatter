@@ -663,16 +663,6 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://m.democracynow.org/stories/15236',
-				'<r><DEMOCRACYNOW id="2015/5/22/neil_young_premieres_new_anti_gmo" url="http://m.democracynow.org/stories/15236">http://m.democracynow.org/stories/15236</DEMOCRACYNOW></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('democracynow');
-				}
-			],
-			[
 				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
 				'<r><DUMPERT id="6622577/4652b140" url="http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html">http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</DUMPERT></r>',
 				[],
@@ -819,7 +809,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://j.gifs.com/Y6YZoO.gif',
-				'<r><GIFS height="360" id="Y6YZoO" url="https://j.gifs.com/Y6YZoO.gif" width="360">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
+				'<r><GIFS height="200" id="Y6YZoO" url="https://j.gifs.com/Y6YZoO.gif" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
 				[],
 				function ($configurator)
 				{
