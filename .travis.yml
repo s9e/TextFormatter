@@ -19,10 +19,10 @@ matrix:
       env: OPTIMIZE=1
     - php: nightly
       env: OPTIMIZE=1
-    - php: hhvm
-      env: OPTIMIZE=1
   allow_failures:
     - php: nightly
+      env: OPTIMIZE=1
+    - php: hhvm
       env: OPTIMIZE=1
 branches:
   except:
