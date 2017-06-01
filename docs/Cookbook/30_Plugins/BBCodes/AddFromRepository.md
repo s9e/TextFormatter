@@ -375,18 +375,10 @@ __SPOILER__
 				firstChildStyle  = firstChild.style,
 				lastChildStyle   = lastChild.style;
 
-			if (nextSiblingStyle.display !== '')
-			{
-				nextSiblingStyle.display = lastChildStyle.display = '';
-				firstChildStyle.display  = 'none';
-			}
-			else
-			{
-				nextSiblingStyle.display = lastChildStyle.display = 'none';
-				firstChildStyle.display  = '';
-			}
+			firstChildStyle.display  = nextSiblingStyle.display;
+			nextSiblingStyle.display = lastChildStyle.display = (firstChildStyle.display) ? '' : 'none';
 		-->
-		<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;''!==a.display?(a.display=c.display='',b.display='none'):(a.display=c.display='none',b.display='')"><span>Show</span><span style="display:none">Hide</span></button>
+		<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>Show</span><span style="display:none">Hide</span></button>
 		<span class="spoiler-title">Spoiler: {TEXT1}</span>
 	</div>
 	<div class="spoiler-content" style="display:none">{TEXT2}</div>
