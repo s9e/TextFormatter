@@ -10,8 +10,8 @@
 
 	<host>vid.me</host>
 	<scrape>
-		<extract>!meta property="og:video:type" content="video/\w+"&gt;\s*&lt;meta property="og:video:height" content="(?'height'\d+)"&gt;\s*&lt;meta property="og:video:width" content="(?'width'\d+)!</extract>
-		<extract>!meta property="og:video:url" content="[^"]*vid\.me/e/(?'id'\w+)!</extract>
+		<extract>!maxwidth=(?'width'\d+).*?maxheight=(?'height'\d+)!</extract>
+		<extract>!vid\.me/e/(?'id'\w+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="https://vid.me/e/{@id}"></iframe>
 </site>
