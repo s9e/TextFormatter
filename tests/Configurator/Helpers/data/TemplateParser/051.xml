@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="svg">
+   <attribute name="xmlns">
+     <output escape="attribute" type="literal">http://www.w3.org/2000/svg</output>
+   </attribute>
+   <attribute name="width">
+     <output escape="attribute" type="literal">100</output>
+   </attribute>
+   <attribute name="height">
+     <output escape="attribute" type="literal">100</output>
+   </attribute>
+   <attribute name="viewbox">
+     <output escape="attribute" type="literal">0 0 100 100</output>
+   </attribute>
+    <closeTag id="1"/>
+   <element empty="yes" id="2" name="rect">
+     <attribute name="width">
+       <output escape="attribute" type="literal">10</output>
+     </attribute>
+     <attribute name="height">
+       <output escape="attribute" type="literal">20</output>
+     </attribute>
+     <attribute name="x">
+       <output escape="attribute" type="literal">0</output>
+     </attribute>
+     <attribute name="y">
+       <output escape="attribute" type="literal">5</output>
+     </attribute>
+     <attribute name="fill">
+       <output escape="attribute" type="literal">#fff</output>
+     </attribute>
+     <closeTag id="2"/>
+   </element>
+  </element>
+</template>

@@ -169,21 +169,27 @@ class TemplateParser
 			return self::$methodName($ir, $node);
 		}
 
-		// Namespaced elements are not supported
-		if (!is_null($node->namespaceURI))
-		{
-			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
-		}
-
 		// Create an <element/> with a name attribute equal to given node's name
 		$element = self::appendElement($ir, 'element');
-		$element->setAttribute('name', $node->localName);
+		$element->setAttribute('name', $node->nodeName);
+
+		// Append an <attribute/> element for each namespace declaration
+		$xpath = new DOMXPath($node->ownerDocument);
+		foreach ($xpath->query('namespace::*', $node) as $ns)
+		{
+			if ($node->hasAttribute($ns->nodeName))
+			{
+				$irAttribute = self::appendElement($element, 'attribute');
+				$irAttribute->setAttribute('name', $ns->nodeName);
+				self::appendOutput($irAttribute, 'literal', $ns->nodeValue);
+			}
+		}
 
 		// Append an <attribute/> element for each of this node's attribute
 		foreach ($node->attributes as $attribute)
 		{
 			$irAttribute = self::appendElement($element, 'attribute');
-			$irAttribute->setAttribute('name', $attribute->name);
+			$irAttribute->setAttribute('name', $attribute->nodeName);
 
 			// Append an <output/> element to represent the attribute's value
 			self::appendOutput($irAttribute, 'avt', $attribute->value);

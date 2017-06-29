@@ -645,7 +645,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
  [x] parse() throws an exception if it encounters an unsupported XSL element
  [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
- [x] parse() throws an exception if it encounters a non-XSL namespaced element
  [x] Parse equality expr 
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
@@ -2674,7 +2673,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Ignores comments
  [x] Throws an exception if a template contains a processing instruction
  [x] Throws an exception when encountering unsupported XSL elements
- [x] Throws an exception when encountering namespaced elements
  [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
  [x] Matches the reference rendering in edge cases 
  [x] Matches the reference rendering in edge cases (quick renderer) 

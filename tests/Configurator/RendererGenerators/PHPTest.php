@@ -253,17 +253,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Throws an exception when encountering namespaced elements
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Namespaced element 'x:x' is not supported
-	*/
-	public function testUnsupportedNamespace()
-	{
-		$this->configurator->tags->add('X')->template = '<x:x xmlns:x="urn:x"/>';
-		$this->configurator->rendering->getRenderer();
-	}
-
-	/**
 	* @testdox Throws an exception on <xsl:copy-of/> that does not copy an attribute
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Unsupported <xsl:copy-of/> expression 'current()'
@@ -1354,6 +1343,14 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->template = '<xsl:choose><xsl:when test="@*">Y</xsl:when><xsl:otherwise>N</xsl:otherwise></xsl:choose>';
+				}
+			],
+			[
+				'<r><X/></r>',
+				'<x:svg xmlns:x="http://www.w3.org/2000/svg" width="100" height="100" viewbox="0 0 100 100"></x:svg>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<x:svg xmlns:x="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"></x:svg>';
 				}
 			],
 		];

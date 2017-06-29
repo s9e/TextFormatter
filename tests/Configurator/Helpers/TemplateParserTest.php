@@ -72,16 +72,6 @@ class TemplateParserTest extends Test
 	}
 
 	/**
-	* @testdox parse() throws an exception if it encounters a non-XSL namespaced element
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Namespaced element 'foo:foo' is not supported
-	*/
-	public function testUnsupportedNS()
-	{
-		TemplateParser::parse('<foo:foo xmlns:foo="urn:foo"/>', 'xml');
-	}
-
-	/**
 	* @dataProvider getParseEqualityExprTests
 	*/
 	public function testParseEqualityExpr($expr, $expected)
