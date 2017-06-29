@@ -622,16 +622,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('bandcamp');
 				}
 			],
-			[
-				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
-				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bbcnews');
-				}
-			],
+//			[
+//				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
+//				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bbcnews');
+//				}
+//			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
 //				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5" url="http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
