@@ -28,7 +28,7 @@ function addTag(tagPos, tagLen, seq)
 * Get the sequence of Unicode codepoints that corresponds to given emoji
 *
 * @param  {!string} str UTF-8 emoji
-* @return {!string}     Codepoint sequence, e.g. "23-20e3"
+* @return {!string}     Codepoint sequence, e.g. "0023-20e3"
 */
 function getSequence(str)
 {
