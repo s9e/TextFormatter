@@ -2199,6 +2199,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() does not replace HTML entities
  [x] censorHtml() does not replace HTML numeric entities
  [x] censorHtml() censors special characters
+ [x] censorHtml() censors special characters with the correct replacement
  [x] censorHtml() ignores words on the allowed list
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements

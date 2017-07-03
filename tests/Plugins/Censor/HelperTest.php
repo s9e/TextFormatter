@@ -184,6 +184,19 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() censors special characters with the correct replacement
+	*/
+	public function testCensorHtmlSpecialCharsReplacement()
+	{
+		$this->configurator->Censor->add('<br>', '??') ;
+
+		$this->assertSame(
+			'<br> ??',
+			$this->configurator->Censor->getHelper()->censorHtml('<br> &lt;br&gt;')
+		);
+	}
+
+	/**
 	* @testdox censorHtml() ignores words on the allowed list
 	*/
 	public function testCensorHtmlAllowed()
