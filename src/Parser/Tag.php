@@ -75,11 +75,6 @@ class Tag
 	{
 		$this->flags = $flags;
 	}
-	public function setSortPriority($sortPriority)
-	{
-		$this->sortPriority = $sortPriority;
-		\trigger_error('setSortPriority() is deprecated. Set the priority when calling adding the tag instead. See http://s9etextformatter.readthedocs.io/Internals/API_changes/#070', \E_USER_DEPRECATED);
-	}
 	public function getAttributes()
 	{
 		return $this->attributes;

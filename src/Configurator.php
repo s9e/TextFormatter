@@ -2191,14 +2191,20 @@ class TemplateParser
 				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
 			return self::$methodName($ir, $node);
 		}
-		if (!\is_null($node->namespaceURI))
-			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
 		$element = self::appendElement($ir, 'element');
-		$element->setAttribute('name', $node->localName);
+		$element->setAttribute('name', $node->nodeName);
+		$xpath = new DOMXPath($node->ownerDocument);
+		foreach ($xpath->query('namespace::*', $node) as $ns)
+			if ($node->hasAttribute($ns->nodeName))
+			{
+				$irAttribute = self::appendElement($element, 'attribute');
+				$irAttribute->setAttribute('name', $ns->nodeName);
+				self::appendOutput($irAttribute, 'literal', $ns->nodeValue);
+			}
 		foreach ($node->attributes as $attribute)
 		{
 			$irAttribute = self::appendElement($element, 'attribute');
-			$irAttribute->setAttribute('name', $attribute->name);
+			$irAttribute->setAttribute('name', $attribute->nodeName);
 			self::appendOutput($irAttribute, 'avt', $attribute->value);
 		}
 		self::parseChildren($element, $node);
