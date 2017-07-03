@@ -1,3 +1,13 @@
+0.10.1 (2017-07-03)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/691c181e0313eccca750f90b9471cf7d1540fea7...98f1ec319bc6943fb3bb00cd1915398d3b34ac41)
+
+### Fixed
+
+ - `98f1ec319` Censor: fixed an issue where Helper::censorHtml() would not use the correct replacement
+
+
 0.10.0 (2017-07-03)
 ===================
 
