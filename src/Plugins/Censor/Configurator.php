@@ -73,9 +73,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (empty($words))
 			return;
 		$config = [
-			'attrName' => $this->attrName,
-			'regexp'   => $this->getWordsRegexp(\array_keys($words)),
-			'tagName'  => $this->tagName
+			'attrName'   => $this->attrName,
+			'regexp'     => $this->getWordsRegexp(\array_keys($words)),
+			'regexpHtml' => $this->getWordsRegexp(\array_map('htmlspecialchars', \array_keys($words))),
+			'tagName'    => $this->tagName
 		];
 		$replacementWords = [];
 		foreach ($words as $word => $replacement)
