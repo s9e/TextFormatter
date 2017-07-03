@@ -516,16 +516,6 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox setSortPriority() sets the tag's sortPriority
-	*/
-	public function testSetSortPriority()
-	{
-		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
-		@$tag->setSortPriority(-10);
-		$this->assertSame(-10, $tag->getSortPriority());
-	}
-
-	/**
 	* @testdox setAttribute('foo', 'bar') sets attribute 'foo' to 'bar'
 	*/
 	public function testSetAttribute()

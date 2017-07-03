@@ -202,21 +202,6 @@ class Tag
 		$this->flags = $flags;
 	}
 
-	/**
-	* Set this tag's tiebreaker
-	*
-	* @deprecated 0.7.0 Set the priority in the constructor instead
-	*
-	* @param  integer $sortPriority
-	* @return void
-	*/
-	public function setSortPriority($sortPriority)
-	{
-		$this->sortPriority = $sortPriority;
-
-		trigger_error('setSortPriority() is deprecated. Set the priority when calling adding the tag instead. See http://s9etextformatter.readthedocs.io/Internals/API_changes/#070', E_USER_DEPRECATED);
-	}
-
 	//==========================================================================
 	// Getters
 	//==========================================================================

@@ -2,6 +2,8 @@
 
 `s9e\TextFormatter\Plugins\Censor\Helper::reparse()` has been removed.
 
+`s9e\TextFormatter\Parser\Tag::setSortPriority()` has been removed. See the [0.7.0 notes](#070) for more info.
+
 
 ## 0.9.0
 

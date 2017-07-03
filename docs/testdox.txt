@@ -1798,7 +1798,6 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if they share the same position
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if $endTag's position is greater than $startTag's
  [x] Tag's sortPriority can be set in the constructor
- [x] setSortPriority() sets the tag's sortPriority
  [x] setAttribute('foo', 'bar') sets attribute 'foo' to 'bar'
  [x] setAttribute() overwrites existing attributes
  [x] setAttributes() sets multiple attributes at once
