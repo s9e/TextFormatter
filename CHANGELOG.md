@@ -1,3 +1,32 @@
+0.10.0 (2017-07-03)
+===================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0100) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d8617a1858407057ff7edd368bcd550075ae903e...023d2f1a70bbfd8a72ce95d086c60c0eb6073908)
+
+### Added
+
+ - `438497a86` MediaEmbed: added support for new Twitch Clips URLs
+ - `e12a63653` TemplateParser: added support for namespaces
+
+### Removed
+
+ - `f0a1b6589` Censor: removed Helper::reparse()
+ - `023d2f1a7` Tag: removed setSortPriority()
+
+### Fixed
+
+ - `51fce5c9d` Censor: fixed an issue with special characters in censorHtml()
+
+### Changed
+
+ - `5390c3af6` BBCodes: updated default spoiler BBCode
+ - `80e813320` MediaEmbed: updated Audiomack
+ - `af3c2e758` MediaEmbed: updated audioBoom
+ - `3e32c86eb` MediaEmbed: updated vidme
+
+
 0.9.6 (2017-05-10)
 ==================
 
