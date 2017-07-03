@@ -25,9 +25,14 @@ class Helper
 	public $defaultReplacement = '****';
 
 	/**
-	* @var string Regexp matching blacklisted words
+	* @var string Regexp matching blacklisted words in plain text
 	*/
 	public $regexp = '/(?!)/';
+
+	/**
+	* @var string Regexp matching blacklisted words in HTML
+	*/
+	public $regexpHtml = '/(?!)/';
 
 	/**
 	* @var array Array of [regexp => replacement]
@@ -71,13 +76,13 @@ class Helper
 
 		// Modify the original regexp so that it only matches text nodes and optionally attribute
 		// values
-		$delim  = $this->regexp[0];
-		$pos    = strrpos($this->regexp, $delim);
+		$delim  = $this->regexpHtml[0];
+		$pos    = strrpos($this->regexpHtml, $delim);
 		$regexp = $delim
 		        . '(?<!&#)(?<!&)'
-		        . substr($this->regexp, 1, $pos - 1)
+		        . substr($this->regexpHtml, 1, $pos - 1)
 		        . '(?=[^<>]*+(?=<|$)' . $attributesExpr . ')'
-		        . substr($this->regexp, $pos);
+		        . substr($this->regexpHtml, $pos);
 
 		return preg_replace_callback(
 			$regexp,

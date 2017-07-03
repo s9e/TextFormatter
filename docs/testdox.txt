@@ -2191,6 +2191,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() uses custom replacements
  [x] censorHtml() escapes custom replacements
  [x] censorHtml() does not replace HTML tag names
+ [x] censorHtml() does not replace HTML tags
  [x] censorHtml() does not replace HTML attribute names
  [x] censorHtml() does not replace HTML attribute values by default
  [x] censorHtml() replaces HTML attribute values if its second argument is true
@@ -2198,6 +2199,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() replaces text in quotes in text nodes without replacing attribute values
  [x] censorHtml() does not replace HTML entities
  [x] censorHtml() does not replace HTML numeric entities
+ [x] censorHtml() censors special characters
  [x] censorHtml() ignores words on the allowed list
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements

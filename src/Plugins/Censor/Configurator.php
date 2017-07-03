@@ -169,9 +169,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// Create the config
 		$config = [
-			'attrName' => $this->attrName,
-			'regexp'   => $this->getWordsRegexp(array_keys($words)),
-			'tagName'  => $this->tagName
+			'attrName'   => $this->attrName,
+			'regexp'     => $this->getWordsRegexp(array_keys($words)),
+			'regexpHtml' => $this->getWordsRegexp(array_map('htmlspecialchars', array_keys($words))),
+			'tagName'    => $this->tagName
 		];
 
 		// Add custom replacements

@@ -63,6 +63,19 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox censorHtml() does not replace HTML tags
+	*/
+	public function testCensorHtmlTags()
+	{
+		$this->configurator->Censor->add('<br>') ;
+
+		$this->assertSame(
+			'<br>',
+			$this->configurator->Censor->getHelper()->censorHtml('<br>')
+		);
+	}
+
+	/**
 	* @testdox censorHtml() does not replace HTML attribute names
 	*/
 	public function testCensorHtmlAttributeNames()
@@ -154,6 +167,19 @@ class HelperTest extends Test
 		$this->assertSame(
 			' xxx &#x11; xxx ',
 			$this->configurator->Censor->getHelper()->censorHtml(' x11 &#x11; x11 ')
+		);
+	}
+
+	/**
+	* @testdox censorHtml() censors special characters
+	*/
+	public function testCensorHtmlSpecialChars()
+	{
+		$this->configurator->Censor->add('<br>') ;
+
+		$this->assertSame(
+			'<br> ****',
+			$this->configurator->Censor->getHelper()->censorHtml('<br> &lt;br&gt;')
 		);
 	}
 
