@@ -36,7 +36,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				return \htmlspecialchars($this->getReplacement($m[0]), \ENT_QUOTES);
+				return \htmlspecialchars($this->getReplacement(\html_entity_decode($m[0], \ENT_QUOTES, 'UTF-8')), \ENT_QUOTES);
 			},
 			$html
 		);
