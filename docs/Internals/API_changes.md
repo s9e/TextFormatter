@@ -1,3 +1,8 @@
+## 0.10.0
+
+`s9e\TextFormatter\Plugins\Censor\Helper::reparse()` has been removed.
+
+
 ## 0.9.0
 
 `s9e\TextFormatter\Configurator\TemplateForensics` has been renamed to `s9e\TextFormatter\Configurator\TemplateInspector`.

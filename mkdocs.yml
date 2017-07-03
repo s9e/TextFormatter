@@ -58,7 +58,6 @@ pages:
       - Synopsis: Plugins/Censor/Synopsis.md
       - Whitelist: Plugins/Censor/Whitelist.md
       - As a standalone: Plugins/Censor/Standalone.md
-      - Quick reparsing: Plugins/Censor/Reparse.md
     - Emoji:
       - Synopsis: Plugins/Emoji/Synopsis.md
       - Configuration: Plugins/Emoji/Configuration.md

@@ -2204,21 +2204,6 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements
  [x] censorText() ignores words on the allowed list
- [x] reparse() preserves old tags
- [x] reparse() updates replacement in old tags
- [x] reparse() add new tags
- [x] reparse() uses replacements in new tags
- [x] reparse() escapes replacements
- [x] reparse() does not escape single quotes in replacements
- [x] reparse() replaces text in quotes
- [x] reparse() replace the "t" root node with "r" if a new match is found
- [x] reparse() does not replace tag names
- [x] reparse() does not replace attribute names
- [x] reparse() does not replace attribute values
- [x] reparse() does not replace XML entities
- [x] reparse() does not erroneously alter tags whose name resembles Censor's tag name
- [x] reparse() ignores words on the allowed list
- [x] reparse() uncensors words on the allowed list
  [x] isCensored('word') returns TRUE if '*or*' is censored
  [x] isCensored('word') returns FALSE if '*xx*' is censored
  [x] isCensored('word') returns FALSE if '*or*' is censored and 'word' is allowed
