@@ -2100,6 +2100,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				// https://github.com/s9e/phpbb-ext-mediaembed/issues/9
+				'https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA',
+				'<r><GOOGLEDRIVE id="1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA" url="https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA">https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA</GOOGLEDRIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googledrive');
+				}
+			],
+			[
 				'https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view',
 				'<r><GOOGLEDRIVE id="0B-SjC2QWxqXRY2NfbGJ2QUcwTlU" url="https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view">https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view</GOOGLEDRIVE></r>',
 				[],
