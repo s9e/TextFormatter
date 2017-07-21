@@ -383,8 +383,8 @@ class JavaScriptTest extends Test
 
 		$this->assertNotContains('"X":{', $js);
 		$this->assertNotContains('"Y":{', $js);
-		$this->assertContains('"X":o051B0AF4', $js);
-		$this->assertContains('"Y":o051B0AF4', $js);
+		$this->assertContains('"X":oF09BAC34', $js);
+		$this->assertContains('"Y":oF09BAC34', $js);
 	}
 
 	/**

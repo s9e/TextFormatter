@@ -85,7 +85,7 @@ class Parser
 	/**
 	* @var integer How hard the parser should work on fixing bad markup
 	*/
-	public $maxFixingCost = 1000;
+	public $maxFixingCost = 10000;
 
 	/**
 	* @var array Associative array of namespace prefixes in use in document (prefixes used as key)

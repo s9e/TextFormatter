@@ -215,7 +215,7 @@ class ConfiguratorBaseTest extends Test
 				'bar'   => 'foo',
 				'setup' => 'foo',
 				'quickMatch'  => false,
-				'regexpLimit' => 10000
+				'regexpLimit' => 50000
 			],
 			$dummy->asConfig()
 		);

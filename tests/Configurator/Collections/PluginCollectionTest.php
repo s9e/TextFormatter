@@ -137,7 +137,7 @@ class PluginCollectionTest extends Test
 		$this->assertArrayMatches(
 			[
 				'Dummy' => [
-					'regexpLimit' => 10000
+					'regexpLimit' => 50000
 				]
 			],
 			$config

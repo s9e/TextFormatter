@@ -215,7 +215,7 @@ class ConfiguratorTest extends Test
 			[
 				'plugins' => [
 					'Dummy' => [
-						'regexpLimit' => 10000
+						'regexpLimit' => 50000
 					]
 				]
 			],

@@ -33,7 +33,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
 	*              regexp
 	*/
-	protected $regexpLimit = 10000;
+	protected $regexpLimit = 50000;
 
 	/**
 	* @param Configurator $configurator
