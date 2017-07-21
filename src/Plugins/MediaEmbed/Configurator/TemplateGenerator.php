@@ -60,8 +60,9 @@ abstract class TemplateGenerator
 		}
 		else
 		{
-			$this->attributes['style']['width']  = '100%';
-			$this->attributes['style']['height'] = $this->attributes['height'] . 'px';
+			$this->attributes['style']['width']     = '100%';
+			$this->attributes['style']['height']    = $this->attributes['height'] . 'px';
+			$this->attributes['style']['max-width'] = '100%';
 
 			if (isset($this->attributes['max-width']))
 			{
@@ -71,6 +72,11 @@ abstract class TemplateGenerator
 			{
 				$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
 				$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
+			}
+
+			if ($this->attributes['style']['width'] === $this->attributes['style']['max-width'])
+			{
+				unset($this->attributes['style']['max-width']);
 			}
 		}
 
