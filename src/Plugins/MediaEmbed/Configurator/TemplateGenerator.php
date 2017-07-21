@@ -43,44 +43,7 @@ abstract class TemplateGenerator
 	{
 		$this->attributes = $attributes + $this->defaultAttributes;
 
-		$prepend = $append = '';
-		if ($this->needsWrapper())
-		{
-			$this->attributes['style']['width']    = '100%';
-			$this->attributes['style']['height']   = '100%';
-			$this->attributes['style']['position'] = 'absolute';
-			$this->attributes['style']['left'] = '0';
-
-			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
-			$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
-
-			$prepend .= '<div>' . $this->generateAttributes(['style' => $outerStyle]);
-			$prepend .= '<div>' . $this->generateAttributes(['style' => $innerStyle]);
-			$append  .= '</div></div>';
-		}
-		else
-		{
-			$this->attributes['style']['width']     = '100%';
-			$this->attributes['style']['height']    = $this->attributes['height'] . 'px';
-			$this->attributes['style']['max-width'] = '100%';
-
-			if (isset($this->attributes['max-width']))
-			{
-				$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
-			}
-			elseif ($this->attributes['width'] !== '100%')
-			{
-				$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
-				$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
-			}
-
-			if ($this->attributes['style']['width'] === $this->attributes['style']['max-width'])
-			{
-				unset($this->attributes['style']['max-width']);
-			}
-		}
-
-		return $prepend . $this->getContentTemplate() . $append;
+		return ($this->needsWrapper()) ? $this->getWrappedTemplate() : $this->getUnwrappedTemplate();
 	}
 
 	/**
@@ -94,36 +57,6 @@ abstract class TemplateGenerator
 		$expr = trim($expr, '{}');
 
 		return (preg_match('(^[@$]?[-\\w]+$)D', $expr)) ? $expr : "($expr)";
-	}
-
-	/**
-	* Generate and return the padding declaration used in the responsive wrapper
-	*
-	* @return string
-	*/
-	protected function getResponsivePadding()
-	{
-		$height        = $this->expr($this->attributes['height']);
-		$paddingHeight = $this->expr($this->attributes['padding-height']);
-		$width         = $this->expr($this->attributes['width']);
-
-		// Create the padding declaration for the fixed ratio
-		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
-		
-		// Add the padding declaration for the computed ratio if applicable
-		if (!empty($this->attributes['padding-height']))
-		{
-			// NOTE: there needs to be whitespace around tokens in calc()
-			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
-		}
-
-		// If the width is dynamic, use a conditional to protect against divisions by zero
-		if (strpos($width, '@') !== false)
-		{
-			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
-		}
-
-		return $css;
 	}
 
 	/**
@@ -168,6 +101,88 @@ abstract class TemplateGenerator
 		}
 
 		return trim($style, ';');
+	}
+
+	/**
+	* Generate and return the padding declaration used in the responsive wrapper
+	*
+	* @return string
+	*/
+	protected function getResponsivePadding()
+	{
+		$height        = $this->expr($this->attributes['height']);
+		$paddingHeight = $this->expr($this->attributes['padding-height']);
+		$width         = $this->expr($this->attributes['width']);
+
+		// Create the padding declaration for the fixed ratio
+		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
+		
+		// Add the padding declaration for the computed ratio if applicable
+		if (!empty($this->attributes['padding-height']))
+		{
+			// NOTE: there needs to be whitespace around tokens in calc()
+			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
+		}
+
+		// If the width is dynamic, use a conditional to protect against divisions by zero
+		if (strpos($width, '@') !== false)
+		{
+			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
+		}
+
+		return $css;
+	}
+
+	/**
+	* Generate and return a responsive template for the embedded content
+	*
+	* @return string
+	*/
+	protected function getUnwrappedTemplate()
+	{
+		$this->attributes['style']['width']     = '100%';
+		$this->attributes['style']['height']    = $this->attributes['height'] . 'px';
+		$this->attributes['style']['max-width'] = '100%';
+
+		if (isset($this->attributes['max-width']))
+		{
+			$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
+		}
+		elseif ($this->attributes['width'] !== '100%')
+		{
+			$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
+			$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
+		}
+
+		if ($this->attributes['style']['width'] === $this->attributes['style']['max-width'])
+		{
+			unset($this->attributes['style']['max-width']);
+		}
+
+		return $this->getContentTemplate();
+	}
+
+	/**
+	* Generate and return a template for the embedded content, complete with a responsive wrapper
+	*
+	* @return string
+	*/
+	protected function getWrappedTemplate()
+	{
+		$this->attributes['style']['width']    = '100%';
+		$this->attributes['style']['height']   = '100%';
+		$this->attributes['style']['position'] = 'absolute';
+		$this->attributes['style']['left'] = '0';
+
+		$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
+		$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
+
+		$template  = '<div>' . $this->generateAttributes(['style' => $outerStyle]);
+		$template .= '<div>' . $this->generateAttributes(['style' => $innerStyle]);
+		$template .= $this->getContentTemplate();
+		$template .= '</div></div>';
+
+		return $template;
 	}
 
 	/**
