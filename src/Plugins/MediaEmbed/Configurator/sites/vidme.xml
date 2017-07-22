@@ -1,17 +1,11 @@
 <site name="vidme" homepage="https://vid.me">
-	<example>https://vid.me/8Vr</example>
+	<example>https://vid.me/rxMHW</example>
 
 	<tags><tag>videos</tag></tags>
 
-	<attributes>
-		<height defaultValue="360"/>
-		<width defaultValue="640"/>
-	</attributes>
-
 	<host>vid.me</host>
 	<scrape>
-		<extract>!maxwidth=(?'width'\d+).*?maxheight=(?'height'\d+)!</extract>
 		<extract>!vid\.me/e/(?'id'\w+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{@height}" src="https://vid.me/e/{@id}"></iframe>
+	<iframe src="https://vid.me/e/{@id}"/>
 </site>

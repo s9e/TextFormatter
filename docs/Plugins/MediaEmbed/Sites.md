@@ -539,7 +539,7 @@
 	<tr>
 		<td><code>vidme</code></td>
 		<td>vidme</td>
-		<td>https://vid.me/8Vr</td>
+		<td>https://vid.me/rxMHW</td>
 	</tr>
 	<tr>
 		<td><code>vimeo</code></td>
