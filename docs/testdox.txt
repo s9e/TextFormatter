@@ -1194,6 +1194,9 @@ s9e\TextFormatter\Tests\Configurator\Rendering
  [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
  [x] getTemplates() returns templates gathered from tags
 
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\AllowAll
+ [x] <b> has a allowChild rule and a allowDescendant rule for <div>
+
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoCloseIfVoid
  [x] Generates an autoClose rule for <hr/>
  [x] Does not generate an autoClose rule for <span>

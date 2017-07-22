@@ -109,6 +109,7 @@
 			<file>tests/Configurator/JavaScript/Minifiers/RemoteCacheTest.php</file>
 			<file>tests/Configurator/JavaScript/StylesheetCompressorTest.php</file>
 			<file>tests/Configurator/RenderingTest.php</file>
+			<file>tests/Configurator/RulesGenerators/AllowAllTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoCloseIfVoidTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AutoReopenFormattingElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/BlockElementsCloseFormattingElementsTest.php</file>
