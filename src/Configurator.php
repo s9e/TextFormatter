@@ -251,7 +251,7 @@ class Configurator implements ConfigProvider
 		// Add the HTML5 rules if applicable
 		if ($options['addHTML5Rules'])
 		{
-			$this->addHTML5Rules($options);
+			$this->addHTML5Rules();
 		}
 
 		// Create a renderer as needed
@@ -341,16 +341,10 @@ class Configurator implements ConfigProvider
 	/**
 	* Add the rules that are generated based on HTML5 specs
 	*
-	* @see s9e\TextFormatter\ConfigBuilder\RulesGenerator
-	*
-	* @param  array $options Options passed to RulesGenerator::getRules()
 	* @return void
 	*/
-	public function addHTML5Rules(array $options = [])
+	public function addHTML5Rules()
 	{
-		// Add the default options
-		$options += ['rootRules' => $this->rootRules];
-
 		// Finalize the plugins' config
 		$this->plugins->finalize();
 
@@ -361,7 +355,7 @@ class Configurator implements ConfigProvider
 		}
 
 		// Get the rules
-		$rules = $this->rulesGenerator->getRules($this->tags, $options);
+		$rules = $this->rulesGenerator->getRules($this->tags);
 
 		// Add the rules pertaining to the root
 		$this->rootRules->merge($rules['root'], false);

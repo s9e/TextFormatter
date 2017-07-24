@@ -1,3 +1,8 @@
+## 0.11.0
+
+The optional argument of `s9e\TextFormatter\Configurator::addHTML5Rules()` and `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
+
+
 ## 0.10.0
 
 `s9e\TextFormatter\Plugins\Censor\Helper::reparse()` has been removed.

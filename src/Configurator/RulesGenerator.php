@@ -77,23 +77,14 @@ class RulesGenerator implements ArrayAccess, Iterator
 	/**
 	* Generate rules for given tag collection
 	*
-	* Possible options:
-	*
-	*  parentHTML: HTML leading to the start of the rendered text. Defaults to "<div>"
-	*
-	* @param  TagCollection $tags    Tags collection
-	* @param  array         $options Array of option settings
+	* @param  TagCollection $tags Tags collection
 	* @return array
 	*/
-	public function getRules(TagCollection $tags, array $options = [])
+	public function getRules(TagCollection $tags)
 	{
-		// Unless specified otherwise, we consider that the renderered text will be displayed as
-		// the child of a <div> element
-		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
-
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
 		// the root of the text (IOW, with no parent) or even disabled altogether
-		$rootInspector = $this->generateRootInspector($parentHTML);
+		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
 
 		// Study the tags
 		$templateInspector = [];
@@ -120,37 +111,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 		unset($rules['root']['requireParent']);
 
 		return $rules;
-	}
-
-	/**
-	* Generate a TemplateInspector instance for the root element
-	*
-	* @param  string            $html Root HTML, e.g. "<div>"
-	* @return TemplateInspector
-	*/
-	protected function generateRootInspector($html)
-	{
-		$dom = new DOMDocument;
-		$dom->loadHTML($html);
-
-		// Get the document's <body> element
-		$body = $dom->getElementsByTagName('body')->item(0);
-
-		// Grab the deepest node
-		$node = $body;
-		while ($node->firstChild)
-		{
-			$node = $node->firstChild;
-		}
-
-		// Now append an <xsl:apply-templates/> node to make the markup look like a normal template
-		$node->appendChild($dom->createElementNS(
-			'http://www.w3.org/1999/XSL/Transform',
-			'xsl:apply-templates'
-		));
-
-		// Finally create and return a new TemplateInspector instance
-		return new TemplateInspector($dom->saveXML($body));
 	}
 
 	/**

@@ -28,39 +28,6 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Root has a denyChild rule for <li> if parentHTML is not specified
-	*/
-	public function testRootDenyChild()
-	{
-		$rulesGenerator = new RulesGenerator;
-		$tagCollection  = new TagCollection;
-		$tagCollection->add('LI')->template = '<li><xsl:apply-templates/></li>';
-
-		$rules = $rulesGenerator->getRules($tagCollection);
-
-		$this->assertEquals(
-			[
-				'denyChild' => ['LI']
-			],
-			$rules['root']
-		);
-	}
-
-	/**
-	* @testdox Root does not have a denyChild rule for <li> if parentHTML is <ul>
-	*/
-	public function testParentHTML()
-	{
-		$rulesGenerator = new RulesGenerator;
-		$tagCollection  = new TagCollection;
-		$tagCollection->add('LI')->template = '<li><xsl:apply-templates/></li>';
-
-		$rules = $rulesGenerator->getRules($tagCollection, ['parentHTML' => '<ul>']);
-
-		$this->assertArrayNotHasKey('denyChild', $rules['root']);
-	}
-
-	/**
 	* @testdox Default rules
 	* @dataProvider getDefault
 	*/

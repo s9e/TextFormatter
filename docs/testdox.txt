@@ -148,10 +148,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] unset($configurator->foo) unsets $configurator->registeredVars['foo']
  [x] Setting $configurator->foo sets $this->configurator->registeredVars['foo']
  [x] addHTML5Rules() adds root rules
- [x] addHTML5Rules() does not overwrite boolean rules
  [x] addHTML5Rules() adds tag rules
  [x] addHTML5Rules() does not overwrite boolean tag rules
- [x] addHTML5Rules() passes its options to the generator
  [x] loadBundle('../Invalid') throws an exception
  [x] loadBundle('Forum') adds the Forum bundle's configuration
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
@@ -162,7 +160,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize(['returnParser' => false]) does not return a parser
  [x] finalize(['returnRenderer' => false]) does not return a renderer
  [x] finalize() calls addHTML5Rules() by default
- [x] finalize() passes its options to addHTML5Rules()
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
  [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
  [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
@@ -1270,8 +1267,6 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
 s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Implements ArrayAccess
  [x] Implements Iterator
- [x] Root has a denyChild rule for <li> if parentHTML is not specified
- [x] Root does not have a denyChild rule for <li> if parentHTML is <ul>
  [x] Default rules 
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalization
