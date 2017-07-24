@@ -141,19 +141,19 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'x <span title="foo">...</b> <div title="bar">...</div> y',
-				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:span data-title="foo"><s>&lt;span title="foo"&gt;</s>...&lt;/b&gt; <html:div title="bar"><s>&lt;div title="bar"&gt;</s>...<e>&lt;/div&gt;</e></html:div> y</html:span></r>',
+				'x <div title="foo">...</b> <span title="bar">...</span> y',
+				'<r xmlns:html="urn:s9e:TextFormatter:html">x <html:div data-title="foo"><s>&lt;div title="foo"&gt;</s>...&lt;/b&gt; <html:span title="bar"><s>&lt;span title="bar"&gt;</s>...<e>&lt;/span&gt;</e></html:span> y</html:div></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->HTMLElements->allowElement('span');
-					$configurator->HTMLElements->allowAttribute('span', 'data-title');
-					$configurator->HTMLElements->allowAttribute('span', 'title');
 					$configurator->HTMLElements->allowElement('div');
 					$configurator->HTMLElements->allowAttribute('div', 'data-title');
 					$configurator->HTMLElements->allowAttribute('div', 'title');
+					$configurator->HTMLElements->allowElement('span');
+					$configurator->HTMLElements->allowAttribute('span', 'data-title');
+					$configurator->HTMLElements->allowAttribute('span', 'title');
 
-					$configurator->HTMLElements->aliasAttribute('span', 'title', 'data-title');
+					$configurator->HTMLElements->aliasAttribute('div', 'title', 'data-title');
 				}
 			],
 			[
