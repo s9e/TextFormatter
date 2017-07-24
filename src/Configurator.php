@@ -226,7 +226,6 @@ class Configurator implements ConfigProvider
 	* Options:
 	*
 	*  - addHTML5Rules:    whether to call addHTML5Rules()
-	*  - optimizeConfig:   whether to optimize the parser's config using references
 	*
 	* @param  array $options
 	* @return array One "parser" element and one "renderer" element unless specified otherwise
@@ -237,8 +236,7 @@ class Configurator implements ConfigProvider
 
 		// Add default options
 		$options += [
-			'addHTML5Rules'  => true,
-			'optimizeConfig' => true
+			'addHTML5Rules'  => true
 		];
 
 		// Add the HTML5 rules if applicable
@@ -259,10 +257,7 @@ class Configurator implements ConfigProvider
 
 		// Remove JS-specific data from the config
 		$config = ConfigHelper::filterConfig($config, 'PHP');
-		if ($options['optimizeConfig'])
-		{
-			ConfigHelper::optimizeArray($config);
-		}
+		ConfigHelper::optimizeArray($config);
 
 		// Create a parser
 		$return['parser'] = new Parser($config);

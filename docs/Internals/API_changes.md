@@ -8,6 +8,8 @@ The `finalizeParser` and `finalizeRenderer` options have been removed from `s9e\
 
 The `returnParser` and `returnRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`. Both objects are always returned.
 
+The `optimizeConfig` option has been removed from `s9e\TextFormatter\Configurator::finalize()`. The parser configuration is always optimized.
+
 
 ## 0.10.0
 

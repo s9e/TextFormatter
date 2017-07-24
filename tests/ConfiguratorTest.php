@@ -315,7 +315,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigRemovesJavaScriptTagFilters()
 	{
-		$pc = new TagFilter(function($tag){});
+		$pc = new TagFilter('is_object');
 		$pc->setJS('function(tag){return false;}');
 
 		$this->configurator->tags->add('A')->filterChain->append($pc);
@@ -334,7 +334,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigRemovesJavaScriptAttributeFilters()
 	{
-		$filter = new AttributeFilter(function($v){});
+		$filter = new AttributeFilter('is_object');
 		$filter->setJS('function(v){return false;}');
 
 		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($filter);
@@ -589,23 +589,6 @@ class ConfiguratorTest extends Test
 		             ->method('addHTML5Rules');
 
 		$configurator->finalize(['addHTML5Rules' => false]);
-	}
-
-	/**
-	* @testdox finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
-	*/
-	public function testFinalizeOptimizeConfig()
-	{
-		$this->configurator->tags->add('X');
-		$this->configurator->tags->add('Y');
-
-		$return1 = $this->configurator->finalize(['optimizeConfig' => false]);
-		$return2 = $this->configurator->finalize(['optimizeConfig' => true]);
-
-		$this->assertLessThan(
-			strlen(serialize($return1['parser'])),
-			strlen(serialize($return2['parser']))
-		);
 	}
 
 	/**

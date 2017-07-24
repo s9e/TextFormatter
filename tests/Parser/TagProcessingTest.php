@@ -861,17 +861,11 @@ class TagProcessingTest extends Test
 				'<r><X>.</X><X>.</X><X>.</X></r>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->filterChain->append(
-						function ($tag, $parser)
-						{
-							if ($tag->getPos() === 0)
-							{
-								$parser->addSelfClosingTag('X', 2, 1);
-							}
-
-							return true;
-						}
-					)->addParameterByName('parser');
+					$configurator->tags->add('X')->filterChain
+						->append(__CLASS__ . '::addXTagAtStartCallback')
+						->addParameterByName('parser')
+						->addParameterByValue(2)
+						->addParameterByValue(1);
 				},
 				function ($parser)
 				{
@@ -884,17 +878,11 @@ class TagProcessingTest extends Test
 				'<r><X>.</X><X>.</X><X>.</X></r>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->filterChain->append(
-						function ($tag, $parser)
-						{
-							if ($tag->getPos() === 0)
-							{
-								$parser->addSelfClosingTag('X', 1, 1);
-							}
-
-							return true;
-						}
-					)->addParameterByName('parser');
+					$configurator->tags->add('X')->filterChain
+						->append(__CLASS__ . '::addXTagAtStartCallback')
+						->addParameterByName('parser')
+						->addParameterByValue(1)
+						->addParameterByValue(1);
 				},
 				function ($parser)
 				{
@@ -955,12 +943,8 @@ class TagProcessingTest extends Test
 				'<r>X<X>X</X></r>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->filterChain->append(
-						function ($tag)
-						{
-							return (bool) $tag->getPos();
-						}
-					);
+					$configurator->tags->add('X')->filterChain
+						->append(__CLASS__ . '::returnTagPosAsBoolCallback');
 				},
 				function ($parser)
 				{
@@ -1336,14 +1320,9 @@ class TagProcessingTest extends Test
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->filterChain
-						->append(
-							function ($tag, $parser)
-							{
-								$parser->addBrTag(2);
-								return true;
-							}
-						)
-						->addParameterByName('parser');
+						->append(__CLASS__ . '::addBrTagCallback')
+						->addParameterByName('parser')
+						->addParameterByValue(2);
 				},
 				function ($parser)
 				{
@@ -1408,5 +1387,27 @@ class TagProcessingTest extends Test
 				}
 			],
 		];
+	}
+
+	public static function addBrTagCallback($tag, $parser, $pos)
+	{
+		$parser->addBrTag($pos);
+
+		return true;
+	}
+
+	public static function addXTagAtStartCallback($tag, $parser, $pos, $len)
+	{
+		if ($tag->getPos() === 0)
+		{
+			$parser->addSelfClosingTag('X', $pos, $len);
+		}
+
+		return true;
+	}
+
+	public static function returnTagPosAsBoolCallback($tag)
+	{
+		return (bool) $tag->getPos();
 	}
 }

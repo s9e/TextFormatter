@@ -158,7 +158,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize() returns a parser and a renderer
  [x] finalize() calls addHTML5Rules() by default
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
- [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
  [x] finalize() does not return a JS parser by default
  [x] finalize() returns a JS parser if JavaScript was enabled
 

@@ -16,7 +16,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testDefaultSignature()
 	{
-		$filter = new AttributeFilter(function($v){});
+		$filter = new AttributeFilter('strtolower');
 		$config = $filter->asConfig();
 
 		$this->assertSame(
@@ -30,7 +30,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testNotSafeInCSS()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$this->assertFalse($filter->isSafeInCSS());
 	}
 
@@ -39,7 +39,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testMarkedSafeInCSS()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$filter->markAsSafeInCSS();
 		$this->assertTrue($filter->isSafeInCSS());
 	}
@@ -49,7 +49,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testNotSafeInJS()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$this->assertFalse($filter->isSafeInJS());
 	}
 
@@ -58,7 +58,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testMarkedSafeInjS()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$filter->markAsSafeInJS();
 		$this->assertTrue($filter->isSafeInJS());
 	}
@@ -95,7 +95,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testNotSafeAsURL()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$this->assertFalse($filter->isSafeAsURL());
 	}
 
@@ -104,7 +104,7 @@ class AttributeFilterTest extends Test
 	*/
 	public function testMarkedSafeAsURL()
 	{
-		$filter = new AttributeFilter(function(){});
+		$filter = new AttributeFilter('strtolower');
 		$filter->markAsSafeAsURL();
 		$this->assertTrue($filter->isSafeAsURL());
 	}
