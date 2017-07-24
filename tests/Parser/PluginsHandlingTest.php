@@ -301,7 +301,7 @@ class PluginsHandlingTest extends Test
 	public function testRegisterParserRegexp()
 	{
 		$this->configurator->tags->add('X');
-		extract($this->configurator->finalize(['returnRenderer' => false]));
+		extract($this->configurator->finalize());
 		$parser->registerParser(
 			'foo',
 			function ($text, $matches) use ($parser)
@@ -325,7 +325,7 @@ class PluginsHandlingTest extends Test
 	public function testRegisterParserRegexpLimit()
 	{
 		$this->configurator->tags->add('X');
-		extract($this->configurator->finalize(['returnRenderer' => false]));
+		extract($this->configurator->finalize());
 		$parser->registerParser(
 			'foo',
 			function ($text, $matches) use ($parser)

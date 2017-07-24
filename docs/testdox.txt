@@ -156,8 +156,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] saveBundle() returns true on success
  [x] saveBundle() returns false on failure
  [x] finalize() returns a parser and a renderer
- [x] finalize(['returnParser' => false]) does not return a parser
- [x] finalize(['returnRenderer' => false]) does not return a renderer
  [x] finalize() calls addHTML5Rules() by default
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
  [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized

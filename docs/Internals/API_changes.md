@@ -6,6 +6,8 @@ The optional argument of `s9e\TextFormatter\Configurator::addHTML5Rules()` and `
 
 The `finalizeParser` and `finalizeRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`.
 
+The `returnParser` and `returnRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`. Both objects are always returned.
+
 
 ## 0.10.0
 

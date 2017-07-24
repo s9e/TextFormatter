@@ -217,10 +217,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		$objects = $configurator->finalize([
 			'addHTML5Rules'  => false,
-			'optimizeConfig' => false,
-			'returnJS'       => false,
-			'returnParser'   => true,
-			'returnRenderer' => false
+			'optimizeConfig' => false
 		]);
 
 		return $objects['parser'];

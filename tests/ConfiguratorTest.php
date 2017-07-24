@@ -564,26 +564,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox finalize(['returnParser' => false]) does not return a parser
-	*/
-	public function testFinalizeNoParser()
-	{
-		$return = $this->configurator->finalize(['returnParser' => false]);
-
-		$this->assertArrayNotHasKey('parser', $return);
-	}
-
-	/**
-	* @testdox finalize(['returnRenderer' => false]) does not return a renderer
-	*/
-	public function testFinalizeNoRenderer()
-	{
-		$return = $this->configurator->finalize(['returnRenderer' => false]);
-
-		$this->assertArrayNotHasKey('renderer', $return);
-	}
-
-	/**
 	* @testdox finalize() calls addHTML5Rules() by default
 	*/
 	public function testFinalizeAddHTML5Rules()

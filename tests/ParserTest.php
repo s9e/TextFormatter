@@ -180,10 +180,7 @@ class ParserTest extends Test
 		$configurator->tags->add('FOO');
 		$configurator->tags->add('BAR');
 
-		extract($configurator->finalize([
-			'optimizeConfig' => true,
-			'returnRenderer' => false
-		]));
+		extract($configurator->finalize());
 
 		$parser->disableTag('FOO');
 
@@ -276,10 +273,7 @@ class ParserTest extends Test
 		$configurator->tags->add('FOO');
 		$configurator->tags->add('BAR');
 
-		extract($configurator->finalize([
-			'optimizeConfig' => true,
-			'returnRenderer' => false
-		]));
+		extract($configurator->finalize());
 
 		$parser->setTagLimit('FOO', 123);
 		$parser->setTagLimit('BAR', 456);
@@ -331,10 +325,7 @@ class ParserTest extends Test
 		$configurator->tags->add('FOO');
 		$configurator->tags->add('BAR');
 
-		extract($configurator->finalize([
-			'optimizeConfig' => true,
-			'returnRenderer' => false
-		]));
+		extract($configurator->finalize());
 
 		$parser->setNestingLimit('FOO', 123);
 		$parser->setNestingLimit('BAR', 456);

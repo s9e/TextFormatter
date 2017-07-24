@@ -1039,7 +1039,7 @@ class PHPTest extends Test
 			$setup($this->configurator);
 		}
 
-		extract($this->configurator->finalize(['returnParser' => false]));
+		extract($this->configurator->finalize());
 
 		if (isset($rendererSetup))
 		{
@@ -1363,7 +1363,7 @@ class PHPTest extends Test
 	public function testVoidHTML($xml, $template, $html)
 	{
 		$this->configurator->tags->add('FOO')->template = new UnsafeTemplate($template);
-		extract($this->configurator->finalize(['returnParser' => false]));
+		extract($this->configurator->finalize());
 		$this->assertSame($html, $renderer->render($xml));
 	}
 

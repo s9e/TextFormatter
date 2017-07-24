@@ -46,10 +46,7 @@ $configurator->javascript
 
 $configurator->javascript->exportMethods = ['disablePlugin', 'enablePlugin', 'preview'];
 
-extract($configurator->finalize([
-	'returnParser'   => false,
-	'returnRenderer' => false
-]));
+extract($configurator->finalize());
 
 ob_start();
 ?><!DOCTYPE html>

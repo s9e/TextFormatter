@@ -6,7 +6,8 @@ TODO: Summer 2017
 - Remove TemplateInspector::isFrame()
 - Explicitly allow URL in tags created by MediaEmbed.
 - Explicitly allow URL in the tags used by Autoimage and Autovideo.
-- Remove finalizeParser, finalizeRenderer, returnParser and returnRenderer from finalize() if possible
+- ~~Remove finalizeParser, finalizeRenderer, returnParser and returnRenderer from finalize() if possible~~
+- Remove optimizeConfig from finalize()
 
 
 TODO: general
