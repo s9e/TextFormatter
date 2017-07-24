@@ -226,8 +226,6 @@ class Configurator implements ConfigProvider
 	* Options: (also see addHTMLRules() options)
 	*
 	*  - addHTML5Rules:    whether to call addHTML5Rules()
-	*  - finalizeParser:   callback executed after the parser is created (gets the parser as arg)
-	*  - finalizeRenderer: same with the renderer
 	*  - optimizeConfig:   whether to optimize the parser's config using references
 	*  - returnParser:     whether to return an instance of Parser in the "parser" key
 	*  - returnRenderer:   whether to return an instance of Renderer in the "renderer" key
@@ -258,15 +256,7 @@ class Configurator implements ConfigProvider
 		if ($options['returnRenderer'])
 		{
 			// Create a renderer
-			$renderer = $this->rendering->getRenderer();
-
-			// Execute the renderer callback if applicable
-			if (isset($options['finalizeRenderer']))
-			{
-				$options['finalizeRenderer']($renderer);
-			}
-
-			$return['renderer'] = $renderer;
+			$return['renderer'] = $this->rendering->getRenderer();
 		}
 
 		if ($options['returnJS'] || $options['returnParser'])
@@ -289,15 +279,7 @@ class Configurator implements ConfigProvider
 				}
 
 				// Create a parser
-				$parser = new Parser($config);
-
-				// Execute the parser callback if applicable
-				if (isset($options['finalizeParser']))
-				{
-					$options['finalizeParser']($parser);
-				}
-
-				$return['parser'] = $parser;
+				$return['parser'] = new Parser($config);
 			}
 		}
 

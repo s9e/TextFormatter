@@ -4,6 +4,8 @@ The optional argument of `s9e\TextFormatter\Configurator::addHTML5Rules()` and `
 
 `defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`.
 
+The `finalizeParser` and `finalizeRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`.
+
 
 ## 0.10.0
 

@@ -155,14 +155,11 @@ s9e\TextFormatter\Tests\Configurator
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns true on success
  [x] saveBundle() returns false on failure
- [x] saveBundle() passes its third parameter to BundleGenerator::generate()
  [x] finalize() returns a parser and a renderer
  [x] finalize(['returnParser' => false]) does not return a parser
  [x] finalize(['returnRenderer' => false]) does not return a renderer
  [x] finalize() calls addHTML5Rules() by default
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
- [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
- [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
  [x] finalize() does not return a JS parser by default
  [x] finalize() returns a JS parser if JavaScript was enabled
@@ -1707,10 +1704,6 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() accepts namespaced class names
  [x] A custom serializer can be set in $bundleGenerator->serializer
  [x] A custom unserializer can be set in $bundleGenerator->unserializer
- [x] generate('Foo', ['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
- [x] Modification made to the parser via callback appear in the generated bundle
- [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
- [x] Modification made to the renderer via callback appear in the generated bundle
  [x] If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
  [x] Does not attempt to load the renderer's source if autoInclude is false
  [x] (before|after)(Parser|Render|Unparse) events are added to the bundle

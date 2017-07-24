@@ -550,23 +550,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox saveBundle() passes its third parameter to BundleGenerator::generate()
-	*/
-	public function testSaveBundleForwardParameters()
-	{
-		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\BundleGenerator')
-		             ->disableOriginalConstructor()
-		             ->getMock();
-
-		$mock->expects($this->once())
-		     ->method('generate')
-		     ->with('Foo', ['finalizeParser' => 'finalize']);
-
-		$this->configurator->bundleGenerator = $mock;
-		$this->configurator->saveBundle('Foo', $this->tempnam(), ['finalizeParser' => 'finalize']);
-	}
-
-	/**
 	* @testdox finalize() returns a parser and a renderer
 	*/
 	public function testFinalizeDefault()
@@ -626,36 +609,6 @@ class ConfiguratorTest extends Test
 		             ->method('addHTML5Rules');
 
 		$configurator->finalize(['addHTML5Rules' => false]);
-	}
-
-	/**
-	* @testdox finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
-	*/
-	public function testFinalizeParserCallback()
-	{
-		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['foo'])
-		             ->getMock();
-		$mock->expects($this->once())
-		     ->method('foo')
-		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
-
-		$this->configurator->finalize(['finalizeParser' => [$mock, 'foo']]);
-	}
-
-	/**
-	* @testdox finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
-	*/
-	public function testFinalizeRendererCallback()
-	{
-		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['foo'])
-		             ->getMock();
-		$mock->expects($this->once())
-		     ->method('foo')
-		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));
-
-		$this->configurator->finalize(['finalizeRenderer' => [$mock, 'foo']]);
 	}
 
 	/**

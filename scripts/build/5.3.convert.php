@@ -55,16 +55,6 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
-		'Configurator.php' => array(
-			array(
-				'$options[\'finalizeParser\']($parser);',
-				'call_user_func($options[\'finalizeParser\'], $parser);'
-			),
-			array(
-				'$options[\'finalizeRenderer\']($renderer);',
-				'call_user_func($options[\'finalizeRenderer\'], $renderer);'
-			)
-		),
 		'Custom.php' => array(
 			array(
 				'$this->callback = $callback;',
