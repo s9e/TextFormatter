@@ -224,7 +224,7 @@ class BundleGenerator
 	/**
 	* Serialize and export a given object as PHP code
 	*
-	* @param  string $obj Original object
+	* @param  object $obj Original object
 	* @return string      PHP code
 	*/
 	protected function exportObject($obj)
