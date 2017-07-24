@@ -62,7 +62,6 @@
 						<xsl:when test="@tld='jp' and $AMAZON_ASSOCIATE_TAG_JP"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when>
 						<xsl:when test="@tld='uk' and $AMAZON_ASSOCIATE_TAG_UK"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when>
 						<xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when>
-						<xsl:otherwise>_</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text>&amp;marketplace=amazon&amp;region=</xsl:text>
 					<xsl:choose>

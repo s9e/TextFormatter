@@ -3578,7 +3578,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=CA&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=CA&amp;asins=B00GQT1LNO&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=CA&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=CA&amp;asins=B00GQT1LNO&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3608,7 +3608,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-fe.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=JP&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=JP&amp;asins=B003AKZ6I8&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-fe.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=JP&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=JP&amp;asins=B003AKZ6I8&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3617,7 +3617,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=GB&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=GB&amp;asins=B00BET0NR6&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=GB&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=GB&amp;asins=B00BET0NR6&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3626,7 +3626,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/dp/B002MUC0ZY',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=US&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=US&amp;asins=B002MUC0ZY&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=US&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=US&amp;asins=B002MUC0ZY&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3635,7 +3635,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=DE&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=DE&amp;asins=B00ET2LTE6&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=DE&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=DE&amp;asins=B00ET2LTE6&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
@@ -3654,7 +3654,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
-				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=FR&amp;ad_type=product_link&amp;tracking_id=_&amp;marketplace=amazon&amp;region=FR&amp;asins=B005NIKPAY&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
+				'<div data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><div style="overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=FR&amp;ad_type=product_link&amp;tracking_id=&amp;marketplace=amazon&amp;region=FR&amp;asins=B005NIKPAY&amp;show_border=true&amp;link_opens_in_new_window=true"></iframe></div></div>',
 				[],
 				function ($configurator)
 				{
