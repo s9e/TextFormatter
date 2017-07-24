@@ -28,16 +28,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		$this->clear();
 	}
 
-	/**
-	* {@inheritdoc}
-	*/
-	public function clear()
-	{
-		parent::clear();
-		$this->defaultChildRule('allow');
-		$this->defaultDescendantRule('allow');
-	}
-
 	//==========================================================================
 	// ArrayAccess methods
 	//==========================================================================
@@ -98,8 +88,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		// the allowed bitfields
 		unset($config['allowChild']);
 		unset($config['allowDescendant']);
-		unset($config['defaultChildRule']);
-		unset($config['defaultDescendantRule']);
 		unset($config['denyChild']);
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
@@ -359,42 +347,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function createParagraphs($bool = true)
 	{
 		return $this->addBooleanRule('createParagraphs', $bool);
-	}
-
-	/**
-	* Set the default child rule
-	*
-	* @param  string $rule Either "allow" or "deny"
-	* @return self
-	*/
-	public function defaultChildRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-		{
-			throw new InvalidArgumentException("defaultChildRule() only accepts 'allow' or 'deny'");
-		}
-
-		$this->items['defaultChildRule'] = $rule;
-
-		return $this;
-	}
-
-	/**
-	* Set the default descendant rule
-	*
-	* @param  string $rule Either "allow" or "deny"
-	* @return self
-	*/
-	public function defaultDescendantRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-		{
-			throw new InvalidArgumentException("defaultDescendantRule() only accepts 'allow' or 'deny'");
-		}
-
-		$this->items['defaultDescendantRule'] = $rule;
-
-		return $this;
 	}
 
 	/**

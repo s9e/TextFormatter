@@ -105,19 +105,8 @@ abstract class RulesHelper
 
 		foreach ($rules as $tagName => $tagRules)
 		{
-			if ($tagRules['defaultDescendantRule'] === 'allow')
-			{
-				$childValue      = (int) ($tagRules['defaultChildRule'] === 'allow');
-				$descendantValue = 1;
-			}
-			else
-			{
-				$childValue      = 0;
-				$descendantValue = 0;
-			}
-
-			$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, $childValue);
-			$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, $descendantValue);
+			$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, 1);
+			$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, 1);
 		}
 
 		return $matrix;

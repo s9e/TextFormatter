@@ -64,21 +64,16 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox clear() removes all rules and resets defaultChildRule and defaultDescendantRule
+	* @testdox clear() removes all rules
 	*/
 	public function testClearAll()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->allowChild('foo');
-		$ruleset->defaultChildRule('deny');
-		$ruleset->defaultDescendantRule('deny');
 		$ruleset->clear();
 
 		$this->assertSame(
-			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow'
-			],
+			[],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -95,9 +90,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'requireParent'         => ['BAR']
+				'requireParent' => ['BAR']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -116,32 +109,10 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'denyChild'             => ['FOO']
+				'denyChild' => ['FOO']
 			],
 			iterator_to_array($ruleset)
 		);
-	}
-
-	/**
-	* @testdox remove('defaultChildRule') throws an exception
-	* @expectedException RuntimeException defaultChildRule
-	*/
-	public function testRemoveDefaultChildRule()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->remove('defaultChildRule');
-	}
-
-	/**
-	* @testdox remove('defaultDescendantRule') throws an exception
-	* @expectedException RuntimeException defaultDescendantRule
-	*/
-	public function testRemoveDefaultDescendantRule()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->remove('defaultDescendantRule');
 	}
 
 	/**
@@ -154,10 +125,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild', 'IMG');
 
 		$this->assertEquals(
-			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow'
-			],
+			[],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -176,9 +144,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'denyChild'             => ['FOO', 'BAR']
+				'denyChild' => ['FOO', 'BAR']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -197,9 +163,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'denyChild'             => ['FOO']
+				'denyChild' => ['FOO']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -226,9 +190,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'allowChild'            => ['B']
+				'allowChild' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -265,9 +227,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'allowDescendant'       => ['B']
+				'allowDescendant' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -392,9 +352,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'closeAncestor'         => ['B']
+				'closeAncestor' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -411,9 +369,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'closeParent'           => ['B']
+				'closeParent' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -451,9 +407,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'createChild'           => ['B']
+				'createChild' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -496,96 +450,6 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$this->assertSame($ruleset, $ruleset->createParagraphs());
-	}
-
-	/**
-	* @testdox defaultChildRule() accepts 'allow'
-	*/
-	public function testDefaultChildRuleAllow()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultChildRule('allow');
-
-		$this->assertEquals(
-			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow'
-			],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox defaultChildRule() accepts 'deny'
-	*/
-	public function testDefaultChildRuleDeny()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultChildRule('deny');
-
-		$this->assertEquals(
-			[
-				'defaultChildRule'      => 'deny',
-				'defaultDescendantRule' => 'allow'
-			],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage defaultChildRule() only accepts 'allow' or 'deny'
-	*/
-	public function testDefaultChildRuleInvalid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultChildRule('invalid');
-	}
-
-	/**
-	* @testdox defaultDescendantRule() accepts 'allow'
-	*/
-	public function testDefaultDescendantRuleAllow()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultDescendantRule('allow');
-
-		$this->assertEquals(
-			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow'
-			],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox defaultDescendantRule() accepts 'deny'
-	*/
-	public function testDefaultDescendantRuleDeny()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultDescendantRule('deny');
-
-		$this->assertEquals(
-			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'deny'
-			],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage defaultDescendantRule() only accepts 'allow' or 'deny'
-	*/
-	public function testDefaultDescendantRuleInvalid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->defaultDescendantRule('invalid');
 	}
 
 	/**
@@ -639,9 +503,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'denyChild'             => ['B']
+				'denyChild' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -679,9 +541,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'denyDescendant'        => ['B']
+				'denyDescendant' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -777,9 +637,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'fosterParent'          => ['B']
+				'fosterParent' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -933,9 +791,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'requireAncestor'       => ['B']
+				'requireAncestor' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -973,9 +829,7 @@ class RulesetTest extends Test
 
 		$this->assertEquals(
 			[
-				'defaultChildRule'      => 'allow',
-				'defaultDescendantRule' => 'allow',
-				'requireParent'         => ['B']
+				'requireParent' => ['B']
 			],
 			iterator_to_array($ruleset)
 		);
@@ -1055,44 +909,8 @@ class RulesetTest extends Test
 	public function testMergeArray()
 	{
 		$rules = [
-			'defaultChildRule'      => 'allow',
-			'defaultDescendantRule' => 'allow',
 			'allowChild' => ['B'],
 			'denyChild'  => ['I']
-		];
-
-		$ruleset = new Ruleset;
-		$ruleset->merge($rules);
-
-		$this->assertEquals($rules, iterator_to_array($ruleset));
-	}
-
-	/**
-	* @testdox merge() correctly copies the defaultChildRule setting from an array
-	*/
-	public function testMergeArrayDefaultChildRule()
-	{
-		$rules = [
-			'defaultChildRule'      => 'deny',
-			'defaultDescendantRule' => 'allow',
-			'allowChild'            => ['B']
-		];
-
-		$ruleset = new Ruleset;
-		$ruleset->merge($rules);
-
-		$this->assertEquals($rules, iterator_to_array($ruleset));
-	}
-
-	/**
-	* @testdox merge() correctly copies the defaultDescendantRule setting from an array
-	*/
-	public function testMergeArrayDefaultDescendantRule()
-	{
-		$rules = [
-			'defaultChildRule'      => 'allow',
-			'defaultDescendantRule' => 'deny',
-			'allowDescendant'       => ['B']
 		];
 
 		$ruleset = new Ruleset;
@@ -1107,8 +925,6 @@ class RulesetTest extends Test
 	public function testMergeArrayIsTransparent()
 	{
 		$rules = [
-			'defaultChildRule'      => 'allow',
-			'defaultDescendantRule' => 'allow',
 			'allowChild'    => ['B'],
 			'isTransparent' => true
 		];
@@ -1126,34 +942,6 @@ class RulesetTest extends Test
 	{
 		$ruleset1 = new Ruleset;
 		$ruleset1->allowChild('B');
-
-		$ruleset2 = new Ruleset;
-		$ruleset2->merge($ruleset1);
-
-		$this->assertEquals($ruleset1, $ruleset2);
-	}
-
-	/**
-	* @testdox merge() correctly copies the defaultChildRule setting from an instance of Ruleset
-	*/
-	public function testMergeInstanceOfRulesetDefaultChildRule()
-	{
-		$ruleset1 = new Ruleset;
-		$ruleset1->defaultChildRule('allow');
-
-		$ruleset2 = new Ruleset;
-		$ruleset2->merge($ruleset1);
-
-		$this->assertEquals($ruleset1, $ruleset2);
-	}
-
-	/**
-	* @testdox merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
-	*/
-	public function testMergeInstanceOfRulesetDefaultDescendantRule()
-	{
-		$ruleset1 = new Ruleset;
-		$ruleset1->defaultDescendantRule('allow');
 
 		$ruleset2 = new Ruleset;
 		$ruleset2->merge($ruleset1);
@@ -1226,15 +1014,13 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$rules = [
-			'allowChild'            => 'X',
-			'allowDescendant'       => 'X',
-			'defaultChildRule'      => 'deny',
-			'defaultDescendantRule' => 'allow',
-			'ignoreTags'               => true,
-			'denyChild'             => 'X',
-			'denyDescendant'        => 'X',
-			'isTransparent'         => false,
-			'requireParent'         => 'X'
+			'allowChild'      => 'X',
+			'allowDescendant' => 'X',
+			'ignoreTags'      => true,
+			'denyChild'       => 'X',
+			'denyDescendant'  => 'X',
+			'isTransparent'   => false,
+			'requireParent'   => 'X'
 		];
 
 		foreach ($rules as $k => $v)

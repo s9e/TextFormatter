@@ -9,7 +9,6 @@ $configurator = new Configurator;
 
 $tag = $configurator->tags->add('B');
 $tag->rules->autoReopen();
-$tag->rules->defaultChildRule('allow');
 $tag->rules->denyChild('X');
 ```
 
@@ -20,15 +19,13 @@ $configurator = new Configurator;
 
 $tag = $configurator->tags->add('B');
 $tag->rules->autoReopen()
-           ->defaultChildRule('allow')
            ->denyChild('X');
 ```
 
 Rules can be:
 
- * boolean -- they accept <code>true</code> or <code>false</code> as argument, with <code>true</code> being the default
- * targeted -- they accept a tag name as argument
- * other -- <code>defaultChildRule()</code> and <code>defaultDescendantRule()</code> accept either <code>"allow"</code> or <code>"deny"</code>
+ * boolean -- they accept <code>true</code> or <code>false</code> as argument, with <code>true</code> being the default.
+ * targeted -- they accept a tag name as argument.
 
 Rules that apply to descendants also apply to children. Rules that apply to ancestors also apply to the parent. A tag that is explicitly denied cannot be allowed by another rule.
 
@@ -65,14 +62,6 @@ Forces current parent LI to be closed when this tag is encountered. Helps dealin
 <dt>createParagraphs</dt>
 <dd><i>Example:</i> <code>$configurator->rootRules->createParagraphs();</code><br/>
 Automatically creates paragraphs (HTML element <code>&lt;p&gt;</code>) to host content. Using two consecutive new lines indicates a paragraph break in content.</dd>
-
-<dt>defaultChildRule</dt>
-<dd><i>Example:</i> <code>$tag->rules->defaultChildRule('deny');</code><br/>
-If defaultChildRule is set to 'deny', all tags that are not targeted by an allowChild rule will be denied. By default, defaultChildRule is set to 'allow', which means that all tags are allowed as children unless they are targeted by a denyChild rule. </dd>
-
-<dt>defaultDescendantRule</dt>
-<dd><i>Example:</i> <code>$tag->rules->defaultDescendantRule('deny');</code><br/>
-Same as defaultChildRule but with descendants.</dd>
 
 <dt>denyChild</dt>
 <dd><i>Example:</i> <code>$tag->rules->denyChild('X');</code><br/>

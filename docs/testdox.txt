@@ -258,11 +258,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist
  [x] Trying to set rules via array access throws a RuntimeException
  [x] unset($ruleset['allowChild']) removes all allowChild rules but doesn't touch the rest
- [x] clear() removes all rules and resets defaultChildRule and defaultDescendantRule
+ [x] clear() removes all rules
  [x] remove('allowChild') removes only 'allowChild' rules
  [x] remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
- [x] remove('defaultChildRule') throws an exception
- [x] remove('defaultDescendantRule') throws an exception
  [x] remove('denyChild', 'IMG') unsets the denyChild list in the ruleset if there is no denyChild rules left
  [x] remove('denyChild', 'IMG') rearranges keys to remove gaps
  [x] remove('denyChild', 'img') normalizes tag names
@@ -291,12 +289,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] createParagraphs() accepts a boolean
  [x] createParagraphs() throws an exception if its argument is not a boolean
  [x] createParagraphs() is chainable
- [x] defaultChildRule() accepts 'allow'
- [x] defaultChildRule() accepts 'deny'
- [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
- [x] defaultDescendantRule() accepts 'allow'
- [x] defaultDescendantRule() accepts 'deny'
- [x] defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
  [x] ignoreTags() accepts a boolean
  [x] ignoreTags() throws an exception if its argument is not a boolean
  [x] ignoreTags() is chainable
@@ -340,12 +332,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] trimFirstLine() throws an exception if its argument is not a boolean
  [x] trimFirstLine() is chainable
  [x] merge() accepts a 2D array of rules
- [x] merge() correctly copies the defaultChildRule setting from an array
- [x] merge() correctly copies the defaultDescendantRule setting from an array
  [x] merge() correctly copies the isTransparent setting from an array
  [x] merge() accepts an instance of Ruleset to copy its content
- [x] merge() correctly copies the defaultChildRule setting from an instance of Ruleset
- [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
  [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
  [x] merge() overwrites boolean rules by default
@@ -619,15 +607,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Works with a single tag
  [x] If no rule is defined, the default is to allow children and descendants
  [x] Correctly applies denyChild
- [x] defaultChildRule is correctly applied
- [x] allowChild overrides defaultChildRule('deny')
- [x] denyChild overrides defaultChildRule('allow')
  [x] denyChild overrides allowChild
  [x] denyDescendant overrides allowChild
- [x] defaultDescendantRule is correctly applied
- [x] allowDescendant overrides defaultDescendantRule('deny')
  [x] allowDescendant does not override denyChild
- [x] denyDescendant overrides defaultDescendantRule('allow')
  [x] denyDescendant overrides allowDescendant
  [x] ignoreTags(true) overrides everything
  [x] ignoreTags(false) has no effect
@@ -962,7 +944,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->template returns the tag's template
  [x] isset($tag->template) is supported
  [x] unset($tag->template) is supported
- [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and template
+ [x] asConfig() produces a config array, omitting properties that are not needed during parsing such as template
  [x] $tag->filterChain starts with Parser::executeAttributePreprocessors by default
  [x] $tag->filterChain contains Parser::filterAttributes by default
  [x] asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined

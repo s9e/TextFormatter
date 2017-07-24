@@ -255,7 +255,6 @@ class RepositoryTest extends Test
 					<rules>
 						<allowChild>BAR</allowChild>
 						<allowChild>BAZ</allowChild>
-						<defaultChildRule>deny</defaultChildRule>
 					</rules>
 				</bbcode>
 			</repository>'
@@ -268,8 +267,6 @@ class RepositoryTest extends Test
 			['BAR', 'BAZ'],
 			$config['tag']->rules['allowChild']
 		);
-
-		$this->assertSame('deny', $config['tag']->rules['defaultChildRule']);
 	}
 
 	/**

@@ -2,6 +2,8 @@
 
 The optional argument of `s9e\TextFormatter\Configurator::addHTML5Rules()` and `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
 
+`defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`.
+
 
 ## 0.10.0
 

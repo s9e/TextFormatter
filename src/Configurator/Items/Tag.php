@@ -110,8 +110,6 @@ class Tag implements ConfigProvider
 		$vars = get_object_vars($this);
 
 		// Remove properties that are not needed during parsing
-		unset($vars['defaultChildRule']);
-		unset($vars['defaultDescendantRule']);
 		unset($vars['template']);
 
 		// If there are no attribute preprocessors defined, we can remove the step from this tag's

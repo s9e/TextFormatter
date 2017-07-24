@@ -87,79 +87,6 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox defaultChildRule is correctly applied
-	*/
-	public function testDefaultChildRuleIsApplied()
-	{
-		$tags = new TagCollection;
-
-		$tags->add('A')->rules->defaultChildRule('deny');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000000]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
-	* @testdox allowChild overrides defaultChildRule('deny')
-	*/
-	public function testAllowChildOverridesDefaultChildRuleDeny()
-	{
-		$tags = new TagCollection;
-
-		$tag = $tags->add('A');
-		$tag->rules->defaultChildRule('deny');
-		$tag->rules->allowChild('A');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
-	* @testdox denyChild overrides defaultChildRule('allow')
-	*/
-	public function testDenyChildOverridesDefaultChildRuleAllow()
-	{
-		$tags = new TagCollection;
-
-		$tag = $tags->add('A');
-		$tag->rules->defaultChildRule('allow');
-		$tag->rules->denyChild('A');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000000]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
 	* @testdox denyChild overrides allowChild
 	*/
 	public function testDenyChildOverridesAllowChild()
@@ -210,54 +137,6 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox defaultDescendantRule is correctly applied
-	*/
-	public function testDefaultDescendantRuleIsApplied()
-	{
-		$tags = new TagCollection;
-
-		$tags->add('A')->rules->defaultDescendantRule('deny');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
-	* @testdox allowDescendant overrides defaultDescendantRule('deny')
-	*/
-	public function testAllowDescendantOverridesDefaultDescendantRuleDeny()
-	{
-		$tags = new TagCollection;
-
-		$tag = $tags->add('A');
-		$tag->rules->defaultDescendantRule('deny');
-		$tag->rules->allowDescendant('A');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
 	* @testdox allowDescendant does not override denyChild
 	*/
 	public function testAllowDescendantDoesNotOverrideDenyChild()
@@ -275,31 +154,6 @@ class RulesHelperTest extends Test
 					'A' => [
 						'bitNumber' => 0,
 						'allowed'   => [0b100000000]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
-	* @testdox denyDescendant overrides defaultDescendantRule('allow')
-	*/
-	public function testDenyDescendantOverridesDefaultDescendantRuleAllow()
-	{
-		$tags = new TagCollection;
-
-		$tag = $tags->add('A');
-		$tag->rules->defaultDescendantRule('allow');
-		$tag->rules->denyDescendant('A');
-
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0]
 					]
 				]
 			],
@@ -342,8 +196,6 @@ class RulesHelperTest extends Test
 		$tag = $tags->add('A');
 		$tag->rules->allowChild('A');
 		$tag->rules->allowDescendant('A');
-		$tag->rules->defaultChildRule('allow');
-		$tag->rules->defaultDescendantRule('allow');
 		$tag->rules->ignoreTags(true);
 
 		$this->assertEquals(
@@ -370,8 +222,6 @@ class RulesHelperTest extends Test
 		$tag = $tags->add('A');
 		$tag->rules->allowChild('A');
 		$tag->rules->allowDescendant('A');
-		$tag->rules->defaultChildRule('allow');
-		$tag->rules->defaultDescendantRule('allow');
 		$tag->rules->ignoreTags(false);
 
 		$this->assertEquals(

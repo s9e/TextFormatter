@@ -135,10 +135,8 @@ class TagTest extends Test
 	public function testRulesArray()
 	{
 		$rules = [
-			'allowChild'            => ['B'],
-			'defaultChildRule'      => 'allow',
-			'defaultDescendantRule' => 'allow',
-			'denyChild'             => ['I']
+			'allowChild' => ['B'],
+			'denyChild'  => ['I']
 		];
 
 		$tag = new Tag;
@@ -169,10 +167,8 @@ class TagTest extends Test
 	public function testRulesArrayClears()
 	{
 		$rules = [
-			'allowChild'            => ['B'],
-			'defaultChildRule'      => 'allow',
-			'defaultDescendantRule' => 'allow',
-			'denyChild'             => ['I']
+			'allowChild' => ['B'],
+			'denyChild'  => ['I']
 		];
 
 		$tag = new Tag;
@@ -266,16 +262,14 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and template
+	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing such as template
 	*/
 	public function testAsConfig()
 	{
 		$tag = new Tag;
-		$tag->defaultChildRule      = 'allow';
-		$tag->defaultDescendantRule = 'allow';
-		$tag->template       = '';
-		$tag->nestingLimit          = 3;
-		$tag->tagLimit              = 99;
+		$tag->template     = '';
+		$tag->nestingLimit = 3;
+		$tag->tagLimit     = 99;
 
 		$config = $tag->asConfig();
 
@@ -285,8 +279,6 @@ class TagTest extends Test
 		$this->assertArrayHasKey('tagLimit', $config);
 		$this->assertSame(99, $config['tagLimit']);
 
-		$this->assertArrayNotHasKey('defaultChildRule', $config);
-		$this->assertArrayNotHasKey('defaultDescendantRule', $config);
 		$this->assertArrayNotHasKey('template', $config);
 	}
 

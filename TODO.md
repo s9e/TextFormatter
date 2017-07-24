@@ -1,6 +1,6 @@
 TODO: Summer 2017
 -----------------
-- Remove defaultChildRule and defaultDescendantRule.
+- ~~Remove defaultChildRule and defaultDescendantRule.~~
 - Remove addHTML5Rules() from public API and make it non-optional in finalize()
 - Make allowed tags/descendants work as a whitelist. Update rules generators such as EnfoceContentModels accordingly.
 - Remove TemplateInspector::isFrame()
