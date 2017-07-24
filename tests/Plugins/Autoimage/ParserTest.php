@@ -41,7 +41,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://example.org/img.png',
-				'<r><IMG src="http://example.org/img.png"><URL url="http://example.org/img.png">http://example.org/img.png</URL></IMG></r>',
+				'<r><URL url="http://example.org/img.png"><IMG src="http://example.org/img.png">http://example.org/img.png</IMG></URL></r>',
 				[],
 				function ($configurator)
 				{

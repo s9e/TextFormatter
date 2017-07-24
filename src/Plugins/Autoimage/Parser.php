@@ -20,7 +20,7 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 		foreach ($matches as $m)
 		{
-			$this->parser->addTagPair($tagName, $m[0][1], 0, $m[0][1] + strlen($m[0][0]), 0, -1)
+			$this->parser->addTagPair($tagName, $m[0][1], 0, $m[0][1] + strlen($m[0][0]), 0, 2)
 			             ->setAttribute($attrName, $m[0][0]);
 		}
 	}
