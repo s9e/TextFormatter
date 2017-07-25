@@ -15,14 +15,15 @@ foreach ($configurator->rulesGenerator as $i => $generator)
 ```
 0	s9e\TextFormatter\Configurator\RulesGenerators\AutoCloseIfVoid
 1	s9e\TextFormatter\Configurator\RulesGenerators\AutoReopenFormattingElements
-2	s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
-3	s9e\TextFormatter\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewLinesArePreserved
-4	s9e\TextFormatter\Configurator\RulesGenerators\EnforceContentModels
-5	s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags
-6	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
-7	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
-8	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
-9	s9e\TextFormatter\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
+2	s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsCloseFormattingElements
+3	s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
+4	s9e\TextFormatter\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewLinesArePreserved
+5	s9e\TextFormatter\Configurator\RulesGenerators\EnforceContentModels
+6	s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags
+7	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
+8	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
+9	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
+10	s9e\TextFormatter\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
 ```
 
 ### Remove a generator

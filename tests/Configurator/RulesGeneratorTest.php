@@ -116,6 +116,31 @@ class RulesGeneratorTest extends Test
 					]
 				]
 			],
+			[
+				[
+					'B' => '<b><xsl:apply-templates/></b>',
+					'X' => '<div>...</div>'
+				],
+				[
+					'root' => [],
+					'tags' => [
+						'B' => [
+							'autoReopen' => true,
+							'denyChild'  => ['X']
+						],
+						'X' => [
+							'autoClose'                   => true,
+							'closeParent'                 => ['B'],
+							'denyChild'                   => ['B', 'X'],
+							'denyDescendant'              => ['B', 'X'],
+							'disableAutoLineBreaks'       => true,
+							'ignoreSurroundingWhitespace' => true,
+							'preventLineBreaks'           => true,
+							'suspendAutoLineBreaks'       => true
+						]
+					]
+				]
+			],
 		];
 	}
 }
