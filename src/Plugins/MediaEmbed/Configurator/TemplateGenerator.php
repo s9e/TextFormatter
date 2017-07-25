@@ -172,7 +172,7 @@ abstract class TemplateGenerator
 		$this->attributes['style']['width']    = '100%';
 		$this->attributes['style']['height']   = '100%';
 		$this->attributes['style']['position'] = 'absolute';
-		$this->attributes['style']['left'] = '0';
+		$this->attributes['style']['left']     = '0';
 
 		$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
 		$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
