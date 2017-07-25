@@ -700,8 +700,7 @@ class TemplateInspector
 			return false;
 		}
 
-		if ($node->getAttribute('class') === ''
-		 && $node->getAttribute('style') === '')
+		if ($node->getAttribute('class') === '' && $node->getAttribute('style') === '')
 		{
 			return false;
 		}
