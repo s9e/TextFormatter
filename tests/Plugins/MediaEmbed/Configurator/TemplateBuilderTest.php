@@ -65,7 +65,7 @@ class TemplateBuilderTest extends Test
 	{
 		$templateBuilder = new TemplateBuilder;
 		$this->assertContains(
-			'<div data-s9e-mediaembed="foo"',
+			'<span data-s9e-mediaembed="foo"',
 			$templateBuilder->build('foo', ['iframe' => ['src' => '']])
 		);
 	}
@@ -90,7 +90,7 @@ class TemplateBuilderTest extends Test
 		$templateBuilder = new TemplateBuilder;
 		$template        = $templateBuilder->build('foo', $attributes);
 
-		$this->assertContains('<div data-s9e-mediaembed="foo"', $template);
+		$this->assertContains('<span data-s9e-mediaembed="foo"', $template);
 		$this->assertNotRegexp('(<xsl:[^>]+data-s9e-mediaembed)', $template);
 	}
 }

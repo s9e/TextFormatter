@@ -175,12 +175,12 @@ abstract class TemplateGenerator
 		$this->attributes['style']['left']     = '0';
 
 		$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
-		$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
+		$innerStyle = 'display:block;overflow:hidden;position:relative;' . $this->getResponsivePadding();
 
-		$template  = '<div>' . $this->generateAttributes(['style' => $outerStyle]);
-		$template .= '<div>' . $this->generateAttributes(['style' => $innerStyle]);
+		$template  = '<span>' . $this->generateAttributes(['style' => $outerStyle]);
+		$template .= '<span>' . $this->generateAttributes(['style' => $innerStyle]);
 		$template .= $this->getContentTemplate();
-		$template .= '</div></div>';
+		$template .= '</span></span>';
 
 		return $template;
 	}
