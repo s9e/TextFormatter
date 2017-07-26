@@ -9,6 +9,7 @@
 	<example>https://www.amazon.es/Microsoft-Sculpt-Ergonomic-Desktop-L5V-00011/dp/B00FO10ZK0/</example>
 	<example>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
 	<example>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/</example>
+	<example>https://www.amazon.com/dp/B0018CDWLS/</example>
 
 	<host>amazon.ca</host>
 	<host>amazon.co.uk</host>
@@ -56,12 +57,13 @@
 					</xsl:choose>
 					<xsl:text>&amp;ad_type=product_link&amp;tracking_id=</xsl:text>
 					<xsl:choose>
-						<xsl:when test="@tld='ca' and $AMAZON_ASSOCIATE_TAG_CA"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when>
-						<xsl:when test="@tld='de' and $AMAZON_ASSOCIATE_TAG_DE"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when>
-						<xsl:when test="@tld='fr' and $AMAZON_ASSOCIATE_TAG_FR"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when>
-						<xsl:when test="@tld='jp' and $AMAZON_ASSOCIATE_TAG_JP"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when>
-						<xsl:when test="@tld='uk' and $AMAZON_ASSOCIATE_TAG_UK"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when>
+						<xsl:when test="@tld='ca'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when>
+						<xsl:when test="@tld='de'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when>
+						<xsl:when test="@tld='fr'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when>
+						<xsl:when test="@tld='jp'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when>
+						<xsl:when test="@tld='uk'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when>
 						<xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when>
+						<xsl:otherwise>-20</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text>&amp;marketplace=amazon&amp;region=</xsl:text>
 					<xsl:choose>
