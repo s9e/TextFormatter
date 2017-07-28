@@ -158,7 +158,7 @@ class ParserTest extends Test
 			],
 			[
 				'<img alt="">',
-				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img alt=""><s>&lt;img alt=""&gt;</s></html:img></r>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img alt="">&lt;img alt=""&gt;</html:img></r>',
 				[],
 				function ($configurator)
 				{
@@ -168,7 +168,7 @@ class ParserTest extends Test
 			],
 			[
 				'<img data-crc32="123">',
-				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img data-crc32="123"><s>&lt;img data-crc32="123"&gt;</s></html:img></r>',
+				'<r xmlns:html="urn:s9e:TextFormatter:html"><html:img data-crc32="123">&lt;img data-crc32="123"&gt;</html:img></r>',
 				[],
 				function ($configurator)
 				{

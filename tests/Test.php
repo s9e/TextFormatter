@@ -121,7 +121,8 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 
 		$this->configurator->javascript->exportMethods = ['parse'];
-		$src = $this->configurator->javascript->getParser();
+		$objects = $this->configurator->finalize();
+		$src     = $objects['js'];
 
 		$this->$assertMethod($expected, $this->execJS($src, $original));
 	}
@@ -214,10 +215,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		{
 			$configurator = $this->configurator;
 		}
-
-		$objects = $configurator->finalize([
-			'addHTML5Rules'  => false
-		]);
+		$objects = $configurator->finalize();
 
 		return $objects['parser'];
 	}

@@ -336,6 +336,7 @@ class FilterProcessingTest extends Test
 		     ->with([new Tag(Tag::START_TAG, 'X', 0, 0)])
 		     ->will($this->returnValue(true));
 
+		$this->configurator->rulesGenerator->clear();
 		$filterChain = $this->configurator->tags->add('X')->filterChain;
 		$filter = $filterChain->append([$mock, 'foo']);
 		$filter->resetParameters();

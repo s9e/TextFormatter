@@ -317,6 +317,7 @@ class TagProcessingTest extends Test
 				'<r><X>f<X>oo</X>o</X> bar</r>',
 				function ($configurator)
 				{
+					$configurator->rulesGenerator->clear();
 					$configurator->tags->add('X')->nestingLimit = 2;
 				},
 				function ($parser)
@@ -352,6 +353,7 @@ class TagProcessingTest extends Test
 				'<r><X>f</X><X>o</X>o bar</r>',
 				function ($configurator)
 				{
+					$configurator->rulesGenerator->clear();
 					$configurator->tags->add('X')->tagLimit = 2;
 				},
 				function ($parser)
@@ -716,6 +718,7 @@ class TagProcessingTest extends Test
 				'<r><X><s>X</s><Y><s>Y</s><Z>Z</Z><e>Y</e></Y><e>X</e></X></r>',
 				function ($configurator)
 				{
+					$configurator->rulesGenerator->clear();
 					$configurator->tags->add('X')->rules->denyChild('Z');
 					$configurator->tags->add('Y');
 					$configurator->tags->add('Z');
@@ -957,6 +960,7 @@ class TagProcessingTest extends Test
 				'<r><X><s>X</s>Y<e>X</e></X></r>',
 				function ($configurator)
 				{
+					$configurator->rulesGenerator->clear();
 					$configurator->tags->add('X')->rules->denyChild('Y');
 					$configurator->tags->add('Y');
 				},
@@ -990,6 +994,7 @@ class TagProcessingTest extends Test
 				'<r><X><s>X</s><e>X</e></X></r>',
 				function ($configurator)
 				{
+					$configurator->rulesGenerator->clear();
 					$configurator->tags->add('X')->rules->denyChild('Y');
 					$configurator->tags->add('Y');
 				},

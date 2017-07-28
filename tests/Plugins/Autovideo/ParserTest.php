@@ -46,6 +46,7 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->Autolink;
+					$configurator->rulesGenerator->clear();
 				}
 			],
 			[

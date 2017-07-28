@@ -447,7 +447,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox addHTML5Rules() adds root rules
+	* @testdox finalize() adds root rules
 	*/
 	public function testAddHTML5RulesRoot()
 	{
@@ -457,13 +457,13 @@ class ConfiguratorTest extends Test
 		$this->configurator->tags->add('LI')->template
 			= '<li><xsl:apply-templates/></li>';
 
-		$this->configurator->addHTML5Rules();
+		$this->configurator->finalize();
 
 		$this->assertSame(['LI'], $this->configurator->rootRules['denyChild']);
 	}
 
 	/**
-	* @testdox addHTML5Rules() adds tag rules
+	* @testdox finalize() adds tag rules
 	*/
 	public function testAddHTML5RulesTags()
 	{
@@ -473,14 +473,14 @@ class ConfiguratorTest extends Test
 		$li = $this->configurator->tags->add('LI');
 		$li->template = '<li><xsl:apply-templates/></li>';
 
-		$this->configurator->addHTML5Rules();
+		$this->configurator->finalize();
 
 		$this->assertSame(['UL'], $ul->rules['denyChild']);
 		$this->assertSame(['LI'], $li->rules['denyChild']);
 	}
 
 	/**
-	* @testdox addHTML5Rules() does not overwrite boolean tag rules
+	* @testdox finalize() does not overwrite boolean tag rules
 	*/
 	public function testAddHTML5RulesTagsNoOverwrite()
 	{
@@ -488,7 +488,7 @@ class ConfiguratorTest extends Test
 		$ul->template = '<ul><xsl:apply-templates/></ul>';
 		$ul->rules->preventLineBreaks(false);
 
-		$this->configurator->addHTML5Rules();
+		$this->configurator->finalize();
 
 		$this->assertFalse($ul->rules['preventLineBreaks']);
 	}
@@ -561,34 +561,6 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('renderer', $return);
 		$this->assertInstanceOf('s9e\\TextFormatter\\Renderer', $return['renderer']);
-	}
-
-	/**
-	* @testdox finalize() calls addHTML5Rules() by default
-	*/
-	public function testFinalizeAddHTML5Rules()
-	{
-		$configurator = $this->getMockBuilder('s9e\\TextFormatter\\Configurator')
-		                     ->setMethods(['addHTML5Rules'])
-		                     ->getMock();
-		$configurator->expects($this->once())
-		             ->method('addHTML5Rules');
-
-		$configurator->finalize();
-	}
-
-	/**
-	* @testdox finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
-	*/
-	public function testFinalizeNoAddHTML5Rules()
-	{
-		$configurator = $this->getMockBuilder('s9e\\TextFormatter\\Configurator')
-		                     ->setMethods(['addHTML5Rules'])
-		                     ->getMock();
-		$configurator->expects($this->never())
-		             ->method('addHTML5Rules');
-
-		$configurator->finalize(['addHTML5Rules' => false]);
 	}
 
 	/**

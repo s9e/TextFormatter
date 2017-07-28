@@ -147,17 +147,15 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->foo throws an exception if $configurator->registeredVars['foo'] does not exist
  [x] unset($configurator->foo) unsets $configurator->registeredVars['foo']
  [x] Setting $configurator->foo sets $this->configurator->registeredVars['foo']
- [x] addHTML5Rules() adds root rules
- [x] addHTML5Rules() adds tag rules
- [x] addHTML5Rules() does not overwrite boolean tag rules
+ [x] finalize() adds root rules
+ [x] finalize() adds tag rules
+ [x] finalize() does not overwrite boolean tag rules
  [x] loadBundle('../Invalid') throws an exception
  [x] loadBundle('Forum') adds the Forum bundle's configuration
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns true on success
  [x] saveBundle() returns false on failure
  [x] finalize() returns a parser and a renderer
- [x] finalize() calls addHTML5Rules() by default
- [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
  [x] finalize() does not return a JS parser by default
  [x] finalize() returns a JS parser if JavaScript was enabled
 

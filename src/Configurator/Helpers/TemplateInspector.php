@@ -295,7 +295,7 @@ class TemplateInspector
 	*/
 	public function isIframe()
 	{
-		return ($this->rootNodes === ['iframe']);
+		return ($this->dom->getElementsByTagName('iframe')->length === 1);
 	}
 
 	/**

@@ -1,6 +1,8 @@
 ## 0.11.0
 
-The optional argument of `s9e\TextFormatter\Configurator::addHTML5Rules()` and `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
+`s9e\TextFormatter\Configurator::addHTML5Rules()` has been removed. Tag rules are systematically added during `finalize()`. See [Automatic rules generation](../Rules/Automatic_rules_generation.md).
+
+The optional argument of `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
 
 `defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`.
 

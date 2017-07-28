@@ -33,32 +33,32 @@ class BBCodesTest extends Test
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
 				'[name="John Smith"]',
-				'<r><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith">[name="John Smith"]</NAME></r>'
 			],
 			[
 				'[name={TEXT} name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
 				'[name="John Smith"]',
-				'<r><NAME first="John" last="Smith" name="John Smith"><s>[name="John Smith"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith" name="John Smith">[name="John Smith"]</NAME></r>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="John Smith"]',
-				'<r><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith">[name="John Smith"]</NAME></r>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="Smith, John"]',
-				'<r><NAME first="John" last="Smith"><s>[name="Smith, John"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith">[name="Smith, John"]</NAME></r>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="John Smith"]',
-				'<r><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith">[name="John Smith"]</NAME></r>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="Smith, John"]',
-				'<r><NAME first="John" last="Smith"><s>[name="Smith, John"]</s></NAME></r>'
+				'<r><NAME first="John" last="Smith">[name="Smith, John"]</NAME></r>'
 			],
 		];
 	}
@@ -113,8 +113,6 @@ class BBCodesTest extends Test
 				$this->configurator->BBCodes->addFromRepository($bbcodeName);
 			}
 		}
-
-		$this->configurator->addHTML5Rules();
 
 		$this->assertJSParsing($original, $this->getParser()->parse($original));
 	}

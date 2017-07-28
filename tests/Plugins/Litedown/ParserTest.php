@@ -2278,7 +2278,6 @@ class ParserTest extends Test
 				{
 					$callback($configurator);
 				}
-				$configurator->addHTML5Rules();
 			};
 		}
 

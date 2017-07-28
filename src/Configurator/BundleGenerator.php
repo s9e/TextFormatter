@@ -54,7 +54,7 @@ class BundleGenerator
 		$options += ['autoInclude' => true];
 
 		// Get the parser and renderer
-		$objects  = $this->configurator->finalize($options);
+		$objects  = $this->configurator->finalize();
 		$parser   = $objects['parser'];
 		$renderer = $objects['renderer'];
 

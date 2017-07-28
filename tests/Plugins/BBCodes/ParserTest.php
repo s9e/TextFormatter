@@ -572,7 +572,6 @@ class ParserTest extends Test
 				{
 					$configurator->BBCodes->addFromRepository('C');
 					$configurator->BBCodes->addFromRepository('URL');
-					$configurator->addHTML5Rules();
 				}
 			],
 		];
