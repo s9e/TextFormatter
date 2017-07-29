@@ -57,6 +57,6 @@ function patchFile($filepath)
 
 patchDir(__DIR__ . '/../src/Plugins/');
 patchDir(__DIR__ . '/../docs/Cookbook/');
-patchFile(__DIR__ . '/../docs/StorageFormat.md');
+patchFile(__DIR__ . '/../docs/Internals/StorageFormat.md');
 
 die("Done.\n");
