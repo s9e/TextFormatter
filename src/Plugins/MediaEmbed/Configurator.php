@@ -168,7 +168,9 @@ class Configurator extends ConfiguratorBase
 		// Create the tag for this site
 		$tag = new Tag;
 
-		// This tag should not need to be closed and should not contain itself or the MEDIA tag
+		// This tag should not need to be closed and should not contain itself or the MEDIA tag.
+		// We allow URL as a child to be used as fallback
+		$tag->rules->allowChild('URL');
 		$tag->rules->autoClose();
 		$tag->rules->denyChild($siteId);
 		$tag->rules->denyChild($this->tagName);
