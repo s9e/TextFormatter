@@ -2,7 +2,7 @@
 
 /*
 
-Below are a few informal benchmarks, meant to be run in CLI. Loading the parser and renderer
+Below are a few informal benchmarks, meant to be run in CLI or web. Loading the parser and renderer
 represents the worst case scenario of parsing or rendering a text in a webserver with no opcode
 cache. The first parsing and rendering measures the time it takes to load extra plugins and set up
 the internal data structures. All subsequent parsings and renderings should be faster than the
@@ -18,6 +18,10 @@ include __DIR__ . '/../../vendor/autoload.php';
 
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;
 
+if (php_sapi_name() !== 'cli')
+{
+	echo '<pre>';
+}
 echo "All times are expressed in microseconds. (1 millionth of a second)\n\n";
 
 $t1 = microtime(true);
