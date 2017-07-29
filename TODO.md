@@ -4,8 +4,8 @@ TODO: Summer 2017
 - ~~Remove addHTML5Rules() from public API and make it non-optional in finalize()~~
 - Make allowed tags/descendants work as a whitelist. Update rules generators such as EnfoceContentModels accordingly.
 - Remove TemplateInspector::isFrame()
-- Explicitly allow URL in tags created by MediaEmbed.
-- Explicitly allow URL in the tags used by Autoimage and Autovideo.
+- ~~Explicitly allow URL in tags created by MediaEmbed.~~
+- ~~Explicitly allow URL in the tags used by Autoimage and Autovideo.~~
 - ~~Remove finalizeParser, finalizeRenderer, returnParser and returnRenderer from finalize() if possible~~
 - ~~Remove optimizeConfig from finalize()~~
 

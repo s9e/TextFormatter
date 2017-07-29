@@ -53,5 +53,8 @@ class Configurator extends ConfiguratorBase
 
 		// Set the default template
 		$tag->template = '<video src="{@' . $this->attrName . '}"/>';
+
+		// Allow URL tags to be used as fallback
+		$tag->rules->allowChild('URL');
 	}
 }
