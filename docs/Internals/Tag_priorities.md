@@ -1,6 +1,6 @@
 Plugin     | Tag name | Priority | Notes
 ---------- | -------- | -------: | -----
-Autoimage  | IMG      |       -1 |
+Autoimage  | IMG      |        2 |
 Autolink   | URL      |        1 |
 Autovideo  | VIDEO    |       -1 |
 Emoji      | EMOJI    |       10 |
