@@ -179,6 +179,11 @@ class UtilsTest extends Test
 				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>'
 			],
 			[
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>',
+				['X', PHP_INT_MAX - 1],
+				'<r><X><s>X</s>..<X><s>X</s>..<e>/X</e></X>..<e>/X</e></X><Y>..</Y></r>'
+			],
+			[
 				'<r xmlns:foo="urn:foo"><X>..</X><foo:X>..</foo:X></r>',
 				['X'],
 				'<r xmlns:foo="urn:foo"><foo:X>..</foo:X></r>'

@@ -90,7 +90,8 @@ abstract class Utils
 
 		$dom   = self::loadXML($xml);
 		$xpath = new DOMXPath($dom);
-		$nodes = $xpath->query(str_repeat('//' . $tagName, 1 + $nestingLevel));
+		$query = '//' . $tagName . '[count(ancestor::' . $tagName . ') >= ' . $nestingLevel . ']';
+		$nodes = $xpath->query($query);
 		foreach ($nodes as $node)
 		{
 			$node->parentNode->removeChild($node);
