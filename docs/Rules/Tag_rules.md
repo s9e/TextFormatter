@@ -23,8 +23,8 @@ $tag->rules->autoReopen()
 
 Rules can be:
 
- * boolean -- they accept <code>true</code> or <code>false</code> as argument, with <code>true</code> being the default.
- * targeted -- they accept a tag name as argument.
+ * boolean — they accept <code>true</code> or <code>false</code> as argument, with <code>true</code> being the default.
+ * targeted — they accept a tag name as argument.
 
 Rules that apply to descendants also apply to children. Rules that apply to ancestors also apply to the parent. A tag that is explicitly denied cannot be allowed by another rule.
 
