@@ -1,1 +1,0 @@
-Moved to http://s9etextformatter.readthedocs.io/Plugins/Litedown/Syntax/

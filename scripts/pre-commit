@@ -18,7 +18,6 @@ then
 	git update-index --add src/Bundles/*.php
 	git update-index --add src/Bundles/*/Renderer.php
 	git update-index --add "src/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollection.php"
-	git update-index --add "src/Plugins/MediaEmbed/README.md"
 
 elif [[ -n `git diff --cached --name-only -b docs` ]]
 then
@@ -52,7 +51,7 @@ if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]
 then
 	./scripts/patchLitedownSyntax.php
 
-	git update-index --add "src/Plugins/Litedown/Syntax.md"
+	git update-index --add "docs/Plugins/Litedown/Syntax.md"
 fi
 
 if [[ -n `git diff --cached --name-only -b tests/Configurator/Helpers/RegexpBuilderTest.php` ]]
