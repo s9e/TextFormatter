@@ -35,7 +35,7 @@ class Parser
 	protected $currentTag;
 	protected $isRich;
 	protected $logger;
-	public $maxFixingCost = 1000;
+	public $maxFixingCost = 10000;
 	protected $namespaces;
 	protected $openTags;
 	protected $output;

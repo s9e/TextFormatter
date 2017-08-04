@@ -20,50 +20,12 @@ abstract class TemplateGenerator
 	public function getTemplate(array $attributes)
 	{
 		$this->attributes = $attributes + $this->defaultAttributes;
-		$prepend = $append = '';
-		if ($this->needsWrapper())
-		{
-			$this->attributes['style']['width']    = '100%';
-			$this->attributes['style']['height']   = '100%';
-			$this->attributes['style']['position'] = 'absolute';
-			$this->attributes['style']['left'] = '0';
-			$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
-			$innerStyle = 'overflow:hidden;position:relative;' . $this->getResponsivePadding();
-			$prepend .= '<div>' . $this->generateAttributes(['style' => $outerStyle]);
-			$prepend .= '<div>' . $this->generateAttributes(['style' => $innerStyle]);
-			$append  .= '</div></div>';
-		}
-		else
-		{
-			$this->attributes['style']['width']  = '100%';
-			$this->attributes['style']['height'] = $this->attributes['height'] . 'px';
-			if (isset($this->attributes['max-width']))
-				$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
-			elseif ($this->attributes['width'] !== '100%')
-			{
-				$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
-				$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
-			}
-		}
-		return $prepend . $this->getContentTemplate() . $append;
+		return ($this->needsWrapper()) ? $this->getWrappedTemplate() : $this->getUnwrappedTemplate();
 	}
 	protected function expr($expr)
 	{
 		$expr = \trim($expr, '{}');
 		return (\preg_match('(^[@$]?[-\\w]+$)D', $expr)) ? $expr : "($expr)";
-	}
-	protected function getResponsivePadding()
-	{
-		$height        = $this->expr($this->attributes['height']);
-		$paddingHeight = $this->expr($this->attributes['padding-height']);
-		$width         = $this->expr($this->attributes['width']);
-		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
-		
-		if (!empty($this->attributes['padding-height']))
-			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
-		if (\strpos($width, '@') !== \false)
-			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
-		return $css;
 	}
 	protected function generateAttributes(array $attributes)
 	{
@@ -85,6 +47,49 @@ abstract class TemplateGenerator
 		foreach ($properties as $name => $value)
 			$style .= $name . ':' . $value . ';';
 		return \trim($style, ';');
+	}
+	protected function getResponsivePadding()
+	{
+		$height        = $this->expr($this->attributes['height']);
+		$paddingHeight = $this->expr($this->attributes['padding-height']);
+		$width         = $this->expr($this->attributes['width']);
+		$css = 'padding-bottom:<xsl:value-of select="100*(' . $height . '+' . $paddingHeight . ')div' . $width . '"/>%';
+		
+		if (!empty($this->attributes['padding-height']))
+			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
+		if (\strpos($width, '@') !== \false)
+			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
+		return $css;
+	}
+	protected function getUnwrappedTemplate()
+	{
+		$this->attributes['style']['width']     = '100%';
+		$this->attributes['style']['height']    = $this->attributes['height'] . 'px';
+		$this->attributes['style']['max-width'] = '100%';
+		if (isset($this->attributes['max-width']))
+			$this->attributes['style']['max-width'] = $this->attributes['max-width'] . 'px';
+		elseif ($this->attributes['width'] !== '100%')
+		{
+			$property = ($this->hasDynamicWidth()) ? 'width' : 'max-width';
+			$this->attributes['style'][$property] = $this->attributes['width'] . 'px';
+		}
+		if ($this->attributes['style']['width'] === $this->attributes['style']['max-width'])
+			unset($this->attributes['style']['max-width']);
+		return $this->getContentTemplate();
+	}
+	protected function getWrappedTemplate()
+	{
+		$this->attributes['style']['width']    = '100%';
+		$this->attributes['style']['height']   = '100%';
+		$this->attributes['style']['position'] = 'absolute';
+		$this->attributes['style']['left']     = '0';
+		$outerStyle = 'display:inline-block;width:100%;max-width:' . $this->attributes['width'] . 'px';
+		$innerStyle = 'display:block;overflow:hidden;position:relative;' . $this->getResponsivePadding();
+		$template  = '<span>' . $this->generateAttributes(['style' => $outerStyle]);
+		$template .= '<span>' . $this->generateAttributes(['style' => $innerStyle]);
+		$template .= $this->getContentTemplate();
+		$template .= '</span></span>';
+		return $template;
 	}
 	protected function hasDynamicHeight()
 	{

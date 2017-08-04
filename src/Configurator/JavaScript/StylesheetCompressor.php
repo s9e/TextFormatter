@@ -18,7 +18,7 @@ class StylesheetCompressor
 		'<xsl:value-of select="',
 		'<xsl:copy-of select="@',
 		'<iframe allowfullscreen="" scrolling="no"',
-		'overflow:hidden;position:relative;padding-bottom:',
+		'display:block;overflow:hidden;position:relative;padding-bottom:',
 		'display:inline-block;width:100%;max-width:',
 		' [-:\\w]++="',
 		'\\{[^}]++\\}',

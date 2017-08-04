@@ -8,10 +8,10 @@
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
-class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
+class AllowAll implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? ['closeParent'] : [];
+		return ['allowChild', 'allowDescendant'];
 	}
 }
