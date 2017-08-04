@@ -69,7 +69,7 @@ var logger = new Logger;
 /**
 * @type {!number} How hard the parser should work on fixing bad markup
 */
-var maxFixingCost = 1000;
+var maxFixingCost = 10000;
 
 /**
 * @type {!Object} Associative array of namespace prefixes in use in document (prefixes used as key)
