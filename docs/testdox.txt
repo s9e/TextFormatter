@@ -597,10 +597,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Works with a single tag
- [x] If no rule is defined, the default is to allow children and descendants
- [x] Correctly applies denyChild
+ [x] If no rule is defined, the default is to deny children and descendants
+ [x] Works with multiple tags
  [x] denyChild overrides allowChild
- [x] denyDescendant overrides allowChild
+ [x] denyDescendant does not override allowChild
  [x] allowDescendant does not override denyChild
  [x] denyDescendant overrides allowDescendant
  [x] ignoreTags(true) overrides everything
@@ -1194,19 +1194,17 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewL
  [x] Generates a disableAutoLineBreaks rule for <pre>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
- [x] <b> has a denyChild rule for <div>
- [x] <a> has a denyChild and a denyDescendant rule for <a>
- [x] <p> does not have a rule for <p>
- [x] <iframe> with no <xsl:apply-templates/> has a denyChild rule for <div>
- [x] <iframe> with no <xsl:apply-templates/> has no rules for <span>
+ [x] <div> has an allowChild rule and an allowDescendant rule for <b>
+ [x] <a> has no rules for <a>
+ [x] <ol> has an allowDescendant rule and no allowChild rule for <div>
  [x] Generates an isTransparent rule for <a>
  [x] Generates an isTransparent rule for a template composed entirely of <xsl:apply-templates/>
  [x] Does not generate any boolean rules for <b>
  [x] Generates a disableAutoLineBreaks rule, a preventLineBreaks rule and a suspendAutoLineBreaks rule for <style>
  [x] Generates a preventLineBreaks rule and a suspendAutoLineBreaks rule for <ul>
- [x] <script> has a denyChild and a denyDescendant rule for <a>
- [x] A mixed inline/block template has a denyChild rule for <div>
- [x] A mixed inline/block template has no rules for <span>
+ [x] <script> has no rules for <a>
+ [x] A mixed inline/block template has no allowChild rule for <div>
+ [x] A mixed inline/block template has an allowChild rule and an allowDescendant rule for <span>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
  [x] <li> closes parent <li>

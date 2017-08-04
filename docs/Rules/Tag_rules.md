@@ -39,7 +39,7 @@ Rules that apply to descendants also apply to children. Rules that apply to ance
 <dt>allowDescendant</dt>
 <dd>
 	<p><i>Example:</i> <code>$tag->rules->allowDescendant('X');</code></p>
-	<p>Allows tag X to be used as a descendant of given tag.</p>
+	<p>Allows tag X to be used as a non-child descendant of given tag.</p>
 </dd>
 
 <dt>autoClose</dt>
@@ -93,7 +93,7 @@ Rules that apply to descendants also apply to children. Rules that apply to ance
 <dt>denyDescendant</dt>
 <dd>
 	<p><i>Example:</i> <code>$tag->rules->denyDescendant('X');</code></p>
-	<p>Prevents tag X to be used as a descendant of this tag.</p>
+	<p>Prevents tag X to be used as a non-child descendant of this tag.</p>
 </dd>
 
 <dt>disableAutoLineBreaks</dt>

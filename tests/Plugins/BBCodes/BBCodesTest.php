@@ -717,6 +717,16 @@ class BBCodesTest extends Test
 				{
 					$configurator->BBCodes->addFromRepository('url');
 					$configurator->BBCodes->addFromRepository('img');
+					$configurator->tags['url']->rules->denyChild('img');
+				}
+			],
+			[
+				'x [url=http://example.org][img]http://example.org/foo.png[/img][/url] y',
+				'x <a href="http://example.org"><img src="http://example.org/foo.png" title="" alt=""></a> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('url');
+					$configurator->BBCodes->addFromRepository('img');
 					$configurator->tags['url']->rules->denyDescendant('img');
 				}
 			],

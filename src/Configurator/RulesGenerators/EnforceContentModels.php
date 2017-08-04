@@ -70,13 +70,13 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 		}
 
 		$rules = [];
-		if (!$src->allowsChild($trg))
+		if ($src->allowsChild($trg))
 		{
-			$rules[] = 'denyChild';
+			$rules[] = 'allowChild';
 		}
-		if (!$src->allowsDescendant($trg))
+		if ($src->allowsDescendant($trg))
 		{
-			$rules[] = 'denyDescendant';
+			$rules[] = 'allowDescendant';
 		}
 
 		return $rules;

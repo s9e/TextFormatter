@@ -105,8 +105,8 @@ abstract class RulesHelper
 
 		foreach ($rules as $tagName => $tagRules)
 		{
-			$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, 1);
-			$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, 1);
+			$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, 0);
+			$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, 0);
 		}
 
 		return $matrix;
@@ -156,6 +156,7 @@ abstract class RulesHelper
 		{
 			if (!empty($tagRules['ignoreTags']))
 			{
+				$rules[$tagName]['denyChild']      = $tagNames;
 				$rules[$tagName]['denyDescendant'] = $tagNames;
 			}
 
@@ -171,12 +172,10 @@ abstract class RulesHelper
 
 		// Apply "allow" rules to grant usage, overwriting the default settings
 		self::applyTargetedRule($matrix, $rules, 'allowChild',      'allowedChildren',    1);
-		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedChildren',    1);
 		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedDescendants', 1);
 
 		// Apply "deny" rules to remove usage
 		self::applyTargetedRule($matrix, $rules, 'denyChild',      'allowedChildren',    0);
-		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedChildren',    0);
 		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedDescendants', 0);
 
 		return $matrix;

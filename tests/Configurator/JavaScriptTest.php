@@ -118,6 +118,7 @@ class JavaScriptTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->tags->add('FOO');
+		$configurator->rootRules->allowChild('FOO');
 
 		$this->configurator->enableJavaScript();
 
@@ -205,6 +206,7 @@ class JavaScriptTest extends Test
 		$callback = new ProgrammableCallback(function() { return 'foo'; });
 		$callback->setJS($js);
 
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->generator = $callback;
 
 		$this->assertContains(
@@ -218,6 +220,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testAttributeFilterBuiltIn()
 	{
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain->append(
 			$this->configurator->attributeFilters->get('#number')
 		);
@@ -235,6 +238,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testAttributeFilterBuiltInCallback()
 	{
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain->append(
 			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt'
 		);
@@ -252,6 +256,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testAttributeFilterMissing()
 	{
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain->append(
 			function() {}
 		);
@@ -306,6 +311,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->registeredVars = ['foo' => 'bar'];
 
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
 			->append('strtolower')
 			->resetParameters()
@@ -359,6 +365,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testCallbackValue()
 	{
+		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
 			->append('strtolower')
 			->resetParameters()
@@ -376,6 +383,8 @@ class JavaScriptTest extends Test
 	*/
 	public function testOptimizeWholeTag()
 	{
+		$this->configurator->rootRules->allowChild('X');
+		$this->configurator->rootRules->allowChild('Y');
 		$this->configurator->tags->add('X');
 		$this->configurator->tags->add('Y');
 		$this->configurator->javascript->exportMethods = ['preview'];
@@ -383,8 +392,7 @@ class JavaScriptTest extends Test
 
 		$this->assertNotContains('"X":{', $js);
 		$this->assertNotContains('"Y":{', $js);
-		$this->assertContains('"X":oF09BAC34', $js);
-		$this->assertContains('"Y":oF09BAC34', $js);
+		$this->assertRegexp('(tagsConfig=\\{"X":(\\w+),"Y":\\1)', $js);
 	}
 
 	/**

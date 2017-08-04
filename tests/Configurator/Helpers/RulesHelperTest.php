@@ -18,71 +18,75 @@ class RulesHelperTest extends Test
 	public function testSingleTag()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->rules->allowChild('A');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
+						'allowed'   => [1]
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
 	/**
-	* @testdox If no rule is defined, the default is to allow children and descendants
+	* @testdox If no rule is defined, the default is to deny children and descendants
 	*/
-	public function testDefaultIsAllow()
+	public function testDefaultIsDeny()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
-					]
-				]
+				'root' => ['allowed' => [0]],
+				'tags' => []
 			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
 	/**
-	* @testdox Correctly applies denyChild
+	* @testdox Works with multiple tags
 	*/
 	public function testTwoTags()
 	{
 		$tags = new TagCollection;
 
-		$tags->add('A');
-		$tags->add('B')->rules->denyChild('A');
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+		$a->rules->allowChild('B');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('B');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+		$rootRules->allowChild('B');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b1100000011]],
+				'root' => ['allowed' => [0b11]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b1100000011]
+						'allowed'   => [0b11]
 					],
 					'B' => [
 						'bitNumber' => 1,
-						'allowed'   => [0b1100000010]
+						'allowed'   => [0b10]
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -97,34 +101,12 @@ class RulesHelperTest extends Test
 		$tag->rules->denyChild('A');
 		$tag->rules->allowChild('A');
 
-		$this->assertEquals(
-			[
-				'root' => ['allowed' => [0b100000001]],
-				'tags' => [
-					'A' => [
-						'bitNumber' => 0,
-						'allowed'   => [0b100000000]
-					]
-				]
-			],
-			RulesHelper::getBitfields($tags, new Ruleset)
-		);
-	}
-
-	/**
-	* @testdox denyDescendant overrides allowChild
-	*/
-	public function testDenyDescendantOverridesAllowChild()
-	{
-		$tags = new TagCollection;
-
-		$tag = $tags->add('A');
-		$tag->rules->denyDescendant('A');
-		$tag->rules->allowChild('A');
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
@@ -132,7 +114,35 @@ class RulesHelperTest extends Test
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
+		);
+	}
+
+	/**
+	* @testdox denyDescendant does not override allowChild
+	*/
+	public function testDenyDescendantDoesNotOverrideAllowChild()
+	{
+		$tags = new TagCollection;
+
+		$tag = $tags->add('A');
+		$tag->rules->allowChild('A');
+		$tag->rules->denyDescendant('A');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+
+		$this->assertEquals(
+			[
+				'root' => ['allowed' => [1]],
+				'tags' => [
+					'A' => [
+						'bitNumber' => 0,
+						'allowed'   => [1]
+					]
+				]
+			],
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -144,12 +154,15 @@ class RulesHelperTest extends Test
 		$tags = new TagCollection;
 
 		$tag = $tags->add('A');
-		$tag->rules->denyChild('A');
 		$tag->rules->allowDescendant('A');
+		$tag->rules->denyChild('A');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
@@ -157,7 +170,7 @@ class RulesHelperTest extends Test
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -172,9 +185,12 @@ class RulesHelperTest extends Test
 		$tag->rules->denyDescendant('A');
 		$tag->rules->allowDescendant('A');
 
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
@@ -182,7 +198,7 @@ class RulesHelperTest extends Test
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -198,9 +214,12 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 		$tag->rules->ignoreTags(true);
 
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
@@ -208,7 +227,7 @@ class RulesHelperTest extends Test
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -224,9 +243,12 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 		$tag->rules->ignoreTags(false);
 
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
@@ -234,7 +256,7 @@ class RulesHelperTest extends Test
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -245,24 +267,34 @@ class RulesHelperTest extends Test
 	{
 		$tags = new TagCollection;
 
-		$tags->add('A');
-		$tags->add('B')->rules->requireParent('A');
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+		$a->rules->allowChild('B');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('A');
+		$b->rules->allowChild('B');
+		$b->rules->requireParent('A');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+		$rootRules->allowChild('B');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b1100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b1100000011]
+						'allowed'   => [0b11]
 					],
 					'B' => [
 						'bitNumber' => 1,
-						'allowed'   => [0b1100000001]
+						'allowed'   => [1]
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -272,19 +304,24 @@ class RulesHelperTest extends Test
 	public function testUnusedTag()
 	{
 		$tags = new TagCollection;
-		$tags->add('A')->rules->denyChild('B');
-		$tags->add('B');
+
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('A');
+		$b->rules->allowChild('B');
 
 		$rootRules = new Ruleset;
-		$rootRules->denyChild('B');
+		$rootRules->allowChild('A');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
+						'allowed'   => [1]
 					]
 				]
 			],
@@ -298,19 +335,21 @@ class RulesHelperTest extends Test
 	public function testUnusedTagsInLoop()
 	{
 		$tags = new TagCollection;
-		$tags->add('A');
-		$tags->add('B');
 
-		$rootRules = new Ruleset;
-		$rootRules->denyChild('A');
-		$rootRules->denyChild('B');
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+		$a->rules->allowChild('B');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('A');
+		$b->rules->allowChild('B');
 
 		$this->assertEquals(
 			[
 				'root' => ['allowed' => [0]],
 				'tags' => []
 			],
-			RulesHelper::getBitfields($tags, $rootRules)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -321,21 +360,35 @@ class RulesHelperTest extends Test
 	{
 		$tags = new TagCollection;
 
-		$tag = $tags->add('A');
-		$tag->rules->allowChild('C');
-		$tag->rules->allowDescendant('C');
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+		$a->rules->allowChild('B');
+		$a->rules->allowChild('C');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('B');
+		$b->rules->allowChild('C');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+		$rootRules->allowChild('B');
+		$rootRules->allowChild('C');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [0b11]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
+						'allowed'   => [0b11]
+					],
+					'B' => [
+						'bitNumber' => 1,
+						'allowed'   => [0b10]
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -346,24 +399,33 @@ class RulesHelperTest extends Test
 	{
 		$tags = new TagCollection;
 
-		$tags->add('A');
-		$tags->add('B');
+		$a = $tags->add('A');
+		$a->rules->allowChild('A');
+		$a->rules->allowChild('B');
+
+		$b = $tags->add('B');
+		$b->rules->allowChild('A');
+		$b->rules->allowChild('B');
+
+		$rootRules = new Ruleset;
+		$rootRules->allowChild('A');
+		$rootRules->allowChild('B');
 
 		$this->assertEquals(
 			[
-				'root' => ['allowed' => [0b100000001]],
+				'root' => ['allowed' => [1]],
 				'tags' => [
 					'A' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
+						'allowed'   => [1]
 					],
 					'B' => [
 						'bitNumber' => 0,
-						'allowed'   => [0b100000001]
+						'allowed'   => [1]
 					]
 				]
 			],
-			RulesHelper::getBitfields($tags, new Ruleset)
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 }

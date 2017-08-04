@@ -4,7 +4,7 @@
 
 The optional argument of `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
 
-`defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`.
+`defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`. The default rule for both children and descendants is now `deny`.
 
 The `finalizeParser` and `finalizeRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`.
 

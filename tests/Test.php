@@ -70,14 +70,12 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function assertParsing($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
 	{
-		$configurator = new Configurator;
-
 		if (isset($setup))
 		{
-			call_user_func($setup, $configurator);
+			call_user_func($setup, $this->configurator);
 		}
 
-		$parser = $this->getParser($configurator);
+		$parser = $this->getParser($this->configurator);
 		$parser->registerParser(
 			'Test',
 			function () use ($callback, $parser)

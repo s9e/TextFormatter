@@ -13,6 +13,7 @@ class HintGeneratorTest extends Test
 {
 	public function assertHintsContain($str)
 	{
+		$this->configurator->finalize();
 		$config = ConfigHelper::filterConfig($this->configurator->asConfig(), 'JS');
 
 		$xsl = $this->configurator->rendering->engine->getXSL($this->configurator->rendering);

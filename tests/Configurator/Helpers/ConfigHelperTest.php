@@ -298,6 +298,8 @@ class ConfigHelperTest extends Test
 		$configurator->BBCodes->addFromRepository('I');
 		$configurator->BBCodes->addFromRepository('U');
 
+		$configurator->finalize();
+
 		$normalConfig = $configurator->asConfig();
 		ConfigHelper::filterConfig($normalConfig);
 

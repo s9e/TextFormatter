@@ -297,13 +297,14 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigTagBitfields()
 	{
-		$this->configurator->tags->add('A');
+		$this->configurator->tags->add('A')->rules->allowChild('A');
+		$this->configurator->rootRules->allowChild('A');
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
 			[
 				'tags' => [
-					'A' => ['allowed' => [0b100000001]]
+					'A' => ['allowed' => [1]]
 				]
 			],
 			$config
@@ -459,7 +460,8 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->finalize();
 
-		$this->assertSame(['LI'], $this->configurator->rootRules['denyChild']);
+		$this->assertArrayHasKey('allowChild', $this->configurator->rootRules);
+		$this->assertSame(['UL'], $this->configurator->rootRules['allowChild']);
 	}
 
 	/**
@@ -475,8 +477,10 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->finalize();
 
-		$this->assertSame(['UL'], $ul->rules['denyChild']);
-		$this->assertSame(['LI'], $li->rules['denyChild']);
+		$this->assertArrayHasKey('allowChild', $ul->rules);
+		$this->assertSame(['LI'], $ul->rules['allowChild']);
+		$this->assertArrayHasKey('allowChild', $li->rules);
+		$this->assertSame(['UL'], $li->rules['allowChild']);
 	}
 
 	/**

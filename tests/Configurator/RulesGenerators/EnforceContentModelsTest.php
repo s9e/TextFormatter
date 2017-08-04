@@ -8,62 +8,38 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 class EnforceContentModelsTest extends AbstractTest
 {
 	/**
-	* @testdox <b> has a denyChild rule for <div>
+	* @testdox <div> has an allowChild rule and an allowDescendant rule for <b>
 	*/
-	public function testDenyChild()
+	public function testAllowBoth()
 	{
 		$this->assertTargetedRules(
-			'<b><xsl:apply-templates/></b>',
 			'<div><xsl:apply-templates/></div>',
-			['denyChild']
-		);
-	}
-
-	/**
-	* @testdox <a> has a denyChild and a denyDescendant rule for <a>
-	*/
-	public function testDenyDescendant()
-	{
-		$this->assertTargetedRules(
-			'<a><xsl:apply-templates/></a>',
-			'<a><xsl:apply-templates/></a>',
-			['denyChild', 'denyDescendant']
-		);
-	}
-
-	/**
-	* @testdox <p> does not have a rule for <p>
-	*/
-	public function testPNoRuleB()
-	{
-		$this->assertTargetedRules(
-			'<p><xsl:apply-templates/></p>',
 			'<b><xsl:apply-templates/></b>',
+			['allowChild', 'allowDescendant']
+		);
+	}
+
+	/**
+	* @testdox <a> has no rules for <a>
+	*/
+	public function testAllowNone()
+	{
+		$this->assertTargetedRules(
+			'<a><xsl:apply-templates/></a>',
+			'<a><xsl:apply-templates/></a>',
 			[]
 		);
 	}
 
 	/**
-	* @testdox <iframe> with no <xsl:apply-templates/> has a denyChild rule for <div>
+	* @testdox <ol> has an allowDescendant rule and no allowChild rule for <div>
 	*/
-	public function testIframeDeniesDiv()
+	public function testAllowDescendantNotChild()
 	{
 		$this->assertTargetedRules(
-			'<iframe/>',
-			'<div/>',
-			['denyChild']
-		);
-	}
-
-	/**
-	* @testdox <iframe> with no <xsl:apply-templates/> has no rules for <span>
-	*/
-	public function testIframeAllowsSpan()
-	{
-		$this->assertTargetedRules(
-			'<iframe/>',
-			'<span/>',
-			[]
+			'<ol><xsl:apply-templates/></ol>',
+			'<div><xsl:apply-templates/></div>',
+			['allowDescendant']
 		);
 	}
 
@@ -127,38 +103,38 @@ class EnforceContentModelsTest extends AbstractTest
 	}
 
 	/**
-	* @testdox <script> has a denyChild and a denyDescendant rule for <a>
+	* @testdox <script> has no rules for <a>
 	*/
-	public function testScriptDeniesTags()
+	public function testScriptAllowsNoTags()
 	{
 		$this->assertTargetedRules(
 			'<script><xsl:apply-templates/></script>',
 			'<a/>',
-			['denyChild', 'denyDescendant']
+			[]
 		);
 	}
 
 	/**
-	* @testdox A mixed inline/block template has a denyChild rule for <div>
+	* @testdox A mixed inline/block template has no allowChild rule for <div>
 	*/
 	public function testMixedDeniesBlock()
 	{
 		$this->assertTargetedRules(
 			'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
 			'<div/>',
-			['denyChild']
+			['allowDescendant']
 		);
 	}
 
 	/**
-	* @testdox A mixed inline/block template has no rules for <span>
+	* @testdox A mixed inline/block template has an allowChild rule and an allowDescendant rule for <span>
 	*/
 	public function testMixedAllowsInline()
 	{
 		$this->assertTargetedRules(
 			'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
 			'<span/>',
-			[]
+			['allowChild', 'allowDescendant']
 		);
 	}
 }

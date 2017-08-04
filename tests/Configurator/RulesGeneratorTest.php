@@ -57,9 +57,16 @@ class RulesGeneratorTest extends Test
 					'B' => '<b><xsl:apply-templates/></b>'
 				],
 				[
-					'root' => [],
+					'root' => [
+						'allowChild'      => ['B'],
+						'allowDescendant' => ['B']
+					],
 					'tags' => [
-						'B' => ['autoReopen' => true]
+						'B' => [
+							'allowChild'      => ['B'],
+							'allowDescendant' => ['B'],
+							'autoReopen'      => true
+						]
 					]
 				]
 			],
@@ -70,16 +77,19 @@ class RulesGeneratorTest extends Test
 				],
 				[
 					'root' => [
-						'denyChild' => ['LI']
+						'allowChild'      => ['OL'],
+						'allowDescendant' => ['LI', 'OL']
 					],
 					'tags' => [
 						'LI' => [
-							'closeParent' => ['LI'],
-							'denyChild'   => ['LI'],
+							'allowChild'                  => ['OL'],
+							'allowDescendant'             => ['LI', 'OL'],
+							'closeParent'                 => ['LI'],
 							'ignoreSurroundingWhitespace' => true
 						],
 						'OL' => [
-							'denyChild'                   => ['OL'],
+							'allowChild'                  => ['LI'],
+							'allowDescendant'             => ['LI', 'OL'],
 							'ignoreSurroundingWhitespace' => true,
 							'ignoreText'                  => true,
 							'preventLineBreaks'           => true,
@@ -93,9 +103,16 @@ class RulesGeneratorTest extends Test
 					'X' => null
 				],
 				[
-					'root' => [],
+					'root' => [
+						'allowChild'      => ['X'],
+						'allowDescendant' => ['X']
+					],
 					'tags' => [
-						'X' => ['isTransparent' => true]
+						'X' => [
+							'allowChild'      => ['X'],
+							'allowDescendant' => ['X'],
+							'isTransparent'   => true
+						]
 					]
 				]
 			],
@@ -104,10 +121,13 @@ class RulesGeneratorTest extends Test
 					'CODE' => '<pre><code><xsl:apply-templates/></code></pre>'
 				],
 				[
-					'root' => [],
+					'root' => [
+						'allowChild'      => ['CODE'],
+						'allowDescendant' => ['CODE'],
+					],
 					'tags' => [
 						'CODE' => [
-							'denyChild'                   => ['CODE'],
+							'allowDescendant'             => ['CODE'],
 							'disableAutoLineBreaks'       => true,
 							'ignoreTags'                  => true,
 							'ignoreSurroundingWhitespace' => true,
@@ -122,17 +142,19 @@ class RulesGeneratorTest extends Test
 					'X' => '<div>...</div>'
 				],
 				[
-					'root' => [],
+					'root' => [
+						'allowChild'      => ['B', 'X'],
+						'allowDescendant' => ['B', 'X']
+					],
 					'tags' => [
 						'B' => [
-							'autoReopen' => true,
-							'denyChild'  => ['X']
+							'allowChild'      => ['B'],
+							'allowDescendant' => ['B', 'X'],
+							'autoReopen'      => true
 						],
 						'X' => [
 							'autoClose'                   => true,
 							'closeParent'                 => ['B'],
-							'denyChild'                   => ['B', 'X'],
-							'denyDescendant'              => ['B', 'X'],
 							'disableAutoLineBreaks'       => true,
 							'ignoreSurroundingWhitespace' => true,
 							'preventLineBreaks'           => true,

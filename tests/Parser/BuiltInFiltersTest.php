@@ -60,10 +60,9 @@ class BuiltInFiltersTest extends Test
 	*/
 	public function testFilters($filter, $original, $expected, $logs = [], $setup = null)
 	{
-		$this->configurator
-			->tags->add('FOO')
-			->attributes->add('foo')
-			->filterChain->append($filter);
+		$tag = $this->configurator->tags->add('FOO');
+		$tag->attributes->add('foo')->filterChain->append($filter);
+		$this->configurator->rootRules->allowChild('FOO');
 
 		if (isset($setup))
 		{

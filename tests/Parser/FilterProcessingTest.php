@@ -232,6 +232,7 @@ class FilterProcessingTest extends Test
 		$tag = $this->configurator->tags->add('X');
 		$tag->filterChain->append([$mock, 'foo']);
 		$tag->filterChain->append([$mock, 'bar']);
+		$this->configurator->finalize();
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -256,6 +257,7 @@ class FilterProcessingTest extends Test
 		$tag = $this->configurator->tags->add('X');
 		$tag->filterChain->append([$mock, 'foo']);
 		$tag->filterChain->append([$mock, 'bar']);
+		$this->configurator->finalize();
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -277,6 +279,7 @@ class FilterProcessingTest extends Test
 
 		$tag = $this->configurator->tags->add('X');
 		$tag->filterChain->append([$mock, 'foo']);
+		$this->configurator->finalize();
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -307,6 +310,7 @@ class FilterProcessingTest extends Test
 		$filter = $tag->filterChain->append([$mock, 'foo']);
 		$filter->resetParameters();
 		$filter->addParameterByName('parser');
+		$this->configurator->finalize();
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -337,10 +341,12 @@ class FilterProcessingTest extends Test
 		     ->will($this->returnValue(true));
 
 		$this->configurator->rulesGenerator->clear();
+		$this->configurator->rulesGenerator->add('AllowAll');
 		$filterChain = $this->configurator->tags->add('X')->filterChain;
 		$filter = $filterChain->append([$mock, 'foo']);
 		$filter->resetParameters();
 		$filter->addParameterByName('openTags');
+		$this->configurator->finalize();
 
 		$parser = $this->getParser();
 		$parser->registerParser(
