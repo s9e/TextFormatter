@@ -1,18 +1,23 @@
 ## 0.11.0
 
-`s9e\TextFormatter\Configurator::addHTML5Rules()` has been removed. Tag rules are systematically added during `finalize()`. See [Automatic rules generation](../Rules/Automatic_rules_generation.md).
-
 The optional argument of `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.
 
-`defaultChildRule()` and `defaultDescendantRule()` have been removed from `s9e\TextFormatter\Configurator\Collections\Ruleset`. The default rule for both children and descendants is now `deny`.
+The optional argument of `s9e\TextFormatter\Configurator::finalize()` has been removed.
 
-The `finalizeParser` and `finalizeRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`.
+The following methods have been removed:
 
-The `returnParser` and `returnRenderer` options have been removed from `s9e\TextFormatter\Configurator::finalize()`. Both objects are always returned.
+ * `s9e\TextFormatter\Configurator::addHTML5Rules()`  
+   Tag rules are systematically added during `finalize()`. See [Automatic rules generation](../Rules/Automatic_rules_generation.md).
 
-The `optimizeConfig` option has been removed from `s9e\TextFormatter\Configurator::finalize()`. The parser configuration is always optimized.
+ * `s9e\TextFormatter\Configurator\Collections\Ruleset::defaultChildRule()`  
+   The default is now `deny`.
 
-`s9e\TextFormatter\Configurator\Helpers\TemplateInspector::isIframe()` has been removed.
+ * `s9e\TextFormatter\Configurator\Collections\Ruleset::defaultDescendantRule()`  
+   The default is now `deny`.
+
+ * `s9e\TextFormatter\Configurator\Helpers\TemplateInspector::isIframe()`
+
+In addition, the meaning of the `allowDescendant` and `denyDescendant` rules have been changed to exclude the tag's child. See [Tag rules](../Rules/Tag_rules.md).
 
 
 ## 0.10.0
