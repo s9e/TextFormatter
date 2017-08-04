@@ -1,3 +1,47 @@
+0.11.0 (2017-08-04)
+===================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0110) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/6266e40850301ddc0e40808e7abe3e507a3ca347...ad7afe67b971cc76c43f5d6445cc06ca12ea2502)
+
+### Added
+
+ - `0239f7e06` Added AllowAll rules generator
+ - `76c01d93b` MediaEmbed: added support for Amazon India
+ - `afe63fc05` RulesGenerator: added BlockElementsCloseFormattingElements to default generators
+
+### Removed
+
+ - `d94ef970f` Configurator: removed addHTML5Rules() and integrated it in finalize()
+ - `3e9a48fe1` Configurator: removed the finalizeParser and finalizeRenderer options from finalize()
+ - `599a21548` Configurator: removed the optimizeConfig option from finalize()
+ - `c20153268` Configurator: removed the returnParser and returnRenderer options from finalize()
+ - `77f96dfe8` RulesGenerator: removed support for parentHTML option
+ - `4d3370389` Ruleset: removed defaultChildRule() and defaultDescendantRule()
+ - `65c910a20` TemplateInspector: removed isIframe()
+
+### Fixed
+
+ - `f5f176c8c` Utils: fixed removeTag() failing with arbitrarily high  values
+
+### Changed
+
+ - `4b05c5233` Autoimage: reversed tag priority to allow Autolink to linkify the image
+ - `a4862b55e` Autovideo: explicitly allow URL tags to be used as fallback
+ - `9970de5da` Internals: increased the default limits for tags and other resources
+ - `c31a802d1` MediaEmbed: explicitly allow URL tags to be used as fallback
+ - `2d3cc9ba9` MediaEmbed: limit the width of dynamically-sized embeds to 100%
+ - `a2dba6ee0` MediaEmbed: reorganized template generation for readability
+ - `a58a52a34` MediaEmbed: updated Amazon
+ - `a7088bd48` MediaEmbed: updated Amazon
+ - `4fc5fbda2` MediaEmbed: updated Getty
+ - `2074eeabc` MediaEmbed: updated Google Drive
+ - `6b26c91cd` MediaEmbed: updated Vidme
+ - `608840ec2` MediaEmbed: use span as responsive wrapper
+ - `15f65327a` Rules: the default rule for tags is now `deny`. `allowDescendant` and `denyDescendant` now only apply to non-child descendant
+
+
 0.10.1 (2017-07-03)
 ===================
 
