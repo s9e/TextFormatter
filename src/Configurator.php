@@ -84,41 +84,20 @@ class Configurator implements ConfigProvider
 		if (!isset($this->javascript))
 			$this->javascript = new JavaScript($this);
 	}
-	public function finalize(array $options = array())
+	public function finalize()
 	{
 		$return = array();
-		$options += array(
-			'addHTML5Rules'  => \true,
-			'optimizeConfig' => \true,
-			'returnJS'       => isset($this->javascript),
-			'returnParser'   => \true,
-			'returnRenderer' => \true
-		);
-		if ($options['addHTML5Rules'])
-			$this->addHTML5Rules($options);
-		if ($options['returnRenderer'])
-		{
-			$renderer = $this->rendering->getRenderer();
-			if (isset($options['finalizeRenderer']))
-				\call_user_func($options['finalizeRenderer'], $renderer);
-			$return['renderer'] = $renderer;
-		}
-		if ($options['returnJS'] || $options['returnParser'])
-		{
-			$config = $this->asConfig();
-			if ($options['returnJS'])
-				$return['js'] = $this->javascript->getParser(ConfigHelper::filterConfig($config, 'JS'));
-			if ($options['returnParser'])
-			{
-				$config = ConfigHelper::filterConfig($config, 'PHP');
-				if ($options['optimizeConfig'])
-					ConfigHelper::optimizeArray($config);
-				$parser = new Parser($config);
-				if (isset($options['finalizeParser']))
-					\call_user_func($options['finalizeParser'], $parser);
-				$return['parser'] = $parser;
-			}
-		}
+		$this->plugins->finalize();
+		foreach ($this->tags as $tag)
+			$this->templateNormalizer->normalizeTag($tag);
+		$return['renderer'] = $this->rendering->getRenderer();
+		$this->addTagRules();
+		$config = $this->asConfig();
+		if (isset($this->javascript))
+			$return['js'] = $this->javascript->getParser(ConfigHelper::filterConfig($config, 'JS'));
+		$config = ConfigHelper::filterConfig($config, 'PHP');
+		ConfigHelper::optimizeArray($config);
+		$return['parser'] = new Parser($config);
 		return $return;
 	}
 	public function loadBundle($bundleName)
@@ -133,17 +112,6 @@ class Configurator implements ConfigProvider
 	{
 		$file = "<?php\n\n" . $this->bundleGenerator->generate($className, $options);
 		return (\file_put_contents($filepath, $file) !== \false);
-	}
-	public function addHTML5Rules(array $options = array())
-	{
-		$options += array('rootRules' => $this->rootRules);
-		$this->plugins->finalize();
-		foreach ($this->tags as $tag)
-			$this->templateNormalizer->normalizeTag($tag);
-		$rules = $this->rulesGenerator->getRules($this->tags, $options);
-		$this->rootRules->merge($rules['root'], \false);
-		foreach ($rules['tags'] as $tagName => $tagRules)
-			$this->tags[$tagName]->rules->merge($tagRules, \false);
 	}
 	public function asConfig()
 	{
@@ -173,6 +141,13 @@ class Configurator implements ConfigProvider
 		unset($config['rootRules']);
 		return $config;
 	}
+	protected function addTagRules()
+	{
+		$rules = $this->rulesGenerator->getRules($this->tags);
+		$this->rootRules->merge($rules['root'], \false);
+		foreach ($rules['tags'] as $tagName => $tagRules)
+			$this->tags[$tagName]->rules->merge($tagRules, \false);
+	}
 }
 
 /*
@@ -195,7 +170,7 @@ class BundleGenerator
 	public function generate($className, array $options = array())
 	{
 		$options += array('autoInclude' => \true);
-		$objects  = $this->configurator->finalize($options);
+		$objects  = $this->configurator->finalize();
 		$parser   = $objects['parser'];
 		$renderer = $objects['renderer'];
 		$namespace = '';
@@ -1223,18 +1198,8 @@ abstract class RulesHelper
 		$tagNames = \array_keys($rules);
 		foreach ($rules as $tagName => $tagRules)
 		{
-			if ($tagRules['defaultDescendantRule'] === 'allow')
-			{
-				$childValue      = (int) ($tagRules['defaultChildRule'] === 'allow');
-				$descendantValue = 1;
-			}
-			else
-			{
-				$childValue      = 0;
-				$descendantValue = 0;
-			}
-			$matrix[$tagName]['allowedChildren']    = \array_fill_keys($tagNames, $childValue);
-			$matrix[$tagName]['allowedDescendants'] = \array_fill_keys($tagNames, $descendantValue);
+			$matrix[$tagName]['allowedChildren']    = \array_fill_keys($tagNames, 0);
+			$matrix[$tagName]['allowedDescendants'] = \array_fill_keys($tagNames, 0);
 		}
 		return $matrix;
 	}
@@ -1255,7 +1220,10 @@ abstract class RulesHelper
 		foreach ($rules as $tagName => $tagRules)
 		{
 			if (!empty($tagRules['ignoreTags']))
+			{
+				$rules[$tagName]['denyChild']      = $tagNames;
 				$rules[$tagName]['denyDescendant'] = $tagNames;
+			}
 			if (!empty($tagRules['requireParent']))
 			{
 				$denyParents = \array_diff($tagNames, $tagRules['requireParent']);
@@ -1264,10 +1232,8 @@ abstract class RulesHelper
 			}
 		}
 		self::applyTargetedRule($matrix, $rules, 'allowChild',      'allowedChildren',    1);
-		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedChildren',    1);
 		self::applyTargetedRule($matrix, $rules, 'allowDescendant', 'allowedDescendants', 1);
 		self::applyTargetedRule($matrix, $rules, 'denyChild',      'allowedChildren',    0);
-		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedChildren',    0);
 		self::applyTargetedRule($matrix, $rules, 'denyDescendant', 'allowedDescendants', 0);
 		return $matrix;
 	}
@@ -1782,10 +1748,6 @@ class TemplateInspector
 	{
 		return $this->isEmpty;
 	}
-	public function isIframe()
-	{
-		return ($this->rootNodes === array('iframe'));
-	}
 	public function isPassthrough()
 	{
 		return $this->isPassthrough;
@@ -1945,8 +1907,7 @@ class TemplateInspector
 	{
 		if ($node->nodeName !== 'span')
 			return \false;
-		if ($node->getAttribute('class') === ''
-		 && $node->getAttribute('style') === '')
+		if ($node->getAttribute('class') === '' && $node->getAttribute('style') === '')
 			return \false;
 		foreach ($node->attributes as $attrName => $attribute)
 			if ($attrName !== 'class' && $attrName !== 'style')
@@ -4780,6 +4741,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection = new RulesGeneratorList;
 		$this->collection->append('AutoCloseIfVoid');
 		$this->collection->append('AutoReopenFormattingElements');
+		$this->collection->append('BlockElementsCloseFormattingElements');
 		$this->collection->append('BlockElementsFosterFormattingElements');
 		$this->collection->append('DisableAutoLineBreaksIfNewLinesArePreserved');
 		$this->collection->append('EnforceContentModels');
@@ -4789,10 +4751,9 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
 		$this->collection->append('TrimFirstLineInCodeBlocks');
 	}
-	public function getRules(TagCollection $tags, array $options = array())
+	public function getRules(TagCollection $tags)
 	{
-		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
-		$rootInspector = $this->generateRootInspector($parentHTML);
+		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
 		$templateInspector = array();
 		foreach ($tags as $tagName => $tag)
 		{
@@ -4811,20 +4772,6 @@ class RulesGenerator implements ArrayAccess, Iterator
 		unset($rules['root']['requireAncestor']);
 		unset($rules['root']['requireParent']);
 		return $rules;
-	}
-	protected function generateRootInspector($html)
-	{
-		$dom = new DOMDocument;
-		$dom->loadHTML($html);
-		$body = $dom->getElementsByTagName('body')->item(0);
-		$node = $body;
-		while ($node->firstChild)
-			$node = $node->firstChild;
-		$node->appendChild($dom->createElementNS(
-			'http://www.w3.org/1999/XSL/Transform',
-			'xsl:apply-templates'
-		));
-		return new TemplateInspector($dom->saveXML($body));
 	}
 	protected function generateRulesets(array $templateInspector, TemplateInspector $rootInspector)
 	{
@@ -5690,7 +5637,7 @@ class Tag implements ConfigProvider
 	protected $filterChain;
 	protected $nestingLimit = 10;
 	protected $rules;
-	protected $tagLimit = 1000;
+	protected $tagLimit = 5000;
 	protected $template;
 	public function __construct(array $options = \null)
 	{
@@ -5716,8 +5663,6 @@ class Tag implements ConfigProvider
 	public function asConfig()
 	{
 		$vars = \get_object_vars($this);
-		unset($vars['defaultChildRule']);
-		unset($vars['defaultDescendantRule']);
 		unset($vars['template']);
 		if (!\count($this->attributePreprocessors))
 		{
@@ -6214,6 +6159,22 @@ class AutoReopenFormattingElements implements BooleanRulesGenerator
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
+class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
+{
+	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
+	{
+		return ($src->isBlock() && $trg->isFormattingElement()) ? array('closeParent') : array();
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RulesGenerators;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
@@ -6275,13 +6236,11 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	}
 	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
 	{
-		if ($src->isIframe())
-			$src = $this->span;
 		$rules = array();
-		if (!$src->allowsChild($trg))
-			$rules[] = 'denyChild';
-		if (!$src->allowsDescendant($trg))
-			$rules[] = 'denyDescendant';
+		if ($src->allowsChild($trg))
+			$rules[] = 'allowChild';
+		if ($src->allowsDescendant($trg))
+			$rules[] = 'allowDescendant';
 		return $rules;
 	}
 }
@@ -7978,12 +7937,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	{
 		$this->clear();
 	}
-	public function clear()
-	{
-		parent::clear();
-		$this->defaultChildRule('allow');
-		$this->defaultDescendantRule('allow');
-	}
 	public function offsetExists($k)
 	{
 		return isset($this->items[$k]);
@@ -8005,8 +7958,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		$config = $this->items;
 		unset($config['allowChild']);
 		unset($config['allowDescendant']);
-		unset($config['defaultChildRule']);
-		unset($config['defaultDescendantRule']);
 		unset($config['denyChild']);
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
@@ -8122,20 +8073,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function createParagraphs($bool = \true)
 	{
 		return $this->addBooleanRule('createParagraphs', $bool);
-	}
-	public function defaultChildRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-			throw new InvalidArgumentException("defaultChildRule() only accepts 'allow' or 'deny'");
-		$this->items['defaultChildRule'] = $rule;
-		return $this;
-	}
-	public function defaultDescendantRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-			throw new InvalidArgumentException("defaultDescendantRule() only accepts 'allow' or 'deny'");
-		$this->items['defaultDescendantRule'] = $rule;
-		return $this;
 	}
 	public function denyChild($tagName)
 	{

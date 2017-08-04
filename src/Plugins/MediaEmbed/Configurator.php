@@ -78,6 +78,7 @@ class Configurator extends ConfiguratorBase
 			$siteConfig = $this->defaultSites->get($siteId);
 		$this->collection[$siteId] = $siteConfig;
 		$tag = new Tag;
+		$tag->rules->allowChild('URL');
 		$tag->rules->autoClose();
 		$tag->rules->denyChild($siteId);
 		$tag->rules->denyChild($this->tagName);

@@ -18,7 +18,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 {
 	protected $configurator;
 	protected $quickMatch = \false;
-	protected $regexpLimit = 10000;
+	protected $regexpLimit = 50000;
 	final public function __construct(Configurator $configurator, array $overrideProps = array())
 	{
 		$this->configurator = $configurator;
