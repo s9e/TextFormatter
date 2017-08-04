@@ -12,6 +12,8 @@ The `returnParser` and `returnRenderer` options have been removed from `s9e\Text
 
 The `optimizeConfig` option has been removed from `s9e\TextFormatter\Configurator::finalize()`. The parser configuration is always optimized.
 
+`s9e\TextFormatter\Configurator\Helpers\TemplateInspector::isIframe()` has been removed.
+
 
 ## 0.10.0
 

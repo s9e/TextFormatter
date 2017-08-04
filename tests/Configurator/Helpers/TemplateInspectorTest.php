@@ -518,22 +518,6 @@ class TemplateInspectorTest extends Test
 				'<br/>'
 			],
 			[
-				'<iframe/> is an iframe',
-				'<iframe/>',
-				'isIframe'
-			],
-			[
-				'<div/> is not an iframe',
-				'<div/>',
-				'!isIframe'
-			],
-			[
-				// It's *two* iframes
-				'<iframe/><iframe/> is not an iframe',
-				'<iframe/><iframe/>',
-				'!isIframe'
-			],
-			[
 				'Mixed inline/block template does not allow block templates',
 				'<div><xsl:apply-templates/></div><span><xsl:apply-templates/></span>',
 				'!allowsChild',
