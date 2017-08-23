@@ -15,8 +15,8 @@ foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 	$template = $bbcode->getElementsByTagName('template')->item(0)->textContent;
 	$template = trim(str_replace("\n\t\t\t", "\n", $template));
 
-	$list[] = '__' . $name . '__  ';
-	$list[] = '`' . $usage . '`';
+	$list[] = '###### ' . $name;
+	$list[] = '```' . $usage . '```';
 	$list[] = "```xsl\n" . $template . "\n```";
 
 	$vars = $bbcode->getElementsByTagName('var');
