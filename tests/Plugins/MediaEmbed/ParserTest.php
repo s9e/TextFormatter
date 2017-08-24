@@ -785,8 +785,18 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" url="https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny" width="950">https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny</GFYCAT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gfycat');
+				}
+			],
+			[
 				'http://gfycat.com/Test',
-				'<r><GFYCAT height="315" id="Test" url="http://gfycat.com/Test" width="560">http://gfycat.com/Test</GFYCAT></r>',
+				'<r><GFYCAT height="360" id="Test" url="http://gfycat.com/Test" width="640">http://gfycat.com/Test</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{

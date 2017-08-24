@@ -5,14 +5,16 @@
 	<tags><tag>images</tag></tags>
 
 	<attributes>
-		<height defaultValue="315"/>
-		<width defaultValue="560"/>
+		<height defaultValue="360"/>
+		<width defaultValue="640"/>
 	</attributes>
 
 	<host>gfycat.com</host>
-	<extract>!gfycat\.com/(?'id'\w+)!</extract>
-	<scrape url="http://gfycat.com/{@id}">
+	<extract>!gfycat\.com/(?:gifs/detail/)?(?'id'\w+)!</extract>
+	<scrape url="http://gfycat.com/iframe/{@id}">
+		<extract>!&lt;meta name="twitter:player:height" content="(?'height'\d+)!</extract>
 		<extract>!video:height" content="(?'height'\d+)!</extract>
+		<extract>!&lt;meta name="twitter:player:width" content="(?'width'\d+)!</extract>
 		<extract>!video:width" content="(?'width'\d+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="//gfycat.com/iframe/{@id}"/>
