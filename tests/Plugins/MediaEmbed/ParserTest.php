@@ -1250,6 +1250,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vid.me/Qd3EM',
+				'<r><VIDME id="Qd3EM" url="https://vid.me/Qd3EM">https://vid.me/Qd3EM</VIDME></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('vidme');
+				}
+			],
+			[
 				'http://vkontakte.ru/video-7016284_163645555',
 				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vkontakte.ru/video-7016284_163645555" vid="163645555">http://vkontakte.ru/video-7016284_163645555</VK></r>',
 				[],

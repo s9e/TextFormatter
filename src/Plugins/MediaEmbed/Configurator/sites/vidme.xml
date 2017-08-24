@@ -5,7 +5,8 @@
 
 	<host>vid.me</host>
 	<scrape>
-		<extract>!vid\.me/e/(?'id'\w+)!</extract>
+		<extract>#vid\.me/e/(?'id'\w+)#</extract>
+		<extract>#oembed.*?url=https://vid\.me/(?!e/)(?'id'\w+)#</extract>
 	</scrape>
 	<iframe src="https://vid.me/e/{@id}"/>
 </site>
