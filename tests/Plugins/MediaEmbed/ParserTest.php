@@ -1153,6 +1153,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1163,6 +1167,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1478,6 +1486,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
