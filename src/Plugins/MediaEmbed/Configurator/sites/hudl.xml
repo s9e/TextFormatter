@@ -12,5 +12,5 @@
 		<match>!hudl\.com/v/!</match>
 		<extract>!hudl\.com/video/\d+/(?'athlete'\d+)/(?'highlight'[\da-f]+)!</extract>
 	</scrape>
-	<iframe width="640" height="360" src="//www.hudl.com/embed/athlete/{@athlete}/highlights/{@highlight}"/>
+	<iframe src="//www.hudl.com/embed/athlete/{@athlete}/highlights/{@highlight}"/>
 </site>

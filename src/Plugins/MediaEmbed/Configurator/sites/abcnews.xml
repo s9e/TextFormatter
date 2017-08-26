@@ -5,5 +5,5 @@
 
 	<host>abcnews.go.com</host>
 	<extract>!abcnews\.go\.com/(?:video/embed\?id=|[^/]+/video/[^/]+-)(?'id'\d+)!</extract>
-	<iframe width="640" height="360" src="//abcnews.go.com/video/embed?id={@id}"/>
+	<iframe src="//abcnews.go.com/video/embed?id={@id}"/>
 </site>

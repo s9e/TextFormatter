@@ -11,7 +11,7 @@
 		<match>!m\.democracynow\.org/stories/\d!</match>
 		<extract>!democracynow\.org/(?'id'(?:\w+/)?\d+/\d+/\d+(?:/\w+)?)' rel='canonical!</extract>
 	</scrape>
-	<iframe width="640" height="360">
+	<iframe>
 		<src><![CDATA[
 			<xsl:text>//www.democracynow.org/embed/</xsl:text>
 			<xsl:choose>

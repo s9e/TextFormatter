@@ -11,7 +11,7 @@
 	<host>nhl.com</host>
 	<extract>#nhl\.com/videocenter/.*?\Wid=(?'id'[-\w]+)#</extract>
 	<extract>#nhl\.com/(?:\w+/)?video(?:/(?![ct]-)[-\w]+)?(?:/t-(?'t'\d+))?(?:/c-(?'c'\d+))?#</extract>
-	<iframe width="640" height="360">
+	<iframe>
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@c or @t">

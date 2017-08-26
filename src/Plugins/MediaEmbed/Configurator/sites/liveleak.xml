@@ -5,5 +5,5 @@
 
 	<host>liveleak.com</host>
 	<extract>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</extract>
-	<iframe width="640" height="360" src="//www.liveleak.com/ll_embed?i={@id}"/>
+	<iframe src="//www.liveleak.com/ll_embed?i={@id}"/>
 </site>

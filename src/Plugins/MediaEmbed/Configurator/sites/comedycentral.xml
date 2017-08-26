@@ -11,5 +11,5 @@
 		<match>!c(?:c|omedycentral)\.com/(?:full-episode|video-clip)s/!</match>
 		<extract>!(?'id'mgid:arc:(?:episode|video):[.\w]+:[-\w]+)!</extract>
 	</scrape>
-	<iframe width="640" height="360" src="//media.mtvnservices.com/embed/{@id}"/>
+	<iframe src="//media.mtvnservices.com/embed/{@id}"/>
 </site>

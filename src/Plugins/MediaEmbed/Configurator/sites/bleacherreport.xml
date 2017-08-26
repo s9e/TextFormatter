@@ -8,5 +8,5 @@
 		<match>!/articles/.!</match>
 		<extract>!id="video-(?'id'[-\w]+)!</extract>
 	</scrape>
-	<iframe width="640" height="360" src="//bleacherreport.com/video_embed?id={@id}"/>
+	<iframe src="//bleacherreport.com/video_embed?id={@id}"/>
 </site>

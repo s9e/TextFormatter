@@ -11,5 +11,5 @@
 		<match>!worldstarhiphop\.com/(?:\w+/)?video\.php\?v=\w+!</match>
 		<extract>!v: ?"?(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="640" height="360" src="//www.worldstarhiphop.com/embed/{@id}"/>
+	<iframe src="//www.worldstarhiphop.com/embed/{@id}"/>
 </site>

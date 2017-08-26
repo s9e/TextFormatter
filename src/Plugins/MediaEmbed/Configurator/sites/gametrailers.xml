@@ -8,7 +8,7 @@
 		<match>!gametrailers\.com/(?:full-episode|review|video)s/!</match>
 		<extract>!embed/(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="640" height="360">
+	<iframe>
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="starts-with(@id,'mgid:')">

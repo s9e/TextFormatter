@@ -5,5 +5,5 @@
 
 	<host>xboxdvr.com</host>
 	<extract>!xboxdvr\.com/gamer/(?'user'[^/]+)/video/(?'id'\d+)!</extract>
-	<iframe width="640" height="360" src="//xboxdvr.com/gamer/{@user}/video/{@id}/embed"/>
+	<iframe src="//xboxdvr.com/gamer/{@user}/video/{@id}/embed"/>
 </site>

@@ -5,5 +5,5 @@
 
 	<host>kissvideo.click</host>
 	<extract>!kissvideo\.click/[^_]*_(?'id'[0-9a-f]+)!</extract>
-	<iframe width="640" height="360" src="//www.kissvideo.click/embed.php?vid={@id}"/>
+	<iframe src="//www.kissvideo.click/embed.php?vid={@id}"/>
 </site>

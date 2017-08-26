@@ -17,7 +17,7 @@
 		<match>!livestre.am!</match>
 		<extract>!//original\.livestream\.com/(?'channel'\w+)/video/(?'clip_id'[-\w]+)!</extract>
 	</scrape>
-	<iframe width="640" height="360">
+	<iframe>
 		<src><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@clip_id">
