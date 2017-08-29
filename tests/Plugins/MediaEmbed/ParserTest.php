@@ -1268,8 +1268,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://vid.me/Qd3EM',
-				'<r><VIDME id="Qd3EM" url="https://vid.me/Qd3EM">https://vid.me/Qd3EM</VIDME></r>',
+				'https://vid.me/6AZf1',
+				'<r><VIDME id="6AZf1" url="https://vid.me/6AZf1">https://vid.me/6AZf1</VIDME></r>',
 				[],
 				function ($configurator)
 				{
