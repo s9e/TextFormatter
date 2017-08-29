@@ -36,6 +36,7 @@ foreach ($cache as $siteId => $siteConfig)
 			'host'         => 1,
 			'iframe'       => 1,
 			'name'         => 1,
+			'parameters'   => 1,
 			'scheme'       => 1,
 			'scrape'       => 1,
 			'tags'         => 1

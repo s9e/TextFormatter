@@ -12,6 +12,18 @@
 	<example>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/</example>
 	<example>https://www.amazon.com/dp/B0018CDWLS/</example>
 
+	<parameters>
+		<AMAZON_ASSOCIATE_TAG    title="Amazon Associate tag (.com)"  />
+		<AMAZON_ASSOCIATE_TAG_CA title="Amazon Associate tag (.ca)"   />
+		<AMAZON_ASSOCIATE_TAG_DE title="Amazon Associate tag (.de)"   />
+		<AMAZON_ASSOCIATE_TAG_ES title="Amazon Associate tag (.es)"   />
+		<AMAZON_ASSOCIATE_TAG_FR title="Amazon Associate tag (.fr)"   />
+		<AMAZON_ASSOCIATE_TAG_IN title="Amazon Associate tag (.in)"   />
+		<AMAZON_ASSOCIATE_TAG_IT title="Amazon Associate tag (.it)"   />
+		<AMAZON_ASSOCIATE_TAG_JP title="Amazon Associate tag (.co.jp)"/>
+		<AMAZON_ASSOCIATE_TAG_UK title="Amazon Associate tag (.co.uk)"/>
+	</parameters>
+
 	<host>amazon.ca</host>
 	<host>amazon.co.uk</host>
 	<host>amazon.co.jp</host>
