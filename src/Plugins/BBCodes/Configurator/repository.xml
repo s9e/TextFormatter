@@ -372,17 +372,17 @@
 
 	<bbcode name="SPOILER">
 		<usage>[SPOILER title={TEXT1;optional}]{TEXT2}[/SPOILER]</usage>
+		<!--
+			var nextSiblingStyle = parentNode.nextSibling.style,
+				firstChildStyle  = firstChild.style,
+				lastChildStyle   = lastChild.style;
+
+			firstChildStyle.display  = nextSiblingStyle.display;
+			nextSiblingStyle.display = lastChildStyle.display = (firstChildStyle.display) ? '' : 'none';
+		-->
 		<template><![CDATA[
 			<div class="spoiler">
 				<div class="spoiler-header">
-					<!--
-						var nextSiblingStyle = parentNode.nextSibling.style,
-							firstChildStyle  = firstChild.style,
-							lastChildStyle   = lastChild.style;
-
-						firstChildStyle.display  = nextSiblingStyle.display;
-						nextSiblingStyle.display = lastChildStyle.display = (firstChildStyle.display) ? '' : 'none';
-					-->
 					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
 					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
 				</div>
