@@ -339,6 +339,14 @@ class BBCodesTest extends Test
 				'x <img src="http://example.org/foo.png" title="" alt=""> y'
 			],
 			[
+				'[img height=123 width=potato]img.png[/img]',
+				'<img src="img.png" title="" alt="" height="123">'
+			],
+			[
+				'[img height=potato width=456]img.png[/img]',
+				'<img src="img.png" title="" alt="" width="456">'
+			],
+			[
 				'our [ins]great [/ins]leader',
 				'our <ins>great </ins>leader'
 			],

@@ -237,9 +237,12 @@ echo $html;
 ```
 
 ###### IMG
-```[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]```
+```[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional} height={UINT;optional}  width={UINT;optional} ]```
 ```xsl
-<img src="{@src}" title="{@title}" alt="{@alt}" />
+<img src="{@src}" title="{@title}" alt="{@alt}">
+	<xsl:copy-of select="@height"/>
+	<xsl:copy-of select="@width"/>
+</img>
 ```
 
 ###### INS

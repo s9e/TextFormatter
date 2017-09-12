@@ -259,9 +259,12 @@
 	</bbcode>
 
 	<bbcode name="IMG">
-		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
+		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional} height={UINT;optional}  width={UINT;optional} ]</usage>
 		<template><![CDATA[
-			<img src="{@src}" title="{@title}" alt="{@alt}" />
+			<img src="{@src}" title="{@title}" alt="{@alt}">
+				<xsl:copy-of select="@height"/>
+				<xsl:copy-of select="@width"/>
+			</img>
 		]]></template>
 	</bbcode>
 
