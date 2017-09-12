@@ -1,3 +1,25 @@
+0.11.1 (2017-09-12)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/ad2f29a3453d112f75f9603be6190c6f4434ea02...d84102711ee361c84a5b2cc5fe93e2e1828071f8)
+
+### Added
+
+ - `eebac1ad4` MediaEmbed: added support for parameters metadata in site config
+
+### Removed
+
+ - `8eb826344` MediaEmbed: removed default dimensions from definitions
+
+### Changed
+
+ - `d84102711` BBCodes: updated default [img] BBCode to accept dimensions
+ - `9e917849f` MediaEmbed: updated Gfycat
+ - `57bff33ca` MediaEmbed: updated Imgur
+ - `7e7aa3b23` MediaEmbed: updated Vidme
+ - `d75174d02` MediaEmbed: updated YouTube
+
+
 0.11.0 (2017-08-04)
 ===================
 
