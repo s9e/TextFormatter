@@ -150,6 +150,11 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testWorks()
 	{
+		if (isset($_SERVER['TRAVIS']) && strpos($_SERVER['JAVA_HOME'], 'java-7') !== false)
+		{
+			$this->markTestSkipped('Unsupported Java version');
+		}
+
 		$closureCompilerBin = $this->getClosureCompilerBin();
 		if (!file_exists($closureCompilerBin))
 		{

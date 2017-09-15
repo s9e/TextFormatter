@@ -2519,6 +2519,8 @@ s9e\TextFormatter\Tests\Plugins\PipeTables\Parser
 s9e\TextFormatter\Tests\Plugins\Preg\Configurator
  [x] replace() generates a tag name automatically
  [x] The name of the tag can be specified
+ [x] The name of the tag is normalized
+ [x] The name of the tag is validated
  [x] replace() returns the tag it creates
  [x] replace() throws an exception if the regexp is invalid
  [x] replace() accepts duplicate named subpatterns
