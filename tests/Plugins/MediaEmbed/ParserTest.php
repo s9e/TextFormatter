@@ -972,8 +972,8 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://livestream.com/ccscsl/USChessChampionships/videos/83267610',
-				'<r><LIVESTREAM account_id="3913412" event_id="3933674" url="http://livestream.com/ccscsl/USChessChampionships/videos/83267610" video_id="83267610">http://livestream.com/ccscsl/USChessChampionships/videos/83267610</LIVESTREAM></r>',
+				'https://livestream.com/internetsociety/wsis/videos/107058039',
+				'<r><LIVESTREAM account_id="686369" event_id="4588746" url="https://livestream.com/internetsociety/wsis/videos/107058039" video_id="107058039">https://livestream.com/internetsociety/wsis/videos/107058039</LIVESTREAM></r>',
 				[],
 				function ($configurator)
 				{
