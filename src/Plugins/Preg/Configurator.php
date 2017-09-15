@@ -17,6 +17,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
@@ -99,6 +100,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function match($regexp, $tagName)
 	{
+		$tagName     = TagName::normalize($tagName);
 		$passthrough = 0;
 		$this->parseRegexp($regexp);
 		foreach ($this->captures as $i => $capture)

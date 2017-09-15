@@ -37,6 +37,26 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The name of the tag is normalized
+	*/
+	public function testAddCustomTagNameNormalized()
+	{
+		$this->configurator->Preg->replace('/(?<foo>[0-9]+)/', '', 'foo');
+
+		$this->assertTrue(isset($this->configurator->tags['FOO']));
+	}
+
+	/**
+	* @testdox The name of the tag is validated
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name
+	*/
+	public function testAddCustomTagNameInvalid()
+	{
+		$this->configurator->Preg->replace('/(?<foo>[0-9]+)/', '', 'foo:bar:baz');
+	}
+
+	/**
 	* @testdox replace() returns the tag it creates
 	*/
 	public function testAddReturn()

@@ -99,6 +99,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'Some *emphasis*.',
+				'<r>Some <B><s>*</s>emphasis<e>*</e></B>.</r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->tags->add('b');
+					$configurator->Preg->match('/\\*(.*?)\\*/', 'b');
+				}
+			],
+			[
 				'[foo](http://example.org) [bar](http://example.com)',
 				'<r><A href="http://example.org"><s>[</s>foo<e>](http://example.org)</e></A> <A href="http://example.com"><s>[</s>bar<e>](http://example.com)</e></A></r>',
 				[],
