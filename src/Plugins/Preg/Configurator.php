@@ -100,8 +100,8 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function match($regexp, $tagName)
 	{
-		$tagName     = TagName::normalize($tagName);
-		$passthrough = 0;
+		$tagName        = TagName::normalize($tagName);
+		$passthroughIdx = 0;
 		$this->parseRegexp($regexp);
 		foreach ($this->captures as $i => $capture)
 		{
@@ -109,10 +109,10 @@ class Configurator extends ConfiguratorBase
 			{
 				continue;
 			}
-			$passthrough = $i;
+			$passthroughIdx = $i;
 		}
 
-		$this->collection[] = [$tagName, $regexp, $passthrough];
+		$this->collection[] = [$tagName, $regexp, $passthroughIdx];
 	}
 
 	/**
@@ -133,16 +133,16 @@ class Configurator extends ConfiguratorBase
 		$this->parseRegexp($regexp);
 		$this->parseTemplate($template);
 
-		$passthrough = $this->getPassthroughCapture();
-		if ($passthrough)
+		$passthroughIdx = $this->getPassthroughCapture();
+		if ($passthroughIdx)
 		{
-			$this->captures[$passthrough]['passthrough'] = true;
+			$this->captures[$passthroughIdx]['passthrough'] = true;
 		}
 
 		$regexp   = $this->fixUnnamedCaptures($regexp);
-		$template = $this->convertTemplate($template, $passthrough);
+		$template = $this->convertTemplate($template, $passthroughIdx);
 
-		$this->collection[] = [$tagName, $regexp, $passthrough];
+		$this->collection[] = [$tagName, $regexp, $passthroughIdx];
 
 		return $this->createTag($tagName, $template);
 	}
@@ -192,18 +192,18 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Convert a preg-style replacement to a template
 	*
-	* @param  string  $template    Original template
-	* @param  integer $passthrough Index of the passthrough capture
-	* @return string               Modified template
+	* @param  string  $template       Original template
+	* @param  integer $passthroughIdx Index of the passthrough capture
+	* @return string                  Modified template
 	*/
-	protected function convertTemplate($template, $passthrough)
+	protected function convertTemplate($template, $passthroughIdx)
 	{
 		// Replace numeric references in the template with the value of the corresponding attribute
 		// values or passthrough
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			$this->referencesRegexp,
-			function ($m, $node) use ($passthrough)
+			function ($m, $node) use ($passthroughIdx)
 			{
 				$key = (int) trim($m[0], '\\${}');
 				if ($key === 0)
@@ -211,7 +211,7 @@ class Configurator extends ConfiguratorBase
 					// $0 copies the whole textContent
 					return ['expression', '.'];
 				}
-				if ($key === $passthrough && $node instanceof DOMText)
+				if ($key === $passthroughIdx && $node instanceof DOMText)
 				{
 					// Passthrough capture, does not include start/end tags
 					return ['passthrough'];
