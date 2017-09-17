@@ -2442,6 +2442,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Ifram
  [x] getTemplate() tests 
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
+ [x] $configurator->MediaEmbed->captureURLs is accessible
  [x] Registers mediasites as a variable for the parser
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createMediaBBCode is false

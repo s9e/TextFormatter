@@ -38,7 +38,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var bool Whether to replace unformatted URLs in text with embedded content
 	*/
-	protected $captureURLs = true;
+	public $captureURLs = true;
 
 	/**
 	* @var SiteCollection Site collection
