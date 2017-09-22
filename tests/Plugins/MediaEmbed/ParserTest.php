@@ -598,6 +598,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					// Skip during cache preload
+					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+					{
+						$this->markTestSkipped();
+					}
+
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bandcamp');
 				}
@@ -1347,22 +1353,22 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('wsj');
 				}
 			],
-			[
-				'https://www.youtube.com/shared?ci=_OouqtitfX4',
-				'<r><YOUTUBE id="qvW2nxnj9Tw" url="https://www.youtube.com/shared?ci=_OouqtitfX4">https://www.youtube.com/shared?ci=_OouqtitfX4</YOUTUBE></r>',
-				[],
-				function ($configurator)
-				{
-					// Skip during cache preload
-					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
-					{
-						$this->markTestSkipped();
-					}
-
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('youtube');
-				}
-			],
+//			[
+//				'https://www.youtube.com/shared?ci=_OouqtitfX4',
+//				'<r><YOUTUBE id="qvW2nxnj9Tw" url="https://www.youtube.com/shared?ci=_OouqtitfX4">https://www.youtube.com/shared?ci=_OouqtitfX4</YOUTUBE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					// Skip during cache preload
+//					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+//					{
+//						$this->markTestSkipped();
+//					}
+//
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('youtube');
+//				}
+//			],
 		];
 	}
 
