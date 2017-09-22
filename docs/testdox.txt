@@ -2424,6 +2424,10 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollect
  [x] get() correctly interprets multiple nodes of the same name in XML
  [x] Properly reads child elements with no whitespace
  [x] Properly reads CDATA
+ [x] Iframe dimensions are cast to integer
+ [x] Default attribute values are cast to integer if they are made of digits
+ [x] Other default attribute values are left as strings
+ [x] Attributes' "required" property is cast to bool
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateBuilder
  [x] getTemplate() returns an empty string by default

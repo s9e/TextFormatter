@@ -17,7 +17,10 @@ class XmlFileDefinitionCollectionTest extends Test
 					<host>localhost</host>
 					<host>127.0.0.1</host>
 					<extract>!localhost/v/(?'id'\\d+)</extract>
-					<attributes><volume defaultValue='11' required='false'/></attributes>
+					<attributes>
+						<playlist defaultValue='12x4' required='true'/>
+						<volume defaultValue='11' required='false'/>
+					</attributes>
 					<iframe width='560' height='315' src='//localhost/e/{@id}'>
 						<onload><![CDATA[alert(1)]]></onload>
 					</iframe>
@@ -156,5 +159,51 @@ class XmlFileDefinitionCollectionTest extends Test
 		$this->assertArrayHasKey('onload',  $siteConfig['iframe']);
 		$this->assertInternalType('string', $siteConfig['iframe']['onload']);
 		$this->assertSame('alert(1)',       $siteConfig['iframe']['onload']);
+	}
+
+	/**
+	* @testdox Iframe dimensions are cast to integer
+	*/
+	public function testDimensionsAreCastToInteger()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertSame(315, $siteConfig['iframe']['height']);
+		$this->assertSame(560, $siteConfig['iframe']['width']);
+	}
+
+	/**
+	* @testdox Default attribute values are cast to integer if they are made of digits
+	*/
+	public function testDefaultValueCastToInteger()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertSame(11, $siteConfig['attributes']['volume']['defaultValue']);
+	}
+
+	/**
+	* @testdox Other default attribute values are left as strings
+	*/
+	public function testDefaultValueCastToString()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertSame('12x4', $siteConfig['attributes']['playlist']['defaultValue']);
+	}
+
+	/**
+	* @testdox Attributes' "required" property is cast to bool
+	*/
+	public function testRequiredCastToBool()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertTrue($siteConfig['attributes']['playlist']['required']);
+		$this->assertFalse($siteConfig['attributes']['volume']['required']);
 	}
 }

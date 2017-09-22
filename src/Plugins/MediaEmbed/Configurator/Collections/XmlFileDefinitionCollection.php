@@ -14,6 +14,15 @@ use InvalidArgumentException;
 class XmlFileDefinitionCollection extends SiteDefinitionCollection
 {
 	/**
+	* @var array Known config types [<name regexp>, <value regexp>, <type>]
+	*/
+	protected $configTypes = [
+		['(^defaultValue$)', '(^[1-9][0-9]*$)D',     'castToInt'],
+		['(height$|width$)', '(^[1-9][0-9]*$)D',     'castToInt'],
+		['(^required$)',     '(^(?:true|false)$)iD', 'castToBool']
+	];
+
+	/**
 	* Constructor
 	*
 	* @param  string $path Path to site definitions' dir
@@ -29,6 +38,73 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 			$siteId = basename($filepath, '.xml');
 			$this->items[$siteId] = $this->getConfigFromXmlFile($filepath);
 		}
+	}
+
+	/**
+	* Cast given config value to the appropriate type
+	*
+	* @param  string $name  Name of the config value
+	* @param  string $value Config value in string form
+	* @return mixed         Config value in appropriate type
+	*/
+	protected function castConfigValue($name, $value)
+	{
+		foreach ($this->configTypes as list($nameRegexp, $valueRegexp, $methodName))
+		{
+			if (preg_match($nameRegexp, $name) && preg_match($valueRegexp, $value))
+			{
+				return $this->$methodName($value);
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	* Cast given config value to a boolean
+	*
+	* @param  string $value
+	* @return bool
+	*/
+	protected function castToBool($value)
+	{
+		return (strtolower($value) === 'true');
+	}
+
+	/**
+	* Cast given config value to an integer
+	*
+	* @param  string  $value
+	* @return integer
+	*/
+	protected function castToInt($value)
+	{
+		return (int) $value;
+	}
+
+	/**
+	* Convert known config values to the appropriate type
+	*
+	* Will cast properties whose name is "defaultValue" or ends in "height" or "width" to integers
+	*
+	* @param  array $config Original config
+	* @return array         Converted config
+	*/
+	protected function convertValueTypes(array $config)
+	{
+		foreach ($config as $k => $v)
+		{
+			if (is_array($v))
+			{
+				$config[$k] = $this->convertValueTypes($v);
+			}
+			else
+			{
+				$config[$k] = $this->castConfigValue($k, $v);
+			}
+		}
+
+		return $config;
 	}
 
 	/**
@@ -85,7 +161,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 			}
 		}
 
-		return $this->flattenConfig($config);
+		return $this->flattenConfig($this->convertValueTypes($config));
 	}
 
 	/**
