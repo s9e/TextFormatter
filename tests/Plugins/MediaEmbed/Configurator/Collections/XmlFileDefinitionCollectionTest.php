@@ -17,7 +17,10 @@ class XmlFileDefinitionCollectionTest extends Test
 					<host>localhost</host>
 					<host>127.0.0.1</host>
 					<extract>!localhost/v/(?'id'\\d+)</extract>
-					<iframe width='560' height='315' src='//localhost/e/{@id}'/>
+					<attributes><volume defaultValue='11' required='false'/></attributes>
+					<iframe width='560' height='315' src='//localhost/e/{@id}'>
+						<onload><![CDATA[alert(1)]]></onload>
+					</iframe>
 				</site>";
 		$siteId   = uniqid('mediaembed');
 		$filepath = sys_get_temp_dir() . '/' . $siteId . '.xml';
@@ -127,5 +130,31 @@ class XmlFileDefinitionCollectionTest extends Test
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('localhost', $siteConfig['host']);
 		$this->assertContains('127.0.0.1', $siteConfig['host']);
+	}
+
+	/**
+	* @testdox Properly reads child elements with no whitespace
+	*/
+	public function testNoWhitespace()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertArrayHasKey('attributes', $siteConfig);
+		$this->assertInternalType('array',     $siteConfig['attributes']);
+		$this->assertArrayHasKey('volume',     $siteConfig['attributes']);
+	}
+
+	/**
+	* @testdox Properly reads CDATA
+	*/
+	public function testCDATA()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertArrayHasKey('onload',  $siteConfig['iframe']);
+		$this->assertInternalType('string', $siteConfig['iframe']['onload']);
+		$this->assertSame('alert(1)',       $siteConfig['iframe']['onload']);
 	}
 }

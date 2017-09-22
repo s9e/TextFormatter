@@ -2422,6 +2422,8 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollect
  [x] get('*invalid*') throws an exception
  [x] The constructor throws an exception if the dir does not exist
  [x] get() correctly interprets multiple nodes of the same name in XML
+ [x] Properly reads child elements with no whitespace
+ [x] Properly reads CDATA
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateBuilder
  [x] getTemplate() returns an empty string by default

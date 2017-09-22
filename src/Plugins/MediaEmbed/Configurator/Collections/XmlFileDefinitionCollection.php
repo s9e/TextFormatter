@@ -59,7 +59,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 	protected function getConfigFromXmlFile($filepath)
 	{
 		$dom = new DOMDocument;
-		$dom->load($filepath);
+		$dom->load($filepath, LIBXML_NOCDATA);
 
 		return $this->getElementConfig($dom->documentElement);
 	}
@@ -96,7 +96,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 	*/
 	protected function getValueFromElement(DOMElement $element)
 	{
-		return (!$element->attributes->length && $element->childNodes->length === 1)
+		return (!$element->attributes->length && $element->childNodes->length === 1 && $element->firstChild->nodeType === XML_TEXT_NODE)
 		     ? $element->nodeValue
 		     : $this->getElementConfig($element);
 	}
