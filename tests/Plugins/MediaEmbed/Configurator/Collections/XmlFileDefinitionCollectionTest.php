@@ -121,7 +121,7 @@ class XmlFileDefinitionCollectionTest extends Test
 	public function testGetMultipleNodes()
 	{
 		$siteId     = $this->generateDefinition();
-		$collection   = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
 		$this->assertInternalType('array', $siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
