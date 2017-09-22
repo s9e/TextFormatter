@@ -131,4 +131,13 @@ class Renderer extends \s9e\TextFormatter\Renderer
 
 		return $html;
 	}
+
+	protected static function hasNonNullValues($array)
+	{
+		foreach ($array as $v)
+			if (isset($v))
+				return true;
+		
+		return false;
+	}
 }

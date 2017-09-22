@@ -397,6 +397,16 @@ class QuickTest extends Test
 				'<r><FOO foo="attr">text</FOO></r>',
 				'textattr'
 			],
+			[
+				['X' => '<xsl:if test="@*">X<xsl:value-of select="@x"/></xsl:if>'],
+				'<r><X x=""/></r>',
+				'X'
+			],
+			[
+				['X' => '<xsl:if test="@*">X<xsl:value-of select="@x"/></xsl:if>'],
+				'<r><X/></r>',
+				''
+			],
 		];
 	}
 
@@ -951,7 +961,7 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:if test="@*">Y</xsl:if>'],
-				'if(!empty($attributes)){$html.=\'Y\';}'
+				'if(self::hasNonNullValues($attributes)){$html.=\'Y\';}'
 			],
 		];
 	}

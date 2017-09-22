@@ -202,6 +202,23 @@ class Quick
 
 		$php[] = '	}';
 
+		if (isset($map['php']))
+		{
+			$php[] = '';
+			$php[] = '	protected static function hasNonNullValues($array)';
+			$php[] = '	{';
+			$php[] = '		foreach ($array as $v)';
+			$php[] = '		{';
+			$php[] = '			if (isset($v))';
+			$php[] = '			{';
+			$php[] = '				return true;';
+			$php[] = '			}';
+			$php[] = '		}';
+			$php[] = '		';
+			$php[] = '		return false;';
+			$php[] = '	}';
+		}
+
 		return implode("\n", $php);
 	}
 
@@ -648,7 +665,7 @@ class Quick
 		);
 		$php = str_replace(
 			'($node->attributes->length)',
-			'(!empty($attributes))',
+			'(self::hasNonNullValues($attributes))',
 			$php
 		);
 
