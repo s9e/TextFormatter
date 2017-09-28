@@ -83,54 +83,55 @@ class RulesGenerator implements ArrayAccess, Iterator
 	*/
 	public function getRules(TagCollection $tags)
 	{
-		// Create a proxy for the parent markup so that we can determine which tags are allowed at
-		// the root of the text (IOW, with no parent) or even disabled altogether
-		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
+		$tagInspectors = $this->getTagInspectors($tags);
 
-		// Study the tags
-		$templateInspector = [];
-		foreach ($tags as $tagName => $tag)
-		{
-			// Use the tag's template if applicable or XSLT's implicit default otherwise
-			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
-			$templateInspector[$tagName] = new TemplateInspector($template);
-		}
-
-		// Generate a full set of rules
-		$rules = $this->generateRulesets($templateInspector, $rootInspector);
-
-		// Remove root rules that wouldn't be applied anyway
-		unset($rules['root']['autoClose']);
-		unset($rules['root']['autoReopen']);
-		unset($rules['root']['breakParagraph']);
-		unset($rules['root']['closeAncestor']);
-		unset($rules['root']['closeParent']);
-		unset($rules['root']['fosterParent']);
-		unset($rules['root']['ignoreSurroundingWhitespace']);
-		unset($rules['root']['isTransparent']);
-		unset($rules['root']['requireAncestor']);
-		unset($rules['root']['requireParent']);
-
-		return $rules;
+		return [
+			'root' => $this->generateRootRules($tagInspectors),
+			'tags' => $this->generateTagRules($tagInspectors)
+		];
 	}
 
 	/**
 	* Generate and return rules based on a set of TemplateInspector
 	*
-	* @param  array             $templateInspector Array of [tagName => TemplateInspector]
-	* @param  TemplateInspector $rootInspector     TemplateInspector for the root of the text
+	* @param  array $tagInspectors Array of [tagName => TemplateInspector]
+	* @return array                Array of [tagName => [<rules>]]
+	*/
+	protected function generateTagRules(array $tagInspectors)
+	{
+		$rules = [];
+		foreach ($tagInspectors as $tagName => $tagInspector)
+		{
+			$rules[$tagName] = $this->generateRuleset($tagInspector, $tagInspectors);
+		}
+
+		return $rules;
+	}
+
+	/**
+	* Generate a set of rules to be applied at the root of a document
+	*
+	* @param  array $tagInspectors Array of [tagName => TemplateInspector]
 	* @return array
 	*/
-	protected function generateRulesets(array $templateInspector, TemplateInspector $rootInspector)
+	protected function generateRootRules(array $tagInspectors)
 	{
-		$rules = [
-			'root' => $this->generateRuleset($rootInspector, $templateInspector),
-			'tags' => []
-		];
-		foreach ($templateInspector as $tagName => $src)
-		{
-			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateInspector);
-		}
+		// Create a proxy for the parent markup so that we can determine which tags are allowed at
+		// the root of the text (IOW, with no parent) or even disabled altogether
+		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
+		$rules         = $this->generateRuleset($rootInspector, $tagInspectors);
+
+		// Remove root rules that wouldn't be applied anyway
+		unset($rules['autoClose']);
+		unset($rules['autoReopen']);
+		unset($rules['breakParagraph']);
+		unset($rules['closeAncestor']);
+		unset($rules['closeParent']);
+		unset($rules['fosterParent']);
+		unset($rules['ignoreSurroundingWhitespace']);
+		unset($rules['isTransparent']);
+		unset($rules['requireAncestor']);
+		unset($rules['requireParent']);
 
 		return $rules;
 	}
@@ -138,18 +139,18 @@ class RulesGenerator implements ArrayAccess, Iterator
 	/**
 	* Generate a set of rules for a single TemplateInspector instance
 	*
-	* @param  TemplateInspector $src     Source of the rules
-	* @param  array             $targets Array of [tagName => TemplateInspector]
+	* @param  TemplateInspector $srcInspector  Source of the rules
+	* @param  array             $trgInspectors Array of [tagName => TemplateInspector]
 	* @return array
 	*/
-	protected function generateRuleset(TemplateInspector $src, array $targets)
+	protected function generateRuleset(TemplateInspector $srcInspector, array $trgInspectors)
 	{
 		$rules = [];
 		foreach ($this->collection as $rulesGenerator)
 		{
 			if ($rulesGenerator instanceof BooleanRulesGenerator)
 			{
-				foreach ($rulesGenerator->generateBooleanRules($src) as $ruleName => $bool)
+				foreach ($rulesGenerator->generateBooleanRules($srcInspector) as $ruleName => $bool)
 				{
 					$rules[$ruleName] = $bool;
 				}
@@ -157,9 +158,10 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 			if ($rulesGenerator instanceof TargetedRulesGenerator)
 			{
-				foreach ($targets as $tagName => $trg)
+				foreach ($trgInspectors as $tagName => $trgInspector)
 				{
-					foreach ($rulesGenerator->generateTargetedRules($src, $trg) as $ruleName)
+					$targetedRules = $rulesGenerator->generateTargetedRules($srcInspector, $trgInspector);
+					foreach ($targetedRules as $ruleName)
 					{
 						$rules[$ruleName][] = $tagName;
 					}
@@ -168,5 +170,24 @@ class RulesGenerator implements ArrayAccess, Iterator
 		}
 
 		return $rules;
+	}
+
+	/**
+	* Inspect given list of tags
+	*
+	* @param  TagCollection $tags Tags collection
+	* @return array               Array of [tagName => TemplateInspector]
+	*/
+	protected function getTagInspectors(TagCollection $tags)
+	{
+		$tagInspectors = [];
+		foreach ($tags as $tagName => $tag)
+		{
+			// Use the tag's template if applicable or XSLT's implicit default otherwise
+			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
+			$tagInspectors[$tagName] = new TemplateInspector($template);
+		}
+
+		return $tagInspectors;
 	}
 }
