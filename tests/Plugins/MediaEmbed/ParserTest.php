@@ -349,7 +349,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://foo.example.org/123[/media]',
-				'<r><X2 id="123" url="http://foo.example.org/123">[media]http://foo.example.org/123[/media]</X2></r>',
+				'<r><X2 id="123" url="http://foo.example.org/123"><s>[media]</s>http://foo.example.org/123<e>[/media]</e></X2></r>',
 				[],
 				function ($configurator)
 				{
@@ -403,7 +403,7 @@ class ParserTest extends Test
 			[
 				// Test that we don't replace the "id" attribute with an URL
 				'[media=foo]http://example.org/123[/media]',
-				'<r><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></r>',
+				'<r><FOO id="123" url="http://example.org/123"><s>[media=foo]</s>http://example.org/123<e>[/media]</e></FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -446,7 +446,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://example.com/foo[/media]',
-				'<r><FOO foo="foo" url="http://example.com/foo">[media]http://example.com/foo[/media]</FOO></r>',
+				'<r><FOO foo="foo" url="http://example.com/foo"><s>[media]</s>http://example.com/foo<e>[/media]</e></FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -562,7 +562,7 @@ class ParserTest extends Test
 			],
 			[
 				'[video]http://example.org/123[/video]',
-				'<r><EXAMPLE id="123" url="http://example.org/123">[video]http://example.org/123[/video]</EXAMPLE></r>',
+				'<r><EXAMPLE id="123" url="http://example.org/123"><s>[video]</s>http://example.org/123<e>[/video]</e></EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3490,7 +3490,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media=youtube]-cEzsCAzTak[/media]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak"><s>[media=youtube]</s>-cEzsCAzTak<e>[/media]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3499,7 +3499,25 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel">[media]http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel[/media]</YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel"><s>[media]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/media]</e></YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'xx [media url=http://www.youtube.com/watch?v=-cEzsCAzTak] xx',
+				'<r>xx <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak]</YOUTUBE> xx</r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'xx [media url=http://www.youtube.com/watch?v=-cEzsCAzTak /] xx',
+				'<r>xx <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak /]</YOUTUBE> xx</r>',
 				[],
 				function ($configurator)
 				{

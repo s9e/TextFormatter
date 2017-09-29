@@ -121,14 +121,24 @@ class Parser extends ParserBase
 	*/
 	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
 	{
-		$endTag = $tag->getEndTag() ?: $tag;
-
-		// Compute the boundaries of our new tag
-		$lpos = $tag->getPos();
-		$rpos = $endTag->getPos() + $endTag->getLen();
+		$endTag = $tag->getEndTag();
+		if ($endTag)
+		{
+			$startPos = $tag->getPos();
+			$startLen = $tag->getLen();
+			$endPos   = $endTag->getPos();
+			$endLen   = $endTag->getLen();
+		}
+		else
+		{
+			$startPos = $tag->getPos();
+			$startLen = 0;
+			$endPos   = $tag->getPos() + $tag->getLen();
+			$endLen   = 0;
+		}
 
 		// Create a new tag and copy this tag's attributes and priority
-		$tagStack->addTagPair(strtoupper($siteId), $lpos, 0, $rpos, 0, $tag->getSortPriority())->setAttributes($tag->getAttributes());
+		$tagStack->addTagPair(strtoupper($siteId), $startPos, $startLen, $endPos, $endLen, $tag->getSortPriority())->setAttributes($tag->getAttributes());
 	}
 
 	/**
