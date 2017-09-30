@@ -7,8 +7,8 @@
 	<host>podbean.com</host>
 	<extract>!podbean\.com/media/(?:player/|share/pb-)(?'id'[-\w]+)!</extract>
 	<scrape>
-		<match>!podbean\.com/e/!</match>
-		<extract>!podbean.com/media/player/(?'id'[-\w]+)!</extract>
+		<match>!podbean\.com/(?:media/shar)?e/!</match>
+		<extract>!podbean\.com/media/player/(?'id'[-\w]+)!</extract>
 	</scrape>
 	<iframe width="100%" height="100" max-width="900" src="//www.podbean.com/media/player/{@id}"/>
 </site>
