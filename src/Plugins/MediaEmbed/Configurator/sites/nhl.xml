@@ -1,36 +1,22 @@
 <site name="NHL Videos and Highlights" homepage="https://www.nhl.com/video">
 	<example>https://www.nhl.com/video/recap-min-2-ott-1-fot/t-277753022/c-46330703</example>
-	<example>http://video.nhl.com/videocenter/console?id=783647&amp;catid=35</example>
 
 	<tags><tag>sports</tag></tags>
 
-	<attributes>
-		<id required="false"/>
-	</attributes>
-
 	<host>nhl.com</host>
-	<extract>#nhl\.com/videocenter/.*?\Wid=(?'id'[-\w]+)#</extract>
 	<extract>#nhl\.com/(?:\w+/)?video(?:/(?![ct]-)[-\w]+)?(?:/t-(?'t'\d+))?(?:/c-(?'c'\d+))?#</extract>
 	<iframe>
 		<src><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@c or @t">
-					<xsl:text>//www.nhl.com/video/embed</xsl:text>
-					<xsl:if test="@t">
-						<xsl:text>/t-</xsl:text>
-						<xsl:value-of select="@t"/>
-					</xsl:if>
-					<xsl:if test="@c">
-						<xsl:text>/c-</xsl:text>
-						<xsl:value-of select="@c"/>
-					</xsl:if>
-					<xsl:text>?autostart=false</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>//video.nhl.com/videocenter/embed?playlist=</xsl:text>
-					<xsl:value-of select="@id"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:text>https://www.nhl.com/video/embed</xsl:text>
+			<xsl:if test="@t">
+				<xsl:text>/t-</xsl:text>
+				<xsl:value-of select="@t"/>
+			</xsl:if>
+			<xsl:if test="@c">
+				<xsl:text>/c-</xsl:text>
+				<xsl:value-of select="@c"/>
+			</xsl:if>
+			<xsl:text>?autostart=false</xsl:text>
 		]]></src>
 	</iframe>
 </site>

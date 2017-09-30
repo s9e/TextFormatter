@@ -2666,24 +2666,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://video.predators.nhl.com/videocenter/?id=783382',
-				'<r><NHL id="783382" url="http://video.predators.nhl.com/videocenter/?id=783382">http://video.predators.nhl.com/videocenter/?id=783382</NHL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('nhl');
-				}
-			],
-			[
-				'http://video.nhl.com/videocenter/console?catid=337&id=783647&lang=en&navid=nhl:topheads',
-				'<r><NHL id="783647" url="http://video.nhl.com/videocenter/console?catid=337&amp;id=783647&amp;lang=en&amp;navid=nhl:topheads">http://video.nhl.com/videocenter/console?catid=337&amp;id=783647&amp;lang=en&amp;navid=nhl:topheads</NHL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('nhl');
-				}
-			],
-			[
 				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
 				'<r><NHL c="46322103" t="283069656" url="https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103">https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103</NHL></r>',
 				[],
@@ -4027,17 +4009,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://video.nhl.com/videocenter/console?catid=337&id=783647&lang=en&navid=nhl:topheads',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//video.nhl.com/videocenter/embed?playlist=783647"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('nhl');
-				}
-			],
-			[
 				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/t-283069656/c-46322103?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-283069656/c-46322103?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4046,7 +4019,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/c-46299003',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/c-46299003?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/c-46299003?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4055,7 +4028,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&adbid=794558584411426816&adbpl=tw&adbpr=50004938',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.nhl.com/video/embed/t-281748732?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-281748732?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{

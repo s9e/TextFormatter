@@ -349,7 +349,7 @@
 	<tr>
 		<td><code>nhl</code></td>
 		<td>NHL Videos and Highlights</td>
-		<td>https://www.nhl.com/video/recap-min-2-ott-1-fot/t-277753022/c-46330703<br/>http://video.nhl.com/videocenter/console?id=783647&amp;catid=35</td>
+		<td>https://www.nhl.com/video/recap-min-2-ott-1-fot/t-277753022/c-46330703</td>
 	</tr>
 	<tr>
 		<td><code>npr</code></td>
