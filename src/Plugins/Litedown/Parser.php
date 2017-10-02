@@ -292,9 +292,14 @@ class Parser extends ParserBase
 				$newContext = \false;
 				if (isset($codeTag))
 				{
-					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
-					$endTag->pairWith($codeTag);
+					if ($textBoundary > $codeTag->getPos())
+					{
+						$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
+						$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
+						$endTag->pairWith($codeTag);
+					}
+					else
+						$codeTag->invalidate();
 					$codeTag = \null;
 					$codeFence = \null;
 				}
@@ -669,7 +674,8 @@ class Parser extends ParserBase
 	}
 	protected function overwrite($pos, $len)
 	{
-		$this->text = \substr($this->text, 0, $pos) . \str_repeat("\x1A", $len) . \substr($this->text, $pos + $len);
+		if ($len > 0)
+			$this->text = \substr($this->text, 0, $pos) . \str_repeat("\x1A", $len) . \substr($this->text, $pos + $len);
 	}
 	protected function processEmphasisBlock(array $block)
 	{

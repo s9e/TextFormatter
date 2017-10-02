@@ -11,6 +11,11 @@ use DOMElement;
 use InvalidArgumentException;
 class XmlFileDefinitionCollection extends SiteDefinitionCollection
 {
+	protected $configTypes = [
+		['(^defaultValue$)', '(^[1-9][0-9]*$)D',     'castToInt'],
+		['(height$|width$)', '(^[1-9][0-9]*$)D',     'castToInt'],
+		['(^required$)',     '(^(?:true|false)$)iD', 'castToBool']
+	];
 	public function __construct($path)
 	{
 		if (!\file_exists($path) || !\is_dir($path))
@@ -20,6 +25,30 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 			$siteId = \basename($filepath, '.xml');
 			$this->items[$siteId] = $this->getConfigFromXmlFile($filepath);
 		}
+	}
+	protected function castConfigValue($name, $value)
+	{
+		foreach ($this->configTypes as list($nameRegexp, $valueRegexp, $methodName))
+			if (\preg_match($nameRegexp, $name) && \preg_match($valueRegexp, $value))
+				return $this->$methodName($value);
+		return $value;
+	}
+	protected function castToBool($value)
+	{
+		return (\strtolower($value) === 'true');
+	}
+	protected function castToInt($value)
+	{
+		return (int) $value;
+	}
+	protected function convertValueTypes(array $config)
+	{
+		foreach ($config as $k => $v)
+			if (\is_array($v))
+				$config[$k] = $this->convertValueTypes($v);
+			else
+				$config[$k] = $this->castConfigValue($k, $v);
+		return $config;
 	}
 	protected function flattenConfig(array $config)
 	{
@@ -31,7 +60,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 	protected function getConfigFromXmlFile($filepath)
 	{
 		$dom = new DOMDocument;
-		$dom->load($filepath);
+		$dom->load($filepath, \LIBXML_NOCDATA);
 		return $this->getElementConfig($dom->documentElement);
 	}
 	protected function getElementConfig(DOMElement $element)
@@ -42,11 +71,11 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 		foreach ($element->childNodes as $childNode)
 			if ($childNode instanceof DOMElement)
 				$config[$childNode->nodeName][] = $this->getValueFromElement($childNode);
-		return $this->flattenConfig($config);
+		return $this->flattenConfig($this->convertValueTypes($config));
 	}
 	protected function getValueFromElement(DOMElement $element)
 	{
-		return (!$element->attributes->length && $element->childNodes->length === 1)
+		return (!$element->attributes->length && $element->childNodes->length === 1 && $element->firstChild->nodeType === \XML_TEXT_NODE)
 		     ? $element->nodeValue
 		     : $this->getElementConfig($element);
 	}
