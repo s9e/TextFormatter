@@ -51,14 +51,24 @@ function (tag, sites)
 	*/
 	function addSiteTag(tag, siteId)
 	{
-		var endTag = tag.getEndTag() || tag;
-
-		// Compute the boundaries of our new tag
-		var lpos = tag.getPos(),
-			rpos = endTag.getPos() + endTag.getLen();
+		var endTag = tag.getEndTag();
+		if (endTag)
+		{
+			var startPos = tag.getPos(),
+				startLen = tag.getLen(),
+				endPos   = endTag.getPos(),
+				endLen   = endTag.getLen();
+		}
+		else
+		{
+			var startPos = tag.getPos(),
+				startLen = 0,
+				endPos   = tag.getPos() + tag.getLen(),
+				endLen   = 0;
+		}
 
 		// Create a new tag and copy this tag's attributes and priority
-		addTagPair(siteId.toUpperCase(), lpos, 0, rpos, 0, tag.getSortPriority()).setAttributes(tag.getAttributes());
+		addTagPair(siteId.toUpperCase(), startPos, startLen, endPos, endLen, tag.getSortPriority()).setAttributes(tag.getAttributes());
 	}
 
 	/**
