@@ -3495,6 +3495,22 @@ class Quick
 			$php[] = '		return $html;';
 		}
 		$php[] = '	}';
+		if (isset($map['php']))
+		{
+			$php[] = '';
+			$php[] = '	protected static function hasNonNullValues($array)';
+			$php[] = '	{';
+			$php[] = '		foreach ($array as $v)';
+			$php[] = '		{';
+			$php[] = '			if (isset($v))';
+			$php[] = '			{';
+			$php[] = '				return true;';
+			$php[] = '			}';
+			$php[] = '		}';
+			$php[] = '		';
+			$php[] = '		return false;';
+			$php[] = '	}';
+		}
 		return \implode("\n", $php);
 	}
 	protected static function export(array $arr)
@@ -3763,7 +3779,7 @@ class Quick
 		);
 		$php = \str_replace(
 			'($node->attributes->length)',
-			'(!empty($attributes))',
+			'(self::hasNonNullValues($attributes))',
 			$php
 		);
 		$php = \preg_replace(
@@ -4753,50 +4769,62 @@ class RulesGenerator implements ArrayAccess, Iterator
 	}
 	public function getRules(TagCollection $tags)
 	{
-		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
-		$templateInspector = array();
-		foreach ($tags as $tagName => $tag)
-		{
-			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
-			$templateInspector[$tagName] = new TemplateInspector($template);
-		}
-		$rules = $this->generateRulesets($templateInspector, $rootInspector);
-		unset($rules['root']['autoClose']);
-		unset($rules['root']['autoReopen']);
-		unset($rules['root']['breakParagraph']);
-		unset($rules['root']['closeAncestor']);
-		unset($rules['root']['closeParent']);
-		unset($rules['root']['fosterParent']);
-		unset($rules['root']['ignoreSurroundingWhitespace']);
-		unset($rules['root']['isTransparent']);
-		unset($rules['root']['requireAncestor']);
-		unset($rules['root']['requireParent']);
-		return $rules;
-	}
-	protected function generateRulesets(array $templateInspector, TemplateInspector $rootInspector)
-	{
-		$rules = array(
-			'root' => $this->generateRuleset($rootInspector, $templateInspector),
-			'tags' => array()
+		$tagInspectors = $this->getTagInspectors($tags);
+		return array(
+			'root' => $this->generateRootRules($tagInspectors),
+			'tags' => $this->generateTagRules($tagInspectors)
 		);
-		foreach ($templateInspector as $tagName => $src)
-			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateInspector);
+	}
+	protected function generateTagRules(array $tagInspectors)
+	{
+		$rules = array();
+		foreach ($tagInspectors as $tagName => $tagInspector)
+			$rules[$tagName] = $this->generateRuleset($tagInspector, $tagInspectors);
 		return $rules;
 	}
-	protected function generateRuleset(TemplateInspector $src, array $targets)
+	protected function generateRootRules(array $tagInspectors)
+	{
+		$rootInspector = new TemplateInspector('<div><xsl:apply-templates/></div>');
+		$rules         = $this->generateRuleset($rootInspector, $tagInspectors);
+		unset($rules['autoClose']);
+		unset($rules['autoReopen']);
+		unset($rules['breakParagraph']);
+		unset($rules['closeAncestor']);
+		unset($rules['closeParent']);
+		unset($rules['fosterParent']);
+		unset($rules['ignoreSurroundingWhitespace']);
+		unset($rules['isTransparent']);
+		unset($rules['requireAncestor']);
+		unset($rules['requireParent']);
+		return $rules;
+	}
+	protected function generateRuleset(TemplateInspector $srcInspector, array $trgInspectors)
 	{
 		$rules = array();
 		foreach ($this->collection as $rulesGenerator)
 		{
 			if ($rulesGenerator instanceof BooleanRulesGenerator)
-				foreach ($rulesGenerator->generateBooleanRules($src) as $ruleName => $bool)
+				foreach ($rulesGenerator->generateBooleanRules($srcInspector) as $ruleName => $bool)
 					$rules[$ruleName] = $bool;
 			if ($rulesGenerator instanceof TargetedRulesGenerator)
-				foreach ($targets as $tagName => $trg)
-					foreach ($rulesGenerator->generateTargetedRules($src, $trg) as $ruleName)
+				foreach ($trgInspectors as $tagName => $trgInspector)
+				{
+					$targetedRules = $rulesGenerator->generateTargetedRules($srcInspector, $trgInspector);
+					foreach ($targetedRules as $ruleName)
 						$rules[$ruleName][] = $tagName;
+				}
 		}
 		return $rules;
+	}
+	protected function getTagInspectors(TagCollection $tags)
+	{
+		$tagInspectors = array();
+		foreach ($tags as $tagName => $tag)
+		{
+			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
+			$tagInspectors[$tagName] = new TemplateInspector($template);
+		}
+		return $tagInspectors;
 	}
 }
 

@@ -16,6 +16,7 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
@@ -54,15 +55,16 @@ class Configurator extends ConfiguratorBase
 	}
 	public function match($regexp, $tagName)
 	{
-		$passthrough = 0;
+		$tagName        = TagName::normalize($tagName);
+		$passthroughIdx = 0;
 		$this->parseRegexp($regexp);
 		foreach ($this->captures as $i => $capture)
 		{
 			if (!$this->isCatchAll($capture['expr']))
 				continue;
-			$passthrough = $i;
+			$passthroughIdx = $i;
 		}
-		$this->collection[] = array($tagName, $regexp, $passthrough);
+		$this->collection[] = array($tagName, $regexp, $passthroughIdx);
 	}
 	public function replace($regexp, $template, $tagName = \null)
 	{
@@ -70,12 +72,12 @@ class Configurator extends ConfiguratorBase
 			$tagName = 'PREG_' . \strtoupper(\dechex(\crc32($regexp)));
 		$this->parseRegexp($regexp);
 		$this->parseTemplate($template);
-		$passthrough = $this->getPassthroughCapture();
-		if ($passthrough)
-			$this->captures[$passthrough]['passthrough'] = \true;
+		$passthroughIdx = $this->getPassthroughCapture();
+		if ($passthroughIdx)
+			$this->captures[$passthroughIdx]['passthrough'] = \true;
 		$regexp   = $this->fixUnnamedCaptures($regexp);
-		$template = $this->convertTemplate($template, $passthrough);
-		$this->collection[] = array($tagName, $regexp, $passthrough);
+		$template = $this->convertTemplate($template, $passthroughIdx);
+		$this->collection[] = array($tagName, $regexp, $passthroughIdx);
 		return $this->createTag($tagName, $template);
 	}
 	protected function addAttribute(Tag $tag, $attrName)
@@ -104,18 +106,18 @@ class Configurator extends ConfiguratorBase
 			$attribute->filterChain[] = $filter;
 		}
 	}
-	protected function convertTemplate($template, $passthrough)
+	protected function convertTemplate($template, $passthroughIdx)
 	{
 		$_this = $this;
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			$this->referencesRegexp,
-			function ($m, $node) use ($passthrough, $_this)
+			function ($m, $node) use ($passthroughIdx, $_this)
 			{
 				$key = (int) \trim($m[0], '\\${}');
 				if ($key === 0)
 					return array('expression', '.');
-				if ($key === $passthrough && $node instanceof DOMText)
+				if ($key === $passthroughIdx && $node instanceof DOMText)
 					return array('passthrough');
 				if (isset($_this->captures[$key]['name']))
 					return array('expression', '@' . $_this->captures[$key]['name']);

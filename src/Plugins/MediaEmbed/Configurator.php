@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 		'urldecode'
 	);
 	protected $appendTemplate = '';
-	protected $captureURLs = \true;
+	public $captureURLs = \true;
 	protected $collection;
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;

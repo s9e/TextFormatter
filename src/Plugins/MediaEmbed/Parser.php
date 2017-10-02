@@ -55,10 +55,22 @@ class Parser extends ParserBase
 	}
 	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
 	{
-		$endTag = $tag->getEndTag() ?: $tag;
-		$lpos = $tag->getPos();
-		$rpos = $endTag->getPos() + $endTag->getLen();
-		$tagStack->addTagPair(\strtoupper($siteId), $lpos, 0, $rpos, 0, $tag->getSortPriority())->setAttributes($tag->getAttributes());
+		$endTag = $tag->getEndTag();
+		if ($endTag)
+		{
+			$startPos = $tag->getPos();
+			$startLen = $tag->getLen();
+			$endPos   = $endTag->getPos();
+			$endLen   = $endTag->getLen();
+		}
+		else
+		{
+			$startPos = $tag->getPos();
+			$startLen = 0;
+			$endPos   = $tag->getPos() + $tag->getLen();
+			$endLen   = 0;
+		}
+		$tagStack->addTagPair(\strtoupper($siteId), $startPos, $startLen, $endPos, $endLen, $tag->getSortPriority())->setAttributes($tag->getAttributes());
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
