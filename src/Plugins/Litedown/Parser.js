@@ -535,11 +535,19 @@ function matchBlockLevelMarkup()
 			// Close the code block if applicable
 			if (codeTag)
 			{
-				// Overwrite the whole block
-				overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
+				if (textBoundary > codeTag.getPos())
+				{
+					// Overwrite the whole block
+					overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
 
-				endTag = addEndTag('CODE', textBoundary, 0, -1);
-				endTag.pairWith(codeTag);
+					endTag = addEndTag('CODE', textBoundary, 0, -1);
+					endTag.pairWith(codeTag);
+				}
+				else
+				{
+					// The code block is empty
+					codeTag.invalidate();
+				}
 				codeTag = null;
 				codeFence = null;
 			}
@@ -1099,7 +1107,10 @@ function matchSuperscript()
 */
 function overwrite(pos, len)
 {
-	text = text.substr(0, pos) + new Array(1 + len).join("\x1A") + text.substr(pos + len);
+	if (len > 0)
+	{
+		text = text.substr(0, pos) + new Array(1 + len).join("\x1A") + text.substr(pos + len);
+	}
 }
 
 /**
