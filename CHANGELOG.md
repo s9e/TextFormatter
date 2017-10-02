@@ -1,3 +1,25 @@
+0.11.2 (2017-10-02)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/0fb5ad37aa380cba7d8e4ae795a8f4c24ede057c...166118701944908429ecd2d94bbe461f1981c931)
+
+### Fixed
+
+ - `b82ab12b4` Litedown: fixed a bug triggered by empty code blocks
+ - `77e81cfba` Quick: fixed an issue with @* in conditionals
+ - `ac2353ba6` XmlFileDefinitionCollection: fixed an issue with atypical but valid definitions
+
+### Changed
+
+ - `14c4846e4` MediaEmbed: identify [media] tag pairs as markup
+ - `aeaa1c8f1` MediaEmbed: made ->MediaEmbed->captureURLs accessible
+ - `744f5a436` MediaEmbed: updated NHL
+ - `ee5e8e13b` MediaEmbed: updated Podbean
+ - `91fa461a0` Preg: normalize custom tag names
+ - `955c8e78c` RulesGenerator: improved code's readability
+ - `ba76dd0fd` XmlFileDefinitionCollection: cast known config values to the appropriate type
+
+
 0.11.1 (2017-09-12)
 ===================
 
