@@ -276,6 +276,26 @@ class ParserTest extends Test
 				]
 			],
 			[
+				"\t",
+				"<r><i>\t</i></r>"
+			],
+			[
+				[
+					'x',
+					'',
+					"\t",
+					'',
+					'x'
+				],
+				[
+					'<r><p>x</p>',
+					'',
+					"<i>\t</i>",
+					'',
+					'<p>x</p></r>'
+				]
+			],
+			[
 				[
 					'>     code',
 					'>     more code',
@@ -2101,6 +2121,16 @@ class ParserTest extends Test
 					'...',
 					'```<i>',
 					'</i><e>````</e></CODE></r>'
+				]
+			],
+			[
+				[
+					'```',
+					'```'
+				],
+				[
+					'<r><CODE><s>```</s><i>',
+					'</i><e>```</e></CODE></r>'
 				]
 			],
 		]);

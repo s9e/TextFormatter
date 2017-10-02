@@ -555,11 +555,20 @@ class Parser extends ParserBase
 				// Close the code block if applicable
 				if (isset($codeTag))
 				{
-					// Overwrite the whole block
-					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
+					if ($textBoundary > $codeTag->getPos())
+					{
+						// Overwrite the whole block
+						$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
 
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
-					$endTag->pairWith($codeTag);
+						$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
+						$endTag->pairWith($codeTag);
+					}
+					else
+					{
+						// The code block is empty
+						$codeTag->invalidate();
+					}
+
 					$codeTag = null;
 					$codeFence = null;
 				}
@@ -1175,7 +1184,10 @@ class Parser extends ParserBase
 	*/
 	protected function overwrite($pos, $len)
 	{
-		$this->text = substr($this->text, 0, $pos) . str_repeat("\x1A", $len) . substr($this->text, $pos + $len);
+		if ($len > 0)
+		{
+			$this->text = substr($this->text, 0, $pos) . str_repeat("\x1A", $len) . substr($this->text, $pos + $len);
+		}
 	}
 
 	/**
