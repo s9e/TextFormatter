@@ -3622,6 +3622,51 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://youtu.be/wI__53kBBKM?t=9h38m43s',
+				'<r><YOUTUBE h="9" id="wI__53kBBKM" m="38" s="43" url="https://youtu.be/wI__53kBBKM?t=9h38m43s">https://youtu.be/wI__53kBBKM?t=9h38m43s</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h38m',
+				'<r><YOUTUBE h="9" id="wI__53kBBKM" m="38" url="https://youtu.be/wI__53kBBKM?t=9h38m">https://youtu.be/wI__53kBBKM?t=9h38m</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h43s',
+				'<r><YOUTUBE h="9" id="wI__53kBBKM" s="43" url="https://youtu.be/wI__53kBBKM?t=9h43s">https://youtu.be/wI__53kBBKM?t=9h43s</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h',
+				'<r><YOUTUBE h="9" id="wI__53kBBKM" url="https://youtu.be/wI__53kBBKM?t=9h">https://youtu.be/wI__53kBBKM?t=9h</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=38m',
+				'<r><YOUTUBE id="wI__53kBBKM" m="38" url="https://youtu.be/wI__53kBBKM?t=38m">https://youtu.be/wI__53kBBKM?t=38m</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
 				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" url="http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</YOUTUBE></r>',
 				[],
@@ -4317,6 +4362,51 @@ class ParserTest extends Test
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
 				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wZZ7oFKsKzY/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wZZ7oFKsKzY?controls=2&amp;start=1425"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h38m43s',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?controls=2&amp;start=34723"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h38m',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?controls=2&amp;start=34680"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h43s',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?controls=2&amp;start=32443"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=9h',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?controls=2&amp;start=32400"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://youtu.be/wI__53kBBKM?t=38m',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?controls=2&amp;start=2280"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{

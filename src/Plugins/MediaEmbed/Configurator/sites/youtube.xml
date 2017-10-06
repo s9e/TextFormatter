@@ -11,7 +11,7 @@
 	<host>youtu.be</host>
 	<extract>!youtube\.com/(?:watch.*?v=|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
-	<extract>![#&amp;?]t=(?:(?:(?'h'\d+)h)?(?'m'\d+)m(?'s'\d+)|(?'t'\d+))!</extract>
+	<extract>@[#&amp;?]t=(?:(?'t'\d+)(?![\dhm])|(?:(?'h'\d+)h)?(?:(?'m'\d+)m)?(?:(?'s'\d+)s)?)@</extract>
 	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
 	<scrape>
 		<match>!/shared\?ci=!</match>
@@ -26,18 +26,30 @@
 				<xsl:text>&amp;list=</xsl:text>
 				<xsl:value-of select="@list"/>
 			</xsl:if>
-			<xsl:if test="@t or @m">
+			<xsl:if test="@t or @h or @m">
 				<xsl:text>&amp;start=</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@t">
 						<xsl:value-of select="@t"/>
 					</xsl:when>
-					<xsl:when test="@h">
+					<xsl:when test="@h and @m and @s">
 						<xsl:value-of select="@h * 3600 + @m * 60 + @s"/>
 					</xsl:when>
-					<xsl:otherwise>
+					<xsl:when test="@h and @m">
+						<xsl:value-of select="@h * 3600 + @m * 60"/>
+					</xsl:when>
+					<xsl:when test="@h and @s">
+						<xsl:value-of select="@h * 3600 + @s"/>
+					</xsl:when>
+					<xsl:when test="@h">
+						<xsl:value-of select="@h * 3600"/>
+					</xsl:when>
+					<xsl:when test="@m and @s">
 						<xsl:value-of select="@m * 60 + @s"/>
-					</xsl:otherwise>
+					</xsl:when>
+					<xsl:when test="@m">
+						<xsl:value-of select="@m * 60"/>
+					</xsl:when>
 				</xsl:choose>
 			</xsl:if>
 		]]></src>
