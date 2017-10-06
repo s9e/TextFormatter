@@ -1839,10 +1839,6 @@ class ParserTest extends Test
 				'*\\\\*foo*',
 				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
 			],
-			[
-				'*\\\\*foo*',
-				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
-			],
 			// Forced line breaks
 			[
 				[
