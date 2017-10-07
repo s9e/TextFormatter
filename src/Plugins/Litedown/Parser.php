@@ -408,6 +408,17 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Test whether given position is preceded by whitespace
+	*
+	* @param  integer $pos
+	* @return bool
+	*/
+	protected function isAfterWhitespace($pos)
+	{
+		return ($pos > 0 && $this->isWhitespace($this->text[$pos - 1]));
+	}
+
+	/**
 	* Test whether given character is alphanumeric
 	*
 	* @param  string $chr
@@ -416,6 +427,17 @@ class Parser extends ParserBase
 	protected function isAlnum($chr)
 	{
 		return (strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $chr) > 0);
+	}
+
+	/**
+	* Test whether given position is followed by whitespace
+	*
+	* @param  integer $pos
+	* @return bool
+	*/
+	protected function isBeforeWhitespace($pos)
+	{
+		return $this->isWhitespace($this->text[$pos + 1]);
 	}
 
 	/**
@@ -428,6 +450,19 @@ class Parser extends ParserBase
 	protected function isSurroundedByAlnum($matchPos, $matchLen)
 	{
 		return ($matchPos > 0 && $this->isAlnum($this->text[$matchPos - 1]) && $this->isAlnum($this->text[$matchPos + $matchLen]));
+	}
+
+	/**
+	* Test whether given character is an ASCII whitespace character
+	*
+	* NOTE: newlines are normalized to LF before parsing so we don't have to check for CR
+	*
+	* @param  string $chr
+	* @return bool
+	*/
+	protected function isWhitespace($chr)
+	{
+		return (strpos(" \n\t", $chr) !== false);
 	}
 
 	/**
@@ -1198,18 +1233,20 @@ class Parser extends ParserBase
 	*/
 	protected function processEmphasisBlock(array $block)
 	{
-		$buffered  = 0;
-		$emPos     = -1;
-		$strongPos = -1;
+		$emPos     = null;
+		$strongPos = null;
 		foreach ($block as list($matchPos, $matchLen))
 		{
-			$closeLen     = min(3, $matchLen);
-			$closeEm      = $closeLen & $buffered & 1;
-			$closeStrong  = $closeLen & $buffered & 2;
+			$canOpen      = !$this->isBeforeWhitespace($matchPos + $matchLen - 1);
+			$canClose     = !$this->isAfterWhitespace($matchPos);
+			$closeLen     = ($canClose) ? min($matchLen, 3) : 0;
+			$closeEm      = ($closeLen & 1) && isset($emPos);
+			$closeStrong  = ($closeLen & 2) && isset($strongPos);
 			$emEndPos     = $matchPos;
 			$strongEndPos = $matchPos;
+			$remaining    = $matchLen;
 
-			if ($buffered > 2 && $emPos === $strongPos)
+			if (isset($emPos) && $emPos === $strongPos)
 			{
 				if ($closeEm)
 				{
@@ -1233,30 +1270,31 @@ class Parser extends ParserBase
 				}
 			}
 
-			$remaining = $matchLen;
 			if ($closeEm)
 			{
-				--$buffered;
 				--$remaining;
 				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+				$emPos = null;
 			}
 			if ($closeStrong)
 			{
-				$buffered  -= 2;
 				$remaining -= 2;
 				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+				$strongPos = null;
 			}
 
-			$remaining = min(3, $remaining);
-			if ($remaining & 1)
+			if ($canOpen)
 			{
-				$emPos = $matchPos + $matchLen - $remaining;
+				$remaining = min($remaining, 3);
+				if ($remaining & 1)
+				{
+					$emPos     = $matchPos + $matchLen - $remaining;
+				}
+				if ($remaining & 2)
+				{
+					$strongPos = $matchPos + $matchLen - $remaining;
+				}
 			}
-			if ($remaining & 2)
-			{
-				$strongPos = $matchPos + $matchLen - $remaining;
-			}
-			$buffered += $remaining;
 		}
 	}
 

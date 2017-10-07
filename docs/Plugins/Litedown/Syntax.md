@@ -183,17 +183,25 @@ Note that special characters inside links can be escaped with a backslash.
 
 ### Emphasis
 
-A pair of `*` or `_` marks emphasis (`<em>`) while a pair of `**` or `__` marks strong emphasis (`<strong>`). One exception: a single `_` between two ASCII alphanumerical characters is kept as-is.
+A pair of `*` or `_` around non-whitespace text marks emphasis (`<em>`) while a pair of `**` or `__` marks strong emphasis (`<strong>`). One exception: a single `_` between two ASCII alphanumerical characters is kept as-is.
 
 ```md
 un*frigging*believable
 
-perform_complicated_task
+***ON SALE!***
+
+a * b = b * a
+
+perform_complicated_task()
 ```
 ```html
 <p>un<em>frigging</em>believable</p>
 
-<p>perform_complicated_task</p>
+<p><strong><em>ON SALE!</em></strong></p>
+
+<p>a * b = b * a</p>
+
+<p>perform_complicated_task()</p>
 ```
 
 When a block of three `*` or `_` is found, the order of strong/em depends on the next series of `*` or `_` characters.

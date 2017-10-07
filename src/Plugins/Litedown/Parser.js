@@ -358,6 +358,17 @@ function init()
 }
 
 /**
+* Test whether given position is preceded by whitespace
+*
+* @param  {number}  pos
+* @return {boolean}
+*/
+function isAfterWhitespace(pos)
+{
+	return (pos > 0 && isWhitespace(text.charAt(pos - 1)));
+}
+
+/**
 * Test whether given character is alphanumeric
 *
 * @param  {!string}  chr
@@ -366,6 +377,17 @@ function init()
 function isAlnum(chr)
 {
 	return (' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.indexOf(chr) > 0);
+}
+
+/**
+* Test whether given position is followed by whitespace
+*
+* @param  {number}  pos
+* @return {boolean}
+*/
+function isBeforeWhitespace(pos)
+{
+	return isWhitespace(text.charAt(pos + 1));
 }
 
 /**
@@ -378,6 +400,19 @@ function isAlnum(chr)
 function isSurroundedByAlnum(matchPos, matchLen)
 {
 	return (matchPos > 0 && isAlnum(text[matchPos - 1]) && isAlnum(text[matchPos + matchLen]));
+}
+
+/**
+* Test whether given character is an ASCII whitespace character
+*
+* NOTE: newlines are normalized to LF before parsing so we don't have to check for CR
+*
+* @param  {string}  chr
+* @return {boolean}
+*/
+function isWhitespace(chr)
+{
+	return (" \n\t".indexOf(chr) > -1);
 }
 
 /**
@@ -1120,23 +1155,23 @@ function overwrite(pos, len)
 */
 function processEmphasisBlock(block)
 {
-	var buffered  = 0,
-		emPos     = -1,
-		strongPos = -1,
-		pair,
-		remaining;
+	var emPos     = null,
+		strongPos = null;
 
 	block.forEach(function(pair)
 	{
 		var matchPos     = pair[0],
 			matchLen     = pair[1],
-			closeLen     = Math.min(3, matchLen),
-			closeEm      = closeLen & buffered & 1,
-			closeStrong  = closeLen & buffered & 2,
+			canOpen      = !isBeforeWhitespace(matchPos + matchLen - 1),
+			canClose     = !isAfterWhitespace(matchPos),
+			closeLen     = (canClose) ? Math.min(matchLen, 3) : 0,
+			closeEm      = (closeLen & 1) && emPos     !== null,
+			closeStrong  = (closeLen & 2) && strongPos !== null,
 			emEndPos     = matchPos,
-			strongEndPos = matchPos;
+			strongEndPos = matchPos,
+			remaining    = matchLen;
 
-		if (buffered > 2 && emPos === strongPos)
+		if (emPos !== null && emPos === strongPos)
 		{
 			if (closeEm)
 			{
@@ -1160,30 +1195,31 @@ function processEmphasisBlock(block)
 			}
 		}
 
-		remaining = matchLen;
 		if (closeEm)
 		{
-			--buffered;
 			--remaining;
 			addTagPair('EM', emPos, 1, emEndPos, 1);
+			emPos = null;
 		}
 		if (closeStrong)
 		{
-			buffered  -= 2;
 			remaining -= 2;
 			addTagPair('STRONG', strongPos, 2, strongEndPos, 2);
+			strongPos = null;
 		}
 
-		remaining = Math.min(3, remaining);
-		if (remaining & 1)
+		if (canOpen)
 		{
-			emPos = matchPos + matchLen - remaining;
+			remaining = Math.min(remaining, 3);
+			if (remaining & 1)
+			{
+				emPos     = matchPos + matchLen - remaining;
+			}
+			if (remaining & 2)
+			{
+				strongPos = matchPos + matchLen - remaining;
+			}
 		}
-		if (remaining & 2)
-		{
-			strongPos = matchPos + matchLen - remaining;
-		}
-		buffered += remaining;
 	});
 }
 

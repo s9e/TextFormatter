@@ -1720,12 +1720,12 @@ class ParserTest extends Test
 				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG> xx</p></r>'
 			],
 			[
-				'xx ***x**x* xx',
-				'<r><p>xx <EM><s>*</s><STRONG><s>**</s>x<e>**</e></STRONG>x<e>*</e></EM> xx</p></r>'
+				'***strongem*strong***em*',
+				'<r><p><STRONG><s>**</s><EM><s>*</s>strongem<e>*</e></EM>strong<e>**</e></STRONG><EM><s>*</s>em<e>*</e></EM></p></r>'
 			],
 			[
-				'xx ***x*x** xx',
-				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM>x<e>**</e></STRONG> xx</p></r>'
+				'***emstrong**em***strong**',
+				'<r><p><EM><s>*</s><STRONG><s>**</s>emstrong<e>**</e></STRONG>em<e>*</e></EM><STRONG><s>**</s>strong<e>**</e></STRONG></p></r>'
 			],
 			[
 				'xx **x*****x*** xx',
@@ -1838,6 +1838,42 @@ class ParserTest extends Test
 			[
 				'*\\\\*foo*',
 				'<r><p><EM><s>*</s>\\\\<e>*</e></EM>foo*</p></r>'
+			],
+			[
+				'*x *x *x',
+				'<t><p>*x *x *x</p></t>'
+			],
+			[
+				'x* x* x*',
+				'<t><p>x* x* x*</p></t>'
+			],
+			[
+				'*x x* x*',
+				'<r><p><EM><s>*</s>x x<e>*</e></EM> x*</p></r>'
+			],
+			[
+				'*x *x x*',
+				'<r><p>*x <EM><s>*</s>x x<e>*</e></EM></p></r>'
+			],
+			[
+				'*x **x** x*',
+				'<r><p><EM><s>*</s>x <STRONG><s>**</s>x<e>**</e></STRONG> x<e>*</e></EM></p></r>'
+			],
+			[
+				'x * x * x',
+				'<t><p>x * x * x</p></t>'
+			],
+			[
+				'x * x*x * x',
+				'<t><p>x * x*x * x</p></t>'
+			],
+			[
+				"*x\nx*",
+				"<r><p><EM><s>*</s>x\nx<e>*</e></EM></p></r>"
+			],
+			[
+				"_\nx_",
+				"<t><p>_\nx_</p></t>"
 			],
 			// Forced line breaks
 			[
