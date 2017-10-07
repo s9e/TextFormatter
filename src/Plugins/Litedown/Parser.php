@@ -203,13 +203,25 @@ class Parser extends ParserBase
 		$text .= "\n\n\x17";
 		$this->text = $text;
 	}
+	protected function isAfterWhitespace($pos)
+	{
+		return ($pos > 0 && $this->isWhitespace($this->text[$pos - 1]));
+	}
 	protected function isAlnum($chr)
 	{
 		return (\strpos(' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $chr) > 0);
 	}
+	protected function isBeforeWhitespace($pos)
+	{
+		return $this->isWhitespace($this->text[$pos + 1]);
+	}
 	protected function isSurroundedByAlnum($matchPos, $matchLen)
 	{
 		return ($matchPos > 0 && $this->isAlnum($this->text[$matchPos - 1]) && $this->isAlnum($this->text[$matchPos + $matchLen]));
+	}
+	protected function isWhitespace($chr)
+	{
+		return (\strpos(" \n\t", $chr) !== \false);
 	}
 	protected function markBoundary($pos)
 	{
@@ -682,18 +694,20 @@ class Parser extends ParserBase
 	}
 	protected function processEmphasisBlock(array $block)
 	{
-		$buffered  = 0;
-		$emPos     = -1;
-		$strongPos = -1;
+		$emPos     = \null;
+		$strongPos = \null;
 		foreach ($block as $_aab3a45e)
 		{
 			list($matchPos, $matchLen) = $_aab3a45e;
-			$closeLen     = \min(3, $matchLen);
-			$closeEm      = $closeLen & $buffered & 1;
-			$closeStrong  = $closeLen & $buffered & 2;
+			$canOpen      = !$this->isBeforeWhitespace($matchPos + $matchLen - 1);
+			$canClose     = !$this->isAfterWhitespace($matchPos);
+			$closeLen     = ($canClose) ? \min($matchLen, 3) : 0;
+			$closeEm      = ($closeLen & 1) && isset($emPos);
+			$closeStrong  = ($closeLen & 2) && isset($strongPos);
 			$emEndPos     = $matchPos;
 			$strongEndPos = $matchPos;
-			if ($buffered > 2 && $emPos === $strongPos)
+			$remaining    = $matchLen;
+			if (isset($emPos) && $emPos === $strongPos)
 				if ($closeEm)
 					$emPos += 2;
 				else
@@ -703,25 +717,26 @@ class Parser extends ParserBase
 					$emEndPos += 2;
 				else
 					++$strongEndPos;
-			$remaining = $matchLen;
 			if ($closeEm)
 			{
-				--$buffered;
 				--$remaining;
 				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
+				$emPos = \null;
 			}
 			if ($closeStrong)
 			{
-				$buffered  -= 2;
 				$remaining -= 2;
 				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
+				$strongPos = \null;
 			}
-			$remaining = \min(3, $remaining);
-			if ($remaining & 1)
-				$emPos = $matchPos + $matchLen - $remaining;
-			if ($remaining & 2)
-				$strongPos = $matchPos + $matchLen - $remaining;
-			$buffered += $remaining;
+			if ($canOpen)
+			{
+				$remaining = \min($remaining, 3);
+				if ($remaining & 1)
+					$emPos     = $matchPos + $matchLen - $remaining;
+				if ($remaining & 2)
+					$strongPos = $matchPos + $matchLen - $remaining;
+			}
 		}
 	}
 	protected function setLinkAttributes(Tag $tag, $linkInfo, $attrName)
