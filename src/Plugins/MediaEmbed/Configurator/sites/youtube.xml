@@ -21,13 +21,16 @@
 		<src><![CDATA[
 			<xsl:text>https://www.youtube.com/embed/</xsl:text>
 			<xsl:value-of select="@id"/>
-			<xsl:text>?controls=2</xsl:text>
 			<xsl:if test="@list">
-				<xsl:text>&amp;list=</xsl:text>
+				<xsl:text>?list=</xsl:text>
 				<xsl:value-of select="@list"/>
 			</xsl:if>
 			<xsl:if test="@t or @h or @m">
-				<xsl:text>&amp;start=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="@list">&amp;</xsl:when>
+					<xsl:otherwise>?</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>start=</xsl:text>
 				<xsl:choose>
 					<xsl:when test="@t">
 						<xsl:value-of select="@t"/>
