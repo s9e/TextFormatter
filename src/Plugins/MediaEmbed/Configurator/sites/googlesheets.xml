@@ -4,7 +4,7 @@
 	<tags><tag>documents</tag></tags>
 
 	<host>docs.google.com</host>
-	<extract>!docs\.google\.com/spreadsheet(?:/ccc\?key=|s/d/)(?'id'[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?!</extract>
+	<extract>@docs\.google\.com/spreadsheet(?:/ccc\?key=|s/d/)(?!e/)(?'id'[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?@</extract>
 	<iframe width="100%" height="500" src="https://docs.google.com/spreadsheets/d/{@id}/pubhtml?widget=true&amp;headers=false#gid={@gid}">
 		<style resize="vertical"/>
 	</iframe>

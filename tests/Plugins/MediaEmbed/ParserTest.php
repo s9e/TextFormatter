@@ -2260,6 +2260,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://docs.google.com/spreadsheets/d/e/2PACX-1vSiIAqvsn0REStt7fvSKOae-kXGXotUTfxvjLHtjT5E5L56JGESE8rHsgX7F6XP147gBCc6fnOFK0QN/pubchart?oid=1465127183&format=interactive',
+				'<t>https://docs.google.com/spreadsheets/d/e/2PACX-1vSiIAqvsn0REStt7fvSKOae-kXGXotUTfxvjLHtjT5E5L56JGESE8rHsgX7F6XP147gBCc6fnOFK0QN/pubchart?oid=1465127183&amp;format=interactive</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googlesheets');
+				}
+			],
+			[
 				'http://www.hudl.com/athlete/2067184/highlights/163744377',
 				'<r><HUDL athlete="2067184" highlight="163744377" url="http://www.hudl.com/athlete/2067184/highlights/163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
 				[],
