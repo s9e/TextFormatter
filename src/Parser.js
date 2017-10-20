@@ -728,7 +728,7 @@ function outputTag(tag)
 
 	// Skip newlines (no other whitespace) after this tag
 	wsPos = pos;
-	while (skipAfter && wsPos < textLen && text.charAt(wsPos) === "\n")
+	while (skipAfter && wsPos < textLen && text[wsPos] === "\n")
 	{
 		// Decrement the number of lines to skip
 		--skipAfter;
@@ -818,7 +818,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	// Ignore as many lines (including whitespace) as specified
 	while (maxLines && --ignorePos >= pos)
 	{
-		var c = text.charAt(ignorePos);
+		var c = text[ignorePos];
 		if (c !== ' ' && c !== "\n" && c !== "\t")
 		{
 			break;
@@ -992,9 +992,9 @@ function outputVerbatim(tag)
 */
 function outputWhitespace(maxPos)
 {
-	while (pos < maxPos && " \n\t".indexOf(text.charAt(pos)) > -1)
+	while (pos < maxPos && " \n\t".indexOf(text[pos]) > -1)
 	{
-		output += text.charAt(pos);
+		output += text[pos];
 		++pos;
 	}
 }
@@ -1412,7 +1412,7 @@ function getMagicEndPos(tagPos)
 {
 	// Back up from given position to the cursor's position until we find a character that
 	// is not whitespace
-	while (tagPos > pos && WHITESPACE.indexOf(text.charAt(tagPos - 1)) > -1)
+	while (tagPos > pos && WHITESPACE.indexOf(text[tagPos - 1]) > -1)
 	{
 		--tagPos;
 	}
@@ -1706,7 +1706,7 @@ function processStartTag(tag)
 	if (HINT.RULE_TRIM_FIRST_LINE
 	 && tag.getFlags() & RULE_TRIM_FIRST_LINE
 	 && !tag.getEndTag()
-	 && text.charAt(tag.getPos() + tag.getLen()) === "\n")
+	 && text[tag.getPos() + tag.getLen()] === "\n")
 	{
 		addIgnoreTag(tag.getPos() + tag.getLen(), 1);
 	}

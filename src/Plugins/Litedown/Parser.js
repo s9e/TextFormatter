@@ -314,7 +314,7 @@ function getSetextLines()
 			endTagLen  : matchPos + match.length - endTagPos,
 			endTagPos  : endTagPos,
 			quoteDepth : match.length - match.replace(/>/g, '').length,
-			tagName    : (match.charAt(0) === '=') ? 'H1' : 'H2'
+			tagName    : (match[0] === '=') ? 'H1' : 'H2'
 		};
 	}
 
@@ -365,7 +365,7 @@ function init()
 */
 function isAfterWhitespace(pos)
 {
-	return (pos > 0 && isWhitespace(text.charAt(pos - 1)));
+	return (pos > 0 && isWhitespace(text[pos - 1]));
 }
 
 /**
@@ -387,7 +387,7 @@ function isAlnum(chr)
 */
 function isBeforeWhitespace(pos)
 {
-	return isWhitespace(text.charAt(pos + 1));
+	return isWhitespace(text[pos + 1]);
 }
 
 /**
@@ -545,7 +545,7 @@ function matchBlockLevelMarkup()
 
 			do
 			{
-				if (indentStr.charAt(indentPos) === ' ')
+				if (indentStr[indentPos] === ' ')
 				{
 					++indentWidth;
 				}
@@ -638,7 +638,7 @@ function matchBlockLevelMarkup()
 				// We're not inside of a list already, we can start one if there's a list item
 				// and it's either not in continuation of a paragraph or immediately after a
 				// block
-				if (hasListItem && (!continuation || text.charAt(matchPos - 1) === "\x17"))
+				if (hasListItem && (!continuation || text[matchPos - 1] === "\x17"))
 				{
 					// Start of a new list
 					listIndex = 0;
@@ -760,7 +760,7 @@ function matchBlockLevelMarkup()
 		if (m[5])
 		{
 			// Headers
-			if (m[5].charAt(0) === '#')
+			if (m[5][0] === '#')
 			{
 				startTagLen = m[5].length;
 				startTagPos = matchPos + matchLen - startTagLen;
@@ -779,7 +779,7 @@ function matchBlockLevelMarkup()
 				}
 			}
 			// Code fence
-			else if (m[5].charAt(0) === '`' || m[5].charAt(0) === '~')
+			else if (m[5][0] === '`' || m[5][0] === '~')
 			{
 				tagPos = matchPos + ignoreLen;
 				tagLen = lfPos - tagPos;
@@ -815,7 +815,7 @@ function matchBlockLevelMarkup()
 				}
 			}
 		}
-		else if (m[3] && !listsCnt && text.charAt(matchPos + matchLen) !== "\x17")
+		else if (m[3] && !listsCnt && text[matchPos + matchLen] !== "\x17")
 		{
 			// Horizontal rule
 			addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
@@ -974,7 +974,7 @@ function matchInlineCode()
 	{
 		var pos = markers[i].next,
 			j   = i;
-		if (text.charAt(markers[i].pos) !== '`')
+		if (text[markers[i].pos] !== '`')
 		{
 			// Adjust the left marker if its first backtick was escaped
 			++markers[i].pos;
@@ -1067,7 +1067,7 @@ function matchReferenceLinks()
 			endTagPos = labelPos - 1,
 			endTagLen = 1;
 
-		if (text.charAt(labelPos) === ' ')
+		if (text[labelPos] === ' ')
 		{
 			++labelPos;
 		}

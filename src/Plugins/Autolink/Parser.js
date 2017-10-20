@@ -22,7 +22,7 @@ function linkifyUrl(tagPos, url)
 	var endTag = addEndTag(config.tagName, tagPos + url.length, 0);
 
 	// If the URL starts with "www." we prepend "http://"
-	if (url.charAt(3) === '.')
+	if (url[3] === '.')
 	{
 		url = 'http://' + url;
 	}
