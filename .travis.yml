@@ -21,6 +21,8 @@ matrix:
     - php: nightly
       env: OPTIMIZE=1
   allow_failures:
+    - php: 5.3.3
+      env: OPTIMIZE=1
     - php: nightly
       env: OPTIMIZE=1
     - php: hhvm

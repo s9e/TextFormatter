@@ -1,6 +1,6 @@
 <h2>Installation</h2>
 
-s9e\\TextFormatter is developed on the latest version of PHP and is compatible with PHP 5.3.3 and above.
+s9e\\TextFormatter is developed on the latest version of PHP and is compatible with PHP 5.4.7 and above.
 
 Once installed, you can try this [basic example](https://github.com/s9e/TextFormatter/blob/master/docs/examples/00_quick.php).
 

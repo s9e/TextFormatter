@@ -1,3 +1,8 @@
+## 0.12.0
+
+Support for PHP 5.3 has been abandoned. Releases are now based on the `release/php5.4` branch, which requires PHP 5.4.7 or greater. The `release/php5.3` branch will remain active for some time but is unsupported.
+
+
 ## 0.11.0
 
 The optional argument of `s9e\TextFormatter\Configurator\RulesGenerator::getRules()` has been removed.

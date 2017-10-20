@@ -15,7 +15,7 @@
 
 ## Requirements
 
-* PHP 5.3.3 or later (see [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md))
+* PHP 5.4.7 or later (see [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/00_Installation.md))
 * [ext/dom](http://docs.php.net/manual/en/book.dom.php)
 * [ext/filter](http://docs.php.net/manual/en/book.filter.php) unless you implement your own validation
 * Optional
