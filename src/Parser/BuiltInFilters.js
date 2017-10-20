@@ -173,7 +173,7 @@ var BuiltInFilters =
 		while (--i >= 0)
 		{
 			// NOTE: ext/filter doesn't support octal notation
-			if (p[i].charAt(0) === '0' || p[i] > 255)
+			if (p[i][0] === '0' || p[i] > 255)
 			{
 				return false;
 			}

@@ -1,6 +1,6 @@
 ## Introduction
 
-s9e\TextFormatter can optionally generate a JavaScript parser that can be used in browsers to parse text and preview the result in a live environment.
+s9e\TextFormatter can optionally generate a JavaScript parser that can be used in browsers to parse text and preview the result in a live environment. The JavaScript parser requires Internet Explorer 8 or later, or any contemporary browser that supports [XSLTProcessor](https://developer.mozilla.org/en-US/docs/Web/API/XSLTProcessor#Browser_compatibility).
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
