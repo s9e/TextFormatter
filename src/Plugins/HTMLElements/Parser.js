@@ -1,7 +1,7 @@
 matches.forEach(function(m)
 {
 	// Test whether this is an end tag
-	var isEnd = (text.charAt(m[0][1] + 1) === '/');
+	var isEnd = (text[m[0][1] + 1] === '/');
 
 	var pos    = m[0][1],
 		len    = m[0][0].length,

@@ -138,7 +138,7 @@ function parseAttributes()
 	attributes = {};
 	while (pos < textLen)
 	{
-		var c = text.charAt(pos);
+		var c = text[pos];
 		if (" \n\t".indexOf(c) > -1)
 		{
 			++pos;
@@ -160,7 +160,7 @@ function parseAttributes()
 				// The attribute name extends to the end of the text
 				throw '';
 			}
-			if (text.charAt(pos) !== '=')
+			if (text[pos] !== '=')
 			{
 				// It's an attribute name not followed by an equal sign, ignore it
 				continue;
@@ -194,7 +194,7 @@ function parseAttributes()
 function parseAttributeValue()
 {
 	// Test whether the value is in quotes
-	if (text.charAt(pos) === '"' || text.charAt(pos) === "'")
+	if (text[pos] === '"' || text[pos] === "'")
 	{
 		return parseQuotedAttributeValue();
 	}
@@ -230,12 +230,12 @@ function parseBBCode()
 	parseBBCodeSuffix();
 
 	// Test whether this is an end tag
-	if (text.charAt(startPos + 1) === '/')
+	if (text[startPos + 1] === '/')
 	{
 		// Test whether the tag is properly closed and whether this tag has an identifier.
 		// We skip end tags that carry an identifier because they're automatically added
 		// when their start tag is processed
-		if (text.charAt(pos) === ']' && bbcodeSuffix === '')
+		if (text[pos] === ']' && bbcodeSuffix === '')
 		{
 			++pos;
 			addBBCodeEndTag();
@@ -258,7 +258,7 @@ function parseBBCode()
 	}
 
 	// Test whether the tag is properly closed
-	if (text.charAt(pos) === ']')
+	if (text[pos] === ']')
 	{
 		++pos;
 	}
@@ -340,7 +340,7 @@ function parseBBCodeSuffix()
 */
 function parseQuotedAttributeValue()
 {
-	var quote    = text.charAt(pos),
+	var quote    = text[pos],
 		valuePos = pos + 1;
 	while (1)
 	{
@@ -358,7 +358,7 @@ function parseQuotedAttributeValue()
 		{
 			++n;
 		}
-		while (text.charAt(pos - n) === '\\');
+		while (text[pos - n] === '\\');
 
 		if (n % 2)
 		{
