@@ -1,6 +1,6 @@
 matches.forEach(function(m)
 {
-	if (HINT.EMOTICONS_NOT_AFTER && config.notAfter && m[0][1] && config.notAfter.test(text.charAt(m[0][1] - 1)))
+	if (HINT.EMOTICONS_NOT_AFTER && config.notAfter && m[0][1] && config.notAfter.test(text[m[0][1] - 1]))
 	{
 		return;
 	}
