@@ -236,6 +236,14 @@
 			<file>tests/Plugins/Keywords/ParserTest.php</file>
 			<file>tests/Plugins/Litedown/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Litedown/ParserTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/BlocksTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/EmphasisTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/ForcedLineBreaksTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/ImagesTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/InlineCodeTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/LinksTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/StrikethroughTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/SuperscriptTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteDefinitionCollectionTest.php</file>

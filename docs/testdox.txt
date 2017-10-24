@@ -2377,6 +2377,45 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests 
  [x] Parsing tests (JavaScript) 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Emphasis
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\ForcedLineBreaks
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Images
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\InlineCode
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Strikethrough
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
  [x] Parsing+rendering tests 
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollection

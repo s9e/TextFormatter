@@ -1,36 +1,21 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\Litedown;
+namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Plugins\Litedown\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
+use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
-/**
-* @covers s9e\TextFormatter\Plugins\Litedown\Parser
-*/
-class ParserTest extends Test
+abstract class AbstractTest extends Test
 {
 	use ParsingTestsRunner;
 	use ParsingTestsJavaScriptRunner;
+	use RenderingTestsRunner;
 
-	public function getParsingTests()
-	{
-		return [
-			[
-				// Ensure that automatic line breaks can be enabled
-				"First\nSecond",
-				"<t><p>First<br/>\nSecond</p></t>",
-				[],
-				function ($configurator)
-				{
-					$configurator->rootRules->enableAutoLineBreaks();
-				}
-			],
-		];
-	}
+	abstract public function getParsingTests();
+	abstract public function getRenderingTests();
 
 	protected static function fixTests($tests)
 	{

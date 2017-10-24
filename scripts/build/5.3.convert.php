@@ -128,6 +128,44 @@ function convertCustom($filepath, &$file)
 				'return call_user_func($callback, $object);'
 			)
 		),
+		'Litedown/Parser.php' => array(
+			array(
+				'(new Blocks($this->parser, $text))->parse();',
+				'$pass=new Blocks($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new LinkReferences($this->parser, $text))->parse();',
+				'$pass=new LinkReferences($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new InlineCode($this->parser, $text))->parse();',
+				'$pass=new InlineCode($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new Images($this->parser, $text))->parse();',
+				'$pass=new Images($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new Links($this->parser, $text))->parse();',
+				'$pass=new Links($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new Strikethrough($this->parser, $text))->parse();',
+				'$pass=new Strikethrough($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new Superscript($this->parser, $text))->parse();',
+				'$pass=new Superscript($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new Emphasis($this->parser, $text))->parse();',
+				'$pass=new Emphasis($this->parser, $text);$pass->parse();'
+			),
+			array(
+				'(new ForcedLineBreaks($this->parser, $text))->parse();',
+				'$pass=new ForcedLineBreaks($this->parser, $text);$pass->parse();'
+			)
+		),
 		'Logger.php' => array(
 			array(
 				'$callback($msg, $context);',

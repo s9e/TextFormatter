@@ -157,4 +157,34 @@ class Configurator extends ConfiguratorBase
 	{
 		return ['LITEDOWN_DECODE_HTML_ENTITIES' => (int) $this->decodeHtmlEntities];
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function getJSParser()
+	{
+		$js = file_get_contents(__DIR__ . '/Parser/ParsedText.js') . "\n"
+		    . file_get_contents(__DIR__ . '/Parser/LinkAttributesSetter.js');
+
+		$passes = [
+			'Blocks',
+			'LinkReferences',
+			'InlineCode',
+			'Images',
+			'Links',
+			'Strikethrough',
+			'Superscript',
+			'Emphasis',
+			'ForcedLineBreaks'
+		];
+		foreach ($passes as $pass)
+		{
+			$js .= "\n(function(){\n"
+			     . file_get_contents(__DIR__ . '/Parser/Passes/' . $pass . '.js') . "\n"
+			     . "parse();\n"
+			     . "})();";
+		}
+
+		return $js;
+	}
 }
