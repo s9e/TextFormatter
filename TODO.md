@@ -1,3 +1,14 @@
+TODO: Autumn 2017
+-----------------
+- ~~Bump PHP requirements to 5.4.~~
+- ~~Split Litedown parser.~~
+- Review Litedown syntax. #75
+- Review Litedown implementation.
+- Move static code from dynamically generated PHP renderers into an abstract class.
+- Switch Travis's code coverage to PHP 7.0 if possible.
+- Look for opportunities to split subsystems into separate libraries.
+
+
 TODO: Summer 2017
 -----------------
 - ~~Remove defaultChildRule and defaultDescendantRule.~~
