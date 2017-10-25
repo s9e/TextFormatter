@@ -82,20 +82,17 @@ class PHP implements RendererGenerator
 	/**
 	* Constructor
 	*
-	* @param  string $cacheDir If set, path to the directory where the renderer will be saved
+	* @param string $cacheDir If set, path to the directory where the renderer will be saved
 	*/
 	public function __construct($cacheDir = null)
 	{
 		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : sys_get_temp_dir();
-
 		if (extension_loaded('tokenizer'))
 		{
 			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
 			$this->optimizer = new Optimizer;
 		}
-
 		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
-
 		$this->serializer = new Serializer;
 	}
 
