@@ -23,12 +23,12 @@ class QuickTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 	}
 
-	protected function getPHP($template, $renderingType)
+	protected function getPHP($template)
 	{
 		$serializer = new Serializer;
 		$optimizer  = new Optimizer;
 
-		$ir  = TemplateParser::parse($template, $renderingType);
+		$ir  = TemplateParser::parse($template);
 		$php = $serializer->serialize($ir->documentElement);
 		$php = $optimizer->optimize($php);
 
@@ -132,7 +132,7 @@ class QuickTest extends Test
 		$compiledTemplates = [];
 		foreach ($templates as $tagName => $template)
 		{
-			$compiledTemplates[$tagName] = self::getPHP($template, 'html');
+			$compiledTemplates[$tagName] = self::getPHP($template);
 		}
 
 		$php = Quick::getSource($compiledTemplates);
@@ -419,7 +419,7 @@ class QuickTest extends Test
 		{
 			$setup();
 		}
-		$php = self::getPHP($template, 'html');
+		$php = self::getPHP($template);
 		$this->assertSame($expected, Quick::getRenderingStrategy($php));
 	}
 
@@ -735,7 +735,7 @@ class QuickTest extends Test
 		$compiledTemplates = [];
 		foreach ($templates as $tagName => $template)
 		{
-			$compiledTemplates[$tagName] = self::getPHP($template, 'html');
+			$compiledTemplates[$tagName] = self::getPHP($template);
 		}
 
 		$this->assertContains($contains, Quick::getSource($compiledTemplates));
