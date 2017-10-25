@@ -47,11 +47,6 @@ function patchFile($filepath)
 	}
 }
 
-patchDir(__DIR__ . '/../docs/Bundles');
-patchDir(__DIR__ . '/../docs/Filters');
-patchDir(__DIR__ . '/../docs/Getting_started');
-patchDir(__DIR__ . '/../docs/Plugins');
-patchDir(__DIR__ . '/../docs/Rules');
-patchDir(__DIR__ . '/../docs/Templating');
+patchDir(__DIR__ . '/../docs');
 
 die("Done.\n");

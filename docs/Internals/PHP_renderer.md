@@ -21,6 +21,6 @@ extract($configurator->finalize());
 echo 'Custom:  ', get_class($renderer);
 ```
 ```
-Default: Renderer_f7c915b7d80bd1c718b3de66bbf2b51003afe7a6
+Default: Renderer_81cb6fc33d8d760fec2542da3af40fe90322085a
 Custom:  MyRenderer
 ```
