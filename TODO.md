@@ -7,6 +7,9 @@ TODO: Autumn 2017
 - Move static code from dynamically generated PHP renderers into an abstract class.
 - ~~Switch Travis's code coverage to PHP 7.0 if possible.~~
 - Look for opportunities to split subsystems into separate libraries.
+- Remove $source from the PHP renderer.
+- Remove NEWS.md.
+- Remove old Cookbook.
 
 
 TODO: Summer 2017
