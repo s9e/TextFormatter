@@ -1,3 +1,0 @@
-## Introduction
-
-s9e\TextFormatter uses [XSLT 1.0](http://www.w3.org/TR/xslt) as its templating language. A template can be made of any XSL that would be valid in an `xsl:template` element. If it doesn't contain any XSL-specific markup, a template can also be defined using plain HTML, which is transparently converted to XSL. Note that most plugins accept other syntaxes and transparently convert them to XSL. For instance, the BBCodes plugin accepts templates in [its own syntax](https://github.com/s9e/TextFormatter/blob/master/docs/BBCodeMonkey.md) while the [Preg plugin](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/Preg) allows PCRE-style replacements.

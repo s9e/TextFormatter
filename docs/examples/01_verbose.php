@@ -64,7 +64,7 @@ extract($configurator->finalize());
 
 // Parse a simple message then render it as HTML. The XML result is what you save in your database
 // while the HTML rendering is what you show to the users
-$text = "Hello, [i]world[/i] :)\nFind more examples in the [url=https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook]Cookbook[/url].";
+$text = "Hello, [i]world[/i] :)\nFind more examples in the [url=https://s9etextformatter.readthedocs.io/]documentation[/url].";
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -73,4 +73,4 @@ echo $html, "\n";
 // Outputs:
 //
 // Hello, <i>world</i> ☺
-// Find more examples in the <a href="https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook">Cookbook</a>.
+// Find more examples in the <a href="https://s9etextformatter.readthedocs.io/">documentation</a>.

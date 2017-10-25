@@ -1,1 +1,0 @@
-This document has moved to [Tag rules](../Rules/Tag_rules.md).

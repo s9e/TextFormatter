@@ -53,15 +53,3 @@ file_put_contents(
 );
 
 echo "Patched $filepath.\n";
-
-$filepath = __DIR__ . '/../docs/Cookbook/30_Plugins/BBCodes/AddFromRepository.md';
-file_put_contents(
-	$filepath,
-	preg_replace(
-		'/(?<=### List of bundled BBCodes\\n\\n).*/s',
-		implode("\n", $list),
-		file_get_contents($filepath)
-	)
-);
-
-die("Patched $filepath.\n");

@@ -8,8 +8,8 @@ TODO: Autumn 2017
 - ~~Switch Travis's code coverage to PHP 7.0 if possible.~~
 - Look for opportunities to split subsystems into separate libraries.
 - Remove $source from the PHP renderer.
-- Remove NEWS.md.
-- Remove old Cookbook.
+- ~~Remove NEWS.md.~~
+- ~~Remove old Cookbook.~~
 
 
 TODO: Summer 2017
