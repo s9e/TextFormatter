@@ -2650,7 +2650,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] getRenderer() can be called multiple times with the same rendering configuration
- [x] The returned instance contains its own source code in $renderer->source
  [x] If no class name is set, a class name is generated based on the renderer's source
  [x] The prefix used for generated class names can be changed in $rendererGenerator->defaultClassPrefix
  [x] The class name can be set in $rendererGenerator->className
@@ -2662,7 +2661,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] When saving the renderer to the cache dir, backslashes in the class name are replaced with underscores
  [x] If $rendererGenerator->filepath and $rendererGenerator->cacheDir are set, the renderer is saved to $rendererGenerator->filepath
  [x] The name of the class of the last generated renderer is available in $rendererGenerator->lastClassName
- [x] The name of the class of the last saved renderer is available in $rendererGenerator->lastFilepath
+ [x] The name of the file of the last saved renderer is available in $rendererGenerator->lastFilepath
  [x] Ignores comments
  [x] Throws an exception if a template contains a processing instruction
  [x] Throws an exception when encountering unsupported XSL elements

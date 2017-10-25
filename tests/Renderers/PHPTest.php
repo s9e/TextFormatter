@@ -25,7 +25,6 @@ class PHPTest extends Test
 	{
 		$this->configurator->rendering->parameters->add('foo', "'bar'");
 		$renderer = $this->configurator->rendering->getRenderer();
-		unset($renderer->source);
 
 		$this->assertEquals(
 			$renderer,

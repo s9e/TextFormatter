@@ -2,6 +2,8 @@
 
 Support for PHP 5.3 has been abandoned. Releases are now based on the `release/php5.4` branch, which requires PHP 5.4.7 or greater. The `release/php5.3` branch will remain active for some time but is unsupported.
 
+The PHP renderer's source has been removed from the renderer instance.
+
 
 ## 0.11.0
 

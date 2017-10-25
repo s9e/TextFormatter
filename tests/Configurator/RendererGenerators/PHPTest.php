@@ -26,6 +26,16 @@ class PHPTest extends Test
 		array_map('unlink', glob(sys_get_temp_dir() . '/*enderer_*.php'));
 	}
 
+	protected function getRendererSource()
+	{
+		if (empty($this->configurator->rendering->engine->lastFilepath))
+		{
+			$this->configurator->rendering->getRenderer();
+		}
+
+		return file_get_contents($this->configurator->rendering->engine->lastFilepath);
+	}
+
 	/**
 	* @testdox Returns an instance of Renderer
 	*/
@@ -50,24 +60,13 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox The returned instance contains its own source code in $renderer->source
-	*/
-	public function testInstanceSource()
-	{
-		$renderer = $this->configurator->rendering->getRenderer();
-
-		$this->assertObjectHasAttribute('source', $renderer);
-		$this->assertContains('class Renderer', $renderer->source);
-	}
-
-	/**
 	* @testdox If no class name is set, a class name is generated based on the renderer's source
 	*/
 	public function testClassNameGenerated()
 	{
 		$this->assertRegexp(
 			'/class Renderer_\\w{40}/',
-			$this->configurator->rendering->getRenderer()->source
+			$this->getRendererSource()
 		);
 	}
 
@@ -80,7 +79,7 @@ class PHPTest extends Test
 
 		$this->assertRegexp(
 			'/class Bar_renderer_\\w{40}/',
-			$this->configurator->rendering->getRenderer()->source
+			$this->getRendererSource()
 		);
 	}
 
@@ -109,7 +108,7 @@ class PHPTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertInstanceOf($className, $renderer);
-		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $renderer->source);
+		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $this->getRendererSource());
 	}
 
 	/**
@@ -119,11 +118,9 @@ class PHPTest extends Test
 	{
 		$filepath = $this->tempnam();
 		$this->configurator->rendering->engine->filepath = $filepath;
-
-		$renderer = $this->configurator->rendering->getRenderer();
+		$this->configurator->rendering->getRenderer();
 
 		$this->assertFileExists($filepath);
-		$this->assertContains($renderer->source, file_get_contents($filepath));
 	}
 
 	/**
@@ -203,7 +200,7 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox The name of the class of the last saved renderer is available in $rendererGenerator->lastFilepath
+	* @testdox The name of the file of the last saved renderer is available in $rendererGenerator->lastFilepath
 	*/
 	public function testLastFilepath()
 	{
@@ -227,7 +224,7 @@ class PHPTest extends Test
 
 		$this->assertNotContains(
 			'Nothing',
-			$this->configurator->rendering->getRenderer()->source
+			$this->getRendererSource()
 		);
 	}
 
@@ -759,13 +756,11 @@ class PHPTest extends Test
 			call_user_func($setup, $this->configurator->rendering->engine, $this);
 		}
 
-		$renderer = $this->configurator->rendering->getRenderer();
-
 		if (isset($contains))
 		{
 			foreach ((array) $contains as $str)
 			{
-				$this->assertContains($str, $renderer->source);
+				$this->assertContains($str, $this->getRendererSource());
 			}
 		}
 
@@ -773,7 +768,7 @@ class PHPTest extends Test
 		{
 			foreach ((array) $notContains as $str)
 			{
-				$this->assertNotContains($str, $renderer->source);
+				$this->assertNotContains($str, $this->getRendererSource());
 			}
 		}
 	}
@@ -1559,9 +1554,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$renderer = $this->configurator->rendering->getRenderer();
-
-		$this->assertContains('renderQuick', $renderer->source);
+		$this->assertContains('renderQuick', $this->getRendererSource());
 	}
 
 	/**
@@ -1572,9 +1565,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = false;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$renderer = $this->configurator->rendering->getRenderer();
-
-		$this->assertNotContains('renderQuick', $renderer->source);
+		$this->assertNotContains('renderQuick', $this->getRendererSource());
 	}
 
 	/**
@@ -1599,7 +1590,7 @@ class PHPTest extends Test
 
 		$this->assertContains(
 			'protected static $bt13027555=[1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7];',
-			$renderer->source
+			$this->getRendererSource()
 		);
 	}
 }

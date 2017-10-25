@@ -5,22 +5,27 @@ $configurator->rendering->engine = 'PHP';
 $configurator->rendering->engine->cacheDir = '/path/to/dir';
 ```
 
-The first time a PHP renderer is generated, its source code is available in `$renderer->source`.
-
-A class name is automatically generated for the renderer class, based on its content. Alternatively, you can specify a class name by setting the `className` property.
+A class name is automatically generated for the renderer class, based on its content. Alternatively, you can specify a class name by setting the `className` property. The class name and file name of the last generated renderer instance can be accessed via the renderer generator.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->rendering->engine = 'PHP';
+$configurator->rendering->engine           = 'PHP';
+$configurator->rendering->engine->cacheDir = '/tmp';
 
 extract($configurator->finalize());
 echo 'Default: ', get_class($renderer), "\n";
 
 $configurator->rendering->engine->className = 'MyRenderer';
 extract($configurator->finalize());
-echo 'Custom:  ', get_class($renderer);
+echo 'Custom:  ', get_class($renderer), "\n\n";
+
+echo 'Last class: ', $configurator->rendering->engine->lastClassName, "\n";
+echo 'Last file:  ', $configurator->rendering->engine->lastFilepath;
 ```
 ```
 Default: Renderer_81cb6fc33d8d760fec2542da3af40fe90322085a
 Custom:  MyRenderer
+
+Last class: MyRenderer
+Last file:  /tmp/MyRenderer.php
 ```

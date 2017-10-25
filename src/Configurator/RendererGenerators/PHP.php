@@ -126,11 +126,7 @@ class PHP implements RendererGenerator
 			include $filepath;
 		}
 
-		// Create an instance and copy the source into the instance
-		$renderer = new $this->lastClassName;
-		$renderer->source = $php;
-
-		return $renderer;
+		return new $this->lastClassName;
 	}
 
 	/**
