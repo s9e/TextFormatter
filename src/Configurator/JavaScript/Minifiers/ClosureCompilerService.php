@@ -30,7 +30,7 @@ class ClosureCompilerService extends OnlineMinifier
 	/**
 	* @var string Closure Compiler Service's URL
 	*/
-	public $url = 'http://closure-compiler.appspot.com/compile';
+	public $url = 'https://closure-compiler.appspot.com/compile';
 
 	/**
 	* Constructor
