@@ -103,10 +103,8 @@
 			<file>tests/Configurator/JavaScript/Minifiers/FirstAvailableTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerApplicationTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
-			<!--file>tests/Configurator/JavaScript/Minifiers/HostedMinifierTest.php</file-->
 			<file>tests/Configurator/JavaScript/Minifiers/MatthiasMullieMinifyTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
-			<!--file>tests/Configurator/JavaScript/Minifiers/RemoteCacheTest.php</file-->
 			<file>tests/Configurator/JavaScript/StylesheetCompressorTest.php</file>
 			<file>tests/Configurator/RenderingTest.php</file>
 			<file>tests/Configurator/RulesGenerators/AllowAllTest.php</file>

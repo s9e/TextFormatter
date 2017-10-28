@@ -34,32 +34,6 @@ $configurator->enableJavaScript();
 $configurator->javascript->setMinifier('MatthiasMullieMinify');
 ```
 
-### Hosted minifier
-
-Experimental minifier that uses a [remote webservice](https://github.com/s9e/WebService-Minifier). Currently only useful if you want to host your own webservice and you minify the same configuration over multiple installations.
-
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->enableJavaScript();
-$configurator->javascript
-	->setMinifier('HostedMinifier')
-	->url = 'http://example.org/path/to/minifier/minify.php';
-```
-
-### Remote cache
-
-Experimental minifier that only works when paired with a [hosted minifier](#hosted-minifier). It accesses the hosted minifier's cache directly. It saves some network activity in case of a hit but wastes a roundtrip on a miss, that's why it's only useful when minifying the the same configuration over multiple installations.
-
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->enableJavaScript();
-
-$minifier = $configurator->javascript->setMinifier('FirstAvailable');
-
-$minifier->add('RemoteCache')->url    = 'http://example.org/path/to/minifier/cache/';
-$minifier->add('HostedMinifier')->url = 'http://example.org/path/to/minifier/minify.php';
-```
-
 ## Meta-minifiers
 
 ### Noop

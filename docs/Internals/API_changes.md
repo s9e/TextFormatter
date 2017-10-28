@@ -4,6 +4,8 @@ Support for PHP 5.3 has been abandoned. Releases are now based on the `release/p
 
 The PHP renderer's source has been removed from the renderer instance.
 
+The `HostedMinifier` and `RemoteCache` minifiers have been removed.
+
 
 ## 0.11.0
 
