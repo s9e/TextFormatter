@@ -14,6 +14,10 @@ class InlineCodeTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				'',
+				'<t></t>',
+			],
+			[
 				'.. `foo` `bar` ..',
 				'<r><p>.. <C><s>`</s>foo<e>`</e></C> <C><s>`</s>bar<e>`</e></C> ..</p></r>'
 			],

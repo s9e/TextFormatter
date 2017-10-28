@@ -15,6 +15,10 @@ class ImagesTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				'',
+				'<t></t>',
+			],
+			[
 				'.. ![Alt text](http://example.org/img.png) ..',
 				'<r><p>.. <IMG alt="Alt text" src="http://example.org/img.png"><s>![</s>Alt text<e>](http://example.org/img.png)</e></IMG> ..</p></r>'
 			],

@@ -14,6 +14,10 @@ class EmphasisTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				'',
+				'<t></t>',
+			],
+			[
 				'xx ***x*****x** xx',
 				'<r><p>xx <STRONG><s>**</s><EM><s>*</s>x<e>*</e></EM><e>**</e></STRONG><STRONG><s>**</s>x<e>**</e></STRONG> xx</p></r>'
 			],

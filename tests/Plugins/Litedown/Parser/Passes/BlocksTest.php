@@ -13,7 +13,10 @@ class BlocksTest extends AbstractTest
 	public function getParsingTests()
 	{
 		return self::fixTests([
-
+			[
+				'',
+				'<t></t>',
+			],
 			// Paragraphs and quotes
 			[
 				'foo',

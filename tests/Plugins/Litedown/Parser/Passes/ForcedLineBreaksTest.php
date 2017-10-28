@@ -14,6 +14,10 @@ class ForcedLineBreaksTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				'',
+				'<t></t>',
+			],
+			[
 				[
 					'first line  ',
 					'second line  ',

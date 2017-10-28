@@ -14,6 +14,10 @@ class SuperscriptTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				'',
+				'<t></t>',
+			],
+			[
 				'.. foo^baar^baz 1^2 ..',
 				'<r><p>.. foo<SUP><s>^</s>baar<SUP><s>^</s>baz</SUP></SUP> 1<SUP><s>^</s>2</SUP> ..</p></r>'
 			],

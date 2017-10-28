@@ -14,6 +14,10 @@ class LinksTest extends AbstractTest
 	public function getParsingTests()
 	{
 		return self::fixTests([
+			[
+				'',
+				'<t></t>',
+			],
 			// Inline links
 			[
 				'Go to [that site](http://example.org) now!',
