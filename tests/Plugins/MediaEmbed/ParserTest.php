@@ -2757,6 +2757,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
+				'<r><ORFIUM album_id="24371" url="https://www.orfium.com/album/24371/everybody-loves-kanye-totom/">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</ORFIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/',
+				'<r><ORFIUM set_id="614763" url="https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/">https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/</ORFIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/',
+				'<r><ORFIUM playlist_id="511651" url="https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/">https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/</ORFIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/',
+				'<r><ORFIUM track_id="625367" url="https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/">https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</ORFIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
 				'http://pastebin.com/9jEf44nc',
 				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
 				[],
@@ -4097,6 +4133,42 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('nhl');
+				}
+			],
+			[
+				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/album/24371" style="border:0;height:550px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/live-set/614763" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/playlist/511651" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
+				}
+			],
+			[
+				'https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/track/625367" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('orfium');
 				}
 			],
 			[

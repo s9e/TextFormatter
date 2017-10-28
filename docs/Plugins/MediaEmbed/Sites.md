@@ -367,6 +367,11 @@
 		<td>https://oddshot.tv/s/-MrDaG</td>
 	</tr>
 	<tr>
+		<td><code>orfium</code></td>
+		<td>Orfium</td>
+		<td>https://www.orfium.com/album/24371/everybody-loves-kanye-totom/<br/>https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/<br/>https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/<br/>https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</td>
+	</tr>
+	<tr>
 		<td><code>pastebin</code></td>
 		<td>Pastebin</td>
 		<td>http://pastebin.com/9jEf44nc</td>

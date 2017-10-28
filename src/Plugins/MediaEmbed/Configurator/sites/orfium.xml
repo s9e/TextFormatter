@@ -1,0 +1,43 @@
+<site name="Orfium" homepage="https://www.orfium.com/">
+	<example>https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</example>
+	<example>https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/</example>
+	<example>https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/</example>
+	<example>https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</example>
+
+	<tags><tag>music</tag></tags>
+
+	<host>orfium.com</host>
+	<extract>@album/(?'album_id'\d+)@</extract>
+	<extract>@playlist/(?'playlist_id'\d+)@</extract>
+	<extract>@live-set/(?'set_id'\d+)@</extract>
+	<extract>@track/(?'track_id'\d+)@</extract>
+	<iframe width="100%" max-width="900">
+		<height><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@album_id">550</xsl:when>
+				<xsl:otherwise>275</xsl:otherwise>
+			</xsl:choose>
+		]]></height>
+		<src><![CDATA[
+			<xsl:text>https://www.orfium.com/embedded/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@album_id">
+					<xsl:text>album/</xsl:text>
+					<xsl:value-of select="@album_id"/>
+				</xsl:when>
+				<xsl:when test="@playlist_id">
+					<xsl:text>playlist/</xsl:text>
+					<xsl:value-of select="@playlist_id"/>
+				</xsl:when>
+				<xsl:when test="@set_id">
+					<xsl:text>live-set/</xsl:text>
+					<xsl:value-of select="@set_id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>track/</xsl:text>
+					<xsl:value-of select="@track_id"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
+</site>
