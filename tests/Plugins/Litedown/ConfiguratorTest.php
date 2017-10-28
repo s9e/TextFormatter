@@ -85,4 +85,12 @@ class ConfiguratorTest extends Test
 			$plugin->getJSHints()
 		);
 	}
+
+	/**
+	* @testdox getJSParser() returns a parser
+	*/
+	public function testGetJSParser()
+	{
+		$this->assertGreaterThan(1000, strlen($this->configurator->Litedown->getJSParser()));
+	}
 }

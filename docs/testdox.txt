@@ -2373,6 +2373,7 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Configurator
  [x] asConfig() returns decodeHtmlEntities is saved as a boolean
  [x] getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 0] by default
  [x] getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 1] if decodeHtmlEntities is true
+ [x] getJSParser() returns a parser
 
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser
  [x] Parsing tests 
