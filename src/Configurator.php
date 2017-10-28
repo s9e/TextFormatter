@@ -123,10 +123,6 @@ class Configurator implements ConfigProvider
 		$this->templateNormalizer = new TemplateNormalizer;
 	}
 
-	//==========================================================================
-	// Magic methods
-	//==========================================================================
-
 	/**
 	* Magic __get automatically loads plugins, returns registered vars
 	*
@@ -202,10 +198,6 @@ class Configurator implements ConfigProvider
 			unset($this->registeredVars[$k]);
 		}
 	}
-
-	//==========================================================================
-	// API
-	//==========================================================================
 
 	/**
 	* Enable the creation of a JavaScript parser
