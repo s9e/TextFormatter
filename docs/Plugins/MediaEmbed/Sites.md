@@ -294,7 +294,7 @@
 	<tr>
 		<td><code>mailru</code></td>
 		<td>Mail.Ru</td>
-		<td>http://my.mail.ru/corp/auto/video/testdrive/34.html<br/>http://my.mail.ru/mail/classolo/video/28/29.html<br/>http://my.mail.ru/mail/you4videos/video/_myvideo/1121.html</td>
+		<td>https://my.mail.ru/corp/auto/video/testdrive/34.html<br/>https://my.mail.ru/mail/alenka1957/video/1/7.html</td>
 	</tr>
 	<tr>
 		<td><code>medium</code></td>

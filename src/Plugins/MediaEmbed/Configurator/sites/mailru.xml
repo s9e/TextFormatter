@@ -1,14 +1,13 @@
 <site name="Mail.Ru" homepage="http://my.mail.ru/">
-	<example>http://my.mail.ru/corp/auto/video/testdrive/34.html</example>
-	<example>http://my.mail.ru/mail/classolo/video/28/29.html</example>
-	<example>http://my.mail.ru/mail/you4videos/video/_myvideo/1121.html</example>
+	<example>https://my.mail.ru/corp/auto/video/testdrive/34.html</example>
+	<example>https://my.mail.ru/mail/alenka1957/video/1/7.html</example>
 
 	<tags><tag>.ru</tag></tags>
 
 	<host>my.mail.ru</host>
 	<scrape>
 		<match>!my\.mail\.ru/\w+/\w+/video/\w+/\d!</match>
-		<extract>!mail\.ru/video/(?'id'[/\w]+)\.html!</extract>
+		<extract>!"itemId": ?"?(?'id'\d+)!</extract>
 	</scrape>
-	<iframe width="560" height="342" src="//videoapi.my.mail.ru/videos/embed/{@id}.html"/>
+	<iframe src="https://my.mail.ru/video/embed/{@id}"/>
 </site>
