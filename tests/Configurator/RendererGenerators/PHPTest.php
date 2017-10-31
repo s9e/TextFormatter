@@ -1165,30 +1165,6 @@ class PHPTest extends Test
 				}
 			],
 			[
-				'<r><T4><s>[t4]</s>...<e>[/t4]</e></T4></r>',
-				'<b title="foo [t4] {baz}">...</b>',
-				function ($configurator)
-				{
-					$configurator->tags->add('T4')->template = '<b title="foo {s} {{baz}}"><xsl:apply-templates /></b>';
-				},
-				function ($renderer)
-				{
-					$renderer->metaElementsRegexp = '((?!))';
-				}
-			],
-			[
-				'<r><T5><s>[t5]</s>...<e>[/t5]</e></T5></r>',
-				'<b title="foo [t5]...[/t5] {baz}">...</b>',
-				function ($configurator)
-				{
-					$configurator->tags->add('T5')->template = '<b title="foo {.} {{baz}}"><xsl:apply-templates /></b>';
-				},
-				function ($renderer)
-				{
-					$renderer->metaElementsRegexp = '((?!))';
-				}
-			],
-			[
 				'<r><T6><s>[t6]</s>...<e>[/t6]</e></T6></r>',
 				'<b title="">...</b>',
 				function ($configurator)

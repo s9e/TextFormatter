@@ -36,6 +36,6 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	*/
 	public static function getRenderer()
 	{
-		return unserialize('O:40:"s9e\\TextFormatter\\Bundles\\Forum\\Renderer":2:{s:9:"' . "\0" . '*' . "\0" . 'params";a:4:{s:6:"L_HIDE";s:4:"Hide";s:6:"L_SHOW";s:4:"Show";s:9:"L_SPOILER";s:7:"Spoiler";s:7:"L_WROTE";s:6:"wrote:";}s:18:"metaElementsRegexp";s:22:"(<[eis]>[^<]*</[eis]>)";}');
+		return unserialize('O:40:"s9e\\TextFormatter\\Bundles\\Forum\\Renderer":1:{s:9:"' . "\0" . '*' . "\0" . 'params";a:4:{s:6:"L_HIDE";s:4:"Hide";s:6:"L_SHOW";s:4:"Show";s:9:"L_SPOILER";s:7:"Spoiler";s:7:"L_WROTE";s:6:"wrote:";}}');
 	}
 }

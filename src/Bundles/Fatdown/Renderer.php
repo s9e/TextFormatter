@@ -58,11 +58,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 		$html = preg_replace_callback(
 			'(<(?:(?!/)((?>BANDCAMP|DAILYMOTION|F(?>P|ACEBOOK)|H[CER]|IMG|LIVELEAK|S(?>OUNDCLOUD|POTIFY)|TWITCH|VI(?>MEO|NE)|YOUTUBE|html:(?>br|img)))(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s',
 			[$this, 'quick'],
-			preg_replace(
-				'(<[eis]>[^<]*</[eis]>)',
-				'',
-				substr($xml, 1 + strpos($xml, '>'), -4)
-			)
+			substr($xml, 1 + strpos($xml, '>'), -4)
 		);
 
 		return str_replace('<br/>', '<br>', $html);

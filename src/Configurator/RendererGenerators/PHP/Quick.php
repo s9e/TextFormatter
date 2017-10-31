@@ -94,11 +94,7 @@ class Quick
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . var_export($regexp, true) . ',';
 		$php[] = "			[\$this, 'quick'],";
-		$php[] = '			preg_replace(';
-		$php[] = "				'(<[eis]>[^<]*</[eis]>)',";
-		$php[] = "				'',";
-		$php[] = '				substr($xml, 1 + strpos($xml, \'>\'), -4)';
-		$php[] = '			)';
+		$php[] = '			substr($xml, 1 + strpos($xml, \'>\'), -4)';
 		$php[] = '		);';
 		$php[] = '';
 		$php[] = "		return str_replace('<br/>', '<br>', \$html);";

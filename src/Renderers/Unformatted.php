@@ -18,11 +18,6 @@ class Unformatted extends Renderer
 	/**
 	* {@inheritdoc}
 	*/
-	public $metaElementsRegexp = '((?!))';
-
-	/**
-	* {@inheritdoc}
-	*/
 	protected function renderRichText($xml)
 	{
 		return str_replace("\n", "<br>\n", htmlspecialchars(strip_tags($xml), ENT_COMPAT, 'UTF-8', false));

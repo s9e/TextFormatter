@@ -853,57 +853,6 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
-	* @testdox getMetaElementsRegexp() tests
-	* @dataProvider getMetaElementsRegexpTests
-	*/
-	public function testMetaElementsRegexp(array $templates, $expected)
-	{
-		$this->assertSame($expected, TemplateHelper::getMetaElementsRegexp($templates));
-	}
-
-	public function getMetaElementsRegexpTests()
-	{
-		return [
-			[
-				[],
-				'(<[eis]>[^<]*</[^>]+>)'
-			],
-			[
-				['e' => '', 'i' => '', 's' => '', 'B' => '<b>..</b>'],
-				'(<[eis]>[^<]*</[^>]+>)'
-			],
-			[
-				['e' => '<xsl:value-of select="."/>', 'i' => '', 's' => '', 'B' => '<b>..</b>'],
-				'(<[is]>[^<]*</[^>]+>)'
-			],
-			[
-				['e' => '.', 'i' => '.', 's' => '.', 'B' => '<b>..</b>'],
-				'((?!))'
-			],
-			[
-				['X' => '<xsl:value-of select="$s"/>'],
-				'(<[eis]>[^<]*</[^>]+>)'
-			],
-			[
-				['X' => '<xsl:value-of select="@s"/>'],
-				'(<[eis]>[^<]*</[^>]+>)'
-			],
-			[
-				['X' => '<xsl:value-of select="s"/>'],
-				'(<[ei]>[^<]*</[^>]+>)'
-			],
-			[
-				['X' => '<xsl:if test="e">...</xsl:if>'],
-				'(<[is]>[^<]*</[^>]+>)'
-			],
-			[
-				['X' => '<hr title="s{i}e"/>'],
-				'(<[es]>[^<]*</[^>]+>)'
-			],
-		];
-	}
-
-	/**
 	* @testdox replaceHomogeneousTemplates() tests
 	* @dataProvider getReplaceHomogeneousTemplatesTests
 	*/

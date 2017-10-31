@@ -6,6 +6,10 @@ The PHP renderer's source has been removed from the renderer instance.
 
 The `HostedMinifier` and `RemoteCache` minifiers have been removed.
 
+`s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getMetaElementsRegexp()` has been removed.
+
+The `metaElementsRegexp` property of `s9e\TextFormatter\Renderer` has been removed. Meta elements `e`, `i` and `s` are now always removed from the source XML before rendering.
+
 
 ## 0.11.0
 

@@ -13,11 +13,6 @@ use InvalidArgumentException;
 abstract class Renderer
 {
 	/**
-	* @var string Regexp that matches meta elements to be removed
-	*/
-	public $metaElementsRegexp = '(<[eis]>[^<]*</[eis]>)';
-
-	/**
 	* @var array Associative array of [paramName => paramValue]
 	*/
 	protected $params = [];
@@ -56,7 +51,7 @@ abstract class Renderer
 		}
 		else
 		{
-			return $this->renderRichText(preg_replace($this->metaElementsRegexp, '', $xml));
+			return $this->renderRichText(preg_replace('(<[eis]>[^<]*</[eis]>)', '', $xml));
 		}
 	}
 

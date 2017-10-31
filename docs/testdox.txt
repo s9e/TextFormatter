@@ -643,7 +643,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
  [x] replaceTokens() tests 
  [x] highlightNode() tests 
- [x] getMetaElementsRegexp() tests 
  [x] replaceHomogeneousTemplates() tests 
 
 s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
