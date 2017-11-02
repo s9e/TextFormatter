@@ -25,7 +25,7 @@ do
 	git branch -D "$tmp" 2> /dev/null
 	git checkout -b "$tmp" master 2> /dev/null
 
-	OPTIMIZE=1 scripts/build/prepareFiles.sh $fullversion
+	scripts/build/prepareFiles.sh $fullversion
 
 	for file in $ignore;
 	do

@@ -18,8 +18,8 @@ rmdir ../../src/Plugins/MediaEmbed/Configurator/sites
 # Patch the sources for current PHP version
 php patchSources.php "$@"
 
-# Optimize the sources if applicable
-if [ -n "$OPTIMIZE" ]
+# Optimize the sources if we do not generate a code coverage report
+if [ -z "$COVERAGE" ]
 then
 	php optimizeSources.php
 fi
