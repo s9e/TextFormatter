@@ -144,48 +144,6 @@ abstract class AbstractTest extends Test
 		$this->assertEquals($renderer, unserialize(serialize($renderer)));
 	}
 
-	/**
-	* @testdox The quick renderer can handle unknown tags
-	*/
-	public function testQuickRendererUnknownTag()
-	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
-		$this->assertSame('unknown', $className::render('<r><UNKNOWN>unknown</UNKNOWN></r>'));
-	}
-
-	/**
-	* @testdox The quick renderer can handle unknown self-closing tags
-	*/
-	public function testQuickRendererUnknownSelfClosingTag()
-	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
-		$this->assertSame('unknown', $className::render('<r><UNKNOWN/>unknown</r>'));
-	}
-
-	/**
-	* @testdox The quick renderer can handle comments
-	* @expectedException InvalidArgumentException comments
-	*/
-	public function testQuickRendererComment()
-	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
-		$this->assertSame('unknown', $className::render('<r><!---->unknown</r>'));
-	}
-
-	/**
-	* @testdox The quick renderer can handle processing instructions
-	* @expectedException InvalidArgumentException Processing
-	*/
-	public function testQuickRendererProcessingInstruction()
-	{
-		$className = static::getClassName();
-		$className::getCachedRenderer()->quickRenderingTest = '((?!))';
-		$this->assertSame('unknown', $className::render('<r><?x ?>unknown</r>'));
-	}
-
 	protected function runRenderingTest($text, $expected, $params, $quick)
 	{
 		$className = static::getClassName();

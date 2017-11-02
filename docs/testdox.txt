@@ -2616,6 +2616,10 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
  [x] optimize() tests 
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
+ [x] The quick renderer can handle unknown tags
+ [x] The quick renderer can handle unknown self-closing tags
+ [x] The quick renderer can handle comments
+ [x] The quick renderer can handle processing instructions
  [x] Conditionals 
  [x] Rendering 
  [x] Rendering strategy 
@@ -2832,10 +2836,6 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] The quick renderer can handle unknown tags
- [x] The quick renderer can handle unknown self-closing tags
- [x] The quick renderer can handle comments
- [x] The quick renderer can handle processing instructions
  [x] Rendering tests 
  [x] Rendering tests (quick renderer) 
 
@@ -2849,10 +2849,6 @@ s9e\TextFormatter\Tests\Bundles\Forum
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] The quick renderer can handle unknown tags
- [x] The quick renderer can handle unknown self-closing tags
- [x] The quick renderer can handle comments
- [x] The quick renderer can handle processing instructions
  [x] Rendering tests 
  [x] Rendering tests (quick renderer) 
 
@@ -2866,10 +2862,6 @@ s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] The quick renderer can handle unknown tags
- [x] The quick renderer can handle unknown self-closing tags
- [x] The quick renderer can handle comments
- [x] The quick renderer can handle processing instructions
  [x] Rendering tests 
  [x] Rendering tests (quick renderer) 
 

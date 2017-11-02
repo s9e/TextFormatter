@@ -35,6 +35,55 @@ class QuickTest extends Test
 		return $php;
 	}
 
+	protected function getRenderer()
+	{
+		extract($this->configurator->finalize());
+
+		return $renderer;
+	}
+
+	/**
+	* @testdox The quick renderer can handle unknown tags
+	*/
+	public function testQuickRendererUnknownTag()
+	{
+		$renderer = $this->getRenderer();
+		$renderer->quickRenderingTest = '((?!))';
+		$this->assertSame('unknown', $renderer->render('<r><UNKNOWN>unknown</UNKNOWN></r>'));
+	}
+
+	/**
+	* @testdox The quick renderer can handle unknown self-closing tags
+	*/
+	public function testQuickRendererUnknownSelfClosingTag()
+	{
+		$renderer = $this->getRenderer();
+		$renderer->quickRenderingTest = '((?!))';
+		$this->assertSame('unknown', $renderer->render('<r><UNKNOWN/>unknown</r>'));
+	}
+
+	/**
+	* @testdox The quick renderer can handle comments
+	* @expectedException InvalidArgumentException comments
+	*/
+	public function testQuickRendererComment()
+	{
+		$renderer = $this->getRenderer();
+		$renderer->quickRenderingTest = '((?!))';
+		$this->assertSame('unknown', $renderer->render('<r><!---->unknown</r>'));
+	}
+
+	/**
+	* @testdox The quick renderer can handle processing instructions
+	* @expectedException InvalidArgumentException Processing
+	*/
+	public function testQuickRendererProcessingInstruction()
+	{
+		$renderer = $this->getRenderer();
+		$renderer->quickRenderingTest = '((?!))';
+		$this->assertSame('unknown', $renderer->render('<r><?x ?>unknown</r>'));
+	}
+
 	/**
 	* @dataProvider getConditionalsTests
 	*/
