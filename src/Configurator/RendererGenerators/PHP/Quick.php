@@ -34,11 +34,6 @@ class Quick
 
 		foreach ($compiledTemplates as $tagName => $php)
 		{
-			if (preg_match('(^(?:br|[ieps])$)', $tagName))
-			{
-				continue;
-			}
-
 			$rendering = self::getRenderingStrategy($php);
 			if ($rendering === false)
 			{
@@ -441,116 +436,83 @@ class Quick
 	*/
 	protected static function replacePHP(&$php)
 	{
-		if ($php === '')
-		{
-			return;
-		}
-
-		$php = str_replace('$this->out', '$html', $php);
-
 		// Expression that matches a $node->getAttribute() call and captures its string argument
 		$getAttribute = "\\\$node->getAttribute\\(('[^']+')\\)";
 
-		// An attribute value escaped as ENT_NOQUOTES. We only need to unescape quotes
-		$php = preg_replace(
-			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_NOQUOTES . '\\))',
-			"str_replace('&quot;','\"',\$attributes[\$1])",
-			$php
-		);
+		$replacements = [
+			'$this->out' => '$html',
 
-		// An attribute value escaped as ENT_COMPAT can be used as-is
-		$php = preg_replace(
-			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_COMPAT . '\\))',
-			'$attributes[$1]',
-			$php
-		);
+			// An attribute value escaped as ENT_NOQUOTES. We only need to unescape quotes
+			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_NOQUOTES . '\\))'
+				=> "str_replace('&quot;','\"',\$attributes[\$1])",
 
-		// Character replacement can be performed directly on the escaped value provided that it is
-		// then escaped as ENT_COMPAT and that replacements do not interfere with the escaping of
-		// the characters &<>" or their representation &amp;&lt;&gt;&quot;
-		$php = preg_replace(
-			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . ENT_COMPAT . '\\))',
-			'strtr($attributes[$1],$2,$3)',
-			$php
-		);
+			// An attribute value escaped as ENT_COMPAT can be used as-is
+			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_COMPAT . '\\))' => '$attributes[$1]',
 
-		// A comparison between two attributes. No need to unescape
-		$php = preg_replace(
-			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')',
-			'$attributes[$1]$2$attributes[$3]',
-			$php
-		);
+			// Character replacement can be performed directly on the escaped value provided that it
+			// is then escaped as ENT_COMPAT and that replacements do not interfere with the escaping
+			// of the characters &<>" or their representation &amp;&lt;&gt;&quot;
+			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . ENT_COMPAT . '\\))'
+				=> 'strtr($attributes[$1],$2,$3)',
 
-		// A comparison between an attribute and a literal string. Rather than unescape the
-		// attribute value, we escape the literal. This applies to comparisons using XPath's
-		// contains() as well (translated to PHP's strpos())
-		$php = preg_replace_callback(
-			'(' . $getAttribute . "===('.*?(?<!\\\\)(?:\\\\\\\\)*'))s",
-			function ($m)
+			// A comparison between two attributes. No need to unescape
+			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')'
+				=> '$attributes[$1]$2$attributes[$3]',
+
+			// A comparison between an attribute and a literal string. Rather than unescape the
+			// attribute value, we escape the literal. This applies to comparisons using XPath's
+			// contains() as well (translated to PHP's strpos())
+			'(' . $getAttribute . "===('.*?(?<!\\\\)(?:\\\\\\\\)*'))s"
+				=> function ($m)
+				{
+					return '$attributes[' . $m[1] . ']===' . htmlspecialchars($m[2], ENT_COMPAT);
+				},
+
+			"(('.*?(?<!\\\\)(?:\\\\\\\\)*')===" . $getAttribute . ')s'
+				=> function ($m)
+				{
+					return htmlspecialchars($m[1], ENT_COMPAT) . '===$attributes[' . $m[2] . ']';
+				},
+
+			'(strpos\\(' . $getAttribute . ",('.*?(?<!\\\\)(?:\\\\\\\\)*')\\)([!=]==(?:0|false)))s"
+				=> function ($m)
+				{
+					return 'strpos($attributes[' . $m[1] . "]," . htmlspecialchars($m[2], ENT_COMPAT) . ')' . $m[3];
+				},
+
+			"(strpos\\(('.*?(?<!\\\\)(?:\\\\\\\\)*')," . $getAttribute . '\\)([!=]==(?:0|false)))s'
+				=> function ($m)
+				{
+					return 'strpos(' . htmlspecialchars($m[1], ENT_COMPAT) . ',$attributes[' . $m[2] . '])' . $m[3];
+				},
+
+			// An attribute value used in an arithmetic comparison or operation does not need to be
+			// unescaped. The same applies to empty(), isset() and conditionals
+			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))'        => '$attributes[$1]',
+			'((?<!\\w)(\\d+(?:==|[-+*]))' . $getAttribute . ')'  => '$1$attributes[$2]',
+			"(empty\\(\\\$node->getAttribute\\(('[^']+')\\)\\))" => 'empty($attributes[$1])',
+			"(\\\$node->hasAttribute\\(('[^']+')\\))"            => 'isset($attributes[$1])',
+			'if($node->attributes->length)' => 'if($this->hasNonNullValues($attributes))',
+
+			// In all other situations, unescape the attribute value before use
+			"(\\\$node->getAttribute\\(('[^']+')\\))" => 'htmlspecialchars_decode($attributes[$1])'
+		];
+
+		foreach ($replacements as $match => $replace)
+		{
+			if ($replace instanceof Closure)
 			{
-				return '$attributes[' . $m[1] . ']===' . htmlspecialchars($m[2], ENT_COMPAT);
-			},
-			$php
-		);
-		$php = preg_replace_callback(
-			"(('.*?(?<!\\\\)(?:\\\\\\\\)*')===" . $getAttribute . ')s',
-			function ($m)
+				$php = preg_replace_callback($match, $replace, $php);
+			}
+			elseif ($match[0] === '(')
 			{
-				return htmlspecialchars($m[1], ENT_COMPAT) . '===$attributes[' . $m[2] . ']';
-			},
-			$php
-		);
-		$php = preg_replace_callback(
-			'(strpos\\(' . $getAttribute . ",('.*?(?<!\\\\)(?:\\\\\\\\)*')\\)([!=]==(?:0|false)))s",
-			function ($m)
+				$php = preg_replace($match, $replace, $php);
+			}
+			else
 			{
-				return 'strpos($attributes[' . $m[1] . "]," . htmlspecialchars($m[2], ENT_COMPAT) . ')' . $m[3];
-			},
-			$php
-		);
-		$php = preg_replace_callback(
-			"(strpos\\(('.*?(?<!\\\\)(?:\\\\\\\\)*')," . $getAttribute . '\\)([!=]==(?:0|false)))s',
-			function ($m)
-			{
-				return 'strpos(' . htmlspecialchars($m[1], ENT_COMPAT) . ',$attributes[' . $m[2] . '])' . $m[3];
-			},
-			$php
-		);
-
-		// An attribute value used in an arithmetic comparison or operation does not need to be
-		// unescaped. The same applies to empty() and isset()
-		$php = preg_replace(
-			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))',
-			'$attributes[$1]',
-			$php
-		);
-		$php = preg_replace(
-			'((?<!\\w)(\\d+(?:==|[-+*]))' . $getAttribute . ')',
-			'$1$attributes[$2]',
-			$php
-		);
-		$php = preg_replace(
-			"(empty\\(\\\$node->getAttribute\\(('[^']+')\\)\\))",
-			'empty($attributes[$1])',
-			$php
-		);
-		$php = preg_replace(
-			"(\\\$node->hasAttribute\\(('[^']+')\\))",
-			'isset($attributes[$1])',
-			$php
-		);
-		$php = str_replace(
-			'($node->attributes->length)',
-			'($this->hasNonNullValues($attributes))',
-			$php
-		);
-
-		// In all other situations, unescape the attribute value before use
-		$php = preg_replace(
-			"(\\\$node->getAttribute\\(('[^']+')\\))",
-			'htmlspecialchars_decode($attributes[$1])',
-			$php
-		);
+				$php = str_replace($match, $replace, $php);
+			}
+		}
 	}
 
 	/**
