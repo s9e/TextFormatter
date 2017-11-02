@@ -4,12 +4,15 @@ TODO: Autumn 2017
 - ~~Split Litedown parser.~~
 - Review Litedown syntax. #75
 - Review Litedown implementation.
-- Move static code from dynamically generated PHP renderers into an abstract class.
+- ~~Move static code from dynamically generated PHP renderers into an abstract class.~~
 - ~~Switch Travis's code coverage to PHP 7.0 if possible.~~
 - Look for opportunities to split subsystems into separate libraries.
 - ~~Remove $source from the PHP renderer.~~
 - ~~Remove NEWS.md.~~
 - ~~Remove old Cookbook.~~
+- Test whether <YOUTUBE> with a <URL> child can use the Quick renderer. Also test recursion without a template for the outer tag.
+- Investigate "htmlspecialchars(htmlspecialchars_decode($attributes['type']).htmlspecialchars_decode($attributes['id']),2)" in Forum bundle's renderer
+- Test what gets serialized in PHP / Quick renderers
 
 
 TODO: Summer 2017

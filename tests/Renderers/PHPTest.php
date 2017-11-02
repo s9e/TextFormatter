@@ -54,20 +54,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Custom properties are preserved during serialization
-	*/
-	public function testSerializePreserveCustom()
-	{
-		$renderer = $this->configurator->rendering->getRenderer();
-		$renderer->foo = 'bar';
-
-		$renderer = unserialize(serialize($renderer));
-
-		$this->assertObjectHasAttribute('foo', $renderer);
-		$this->assertSame('bar', $renderer->foo);
-	}
-
-	/**
 	* @testdox Internal objects and resources are unset after rendering
 	*/
 	public function testResourcesUnset()

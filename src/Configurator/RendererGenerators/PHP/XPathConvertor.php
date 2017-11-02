@@ -428,7 +428,7 @@ class XPathConvertor
 	* Export an XPath expression as PHP with special consideration for XPath variables
 	*
 	* Will return PHP source representing the XPath expression, with special consideration for XPath
-	* variables which are returned as a method call to $this->getParamAsXPath()
+	* variables which are returned as a method call to XPath::export()
 	*
 	* @param  string $expr XPath expression
 	* @return string       PHP representation of the expression

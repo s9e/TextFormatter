@@ -13,6 +13,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer
+* @covers s9e\TextFormatter\Renderers\PHP
 */
 class PHPTest extends Test
 {
@@ -744,6 +745,18 @@ class PHPTest extends Test
 						= '<script><xsl:value-of select="\'0&lt;1 &amp;&amp; 1&lt;0 &amp;&amp; alert(1)\'"/></script>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template
+						= '<xsl:if test="concat($FOO,$FOO)=\'foofoo\'">foo</xsl:if><xsl:if test="concat($FOO,$FOO)=\'bar\'">bar</xsl:if>';
+				},
+				function ($renderer)
+				{
+					$renderer->setParameter('FOO', 'foo');
+				}
+			],
 		];
 	}
 
@@ -848,7 +861,7 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:if test="$a+$b=$c">...</xsl:if>',
-				['$this->xpath = new \\DOMXPath($dom);', 'function getParamAsXPath(']
+				"if(\$this->xpath->evaluate(\$this->getParamAsXPath('a').'+'.\$this->getParamAsXPath('b').'='.\$this->getParamAsXPath('c'),\$node))"
 			],
 		];
 	}
@@ -1017,7 +1030,7 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:apply-templates select="*"/>',
-				'$this->xpath = new \\DOMXPath',
+				null,
 				'getParamAsXPath'
 			],
 		];
@@ -1530,7 +1543,10 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$this->assertContains('renderQuick', $this->getRendererSource());
+		$this->assertContains(
+			'public $enableQuickRenderer=true;',
+			$this->getRendererSource()
+		);
 	}
 
 	/**
@@ -1541,7 +1557,10 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = false;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$this->assertNotContains('renderQuick', $this->getRendererSource());
+		$this->assertNotContains(
+			'$enableQuickRenderer=true;',
+			$this->getRendererSource()
+		);
 	}
 
 	/**

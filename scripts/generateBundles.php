@@ -20,7 +20,6 @@ foreach (glob(__DIR__ . '/../src/Configurator/Bundles/*.php') as $filepath)
 	$rendererGenerator = $configurator->rendering->setEngine('PHP');
 	$rendererGenerator->useMultibyteStringFunctions = false;
 	$rendererGenerator->forceEmptyElements = false;
-	$rendererGenerator->enableQuickRenderer = true;
 	$rendererGenerator->className = 's9e\\TextFormatter\\Bundles\\' . $bundleName . '\\Renderer';
 	$rendererGenerator->filepath  = $bundleDir . '/Renderer.php';
 

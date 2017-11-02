@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
+use Closure;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
@@ -20,13 +21,19 @@ class Quick
 	*/
 	public static function getSource(array $compiledTemplates)
 	{
-		$map = [];
-		$tagNames = [];
+		$map         = ['dynamic' => [], 'php' => [], 'static' => []];
+		$tagNames    = [];
 		$unsupported = [];
+
+		// Ignore system tags
+		unset($compiledTemplates['br']);
+		unset($compiledTemplates['e']);
+		unset($compiledTemplates['i']);
+		unset($compiledTemplates['p']);
+		unset($compiledTemplates['s']);
 
 		foreach ($compiledTemplates as $tagName => $php)
 		{
-			// Ignore system tags
 			if (preg_match('(^(?:br|[ieps])$)', $tagName))
 			{
 				continue;
@@ -53,167 +60,44 @@ class Quick
 		}
 
 		$php = [];
-		if (isset($map['static']))
-		{
-			$php[] = '	private static $static=' . self::export($map['static']) . ';';
-		}
-		if (isset($map['dynamic']))
-		{
-			$php[] = '	private static $dynamic=' . self::export($map['dynamic']) . ';';
-		}
-		if (isset($map['php']))
+		$php[] = '	/** {@inheritdoc} */';
+		$php[] = '	public $enableQuickRenderer=true;';
+		$php[] = '	/** {@inheritdoc} */';
+		$php[] = '	protected $static=' . self::export($map['static']) . ';';
+		$php[] = '	/** {@inheritdoc} */';
+		$php[] = '	protected $dynamic=' . self::export($map['dynamic']) . ';';
+
+		$quickSource = '';
+		if (!empty($map['php']))
 		{
 			list($quickBranches, $quickSource) = self::generateBranchTable('$qb', $map['php']);
-
-			$php[] = '	private static $attributes;';
-			$php[] = '	private static $quickBranches=' . self::export($quickBranches) . ';';
+			$php[] = '	/** {@inheritdoc} */';
+			$php[] = '	protected $quickBranches=' . self::export($quickBranches) . ';';
 		}
 
-		if (!empty($unsupported))
-		{
-			$regexp = '(<' . RegexpBuilder::fromList($unsupported, ['useLookahead' => true]) . '[ />])';
-			$php[] = '	public $quickRenderingTest=' . var_export($regexp, true) . ';';
-		}
-
-		$php[] = '';
-		$php[] = '	protected function renderQuick($xml)';
-		$php[] = '	{';
-		$php[] = '		$xml = $this->decodeSMP($xml);';
-
-		if (isset($map['php']))
-		{
-			// Reset saved attributes before we start rendering
-			$php[] = '		self::$attributes = [];';
-		}
-
-		// Build the regexp that matches all the tags
+		// Build a regexp that matches all the tags
 		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
 		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s';
+		$php[] = '	/** {@inheritdoc} */';
+		$php[] = '	protected $quickRegexp=' . var_export($regexp, true) . ';';
 
-		$php[] = '		$html = preg_replace_callback(';
-		$php[] = '			' . var_export($regexp, true) . ',';
-		$php[] = "			[\$this, 'quick'],";
-		$php[] = '			substr($xml, 1 + strpos($xml, \'>\'), -4)';
-		$php[] = '		);';
-		$php[] = '';
-		$php[] = "		return str_replace('<br/>', '<br>', \$html);";
-		$php[] = '	}';
-		$php[] = '';
-		$php[] = '	protected function quick($m)';
-		$php[] = '	{';
-		$php[] = '		if (isset($m[2]))';
-		$php[] = '		{';
-		$php[] = '			$id = $m[2];';
-		$php[] = '';
-		$php[] = '			if (isset($m[3]))';
-		$php[] = '			{';
-		$php[] = '				unset($m[3]);';
-		$php[] = '';
-		$php[] = '				$m[0] = substr($m[0], 0, -2) . \'>\';';
-		$php[] = '				$html = $this->quick($m);';
-		$php[] = '';
-		$php[] = '				$m[0] = \'</\' . $id . \'>\';';
-		$php[] = '				$m[2] = \'/\' . $id;';
-		$php[] = '				$html .= $this->quick($m);';
-		$php[] = '';
-		$php[] = '				return $html;';
-		$php[] = '			}';
-		$php[] = '		}';
-		$php[] = '		else';
-		$php[] = '		{';
-		$php[] = '			$id = $m[1];';
-		$php[] = '';
-		$php[] = '			$lpos = 1 + strpos($m[0], \'>\');';
-		$php[] = '			$rpos = strrpos($m[0], \'<\');';
-		$php[] = '			$textContent = substr($m[0], $lpos, $rpos - $lpos);';
-		$php[] = '';
-		$php[] = '			if (strpos($textContent, \'<\') !== false)';
-		$php[] = '			{';
-		$php[] = '				throw new \\RuntimeException;';
-		$php[] = '			}';
-		$php[] = '';
-		$php[] = '			$textContent = htmlspecialchars_decode($textContent);';
-		$php[] = '		}';
-		$php[] = '';
-
-		if (isset($map['static']))
-		{
-			$php[] = '		if (isset(self::$static[$id]))';
-			$php[] = '		{';
-			$php[] = '			return self::$static[$id];';
-			$php[] = '		}';
-			$php[] = '';
-		}
-
-		if (isset($map['dynamic']))
-		{
-			$php[] = '		if (isset(self::$dynamic[$id]))';
-			$php[] = '		{';
-			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
-			$php[] = '			return preg_replace($match, $replace, $m[0], 1);';
-			$php[] = '		}';
-			$php[] = '';
-		}
-
-		if (isset($map['php']))
-		{
-			$php[] = '		if (!isset(self::$quickBranches[$id]))';
-			$php[] = '		{';
-		}
-
-		// Test for <! and <? tags
-		$condition = "\$id[0] === '!' || \$id[0] === '?'";
+		// Build a regexp that matches tags that cannot be rendered with the Quick renderer
 		if (!empty($unsupported))
 		{
-			$regexp = '(^/?' . RegexpBuilder::fromList($unsupported) . '$)';
-			$condition .= ' || preg_match(' . var_export($regexp, true) . ', $id)';
+			$regexp = '(<(?:[!?]|' . RegexpBuilder::fromList($unsupported) . '[ />]))';
+			$php[]  = '	/** {@inheritdoc} */';
+			$php[]  = '	protected $quickRenderingTest=' . var_export($regexp, true) . ';';
 		}
 
-		$php[] = '			if (' . $condition . ')';
-		$php[] = '			{';
-		$php[] = '				throw new \\RuntimeException;';
-		$php[] = '			}';
-		$php[] = "			return '';";
-
-		if (isset($map['php']))
-		{
-			$php[] = '		}';
-			$php[] = '';
-			$php[] = '		$attributes = [];';
-			$php[] = '		if (strpos($m[0], \'="\') !== false)';
-			$php[] = '		{';
-			$php[] = '			preg_match_all(\'(([^ =]++)="([^"]*))S\', substr($m[0], 0, strpos($m[0], \'>\')), $matches);';
-			$php[] = '			foreach ($matches[1] as $i => $attrName)';
-			$php[] = '			{';
-			$php[] = '				$attributes[$attrName] = $matches[2][$i];';
-			$php[] = '			}';
-			$php[] = '		}';
-			$php[] = '';
-			$php[] = '		$qb = self::$quickBranches[$id];';
-			$php[] = '		' . $quickSource;
-			$php[] = '';
-			$php[] = '		return $html;';
-		}
-
+		$php[] = '	/** {@inheritdoc} */';
+		$php[] = '	protected function renderQuickTemplate($qb, $xml)';
+		$php[] = '	{';
+		$php[] = '		$attributes=$this->matchAttributes($xml);';
+		$php[] = "		\$html='';" . $quickSource;
+		$php[] = '';
+		$php[] = '		return $html;';
 		$php[] = '	}';
-
-		if (isset($map['php']))
-		{
-			$php[] = '';
-			$php[] = '	protected static function hasNonNullValues($array)';
-			$php[] = '	{';
-			$php[] = '		foreach ($array as $v)';
-			$php[] = '		{';
-			$php[] = '			if (isset($v))';
-			$php[] = '			{';
-			$php[] = '				return true;';
-			$php[] = '			}';
-			$php[] = '		}';
-			$php[] = '		';
-			$php[] = '		return false;';
-			$php[] = '	}';
-		}
 
 		return implode("\n", $php);
 	}
@@ -296,7 +180,7 @@ class Quick
 		// Keep string rendering where possible, use PHP rendering wherever else
 		foreach ($phpRenderings as $i => $phpRendering)
 		{
-			if (!isset($renderings[$i]) || $renderings[$i] === false || strpos($phpRendering, 'self::$attributes[]') !== false)
+			if (!isset($renderings[$i]) || $renderings[$i] === false || strpos($phpRendering, '$this->attributes[]') !== false)
 			{
 				$renderings[$i] = ['php', $phpRendering];
 			}
@@ -486,7 +370,7 @@ class Quick
 		self::convertPHP($head, $tail, (bool) $branch['passthrough']);
 
 		// Test whether any method call was left unconverted. If so, we cannot render this template
-		if (preg_match('((?<!-)->(?!params\\[))', $head . $tail))
+		if (preg_match('((?<!-|\\$this)->)', $head . $tail))
 		{
 			return false;
 		}
@@ -531,9 +415,9 @@ class Quick
 		self::replacePHP($head);
 		self::replacePHP($tail);
 
-		if (!$passthrough)
+		if (!$passthrough && strpos($head, '$node->textContent') !== false)
 		{
-			$head = str_replace('$node->textContent', '$textContent', $head);
+			$head = '$textContent=$this->getQuickTextContent($xml);' . str_replace('$node->textContent', '$textContent', $head);
 		}
 
 		if (!empty($attrNames))
@@ -544,12 +428,8 @@ class Quick
 
 		if ($saveAttributes)
 		{
-			if (strpos($head, '$html') === false)
-			{
-				$head .= "\$html='';";
-			}
-			$head .= 'self::$attributes[]=$attributes;';
-			$tail  = '$attributes=array_pop(self::$attributes);' . $tail;
+			$head .= '$this->attributes[]=$attributes;';
+			$tail  = '$attributes=array_pop($this->attributes);' . $tail;
 		}
 	}
 
@@ -661,7 +541,7 @@ class Quick
 		);
 		$php = str_replace(
 			'($node->attributes->length)',
-			'(self::hasNonNullValues($attributes))',
+			'($this->hasNonNullValues($attributes))',
 			$php
 		);
 
@@ -671,15 +551,6 @@ class Quick
 			'htmlspecialchars_decode($attributes[$1])',
 			$php
 		);
-
-		if (substr($php, 0, 7) === '$html.=')
-		{
-			$php = '$html=' . substr($php, 7);
-		}
-		else
-		{
-			$php = "\$html='';" . $php;
-		}
 	}
 
 	/**
@@ -888,13 +759,12 @@ class Quick
 		}
 
 		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]+|\\\\['\\\\])*)';\$)";
-
-		if (!preg_match($regexp, $php, $m))
+		if (preg_match($regexp, $php, $m))
 		{
-			return false;
+			return stripslashes($m[1]);
 		}
 
-		return stripslashes($m[1]);
+		return false;
 	}
 
 	/**

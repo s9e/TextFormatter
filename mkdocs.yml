@@ -108,4 +108,5 @@ pages:
     - API changes: Internals/API_changes.md
     - Limits: Internals/Limits.md
     - PHP renderer: Internals/PHP_renderer.md
+    - Quick renderer: Internals/Quick_renderer.md
     - Tag priorities: Internals/Tag_priorities.md

@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMDocument;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Utils\XPath;
 
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
@@ -89,7 +89,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function foldDivision(array $m)
 	{
-		return $m[1] . XPathHelper::export($m[2] / $m[3]);
+		return $m[1] . XPath::export($m[2] / $m[3]);
 	}
 
 	/**
@@ -100,7 +100,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function foldMultiplication(array $m)
 	{
-		return $m[1] . XPathHelper::export($m[2] * $m[3]);
+		return $m[1] . XPath::export($m[2] * $m[3]);
 	}
 
 	/**
@@ -111,7 +111,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function foldOperation(array $m)
 	{
-		return XPathHelper::export($this->xpath->evaluate($m[0]));
+		return XPath::export($this->xpath->evaluate($m[0]));
 	}
 
 	/**

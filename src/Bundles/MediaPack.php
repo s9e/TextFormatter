@@ -36,6 +36,6 @@ abstract class MediaPack extends \s9e\TextFormatter\Bundle
 	*/
 	public static function getRenderer()
 	{
-		return unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":1:{s:9:"' . "\0" . '*' . "\0" . 'params";a:9:{s:20:"AMAZON_ASSOCIATE_TAG";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_CA";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_DE";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_ES";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_FR";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_IN";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_IT";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_JP";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_UK";s:0:"";}}');
+		return unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:9:"' . "\0" . '*' . "\0" . 'params";a:9:{s:20:"AMAZON_ASSOCIATE_TAG";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_CA";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_DE";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_ES";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_FR";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_IN";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_IT";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_JP";s:0:"";s:23:"AMAZON_ASSOCIATE_TAG_UK";s:0:"";}}');
 	}
 }

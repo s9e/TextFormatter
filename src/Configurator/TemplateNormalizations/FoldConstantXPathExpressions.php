@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMDocument;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+use s9e\TextFormatter\Utils\XPath;
 
 class FoldConstantXPathExpressions extends AbstractConstantFolding
 {
@@ -97,7 +97,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 			$result = $this->evaluate($expr);
 			if ($this->canBeSerialized($result))
 			{
-				$foldedExpr = XPathHelper::export($result);
+				$foldedExpr = XPath::export($result);
 				if (strlen($foldedExpr) < strlen($expr))
 				{
 					$expr = $foldedExpr;

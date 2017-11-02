@@ -277,6 +277,7 @@
 			<file>tests/Utils/Http/Clients/CurlTest.php</file>
 			<file>tests/Utils/Http/Clients/NativeTest.php</file>
 			<file>tests/Utils/HttpTest.php</file>
+			<file>tests/Utils/XPathTest.php</file>
 			<file>tests/UtilsTest.php</file>
 
 			<file>tests/BundleTest.php</file>

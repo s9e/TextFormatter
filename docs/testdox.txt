@@ -646,14 +646,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] replaceHomogeneousTemplates() tests 
 
 s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
- [x] export('foo') returns 'foo'
- [x] export("d'oh") returns "d'oh"
- [x] export("'\"") returns concat("'",'"')
- [x] export('"\'') returns concat('"',"'")
- [x] export(123) returns 123
- [x] export(123.45) returns 123.45
- [x] export(123.45) returns 123.45 regardless of locale
- [x] export(new stdClass) throws an exception
  [x] getVariables() tests 
  [x] isExpressionNumeric() tests 
  [x] minify() tests 
@@ -2743,7 +2735,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
  [x] The source of the renderer is omitted for serialization
  [x] The last output of the renderer is omitted for serialization
- [x] Custom properties are preserved during serialization
  [x] Internal objects and resources are unset after rendering
  [x] Renders plain text
  [x] Renders multi-line text
@@ -2804,6 +2795,16 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Native
 s9e\TextFormatter\Tests\Configurator\Helpers\Http
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client
 
+s9e\TextFormatter\Utils\XPath
+ [x] export('foo') returns 'foo'
+ [x] export("d'oh") returns "d'oh"
+ [x] export("'\"") returns concat("'",'"')
+ [x] export('"\'') returns concat('"',"'")
+ [x] export(123) returns 123
+ [x] export(123.45) returns 123.45
+ [x] export(123.45) returns 123.45 regardless of locale
+ [x] export(new stdClass) throws an exception
+
 s9e\TextFormatter\Tests\Utils
  [x] encodeUnicodeSupplementaryCharacters() tests 
  [x] getAttributeValues() tests 
@@ -2837,7 +2838,6 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] Rendering tests 
- [x] Rendering tests (quick renderer) 
 
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
@@ -2850,7 +2850,6 @@ s9e\TextFormatter\Tests\Bundles\Forum
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] Rendering tests 
- [x] Rendering tests (quick renderer) 
 
 s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
@@ -2863,5 +2862,4 @@ s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
  [x] Rendering tests 
- [x] Rendering tests (quick renderer) 
 

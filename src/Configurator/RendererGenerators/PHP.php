@@ -148,9 +148,6 @@ class PHP implements RendererGenerator
 			$groupedTemplates[$template][] = $tagName;
 		}
 
-		// Record whether the template has a <xsl:apply-templates/> with a select attribute
-		$hasApplyTemplatesSelect = false;
-
 		// Assign a branch number to each unique template and record the value for each tag
 		$tagBranch   = 0;
 		$tagBranches = [];
@@ -166,18 +163,6 @@ class PHP implements RendererGenerator
 		{
 			// Parse the template
 			$ir = TemplateParser::parse($template);
-
-			// Test whether this template uses an <xsl:apply-templates/> element with a select
-			if (!$hasApplyTemplatesSelect)
-			{
-				foreach ($ir->getElementsByTagName('applyTemplates') as $applyTemplates)
-				{
-					if ($applyTemplates->hasAttribute('select'))
-					{
-						$hasApplyTemplatesSelect = true;
-					}
-				}
-			}
 
 			// Serialize the representation to PHP
 			$templateSource = $this->serializer->serialize($ir->documentElement);
@@ -219,27 +204,9 @@ class PHP implements RendererGenerator
 		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
 		unset($compiledTemplates);
 
-		// Test whether any templates needs an XPath engine
-		if ($hasApplyTemplatesSelect)
-		{
-			$needsXPath = true;
-		}
-		elseif (strpos($templatesSource, '$this->getParamAsXPath') !== false)
-		{
-			$needsXPath = true;
-		}
-		elseif (strpos($templatesSource, '$this->xpath') !== false)
-		{
-			$needsXPath = true;
-		}
-		else
-		{
-			$needsXPath = false;
-		}
-
 		// Start the code right after the class name, we'll prepend the header when we're done
 		$php = [];
-		$php[] = ' extends \\s9e\\TextFormatter\\Renderer';
+		$php[] = ' extends \\s9e\\TextFormatter\\Renderers\\PHP';
 		$php[] = '{';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
 		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
@@ -249,128 +216,18 @@ class PHP implements RendererGenerator
 			$php[] = '	protected static $' . $varName . '=' . self::export($branchTable) . ';';
 		}
 
-		if ($needsXPath)
-		{
-			$php[] = '	protected $xpath;';
-		}
-
-		$php[] = '	public function __sleep()';
+		$php[] = '	protected function renderNode(\\DOMNode $node)';
 		$php[] = '	{';
-		$php[] = '		$props = get_object_vars($this);';
-		$php[] = "		unset(\$props['out'], \$props['proc'], \$props['source']" . (($needsXPath) ? ", \$props['xpath']" : '') . ');';
-		$php[] = '		return array_keys($props);';
-		$php[] = '	}';
-		$php[] = '	public function renderRichText($xml)';
-		$php[] = '	{';
-
-		if ($quickSource !== false)
-		{
-			// Try the Quick renderer first and if anything happens just keep going with the normal
-			// rendering
-			$php[] = '		if (!isset($this->quickRenderingTest) || !preg_match($this->quickRenderingTest, $xml))';
-			$php[] = '		{';
-			$php[] = '			try';
-			$php[] = '			{';
-			$php[] = '				return $this->renderQuick($xml);';
-			$php[] = '			}';
-			$php[] = '			catch (\\Exception $e)';
-			$php[] = '			{';
-			$php[] = '			}';
-			$php[] = '		}';
-		}
-
-		$php[] = '		$dom = $this->loadXML($xml);';
-
-		if ($needsXPath)
-		{
-			$php[] = '		$this->xpath = new \\DOMXPath($dom);';
-		}
-
-		$php[] = "		\$this->out = '';";
-		$php[] = '		$this->at($dom->documentElement);';
-
-		if ($needsXPath)
-		{
-			$php[] = '		$this->xpath = null;';
-		}
-
-		$php[] = '		return $this->out;';
-		$php[] = '	}';
-
-		if ($hasApplyTemplatesSelect)
-		{
-			$php[] = '	protected function at(\\DOMNode $root, $xpath = null)';
-		}
-		else
-		{
-			$php[] = '	protected function at(\\DOMNode $root)';
-		}
-
-		$php[] = '	{';
-		$php[] = '		if ($root->nodeType === 3)';
+		$php[] = '		if (isset(self::$tagBranches[$node->nodeName]))';
 		$php[] = '		{';
-		$php[] = '			$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');';
+		$php[] = '			$tb = self::$tagBranches[$node->nodeName];';
+		$php[] = '			' . $templatesSource;
 		$php[] = '		}';
 		$php[] = '		else';
 		$php[] = '		{';
-
-		if ($hasApplyTemplatesSelect)
-		{
-			$php[] = '			foreach (isset($xpath) ? $this->xpath->query($xpath, $root) : $root->childNodes as $node)';
-		}
-		else
-		{
-			$php[] = '			foreach ($root->childNodes as $node)';
-		}
-
-		$php[] = '			{';
-		$php[] = '				if (!isset(self::$tagBranches[$node->nodeName]))';
-		$php[] = '				{';
-		$php[] = '					$this->at($node);';
-		$php[] = '				}';
-		$php[] = '				else';
-		$php[] = '				{';
-		$php[] = '					$tb = self::$tagBranches[$node->nodeName];';
-		$php[] = '					' . $templatesSource;
-		$php[] = '				}';
-		$php[] = '			}';
+		$php[] = '			$this->at($node);';
 		$php[] = '		}';
 		$php[] = '	}';
-
-		// Add the getParamAsXPath() method if necessary
-		if (strpos($templatesSource, '$this->getParamAsXPath') !== false)
-		{
-			$php[] = '	protected function getParamAsXPath($k)';
-			$php[] = '	{';
-			$php[] = '		if (!isset($this->params[$k]))';
-			$php[] = '		{';
-			$php[] = '			return "\'\'";';
-			$php[] = '		}';
-			$php[] = '		$str = $this->params[$k];';
-			$php[] = '		if (strpos($str, "\'") === false)';
-			$php[] = '		{';
-			$php[] = '			return "\'$str\'";';
-			$php[] = '		}';
-			$php[] = '		if (strpos($str, \'"\') === false)';
-			$php[] = '		{';
-			$php[] = '			return "\\"$str\\"";';
-			$php[] = '		}';
-			$php[] = '		$toks = [];';
-			$php[] = '		$c = \'"\';';
-			$php[] = '		$pos = 0;';
-			$php[] = '		while ($pos < strlen($str))';
-			$php[] = '		{';
-			$php[] = '			$spn = strcspn($str, $c, $pos);';
-			$php[] = '			if ($spn)';
-			$php[] = '			{';
-			$php[] = '				$toks[] = $c . substr($str, $pos, $spn) . $c;';
-			$php[] = '				$pos += $spn;';
-			$php[] = '			}';
-			$php[] = '			$c = ($c === \'"\') ? "\'" : \'"\';';
-			$php[] = '		}';
-			$php[] = '		return \'concat(\' . implode(\',\', $toks) . \')\';';
-			$php[] = '	}';
-		}
 
 		// Append the Quick renderer if applicable
 		if ($quickSource !== false)
