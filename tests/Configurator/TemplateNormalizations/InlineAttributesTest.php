@@ -42,6 +42,10 @@ class InlineAttributesTest extends AbstractTest
 				'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>',
 				'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>'
 			],
+			[
+				'<hr><xsl:attribute name="title">&amp;&lt;&gt;"</xsl:attribute></hr>',
+				'<hr title="&amp;&lt;&gt;&quot;"/>',
+			],
 		];
 	}
 }

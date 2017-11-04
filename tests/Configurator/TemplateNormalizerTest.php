@@ -172,6 +172,10 @@ class TemplateNormalizerTest extends Test
 				'<xsl:value-of select="translate(\'abcdef\', \'abc\', \'ABC\')"/>',
 				'ABCdef'
 			],
+			[
+				'<hr><xsl:attribute name="title"><xsl:text>&amp;&lt;&gt;"</xsl:text></xsl:attribute></hr>',
+				'<hr title="&amp;&lt;&gt;&quot;"/>',
+			],
 		];
 	}
 }
