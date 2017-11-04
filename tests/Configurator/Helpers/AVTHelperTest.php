@@ -255,6 +255,10 @@ class AVTHelperTest extends Test
 				'<xsl:value-of select="@foo"/>bar'
 			],
 			[
+				' {@foo} ',
+				'<xsl:text> </xsl:text><xsl:value-of select="@foo"/><xsl:text> </xsl:text>'
+			],
+			[
 				"{'\"'}",
 				'<xsl:value-of select="\'&quot;\'"/>'
 			],

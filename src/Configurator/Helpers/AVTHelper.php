@@ -164,13 +164,17 @@ abstract class AVTHelper
 		$xsl = '';
 		foreach (self::parse($attrValue) as list($type, $content))
 		{
-			if ($type === 'literal')
+			if ($type === 'expression')
 			{
-				$xsl .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
+				$xsl .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_COMPAT, 'UTF-8') . '"/>';
+			}
+			elseif (trim($content) !== $content)
+			{
+				$xsl .= '<xsl:text>' . htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8') . '</xsl:text>';
 			}
 			else
 			{
-				$xsl .= '<xsl:value-of select="' . htmlspecialchars($content, ENT_COMPAT, 'UTF-8') . '"/>';
+				$xsl .= htmlspecialchars($content, ENT_NOQUOTES, 'UTF-8');
 			}
 		}
 
