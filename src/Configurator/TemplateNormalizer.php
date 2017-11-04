@@ -69,12 +69,11 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
+		$this->collection->append('UninlineAttributes');
 		$this->collection->append('FoldArithmeticConstants');
 		$this->collection->append('FoldConstantXPathExpressions');
-		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
-		$this->collection->append('InlineInferredValues');
 		$this->collection->append('InlineTextElements');
 		$this->collection->append('InlineXPathLiterals');
 		$this->collection->append('MinifyXPathExpressions');
@@ -84,6 +83,8 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
+		$this->collection->append('InlineAttributes');
+		$this->collection->append('InlineInferredValues');
 		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
 	}
 

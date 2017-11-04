@@ -1310,6 +1310,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SortAttributesByName
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\TransposeComments
  [x] Works 
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\UninlineAttributes
+ [x] Works 
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Implements ArrayAccess
  [x] Implements Iterator

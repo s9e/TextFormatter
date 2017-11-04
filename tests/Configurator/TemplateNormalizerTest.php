@@ -176,6 +176,54 @@ class TemplateNormalizerTest extends Test
 				'<hr><xsl:attribute name="title"><xsl:text>&amp;&lt;&gt;"</xsl:text></xsl:attribute></hr>',
 				'<hr title="&amp;&lt;&gt;&quot;"/>',
 			],
+			[
+				'<xsl:choose>
+					<xsl:when test="@foo">
+						<span title="{@foo}">
+							<xsl:apply-templates/>
+						</span>
+					</xsl:when>
+					<xsl:otherwise>
+						<span>
+							<xsl:apply-templates/>
+						</span>
+					</xsl:otherwise>
+				</xsl:choose>',
+				self::ws(
+					'<span>
+						<xsl:if test="@foo">
+							<xsl:attribute name="title">
+								<xsl:value-of select="@foo"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:apply-templates/>
+					</span>'
+				)
+			],
+			[
+				'<hr onclick="if(1){alert(1)}"/>',
+				'<hr onclick="if(1){{alert(1)}}"/>'
+			],
+			[
+				'<xsl:choose>
+					<xsl:when test="@title">
+						<span title="{@title}">
+							<xsl:apply-templates/>
+						</span>
+					</xsl:when>
+					<xsl:otherwise>
+						<span>
+							<xsl:apply-templates/>
+						</span>
+					</xsl:otherwise>
+				</xsl:choose>',
+				self::ws(
+					'<span>
+						<xsl:copy-of select="@title"/>
+						<xsl:apply-templates/>
+					</span>'
+				)
+			],
 		];
 	}
 }

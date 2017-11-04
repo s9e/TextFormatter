@@ -149,6 +149,7 @@
 			<file>tests/Configurator/TemplateNormalizations/SetRelNoreferrerOnTargetedLinksTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/SortAttributesByNameTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/TransposeCommentsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/UninlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizerTest.php</file>
 			<file>tests/Configurator/TemplateChecks/AbstractDynamicContentCheckTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowAttributeSetsTest.php</file>
