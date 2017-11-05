@@ -9,39 +9,24 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
 use DOMElement;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-abstract class AbstractConstantFolding extends TemplateNormalization
+abstract class AbstractConstantFolding extends AbstractNormalization
 {
+	/**
+	* {@inheritdoc}
+	*/
+	protected $queries = [
+		'//*[namespace-uri() != $XSL]/@*[contains(.,"{")]',
+		'//xsl:value-of'
+	];
+
 	/**
 	* Return the optimization passes supported by the concrete implementation
 	*
 	* @return array Regexps as keys, method names as values
 	*/
 	abstract protected function getOptimizationPasses();
-
-	/**
-	* Constant folding pass
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			$this->replaceAVT($attribute);
-		}
-
-		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'value-of') as $valueOf)
-		{
-			$this->replaceValueOf($valueOf);
-		}
-	}
 
 	/**
 	* Evaluate given expression and return the result
@@ -67,7 +52,7 @@ abstract class AbstractConstantFolding extends TemplateNormalization
 	* @param  DOMAttr $attribute
 	* @return void
 	*/
-	protected function replaceAVT(DOMAttr $attribute)
+	protected function normalizeAttribute(DOMAttr $attribute)
 	{
 		AVTHelper::replace(
 			$attribute,
@@ -89,7 +74,7 @@ abstract class AbstractConstantFolding extends TemplateNormalization
 	* @param  DOMElement $valueOf
 	* @return void
 	*/
-	protected function replaceValueOf(DOMElement $valueOf)
+	protected function normalizeElement(DOMElement $valueOf)
 	{
 		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
 	}

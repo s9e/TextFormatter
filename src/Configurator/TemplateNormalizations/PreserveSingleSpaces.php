@@ -7,32 +7,23 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use DOMNode;
 
-class PreserveSingleSpaces extends TemplateNormalization
+/**
+* Remove all inter-element whitespace except for single space characters
+*/
+class PreserveSingleSpaces extends AbstractNormalization
 {
 	/**
-	* Removes all inter-element whitespace except for single space characters
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
+	protected $queries = ['//text()[. = " "][not(parent::xsl:text)]'];
 
-		// Query all text nodes that are made of a single space and not inside of an xsl:text
-		// element
-		$query = '//text()[. = " "][not(parent::xsl:text)]';
-		foreach ($xpath->query($query) as $textNode)
-		{
-			$textNode->parentNode->replaceChild(
-				$dom->createElementNS(self::XMLNS_XSL, 'text', ' '),
-				$textNode
-			);
-		}
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeNode(DOMNode $node)
+	{
+		$node->parentNode->replaceChild($this->createElement('xsl:text', ' '), $node);
 	}
 }

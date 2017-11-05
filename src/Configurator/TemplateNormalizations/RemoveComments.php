@@ -7,24 +7,23 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use DOMNode;
 
-class RemoveComments extends TemplateNormalization
+/**
+* Remove all comments
+*/
+class RemoveComments extends AbstractNormalization
 {
 	/**
-	* Remove all comments
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//comment()'];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeNode(DOMNode $node)
 	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		foreach ($xpath->query('//comment()') as $comment)
-		{
-			$comment->parentNode->removeChild($comment);
-		}
+		$node->parentNode->removeChild($node);
 	}
 }

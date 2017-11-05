@@ -121,7 +121,7 @@
 			<file>tests/Configurator/RulesGenerators/ManageParagraphsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/TrimFirstLineInCodeBlocksTest.php</file>
 			<file>tests/Configurator/RulesGeneratorTest.php</file>
-			<file>tests/Configurator/TemplateNormalizationTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/AbstractNormalizationTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/FixUnescapedCurlyBracesInHtmlAttributesTest.php</file>

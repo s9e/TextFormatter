@@ -44,8 +44,8 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<hr onmouseover="if(1){@cmd}(1)"/>',
 			],
 			[
-				'<xsl:value-of select="\'{}\'"/>',
-				'<xsl:value-of select="\'{}\'"/>'
+				'<xsl:value-of select="\'if(1){alert(1)}\'"/>',
+				'<xsl:value-of select="\'if(1){alert(1)}\'"/>'
 			],
 			[
 				'<hr onmouseover="foo({bar:\'\'}"/>',

@@ -8,40 +8,34 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class OptimizeConditionalAttributes extends TemplateNormalization
+/**
+* Optimize conditional attributes
+*
+* Will replace conditional attributes with a <xsl:copy-of/>, e.g.
+*	<xsl:if test="@foo">
+*		<xsl:attribute name="foo">
+*			<xsl:value-of select="@foo" />
+*		</xsl:attribute>
+*	</xsl:if>
+* into
+*	<xsl:copy-of select="@foo"/>
+*/
+class OptimizeConditionalAttributes extends AbstractNormalization
 {
 	/**
-	* Optimize conditional attributes
-	*
-	* Will replace conditional attributes with a <xsl:copy-of/>, e.g.
-	*	<xsl:if test="@foo">
-	*		<xsl:attribute name="foo">
-	*			<xsl:value-of select="@foo" />
-	*		</xsl:attribute>
-	*	</xsl:if>
-	* into
-	*	<xsl:copy-of select="@foo"/>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		$query = '//xsl:if'
-		       . "[starts-with(@test, '@')]"
-		       . '[count(descendant::node()) = 2]'
-		       . '[xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
-		foreach ($xpath->query($query) as $if)
-		{
-			$copyOf = $dom->createElementNS(self::XMLNS_XSL, 'xsl:copy-of');
-			$copyOf->setAttribute('select', $if->getAttribute('test'));
+	protected $queries = ['//xsl:if[starts-with(@test, "@")][count(descendant::node()) = 2][xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]'];
 
-			$if->parentNode->replaceChild($copyOf, $if);
-		}
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		$copyOf = $this->createElement('xsl:copy-of');
+		$copyOf->setAttribute('select', $element->getAttribute('test'));
+
+		$element->parentNode->replaceChild($copyOf, $element);
 	}
 }

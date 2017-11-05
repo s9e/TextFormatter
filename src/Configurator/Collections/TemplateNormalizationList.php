@@ -7,20 +7,20 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization;
 use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
 
 class TemplateNormalizationList extends NormalizedList
 {
 	/**
-	* Normalize the value to an instance of TemplateNormalization
+	* Normalize the value to an instance of AbstractNormalization
 	*
-	* @param  mixed                 $value Either a string, or an instance of TemplateNormalization
-	* @return TemplateNormalization        An instance of TemplateNormalization
+	* @param  mixed                 $value Either a string, or an instance of AbstractNormalization
+	* @return AbstractNormalization        An instance of AbstractNormalization
 	*/
 	public function normalizeValue($value)
 	{
-		if ($value instanceof TemplateNormalization)
+		if ($value instanceof AbstractNormalization)
 		{
 			return $value;
 		}

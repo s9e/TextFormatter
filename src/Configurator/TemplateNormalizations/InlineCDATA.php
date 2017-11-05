@@ -7,31 +7,23 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use DOMNode;
 
-class InlineCDATA extends TemplateNormalization
+class InlineCDATA extends AbstractNormalization
 {
 	/**
-	* Replace CDATA sections with text literals
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//text()'];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeNode(DOMNode $node)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		foreach ($xpath->query('//text()') as $textNode)
+		if ($node->nodeType === XML_CDATA_SECTION_NODE)
 		{
-			if ($textNode->nodeType === XML_CDATA_SECTION_NODE)
-			{
-				$textNode->parentNode->replaceChild(
-					$dom->createTextNode($textNode->textContent),
-					$textNode
-				);
-			}
+			$node->parentNode->replaceChild($this->createTextNode($node->textContent), $node);
 		}
 	}
 }

@@ -14,6 +14,8 @@ The `quickRenderingTest` property of the PHP renderer is now protected.
 
 `s9e\TextFormatter\Configurator\Helpers\XPathHelper::export()` has been moved to `s9e\TextFormatter\Utils\XPath::export()`.
 
+`s9e\TextFormatter\Configurator\TemplateNormalization` has been replaced by `s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization`.
+
 
 ## 0.11.0
 

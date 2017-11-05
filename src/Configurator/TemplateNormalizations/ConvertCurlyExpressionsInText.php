@@ -7,77 +7,73 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use DOMNode;
 
-class ConvertCurlyExpressionsInText extends TemplateNormalization
+/**
+* Convert simple expressions in curly brackets in text into xsl:value-of elements
+*
+* Will replace
+*     <span>{$FOO}{@bar}</span>
+* with
+*     <span><xsl:value-of value="$FOO"/><xsl:value-of value="@bar"/></span>
+*/
+class ConvertCurlyExpressionsInText extends AbstractNormalization
 {
 	/**
-	* Convert simple expressions in curly brackets in text into xsl:value-of elements
+	* {@inheritdoc}
+	*/
+	protected $queries = ['//*[namespace-uri() != $XSL]/text()[contains(., "{@") or contains(., "{$")]'];
+
+	/**
+	* Insert a text node before given node
 	*
-	* Will replace
-	*     <span>{$FOO}{@bar}</span>
-	* with
-	*     <span><xsl:value-of value="$FOO"/><xsl:value-of value="@bar"/></span>
-	*
-	* @param  DOMElement $template <xsl:template/> node
+	* @param  string  $text
+	* @param  DOMNode $node
 	* @return void
 	*/
-	public function normalize(DOMElement $template)
+	protected function insertTextBefore($text, $node)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		$query = '//text()[contains(., "{@") or contains(., "{$")]';
-		foreach ($xpath->query($query) as $node)
+		$node->parentNode->insertBefore($this->createTextNode($text), $node);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeNode(DOMNode $node)
+	{
+		$parentNode = $node->parentNode;
+
+		preg_match_all(
+			'#\\{([$@][-\\w]+)\\}#',
+			$node->textContent,
+			$matches,
+			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+		);
+
+		$lastPos = 0;
+		foreach ($matches as $m)
 		{
-			$parentNode = $node->parentNode;
+			$pos = $m[0][1];
 
-			// Skip XSL elements
-			if ($parentNode->namespaceURI === self::XMLNS_XSL)
+			// Catch up to current position
+			if ($pos > $lastPos)
 			{
-				continue;
+				$text = substr($node->textContent, $lastPos, $pos - $lastPos);
+				$this->insertTextBefore($text, $node);
 			}
+			$lastPos = $pos + strlen($m[0][0]);
 
-			preg_match_all(
-				'#\\{([$@][-\\w]+)\\}#',
-				$node->textContent,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			$lastPos = 0;
-			foreach ($matches as $m)
-			{
-				$pos = $m[0][1];
-
-				// Catch up to current position
-				if ($pos > $lastPos)
-				{
-					$parentNode->insertBefore(
-						$dom->createTextNode(
-							substr($node->textContent, $lastPos, $pos - $lastPos)
-						),
-						$node
-					);
-				}
-				$lastPos = $pos + strlen($m[0][0]);
-
-				// Add the xsl:value-of element
-				$parentNode
-					->insertBefore($dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'), $node)
-					->setAttribute('select', $m[1][0]);
-			}
-
-			// Append the rest of the text
-			$text = substr($node->textContent, $lastPos);
-			if ($text > '')
-			{
-				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			}
-
-			// Now remove the old text node
-			$parentNode->removeChild($node);
+			// Add the xsl:value-of element
+			$parentNode
+				->insertBefore($this->createElement('xsl:value-of'), $node)
+				->setAttribute('select', $m[1][0]);
 		}
+
+		// Append the rest of the text
+		$text = substr($node->textContent, $lastPos);
+		$this->insertTextBefore($text, $node);
+
+		// Now remove the old text node
+		$parentNode->removeChild($node);
 	}
 }

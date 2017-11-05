@@ -9,10 +9,8 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
 use DOMNode;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class OptimizeChoose extends TemplateNormalization
+class OptimizeChoose extends AbstractNormalization
 {
 	/**
 	* @var DOMElement Current xsl:choose element
@@ -20,25 +18,9 @@ class OptimizeChoose extends TemplateNormalization
 	protected $choose;
 
 	/**
-	* @var DOMXPath XPath object for current template
+	* {@inheritdoc}
 	*/
-	protected $xpath;
-
-	/**
-	* Optimize xsl:choose branches by moving their common children out of them
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
-	*/
-	public function normalize(DOMElement $template)
-	{
-		$this->xpath = new DOMXPath($template->ownerDocument);
-		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'choose') as $choose)
-		{
-			$this->choose = $choose;
-			$this->optimizeChooseElement();
-		}
-	}
+	protected $queries = ['//xsl:choose'];
 
 	/**
 	* Adopt the children of given element's only child
@@ -81,7 +63,7 @@ class OptimizeChoose extends TemplateNormalization
 	{
 		$query = 'xsl:when|xsl:otherwise';
 
-		return iterator_to_array($this->xpath->query($query, $this->choose));
+		return $this->xpath($query, $this->choose);
 	}
 
 	/**
@@ -244,12 +226,11 @@ class OptimizeChoose extends TemplateNormalization
 	}
 
 	/**
-	* Optimize current xsl:choose element
-	*
-	* @return void
+	* {@inheritdoc}
 	*/
-	protected function optimizeChooseElement()
+	protected function normalizeElement(DOMElement $element)
 	{
+		$this->choose = $element;
 		if ($this->hasOtherwise())
 		{
 			$this->optimizeCommonFirstChild();
@@ -317,7 +298,7 @@ class OptimizeChoose extends TemplateNormalization
 	protected function optimizeEmptyOtherwise()
 	{
 		$query = 'xsl:otherwise[count(node()) = 0]';
-		foreach ($this->xpath->query($query, $this->choose) as $otherwise)
+		foreach ($this->xpath($query, $this->choose) as $otherwise)
 		{
 			$this->choose->removeChild($otherwise);
 		}
@@ -335,8 +316,8 @@ class OptimizeChoose extends TemplateNormalization
 		{
 			return;
 		}
-		$when = $this->xpath->query('xsl:when', $this->choose)->item(0);
-		$if   = $this->choose->ownerDocument->createElementNS(self::XMLNS_XSL, 'xsl:if');
+		$when = $this->xpath('xsl:when', $this->choose)[0];
+		$if   = $this->createElement('xsl:if');
 		$if->setAttribute('test', $when->getAttribute('test'));
 		while ($when->firstChild)
 		{
@@ -363,5 +344,14 @@ class OptimizeChoose extends TemplateNormalization
 		{
 			$this->adoptChildren($branch);
 		}
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function reset()
+	{
+		$this->choose = null;
+		parent::reset();
 	}
 }

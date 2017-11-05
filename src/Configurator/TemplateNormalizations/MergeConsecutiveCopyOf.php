@@ -8,49 +8,34 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class MergeConsecutiveCopyOf extends TemplateNormalization
+class MergeConsecutiveCopyOf extends AbstractNormalization
 {
 	/**
-	* Merge xsl:copy-of elements
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//xsl:copy-of'];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
 	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		foreach ($xpath->query('//xsl:copy-of') as $node)
+		while ($this->nextSiblingIsCopyOf($element))
 		{
-			$this->mergeCopyOfSiblings($node);
+			$element->setAttribute('select', $element->getAttribute('select') . '|' . $element->nextSibling->getAttribute('select'));
+			$element->parentNode->removeChild($element->nextSibling);
 		}
 	}
 
 	/**
-	* Merge the select expression of xsl:copy-of siblings into given xsl:copy-of
+	* Test whether the next sibling to given element is an xsl:copy-of element
 	*
-	* @param  DOMElement $node <xsl:copy-of/> element
-	* @return void
-	*/
-	protected function mergeCopyOfSiblings(DOMElement $node)
-	{
-		while ($this->nextSiblingIsCopyOf($node))
-		{
-			$node->setAttribute('select', $node->getAttribute('select') . '|' . $node->nextSibling->getAttribute('select'));
-			$node->parentNode->removeChild($node->nextSibling);
-		}
-	}
-
-	/**
-	* Test whether the next sibling to given node is an xsl:copy-of element
-	*
-	* @param  DOMElement $node Context node
+	* @param  DOMElement $element Context node
 	* @return bool
 	*/
-	protected function nextSiblingIsCopyOf(DOMElement $node)
+	protected function nextSiblingIsCopyOf(DOMElement $element)
 	{
-		return ($node->nextSibling && $node->nextSibling->localName === 'copy-of' && $node->nextSibling->namespaceURI === self::XMLNS_XSL);
+		return ($element->nextSibling && $this->isXsl($element->nextSibling, 'copy-of'));
 	}
 }

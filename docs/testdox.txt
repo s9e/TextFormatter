@@ -1224,8 +1224,16 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Implements Iterator
  [x] Default rules 
 
-s9e\TextFormatter\Tests\Configurator\TemplateNormalization
- [x] lowercase() makes an ASCII string lowercase
+s9e\TextFormatter\Tests\Configurator\AbstractNormalization
+ [x] Nothing happens if the normalization doesn't override any method or set any query
+ [x] Nothing happens if the normalization doesn't override any method but set an element query
+ [x] Nothing happens if the normalization doesn't override any method but set an attribute query
+ [x] Calls normalizeAttribute() if an XPath query returns a DOMElement
+ [x] Calls normalizeElement() if an XPath query returns a DOMElement
+ [x] Nodes removed during normalization are not processed further
+ [x] Can create elements and text nodes
+ [x] isXsl() differentiates between XSL elements and others
+ [x] lowercase() works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressionsInText
  [x] Works 

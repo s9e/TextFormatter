@@ -8,44 +8,50 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class InlineTextElements extends TemplateNormalization
+class InlineTextElements extends AbstractNormalization
 {
 	/**
-	* Replace <xsl:text/> nodes with a Text node, except for nodes whose content is only whitespace
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//xsl:text'];
+
+	/**
+	* Test whether an element is followed by a text node
+	*
+	* @param  DOMElement $element
+	* @return bool
+	*/
+	protected function isFollowedByText(DOMElement $element)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		foreach ($xpath->query('//xsl:text') as $node)
+		return ($element->nextSibling && $element->nextSibling->nodeType === XML_TEXT_NODE);
+	}
+
+	/**
+	* Test whether an element is preceded by a text node
+	*
+	* @param  DOMElement $element
+	* @return bool
+	*/
+	protected function isPrecededByText(DOMElement $element)
+	{
+		return ($element->previousSibling && $element->previousSibling->nodeType === XML_TEXT_NODE);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		// If this node's content is whitespace, ensure it's preceded or followed by a text node
+		if (trim($element->textContent) === '')
 		{
-			// If this node's content is whitespace, ensure it's preceded or followed by a text node
-			if (trim($node->textContent) === '')
+			if (!$this->isFollowedByText($element) && !$this->isPrecededByText($element))
 			{
-				if ($node->previousSibling && $node->previousSibling->nodeType === XML_TEXT_NODE)
-				{
-					// This node is preceded by a text node
-				}
-				elseif ($node->nextSibling && $node->nextSibling->nodeType === XML_TEXT_NODE)
-				{
-					// This node is followed by a text node
-				}
-				else
-				{
-					// This would become inter-element whitespace, therefore we can't inline
-					continue;
-				}
+				// This would become inter-element whitespace, therefore we can't inline
+				return;
 			}
-			$node->parentNode->replaceChild(
-				$dom->createTextNode($node->textContent),
-				$node
-			);
 		}
+		$element->parentNode->replaceChild($this->createTextNode($element->textContent), $element);
 	}
 }

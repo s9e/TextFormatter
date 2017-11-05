@@ -9,38 +9,25 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
 use DOMElement;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class UninlineAttributes extends TemplateNormalization
+/**
+* Uninline element attributes
+*
+* Will replace
+*     <a href="{@url}">...</a>
+* with
+*     <a><xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>...</a>
+*/
+class UninlineAttributes extends AbstractNormalization
 {
 	/**
-	* Uninline element attributes
-	*
-	* Will replace
-	*     <a href="{@url}">...</a>
-	* with
-	*     <a><xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>...</a>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
-		foreach ($xpath->query($query) as $element)
-		{
-			$this->normalizeElement($element);
-		}
-	}
+	protected $queries = ['//*[namespace-uri() != $XSL]'];
 
 	/**
-	* Uninline an element's attributes
-	*
-	* @param  DOMElement $element
-	* @return void
+	* {@inheritdoc}
 	*/
 	protected function normalizeElement(DOMElement $element)
 	{
@@ -60,8 +47,7 @@ class UninlineAttributes extends TemplateNormalization
 	*/
 	protected function uninlineAttribute(DOMAttr $attribute)
 	{
-		$ownerDocument = $attribute->ownerDocument;
-		$xslAttribute  = $ownerDocument->createElementNS(self::XMLNS_XSL, 'xsl:attribute');
+		$xslAttribute  = $this->createElement('xsl:attribute');
 		$xslAttribute->setAttribute('name', $attribute->nodeName);
 
 		// Build the content of the xsl:attribute element
@@ -69,13 +55,13 @@ class UninlineAttributes extends TemplateNormalization
 		{
 			if ($type === 'expression')
 			{
-				$childNode = $ownerDocument->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
+				$childNode = $this->createElement('xsl:value-of');
 				$childNode->setAttribute('select', $content);
 			}
 			else
 			{
-				$childNode = $ownerDocument->createElementNS(self::XMLNS_XSL, 'xsl:text');
-				$childNode->appendChild($ownerDocument->createTextNode($content));
+				$childNode = $this->createElement('xsl:text');
+				$childNode->appendChild($this->createTextNode($content));
 			}
 
 			$xslAttribute->appendChild($childNode);

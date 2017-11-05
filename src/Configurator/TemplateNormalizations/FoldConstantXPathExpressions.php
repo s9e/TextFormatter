@@ -7,8 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMDocument;
-use DOMXPath;
 use s9e\TextFormatter\Utils\XPath;
 
 class FoldConstantXPathExpressions extends AbstractConstantFolding
@@ -33,19 +31,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'sum',
 		'translate'
 	];
-
-	/**
-	* @var DOMXPath
-	*/
-	protected $xpath;
-
-	/**
-	* Constructor
-	*/
-	public function __construct()
-	{
-		$this->xpath = new DOMXPath(new DOMDocument);
-	}
 
 	/**
 	* {@inheritdoc}

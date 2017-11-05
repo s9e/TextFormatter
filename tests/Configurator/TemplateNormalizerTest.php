@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator;
 
 use DOMElement;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Tests\Test;
 
@@ -228,7 +228,7 @@ class TemplateNormalizerTest extends Test
 	}
 }
 
-class DummyNormalization extends TemplateNormalization
+class DummyNormalization extends AbstractNormalization
 {
 	public function __construct($str)
 	{

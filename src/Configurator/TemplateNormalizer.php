@@ -89,9 +89,9 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	}
 
 	/**
-	* Normalize a tag's templates
+	* Normalize a tag's template
 	*
-	* @param  Tag  $tag Tag whose templates will be normalized
+	* @param  Tag  $tag Tag whose template will be normalized
 	* @return void
 	*/
 	public function normalizeTag(Tag $tag)

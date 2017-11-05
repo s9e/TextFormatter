@@ -10,41 +10,41 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use DOMNode;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class InlineInferredValues extends TemplateNormalization
+/**
+* Inline the text content of a node or the value of an attribute where it's known
+*
+* Will replace
+*     <xsl:if test="@foo='Foo'"><xsl:value-of select="@foo"/></xsl:if>
+* with
+*     <xsl:if test="@foo='Foo'">Foo</xsl:if>
+*
+* This should be applied after control structures have been optimized
+*/
+class InlineInferredValues extends AbstractNormalization
 {
 	/**
-	* Inline the text content of a node or the value of an attribute where it's known
-	*
-	* Will replace
-	*     <xsl:if test="@foo='Foo'"><xsl:value-of select="@foo"/></xsl:if>
-	* with
-	*     <xsl:if test="@foo='Foo'">Foo</xsl:if>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//xsl:if | //xsl:when';
-		foreach ($xpath->query($query) as $node)
-		{
-			// Test whether the map has exactly one key and one value
-			$map = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
-			if ($map === false || count($map) !== 1 || count($map[key($map)]) !== 1)
-			{
-				continue;
-			}
+	protected $queries = ['//xsl:if', '//xsl:when'];
 
-			$expr  = key($map);
-			$value = end($map[$expr]);
-			$this->inlineInferredValue($node, $expr, $value);
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		// Test whether the map has exactly one key and one value
+		$map = TemplateParser::parseEqualityExpr($element->getAttribute('test'));
+		if ($map === false || count($map) !== 1 || count($map[key($map)]) !== 1)
+		{
+			return;
 		}
+
+		$expr  = key($map);
+		$value = end($map[$expr]);
+		$this->inlineInferredValue($element, $expr, $value);
 	}
 
 	/**
@@ -57,19 +57,16 @@ class InlineInferredValues extends TemplateNormalization
 	*/
 	protected function inlineInferredValue(DOMNode $node, $expr, $value)
 	{
-		$xpath = new DOMXPath($node->ownerDocument);
-
 		// Get xsl:value-of descendants that match the condition
 		$query = './/xsl:value-of[@select="' . $expr . '"]';
-		foreach ($xpath->query($query, $node) as $valueOf)
+		foreach ($this->xpath($query, $node) as $valueOf)
 		{
 			$this->replaceValueOf($valueOf, $value);
 		}
 
 		// Get all attributes from non-XSL elements that *could* match the condition
-		$query = './/*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., "{' . $expr . '}")]';
-		foreach ($xpath->query($query, $node) as $attribute)
+		$query = './/*[namespace-uri() != $XSL]/@*[contains(., "{' . $expr . '}")]';
+		foreach ($this->xpath($query, $node) as $attribute)
 		{
 			$this->replaceAttribute($attribute, $expr, $value);
 		}

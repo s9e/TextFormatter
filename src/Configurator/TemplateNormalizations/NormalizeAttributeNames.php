@@ -7,40 +7,34 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use DOMAttr;
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class NormalizeAttributeNames extends TemplateNormalization
+class NormalizeAttributeNames extends AbstractNormalization
 {
 	/**
-	* Lowercase attribute names
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//@*', '//xsl:attribute[not(contains(@name, "{"))]'];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		$xpath = new DOMXPath($template->ownerDocument);
-
-		// Normalize elements' attributes
-		foreach ($xpath->query('.//@*', $template) as $attribute)
+		$attrName = $this->lowercase($attribute->localName);
+		if ($attrName !== $attribute->localName)
 		{
-			$attrName = self::lowercase($attribute->localName);
-
-			if ($attrName !== $attribute->localName)
-			{
-				$attribute->parentNode->setAttribute($attrName, $attribute->value);
-				$attribute->parentNode->removeAttributeNode($attribute);
-			}
+			$attribute->parentNode->setAttribute($attrName, $attribute->value);
+			$attribute->parentNode->removeAttributeNode($attribute);
 		}
+	}
 
-		// Normalize <xsl:attribute/> names
-		foreach ($xpath->query('//xsl:attribute[not(contains(@name, "{"))]') as $attribute)
-		{
-			$attrName = self::lowercase($attribute->getAttribute('name'));
-
-			$attribute->setAttribute('name', $attrName);
-		}
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		$element->setAttribute('name', $this->lowercase($element->getAttribute('name')));
 	}
 }

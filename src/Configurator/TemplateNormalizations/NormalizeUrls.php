@@ -9,42 +9,25 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
 use DOMElement;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 
-class NormalizeUrls extends TemplateNormalization
+/**
+* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
+*/
+class NormalizeUrls extends AbstractNormalization
 {
 	/**
-	* Normalize URLs
-	*
-	* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected function getNodes()
 	{
-		foreach (TemplateHelper::getURLNodes($template->ownerDocument) as $node)
-		{
-			if ($node instanceof DOMAttr)
-			{
-				$this->normalizeAttribute($node);
-			}
-			elseif ($node instanceof DOMElement)
-			{
-				$this->normalizeElement($node);
-			}
-		}
+		return TemplateHelper::getURLNodes($this->ownerDocument);
 	}
 
 	/**
-	* Normalize the value of an attribute
-	*
-	* @param  DOMAttr $attribute
-	* @return void
+	* {@inheritdoc}
 	*/
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
@@ -72,16 +55,12 @@ class NormalizeUrls extends TemplateNormalization
 	}
 
 	/**
-	* Normalize value of the text nodes, descendants of an element
-	*
-	* @param  DOMElement $element
-	* @return void
+	* {@inheritdoc}
 	*/
 	protected function normalizeElement(DOMElement $element)
 	{
-		$xpath = new DOMXPath($element->ownerDocument);
 		$query = './/text()[normalize-space() != ""]';
-		foreach ($xpath->query($query, $element) as $i => $node)
+		foreach ($this->xpath($query, $element) as $i => $node)
 		{
 			$value = BuiltInFilters::sanitizeUrl($node->nodeValue);
 

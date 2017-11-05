@@ -8,63 +8,80 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class NormalizeElementNames extends TemplateNormalization
+class NormalizeElementNames extends AbstractNormalization
 {
 	/**
-	* Lowercase element names
+	* {@inheritdoc}
+	*/
+	protected $queries = [
+		'//*[namespace-uri() != $XSL]',
+		'//xsl:element[not(contains(@name, "{"))]'
+	];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		if ($this->isXsl($element, 'element'))
+		{
+			$this->replaceXslElement($element);
+		}
+		else
+		{
+			$this->replaceElement($element);
+		}
+	}
+
+	/**
+	* Normalize and replace a non-XSL element if applicable
 	*
-	* @param  DOMElement $template <xsl:template/> node
+	* @param  DOMElement $element
 	* @return void
 	*/
-	public function normalize(DOMElement $template)
+	protected function replaceElement(DOMElement $element)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-
-		// Normalize elements' names
-		foreach ($xpath->query('//*[namespace-uri() != "' . self::XMLNS_XSL . '"]') as $element)
+		$elName = $this->lowercase($element->localName);
+		if ($elName === $element->localName)
 		{
-			$elName = self::lowercase($element->localName);
-
-			if ($elName === $element->localName)
-			{
-				continue;
-			}
-
-			// Create a new element with the correct name
-			$newElement = (is_null($element->namespaceURI))
-			            ? $dom->createElement($elName)
-			            : $dom->createElementNS($element->namespaceURI, $elName);
-
-			// Move every child to the new element
-			while ($element->firstChild)
-			{
-				$newElement->appendChild($element->removeChild($element->firstChild));
-			}
-
-			// Copy attributes to the new node
-			foreach ($element->attributes as $attribute)
-			{
-				$newElement->setAttributeNS(
-					$attribute->namespaceURI,
-					$attribute->nodeName,
-					$attribute->value
-				);
-			}
-
-			// Replace the old element with the new one
-			$element->parentNode->replaceChild($newElement, $element);
+			return;
 		}
 
-		// Normalize <xsl:element/> names
-		foreach ($xpath->query('//xsl:element[not(contains(@name, "{"))]') as $element)
-		{
-			$elName = self::lowercase($element->getAttribute('name'));
+		// Create a new element with the correct name
+		$newElement = (is_null($element->namespaceURI))
+		            ? $this->ownerDocument->createElement($elName)
+		            : $this->ownerDocument->createElementNS($element->namespaceURI, $elName);
 
-			$element->setAttribute('name', $elName);
+		// Move every child to the new element
+		while ($element->firstChild)
+		{
+			$newElement->appendChild($element->removeChild($element->firstChild));
 		}
+
+		// Copy attributes to the new node
+		foreach ($element->attributes as $attribute)
+		{
+			$newElement->setAttributeNS(
+				$attribute->namespaceURI,
+				$attribute->nodeName,
+				$attribute->value
+			);
+		}
+
+		// Replace the old element with the new one
+		$element->parentNode->replaceChild($newElement, $element);
+	}
+
+	/**
+	* Normalize the name used in a xsl:element
+	*
+	* @param  DOMElement $element
+	* @return void
+	*/
+	protected function replaceXslElement(DOMElement $element)
+	{
+		$elName = $this->lowercase($element->getAttribute('name'));
+		$element->setAttribute('name', $elName);
 	}
 }

@@ -8,28 +8,20 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMNodeList;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class SetRelNoreferrerOnTargetedLinks extends TemplateNormalization
+/**
+* Add rel="noreferrer" on links that open in a new context that would allow window.opener to be
+* accessed.
+*
+* @link https://mathiasbynens.github.io/rel-noopener/
+* @link https://wiki.whatwg.org/wiki/Links_to_Unrelated_Browsing_Contexts
+*/
+class SetRelNoreferrerOnTargetedLinks extends AbstractNormalization
 {
 	/**
-	* Add rel="noreferrer" on link elements with a target attribute
-	*
-	* Adds a "noreferrer" on links that open in a new context that would allow window.opener to be
-	* accessed.
-	*
-	* @link https://mathiasbynens.github.io/rel-noopener/
-	* @link https://wiki.whatwg.org/wiki/Links_to_Unrelated_Browsing_Contexts
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$this->normalizeElements($template->ownerDocument->getElementsByTagName('a'));
-		$this->normalizeElements($template->ownerDocument->getElementsByTagName('area'));
-	}
+	protected $queries = ['//a', '//area'];
 
 	/**
 	* Add a rel="noreferrer" attribute to given element
@@ -73,19 +65,13 @@ class SetRelNoreferrerOnTargetedLinks extends TemplateNormalization
 	}
 
 	/**
-	* Normalize a list of links
-	*
-	* @param  DOMNodeList $elements
-	* @return void
+	* {@inheritdoc}
 	*/
-	protected function normalizeElements(DOMNodeList $elements)
+	protected function normalizeElement(DOMElement $element)
 	{
-		foreach ($elements as $element)
+		if ($this->linkTargetCanAccessOpener($element))
 		{
-			if ($this->linkTargetCanAccessOpener($element))
-			{
-				$this->addRelAttribute($element);
-			}
+			$this->addRelAttribute($element);
 		}
 	}
 }

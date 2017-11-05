@@ -8,51 +8,36 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
-use DOMException;
 use DOMText;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class InlineAttributes extends TemplateNormalization
+/**
+* Inline the xsl:attribute declarations of a template
+*
+* Will replace
+*     <a><xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>...</a>
+* with
+*     <a href="{@url}">...</a>
+*/
+class InlineAttributes extends AbstractNormalization
 {
 	/**
-	* Inline the attribute declarations of a template
-	*
-	* Will replace
-	*     <a><xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>...</a>
-	* with
-	*     <a href="{@url}">...</a>
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/xsl:attribute';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			$this->inlineAttribute($attribute);
-		}
-	}
+	protected $queries = ['//*[namespace-uri() != $XSL]/xsl:attribute'];
 
 	/**
-	* Inline the content of an xsl:attribute element
-	*
-	* @param  DOMElement $attribute xsl:attribute element
-	* @return void
+	* {@inheritdoc}
 	*/
-	protected function inlineAttribute(DOMElement $attribute)
+	protected function normalizeElement(DOMElement $element)
 	{
 		$value = '';
-		foreach ($attribute->childNodes as $node)
+		foreach ($element->childNodes as $node)
 		{
-			if ($node instanceof DOMText
-			 || [$node->namespaceURI, $node->localName] === [self::XMLNS_XSL, 'text'])
+			if ($node instanceof DOMText || $this->isXsl($node, 'text'))
 			{
 				$value .= preg_replace('([{}])', '$0$0', $node->textContent);
 			}
-			elseif ([$node->namespaceURI, $node->localName] === [self::XMLNS_XSL, 'value-of'])
+			elseif ($this->isXsl($node, 'value-of'))
 			{
 				$value .= '{' . $node->getAttribute('select') . '}';
 			}
@@ -62,7 +47,7 @@ class InlineAttributes extends TemplateNormalization
 				return;
 			}
 		}
-		$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);
-		$attribute->parentNode->removeChild($attribute);
+		$element->parentNode->setAttribute($element->getAttribute('name'), $value);
+		$element->parentNode->removeChild($element);
 	}
 }

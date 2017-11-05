@@ -7,32 +7,24 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
+use DOMNode;
 
-class TransposeComments extends TemplateNormalization
+/**
+* Convert comments into xsl:comment elements
+*/
+class TransposeComments extends AbstractNormalization
 {
 	/**
-	* Convert comments into xsl:comment elements
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
+	protected $queries = ['//comment()'];
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeNode(DOMNode $node)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		foreach ($xpath->query('//comment()') as $comment)
-		{
-			$comment->parentNode->replaceChild(
-				$dom->createElementNS(
-					self::XMLNS_XSL,
-					'xsl:comment',
-					htmlspecialchars($comment->nodeValue)
-				),
-				$comment
-			);
-		}
+		$xslComment = $this->createElement('xsl:comment', $node->nodeValue);
+		$node->parentNode->replaceChild($xslComment, $node);
 	}
 }

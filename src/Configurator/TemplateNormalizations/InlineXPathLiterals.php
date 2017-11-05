@@ -7,55 +7,19 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use DOMAttr;
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
-class InlineXPathLiterals extends TemplateNormalization
+class InlineXPathLiterals extends AbstractNormalization
 {
 	/**
-	* Replace xsl:value nodes that contain a literal with a Text node
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		foreach ($xpath->query('//xsl:value-of') as $valueOf)
-		{
-			$textContent = $this->getTextContent($valueOf->getAttribute('select'));
-
-			if ($textContent !== false)
-			{
-				$this->replaceElement($valueOf, $textContent);
-			}
-		}
-
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., "{")]';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			AVTHelper::replace(
-				$attribute,
-				function ($token)
-				{
-					if ($token[0] === 'expression')
-					{
-						$textContent = $this->getTextContent($token[1]);
-						if ($textContent !== false)
-						{
-							// Turn this token into a literal
-							$token = ['literal', $textContent];
-						}
-					}
-
-					return $token;
-				}
-			);
-		}
-	}
+	protected $queries = [
+		'//xsl:value-of',
+		'//*[namespace-uri() != $XSL]/@*[contains(., "{")]'
+	];
 
 	/**
 	* Return the textContent value of an XPath expression
@@ -82,17 +46,38 @@ class InlineXPathLiterals extends TemplateNormalization
 	}
 
 	/**
-	* Replace an xsl:value-of element with a text node
-	*
-	* @param  DOMElement $valueOf
-	* @param  string     $textContent
-	* @return void
+	* {@inheritdoc}
 	*/
-	protected function replaceElement(DOMElement $valueOf, $textContent)
+	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		$valueOf->parentNode->replaceChild(
-			$valueOf->ownerDocument->createTextNode($textContent),
-			$valueOf
+		AVTHelper::replace(
+			$attribute,
+			function ($token)
+			{
+				if ($token[0] === 'expression')
+				{
+					$textContent = $this->getTextContent($token[1]);
+					if ($textContent !== false)
+					{
+						// Turn this token into a literal
+						$token = ['literal', $textContent];
+					}
+				}
+
+				return $token;
+			}
 		);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function normalizeElement(DOMElement $element)
+	{
+		$textContent = $this->getTextContent($element->getAttribute('select'));
+		if ($textContent !== false)
+		{
+			$element->parentNode->replaceChild($this->createTextNode($textContent), $element);
+		}
 	}
 }

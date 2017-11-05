@@ -8,50 +8,29 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
 
-class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
+/**
+* Fix unescaped curly braces in HTML attributes
+*
+* Will replace
+*     <hr onclick="if(1){alert(1)}">
+*     <hr title="x{x">
+* with
+*     <hr onclick="if(1){{alert(1)}">
+*     <hr title="x{{x">
+*/
+class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 {
 	/**
-	* Fix unescaped curly braces in HTML attributes
-	*
-	* Will replace
-	*     <hr onclick="if(1){alert(1)}">
-	*     <hr title="x{x">
-	* with
-	*     <hr onclick="if(1){{alert(1)}">
-	*     <hr title="x{{x">
-	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* {@inheritdoc}
 	*/
-	public function normalize(DOMElement $template)
-	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		$query = '//@*[contains(., "{")]';
-		foreach ($xpath->query($query) as $attribute)
-		{
-			$this->fixAttribute($attribute);
-		}
-	}
+	protected $queries = ['//*[namespace-uri() != $XSL]/@*[contains(., "{")]'];
 
 	/**
-	* Fix unescaped braces in give attribute
-	*
-	* @param  DOMAttr $attribute
-	* @return void
+	* {@inheritdoc}
 	*/
-	protected function fixAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		// Skip XSL elements
-		if ($attribute->parentNode->namespaceURI === self::XMLNS_XSL)
-		{
-			return;
-		}
-
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
 			'((?<!\\{)(?:\\{\\{)*\\{(?!\\{)[^}]*+$)',
