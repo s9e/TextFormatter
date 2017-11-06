@@ -116,17 +116,6 @@ class OptimizeChoose extends AbstractNormalization
 	}
 
 	/**
-	* Test whether given node is an xsl:choose element
-	*
-	* @param  DOMNode $node
-	* @return bool
-	*/
-	protected function isXslChoose(DOMNode $node)
-	{
-		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'choose');
-	}
-
-	/**
 	* Test whether all branches of current xsl:choose element share a common firstChild/lastChild
 	*
 	* @param  string $childType Either firstChild or lastChild
@@ -166,7 +155,7 @@ class OptimizeChoose extends AbstractNormalization
 		}
 
 		$firstChild = $branches[0]->firstChild;
-		if ($this->isXslChoose($firstChild))
+		if ($this->isXsl($firstChild, 'choose'))
 		{
 			// Abort on xsl:choose because we can't move it without moving its children
 			return false;
