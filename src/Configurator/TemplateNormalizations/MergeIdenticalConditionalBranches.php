@@ -9,48 +9,15 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class MergeIdenticalConditionalBranches extends TemplateNormalization
+class MergeIdenticalConditionalBranches extends AbstractNormalization
 {
-	public function normalize(DOMElement $template)
-	{
-		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'choose') as $choose)
-		{
-			self::mergeCompatibleBranches($choose);
-			self::mergeConsecutiveBranches($choose);
-		}
-	}
-	protected static function mergeCompatibleBranches(DOMElement $choose)
-	{
-		$node = $choose->firstChild;
-		while ($node)
-		{
-			$nodes = self::collectCompatibleBranches($node);
-			if (\count($nodes) > 1)
-			{
-				$node = \end($nodes)->nextSibling;
-				self::mergeBranches($nodes);
-			}
-			else
-				$node = $node->nextSibling;
-		}
-	}
-	protected static function mergeConsecutiveBranches(DOMElement $choose)
-	{
-		$nodes = array();
-		foreach ($choose->childNodes as $node)
-			if (self::isXslWhen($node))
-				$nodes[] = $node;
-		$i = \count($nodes);
-		while (--$i > 0)
-			self::mergeBranches(array($nodes[$i - 1], $nodes[$i]));
-	}
-	protected static function collectCompatibleBranches(DOMNode $node)
+	protected $queries = array('//xsl:choose');
+	protected function collectCompatibleBranches(DOMNode $node)
 	{
 		$nodes  = array();
 		$key    = \null;
 		$values = array();
-		while ($node && self::isXslWhen($node))
+		while ($node && $this->isXsl($node, 'when'))
 		{
 			$branch = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
 			if ($branch === \false || \count($branch) !== 1)
@@ -66,7 +33,7 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 		}
 		return $nodes;
 	}
-	protected static function mergeBranches(array $nodes)
+	protected function mergeBranches(array $nodes)
 	{
 		$sortedNodes = array();
 		foreach ($nodes as $node)
@@ -89,8 +56,34 @@ class MergeIdenticalConditionalBranches extends TemplateNormalization
 			$identicalNodes[0]->setAttribute('test', \implode(' or ', $expr));
 		}
 	}
-	protected static function isXslWhen(DOMNode $node)
+	protected function mergeCompatibleBranches(DOMElement $choose)
 	{
-		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'when');
+		$node = $choose->firstChild;
+		while ($node)
+		{
+			$nodes = $this->collectCompatibleBranches($node);
+			if (\count($nodes) > 1)
+			{
+				$node = \end($nodes)->nextSibling;
+				$this->mergeBranches($nodes);
+			}
+			else
+				$node = $node->nextSibling;
+		}
+	}
+	protected function mergeConsecutiveBranches(DOMElement $choose)
+	{
+		$nodes = array();
+		foreach ($choose->childNodes as $node)
+			if ($this->isXsl($node, 'when'))
+				$nodes[] = $node;
+		$i = \count($nodes);
+		while (--$i > 0)
+			$this->mergeBranches(array($nodes[$i - 1], $nodes[$i]));
+	}
+	protected function normalizeElement(DOMElement $element)
+	{
+		$this->mergeCompatibleBranches($element);
+		$this->mergeConsecutiveBranches($element);
 	}
 }

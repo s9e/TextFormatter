@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Renderers;
 use s9e\TextFormatter\Renderer;
 class Unformatted extends Renderer
 {
-	public $metaElementsRegexp = '((?!))';
 	protected function renderRichText($xml)
 	{
 		return \str_replace("\n", "<br>\n", \htmlspecialchars(\strip_tags($xml), \ENT_COMPAT, 'UTF-8', \false));

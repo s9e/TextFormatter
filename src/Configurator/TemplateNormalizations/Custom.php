@@ -7,8 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class Custom extends TemplateNormalization
+class Custom extends AbstractNormalization
 {
 	protected $callback;
 	public function __construct($callback)

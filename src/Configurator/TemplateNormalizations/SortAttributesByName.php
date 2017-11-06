@@ -7,21 +7,16 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class SortAttributesByName extends TemplateNormalization
+class SortAttributesByName extends AbstractNormalization
 {
-	public function normalize(DOMElement $template)
+	protected $queries = array('//*[@*]');
+	protected function normalizeElement(DOMElement $element)
 	{
-		foreach ($template->getElementsByTagName('*') as $element)
-		{
-			if (!$element->attributes->length)
-				continue;
-			$attributes = array();
-			foreach ($element->attributes as $name => $attribute)
-				$attributes[$name] = $element->removeAttributeNode($attribute);
-			\ksort($attributes);
-			foreach ($attributes as $attribute)
-				$element->setAttributeNode($attribute);
-		}
+		$attributes = array();
+		foreach ($element->attributes as $name => $attribute)
+			$attributes[$name] = $element->removeAttributeNode($attribute);
+		\ksort($attributes);
+		foreach ($attributes as $attribute)
+			$element->setAttributeNode($attribute);
 	}
 }

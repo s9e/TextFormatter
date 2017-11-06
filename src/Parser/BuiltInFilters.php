@@ -172,7 +172,7 @@ class BuiltInFilters
 		if (\preg_match('#[^[:ascii:]]#', $parts['host']) && \function_exists('idn_to_ascii'))
 		{
 			$variant = (\defined('INTL_IDNA_VARIANT_UTS46')) ? \INTL_IDNA_VARIANT_UTS46 : 0;
-			$parts['host'] = \idn_to_ascii($parts['host'], 0);
+			$parts['host'] = @\idn_to_ascii($parts['host'], 0, $variant);
 		}
 		return $parts;
 	}
