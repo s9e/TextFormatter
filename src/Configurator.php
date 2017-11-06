@@ -4920,6 +4920,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
+		$this->collection->append('OptimizeChooseText');
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineInferredValues');
 		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
@@ -6615,6 +6616,63 @@ class DisallowXPathFunction extends TemplateCheck
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMNode;
+abstract class AbstractChooseOptimization extends AbstractNormalization
+{
+	protected $choose;
+	protected $queries = array('//xsl:choose');
+	protected function getAttributes(DOMElement $element)
+	{
+		$attributes = array();
+		foreach ($element->attributes as $attribute)
+		{
+			$key = $attribute->namespaceURI . '#' . $attribute->nodeName;
+			$attributes[$key] = $attribute->nodeValue;
+		}
+		return $attributes;
+	}
+	protected function getBranches()
+	{
+		$query = 'xsl:when|xsl:otherwise';
+		return $this->xpath($query, $this->choose);
+	}
+	protected function hasOtherwise()
+	{
+		return (bool) $this->xpath->evaluate('count(xsl:otherwise)', $this->choose);
+	}
+	protected function isEmpty()
+	{
+		$query = 'count(xsl:when/node() | xsl:otherwise/node())';
+		return !$this->xpath->evaluate($query, $this->choose);
+	}
+	protected function isEqualNode(DOMNode $node1, DOMNode $node2)
+	{
+		return ($node1->ownerDocument->saveXML($node1) === $node2->ownerDocument->saveXML($node2));
+	}
+	protected function isEqualTag(DOMElement $el1, DOMElement $el2)
+	{
+		return ($el1->namespaceURI === $el2->namespaceURI && $el1->nodeName === $el2->nodeName && $this->getAttributes($el1) === $this->getAttributes($el2));
+	}
+	protected function normalizeElement(DOMElement $element)
+	{
+		$this->choose = $element;
+		$this->optimizeChoose();
+	}
+	abstract protected function optimizeChoose();
+	protected function reset()
+	{
+		$this->choose = \null;
+		parent::reset();
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
@@ -7040,169 +7098,6 @@ class NormalizeUrls extends AbstractNormalization
 	protected function unescapeBrackets($url)
 	{
 		return \preg_replace('#^(\\w+://)%5B([-\\w:._%]+)%5D#i', '$1[$2]', $url);
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMNode;
-class OptimizeChoose extends AbstractNormalization
-{
-	protected $choose;
-	protected $queries = array('//xsl:choose');
-	protected function adoptChildren(DOMElement $branch)
-	{
-		while ($branch->firstChild->firstChild)
-			$branch->appendChild($branch->firstChild->removeChild($branch->firstChild->firstChild));
-		$branch->removeChild($branch->firstChild);
-	}
-	protected function getAttributes(DOMElement $element)
-	{
-		$attributes = array();
-		foreach ($element->attributes as $attribute)
-		{
-			$key = $attribute->namespaceURI . '#' . $attribute->nodeName;
-			$attributes[$key] = $attribute->nodeValue;
-		}
-		return $attributes;
-	}
-	protected function getBranches()
-	{
-		$query = 'xsl:when|xsl:otherwise';
-		return $this->xpath($query, $this->choose);
-	}
-	protected function hasNoContent()
-	{
-		$query = 'count(xsl:when/node() | xsl:otherwise/node())';
-		return !$this->xpath->evaluate($query, $this->choose);
-	}
-	protected function hasOtherwise()
-	{
-		return (bool) $this->xpath->evaluate('count(xsl:otherwise)', $this->choose);
-	}
-	protected function isEqualNode(DOMNode $node1, DOMNode $node2)
-	{
-		return ($node1->ownerDocument->saveXML($node1) === $node2->ownerDocument->saveXML($node2));
-	}
-	protected function isEqualTag(DOMElement $el1, DOMElement $el2)
-	{
-		return ($el1->namespaceURI === $el2->namespaceURI && $el1->nodeName === $el2->nodeName && $this->getAttributes($el1) === $this->getAttributes($el2));
-	}
-	protected function isXslChoose(DOMNode $node)
-	{
-		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'choose');
-	}
-	protected function matchBranches($childType)
-	{
-		$branches = $this->getBranches();
-		if (!isset($branches[0]->$childType))
-			return \false;
-		$childNode = $branches[0]->$childType;
-		foreach ($branches as $branch)
-			if (!isset($branch->$childType) || !$this->isEqualNode($childNode, $branch->$childType))
-				return \false;
-		return \true;
-	}
-	protected function matchOnlyChild()
-	{
-		$branches = $this->getBranches();
-		if (!isset($branches[0]->firstChild))
-			return \false;
-		$firstChild = $branches[0]->firstChild;
-		if ($this->isXslChoose($firstChild))
-			return \false;
-		foreach ($branches as $branch)
-		{
-			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
-				return \false;
-			if (!$this->isEqualTag($firstChild, $branch->firstChild))
-				return \false;
-		}
-		return \true;
-	}
-	protected function moveFirstChildBefore()
-	{
-		$branches = $this->getBranches();
-		$this->choose->parentNode->insertBefore(\array_pop($branches)->firstChild, $this->choose);
-		foreach ($branches as $branch)
-			$branch->removeChild($branch->firstChild);
-	}
-	protected function moveLastChildAfter()
-	{
-		$branches = $this->getBranches();
-		$node     = \array_pop($branches)->lastChild;
-		if (isset($this->choose->nextSibling))
-			$this->choose->parentNode->insertBefore($node, $this->choose->nextSibling);
-		else
-			$this->choose->parentNode->appendChild($node);
-		foreach ($branches as $branch)
-			$branch->removeChild($branch->lastChild);
-	}
-	protected function normalizeElement(DOMElement $element)
-	{
-		$this->choose = $element;
-		if ($this->hasOtherwise())
-		{
-			$this->optimizeCommonFirstChild();
-			$this->optimizeCommonLastChild();
-			$this->optimizeCommonOnlyChild();
-			$this->optimizeEmptyOtherwise();
-		}
-		if ($this->hasNoContent())
-			$this->choose->parentNode->removeChild($this->choose);
-		else
-			$this->optimizeSingleBranch();
-	}
-	protected function optimizeCommonFirstChild()
-	{
-		while ($this->matchBranches('firstChild'))
-			$this->moveFirstChildBefore();
-	}
-	protected function optimizeCommonLastChild()
-	{
-		while ($this->matchBranches('lastChild'))
-			$this->moveLastChildAfter();
-	}
-	protected function optimizeCommonOnlyChild()
-	{
-		while ($this->matchOnlyChild())
-			$this->reparentChild();
-	}
-	protected function optimizeEmptyOtherwise()
-	{
-		$query = 'xsl:otherwise[count(node()) = 0]';
-		foreach ($this->xpath($query, $this->choose) as $otherwise)
-			$this->choose->removeChild($otherwise);
-	}
-	protected function optimizeSingleBranch()
-	{
-		$query = 'count(xsl:when) = 1 and not(xsl:otherwise)';
-		if (!$this->xpath->evaluate($query, $this->choose))
-			return;
-		list($when) = $this->xpath('xsl:when', $this->choose);
-		$if   = $this->createElement('xsl:if');
-		$if->setAttribute('test', $when->getAttribute('test'));
-		while ($when->firstChild)
-			$if->appendChild($when->removeChild($when->firstChild));
-		$this->choose->parentNode->replaceChild($if, $this->choose);
-	}
-	protected function reparentChild()
-	{
-		$branches  = $this->getBranches();
-		$childNode = $branches[0]->firstChild->cloneNode();
-		$childNode->appendChild($this->choose->parentNode->replaceChild($childNode, $this->choose));
-		foreach ($branches as $branch)
-			$this->adoptChildren($branch);
-	}
-	protected function reset()
-	{
-		$this->choose = \null;
-		parent::reset();
 	}
 }
 
@@ -8055,6 +7950,207 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		if (\count(\array_diff($m[0], $this->supportedFunctions)) > 0)
 			return \false;
 		return !\preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\())i', $expr);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+class OptimizeChoose extends AbstractChooseOptimization
+{
+	protected function adoptChildren(DOMElement $branch)
+	{
+		while ($branch->firstChild->firstChild)
+			$branch->appendChild($branch->firstChild->removeChild($branch->firstChild->firstChild));
+		$branch->removeChild($branch->firstChild);
+	}
+	protected function matchBranches($childType)
+	{
+		$branches = $this->getBranches();
+		if (!isset($branches[0]->$childType))
+			return \false;
+		$childNode = $branches[0]->$childType;
+		foreach ($branches as $branch)
+			if (!isset($branch->$childType) || !$this->isEqualNode($childNode, $branch->$childType))
+				return \false;
+		return \true;
+	}
+	protected function matchOnlyChild()
+	{
+		$branches = $this->getBranches();
+		if (!isset($branches[0]->firstChild))
+			return \false;
+		$firstChild = $branches[0]->firstChild;
+		if ($this->isXsl($firstChild, 'choose'))
+			return \false;
+		foreach ($branches as $branch)
+		{
+			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
+				return \false;
+			if (!$this->isEqualTag($firstChild, $branch->firstChild))
+				return \false;
+		}
+		return \true;
+	}
+	protected function moveFirstChildBefore()
+	{
+		$branches = $this->getBranches();
+		$this->choose->parentNode->insertBefore(\array_pop($branches)->firstChild, $this->choose);
+		foreach ($branches as $branch)
+			$branch->removeChild($branch->firstChild);
+	}
+	protected function moveLastChildAfter()
+	{
+		$branches = $this->getBranches();
+		$node     = \array_pop($branches)->lastChild;
+		if (isset($this->choose->nextSibling))
+			$this->choose->parentNode->insertBefore($node, $this->choose->nextSibling);
+		else
+			$this->choose->parentNode->appendChild($node);
+		foreach ($branches as $branch)
+			$branch->removeChild($branch->lastChild);
+	}
+	protected function optimizeChoose()
+	{
+		if ($this->hasOtherwise())
+		{
+			$this->optimizeCommonFirstChild();
+			$this->optimizeCommonLastChild();
+			$this->optimizeCommonOnlyChild();
+			$this->optimizeEmptyOtherwise();
+		}
+		if ($this->isEmpty())
+			$this->choose->parentNode->removeChild($this->choose);
+		else
+			$this->optimizeSingleBranch();
+	}
+	protected function optimizeCommonFirstChild()
+	{
+		while ($this->matchBranches('firstChild'))
+			$this->moveFirstChildBefore();
+	}
+	protected function optimizeCommonLastChild()
+	{
+		while ($this->matchBranches('lastChild'))
+			$this->moveLastChildAfter();
+	}
+	protected function optimizeCommonOnlyChild()
+	{
+		while ($this->matchOnlyChild())
+			$this->reparentChild();
+	}
+	protected function optimizeEmptyOtherwise()
+	{
+		$query = 'xsl:otherwise[count(node()) = 0]';
+		foreach ($this->xpath($query, $this->choose) as $otherwise)
+			$this->choose->removeChild($otherwise);
+	}
+	protected function optimizeSingleBranch()
+	{
+		$query = 'count(xsl:when) = 1 and not(xsl:otherwise)';
+		if (!$this->xpath->evaluate($query, $this->choose))
+			return;
+		list($when) = $this->xpath('xsl:when', $this->choose);
+		$if   = $this->createElement('xsl:if');
+		$if->setAttribute('test', $when->getAttribute('test'));
+		while ($when->firstChild)
+			$if->appendChild($when->removeChild($when->firstChild));
+		$this->choose->parentNode->replaceChild($if, $this->choose);
+	}
+	protected function reparentChild()
+	{
+		$branches  = $this->getBranches();
+		$childNode = $branches[0]->firstChild->cloneNode();
+		$childNode->appendChild($this->choose->parentNode->replaceChild($childNode, $this->choose));
+		foreach ($branches as $branch)
+			$this->adoptChildren($branch);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMText;
+class OptimizeChooseText extends AbstractChooseOptimization
+{
+	protected function adjustTextNodes($childType, $pos, $len = \PHP_INT_MAX)
+	{
+		foreach ($this->getBranches() as $branch)
+		{
+			$node            = $branch->$childType;
+			$node->nodeValue = \substr($node->textContent, $pos, $len);
+		}
+	}
+	protected function getPrefixLength(array $strings)
+	{
+		$i      = 0;
+		$len    = 0;
+		$maxLen = \min(\array_map('strlen', $strings));
+		while ($i < $maxLen)
+		{
+			$c = $strings[0][$i];
+			foreach ($strings as $string)
+				if ($string[$i] !== $c)
+					break 2;
+			$len = ++$i;
+		}
+		return $len;
+	}
+	protected function getTextContent($childType)
+	{
+		$strings = array();
+		foreach ($this->getBranches() as $branch)
+		{
+			if (!($branch->$childType instanceof DOMText))
+				return array();
+			$strings[] = $branch->$childType->textContent;
+		}
+		return $strings;
+	}
+	protected function optimizeChoose()
+	{
+		if (!$this->hasOtherwise())
+			return;
+		$this->optimizeLeadingText();
+		$this->optimizeTrailingText();
+	}
+	protected function optimizeLeadingText()
+	{
+		$strings = $this->getTextContent('firstChild');
+		if (empty($strings))
+			return;
+		$len = $this->getPrefixLength($strings);
+		if ($len)
+		{
+			$this->adjustTextNodes('firstChild', $len);
+			$this->choose->parentNode->insertBefore(
+				$this->createTextNode(\substr($strings[0], 0, $len)),
+				$this->choose
+			);
+		}
+	}
+	protected function optimizeTrailingText()
+	{
+		$strings = $this->getTextContent('lastChild');
+		if (empty($strings))
+			return;
+		$len = $this->getPrefixLength(\array_map('strrev', $strings));
+		if ($len)
+		{
+			$this->adjustTextNodes('lastChild', 0, -$len);
+			$this->choose->parentNode->insertBefore(
+				$this->createTextNode(\substr($strings[0], -$len)),
+				$this->choose->nextSibling
+			);
+		}
 	}
 }
 
