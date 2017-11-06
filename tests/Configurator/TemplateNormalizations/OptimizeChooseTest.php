@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
 /**
+* @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractChooseOptimization
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChoose
 */
 class OptimizeChooseTest extends AbstractTest
