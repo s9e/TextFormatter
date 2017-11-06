@@ -6,47 +6,39 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class ConvertCurlyExpressionsInText extends TemplateNormalization
+use DOMNode;
+class ConvertCurlyExpressionsInText extends AbstractNormalization
 {
-	public function normalize(DOMElement $template)
+	protected $queries = ['//*[namespace-uri() != $XSL]/text()[contains(., "{@") or contains(., "{$")]'];
+	protected function insertTextBefore($text, $node)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		$query = '//text()[contains(., "{@") or contains(., "{$")]';
-		foreach ($xpath->query($query) as $node)
+		$node->parentNode->insertBefore($this->createTextNode($text), $node);
+	}
+	protected function normalizeNode(DOMNode $node)
+	{
+		$parentNode = $node->parentNode;
+		\preg_match_all(
+			'#\\{([$@][-\\w]+)\\}#',
+			$node->textContent,
+			$matches,
+			\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
+		);
+		$lastPos = 0;
+		foreach ($matches as $m)
 		{
-			$parentNode = $node->parentNode;
-			if ($parentNode->namespaceURI === self::XMLNS_XSL)
-				continue;
-			\preg_match_all(
-				'#\\{([$@][-\\w]+)\\}#',
-				$node->textContent,
-				$matches,
-				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
-			);
-			$lastPos = 0;
-			foreach ($matches as $m)
+			$pos = $m[0][1];
+			if ($pos > $lastPos)
 			{
-				$pos = $m[0][1];
-				if ($pos > $lastPos)
-					$parentNode->insertBefore(
-						$dom->createTextNode(
-							\substr($node->textContent, $lastPos, $pos - $lastPos)
-						),
-						$node
-					);
-				$lastPos = $pos + \strlen($m[0][0]);
-				$parentNode
-					->insertBefore($dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'), $node)
-					->setAttribute('select', $m[1][0]);
+				$text = \substr($node->textContent, $lastPos, $pos - $lastPos);
+				$this->insertTextBefore($text, $node);
 			}
-			$text = \substr($node->textContent, $lastPos);
-			if ($text > '')
-				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			$parentNode->removeChild($node);
+			$lastPos = $pos + \strlen($m[0][0]);
+			$parentNode
+				->insertBefore($this->createElement('xsl:value-of'), $node)
+				->setAttribute('select', $m[1][0]);
 		}
+		$text = \substr($node->textContent, $lastPos);
+		$this->insertTextBefore($text, $node);
+		$parentNode->removeChild($node);
 	}
 }
