@@ -17,7 +17,7 @@ class SerializerTest extends Test
 	* @testdox serialize() tests
 	* @dataProvider getSerializeTests
 	*/
-	public function testSerialize($xml, $expected, $branchTables = [], $setup = null)
+	public function testSerialize($xml, $expected, $setup = null)
 	{
 		$ir = new DOMDocument;
 		$ir->preserveWhiteSpace = false;
@@ -34,7 +34,6 @@ class SerializerTest extends Test
 		}
 
 		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
-		$this->assertSame($branchTables, $serializer->branchTables);
 	}
 
 	public function getSerializeTests()
@@ -72,8 +71,7 @@ class SerializerTest extends Test
 						</case>
 					</switch>
 				</template>',
-				"if(isset(self::\$bt13027555[\$node->getAttribute('foo')])){\$n=self::\$bt13027555[\$node->getAttribute('foo')];if(\$n<4){if(\$n===0){\$this->out.='1';}elseif(\$n===1){\$this->out.='2';}elseif(\$n===2){\$this->out.='3';}else{\$this->out.='4';}}elseif(\$n===4){\$this->out.='5';}elseif(\$n===5){\$this->out.='6';}elseif(\$n===6){\$this->out.='7';}else{\$this->out.='8';}}else{\$this->out.='default';}",
-				['bt13027555' => [1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7]]
+				"switch(\$node->getAttribute('foo')){case'1':\$this->out.='1';break;case'2':\$this->out.='2';break;case'3':\$this->out.='3';break;case'4':\$this->out.='4';break;case'5':\$this->out.='5';break;case'6':\$this->out.='6';break;case'7':\$this->out.='7';break;case'8':\$this->out.='8';break;default:\$this->out.='default';}"
 			],
 			[
 				'<template><closeTag id="1"/></template>',
@@ -137,8 +135,7 @@ class SerializerTest extends Test
 						</case>
 					</switch>
 				</template>',
-				"if(isset(self::\$bt7794ED46[\$node->getAttribute('foo')])){\$n=self::\$bt7794ED46[\$node->getAttribute('foo')];if(\$n<4){if(\$n===0){\$this->out.='1';}elseif(\$n===1){\$this->out.='2';}elseif(\$n===2){\$this->out.='3';}else{\$this->out.='4';}}elseif(\$n===4){\$this->out.='5';}elseif(\$n===5){\$this->out.='6';}elseif(\$n===6){\$this->out.='7';}else{if(isset(self::\$bt7794ED46[\$node->getAttribute('bar')])){\$n=self::\$bt7794ED46[\$node->getAttribute('bar')];if(\$n<4){if(\$n===0){\$this->out.='1';}elseif(\$n===1){\$this->out.='2';}elseif(\$n===2){\$this->out.='3';}else{\$this->out.='4';}}elseif(\$n===4){\$this->out.='5';}elseif(\$n===5){\$this->out.='6';}elseif(\$n===6){\$this->out.='7';}else{\$this->out.='8';}}}}",
-				['bt7794ED46' => [1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7,44=>7]]
+				"switch(\$node->getAttribute('foo')){case'1':\$this->out.='1';break;case'2':\$this->out.='2';break;case'3':\$this->out.='3';break;case'4':\$this->out.='4';break;case'5':\$this->out.='5';break;case'6':\$this->out.='6';break;case'7':\$this->out.='7';break;case'8':case'44':switch(\$node->getAttribute('bar')){case'1':\$this->out.='1';break;case'2':\$this->out.='2';break;case'3':\$this->out.='3';break;case'4':\$this->out.='4';break;case'5':\$this->out.='5';break;case'6':\$this->out.='6';break;case'7':\$this->out.='7';break;case'8':case'44':\$this->out.='8';}}"
 			],
 			[
 				'<template>
@@ -154,38 +151,33 @@ class SerializerTest extends Test
 						</case>
 					</switch>
 				</template>',
-				"if(isset(self::\$bt6C8E2931[\$node->getAttribute('foo')])){\$n=self::\$bt6C8E2931[\$node->getAttribute('foo')];if(\$n===0){\$this->out.='1';}else{\$this->out.='2';}}else{\$this->out.='default';}",
-				['bt6C8E2931' => [1=>0,2=>1]],
-				function ($serializer)
-				{
-					$serializer->branchTableThreshold = 2;
-				}
+				"switch(\$node->getAttribute('foo')){case'1':\$this->out.='1';break;case'2':\$this->out.='2';break;default:\$this->out.='default';}"
 			],
 			[
 				'<template>
 					<switch branch-key="@foo">
-						<case branch-values=\'a:1:{i:0;s:1:"1";}\' test="@foo = 1">
-							<output escape="text" type="literal">1</output>
-						</case>
-						<case branch-values=\'a:1:{i:0;s:1:"2";}\' test="@foo = 2">
-							<output escape="text" type="literal">2</output>
+						<case branch-values=\'a:1:{i:0;s:3:"foo";}\' test="@foo = \'foo\'">
+							<output escape="text" type="literal">foo</output>
 						</case>
 						<case>
 							<output escape="text" type="literal">default</output>
 						</case>
 					</switch>
 				</template>',
-				"if(\$node->getAttribute('foo')==1){\$this->out.='1';}elseif(\$node->getAttribute('foo')==2){\$this->out.='2';}else{\$this->out.='default';}",
-				[],
-				function ($serializer)
-				{
-					if (PCRE_VERSION < 8.13)
-					{
-						// The PHP output is different with older PCRE versions
-						$this->markTestSkipped();
-					}
-					$serializer->branchTableThreshold = 20;
-				}
+				"if(\$node->getAttribute('foo')==='foo'){\$this->out.='foo';}else{\$this->out.='default';}"
+			],
+			[
+				'<template>
+					<switch branch-key="@foo">
+						<case branch-values=\'a:1:{i:0;s:3:"foo";}\' test="@foo = \'foo\'">
+							<output escape="text" type="literal">foo</output>
+						</case>
+						<case branch-values=\'a:1:{i:0;s:3:"bar";}\' test="@foo = \'bar\'">
+							<output escape="text" type="literal">bar</output>
+						</case>
+					</switch>
+				</template>',
+				"switch(\$node->getAttribute('foo')){case'bar':\$this->out.='bar';break;case'foo':\$this->out.='foo';}"
 			],
 		];
 	}

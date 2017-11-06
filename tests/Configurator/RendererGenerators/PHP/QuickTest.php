@@ -82,90 +82,6 @@ class QuickTest extends Test
 	}
 
 	/**
-	* @dataProvider getConditionalsTests
-	*/
-	public function testConditionals($conditionals, $expected)
-	{
-		$expected = preg_replace('(\\s+)', '', $expected);
-		$this->assertSame($expected, Quick::generateConditionals('$n', $conditionals));
-	}
-
-	public function getConditionalsTests()
-	{
-		return [
-			[
-				['/*0*/'],
-				'/*0*/'
-			],
-			[
-				['/*0*/', '/*1*/'],
-				'if($n===0){/*0*/}else{/*1*/}'
-			],
-			[
-				['/*0*/', '/*1*/', '/*2*/', '/*3*/', '/*4*/', '/*5*/', '/*6*/', '/*7*/'],
-				'
-					if ($n<4)
-					{
-							if($n===0){/*0*/}
-						elseif($n===1){/*1*/}
-						elseif($n===2){/*2*/}
-						else          {/*3*/}
-					}
-					elseif($n===4){/*4*/}
-					elseif($n===5){/*5*/}
-					elseif($n===6){/*6*/}
-					else          {/*7*/}
-				'
-			],
-			[
-				['/*0*/', '/*1*/', '/*2*/', '/*3*/', '/*4*/', '/*5*/', '/*6*/', '/*7*/', '/*8*/'],
-				'
-					if($n<5)
-					{
-						if($n<3)
-						{
-								if($n===0){/*0*/}
-							elseif($n===1){/*1*/}
-							else          {/*2*/}
-						}
-						elseif($n===3)    {/*3*/}
-						else              {/*4*/}
-					}
-					elseif($n===5)        {/*5*/}
-					elseif($n===6)        {/*6*/}
-					elseif($n===7)        {/*7*/}
-					else                  {/*8*/}
-				'
-			],
-			[
-				['/*0*/', '/*1*/', '/*2*/', '/*3*/', '/*4*/', '/*5*/', '/*6*/', '/*7*/', '/*8*/', '/*9*/', '/*10*/'],
-				'
-					if($n<6)
-					{
-						if($n<3)
-						{
-								if($n===0){/*0*/}
-							elseif($n===1){/*1*/}
-							else          {/*2*/}
-						}
-						elseif($n===3)    {/*3*/}
-						elseif($n===4)    {/*4*/}
-						else              {/*5*/}
-					}
-					elseif($n<9)
-					{
-							if($n===6)    {/*6*/}
-						elseif($n===7)    {/*7*/}
-						else              {/*8*/}
-					}
-					elseif($n===9)        {/*9*/}
-					else                  {/*10*/}
-				'
-			],
-		];
-	}
-
-	/**
 	* @dataProvider getRenderingTests
 	*/
 	public function testRendering($templates, $xml, $expected, $setup = null)
@@ -795,7 +711,7 @@ class QuickTest extends Test
 					'B' => '<b><xsl:if test="@foo">B</xsl:if><xsl:apply-templates/></b>',
 					'X' => '<b><xsl:if test="@foo">X</xsl:if><xsl:apply-templates/></b>'
 				],
-				'if($qb===0){$html.=\'<b>\';if(isset($attributes[\'foo\'])){$html.=\'B\';}}else{$html.=\'<b>\';if(isset($attributes[\'foo\'])){$html.=\'X\';}}'
+				"switch(\$id){case'B':\$html.='<b>';if(isset(\$attributes['foo'])){\$html.='B';}break;case'X':\$html.='<b>';if(isset(\$attributes['foo'])){\$html.='X';}}"
 			],
 			[
 				[
@@ -803,7 +719,7 @@ class QuickTest extends Test
 					'X' => '<b><xsl:if test="@foo">X</xsl:if><xsl:apply-templates/></b>',
 					'Y' => '<b><xsl:if test="@foo">X</xsl:if><xsl:apply-templates/></b>'
 				],
-				'if($qb===0){$html.=\'<b>\';if(isset($attributes[\'foo\'])){$html.=\'B\';}}else{$html.=\'<b>\';if(isset($attributes[\'foo\'])){$html.=\'X\';}}'
+				"switch(\$id){case'B':\$html.='<b>';if(isset(\$attributes['foo'])){\$html.='B';}break;case'X':case'Y':\$html.='<b>';if(isset(\$attributes['foo'])){\$html.='X';}}"
 			],
 			[
 				[

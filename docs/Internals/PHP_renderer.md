@@ -23,7 +23,7 @@ echo 'Last class: ', $configurator->rendering->engine->lastClassName, "\n";
 echo 'Last file:  ', $configurator->rendering->engine->lastFilepath;
 ```
 ```
-Default: Renderer_4732adf2de8cf8aa5a30f798f735e3239d40b615
+Default: Renderer_42d42900e1fe70a3dfadc1c19ebcd948e925d8ba
 Custom:  MyRenderer
 
 Last class: MyRenderer

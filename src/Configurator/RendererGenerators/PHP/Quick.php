@@ -65,9 +65,7 @@ class Quick
 		$quickSource = '';
 		if (!empty($map['php']))
 		{
-			list($quickBranches, $quickSource) = self::generateBranchTable('$qb', $map['php']);
-			$php[] = '	/** {@inheritdoc} */';
-			$php[] = '	protected $quickBranches=' . self::export($quickBranches) . ';';
+			$quickSource = SwitchStatement::generate('$id', $map['php']);
 		}
 
 		// Build a regexp that matches all the tags
@@ -86,7 +84,7 @@ class Quick
 		}
 
 		$php[] = '	/** {@inheritdoc} */';
-		$php[] = '	protected function renderQuickTemplate($qb, $xml)';
+		$php[] = '	protected function renderQuickTemplate($id, $xml)';
 		$php[] = '	{';
 		$php[] = '		$attributes=$this->matchAttributes($xml);';
 		$php[] = "		\$html='';" . $quickSource;
@@ -755,76 +753,5 @@ class Quick
 			},
 			$str
 		);
-	}
-
-	/**
-	* Generate a series of conditionals
-	*
-	* @param  string $expr       Expression tested for equality
-	* @param  array  $statements List of PHP statements
-	* @return string
-	*/
-	public static function generateConditionals($expr, array $statements)
-	{
-		$keys = array_keys($statements);
-		$cnt  = count($statements);
-		$min  = (int) $keys[0];
-		$max  = (int) $keys[$cnt - 1];
-
-		if ($cnt <= 4)
-		{
-			if ($cnt === 1)
-			{
-				return end($statements);
-			}
-
-			$php = '';
-			$k = $min;
-			do
-			{
-				$php .= 'if(' . $expr . '===' . $k . '){' . $statements[$k] . '}else';
-			}
-			while (++$k < $max);
-
-			$php .= '{' . $statements[$max] . '}';
-			
-			return $php;
-		}
-
-		$cutoff = ceil($cnt / 2);
-		$chunks = array_chunk($statements, $cutoff, true);
-
-		return 'if(' . $expr . '<' . key($chunks[1]) . '){' . self::generateConditionals($expr, array_slice($statements, 0, $cutoff, true)) . '}else' . self::generateConditionals($expr, array_slice($statements, $cutoff, null, true));
-	}
-
-	/**
-	* Generate a branch table (with its source) for an array of PHP statements
-	*
-	* @param  string $expr       PHP expression used to determine the branch
-	* @param  array  $statements Map of [value => statement]
-	* @return array              Two elements: first is the branch table, second is the source
-	*/
-	public static function generateBranchTable($expr, array $statements)
-	{
-		// Map of [statement => id]
-		$branchTable = [];
-
-		// Map of [value => id]
-		$branchIds = [];
-
-		// Sort the PHP statements by the value used to identify their branch
-		ksort($statements);
-
-		foreach ($statements as $value => $statement)
-		{
-			if (!isset($branchIds[$statement]))
-			{
-				$branchIds[$statement] = count($branchIds);
-			}
-
-			$branchTable[$value] = $branchIds[$statement];
-		}
-
-		return [$branchTable, self::generateConditionals($expr, array_keys($branchIds))];
 	}
 }

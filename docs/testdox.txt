@@ -2623,7 +2623,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] The quick renderer can handle unknown self-closing tags
  [x] The quick renderer can handle comments
  [x] The quick renderer can handle processing instructions
- [x] Conditionals 
  [x] Rendering 
  [x] Rendering strategy 
  [x] Source 
@@ -2653,6 +2652,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
  [x] serialize() tests 
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\SwitchStatement
+ [x] generate() tests 
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
@@ -2689,7 +2691,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Tests from plugins (Quick renderer) 
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
- [x] Saves the branch tables from the serializer if applicable
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

@@ -264,6 +264,7 @@
 			<file>tests/Configurator/RendererGenerators/PHP/OptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/QuickTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/SerializerTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/SwitchStatementTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
 			<file>tests/Configurator/RendererGenerators/UnformattedTest.php</file>
 			<file>tests/Configurator/RendererGenerators/XSLT/OptimizerTest.php</file>

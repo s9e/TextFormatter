@@ -16,16 +16,6 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 class Serializer
 {
 	/**
-	* @var integer Minimum number of branches required to use a branch table
-	*/
-	public $branchTableThreshold = 8;
-
-	/**
-	* @var array Branch tables created during last serialization
-	*/
-	public $branchTables = [];
-
-	/**
 	* @var XPathConvertor XPath-to-PHP convertor
 	*/
 	public $convertor;
@@ -139,6 +129,19 @@ class Serializer
 	}
 
 	/**
+	* Test whether given switch has more than one non-default case
+	*
+	* @param  DOMElement $switch <switch/> node
+	* @return bool
+	*/
+	protected function hasMultipleCases(DOMElement $switch)
+	{
+		$xpath = new DOMXPath($switch->ownerDocument);
+
+		return $xpath->evaluate('count(case[@test]) > 1', $switch);
+	}
+
+	/**
 	* Serialize an <applyTemplates/> node
 	*
 	* @param  DOMElement $applyTemplates <applyTemplates/> node
@@ -185,8 +188,6 @@ class Serializer
 	*/
 	public function serialize(DOMElement $ir)
 	{
-		$this->branchTables = [];
-
 		return $this->serializeChildren($ir);
 	}
 
@@ -377,23 +378,11 @@ class Serializer
 			throw new RuntimeException;
 		}
 
-		list($branchTable, $php) = Quick::generateBranchTable('$n', $statements);
-
-		// The name of the branching table is based on its content
-		$varName = 'bt' . sprintf('%08X', crc32(serialize($branchTable)));
-		$expr = 'self::$' . $varName . '[' . $this->convertXPath($switch->getAttribute('branch-key')) . ']';
-		$php = 'if(isset(' . $expr . ')){$n=' . $expr . ';' . $php . '}';
-
 		// Test whether the last case has a branch-values. If not, it's the default case
-		if (!$case->hasAttribute('branch-values'))
-		{
-			$php .= 'else{' . $this->serializeChildren($case) . '}';
-		}
+		$defaultCode = ($case->hasAttribute('branch-values')) ? '' : $this->serializeChildren($case);
+		$expr        = $this->convertXPath($switch->getAttribute('branch-key'));
 
-		// Save the branching table
-		$this->branchTables[$varName] = $branchTable;
-
-		return $php;
+		return SwitchStatement::generate($expr, $statements, $defaultCode);
 	}
 
 	/**
@@ -429,15 +418,13 @@ class Serializer
 	protected function serializeSwitch(DOMElement $switch)
 	{
 		// Use a specialized branch table if the minimum number of branches is reached
-		if ($switch->hasAttribute('branch-key')
-		 && $switch->childNodes->length >= $this->branchTableThreshold)
+		if ($switch->hasAttribute('branch-key') && $this->hasMultipleCases($switch))
 		{
 			return $this->serializeHash($switch);
 		}
 
 		$php  = '';
 		$else = '';
-
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
 			if (!$case->parentNode->isSameNode($switch))

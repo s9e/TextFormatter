@@ -15,6 +15,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\ControlStructuresOptim
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\SwitchStatement;
 use s9e\TextFormatter\Configurator\Rendering;
 
 class PHP implements RendererGenerator
@@ -138,101 +139,23 @@ class PHP implements RendererGenerator
 		// Copy some options to the serializer
 		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
-		// Gather templates and optimize simple templates
-		$templates = $rendering->getTemplates();
-
-		// Group templates by content to deduplicate them
-		$groupedTemplates = [];
-		foreach ($templates as $tagName => $template)
-		{
-			$groupedTemplates[$template][] = $tagName;
-		}
-
-		// Assign a branch number to each unique template and record the value for each tag
-		$tagBranch   = 0;
-		$tagBranches = [];
-
-		// Store the compiled template for each branch
-		$compiledTemplates = [];
-
-		// Other branch tables
-		$branchTables = [];
-
-		// Parse each template and serialize it to PHP
-		foreach ($groupedTemplates as $template => $tagNames)
-		{
-			// Parse the template
-			$ir = TemplateParser::parse($template);
-
-			// Serialize the representation to PHP
-			$templateSource = $this->serializer->serialize($ir->documentElement);
-			if (isset($this->optimizer))
-			{
-				$templateSource = $this->optimizer->optimize($templateSource);
-			}
-
-			// Record the branch tables used in this template
-			$branchTables += $this->serializer->branchTables;
-
-			// Record the source for this branch number and assign this number to each tag
-			$compiledTemplates[$tagBranch] = $templateSource;
-			foreach ($tagNames as $tagName)
-			{
-				$tagBranches[$tagName] = $tagBranch;
-			}
-			++$tagBranch;
-		}
-
-		// Unset the vars we don't need anymore
-		unset($groupedTemplates, $ir, $quickRender);
-
-		// Store the compiled template if we plan to create a Quick renderer
-		$quickSource = false;
-		if ($this->enableQuickRenderer)
-		{
-			$quickRender = [];
-			foreach ($tagBranches as $tagName => $tagBranch)
-			{
-				$quickRender[$tagName] = $compiledTemplates[$tagBranch];
-			}
-
-			$quickSource = Quick::getSource($quickRender);
-			unset($quickRender);
-		}
-
-		// Coalesce all the compiled templates
-		$templatesSource = Quick::generateConditionals('$tb', $compiledTemplates);
-		unset($compiledTemplates);
+		// Compile the templates to PHP
+		$compiledTemplates = array_map([$this, 'compileTemplate'], $rendering->getTemplates());
 
 		// Start the code right after the class name, we'll prepend the header when we're done
 		$php = [];
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderers\\PHP';
 		$php[] = '{';
 		$php[] = '	protected $params=' . self::export($rendering->getAllParameters()) . ';';
-		$php[] = '	protected static $tagBranches=' . self::export($tagBranches) . ';';
-
-		foreach ($branchTables as $varName => $branchTable)
-		{
-			$php[] = '	protected static $' . $varName . '=' . self::export($branchTable) . ';';
-		}
-
 		$php[] = '	protected function renderNode(\\DOMNode $node)';
 		$php[] = '	{';
-		$php[] = '		if (isset(self::$tagBranches[$node->nodeName]))';
-		$php[] = '		{';
-		$php[] = '			$tb = self::$tagBranches[$node->nodeName];';
-		$php[] = '			' . $templatesSource;
-		$php[] = '		}';
-		$php[] = '		else';
-		$php[] = '		{';
-		$php[] = '			$this->at($node);';
-		$php[] = '		}';
+		$php[] = '		' . SwitchStatement::generate('$node->nodeName', $compiledTemplates, '$this->at($node);');
 		$php[] = '	}';
 
 		// Append the Quick renderer if applicable
-		if ($quickSource !== false)
+		if ($this->enableQuickRenderer)
 		{
-			$php[] = $quickSource;
+			$php[] = Quick::getSource($compiledTemplates);
 		}
 
 		// Close the class definition
@@ -290,5 +213,26 @@ class PHP implements RendererGenerator
 		}
 
 		return '[' . implode(',', $pairs) . ']';
+	}
+
+	/**
+	* Compile a template to PHP
+	*
+	* @param  string $template Original template
+	* @return string           Compiled template
+	*/
+	protected function compileTemplate($template)
+	{
+		// Parse the template
+		$ir = TemplateParser::parse($template);
+
+		// Serialize the representation to PHP
+		$php = $this->serializer->serialize($ir->documentElement);
+		if (isset($this->optimizer))
+		{
+			$php = $this->optimizer->optimize($php);
+		}
+
+		return $php;
 	}
 }

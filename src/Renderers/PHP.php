@@ -36,11 +36,6 @@ abstract class PHP extends Renderer
 	protected $out;
 
 	/**
-	* @var array Branching table used by the Quick renderer [id => index]
-	*/
-	protected $quickBranches;
-
-	/**
 	* @var string Regexp that matches XML elements to be rendered by the quick renderer
 	*/
 	protected $quickRegexp = '((?!))';
@@ -221,12 +216,8 @@ abstract class PHP extends Renderer
 		{
 			return preg_replace($this->dynamic[$id][0], $this->dynamic[$id][1], $m[0], 1);
 		}
-		if (isset($this->quickBranches[$id]))
-		{
-			return $this->renderQuickTemplate($this->quickBranches[$id], $m[0]);
-		}
 
-		return '';
+		return $this->renderQuickTemplate($id, $m[0]);
 	}
 
 	/**
@@ -254,11 +245,11 @@ abstract class PHP extends Renderer
 	*
 	* This stub should be overwritten by generated renderers
 	*
-	* @param  integer $qb  Template's index in the quick branch table
-	* @param  string  $xml
-	* @return string
+	* @param  integer $id  Template's index in the quick branch table
+	* @param  string  $xml Tag's ID (tag name optionally preceded by a slash)
+	* @return string       Rendered template
 	*/
-	protected function renderQuickTemplate($qb, $xml)
+	protected function renderQuickTemplate($id, $xml)
 	{
 		throw new RuntimeException('Not implemented');
 	}

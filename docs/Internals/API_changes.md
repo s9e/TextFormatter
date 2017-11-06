@@ -16,6 +16,10 @@ The `quickRenderingTest` property of the PHP renderer is now protected.
 
 `s9e\TextFormatter\Configurator\TemplateNormalization` has been replaced by `s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization`.
 
+The `branchTableThreshold` property of `s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer` has been removed.
+
+The `generateConditionals()` and `generateBranchTable()` methods of `s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick` have been removed.
+
 
 ## 0.11.0
 

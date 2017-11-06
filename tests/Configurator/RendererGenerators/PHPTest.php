@@ -969,7 +969,7 @@ class PHPTest extends Test
 					<xsl:when test="@foo">foo</xsl:when>
 					<xsl:otherwise><xsl:text/></xsl:otherwise>
 				</xsl:choose>',
-				"{if(\$node->hasAttribute('foo'))\$this->out.='foo';}",
+				"case'X':if(\$node->hasAttribute('foo'))\$this->out.='foo';break;",
 				['else{}', 'else;', "\$this->out.=''"]
 			],
 			[
@@ -1559,32 +1559,6 @@ class PHPTest extends Test
 
 		$this->assertNotContains(
 			'$enableQuickRenderer=true;',
-			$this->getRendererSource()
-		);
-	}
-
-	/**
-	* @testdox Saves the branch tables from the serializer if applicable
-	*/
-	public function testBranchTables()
-	{
-		$this->configurator->rendering->engine->enableQuickRenderer = false;
-		$this->configurator->tags->add('X')->template = 
-			'<xsl:choose>
-				<xsl:when test="@foo=1">1</xsl:when>
-				<xsl:when test="@foo=2">2</xsl:when>
-				<xsl:when test="@foo=3">3</xsl:when>
-				<xsl:when test="@foo=4">4</xsl:when>
-				<xsl:when test="@foo=5">5</xsl:when>
-				<xsl:when test="@foo=6">6</xsl:when>
-				<xsl:when test="@foo=7">7</xsl:when>
-				<xsl:when test="@foo=8">8</xsl:when>
-			</xsl:choose>';
-
-		$renderer = $this->configurator->rendering->getRenderer();
-
-		$this->assertContains(
-			'protected static $bt13027555=[1=>0,2=>1,3=>2,4=>3,5=>4,6=>5,7=>6,8=>7];',
 			$this->getRendererSource()
 		);
 	}
