@@ -31,9 +31,10 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 15	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
 16	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
 17	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChoose
-18	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
-19	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
-20	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
+18	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChooseText
+19	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
+20	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
+21	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
 ```
 
 ### Remove a normalization

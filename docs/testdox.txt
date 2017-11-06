@@ -1300,6 +1300,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeNestedCondit
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChoose
  [x] Works 
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChooseText
+ [x] Works 
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\PreserveSingleSpaces
  [x] Works 
 

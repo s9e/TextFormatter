@@ -224,6 +224,13 @@ class TemplateNormalizerTest extends Test
 					</span>'
 				)
 			],
+			[
+				'<xsl:choose>
+					<xsl:when test="@foo">xxx<b>...</b>yz</xsl:when>
+					<xsl:otherwise>xxxyz</xsl:otherwise>
+				</xsl:choose>',
+				'xxx<xsl:if test="@foo"><b>...</b></xsl:if>yz'
+			],
 		];
 	}
 }
