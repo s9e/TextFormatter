@@ -7,26 +7,19 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class MergeConsecutiveCopyOf extends TemplateNormalization
+class MergeConsecutiveCopyOf extends AbstractNormalization
 {
-	public function normalize(DOMElement $template)
+	protected $queries = ['//xsl:copy-of'];
+	protected function normalizeElement(DOMElement $element)
 	{
-		$xpath = new DOMXPath($template->ownerDocument);
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-			$this->mergeCopyOfSiblings($node);
-	}
-	protected function mergeCopyOfSiblings(DOMElement $node)
-	{
-		while ($this->nextSiblingIsCopyOf($node))
+		while ($this->nextSiblingIsCopyOf($element))
 		{
-			$node->setAttribute('select', $node->getAttribute('select') . '|' . $node->nextSibling->getAttribute('select'));
-			$node->parentNode->removeChild($node->nextSibling);
+			$element->setAttribute('select', $element->getAttribute('select') . '|' . $element->nextSibling->getAttribute('select'));
+			$element->parentNode->removeChild($element->nextSibling);
 		}
 	}
-	protected function nextSiblingIsCopyOf(DOMElement $node)
+	protected function nextSiblingIsCopyOf(DOMElement $element)
 	{
-		return ($node->nextSibling && $node->nextSibling->localName === 'copy-of' && $node->nextSibling->namespaceURI === self::XMLNS_XSL);
+		return ($element->nextSibling && $this->isXsl($element->nextSibling, 'copy-of'));
 	}
 }

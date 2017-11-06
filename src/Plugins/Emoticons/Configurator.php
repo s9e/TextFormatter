@@ -11,12 +11,12 @@ use Countable;
 use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
+use s9e\TextFormatter\Utils\XPath;
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
@@ -81,7 +81,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		if (!empty($this->notIfCondition))
 			$xsl .= '<xsl:when test="' . \htmlspecialchars($this->notIfCondition) . '"><xsl:value-of select="."/></xsl:when><xsl:otherwise><xsl:choose>';
 		foreach ($this->collection as $code => $template)
-			$xsl .= '<xsl:when test=".=' . \htmlspecialchars(XPathHelper::export($code)) . '">'
+			$xsl .= '<xsl:when test=".=' . \htmlspecialchars(XPath::export($code)) . '">'
 			      . $template
 			      . '</xsl:when>';
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
