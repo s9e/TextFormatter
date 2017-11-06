@@ -1423,8 +1423,8 @@ function getMagicEndPos(tagPos)
 /**
 * Compute the position and priority of a magic start tag, adjusted for whitespace
 *
-* @param  {!number}   tagPos Leftmost possible position for the tag
-* @return {!number[]}        [Tag pos, priority]
+* @param  {!number} tagPos Leftmost possible position for the tag
+* @return {!Array}         [Tag pos, priority]
 */
 function getMagicStartCoords(tagPos)
 {

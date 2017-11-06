@@ -13,7 +13,7 @@ class ClosureCompilerService extends OnlineMinifier
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 	public $excludeDefaultExterns = \true;
 	public $externs;
-	public $url = 'http://closure-compiler.appspot.com/compile';
+	public $url = 'https://closure-compiler.appspot.com/compile';
 	public function __construct()
 	{
 		parent::__construct();

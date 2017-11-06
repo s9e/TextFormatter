@@ -189,15 +189,7 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getRegexpInfo($regexp)
 	{
-		$valid = \false;
-		try
-		{
-			$valid = @\preg_match_all($regexp, '', $m);
-		}
-		catch (Exception $e)
-		{
-			}
-		if ($valid === \false)
+		if (@\preg_match_all($regexp, '') === \false)
 			throw new InvalidArgumentException('Invalid regexp');
 		return RegexpParser::parse($regexp);
 	}

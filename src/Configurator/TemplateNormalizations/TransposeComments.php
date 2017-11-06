@@ -6,23 +6,13 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
-use DOMElement;
-use DOMXPath;
-use s9e\TextFormatter\Configurator\TemplateNormalization;
-class TransposeComments extends TemplateNormalization
+use DOMNode;
+class TransposeComments extends AbstractNormalization
 {
-	public function normalize(DOMElement $template)
+	protected $queries = ['//comment()'];
+	protected function normalizeNode(DOMNode $node)
 	{
-		$dom   = $template->ownerDocument;
-		$xpath = new DOMXPath($dom);
-		foreach ($xpath->query('//comment()') as $comment)
-			$comment->parentNode->replaceChild(
-				$dom->createElementNS(
-					self::XMLNS_XSL,
-					'xsl:comment',
-					\htmlspecialchars($comment->nodeValue)
-				),
-				$comment
-			);
+		$xslComment = $this->createElement('xsl:comment', $node->nodeValue);
+		$node->parentNode->replaceChild($xslComment, $node);
 	}
 }
