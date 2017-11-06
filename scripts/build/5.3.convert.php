@@ -46,7 +46,7 @@ function convertCustom($filepath, &$file)
 		'BuiltInFilters.php' => array(
 			array(
 				"\$parts['host'] = idn_to_ascii(\$parts['host'], 0, \$variant);",
-				"\$parts['host'] = idn_to_ascii(\$parts['host'], 0);"
+				"\$parts['host'] = @idn_to_ascii(\$parts['host'], 0, \$variant);"
 			)
 		),
 		'BBCodeMonkey.php' => array(
@@ -97,7 +97,7 @@ function convertCustom($filepath, &$file)
 		'HostnameList.php' => array(
 			array(
 				"\$host = idn_to_ascii(\$host, 0, \$variant);",
-				"\$host = idn_to_ascii(\$host, 0);"
+				"\$host = @idn_to_ascii(\$host, 0, \$variant);"
 			)
 		),
 		'Http.php' => array(
@@ -184,14 +184,8 @@ function convertCustom($filepath, &$file)
 		),
 		'OptimizeChoose.php' => array(
 			array(
-				'return iterator_to_array($this->xpath->query($query, $this->choose));',
-				'$nodes = array();
-		foreach ($this->xpath->query($query, $this->choose) as $node)
-		{
-			$nodes[] = $node;
-		}
-
-		return $nodes;'
+				"\$when = \$this->xpath('xsl:when', \$this->choose)[0];",
+				"list(\$when) = \$this->xpath('xsl:when', \$this->choose);",
 			)
 		),
 		'PHP.php' => array(
@@ -227,8 +221,8 @@ function convertCustom($filepath, &$file)
 		),
 		'PHP/XPathConvertorTest.php' => array(
 			array(
-				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
-				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')",'
+				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')"',
+				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')"'
 			),
 			array(
 				"\"strtr(\\\$node->getAttribute('bar'),['é'=>'É','è'=>'È'])\"",
@@ -247,8 +241,8 @@ function convertCustom($filepath, &$file)
 		),
 		'Quick.php' => array(
 			array(
-				'$php[] = \'		self::$attributes = [];\';',
-				'$php[] = \'		self::$attributes = array();\';'
+				'$php[] = \'		$this->attributes = [];\';',
+				'$php[] = \'		$this->attributes = array();\';'
 			),
 			array(
 				'$php[] = "			[\\$this, \'quick\'],";',
@@ -269,32 +263,32 @@ function convertCustom($filepath, &$file)
 		),
 		'QuickTest.php' => array(
 			array(
-				x('$attributes+=[\'foo\'=>null];$html=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
-				x('$attributes+=array(\'foo\'=>null);$html=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
+				x('$attributes+=[\'foo\'=>null];$html.=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
+				x('$attributes+=array(\'foo\'=>null);$html.=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
 			),
 			array(
-				x('$attributes+=[\'foo\'=>null];$html=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}self::$attributes[]=$attributes;'),
-				x('$attributes+=array(\'foo\'=>null);$html=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}self::$attributes[]=$attributes;')
+				x('$attributes+=[\'foo\'=>null];$html.=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}$this->attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$html.=\'START\';if($attributes[\'foo\']==1){$html.=\'[1]\';if($attributes[\'foo\']==2){$html.=\'[2]\';}else{$html.=\'[3]\';}}else{$html.=\'[o]\';if($attributes[\'foo\']==4){$html.=\'[4]\';}else{$html.=\'[5]\';}}$this->attributes[]=$attributes;')
 			),
 			array(
-				'[[\'php\', "\\$attributes+=[\'content\'=>null];\\$html=\'<!--\'.str_replace(\'&quot;\',\'\\"\',\\$attributes[\'content\']).\'-->\';"]]',
-				'[[\'php\', "\\$attributes+=array(\'content\'=>null);\\$html=\'<!--\'.str_replace(\'&quot;\',\'\\"\',\\$attributes[\'content\']).\'-->\';"]]',
+				'[[\'php\', "\\$attributes+=[\'content\'=>null];\\$html.=\'<!--\'.str_replace(\'&quot;\',\'\\"\',\\$attributes[\'content\']).\'-->\';"]]',
+				'[[\'php\', "\\$attributes+=array(\'content\'=>null);\\$html.=\'<!--\'.str_replace(\'&quot;\',\'\\"\',\\$attributes[\'content\']).\'-->\';"]]',
 			),
 			array(
 				'"\\$static=[\'foo:bar\'=>\'foobar\']"',
 				'"\\$static=array(\'foo:bar\'=>\'foobar\')"'
 			),
 			array(
-				x('$attributes+=[\'foo\'=>null];$html=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
-				x('$attributes+=array(\'foo\'=>null);$html=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
+				x('$attributes+=[\'foo\'=>null];$html.=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'),
+				x('$attributes+=array(\'foo\'=>null);$html.=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);')
 			),
 			array(
-				x('$attributes+=[\'foo\'=>null];$html=\'<div>\';self::$attributes[]=$attributes;'),
-				x('$attributes+=array(\'foo\'=>null);$html=\'<div>\';self::$attributes[]=$attributes;')
+				x('$attributes+=[\'foo\'=>null];$html.=\'<div>\';$this->attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$html.=\'<div>\';$this->attributes[]=$attributes;')
 			),
 			array(
-				x('$attributes+=[\'foo\'=>null];$html=\'\';self::$attributes[]=$attributes;'),
-				x('$attributes+=array(\'foo\'=>null);$html=\'\';self::$attributes[]=$attributes;')
+				x('$attributes+=[\'foo\'=>null];$this->attributes[]=$attributes;'),
+				x('$attributes+=array(\'foo\'=>null);$this->attributes[]=$attributes;')
 			),
 		),
 		'RegexpBuilder.php' => array(

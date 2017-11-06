@@ -11,12 +11,8 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: nightly
-    - php:  5.3.3
-      dist: precise
   allow_failures:
     - php: nightly
-    - php:  5.3.3
-      dist: precise
 branches:
   except:
     - /^dist/
