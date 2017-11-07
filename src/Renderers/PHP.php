@@ -207,7 +207,18 @@ abstract class PHP extends Renderer
 			return $this->renderQuickSelfClosingTag($m);
 		}
 
-		$id = (isset($m[2])) ? $m[2] : $m[1];
+		if (isset($m[2]))
+		{
+			// Single tag
+			$id = $m[2];
+		}
+		else
+		{
+			// Tag pair
+			$id = $m[1];
+			$this->checkTagPairContent($id, $m[0]);
+		}
+
 		if (isset($this->static[$id]))
 		{
 			return $this->static[$id];
@@ -218,6 +229,23 @@ abstract class PHP extends Renderer
 		}
 
 		return $this->renderQuickTemplate($id, $m[0]);
+	}
+
+	/**
+	* Ensure that a tag pair does not contain a start tag of itself
+	*
+	* Detects malformed matches such as <X><X></X>
+	*
+	* @param  string $id
+	* @param  string $xml
+	* @return void
+	*/
+	protected function checkTagPairContent($id, $xml)
+	{
+		if (strpos($xml, '<' . $id, 1) !== false)
+		{
+			throw new RuntimeException;
+		}
 	}
 
 	/**

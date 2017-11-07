@@ -10,7 +10,7 @@ TODO: Autumn 2017
 - ~~Remove $source from the PHP renderer.~~
 - ~~Remove NEWS.md.~~
 - ~~Remove old Cookbook.~~
-- Test whether <YOUTUBE> with a <URL> child can use the Quick renderer. Also test recursion without a template for the outer tag.
+- ~~Test whether <YOUTUBE> with a <URL> child can use the Quick renderer. Also test recursion without a template for the outer tag.~~
 - Investigate "htmlspecialchars(htmlspecialchars_decode($attributes['type']).htmlspecialchars_decode($attributes['id']),2)" in Forum bundle's renderer
 - Test what gets serialized in PHP / Quick renderers
 

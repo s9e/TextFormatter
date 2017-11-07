@@ -757,6 +757,14 @@ class PHPTest extends Test
 					$renderer->setParameter('FOO', 'foo');
 				}
 			],
+			[
+				'<r><HR><HR></HR><X/></HR></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('HR')->template = '<hr/>';
+					$configurator->tags->add('X')->template  = 'x';
+				}
+			],
 		];
 	}
 
