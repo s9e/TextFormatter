@@ -532,6 +532,22 @@ class BlocksTest extends AbstractTest
 			],
 			[
 				[
+					' * foo',
+					'',
+					'   * bar',
+					'',
+					'     baz'
+				],
+				[
+					'<r> <LIST><LI><s>* </s><p>foo</p>',
+					'',
+					'   <LIST><LI><s>* </s><p>bar</p>',
+					'',
+					'     <p>baz</p></LI></LIST></LI></LIST></r>'
+				]
+			],
+			[
+				[
 					'1. one',
 					'2. two'
 				],
@@ -614,6 +630,18 @@ class BlocksTest extends AbstractTest
 					'<r><LIST><LI><s>* </s>foo</LI></LIST>',
 					'',
 					'<QUOTE><i>&gt; </i><p>bar</p></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'List:',
+					'- first',
+					'- second'
+				],
+				[
+					'<r><p>List:</p>',
+					'<LIST><LI><s>- </s>first</LI>',
+					'<LI><s>- </s>second</LI></LIST></r>'
 				]
 			],
 			// atx-style headers
