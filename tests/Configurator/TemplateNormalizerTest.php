@@ -35,11 +35,11 @@ class TemplateNormalizerTest extends Test
 	public function testOnlyOnce()
 	{
 		$templateNormalizer = new TemplateNormalizer;
-		$templateNormalizer->append(new DummyNormalization('?'));
-		$templateNormalizer->append(new DummyNormalization('!'))->onlyOnce = true;
+		$templateNormalizer->append(new DummyNormalization('X'));
+		$templateNormalizer->append(new DummyNormalization('O'))->onlyOnce = true;
 
-		$this->assertSame(
-			'Hi?!????',
+		$this->assertRegexp(
+			'(HiXOX{10,})',
 			$templateNormalizer->normalizeTemplate('Hi')
 		);
 	}
@@ -230,6 +230,21 @@ class TemplateNormalizerTest extends Test
 					<xsl:otherwise>xxxyz</xsl:otherwise>
 				</xsl:choose>',
 				'xxx<xsl:if test="@foo"><b>...</b></xsl:if>yz'
+			],
+			[
+				'<xsl:choose>
+					<xsl:when test="@foo">
+						<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i>
+							<xsl:text>foo</xsl:text>
+						</i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>
+					</xsl:when>
+					<xsl:otherwise>
+						<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i>
+							<xsl:text>bar</xsl:text>
+						</i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>
+					</xsl:otherwise>
+				</xsl:choose>',
+				'<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><xsl:choose><xsl:when test="@foo">foo</xsl:when><xsl:otherwise>bar</xsl:otherwise></xsl:choose></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>'
 			],
 		];
 	}

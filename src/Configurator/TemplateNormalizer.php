@@ -54,7 +54,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	/**
 	* @var integer Maximum number of iterations over a given template
 	*/
-	protected $maxIterations = 5;
+	protected $maxIterations = 100;
 
 	/**
 	* Constructor
@@ -119,7 +119,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		do
 		{
 			$old = $template;
-
 			foreach ($this->collection as $k => $normalization)
 			{
 				if ($i > 0 && !empty($normalization->onlyOnce))
@@ -129,7 +128,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 
 				$normalization->normalize($dom->documentElement);
 			}
-
 			$template = TemplateHelper::saveTemplate($dom);
 		}
 		while (++$i < $this->maxIterations && $template !== $old);

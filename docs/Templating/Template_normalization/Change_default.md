@@ -79,5 +79,5 @@ $configurator->templateNormalizer->append(
 echo $configurator->templateNormalizer->normalizeTemplate('Hello world');
 ```
 ```html
-Hello world?!!!!!
+Hello world?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ```
