@@ -4898,7 +4898,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		return $this->collection->valid();
 	}
 	protected $collection;
-	protected $maxIterations = 5;
+	protected $maxIterations = 100;
 	public function __construct()
 	{
 		$this->collection = new TemplateNormalizationList;
