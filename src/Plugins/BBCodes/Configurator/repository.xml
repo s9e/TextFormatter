@@ -2,7 +2,7 @@
 <repository>
 
 	<bbcode name="ACRONYM">
-		<usage>[ACRONYM title={TEXT1;optional}]{TEXT2}[/ACRONYM]</usage>
+		<usage>[ACRONYM title={TEXT1?}]{TEXT2}[/ACRONYM]</usage>
 		<template><![CDATA[
 			<acronym title="{TEXT1}">{TEXT2}</acronym>
 		]]></template>
@@ -45,7 +45,7 @@
 
 	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: https://highlightjs.org/ -->
 	<bbcode name="CODE">
-		<usage>[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]</usage>
+		<usage>[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]</usage>
 		<template><![CDATA[
 			<pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
 				<xsl:if test="@lang">
@@ -259,7 +259,7 @@
 	</bbcode>
 
 	<bbcode name="IMG">
-		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional} height={UINT;optional}  width={UINT;optional} ]</usage>
+		<usage>[IMG src={URL;useContent} title={TEXT?} alt={TEXT?} height={UINT?}  width={UINT?} ]</usage>
 		<template><![CDATA[
 			<img src="{@src}" title="{@title}" alt="{@alt}">
 				<xsl:copy-of select="@height"/>
@@ -334,7 +334,7 @@
 	</bbcode>
 
 	<bbcode name="QUOTE">
-		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
+		<usage>[QUOTE author={TEXT?}]{TEXT}[/QUOTE]</usage>
 		<template><![CDATA[
 			<blockquote>
 				<xsl:if test="not(@author)">
@@ -374,7 +374,7 @@
 	</bbcode>
 
 	<bbcode name="SPOILER">
-		<usage>[SPOILER title={TEXT1;optional}]{TEXT2}[/SPOILER]</usage>
+		<usage>[SPOILER title={TEXT1?}]{TEXT2}[/SPOILER]</usage>
 		<!--
 			var nextSiblingStyle = parentNode.nextSibling.style,
 				firstChildStyle  = firstChild.style,
@@ -482,7 +482,7 @@
 	</bbcode>
 
 	<bbcode name="URL">
-		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
+		<usage>[URL={URL;useContent} title={TEXT?}]{TEXT}[/URL]</usage>
 		<template><![CDATA[
 			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
 		]]></template>

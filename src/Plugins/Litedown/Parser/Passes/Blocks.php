@@ -124,10 +124,7 @@ class Blocks extends AbstractPass
 				elseif ($continuation && !$hasListItem)
 					$listIndex = $listsCnt - 1;
 				elseif (!$listsCnt)
-					if ($hasListItem && (!$continuation || $this->text->charAt($matchPos - 1) === "\x17"))
-						$listIndex = 0;
-					else
-						$listIndex = -1;
+					$listIndex = ($hasListItem) ? 0 : -1;
 				else
 				{
 					$listIndex = 0;

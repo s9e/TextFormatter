@@ -213,18 +213,7 @@ function parse()
 			else if (!listsCnt)
 			{
 				// We're not inside of a list already, we can start one if there's a list item
-				// and it's either not in continuation of a paragraph or immediately after a
-				// block
-				if (hasListItem && (!continuation || text[matchPos - 1] === "\x17"))
-				{
-					// Start of a new list
-					listIndex = 0;
-				}
-				else
-				{
-					// We're in a normal paragraph
-					listIndex = -1;
-				}
+				listIndex = (hasListItem) ? 0 : -1
 			}
 			else
 			{
