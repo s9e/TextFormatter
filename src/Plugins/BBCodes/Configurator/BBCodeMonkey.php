@@ -187,7 +187,7 @@ class BBCodeMonkey
 			list($attrName, $definition) = $_e874cdc7;
 			if (!isset($bbcode->defaultAttribute))
 				$bbcode->defaultAttribute = $attrName;
-			$tokens = self::parseTokens($definition);
+			$tokens = $this->parseTokens($definition);
 			if (empty($tokens))
 				throw new RuntimeException('No valid tokens found in ' . $attrName . "'s definition " . $definition);
 			if ($tokens[0]['content'] === $definition)
@@ -289,7 +289,7 @@ class BBCodeMonkey
 			return \false;
 		return $value;
 	}
-	protected static function parseTokens($definition)
+	protected function parseTokens($definition)
 	{
 		$tokenTypes = array(
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
@@ -300,7 +300,7 @@ class BBCodeMonkey
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
 		);
 		\preg_match_all(
-			'#\\{(' . \implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
+			'#\\{(' . \implode('|', $tokenTypes) . ')(?<options>\\??(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
 			\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
@@ -314,7 +314,7 @@ class BBCodeMonkey
 			$token = array(
 				'pos'     => $m[0][1],
 				'content' => $m[0][0],
-				'options' => array()
+				'options' => (isset($m['options'][0])) ? $this->parseOptionString($m['options'][0]) : array()
 			);
 			$head = $m[1][0];
 			$pos  = \strpos($head, '=');
@@ -328,22 +328,6 @@ class BBCodeMonkey
 						$token[$k] = $v[0];
 			}
 			$token['type'] = \rtrim($token['id'], '0123456789');
-			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
-			foreach (\preg_split('#;+#', $options, -1, \PREG_SPLIT_NO_EMPTY) as $pair)
-			{
-				$pos = \strpos($pair, '=');
-				if ($pos === \false)
-				{
-					$k = $pair;
-					$v = \true;
-				}
-				else
-				{
-					$k = \substr($pair, 0, $pos);
-					$v = \substr($pair, 1 + $pos);
-				}
-				$token['options'][$k] = $v;
-			}
 			if ($token['type'] === 'PARSE')
 			{
 				\preg_match_all('#' . self::REGEXP . '(?:,|$)#', $token['regexps'], $m);
@@ -463,5 +447,26 @@ class BBCodeMonkey
 		{
 			}
 		return \false;
+	}
+	protected function parseOptionString($string)
+	{
+		$string = \preg_replace('(^\\?)', ';optional', $string);
+		$options = array();
+		foreach (\preg_split('#;+#', $string, -1, \PREG_SPLIT_NO_EMPTY) as $pair)
+		{
+			$pos = \strpos($pair, '=');
+			if ($pos === \false)
+			{
+				$k = $pair;
+				$v = \true;
+			}
+			else
+			{
+				$k = \substr($pair, 0, $pos);
+				$v = \substr($pair, 1 + $pos);
+			}
+			$options[$k] = $v;
+		}
+		return $options;
 	}
 }

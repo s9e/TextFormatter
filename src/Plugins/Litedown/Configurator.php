@@ -11,7 +11,7 @@ class Configurator extends ConfiguratorBase
 {
 	public $decodeHtmlEntities = \false;
 	protected $tags = array(
-		'C'      => '<code><xsl:apply-templates /></code>',
+		'C'      => '<code><xsl:apply-templates/></code>',
 		'CODE'   => array(
 			'attributes' => array(
 				'lang' => array(
@@ -28,7 +28,7 @@ class Configurator extends ConfiguratorBase
 								<xsl:value-of select="@lang"/>
 							</xsl:attribute>
 						</xsl:if>
-						<xsl:apply-templates />
+						<xsl:apply-templates/>
 					</code>
 				</pre>'
 		),
@@ -43,9 +43,9 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => array(
 			'attributes' => array(
-				'alt'   => array('required' => \false),
+				'alt'   => array('required'    => \false   ),
 				'src'   => array('filterChain' => array('#url')),
-				'title' => array('required' => \false)
+				'title' => array('required'    => \false   )
 			),
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		),
@@ -76,12 +76,8 @@ class Configurator extends ConfiguratorBase
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
 		'URL'    => array(
 			'attributes' => array(
-				'title' => array(
-					'required' => \false
-				),
-				'url'   => array(
-					'filterChain' => array('#url')
-				)
+				'title' => array('required'    => \false   ),
+				'url'   => array('filterChain' => array('#url'))
 			),
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		)
@@ -95,18 +91,6 @@ class Configurator extends ConfiguratorBase
 				continue;
 			if (\is_string($tagConfig))
 				$tagConfig = array('template' => $tagConfig);
-			if (isset($tagConfig['attributes']))
-			{
-				foreach ($tagConfig['attributes'] as &$attributeConfig)
-					if (isset($attributeConfig['filterChain']))
-					{
-						foreach ($attributeConfig['filterChain'] as &$filter)
-							if (\is_string($filter) && $filter[0] === '#')
-								$filter = $this->configurator->attributeFilters[$filter];
-						unset($filter);
-					}
-				unset($attributeConfig);
-			}
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
 	}
