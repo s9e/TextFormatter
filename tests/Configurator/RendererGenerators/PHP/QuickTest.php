@@ -745,6 +745,10 @@ class QuickTest extends Test
 				"if(isset(\$attributes['x'])){\$html.='<hr title=\"'.\$attributes['x'].'\">';}"
 			],
 			[
+				['X' => '<xsl:if test="@x"><hr title="{@x}{@y}"/></xsl:if>'],
+				"if(isset(\$attributes['x'])){\$html.='<hr title=\"'.\$attributes['x'].\$attributes['y'].'\">';}"
+			],
+			[
 				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
 				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}",
 				function ()

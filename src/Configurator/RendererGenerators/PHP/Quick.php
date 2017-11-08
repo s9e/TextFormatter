@@ -444,8 +444,12 @@ class Quick
 			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_NOQUOTES . '\\))'
 				=> "str_replace('&quot;','\"',\$attributes[\$1])",
 
-			// An attribute value escaped as ENT_COMPAT can be used as-is
-			'(htmlspecialchars\\(' . $getAttribute . ',' . ENT_COMPAT . '\\))' => '$attributes[$1]',
+			// One or several attribute values escaped as ENT_COMPAT can be used as-is
+			'(htmlspecialchars\\((' . $getAttribute . '(?:\\.' . $getAttribute . ')*),' . ENT_COMPAT . '\\))'
+				=> function ($m) use ($getAttribute)
+				{
+					return preg_replace('(' . $getAttribute . ')', '$attributes[$1]', $m[1]);
+				},
 
 			// Character replacement can be performed directly on the escaped value provided that it
 			// is then escaped as ENT_COMPAT and that replacements do not interfere with the escaping
