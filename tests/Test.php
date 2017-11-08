@@ -188,6 +188,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		return substr(shell_exec($exec . $options . ' ' . escapeshellarg($filepath)), 0, -1);
 	}
 
+	protected function getPluginName()
+	{
+		return preg_replace('/^.*?\\\\Plugins\\\\([^\\\\]++).*/', '$1', get_class($this));
+	}
+
 	protected static $tmpFiles = [];
 	public function tempnam()
 	{

@@ -13,9 +13,8 @@ trait RenderingTestsRunner
 	*/
 	public function testRendering($original, $expected, array $pluginOptions = [], $setup = null, $assertMethod = 'assertSame')
 	{
-		$pluginName = preg_replace('/^.*?\\\\Plugins\\\\([^\\\\]++).*/', '$1', get_class($this));
-
-		$plugin = $this->configurator->plugins->load($pluginName, $pluginOptions);
+		$pluginName = $this->getPluginName();
+		$plugin     = $this->configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
 		{

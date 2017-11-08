@@ -15,13 +15,18 @@ trait ParsingTestsJavaScriptRunner
 	*/
 	public function testJavaScriptParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = null, $assertMethod = 'assertSame')
 	{
-		$args = func_get_args();
-		if (isset($args[4]))
+		if (isset($expectedJS))
 		{
-			// Replace $expected with $expectedJS
-			$args[1] = $args[4];
+			$expected = $expectedJS;
 		}
 
-		call_user_func_array([$this, 'testParsing'], $args);
+		$pluginName = $this->getPluginName();
+		$plugin     = $this->configurator->plugins->load($pluginName, $pluginOptions);
+		if ($setup)
+		{
+			$setup($this->configurator, $plugin);
+		}
+
+		$this->assertJSParsing($original, $expected);
 	}
 }

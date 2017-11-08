@@ -12,7 +12,7 @@ trait ParsingTestsRunner
 	*/
 	public function testParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = null, $assertMethod = 'assertSame')
 	{
-		$pluginName = preg_replace('/^.*?\\\\Plugins\\\\([^\\\\]++).*/', '$1', get_class($this));
+		$pluginName = $this->getPluginName();
 		$plugin     = $this->configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
