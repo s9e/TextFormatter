@@ -144,13 +144,10 @@ abstract class AbstractTest extends Test
 		$this->assertEquals($renderer, unserialize(serialize($renderer)));
 	}
 
-	/**
-	* @testdox Rendering tests
-	* @dataProvider getRenderingTests
-	*/
-	public function testRender($text, $expected, $params = [])
+	protected function runRenderingTest($text, $expected, $params, $enableQuickRenderer)
 	{
 		$className = static::getClassName();
+		$className::getCachedRenderer()->enableQuickRenderer = $enableQuickRenderer;
 
 		$xml  = $className::parse($text);
 		$html = $className::render($xml, $params);
@@ -162,6 +159,24 @@ abstract class AbstractTest extends Test
 		}
 
 		$this->assertSame($expected, $html);
+	}
+
+	/**
+	* @testdox Rendering tests (Quick enabled)
+	* @dataProvider getRenderingTests
+	*/
+	public function testRenderQuick($text, $expected, $params = [])
+	{
+		$this->runRenderingTest($text, $expected, $params, true);
+	}
+
+	/**
+	* @testdox Rendering tests (Quick disabled)
+	* @dataProvider getRenderingTests
+	*/
+	public function testRender($text, $expected, $params = [])
+	{
+		$this->runRenderingTest($text, $expected, $params, false);
 	}
 
 	public function getRenderingTests()
