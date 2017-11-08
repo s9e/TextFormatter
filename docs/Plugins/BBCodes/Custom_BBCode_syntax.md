@@ -30,8 +30,9 @@ The first attribute becomes the BBCode's `defaultAttribute`, and if its name is 
 
 Here, we have a BBCode named "URL" with an attribute named "url" which is its `defaultAttribute`.
 
-By default, all attributes are `required`. To mark an attribute as optional:
+By default, all attributes are `required`. To mark an attribute as optional you can use either of the following:
 
+    [b title={TEXT1?}]{TEXT2}[/b]
     [b title={TEXT1;optional}]{TEXT2}[/b]
 
 Here we have an optional attribute "title" or type "text". Internally, attribute types are added to the attribute's `filterChain` as a built-in filter, except for the type "text" which has no filter associated. For example, {URL} will add the filter "#url" to its attribute's `filterChain`. Some filters accept some parameters:

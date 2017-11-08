@@ -42,7 +42,7 @@ echo $html;
 ### List of bundled BBCodes
 
 ###### ACRONYM
-```[ACRONYM title={TEXT1;optional}]{TEXT2}[/ACRONYM]```
+```[ACRONYM title={TEXT1?}]{TEXT2}[/ACRONYM]```
 ```xsl
 <acronym title="{TEXT1}">{TEXT2}</acronym>
 ```
@@ -78,7 +78,7 @@ echo $html;
 ```
 
 ###### CODE
-```[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]```
+```[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]```
 ```xsl
 <pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
 	<xsl:if test="@lang">
@@ -237,7 +237,7 @@ echo $html;
 ```
 
 ###### IMG
-```[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional} height={UINT;optional}  width={UINT;optional} ]```
+```[IMG src={URL;useContent} title={TEXT?} alt={TEXT?} height={UINT?}  width={UINT?} ]```
 ```xsl
 <img src="{@src}" title="{@title}" alt="{@alt}">
 	<xsl:copy-of select="@height"/>
@@ -304,7 +304,7 @@ echo $html;
 ```
 
 ###### QUOTE
-```[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]```
+```[QUOTE author={TEXT?}]{TEXT}[/QUOTE]```
 ```xsl
 <blockquote>
 	<xsl:if test="not(@author)">
@@ -369,7 +369,7 @@ echo $html;
 </table>
 
 ###### SPOILER
-```[SPOILER title={TEXT1;optional}]{TEXT2}[/SPOILER]```
+```[SPOILER title={TEXT1?}]{TEXT2}[/SPOILER]```
 ```xsl
 <div class="spoiler">
 	<div class="spoiler-header">
@@ -479,7 +479,7 @@ echo $html;
 ```
 
 ###### URL
-```[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]```
+```[URL={URL;useContent} title={TEXT?}]{TEXT}[/URL]```
 ```xsl
 <a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
 ```

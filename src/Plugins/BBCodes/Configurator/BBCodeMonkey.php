@@ -584,7 +584,7 @@ class BBCodeMonkey
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
 		// attributes such as [FLASH={NUMBER},{NUMBER}]
 		preg_match_all(
-			'#\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
+			'#\\{(' . implode('|', $tokenTypes) . ')(?<options>\\??(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
 			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -634,6 +634,7 @@ class BBCodeMonkey
 
 			// Parse the options
 			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
+			$options = preg_replace('(^\\?)', ';optional', $options);
 			foreach (preg_split('#;+#', $options, -1, PREG_SPLIT_NO_EMPTY) as $pair)
 			{
 				$pos = strpos($pair, '=');

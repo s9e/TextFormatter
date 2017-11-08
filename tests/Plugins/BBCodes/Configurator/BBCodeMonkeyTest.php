@@ -235,7 +235,42 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[b title={TEXT1?}]{TEXT2}[/B]',
+				'',
+				[
+					'bbcodeName' => 'B',
+					'bbcode' => new BBCode([
+						'defaultAttribute' => 'title'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'title' => ['required' => false]
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
 				'[b title={TEXT1;defaultValue=Title;optional}]{TEXT2}[/B]',
+				'',
+				[
+					'bbcodeName' => 'B',
+					'bbcode' => new BBCode([
+						'defaultAttribute' => 'title'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'title' => [
+								'defaultValue' => 'Title',
+								'required'     => false
+							]
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
+				'[b title={TEXT1?;defaultValue=Title}]{TEXT2}[/B]',
 				'',
 				[
 					'bbcodeName' => 'B',
