@@ -8,10 +8,48 @@
 namespace s9e\TextFormatter\Plugins\Litedown\Parser\Passes;
 class Emphasis extends AbstractPass
 {
+	protected $closeEm;
+	protected $closeStrong;
+	protected $emPos;
+	protected $emEndPos;
+	protected $remaining;
+	protected $strongPos;
+	protected $strongEndPos;
 	public function parse()
 	{
 		$this->parseEmphasisByCharacter('*', '/\\*+/');
 		$this->parseEmphasisByCharacter('_', '/_+/');
+	}
+	protected function adjustEndingPositions()
+	{
+		if ($this->closeEm && $this->closeStrong)
+			if ($this->emPos < $this->strongPos)
+				$this->emEndPos += 2;
+			else
+				++$this->strongEndPos;
+	}
+	protected function adjustStartingPositions()
+	{
+		if (isset($this->emPos) && $this->emPos === $this->strongPos)
+			if ($this->closeEm)
+				$this->emPos += 2;
+			else
+				++$this->strongPos;
+	}
+	protected function closeSpans()
+	{
+		if ($this->closeEm)
+		{
+			--$this->remaining;
+			$this->parser->addTagPair('EM', $this->emPos, 1, $this->emEndPos, 1);
+			$this->emPos = \null;
+		}
+		if ($this->closeStrong)
+		{
+			$this->remaining -= 2;
+			$this->parser->addTagPair('STRONG', $this->strongPos, 2, $this->strongEndPos, 2);
+			$this->strongPos = \null;
+		}
 	}
 	protected function parseEmphasisByCharacter($character, $regexp)
 	{
@@ -47,50 +85,34 @@ class Emphasis extends AbstractPass
 	{
 		return ($this->text->charAt($matchPos) === '_' && $matchLen === 1 && $this->text->isSurroundedByAlnum($matchPos, $matchLen));
 	}
+	protected function openSpans($pos)
+	{
+		if ($this->remaining & 1)
+			$this->emPos     = $pos - $this->remaining;
+		if ($this->remaining & 2)
+			$this->strongPos = $pos - $this->remaining;
+	}
 	protected function processEmphasisBlock(array $block)
 	{
-		$emPos     = \null;
-		$strongPos = \null;
+		$this->emPos     = \null;
+		$this->strongPos = \null;
 		foreach ($block as list($matchPos, $matchLen))
-		{
-			$canOpen      = !$this->text->isBeforeWhitespace($matchPos + $matchLen - 1);
-			$canClose     = !$this->text->isAfterWhitespace($matchPos);
-			$closeLen     = ($canClose) ? \min($matchLen, 3) : 0;
-			$closeEm      = ($closeLen & 1) && isset($emPos);
-			$closeStrong  = ($closeLen & 2) && isset($strongPos);
-			$emEndPos     = $matchPos;
-			$strongEndPos = $matchPos;
-			$remaining    = $matchLen;
-			if (isset($emPos) && $emPos === $strongPos)
-				if ($closeEm)
-					$emPos += 2;
-				else
-					++$strongPos;
-			if ($closeEm && $closeStrong)
-				if ($emPos < $strongPos)
-					$emEndPos += 2;
-				else
-					++$strongEndPos;
-			if ($closeEm)
-			{
-				--$remaining;
-				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
-				$emPos = \null;
-			}
-			if ($closeStrong)
-			{
-				$remaining -= 2;
-				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
-				$strongPos = \null;
-			}
-			if ($canOpen)
-			{
-				$remaining = \min($remaining, 3);
-				if ($remaining & 1)
-					$emPos     = $matchPos + $matchLen - $remaining;
-				if ($remaining & 2)
-					$strongPos = $matchPos + $matchLen - $remaining;
-			}
-		}
+			$this->processEmphasisMatch($matchPos, $matchLen);
+	}
+	protected function processEmphasisMatch($matchPos, $matchLen)
+	{
+		$canOpen  = !$this->text->isBeforeWhitespace($matchPos + $matchLen - 1);
+		$canClose = !$this->text->isAfterWhitespace($matchPos);
+		$closeLen = ($canClose) ? \min($matchLen, 3) : 0;
+		$this->closeEm      = ($closeLen & 1) && isset($this->emPos);
+		$this->closeStrong  = ($closeLen & 2) && isset($this->strongPos);
+		$this->emEndPos     = $matchPos;
+		$this->strongEndPos = $matchPos;
+		$this->remaining    = $matchLen;
+		$this->adjustStartingPositions();
+		$this->adjustEndingPositions();
+		$this->closeSpans();
+		$this->remaining = ($canOpen) ? \min($this->remaining, 3) : 0;
+		$this->openSpans($matchPos + $matchLen);
 	}
 }

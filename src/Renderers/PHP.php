@@ -82,12 +82,23 @@ abstract class PHP extends Renderer
 	{
 		if (isset($m[3]))
 			return $this->renderQuickSelfClosingTag($m);
-		$id = (isset($m[2])) ? $m[2] : $m[1];
+		if (isset($m[2]))
+			$id = $m[2];
+		else
+		{
+			$id = $m[1];
+			$this->checkTagPairContent($id, $m[0]);
+		}
 		if (isset($this->static[$id]))
 			return $this->static[$id];
 		if (isset($this->dynamic[$id]))
 			return \preg_replace($this->dynamic[$id][0], $this->dynamic[$id][1], $m[0], 1);
 		return $this->renderQuickTemplate($id, $m[0]);
+	}
+	protected function checkTagPairContent($id, $xml)
+	{
+		if (\strpos($xml, '<' . $id, 1) !== \false)
+			throw new RuntimeException;
 	}
 	protected function renderQuickSelfClosingTag(array $m)
 	{
