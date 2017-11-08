@@ -366,7 +366,7 @@ class BBCodeMonkey
 			}
 
 			// Parse the tokens in that definition
-			$tokens = self::parseTokens($definition);
+			$tokens = $this->parseTokens($definition);
 
 			if (empty($tokens))
 			{
@@ -569,7 +569,7 @@ class BBCodeMonkey
 	* @param  string $definition
 	* @return array
 	*/
-	protected static function parseTokens($definition)
+	protected function parseTokens($definition)
 	{
 		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
@@ -602,7 +602,7 @@ class BBCodeMonkey
 			$token = [
 				'pos'     => $m[0][1],
 				'content' => $m[0][0],
-				'options' => []
+				'options' => (isset($m['options'][0])) ? $this->parseOptionString($m['options'][0]) : []
 			];
 
 			// Get this token's type by looking at the start of the match
@@ -631,28 +631,6 @@ class BBCodeMonkey
 
 			// The token's type is its id minus the number, e.g. NUMBER1 => NUMBER
 			$token['type'] = rtrim($token['id'], '0123456789');
-
-			// Parse the options
-			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
-			$options = preg_replace('(^\\?)', ';optional', $options);
-			foreach (preg_split('#;+#', $options, -1, PREG_SPLIT_NO_EMPTY) as $pair)
-			{
-				$pos = strpos($pair, '=');
-
-				if ($pos === false)
-				{
-					// Options with no value are set to true, e.g. {FOO;useContent}
-					$k = $pair;
-					$v = true;
-				}
-				else
-				{
-					$k = substr($pair, 0, $pos);
-					$v = substr($pair, 1 + $pos);
-				}
-
-				$token['options'][$k] = $v;
-			}
 
 			// {PARSE} tokens can have several regexps separated with commas, we split them up here
 			if ($token['type'] === 'PARSE')
@@ -840,5 +818,38 @@ class BBCodeMonkey
 		}
 
 		return false;
+	}
+
+	/**
+	* Parse the option string into an associative array
+	*
+	* @param  string $string Serialized options
+	* @return array          Associative array of options
+	*/
+	protected function parseOptionString($string)
+	{
+		// Use the first "?" as an alias for the "optional" option
+		$string = preg_replace('(^\\?)', ';optional', $string);
+
+		$options = [];
+		foreach (preg_split('#;+#', $string, -1, PREG_SPLIT_NO_EMPTY) as $pair)
+		{
+			$pos = strpos($pair, '=');
+			if ($pos === false)
+			{
+				// Options with no value are set to true, e.g. {FOO;useContent}
+				$k = $pair;
+				$v = true;
+			}
+			else
+			{
+				$k = substr($pair, 0, $pos);
+				$v = substr($pair, 1 + $pos);
+			}
+
+			$options[$k] = $v;
+		}
+
+		return $options;
 	}
 }
