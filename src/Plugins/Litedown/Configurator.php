@@ -113,26 +113,6 @@ class Configurator extends ConfiguratorBase
 				$tagConfig = ['template' => $tagConfig];
 			}
 
-			// Replace default filters in the definition
-			if (isset($tagConfig['attributes']))
-			{
-				foreach ($tagConfig['attributes'] as &$attributeConfig)
-				{
-					if (isset($attributeConfig['filterChain']))
-					{
-						foreach ($attributeConfig['filterChain'] as &$filter)
-						{
-							if (is_string($filter) && $filter[0] === '#')
-							{
-								$filter = $this->configurator->attributeFilters[$filter];
-							}
-						}
-						unset($filter);
-					}
-				}
-				unset($attributeConfig);
-			}
-
 			// Add this tag
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
