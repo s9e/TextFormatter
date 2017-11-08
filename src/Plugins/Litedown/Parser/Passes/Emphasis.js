@@ -1,7 +1,101 @@
+/**
+* @param {boolean} Whether current EM span is being closed by current emphasis mark
+*/
+var closeEm;
+
+/**
+* @param {boolean} Whether current EM span is being closed by current emphasis mark
+*/
+var closeStrong;
+
+/**
+* @param {number} Starting position of the current EM span in the text
+*/
+var emPos;
+
+/**
+* @param {number} Ending position of the current EM span in the text
+*/
+var emEndPos;
+
+/**
+* @param {number} Number of emphasis characters unused in current span
+*/
+var remaining;
+
+/**
+* @param {number} Starting position of the current STRONG span in the text
+*/
+var strongPos;
+
+/**
+* @param {number} Ending position of the current STRONG span in the text
+*/
+var strongEndPos;
+
 function parse()
 {
 	parseEmphasisByCharacter('*', /\*+/g);
 	parseEmphasisByCharacter('_', /_+/g);
+}
+
+/**
+* Adjust the ending position of current EM and STRONG spans
+*/
+function adjustEndingPositions()
+{
+	if (closeEm && closeStrong)
+	{
+		if (emPos < strongPos)
+		{
+			emEndPos += 2;
+		}
+		else
+		{
+			++strongEndPos;
+		}
+	}
+}
+
+/**
+* Adjust the starting position of current EM and STRONG spans
+*
+* If both EM and STRONG are set to start at the same position, we adjust their position
+* to match the order they are closed. If they start and end at the same position, STRONG
+* starts before EM to match Markdown's behaviour
+*/
+function adjustStartingPositions()
+{
+	if (emPos !== null && emPos === strongPos)
+	{
+		if (closeEm)
+		{
+			emPos += 2;
+		}
+		else
+		{
+			++strongPos;
+		}
+	}
+}
+
+/**
+* End current valid EM and STRONG spans
+*/
+function closeSpans()
+{
+	if (closeEm)
+	{
+		--remaining;
+		addTagPair('EM', emPos, 1, emEndPos, 1);
+		emPos = null;
+	}
+	if (closeStrong)
+	{
+		remaining -= 2;
+		addTagPair('STRONG', strongPos, 2, strongEndPos, 2);
+		strongPos = null;
+	}
 }
 
 /**
@@ -58,6 +152,23 @@ function ignoreEmphasis(pos, len)
 }
 
 /**
+* Open EM and STRONG spans whose content starts at given position
+*
+* @param {number} pos
+*/
+function openSpans(pos)
+{
+	if (remaining & 1)
+	{
+		emPos     = pos - remaining;
+	}
+	if (remaining & 2)
+	{
+		strongPos = pos - remaining;
+	}
+}
+
+/**
 * Parse emphasis and strong applied using given character
 *
 * @param  {string} character Markup character, either * or _
@@ -82,70 +193,38 @@ function parseEmphasisByCharacter(character, regexp)
 */
 function processEmphasisBlock(block)
 {
-	var emPos     = null,
-		strongPos = null;
+	emPos     = null,
+	strongPos = null;
 
 	block.forEach(function(pair)
 	{
-		var matchPos     = pair[0],
-			matchLen     = pair[1],
-			canOpen      = !isBeforeWhitespace(matchPos + matchLen - 1),
-			canClose     = !isAfterWhitespace(matchPos),
-			closeLen     = (canClose) ? Math.min(matchLen, 3) : 0,
-			closeEm      = (closeLen & 1) && emPos     !== null,
-			closeStrong  = (closeLen & 2) && strongPos !== null,
-			emEndPos     = matchPos,
-			strongEndPos = matchPos,
-			remaining    = matchLen;
-
-		if (emPos !== null && emPos === strongPos)
-		{
-			if (closeEm)
-			{
-				emPos += 2;
-			}
-			else
-			{
-				++strongPos;
-			}
-		}
-
-		if (closeEm && closeStrong)
-		{
-			if (emPos < strongPos)
-			{
-				emEndPos += 2;
-			}
-			else
-			{
-				++strongEndPos;
-			}
-		}
-
-		if (closeEm)
-		{
-			--remaining;
-			addTagPair('EM', emPos, 1, emEndPos, 1);
-			emPos = null;
-		}
-		if (closeStrong)
-		{
-			remaining -= 2;
-			addTagPair('STRONG', strongPos, 2, strongEndPos, 2);
-			strongPos = null;
-		}
-
-		if (canOpen)
-		{
-			remaining = Math.min(remaining, 3);
-			if (remaining & 1)
-			{
-				emPos     = matchPos + matchLen - remaining;
-			}
-			if (remaining & 2)
-			{
-				strongPos = matchPos + matchLen - remaining;
-			}
-		}
+		processEmphasisMatch(pair[0], pair[1]);
 	});
+}
+
+/**
+* Process an emphasis mark
+*
+* @param {number} matchPos
+* @param {number} matchLen
+*/
+function processEmphasisMatch(matchPos, matchLen)
+{
+	var canOpen  = !isBeforeWhitespace(matchPos + matchLen - 1),
+		canClose = !isAfterWhitespace(matchPos),
+		closeLen = (canClose) ? Math.min(matchLen, 3) : 0;
+
+	closeEm      = (closeLen & 1) && emPos     !== null;
+	closeStrong  = (closeLen & 2) && strongPos !== null;
+	emEndPos     = matchPos;
+	strongEndPos = matchPos;
+	remaining    = matchLen;
+
+	adjustStartingPositions();
+	adjustEndingPositions();
+	closeSpans();
+
+	// Adjust the length of unused markup remaining in current match
+	remaining = (canOpen) ? Math.min(remaining, 3) : 0;
+	openSpans(matchPos + matchLen);
 }

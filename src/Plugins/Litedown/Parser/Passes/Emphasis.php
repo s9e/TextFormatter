@@ -10,12 +10,112 @@ namespace s9e\TextFormatter\Plugins\Litedown\Parser\Passes;
 class Emphasis extends AbstractPass
 {
 	/**
+	* @var bool Whether current EM span is being closed by current emphasis mark
+	*/
+	protected $closeEm;
+
+	/**
+	* @var bool Whether current EM span is being closed by current emphasis mark
+	*/
+	protected $closeStrong;
+
+	/**
+	* @var integer Starting position of the current EM span in the text
+	*/
+	protected $emPos;
+
+	/**
+	* @var integer Ending position of the current EM span in the text
+	*/
+	protected $emEndPos;
+
+	/**
+	* @var integer Number of emphasis characters unused in current span
+	*/
+	protected $remaining;
+
+	/**
+	* @var integer Starting position of the current STRONG span in the text
+	*/
+	protected $strongPos;
+
+	/**
+	* @var integer Ending position of the current STRONG span in the text
+	*/
+	protected $strongEndPos;
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function parse()
 	{
 		$this->parseEmphasisByCharacter('*', '/\\*+/');
 		$this->parseEmphasisByCharacter('_', '/_+/');
+	}
+
+	/**
+	* Adjust the ending position of current EM and STRONG spans
+	*
+	* @return void
+	*/
+	protected function adjustEndingPositions()
+	{
+		if ($this->closeEm && $this->closeStrong)
+		{
+			if ($this->emPos < $this->strongPos)
+			{
+				$this->emEndPos += 2;
+			}
+			else
+			{
+				++$this->strongEndPos;
+			}
+		}
+	}
+
+	/**
+	* Adjust the starting position of current EM and STRONG spans
+	*
+	* If both EM and STRONG are set to start at the same position, we adjust their position
+	* to match the order they are closed. If they start and end at the same position, STRONG
+	* starts before EM to match Markdown's behaviour
+	*
+	* @return void
+	*/
+	protected function adjustStartingPositions()
+	{
+		if (isset($this->emPos) && $this->emPos === $this->strongPos)
+		{
+			if ($this->closeEm)
+			{
+				$this->emPos += 2;
+			}
+			else
+			{
+				++$this->strongPos;
+			}
+		}
+	}
+
+	/**
+	* End current valid EM and STRONG spans
+	*
+	* @return void
+	*/
+	protected function closeSpans()
+	{
+		if ($this->closeEm)
+		{
+			--$this->remaining;
+			$this->parser->addTagPair('EM', $this->emPos, 1, $this->emEndPos, 1);
+			$this->emPos = null;
+		}
+		if ($this->closeStrong)
+		{
+			$this->remaining -= 2;
+			$this->parser->addTagPair('STRONG', $this->strongPos, 2, $this->strongEndPos, 2);
+			$this->strongPos = null;
+		}
 	}
 
 	/**
@@ -91,6 +191,24 @@ class Emphasis extends AbstractPass
 	}
 
 	/**
+	* Open EM and STRONG spans whose content starts at given position
+	*
+	* @param  integer $pos
+	* @return void
+	*/
+	protected function openSpans($pos)
+	{
+		if ($this->remaining & 1)
+		{
+			$this->emPos     = $pos - $this->remaining;
+		}
+		if ($this->remaining & 2)
+		{
+			$this->strongPos = $pos - $this->remaining;
+		}
+	}
+
+	/**
 	* Process a list of emphasis markup strings
 	*
 	* @param  array[] $block List of [matchPos, matchLen] pairs
@@ -98,68 +216,39 @@ class Emphasis extends AbstractPass
 	*/
 	protected function processEmphasisBlock(array $block)
 	{
-		$emPos     = null;
-		$strongPos = null;
+		$this->emPos     = null;
+		$this->strongPos = null;
 		foreach ($block as list($matchPos, $matchLen))
 		{
-			$canOpen      = !$this->text->isBeforeWhitespace($matchPos + $matchLen - 1);
-			$canClose     = !$this->text->isAfterWhitespace($matchPos);
-			$closeLen     = ($canClose) ? min($matchLen, 3) : 0;
-			$closeEm      = ($closeLen & 1) && isset($emPos);
-			$closeStrong  = ($closeLen & 2) && isset($strongPos);
-			$emEndPos     = $matchPos;
-			$strongEndPos = $matchPos;
-			$remaining    = $matchLen;
-
-			if (isset($emPos) && $emPos === $strongPos)
-			{
-				if ($closeEm)
-				{
-					$emPos += 2;
-				}
-				else
-				{
-					++$strongPos;
-				}
-			}
-
-			if ($closeEm && $closeStrong)
-			{
-				if ($emPos < $strongPos)
-				{
-					$emEndPos += 2;
-				}
-				else
-				{
-					++$strongEndPos;
-				}
-			}
-
-			if ($closeEm)
-			{
-				--$remaining;
-				$this->parser->addTagPair('EM', $emPos, 1, $emEndPos, 1);
-				$emPos = null;
-			}
-			if ($closeStrong)
-			{
-				$remaining -= 2;
-				$this->parser->addTagPair('STRONG', $strongPos, 2, $strongEndPos, 2);
-				$strongPos = null;
-			}
-
-			if ($canOpen)
-			{
-				$remaining = min($remaining, 3);
-				if ($remaining & 1)
-				{
-					$emPos     = $matchPos + $matchLen - $remaining;
-				}
-				if ($remaining & 2)
-				{
-					$strongPos = $matchPos + $matchLen - $remaining;
-				}
-			}
+			$this->processEmphasisMatch($matchPos, $matchLen);
 		}
+	}
+
+	/**
+	* Process an emphasis mark
+	*
+	* @param  integer $matchPos
+	* @param  integer $matchLen
+	* @return void
+	*/
+	protected function processEmphasisMatch($matchPos, $matchLen)
+	{
+		$canOpen  = !$this->text->isBeforeWhitespace($matchPos + $matchLen - 1);
+		$canClose = !$this->text->isAfterWhitespace($matchPos);
+		$closeLen = ($canClose) ? min($matchLen, 3) : 0;
+
+		$this->closeEm      = ($closeLen & 1) && isset($this->emPos);
+		$this->closeStrong  = ($closeLen & 2) && isset($this->strongPos);
+		$this->emEndPos     = $matchPos;
+		$this->strongEndPos = $matchPos;
+		$this->remaining    = $matchLen;
+
+		$this->adjustStartingPositions();
+		$this->adjustEndingPositions();
+		$this->closeSpans();
+
+		// Adjust the length of unused markup remaining in current match
+		$this->remaining = ($canOpen) ? min($this->remaining, 3) : 0;
+		$this->openSpans($matchPos + $matchLen);
 	}
 }
