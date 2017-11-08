@@ -403,11 +403,6 @@ class TemplateInspector
 	protected function analyseBranches()
 	{
 		/**
-		* @var array allowChild bitfield for each branch
-		*/
-		$branchBitfields = [];
-
-		/**
 		* @var bool Whether this template should be considered a formatting element
 		*/
 		$isFormattingElement = true;
@@ -548,7 +543,7 @@ class TemplateInspector
 			}
 
 			// Add this branch's bitfield to the list
-			$branchBitfields[] = $branchBitfield;
+			$this->allowChildBitfields[] = $branchBitfield;
 
 			// Save the name of the last node processed
 			if (isset($leafNode))
@@ -587,23 +582,18 @@ class TemplateInspector
 			}
 		}
 
-		if (empty($branchBitfields))
+		if (empty($this->allowChildBitfields))
 		{
 			// No branches => not transparent and no child elements
 			$this->allowChildBitfields = ["\0"];
 			$this->allowsChildElements = false;
 			$this->isTransparent       = false;
 		}
-		else
+		elseif (!empty($this->leafNodes))
 		{
-			$this->allowChildBitfields = $branchBitfields;
-
 			// Set the isFormattingElement property to our final value, but only if this template
 			// had any branches
-			if (!empty($this->leafNodes))
-			{
-				$this->isFormattingElement = $isFormattingElement;
-			}
+			$this->isFormattingElement = $isFormattingElement;
 		}
 	}
 

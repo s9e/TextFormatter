@@ -2852,7 +2852,8 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] Rendering tests 
+ [x] Rendering tests (Quick enabled) 
+ [x] Rendering tests (Quick disabled) 
 
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
@@ -2864,7 +2865,8 @@ s9e\TextFormatter\Tests\Bundles\Forum
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] Rendering tests 
+ [x] Rendering tests (Quick enabled) 
+ [x] Rendering tests (Quick disabled) 
 
 s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
@@ -2876,5 +2878,6 @@ s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() returns a new instance of s9e\TextFormatter\Renderer
  [x] The renderer can be un/serialized
- [x] Rendering tests 
+ [x] Rendering tests (Quick enabled) 
+ [x] Rendering tests (Quick disabled) 
 
