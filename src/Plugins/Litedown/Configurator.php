@@ -20,7 +20,7 @@ class Configurator extends ConfiguratorBase
 	* @var array Default tags
 	*/
 	protected $tags = [
-		'C'      => '<code><xsl:apply-templates /></code>',
+		'C'      => '<code><xsl:apply-templates/></code>',
 		'CODE'   => [
 			'attributes' => [
 				'lang' => [
@@ -37,7 +37,7 @@ class Configurator extends ConfiguratorBase
 								<xsl:value-of select="@lang"/>
 							</xsl:attribute>
 						</xsl:if>
-						<xsl:apply-templates />
+						<xsl:apply-templates/>
 					</code>
 				</pre>'
 		],
@@ -52,9 +52,9 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => [
 			'attributes' => [
-				'alt'   => ['required' => false],
+				'alt'   => ['required'    => false   ],
 				'src'   => ['filterChain' => ['#url']],
-				'title' => ['required' => false]
+				'title' => ['required'    => false   ]
 			],
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
@@ -85,12 +85,8 @@ class Configurator extends ConfiguratorBase
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
 		'URL'    => [
 			'attributes' => [
-				'title' => [
-					'required' => false
-				],
-				'url'   => [
-					'filterChain' => ['#url']
-				]
+				'title' => ['required'    => false   ],
+				'url'   => ['filterChain' => ['#url']]
 			],
 			'template' => '<a href="{@url}"><xsl:copy-of select="@title"/><xsl:apply-templates/></a>'
 		]
