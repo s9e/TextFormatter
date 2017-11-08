@@ -599,7 +599,7 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					// Skip during cache preload
-					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
+					if (isset($_SERVER['CACHE_PRELOAD']))
 					{
 						$this->markTestSkipped();
 					}
@@ -1401,6 +1401,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					// Skip during cache preload
+					if (isset($_SERVER['CACHE_PRELOAD']))
+					{
+						$this->markTestSkipped();
+					}
+
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bandcamp');
 				}
