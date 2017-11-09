@@ -412,11 +412,11 @@ class TemplateInspectorTest extends Test
 			],
 			[
 				'<img/> is void',
-				'<img><xsl:apply-templates/></img>',
+				'<img/>',
 				'isVoid'
 			],
 			[
-				'<img> is void even with a <xsl:apply-templates/> child',
+				'<img><xsl:apply-templates/></img> is void',
 				'<img><xsl:apply-templates/></img>',
 				'isVoid'
 			],
