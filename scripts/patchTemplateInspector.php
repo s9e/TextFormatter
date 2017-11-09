@@ -644,12 +644,11 @@ foreach ($elements as $elName => $element)
 
 	foreach ($fields as $k => $v)
 	{
+		$el[$v] = 0;
 		if (!isset($element[$k]))
 		{
 			continue;
 		}
-
-		$el[$v] = 0;
 
 		foreach ($element[$k] as $category => $xpath)
 		{
