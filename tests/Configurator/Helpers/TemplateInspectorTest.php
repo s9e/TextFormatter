@@ -315,6 +315,16 @@ class TemplateInspectorTest extends Test
 				'!isFormattingElement'
 			],
 			[
+				'A template with two branches that qualify as formatting elements is a formatting element',
+				'<xsl:choose><xsl:when test="@foo"><b><xsl:apply-templates/></b></xsl:when><xsl:otherwise><b><xsl:apply-templates/></b></xsl:otherwise></xsl:choose>',
+				'isFormattingElement'
+			],
+			[
+				'A template with a branch that does not qualify as a formatting element is not a formatting element',
+				'<xsl:choose><xsl:when test="@foo"><b><xsl:apply-templates/></b></xsl:when><xsl:otherwise><p><xsl:apply-templates/></p></xsl:otherwise></xsl:choose>',
+				'!isFormattingElement'
+			],
+			[
 				'<img> uses the "empty" content model',
 				'<img/>',
 				'isEmpty'

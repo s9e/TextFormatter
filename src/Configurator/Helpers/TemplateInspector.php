@@ -32,6 +32,11 @@ use DOMXPath;
 class TemplateInspector
 {
 	/**
+	* XSL namespace
+	*/
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+
+	/**
 	* @var string[] allowChild bitfield for each branch
 	*/
 	protected $allowChildBitfields = [];
@@ -39,12 +44,17 @@ class TemplateInspector
 	/**
 	* @var bool Whether elements are allowed as children
 	*/
-	protected $allowsChildElements = true;
+	protected $allowsChildElements;
 
 	/**
 	* @var bool Whether text nodes are allowed as children
 	*/
-	protected $allowsText = true;
+	protected $allowsText;
+
+	/**
+	* @var array[] Array of array of DOMElement instances
+	*/
+	protected $branches;
 
 	/**
 	* @var string OR-ed bitfield representing all of the categories used by this template
@@ -69,7 +79,7 @@ class TemplateInspector
 	/**
 	* @var bool Whether this template renders non-whitespace text nodes at its root
 	*/
-	protected $hasRootText = false;
+	protected $hasRootText;
 
 	/**
 	* @var bool Whether this template should be considered a block-level element
@@ -79,12 +89,12 @@ class TemplateInspector
 	/**
 	* @var bool Whether the template uses the "empty" content model
 	*/
-	protected $isEmpty = true;
+	protected $isEmpty;
 
 	/**
 	* @var bool Whether this template adds to the list of active formatting elements
 	*/
-	protected $isFormattingElement = false;
+	protected $isFormattingElement;
 
 	/**
 	* @var bool Whether this template lets content through via an xsl:apply-templates element
@@ -99,7 +109,7 @@ class TemplateInspector
 	/**
 	* @var bool Whether all branches have an ancestor that is a void element
 	*/
-	protected $isVoid = true;
+	protected $isVoid;
 
 	/**
 	* @var array Names of every last HTML element that precedes an <xsl:apply-templates/> node
@@ -129,7 +139,7 @@ class TemplateInspector
 	/**
 	* Constructor
 	*
-	* @param  string $template Template content
+	* @param string $template Template content
 	*/
 	public function __construct($template)
 	{
@@ -166,12 +176,7 @@ class TemplateInspector
 			}
 		}
 
-		if (!$this->allowsText && $child->hasRootText)
-		{
-			return false;
-		}
-
-		return true;
+		return ($this->allowsText || !$child->hasRootText);
 	}
 
 	/**
@@ -189,12 +194,7 @@ class TemplateInspector
 		}
 
 		// Test whether the descendant contains any elements and we disallow elements
-		if (!$this->allowsChildElements && $descendant->hasElements)
-		{
-			return false;
-		}
-
-		return true;
+		return ($this->allowsChildElements || !$descendant->hasElements);
 	}
 
 	/**
@@ -334,11 +334,10 @@ class TemplateInspector
 	protected function analyseContent()
 	{
 		// Get all non-XSL elements
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]';
-
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
+			$this->contentBitfield |= $this->getBitfield($node, 'c');
 			$this->hasElements = true;
 		}
 
@@ -353,34 +352,25 @@ class TemplateInspector
 	{
 		// Get every non-XSL element with no non-XSL ancestor. This should return us the first
 		// HTML element of every branch
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]'
-		       . '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
-
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
+		       . '[not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$elName = $node->localName;
-
 			// Save the actual name of the root node
-			$this->rootNodes[] = $elName;
-
-			if (!isset(self::$htmlElements[$elName]))
-			{
-				// Unknown elements are treated as if they were a <span> element
-				$elName = 'span';
-			}
+			$this->rootNodes[] = $node->localName;
 
 			// If any root node is a block-level element, we'll mark the template as such
-			if ($this->elementIsBlock($elName, $node))
+			if ($this->elementIsBlock($node))
 			{
 				$this->isBlock = true;
 			}
 
-			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
+			$this->rootBitfields[] = $this->getBitfield($node, 'c');
 		}
 
 		// Test for non-whitespace text nodes at the root. For that we need a predicate that filters
 		// out: nodes with a non-XSL ancestor,
-		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		$predicate = '[not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 
 		// ..and nodes with an <xsl:attribute/>, <xsl:comment/> or <xsl:variable/> ancestor
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
@@ -391,10 +381,7 @@ class TemplateInspector
 		       . '|'
 		       . '//xsl:value-of' . $predicate;
 
-		if ($this->evaluate('count(' . $query . ')'))
-		{
-			$this->hasRootText = true;
-		}
+		$this->hasRootText = (bool) $this->evaluate('count(' . $query . ')');
 	}
 
 	/**
@@ -402,34 +389,61 @@ class TemplateInspector
 	*/
 	protected function analyseBranches()
 	{
-		/**
-		* @var bool Whether this template should be considered a formatting element
-		*/
-		$isFormattingElement = true;
-
-		// Consider this template transparent unless we find out there are no branches or that one
-		// of the branches is not transparent
-		$this->isTransparent = true;
-
-		// For each <xsl:apply-templates/> element...
-		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
+		$this->branches = [];
+		foreach ($this->xpath->query('//xsl:apply-templates') as $applyTemplates)
 		{
-			// ...we retrieve all non-XSL ancestors
-			$nodes = $this->xpath->query(
-				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
-				$applyTemplates
-			);
+			$query            = 'ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
+			$this->branches[] = iterator_to_array($this->xpath->query($query, $applyTemplates));
+		}
 
-			/**
-			* @var bool Whether this branch allows elements
-			*/
-			$allowsChildElements = true;
+		$this->computeAllowsChildElements();
+		$this->computeAllowsText();
+		$this->computeBitfields();
+		$this->computeFormattingElement();
+		$this->computeIsEmpty();
+		$this->computeIsTransparent();
+		$this->computeIsVoid();
+		$this->computePreservesNewLines();
+		$this->storeLeafNodes();
+	}
 
-			/**
-			* @var bool Whether this branch allows text nodes
-			*/
-			$allowsText = true;
+	/**
+	* Test whether any branch of this template has an element that has given property
+	*
+	* @param  string $propName
+	* @return bool
+	*/
+	protected function anyBranchHasProperty($propName)
+	{
+		foreach ($this->branches as $branch)
+		{
+			foreach ($branch as $element)
+			{
+				if ($this->hasProperty($element->nodeName, $propName, $element))
+				{
+					return true;
+				}
+			}
+		}
 
+		return false;
+	}
+
+	/**
+	* Compute the allowChildBitfields and denyDescendantBitfield properties
+	*
+	* @return void
+	*/
+	protected function computeBitfields()
+	{
+		if (empty($this->branches))
+		{
+			$this->allowChildBitfields = ["\0"];
+
+			return;
+		}
+		foreach ($this->branches as $branch)
+		{
 			/**
 			* @var string allowChild bitfield for current branch. Starts with the value associated
 			*             with <div> in order to approximate a value if the whole branch uses the
@@ -437,176 +451,172 @@ class TemplateInspector
 			*/
 			$branchBitfield = self::$htmlElements['div']['ac'];
 
-			/**
-			* @var bool Whether this branch denies all non-text descendants
-			*/
-			$isEmpty = false;
-
-			/**
-			* @var bool Whether this branch contains a void element
-			*/
-			$isVoid = false;
-
-			/**
-			* @var string Name of the last node of this branch
-			*/
-			$leafNode = null;
-
-			/**
-			* @var boolean Whether this branch preserves new lines
-			*/
-			$preservesNewLines = false;
-
-			foreach ($nodes as $node)
+			foreach ($branch as $element)
 			{
-				$elName = $leafNode = $node->localName;
-
-				if (!isset(self::$htmlElements[$elName]))
-				{
-					// Unknown elements are treated as if they were a <span> element
-					$elName = 'span';
-				}
-
-				// Test whether the element is void
-				if ($this->hasProperty($elName, 'v', $node))
-				{
-					$isVoid = true;
-				}
-
-				// Test whether the element uses the "empty" content model
-				if ($this->hasProperty($elName, 'e', $node))
-				{
-					$isEmpty = true;
-				}
-
-				if (!$this->hasProperty($elName, 't', $node))
+				$elName = $element->localName;
+				if (!$this->hasProperty($elName, 't', $element))
 				{
 					// If the element isn't transparent, we reset its bitfield
 					$branchBitfield = "\0";
-
-					// Also, it means that the template itself isn't transparent
-					$this->isTransparent = false;
 				}
-
-				// Test whether this element is a formatting element
-				if (!$this->hasProperty($elName, 'fe', $node)
-				 && !$this->isFormattingSpan($node))
-				{
-					$isFormattingElement = false;
-				}
-
-				// Test whether this branch allows elements
-				$allowsChildElements = !$this->hasProperty($elName, 'to', $node);
-
-				// Test whether this branch allows text nodes
-				$allowsText = !$this->hasProperty($elName, 'nt', $node);
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise
-				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
+				$branchBitfield |= $this->getBitfield($element, 'ac');
 
 				// denyDescendant rules are cumulative
-				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
-
-				// Test whether this branch preserves whitespace by inspecting the current element
-				// and the value of its style attribute. Technically, this block of code also tests
-				// this element's descendants' style attributes but the result is the same as we
-				// need to check every element of this branch in order
-				$style = '';
-
-				if ($this->hasProperty($elName, 'pre', $node))
-				{
-					$style .= 'white-space:pre;';
-				}
-
-				if ($node->hasAttribute('style'))
-				{
-					$style .= $node->getAttribute('style') . ';';
-				}
-
-				$attributes = $this->xpath->query('.//xsl:attribute[@name="style"]', $node);
-				foreach ($attributes as $attribute)
-				{
-					$style .= $attribute->textContent;
-				}
-
-				preg_match_all(
-					'/white-space\\s*:\\s*(no|pre)/i',
-					strtolower($style),
-					$matches
-				);
-				foreach ($matches[1] as $match)
-				{
-					// TRUE:  "pre", "pre-line" and "pre-wrap"
-					// FALSE: "normal", "nowrap"
-					$preservesNewLines = ($match === 'pre');
-				}
+				$this->denyDescendantBitfield |= $this->getBitfield($element, 'dd');
 			}
 
 			// Add this branch's bitfield to the list
 			$this->allowChildBitfields[] = $branchBitfield;
+		}
+	}
 
-			// Save the name of the last node processed
-			if (isset($leafNode))
-			{
-				$this->leafNodes[] = $leafNode;
-			}
+	/**
+	* Compute the allowsChildElements property
+	*
+	* A template allows child Elements if it has at least one xsl:apply-templates and none of its
+	* ancestors have the text-only ("to") property
+	*
+	* @return void
+	*/
+	protected function computeAllowsChildElements()
+	{
+		$this->allowsChildElements = ($this->anyBranchHasProperty('to')) ? false : !empty($this->branches);
+	}
 
-			// If any branch disallows elements, the template disallows elements
-			if (!$allowsChildElements)
-			{
-				$this->allowsChildElements = false;
-			}
-
-			// If any branch disallows text, the template disallows text
-			if (!$allowsText)
+	/**
+	* Compute the allowsText property
+	*
+	* A template is said to allow text if none of the leaf elements disallow text
+	*
+	* @return void
+	*/
+	protected function computeAllowsText()
+	{
+		foreach (array_filter($this->branches) as $branch)
+		{
+			$element = end($branch);
+			if ($this->hasProperty($element->nodeName, 'nt', $element))
 			{
 				$this->allowsText = false;
-			}
 
-			// If any branch is not empty, the template is not empty
-			if (!$isEmpty)
+				return;
+			}
+		}
+		$this->allowsText = true;
+	}
+
+	/**
+	* Compute the isFormattingElement property
+	*
+	* A template is said to be a formatting element if all (non-zero) of its branches are entirely
+	* composed of formatting elements
+	*
+	* @return void
+	*/
+	protected function computeFormattingElement()
+	{
+		foreach ($this->branches as $branch)
+		{
+			foreach ($branch as $element)
 			{
-				$this->isEmpty = false;
-			}
+				if (!$this->hasProperty($element->nodeName, 'fe', $element) && !$this->isFormattingSpan($element))
+				{
+					$this->isFormattingElement = false;
 
-			// If any branch is not void, the template is not void
-			if (!$isVoid)
+					return;
+				}
+			}
+		}
+		$this->isFormattingElement = (bool) count(array_filter($this->branches));
+	}
+
+	/**
+	* Compute the isEmpty property
+	*
+	* A template is said to be empty if it has no xsl:apply-templates elements or any there is a empty
+	* element ancestor to an xsl:apply-templates element
+	*
+	* @return void
+	*/
+	protected function computeIsEmpty()
+	{
+		$this->isEmpty = ($this->anyBranchHasProperty('e')) || empty($this->branches);
+	}
+
+	/**
+	* Compute the isTransparent property
+	*
+	* A template is said to be transparent if it has at least one branch and no non-transparent
+	* elements in its path
+	*
+	* @return void
+	*/
+	protected function computeIsTransparent()
+	{
+		foreach ($this->branches as $branch)
+		{
+			foreach ($branch as $element)
 			{
-				$this->isVoid = false;
+				if (!$this->hasProperty($element->nodeName, 't', $element))
+				{
+					$this->isTransparent = false;
+
+					return;
+				}
+			}
+		}
+		$this->isTransparent = !empty($this->branches);
+	}
+
+	/**
+	* Compute the isVoid property
+	*
+	* A template is said to be void if it has no xsl:apply-templates elements or any there is a void
+	* element ancestor to an xsl:apply-templates element
+	*
+	* @return void
+	*/
+	protected function computeIsVoid()
+	{
+		$this->isVoid = ($this->anyBranchHasProperty('v')) || empty($this->branches);
+	}
+
+	/**
+	* Compute the preservesNewLines property
+	*
+	* @return void
+	*/
+	protected function computePreservesNewLines()
+	{
+		foreach ($this->branches as $branch)
+		{
+			$style = '';
+			foreach ($branch as $element)
+			{
+				$style .= $this->getStyle($element, true);
 			}
 
-			// If any branch preserves new lines, the template preserves new lines
-			if ($preservesNewLines)
+			if (preg_match('(.*white-space\\s*:\\s*(no|pre))is', $style, $m) && strtolower($m[1]) === 'pre')
 			{
 				$this->preservesNewLines = true;
+
+				return;
 			}
 		}
-
-		if (empty($this->allowChildBitfields))
-		{
-			// No branches => not transparent and no child elements
-			$this->allowChildBitfields = ["\0"];
-			$this->allowsChildElements = false;
-			$this->isTransparent       = false;
-		}
-		elseif (!empty($this->leafNodes))
-		{
-			// Set the isFormattingElement property to our final value, but only if this template
-			// had any branches
-			$this->isFormattingElement = $isFormattingElement;
-		}
+		$this->preservesNewLines = false;
 	}
 
 	/**
 	* Test whether given element is a block-level element
 	*
-	* @param  string     $elName Element name
-	* @param  DOMElement $node   Context node
+	* @param  DOMElement $element
 	* @return bool
 	*/
-	protected function elementIsBlock($elName, DOMElement $node)
+	protected function elementIsBlock(DOMElement $element)
 	{
-		$style = $this->getStyle($node);
+		$style = $this->getStyle($element);
 		if (preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
 		{
 			return true;
@@ -616,40 +626,33 @@ class TemplateInspector
 			return false;
 		}
 
-		return $this->hasProperty($elName, 'b', $node);
+		return $this->hasProperty($element->nodeName, 'b', $element);
 	}
 
 	/**
 	* Retrieve and return the inline style assigned to given element
 	*
 	* @param  DOMElement $node Context node
+	* @param  bool       $deep Whether to retrieve the content of all xsl:attribute descendants
 	* @return string
 	*/
-	protected function getStyle(DOMElement $node)
+	protected function getStyle(DOMElement $node, $deep = false)
 	{
-		// Start with the inline attribute
-		$style = $node->getAttribute('style');
+		$style = '';
+		if ($this->hasProperty($node->nodeName, 'pre', $node))
+		{
+			$style .= 'white-space:pre;';
+		}
+		$style .= $node->getAttribute('style');
 
-		// Add the content of any xsl:attribute named "style". This will miss optional attributes
-		$xpath = new DOMXPath($node->ownerDocument);
-		$query = 'xsl:attribute[@name="style"]';
-		foreach ($xpath->query($query, $node) as $attribute)
+		// Add the content of any descendant/child xsl:attribute named "style"
+		$query = (($deep) ? './/' : './') . 'xsl:attribute[@name="style"]';
+		foreach ($this->xpath->query($query, $node) as $attribute)
 		{
 			$style .= ';' . $attribute->textContent;
 		}
 
 		return $style;
-	}
-
-	/**
-	* Get all XSL elements of given name
-	*
-	* @param  string      $elName XSL element's name, e.g. "apply-templates"
-	* @return \DOMNodeList
-	*/
-	protected function getXSLElements($elName)
-	{
-		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
 	}
 
 	/**
@@ -682,6 +685,21 @@ class TemplateInspector
 		}
 
 		return true;
+	}
+
+	/**
+	* Store the names of every leaf node
+	*
+	* A leaf node is defined as the closest non-XSL ancestor to an xsl:apply-templates element
+	*
+	* @return void
+	*/
+	protected function storeLeafNodes()
+	{
+		foreach (array_filter($this->branches) as $branch)
+		{
+			$this->leafNodes[] = end($branch)->nodeName;
+		}
 	}
 
 	/**
@@ -841,18 +859,18 @@ class TemplateInspector
 	];
 
 	/**
-	* Get the bitfield value for a given element name in a given context
+	* Get the bitfield value for a given element in a given context
 	*
-	* @param  string     $elName Name of the HTML element
-	* @param  string     $k      Bitfield name: either 'c', 'ac' or 'dd'
-	* @param  DOMElement $node   Context node (not necessarily the same as $elName)
+	* @param  DOMElement $element Context node
+	* @param  string     $k       Bitfield name: either 'c', 'ac' or 'dd'
 	* @return string
 	*/
-	protected function getBitfield($elName, $k, DOMElement $node)
+	protected function getBitfield(DOMElement $element, $k)
 	{
-		if (!isset(self::$htmlElements[$elName][$k]))
+		$elName = $element->nodeName;
+		if (!isset(self::$htmlElements[$elName]))
 		{
-			return "\0";
+			$elName = 'span';
 		}
 
 		$bitfield = self::$htmlElements[$elName][$k];
@@ -876,7 +894,7 @@ class TemplateInspector
 					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
 
 					// If the XPath condition is not fulfilled...
-					if (!$this->evaluate($xpath, $node))
+					if (!$this->evaluate($xpath, $element))
 					{
 						// ...turn off the corresponding bit
 						$byteValue ^= $bitValue;
