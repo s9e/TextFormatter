@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
@@ -19,8 +18,7 @@ class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 	public function generateBooleanRules(TemplateInspector $src)
 	{
 		$rules = [];
-		$xpath = new DOMXPath($src->getDOM());
-		if ($xpath->evaluate('count(//pre//code//xsl:apply-templates)') > 0)
+		if ($src->evaluate('count(//pre//code//xsl:apply-templates)') > 0)
 		{
 			$rules['trimFirstLine'] = true;
 		}

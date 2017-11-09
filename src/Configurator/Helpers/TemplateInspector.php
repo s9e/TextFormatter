@@ -247,15 +247,15 @@ class TemplateInspector
 	}
 
 	/**
-	* Return the source template as a DOMDocument
+	* Evaluate an XPath expression
 	*
-	* NOTE: the document should not be modified
-	*
-	* @return DOMDocument
+	* @param  string     $expr XPath expression
+	* @param  DOMElement $node Context node
+	* @return mixed
 	*/
-	public function getDOM()
+	public function evaluate($expr, DOMElement $node = null)
 	{
-		return $this->dom;
+		return $this->xpath->evaluate($expr, $node);
 	}
 
 	/**
@@ -343,7 +343,7 @@ class TemplateInspector
 		}
 
 		// Test whether this template is passthrough
-		$this->isPassthrough = (bool) $this->xpath->evaluate('count(//xsl:apply-templates)');
+		$this->isPassthrough = (bool) $this->evaluate('count(//xsl:apply-templates)');
 	}
 
 	/**
@@ -391,7 +391,7 @@ class TemplateInspector
 		       . '|'
 		       . '//xsl:value-of' . $predicate;
 
-		if ($this->evaluate($query, $this->dom->documentElement))
+		if ($this->evaluate('count(' . $query . ')'))
 		{
 			$this->hasRootText = true;
 		}
@@ -617,18 +617,6 @@ class TemplateInspector
 		}
 
 		return $this->hasProperty($elName, 'b', $node);
-	}
-
-	/**
-	* Evaluate a boolean XPath query
-	*
-	* @param  string     $query XPath query
-	* @param  DOMElement $node  Context node
-	* @return boolean
-	*/
-	protected function evaluate($query, DOMElement $node)
-	{
-		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
 	}
 
 	/**
@@ -917,7 +905,7 @@ class TemplateInspector
 		{
 			// Test the XPath condition
 			if (!isset(self::$htmlElements[$elName][$propName . '0'])
-			 || $this->evaluate(self::$htmlElements[$elName][$propName . '0'], $node))
+			 || $this->evaluate('boolean(' . self::$htmlElements[$elName][$propName . '0'] . ')', $node))
 			{
 				return true;
 			}

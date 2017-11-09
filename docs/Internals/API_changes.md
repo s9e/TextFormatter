@@ -8,6 +8,8 @@ The `HostedMinifier` and `RemoteCache` minifiers have been removed.
 
 `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getMetaElementsRegexp()` has been removed.
 
+`s9e\TextFormatter\Configurator\Helpers\TemplateInspector::getDOM()` has been removed.
+
 The `metaElementsRegexp` property of `s9e\TextFormatter\Renderer` has been removed. Meta elements `e`, `i` and `s` are now always removed from the source XML before rendering.
 
 The `quickRenderingTest` property of the PHP renderer is now protected.

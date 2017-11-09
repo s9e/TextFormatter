@@ -11,13 +11,14 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 class TemplateInspectorTest extends Test
 {
 	/**
-	* @testdox getDOM() returns the template as a DOMDocument
+	* @testdox evaluate() returns the return value of an XPath expression
 	*/
-	public function testGetDOM()
+	public function testEvaluate()
 	{
 		$templateInspector = new TemplateInspector('<br/>');
 
-		$this->assertInstanceOf('DOMDocument', $templateInspector->getDOM());
+		$this->assertEquals(1, $templateInspector->evaluate('count(//br)'));
+		$this->assertEquals(0, $templateInspector->evaluate('count(//b)'));
 	}
 
 	/**
