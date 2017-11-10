@@ -5,6 +5,7 @@ s9e\\TextFormatter is a text formatting library that supports BBCode, Markdown, 
 [![Build Status](https://api.travis-ci.org/s9e/TextFormatter.svg?branch=master)](https://travis-ci.org/s9e/TextFormatter)
 [![Code Coverage](https://scrutinizer-ci.com/g/s9e/TextFormatter/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/s9e/TextFormatter/?branch=master)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/s9e/TextFormatter/badges/quality-score.png?s=3942dab3c410fb9ce02001e7446d1083fa91172c)](https://scrutinizer-ci.com/g/s9e/TextFormatter/)
+[![Documentation](https://readthedocs.org/projects/s9etextformatter/badge/)](https://s9etextformatter.readthedocs.io/)
 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#57;&#101;&#46;&#100;&#101;&#x76;+github&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">Contact the author</a>.
 
 ## Installation
