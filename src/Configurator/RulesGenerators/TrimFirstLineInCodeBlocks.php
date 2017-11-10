@@ -17,12 +17,6 @@ class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 	*/
 	public function generateBooleanRules(TemplateInspector $src)
 	{
-		$rules = [];
-		if ($src->evaluate('count(//pre//code//xsl:apply-templates)') > 0)
-		{
-			$rules['trimFirstLine'] = true;
-		}
-
-		return $rules;
+		return ($src->evaluate('count(//pre//code//xsl:apply-templates)')) ? ['trimFirstLine' => true] : [];
 	}
 }

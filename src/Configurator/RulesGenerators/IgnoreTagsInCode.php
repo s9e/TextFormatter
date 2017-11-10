@@ -17,11 +17,6 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 	*/
 	public function generateBooleanRules(TemplateInspector $src)
 	{
-		if ($src->evaluate('count(//code//xsl:apply-templates)'))
-		{
-			return ['ignoreTags' => true];
-		}
-
-		return [];
+		return ($src->evaluate('count(//code//xsl:apply-templates)')) ? ['ignoreTags' => true] : [];
 	}
 }
