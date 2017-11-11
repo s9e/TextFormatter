@@ -6,6 +6,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\ParsedText
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractPass
+* @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractScript
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Superscript
 */
 class SuperscriptTest extends AbstractTest
