@@ -154,6 +154,10 @@ function convertCustom($filepath, &$file)
 				'$pass=new Strikethrough($this->parser, $text);$pass->parse();'
 			),
 			array(
+				'(new Subscript($this->parser, $text))->parse();',
+				'$pass=new Subscript($this->parser, $text);$pass->parse();'
+			),
+			array(
 				'(new Superscript($this->parser, $text))->parse();',
 				'$pass=new Superscript($this->parser, $text);$pass->parse();'
 			),
