@@ -45,7 +45,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append(
 			$this->configurator->attributeFilters['#identifier']
 		);
-		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/{@seq}.svg"/>';
+		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/{@seq}.png"/>';
 	}
 
 	/**

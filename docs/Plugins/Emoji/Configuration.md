@@ -14,5 +14,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">
+Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f600.png">
 ```

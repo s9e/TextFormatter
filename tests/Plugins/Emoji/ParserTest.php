@@ -147,16 +147,16 @@ class ParserTest extends Test
 		return [
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">'
+				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f600.png">'
 			],
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">',
+				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f600.png">',
 				['tagName' => 'EMOTE']
 			],
 			[
 				':copyright::registered:#️⃣',
-				'<img alt=":copyright:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/00a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/00ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/0023-20e3.svg">'
+				'<img alt=":copyright:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/00a9.png"><img alt=":registered:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/00ae.png"><img alt="#️⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/0023-20e3.png">'
 			],
 		];
 	}

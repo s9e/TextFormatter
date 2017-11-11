@@ -5,11 +5,14 @@ $version = 'latest';
 $map = [];
 $images = [];
 
-$url = 'https://raw.githubusercontent.com/Ranks/emojione/master/emoji.json';
-foreach (json_decode(wget($url, 'emojione-')) as $alias => $entry)
+$url = 'https://raw.githubusercontent.com/Ranks/emojione-assets/master/emoji.json';
+foreach (json_decode(wget($url, 'emojione-')) as $entry)
 {
-	$map[$alias] = $entry->unicode;
-	$images[$entry->unicode] = 1;
+	$alias = trim($entry->shortname, ':');
+	$seq   = removeMarks($entry->code_points->fully_qualified);
+
+	$map[$alias]  = $seq;
+	$images[$seq] = 1;
 }
 
 $url = 'https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json';
@@ -210,7 +213,13 @@ function utf8ToSeq($str)
 	}
 	while (++$i < strlen($str));
 
-	$seq = implode('-', $seq);
+	$seq = removeMarks(implode('-', $seq));
+
+	return $seq;
+}
+
+function removeMarks($seq)
+{
 	$seq = str_replace('-fe0f', '', $seq);
 	$seq = str_replace('-200d', '', $seq);
 
