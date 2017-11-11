@@ -22,6 +22,16 @@ The `branchTableThreshold` property of `s9e\TextFormatter\Configurator\RendererG
 
 The `generateConditionals()` and `generateBranchTable()` methods of `s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick` have been removed.
 
+The template used by the Emoji plugin is now hardcoded and defaults to using EmojiOne's SVG assets. The following methods have been removed from its configurator:
+
+ * `forceImageSize()`
+ * `omitImageSize()`
+ * `setImageSize()`
+ * `useEmojiOne()`
+ * `usePNG()`
+ * `useuseSVG()`
+ * `useTwemoji()`
+
 
 ## 0.11.0
 

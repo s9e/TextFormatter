@@ -2188,21 +2188,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array contains a regexp for aliases if applicable
  [x] The config array contains a quickMatch for aliases if applicable
  [x] The config array does not contain a quickMatch for aliases if impossible
- [x] Can use the EmojiOne set
- [x] Can use the Twemoji set
  [x] Uses EmojiOne by default
- [x] Twemoji set can use PNG images
- [x] Twemoji set can use SVG images
- [x] Twemoji set uses PNG images by default
- [x] EmojiOne set can use PNG images
- [x] EmojiOne set can use SVG images
- [x] EmojiOne set uses PNG by Default
- [x] Image size is forced by default with Twemoji
- [x] Image size can be omitted with Twemoji
- [x] Image size is forced by default with EmojiOne
- [x] Image size can be omitted with EmojiOne
- [x] Image size can be omitted then forced back on
- [x] Image size can be changed
  [x] removeAlias() removes given alias
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists

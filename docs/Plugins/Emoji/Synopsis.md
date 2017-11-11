@@ -2,11 +2,11 @@ Emoji are a standardized set of pictographs.  They exists as Unicode characters 
 
 ## Examples
 
-### Using the Twemoji set
+### Using the default set
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->Emoji->useTwemoji();
+$configurator->Emoji;
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
@@ -18,24 +18,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/1f600.png">
-```
-
-### Using the EmojiOne set
-
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->Emoji->useEmojiOne();
-
-// Get an instance of the parser and the renderer
-extract($configurator->finalize());
-
-$text = 'Hello world 😀';
-$xml  = $parser->parse($text);
-$html = $renderer->render($xml);
-
-echo $html;
-```
-```html
-Hello world <img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">
+Hello world <img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">
 ```

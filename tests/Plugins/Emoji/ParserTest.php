@@ -147,139 +147,16 @@ class ParserTest extends Test
 		return [
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">'
+				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">'
 			],
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->omitImageSize();
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setImageSize(16);
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="24" height="24" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setImageSize(24);
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="36" height="36" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setImageSize(36);
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="72" height="72" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setImageSize(72);
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="720" height="720" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->setImageSize(720);
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useSVG();
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
+				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/1f600.svg">',
 				['tagName' => 'EMOTE']
 			],
 			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useEmojiOne();
-				}
-			],
-			[
-				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/png/1f600.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useEmojiOne();
-					$plugin->omitImageSize();
-				}
-			],
-			[
-				'#️⃣1️⃣2️⃣',
-				'<img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20e3.png"><img alt="1️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0031-20e3.png"><img alt="2️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0032-20e3.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useEmojiOne();
-				}
-			],
-			[
-				'👨‍👩‍👦‍👦',
-				'<img alt="👨‍👩‍👦‍👦" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/1f468-1f469-1f466-1f466.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useEmojiOne();
-				}
-			],
-			[
-				'👨‍👩‍👦‍👦',
-				'<img alt="👨‍👩‍👦‍👦" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/1f468-200d-1f469-200d-1f466-200d-1f466.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useTwemoji();
-				}
-			],
-			[
 				':copyright::registered:#️⃣',
-				'<img alt=":copyright:" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/00a9.png"><img alt=":registered:" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/00ae.png"><img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//cdn.jsdelivr.net/emojione/assets/png/0023-20e3.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useEmojiOne();
-				}
-			],
-			[
-				':copyright::registered:#️⃣',
-				'<img alt=":copyright:" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/a9.png"><img alt=":registered:" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/ae.png"><img alt="#️⃣" class="emoji" draggable="false" width="16" height="16" src="//twemoji.maxcdn.com/2/72x72/23-20e3.png">',
-				[],
-				function ($configurator, $plugin)
-				{
-					$plugin->useTwemoji();
-				}
+				'<img alt=":copyright:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/00a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/00ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/svg/0023-20e3.svg">'
 			],
 		];
 	}
