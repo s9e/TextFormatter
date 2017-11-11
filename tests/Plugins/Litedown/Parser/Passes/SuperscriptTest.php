@@ -18,12 +18,52 @@ class SuperscriptTest extends AbstractTest
 				'<t></t>',
 			],
 			[
-				'.. foo^baar^baz 1^2 ..',
-				'<r><p>.. foo<SUP><s>^</s>baar<SUP><s>^</s>baz</SUP></SUP> 1<SUP><s>^</s>2</SUP> ..</p></r>'
+				'x^2 y^2',
+				'<r><p>x<SUP><s>^</s>2</SUP> y<SUP><s>^</s>2</SUP></p></r>'
 			],
 			[
-				'.. \\^_^ ..',
-				'<t><p>.. \^_^ ..</p></t>'
+				'4^th^ of July',
+				'<r><p>4<SUP><s>^</s>th<e>^</e></SUP> of July</p></r>'
+			],
+			[
+				'x^(n - 1)',
+				'<r><p>x<SUP><s>^(</s>n - 1<e>)</e></SUP></p></r>'
+			],
+			[
+				'x^(n^(n - 1))',
+				'<r><p>x<SUP><s>^(</s>n<SUP><s>^(</s>n - 1<e>)</e></SUP><e>)</e></SUP></p></r>'
+			],
+			[
+				'x^(n^(n^2))',
+				'<r><p>x<SUP><s>^(</s>n<SUP><s>^(</s>n<SUP><s>^</s>2</SUP><e>)</e></SUP><e>)</e></SUP></p></r>'
+			],
+			[
+				':^(',
+				'<t><p>:^(</p></t>'
+			],
+			[
+				[
+					':^(',
+					'',
+					')'
+				],
+				[
+					'<t><p>:^(</p>',
+					'',
+					'<p>)</p></t>'
+				]
+			],
+			[
+				[
+					'x^2',
+					'',
+					'x^2'
+				],
+				[
+					'<r><p>x<SUP><s>^</s>2</SUP></p>',
+					'',
+					'<p>x<SUP><s>^</s>2</SUP></p></r>'
+				]
 			],
 		]);
 	}

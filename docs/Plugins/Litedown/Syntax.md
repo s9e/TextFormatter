@@ -231,14 +231,18 @@ Any text between two `~~` markers.
 ### Superscript
 
 ```md
-E=mc^2
-
-foo^bar^baz
+x^2
+x^2^
+x^(n - 1)
+x^(n^2)
+x^(n^(2))
 ```
 ```html
-<p>E=mc<sup>2</sup></p>
-
-<p>foo<sup>bar<sup>baz</sup></sup></p>
+<p>x<sup>2</sup>
+x<sup>2</sup>
+x<sup>n - 1</sup>
+x<sup>n<sup>2</sup></sup>
+x<sup>n<sup>2</sup></sup></p>
 ```
 
 ### Inline code
