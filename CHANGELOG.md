@@ -1,3 +1,59 @@
+0.12.0 (2017-11-11)
+===================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0120) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/f8d9f670a609d147573117d2e33ffb7ee6844eb8...87dd6663f0f514822b258968441301b9be24f58e)
+
+### Added
+
+ - `cff256ec2` Added OptimizeChooseText template normalization
+ - `f7b88b2d8` Added UninlineAttributes template normalization
+ - `8dfdedf97` BBCodeMonkey: added support for short-form optional attributes
+ - `e92549522` Litedown: added support for subscript
+ - `8e751a5a1` MediaEmbed: added Orfium
+
+### Removed
+
+ - `193dec933` Emoji: removed set configuration and hardcoded default template
+ - `4744c5950` OptimizeChoose: removed redundant method
+ - `232bb4e03` PHP renderer: removed source from renderer instance
+ - `433651b7b` Removed HostedMinifier and RemoteCache
+ - `cf79c62f4` Renderer: removed $metaElementsRegexp
+ - `d37d1912a` TemplateInspector: removed getDOM()
+
+### Changed
+
+ - `0c6bc3331` AVTHelper: preserve whitespace in toXSL()
+ - `4ea55275c` BBCodeMonkey: reorganized some code
+ - `761bc3e35` ClosureCompilerService: updated service's URL
+ - `34ff96f14` Detect unexpected input that cannot be rendered by the Quick renderer
+ - `1fc40d19d` Emoji: use EmojiOne 3.1's PNG assets
+ - `e6f58045d` Litedown: do not require a blank line before lists
+ - `be2618c1d` Litedown: refactored Superscript pass
+ - `b6368c235` Litedown: refactored parser into separate passes
+ - `9ebe42bea` Litedown: reorganized Emphasis parser
+ - `c941be98a` Litedown: simplified configurator setup
+ - `f4be8e77d` Litedown: updated emphasis syntax to check for whitespace
+ - `92ba7928c` Litedown: updated superscript syntax
+ - `8d8e3cde3` MediaEmbed: updated Google Sheets
+ - `cb942255a` MediaEmbed: updated Mail.Ru
+ - `cb0c4d6dc` MediaEmbed: updated YouTube
+ - `283087b99` MediaEmbed: updated YouTube to remove deprecated option
+ - `e06cc7079` Moved static code from dynamically generated PHP renderers into a separate class
+ - `713cc2e29` OptimizeChoose: moved generic methods to an abstract class
+ - `21f63889d` Preg: replaced detection of invalid regexps
+ - `d5bfb22a4` Quick: bypass entity decoding/encoding when multiple XML attribute values are output in an HTML attribute
+ - `50d1bf55e` Quick: simplified boilerplate code
+ - `3755ed483` Refactored and simplified template normalization classes
+ - `f1a382413` Replaced custom branch tables with native switch statements in PHP renderers
+ - `844df511a` TemplateInspector: reorganized code for readability
+ - `d184254b7` TemplateInspector: simplified bitfield analysis
+ - `bdcfec4fc` TemplateNormalizer: increased the maximum number of iterations
+ - `e20a5c8b0` Updated JavaScript parsers to use bracket notation for character access
+ - `f6a3dfdb6` Updated PHP requirements to PHP 5.4.7
+
+
 0.11.2 (2017-10-02)
 ===================
 
