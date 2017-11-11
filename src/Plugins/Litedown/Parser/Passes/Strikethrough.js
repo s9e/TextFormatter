@@ -5,13 +5,16 @@ function parse()
 		return;
 	}
 
-	var m, regexp = /~~[^\x17]+?~~/g;
+	var m, regexp = /~~[^\x17]+?~~(?!~)/g;
 	while (m = regexp.exec(text))
 	{
 		var match    = m[0],
 			matchPos = m['index'],
-			matchLen = match.length;
+			matchLen = match.length,
+			endPos   = matchPos + matchLen - 2;
 
-		addTagPair('DEL', matchPos, 2, matchPos + matchLen - 2, 2);
+		addTagPair('DEL', matchPos, 2, endPos, 2);
+		overwrite(matchPos, 2);
+		overwrite(endPos, 2);
 	}
 }

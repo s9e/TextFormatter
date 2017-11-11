@@ -73,6 +73,7 @@ class Configurator extends ConfiguratorBase
 		),
 		'QUOTE'  => '<blockquote><xsl:apply-templates/></blockquote>',
 		'STRONG' => '<strong><xsl:apply-templates/></strong>',
+		'SUB'    => '<sub><xsl:apply-templates/></sub>',
 		'SUP'    => '<sup><xsl:apply-templates/></sup>',
 		'URL'    => array(
 			'attributes' => array(
@@ -105,6 +106,7 @@ class Configurator extends ConfiguratorBase
 	public function getJSParser()
 	{
 		$js = \file_get_contents(__DIR__ . '/Parser/ParsedText.js') . "\n"
+		    . \file_get_contents(__DIR__ . '/Parser/Passes/AbstractScript.js') . "\n"
 		    . \file_get_contents(__DIR__ . '/Parser/LinkAttributesSetter.js');
 		$passes = array(
 			'Blocks',
@@ -113,6 +115,7 @@ class Configurator extends ConfiguratorBase
 			'Images',
 			'Links',
 			'Strikethrough',
+			'Subscript',
 			'Superscript',
 			'Emphasis',
 			'ForcedLineBreaks'

@@ -6,10 +6,10 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown\Parser\Passes;
-class Superscript extends AbstractScript
+class Subscript extends AbstractScript
 {
 	public function parse()
 	{
-		$this->parseAbstractScript('SUP', '^', '/\\^(?!\\()[^\\x17\\s^()]++\\^?/', '/\\^\\([^\\x17()]++\\)/');
+		$this->parseAbstractScript('SUB', '~', '/~(?!\\()[^\\x17\\s~()]++~?/', '/~\\([^\\x17()]+\\)/');
 	}
 }
