@@ -31,7 +31,7 @@ class Parser extends ParserBase
 		$pass=new Images($this->parser, $text);$pass->parse();
 		$pass=new Links($this->parser, $text);$pass->parse();
 		$pass=new Strikethrough($this->parser, $text);$pass->parse();
-		(new Subscript($this->parser, $text))->parse();
+		$pass=new Subscript($this->parser, $text);$pass->parse();
 		$pass=new Superscript($this->parser, $text);$pass->parse();
 		$pass=new Emphasis($this->parser, $text);$pass->parse();
 		$pass=new ForcedLineBreaks($this->parser, $text);$pass->parse();
