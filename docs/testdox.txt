@@ -2419,6 +2419,11 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Strikethrough
  [x] Parsing tests (JavaScript) 
  [x] Parsing+rendering tests 
 
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Subscript
+ [x] Parsing tests 
+ [x] Parsing tests (JavaScript) 
+ [x] Parsing+rendering tests 
+
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
  [x] Parsing tests 
  [x] Parsing tests (JavaScript) 

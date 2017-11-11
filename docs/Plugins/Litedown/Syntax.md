@@ -228,7 +228,7 @@ Any text between two `~~` markers.
 <p>90s haircuts are <del>cool</del> <del>lame</del> cool again.</p>
 ```
 
-### Superscript
+### Subscript and superscript
 
 ```md
 x^2
@@ -236,13 +236,15 @@ x^2^
 x^(n - 1)
 x^(n^2)
 x^(n^(2))
+H~2~0
 ```
 ```html
 <p>x<sup>2</sup>
 x<sup>2</sup>
 x<sup>n - 1</sup>
 x<sup>n<sup>2</sup></sup>
-x<sup>n<sup>2</sup></sup></p>
+x<sup>n<sup>2</sup></sup>
+H<sub>2</sub>0</p>
 ```
 
 ### Inline code

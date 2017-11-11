@@ -23,7 +23,7 @@ class StrikethroughTest extends AbstractTest
 			],
 			[
 				'.. ~~foo~bar~~ ..',
-				'<r><p>.. <DEL><s>~~</s>foo~bar<e>~~</e></DEL> ..</p></r>'
+				'<r><p>.. <DEL><s>~~</s>foo<SUB><s>~</s>bar</SUB><e>~~</e></DEL> ..</p></r>'
 			],
 			[
 				'.. ~~foo\\~~ ~~bar~~ ..',
@@ -39,7 +39,7 @@ class StrikethroughTest extends AbstractTest
 			],
 			[
 				"~~foo\n\nbar~~",
-				"<t><p>~~foo</p>\n\n<p>bar~~</p></t>"
+				"<r><p>~<SUB><s>~</s>foo</SUB></p>\n\n<p>bar~~</p></r>"
 			],
 		]);
 	}

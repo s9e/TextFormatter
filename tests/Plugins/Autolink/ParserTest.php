@@ -122,8 +122,8 @@ class ParserTest extends Test
 				'<r><URL url="http://example.com/foo">http://example.com/foo</URL>~ <URL url="http://example.com/~foo">http://example.com/~foo</URL></r>'
 			],
 			[
-				'~~http://example.com/~foo http://example.com/~foo~~',
-				'<r><p><DEL><s>~~</s><URL url="http://example.com/~foo">http://example.com/~foo</URL> <URL url="http://example.com/~foo">http://example.com/~foo</URL><e>~~</e></DEL></p></r>',
+				'~~http://example.com/~foo~~',
+				'<r><p><DEL><s>~~</s><URL url="http://example.com/~foo">http://example.com/<SUB><s>~</s>foo</SUB></URL><e>~~</e></DEL></p></r>',
 				[],
 				function ($configurator)
 				{

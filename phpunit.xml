@@ -243,6 +243,7 @@
 			<file>tests/Plugins/Litedown/Parser/Passes/InlineCodeTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/LinksTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/StrikethroughTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/SubscriptTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/SuperscriptTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteCollectionTest.php</file>

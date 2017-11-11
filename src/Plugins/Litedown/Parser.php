@@ -17,6 +17,7 @@ use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\InlineCode;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\LinkReferences;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Links;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Strikethrough;
+use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Subscript;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Superscript;
 use s9e\TextFormatter\Plugins\ParserBase;
 
@@ -43,6 +44,7 @@ class Parser extends ParserBase
 		(new Images($this->parser, $text))->parse();
 		(new Links($this->parser, $text))->parse();
 		(new Strikethrough($this->parser, $text))->parse();
+		(new Subscript($this->parser, $text))->parse();
 		(new Superscript($this->parser, $text))->parse();
 		(new Emphasis($this->parser, $text))->parse();
 		(new ForcedLineBreaks($this->parser, $text))->parse();
