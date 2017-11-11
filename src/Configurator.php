@@ -1636,20 +1636,22 @@ use DOMElement;
 use DOMXPath;
 class TemplateInspector
 {
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 	protected $allowChildBitfields = [];
-	protected $allowsChildElements = \true;
-	protected $allowsText = \true;
+	protected $allowsChildElements;
+	protected $allowsText;
+	protected $branches;
 	protected $contentBitfield = "\0";
 	protected $denyDescendantBitfield = "\0";
 	protected $dom;
 	protected $hasElements = \false;
-	protected $hasRootText = \false;
+	protected $hasRootText;
 	protected $isBlock = \false;
-	protected $isEmpty = \true;
-	protected $isFormattingElement = \false;
+	protected $isEmpty;
+	protected $isFormattingElement;
 	protected $isPassthrough = \false;
 	protected $isTransparent = \false;
-	protected $isVoid = \true;
+	protected $isVoid;
 	protected $leafNodes = [];
 	protected $preservesNewLines = \false;
 	protected $rootBitfields = [];
@@ -1671,17 +1673,13 @@ class TemplateInspector
 			foreach ($this->allowChildBitfields as $allowChildBitfield)
 				if (!self::match($rootBitfield, $allowChildBitfield))
 					return \false;
-		if (!$this->allowsText && $child->hasRootText)
-			return \false;
-		return \true;
+		return ($this->allowsText || !$child->hasRootText);
 	}
 	public function allowsDescendant(TemplateInspector $descendant)
 	{
 		if (self::match($descendant->contentBitfield, $this->denyDescendantBitfield))
 			return \false;
-		if (!$this->allowsChildElements && $descendant->hasElements)
-			return \false;
-		return \true;
+		return ($this->allowsChildElements || !$descendant->hasElements);
 	}
 	public function allowsChildElements()
 	{
@@ -1703,9 +1701,9 @@ class TemplateInspector
 		}
 		return \false;
 	}
-	public function getDOM()
+	public function evaluate($expr, DOMElement $node = \null)
 	{
-		return $this->dom;
+		return $this->xpath->evaluate($expr, $node);
 	}
 	public function isBlock()
 	{
@@ -1737,142 +1735,159 @@ class TemplateInspector
 	}
 	protected function analyseContent()
 	{
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
+			$this->contentBitfield |= $this->getBitfield($node, 'c');
 			$this->hasElements = \true;
 		}
-		$this->isPassthrough = (bool) $this->xpath->evaluate('count(//xsl:apply-templates)');
+		$this->isPassthrough = (bool) $this->evaluate('count(//xsl:apply-templates)');
 	}
 	protected function analyseRootNodes()
 	{
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"][not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$elName = $node->localName;
-			$this->rootNodes[] = $elName;
-			if (!isset(self::$htmlElements[$elName]))
-				$elName = 'span';
-			if ($this->elementIsBlock($elName, $node))
+			$this->rootNodes[] = $node->localName;
+			if ($this->elementIsBlock($node))
 				$this->isBlock = \true;
-			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
+			$this->rootBitfields[] = $this->getBitfield($node, 'c');
 		}
-		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		$predicate = '[not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
 		$query = '//text()[normalize-space() != ""]' . $predicate
 		       . '|//xsl:text[normalize-space() != ""]' . $predicate
 		       . '|//xsl:value-of' . $predicate;
-		if ($this->evaluate($query, $this->dom->documentElement))
-			$this->hasRootText = \true;
+		$this->hasRootText = (bool) $this->evaluate('count(' . $query . ')');
 	}
 	protected function analyseBranches()
 	{
-		$branchBitfields = [];
-		$isFormattingElement = \true;
-		$this->isTransparent = \true;
-		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
+		$this->branches = [];
+		foreach ($this->xpath->query('//xsl:apply-templates') as $applyTemplates)
 		{
-			$nodes = $this->xpath->query(
-				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
-				$applyTemplates
-			);
-			$allowsChildElements = \true;
-			$allowsText = \true;
-			$branchBitfield = self::$htmlElements['div']['ac'];
-			$isEmpty = \false;
-			$isVoid = \false;
-			$leafNode = \null;
-			$preservesNewLines = \false;
-			foreach ($nodes as $node)
-			{
-				$elName = $leafNode = $node->localName;
-				if (!isset(self::$htmlElements[$elName]))
-					$elName = 'span';
-				if ($this->hasProperty($elName, 'v', $node))
-					$isVoid = \true;
-				if ($this->hasProperty($elName, 'e', $node))
-					$isEmpty = \true;
-				if (!$this->hasProperty($elName, 't', $node))
-				{
-					$branchBitfield = "\0";
-					$this->isTransparent = \false;
-				}
-				if (!$this->hasProperty($elName, 'fe', $node)
-				 && !$this->isFormattingSpan($node))
-					$isFormattingElement = \false;
-				$allowsChildElements = !$this->hasProperty($elName, 'to', $node);
-				$allowsText = !$this->hasProperty($elName, 'nt', $node);
-				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
-				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
-				$style = '';
-				if ($this->hasProperty($elName, 'pre', $node))
-					$style .= 'white-space:pre;';
-				if ($node->hasAttribute('style'))
-					$style .= $node->getAttribute('style') . ';';
-				$attributes = $this->xpath->query('.//xsl:attribute[@name="style"]', $node);
-				foreach ($attributes as $attribute)
-					$style .= $attribute->textContent;
-				\preg_match_all(
-					'/white-space\\s*:\\s*(no|pre)/i',
-					\strtolower($style),
-					$matches
-				);
-				foreach ($matches[1] as $match)
-					$preservesNewLines = ($match === 'pre');
-			}
-			$branchBitfields[] = $branchBitfield;
-			if (isset($leafNode))
-				$this->leafNodes[] = $leafNode;
-			if (!$allowsChildElements)
-				$this->allowsChildElements = \false;
-			if (!$allowsText)
-				$this->allowsText = \false;
-			if (!$isEmpty)
-				$this->isEmpty = \false;
-			if (!$isVoid)
-				$this->isVoid = \false;
-			if ($preservesNewLines)
-				$this->preservesNewLines = \true;
+			$query            = 'ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
+			$this->branches[] = \iterator_to_array($this->xpath->query($query, $applyTemplates));
 		}
-		if (empty($branchBitfields))
+		$this->computeAllowsChildElements();
+		$this->computeAllowsText();
+		$this->computeBitfields();
+		$this->computeFormattingElement();
+		$this->computeIsEmpty();
+		$this->computeIsTransparent();
+		$this->computeIsVoid();
+		$this->computePreservesNewLines();
+		$this->storeLeafNodes();
+	}
+	protected function anyBranchHasProperty($propName)
+	{
+		foreach ($this->branches as $branch)
+			foreach ($branch as $element)
+				if ($this->hasProperty($element->nodeName, $propName, $element))
+					return \true;
+		return \false;
+	}
+	protected function computeBitfields()
+	{
+		if (empty($this->branches))
 		{
 			$this->allowChildBitfields = ["\0"];
-			$this->allowsChildElements = \false;
-			$this->isTransparent       = \false;
+			return;
 		}
-		else
+		foreach ($this->branches as $branch)
 		{
-			$this->allowChildBitfields = $branchBitfields;
-			if (!empty($this->leafNodes))
-				$this->isFormattingElement = $isFormattingElement;
+			$branchBitfield = self::$htmlElements['div']['ac'];
+			foreach ($branch as $element)
+			{
+				$elName = $element->localName;
+				if (!$this->hasProperty($elName, 't', $element))
+					$branchBitfield = "\0";
+				$branchBitfield |= $this->getBitfield($element, 'ac');
+				$this->denyDescendantBitfield |= $this->getBitfield($element, 'dd');
+			}
+			$this->allowChildBitfields[] = $branchBitfield;
 		}
 	}
-	protected function elementIsBlock($elName, DOMElement $node)
+	protected function computeAllowsChildElements()
 	{
-		$style = $this->getStyle($node);
+		$this->allowsChildElements = ($this->anyBranchHasProperty('to')) ? \false : !empty($this->branches);
+	}
+	protected function computeAllowsText()
+	{
+		foreach (\array_filter($this->branches) as $branch)
+		{
+			$element = \end($branch);
+			if ($this->hasProperty($element->nodeName, 'nt', $element))
+			{
+				$this->allowsText = \false;
+				return;
+			}
+		}
+		$this->allowsText = \true;
+	}
+	protected function computeFormattingElement()
+	{
+		foreach ($this->branches as $branch)
+			foreach ($branch as $element)
+				if (!$this->hasProperty($element->nodeName, 'fe', $element) && !$this->isFormattingSpan($element))
+				{
+					$this->isFormattingElement = \false;
+					return;
+				}
+		$this->isFormattingElement = (bool) \count(\array_filter($this->branches));
+	}
+	protected function computeIsEmpty()
+	{
+		$this->isEmpty = ($this->anyBranchHasProperty('e')) || empty($this->branches);
+	}
+	protected function computeIsTransparent()
+	{
+		foreach ($this->branches as $branch)
+			foreach ($branch as $element)
+				if (!$this->hasProperty($element->nodeName, 't', $element))
+				{
+					$this->isTransparent = \false;
+					return;
+				}
+		$this->isTransparent = !empty($this->branches);
+	}
+	protected function computeIsVoid()
+	{
+		$this->isVoid = ($this->anyBranchHasProperty('v')) || empty($this->branches);
+	}
+	protected function computePreservesNewLines()
+	{
+		foreach ($this->branches as $branch)
+		{
+			$style = '';
+			foreach ($branch as $element)
+				$style .= $this->getStyle($element, \true);
+			if (\preg_match('(.*white-space\\s*:\\s*(no|pre))is', $style, $m) && \strtolower($m[1]) === 'pre')
+			{
+				$this->preservesNewLines = \true;
+				return;
+			}
+		}
+		$this->preservesNewLines = \false;
+	}
+	protected function elementIsBlock(DOMElement $element)
+	{
+		$style = $this->getStyle($element);
 		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
 			return \true;
 		if (\preg_match('(\\bdisplay\\s*:\\s*(?:inli|no)ne)i', $style))
 			return \false;
-		return $this->hasProperty($elName, 'b', $node);
+		return $this->hasProperty($element->nodeName, 'b', $element);
 	}
-	protected function evaluate($query, DOMElement $node)
+	protected function getStyle(DOMElement $node, $deep = \false)
 	{
-		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
-	}
-	protected function getStyle(DOMElement $node)
-	{
-		$style = $node->getAttribute('style');
-		$xpath = new DOMXPath($node->ownerDocument);
-		$query = 'xsl:attribute[@name="style"]';
-		foreach ($xpath->query($query, $node) as $attribute)
+		$style = '';
+		if ($this->hasProperty($node->nodeName, 'pre', $node))
+			$style .= 'white-space:pre;';
+		$style .= $node->getAttribute('style');
+		$query = (($deep) ? './/' : './') . 'xsl:attribute[@name="style"]';
+		foreach ($this->xpath->query($query, $node) as $attribute)
 			$style .= ';' . $attribute->textContent;
 		return $style;
-	}
-	protected function getXSLElements($elName)
-	{
-		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
 	}
 	protected function isFormattingSpan(DOMElement $node)
 	{
@@ -1885,124 +1900,130 @@ class TemplateInspector
 				return \false;
 		return \true;
 	}
+	protected function storeLeafNodes()
+	{
+		foreach (\array_filter($this->branches) as $branch)
+			$this->leafNodes[] = \end($branch)->nodeName;
+	}
 	protected static $htmlElements = [
 		'a'=>['c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1],
-		'abbr'=>['c'=>"\7",'ac'=>"\4"],
+		'abbr'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'address'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>['p']],
-		'article'=>['c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>['p']],
+		'article'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'aside'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
 		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
-		'b'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'base'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'bdi'=>['c'=>"\7",'ac'=>"\4"],
-		'bdo'=>['c'=>"\7",'ac'=>"\4"],
-		'blockquote'=>['c'=>"\203",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'body'=>['c'=>"\200\0\4",'ac'=>"\1",'b'=>1],
-		'br'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1],
+		'b'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'base'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'bdi'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'bdo'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'blockquote'=>['c'=>"\203",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'body'=>['c'=>"\200\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1],
+		'br'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'button'=>['c'=>"\117",'ac'=>"\4",'dd'=>"\10"],
-		'canvas'=>['c'=>"\47",'ac'=>"\0",'t'=>1],
+		'canvas'=>['c'=>"\47",'ac'=>"\0",'dd'=>"\0",'t'=>1],
 		'caption'=>['c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1],
-		'cite'=>['c'=>"\7",'ac'=>"\4"],
-		'code'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'col'=>['c'=>"\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1],
-		'data'=>['c'=>"\7",'ac'=>"\4"],
-		'datalist'=>['c'=>"\5",'ac'=>"\4\200\0\10"],
-		'dd'=>['c'=>"\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>['dd','dt']],
-		'del'=>['c'=>"\5",'ac'=>"\0",'t'=>1],
-		'details'=>['c'=>"\213",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>['p']],
+		'cite'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'code'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'col'=>['c'=>"\0\0\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'colgroup'=>['c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e0'=>'@span','b'=>1],
+		'data'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'datalist'=>['c'=>"\5",'ac'=>"\4\200\0\10",'dd'=>"\0"],
+		'dd'=>['c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['dd','dt']],
+		'del'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1],
+		'details'=>['c'=>"\213",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'dfn'=>['c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"],
-		'div'=>['c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'div'=>['c'=>"\3",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'dt'=>['c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>['dd','dt']],
-		'em'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'embed'=>['c'=>"\57",'nt'=>1,'e'=>1,'v'=>1],
-		'fieldset'=>['c'=>"\303",'ac'=>"\1\0\0\20",'b'=>1,'cp'=>['p']],
-		'figcaption'=>['c'=>"\0\0\0\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'figure'=>['c'=>"\203",'ac'=>"\1\0\0\0\0\4",'b'=>1,'cp'=>['p']],
+		'em'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'embed'=>['c'=>"\57",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'fieldset'=>['c'=>"\303",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'figcaption'=>['c'=>"\0\0\0\0\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'figure'=>['c'=>"\203",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'footer'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
 		'form'=>['c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
-		'h1'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h2'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h3'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h4'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h5'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'h6'=>['c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'head'=>['c'=>"\0\0\4",'ac'=>"\20",'nt'=>1,'b'=>1],
+		'h1'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h2'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h3'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h4'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h5'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h6'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'head'=>['c'=>"\0\0\4",'ac'=>"\20",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'header'=>['c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'hr'=>['c'=>"\1\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
-		'html'=>['c'=>"\0",'ac'=>"\0\0\4",'nt'=>1,'b'=>1],
-		'i'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'iframe'=>['c'=>"\57",'ac'=>"\4"],
-		'img'=>['c'=>"\57\20\10",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1],
-		'input'=>['c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1],
-		'ins'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
-		'kbd'=>['c'=>"\7",'ac'=>"\4"],
-		'keygen'=>['c'=>"\117",'nt'=>1,'e'=>1,'v'=>1],
+		'hr'=>['c'=>"\1\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
+		'html'=>['c'=>"\0",'ac'=>"\0\0\4",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'i'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'iframe'=>['c'=>"\57",'ac'=>"\4",'dd'=>"\0"],
+		'img'=>['c'=>"\57\20\10",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'input'=>['c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'ins'=>['c'=>"\7",'ac'=>"\0",'dd'=>"\0",'t'=>1],
+		'kbd'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'keygen'=>['c'=>"\117",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'label'=>['c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"],
-		'legend'=>['c'=>"\0\0\0\20",'ac'=>"\4",'b'=>1],
-		'li'=>['c'=>"\0\0\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'main'=>['c'=>"\3\0\0\0\10",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'mark'=>['c'=>"\7",'ac'=>"\4"],
-		'media element'=>['c'=>"\0\0\0\0\0\2",'nt'=>1,'b'=>1],
-		'menu'=>['c'=>"\1\100",'ac'=>"\0\300",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'menuitem'=>['c'=>"\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'meta'=>['c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'legend'=>['c'=>"\0\0\0\20",'ac'=>"\4",'dd'=>"\0",'b'=>1],
+		'li'=>['c'=>"\0\0\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['li']],
+		'link'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'main'=>['c'=>"\3\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'mark'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'media element'=>['c'=>"\0\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'menu'=>['c'=>"\1\100",'ac'=>"\0\300",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'menuitem'=>['c'=>"\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'meta'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'meter'=>['c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"],
 		'nav'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'noscript'=>['c'=>"\25",'nt'=>1],
-		'object'=>['c'=>"\147",'ac'=>"\0\0\0\0\1",'t'=>1],
-		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'optgroup'=>['c'=>"\0\0\2",'ac'=>"\0\200\0\10",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
-		'option'=>['c'=>"\0\0\2\10",'b'=>1,'cp'=>['option']],
-		'output'=>['c'=>"\107",'ac'=>"\4"],
-		'p'=>['c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'param'=>['c'=>"\0\0\0\0\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'picture'=>['c'=>"\45",'ac'=>"\0\200\10",'nt'=>1],
-		'pre'=>['c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>['p']],
+		'noscript'=>['c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
+		'object'=>['c'=>"\147",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1],
+		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'optgroup'=>['c'=>"\0\0\2",'ac'=>"\0\200\0\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
+		'option'=>['c'=>"\0\0\2\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>['option']],
+		'output'=>['c'=>"\107",'ac'=>"\4",'dd'=>"\0"],
+		'p'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'param'=>['c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'picture'=>['c'=>"\45",'ac'=>"\0\200\10",'dd'=>"\0",'nt'=>1],
+		'pre'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'pre'=>1,'b'=>1,'cp'=>['p']],
 		'progress'=>['c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"],
-		'q'=>['c'=>"\7",'ac'=>"\4"],
-		'rb'=>['c'=>"\0\10",'ac'=>"\4",'b'=>1],
-		'rp'=>['c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>['rp','rt']],
-		'rt'=>['c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>['rp','rt']],
-		'rtc'=>['c'=>"\0\10",'ac'=>"\4\0\100",'b'=>1],
-		'ruby'=>['c'=>"\7",'ac'=>"\4\10"],
-		's'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'samp'=>['c'=>"\7",'ac'=>"\4"],
-		'script'=>['c'=>"\25\200",'to'=>1],
-		'section'=>['c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>['p']],
-		'select'=>['c'=>"\117",'ac'=>"\0\200\2",'nt'=>1],
-		'small'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'source'=>['c'=>"\0\0\10\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'span'=>['c'=>"\7",'ac'=>"\4"],
-		'strong'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'style'=>['c'=>"\20",'to'=>1,'b'=>1],
-		'sub'=>['c'=>"\7",'ac'=>"\4"],
-		'summary'=>['c'=>"\0\0\0\2",'ac'=>"\4\1",'b'=>1],
-		'sup'=>['c'=>"\7",'ac'=>"\4"],
-		'table'=>['c'=>"\3\0\0\200",'ac'=>"\0\202",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'tbody'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>['tbody','td','tfoot','th','thead','tr']],
-		'td'=>['c'=>"\200\0\40",'ac'=>"\1",'b'=>1,'cp'=>['td','th']],
-		'template'=>['c'=>"\25\200\20",'nt'=>1],
-		'textarea'=>['c'=>"\117",'pre'=>1,'to'=>1],
-		'tfoot'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
+		'q'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'rb'=>['c'=>"\0\10",'ac'=>"\4",'dd'=>"\0",'b'=>1],
+		'rp'=>['c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
+		'rt'=>['c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
+		'rtc'=>['c'=>"\0\10",'ac'=>"\4\0\100",'dd'=>"\0",'b'=>1],
+		'ruby'=>['c'=>"\7",'ac'=>"\4\10",'dd'=>"\0"],
+		's'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'samp'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'script'=>['c'=>"\25\200",'ac'=>"\0",'dd'=>"\0",'to'=>1],
+		'section'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'select'=>['c'=>"\117",'ac'=>"\0\200\2",'dd'=>"\0",'nt'=>1],
+		'small'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'source'=>['c'=>"\0\0\10\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'span'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'strong'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'style'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'sub'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'summary'=>['c'=>"\0\0\0\2",'ac'=>"\4\1",'dd'=>"\0",'b'=>1],
+		'sup'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
+		'table'=>['c'=>"\3\0\0\200",'ac'=>"\0\202",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'tbody'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','tfoot','th','thead','tr']],
+		'td'=>['c'=>"\200\0\40",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['td','th']],
+		'template'=>['c'=>"\25\200\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
+		'textarea'=>['c'=>"\117",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1],
+		'tfoot'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
 		'th'=>['c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>['td','th']],
-		'thead'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1],
-		'time'=>['c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime'],
-		'title'=>['c'=>"\20",'to'=>1,'b'=>1],
-		'tr'=>['c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
-		'track'=>['c'=>"\0\0\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'u'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'var'=>['c'=>"\7",'ac'=>"\4"],
+		'thead'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'time'=>['c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime','dd'=>"\0"],
+		'title'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'tr'=>['c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
+		'track'=>['c'=>"\0\0\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'u'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
+		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'var'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
-		'wbr'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1]
+		'wbr'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1]
 	];
-	protected function getBitfield($elName, $k, DOMElement $node)
+	protected function getBitfield(DOMElement $element, $k)
 	{
-		if (!isset(self::$htmlElements[$elName][$k]))
-			return "\0";
+		$elName = $element->nodeName;
+		if (!isset(self::$htmlElements[$elName]))
+			$elName = 'span';
 		$bitfield = self::$htmlElements[$elName][$k];
 		foreach (\str_split($bitfield, 1) as $byteNumber => $char)
 		{
@@ -2016,7 +2037,7 @@ class TemplateInspector
 				if (isset(self::$htmlElements[$elName][$k . $n]))
 				{
 					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
-					if (!$this->evaluate($xpath, $node))
+					if (!$this->evaluate($xpath, $element))
 					{
 						$byteValue ^= $bitValue;
 						$bitfield[$byteNumber] = \chr($byteValue);
@@ -2030,7 +2051,7 @@ class TemplateInspector
 	{
 		if (!empty(self::$htmlElements[$elName][$propName]))
 			if (!isset(self::$htmlElements[$elName][$propName . '0'])
-			 || $this->evaluate(self::$htmlElements[$elName][$propName . '0'], $node))
+			 || $this->evaluate('boolean(' . self::$htmlElements[$elName][$propName . '0'] . ')', $node))
 				return \true;
 		return \false;
 	}
@@ -3534,7 +3555,11 @@ class Quick
 			'$this->out' => '$html',
 			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_NOQUOTES . '\\))'
 				=> "str_replace('&quot;','\"',\$attributes[\$1])",
-			'(htmlspecialchars\\(' . $getAttribute . ',' . \ENT_COMPAT . '\\))' => '$attributes[$1]',
+			'(htmlspecialchars\\((' . $getAttribute . '(?:\\.' . $getAttribute . ')*),' . \ENT_COMPAT . '\\))'
+				=> function ($m) use ($getAttribute)
+				{
+					return \preg_replace('(' . $getAttribute . ')', '$attributes[$1]', $m[1]);
+				},
 			'(htmlspecialchars\\(strtr\\(' . $getAttribute . ",('[^\"&\\\\';<>aglmopqtu]+'),('[^\"&\\\\'<>]+')\\)," . \ENT_COMPAT . '\\))'
 				=> 'strtr($attributes[$1],$2,$3)',
 			'(' . $getAttribute . '(!?=+)' . $getAttribute . ')'
@@ -5646,17 +5671,13 @@ class EnforceOptionalEndTags implements TargetedRulesGenerator
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class IgnoreTagsInCode implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateInspector $src)
 	{
-		$xpath = new DOMXPath($src->getDOM());
-		if ($xpath->evaluate('count(//code//xsl:apply-templates)'))
-			return ['ignoreTags' => \true];
-		return [];
+		return ($src->evaluate('count(//code//xsl:apply-templates)')) ? ['ignoreTags' => \true] : [];
 	}
 }
 
@@ -5698,18 +5719,13 @@ class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 {
 	public function generateBooleanRules(TemplateInspector $src)
 	{
-		$rules = [];
-		$xpath = new DOMXPath($src->getDOM());
-		if ($xpath->evaluate('count(//pre//code//xsl:apply-templates)') > 0)
-			$rules['trimFirstLine'] = \true;
-		return $rules;
+		return ($src->evaluate('count(//pre//code//xsl:apply-templates)')) ? ['trimFirstLine' => \true] : [];
 	}
 }
 
