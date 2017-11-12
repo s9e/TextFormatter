@@ -30,7 +30,7 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 * @method integer|string key()
 * @method mixed   next()
 * @method integer normalizeKey(mixed $key)
-* @method TemplateNormalization normalizeValue(mixed $value)
+* @method AbstractNormalization normalizeValue(mixed $value)
 * @method bool    offsetExists(string|integer $offset)
 * @method mixed   offsetGet(string|integer $offset)
 * @method void    offsetSet(mixed $offset, mixed $value)
