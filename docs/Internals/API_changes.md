@@ -29,7 +29,7 @@ The template used by the Emoji plugin is now hardcoded and defaults to using Emo
  * `setImageSize()`
  * `useEmojiOne()`
  * `usePNG()`
- * `useuseSVG()`
+ * `useSVG()`
  * `useTwemoji()`
 
 
