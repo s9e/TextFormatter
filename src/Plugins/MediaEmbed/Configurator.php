@@ -285,7 +285,7 @@ class Configurator extends ConfiguratorBase
 		// Create a template for this media site based on the preferred rendering method
 		$tag->template = $this->templateBuilder->build($siteId, $siteConfig) . $this->appendTemplate;
 
-		// Normalize the tag's templates
+		// Normalize the tag's template
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 
 		// Check the tag's safety
