@@ -10,34 +10,6 @@ namespace s9e\TextFormatter\Parser;
 class BuiltInFilters
 {
 	/**
-	* Filter an alphanumeric value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterAlnum($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => '/^[0-9A-Za-z]+$/D']
-		]);
-	}
-
-	/**
-	* Filter a color value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterColor($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => [
-				'regexp' => '/^(?>#[0-9a-f]{3,6}|rgb\\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\\)|[a-z]+)$/Di'
-			]
-		]);
-	}
-
-	/**
 	* Filter an email value
 	*
 	* @param  string $attrValue Original value
@@ -86,19 +58,6 @@ class BuiltInFilters
 		}
 
 		return ($strict) ? false : $attrValue;
-	}
-
-	/**
-	* Filter an identifier value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterIdentifier($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => '/^[-0-9A-Za-z_]+$/D']
-		]);
 	}
 
 	/**
@@ -203,19 +162,6 @@ class BuiltInFilters
 	}
 
 	/**
-	* Filter a numbervalue
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterNumber($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => '/^[0-9]+$/D']
-		]);
-	}
-
-	/**
 	* Filter a range value
 	*
 	* @param  string  $attrValue Original value
@@ -281,19 +227,6 @@ class BuiltInFilters
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => $regexp]
-		]);
-	}
-
-	/**
-	* Filter a simpletext value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterSimpletext($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => '/^[- +,.0-9A-Za-z_]+$/D']
 		]);
 	}
 

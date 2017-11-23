@@ -874,17 +874,17 @@ class BuiltInFiltersTest extends Test
 	public function getRegressionsData()
 	{
 		return [
-			['123', ['int' => 123, 'uint' => 123, 'float' => 123.0, 'number' => '123']],
-			['123abc', ['int' => false, 'uint' => false, 'float' => false, 'number' => false]],
-			['0123', ['int' => false, 'uint' => false, 'float' => 123.0, 'number' => '0123']],
-			['-123', ['int' => -123, 'uint' => false, 'float' => -123.0, 'number' => false]],
-			['12.3', ['int' => false, 'uint' => false, 'float' => 12.3, 'number' => false]],
-			['10000000000000000000', ['int' => false, 'uint' => false, 'float' => 10000000000000000000, 'number' => '10000000000000000000']],
-			['12e3', ['int' => false, 'uint' => false, 'float' => 12000.0, 'number' => false]],
-			['-12e3', ['int' => false, 'uint' => false, 'float' => -12000.0, 'number' => false]],
-			['12e-3', ['int' => false, 'uint' => false, 'float' => 0.012, 'number' => false]],
-			['-12e-3', ['int' => false, 'uint' => false, 'float' => -0.012, 'number' => false]],
-			['0x123', ['int' => false, 'uint' => false, 'float' => false, 'number' => false]],
+			['123',    ['int' => 123,   'uint' => 123,   'float' => 123.0]],
+			['123abc', ['int' => false, 'uint' => false, 'float' => false]],
+			['0123',   ['int' => false, 'uint' => false, 'float' => 123.0]],
+			['-123',   ['int' => -123,  'uint' => false, 'float' => -123.0]],
+			['12.3',   ['int' => false, 'uint' => false, 'float' => 12.3]],
+			['10000000000000000000', ['int' => false, 'uint' => false, 'float' => 10000000000000000000]],
+			['12e3',   ['int' => false, 'uint' => false, 'float' => 12000.0]],
+			['-12e3',  ['int' => false, 'uint' => false, 'float' => -12000.0]],
+			['12e-3',  ['int' => false, 'uint' => false, 'float' => 0.012]],
+			['-12e-3', ['int' => false, 'uint' => false, 'float' => -0.012]],
+			['0x123',  ['int' => false, 'uint' => false, 'float' => false]],
 		];
 	}
 

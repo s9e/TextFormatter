@@ -29,24 +29,6 @@ var BuiltInFilters =
 	* @param  {*} attrValue
 	* @return {*}
 	*/
-	filterAlnum: function(attrValue)
-	{
-		return /^[0-9A-Za-z]+$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterColor: function(attrValue)
-	{
-		return /^(?:#[0-9a-f]{3,6}|rgb\(\d{1,3}, *\d{1,3}, *\d{1,3}\)|[a-z]+)$/i.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
 	filterEmail: function(attrValue)
 	{
 		return /^[-\w.+]+@[-\w.]+$/.test(attrValue) ? attrValue : false;
@@ -211,15 +193,6 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterNumber: function(attrValue)
-	{
-		return /^\d+$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
 	* @param  {*}       attrValue
 	* @param  {!number} min
 	* @param  {!number} max
@@ -280,15 +253,6 @@ var BuiltInFilters =
 	filterRegexp: function(attrValue, regexp)
 	{
 		return regexp.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterSimpletext: function(attrValue)
-	{
-		return /^[-\w+., ]+$/.test(attrValue) ? attrValue : false;
 	},
 
 	/**

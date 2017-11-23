@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class ColorFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterColor()
+	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
 	*/
 	public function testCallback()
 	{
 		$filter = new ColorFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterColor',
+			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
 			$filter->getCallback()
 		);
 	}

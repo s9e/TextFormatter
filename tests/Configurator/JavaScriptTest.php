@@ -222,13 +222,13 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain->append(
-			$this->configurator->attributeFilters->get('#number')
+			$this->configurator->attributeFilters->get('#int')
 		);
 
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertContains(
-			'function(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}',
+			'function(attrValue,attrName){return BuiltInFilters.filterInt(attrValue);}',
 			$js
 		);
 	}

@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class NumberFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
+	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
 	*/
 	public function testCallback()
 	{
 		$filter = new NumberFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterNumber',
+			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
 			$filter->getCallback()
 		);
 	}

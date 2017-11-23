@@ -7,17 +7,14 @@
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
-use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-
-class ColorFilter extends AttributeFilter
+class ColorFilter extends RegexpFilter
 {
 	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterColor');
-		$this->setJS('BuiltInFilters.filterColor');
+		parent::__construct('/^(?>#[0-9a-f]{3,6}|rgb\\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\\)|[a-z]+)$/Di');
 		$this->markAsSafeInCSS();
 	}
 }

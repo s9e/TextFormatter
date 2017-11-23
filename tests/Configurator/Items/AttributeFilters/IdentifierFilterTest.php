@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class IdentifierFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
+	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
 	*/
 	public function testCallback()
 	{
 		$filter = new IdentifierFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterIdentifier',
+			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
 			$filter->getCallback()
 		);
 	}

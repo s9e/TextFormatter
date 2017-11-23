@@ -714,7 +714,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\AlnumFilter
- [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is safe in CSS
  [x] Is safe in URL
 
@@ -727,7 +727,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\ChoiceFilter
  [x] setValues() throws an exception if its second argument is not a boolean
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\ColorFilter
- [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterColor()
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is safe in CSS
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\EmailFilter
@@ -774,7 +774,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\HashmapFilter
  [x] Changing the map's strictness resets the filter's safeness
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IdentifierFilter
- [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is safe in CSS
  [x] Is safe in URL
 
@@ -824,7 +824,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\MapFilter
  [x] isSafeInJS() returns false if a value in the map contains U+2029
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\NumberFilter
- [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is safe in CSS
  [x] Is safe in JS
  [x] Is safe in URL
@@ -880,7 +880,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\RegexpFilter
  [x] Template safeness can be set manually
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
- [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is safe in CSS
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UintFilter

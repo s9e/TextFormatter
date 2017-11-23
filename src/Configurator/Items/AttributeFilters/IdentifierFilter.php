@@ -7,17 +7,14 @@
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
-use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-
-class IdentifierFilter extends AttributeFilter
+class IdentifierFilter extends RegexpFilter
 {
 	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIdentifier');
-		$this->setJS('BuiltInFilters.filterIdentifier');
+		parent::__construct('/^[-0-9A-Za-z_]+$/D');
 		$this->markAsSafeAsURL();
 		$this->markAsSafeInCSS();
 	}

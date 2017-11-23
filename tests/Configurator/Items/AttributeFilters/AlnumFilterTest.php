@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class AlnumFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
+	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
 	*/
 	public function testCallback()
 	{
 		$filter = new AlnumFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterAlnum',
+			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
 			$filter->getCallback()
 		);
 	}
