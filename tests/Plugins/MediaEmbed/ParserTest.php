@@ -1109,26 +1109,26 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('playstv');
 				}
 			],
-			[
-				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
-				'<r><PODBEAN id="gupid-6a18d0" url="https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('podbean');
-				}
-			],
-			[
-				'http://www.podbean.com/media/share/dir-vf532-2dd8497',
-				'<r><PODBEAN id="vf532-2dd8497-dir" url="http://www.podbean.com/media/share/dir-vf532-2dd8497">http://www.podbean.com/media/share/dir-vf532-2dd8497</PODBEAN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('podbean');
-				}
-			],
+//			[
+//				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
+//				'<r><PODBEAN id="gupid-6a18d0" url="https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('podbean');
+//				}
+//			],
+//			[
+//				'http://www.podbean.com/media/share/dir-vf532-2dd8497',
+//				'<r><PODBEAN id="vf532-2dd8497-dir" url="http://www.podbean.com/media/share/dir-vf532-2dd8497">http://www.podbean.com/media/share/dir-vf532-2dd8497</PODBEAN></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('podbean');
+//				}
+//			],
 			[
 				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
 				'<r><RUTUBE id="6613980" url="http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
