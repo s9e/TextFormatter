@@ -122,7 +122,7 @@ class TagStackTest extends Test
 					]
 				]
 			],
-			$dummyStack->getLogger()->get()
+			$dummyStack->getLogger()->getLogs()
 		);
 	}
 

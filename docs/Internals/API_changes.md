@@ -2,6 +2,8 @@
 
 `s9e\TextFormatter\Parser\BuiltInFilters` has been removed and split into multiple classes.
 
+`s9e\TextFormatter\Parser\Logger::get()` has been renamed `s9e\TextFormatter\Parser\Logger::getLogs()`.
+
 
 ## 0.12.0
 

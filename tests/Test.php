@@ -96,7 +96,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		if (isset($expectedLogs))
 		{
-			$this->assertArrayMatches($expectedLogs, $parser->getLogger()->get(), true, 'assertEquals');
+			$this->assertArrayMatches($expectedLogs, $parser->getLogger()->getLogs(), true, 'assertEquals');
 		}
 	}
 

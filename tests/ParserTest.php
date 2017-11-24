@@ -58,7 +58,7 @@ class ParserTest extends Test
 
 		$logger->debug('debug');
 		$parser->parse('');
-		$this->assertEmpty($logger->get());
+		$this->assertEmpty($logger->getLogs());
 	}
 
 	/**

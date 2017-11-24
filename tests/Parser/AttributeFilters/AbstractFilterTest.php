@@ -51,7 +51,7 @@ abstract class AbstractFilterTest extends Test
 			$logger = $parser->getLogger();
 
 			$actualXml  = $parser->parse($text);
-			$actualLogs = $logger->get();
+			$actualLogs = $logger->getLogs();
 
 			foreach ($actualLogs as &$entry)
 			{

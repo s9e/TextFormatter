@@ -21,7 +21,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -35,7 +35,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['err', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -49,7 +49,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['info', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -63,7 +63,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['warn', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -79,7 +79,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', ['attrName' => 'foo']]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -95,7 +95,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', ['attrName' => 'bar']]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -112,7 +112,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -129,7 +129,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', ['tag' => $tag]]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -146,7 +146,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', ['tag' => 'foo']]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -164,7 +164,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 
@@ -180,7 +180,7 @@ class LoggerTest extends Test
 
 		$this->assertSame(
 			[['debug', 'Hi', []]],
-			$logger->get()
+			$logger->getLogs()
 		);
 	}
 }

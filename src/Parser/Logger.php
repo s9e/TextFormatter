@@ -67,7 +67,7 @@ class Logger
 	*
 	* @return array
 	*/
-	public function get()
+	public function getLogs()
 	{
 		return $this->logs;
 	}

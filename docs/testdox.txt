@@ -1935,6 +1935,10 @@ s9e\TextFormatter\Tests\Parser\AttributeFilters\NumericFilter
  [x] Filter 
  [x] J s filter 
 
+s9e\TextFormatter\Tests\Parser\AttributeFilters\RangeFilter
+ [x] Filter 
+ [x] J s filter 
+
 s9e\TextFormatter\Tests\Parser\AttributeFilters\RegexpFilter
  [x] Filter 
  [x] J s filter 
@@ -2791,6 +2795,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] The source of the renderer is omitted for serialization
  [x] The last output of the renderer is omitted for serialization
  [x] Internal objects and resources are unset after rendering
+ [x] The abstract renderer has a default implementation for renderQuickTemplate()
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
