@@ -103,7 +103,7 @@ class HashmapFilterTest extends Test
 
 		$vars = $filter->getVars();
 
-		$this->assertSame(['foo' => 'bar'], $vars['map']);
+		$this->assertSame(['foo' => 'bar'], (array) $vars['map']);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class HashmapFilterTest extends Test
 
 		$vars = $filter->getVars();
 
-		$this->assertEquals(['foo' => 'bar', 'bar' => 'bar', 'baz' => 'quux'], $vars['map']);
+		$this->assertEquals(['foo' => 'bar', 'bar' => 'bar', 'baz' => 'quux'], (array) $vars['map']);
 	}
 
 	/**

@@ -11,6 +11,7 @@ use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\FilterableConfigValue;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 abstract class ConfigHelper
 {
@@ -143,6 +144,7 @@ abstract class ConfigHelper
 
 		foreach ($value as $k => $v)
 		{
+			$isDictionary = $v instanceof Dictionary;
 			if ($v instanceof ConfigProvider)
 			{
 				$v = $v->asConfig();
@@ -176,7 +178,7 @@ abstract class ConfigHelper
 				continue;
 			}
 
-			$array[$k] = $v;
+			$array[$k] = ($isDictionary) ? new Dictionary($v) : $v;
 		}
 
 		return $array;

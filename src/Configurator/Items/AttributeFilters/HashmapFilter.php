@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
 class HashmapFilter extends AttributeFilter
 {
@@ -73,7 +74,7 @@ class HashmapFilter extends AttributeFilter
 		ksort($map);
 
 		// Record this filter's variables
-		$this->vars['map']    = $map;
+		$this->vars['map']    = new Dictionary($map);
 		$this->vars['strict'] = $strict;
 
 		// Evaluate safeness
