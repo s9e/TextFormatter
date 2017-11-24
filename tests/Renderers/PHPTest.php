@@ -2,12 +2,15 @@
 
 namespace s9e\TextFormatter\Tests\Renderers;
 
+use DOMNode;
 use ReflectionObject;
+use s9e\TextFormatter\Renderers\PHP;
 use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Renderer
+* @covers s9e\TextFormatter\Renderers\PHP
 */
 class PHPTest extends Test
 {
@@ -83,5 +86,28 @@ class PHPTest extends Test
 				$renderer
 			);
 		}
+	}
+
+	/**
+	* @testdox The abstract renderer has a default implementation for renderQuickTemplate()
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Not implemented
+	*/
+	public function testDefaultQuickTemplate()
+	{
+		$renderer = new DummyRenderer;
+		$renderer->callRenderQuickTemplate();
+	}
+}
+
+class DummyRenderer extends PHP
+{
+	public function callRenderQuickTemplate()
+	{
+		$this->renderQuickTemplate('x', '<x>');
+	}
+
+	protected function renderNode(DOMNode $node)
+	{
 	}
 }
