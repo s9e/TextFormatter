@@ -43,7 +43,7 @@ function convertCustom($filepath, &$file)
 				'public function evaluateExpression($expr)',
 			)
 		),
-		'BuiltInFilters.php' => array(
+		'UrlFilter.php' => array(
 			array(
 				"\$parts['host'] = idn_to_ascii(\$parts['host'], 0, \$variant);",
 				"\$parts['host'] = @idn_to_ascii(\$parts['host'], 0, \$variant);"
