@@ -3647,7 +3647,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=1h23m45s',
-				'<r><YOUTUBE h="1" id="wZZ7oFKsKzY" m="23" s="45" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="5025" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3656,7 +3656,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
-				'<r><YOUTUBE id="wZZ7oFKsKzY" m="23" s="45" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="1425" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3674,7 +3674,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m43s',
-				'<r><YOUTUBE h="9" id="wI__53kBBKM" m="38" s="43" url="https://youtu.be/wI__53kBBKM?t=9h38m43s">https://youtu.be/wI__53kBBKM?t=9h38m43s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="34723" url="https://youtu.be/wI__53kBBKM?t=9h38m43s">https://youtu.be/wI__53kBBKM?t=9h38m43s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3683,7 +3683,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m',
-				'<r><YOUTUBE h="9" id="wI__53kBBKM" m="38" url="https://youtu.be/wI__53kBBKM?t=9h38m">https://youtu.be/wI__53kBBKM?t=9h38m</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="34680" url="https://youtu.be/wI__53kBBKM?t=9h38m">https://youtu.be/wI__53kBBKM?t=9h38m</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3692,7 +3692,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h43s',
-				'<r><YOUTUBE h="9" id="wI__53kBBKM" s="43" url="https://youtu.be/wI__53kBBKM?t=9h43s">https://youtu.be/wI__53kBBKM?t=9h43s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="32443" url="https://youtu.be/wI__53kBBKM?t=9h43s">https://youtu.be/wI__53kBBKM?t=9h43s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3701,7 +3701,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h',
-				'<r><YOUTUBE h="9" id="wI__53kBBKM" url="https://youtu.be/wI__53kBBKM?t=9h">https://youtu.be/wI__53kBBKM?t=9h</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="32400" url="https://youtu.be/wI__53kBBKM?t=9h">https://youtu.be/wI__53kBBKM?t=9h</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3710,7 +3710,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=38m',
-				'<r><YOUTUBE id="wI__53kBBKM" m="38" url="https://youtu.be/wI__53kBBKM?t=38m">https://youtu.be/wI__53kBBKM?t=38m</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="2280" url="https://youtu.be/wI__53kBBKM?t=38m">https://youtu.be/wI__53kBBKM?t=38m</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
