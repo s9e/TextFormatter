@@ -202,6 +202,7 @@
 			<file>tests/Parser/AttributeFilters/MapFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/NetworkFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/NumericFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/RangeFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/RegexpFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/SimpletextFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/UrlFilterTest.php</file>
