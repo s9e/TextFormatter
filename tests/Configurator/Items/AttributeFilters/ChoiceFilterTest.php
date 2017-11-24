@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class ChoiceFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new ChoiceFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\RegexpFilter::filter',
 			$filter->getCallback()
 		);
 	}

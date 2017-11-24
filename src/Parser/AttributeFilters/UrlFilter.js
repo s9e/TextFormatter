@@ -1,284 +1,21 @@
-/**
-* @param  {!string} str
-* @return {!string}
-*/
-function rawurlencode(str)
+/** @const */
+var UrlFilter =
 {
-	return encodeURIComponent(str).replace(
-		/[!'()*]/g,
-		/**
-		* @param {!string} c
-		*/
-		function(c)
-		{
-			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
-		}
-	);
-}
-
-/**
-* IMPORTANT NOTE: those filters are only meant to catch bad input and honest mistakes. They don't
-*                 match their PHP equivalent exactly and may let unwanted values through. Their
-*                 result should always be checked by PHP filters
-*
-* @const
-*/
-var BuiltInFilters =
-{
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterEmail: function(attrValue)
-	{
-		return /^[-\w.+]+@[-\w.]+$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {!boolean}
-	*/
-	filterFalse: function(attrValue)
-	{
-		return false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterFloat: function(attrValue)
-	{
-		return /^(?:0|-?[1-9]\d*)(?:\.\d+)?(?:e[1-9]\d*)?$/i.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*}        attrValue Original value
-	* @param  {!Object}  map       Hash map
-	* @param  {!boolean} strict    Whether this map is strict (values with no match are invalid)
-	* @return {*}                  Filtered value, or FALSE if invalid
-	*/
-	filterHashmap: function(attrValue, map, strict)
-	{
-		if (attrValue in map)
-		{
-			return map[attrValue];
-		}
-
-		return (strict) ? false : attrValue;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterIdentifier: function(attrValue)
-	{
-		return /^[-\w]+$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterInt: function(attrValue)
-	{
-		return /^(?:0|-?[1-9]\d*)$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterIp: function(attrValue)
-	{
-		if (/^[\d.]+$/.test(attrValue))
-		{
-			return BuiltInFilters.filterIpv4(attrValue);
-		}
-
-		if (/^[\da-f:]+$/i.test(attrValue))
-		{
-			return BuiltInFilters.filterIpv6(attrValue);
-		}
-
-		return false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterIpport: function(attrValue)
-	{
-		var m, ip;
-
-		if (m = /^\[([\da-f:]+)(\]:[1-9]\d*)$/i.exec(attrValue))
-		{
-			ip = BuiltInFilters.filterIpv6(m[1]);
-
-			if (ip === false)
-			{
-				return false;
-			}
-
-			return '[' + ip + m[2];
-		}
-
-		if (m = /^([\d.]+)(:[1-9]\d*)$/.exec(attrValue))
-		{
-			ip = BuiltInFilters.filterIpv4(m[1]);
-
-			if (ip === false)
-			{
-				return false;
-			}
-
-			return ip + m[2];
-		}
-
-		return false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterIpv4: function(attrValue)
-	{
-		if (!/^\d+\.\d+\.\d+\.\d+$/.test(attrValue))
-		{
-			return false;
-		}
-
-		var i = 4, p = attrValue.split('.');
-		while (--i >= 0)
-		{
-			// NOTE: ext/filter doesn't support octal notation
-			if (p[i][0] === '0' || p[i] > 255)
-			{
-				return false;
-			}
-		}
-
-		return attrValue;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterIpv6: function(attrValue)
-	{
-		return /^(\d*:){2,7}\d+(?:\.\d+\.\d+\.\d+)?$/.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @param  {!Array.<!Array>}  map
-	* @return {*}
-	*/
-	filterMap: function(attrValue, map)
-	{
-		var i = -1, cnt = map.length;
-		while (++i < cnt)
-		{
-			if (map[i][0].test(attrValue))
-			{
-				return map[i][1];
-			}
-		}
-
-		return attrValue;
-	},
-
-	/**
-	* @param  {*}       attrValue
-	* @param  {!number} min
-	* @param  {!number} max
-	* @param  {Logger}  logger
-	* @return {!number|boolean}
-	*/
-	filterRange: function(attrValue, min, max, logger)
-	{
-		if (!/^(?:0|-?[1-9]\d*)$/.test(attrValue))
-		{
-			return false;
-		}
-
-		attrValue = parseInt(attrValue, 10);
-
-		if (attrValue < min)
-		{
-			if (logger)
-			{
-				logger.warn(
-					'Value outside of range, adjusted up to min value',
-					{
-						'attrValue' : attrValue,
-						'min'       : min,
-						'max'       : max
-					}
-				);
-			}
-
-			return min;
-		}
-
-		if (attrValue > max)
-		{
-			if (logger)
-			{
-				logger.warn(
-					'Value outside of range, adjusted down to max value',
-					{
-						'attrValue' : attrValue,
-						'min'       : min,
-						'max'       : max
-					}
-				);
-			}
-
-			return max;
-		}
-
-		return attrValue;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @param  {!RegExp} regexp
-	* @return {*}
-	*/
-	filterRegexp: function(attrValue, regexp)
-	{
-		return regexp.test(attrValue) ? attrValue : false;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterUint: function(attrValue)
-	{
-		return /^(?:0|[1-9]\d*)$/.test(attrValue) ? attrValue : false;
-	},
-
 	/**
 	* @param  {*} attrValue
 	* @param  {!Object} urlConfig
 	* @param  {Logger} logger
 	* @return {*}
 	*/
-	filterUrl: function(attrValue, urlConfig, logger)
+	filter: function(attrValue, urlConfig, logger)
 	{
 		/**
 		* Trim the URL to conform with HTML5 then parse it
 		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
 		*/
-		var p = BuiltInFilters.parseUrl(attrValue.replace(/^\s+/, '').replace(/\s+$/, ''));
+		var p = UrlFilter.parseUrl(attrValue.replace(/^\s+/, '').replace(/\s+$/, ''));
 
-		var error = BuiltInFilters.validateUrl(urlConfig, p);
+		var error = UrlFilter.validateUrl(urlConfig, p);
 		if (error)
 		{
 			if (logger)
@@ -290,7 +27,7 @@ var BuiltInFilters =
 			return false;
 		}
 
-		return BuiltInFilters.rebuildUrl(urlConfig, p);
+		return UrlFilter.rebuildUrl(urlConfig, p);
 	},
 
 	/**
@@ -401,16 +138,16 @@ var BuiltInFilters =
 		* @link http://tools.ietf.org/html/rfc3986#section-2.1
 		*/
 		path = path.replace(
-			/%.?[a-f]/,
-			function (m)
+			/%.?[a-f]/g,
+			function (str)
 			{
-				return m[0].toUpperCase();
+				return str.toUpperCase();
 			},
 			path
 		);
 
 		// Append the sanitized path to the URL
-		url += BuiltInFilters.sanitizeUrl(path);
+		url += UrlFilter.sanitizeUrl(path);
 
 		// Replace the first colon if there's no scheme and it could potentially be interpreted as
 		// the scheme separator
@@ -485,8 +222,8 @@ var BuiltInFilters =
 			if (!regexp.test(p['host']))
 			{
 				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
-				if (!BuiltInFilters.filterIpv4(p['host'])
-				 && !BuiltInFilters.filterIpv6(p['host'].replace(/^\[(.*)\]$/, '$1', p['host'])))
+				if (!NetworkFilter.filterIpv4(p['host'])
+				 && !NetworkFilter.filterIpv6(p['host'].replace(/^\[(.*)\]$/, '$1', p['host'])))
 				{
 					return 'URL host is invalid';
 				}
@@ -499,4 +236,4 @@ var BuiltInFilters =
 			}
 		}
 	}
-}
+};

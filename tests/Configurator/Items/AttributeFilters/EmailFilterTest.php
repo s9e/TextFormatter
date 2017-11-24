@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class EmailFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterEmail()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\EmailFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new EmailFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterEmail',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\EmailFilter::filter',
 			$filter->getCallback()
 		);
 	}

@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class RangeFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRange()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\NumericFilter::filterRange()
 	*/
 	public function testCallback()
 	{
 		$filter = new RangeFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRange',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterRange',
 			$filter->getCallback()
 		);
 	}

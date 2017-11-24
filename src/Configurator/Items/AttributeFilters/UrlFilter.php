@@ -16,13 +16,13 @@ class UrlFilter extends AttributeFilter
 	*/
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\UrlFilter::filter');
 
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('urlConfig');
 		$this->addParameterByName('logger');
-		$this->setJS('BuiltInFilters.filterUrl');
+		$this->setJS('UrlFilter.filter');
 	}
 
 	/**

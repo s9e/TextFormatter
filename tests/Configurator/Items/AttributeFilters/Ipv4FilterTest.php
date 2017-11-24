@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class Ipv4FilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv4()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\NetworkFilter::filterIpv4()
 	*/
 	public function testCallback()
 	{
 		$filter = new Ipv4Filter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpv4',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\NetworkFilter::filterIpv4',
 			$filter->getCallback()
 		);
 	}

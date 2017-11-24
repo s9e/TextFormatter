@@ -38,6 +38,7 @@ punycode = {
 	toASCII: function(host)
 	{
 		var table= {
+			'älypää.com':     'xn--lyp-plada.com',
 			'www.älypää.com': 'www.xn--lyp-plada.com'
 		}
 

@@ -11,7 +11,7 @@ use DOMAttr;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
-use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Parser\AttributeFilters\UrlFilter;
 
 /**
 * @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
@@ -39,7 +39,7 @@ class NormalizeUrls extends AbstractNormalization
 		{
 			if ($type === 'literal')
 			{
-				$attrValue .= BuiltInFilters::sanitizeUrl($content);
+				$attrValue .= UrlFilter::sanitizeUrl($content);
 			}
 			else
 			{
@@ -62,7 +62,7 @@ class NormalizeUrls extends AbstractNormalization
 		$query = './/text()[normalize-space() != ""]';
 		foreach ($this->xpath($query, $element) as $i => $node)
 		{
-			$value = BuiltInFilters::sanitizeUrl($node->nodeValue);
+			$value = UrlFilter::sanitizeUrl($node->nodeValue);
 
 			if (!$i)
 			{

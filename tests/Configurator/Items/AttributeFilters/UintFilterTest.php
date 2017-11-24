@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class UintFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUint()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\NumericFilter::filterUint()
 	*/
 	public function testCallback()
 	{
 		$filter = new UintFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterUint',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterUint',
 			$filter->getCallback()
 		);
 	}

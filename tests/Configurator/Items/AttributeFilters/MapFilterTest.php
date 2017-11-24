@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class MapFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\MapFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new MapFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterMap',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\MapFilter::filter',
 			$filter->getCallback()
 		);
 	}

@@ -16,7 +16,7 @@ class IpportFilter extends AttributeFilter
 	*/
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpport');
-		$this->setJS('BuiltInFilters.filterIpport');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NetworkFilter::filterIpport');
+		$this->setJS('NetworkFilter.filterIpport');
 	}
 }

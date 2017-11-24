@@ -349,30 +349,27 @@ class JavaScript
 	*/
 	protected function getSource()
 	{
-		$src = '';
+		$rootDir = __DIR__ . '/..';
+		$src     = '';
 
-		// Add the parser files
-		$files = [
-			'Parser/utils.js',
-			'Parser/BuiltInFilters.js',
-			// If getLogger() is not exported we use a dummy Logger that can be optimized away
-			'Parser/' . (in_array('getLogger', $this->exportMethods) ? '' : 'Null') . 'Logger.js',
-			'Parser/Tag.js',
-			'Parser.js'
-		];
+		// If getLogger() is not exported we use a dummy Logger that can be optimized away
+		$logger = (in_array('getLogger', $this->exportMethods)) ? 'Logger.js' : 'NullLogger.js';
+
+		// Prepare the list of files
+		$files   = glob($rootDir . '/Parser/AttributeFilters/*.js');
+		$files[] = $rootDir . '/Parser/utils.js';
+		$files[] = $rootDir . '/Parser/' . $logger;
+		$files[] = $rootDir . '/Parser/Tag.js';
+		$files[] = $rootDir . '/Parser.js';
 
 		// Append render.js if we export the preview method
 		if (in_array('preview', $this->exportMethods, true))
 		{
-			$files[] = 'render.js';
+			$files[] = $rootDir . '/render.js';
 			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";
 		}
 
-		foreach ($files as $filename)
-		{
-			$filepath = __DIR__ . '/../' . $filename;
-			$src .= file_get_contents($filepath) . "\n";
-		}
+		$src .= implode("\n", array_map('file_get_contents', $files));
 
 		return $src;
 	}

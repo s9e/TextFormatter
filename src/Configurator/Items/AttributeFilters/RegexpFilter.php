@@ -23,12 +23,12 @@ class RegexpFilter extends AttributeFilter
 	*/
 	public function __construct($regexp = null)
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\RegexpFilter::filter');
 
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('regexp');
-		$this->setJS('BuiltInFilters.filterRegexp');
+		$this->setJS('RegexpFilter.filter');
 
 		if (isset($regexp))
 		{

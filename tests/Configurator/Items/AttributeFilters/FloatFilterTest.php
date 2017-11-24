@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class FloatFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFloat()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\NumericFilter::filterFloat()
 	*/
 	public function testCallback()
 	{
 		$filter = new FloatFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterFloat',
 			$filter->getCallback()
 		);
 	}

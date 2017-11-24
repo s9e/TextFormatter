@@ -228,7 +228,7 @@ class JavaScriptTest extends Test
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertContains(
-			'function(attrValue,attrName){return BuiltInFilters.filterInt(attrValue);}',
+			'function(attrValue,attrName){return NumericFilter.filterInt(attrValue);}',
 			$js
 		);
 	}
@@ -240,7 +240,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->rootRules->allowChild('FOO');
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain->append(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt'
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterInt'
 		);
 
 		$js = $this->configurator->javascript->getParser();

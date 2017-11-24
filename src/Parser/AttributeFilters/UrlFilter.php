@@ -5,253 +5,21 @@
 * @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Parser;
+namespace s9e\TextFormatter\Parser\AttributeFilters;
 
-class BuiltInFilters
+use s9e\TextFormatter\Parser\Logger;
+
+class UrlFilter
 {
 	/**
-	* Filter an email value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterEmail($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_EMAIL);
-	}
-
-	/**
-	* Invalidate an attribute value
-	*
-	* @param  string $attrValue Original value
-	* @return bool              Always FALSE
-	*/
-	public static function filterFalse($attrValue)
-	{
-		return false;
-	}
-
-	/**
-	* Filter a float value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterFloat($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_FLOAT);
-	}
-
-	/**
-	* Filter a value through a hash map
-	*
-	* @param  string $attrValue Original value
-	* @param  array  $map       Associative array
-	* @param  bool   $strict    Whether this map is strict (values with no match are invalid)
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterHashmap($attrValue, array $map, $strict)
-	{
-		if (isset($map[$attrValue]))
-		{
-			return $map[$attrValue];
-		}
-
-		return ($strict) ? false : $attrValue;
-	}
-
-	/**
-	* Filter an int value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterInt($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_INT);
-	}
-
-	/**
-	* Filter an IP value (includes IPv4 and IPv6)
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterIp($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_IP);
-	}
-
-	/**
-	* Filter an IP:port value (includes IPv4 and IPv6)
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterIpport($attrValue)
-	{
-		if (preg_match('/^\\[([^\\]]+)(\\]:[1-9][0-9]*)$/D', $attrValue, $m))
-		{
-			$ip = self::filterIpv6($m[1]);
-
-			if ($ip === false)
-			{
-				return false;
-			}
-
-			return '[' . $ip . $m[2];
-		}
-
-		if (preg_match('/^([^:]+)(:[1-9][0-9]*)$/D', $attrValue, $m))
-		{
-			$ip = self::filterIpv4($m[1]);
-
-			if ($ip === false)
-			{
-				return false;
-			}
-
-			return $ip . $m[2];
-		}
-
-		return false;
-	}
-
-	/**
-	* Filter an IPv4 value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterIpv4($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-	}
-
-	/**
-	* Filter an IPv6 value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterIpv6($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-	}
-
-	/**
-	* Filter a mapped value
-	*
-	* NOTE: if there's no match, the original value is returned
-	*
-	* @param  string $attrValue Original value
-	* @param  array  $map       List in the form [[<regexp>, <value>]]
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterMap($attrValue, array $map)
-	{
-		foreach ($map as $pair)
-		{
-			if (preg_match($pair[0], $attrValue))
-			{
-				return $pair[1];
-			}
-		}
-
-		return $attrValue;
-	}
-
-	/**
-	* Filter a range value
-	*
-	* @param  string  $attrValue Original value
-	* @param  integer $min       Minimum value
-	* @param  integer $max       Maximum value
-	* @param  Logger  $logger    Parser's Logger instance
-	* @return mixed              Filtered value, or FALSE if invalid
-	*/
-	public static function filterRange($attrValue, $min, $max, Logger $logger = null)
-	{
-		$attrValue = filter_var($attrValue, FILTER_VALIDATE_INT);
-
-		if ($attrValue === false)
-		{
-			return false;
-		}
-
-		if ($attrValue < $min)
-		{
-			if (isset($logger))
-			{
-				$logger->warn(
-					'Value outside of range, adjusted up to min value',
-					[
-						'attrValue' => $attrValue,
-						'min'       => $min,
-						'max'       => $max
-					]
-				);
-			}
-
-			return $min;
-		}
-
-		if ($attrValue > $max)
-		{
-			if (isset($logger))
-			{
-				$logger->warn(
-					'Value outside of range, adjusted down to max value',
-					[
-						'attrValue' => $attrValue,
-						'min'       => $min,
-						'max'       => $max
-					]
-				);
-			}
-
-			return $max;
-		}
-
-		return $attrValue;
-	}
-
-	/**
-	* Filter a value by regexp
-	*
-	* @param  string $attrValue Original value
-	* @param  string $regexp    Filtering regexp
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterRegexp($attrValue, $regexp)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => $regexp]
-		]);
-	}
-
-	/**
-	* Filter a uint value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterUint($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_INT, [
-			'options' => ['min_range' => 0]
-		]);
-	}
-
-	/**
-	* Filter an URL
+	* Filter a URL
 	*
 	* @param  mixed  $attrValue Original URL
 	* @param  array  $urlConfig URL config
 	* @param  Logger $logger    Parser's logger
 	* @return mixed             Cleaned up URL if valid, FALSE otherwise
 	*/
-	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = null)
+	public static function filter($attrValue, array $urlConfig, Logger $logger = null)
 	{
 		/**
 		* Trim the URL to conform with HTML5 then parse it
@@ -472,8 +240,8 @@ class BuiltInFilters
 			if (!preg_match($regexp, $p['host']))
 			{
 				// If the host invalid, retest as an IPv4 and IPv6 address (IPv6 in brackets)
-				if (!self::filterIpv4($p['host'])
-				 && !self::filterIpv6(preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
+				if (!NetworkFilter::filterIpv4($p['host'])
+				 && !NetworkFilter::filterIpv6(preg_replace('/^\\[(.*)\\]$/', '$1', $p['host'])))
 				{
 					return 'URL host is invalid';
 				}

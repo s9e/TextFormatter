@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class FalseFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFalse()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\FalseFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new FalseFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterFalse',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\FalseFilter::filter',
 			$filter->getCallback()
 		);
 	}

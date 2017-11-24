@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class UrlFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUrl()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\UrlFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new UrlFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\UrlFilter::filter',
 			$filter->getCallback()
 		);
 	}

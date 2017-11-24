@@ -25,12 +25,12 @@ class MapFilter extends AttributeFilter
 	*/
 	public function __construct(array $map = null, $caseSensitive = false, $strict = false)
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterMap');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\MapFilter::filter');
 
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('map');
-		$this->setJS('BuiltInFilters.filterMap');
+		$this->setJS('MapFilter.filter');
 
 		if (isset($map))
 		{
@@ -120,7 +120,7 @@ class MapFilter extends AttributeFilter
 		// is appended to the list
 		if ($strict)
 		{
-			$map[] = ['//', false];
+			$map[] = [new Regexp('//'), false];
 		}
 
 		// Record the map in this filter's variables

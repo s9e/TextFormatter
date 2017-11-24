@@ -11,14 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 class HashmapFilterTest extends Test
 {
 	/**
-	* @testdox Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterHashmap()
+	* @testdox Callback is s9e\TextFormatter\Parser\AttributeFilters\HashmapFilter::filter()
 	*/
 	public function testCallback()
 	{
 		$filter = new HashmapFilter;
 
 		$this->assertSame(
-			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterHashmap',
+			's9e\\TextFormatter\\Parser\\AttributeFilters\\HashmapFilter::filter',
 			$filter->getCallback()
 		);
 	}

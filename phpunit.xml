@@ -185,7 +185,6 @@
 
 			<!-- Trying to sort by order of dependency  -->
 			<file>tests/Parser/TagTest.php</file>
-			<file>tests/Parser/BuiltInFiltersTest.php</file>
 			<file>tests/Parser/FilterProcessingTest.php</file>
 			<file>tests/Parser/LoggerTest.php</file>
 			<file>tests/Parser/PluginsHandlingTest.php</file>
@@ -193,6 +192,19 @@
 			<file>tests/Parser/OutputHandlingTest.php</file>
 			<file>tests/Parser/TagProcessingTest.php</file>
 			<file>tests/Parser/RulesHandlingTest.php</file>
+			<file>tests/Parser/AttributeFilters/AlnumFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/ColorFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/EmailFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/FalseFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/FontfamilyFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/HashmapFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/IdentifierFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/MapFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/NetworkFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/NumericFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/RegexpFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/SimpletextFilterTest.php</file>
+			<file>tests/Parser/AttributeFilters/UrlFilterTest.php</file>
 			<file>tests/ParserTest.php</file>
 
 			<file>tests/Plugins/ConfiguratorBaseTest.php</file>
