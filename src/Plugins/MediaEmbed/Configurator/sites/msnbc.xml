@@ -8,6 +8,7 @@
 	<scrape>
 		<match>@msnbc\.com/[-\w]+/watch/@</match>
 		<match>@on\.msnbc\.com/.@</match>
+		<extract>@property="nv:videoId" content="(?'id'\w+)@</extract>
 		<extract>@guid="?(?'id'\w+)@</extract>
 	</scrape>
 	<iframe width="635" height="440" src="//player.theplatform.com/p/2E2eJC/EmbeddedOffSite?guid={@id}"/>
