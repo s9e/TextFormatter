@@ -883,6 +883,12 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\SimpletextFilter
  [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter::filter()
  [x] Is safe in CSS
 
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\TimestampFilter
+ [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter::filter()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\UintFilter
  [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\NumericFilter::filterUint()
  [x] Is safe in CSS

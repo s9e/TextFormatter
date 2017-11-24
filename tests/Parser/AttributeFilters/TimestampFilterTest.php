@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Parser\AttributeFilters;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\TimestampFilter;
 
 /**
-* @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
+* @covers s9e\TextFormatter\Parser\AttributeFilters\TimestampFilter
 */
 class TimestampFilterTest extends AbstractFilterTest
 {

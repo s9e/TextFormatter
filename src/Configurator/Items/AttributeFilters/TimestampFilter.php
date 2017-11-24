@@ -18,5 +18,8 @@ class TimestampFilter extends AttributeFilter
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\TimestampFilter::filter');
 		$this->setJS('TimestampFilter.filter');
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 	}
 }

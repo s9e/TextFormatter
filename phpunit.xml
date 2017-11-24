@@ -83,6 +83,7 @@
 			<file>tests/Configurator/Items/AttributeFilters/RangeFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/RegexpFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/SimpletextFilterTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/TimestampFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UintFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UrlFilterTest.php</file>
 			<file>tests/Configurator/Items/RegexpTest.php</file>
