@@ -109,6 +109,11 @@ abstract class RegexpConvertor
 			$modifiers .= 'g';
 		}
 
+		if ($regexp === '')
+		{
+			$regexp = '(?:)';
+		}
+
 		return '/' . self::escapeLineTerminators($regexp) . '/' . $modifiers;
 	}
 

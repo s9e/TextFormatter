@@ -352,6 +352,14 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
+	* @testdox toJS('//') returns /(?:)/
+	*/
+	public function testConvertEmptyRegexp()
+	{
+		$this->assertSame('/(?:)/', RegexpConvertor::toJS('//'));
+	}
+
+	/**
 	* @testdox toJS('/x/') returns /x/
 	*/
 	public function testConvertDefaultNotGlobal()
