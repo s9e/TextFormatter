@@ -35,6 +35,7 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 19	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 20	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
 21	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
+22	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyInlineCSS
 ```
 
 ### Remove a normalization

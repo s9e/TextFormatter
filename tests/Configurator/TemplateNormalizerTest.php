@@ -246,6 +246,10 @@ class TemplateNormalizerTest extends Test
 				</xsl:choose>',
 				'<i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><i><xsl:choose><xsl:when test="@foo">foo</xsl:when><xsl:otherwise>bar</xsl:otherwise></xsl:choose></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i></i>'
 			],
+			[
+				'<i style=" color:#123456; "/>',
+				'<i style="color:#123456"/>'
+			],
 		];
 	}
 }

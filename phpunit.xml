@@ -134,6 +134,7 @@
 			<file>tests/Configurator/TemplateNormalizations/InlineInferredValuesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineTextElementsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineXPathLiteralsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/MinifyInlineCSSTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/MinifyXPathExpressionsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/MergeConsecutiveCopyOfTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/MergeIdenticalConditionalBranchesTest.php</file>

@@ -87,6 +87,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineInferredValues');
 		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
+		$this->collection->append('MinifyInlineCSS');
 	}
 
 	/**

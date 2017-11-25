@@ -1276,6 +1276,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineXPathLiterals
  [x] Works 
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyInlineCSS
+ [x] Works 
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions
  [x] Throws an exception if a string isn't properly closed
  [x] Works 
