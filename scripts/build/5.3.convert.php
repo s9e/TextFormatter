@@ -72,10 +72,6 @@ function convertCustom($filepath, &$file)
 		),
 		'Censor/Helper.php' => array(
 			array(
-				'protected function buildTag($word)',
-				'public function buildTag($word)'
-			),
-			array(
 				'protected function getReplacement($word)',
 				'public function getReplacement($word)'
 			),

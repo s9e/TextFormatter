@@ -124,24 +124,6 @@ class Helper
 	}
 
 	/**
-	* Build and return the censor tag that matches given word
-	*
-	* @param  string $word Word to censor
-	* @return string       Censor tag, complete with its replacement attribute
-	*/
-	protected function buildTag($word)
-	{
-		$startTag = '<' . $this->tagName;
-		$replacement = $this->getReplacement($word);
-		if ($replacement !== $this->defaultReplacement)
-		{
-			$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_COMPAT) . '"';
-		}
-
-		return $startTag . '>' . $word . '</' . $this->tagName . '>';
-	}
-
-	/**
 	* Get the replacement for given word
 	*
 	* @param  string $word Original word
