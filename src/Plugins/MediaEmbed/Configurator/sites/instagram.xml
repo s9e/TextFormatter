@@ -17,8 +17,7 @@
 			}
 		});
 
-		var origin = src.substr(0, src.indexOf('/', 8));
-		contentWindow.postMessage('s9e:' + id, origin);
+		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
 	<iframe width="640" height="640" src="https://s9e.github.io/iframe/instagram.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')"/>
 </site>

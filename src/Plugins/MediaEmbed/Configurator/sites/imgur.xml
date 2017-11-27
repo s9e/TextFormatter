@@ -32,8 +32,7 @@
 			}
 		});
 
-		var origin = src.substr(0, src.indexOf('/', 8));
-		contentWindow.postMessage('s9e:' + id, origin);
+		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
 	<iframe width="568" height="450" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')">
 		<src><![CDATA[
