@@ -61,7 +61,7 @@
 <dd>A string that matches <code>/^[- +,.0-9A-Za-z_]+$/</code>.</dd>
 
 <dt>#timestamp</dt>
-<dd>A unit of time such as `1h12m30s` converted to a number of seconds. Also accepts a number.</dd>
+<dd>A unit of time such as <code>1h12m30s</code> converted to a number of seconds. Also accepts a number.</dd>
 
 <dt>#uint</dt>
 <dd>An unsigned integer value. Same as #int, but rejects values less than 0.</dd>
