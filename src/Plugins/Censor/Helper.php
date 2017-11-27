@@ -58,14 +58,6 @@ class Helper
 	{
 		return (\preg_match($this->regexp, $word) && !$this->isAllowed($word));
 	}
-	public function buildTag($word)
-	{
-		$startTag = '<' . $this->tagName;
-		$replacement = $this->getReplacement($word);
-		if ($replacement !== $this->defaultReplacement)
-			$startTag .= ' ' . $this->attrName . '="' . \htmlspecialchars($replacement, \ENT_COMPAT) . '"';
-		return $startTag . '>' . $word . '</' . $this->tagName . '>';
-	}
 	public function getReplacement($word)
 	{
 		if ($this->isAllowed($word))

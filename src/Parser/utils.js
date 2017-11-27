@@ -66,6 +66,24 @@ function htmlspecialchars_noquotes(str)
 }
 
 /**
+* @param  {!string} str
+* @return {!string}
+*/
+function rawurlencode(str)
+{
+	return encodeURIComponent(str).replace(
+		/[!'()*]/g,
+		/**
+		* @param {!string} c
+		*/
+		function(c)
+		{
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		}
+	);
+}
+
+/**
 * @return {!boolean}
 */
 function returnFalse()

@@ -16,11 +16,11 @@ class MapFilter extends AttributeFilter
 {
 	public function __construct(array $map = \null, $caseSensitive = \false, $strict = \false)
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterMap');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\MapFilter::filter');
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('map');
-		$this->setJS('BuiltInFilters.filterMap');
+		$this->setJS('MapFilter.filter');
 		if (isset($map))
 			$this->setMap($map, $caseSensitive, $strict);
 	}
@@ -60,7 +60,7 @@ class MapFilter extends AttributeFilter
 			$map[] = array(new Regexp($regexp), $value);
 		}
 		if ($strict)
-			$map[] = array('//', \false);
+			$map[] = array(new Regexp('//'), \false);
 		$this->vars['map'] = $map;
 	}
 	protected function assessSafeness(array $map)

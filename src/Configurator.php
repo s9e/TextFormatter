@@ -529,6 +529,7 @@ use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\FilterableConfigValue;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 abstract class ConfigHelper
 {
 	public static function filterConfig(array $config, $target = 'PHP')
@@ -595,6 +596,7 @@ abstract class ConfigHelper
 		$array = array();
 		foreach ($value as $k => $v)
 		{
+			$isDictionary = $v instanceof Dictionary;
 			if ($v instanceof ConfigProvider)
 				$v = $v->asConfig();
 			elseif ($v instanceof Traversable || \is_array($v))
@@ -612,7 +614,7 @@ abstract class ConfigHelper
 				continue;
 			if (!$keepEmpty && $v === array())
 				continue;
-			$array[$k] = $v;
+			$array[$k] = ($isDictionary) ? new Dictionary($v) : $v;
 		}
 		return $array;
 	}
@@ -4949,6 +4951,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('InlineAttributes');
 		$this->collection->append('InlineInferredValues');
 		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
+		$this->collection->append('MinifyInlineCSS');
 	}
 	public function normalizeTag(Tag $tag)
 	{
@@ -6965,6 +6968,42 @@ class InlineXPathLiterals extends AbstractNormalization
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+class MinifyInlineCSS extends AbstractNormalization
+{
+	protected $queries = array('//*[namespace-uri() != $XSL]/@style');
+	protected function normalizeAttribute(DOMAttr $attribute)
+	{
+		$css = $attribute->nodeValue;
+		if (!\preg_match('(\\{(?!@\\w+\\}))', $css))
+			$attribute->nodeValue = $this->minify($css);
+	}
+	protected function minify($css)
+	{
+		$css = \trim($css, " \n\t;");
+		$css = \preg_replace('(\\s*([,:;])\\s*)', '$1', $css);
+		$css = \preg_replace_callback(
+			'((?<=[\\s:])#[0-9a-f]{3,6})i',
+			function ($m)
+			{
+				return \strtolower($m[0]);
+			},
+			$css
+		);
+		$css = \preg_replace('((?<=[\\s:])#([0-9a-f])\\1([0-9a-f])\\2([0-9a-f])\\3)', '#$1$2$3', $css);
+		$css = \preg_replace('((?<=[\\s:])#f00\\b)', 'red', $css);
+		$css = \preg_replace('((?<=[\\s:])0px\\b)', '0', $css);
+		return $css;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class MinifyXPathExpressions extends AbstractNormalization
@@ -7076,7 +7115,7 @@ use DOMAttr;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
-use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Parser\AttributeFilters\UrlFilter;
 class NormalizeUrls extends AbstractNormalization
 {
 	protected function getNodes()
@@ -7091,7 +7130,7 @@ class NormalizeUrls extends AbstractNormalization
 		{
 			list($type, $content) = $_f6b3b659;
 			if ($type === 'literal')
-				$attrValue .= BuiltInFilters::sanitizeUrl($content);
+				$attrValue .= UrlFilter::sanitizeUrl($content);
 			else
 				$attrValue .= '{' . $content . '}';
 		}
@@ -7103,7 +7142,7 @@ class NormalizeUrls extends AbstractNormalization
 		$query = './/text()[normalize-space() != ""]';
 		foreach ($this->xpath($query, $element) as $i => $node)
 		{
-			$value = BuiltInFilters::sanitizeUrl($node->nodeValue);
+			$value = UrlFilter::sanitizeUrl($node->nodeValue);
 			if (!$i)
 				$value = $this->unescapeBrackets(\ltrim($value));
 			$node->nodeValue = $value;
@@ -8699,12 +8738,12 @@ class UrlFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUrl');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\UrlFilter::filter');
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('urlConfig');
 		$this->addParameterByName('logger');
-		$this->setJS('BuiltInFilters.filterUrl');
+		$this->setJS('UrlFilter.filter');
 	}
 	public function isSafeInCSS()
 	{

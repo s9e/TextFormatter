@@ -10,16 +10,17 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 class HashmapFilter extends AttributeFilter
 {
 	public function __construct(array $map = \null, $strict = \false)
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterHashmap');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\HashmapFilter::filter');
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
 		$this->addParameterByName('map');
 		$this->addParameterByName('strict');
-		$this->setJS('BuiltInFilters.filterHashmap');
+		$this->setJS('HashmapFilter.filter');
 		if (isset($map))
 			$this->setMap($map, $strict);
 	}
@@ -36,7 +37,7 @@ class HashmapFilter extends AttributeFilter
 		if (!$strict)
 			$map = $this->optimizeLooseMap($map);
 		\ksort($map);
-		$this->vars['map']    = $map;
+		$this->vars['map']    = new Dictionary($map);
 		$this->vars['strict'] = $strict;
 		$this->resetSafeness();
 		if (!empty($this->vars['strict']))
