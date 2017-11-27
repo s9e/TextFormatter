@@ -27,7 +27,7 @@ class Logger
 		$this->unsetAttribute();
 		$this->unsetTag();
 	}
-	public function get()
+	public function getLogs()
 	{
 		return $this->logs;
 	}

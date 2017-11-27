@@ -7,11 +7,14 @@
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-class IpportFilter extends AttributeFilter
+class TimestampFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NetworkFilter::filterIpport');
-		$this->setJS('NetworkFilter.filterIpport');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\TimestampFilter::filter');
+		$this->setJS('TimestampFilter.filter');
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 	}
 }

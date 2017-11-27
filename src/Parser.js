@@ -404,7 +404,7 @@ function getNamedCaptures(attrValue, regexp, map)
 * @param  {!Object}  tagConfig      Tag's config
 * @param  {!Object}  registeredVars Vars registered for use in attribute filters
 * @param  {!Logger}  logger         This parser's Logger instance
-* @return {!boolean}           Whether the whole attribute set is valid
+* @return {!boolean}                Whether the whole attribute set is valid
 */
 function filterAttributes(tag, tagConfig, registeredVars, logger)
 {

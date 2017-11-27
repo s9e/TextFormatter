@@ -11,8 +11,8 @@ class UintFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterUint');
-		$this->setJS('BuiltInFilters.filterUint');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterUint');
+		$this->setJS('NumericFilter.filterUint');
 	}
 	public function isSafeInCSS()
 	{
