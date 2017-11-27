@@ -11,8 +11,8 @@ class IntFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt');
-		$this->setJS('BuiltInFilters.filterInt');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterInt');
+		$this->setJS('NumericFilter.filterInt');
 		$this->markAsSafeAsURL();
 		$this->markAsSafeInCSS();
 		$this->markAsSafeInJS();

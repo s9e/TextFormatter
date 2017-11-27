@@ -11,8 +11,8 @@ class FloatFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFloat');
-		$this->setJS('BuiltInFilters.filterFloat');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NumericFilter::filterFloat');
+		$this->setJS('NumericFilter.filterFloat');
 		$this->markAsSafeAsURL();
 		$this->markAsSafeInCSS();
 		$this->markAsSafeInJS();

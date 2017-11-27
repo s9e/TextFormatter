@@ -11,7 +11,7 @@ class FalseFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterFalse');
-		$this->setJS('BuiltInFilters.filterFalse');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\FalseFilter::filter');
+		$this->setJS('FalseFilter.filter');
 	}
 }

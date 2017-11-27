@@ -11,7 +11,7 @@ class EmailFilter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterEmail');
-		$this->setJS('BuiltInFilters.filterEmail');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\EmailFilter::filter');
+		$this->setJS('EmailFilter.filter');
 	}
 }

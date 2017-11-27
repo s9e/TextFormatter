@@ -68,6 +68,8 @@ abstract class RegexpConvertor
 		$modifiers = \preg_replace('#[^im]#', '', $regexpInfo['modifiers']);
 		if ($isGlobal)
 			$modifiers .= 'g';
+		if ($regexp === '')
+			$regexp = '(?:)';
 		return '/' . self::escapeLineTerminators($regexp) . '/' . $modifiers;
 	}
 	protected static function convertUnicodeCharacters($str, $inCharacterClass, $dotAll)

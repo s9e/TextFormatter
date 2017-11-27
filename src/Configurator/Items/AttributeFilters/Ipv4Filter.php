@@ -11,7 +11,7 @@ class Ipv4Filter extends AttributeFilter
 {
 	public function __construct()
 	{
-		parent::__construct('s9e\\TextFormatter\\Parser\\BuiltInFilters::filterIpv4');
-		$this->setJS('BuiltInFilters.filterIpv4');
+		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\NetworkFilter::filterIpv4');
+		$this->setJS('NetworkFilter.filterIpv4');
 	}
 }

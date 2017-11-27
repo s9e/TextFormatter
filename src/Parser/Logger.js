@@ -73,7 +73,7 @@ Logger.prototype.clear = function()
 *
 * @return {!Object}
 */
-Logger.prototype['get'] = function()
+Logger.prototype['getLogs'] = function()
 {
 	return this.logs;
 }
