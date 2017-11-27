@@ -1,3 +1,34 @@
+0.13.0 (2017-11-27)
+===================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0130) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d50adf87a92d5c793f5a06df7af089bdbaa749e4...459dddf5bc5f81f78564e3562231b6f01f2f2791)
+
+### Added
+
+ - `fa9e938a4` Added MinifyInlineCSS template normalization
+ - `d471649ce` Added timestamp attribute filter
+
+### Removed
+
+ - `0ef891332` Censor: removed unused method
+
+### Fixed
+
+ - `feeeac930` HashmapFilter: fixed an issue where hash keys were not preserved during JavaScript minification
+ - `803d3c5b9` RegexpConvertor: fixed the conversion of empty regexps
+
+### Changed
+
+ - `9ccb7597a` BuiltInFilters: reorganized filters into separate classes
+ - `66b1d77be` BuiltInFilters: simplified regexp-based filters
+ - `4f998c818` Logger: renamed get() to getLogs()
+ - `d2df9701b` MediaEmbed: updated MSNBC
+ - `47b00f1c8` MediaEmbed: updated YouTube
+ - `017c8f77c` MediaEmbed: updated cached definitions
+
+
 0.12.0 (2017-11-11)
 ===================
 
