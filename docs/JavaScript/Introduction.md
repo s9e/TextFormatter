@@ -20,7 +20,7 @@ With JavaScript enabled, `finalize()` will return an element named `js` that con
 // Parse $text and return the XML as a string
 s9e.TextFormatter.parse($text);
 
-// Parse $text and preview it in DOMElement $target
+// Parse $text and preview it in HTMLElement $target. It will return the last node modified
 s9e.TextFormatter.preview($text, $target);
 
 // Toggle a plugin by name

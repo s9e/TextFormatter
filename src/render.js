@@ -87,13 +87,15 @@ var postProcessFunctions = {};
 /**
 * Parse a given text and render it into given HTML element
 *
-* @param {!string} text
-* @param {!HTMLElement} target
+* @param  {!string} text
+* @param  {!HTMLElement} target
+* @return {!Node}
 */
 function preview(text, target)
 {
-	var targetDoc = target.ownerDocument,
-		resultFragment = xslt.transformToFragment(parse(text), targetDoc);
+	var targetDoc      = target.ownerDocument,
+		resultFragment = xslt.transformToFragment(parse(text), targetDoc),
+		lastUpdated    = target;
 
 	// Apply post-processing
 	if (HINT.postProcessing)
@@ -165,6 +167,7 @@ function preview(text, target)
 		while (--i >= left)
 		{
 			oldEl.removeChild(oldNodes[i]);
+			lastUpdated = oldEl;
 		}
 
 		// Test whether there are any nodes in the new tree between the matching nodes at the left
@@ -188,10 +191,13 @@ function preview(text, target)
 		if (!right)
 		{
 			oldEl.appendChild(newNodesFragment);
+			lastUpdated = oldEl.lastChild;
 		}
 		else
 		{
-			oldEl.insertBefore(newNodesFragment, oldEl.childNodes[left]);
+			var beforeNode = oldEl.childNodes[left];
+			oldEl.insertBefore(newNodesFragment, beforeNode);
+			lastUpdated = beforeNode.previousChild;
 		}
 	}
 
@@ -216,6 +222,7 @@ function preview(text, target)
 			if (oldNode.nodeValue !== newNode.nodeValue)
 			{
 				oldNode.nodeValue = newNode.nodeValue;
+				lastUpdated = oldNode;
 			}
 
 			return true;
@@ -255,6 +262,7 @@ function preview(text, target)
 			if (!newEl.hasAttributeNS(namespaceURI, attrName))
 			{
 				oldEl.removeAttributeNS(namespaceURI, attrName);
+				lastUpdated = oldEl;
 			}
 		}
 
@@ -269,11 +277,14 @@ function preview(text, target)
 			if (attrValue !== oldEl.getAttributeNS(namespaceURI, attrName))
 			{
 				oldEl.setAttributeNS(namespaceURI, attrName, attrValue);
+				lastUpdated = oldEl;
 			}
 		}
 	}
 
 	refreshElementContent(target, resultFragment);
+
+	return lastUpdated;
 }
 
 /**
