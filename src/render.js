@@ -147,7 +147,6 @@ function preview(text, target)
 
 		// Skip the rightmost matching nodes
 		var maxRight = Math.min(oldCnt - left, newCnt - left);
-
 		while (right < maxRight)
 		{
 			oldNode = oldNodes[oldCnt - (right + 1)];
@@ -161,24 +160,29 @@ function preview(text, target)
 			++right;
 		}
 
-		// Clone the new nodes
-		var newNodesFragment = targetDoc.createDocumentFragment(),
-			i = left;
-
-		while (i < (newCnt - right))
-		{
-			newNode = newNodes[i].cloneNode(true);
-
-			newNodesFragment.appendChild(newNode);
-			++i;
-		}
-
 		// Remove the old dirty nodes in the middle of the tree
-		i = oldCnt - right;
+		var i = oldCnt - right;
 		while (--i >= left)
 		{
 			oldEl.removeChild(oldNodes[i]);
 		}
+
+		// Test whether there are any nodes in the new tree between the matching nodes at the left
+		// and the matching nodes at the right
+		var rightBoundary = newCnt - right;
+		if (left >= rightBoundary)
+		{
+			return;
+		}
+
+		// Clone the new nodes
+		var newNodesFragment = targetDoc.createDocumentFragment();
+		i = left;
+		do
+		{
+			newNodesFragment.appendChild(newNodes[i].cloneNode(true));
+		}
+		while (++i < rightBoundary);
 
 		// If we haven't skipped any nodes to the right, we can just append the fragment
 		if (!right)
