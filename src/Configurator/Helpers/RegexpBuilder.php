@@ -158,9 +158,10 @@ abstract class RegexpBuilder
 	*    that no group has more than 1 chain. When we're done, we remerge all the chains together.
 	*
 	* @param  array $chains
+	* @param  bool  $preventRemerge
 	* @return array
 	*/
-	protected static function mergeChains(array $chains)
+	protected static function mergeChains(array $chains, $preventRemerge = false)
 	{
 		// If there's only one chain, there's nothing to merge
 		if (!isset($chains[1]))
@@ -256,7 +257,7 @@ abstract class RegexpBuilder
 			        + $groups;
 		}
 
-		if ($remerge)
+		if ($remerge && !$preventRemerge)
 		{
 			// Merge all chains sharing the same head together
 			$mergedChains = [];
@@ -270,7 +271,7 @@ abstract class RegexpBuilder
 			self::mergeTails($mergedChains);
 
 			// Now merge all chains together and append it to our merged chain
-			$regexp = implode('', self::mergeChains($mergedChains));
+			$regexp = implode('', self::mergeChains($mergedChains, true));
 
 			if ($endOfChain)
 			{

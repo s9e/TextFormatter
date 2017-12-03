@@ -544,6 +544,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['m.', 'mK'], ["specialChars" => ["." => ".", "K" => "\\K"]]) returns 'm(?:.|\\K)'
  [x] fromList(['h$', 'h.'], ["specialChars" => ["." => ".", "$" => "$"]]) returns 'h(?:$|.)'
  [x] fromList(['h?', 'ha'], ["specialChars" => ["?" => ".?"]]) returns 'h.?'
+ [x] fromList(['a', 'a?', 'bb'], ["specialChars" => ["?" => ".?"]]) returns '(?:a|a.|bb)'
  [x] fromList(['h.', 'hi', 'hit'], ["specialChars" => ["." => ".?"]]) returns 'h(?:.|it)?'
  [x] fromList(['a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'], ["specialChars" => ["." => ".?"]]) returns 'a.?c.?e'
  [x] fromList(['h????', 'hello', 'heart'], ["specialChars" => ["?" => ".?"]]) returns 'h.?.?.?.?'
