@@ -3,26 +3,26 @@
 
 $externs = [
 	'contrib/nodejs/punycode.js' => [
-		'var punycode',
+		'punycode',
 		'punycode.toASCII'
 	],
 	'externs/browser/deprecated.js' => [
-		'function XSLTProcessor('
+		'XSLTProcessor'
 	],
 	'externs/es3.js' => [
-		'var Infinity',
-		'var undefined',
+		'Infinity',
+		'undefined',
 
-		'var symbol',
-		'function Symbol(',
+		'symbol',
+		'Symbol',
 
-		'function decodeURIComponent(',
-		'function encodeURIComponent(',
-		'function escape(',
-		'function isNaN(',
-		'function parseInt(',
+		'decodeURIComponent',
+		'encodeURIComponent',
+		'escape',
+		'isNaN',
+		'parseInt',
 
-		'function Array(',
+		'Array',
 		'Array.prototype.forEach',
 		'Array.prototype.indexOf',
 		'Array.prototype.join',
@@ -36,29 +36,29 @@ $externs = [
 		'Array.prototype.splice',
 		'Array.prototype.unshift',
 
-		'function Date(',
+		'Date',
 		'Date.parse',
 
-		'function Function(',
+		'Function',
 
-		'var Math',
+		'Math',
 		'Math.floor',
 		'Math.max',
 		'Math.min',
 		'Math.random',
 
-		'function Number(',
+		'Number',
 		'Number.prototype.toString',
 
-		'function Object(',
+		'Object',
 		'Object.prototype.toString',
 
-		'function RegExp(',
+		'RegExp',
 		'RegExp.prototype.exec',
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
 
-		'function String(',
+		'String',
 		'String.fromCharCode',
 		'String.prototype.charAt',
 		'String.prototype.charCodeAt',
@@ -74,24 +74,26 @@ $externs = [
 		'Element.prototype.innerHTML'
 	],
 	'externs/browser/gecko_xml.js' => [
-		'function DOMParser(',
+		'DOMParser',
 		'DOMParser.prototype.parseFromString'
 	],
 	'externs/browser/ie_dom.js' => [
-		'var window'
+		'window'
 	],
 	'externs/browser/w3c_dom1.js' => [
-		'function Document(',
+		'Document',
 		'Document.prototype.createDocumentFragment',
 		'Document.prototype.createElement',
 
-		'function DocumentFragment(',
+		'DocumentFragment',
 
-		'function NamedNodeMap(',
+		'Element.prototype.getAttribute',
+
+		'NamedNodeMap',
 		'NamedNodeMap.prototype.item',
 		'NamedNodeMap.prototype.length',
 
-		'function Node(',
+		'Node',
 		'Node.prototype.appendChild',
 		'Node.prototype.childNodes',
 		'Node.prototype.cloneNode',
@@ -104,20 +106,21 @@ $externs = [
 		'Node.prototype.parentNode',
 		'Node.prototype.removeChild',
 
-		'function NodeList(',
+		'NodeList',
 		'NodeList.prototype.length',
 
-		'function Element(',
+		'Element',
 
-		'function Window(',
+		'Window',
 	],
 	'externs/browser/w3c_dom2.js' => [
 		'Document.prototype.importNode',
-		'function HTMLDocument(',
-		'function HTMLElement',
+		'HTMLDocument',
+		'HTMLElement',
 	],
 	'externs/browser/w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
+		'Element.prototype.hasAttribute',
 		'Element.prototype.hasAttributeNS',
 		'Element.prototype.removeAttributeNS',
 		'Element.prototype.setAttributeNS',
@@ -127,7 +130,7 @@ $externs = [
 		'Node.prototype.textContent'
 	],
 	'externs/browser/window.js' => [
-		'var document;'
+		'document'
 	]
 ];
 
@@ -159,25 +162,28 @@ function getExterns($externs)
 		// Remove the file header
 		$file = preg_replace('(/\\*\\*.*?@fileoverview.*?\\*/)s', '', $file);
 
-		preg_match_all('(/\\*\\*.*?\\*/\\s*(\\w[^\\n]+))s', $file, $m);
+		preg_match_all('(/\\*\\*.*?\\*/\\s*(?:function |var )?([\\w.]+)\\N*)s', $file, $m);
+		$defs = [];
+		foreach ($m[1] as $k => $name)
+		{
+			$defs[$name] = $m[0][$k];
+		}
+
 		foreach ($names as $name)
 		{
-			$len = strlen($name);
-
-			foreach ($m[1] as $k => $line)
+			if (isset($defs[$name]))
 			{
-				if (substr($line, 0, $len) === $name)
-				{
-					$out .= $m[0][$k] . "\n";
-					continue 2;
-				}
+				$out .= $defs[$name] . "\n";
 			}
-
-			echo "Could not find $name\n";
+			else
+			{
+				echo "Could not find $name\n";
+				print_r($defs);exit;
+			}
 		}
 	}
 
-	// Remove superfluous doc like comments and @see links
+	// Remove superfluous doc such as comments and @see links
 	$out = preg_replace('#^ \\*(?!/| @(?!see)).*\\n#m', '', $out);
 
 	// Remove unnecessary annotations

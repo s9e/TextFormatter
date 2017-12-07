@@ -71,6 +71,13 @@ Document.prototype.createElement = function(tagName, opt_typeExtension) {};
  */
 function DocumentFragment() {}
 /**
+ * @param {string} name
+ * @param {number?=} opt_flags
+ * @return {string}
+ * @nosideeffects
+ */
+Element.prototype.getAttribute = function(name, opt_flags) {};
+/**
  * @constructor
  * @implements {IObject<(string|number), T>}
  * @implements {IArrayLike<T>}
@@ -94,7 +101,7 @@ NamedNodeMap.prototype.length;
 function Node() {}
 /**
  * @param {Node} newChild
- * @return {Node}
+ * @return {!Node}
  */
 Node.prototype.appendChild = function(newChild) {};
 /**
@@ -185,6 +192,12 @@ function HTMLElement() {}
  * @nosideeffects
  */
 Element.prototype.getAttributeNS = function(namespaceURI, localName) {};
+/**
+ * @param {string} name
+ * @return {boolean}
+ * @nosideeffects
+ */
+Element.prototype.hasAttribute = function(name) {};
 /**
  * @param {?string} namespaceURI
  * @param {string} localName
