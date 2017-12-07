@@ -1345,6 +1345,14 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<x:svg xmlns:x="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"></x:svg>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				'<div></div>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<div data-s9e-livepreview-ignore-attrs="foo"/>';
+				}
+			],
 		];
 	}
 

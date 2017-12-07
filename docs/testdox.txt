@@ -1325,6 +1325,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveComments
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
  [x] Works 
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveLivePreviewAttributes
+ [x] Works 
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
  [x] Works 
 
@@ -1697,6 +1700,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Tag config is wholly deduplicated
  [x] The public API is created if any method is exported
  [x] The public API is not created if no method is exported
+ [x] Preserves live preview attributes
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator
@@ -2772,6 +2776,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] escapes a parameter's default value
  [x] Merges simple templates together
  [x] Calls $optimizer->optimizeTemplate() for each template
+ [x] Removes live preview attributes
 
 s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument

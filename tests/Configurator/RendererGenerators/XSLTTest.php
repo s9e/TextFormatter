@@ -174,4 +174,14 @@ class XSLTTest extends Test
 		$this->assertContains('<xsl:template match="X"><b>x</b></xsl:template>', $xsl);
 		$this->assertContains('<xsl:template match="Y"><b>y</b></xsl:template>', $xsl);
 	}
+
+	/**
+	* @testdox Removes live preview attributes
+	*/
+	public function testRemovesLivePreviewAttributes()
+	{
+		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-ignore-attrs="foo"/>';
+
+		$this->assertNotContains('livepreview', $this->getXSL());
+	}
 }

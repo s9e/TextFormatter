@@ -16,7 +16,9 @@ class HintGeneratorTest extends Test
 		$this->configurator->finalize();
 		$config = ConfigHelper::filterConfig($this->configurator->asConfig(), 'JS');
 
-		$xsl = $this->configurator->rendering->engine->getXSL($this->configurator->rendering);
+		$xslt = $this->configurator->rendering->engine;
+		$xslt->optimizer->normalizer->remove('RemoveLivePreviewAttributes');
+		$xsl  = $xslt->getXSL($this->configurator->rendering);
 
 		$generator = new HintGenerator;
 		$generator->setConfig($config);

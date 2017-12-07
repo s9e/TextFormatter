@@ -412,6 +412,16 @@ class JavaScriptTest extends Test
 		$this->configurator->javascript->exportMethods = [];
 		$this->assertNotContains("window['s9e']['TextFormatter']", $this->configurator->javascript->getParser());
 	}
+
+	/**
+	* @testdox Preserves live preview attributes
+	*/
+	public function testLivePreviewAttributes()
+	{
+		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-ignore-attrs="style"/>';
+
+		$this->assertContains('data-s9e-livepreview-ignore-attrs', $this->configurator->javascript->getParser());
+	}
 }
 
 class NonScalarConfigThing implements ConfigProvider

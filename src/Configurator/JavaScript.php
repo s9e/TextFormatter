@@ -126,7 +126,9 @@ class JavaScript
 		$this->configOptimizer->reset();
 
 		// Get the stylesheet used for rendering
-		$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);
+		$xslt      = new XSLT;
+		$xslt->optimizer->normalizer->remove('RemoveLivePreviewAttributes');
+		$this->xsl = $xslt->getXSL($this->configurator->rendering);
 
 		// Prepare the parser's config
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();

@@ -108,12 +108,6 @@ function convertCustom($filepath, &$file)
 				'public function getTextContent($expr)',
 			)
 		),
-		'JavaScript.php' => array(
-			array(
-				'$this->xsl = (new XSLT)->getXSL($this->configurator->rendering);',
-				"\$rendererGenerator = new XSLT;\n\t\t\$this->xsl = \$rendererGenerator->getXSL(\$this->configurator->rendering);"
-			)
-		),
 		'JavaScript/Encoder.php' => array(
 			array(
 				'return $this->typeEncoders[$type]($value);',

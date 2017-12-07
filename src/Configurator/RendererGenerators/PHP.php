@@ -17,6 +17,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\SwitchStatement;
 use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class PHP implements RendererGenerator
 {
@@ -66,6 +67,11 @@ class PHP implements RendererGenerator
 	public $lastFilepath;
 
 	/**
+	* @var TemplateNormalizer
+	*/
+	protected $normalizer;
+
+	/**
 	* @var Optimizer Optimizer
 	*/
 	public $optimizer;
@@ -95,6 +101,10 @@ class PHP implements RendererGenerator
 		}
 		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
 		$this->serializer = new Serializer;
+
+		$this->normalizer = new TemplateNormalizer;
+		$this->normalizer->clear();
+		$this->normalizer->append('RemoveLivePreviewAttributes');
 	}
 
 	/**
@@ -223,6 +233,8 @@ class PHP implements RendererGenerator
 	*/
 	protected function compileTemplate($template)
 	{
+		$template = $this->normalizer->normalizeTemplate($template);
+
 		// Parse the template
 		$ir = TemplateParser::parse($template);
 
