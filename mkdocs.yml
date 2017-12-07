@@ -102,6 +102,7 @@ pages:
       - Create tags: Plugins/Your_own_plugin/Create_tags.md
   - JavaScript:
     - Introduction: JavaScript/Introduction.md
+    - Live preview attributes: JavaScript/Live_preview_attributes.md
     - Minifiers: JavaScript/Minifiers.md
   - Internals:
     - API docs: Internals/API_docs.md

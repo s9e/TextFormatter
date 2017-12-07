@@ -165,6 +165,24 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox HINT.ignoreAttrs=0 by default
+	*/
+	public function testHintIgnoreAttrsFalse()
+	{
+		$this->assertHintsContain('HINT.ignoreAttrs=0');
+	}
+
+	/**
+	* @testdox HINT.ignoreAttrs=1 if "data-s9e-livepreview-ignore-attrs" appears in the stylesheet
+	*/
+	public function testHintIgnoreAttrsTrue()
+	{
+		$this->configurator->tags->add('X')->template
+			= '<hr data-s9e-livepreview-ignore-attrs="style"/>';
+		$this->assertHintsContain('HINT.ignoreAttrs=1');
+	}
+
+	/**
 	* @testdox HINT.requireAncestor=0 by default
 	*/
 	public function testHintRequireAncestorFalse()

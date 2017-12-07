@@ -1023,6 +1023,8 @@ s9e\TextFormatter\Tests\Configurator\HintGenerator
  [x] HINT.namespaces=1 if any tag has a namespaces rule
  [x] HINT.postProcessing=0 by default
  [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+ [x] HINT.ignoreAttrs=0 by default
+ [x] HINT.ignoreAttrs=1 if "data-s9e-livepreview-ignore-attrs" appears in the stylesheet
  [x] HINT.requireAncestor=0 by default
  [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
  [x] HINT.RULE_AUTO_CLOSE=0 by default

@@ -113,6 +113,7 @@ class HintGenerator
 		// Test for post-processing in templates. Theorically allows for false positives and
 		// false negatives, but not in any realistic setting
 		$this->hints['postProcessing'] = (int) (strpos($this->xsl, 'data-s9e-livepreview-postprocess') !== false);
+		$this->hints['ignoreAttrs']    = (int) (strpos($this->xsl, 'data-s9e-livepreview-ignore-attrs') !== false);
 	}
 
 	/**
