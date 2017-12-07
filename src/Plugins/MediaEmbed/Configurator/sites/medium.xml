@@ -17,7 +17,7 @@
 			}
 		);
 	-->
-	<iframe width="400" height="400" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F{@id}&amp;id={translate(@id,'abcdef','111111')}" onload="window.addEventListener('message',function(a){{a=a.data.split('::');'m'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+'px')}})">
+	<iframe width="400" height="400" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F{@id}&amp;id={translate(@id,'abcdef','111111')}" onload="window.addEventListener('message',function(a){{a=a.data.split('::');'m'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+'px')}})" data-s9e-livepreview-ignore-attrs="style">
 		<style
 			border="1px solid"
 			border-color="#eee #ddd #bbb"
