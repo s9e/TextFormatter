@@ -2,8 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateInspector
