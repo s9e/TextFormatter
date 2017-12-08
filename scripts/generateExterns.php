@@ -87,8 +87,6 @@ $externs = [
 
 		'DocumentFragment',
 
-		'Element.prototype.getAttribute',
-
 		'NamedNodeMap',
 		'NamedNodeMap.prototype.item',
 		'NamedNodeMap.prototype.length',
@@ -120,7 +118,6 @@ $externs = [
 	],
 	'externs/browser/w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
-		'Element.prototype.hasAttribute',
 		'Element.prototype.hasAttributeNS',
 		'Element.prototype.removeAttributeNS',
 		'Element.prototype.setAttributeNS',

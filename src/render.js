@@ -252,12 +252,7 @@ function preview(text, target)
 			oldCnt        = oldAttributes.length,
 			newCnt        = newAttributes.length,
 			i             = oldCnt,
-			ignoreAttrs   = '';
-
-		if (HINT.ignoreAttrs && oldEl.hasAttribute('data-s9e-livepreview-ignore-attrs'))
-		{
-			ignoreAttrs = ' ' + oldEl.getAttribute('data-s9e-livepreview-ignore-attrs') + ' ';
-		}
+			ignoreAttrs   = ' ' + oldAttributes['data-s9e-livepreview-ignore-attrs'] + ' ';
 
 		while (--i >= 0)
 		{
@@ -265,7 +260,7 @@ function preview(text, target)
 				namespaceURI = oldAttr['namespaceURI'],
 				attrName     = oldAttr['name'];
 
-			if (HINT.ignoreAttrs && ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
+			if (HINT.ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
 			{
 				continue;
 			}
@@ -284,7 +279,7 @@ function preview(text, target)
 				attrName     = newAttr['name'],
 				attrValue    = newAttr['value'];
 
-			if (HINT.ignoreAttrs && ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
+			if (HINT.ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
 			{
 				continue;
 			}
