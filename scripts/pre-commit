@@ -25,6 +25,12 @@ then
 	git add "docs"
 fi
 
+if [[ -n `git diff --cached --name-only -b src/Configurator/Collections/Ruleset.php` ]]
+then
+	./scripts/patchRuleset.php
+	git update-index --add "src/Configurator/Collections/Ruleset.php"
+fi
+
 if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 then
 	./scripts/patchMediaEmbedDoc.php

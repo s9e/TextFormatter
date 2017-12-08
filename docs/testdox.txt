@@ -246,6 +246,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] finalize() calls every plugin's finalize() method
 
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
+ [x] Setting an unknown rule throws an exception
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist
  [x] Trying to set rules via array access throws a RuntimeException

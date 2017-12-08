@@ -13,6 +13,17 @@ use s9e\TextFormatter\Tests\Test;
 class RulesetTest extends Test
 {
 	/**
+	* @testdox Setting an unknown rule throws an exception
+	* @expectedException BadMethodCallException
+	* @expectedExceptionMessage Undefined method 'bar'
+	*/
+	public function testUnknownRule()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->bar();
+	}
+
+	/**
 	* @testdox isset($ruleset['allowChild']) tests whether any allowChild rules exist
 	*/
 	public function testOffsetExists()

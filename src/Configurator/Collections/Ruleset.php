@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use ArrayAccess;
+use BadMethodCallException;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -16,16 +17,88 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
 
 /**
-* @see docs/Rules.md
+* @method void allowChild(string $tagName)
+* @method void allowDescendant(string $tagName)
+* @method void autoClose(bool $bool = true)
+* @method void autoReopen(bool $bool = true)
+* @method void breakParagraph(bool $bool = true)
+* @method void closeAncestor(string $tagName)
+* @method void closeParent(string $tagName)
+* @method void createChild(string $tagName)
+* @method void createParagraphs(bool $bool = true)
+* @method void denyChild(string $tagName)
+* @method void denyDescendant(string $tagName)
+* @method void disableAutoLineBreaks(bool $bool = true)
+* @method void enableAutoLineBreaks(bool $bool = true)
+* @method void fosterParent(string $tagName)
+* @method void ignoreSurroundingWhitespace(bool $bool = true)
+* @method void ignoreTags(bool $bool = true)
+* @method void ignoreText(bool $bool = true)
+* @method void isTransparent(bool $bool = true)
+* @method void preventLineBreaks(bool $bool = true)
+* @method void requireParent(string $tagName)
+* @method void requireAncestor(string $tagName)
+* @method void suspendAutoLineBreaks(bool $bool = true)
+* @method void trimFirstLine(bool $bool = true)
+* @see /docs/Rules.md
 */
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
+	/**
+	* @var array Supported rules and the method used to add them
+	*/
+	protected $rules = [
+		'allowChild'                  => 'addTargetedRule',
+		'allowDescendant'             => 'addTargetedRule',
+		'autoClose'                   => 'addBooleanRule',
+		'autoReopen'                  => 'addBooleanRule',
+		'breakParagraph'              => 'addBooleanRule',
+		'closeAncestor'               => 'addTargetedRule',
+		'closeParent'                 => 'addTargetedRule',
+		'createChild'                 => 'addTargetedRule',
+		'createParagraphs'            => 'addBooleanRule',
+		'denyChild'                   => 'addTargetedRule',
+		'denyDescendant'              => 'addTargetedRule',
+		'disableAutoLineBreaks'       => 'addBooleanRule',
+		'enableAutoLineBreaks'        => 'addBooleanRule',
+		'fosterParent'                => 'addTargetedRule',
+		'ignoreSurroundingWhitespace' => 'addBooleanRule',
+		'ignoreTags'                  => 'addBooleanRule',
+		'ignoreText'                  => 'addBooleanRule',
+		'isTransparent'               => 'addBooleanRule',
+		'preventLineBreaks'           => 'addBooleanRule',
+		'requireParent'               => 'addTargetedRule',
+		'requireAncestor'             => 'addTargetedRule',
+		'suspendAutoLineBreaks'       => 'addBooleanRule',
+		'trimFirstLine'               => 'addBooleanRule'
+	];
+
 	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
 		$this->clear();
+	}
+
+	/**
+	* Add a rule to this set
+	*
+	* @param  string $methodName Rule name
+	* @param  array  $args       Arguments used to add given rule
+	* @return self
+	*/
+	public function __call($methodName, array $args)
+	{
+		if (!isset($this->rules[$methodName]))
+		{
+			throw new BadMethodCallException("Undefined method '" . $methodName . "'");
+		}
+
+		array_unshift($args, $methodName);
+		call_user_func_array([$this, $this->rules[$methodName]], $args);
+
+		return $this;
 	}
 
 	//==========================================================================
@@ -221,7 +294,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	* @param  bool   $bool     Whether to enable or disable the rule
 	* @return self
 	*/
-	protected function addBooleanRule($ruleName, $bool)
+	protected function addBooleanRule($ruleName, $bool = true)
 	{
 		if (!is_bool($bool))
 		{
@@ -229,8 +302,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items[$ruleName] = $bool;
-
-		return $this;
 	}
 
 	/**
@@ -243,267 +314,5 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	protected function addTargetedRule($ruleName, $tagName)
 	{
 		$this->items[$ruleName][] = TagName::normalize($tagName);
-
-		return $this;
-	}
-
-	/**
-	* Add an allowChild rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function allowChild($tagName)
-	{
-		return $this->addTargetedRule('allowChild', $tagName);
-	}
-
-	/**
-	* Add an allowDescendant rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function allowDescendant($tagName)
-	{
-		return $this->addTargetedRule('allowDescendant', $tagName);
-	}
-
-	/**
-	* Add an autoClose rule
-	*
-	* NOTE: this rule exists so that plugins don't have to specifically handle tags whose end tag
-	*       may/must be omitted such as <hr> or [img]
-	*
-	* @param  bool $bool Whether or not the tag should automatically be closed if its start tag is not followed by an end tag
-	* @return self
-	*/
-	public function autoClose($bool = true)
-	{
-		return $this->addBooleanRule('autoClose', $bool);
-	}
-
-	/**
-	* Add an autoReopen rule
-	*
-	* @param  bool $bool Whether or not the tag should automatically be reopened if closed by an end tag of a different name
-	* @return self
-	*/
-	public function autoReopen($bool = true)
-	{
-		return $this->addBooleanRule('autoReopen', $bool);
-	}
-
-	/**
-	* Add a breakParagraph rule
-	*
-	* @param  bool $bool Whether or not this tag breaks current paragraph if applicable
-	* @return self
-	*/
-	public function breakParagraph($bool = true)
-	{
-		return $this->addBooleanRule('breakParagraph', $bool);
-	}
-
-	/**
-	* Add a closeAncestor rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function closeAncestor($tagName)
-	{
-		return $this->addTargetedRule('closeAncestor', $tagName);
-	}
-
-	/**
-	* Add a closeParent rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function closeParent($tagName)
-	{
-		return $this->addTargetedRule('closeParent', $tagName);
-	}
-
-	/**
-	* Add a createChild rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function createChild($tagName)
-	{
-		return $this->addTargetedRule('createChild', $tagName);
-	}
-
-	/**
-	* Add a createParagraphs rule
-	*
-	* @param  bool $bool Whether or not paragraphs should automatically be created to handle content
-	* @return self
-	*/
-	public function createParagraphs($bool = true)
-	{
-		return $this->addBooleanRule('createParagraphs', $bool);
-	}
-
-	/**
-	* Add a denyChild rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function denyChild($tagName)
-	{
-		return $this->addTargetedRule('denyChild', $tagName);
-	}
-
-	/**
-	* Add a denyDescendant rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function denyDescendant($tagName)
-	{
-		return $this->addTargetedRule('denyDescendant', $tagName);
-	}
-
-	/**
-	* Add a disableAutoLineBreaks rule
-	*
-	* @param  bool $bool Whether or not automatic line breaks should be disabled
-	* @return self
-	*/
-	public function disableAutoLineBreaks($bool = true)
-	{
-		return $this->addBooleanRule('disableAutoLineBreaks', $bool);
-	}
-
-	/**
-	* Add a enableAutoLineBreaks rule
-	*
-	* @param  bool $bool Whether or not automatic line breaks should be enabled
-	* @return self
-	*/
-	public function enableAutoLineBreaks($bool = true)
-	{
-		return $this->addBooleanRule('enableAutoLineBreaks', $bool);
-	}
-
-	/**
-	* Add a fosterParent rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function fosterParent($tagName)
-	{
-		return $this->addTargetedRule('fosterParent', $tagName);
-	}
-
-	/**
-	* Ignore (some) whitespace around tags
-	*
-	* When true, some whitespace around this tag will be ignored (not transformed to line breaks.)
-	* Up to 2 lines outside of a tag pair and 1 line inside of it:
-	*     {2 lines}{START_TAG}{1 line}{CONTENT}{1 line}{END_TAG}{2 lines}
-	*
-	* @param  bool $bool Whether whitespace around this tag should be ignored
-	* @return self
-	*/
-	public function ignoreSurroundingWhitespace($bool = true)
-	{
-		return $this->addBooleanRule('ignoreSurroundingWhitespace', $bool);
-	}
-
-	/**
-	* Add an ignoreTags rule
-	*
-	* @param  bool $bool Whether to silently ignore all tags until current tag is closed
-	* @return self
-	*/
-	public function ignoreTags($bool = true)
-	{
-		return $this->addBooleanRule('ignoreTags', $bool);
-	}
-
-	/**
-	* Add an ignoreText rule
-	*
-	* @param  bool $bool Whether or not the tag should ignore text nodes
-	* @return self
-	*/
-	public function ignoreText($bool = true)
-	{
-		return $this->addBooleanRule('ignoreText', $bool);
-	}
-
-	/**
-	* Add a isTransparent rule
-	*
-	* @param  bool $bool Whether or not the tag should use the "transparent" content model
-	* @return self
-	*/
-	public function isTransparent($bool = true)
-	{
-		return $this->addBooleanRule('isTransparent', $bool);
-	}
-
-	/**
-	* Add a preventLineBreaks rule
-	*
-	* @param  bool $bool Whether or not manual line breaks should be ignored in this tag's context
-	* @return self
-	*/
-	public function preventLineBreaks($bool = true)
-	{
-		return $this->addBooleanRule('preventLineBreaks', $bool);
-	}
-
-	/**
-	* Add a requireParent rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function requireParent($tagName)
-	{
-		return $this->addTargetedRule('requireParent', $tagName);
-	}
-
-	/**
-	* Add a requireAncestor rule
-	*
-	* @param  string $tagName Name of the target tag
-	* @return self
-	*/
-	public function requireAncestor($tagName)
-	{
-		return $this->addTargetedRule('requireAncestor', $tagName);
-	}
-
-	/**
-	* Add a suspendAutoLineBreaks rule
-	*
-	* @param  bool $bool Whether or not automatic line breaks should be temporarily suspended
-	* @return self
-	*/
-	public function suspendAutoLineBreaks($bool = true)
-	{
-		return $this->addBooleanRule('suspendAutoLineBreaks', $bool);
-	}
-
-	/**
-	* Add a trimFirstLine rule
-	*
-	* @param  bool $bool Whether the white space inside this tag should be trimmed 
-	* @return self
-	*/
-	public function trimFirstLine($bool = true)
-	{
-		return $this->addBooleanRule('trimFirstLine', $bool);
 	}
 }
