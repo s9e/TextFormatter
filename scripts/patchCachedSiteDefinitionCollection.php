@@ -26,22 +26,6 @@ $cache      = iterator_to_array(new XmlFileDefinitionCollection($path));
 $normalizer = new s9e\TextFormatter\Configurator\TemplateNormalizer;
 foreach ($cache as $siteId => $siteConfig)
 {
-	$siteConfig = array_intersect_key(
-		$siteConfig,
-		[
-			'attributes'   => 1,
-			'choose'       => 1,
-			'extract'      => 1,
-			'flash'        => 1,
-			'host'         => 1,
-			'iframe'       => 1,
-			'name'         => 1,
-			'parameters'   => 1,
-			'scheme'       => 1,
-			'scrape'       => 1,
-			'tags'         => 1
-		]
-	);
 	if (isset($siteConfig['tags']))
 	{
 		$siteConfig['tags'] = (array) $siteConfig['tags'];
