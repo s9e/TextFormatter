@@ -184,8 +184,8 @@ class ConfiguratorTest extends Test
 			[
 				'scrapeConfig' => [
 					[
-						"#/(?'id'\d+)#",
-						"#/(?'vid'\d+)#",
+						["#/(?'id'\\d+)#"],
+						["#/(?'vid'\\d+)#"],
 						['vid'],
 						'http://example.org/{@id}'
 					]
@@ -426,8 +426,8 @@ class ConfiguratorTest extends Test
 		$this->assertEquals(
 			[
 				'scrapeConfig' => [
-					['#/v/\d+#', "#id=(?'id'\d+)#", ['id']],
-					['#/V/\d+#', "#id=(?'id'\d+)#", ['id']]
+					[['#/v/\d+#'], ["#id=(?'id'\d+)#"], ['id']],
+					[['#/V/\d+#'], ["#id=(?'id'\d+)#"], ['id']]
 				]
 			],
 			$tag->filterChain[1]->getVars()
@@ -462,7 +462,7 @@ class ConfiguratorTest extends Test
 				'scrapeConfig' => [
 					[
 						['#/v/\d+#', '#/V/\d+#'],
-						"#id=(?'id'\d+)#",
+						["#id=(?'id'\d+)#"],
 						['id']
 					]
 				]
@@ -497,8 +497,8 @@ class ConfiguratorTest extends Test
 			[
 				'scrapeConfig' => [
 					[
-						'//',
-						"#id=(?'id'\d+)#",
+						['//'],
+						["#id=(?'id'\d+)#"],
 						['id']
 					]
 				]
@@ -537,7 +537,7 @@ class ConfiguratorTest extends Test
 			[
 				'scrapeConfig' => [
 					[
-						'#/v/\d+#',
+						['#/v/\d+#'],
 						[
 							"#id=(?'id'\d+)#",
 							"#xd=(?'xd'\d+)#"

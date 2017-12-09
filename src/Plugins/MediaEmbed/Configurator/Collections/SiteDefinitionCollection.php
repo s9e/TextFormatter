@@ -61,6 +61,44 @@ class SiteDefinitionCollection extends NormalizedCollection
 			throw new InvalidArgumentException('Invalid site definition type');
 		}
 
+		$siteConfig           += ['extract' => [], 'scrape' => []];
+		$siteConfig['extract'] = $this->normalizeRegexp($siteConfig['extract']);
+		$siteConfig['scrape']  = $this->normalizeScrape($siteConfig['scrape']);
+
 		return $siteConfig;
+	}
+
+	/**
+	* Normalize a regexp / indexed array of regexps
+	*
+	* @param  array|string
+	* @return array
+	*/
+	protected function normalizeRegexp($value)
+	{
+		return (array) $value;
+	}
+
+	/**
+	* Normalize the "scrape" value
+	*
+	* @param  array
+	* @return array
+	*/
+	protected function normalizeScrape($value)
+	{
+		if (!empty($value) && !isset($value[0]))
+		{
+			$value = [$value];
+		}
+		foreach ($value as &$scrape)
+		{
+			$scrape           += ['extract' => [], 'match' => '//'];
+			$scrape['extract'] = $this->normalizeRegexp($scrape['extract']);
+			$scrape['match']   = $this->normalizeRegexp($scrape['match']);
+		}
+		unset($scrape);
+
+		return $value;
 	}
 }

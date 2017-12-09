@@ -262,7 +262,6 @@ class Parser extends ParserBase
 	protected static function scrapeEntry($url, Tag $tag, array $scrape, $cacheDir)
 	{
 		list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
-
 		if (!self::tagIsMissingAnyAttribute($tag, $attrNames))
 		{
 			return;

@@ -15,9 +15,15 @@ class SiteDefinitionCollectionTest extends Test
 	*/
 	public function testWorks()
 	{
+		$config = [
+			'name' => 'Foo',
+			'extract' => [],
+			'scrape'  => [['extract' => [], 'match' => ['//']]]
+		];
+
 		$collection = new SiteDefinitionCollection;
-		$collection->set('foo', ['name' => 'Foo']);
-		$this->assertSame(['name' => 'Foo'], $collection->get('foo'));
+		$collection->set('foo', $config);
+		$this->assertEquals($config, $collection->get('foo'));
 	}
 
 	/**
@@ -64,5 +70,53 @@ class SiteDefinitionCollectionTest extends Test
 		$collection->onDuplicate('error');
 		$collection->add('foo', []);
 		$collection->add('foo', []);
+	}
+
+	/**
+	* @testdox Converts the extract field to an array if it's a string
+	*/
+	public function testExtractString()
+	{
+		$original = ['extract' => '/foo/',   'scrape' => []];
+		$expected = ['extract' => ['/foo/'], 'scrape' => []];
+
+		$collection = new SiteDefinitionCollection;
+		$collection->add('foo', $original);
+
+		$this->assertEquals($expected, $collection['foo']);
+	}
+
+	/**
+	* @testdox Preserves the extract field if it's an array
+	*/
+	public function testExtractArray()
+	{
+		$original = ['extract' => ['/foo/'], 'scrape' => []];
+		$expected = ['extract' => ['/foo/'], 'scrape' => []];
+
+		$collection = new SiteDefinitionCollection;
+		$collection->add('foo', $original);
+
+		$this->assertEquals($expected, $collection['foo']);
+	}
+
+	/**
+	* @testdox Normalizes the scrape config
+	*/
+	public function testNormalizeScrape()
+	{
+		$original = [
+			'extract' => [],
+			'scrape'  => ['extract' => '/foo/']
+		];
+		$expected = [
+			'extract' => [],
+			'scrape'  => [['extract' => ['/foo/'], 'match' => ['//']]]
+		];
+
+		$collection = new SiteDefinitionCollection;
+		$collection->add('foo', $original);
+
+		$this->assertEquals($expected, $collection['foo']);
 	}
 }

@@ -36,7 +36,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 		foreach (glob($path . '/*.xml') as $filepath)
 		{
 			$siteId = basename($filepath, '.xml');
-			$this->items[$siteId] = $this->getConfigFromXmlFile($filepath);
+			$this->add($siteId, $this->getConfigFromXmlFile($filepath));
 		}
 	}
 

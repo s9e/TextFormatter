@@ -156,11 +156,8 @@ class Configurator extends ConfiguratorBase
 		// Normalize the site ID
 		$siteId = $this->normalizeId($siteId);
 
-		// If there's no value, look into the default site definitions
-		if (!isset($siteConfig))
-		{
-			$siteConfig = $this->defaultSites->get($siteId);
-		}
+		// Normalize or retrieve the site definition
+		$siteConfig = (isset($siteConfig)) ? $this->defaultSites->normalizeValue($siteConfig) : $this->defaultSites->get($siteId);
 
 		// Add this site to the list
 		$this->collection[$siteId] = $siteConfig;
@@ -182,25 +179,19 @@ class Configurator extends ConfiguratorBase
 		];
 
 		// Process the "scrape" directives
-		if (isset($siteConfig['scrape']))
-		{
-			$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
-		}
+		$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
 
 		// Add each "extract" as an attribute preprocessor
-		if (isset($siteConfig['extract']))
+		foreach ($siteConfig['extract'] as $regexp)
 		{
-			foreach ((array) $siteConfig['extract'] as $regexp)
-			{
-				// Get the attributes filled by this regexp
-				$attrRegexps = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
+			// Get the attributes filled by this regexp
+			$attrRegexps = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
 
-				// For each named subpattern in the regexp, ensure that an attribute exists and
-				// create it otherwise, using the subpattern as regexp filter
-				foreach ($attrRegexps as $attrName => $attrRegexp)
-				{
-					$attributes[$attrName]['regexp'] = $attrRegexp;
-				}
+			// For each named subpattern in the regexp, ensure that an attribute exists and
+			// create it otherwise, using the subpattern as regexp filter
+			foreach ($attrRegexps as $attrName => $attrRegexp)
+			{
+				$attributes[$attrName]['regexp'] = $attrRegexp;
 			}
 		}
 
@@ -332,12 +323,6 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
-		// Ensure that the array is multidimensional
-		if (!isset($scrapes[0]))
-		{
-			$scrapes = [$scrapes];
-		}
-
 		$attributes   = [];
 		$scrapeConfig = [];
 		foreach ($scrapes as $scrape)
@@ -345,7 +330,7 @@ class Configurator extends ConfiguratorBase
 			// Collect the names of the attributes filled by this scrape. At runtime, we will
 			// not scrape the content of the link if all of the attributes already have a value
 			$attrNames = [];
-			foreach ((array) $scrape['extract'] as $extractRegexp)
+			foreach ($scrape['extract'] as $extractRegexp)
 			{
 				// Use an attribute preprocessor so we can reuse its routines
 				$attributePreprocessor = new AttributePreprocessor($extractRegexp);
@@ -362,12 +347,6 @@ class Configurator extends ConfiguratorBase
 			sort($attrNames);
 
 			// Prepare the scrape config and add the URL if applicable
-			if (!isset($scrape['match']))
-			{
-				// No "match" regexp means that all URLs should be scraped. We do need an entry
-				// so we use a regexp that matches anything
-				$scrape['match'] = '//';
-			}
 			$entry = [$scrape['match'], $scrape['extract'], $attrNames];
 			if (isset($scrape['url']))
 			{

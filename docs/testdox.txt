@@ -2516,6 +2516,9 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
  [x] Throws an exception if the site ID is not valid
  [x] set() throws an exception if the site config is not an array
  [x] add() throws a meaningful exception if the site ID already exists
+ [x] Converts the extract field to an array if it's a string
+ [x] Preserves the extract field if it's an array
+ [x] Normalizes the scrape config
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollection
  [x] isset() returns TRUE if the site config exists
