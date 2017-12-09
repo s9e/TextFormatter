@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -211,45 +210,7 @@ class Configurator extends ConfiguratorBase
 		$hasRequiredAttribute = false;
 		foreach ($attributes as $attrName => $attrConfig)
 		{
-			$attribute = $tag->attributes->add($attrName);
-
-			if (isset($attrConfig['preFilter']))
-			{
-				$this->appendFilter($attribute, $attrConfig['preFilter']);
-			}
-
-			// Add a filter depending on the attribute's type or regexp
-			if (isset($attrConfig['type']))
-			{
-				// If "type" is "url", get the "#url" filter
-				$filter = $this->configurator->attributeFilters['#' . $attrConfig['type']];
-				$attribute->filterChain->append($filter);
-			}
-			elseif (isset($attrConfig['regexp']))
-			{
-				$attribute->filterChain->append(new RegexpFilter($attrConfig['regexp']));
-			}
-
-			if (isset($attrConfig['required']))
-			{
-				$attribute->required = $attrConfig['required'];
-			}
-			else
-			{
-				// Non-id attributes are marked as optional
-				$attribute->required = ($attrName === 'id');
-			}
-
-			if (isset($attrConfig['postFilter']))
-			{
-				$this->appendFilter($attribute, $attrConfig['postFilter']);
-			}
-
-			if (isset($attrConfig['defaultValue']))
-			{
-				$attribute->defaultValue = $attrConfig['defaultValue'];
-			}
-
+			$attribute = $this->addAttribute($tag, $attrName, $attrConfig);
 			$hasRequiredAttribute |= $attribute->required;
 		}
 
@@ -314,6 +275,57 @@ class Configurator extends ConfiguratorBase
 	//==========================================================================
 	// Internal methods
 	//==========================================================================
+
+	/**
+	* Add an attribute to given tag
+	*
+	* @param  Tag       $tag
+	* @param  string    $attrName
+	* @param  array     $attrConfig
+	* @return Attribute
+	*/
+	protected function addAttribute(Tag $tag, $attrName, array $attrConfig)
+	{
+		$attribute = $tag->attributes->add($attrName);
+		if (isset($attrConfig['preFilter']))
+		{
+			$this->appendFilter($attribute, $attrConfig['preFilter']);
+		}
+
+		// Add a filter depending on the attribute's type or regexp
+		if (isset($attrConfig['type']))
+		{
+			// If "type" is "url", get the "#url" filter
+			$filter = $this->configurator->attributeFilters['#' . $attrConfig['type']];
+			$attribute->filterChain->append($filter);
+		}
+		elseif (isset($attrConfig['regexp']))
+		{
+			$attribute->filterChain->append('#regexp')->setRegexp($attrConfig['regexp']);
+		}
+
+		if (isset($attrConfig['required']))
+		{
+			$attribute->required = $attrConfig['required'];
+		}
+		else
+		{
+			// Non-id attributes are marked as optional
+			$attribute->required = ($attrName === 'id');
+		}
+
+		if (isset($attrConfig['postFilter']))
+		{
+			$this->appendFilter($attribute, $attrConfig['postFilter']);
+		}
+
+		if (isset($attrConfig['defaultValue']))
+		{
+			$attribute->defaultValue = $attrConfig['defaultValue'];
+		}
+
+		return $attribute;
+	}
 
 	/**
 	* Add the defined scrapes to given tag
