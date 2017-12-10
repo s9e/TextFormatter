@@ -49,13 +49,13 @@ function Symbol(opt_description) {}
 /**
  * @param {string} uri
  * @return {string}
- * @nosideeffects
+ * @throws {URIError} when used wrongly.
  */
 function decodeURIComponent(uri) {}
 /**
  * @param {string} uri
  * @return {string}
- * @nosideeffects
+ * @throws {URIError} if one attempts to encode a surrogate which is not part of
  */
 function encodeURIComponent(uri) {}
 /**
@@ -154,13 +154,13 @@ Array.prototype.shift = function() {};
  */
 Array.prototype.slice = function(opt_begin, opt_end) {};
 /**
- * @param {function(T,T):number=} opt_compareFunction Specifies a function that
+ * @param {function(T,T):number=} opt_compareFn Specifies a function that
  * @this {IArrayLike<T>}
  * @template T
  * @modifies {this}
  * @return {!Array<T>}
  */
-Array.prototype.sort = function(opt_compareFunction) {};
+Array.prototype.sort = function(opt_compareFn) {};
 /**
  * @param {*=} opt_index Index at which to start changing the array. If negative,  *     will begin that many elements from the end.  A non-number type will be
  * @param {*=} opt_howMany An integer indicating the number of old array elements
@@ -263,7 +263,7 @@ Object.prototype.toString = function() {};
  * @param {*=} opt_pattern
  * @param {*=} opt_flags
  * @return {!RegExp}
- * @nosideeffects
+ * @throws {SyntaxError} if opt_pattern is an invalid pattern.
  */
 function RegExp(opt_pattern, opt_flags) {}
 /**
@@ -282,6 +282,7 @@ RegExp.prototype.lastIndex;
 RegExp.prototype.test = function(str) {};
 /**
  * @constructor
+ * @implements {Iterable<string>}
  * @param {*=} opt_str
  * @return {string}
  * @nosideeffects
@@ -321,12 +322,11 @@ String.prototype.indexOf = function(searchValue, opt_fromIndex) {};
 String.prototype.length;
 /**
  * @this {String|string}
- * @param {RegExp|string} regex
- * @param {string|Function} str
- * @param {string=} opt_flags
+ * @param {RegExp|string} pattern
+ * @param {string|Function} replacement
  * @return {string}
  */
-String.prototype.replace = function(regex, str, opt_flags) {};
+String.prototype.replace = function(pattern, replacement) {};
 /**
  * @this {String|string}
  * @param {*=} opt_separator
@@ -420,7 +420,7 @@ NamedNodeMap.prototype.length;
 function Node() {}
 /**
  * @param {Node} newChild
- * @return {Node}
+ * @return {!Node}
  */
 Node.prototype.appendChild = function(newChild) {};
 /**
