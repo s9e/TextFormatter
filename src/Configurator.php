@@ -626,6 +626,219 @@ abstract class ConfigHelper
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
+use DOMElement;
+use DOMXPath;
+class ElementInspector
+{
+	protected static $htmlElements = array(
+		'a'=>array('c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1),
+		'abbr'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'address'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>array('p')),
+		'article'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
+		'b'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'base'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'bdi'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'bdo'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'blockquote'=>array('c'=>"\203",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'body'=>array('c'=>"\200\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1),
+		'br'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
+		'button'=>array('c'=>"\117",'ac'=>"\4",'dd'=>"\10"),
+		'canvas'=>array('c'=>"\47",'ac'=>"\0",'dd'=>"\0",'t'=>1),
+		'caption'=>array('c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1),
+		'cite'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'code'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'col'=>array('c'=>"\0\0\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'colgroup'=>array('c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e?'=>'@span','b'=>1),
+		'data'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'datalist'=>array('c'=>"\5",'ac'=>"\4\200\0\10",'dd'=>"\0"),
+		'dd'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('dd','dt')),
+		'del'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1),
+		'details'=>array('c'=>"\213",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'dfn'=>array('c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"),
+		'div'=>array('c'=>"\3",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'dl'=>array('c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('dd','dt')),
+		'em'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'embed'=>array('c'=>"\57",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
+		'fieldset'=>array('c'=>"\303",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'figure'=>array('c'=>"\203",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'footer'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>array('p')),
+		'h1'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'h2'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'h3'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'h4'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'h5'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'h6'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'head'=>array('c'=>"\0\0\4",'ac'=>"\20",'dd'=>"\0",'nt'=>1,'b'=>1),
+		'header'=>array('c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
+		'html'=>array('c'=>"\0",'ac'=>"\0\0\4",'dd'=>"\0",'nt'=>1,'b'=>1),
+		'i'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'iframe'=>array('c'=>"\57",'ac'=>"\4",'dd'=>"\0"),
+		'img'=>array('c'=>"\57\20\10",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
+		'input'=>array('c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
+		'ins'=>array('c'=>"\7",'ac'=>"\0",'dd'=>"\0",'t'=>1),
+		'kbd'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'keygen'=>array('c'=>"\117",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
+		'label'=>array('c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"),
+		'legend'=>array('c'=>"\0\0\0\20",'ac'=>"\4",'dd'=>"\0",'b'=>1),
+		'li'=>array('c'=>"\0\0\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('li')),
+		'link'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'main'=>array('c'=>"\3\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'mark'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'media element'=>array('c'=>"\0\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1),
+		'menu'=>array('c'=>"\1\100",'ac'=>"\0\300",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'menuitem'=>array('c'=>"\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'meta'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'meter'=>array('c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
+		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'noscript'=>array('c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1),
+		'object'=>array('c'=>"\147",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1),
+		'ol'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\0\2",'ac'=>"\0\200\0\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\0\2\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>array('option')),
+		'output'=>array('c'=>"\107",'ac'=>"\4",'dd'=>"\0"),
+		'p'=>array('c'=>"\3",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'param'=>array('c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'picture'=>array('c'=>"\45",'ac'=>"\0\200\10",'dd'=>"\0",'nt'=>1),
+		'pre'=>array('c'=>"\3",'ac'=>"\4",'dd'=>"\0",'pre'=>1,'b'=>1,'cp'=>array('p')),
+		'progress'=>array('c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"),
+		'q'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'rb'=>array('c'=>"\0\10",'ac'=>"\4",'dd'=>"\0",'b'=>1),
+		'rp'=>array('c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('rp','rt')),
+		'rt'=>array('c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('rp','rt')),
+		'rtc'=>array('c'=>"\0\10",'ac'=>"\4\0\100",'dd'=>"\0",'b'=>1),
+		'ruby'=>array('c'=>"\7",'ac'=>"\4\10",'dd'=>"\0"),
+		's'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'samp'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'script'=>array('c'=>"\25\200",'ac'=>"\0",'dd'=>"\0",'to'=>1),
+		'section'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
+		'select'=>array('c'=>"\117",'ac'=>"\0\200\2",'dd'=>"\0",'nt'=>1),
+		'small'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'source'=>array('c'=>"\0\0\10\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'span'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'strong'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'style'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1),
+		'sub'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'summary'=>array('c'=>"\0\0\0\2",'ac'=>"\4\1",'dd'=>"\0",'b'=>1),
+		'sup'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'table'=>array('c'=>"\3\0\0\200",'ac'=>"\0\202",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'tbody'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','tfoot','th','thead','tr')),
+		'td'=>array('c'=>"\200\0\40",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('td','th')),
+		'template'=>array('c'=>"\25\200\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1),
+		'textarea'=>array('c'=>"\117",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1),
+		'tfoot'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','th','thead','tr')),
+		'th'=>array('c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1),
+		'time'=>array('c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime','dd'=>"\0"),
+		'title'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1),
+		'tr'=>array('c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('td','th','tr')),
+		'track'=>array('c'=>"\0\0\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'u'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
+		'ul'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'var'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
+		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
+		'wbr'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1)
+	);
+	public static function closesParent(DOMElement $child, DOMElement $parent)
+	{
+		$parentName = $parent->nodeName;
+		$childName  = $child->nodeName;
+		return !empty(self::$htmlElements[$parentName]['cp']) && \in_array($childName, self::$htmlElements[$parentName]['cp'], \true);
+	}
+	public static function disallowsText(DOMElement $element)
+	{
+		return self::hasProperty($element, 'nt');
+	}
+	public static function getAllowChildBitfield(DOMElement $element)
+	{
+		return self::getBitfield($element, 'ac');
+	}
+	public static function getCategoryBitfield(DOMElement $element)
+	{
+		return self::getBitfield($element, 'c');
+	}
+	public static function getDenyDescendantBitfield(DOMElement $element)
+	{
+		return self::getBitfield($element, 'dd');
+	}
+	public static function isBlock(DOMElement $element)
+	{
+		return self::hasProperty($element, 'b');
+	}
+	public static function isEmpty(DOMElement $element)
+	{
+		return self::hasProperty($element, 'e');
+	}
+	public static function isFormattingElement(DOMElement $element)
+	{
+		return self::hasProperty($element, 'fe');
+	}
+	public static function isTextOnly(DOMElement $element)
+	{
+		return self::hasProperty($element, 'to');
+	}
+	public static function isTransparent(DOMElement $element)
+	{
+		return self::hasProperty($element, 't');
+	}
+	public static function isVoid(DOMElement $element)
+	{
+		return self::hasProperty($element, 'v');
+	}
+	public static function preservesWhitespace(DOMElement $element)
+	{
+		return self::hasProperty($element, 'pre');
+	}
+	protected static function evaluate($query, DOMElement $element)
+	{
+		$xpath = new DOMXPath($element->ownerDocument);
+		return $xpath->evaluate('boolean(' . $query . ')', $element);
+	}
+	protected static function getBitfield(DOMElement $element, $name)
+	{
+		$props    = self::getProperties($element);
+		$bitfield = self::toBin($props[$name]);
+		foreach (\array_keys(\array_filter(\str_split($bitfield, 1))) as $bitNumber)
+		{
+			$conditionName = $name . $bitNumber;
+			if (isset($props[$conditionName]) && !self::evaluate($props[$conditionName], $element))
+				$bitfield[$bitNumber] = '0';
+		}
+		return self::toRaw($bitfield);
+	}
+	protected static function getProperties(DOMElement $element)
+	{
+		return (isset(self::$htmlElements[$element->nodeName])) ? self::$htmlElements[$element->nodeName] : self::$htmlElements['span'];
+	}
+	protected static function hasProperty(DOMElement $element, $propName)
+	{
+		$props = self::getProperties($element);
+		return !empty($props[$propName]) && (!isset($props[$propName . '?']) || self::evaluate($props[$propName . '?'], $element));
+	}
+	protected static function toBin($raw)
+	{
+		$bin = '';
+		foreach (\str_split($raw, 1) as $char)
+			$bin .= \strrev(\substr('0000000' . \decbin(\ord($char)), -8));
+		return $bin;
+	}
+	protected static function toRaw($bin)
+	{
+		return \implode('', \array_map('chr', \array_map('bindec', \array_map('strrev', \str_split($bin, 8)))));
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 abstract class RegexpBuilder
 {
@@ -701,7 +914,7 @@ abstract class RegexpBuilder
 		}
 		return $regexp;
 	}
-	protected static function mergeChains(array $chains)
+	protected static function mergeChains(array $chains, $preventRemerge = \false)
 	{
 		if (!isset($chains[1]))
 			return $chains[0];
@@ -748,13 +961,13 @@ abstract class RegexpBuilder
 			$groups = array($head => $groups[$head])
 			        + $groups;
 		}
-		if ($remerge)
+		if ($remerge && !$preventRemerge)
 		{
 			$mergedChains = array();
 			foreach ($groups as $head => $groupChains)
 				$mergedChains[] = self::mergeChains($groupChains);
 			self::mergeTails($mergedChains);
-			$regexp = \implode('', self::mergeChains($mergedChains));
+			$regexp = \implode('', self::mergeChains($mergedChains, \true));
 			if ($endOfChain)
 				$regexp = self::makeRegexpOptional($regexp);
 			$mergedChain[] = $regexp;
@@ -1633,7 +1846,6 @@ abstract class TemplateHelper
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
-use DOMDocument;
 use DOMElement;
 use DOMXPath;
 class TemplateInspector
@@ -1644,6 +1856,7 @@ class TemplateInspector
 	protected $allowsText;
 	protected $branches;
 	protected $contentBitfield = "\0";
+	protected $defaultBranchBitfield;
 	protected $denyDescendantBitfield = "\0";
 	protected $dom;
 	protected $hasElements = \false;
@@ -1663,6 +1876,7 @@ class TemplateInspector
 	{
 		$this->dom   = TemplateHelper::loadTemplate($template);
 		$this->xpath = new DOMXPath($this->dom);
+		$this->defaultBranchBitfield = ElementInspector::getAllowChildBitfield($this->dom->createElement('div'));
 		$this->analyseRootNodes();
 		$this->analyseBranches();
 		$this->analyseContent();
@@ -1693,14 +1907,10 @@ class TemplateInspector
 	}
 	public function closesParent(TemplateInspector $parent)
 	{
-		foreach ($this->rootNodes as $rootName)
-		{
-			if (empty(self::$htmlElements[$rootName]['cp']))
-				continue;
-			foreach ($parent->leafNodes as $leafName)
-				if (\in_array($leafName, self::$htmlElements[$rootName]['cp'], \true))
+		foreach ($this->rootNodes as $rootNode)
+			foreach ($parent->leafNodes as $leafNode)
+				if (ElementInspector::closesParent($leafNode, $rootNode))
 					return \true;
-		}
 		return \false;
 	}
 	public function evaluate($expr, DOMElement $node = \null)
@@ -1740,7 +1950,7 @@ class TemplateInspector
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$this->contentBitfield |= $this->getBitfield($node, 'c');
+			$this->contentBitfield |= ElementInspector::getCategoryBitfield($node);
 			$this->hasElements = \true;
 		}
 		$this->isPassthrough = (bool) $this->evaluate('count(//xsl:apply-templates)');
@@ -1750,10 +1960,10 @@ class TemplateInspector
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"][not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 		foreach ($this->xpath->query($query) as $node)
 		{
-			$this->rootNodes[] = $node->localName;
+			$this->rootNodes[] = $node;
 			if ($this->elementIsBlock($node))
 				$this->isBlock = \true;
-			$this->rootBitfields[] = $this->getBitfield($node, 'c');
+			$this->rootBitfields[] = ElementInspector::getCategoryBitfield($node);
 		}
 		$predicate = '[not(ancestor::*[namespace-uri() != "' . self::XMLNS_XSL . '"])]';
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
@@ -1780,11 +1990,11 @@ class TemplateInspector
 		$this->computePreservesNewLines();
 		$this->storeLeafNodes();
 	}
-	protected function anyBranchHasProperty($propName)
+	protected function anyBranchHasProperty($methodName)
 	{
 		foreach ($this->branches as $branch)
 			foreach ($branch as $element)
-				if ($this->hasProperty($element->nodeName, $propName, $element))
+				if (ElementInspector::$methodName($element))
 					return \true;
 		return \false;
 	}
@@ -1797,40 +2007,36 @@ class TemplateInspector
 		}
 		foreach ($this->branches as $branch)
 		{
-			$branchBitfield = self::$htmlElements['div']['ac'];
+			$branchBitfield = $this->defaultBranchBitfield;
 			foreach ($branch as $element)
 			{
-				$elName = $element->localName;
-				if (!$this->hasProperty($elName, 't', $element))
+				if (!ElementInspector::isTransparent($element))
 					$branchBitfield = "\0";
-				$branchBitfield |= $this->getBitfield($element, 'ac');
-				$this->denyDescendantBitfield |= $this->getBitfield($element, 'dd');
+				$branchBitfield |= ElementInspector::getAllowChildBitfield($element);
+				$this->denyDescendantBitfield |= ElementInspector::getDenyDescendantBitfield($element);
 			}
 			$this->allowChildBitfields[] = $branchBitfield;
 		}
 	}
 	protected function computeAllowsChildElements()
 	{
-		$this->allowsChildElements = ($this->anyBranchHasProperty('to')) ? \false : !empty($this->branches);
+		$this->allowsChildElements = ($this->anyBranchHasProperty('isTextOnly')) ? \false : !empty($this->branches);
 	}
 	protected function computeAllowsText()
 	{
 		foreach (\array_filter($this->branches) as $branch)
-		{
-			$element = \end($branch);
-			if ($this->hasProperty($element->nodeName, 'nt', $element))
+			if (ElementInspector::disallowsText(\end($branch)))
 			{
 				$this->allowsText = \false;
 				return;
 			}
-		}
 		$this->allowsText = \true;
 	}
 	protected function computeFormattingElement()
 	{
 		foreach ($this->branches as $branch)
 			foreach ($branch as $element)
-				if (!$this->hasProperty($element->nodeName, 'fe', $element) && !$this->isFormattingSpan($element))
+				if (!ElementInspector::isFormattingElement($element) && !$this->isFormattingSpan($element))
 				{
 					$this->isFormattingElement = \false;
 					return;
@@ -1839,13 +2045,13 @@ class TemplateInspector
 	}
 	protected function computeIsEmpty()
 	{
-		$this->isEmpty = ($this->anyBranchHasProperty('e')) || empty($this->branches);
+		$this->isEmpty = ($this->anyBranchHasProperty('isEmpty')) || empty($this->branches);
 	}
 	protected function computeIsTransparent()
 	{
 		foreach ($this->branches as $branch)
 			foreach ($branch as $element)
-				if (!$this->hasProperty($element->nodeName, 't', $element))
+				if (!ElementInspector::isTransparent($element))
 				{
 					$this->isTransparent = \false;
 					return;
@@ -1854,7 +2060,7 @@ class TemplateInspector
 	}
 	protected function computeIsVoid()
 	{
-		$this->isVoid = ($this->anyBranchHasProperty('v')) || empty($this->branches);
+		$this->isVoid = ($this->anyBranchHasProperty('isVoid')) || empty($this->branches);
 	}
 	protected function computePreservesNewLines()
 	{
@@ -1878,12 +2084,12 @@ class TemplateInspector
 			return \true;
 		if (\preg_match('(\\bdisplay\\s*:\\s*(?:inli|no)ne)i', $style))
 			return \false;
-		return $this->hasProperty($element->nodeName, 'b', $element);
+		return ElementInspector::isBlock($element);
 	}
 	protected function getStyle(DOMElement $node, $deep = \false)
 	{
 		$style = '';
-		if ($this->hasProperty($node->nodeName, 'pre', $node))
+		if (ElementInspector::preservesWhitespace($node))
 			$style .= 'white-space:pre;';
 		$style .= $node->getAttribute('style');
 		$query = (($deep) ? './/' : './') . 'xsl:attribute[@name="style"]';
@@ -1905,157 +2111,7 @@ class TemplateInspector
 	protected function storeLeafNodes()
 	{
 		foreach (\array_filter($this->branches) as $branch)
-			$this->leafNodes[] = \end($branch)->nodeName;
-	}
-	protected static $htmlElements = array(
-		'a'=>array('c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1),
-		'abbr'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'address'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>array('p')),
-		'article'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
-		'b'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'base'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'bdi'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'bdo'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'blockquote'=>array('c'=>"\203",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'body'=>array('c'=>"\200\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1),
-		'br'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
-		'button'=>array('c'=>"\117",'ac'=>"\4",'dd'=>"\10"),
-		'canvas'=>array('c'=>"\47",'ac'=>"\0",'dd'=>"\0",'t'=>1),
-		'caption'=>array('c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1),
-		'cite'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'code'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'col'=>array('c'=>"\0\0\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'colgroup'=>array('c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
-		'data'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'datalist'=>array('c'=>"\5",'ac'=>"\4\200\0\10",'dd'=>"\0"),
-		'dd'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('dd','dt')),
-		'del'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1),
-		'details'=>array('c'=>"\213",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'dfn'=>array('c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"),
-		'div'=>array('c'=>"\3",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'dl'=>array('c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'dt'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('dd','dt')),
-		'em'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'embed'=>array('c'=>"\57",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
-		'fieldset'=>array('c'=>"\303",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'figcaption'=>array('c'=>"\0\0\0\0\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'figure'=>array('c'=>"\203",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'footer'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'form'=>array('c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>array('p')),
-		'h1'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'h2'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'h3'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'h4'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'h5'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'h6'=>array('c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'head'=>array('c'=>"\0\0\4",'ac'=>"\20",'dd'=>"\0",'nt'=>1,'b'=>1),
-		'header'=>array('c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'hr'=>array('c'=>"\1\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
-		'html'=>array('c'=>"\0",'ac'=>"\0\0\4",'dd'=>"\0",'nt'=>1,'b'=>1),
-		'i'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'iframe'=>array('c'=>"\57",'ac'=>"\4",'dd'=>"\0"),
-		'img'=>array('c'=>"\57\20\10",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
-		'input'=>array('c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
-		'ins'=>array('c'=>"\7",'ac'=>"\0",'dd'=>"\0",'t'=>1),
-		'kbd'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'keygen'=>array('c'=>"\117",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1),
-		'label'=>array('c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"),
-		'legend'=>array('c'=>"\0\0\0\20",'ac'=>"\4",'dd'=>"\0",'b'=>1),
-		'li'=>array('c'=>"\0\0\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('li')),
-		'link'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'main'=>array('c'=>"\3\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'mark'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'media element'=>array('c'=>"\0\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1),
-		'menu'=>array('c'=>"\1\100",'ac'=>"\0\300",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'menuitem'=>array('c'=>"\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'meta'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'meter'=>array('c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
-		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'noscript'=>array('c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1),
-		'object'=>array('c'=>"\147",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1),
-		'ol'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'optgroup'=>array('c'=>"\0\0\2",'ac'=>"\0\200\0\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>"\0\0\2\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>array('option')),
-		'output'=>array('c'=>"\107",'ac'=>"\4",'dd'=>"\0"),
-		'p'=>array('c'=>"\3",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'param'=>array('c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'picture'=>array('c'=>"\45",'ac'=>"\0\200\10",'dd'=>"\0",'nt'=>1),
-		'pre'=>array('c'=>"\3",'ac'=>"\4",'dd'=>"\0",'pre'=>1,'b'=>1,'cp'=>array('p')),
-		'progress'=>array('c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"),
-		'q'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'rb'=>array('c'=>"\0\10",'ac'=>"\4",'dd'=>"\0",'b'=>1),
-		'rp'=>array('c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('rp','rt')),
-		'rt'=>array('c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>array('rp','rt')),
-		'rtc'=>array('c'=>"\0\10",'ac'=>"\4\0\100",'dd'=>"\0",'b'=>1),
-		'ruby'=>array('c'=>"\7",'ac'=>"\4\10",'dd'=>"\0"),
-		's'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'samp'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'script'=>array('c'=>"\25\200",'ac'=>"\0",'dd'=>"\0",'to'=>1),
-		'section'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('p')),
-		'select'=>array('c'=>"\117",'ac'=>"\0\200\2",'dd'=>"\0",'nt'=>1),
-		'small'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'source'=>array('c'=>"\0\0\10\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'span'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'strong'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'style'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1),
-		'sub'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'summary'=>array('c'=>"\0\0\0\2",'ac'=>"\4\1",'dd'=>"\0",'b'=>1),
-		'sup'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'table'=>array('c'=>"\3\0\0\200",'ac'=>"\0\202",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'tbody'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','tfoot','th','thead','tr')),
-		'td'=>array('c'=>"\200\0\40",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>array('td','th')),
-		'template'=>array('c'=>"\25\200\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1),
-		'textarea'=>array('c'=>"\117",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1),
-		'tfoot'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','th','thead','tr')),
-		'th'=>array('c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('td','th')),
-		'thead'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1),
-		'time'=>array('c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime','dd'=>"\0"),
-		'title'=>array('c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1),
-		'tr'=>array('c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('td','th','tr')),
-		'track'=>array('c'=>"\0\0\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'u'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1),
-		'ul'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'var'=>array('c'=>"\7",'ac'=>"\4",'dd'=>"\0"),
-		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
-		'wbr'=>array('c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1)
-	);
-	protected function getBitfield(DOMElement $element, $k)
-	{
-		$elName = $element->nodeName;
-		if (!isset(self::$htmlElements[$elName]))
-			$elName = 'span';
-		$bitfield = self::$htmlElements[$elName][$k];
-		foreach (\str_split($bitfield, 1) as $byteNumber => $char)
-		{
-			$byteValue = \ord($char);
-			for ($bitNumber = 0; $bitNumber < 8; ++$bitNumber)
-			{
-				$bitValue = 1 << $bitNumber;
-				if (!($byteValue & $bitValue))
-					continue;
-				$n = $byteNumber * 8 + $bitNumber;
-				if (isset(self::$htmlElements[$elName][$k . $n]))
-				{
-					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
-					if (!$this->evaluate($xpath, $element))
-					{
-						$byteValue ^= $bitValue;
-						$bitfield[$byteNumber] = \chr($byteValue);
-					}
-				}
-			}
-		}
-		return $bitfield;
-	}
-	protected function hasProperty($elName, $propName, DOMElement $node)
-	{
-		if (!empty(self::$htmlElements[$elName][$propName]))
-			if (!isset(self::$htmlElements[$elName][$propName . '0'])
-			 || $this->evaluate('boolean(' . self::$htmlElements[$elName][$propName . '0'] . ')', $node))
-				return \true;
-		return \false;
+			$this->leafNodes[] = \end($branch);
 	}
 	protected static function match($bitfield1, $bitfield2)
 	{
@@ -5663,6 +5719,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\SwitchStatement;
 use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 class PHP implements RendererGenerator
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
@@ -5674,6 +5731,7 @@ class PHP implements RendererGenerator
 	public $filepath;
 	public $lastClassName;
 	public $lastFilepath;
+	protected $normalizer;
 	public $optimizer;
 	public $serializer;
 	public $useMultibyteStringFunctions;
@@ -5687,6 +5745,9 @@ class PHP implements RendererGenerator
 		}
 		$this->useMultibyteStringFunctions = \extension_loaded('mbstring');
 		$this->serializer = new Serializer;
+		$this->normalizer = new TemplateNormalizer;
+		$this->normalizer->clear();
+		$this->normalizer->append('RemoveLivePreviewAttributes');
 	}
 	public function getRenderer(Rendering $rendering)
 	{
@@ -5742,6 +5803,7 @@ class PHP implements RendererGenerator
 	}
 	protected function compileTemplate($template)
 	{
+		$template = $this->normalizer->normalizeTemplate($template);
 		$ir = TemplateParser::parse($template);
 		$php = $this->serializer->serialize($ir->documentElement);
 		if (isset($this->optimizer))
@@ -7245,6 +7307,30 @@ class RemoveInterElementWhitespace extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+class RemoveLivePreviewAttributes extends AbstractNormalization
+{
+	protected $queries = array(
+		'//@*           [starts-with(name(), "data-s9e-livepreview-")]',
+		'//xsl:attribute[starts-with(@name,  "data-s9e-livepreview-")]'
+	);
+	protected function normalizeAttribute(DOMAttr $attribute)
+	{
+		$attribute->parentNode->removeAttributeNode($attribute);
+	}
+	protected function normalizeElement(DOMElement $element)
+	{
+		$element->parentNode->removeChild($element);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
@@ -7547,6 +7633,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 use ArrayAccess;
+use BadMethodCallException;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -7555,9 +7642,42 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
+	protected $rules = array(
+		'allowChild'                  => 'addTargetedRule',
+		'allowDescendant'             => 'addTargetedRule',
+		'autoClose'                   => 'addBooleanRule',
+		'autoReopen'                  => 'addBooleanRule',
+		'breakParagraph'              => 'addBooleanRule',
+		'closeAncestor'               => 'addTargetedRule',
+		'closeParent'                 => 'addTargetedRule',
+		'createChild'                 => 'addTargetedRule',
+		'createParagraphs'            => 'addBooleanRule',
+		'denyChild'                   => 'addTargetedRule',
+		'denyDescendant'              => 'addTargetedRule',
+		'disableAutoLineBreaks'       => 'addBooleanRule',
+		'enableAutoLineBreaks'        => 'addBooleanRule',
+		'fosterParent'                => 'addTargetedRule',
+		'ignoreSurroundingWhitespace' => 'addBooleanRule',
+		'ignoreTags'                  => 'addBooleanRule',
+		'ignoreText'                  => 'addBooleanRule',
+		'isTransparent'               => 'addBooleanRule',
+		'preventLineBreaks'           => 'addBooleanRule',
+		'requireParent'               => 'addTargetedRule',
+		'requireAncestor'             => 'addTargetedRule',
+		'suspendAutoLineBreaks'       => 'addBooleanRule',
+		'trimFirstLine'               => 'addBooleanRule'
+	);
 	public function __construct()
 	{
 		$this->clear();
+	}
+	public function __call($methodName, array $args)
+	{
+		if (!isset($this->rules[$methodName]))
+			throw new BadMethodCallException("Undefined method '" . $methodName . "'");
+		\array_unshift($args, $methodName);
+		\call_user_func_array(array($this, $this->rules[$methodName]), $args);
+		return $this;
 	}
 	public function offsetExists($k)
 	{
@@ -7648,109 +7768,15 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		else
 			unset($this->items[$type]);
 	}
-	protected function addBooleanRule($ruleName, $bool)
+	protected function addBooleanRule($ruleName, $bool = \true)
 	{
 		if (!\is_bool($bool))
 			throw new InvalidArgumentException($ruleName . '() expects a boolean');
 		$this->items[$ruleName] = $bool;
-		return $this;
 	}
 	protected function addTargetedRule($ruleName, $tagName)
 	{
 		$this->items[$ruleName][] = TagName::normalize($tagName);
-		return $this;
-	}
-	public function allowChild($tagName)
-	{
-		return $this->addTargetedRule('allowChild', $tagName);
-	}
-	public function allowDescendant($tagName)
-	{
-		return $this->addTargetedRule('allowDescendant', $tagName);
-	}
-	public function autoClose($bool = \true)
-	{
-		return $this->addBooleanRule('autoClose', $bool);
-	}
-	public function autoReopen($bool = \true)
-	{
-		return $this->addBooleanRule('autoReopen', $bool);
-	}
-	public function breakParagraph($bool = \true)
-	{
-		return $this->addBooleanRule('breakParagraph', $bool);
-	}
-	public function closeAncestor($tagName)
-	{
-		return $this->addTargetedRule('closeAncestor', $tagName);
-	}
-	public function closeParent($tagName)
-	{
-		return $this->addTargetedRule('closeParent', $tagName);
-	}
-	public function createChild($tagName)
-	{
-		return $this->addTargetedRule('createChild', $tagName);
-	}
-	public function createParagraphs($bool = \true)
-	{
-		return $this->addBooleanRule('createParagraphs', $bool);
-	}
-	public function denyChild($tagName)
-	{
-		return $this->addTargetedRule('denyChild', $tagName);
-	}
-	public function denyDescendant($tagName)
-	{
-		return $this->addTargetedRule('denyDescendant', $tagName);
-	}
-	public function disableAutoLineBreaks($bool = \true)
-	{
-		return $this->addBooleanRule('disableAutoLineBreaks', $bool);
-	}
-	public function enableAutoLineBreaks($bool = \true)
-	{
-		return $this->addBooleanRule('enableAutoLineBreaks', $bool);
-	}
-	public function fosterParent($tagName)
-	{
-		return $this->addTargetedRule('fosterParent', $tagName);
-	}
-	public function ignoreSurroundingWhitespace($bool = \true)
-	{
-		return $this->addBooleanRule('ignoreSurroundingWhitespace', $bool);
-	}
-	public function ignoreTags($bool = \true)
-	{
-		return $this->addBooleanRule('ignoreTags', $bool);
-	}
-	public function ignoreText($bool = \true)
-	{
-		return $this->addBooleanRule('ignoreText', $bool);
-	}
-	public function isTransparent($bool = \true)
-	{
-		return $this->addBooleanRule('isTransparent', $bool);
-	}
-	public function preventLineBreaks($bool = \true)
-	{
-		return $this->addBooleanRule('preventLineBreaks', $bool);
-	}
-	public function requireParent($tagName)
-	{
-		return $this->addTargetedRule('requireParent', $tagName);
-	}
-	public function requireAncestor($tagName)
-	{
-		return $this->addTargetedRule('requireAncestor', $tagName);
-	}
-	public function suspendAutoLineBreaks($bool = \true)
-	{
-		return $this->addBooleanRule('suspendAutoLineBreaks', $bool);
-	}
-	public function trimFirstLine($bool = \true)
-	{
-		return $this->addBooleanRule('trimFirstLine', $bool);
 	}
 }
 

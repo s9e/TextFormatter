@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
-use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -74,8 +73,7 @@ class Configurator extends ConfiguratorBase
 	public function add($siteId, array $siteConfig = \null)
 	{
 		$siteId = $this->normalizeId($siteId);
-		if (!isset($siteConfig))
-			$siteConfig = $this->defaultSites->get($siteId);
+		$siteConfig = (isset($siteConfig)) ? $this->defaultSites->normalizeValue($siteConfig) : $this->defaultSites->get($siteId);
 		$this->collection[$siteId] = $siteConfig;
 		$tag = new Tag;
 		$tag->rules->allowChild('URL');
@@ -85,15 +83,13 @@ class Configurator extends ConfiguratorBase
 		$attributes = array(
 			'url' => array('type' => 'url')
 		);
-		if (isset($siteConfig['scrape']))
-			$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
-		if (isset($siteConfig['extract']))
-			foreach ((array) $siteConfig['extract'] as $regexp)
-			{
-				$attrRegexps = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
-				foreach ($attrRegexps as $attrName => $attrRegexp)
-					$attributes[$attrName]['regexp'] = $attrRegexp;
-			}
+		$attributes += $this->addScrapes($tag, $siteConfig['scrape']);
+		foreach ($siteConfig['extract'] as $regexp)
+		{
+			$attrRegexps = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
+			foreach ($attrRegexps as $attrName => $attrRegexp)
+				$attributes[$attrName]['regexp'] = $attrRegexp;
+		}
 		if (isset($siteConfig['attributes']))
 			foreach ($siteConfig['attributes'] as $attrName => $attrConfig)
 				foreach ($attrConfig as $configName => $configValue)
@@ -101,24 +97,7 @@ class Configurator extends ConfiguratorBase
 		$hasRequiredAttribute = \false;
 		foreach ($attributes as $attrName => $attrConfig)
 		{
-			$attribute = $tag->attributes->add($attrName);
-			if (isset($attrConfig['preFilter']))
-				$this->appendFilter($attribute, $attrConfig['preFilter']);
-			if (isset($attrConfig['type']))
-			{
-				$filter = $this->configurator->attributeFilters['#' . $attrConfig['type']];
-				$attribute->filterChain->append($filter);
-			}
-			elseif (isset($attrConfig['regexp']))
-				$attribute->filterChain->append(new RegexpFilter($attrConfig['regexp']));
-			if (isset($attrConfig['required']))
-				$attribute->required = $attrConfig['required'];
-			else
-				$attribute->required = ($attrName === 'id');
-			if (isset($attrConfig['postFilter']))
-				$this->appendFilter($attribute, $attrConfig['postFilter']);
-			if (isset($attrConfig['defaultValue']))
-				$attribute->defaultValue = $attrConfig['defaultValue'];
+			$attribute = $this->addAttribute($tag, $attrName, $attrConfig);
 			$hasRequiredAttribute |= $attribute->required;
 		}
 		if (isset($attributes['id']['regexp']))
@@ -148,16 +127,36 @@ class Configurator extends ConfiguratorBase
 	{
 		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
+	protected function addAttribute(Tag $tag, $attrName, array $attrConfig)
+	{
+		$attribute = $tag->attributes->add($attrName);
+		if (isset($attrConfig['preFilter']))
+			$this->appendFilter($attribute, $attrConfig['preFilter']);
+		if (isset($attrConfig['type']))
+		{
+			$filter = $this->configurator->attributeFilters['#' . $attrConfig['type']];
+			$attribute->filterChain->append($filter);
+		}
+		elseif (isset($attrConfig['regexp']))
+			$attribute->filterChain->append('#regexp')->setRegexp($attrConfig['regexp']);
+		if (isset($attrConfig['required']))
+			$attribute->required = $attrConfig['required'];
+		else
+			$attribute->required = ($attrName === 'id');
+		if (isset($attrConfig['postFilter']))
+			$this->appendFilter($attribute, $attrConfig['postFilter']);
+		if (isset($attrConfig['defaultValue']))
+			$attribute->defaultValue = $attrConfig['defaultValue'];
+		return $attribute;
+	}
 	protected function addScrapes(Tag $tag, array $scrapes)
 	{
-		if (!isset($scrapes[0]))
-			$scrapes = array($scrapes);
 		$attributes   = array();
 		$scrapeConfig = array();
 		foreach ($scrapes as $scrape)
 		{
 			$attrNames = array();
-			foreach ((array) $scrape['extract'] as $extractRegexp)
+			foreach ($scrape['extract'] as $extractRegexp)
 			{
 				$attributePreprocessor = new AttributePreprocessor($extractRegexp);
 				foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
@@ -168,8 +167,6 @@ class Configurator extends ConfiguratorBase
 			}
 			$attrNames = \array_unique($attrNames);
 			\sort($attrNames);
-			if (!isset($scrape['match']))
-				$scrape['match'] = '//';
 			$entry = array($scrape['match'], $scrape['extract'], $attrNames);
 			if (isset($scrape['url']))
 				$entry[] = $scrape['url'];

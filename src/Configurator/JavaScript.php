@@ -61,8 +61,9 @@ class JavaScript
 	public function getParser(array $config = \null)
 	{
 		$this->configOptimizer->reset();
-		$rendererGenerator = new XSLT;
-		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
+		$xslt      = new XSLT;
+		$xslt->optimizer->normalizer->remove('RemoveLivePreviewAttributes');
+		$this->xsl = $xslt->getXSL($this->configurator->rendering);
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
