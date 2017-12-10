@@ -1,3 +1,32 @@
+0.13.1 (2017-12-10)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/9c1e4cebcb61535d14423263553b6414b42f456c...492c1d8e7d97b43614dc258d9b701ce9c21dc296)
+
+### Added
+
+ - `8aef6ff75` Added RemoveLivePreviewAttributes template normalization to non-JavaScript renderer generators
+ - `badcf2a35` Added live preview attribute data-s9e-livepreview-ignore-attrs
+ - `fa352dc5a` MediaEmbed: added live preview hints to dynamically-resized embeds
+
+### Fixed
+
+ - `500d43a51` RegexpBuilder: fixed infinite recursion during remerge
+
+### Changed
+
+ - `69332cc50` JavaScript: updated Closure Compiler externs
+ - `62ed3073f` MediaEmbed: keep all optional fields in cached definitions
+ - `1e56d2a60` MediaEmbed: moved attribute creation out of add()
+ - `805b1ae9a` MediaEmbed: normalize site definitions as they are created
+ - `ee4b1bdd4` MediaEmbed: updated MSNBC
+ - `6e5b6c405` Ruleset: refactored internals to be more scalable
+ - `d3fde3969` TemplateInspector: split individual elements' inpection into ElementInspector
+ - `2d242d8a7` Updated live preview code and JavaScript externs
+ - `f6551bb4d` Updated live preview to return the last node modified
+ - `a75aef0cb` Updated the live preview algorithm
+
+
 0.13.0 (2017-11-27)
 ===================
 
