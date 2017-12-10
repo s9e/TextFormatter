@@ -17,6 +17,7 @@ class Optimizer
 		$this->normalizer->append('MergeConsecutiveCopyOf');
 		$this->normalizer->append('MergeIdenticalConditionalBranches');
 		$this->normalizer->append('OptimizeNestedConditionals');
+		$this->normalizer->append('RemoveLivePreviewAttributes');
 	}
 	public function optimizeTemplate($template)
 	{

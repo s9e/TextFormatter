@@ -87,13 +87,15 @@ var postProcessFunctions = {};
 /**
 * Parse a given text and render it into given HTML element
 *
-* @param {!string} text
-* @param {!HTMLElement} target
+* @param  {!string} text
+* @param  {!HTMLElement} target
+* @return {!Node}
 */
 function preview(text, target)
 {
-	var targetDoc = target.ownerDocument,
-		resultFragment = xslt.transformToFragment(parse(text), targetDoc);
+	var targetDoc      = target.ownerDocument,
+		resultFragment = xslt.transformToFragment(parse(text), targetDoc),
+		lastUpdated    = target;
 
 	// Apply post-processing
 	if (HINT.postProcessing)
@@ -147,7 +149,6 @@ function preview(text, target)
 
 		// Skip the rightmost matching nodes
 		var maxRight = Math.min(oldCnt - left, newCnt - left);
-
 		while (right < maxRight)
 		{
 			oldNode = oldNodes[oldCnt - (right + 1)];
@@ -161,33 +162,42 @@ function preview(text, target)
 			++right;
 		}
 
-		// Clone the new nodes
-		var newNodesFragment = targetDoc.createDocumentFragment(),
-			i = left;
-
-		while (i < (newCnt - right))
-		{
-			newNode = newNodes[i].cloneNode(true);
-
-			newNodesFragment.appendChild(newNode);
-			++i;
-		}
-
 		// Remove the old dirty nodes in the middle of the tree
-		i = oldCnt - right;
+		var i = oldCnt - right;
 		while (--i >= left)
 		{
 			oldEl.removeChild(oldNodes[i]);
+			lastUpdated = oldEl;
 		}
+
+		// Test whether there are any nodes in the new tree between the matching nodes at the left
+		// and the matching nodes at the right
+		var rightBoundary = newCnt - right;
+		if (left >= rightBoundary)
+		{
+			return;
+		}
+
+		// Clone the new nodes
+		var newNodesFragment = targetDoc.createDocumentFragment();
+		i = left;
+		do
+		{
+			newNodesFragment.appendChild(newNodes[i].cloneNode(true));
+		}
+		while (++i < rightBoundary);
 
 		// If we haven't skipped any nodes to the right, we can just append the fragment
 		if (!right)
 		{
 			oldEl.appendChild(newNodesFragment);
+			lastUpdated = oldEl.lastChild;
 		}
 		else
 		{
-			oldEl.insertBefore(newNodesFragment, oldEl.childNodes[left]);
+			var beforeNode = oldEl.childNodes[left];
+			oldEl.insertBefore(newNodesFragment, beforeNode);
+			lastUpdated = beforeNode.previousChild;
 		}
 	}
 
@@ -212,6 +222,7 @@ function preview(text, target)
 			if (oldNode.nodeValue !== newNode.nodeValue)
 			{
 				oldNode.nodeValue = newNode.nodeValue;
+				lastUpdated = oldNode;
 			}
 
 			return true;
@@ -238,9 +249,10 @@ function preview(text, target)
 	{
 		var oldAttributes = oldEl['attributes'],
 			newAttributes = newEl['attributes'],
-			oldCnt = oldAttributes.length,
-			newCnt = newAttributes.length,
-			i = oldCnt;
+			oldCnt        = oldAttributes.length,
+			newCnt        = newAttributes.length,
+			i             = oldCnt,
+			ignoreAttrs   = ' ' + oldAttributes['data-s9e-livepreview-ignore-attrs'] + ' ';
 
 		while (--i >= 0)
 		{
@@ -248,9 +260,14 @@ function preview(text, target)
 				namespaceURI = oldAttr['namespaceURI'],
 				attrName     = oldAttr['name'];
 
+			if (HINT.ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
+			{
+				continue;
+			}
 			if (!newEl.hasAttributeNS(namespaceURI, attrName))
 			{
 				oldEl.removeAttributeNS(namespaceURI, attrName);
+				lastUpdated = oldEl;
 			}
 		}
 
@@ -262,14 +279,21 @@ function preview(text, target)
 				attrName     = newAttr['name'],
 				attrValue    = newAttr['value'];
 
+			if (HINT.ignoreAttrs && ignoreAttrs.indexOf(' ' + attrName + ' ') > -1)
+			{
+				continue;
+			}
 			if (attrValue !== oldEl.getAttributeNS(namespaceURI, attrName))
 			{
 				oldEl.setAttributeNS(namespaceURI, attrName, attrValue);
+				lastUpdated = oldEl;
 			}
 		}
 	}
 
 	refreshElementContent(target, resultFragment);
+
+	return lastUpdated;
 }
 
 /**
