@@ -94,7 +94,7 @@ NamedNodeMap.prototype.length;
 function Node() {}
 /**
  * @param {Node} newChild
- * @return {Node}
+ * @return {!Node}
  */
 Node.prototype.appendChild = function(newChild) {};
 /**
