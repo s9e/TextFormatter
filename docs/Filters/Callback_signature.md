@@ -13,13 +13,13 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 
  * `logger` - the parser's logger
  * `openTags` - an array containing a list of all tags currently open
- * `parser` - the parser itself
+ * `parser` - the parser itself. <small>(This parameter is skipped in JavaScript filters)</small>
  * `registeredVars` - all of the registered variables in an array
  * `tag` - the current tag
- * `tagConfig` - the current tag's configuration
+ * `tagConfig` - the current tag's configuration <span style="color:red">⚠</span>
  * `text` - the text being parsed
 
-<span style="color:red">⚠</span> The `openTags` and `tagConfig` parameters are subject to change.
+<span style="color:red">⚠</span> The `tagConfig` parameter is subject to change and may be removed in a future version.
 
 ## Examples
 
