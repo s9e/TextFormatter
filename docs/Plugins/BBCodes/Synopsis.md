@@ -1,4 +1,4 @@
-This plugin handles a very flexible flavour of the [BBCode](http://en.wikipedia.org/wiki/BBCode) syntax.
+This plugin handles a very flexible flavour of the [BBCode](https://en.wikipedia.org/wiki/BBCode) syntax.
 
  * BBCode names are case-insensitive (`[b]...[/B]`)
  * BBCodes can have any number of attributes, which are case-insensitive

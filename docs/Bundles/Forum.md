@@ -31,7 +31,7 @@ Media BBCodes: Bandcamp, Dailymotion, Facebook, Indiegogo, Instagram, Kickstarte
 
 ### Emoji and Emoticons
 
-Emoji are supported thanks to the free image set from [EmojiOne](http://emojione.com/). Please consult their website for [license terms](http://emojione.com/licensing/).
+Emoji are supported thanks to the free image set from [EmojiOne](https://emojione.com/). Please consult their website for [license terms](http://emojione.com/licensing/).
 
 The following emoticons are also supported as an alias to the corresponding emoji: `:)` `:-)` `;)` `;-)` `:D` `:-D` `:(` `:-(` `:-*` `:P` `:-P` `:p` `:-p` `;P` `;-P` `;p` `;-p` `:?` `:-?` `:|` `:-|` `:o` `:lol:`
 

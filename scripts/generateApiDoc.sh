@@ -12,7 +12,7 @@ fi
 cd "$TMP_DIR"
 if [ ! -f ./sami.phar ];
 then
-	wget http://get.sensiolabs.org/sami.phar
+	wget https://get.sensiolabs.org/sami.phar
 fi
 
 echo "$CONF" > conf.php

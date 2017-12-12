@@ -4,7 +4,7 @@
 
 ### Demo
 
-You can try the [real-time JavaScript demo](http://s9e.github.io/TextFormatter/fatdown.html), or you can compare Fatdown to various Markdown implementations via [the wonderful Babelmark 2](http://johnmacfarlane.net/babelmark2/).
+You can try the [real-time JavaScript demo](https://s9e.github.io/TextFormatter/fatdown.html), or you can compare Fatdown to various Markdown implementations via [the wonderful Babelmark 2](http://johnmacfarlane.net/babelmark2/).
 
 ### Examples
 
@@ -23,7 +23,7 @@ echo $html;
 
 #### Why Fatdown doesn't suck
 
-Unlike the original Markdown, Fatdown's HTML support **does not leave you wide open to [XSS](http://en.wikipedia.org/wiki/Cross-site_scripting)**. Markdown is designed for publishers, not user input.
+Unlike the original Markdown, Fatdown's HTML support **does not leave you wide open to [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting)**. Markdown is designed for publishers, not user input.
 
 ```php
 use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;

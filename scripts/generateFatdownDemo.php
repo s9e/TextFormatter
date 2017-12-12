@@ -20,7 +20,7 @@ ob_start();
 <head>
 	<meta charset="utf-8" />
 	<title>s9e\TextFormatter &bull; Fatdown/JS Demo</title>
-	<base href="http://s9e.github.io/TextFormatter/fatdown.html" />
+	<base href="https://s9e.github.io/TextFormatter/fatdown.html" />
 	<style type="text/css">
 		#preview
 		{

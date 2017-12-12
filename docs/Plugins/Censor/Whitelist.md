@@ -1,6 +1,6 @@
 <h2>Whitelist specific words to escape the censor</h2>
 
-Occasionally, broad patterns may censor good words while trying to filter bad ones. This is known as [the Scunthorpe problem](http://en.wikipedia.org/wiki/Scunthorpe_problem). You can whitelist specific words to make them immune to the Censor plugin.
+Occasionally, broad patterns may censor good words while trying to filter bad ones. This is known as [the Scunthorpe problem](https://en.wikipedia.org/wiki/Scunthorpe_problem). You can whitelist specific words to make them immune to the Censor plugin.
 
 In the following example, we configure the Censor plugin to censor any word that contains "thor" except for "Scunthorpe" which is specifically allowed.
 

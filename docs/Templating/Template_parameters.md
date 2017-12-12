@@ -1,6 +1,6 @@
 <h2>Template parameters</h2>
 
-Template parameters come from [XSLT](http://www.w3.org/TR/xslt#variables). They are a special kind of global variables, shared among all templates. They have to be created during configuration, they can take a default value and they are always interpreted as text (special characters are automatically escaped.) They can be used for localization, or passing some dynamic information before rendering.
+Template parameters come from [XSLT](https://www.w3.org/TR/xslt#variables). They are a special kind of global variables, shared among all templates. They have to be created during configuration, they can take a default value and they are always interpreted as text (special characters are automatically escaped.) They can be used for localization, or passing some dynamic information before rendering.
 
 ### How to use template parameters
 

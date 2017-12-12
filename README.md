@@ -10,7 +10,7 @@ s9e\\TextFormatter is a text formatting library that supports BBCode, Markdown, 
 
 ## Installation
 
-The best way to install s9e\\TextFormatter is via Composer. See [Installation](http://s9etextformatter.readthedocs.io/Getting_started/Installation/).
+The best way to install s9e\\TextFormatter is via Composer. See [Installation](https://s9etextformatter.readthedocs.io/Getting_started/Installation/).
 
 ```bash
 composer require s9e/text-formatter
@@ -18,10 +18,10 @@ composer require s9e/text-formatter
 
 ## Demo
 
-You can try the JavaScript version in this [BBCodes + other stuff demo](http://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](http://s9e.github.io/TextFormatter/fatdown.html).
+You can try the JavaScript version in this [BBCodes + other stuff demo](https://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](https://s9e.github.io/TextFormatter/fatdown.html).
 
 ## Examples
 
-If you can only read one example, [read how to use a bundle](http://s9etextformatter.readthedocs.io/Getting_started/Using_predefined_bundles/).
+If you can only read one example, [read how to use a bundle](https://s9etextformatter.readthedocs.io/Getting_started/Using_predefined_bundles/).
 
-You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples) and you will find in [the manual](http://s9etextformatter.readthedocs.io/) a description of each plugin as well as other examples.
+You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples) and you will find in [the manual](https://s9etextformatter.readthedocs.io/) a description of each plugin as well as other examples.

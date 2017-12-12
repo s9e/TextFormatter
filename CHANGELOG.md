@@ -30,7 +30,7 @@
 0.13.0 (2017-11-27)
 ===================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0130) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#0130) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/d50adf87a92d5c793f5a06df7af089bdbaa749e4...459dddf5bc5f81f78564e3562231b6f01f2f2791)
 
@@ -61,7 +61,7 @@
 0.12.0 (2017-11-11)
 ===================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0120) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#0120) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/f8d9f670a609d147573117d2e33ffb7ee6844eb8...87dd6663f0f514822b258968441301b9be24f58e)
 
@@ -161,7 +161,7 @@
 0.11.0 (2017-08-04)
 ===================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0110) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#0110) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/6266e40850301ddc0e40808e7abe3e507a3ca347...ad7afe67b971cc76c43f5d6445cc06ca12ea2502)
 
@@ -215,7 +215,7 @@
 0.10.0 (2017-07-03)
 ===================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#0100) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#0100) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/d8617a1858407057ff7edd368bcd550075ae903e...023d2f1a70bbfd8a72ce95d086c60c0eb6073908)
 
@@ -377,7 +377,7 @@
 0.9.0 (2017-01-15)
 ==================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#090) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#090) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/8fefdbf95ab97316172d0f49d83c9547d0998795...d8623b088dd5ab71250fa9d842c513628bca4a89)
 
@@ -528,7 +528,7 @@
 0.8.0 (2016-10-09)
 ==================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#080) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#080) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/7d08b19a0573b0b459a1206a0142da370bccda42...dc20ca832b5abbac7f24b65912b897b1a37f9197)
 
@@ -588,7 +588,7 @@
 0.7.0 (2016-09-12)
 ==================
 
-**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#070) for a description. ⚠️**
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#070) for a description. ⚠️**
 
 [Full commit log](https://github.com/s9e/TextFormatter/compare/66605667be735e06ccbdf2b14c344c2b8bb84100...7cd1dfea62d9d35a40c206997e266918b9f1dfa1)
 

@@ -8,11 +8,11 @@ Technically, the PHP tags `<?php` and `?>` are valid XML even though they have n
 
 ### Output escaping cannot be disabled
 
-Text content and other values are automatically escaped by XSLT processors but it can be disabled with the [disable-output-escaping attribute](http://www.w3.org/TR/xslt#disable-output-escaping). Disabling output escaping could lead to HTML injection, and therefore it is forbidden.
+Text content and other values are automatically escaped by XSLT processors but it can be disabled with the [disable-output-escaping attribute](https://www.w3.org/TR/xslt#disable-output-escaping). Disabling output escaping could lead to HTML injection, and therefore it is forbidden.
 
 ### Exotic XSL is disabled
 
-A number of rarely-used XSL features are disabled, such as [attribute sets](http://www.w3.org/TR/xslt#attribute-sets), `<xsl:copy/>`, `<xsl:copy-of/>` targeting anything but a single attribute, the `document()` function, as well as dynamic element names and attribute names.
+A number of rarely-used XSL features are disabled, such as [attribute sets](https://www.w3.org/TR/xslt#attribute-sets), `<xsl:copy/>`, `<xsl:copy-of/>` targeting anything but a single attribute, the `document()` function, as well as dynamic element names and attribute names.
 
 ### Dynamic content in JavaScript, CSS and URLs
 

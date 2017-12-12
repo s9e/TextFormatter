@@ -26,7 +26,7 @@ $configurator->javascript
 
 ### MatthiasMullie\\Minify
 
-[Minify](http://www.minifier.org/) is a JavaScript minifier written in PHP. Its minification is not as extensive as Google's Closure Compiler but it is fast and does not use any external service. In order to use this minifier you must have Minify already installed.
+[Minify](https://www.minifier.org/) is a JavaScript minifier written in PHP. Its minification is not as extensive as Google's Closure Compiler but it is fast and does not use any external service. In order to use this minifier you must have Minify already installed.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;

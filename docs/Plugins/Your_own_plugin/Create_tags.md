@@ -12,4 +12,4 @@ $tag->template = '<b><xsl:apply-templates/></b>';
 ### Use tags during parsing
 
 This section is unfinished.
-In the meantime, see [addStartTag](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Parser.html#method_addStartTag)().
+In the meantime, see [addStartTag](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Parser.html#method_addStartTag)().

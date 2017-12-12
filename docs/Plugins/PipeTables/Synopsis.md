@@ -5,7 +5,7 @@ See its [Syntax](Syntax.md).
 ### References
 
  * [GitHub-flavored Markdown](https://help.github.com/articles/organizing-information-with-tables/)
- * [Pandoc's pipe_tables extension](http://pandoc.org/MANUAL.html#extension-pipe_tables)
+ * [Pandoc's pipe_tables extension](https://pandoc.org/MANUAL.html#extension-pipe_tables)
  * [PHP Markdown Extra](https://michelf.ca/projects/php-markdown/extra/#table)
 
 ## Example

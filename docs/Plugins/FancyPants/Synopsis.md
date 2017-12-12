@@ -1,4 +1,4 @@
-This plugin provides enhanced typography, aka "fancy Unicode symbols." It is inspired by [SmartyPants](http://daringfireball.net/projects/smartypants/) and [RedCloth's Textile](http://redcloth.org/textile/writing-paragraph-text/#typographers-quotes).
+This plugin provides enhanced typography, aka "fancy Unicode symbols." It is inspired by [SmartyPants](https://daringfireball.net/projects/smartypants/) and [RedCloth's Textile](http://redcloth.org/textile/writing-paragraph-text/#typographers-quotes).
 
 ## Example
 

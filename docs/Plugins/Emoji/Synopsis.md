@@ -1,4 +1,4 @@
-Emoji are a standardized set of pictographs.  They exists as Unicode characters and ASCII shortcodes. The Emoji plugin renders both as images, using the free sets from [Twemoji](http://twitter.github.io/twemoji/) or [EmojiOne](http://emojione.com/). Please consult their respective website for license terms.
+Emoji are a standardized set of pictographs.  They exists as Unicode characters and ASCII shortcodes. The Emoji plugin renders both as images, using [EmojiOne](https://emojione.com/) assets. Please consult their respective website for license terms.
 
 ## Examples
 

@@ -11,7 +11,7 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 <dt>AutoCloseIfVoid</dt>
 <dd>
 	<p><i>Purpose: convenience. Default: enabled.</i></p>
-	<p>Generates an <code>autoClose</code> rule for tags that are rendered as <a href="http://www.w3.org/TR/html5/syntax.html#void-elements">void elements</a>. For example, a BBCode that renders as an <code>img</code> element can be used as <code>[img=foo.png]</code>.</p>
+	<p>Generates an <code>autoClose</code> rule for tags that are rendered as <a href="https://www.w3.org/TR/html5/syntax.html#void-elements">void elements</a>. For example, a BBCode that renders as an <code>img</code> element can be used as <code>[img=foo.png]</code>.</p>
 </dd>
 
 <dt>AutoReopenFormattingElements</dt>
@@ -42,14 +42,14 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 <dd>
 	<p><i>Purpose: compliance. Default: enabled.</i></p>
 	<p>Generates <code>denyChild</code>, <code>denyDescendant</code>, <code>disableAutoLineBreaks</code>, <code>enableAutoLineBreaks</code> and <code>suspendAutoLineBreaks</code> rules to disallow tags in contexts where their HTML representation is not allowed.</p>
-	<p>See <a href="http://www.w3.org/TR/html5/dom.html#content-models">HTML5 Content Models</a>.</p>
+	<p>See <a href="https://www.w3.org/TR/html5/dom.html#content-models">HTML5 Content Models</a>.</p>
 </dd>
 
 <dt>EnforceOptionalEndTags</dt>
 <dd>
 	<p><i>Purpose: compliance. Default: enabled.</i></p>
 	<p>Generates <code>closeParent</code> rules to automatically close tags in contexts where their end tag is optional (such as with consecutive <code>li</code> elements) and would otherwise be automatically created by the browser's HTML5 parser.</p>
-	<p>See <a href="http://www.w3.org/TR/html5/syntax.html#optional-tags">HTML5 Optional Tags</a>.</p>
+	<p>See <a href="https://www.w3.org/TR/html5/syntax.html#optional-tags">HTML5 Optional Tags</a>.</p>
 </dd>
 
 <dt>IgnoreTagsInCode</dt>

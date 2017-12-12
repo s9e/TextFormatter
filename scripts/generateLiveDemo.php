@@ -54,7 +54,7 @@ ob_start();
 <head>
 	<meta charset="utf-8" />
 	<title>s9e\TextFormatter &bull; Demo</title>
-	<base href="http://s9e.github.io/TextFormatter/demo.html" />
+	<base href="https://s9e.github.io/TextFormatter/demo.html" />
 	<style type="text/css">
 		#preview
 		{

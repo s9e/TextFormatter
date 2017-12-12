@@ -1,1 +1,1 @@
-You can find an up-to-date API documentation at <http://s9e.github.io/TextFormatter/api/>.
+You can find an up-to-date API documentation at <https://s9e.github.io/TextFormatter/api/>.

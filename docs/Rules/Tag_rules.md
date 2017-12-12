@@ -45,7 +45,7 @@ Rules that apply to descendants also apply to children. Rules that apply to ance
 <dt>autoClose</dt>
 <dd>
 	<p><i>Example:</i> <code>$tag->rules->autoClose(true);</code></p>
-	<p>Start tags of this tag are automatically closed if they are not paired with an end tag. This rule exists primarily to deal with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements">void elements</a> such as <code>&lt;img&gt;</code>.</p>
+	<p>Start tags of this tag are automatically closed if they are not paired with an end tag. This rule exists primarily to deal with <a href="https://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements">void elements</a> such as <code>&lt;img&gt;</code>.</p>
 </dd>
 
 <dt>autoReopen</dt>
@@ -69,7 +69,7 @@ Rules that apply to descendants also apply to children. Rules that apply to ance
 <dt>closeParent</dt>
 <dd>
 	<p><i>Example:</i> <code>$tag->rules->closeParent('LI');</code></p>
-	<p>Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following <code>&lt;LI&gt;one&lt;LI&gt;two</code> is interpreted as <code>&lt;LI&gt;one&lt;/LI&gt;&lt;LI&gt;two</code>.</p>
+	<p>Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="https://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following <code>&lt;LI&gt;one&lt;LI&gt;two</code> is interpreted as <code>&lt;LI&gt;one&lt;/LI&gt;&lt;LI&gt;two</code>.</p>
 </dd>
 
 <dt>createChild</dt>
@@ -135,7 +135,7 @@ Rules that apply to descendants also apply to children. Rules that apply to ance
 <dt>isTransparent</dt>
 <dd>
 	<p><i>Example:</i> <code>$tag->rules->isTransparent();</code></p>
-	<p>Indicates that this tag uses the <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#transparent-content-models">transparent content model</a> and their allow/deny rules are inherited from its parent.</p>
+	<p>Indicates that this tag uses the <a href="https://www.w3.org/html/wg/drafts/html/master/single-page.html#transparent-content-models">transparent content model</a> and their allow/deny rules are inherited from its parent.</p>
 </dd>
 
 <dt>preventLineBreaks</dt>

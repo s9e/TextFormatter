@@ -1,6 +1,6 @@
 <h2>How to map keywords to IDs</h2>
 
-Sometimes, keywords are not the best way to identify a resource. For instance, in a tabletop games forum you may want to map the name of spell cards to the name of its image file. This example is inspired by the Mage Wars forum [Arcane Wonders](http://forum.arcanewonders.com/index.php?topic=13249.msg25802).
+Sometimes, keywords are not the best way to identify a resource. For instance, in a tabletop games forum you may want to map the name of spell cards to the name of its image file. This example is inspired by the Mage Wars forum [Arcane Wonders](https://forum.arcanewonders.com/index.php?topic=13249.msg25802).
 
 In the following example, we use the Keywords plugin to capture card names used in normal text. We use one of the [built-in filter](https://github.com/s9e/TextFormatter/blob/master/docs/BuiltInFilters.md) `#hashmap` on the `value` attribute to map the name of the card to its ID. Additionally, we see how additional filters can be used to transform attributes' values. In this instance, we use `strtolower()` to normalize the keyword value to lowercase.
 
