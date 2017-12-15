@@ -8,18 +8,8 @@
 
 	<tags><tag>images</tag></tags>
 
-	<attributes>
-		<type type="alnum"/>
-	</attributes>
-
 	<host>imgur.com</host>
-	<extract>@imgur\.com/(?!r/|user/)(?:gallery/|t/[^/]+/)?(?'id'(?:a/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
-	<scrape>
-		<match>@imgur\.com/(?:gallery/|t/[^/]+/)\w@</match>
-		<extract>!image\s*:\s*.*?"is_(?'type'album)":true!</extract>
-		<extract>!&lt;div id="(?'type'album)-!</extract>
-		<extract>!class="(?'type'album)-image!</extract>
-	</scrape>
+	<extract>@imgur\.com/(?!r/|user/)(?:t/[^/]+/)?(?'id'(?:a/|gallery/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)
@@ -34,11 +24,5 @@
 
 		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
-	<iframe width="568" height="450" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
-		<src><![CDATA[
-			<xsl:text>https://s9e.github.io/iframe/imgur.min.html#</xsl:text>
-			<xsl:if test="@type = 'album' and not(starts-with(@id, 'a/'))">a/</xsl:if>
-			<xsl:value-of select="@id"/>
-		]]></src>
-	</iframe>
+	<iframe width="568" height="450" src="https://s9e.github.io/iframe/imgur.min.html#{@id}" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
