@@ -1969,7 +1969,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<r><FACEBOOK id="10151471074398553" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				'<r><FACEBOOK id="10151471074398553" type="post" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553" user="FacebookDevelopers">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1978,7 +1978,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<r><FACEBOOK id="10151471074398553" url="https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553">https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				'<r><FACEBOOK id="10151471074398553" type="post" url="https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553" user="FacebookDevelopers">https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -2059,7 +2059,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://web.facebook.com/VijayTelevision/videos/948642131881684/',
-				'<r><FACEBOOK id="948642131881684" type="video" url="https://web.facebook.com/VijayTelevision/videos/948642131881684/">https://web.facebook.com/VijayTelevision/videos/948642131881684/</FACEBOOK></r>',
+				'<r><FACEBOOK id="948642131881684" type="video" url="https://web.facebook.com/VijayTelevision/videos/948642131881684/" user="VijayTelevision">https://web.facebook.com/VijayTelevision/videos/948642131881684/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -3990,7 +3990,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/facebook.min.html#10151471074398553" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/facebook.min.html#post10151471074398553" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
