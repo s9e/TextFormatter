@@ -1,9 +1,17 @@
 <site name="Flickr" homepage="https://www.flickr.com/">
 	<example>https://www.flickr.com/photos/8757881@N04/2971804544/lightbox/</example>
+	<example>https://flic.kr/8757881@N04/2971804544</example>
+	<example>https://flic.kr/p/5wBgXo</example>
 
 	<tags><tag>images</tag></tags>
 
+	<host>flic.kr</host>
 	<host>flickr.com</host>
-	<extract>!flickr\.com/photos/[^/]+/(?'id'\d+)!</extract>
+	<extract>@flickr\.com/photos/[^/]+/(?'id'\d+)@</extract>
+	<extract>@flic\.kr/(?!p/)[^/]+/(?'id'\d+)@</extract>
+	<scrape url="https://www.flickr.com/photo.gne?rb=1&amp;short={@short}">
+		<match>@flic\.kr/p/(?'short'\w+)@</match>
+		<extract>@flickr\.com/photos/[^/]+/(?'id'\d+)@</extract>
+	</scrape>
 	<iframe width="500" height="500" src="https://www.flickr.com/photos/_/{@id}/player/"/>
 </site>

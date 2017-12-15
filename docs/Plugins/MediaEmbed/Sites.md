@@ -124,7 +124,7 @@
 	<tr>
 		<td><code>flickr</code></td>
 		<td>Flickr</td>
-		<td>https://www.flickr.com/photos/8757881@N04/2971804544/lightbox/</td>
+		<td>https://www.flickr.com/photos/8757881@N04/2971804544/lightbox/<br/>https://flic.kr/8757881@N04/2971804544<br/>https://flic.kr/p/5wBgXo</td>
 	</tr>
 	<tr>
 		<td><code>foratv</code></td>

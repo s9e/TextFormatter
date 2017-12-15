@@ -689,6 +689,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://flic.kr/p/5wBgXo',
+				'<r><FLICKR id="2971804544" url="https://flic.kr/p/5wBgXo">https://flic.kr/p/5wBgXo</FLICKR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('flickr');
+				}
+			],
+			[
 				'http://fora.tv/2009/07/30/Marijuana_Economics',
 				'<r><FORATV id="9677" url="http://fora.tv/2009/07/30/Marijuana_Economics">http://fora.tv/2009/07/30/Marijuana_Economics</FORATV></r>',
 				[],
@@ -2069,6 +2079,15 @@ class ParserTest extends Test
 			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
 				'<r><FLICKR id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('flickr');
+				}
+			],
+			[
+				'https://flic.kr/8757881@N04/2971804544',
+				'<r><FLICKR id="2971804544" url="https://flic.kr/8757881@N04/2971804544">https://flic.kr/8757881@N04/2971804544</FLICKR></r>',
 				[],
 				function ($configurator)
 				{
