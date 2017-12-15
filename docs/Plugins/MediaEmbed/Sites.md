@@ -94,7 +94,7 @@
 	<tr>
 		<td><code>dailymotion</code></td>
 		<td>Dailymotion</td>
-		<td>http://www.dailymotion.com/video/x222z1<br/>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1<br/>http://games.dailymotion.com/live/x15gjhi</td>
+		<td>http://dai.ly/x5e9eog<br/>http://www.dailymotion.com/video/x5e9eog</td>
 	</tr>
 	<tr>
 		<td><code>democracynow</code></td>
@@ -499,7 +499,7 @@
 	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
-		<td>http://www.twitch.tv/twitch<br/>http://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</td>
+		<td>http://www.twitch.tv/twitch<br/>http://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop<br/>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</td>
 	</tr>
 	<tr>
 		<td><code>twitter</code></td>

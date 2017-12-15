@@ -1851,6 +1851,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.dailymotion.com/video/x5e9eog?start=90',
+				'<r><DAILYMOTION id="x5e9eog" t="90" url="http://www.dailymotion.com/video/x5e9eog?start=90">http://www.dailymotion.com/video/x5e9eog?start=90</DAILYMOTION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
+				'http://dai.ly/x5e9eog',
+				'<r><DAILYMOTION id="x5e9eog" url="http://dai.ly/x5e9eog">http://dai.ly/x5e9eog</DAILYMOTION></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
 				'http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun',
 				'<r><DAILYMOTION id="x12w88" url="http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun">http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun</DAILYMOTION></r>',
 				[],
@@ -3900,7 +3918,16 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.dailymotion.com/embed/video/x222z1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x222z1"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
+				'http://www.dailymotion.com/video/x5e9eog?start=90',
+				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x5e9eog?start=90"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
