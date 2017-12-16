@@ -1,13 +1,31 @@
 <h2>How to add a link to the original URL below the embedded content</h2>
 
-If you want to display a link to the original page below the embedded content, the `appendTemplate()` method can be called (before adding media sites) to set a template to be displayed after the embedded content.
+One way to display a link to the original URL used to the embed content is to create a [template normalizer](../../Templating/Template_normalization/Change_default.md#add-your-own-custom-normalization) before adding any media sites.
 
 ```php
-$configurator = new s9e\TextFormatter\Configurator;
+function appendMediaLink($root)
+{
+	// Check that the first element has a data-s9e-mediaembed attribute
+	$xpath = new DOMXPath($root->ownerDocument);
+	$nodes = $xpath->query('*[@data-s9e-mediaembed]');
+	if (!$nodes->length)
+	{
+		return;
+	}
 
-$configurator->MediaEmbed->appendTemplate(
-	'<a href="{@url}"><xsl:value-of select="@url"/></a>'
-);
+	// Append our custom XSL to this template
+	$fragment = $root->ownerDocument->createDocumentFragment();
+	$fragment->appendXML(
+		'<xsl:if test="@url" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+			<a href="{@url}"><xsl:value-of select="@url"/></a>
+		</xsl:if>'
+	);
+
+	$root->appendChild($fragment);
+}
+
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->templateNormalizer->add('appendMediaLink')->onlyOnce = true;
 $configurator->MediaEmbed->add('youtube');
 
 // Get an instance of the parser and the renderer

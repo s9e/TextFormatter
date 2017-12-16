@@ -30,11 +30,6 @@ class Configurator extends ConfiguratorBase
 	];
 
 	/**
-	* @var string String to be appended to the templates used to render media sites
-	*/
-	protected $appendTemplate = '';
-
-	/**
 	* @var bool Whether to replace unformatted URLs in text with embedded content
 	*/
 	public $captureURLs = true;
@@ -235,7 +230,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create a template for this media site based on the preferred rendering method
-		$tag->template = $this->templateBuilder->build($siteId, $siteConfig) . $this->appendTemplate;
+		$tag->template = $this->templateBuilder->build($siteId, $siteConfig);
 
 		// Normalize the tag's template
 		$this->configurator->templateNormalizer->normalizeTag($tag);
@@ -259,17 +254,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $tag;
-	}
-
-	/**
-	* Set a string to be appended to the templates used to render media sites
-	*
-	* @param  string $template
-	* @return void
-	*/
-	public function appendTemplate($template = '')
-	{
-		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
 	//==========================================================================

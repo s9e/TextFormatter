@@ -1,3 +1,8 @@
+## 0.14.0
+
+`s9e\TextFormatter\Plugins\MediaEmbed\Configurator::appendTemplate()` has been removed. The [same functionality](../Plugins/MediaEmbed/Append_template.md) can be implemented as a template normalizer.
+
+
 ## 0.13.0
 
 `s9e\TextFormatter\Parser\BuiltInFilters` has been removed and split into multiple classes.
