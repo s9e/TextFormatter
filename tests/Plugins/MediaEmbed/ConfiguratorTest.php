@@ -12,17 +12,6 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox $configurator->MediaEmbed->captureURLs is accessible
-	*/
-	public function testCaptureURLsIsPublic()
-	{
-		$this->configurator->MediaEmbed->captureURLs = false;
-		$this->assertFalse($this->configurator->MediaEmbed->captureURLs);
-		$this->configurator->MediaEmbed->captureURLs = true;
-		$this->assertTrue($this->configurator->MediaEmbed->captureURLs);
-	}
-
-	/**
 	* @testdox Registers mediasites as a variable for the parser
 	*/
 	public function testRegistersVar()
@@ -970,19 +959,6 @@ class ConfiguratorTest extends Test
 
 		$this->assertInternalType('array', $config);
 		$this->assertArrayHasKey('regexp', $config);
-	}
-
-	/**
-	* @testdox asConfig() returns NULL if captureURLs is false
-	*/
-	public function testAsConfigNullNoCapture()
-	{
-		$plugin = $this->configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
-		$plugin->add('youtube');
-
-		$config = $plugin->asConfig();
-
-		$this->assertNull($config);
 	}
 
 	/**

@@ -4,7 +4,6 @@
 include __DIR__ . '/../vendor/autoload.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
 $siteId = $_SERVER['argv'][1];

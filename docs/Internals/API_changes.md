@@ -1,8 +1,10 @@
 ## 0.14.0
 
-`s9e\TextFormatter\Plugins\MediaEmbed\Configurator::appendTemplate()` has been removed. The [same functionality](../Plugins/MediaEmbed/Append_template.md) can be implemented as a template normalizer.
+The following method and properties have been removed from `s9e\TextFormatter\Plugins\MediaEmbed\Configurator`:
 
-`s9e\TextFormatter\Plugins\MediaEmbed\Configurator::$createIndividualBBCodes` has been removed. Individual BBCodes can be [created manually](../Plugins/MediaEmbed/Synopsis.md#example).
+ - `appendTemplate()` — The [same functionality](../Plugins/MediaEmbed/Append_template.md) can be implemented as a template normalizer.
+ - `$captureURLs` — Disabling the plugin at runtime produces the same effect.
+ - `$createIndividualBBCodes` — Individual BBCodes can be [created manually](../Plugins/MediaEmbed/Synopsis.md#example).
 
 
 ## 0.13.0

@@ -286,7 +286,7 @@ class ParserTest extends Test
 				// Ensure that invalid URLs don't get scraped
 				'[media]http://example.invalid/123?x"> foo="bar[/media]',
 				'<t>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</t>',
-				['captureURLs' => false],
+				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = self::populateCache([

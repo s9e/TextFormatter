@@ -30,11 +30,6 @@ class Configurator extends ConfiguratorBase
 	];
 
 	/**
-	* @var bool Whether to replace unformatted URLs in text with embedded content
-	*/
-	public $captureURLs = true;
-
-	/**
 	* @var SiteCollection Site collection
 	*/
 	protected $collection;
@@ -110,7 +105,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		if (!$this->captureURLs || !count($this->collection))
+		if (!count($this->collection))
 		{
 			return;
 		}

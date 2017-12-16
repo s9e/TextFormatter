@@ -2556,7 +2556,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Ifram
  [x] getTemplate() tests 
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
- [x] $configurator->MediaEmbed->captureURLs is accessible
  [x] Registers mediasites as a variable for the parser
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createMediaBBCode is false
@@ -2596,7 +2595,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
  [x] asConfig() returns NULL if no site was added
  [x] asConfig() returns a an array containing a "regexp" element by default, if any site was added
- [x] asConfig() returns NULL if captureURLs is false
  [x] asConfig() creates a regexp if a site has a "host"
  [x] asConfig() creates a regexp if a site has a "scheme"
  [x] asConfig() creates a regexp if a site has both "host" and "scheme"
