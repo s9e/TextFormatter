@@ -542,11 +542,6 @@
 		<td>http://videomega.tv/?ref=aPRKXgQdaD</td>
 	</tr>
 	<tr>
-		<td><code>vidme</code></td>
-		<td>vidme</td>
-		<td>https://vid.me/6AZf1</td>
-	</tr>
-	<tr>
 		<td><code>vimeo</code></td>
 		<td>Vimeo</td>
 		<td>http://vimeo.com/67207222<br/>http://vimeo.com/channels/staffpicks/67207222</td>
