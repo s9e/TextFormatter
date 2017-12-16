@@ -85,7 +85,7 @@ class Configurator extends ConfiguratorBase
 		// Empty this tag's filter chain and add our tag filter
 		$tag->filterChain->clear();
 		$tag->filterChain
-		    ->append([__NAMESPACE__ . '\\Parser', 'filterTag'])
+		    ->append(__NAMESPACE__ . '\\Parser::filterTag')
 		    ->addParameterByName('parser')
 		    ->addParameterByName('mediasites')
 		    ->setJS(file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
