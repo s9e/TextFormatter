@@ -3289,6 +3289,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vimeo.com/67207222#t=90s',
+				'<r><VIMEO id="67207222" t="90" url="http://vimeo.com/67207222#t=90s">http://vimeo.com/67207222#t=90s</VIMEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
+				'http://vimeo.com/67207222#t=1m30s',
+				'<r><VIMEO id="67207222" t="90" url="http://vimeo.com/67207222#t=1m30s">http://vimeo.com/67207222#t=1m30s</VIMEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
 				'http://www.ustream.tv/recorded/40771396',
 				'<r><USTREAM url="http://www.ustream.tv/recorded/40771396" vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></r>',
 				[],
@@ -4308,7 +4326,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<span data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//player.vimeo.com/video/67207222" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.vimeo.com/video/67207222"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{

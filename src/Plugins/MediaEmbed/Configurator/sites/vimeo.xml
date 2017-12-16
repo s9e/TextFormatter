@@ -5,7 +5,18 @@
 
 	<tags><tag>videos</tag></tags>
 
+	<attributes>
+		<t type="timestamp"/>
+	</attributes>
+
 	<host>vimeo.com</host>
 	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)!</extract>
-	<iframe src="//player.vimeo.com/video/{@id}"/>
+	<extract>!#t=(?'t'[\dhms]+)!</extract>
+	<iframe>
+		<src><![CDATA[
+			<xsl:text>//player.vimeo.com/video/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="@t">#t=<xsl:value-of select="@t"/></xsl:if>
+		]]></src>
+	</iframe>
 </site>
