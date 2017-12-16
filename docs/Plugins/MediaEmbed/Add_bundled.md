@@ -2,11 +2,14 @@
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-
-$configurator->MediaEmbed->createIndividualBBCodes = true;
 $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');
+
+$configurator->BBCodes->add(
+	'youtube',
+	['defaultAttribute' => 'url', 'contentAttributes' => ['url']]
+);
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

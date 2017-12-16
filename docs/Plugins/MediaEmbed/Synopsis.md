@@ -24,9 +24,12 @@ Has built-in support for Dailymotion, Facebook, Instagram, Twitch, Twitter, YouT
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// We want to create individual BBCodes such as [youtube] in
+// We want to create an individual BBCode for [youtube] in
 // addition to the default [media] BBCode
-$configurator->MediaEmbed->createIndividualBBCodes = true;
+$configurator->BBCodes->add(
+	'youtube',
+	['defaultAttribute' => 'url', 'contentAttributes' => ['url']]
+);
 
 // Add the sites we want to support
 $configurator->MediaEmbed->add('dailymotion');

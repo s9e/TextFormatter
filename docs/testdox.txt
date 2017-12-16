@@ -2561,7 +2561,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createMediaBBCode is false
  [x] add('youtube') does not create a [youtube] BBCode by default
- [x] add('youtube') creates a [youtube] BBCode if createIndividualBBCodes is True
  [x] add('inexistent') throws an exception
  [x] add() returns a tag
  [x] add() accepts an array as second argument

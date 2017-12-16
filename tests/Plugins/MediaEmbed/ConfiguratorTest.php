@@ -60,15 +60,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add('youtube') creates a [youtube] BBCode if createIndividualBBCodes is True
-	*/
-	public function testSiteBBCode()
-	{
-		$this->configurator->plugins->load('MediaEmbed', ['createIndividualBBCodes' => true])->add('youtube');
-		$this->assertTrue(isset($this->configurator->BBCodes['YOUTUBE']));
-	}
-
-	/**
 	* @testdox add('inexistent') throws an exception
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Media site 'inexistent' does not exist

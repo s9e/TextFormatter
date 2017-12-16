@@ -45,11 +45,6 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = true;
 
 	/**
-	* @var bool Whether to create a BBCode for each site
-	*/
-	public $createIndividualBBCodes = false;
-
-	/**
 	* @var Configurator\Collections\SiteDefinitionCollection Default sites
 	*/
 	public $defaultSites;
@@ -240,18 +235,6 @@ class Configurator extends ConfiguratorBase
 
 		// Now add the tag to the list
 		$this->configurator->tags->add($siteId, $tag);
-
-		// Create a BBCode for this site if applicable
-		if ($this->createIndividualBBCodes)
-		{
-			$this->configurator->BBCodes->add(
-				$siteId,
-				[
-					'defaultAttribute'  => 'url',
-					'contentAttributes' => ['url']
-				]
-			);
-		}
 
 		return $tag;
 	}
