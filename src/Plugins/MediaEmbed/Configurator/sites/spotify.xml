@@ -8,6 +8,6 @@
 
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)[:/][-/:\w]+)!</extract>
-	<iframe width="400" height="480" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:{translate(@path,'/',':')}"/>
+	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:album|artist|track|user)(?:[:/][-\w]+)+)!</extract>
+	<iframe width="400" height="480" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:{translate(@id,'/',':')}{translate(@path,'/',':')}"/>
 </site>

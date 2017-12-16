@@ -2993,7 +2993,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA',
-				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				'<r><SPOTIFY id="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
@@ -3002,7 +3002,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ',
-				'<r><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
+				'<r><SPOTIFY id="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
@@ -4527,6 +4527,22 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:user:commodore-64:playlist:33fewoc4vDuICqL2mX95PA" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'<r><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:6acKqVtKngFXApjvXsU6mQ" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
 				}
 			],
 		];
