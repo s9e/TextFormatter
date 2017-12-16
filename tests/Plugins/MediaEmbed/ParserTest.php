@@ -2899,8 +2899,17 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for',
+				'<r><REDDIT id="pics/comments/304rms" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for</REDDIT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('reddit');
+				}
+			],
+			[
 				'http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl',
-				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
+				'<r><REDDIT id="pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
 				[],
 				function ($configurator)
 				{
@@ -4478,7 +4487,6 @@ class ParserTest extends Test
 	/**
 	* @testdox Legacy rendering tests
 	* @dataProvider getLegacyRenderingTests
-	* @group needs-network
 	*/
 	public function testLegacyRendering($xml, $html, $setup = null)
 	{
@@ -4503,6 +4511,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gametrailers');
+				}
+			],
+			[
+				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
+				'<iframe data-s9e-mediaembed="reddit" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/reddit.min.html#/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" style="border:0;height:165px;max-width:800px;width:100%"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('reddit');
 				}
 			],
 			[

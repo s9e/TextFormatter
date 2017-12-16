@@ -6,6 +6,6 @@
 	<tags><tag>social</tag></tags>
 
 	<host>reddit.com</host>
-	<extract>!(?'path'/r/\w+/comments/\w+/(?:\w+/\w+)?)!</extract>
-	<iframe width="800" height="165" src="https://s9e.github.io/iframe/reddit.min.html#{@path}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
+	<extract>!(?'id'\w+/comments/\w+(?:/\w+/\w+)?)!</extract>
+	<iframe width="800" height="165" src="https://s9e.github.io/iframe/reddit.min.html#{@id}{@path}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
