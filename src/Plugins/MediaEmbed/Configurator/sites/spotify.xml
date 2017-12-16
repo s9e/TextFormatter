@@ -1,30 +1,13 @@
 <site name="Spotify" homepage="https://www.spotify.com/">
 	<source>https://developer.spotify.com/technologies/widgets/spotify-play-button/</source>
 	<source>http://news.spotify.com/2008/01/14/linking-to-spotify/</source>
-	<example>spotify:track:5JunxkcjfCYcY7xJ29tLai</example>
-	<example>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe</example>
 	<example>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</example>
 	<example>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</example>
 
 	<tags><tag>music</tag></tags>
 
-	<scheme>spotify</scheme>
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?'uri'spotify:(?:album|artist|user|track(?:set)?):[-,:\w]+)!</extract>
-	<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)/[-/\w]+)!</extract>
-	<iframe width="400" height="480">
-		<src><![CDATA[
-			<xsl:text>https://embed.spotify.com/?view=coverart&amp;uri=</xsl:text>
-			<xsl:choose>
-				<xsl:when test="@uri">
-					<xsl:value-of select="@uri"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>spotify:</xsl:text>
-					<xsl:value-of select="translate(@path,'/',':')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		]]></src>
-	</iframe>
+	<extract>!(?:open|play)\.spotify\.com/(?'path'(?:album|artist|track|user)[:/][-/:\w]+)!</extract>
+	<iframe width="400" height="480" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:{translate(@path,'/',':')}"/>
 </site>

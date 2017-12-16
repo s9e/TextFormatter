@@ -6,6 +6,8 @@ The following method and properties have been removed from `s9e\TextFormatter\Pl
  - `$captureURLs` — Disabling the plugin at runtime produces the same effect.
  - `$createIndividualBBCodes` — Individual BBCodes can be [created manually](../Plugins/MediaEmbed/Synopsis.md#example).
 
+In addition, support for custom schemes has been removed from the MediaEmbed plugin. The [same functionality](../Plugins/Preg/Practical_examples.md#capture-spotify-uris) can be produced using the Preg plugin.
+
 
 ## 0.13.0
 

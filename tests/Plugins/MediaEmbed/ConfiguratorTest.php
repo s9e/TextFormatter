@@ -984,71 +984,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a regexp if a site has a "scheme"
-	*/
-	public function testAsConfigRegexpScheme()
-	{
-		$this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'scheme'   => 'bar',
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'template' => ''
-			]
-		);
-
-		$config = $this->configurator->MediaEmbed->asConfig();
-
-		$this->assertSame(
-			'/\\b(?>bar:|https?:\\/\\/)[^["\'\\s]+/Si',
-			$config['regexp']
-		);
-	}
-
-	/**
-	* @testdox asConfig() creates a regexp if a site has both "host" and "scheme"
-	*/
-	public function testAsConfigRegexpBoth()
-	{
-		$this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => ['example.com', 'example.org'],
-				'scheme'   => ['bar', 'baz'],
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'template' => ''
-			]
-		);
-
-		$config = $this->configurator->MediaEmbed->asConfig();
-
-		$this->assertSame(
-			'/\\b(?>ba[rz]:|https?:\\/\\/)[^["\'\\s]+/Si',
-			$config['regexp']
-		);
-	}
-
-	/**
-	* @testdox asConfig() returns ':' as quickMatch if it has a site with a "scheme"
-	*/
-	public function testAsConfigQuickMatchScheme()
-	{
-		$this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'scheme'   => ['bar', 'baz'],
-				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
-				'template' => ''
-			]
-		);
-
-		$config = $this->configurator->MediaEmbed->asConfig();
-
-		$this->assertSame(':', $config['quickMatch']);
-	}
-
-	/**
-	* @testdox asConfig() returns '://' as quickMatch if it has no site with a "scheme"
+	* @testdox asConfig() returns '://' as quickMatch
 	*/
 	public function testAsConfigQuickMatchHost()
 	{

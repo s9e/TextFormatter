@@ -97,6 +97,7 @@ pages:
       - Syntax: Plugins/PipeTables/Syntax.md
     - Preg:
       - Synopsis: Plugins/Preg/Synopsis.md
+      - Practical examples: Plugins/Preg/Practical_examples.md
     - Your own plugin:
       - Plug your own parser: Plugins/Your_own_plugin/Register_parser.md
       - Create tags: Plugins/Your_own_plugin/Create_tags.md

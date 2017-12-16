@@ -45,6 +45,16 @@ class Configurator extends ConfiguratorBase
 	public $defaultSites;
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '://';
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected $regexp = '/\\bhttps?:\\/\\/[^["\'\\s]+/Si';
+
+	/**
 	* @var string Name of the tag used to handle embeddable URLs
 	*/
 	protected $tagName = 'MEDIA';
@@ -110,16 +120,9 @@ class Configurator extends ConfiguratorBase
 			return;
 		}
 
-		$regexp  = 'https?:\\/\\/';
-		$schemes = $this->getSchemes();
-		if (!empty($schemes))
-		{
-			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
-		}
-
 		return [
-			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si',
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => $this->regexp,
 			'tagName'    => $this->tagName
 		];
 	}
@@ -360,28 +363,6 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
-	}
-
-	/**
-	* Return the list of custom schemes supported via media sites
-	*
-	* @return string[]
-	*/
-	protected function getSchemes()
-	{
-		$schemes = [];
-		foreach ($this->collection as $site)
-		{
-			if (isset($site['scheme']))
-			{
-				foreach ((array) $site['scheme'] as $scheme)
-				{
-					$schemes[] = $scheme;
-				}
-			}
-		}
-
-		return $schemes;
 	}
 
 	/**

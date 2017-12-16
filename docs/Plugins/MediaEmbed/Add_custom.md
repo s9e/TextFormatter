@@ -2,9 +2,7 @@
 
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
-  * At least one of the following:
-    * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
-    * `scheme` is a custom scheme handled by given site, e.g. `spotify` for handling `spotify:` URIs.
+  * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
   * At least one of the following:
     * `extract` is a regexp used to extract values from the URL.
     * `scrape` is an array that must contain at least one `extract` and zero or more `match` where:

@@ -2983,34 +2983,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'spotify:track:5JunxkcjfCYcY7xJ29tLai',
-				'<r><SPOTIFY uri="spotify:track:5JunxkcjfCYcY7xJ29tLai">spotify:track:5JunxkcjfCYcY7xJ29tLai</SPOTIFY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('spotify');
-				}
-			],
-			[
-				'spotify:album:0coYJwk0uFvOXDkgMzQJMG',
-				'<r><SPOTIFY uri="spotify:album:0coYJwk0uFvOXDkgMzQJMG">spotify:album:0coYJwk0uFvOXDkgMzQJMG</SPOTIFY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('spotify');
-				}
-			],
-			[
-				'[spotify]spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe[/spotify]',
-				'<r><SPOTIFY uri="spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe"><s>[spotify]</s>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<e>[/spotify]</e></SPOTIFY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('spotify', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('spotify');
-				}
-			],
-			[
 				'https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA',
 				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				[],
@@ -4227,18 +4199,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('spotify', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('spotify');
-				}
-			],
-			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4247,7 +4209,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:3lDpjvbifbmrmzWGE8F9zd" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
