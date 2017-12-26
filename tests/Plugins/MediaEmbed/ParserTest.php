@@ -1090,8 +1090,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.podbean.com/media/share/dir-vf532-2dd8497',
-				'<r><PODBEAN id="vf532-2dd8497-dir" url="http://www.podbean.com/media/share/dir-vf532-2dd8497">http://www.podbean.com/media/share/dir-vf532-2dd8497</PODBEAN></r>',
+				'http://www.podbean.com/media/share/dir-rfuh3-318f30b',
+				'<r><PODBEAN id="rfuh3-318f30b-dir" url="http://www.podbean.com/media/share/dir-rfuh3-318f30b">http://www.podbean.com/media/share/dir-rfuh3-318f30b</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
