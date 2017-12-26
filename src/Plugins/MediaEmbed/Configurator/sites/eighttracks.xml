@@ -7,7 +7,7 @@
 	<host>8tracks.com</host>
 	<extract>!8tracks\.com/[-\w]+/(?'id'\d+)(?=#|$)!</extract>
 	<scrape>
-		<match>!8tracks\.com/[-\w]+/[-\w]+!</match>
+		<match>!8tracks\.com/[-\w]+/\D!</match>
 		<extract>!eighttracks://mix/(?'id'\d+)!</extract>
 	</scrape>
 	<iframe width="400" height="400" src="//8tracks.com/mixes/{@id}/player_v3_universal"/>
