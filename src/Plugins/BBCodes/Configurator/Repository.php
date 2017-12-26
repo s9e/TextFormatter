@@ -132,15 +132,6 @@ class Repository
 			call_user_func_array([$tag->rules, $methodName], $args);
 		}
 
-		// Set predefined attributes
-		foreach ($node->getElementsByTagName('predefinedAttributes') as $predefinedAttributes)
-		{
-			foreach ($predefinedAttributes->attributes as $attribute)
-			{
-				$bbcode->predefinedAttributes->set($attribute->name, $attribute->value);
-			}
-		}
-
 		return [
 			'bbcode'     => $bbcode,
 			'bbcodeName' => $bbcodeName,

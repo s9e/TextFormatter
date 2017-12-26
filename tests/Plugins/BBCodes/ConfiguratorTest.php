@@ -376,21 +376,4 @@ class ConfiguratorTest extends Test
 		);
 		$this->assertArrayHasKey('FOO', $config['bbcodes']);
 	}
-
-	/**
-	* @testdox asConfig() returns predefinedAttributes in a Dictionary
-	*/
-	public function testAsConfigPreservesPredefinedAttributeNames()
-	{
-		$plugin = $this->configurator->plugins->load('BBCodes');
-		$plugin->add('FOO')->predefinedAttributes['k'] = 'v';
-
-		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary',
-			$config['bbcodes']['FOO']['predefinedAttributes']
-		);
-		$this->assertArrayHasKey('k', $config['bbcodes']['FOO']['predefinedAttributes']);
-	}
 }

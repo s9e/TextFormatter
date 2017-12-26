@@ -81,18 +81,6 @@ class BBCodeTest extends Test
 	}
 
 	/**
-	* @testdox $bbcode->predefinedAttributes is an instance of AttributeValueCollection
-	*/
-	public function testAttributeValuesInstance()
-	{
-		$bbcode = new BBCode;
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\AttributeValueCollection',
-			$bbcode->predefinedAttributes
-		);
-	}
-
-	/**
 	* @testdox asConfig() returns its set properties
 	*/
 	public function testAsConfig()
@@ -118,20 +106,6 @@ class BBCodeTest extends Test
 
 		$this->assertSame(
 			['tagName' => 'FOO'],
-			$bbcode->asConfig()
-		);
-	}
-
-	/**
-	* @testdox asConfig() returns predefinedAttributes in a Dictionary
-	*/
-	public function testAsConfigPredefinedAttributesDictionary()
-	{
-		$bbcode = new BBCode;
-		$bbcode->predefinedAttributes = ['foo' => 'bar'];
-
-		$this->assertEquals(
-			['predefinedAttributes' => new Dictionary(['foo' => 'bar'])],
 			$bbcode->asConfig()
 		);
 	}

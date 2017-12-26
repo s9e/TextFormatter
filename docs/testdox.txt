@@ -2105,9 +2105,6 @@ s9e\TextFormatter\Tests\Plugins\Autovideo\Parser
  [x] Parsing tests (JavaScript) 
  [x] Parsing+rendering tests 
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
- [x] Throws an exception on invalid attribute name
-
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
@@ -2116,10 +2113,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
  [x] $bbcode->contentAttributes is an instance of AttributeList
- [x] $bbcode->predefinedAttributes is an instance of AttributeValueCollection
  [x] asConfig() returns its set properties
  [x] asConfig() omits forceLookahead is it's FALSE
- [x] asConfig() returns predefinedAttributes in a Dictionary
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode
@@ -2158,7 +2153,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] Custom tagName is correctly set
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value
- [x] predefinedAttributes is correctly set
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Instances of Repository are added as-is
@@ -2187,7 +2181,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] asConfig() returns BBCodes in a Dictionary
- [x] asConfig() returns predefinedAttributes in a Dictionary
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests 

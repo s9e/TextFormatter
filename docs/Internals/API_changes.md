@@ -8,6 +8,8 @@ The following method and properties have been removed from `s9e\TextFormatter\Pl
 
 In addition, support for custom schemes has been removed from the MediaEmbed plugin. The [same functionality](../Plugins/Preg/Practical_examples.md#capture-spotify-uris) can be produced using the Preg plugin.
 
+The `predefinedAttributes` property of `s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode` has been removed, as well as the `s9e\TextFormatter\Plugins\BBCodes\Configurator\AttributeValueCollection` class.
+
 
 ## 0.13.0
 

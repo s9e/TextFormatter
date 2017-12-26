@@ -436,32 +436,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'[PHP]...[/PHP]',
-				'<r><CODE lang="php"><s>[PHP]</s>...<e>[/PHP]</e></CODE></r>',
-				[],
-				function ($configurator)
-				{
-					$bbcode = $configurator->BBCodes->add('PHP');
-					$bbcode->predefinedAttributes['lang'] = 'php';
-					$bbcode->tagName = 'CODE';
-
-					$configurator->tags->add('CODE')->attributes->add('lang');
-				}
-			],
-			[
-				'[PHP lang=php4]...[/PHP]',
-				'<r><CODE lang="php4"><s>[PHP lang=php4]</s>...<e>[/PHP]</e></CODE></r>',
-				[],
-				function ($configurator)
-				{
-					$bbcode = $configurator->BBCodes->add('PHP');
-					$bbcode->predefinedAttributes['lang'] = 'php';
-					$bbcode->tagName = 'CODE';
-
-					$configurator->tags->add('CODE')->attributes->add('lang');
-				}
-			],
-			[
 				'x [IMG=http://localhost/foo.png /] y',
 				'<r>x <IMG src="http://localhost/foo.png">[IMG=http://localhost/foo.png /]</IMG> y</r>',
 				[],

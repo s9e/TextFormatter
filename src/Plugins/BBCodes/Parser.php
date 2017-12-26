@@ -276,12 +276,8 @@ class Parser extends ParserBase
 			return;
 		}
 
-		// Parse attributes and fill in the blanks with predefined attributes
+		// Parse attributes
 		$this->parseAttributes();
-		if (isset($this->bbcodeConfig['predefinedAttributes']))
-		{
-			$this->attributes += $this->bbcodeConfig['predefinedAttributes'];
-		}
 
 		// Test whether the tag is properly closed
 		if (substr($this->text, $this->pos, 1) === ']')

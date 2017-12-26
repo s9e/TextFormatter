@@ -292,30 +292,4 @@ class RepositoryTest extends Test
 
 		$this->assertTrue($config['tag']->rules['ignoreTags']);
 	}
-
-	/**
-	* @testdox predefinedAttributes is correctly set
-	*/
-	public function testPredefinedAttributes()
-	{
-		$dom = new DOMDocument;
-		$dom->loadXML(
-			'<repository>
-				<bbcode name="FOO">
-					<usage>[FOO]</usage>
-					<template></template>
-					<predefinedAttributes foo="bar" baz="quux" />
-				</bbcode>
-			</repository>'
-		);
-
-		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
-		$config = $repository->get('FOO');
-
-		$this->assertTrue(isset($config['bbcode']->predefinedAttributes['foo']));
-		$this->assertSame('bar', $config['bbcode']->predefinedAttributes['foo']);
-
-		$this->assertTrue(isset($config['bbcode']->predefinedAttributes['baz']));
-		$this->assertSame('quux', $config['bbcode']->predefinedAttributes['baz']);
-	}
 }

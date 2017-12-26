@@ -20,7 +20,6 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 * @property AttributeList $contentAttributes List of attributes whose value is to be made the content between the BBCode's tags if it's not explicitly given
 * @property string $defaultAttribute Name of the default attribute
 * @property bool $forceLookahead Whether the parser should look ahead in the text for an end tag before adding a start tag
-* @property AttributeValueCollection $predefinedAttributes Predefined attribute values, can be overwritten by user input
 * @property string $tagName Name of the tag used to represent this BBCode in the intermediate representation
 */
 class BBCode implements ConfigProvider
@@ -45,11 +44,6 @@ class BBCode implements ConfigProvider
 	protected $forceLookahead = false;
 
 	/**
-	* @var AttributeValueCollection Predefined attribute values, can be overwritten by user input
-	*/
-	protected $predefinedAttributes;
-
-	/**
 	* @var string Name of the tag used to represent this BBCode in the intermediate representation
 	*/
 	protected $tagName;
@@ -59,9 +53,7 @@ class BBCode implements ConfigProvider
 	*/
 	public function __construct(array $options = null)
 	{
-		$this->contentAttributes    = new AttributeList;
-		$this->predefinedAttributes = new AttributeValueCollection;
-
+		$this->contentAttributes = new AttributeList;
 		if (isset($options))
 		{
 			foreach ($options as $optionName => $optionValue)
@@ -80,10 +72,6 @@ class BBCode implements ConfigProvider
 		if (!$this->forceLookahead)
 		{
 			unset($config['forceLookahead']);
-		}
-		if (isset($config['predefinedAttributes']))
-		{
-			$config['predefinedAttributes'] = new Dictionary($config['predefinedAttributes']);
 		}
 
 		return $config;
