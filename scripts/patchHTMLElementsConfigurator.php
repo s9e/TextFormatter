@@ -25,7 +25,8 @@ $page  = loadPage('http://w3c.github.io/html/fullindex.html');
 $xpath = new DOMXPath ($page);
 $query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr[contains(., "URL")]/th';
 
-$filters = [];
+// Prefill the list of filters with the "icon" attribute from the now-deprecated menuitem element
+$filters = ['icon' => '#url'];
 foreach ($xpath->query($query) as $th)
 {
 	foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
