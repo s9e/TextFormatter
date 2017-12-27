@@ -32,12 +32,9 @@ $page = loadPage('http://www.w3.org/TR/html/single-page.html');
 //==============================================================================
 
 //$page  = loadPage('http://www.w3.org/TR/html5/syntax.html');
-$nodes = $page->getElementById('ref-for-list-of-active-formatting-elements-1')
-              ->parentNode
-              ->getElementsByTagName('code');
-
+$node = $page->getElementById('formatting')->parentNode->nextSibling;
 $formattingElements = [];
-foreach ($nodes as $node)
+foreach ($node->getElementsByTagName('code') as $node)
 {
 	$formattingElements[$node->textContent] = 1;
 }
@@ -104,7 +101,7 @@ while (isset($node->nextSibling))
 		$closeParent[$m[1]][$elName] = 0;
 		$closeParent[$m[2]][$elName] = 0;
 	}
-	elseif (preg_match('#^((?:\\w+, )*or [a-z]+) element, or if there is no more content in the parent element and the parent element is an HTML element that is not an? (?:\\w+, )*or \\w+ element$#', $text, $m))
+	elseif (preg_match('#^((?:\\w+, )*or [a-z]+) element, or if there is no more content in the parent element and the parent element is an HTML element that is not an? (?:\\w+, )*or \\w+ element, or an autonomous custom element$#', $text, $m))
 	{
 		foreach (preg_split('(, (?:or )?)', $m[1]) as $target)
 		{
@@ -152,6 +149,8 @@ function getCategories($dl)
 	foreach (getDdText(getDt($dl, 'Categories')) as $text)
 	{
 		$text = strtolower($text);
+		$text = preg_replace('(^if the element is allowed in the body: )', '', $text);
+
 		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root)\\.$)', $text, $m))
 		{
 			$cat[$m[1]][''] = 1;
@@ -195,6 +194,7 @@ function getCategories($dl)
 		}
 		else
 		{
+echo $dl->ownerDocument->saveXML($dl),"\n";
 			die("Cannot parse category '$text'\n");
 		}
 	}
@@ -248,7 +248,8 @@ function getContentModel($dl, $elName)
 	foreach (getDdText(getDt($dl, 'Content model')) as $text)
 	{
 		$text = preg_replace('(\\s+)', ' ', strtolower($text));
-		$text = preg_replace('(^either: |^or: )', '', $text);
+		$text = preg_replace('(^either:|^or:)', '', $text);
+		$text = trim($text);
 		$text = rtrim($text, '.');
 
 		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root|transparent)$)', $text, $m))
@@ -328,11 +329,21 @@ function getContentModel($dl, $elName)
 			$model['allowChildElement']['li']['']                         = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
-		elseif ($text === 'zero or more groups each consisting of one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements')
+		elseif ($text === 'zero or more groups each consisting of one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements'
+		     || $text === 'if the element is a child of a dl element: one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements')
 		{
 			$model['allowChildElement']['dt']['']                         = 1;
 			$model['allowChildElement']['dd']['']                         = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
+		}
+		elseif ($text === 'one or more div elements, optionally intermixed with script-supporting elements')
+		{
+			$model['allowChildElement']['div']['']                        = 1;
+			$model['allowChildCategory']['script-supporting element'][''] = 1;
+		}
+		elseif ($text === 'if the element is not a child of a dl element: flow content')
+		{
+			$model['allowChildCategory']['flow content']['not(ancestor::dl)'] = 1;
 		}
 		elseif ($text === 'zero or more source elements, followed by one img element, optionally intermixed with script-supporting elements')
 		{
@@ -388,7 +399,7 @@ function getContentModel($dl, $elName)
 		{
 			$model['allowChildCategory']['metadata content'][''] = 1;
 		}
-		elseif ($text === 'text' || $text === 'text that is not inter-element whitespace')
+		elseif ($text === 'text' || $text === 'text that is not inter-element white space')
 		{
 			$model['allowText'] = 1;
 			$model['textOnly']  = 1;
@@ -400,6 +411,11 @@ function getContentModel($dl, $elName)
 		elseif ($text === 'otherwise: text , but must match requirements described in prose below')
 		{
 			$model['allowText'] = 1;
+		}
+		elseif ($text === 'phrasing content and headings (h1-h6 elements)')
+		{
+			$model['allowChildCategory']['phrasing content'][''] = 1;
+			$model['allowChildCategory']['heading content']['']  = 1;
 		}
 		elseif (preg_match('(^if the (\\w+) attribute is present: nothing$)', $text, $m))
 		{
@@ -456,7 +472,18 @@ function getDdText($dt)
 	{
 		if ($node->nodeName === 'dd')
 		{
-			$dds[] = trim($node->textContent);
+			$paragraphs = $node->getElementsByTagName('p');
+			if ($paragraphs->length)
+			{
+				foreach ($paragraphs as $p)
+				{
+					$dds[] = trim($p->textContent);
+				}
+			}
+			else
+			{
+				$dds[] = trim($node->textContent);
+			}
 		}
 		elseif ($node->nodeType !== XML_TEXT_NODE)
 		{
