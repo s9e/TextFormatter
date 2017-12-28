@@ -400,11 +400,10 @@ function getNamedCaptures(attrValue, regexp, map)
 *
 * @private
 *
-* @param  {!Tag}     tag            Tag being checked
-* @param  {!Object}  tagConfig      Tag's config
-* @param  {!Object}  registeredVars Vars registered for use in attribute filters
-* @param  {!Logger}  logger         This parser's Logger instance
-* @return {!boolean}                Whether the whole attribute set is valid
+* @param {!Tag}    tag            Tag being checked
+* @param {!Object} tagConfig      Tag's config
+* @param {!Object} registeredVars Vars registered for use in attribute filters
+* @param {!Logger} logger         This parser's Logger instance
 */
 function filterAttributes(tag, tagConfig, registeredVars, logger)
 {
@@ -412,7 +411,7 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 	{
 		tag.setAttributes({});
 
-		return true;
+		return;
 	}
 
 	var attrName, attrConfig;
@@ -494,26 +493,21 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 			{
 				// This attribute is missing, has no default value and is required, which means
 				// the attribute set is invalid
-				return false;
+				tag.invalidate();
 			}
 		}
 	}
-
-	return true;
 }
 
 /**
 * Execute given tag's filterChain
 *
-* @param  {!Tag}     tag Tag to filter
-* @return {!boolean}     Whether the tag is valid
+* @param {!Tag} tag Tag to filter
 */
 function filterTag(tag)
 {
 	var tagName   = tag.getName(),
-		tagConfig = tagsConfig[tagName],
-		isValid   = true;
-
+		tagConfig = tagsConfig[tagName];
 	if (tagConfig.filterChain)
 	{
 		// Record the tag being processed into the logger it can be added to the context of
@@ -522,18 +516,16 @@ function filterTag(tag)
 
 		for (var i = 0; i < tagConfig.filterChain.length; ++i)
 		{
-			if (!tagConfig.filterChain[i](tag, tagConfig))
+			if (tag.isInvalid())
 			{
-				isValid = false;
 				break;
 			}
+			tagConfig.filterChain[i](tag, tagConfig);
 		}
 
 		// Remove the tag from the logger
 		logger.unsetTag();
 	}
-
-	return isValid;
 }
 
 //==========================================================================
@@ -1634,10 +1626,9 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (!filterTag(tag))
+	filterTag(tag);
+	if (tag.isInvalid())
 	{
-		tag.invalidate();
-
 		return;
 	}
 

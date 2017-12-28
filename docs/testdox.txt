@@ -1819,18 +1819,17 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeFilter() correctly passes a named var to the callback
  [x] executeFilter() correctly passes a var passed through registeredVars to the callback
  [x] executeFilter() passes NULL to the callback if a variable is missing
- [x] filterTag() returns TRUE if the tag has an empty filterChain
- [x] filterTag() executes the tag's filterChain and returns TRUE
- [x] filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
+ [x] filterTag() executes the tag's filterChain
+ [x] filterTag() stops executing the tag's filterChain if a filter invalidates the tag
  [x] filterTag() calls the logger's setTag() and unsetTag() methods
- [x] filterTag() can pass its own instance to tag filters via the 'parser' parameter
+ [x] filterTag() passes the Parser instance to tag filters via the 'parser' parameter
  [x] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
  [x] filterTag() can pass the text being parsed via the 'text' parameter
  [x] filterAttributes() removes the tag's attributes if none were configured
  [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
  [x] filterAttributes() removes undefined attributes
  [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
- [x] filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
+ [x] filterAttributes() stops executing the attribute's filterChain and invalidates the tag if a an attribute filter returns FALSE
  [x] filterAttributes() removes invalid attributes
  [x] filterAttributes() replaces invalid attributes with their defaultValue if applicable
  [x] filterAttributes() adds missing attributes with their defaultValue if applicable

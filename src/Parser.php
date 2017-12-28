@@ -516,7 +516,7 @@ class Parser
 	* @param  array  $tagConfig      Tag's config
 	* @param  array  $registeredVars Array of registered vars for use in attribute filters
 	* @param  Logger $logger         This parser's Logger instance
-	* @return bool                   Whether the whole attribute set is valid
+	* @return void
 	*/
 	public static function filterAttributes(Tag $tag, array $tagConfig, array $registeredVars, Logger $logger)
 	{
@@ -524,7 +524,7 @@ class Parser
 		{
 			$tag->setAttributes([]);
 
-			return true;
+			return;
 		}
 
 		// Generate values for attributes with a generator set
@@ -611,26 +611,22 @@ class Parser
 				{
 					// This attribute is missing, has no default value and is required, which means
 					// the attribute set is invalid
-					return false;
+					$tag->invalidate();
 				}
 			}
 		}
-
-		return true;
 	}
 
 	/**
 	* Execute given tag's filterChain
 	*
 	* @param  Tag  $tag Tag to filter
-	* @return bool      Whether the tag is valid
+	* @return void
 	*/
 	protected function filterTag(Tag $tag)
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
-		$isValid   = true;
-
 		if (!empty($tagConfig['filterChain']))
 		{
 			// Record the tag being processed into the logger it can be added to the context of
@@ -647,21 +643,18 @@ class Parser
 				'tagConfig'      => $tagConfig,
 				'text'           => $this->text
 			];
-
 			foreach ($tagConfig['filterChain'] as $filter)
 			{
-				if (!self::executeFilter($filter, $vars))
+				if ($tag->isInvalid())
 				{
-					$isValid = false;
 					break;
 				}
+				self::executeFilter($filter, $vars);
 			}
 
 			// Remove the tag from the logger
 			$this->logger->unsetTag();
 		}
-
-		return $isValid;
 	}
 
 	//==========================================================================
@@ -1718,10 +1711,9 @@ class Parser
 			return;
 		}
 
-		if (!$this->filterTag($tag))
+		$this->filterTag($tag);
+		if ($tag->isInvalid())
 		{
-			$tag->invalidate();
-
 			return;
 		}
 

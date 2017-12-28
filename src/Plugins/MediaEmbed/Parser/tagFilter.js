@@ -1,7 +1,6 @@
 /**
-* @param  {!Tag}     tag   The original tag
-* @param  {!Object}  sites Map of [host => siteId]
-* @return {!boolean}       Always false
+* @param  {!Tag}    tag   The original tag
+* @param  {!Object} sites Map of [host => siteId]
 */
 function (tag, sites)
 {
@@ -25,12 +24,12 @@ function (tag, sites)
 	* This will always invalidate the original tag, and possibly replace it with the tag that
 	* corresponds to the media site
 	*
-	* @param  {!Tag}     tag   The original tag
-	* @param  {!Object}  sites Map of [host => siteId]
-	* @return {!boolean}       Always false
+	* @param {!Tag}    tag   The original tag
+	* @param {!Object} sites Map of [host => siteId]
 	*/
 	function filterTag(tag, sites)
 	{
+		tag.invalidate();
 		if (tag.hasAttribute('site'))
 		{
 			addTagFromMediaId(tag, sites);
@@ -39,8 +38,6 @@ function (tag, sites)
 		{
 			addTagFromMediaUrl(tag, sites);
 		}
-
-		return false;
 	}
 
 	/**

@@ -962,7 +962,7 @@ class TagProcessingTest extends Test
 				function ($configurator)
 				{
 					$configurator->tags->add('X')->filterChain
-						->append(__CLASS__ . '::returnTagPosAsBoolCallback');
+						->append(__CLASS__ . '::invalidateTagsAtPos0');
 				},
 				function ($parser)
 				{
@@ -1424,8 +1424,11 @@ class TagProcessingTest extends Test
 		return true;
 	}
 
-	public static function returnTagPosAsBoolCallback($tag)
+	public static function invalidateTagsAtPos0($tag)
 	{
-		return (bool) $tag->getPos();
+		if (!$tag->getPos())
+		{
+			$tag->invalidate();
+		}
 	}
 }

@@ -45,10 +45,11 @@ class Parser extends ParserBase
 	* @param  Tag      $tag      The original tag
 	* @param  TagStack $tagStack Parser instance, so that we can add the new tag to the stack
 	* @param  array    $sites    Map of [host => siteId]
-	* @return bool               Unconditionally FALSE
+	* @return void
 	*/
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
+		$tag->invalidate();
 		if ($tag->hasAttribute('site'))
 		{
 			self::addTagFromMediaId($tag, $tagStack, $sites);
@@ -57,15 +58,13 @@ class Parser extends ParserBase
 		{
 			self::addTagFromMediaUrl($tag, $tagStack, $sites);
 		}
-
-		return false;
 	}
 
 	/**
-	* Test whether a given tag has at least one non-default attribute
+	* Invalidate given tag if it doesn't have at least one non-default attribute
 	*
 	* @param  Tag  $tag The original tag
-	* @return bool      Whether the tag contains an attribute not named "url"
+	* @return void
 	*/
 	public static function hasNonDefaultAttribute(Tag $tag)
 	{
@@ -73,11 +72,11 @@ class Parser extends ParserBase
 		{
 			if ($attrName !== 'url')
 			{
-				return true;
+				return;
 			}
 		}
 
-		return false;
+		$tag->invalidate();
 	}
 
 	/**

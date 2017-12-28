@@ -204,18 +204,7 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox filterTag() returns TRUE if the tag has an empty filterChain
-	*/
-	public function testFilterTagNoFilterChain()
-	{
-		$dummy = new FilterProcessingDummy;
-		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
-
-		$this->assertTrue($dummy->__filterTag($tag));
-	}
-
-	/**
-	* @testdox filterTag() executes the tag's filterChain and returns TRUE
+	* @testdox filterTag() executes the tag's filterChain
 	*/
 	public function testFilterTag()
 	{
@@ -237,32 +226,29 @@ class FilterProcessingTest extends Test
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		$this->assertTrue($dummy->__filterTag($tag));
+		$dummy->__filterTag($tag);
 	}
 
 	/**
-	* @testdox filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
+	* @testdox filterTag() stops executing the tag's filterChain if a filter invalidates the tag
 	*/
-	public function testFilterTagReturnsFalse()
+	public function testFilterTagStopsExecution()
 	{
+		$tag  = $this->configurator->tags->add('X');
 		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['foo', 'bar'])
+		             ->setMethods(['bar'])
 		             ->getMock();
-		$mock->expects($this->once())
-		     ->method('foo')
-		     ->will($this->returnValue(false));
 		$mock->expects($this->never())
 		     ->method('bar');
 
-		$tag = $this->configurator->tags->add('X');
-		$tag->filterChain->append([$mock, 'foo']);
+		$tag->filterChain->append(__NAMESPACE__ . '\\InvalidatingFilter::invalidate');
 		$tag->filterChain->append([$mock, 'bar']);
 		$this->configurator->finalize();
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		$this->assertFalse($dummy->__filterTag($tag));
+		$dummy->__filterTag($tag);
 	}
 
 	/**
@@ -298,7 +284,7 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox filterTag() can pass its own instance to tag filters via the 'parser' parameter
+	* @testdox filterTag() passes the Parser instance to tag filters via the 'parser' parameter
 	*/
 	public function testFilterTagPassesParser()
 	{
@@ -320,7 +306,7 @@ class FilterProcessingTest extends Test
 		     ->with($this->identicalTo($dummy))
 		     ->will($this->returnValue(true));
 
-		$this->assertTrue($dummy->__filterTag($tag));
+		$dummy->__filterTag($tag);
 	}
 
 	/**
@@ -479,7 +465,7 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
+	* @testdox filterAttributes() stops executing the attribute's filterChain and invalidates the tag if a an attribute filter returns FALSE
 	*/
 	public function testFilterAttributesReturnsFalse()
 	{
@@ -501,7 +487,8 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger));
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
+		$this->assertTrue($tag->isInvalid());
 	}
 
 	/**
@@ -606,6 +593,14 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('bar', 'bar');
 
 		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], $logger);
+	}
+}
+
+class InvalidatingFilter
+{
+	public static function invalidate($tag)
+	{
+		$tag->invalidate();
 	}
 }
 

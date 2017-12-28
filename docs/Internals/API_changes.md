@@ -10,6 +10,8 @@ In addition, support for custom schemes has been removed from the MediaEmbed plu
 
 The `predefinedAttributes` property of `s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode` has been removed, as well as the `s9e\TextFormatter\Plugins\BBCodes\Configurator\AttributeValueCollection` class.
 
+The return value of tag filters is not used to invalidate tags anymore. Tags must be explicitly invalidated in tag filters.
+
 
 ## 0.13.0
 
