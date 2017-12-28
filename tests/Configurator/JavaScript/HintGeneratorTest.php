@@ -29,23 +29,6 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox HINT.attributeGenerator=0 by default
-	*/
-	public function testHintAttributeGeneratorFalse()
-	{
-		$this->assertHintsContain('HINT.attributeGenerator=0');
-	}
-
-	/**
-	* @testdox HINT.attributeGenerator=1 if any attribute has a generator
-	*/
-	public function testHintAttributeGeneratorTrue()
-	{
-		$this->configurator->tags->add('X')->attributes->add('x')->generator = 'mt_rand';
-		$this->assertHintsContain('HINT.attributeGenerator=1');
-	}
-
-	/**
 	* @testdox HINT.attributeDefaultValue=0 by default
 	*/
 	public function testHintAttributeDefaultValueFalse()

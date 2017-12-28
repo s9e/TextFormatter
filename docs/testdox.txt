@@ -658,8 +658,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array
- [x] $attr->generator accepts an instance of ProgrammableCallback
- [x] $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
  [x] asConfig() correctly produces a config array
  [x] isSafeAsURL() returns FALSE by default
  [x] isSafeAsURL() returns TRUE if any filter is safe in context
@@ -1011,8 +1009,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider
  [x] get() will throw an exception if the function can't be sourced
 
 s9e\TextFormatter\Tests\Configurator\HintGenerator
- [x] HINT.attributeGenerator=0 by default
- [x] HINT.attributeGenerator=1 if any attribute has a generator
  [x] HINT.attributeDefaultValue=0 by default
  [x] HINT.attributeDefaultValue=1 if any attribute has a defaultValue
  [x] HINT.closeAncestor=0 by default
@@ -1690,7 +1686,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] If a plugin's quickMatch value contains bad UTF-8, only the first consecutive valid characters are kept
  [x] A plugin with no JS parser does not appear in the source
  [x] getParser() throws an exception if it encounters a value that cannot be encoded into JavaScript
- [x] Attribute generators are converted
  [x] Built-in attribute filters are converted
  [x] An attribute filter that uses a built-in filter as callback is converted
  [x] An attribute filter with no JS representation unconditionally returns false
@@ -1826,7 +1821,6 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
  [x] filterTag() can pass the text being parsed via the 'text' parameter
  [x] filterAttributes() removes the tag's attributes if none were configured
- [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
  [x] filterAttributes() removes undefined attributes
  [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
  [x] filterAttributes() stops executing the attribute's filterChain and invalidates the tag if a an attribute filter returns FALSE
@@ -2595,8 +2589,8 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] The MEDIA tag transfers its priority to the tag it creates
  [x] The MEDIA tag can be effectively disabled
  [x] Abstract tests (not tied to bundled sites) 
- [x] Scraping tests 
- [x] Scraping+rendering tests 
+ [ ] Scraping tests 
+ [ ] Scraping+rendering tests 
  [x] Legacy rendering tests 
  [x] Parsing tests 
  [x] Parsing tests (JavaScript) 
@@ -2848,21 +2842,21 @@ s9e\TextFormatter\Tests\Unparser
  [x] Characters outside Unicode's BMP are decoded
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Curl
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Native
- [x] Does not send "Accept-Encoding: gzip" if gzip is disabled
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] Does not send "Accept-Encoding: gzip" if gzip is disabled
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Configurator\Helpers\Http
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client

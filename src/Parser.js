@@ -416,20 +416,6 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 
 	var attrName, attrConfig;
 
-	// Generate values for attributes with a generator set
-	if (HINT.attributeGenerator)
-	{
-		for (attrName in tagConfig.attributes)
-		{
-			attrConfig = tagConfig.attributes[attrName];
-
-			if (attrConfig.generator)
-			{
-				tag.setAttribute(attrName, attrConfig.generator(attrName));
-			}
-		}
-	}
-
 	// Filter and remove invalid attributes
 	var attributes = tag.getAttributes();
 	for (attrName in attributes)

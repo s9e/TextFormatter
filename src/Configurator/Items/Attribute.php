@@ -17,7 +17,6 @@ use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
 /**
 * @property mixed $defaultValue Default value used for this attribute
 * @property AttributeFilterChain $filterChain This attribute's filter chain
-* @property ProgrammableCallback $generator Generator used to generate a value for this attribute during parsing
 * @property bool $required Whether this attribute is required for the tag to be valid
 */
 class Attribute implements ConfigProvider
@@ -34,11 +33,6 @@ class Attribute implements ConfigProvider
 	* @var AttributeFilterChain This attribute's filter chain
 	*/
 	protected $filterChain;
-
-	/**
-	* @var ProgrammableCallback Generator used to generate a value for this attribute during parsing
-	*/
-	protected $generator;
 
 	/**
 	* @var bool Whether this attribute is required for the tag to be valid
@@ -83,21 +77,6 @@ class Attribute implements ConfigProvider
 		}
 
 		return !empty($this->markedSafe[$context]);
-	}
-
-	/**
-	* Set a generator for this attribute
-	*
-	* @param callable|ProgrammableCallback $callback
-	*/
-	public function setGenerator($callback)
-	{
-		if (!($callback instanceof ProgrammableCallback))
-		{
-			$callback = new ProgrammableCallback($callback);
-		}
-
-		$this->generator = $callback;
 	}
 
 	/**

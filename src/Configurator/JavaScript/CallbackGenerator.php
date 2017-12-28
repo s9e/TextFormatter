@@ -17,9 +17,6 @@ class CallbackGenerator
 			'attrValue' => '*',
 			'attrName'  => '!string'
 		],
-		'tags.*.attributes.*.generator' => [
-			'attrName'  => '!string'
-		],
 		'tags.*.filterChain.*' => [
 			'tag'       => '!Tag',
 			'tagConfig' => '!Object'

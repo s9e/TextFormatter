@@ -394,24 +394,6 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox filterAttributes() calls the attribute's generator and uses its return value as attribute's value
-	*/
-	public function testFilterAttributesCallsAttributeGenerator()
-	{
-		$tagConfig = new TagConfig;
-		$tagConfig->attributes->add('foo')->generator = function() { return 42; };
-
-		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
-
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
-
-		$this->assertSame(
-			['foo' => 42],
-			$tag->getAttributes()
-		);
-	}
-
-	/**
 	* @testdox filterAttributes() removes undefined attributes
 	*/
 	public function testFilterAttributesRemovesUndefinedAttributes()

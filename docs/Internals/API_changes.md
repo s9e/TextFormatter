@@ -12,6 +12,8 @@ The `predefinedAttributes` property of `s9e\TextFormatter\Plugins\BBCodes\Config
 
 The return value of tag filters is not used to invalidate tags anymore. Tags must be explicitly invalidated in tag filters.
 
+Support for attribute generators and the `{RANDOM}` token in BBCode definitions has been removed. The same behaviour can be defined in PHP by prepending a custom tag filter to a tag's `filterChain`.
+
 
 ## 0.13.0
 

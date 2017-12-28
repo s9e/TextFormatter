@@ -168,7 +168,6 @@ class HintGenerator
 
 		foreach ($tagConfig['attributes'] as $attrConfig)
 		{
-			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
 			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
 		}
 	}
@@ -180,7 +179,6 @@ class HintGenerator
 	*/
 	protected function setTagsHints()
 	{
-		$this->hints['attributeGenerator']    = 0;
 		$this->hints['attributeDefaultValue'] = 0;
 		$this->hints['namespaces']            = 0;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)

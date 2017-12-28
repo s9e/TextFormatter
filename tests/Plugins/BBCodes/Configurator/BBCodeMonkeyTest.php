@@ -670,24 +670,6 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
-				'[foo={RANDOM=1000,9999}/]',
-				'',
-				[
-					'bbcodeName' => 'FOO',
-					'bbcode' => new BBCode([
-						'defaultAttribute'  => 'foo'
-					]),
-					'tag'    => new Tag([
-						'attributes' => [
-							'foo' => [
-								'generator' => $this->getProgrammableCallback('mt_rand', 1000, 9999)
-							]
-						],
-						'template' => ''
-					])
-				]
-			],
-			[
 				'[foo={CHOICE=one,two}/]',
 				'',
 				[

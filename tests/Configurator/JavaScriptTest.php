@@ -197,25 +197,6 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox Attribute generators are converted
-	*/
-	public function testAttributeGenerator()
-	{
-		$js = 'function() { return "foo"; }';
-
-		$callback = new ProgrammableCallback(function() { return 'foo'; });
-		$callback->setJS($js);
-
-		$this->configurator->rootRules->allowChild('FOO');
-		$this->configurator->tags->add('FOO')->attributes->add('bar')->generator = $callback;
-
-		$this->assertContains(
-			$js,
-			$this->configurator->javascript->getParser()
-		);
-	}
-
-	/**
 	* @testdox Built-in attribute filters are converted
 	*/
 	public function testAttributeFilterBuiltIn()

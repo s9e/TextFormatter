@@ -527,25 +527,6 @@ class Parser
 			return;
 		}
 
-		// Generate values for attributes with a generator set
-		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
-		{
-			if (isset($attrConfig['generator']))
-			{
-				$tag->setAttribute(
-					$attrName,
-					self::executeFilter(
-						$attrConfig['generator'],
-						[
-							'attrName'       => $attrName,
-							'logger'         => $logger,
-							'registeredVars' => $registeredVars
-						]
-					)
-				);
-			}
-		}
-
 		// Filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
 		{

@@ -45,33 +45,6 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox $attr->generator accepts an instance of ProgrammableCallback
-	*/
-	public function testSetGeneratorProgrammableCallback()
-	{
-		$attr     = new Attribute;
-		$callback = new ProgrammableCallback('mt_rand');
-
-		$attr->generator = $callback;
-
-		$this->assertSame($callback, $attr->generator);
-	}
-
-	/**
-	* @testdox $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
-	*/
-	public function testSetGeneratorCallback()
-	{
-		$attr = new Attribute;
-		$attr->generator = 'mt_rand';
-
-		$this->assertInstanceof(
-			's9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback',
-			$attr->generator
-		);
-	}
-
-	/**
 	* @testdox asConfig() correctly produces a config array
 	*/
 	public function testAsConfig()
