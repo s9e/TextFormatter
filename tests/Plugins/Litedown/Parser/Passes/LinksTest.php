@@ -341,6 +341,23 @@ class LinksTest extends AbstractTest
 			],
 			[
 				[
+					'[quote]foo[/quote]',
+					'',
+					'[quote]:foo:[/quote]'
+				],
+				[
+					'<r><QUOTE><s>[quote]</s><p>foo</p><e>[/quote]</e></QUOTE>',
+					'',
+					'<QUOTE><s>[quote]</s><p>:foo:</p><e>[/quote]</e></QUOTE></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('QUOTE');
+				}
+			],
+			[
+				[
 					'[foo][1]',
 					'',
 					'[1]:  http://example.org  "Title" '
@@ -349,6 +366,18 @@ class LinksTest extends AbstractTest
 					'<r><p><URL title="Title" url="http://example.org"><s>[</s>foo<e>][1]</e></URL></p>',
 					'',
 					'<i>[1]:  http://example.org  "Title" </i></r>'
+				]
+			],
+			[
+				[
+					'[foo][1]',
+					'',
+					'[1]: http://example.org/?x\\[1\\]=2'
+				],
+				[
+					'<r><p><URL url="http://example.org/?x%5B1%5D=2"><s>[</s>foo<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: http://example.org/?x\\[1\\]=2</i></r>'
 				]
 			],
 		]);

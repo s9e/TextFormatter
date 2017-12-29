@@ -12,7 +12,6 @@ Litedown   | QUOTE    |     -999 | Increases with nesting level
 Litedown   | URL      |        1 | Implicit reference, e.g. `[ref]`
 Litedown   | URL      |       -1 | Reference-style, or inline
 Litedown   | *i*      |     1000 | Start-of-line markup
-Litedown   | *i*      |       -2 | References
 PipeTables | TABLE    |     -104 |
 PipeTables | THEAD    |     -103 |
 PipeTables | TBODY    |     -103 |

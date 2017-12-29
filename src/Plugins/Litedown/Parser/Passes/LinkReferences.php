@@ -19,11 +19,11 @@ class LinkReferences extends AbstractPass
 			return;
 		}
 
-		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))?)[^\\x17\\n]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^[\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))?) *(?=$|\\x17)\\n?/m';
 		preg_match_all($regexp, $this->text, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]), -2);
+			$this->parser->addIgnoreTag($m[0][1], strlen($m[0][0]));
 
 			// Only add the reference if it does not already exist
 			$id = strtolower($m[1][0]);
