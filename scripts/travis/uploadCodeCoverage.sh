@@ -12,7 +12,7 @@ cd $(dirname "$0")
 cd ../..
 php /tmp/ocular.phar code-coverage:upload --format=php-clover /tmp/clover.xml
 
-if [ -f vendor/bin/coveralls ]
+if [ -f vendor/bin/php-coveralls ]
 then
-	php vendor/bin/coveralls --exclude-no-stmt -n -v
+	php vendor/bin/php-coveralls --exclude-no-stmt -n -v
 fi
