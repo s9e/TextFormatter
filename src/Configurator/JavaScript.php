@@ -360,6 +360,7 @@ class JavaScript
 		// Prepare the list of files
 		$files   = glob($rootDir . '/Parser/AttributeFilters/*.js');
 		$files[] = $rootDir . '/Parser/utils.js';
+		$files[] = $rootDir . '/Parser/FilterProcessing.js';
 		$files[] = $rootDir . '/Parser/' . $logger;
 		$files[] = $rootDir . '/Parser/Tag.js';
 		$files[] = $rootDir . '/Parser.js';

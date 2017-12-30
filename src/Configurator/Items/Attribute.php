@@ -87,6 +87,6 @@ class Attribute implements ConfigProvider
 		$vars = get_object_vars($this);
 		unset($vars['markedSafe']);
 
-		return ConfigHelper::toArray($vars);
+		return ConfigHelper::toArray($vars) + ['filterChain' => []];
 	}
 }

@@ -79,11 +79,11 @@ class Tag implements ConfigProvider
 		$this->rules                  = new Ruleset;
 
 		// Start the filterChain with the default processing
-		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
+		$this->filterChain->append('s9e\\TextFormatter\\Parser\\FilterProcessing::executeAttributePreprocessors')
 		                  ->addParameterByName('tagConfig')
 		                  ->setJS('executeAttributePreprocessors');
 
-		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
+		$this->filterChain->append('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes')
 		                  ->addParameterByName('tagConfig')
 		                  ->addParameterByName('registeredVars')
 		                  ->addParameterByName('logger')
@@ -116,7 +116,7 @@ class Tag implements ConfigProvider
 		// filterChain
 		if (!count($this->attributePreprocessors))
 		{
-			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
+			$callback = 's9e\\TextFormatter\\Parser\\FilterProcessing::executeAttributePreprocessors';
 
 			// We operate on a copy of the filterChain, without modifying the original
 			$filterChain = clone $vars['filterChain'];
@@ -134,7 +134,7 @@ class Tag implements ConfigProvider
 			$vars['filterChain'] = $filterChain;
 		}
 
-		return ConfigHelper::toArray($vars);
+		return ConfigHelper::toArray($vars) + ['attributes' => [], 'filterChain' => []];
 	}
 
 	/**

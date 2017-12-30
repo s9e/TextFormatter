@@ -327,6 +327,6 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	*/
 	protected function tagFiltersAttributes(Tag $tag)
 	{
-		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes');
+		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes');
 	}
 }

@@ -370,8 +370,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] PHP string callbacks are normalized to an instance of TagFilter
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
- [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns true on default tags
- [x] containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns false on empty chains
+ [x] containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes') returns true on default tags
+ [x] containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes') returns false on empty chains
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagList
  [x] Tag names are normalized for storage
@@ -937,9 +937,9 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] isset($tag->template) is supported
  [x] unset($tag->template) is supported
  [x] asConfig() produces a config array, omitting properties that are not needed during parsing such as template
- [x] $tag->filterChain starts with Parser::executeAttributePreprocessors by default
- [x] $tag->filterChain contains Parser::filterAttributes by default
- [x] asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
+ [x] $tag->filterChain starts with FilterProcessing::executeAttributePreprocessors by default
+ [x] $tag->filterChain contains FilterProcessing::filterAttributes by default
+ [x] asConfig() omits 'FilterProcessing::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
  [x] asConfig() does not modify the tag's filterChain itself
 
 s9e\TextFormatter\Tests\Configurator\Items\TagFilter

@@ -101,21 +101,21 @@ class TagFilterChainTest extends Test
 	}
 
 	/**
-	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns true on default tags
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes') returns true on default tags
 	*/
 	public function testContainsCallback()
 	{
 		$tag = new Tag;
-		$this->assertTrue($tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
+		$this->assertTrue($tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes'));
 	}
 
 	/**
-	* @testdox containsCallback('s9e\\TextFormatter\\Parser::filterAttributes') returns false on empty chains
+	* @testdox containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes') returns false on empty chains
 	*/
 	public function testContainsCallbackFalse()
 	{
 		$filterChain = new TagFilterChain;
-		$this->assertFalse($filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes'));
+		$this->assertFalse($filterChain->containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes'));
 	}
 
 }
