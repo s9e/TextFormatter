@@ -1050,26 +1050,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers',
-				'<r><NYTIMES id="100000003313949" url="http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers">http://www.nytimes.com/movies/movie/131154/Crooklyn/trailers</NYTIMES></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('nytimes');
-				}
-			],
-			[
-				'http://movies.nytimes.com/movie/131154/Crooklyn/trailers',
-				'<r><NYTIMES id="100000003313949" url="http://movies.nytimes.com/movie/131154/Crooklyn/trailers">http://movies.nytimes.com/movie/131154/Crooklyn/trailers</NYTIMES></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('nytimes');
-				}
-			],
-			[
 				'http://plays.tv/s/Kt4onQhyyVyz',
 				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/s/Kt4onQhyyVyz">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
 				[],
