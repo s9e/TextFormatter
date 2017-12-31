@@ -91,15 +91,11 @@ function (tag, sites)
 	*/
 	function addTagFromMediaUrl(tag, sites)
 	{
-		// Capture the scheme and (if applicable) host of the URL
-		var p = /^(?:([^:]+):)?(?:\/\/([^\/]+))?/.exec(tag.getAttribute('url')), siteId;
-		if (p[1] && sites[p[1] + ':'])
+		// Capture the host of the URL
+		var p = /^\w+:\/\/(?:[^@\/]*@)?([^\/]+)/.exec(tag.getAttribute('url')), siteId;
+		if (p[1])
 		{
-			siteId = sites[p[1] + ':'];
-		}
-		else if (p[2])
-		{
-			siteId = findSiteIdByHost(p[2], sites);
+			siteId = findSiteIdByHost(p[1], sites);
 		}
 
 		if (siteId)

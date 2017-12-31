@@ -167,15 +167,10 @@ class Parser extends ParserBase
 	*/
 	protected static function addTagFromMediaUrl(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		// Capture the scheme and (if applicable) host of the URL
-		$p = parse_url($tag->getAttribute('url'));
-		if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
+		// Capture the host of the URL
+		if (preg_match('(^\\w+://(?:[^@/]*@)?([^/]+))', $tag->getAttribute('url'), $m))
 		{
-			$siteId = $sites[$p['scheme'] . ':'];
-		}
-		elseif (isset($p['host']))
-		{
-			$siteId = self::findSiteIdByHost($p['host'], $sites);
+			$siteId = self::findSiteIdByHost($m[1], $sites);
 		}
 
 		if (!empty($siteId))
