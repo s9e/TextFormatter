@@ -115,6 +115,20 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox executeAttributePreprocessors() does nothing if none were set
+	*/
+	public function testExecuteAttributePreprocessorsEmpty()
+	{
+		$tag = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
+		            ->disableOriginalConstructor()
+		            ->setMethods(['hasAttribute'])
+		            ->getMock();
+		$tag->expects($this->never())->method('hasAttribute');
+
+		FilterProcessing::executeAttributePreprocessors($tag, []);
+	}
+
+	/**
 	* @testdox executeFilter() correctly passes a value to the callback
 	*/
 	public function testExecuteFilterByValue()
