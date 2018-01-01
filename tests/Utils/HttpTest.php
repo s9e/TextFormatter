@@ -20,4 +20,14 @@ class HttpTest extends Test
 			Http::getClient()
 		);
 	}
+
+	/**
+	* @testdox getCachingClient() returns an instance of s9e\TextFormatter\Utils\Http\Clients\Cached that implements s9e\TextFormatter\Utils\Http\Client
+	*/
+	public function testGetCachingClient()
+	{
+		$client = Http::getCachingClient();
+		$this->assertInstanceOf('s9e\\TextFormatter\\Utils\\Http\\Client',          $client);
+		$this->assertInstanceOf('s9e\\TextFormatter\\Utils\\Http\\Clients\\Cached', $client);
+	}
 }
