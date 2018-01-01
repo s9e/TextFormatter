@@ -212,15 +212,15 @@ class Parser extends ParserBase
 	/**
 	* Return a cached instance of the HTTP client
 	*
+	* @param  string|null $cacheDir
 	* @return \s9e\TextFormatter\Utils\Http\Client
 	*/
-	protected static function getHttpClient()
+	protected static function getHttpClient($cacheDir)
 	{
 		if (!isset(self::$client))
 		{
-			self::$client = Http::getClient();
+			self::$client = (isset($cacheDir)) ? Http::getCachingClient($cacheDir) : Http::getClient();
 		}
-		self::$client->timeout = 10;
 
 		return self::$client;
 	}
@@ -345,33 +345,8 @@ class Parser extends ParserBase
 	*/
 	protected static function wget($url, $cacheDir = null)
 	{
-		$prefix = '';
-		$url    = preg_replace('(#.*)s', '', $url);
+		$url = preg_replace('(#.*)s', '', $url);
 
-		// Return the content from the cache if applicable
-		if (isset($cacheDir) && file_exists($cacheDir))
-		{
-			$cacheFile = $cacheDir . '/http.' . crc32($url);
-			if (extension_loaded('zlib'))
-			{
-				$prefix     = 'compress.zlib://';
-				$cacheFile .= '.gz';
-			}
-			if (file_exists($cacheFile))
-			{
-				return file_get_contents($prefix . $cacheFile);
-			}
-		}
-
-		// Retrieve the external content from the source
-		$content = @self::getHttpClient()->get($url, ['User-Agent: PHP (not Mozilla)']);
-
-		// Save to the cache if applicable
-		if (isset($cacheFile) && !empty($content))
-		{
-			file_put_contents($prefix . $cacheFile, $content);
-		}
-
-		return $content;
+		return @self::getHttpClient($cacheDir)->get($url, ['User-Agent: PHP (not Mozilla)']);
 	}
 }

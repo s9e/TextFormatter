@@ -295,6 +295,7 @@
 			<file>tests/Renderers/UnformattedTest.php</file>
 
 			<file>tests/UnparserTest.php</file>
+			<file>tests/Utils/Http/Clients/CachedTest.php</file>
 			<file>tests/Utils/Http/Clients/CurlTest.php</file>
 			<file>tests/Utils/Http/Clients/NativeTest.php</file>
 			<file>tests/Utils/HttpTest.php</file>

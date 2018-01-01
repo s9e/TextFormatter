@@ -22,7 +22,6 @@ class ParserTest extends Test
 	protected static function populateCache($entries)
 	{
 		$cacheDir = __DIR__ . '/../../.cache';
-
 		if (!file_exists($cacheDir))
 		{
 			$cacheDir = sys_get_temp_dir();
@@ -37,10 +36,10 @@ class ParserTest extends Test
 
 		foreach ($entries as $url => $content)
 		{
-			file_put_contents(
-				$prefix . $cacheDir . '/http.' . crc32($url) . $suffix,
-				$content
-			);
+			$vars     = [$url, ['User-Agent: PHP (not Mozilla)']];
+			$cacheKey = strtr(base64_encode(sha1(serialize($vars), true)), '/', '_');
+
+			file_put_contents($prefix . $cacheDir . '/http.' . $cacheKey . $suffix, $content);
 		}
 
 		return $cacheDir;
