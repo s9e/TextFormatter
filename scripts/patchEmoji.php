@@ -83,8 +83,13 @@ foreach ($emoji as $utf8)
 	{
 		echo bin2hex($utf8), " does not contain 0xE2, 0xEF or 0xF0. Parser.php would need to be updated.\n";
 	}
+	$seq = utf8ToSeq($utf8);
+
 	$allText .= $utf8 . "\n";
-	$allXml  .= '<EMOJI seq="' . utf8ToSeq($utf8) . '">' . $utf8 . "</EMOJI>\n";
+	$allXml  .= '<EMOJI seq="' . $seq . '">' . $utf8 . "</EMOJI>\n";
+
+	$allText .= ':' . $seq . ":\n";
+	$allXml  .= '<EMOJI seq="' . $seq . '">:' . $seq . ":</EMOJI>\n";
 }
 $allXml .= '</r>';
 

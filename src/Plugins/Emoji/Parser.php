@@ -136,9 +136,14 @@ class Parser extends ParserBase
 		foreach ($matches[0] as list($shortName, $tagPos))
 		{
 			$shortName = substr($shortName, 1);
+			$tagLen    = 2 + strlen($shortName);
 			if (isset(self::$map[$shortName]))
 			{
-				$this->addTag($tagPos, 2 + strlen($shortName), self::$map[$shortName]);
+				$this->addTag($tagPos, $tagLen, self::$map[$shortName]);
+			}
+			elseif (preg_match('/^[0-3][0-9a-f]{3,4}(?:-[0-9a-f]{4,5})*$/', $shortName))
+			{
+				$this->addTag($tagPos, $tagLen, preg_replace('/-(?:200d|fe0f)/', '', $shortName));
 			}
 		}
 	}
