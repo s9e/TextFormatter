@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
@@ -152,7 +152,7 @@ class Configurator implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -182,7 +182,7 @@ class BundleGenerator
 		$php = [];
 		$php[] = '/**';
 		$php[] = '* @package   s9e\TextFormatter';
-		$php[] = '* @copyright Copyright (c) 2010-2017 The s9e Authors';
+		$php[] = '* @copyright Copyright (c) 2010-2018 The s9e Authors';
 		$php[] = '* @license   http://www.opensource.org/licenses/mit-license.php The MIT License';
 		$php[] = '*/';
 		if ($namespace)
@@ -298,7 +298,7 @@ class BundleGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -309,7 +309,7 @@ interface ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -320,7 +320,7 @@ interface FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -416,7 +416,7 @@ abstract class AVTHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -521,7 +521,7 @@ class CharacterClassBuilder
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -622,7 +622,7 @@ abstract class ConfigHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -633,113 +633,109 @@ class ElementInspector
 	protected static $htmlElements = [
 		'a'=>['c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1],
 		'abbr'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'address'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>['p']],
-		'article'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'address'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\200\44",'b'=>1,'cp'=>['p']],
+		'article'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
 		'aside'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
 		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
 		'b'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'base'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'base'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'bdi'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'bdo'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'blockquote'=>['c'=>"\203",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'body'=>['c'=>"\200\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1],
+		'blockquote'=>['c'=>"\23",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'body'=>['c'=>"\20\0\2",'ac'=>"\1",'dd'=>"\0",'b'=>1],
 		'br'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'button'=>['c'=>"\117",'ac'=>"\4",'dd'=>"\10"],
-		'canvas'=>['c'=>"\47",'ac'=>"\0",'dd'=>"\0",'t'=>1],
+		'button'=>['c'=>"\17\1",'ac'=>"\4",'dd'=>"\10"],
 		'caption'=>['c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1],
 		'cite'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'code'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'col'=>['c'=>"\0\0\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e?'=>'@span','b'=>1],
+		'col'=>['c'=>"\0\0\10",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'colgroup'=>['c'=>"\0\2",'ac'=>"\0\0\10",'ac19'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e?'=>'@span','b'=>1],
 		'data'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'datalist'=>['c'=>"\5",'ac'=>"\4\200\0\10",'dd'=>"\0"],
-		'dd'=>['c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['dd','dt']],
+		'datalist'=>['c'=>"\5",'ac'=>"\4\0\200\10",'dd'=>"\0"],
+		'dd'=>['c'=>"\0\100\100",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['dd','dt']],
 		'del'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1],
-		'details'=>['c'=>"\213",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'details'=>['c'=>"\33",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'dfn'=>['c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"],
-		'div'=>['c'=>"\3",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'dt'=>['c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>['dd','dt']],
+		'dialog'=>['c'=>"\21",'ac'=>"\1",'dd'=>"\0",'b'=>1],
+		'div'=>['c'=>"\3\100",'ac'=>"\1\0\300",'ac0'=>'not(ancestor::dl)','dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\100\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'dt'=>['c'=>"\0\100\100",'ac'=>"\1",'dd'=>"\200\4\0\40",'b'=>1,'cp'=>['dd','dt']],
 		'em'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'embed'=>['c'=>"\57",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'fieldset'=>['c'=>"\303",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'fieldset'=>['c'=>"\23\1",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'figcaption'=>['c'=>"\0\0\0\0\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'figure'=>['c'=>"\203",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'figure'=>['c'=>"\23",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'footer'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
 		'form'=>['c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
-		'h1'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'h2'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'h3'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'h4'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'h5'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'h6'=>['c'=>"\3\1",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'head'=>['c'=>"\0\0\4",'ac'=>"\20",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'h1'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h2'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h3'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h4'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h5'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'h6'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'head'=>['c'=>"\0\0\2",'ac'=>"\100",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'header'=>['c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'hr'=>['c'=>"\1\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
-		'html'=>['c'=>"\0",'ac'=>"\0\0\4",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'hr'=>['c'=>"\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
+		'html'=>['c'=>"\0",'ac'=>"\0\0\2",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'i'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'iframe'=>['c'=>"\57",'ac'=>"\4",'dd'=>"\0"],
-		'img'=>['c'=>"\57\20\10",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'img'=>['c'=>"\57\20\4",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'input'=>['c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'ins'=>['c'=>"\7",'ac'=>"\0",'dd'=>"\0",'t'=>1],
 		'kbd'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'keygen'=>['c'=>"\117",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'label'=>['c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"],
-		'legend'=>['c'=>"\0\0\0\20",'ac'=>"\4",'dd'=>"\0",'b'=>1],
+		'label'=>['c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\200\0\0\4"],
+		'legend'=>['c'=>"\0\0\0\20",'ac'=>"\204",'dd'=>"\0",'b'=>1],
 		'li'=>['c'=>"\0\0\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'link'=>['c'=>"\105",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'main'=>['c'=>"\3\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'mark'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'media element'=>['c'=>"\0\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
-		'menu'=>['c'=>"\1\100",'ac'=>"\0\300",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'menuitem'=>['c'=>"\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'meta'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'meter'=>['c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"],
+		'meta'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'meter'=>['c'=>"\7\200\0\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"],
 		'nav'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'noscript'=>['c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
-		'object'=>['c'=>"\147",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1],
-		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'optgroup'=>['c'=>"\0\0\2",'ac'=>"\0\200\0\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
-		'option'=>['c'=>"\0\0\2\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>['option']],
-		'output'=>['c'=>"\107",'ac'=>"\4",'dd'=>"\0"],
+		'object'=>['c'=>"\47\1",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1],
+		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\200\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'optgroup'=>['c'=>"\0\0\1",'ac'=>"\0\0\200\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
+		'option'=>['c'=>"\0\0\1\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>['option']],
+		'output'=>['c'=>"\7\1",'ac'=>"\4",'dd'=>"\0"],
 		'p'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'param'=>['c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'picture'=>['c'=>"\45",'ac'=>"\0\200\10",'dd'=>"\0",'nt'=>1],
+		'picture'=>['c'=>"\45",'ac'=>"\0\0\204",'dd'=>"\0",'nt'=>1],
 		'pre'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'pre'=>1,'b'=>1,'cp'=>['p']],
-		'progress'=>['c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"],
+		'progress'=>['c'=>"\7\200\0\1",'ac'=>"\4",'dd'=>"\0\0\0\1"],
 		'q'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'rb'=>['c'=>"\0\10",'ac'=>"\4",'dd'=>"\0",'b'=>1],
-		'rp'=>['c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
-		'rt'=>['c'=>"\0\10\100",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
-		'rtc'=>['c'=>"\0\10",'ac'=>"\4\0\100",'dd'=>"\0",'b'=>1],
+		'rp'=>['c'=>"\0\10\40",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
+		'rt'=>['c'=>"\0\10\40",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
+		'rtc'=>['c'=>"\0\10",'ac'=>"\4\0\40",'dd'=>"\0",'b'=>1],
 		'ruby'=>['c'=>"\7",'ac'=>"\4\10",'dd'=>"\0"],
 		's'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'samp'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'script'=>['c'=>"\25\200",'ac'=>"\0",'dd'=>"\0",'to'=>1],
+		'script'=>['c'=>"\105\0\200",'ac'=>"\0",'dd'=>"\0",'to'=>1],
 		'section'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'select'=>['c'=>"\117",'ac'=>"\0\200\2",'dd'=>"\0",'nt'=>1],
+		'select'=>['c'=>"\17\1",'ac'=>"\0\0\201",'dd'=>"\0",'nt'=>1],
 		'small'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'source'=>['c'=>"\0\0\10\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'source'=>['c'=>"\0\0\4\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'span'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'strong'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'style'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'style'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
 		'sub'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'summary'=>['c'=>"\0\0\0\2",'ac'=>"\4\1",'dd'=>"\0",'b'=>1],
+		'summary'=>['c'=>"\0\0\0\2",'ac'=>"\204",'dd'=>"\0",'b'=>1],
 		'sup'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'table'=>['c'=>"\3\0\0\200",'ac'=>"\0\202",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'tbody'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','tfoot','th','thead','tr']],
-		'td'=>['c'=>"\200\0\40",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['td','th']],
-		'template'=>['c'=>"\25\200\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
-		'textarea'=>['c'=>"\117",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1],
-		'tfoot'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
-		'th'=>['c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>['td','th']],
-		'thead'=>['c'=>"\0\2",'ac'=>"\0\200\0\0\100",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'table'=>['c'=>"\3\0\0\200",'ac'=>"\0\2\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'tbody'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
+		'td'=>['c'=>"\20\0\20",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['td','th']],
+		'template'=>['c'=>"\0\0\10",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'textarea'=>['c'=>"\17\1",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1],
+		'tfoot'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
+		'th'=>['c'=>"\0\0\20",'ac'=>"\1",'dd'=>"\200\4\0\40",'b'=>1,'cp'=>['td','th']],
+		'thead'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'time'=>['c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime','dd'=>"\0"],
-		'title'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
-		'tr'=>['c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
+		'title'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'tr'=>['c'=>"\0\2\0\0\100",'ac'=>"\0\0\220",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
 		'track'=>['c'=>"\0\0\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'u'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\200\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'var'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
 		'wbr'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1]
@@ -835,7 +831,7 @@ class ElementInspector
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1351,7 +1347,7 @@ abstract class RegexpBuilder
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1496,7 +1492,7 @@ abstract class RulesHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1508,7 +1504,6 @@ use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 abstract class TemplateHelper
 {
@@ -1626,7 +1621,7 @@ abstract class TemplateHelper
 	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap)|src)$/i';
+		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>ing|luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
 		{
@@ -1682,7 +1677,7 @@ abstract class TemplateHelper
 		if (\strpos($template, '<xsl:') !== \false)
 		{
 			$error = \libxml_get_last_error();
-			throw new InvalidXslException($error->message);
+			throw new RuntimeException('Invalid XSL: ' . $error->message);
 		}
 		return self::loadTemplateAsHTML($template);
 	}
@@ -1842,7 +1837,7 @@ abstract class TemplateHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -2121,7 +2116,7 @@ class TemplateInspector
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -2591,7 +2586,7 @@ class TemplateParser
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -2645,7 +2640,7 @@ abstract class XPathHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -2729,7 +2724,7 @@ class Template
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -2857,7 +2852,7 @@ class FunctionProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -2868,7 +2863,7 @@ interface RendererGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -2925,7 +2920,7 @@ abstract class AbstractOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3152,7 +3147,7 @@ class BranchOutputOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3355,7 +3350,7 @@ class Optimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3783,7 +3778,7 @@ class Quick
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3982,7 +3977,7 @@ class Serializer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -4026,7 +4021,7 @@ class SwitchStatement
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -4396,7 +4391,7 @@ class XPathConvertor
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
@@ -4408,7 +4403,7 @@ interface BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
@@ -4420,7 +4415,7 @@ interface TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -4434,7 +4429,7 @@ abstract class TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -4513,7 +4508,7 @@ abstract class AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Traits;
@@ -4567,7 +4562,7 @@ trait CollectionProxy
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Traits;
@@ -4670,7 +4665,7 @@ trait Configurable
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Traits;
@@ -4717,7 +4712,7 @@ trait TemplateSafeness
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Validators;
@@ -4738,7 +4733,7 @@ abstract class AttributeName
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Validators;
@@ -4761,7 +4756,7 @@ abstract class TagName
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -4808,7 +4803,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -4824,7 +4819,6 @@ class Attribute implements ConfigProvider
 	use TemplateSafeness;
 	protected $defaultValue;
 	protected $filterChain;
-	protected $generator;
 	protected $required = \true;
 	public function __construct(array $options = \null)
 	{
@@ -4841,23 +4835,17 @@ class Attribute implements ConfigProvider
 				return \true;
 		return !empty($this->markedSafe[$context]);
 	}
-	public function setGenerator($callback)
-	{
-		if (!($callback instanceof ProgrammableCallback))
-			$callback = new ProgrammableCallback($callback);
-		$this->generator = $callback;
-	}
 	public function asConfig()
 	{
 		$vars = \get_object_vars($this);
 		unset($vars['markedSafe']);
-		return ConfigHelper::toArray($vars);
+		return ConfigHelper::toArray($vars) + ['filterChain' => []];
 	}
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -4962,7 +4950,7 @@ class ProgrammableCallback implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5040,7 +5028,7 @@ class Regexp implements ConfigProvider, FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5069,10 +5057,10 @@ class Tag implements ConfigProvider
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
 		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
-		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
+		$this->filterChain->append('s9e\\TextFormatter\\Parser\\FilterProcessing::executeAttributePreprocessors')
 		                  ->addParameterByName('tagConfig')
 		                  ->setJS('executeAttributePreprocessors');
-		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
+		$this->filterChain->append('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes')
 		                  ->addParameterByName('tagConfig')
 		                  ->addParameterByName('registeredVars')
 		                  ->addParameterByName('logger')
@@ -5090,7 +5078,7 @@ class Tag implements ConfigProvider
 		unset($vars['template']);
 		if (!\count($this->attributePreprocessors))
 		{
-			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
+			$callback = 's9e\\TextFormatter\\Parser\\FilterProcessing::executeAttributePreprocessors';
 			$filterChain = clone $vars['filterChain'];
 			$i = \count($filterChain);
 			while (--$i >= 0)
@@ -5098,7 +5086,7 @@ class Tag implements ConfigProvider
 					unset($filterChain[$i]);
 			$vars['filterChain'] = $filterChain;
 		}
-		return ConfigHelper::toArray($vars);
+		return ConfigHelper::toArray($vars) + ['attributes' => [], 'filterChain' => []];
 	}
 	public function getTemplate()
 	{
@@ -5146,7 +5134,7 @@ class Tag implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -5170,7 +5158,7 @@ class Code implements FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
@@ -5249,7 +5237,7 @@ class PHP implements RendererGenerator
 		           ? $this->className
 		           : $this->defaultClassPrefix . \sha1($php);
 		$this->lastClassName = $className;
-		$header = "\n/**\n* @package   s9e\TextFormatter\n* @copyright Copyright (c) 2010-2017 The s9e Authors\n* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n*/\n";
+		$header = "\n/**\n* @package   s9e\TextFormatter\n* @copyright Copyright (c) 2010-2018 The s9e Authors\n* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n*/\n";
 		$pos = \strrpos($className, '\\');
 		if ($pos !== \false)
 		{
@@ -5279,7 +5267,7 @@ class PHP implements RendererGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -5422,7 +5410,7 @@ class ControlStructuresOptimizer extends AbstractOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -5494,7 +5482,7 @@ class Rendering
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -5589,7 +5577,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5605,7 +5593,7 @@ class AutoCloseIfVoid implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5621,7 +5609,7 @@ class AutoReopenFormattingElements implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5637,7 +5625,7 @@ class BlockElementsCloseFormattingElements implements TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5653,7 +5641,7 @@ class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5669,7 +5657,7 @@ class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerat
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5715,7 +5703,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5731,7 +5719,7 @@ class EnforceOptionalEndTags implements TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5747,7 +5735,7 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5763,7 +5751,7 @@ class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5779,7 +5767,7 @@ class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
@@ -5795,7 +5783,7 @@ class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -5862,7 +5850,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -5992,13 +5980,13 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	}
 	protected function tagFiltersAttributes(Tag $tag)
 	{
-		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser::filterAttributes');
+		return $tag->filterChain->containsCallback('s9e\\TextFormatter\\Parser\\FilterProcessing::filterAttributes');
 	}
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6128,7 +6116,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6150,7 +6138,7 @@ class DisallowAttributeSets extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6171,7 +6159,7 @@ class DisallowCopy extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6193,7 +6181,7 @@ class DisallowDisableOutputEscaping extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6214,7 +6202,7 @@ class DisallowDynamicAttributeNames extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6235,7 +6223,7 @@ class DisallowDynamicElementNames extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6262,7 +6250,7 @@ class DisallowElementNS extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6285,7 +6273,7 @@ class DisallowObjectParamsWithGeneratedName extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6320,7 +6308,7 @@ class DisallowPHPTags extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6344,7 +6332,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6392,7 +6380,7 @@ class DisallowXPathFunction extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6449,7 +6437,7 @@ abstract class AbstractChooseOptimization extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6493,7 +6481,7 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6520,7 +6508,7 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6546,7 +6534,7 @@ class InlineAttributes extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6563,7 +6551,7 @@ class InlineCDATA extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6594,7 +6582,7 @@ class InlineElements extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6647,7 +6635,7 @@ class InlineInferredValues extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6674,7 +6662,7 @@ class InlineTextElements extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6722,7 +6710,7 @@ class InlineXPathLiterals extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6758,7 +6746,7 @@ class MinifyInlineCSS extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6795,7 +6783,7 @@ class MinifyXPathExpressions extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6821,7 +6809,7 @@ class NormalizeAttributeNames extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6866,7 +6854,7 @@ class NormalizeElementNames extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6917,7 +6905,7 @@ class NormalizeUrls extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6935,7 +6923,7 @@ class OptimizeConditionalAttributes extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6956,7 +6944,7 @@ class OptimizeConditionalValueOf extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6972,7 +6960,7 @@ class PreserveSingleSpaces extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6988,7 +6976,7 @@ class RemoveComments extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7004,7 +6992,7 @@ class RemoveInterElementWhitespace extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7028,7 +7016,7 @@ class RemoveLivePreviewAttributes extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7061,7 +7049,7 @@ class SetRelNoreferrerOnTargetedLinks extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7106,7 +7094,7 @@ class UninlineAttributes extends AbstractNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license'); The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -7175,7 +7163,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -7230,7 +7218,7 @@ class UrlConfig implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -7294,7 +7282,7 @@ class AttributePreprocessorCollection extends Collection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -7394,7 +7382,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -7548,7 +7536,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -7558,7 +7546,7 @@ abstract class Filter extends ProgrammableCallback
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -7584,7 +7572,7 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -7610,7 +7598,7 @@ class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -7649,7 +7637,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -7666,7 +7654,7 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7734,7 +7722,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7802,7 +7790,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7920,7 +7908,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -8003,7 +7991,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8035,7 +8023,7 @@ class AttributeCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8083,7 +8071,7 @@ class AttributeFilterCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8153,7 +8141,7 @@ class NormalizedList extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8219,7 +8207,7 @@ class PluginCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8251,7 +8239,7 @@ class TagCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8270,7 +8258,7 @@ class TemplateParameterCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -8299,7 +8287,7 @@ class AttributeFilter extends Filter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -8315,7 +8303,7 @@ class TagFilter extends Filter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8346,7 +8334,7 @@ abstract class FilterChain extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8398,7 +8386,7 @@ class HostnameList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8424,7 +8412,7 @@ class RulesGeneratorList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8447,7 +8435,7 @@ class SchemeList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8467,7 +8455,7 @@ class TemplateCheckList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8488,7 +8476,7 @@ class TemplateNormalizationList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
@@ -8520,7 +8508,7 @@ class UrlFilter extends AttributeFilter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8540,7 +8528,7 @@ class AttributeFilterChain extends FilterChain
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;

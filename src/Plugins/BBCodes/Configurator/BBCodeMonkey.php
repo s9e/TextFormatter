@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
@@ -294,7 +294,7 @@ class BBCodeMonkey
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'map'    => '(?:HASH)?MAP[0-9]*=(?<map>.+?)',
 			'parse'  => 'PARSE=(?<regexps>' . self::REGEXP . '(?:,' . self::REGEXP . ')*)',
-			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
+			'range'  => 'RANGE[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . self::REGEXP . ')',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
 		];
@@ -308,7 +308,7 @@ class BBCodeMonkey
 		foreach ($matches as $m)
 		{
 			if (isset($m['other'][0])
-			 && \preg_match('#^(?:CHOICE|HASHMAP|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
+			 && \preg_match('#^(?:CHOICE|HASHMAP|MAP|REGEXP|PARSE|RANGE)#', $m['other'][0]))
 				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
 			$token = [
 				'pos'     => $m[0][1],
@@ -356,12 +356,6 @@ class BBCodeMonkey
 		{
 			$filter = $this->configurator->attributeFilters->get('#range');
 			$attribute->filterChain->append($filter)->setRange($token['min'], $token['max']);
-		}
-		elseif ($token['type'] === 'RANDOM')
-		{
-			$attribute->generator = new ProgrammableCallback('mt_rand');
-			$attribute->generator->addParameterByValue((int) $token['min']);
-			$attribute->generator->addParameterByValue((int) $token['max']);
 		}
 		elseif ($token['type'] === 'CHOICE')
 		{
@@ -427,7 +421,7 @@ class BBCodeMonkey
 		{
 			if (\substr($filterName, 0, 1) !== '#'
 			 && !\in_array($filterName, $this->allowedFilters, \true))
-				throw new RuntimeException("Filter '" . $filterName . "' is not allowed");
+				throw new RuntimeException("Filter '" . $filterName . "' is not allowed in BBCodes");
 			$filter = $this->configurator->attributeFilters->get($filterName);
 			$attribute->filterChain->append($filter);
 		}

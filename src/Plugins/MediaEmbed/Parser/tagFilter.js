@@ -1,7 +1,6 @@
 /**
-* @param  {!Tag}     tag   The original tag
-* @param  {!Object}  sites Map of [host => siteId]
-* @return {!boolean}       Always false
+* @param  {!Tag}    tag   The original tag
+* @param  {!Object} sites Map of [host => siteId]
 */
 function (tag, sites)
 {
@@ -25,12 +24,12 @@ function (tag, sites)
 	* This will always invalidate the original tag, and possibly replace it with the tag that
 	* corresponds to the media site
 	*
-	* @param  {!Tag}     tag   The original tag
-	* @param  {!Object}  sites Map of [host => siteId]
-	* @return {!boolean}       Always false
+	* @param {!Tag}    tag   The original tag
+	* @param {!Object} sites Map of [host => siteId]
 	*/
 	function filterTag(tag, sites)
 	{
+		tag.invalidate();
 		if (tag.hasAttribute('site'))
 		{
 			addTagFromMediaId(tag, sites);
@@ -39,8 +38,6 @@ function (tag, sites)
 		{
 			addTagFromMediaUrl(tag, sites);
 		}
-
-		return false;
 	}
 
 	/**
@@ -94,15 +91,11 @@ function (tag, sites)
 	*/
 	function addTagFromMediaUrl(tag, sites)
 	{
-		// Capture the scheme and (if applicable) host of the URL
-		var p = /^(?:([^:]+):)?(?:\/\/([^\/]+))?/.exec(tag.getAttribute('url')), siteId;
-		if (p[1] && sites[p[1] + ':'])
+		// Capture the host of the URL
+		var p = /^\w+:\/\/(?:[^@\/]*@)?([^\/]+)/.exec(tag.getAttribute('url')), siteId;
+		if (p[1])
 		{
-			siteId = sites[p[1] + ':'];
-		}
-		else if (p[2])
-		{
-			siteId = findSiteIdByHost(p[2], sites);
+			siteId = findSiteIdByHost(p[1], sites);
 		}
 
 		if (siteId)

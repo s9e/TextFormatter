@@ -1,8 +1,7 @@
 /**
-* Test whether a given tag has at least one non-default attribute
+* Invalidate given tag if it doesn't have at least one non-default attribute
 *
-* @param  {!Tag}     tag The original tag
-* @return {!boolean}     Whether the tag contains an attribute not named "url"
+* @param {!Tag} tag The original tag
 */
 function (tag)
 {
@@ -10,9 +9,9 @@ function (tag)
 	{
 		if (attrName !== 'url')
 		{
-			return true;
+			return;
 		}
 	}
 
-	return false;
+	tag.invalidate();
 }
