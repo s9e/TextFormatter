@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
@@ -75,21 +75,12 @@ class Forum extends Bundle
 		];
 		foreach ($emoticons as $code => $hex)
 			$configurator->Emoji->addAlias($code, \html_entity_decode('&#x' . $hex . ';'));
-		$configurator->MediaEmbed->createIndividualBBCodes = \true;
-		$configurator->MediaEmbed->add('bandcamp');
-		$configurator->MediaEmbed->add('dailymotion');
-		$configurator->MediaEmbed->add('facebook');
-		$configurator->MediaEmbed->add('indiegogo');
-		$configurator->MediaEmbed->add('instagram');
-		$configurator->MediaEmbed->add('kickstarter');
-		$configurator->MediaEmbed->add('liveleak');
-		$configurator->MediaEmbed->add('soundcloud');
-		$configurator->MediaEmbed->add('twitch');
-		$configurator->MediaEmbed->add('twitter');
-		$configurator->MediaEmbed->add('vimeo');
-		$configurator->MediaEmbed->add('vine');
-		$configurator->MediaEmbed->add('wshh');
-		$configurator->MediaEmbed->add('youtube');
+		$sites = ['bandcamp', 'dailymotion', 'facebook', 'indiegogo', 'instagram', 'kickstarter', 'liveleak', 'soundcloud', 'twitch', 'twitter', 'vimeo', 'vine', 'wshh', 'youtube'];
+		foreach ($sites as $siteId)
+		{
+			$configurator->MediaEmbed->add($siteId);
+			$configurator->BBCodes->add($siteId, ['contentAttributes' => ['url']]);
+		}
 		$configurator->Autoemail;
 		$configurator->Autolink;
 	}

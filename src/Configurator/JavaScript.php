@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -176,6 +176,7 @@ class JavaScript
 		$logger = (\in_array('getLogger', $this->exportMethods)) ? 'Logger.js' : 'NullLogger.js';
 		$files   = \glob($rootDir . '/Parser/AttributeFilters/*.js');
 		$files[] = $rootDir . '/Parser/utils.js';
+		$files[] = $rootDir . '/Parser/FilterProcessing.js';
 		$files[] = $rootDir . '/Parser/' . $logger;
 		$files[] = $rootDir . '/Parser/Tag.js';
 		$files[] = $rootDir . '/Parser.js';

@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
@@ -20,12 +20,10 @@ class BBCode implements ConfigProvider
 	protected $contentAttributes;
 	protected $defaultAttribute;
 	protected $forceLookahead = \false;
-	protected $predefinedAttributes;
 	protected $tagName;
 	public function __construct(array $options = \null)
 	{
-		$this->contentAttributes    = new AttributeList;
-		$this->predefinedAttributes = new AttributeValueCollection;
+		$this->contentAttributes = new AttributeList;
 		if (isset($options))
 			foreach ($options as $optionName => $optionValue)
 				$this->__set($optionName, $optionValue);
@@ -35,8 +33,6 @@ class BBCode implements ConfigProvider
 		$config = ConfigHelper::toArray(\get_object_vars($this));
 		if (!$this->forceLookahead)
 			unset($config['forceLookahead']);
-		if (isset($config['predefinedAttributes']))
-			$config['predefinedAttributes'] = new Dictionary($config['predefinedAttributes']);
 		return $config;
 	}
 	public static function normalizeName($bbcodeName)

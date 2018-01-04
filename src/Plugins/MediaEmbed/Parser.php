@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
@@ -26,18 +26,18 @@ class Parser extends ParserBase
 	}
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
+		$tag->invalidate();
 		if ($tag->hasAttribute('site'))
 			self::addTagFromMediaId($tag, $tagStack, $sites);
 		elseif ($tag->hasAttribute('url'))
 			self::addTagFromMediaUrl($tag, $tagStack, $sites);
-		return \false;
 	}
 	public static function hasNonDefaultAttribute(Tag $tag)
 	{
 		foreach ($tag->getAttributes() as $attrName => $void)
 			if ($attrName !== 'url')
-				return \true;
-		return \false;
+				return;
+		$tag->invalidate();
 	}
 	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = \null)
 	{
@@ -80,11 +80,8 @@ class Parser extends ParserBase
 	}
 	protected static function addTagFromMediaUrl(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		$p = \parse_url($tag->getAttribute('url'));
-		if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
-			$siteId = $sites[$p['scheme'] . ':'];
-		elseif (isset($p['host']))
-			$siteId = self::findSiteIdByHost($p['host'], $sites);
+		if (\preg_match('(^\\w+://(?:[^@/]*@)?([^/]+))', $tag->getAttribute('url'), $m))
+			$siteId = self::findSiteIdByHost($m[1], $sites);
 		if (!empty($siteId))
 			self::addSiteTag($tag, $tagStack, $siteId);
 	}
@@ -102,11 +99,10 @@ class Parser extends ParserBase
 		while ($host > '');
 		return \false;
 	}
-	protected static function getHttpClient()
+	protected static function getHttpClient($cacheDir)
 	{
 		if (!isset(self::$client))
-			self::$client = Http::getClient();
-		self::$client->timeout = 10;
+			self::$client = (isset($cacheDir)) ? Http::getCachingClient($cacheDir) : Http::getClient();
 		return self::$client;
 	}
 	protected static function replaceTokens($url, array $vars)
@@ -157,22 +153,7 @@ class Parser extends ParserBase
 	}
 	protected static function wget($url, $cacheDir = \null)
 	{
-		$prefix = '';
-		$url    = \preg_replace('(#.*)s', '', $url);
-		if (isset($cacheDir) && \file_exists($cacheDir))
-		{
-			$cacheFile = $cacheDir . '/http.' . \crc32($url);
-			if (\extension_loaded('zlib'))
-			{
-				$prefix     = 'compress.zlib://';
-				$cacheFile .= '.gz';
-			}
-			if (\file_exists($cacheFile))
-				return \file_get_contents($prefix . $cacheFile);
-		}
-		$content = @self::getHttpClient()->get($url, ['User-Agent: PHP (not Mozilla)']);
-		if (isset($cacheFile) && !empty($content))
-			\file_put_contents($prefix . $cacheFile, $content);
-		return $content;
+		$url = \preg_replace('(#.*)s', '', $url);
+		return @self::getHttpClient($cacheDir)->get($url, ['User-Agent: PHP (not Mozilla)']);
 	}
 }

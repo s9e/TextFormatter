@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
@@ -73,9 +73,6 @@ class Repository
 				$args[] = $ruleNode->textContent;
 			\call_user_func_array([$tag->rules, $methodName], $args);
 		}
-		foreach ($node->getElementsByTagName('predefinedAttributes') as $predefinedAttributes)
-			foreach ($predefinedAttributes->attributes as $attribute)
-				$bbcode->predefinedAttributes->set($attribute->name, $attribute->value);
 		return [
 			'bbcode'     => $bbcode,
 			'bbcodeName' => $bbcodeName,

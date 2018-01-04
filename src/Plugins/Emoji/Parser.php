@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Emoji;
@@ -71,8 +71,11 @@ class Parser extends ParserBase
 		foreach ($matches[0] as list($shortName, $tagPos))
 		{
 			$shortName = \substr($shortName, 1);
+			$tagLen    = 2 + \strlen($shortName);
 			if (isset(self::$map[$shortName]))
-				$this->addTag($tagPos, 2 + \strlen($shortName), self::$map[$shortName]);
+				$this->addTag($tagPos, $tagLen, self::$map[$shortName]);
+			elseif (\preg_match('/^[0-3][0-9a-f]{3,4}(?:-[0-9a-f]{4,5})*$/', $shortName))
+				$this->addTag($tagPos, $tagLen, \preg_replace('/-(?:200d|fe0f)/', '', $shortName));
 		}
 	}
 	protected function parseUnicodeEmoji($text)
