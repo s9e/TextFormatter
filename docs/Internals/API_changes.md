@@ -1,4 +1,4 @@
-## 0.14.0
+## 1.0.0
 
 The following method and properties have been removed from `s9e\TextFormatter\Plugins\MediaEmbed\Configurator`:
 
