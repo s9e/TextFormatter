@@ -14,6 +14,8 @@ The return value of tag filters is not used to invalidate tags anymore. Tags mus
 
 Support for attribute generators and the `{RANDOM}` token in BBCode definitions has been removed. The same behaviour can be defined in PHP by prepending a custom tag filter to a tag's `filterChain`.
 
+The `s9e\TextFormatter\Configurator\Exceptions\InvalidTemplateException` and `s9e\TextFormatter\Configurator\Exceptions\InvalidXslException` classes have been removed.
+
 
 ## 0.13.0
 
