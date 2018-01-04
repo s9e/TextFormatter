@@ -100,10 +100,15 @@ function parseAsciiEmoji(text)
 	while (m = asciiRegexp.exec(text))
 	{
 		var shortName = m[0].substr(1),
+			tagLen    = 2 + shortName.length,
 			tagPos    = m['index'];
 		if (map[shortName])
 		{
-			addTag(tagPos, 2 + shortName.length, map[shortName]);
+			addTag(tagPos, tagLen, map[shortName]);
+		}
+		else if (/^[0-3][0-9a-f]{3,4}(?:-[0-9a-f]{4,5})*$/.test(shortName))
+		{
+			addTag(tagPos, tagLen, shortName.replace(/-(?:200d|fe0f)/g, ''));
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -74,14 +74,10 @@ class HintGenerator
 		if (empty($tagConfig['attributes']))
 			return;
 		foreach ($tagConfig['attributes'] as $attrConfig)
-		{
-			$this->hints['attributeGenerator']    |= isset($attrConfig['generator']);
 			$this->hints['attributeDefaultValue'] |= isset($attrConfig['defaultValue']);
-		}
 	}
 	protected function setTagsHints()
 	{
-		$this->hints['attributeGenerator']    = 0;
 		$this->hints['attributeDefaultValue'] = 0;
 		$this->hints['namespaces']            = 0;
 		foreach ($this->config['tags'] as $tagName => $tagConfig)

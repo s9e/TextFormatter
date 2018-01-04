@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
@@ -23,12 +23,11 @@ class Configurator extends ConfiguratorBase
 		'stripslashes',
 		'urldecode'
 	);
-	protected $appendTemplate = '';
-	public $captureURLs = \true;
 	protected $collection;
 	protected $createMediaBBCode = \true;
-	public $createIndividualBBCodes = \false;
 	public $defaultSites;
+	protected $quickMatch = '://';
+	protected $regexp = '/\\bhttps?:\\/\\/[^["\'\\s]+/Si';
 	protected $tagName = 'MEDIA';
 	protected $templateBuilder;
 	protected function setUp()
@@ -40,7 +39,7 @@ class Configurator extends ConfiguratorBase
 		$tag->rules->denyChild($this->tagName);
 		$tag->filterChain->clear();
 		$tag->filterChain
-		    ->append(array(__NAMESPACE__ . '\\Parser', 'filterTag'))
+		    ->append(__NAMESPACE__ . '\\Parser::filterTag')
 		    ->addParameterByName('parser')
 		    ->addParameterByName('mediasites')
 		    ->setJS(\file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
@@ -58,15 +57,11 @@ class Configurator extends ConfiguratorBase
 	}
 	public function asConfig()
 	{
-		if (!$this->captureURLs || !\count($this->collection))
+		if (!\count($this->collection))
 			return;
-		$regexp  = 'https?:\\/\\/';
-		$schemes = $this->getSchemes();
-		if (!empty($schemes))
-			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		return array(
-			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si',
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => $this->regexp,
 			'tagName'    => $this->tagName
 		);
 	}
@@ -109,23 +104,11 @@ class Configurator extends ConfiguratorBase
 			$tag->filterChain
 				->append(array(__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'))
 				->setJS(\file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
-		$tag->template = $this->templateBuilder->build($siteId, $siteConfig) . $this->appendTemplate;
+		$tag->template = $this->templateBuilder->build($siteId, $siteConfig);
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
-		if ($this->createIndividualBBCodes)
-			$this->configurator->BBCodes->add(
-				$siteId,
-				array(
-					'defaultAttribute'  => 'url',
-					'contentAttributes' => array('url')
-				)
-			);
 		return $tag;
-	}
-	public function appendTemplate($template = '')
-	{
-		$this->appendTemplate = $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 	protected function addAttribute(Tag $tag, $attrName, array $attrConfig)
 	{
@@ -184,15 +167,6 @@ class Configurator extends ConfiguratorBase
 		if (!\in_array($filter, $this->allowedFilters, \true))
 			throw new RuntimeException("Filter '" . $filter . "' is not allowed");
 		$attribute->filterChain->append($this->configurator->attributeFilters[$filter]);
-	}
-	protected function getSchemes()
-	{
-		$schemes = array();
-		foreach ($this->collection as $site)
-			if (isset($site['scheme']))
-				foreach ((array) $site['scheme'] as $scheme)
-					$schemes[] = $scheme;
-		return $schemes;
 	}
 	protected function normalizeId($siteId)
 	{
