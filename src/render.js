@@ -8,7 +8,7 @@ var xslt = {
 		var stylesheet = xslt.loadXML(xsl, 'MSXML2.FreeThreadedDOMDocument.6.0');
 		if (MSXML)
 		{
-			var generator = new ActiveXObject("MSXML2.XSLTemplate.6.0");
+			var generator = new ActiveXObject('MSXML2.XSLTemplate.6.0');
 			generator['stylesheet'] = stylesheet;
 			xslt.proc = generator['createProcessor']();
 		}
@@ -70,7 +70,7 @@ var xslt = {
 			div.innerHTML = xslt.proc['output'];
 			while (div.firstChild)
 			{
-				fragment.appendChild(div.removeChild(div.firstChild));
+				fragment.appendChild(div.firstChild);
 			}
 
 			return fragment;
@@ -106,7 +106,6 @@ function preview(text, target)
 		{
 			/** @type {!string} */
 			var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
-
 			if (!postProcessFunctions[code])
 			{
 				postProcessFunctions[code] = new Function(code);
@@ -126,19 +125,18 @@ function preview(text, target)
 	{
 		var oldNodes = oldEl.childNodes,
 			newNodes = newEl.childNodes,
-			oldCnt = oldNodes.length,
-			newCnt = newNodes.length,
+			oldCnt   = oldNodes.length,
+			newCnt   = newNodes.length,
 			oldNode,
 			newNode,
-			left  = 0,
-			right = 0;
+			left     = 0,
+			right    = 0;
 
 		// Skip the leftmost matching nodes
 		while (left < oldCnt && left < newCnt)
 		{
 			oldNode = oldNodes[left];
 			newNode = newNodes[left];
-
 			if (!refreshNode(oldNode, newNode))
 			{
 				break;
@@ -153,7 +151,6 @@ function preview(text, target)
 		{
 			oldNode = oldNodes[oldCnt - (right + 1)];
 			newNode = newNodes[newCnt - (right + 1)];
-
 			if (!refreshNode(oldNode, newNode))
 			{
 				break;
@@ -183,9 +180,9 @@ function preview(text, target)
 		i = left;
 		do
 		{
-			newNodesFragment.appendChild(newNodes[i].cloneNode(true));
+			newNodesFragment.appendChild(newNodes[i]);
 		}
-		while (++i < rightBoundary);
+		while (i < --rightBoundary);
 
 		// If we haven't skipped any nodes to the right, we can just append the fragment
 		if (!right)
