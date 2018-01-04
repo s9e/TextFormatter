@@ -91,7 +91,7 @@ class Forum extends Bundle
 		foreach ($sites as $siteId)
 		{
 			$configurator->MediaEmbed->add($siteId);
-			$configurator->BBCodes->add($siteId, ['contentAttributes' => ['url']]);
+			$configurator->BBCodes->add($siteId, ['contentAttributes' => ['id', 'url']]);
 		}
 
 		$configurator->Autoemail;

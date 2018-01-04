@@ -3,8 +3,8 @@
 	<example>https://archive.org/details/DFTS2014-05-30</example>
 
 	<attributes>
-		<height defaultValue="360"/>
-		<width defaultValue="640"/>
+		<height defaultValue="360" filterChain="#uint"/>
+		<width  defaultValue="640" filterChain="#uint"/>
 	</attributes>
 
 	<host>archive.org</host>

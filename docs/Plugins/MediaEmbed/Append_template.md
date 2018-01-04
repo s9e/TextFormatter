@@ -1,32 +1,42 @@
-<h2>How to add a link to the original URL below the embedded content</h2>
-
-One way to display a link to the original URL used to the embed content is to create a [template normalizer](../../Templating/Template_normalization/Change_default.md#add-your-own-custom-normalization) before adding any media sites.
+<h2>How to add a link to the original URL alongside the embedded content</h2>
 
 ```php
-function appendMediaLink($root)
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->MediaEmbed->add('youtube');
+
+// After all the tags have been configured, add a `url` attribute and modify
+// the template accordingly
+foreach ($configurator->tags as $tag)
 {
-	// Check that the first element has a data-s9e-mediaembed attribute
-	$xpath = new DOMXPath($root->ownerDocument);
-	$nodes = $xpath->query('*[@data-s9e-mediaembed]');
-	if (!$nodes->length)
+	if (strpos($tag->template, 'data-s9e-mediaembed') === false)
 	{
-		return;
+		continue;
 	}
-
-	// Append our custom XSL to this template
-	$fragment = $root->ownerDocument->createDocumentFragment();
-	$fragment->appendXML(
-		'<xsl:if test="@url" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-			<a href="{@url}"><xsl:value-of select="@url"/></a>
-		</xsl:if>'
-	);
-
-	$root->appendChild($fragment);
+	$tag->attributes->add('url')->filterChain->append('#url');
+	$tag->filterChain->prepend('addMediaUrl')->addParameterByName('parser');
+	$tag->template .= '<xsl:if test="@url"><a href="{@url}"><xsl:value-of select="@url"/></a></xsl:if>';
 }
 
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->templateNormalizer->add('appendMediaLink')->onlyOnce = true;
-$configurator->MediaEmbed->add('youtube');
+function addMediaUrl($tag, $parser);
+{
+	// Get the position and length of text consumed by this tag, or pair of tags
+	$pos = $tag->getPos();
+	if ($tag->getEndTag())
+	{
+		$len = $tag->getEndTag()->getPos() + $tag->getEndTag()->getLen() - $pos;
+	}
+	else
+	{
+		$len = $tag->getLen();
+	}
+
+	// If the text contains a URL, add it as an attribute
+	$text = substr($parser->getText(), $pos, $len);
+	if (preg_match('(https?://[^[]++)', $text, $m))
+	{
+		$tag->setAttribute('url', $m[0]);
+	}
+}
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

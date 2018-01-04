@@ -263,7 +263,6 @@
 			<file>tests/Plugins/Litedown/Parser/Passes/SubscriptTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/SuperscriptTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollectionTest.php</file>
-			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/SiteDefinitionCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/Collections/XmlFileDefinitionCollectionTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/TemplateBuilderTest.php</file>

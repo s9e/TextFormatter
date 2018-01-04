@@ -163,22 +163,28 @@ If the URL used for scraping is different from the media's URL, you can specify 
 
 For example: the dimensions of a Gfycat video are mentionned in the metadata of their page. However, if someone posted a direct link to a Gfycat .gif image such as `http://giant.gfycat.com/SereneIllfatedCapybara.gif`, the dimensions would not be available. In the following example, we configure `scrape` with a custom URL that is known to include the original image's dimensions.
 
+In addition, we specify that both the `width` and `height` attributes should be filtered as unsigned integer.
+
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
 $configurator->MediaEmbed->add(
 	'gfycat',
 	[
-		'host'   => 'gfycat.com',
-		'extract' => "!gfycat\\.com/(?'id'\\w+)!",
-		'scrape' => [
+		'host'       => 'gfycat.com',
+		'attributes' => [
+			'height' => ['filterChain' => '#uint'],
+			'width'  => ['filterChain' => '#uint']
+		],
+		'extract'    => "!gfycat\\.com/(?'id'\\w+)!",
+		'scrape'     => [
 			'url'     => 'http://gfycat.com/{@id}',
 			'extract' => [
 				'!property="og:image:height"\s*content="(?<height>\d+)!',
 				'!property="og:image:width"\s*content="(?<width>\d+)!'
 			]
 		],
-		'iframe' => [
+		'iframe'     => [
 			'width'     => '{@width}',
 			'height'    => '{@height}',
 			'src'       => '//gfycat.com/iframe/{@id}'

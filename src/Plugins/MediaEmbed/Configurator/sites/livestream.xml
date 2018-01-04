@@ -11,6 +11,7 @@
 	<extract>!/videos/(?'video_id'\d+)!</extract>
 	<extract>!original\.livestream\.com/(?'channel'\w+)/video\?clipId=(?'clip_id'[-\w]+)!</extract>
 	<scrape>
+		<match>@livestream\.com/(?!accounts/\d+/events/\d)@</match>
 		<extract>!accounts/(?'account_id'\d+)/events/(?'event_id'\d+)!</extract>
 	</scrape>
 	<scrape>

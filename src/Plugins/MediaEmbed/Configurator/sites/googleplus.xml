@@ -6,7 +6,7 @@
 	<tags><tag>social</tag></tags>
 
 	<attributes>
-		<name postFilter="urldecode"/>
+		<name filterChain="urldecode"/>
 	</attributes>
 
 	<host>plus.google.com</host>

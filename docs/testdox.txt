@@ -2489,14 +2489,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollecti
  [x] Site definitions contain the site's name
  [x] Site definitions contain the site's tags
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteCollection
- [x] Extends ArrayObject
- [x] Implements ConfigProvider
- [x] asConfig() returns a Dictionary
- [x] The config contains a map of ['host.tld' => 'site id']
- [x] The config contains a map of ['scheme:' => 'site id']
- [x] Accept "host" as a string or an array of strings
-
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
  [x] Can set and retrieve definitions
  [x] get() throws a meaningful exception if the site ID does not exist
@@ -2543,7 +2535,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Ifram
  [x] getTemplate() tests 
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
- [x] Registers mediasites as a variable for the parser
+ [x] finalize() registers MediaEmbed.hosts and MediaEmbed.sites as variables
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createMediaBBCode is false
  [x] add('youtube') does not create a [youtube] BBCode by default
@@ -2552,32 +2544,15 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() accepts an array as second argument
  [x] add() creates an attribute for every named subpattern in extract
  [x] add() creates an attribute for every named subpattern in scrape/extract
- [x] add() saves the "url" attribute of a scrape if applicable
- [x] add() creates an optional "url" attribute
- [x] Extract regexps can contain an "url" capture
- [x] The "url" attribute keeps its #url filter instead of a #regexp filter even if it's used in a capture
- [x] add() marks the "id" attribute as non-optional if present
- [x] add() marks non-"id" attributes as optional
- [x] add() adds the regexp used for the "id" attribute to the list of attribute preprocessors
- [x] add() accepts multiple "extract" elements
  [x] add() accepts multiple "host" elements
- [x] add() accepts multiple "scrape" elements
- [x] add() accepts multiple "match" elements in "scrape"
- [x] add() accepts zero "match" elements in "scrape"
- [x] add() accepts multiple "extract" elements in "scrape"
  [x] add() sets the tag's default template to the iframe defined in the "iframe" element if available
  [x] add() sets the tag's default template to the object defined in the "flash" element if available
  [x] add() sets an empty template if none is specified
  [x] add() handles multiple-choice templates
  [x] add() handles multiple-choice templates with more than 2 branches
  [x] add() checks the tag's safety before adding it
- [x] add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
- [x] add() does not test for non-default attributes if the tag has a required attribute
  [x] add() uses explicit attribute declarations
- [x] add() processes the optional preFilter in attribute declarations
- [x] add() throws a RuntimeException if the optional preFilter is not allowed
- [x] add() processes the optional postFilter in attribute declarations
- [x] add() throws a RuntimeException if the optional postFilter is not allowed
+ [x] add() throws a RuntimeException if a filter is not allowed
  [x] add() processes the optional defaultValue in attribute declarations
  [x] add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
  [x] asConfig() returns NULL if no site was added
@@ -2586,8 +2561,6 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] asConfig() returns '://' as quickMatch
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
- [x] scrape() does not do anything if the tag does not have a "url" attribute
- [x] The MEDIA tag transfers its priority to the tag it creates
  [x] The MEDIA tag can be effectively disabled
  [x] Abstract tests (not tied to bundled sites) 
  [x] Scraping tests 

@@ -10,9 +10,6 @@
 		<match>#cbsnews\.com/videos/(?!watch/)#</match>
 		<extract>#"pid":"(?'pid'\w+)"#</extract>
 	</scrape>
-	<attributes>
-		<id required="false"/>
-	</attributes>
 	<choose>
 		<when test="@pid">
 			<flash padding-height="38" src="//www.cbsnews.com/common/video/cbsnews_player.swf" flashvars="pType=embed&amp;si=254&amp;pid={@pid}"/>

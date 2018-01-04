@@ -12,13 +12,14 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox Registers mediasites as a variable for the parser
+	* @testdox finalize() registers MediaEmbed.hosts and MediaEmbed.sites as variables
 	*/
-	public function testRegistersVar()
+	public function testRegistersVars()
 	{
-		$this->configurator->plugins->load('MediaEmbed');
+		$this->configurator->MediaEmbed->finalize();
 
-		$this->assertArrayHasKey('mediasites', $this->configurator->registeredVars);
+		$this->assertArrayHasKey('MediaEmbed.hosts', $this->configurator->registeredVars);
+		$this->assertArrayHasKey('MediaEmbed.sites', $this->configurator->registeredVars);
 	}
 
 	/**
@@ -139,228 +140,14 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() saves the "url" attribute of a scrape if applicable
-	*/
-	public function testAddScrapeUrl()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'example.org',
-				'scrape'   => [
-					'url'     => 'http://example.org/{@id}',
-					'match'   => "#/(?'id'\\d+)#",
-					'extract' => "#/(?'vid'\\d+)#"
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[
-				'scrapeConfig' => [
-					[
-						["#/(?'id'\\d+)#"],
-						["#/(?'vid'\\d+)#"],
-						['vid'],
-						'http://example.org/{@id}'
-					]
-				]
-			],
-			$tag->filterChain[1]->getVars()
-		);
-	}
-
-	/**
-	* @testdox add() creates an optional "url" attribute
-	*/
-	public function testAddOptionalUrl()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'youtube.com',
-				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertTrue($tag->attributes->exists('url'));
-		$this->assertFalse($tag->attributes['url']->required);
-	}
-
-	/**
-	* @testdox Extract regexps can contain an "url" capture
-	*/
-	public function testAddCaptureUrl()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'youtube.com',
-				'extract' => "!(?'url'youtube\\.com/.+)!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-	}
-
-	/**
-	* @testdox The "url" attribute keeps its #url filter instead of a #regexp filter even if it's used in a capture
-	*/
-	public function testAddCaptureUrlFilter()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'youtube.com',
-				'extract' => "!(?'url'youtube\\.com/.+)!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[$this->configurator->attributeFilters['#url']],
-			iterator_to_array($tag->attributes['url']->filterChain)
-		);
-	}
-
-	/**
-	* @testdox add() marks the "id" attribute as non-optional if present
-	*/
-	public function testAddIdRequired()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtube.com',
-				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertTrue($tag->attributes['id']->required);
-	}
-
-	/**
-	* @testdox add() marks non-"id" attributes as optional
-	*/
-	public function testAddOptionalAttributes()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtube.com',
-				'extract' => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertFalse($tag->attributes['path']->required);
-	}
-
-	/**
-	* @testdox add() adds the regexp used for the "id" attribute to the list of attribute preprocessors
-	*/
-	public function testAddIdPreprocessor()
-	{
-		$r1 = "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!";
-
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtube.com',
-				'extract' => $r1,
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$expected = [
-			['url', new AttributePreprocessor($r1)],
-			['url', new AttributePreprocessor("!^(?'id'[-0-9A-Z_a-z]+)\$!D")]
-		];
-		$actual = [];
-		foreach ($tag->attributePreprocessors as $k => $v)
-		{
-			$actual[] = [$k, $v];
-		}
-
-		$this->assertEquals($expected, $actual);
-	}
-
-	/**
-	* @testdox add() accepts multiple "extract" elements
-	*/
-	public function testAddMultipleMatch()
-	{
-		$r1 = "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!";
-		$r2 = "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!";
-
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'    => 'youtube.com',
-				'extract' => [$r1, $r2],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$expected = [
-			['url', new AttributePreprocessor($r1)],
-			['url', new AttributePreprocessor($r2)],
-			['url', new AttributePreprocessor("!^(?'id'[-0-9A-Z_a-z]+)\$!D")]
-		];
-		$actual = [];
-		foreach ($tag->attributePreprocessors as $k => $v)
-		{
-			$actual[] = [$k, $v];
-		}
-
-		$this->assertEquals($expected, $actual);
-	}
-
-	/**
 	* @testdox add() accepts multiple "host" elements
 	*/
 	public function testAddMultipleHost()
 	{
-		$hosts = ['youtube.com', 'youtu.be'];
-
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'    => $hosts,
+				'host'    => ['youtube.com', 'youtu.be'],
 				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
 				'iframe'  => [
 					'width'  => 560,
@@ -369,164 +156,10 @@ class ConfiguratorTest extends Test
 				]
 			]
 		);
-
+		$this->configurator->finalize();
 		$this->assertEquals(
-			$hosts,
-			$this->configurator->registeredVars['mediasites']['youtube']['host']
-		);
-	}
-
-	/**
-	* @testdox add() accepts multiple "scrape" elements
-	*/
-	public function testAddMultipleScrape()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'example.org',
-				'scrape'   => [
-					[
-						'match'   => '#/v/\\d+#',
-						'extract' => "#id=(?'id'\\d+)#"
-					],
-					[
-						'match'   => '#/V/\\d+#',
-						'extract' => "#id=(?'id'\\d+)#"
-					]
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[
-				'scrapeConfig' => [
-					[['#/v/\d+#'], ["#id=(?'id'\d+)#"], ['id']],
-					[['#/V/\d+#'], ["#id=(?'id'\d+)#"], ['id']]
-				]
-			],
-			$tag->filterChain[1]->getVars()
-		);
-	}
-
-	/**
-	* @testdox add() accepts multiple "match" elements in "scrape"
-	*/
-	public function testAddMultipleMatchScrape()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'example.org',
-				'scrape'   => [
-					[
-						'match'   => ['#/v/\\d+#', '#/V/\\d+#'],
-						'extract' => "#id=(?'id'\\d+)#"
-					]
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[
-				'scrapeConfig' => [
-					[
-						['#/v/\d+#', '#/V/\d+#'],
-						["#id=(?'id'\d+)#"],
-						['id']
-					]
-				]
-			],
-			$tag->filterChain[1]->getVars()
-		);
-	}
-
-	/**
-	* @testdox add() accepts zero "match" elements in "scrape"
-	*/
-	public function testAddZeroMatchScrape()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'example.org',
-				'scrape'   => [
-					[
-						'extract' => "#id=(?'id'\\d+)#"
-					]
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[
-				'scrapeConfig' => [
-					[
-						['//'],
-						["#id=(?'id'\d+)#"],
-						['id']
-					]
-				]
-			],
-			$tag->filterChain[1]->getVars()
-		);
-	}
-
-	/**
-	* @testdox add() accepts multiple "extract" elements in "scrape"
-	*/
-	public function testAddMultipleExtractScrape()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'example',
-			[
-				'host'    => 'example.org',
-				'scrape'   => [
-					[
-						'match'   => '#/v/\\d+#',
-						'extract' => [
-							"#id=(?'id'\\d+)#",
-							"#xd=(?'xd'\\d+)#"
-						]
-					]
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$this->assertEquals(
-			[
-				'scrapeConfig' => [
-					[
-						['#/v/\d+#'],
-						[
-							"#id=(?'id'\d+)#",
-							"#xd=(?'xd'\d+)#"
-						],
-						['id', 'xd']
-					]
-				]
-			],
-			$tag->filterChain[1]->getVars()
+			['youtube.com' => 'youtube', 'youtu.be' => 'youtube'],
+			iterator_to_array($this->configurator->registeredVars['MediaEmbed.hosts'])
 		);
 	}
 
@@ -689,70 +322,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
-	*/
-	public function testAddFilterIfNoRequired()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.com',
-				'extract' => [
-					"!example\\.com/(?<foo>\\d+)!",
-					"!example\\.com/(?<bar>\\D+)!"
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$expected = 's9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::hasNonDefaultAttribute';
-		foreach ($tag->filterChain as $filter)
-		{
-			if ($filter->getCallback() === $expected)
-			{
-				return;
-			}
-		}
-
-		$this->fail('Could not find the expected callback');
-	}
-
-	/**
-	* @testdox add() does not test for non-default attributes if the tag has a required attribute
-	*/
-	public function testAddNoFilterIfRequired()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'foo',
-			[
-				'host'    => 'example.com',
-				'extract' => [
-					"!example\\.com/(?<id>\\d+)!",
-					"!example\\.com/(?<bar>\\D+)!"
-				],
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				]
-			]
-		);
-
-		$callback = 's9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::hasNonDefaultAttribute';
-		foreach ($tag->filterChain as $filter)
-		{
-			if ($filter->getCallback() === $callback)
-			{
-				$this->fail('The filter chain should not contain ' . $callback);
-			}
-		}
-	}
-
-	/**
 	* @testdox add() uses explicit attribute declarations
 	*/
 	public function testAddExplicitAttributes()
@@ -769,7 +338,7 @@ class ConfiguratorTest extends Test
 				],
 				'attributes' => [
 					'id' => ['required' => false],
-					'xx' => ['type' => 'number']
+					'xx' => ['filterChain' => ['#number']]
 				]
 			]
 		);
@@ -783,43 +352,11 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() processes the optional preFilter in attribute declarations
-	*/
-	public function testAddPreFilter()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'      => 'youtube.com',
-				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				],
-				'attributes' => [
-					'id' => ['required' => false],
-					'xx' => ['type' => 'number', 'preFilter' => 'hexdec']
-				]
-			]
-		);
-
-		$this->assertTrue(isset($tag->attributes['xx']));
-		$this->assertEquals(
-			[
-				$this->configurator->attributeFilters['hexdec'],
-				$this->configurator->attributeFilters['#number']
-			],
-			iterator_to_array($tag->attributes['xx']->filterChain)
-		);
-	}
-
-	/**
-	* @testdox add() throws a RuntimeException if the optional preFilter is not allowed
+	* @testdox add() throws a RuntimeException if a filter is not allowed
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Filter 'eval' is not allowed
+	* @expectedExceptionMessage Filter 'eval' is not allowed in media sites
 	*/
-	public function testAddPreFilterInvalid()
+	public function testDisallowedFilter()
 	{
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
@@ -833,64 +370,7 @@ class ConfiguratorTest extends Test
 				],
 				'attributes' => [
 					'id' => ['required' => false],
-					'xx' => ['type' => 'number', 'preFilter' => 'eval']
-				]
-			]
-		);
-	}
-
-	/**
-	* @testdox add() processes the optional postFilter in attribute declarations
-	*/
-	public function testAddPostFilter()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'      => 'youtube.com',
-				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				],
-				'attributes' => [
-					'id' => ['required' => false],
-					'xx' => ['type' => 'number', 'postFilter' => 'hexdec']
-				]
-			]
-		);
-
-		$this->assertTrue(isset($tag->attributes['xx']));
-		$this->assertEquals(
-			[
-				$this->configurator->attributeFilters['#number'],
-				$this->configurator->attributeFilters['hexdec']
-			],
-			iterator_to_array($tag->attributes['xx']->filterChain)
-		);
-	}
-
-	/**
-	* @testdox add() throws a RuntimeException if the optional postFilter is not allowed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Filter 'eval' is not allowed
-	*/
-	public function testAddPostFilterInvalid()
-	{
-		$tag = $this->configurator->MediaEmbed->add(
-			'youtube',
-			[
-				'host'      => 'youtube.com',
-				'extract'   => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
-				'iframe'  => [
-					'width'  => 560,
-					'height' => 315,
-					'src'    => '//localhost'
-				],
-				'attributes' => [
-					'id' => ['required' => false],
-					'xx' => ['type' => 'number', 'postFilter' => 'eval']
+					'xx' => ['filterChain' => ['eval']]
 				]
 			]
 		);
@@ -909,7 +389,7 @@ class ConfiguratorTest extends Test
 				'template'   => '',
 				'attributes' => [
 					'id' => ['required' => false],
-					'height' => ['type' => 'number', 'defaultValue' => 123]
+					'height' => ['defaultValue' => 123]
 				]
 			]
 		);

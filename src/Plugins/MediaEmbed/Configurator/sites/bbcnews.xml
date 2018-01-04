@@ -4,7 +4,7 @@
 	<tags><tag>news</tag></tags>
 
 	<attributes>
-		<id postFilter="stripslashes"/>
+		<id filterChain="stripslashes"/>
 	</attributes>
 
 	<host>bbc.com</host>

@@ -5,8 +5,8 @@
 	<tags><tag>images</tag></tags>
 
 	<attributes>
-		<height defaultValue="360"/>
-		<width defaultValue="640"/>
+		<height defaultValue="360" filterChain="#uint"/>
+		<width  defaultValue="640" filterChain="#uint"/>
 	</attributes>
 
 	<host>gifs.com</host>

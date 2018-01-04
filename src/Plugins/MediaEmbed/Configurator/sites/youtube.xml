@@ -8,7 +8,8 @@
 	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 
 	<attributes>
-		<t type="timestamp"/>
+		<id filterChain="#identifier"/>
+		<t  filterChain="#timestamp"/>
 	</attributes>
 
 	<host>youtube.com</host>

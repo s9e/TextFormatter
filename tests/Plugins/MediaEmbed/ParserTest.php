@@ -70,42 +70,6 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @testdox scrape() does not do anything if the tag does not have a "url" attribute
-	*/
-	public function testScrapeNoUrl()
-	{
-		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0);
-
-		$this->assertTrue(Parser::scrape($tag, []));
-	}
-
-	/**
-	* @testdox The MEDIA tag transfers its priority to the tag it creates
-	*/
-	public function testTagPriority()
-	{
-		$newTag = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Tag')
-		               ->disableOriginalConstructor()
-		               ->setMethods(['setAttributes'])
-		               ->getMock();
-
-		$tagStack = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
-		                 ->disableOriginalConstructor()
-		                 ->setMethods(['addTagPair'])
-		                 ->getMock();
-
-		$tagStack->expects($this->once())
-		         ->method('addTagPair')
-		         ->with('FOO', 0, 0, 1, 0, 123)
-		         ->will($this->returnValue($newTag));
-
-		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 1, 123);
-		$tag->setAttribute('site', 'foo');
-
-		Parser::filterTag($tag, $tagStack, ['foo.invalid' => 'foo']);
-	}
-
-	/**
 	* @testdox The MEDIA tag can be effectively disabled
 	*/
 	public function testDisableTag()
@@ -122,7 +86,7 @@ class ParserTest extends Test
 		$text = 'http://localhost/video/123';
 		$parser = $this->getParser();
 		$this->assertSame(
-			'<r><FOO id="123" url="http://localhost/video/123">http://localhost/video/123</FOO></r>',
+			'<r><FOO id="123">http://localhost/video/123</FOO></r>',
 			$parser->parse($text)
 		);
 		$parser->disableTag('MEDIA');
@@ -147,7 +111,7 @@ class ParserTest extends Test
 			[
 				// Multiple "match" in scrape
 				'http://example.invalid/123',
-				'<r><EXAMPLE id="456" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
+				'<r><EXAMPLE id="456">http://example.invalid/123</EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -175,7 +139,7 @@ class ParserTest extends Test
 			[
 				// Multiple "extract" in scrape
 				'http://example.invalid/123',
-				'<r><EXAMPLE id="456" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
+				'<r><EXAMPLE id="456">http://example.invalid/123</EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -203,7 +167,7 @@ class ParserTest extends Test
 			[
 				// Multiple scrapes
 				'http://example.invalid/123',
-				'<r><EXAMPLE id="456" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
+				'<r><EXAMPLE id="456">http://example.invalid/123</EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -237,7 +201,7 @@ class ParserTest extends Test
 			[
 				// Ensure that the hash is ignored when scraping
 				'http://example.invalid/123#hash',
-				'<r><EXAMPLE id="success" url="http://example.invalid/123#hash">http://example.invalid/123#hash</EXAMPLE></r>',
+				'<r><EXAMPLE id="success">http://example.invalid/123#hash</EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -276,31 +240,7 @@ class ParserTest extends Test
 								'match'   => '/./',
 								'extract' => "/(?'id'[0-9]+)/"
 							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that invalid URLs don't get scraped
-				'[media]http://example.invalid/123?x"> foo="bar[/media]',
-				'<t>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = self::populateCache([
-						'http://example.invalid/123?x"> foo="bar' => '456'
-					]);
-
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => 'src']
 						]
 					);
 				}
@@ -320,35 +260,14 @@ class ParserTest extends Test
 								'match'   => '/XXX/',
 								'extract' => "/(?'id'[0-9]+)/"
 							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that we don't scrape if the attributes are already filled
-				'http://example.invalid/123',
-				'<r><EXAMPLE id="12" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'extract' => "#/(?'id'[0-9]{2})#",
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => 'src']
 						]
 					);
 				}
 			],
 			[
 				'[media]http://foo.example.org/123[/media]',
-				'<r><X2 id="123" url="http://foo.example.org/123"><s>[media]</s>http://foo.example.org/123<e>[/media]</e></X2></r>',
+				'<r><X2 id="123"><s>[media]</s>http://foo.example.org/123<e>[/media]</e></X2></r>',
 				[],
 				function ($configurator)
 				{
@@ -400,27 +319,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				// Test that we don't replace the "id" attribute with an URL
-				'[media=foo]http://example.org/123[/media]',
-				'<r><FOO id="123" url="http://example.org/123"><s>[media=foo]</s>http://example.org/123<e>[/media]</e></FOO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'    => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'iframe' => [
-								'width'  => 560,
-								'height' => 315,
-								'src'    => '//localhost'
-							]
-						]
-					);
-				}
-			],
-			[
 				'[media]http://example.com/baz[/media]',
 				'<t>[media]http://example.com/baz[/media]</t>',
 				[],
@@ -445,7 +343,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://example.com/foo[/media]',
-				'<r><FOO foo="foo" url="http://example.com/foo"><s>[media]</s>http://example.com/foo<e>[/media]</e></FOO></r>',
+				'<r><FOO foo="foo"><s>[media]</s>http://example.com/foo<e>[/media]</e></FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -493,7 +391,7 @@ class ParserTest extends Test
 			[
 				// No match on URL but @bar is valid == tag is kept
 				'[foo bar=bar]http://example.com/baz[/foo]',
-				'<r><FOO bar="bar" url="http://example.com/baz"><s>[foo bar=bar]</s>http://example.com/baz<e>[/foo]</e></FOO></r>',
+				'<r><FOO bar="bar"><s>[foo bar=bar]</s>http://example.com/baz<e>[/foo]</e></FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -528,7 +426,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://localhost/video/123',
-				'<r><FOO id="123" url="http://localhost/video/123"><URL url="http://localhost/video/123">http://localhost/video/123</URL></FOO></r>',
+				'<r><FOO id="123"><URL url="http://localhost/video/123">http://localhost/video/123</URL></FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -545,7 +443,7 @@ class ParserTest extends Test
 			],
 			[
 				'HTTP://example.com/123',
-				'<r><FOO id="123" url="http://example.com/123">HTTP://example.com/123</FOO></r>',
+				'<r><FOO id="123">HTTP://example.com/123</FOO></r>',
 				[],
 				function ($configurator)
 				{
@@ -561,7 +459,7 @@ class ParserTest extends Test
 			],
 			[
 				'[video]http://example.org/123[/video]',
-				'<r><EXAMPLE id="123" url="http://example.org/123"><s>[video]</s>http://example.org/123<e>[/video]</e></EXAMPLE></r>',
+				'<r><EXAMPLE id="123"><s>[video]</s>http://example.org/123<e>[/video]</e></EXAMPLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -593,7 +491,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<r><BANDCAMP album_id="1122163921" url="http://proleter.bandcamp.com/album/curses-from-past-times-ep">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
+				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
 				[],
 				function ($configurator)
 				{
@@ -609,7 +507,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<r><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7" url="http://proleter.bandcamp.com/track/muhammad-ali">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></r>',
+				'<r><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></r>',
 				[],
 				function ($configurator)
 				{
@@ -619,7 +517,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://therunons.bandcamp.com/track/still-feel',
-				'<r><BANDCAMP track_id="2146686782" url="http://therunons.bandcamp.com/track/still-feel">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></r>',
+				'<r><BANDCAMP track_id="2146686782">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></r>',
 				[],
 				function ($configurator)
 				{
@@ -629,7 +527,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
-//				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan" url="http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
+//				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -639,7 +537,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
-//				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5" url="http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
+//				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -649,7 +547,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001',
-				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001" url="http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
+				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -659,7 +557,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-//				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" url="http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
+//				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -669,7 +567,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
-				'<r><DUMPERT id="6622577/4652b140" url="http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html">http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</DUMPERT></r>',
+				'<r><DUMPERT id="6622577/4652b140">http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</DUMPERT></r>',
 				[],
 				function ($configurator)
 				{
@@ -679,7 +577,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://8tracks.com/lovinq/headphones-in-world-out',
-				'<r><EIGHTTRACKS id="4982023" url="http://8tracks.com/lovinq/headphones-in-world-out">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
+				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
 				[],
 				function ($configurator)
 				{
@@ -689,7 +587,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://flic.kr/p/5wBgXo',
-				'<r><FLICKR id="2971804544" url="https://flic.kr/p/5wBgXo">https://flic.kr/p/5wBgXo</FLICKR></r>',
+				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],
 				function ($configurator)
 				{
@@ -699,7 +597,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://fora.tv/2009/07/30/Marijuana_Economics',
-				'<r><FORATV id="9677" url="http://fora.tv/2009/07/30/Marijuana_Economics">http://fora.tv/2009/07/30/Marijuana_Economics</FORATV></r>',
+				'<r><FORATV id="9677">http://fora.tv/2009/07/30/Marijuana_Economics</FORATV></r>',
 				[],
 				function ($configurator)
 				{
@@ -709,7 +607,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
-//				'<r><GAMETRAILERS id="2954127" url="http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
+//				'<r><GAMETRAILERS id="2954127">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -719,7 +617,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://gty.im/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://gty.im/3232182" width="594">http://gty.im/3232182</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://gty.im/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -731,7 +629,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://www.gettyimages.com/detail/3232182" width="594">http://www.gettyimages.com/detail/3232182</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://www.gettyimages.com/detail/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -743,7 +641,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" url="http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182" width="594">http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -755,7 +653,7 @@ class ParserTest extends Test
 			],
 			[
 				"http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667",
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" url="http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667" width="396">http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -767,7 +665,7 @@ class ParserTest extends Test
 			],
 			[
 				"http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667",
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" url="http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667" width="396">http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -779,7 +677,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206',
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="534861206" sig="[-\\w]{43}=" url="http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206" width="396">http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206</GETTY></r>)',
+				'(<r><GETTY et="[-\\w]{22}" height="594" id="534861206" sig="[-\\w]{43}=" width="396">http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -791,7 +689,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://gfycat.com/SereneIllfatedCapybara',
-				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://gfycat.com/SereneIllfatedCapybara" width="600">http://gfycat.com/SereneIllfatedCapybara</GFYCAT></r>',
+				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" width="600">http://gfycat.com/SereneIllfatedCapybara</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -801,7 +699,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" url="https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny" width="950">https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny</GFYCAT></r>',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -811,7 +709,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://gfycat.com/Test',
-				'<r><GFYCAT height="360" id="Test" url="http://gfycat.com/Test" width="640">http://gfycat.com/Test</GFYCAT></r>',
+				'<r><GFYCAT height="360" id="Test" width="640">http://gfycat.com/Test</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -824,7 +722,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://giant.gfycat.com/SereneIllfatedCapybara.gif',
-				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" url="http://giant.gfycat.com/SereneIllfatedCapybara.gif" width="600">http://giant.gfycat.com/SereneIllfatedCapybara.gif</GFYCAT></r>',
+				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" width="600">http://giant.gfycat.com/SereneIllfatedCapybara.gif</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -834,7 +732,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://j.gifs.com/Y6YZoO.gif',
-				'<r><GIFS height="200" id="Y6YZoO" url="https://j.gifs.com/Y6YZoO.gif" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
+				'<r><GIFS height="200" id="Y6YZoO" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
 				[],
 				function ($configurator)
 				{
@@ -844,7 +742,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.hudl.com/v/CVmja',
-				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b" url="http://www.hudl.com/v/CVmja">http://www.hudl.com/v/CVmja</HUDL></r>',
+				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b">http://www.hudl.com/v/CVmja</HUDL></r>',
 				[],
 				function ($configurator)
 				{
@@ -854,7 +752,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://college.healthguru.com/video/handling-heartache',
-//				'<r><HEALTHGURU id="ZX" url="http://college.healthguru.com/video/handling-heartache">http://college.healthguru.com/video/handling-heartache</HEALTHGURU></r>',
+//				'<r><HEALTHGURU id="ZX">http://college.healthguru.com/video/handling-heartache</HEALTHGURU></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -864,7 +762,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://college.healthguru.com/content/video/watch/100502/handling-heartache',
-//				'<r><HEALTHGURU id="RX" url="http://college.healthguru.com/content/video/watch/100502/handling-heartache">http://college.healthguru.com/content/video/watch/100502/handling-heartache</HEALTHGURU></r>',
+//				'<r><HEALTHGURU id="RX">http://college.healthguru.com/content/video/watch/100502/handling-heartache</HEALTHGURU></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -874,7 +772,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.hulu.com/watch/484180',
-				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA" url="http://www.hulu.com/watch/484180">http://www.hulu.com/watch/484180</HULU></r>',
+				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA">http://www.hulu.com/watch/484180</HULU></r>',
 				[],
 				function ($configurator)
 				{
@@ -884,7 +782,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/BillGate99',
-				'<r><INTERNETARCHIVE height="240" id="BillGate99" url="https://archive.org/details/BillGate99" width="320">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
+				'<r><INTERNETARCHIVE height="240" id="BillGate99" width="320">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -894,7 +792,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/DFTS2014-05-30',
-				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" url="https://archive.org/details/DFTS2014-05-30" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
+				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -904,7 +802,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.khl.ru/events/233677',
-				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+" url="http://video.khl.ru/events/233677">http://video.khl.ru/events/233677</KHL></r>)',
+				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+">http://video.khl.ru/events/233677</KHL></r>)',
 				[],
 				function ($configurator)
 				{
@@ -916,7 +814,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.khl.ru/quotes/251237',
-				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+" url="http://video.khl.ru/quotes/251237">http://video.khl.ru/quotes/251237</KHL></r>)',
+				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+">http://video.khl.ru/quotes/251237</KHL></r>)',
 				[],
 				function ($configurator)
 				{
@@ -928,7 +826,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey',
-				'<r><LIBSYN id="3521244" url="http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
+				'<r><LIBSYN id="3521244">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
 				[],
 				function ($configurator)
 				{
@@ -938,7 +836,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://livestre.am/1aHRU',
-//				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae" url="http://livestre.am/1aHRU">http://livestre.am/1aHRU</LIVESTREAM></r>',
+//				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae">http://livestre.am/1aHRU</LIVESTREAM></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -948,7 +846,7 @@ class ParserTest extends Test
 //			],
 			[
 				'https://livestream.com/internetsociety/wsis/videos/107058039',
-				'<r><LIVESTREAM account_id="686369" event_id="4588746" url="https://livestream.com/internetsociety/wsis/videos/107058039" video_id="107058039">https://livestream.com/internetsociety/wsis/videos/107058039</LIVESTREAM></r>',
+				'<r><LIVESTREAM account_id="686369" event_id="4588746" video_id="107058039">https://livestream.com/internetsociety/wsis/videos/107058039</LIVESTREAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -958,7 +856,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
-//				'<r><MAILRU id="corp/auto/testdrive/34" url="http://my.mail.ru/corp/auto/video/testdrive/34.html">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
+//				'<r><MAILRU id="corp/auto/testdrive/34">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -968,7 +866,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks',
-//				'<r><MRCTV id="55537" url="http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
+//				'<r><MRCTV id="55537">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -978,7 +876,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
-				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
+				'<r><MSNBC id="n_farrow_moon_140709_257794">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
 				[],
 				function ($configurator)
 				{
@@ -988,7 +886,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://on.msnbc.com/1qkH62o',
-				'<r><MSNBC id="n_farrow_moon_140709_257794" url="http://on.msnbc.com/1qkH62o">http://on.msnbc.com/1qkH62o</MSNBC></r>',
+				'<r><MSNBC id="n_farrow_moon_140709_257794">http://on.msnbc.com/1qkH62o</MSNBC></r>',
 				[],
 				function ($configurator)
 				{
@@ -998,7 +896,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.nationalgeographic.com/tv/changing-earth',
-				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO" url="http://video.nationalgeographic.com/tv/changing-earth">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
+				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -1009,7 +907,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
-				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4" url="http://video.nationalgeographic.com/video/weirdest-superb-lyrebird">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
+				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -1020,7 +918,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance',
-				'<r><NBCSPORTS id="fTQA2MMyx9YO" url="http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
+				'<r><NBCSPORTS id="fTQA2MMyx9YO">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1030,7 +928,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
-				'<r><NPR i="385396431" m="385396432" url="http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world">http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
+				'<r><NPR i="385396431" m="385396432">http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1040,7 +938,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://n.pr/1Qky1m5',
-				'<r><NPR i="411271189" m="411271193" url="http://n.pr/1Qky1m5">http://n.pr/1Qky1m5</NPR></r>',
+				'<r><NPR i="411271189" m="411271193">http://n.pr/1Qky1m5</NPR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1050,7 +948,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://plays.tv/s/Kt4onQhyyVyz',
-				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/s/Kt4onQhyyVyz">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
+				'<r><PLAYSTV id="565683db95f139f47e">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
 				[],
 				function ($configurator)
 				{
@@ -1060,7 +958,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
-				'<r><PODBEAN id="gupid-6a18d0" url="https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
+				'<r><PODBEAN id="gupid-6a18d0">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1070,7 +968,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.podbean.com/media/share/dir-rfuh3-318f30b',
-				'<r><PODBEAN id="rfuh3-318f30b-dir" url="http://www.podbean.com/media/share/dir-rfuh3-318f30b">http://www.podbean.com/media/share/dir-rfuh3-318f30b</PODBEAN></r>',
+				'<r><PODBEAN id="rfuh3-318f30b-dir">http://www.podbean.com/media/share/dir-rfuh3-318f30b</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1080,7 +978,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
-				'<r><RUTUBE id="6613980" url="http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
+				'<r><RUTUBE id="6613980">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -1090,7 +988,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
-				'<r><SLIDESHARE id="21112125" url="http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
+				'<r><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
 				[],
 				function ($configurator)
 				{
@@ -1104,7 +1002,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
-//				'<r><SOUNDCLOUD id="topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860" url="https://soundcloud.com/topdawgent/i-1/s-GT9Cd">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
+//				'<r><SOUNDCLOUD id="topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1114,7 +1012,7 @@ class ParserTest extends Test
 //			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -1128,7 +1026,7 @@ class ParserTest extends Test
 			],
 			[
 				'Https://soundcloud.com/andrewbird/three-white-horses',
-				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713" url="https://soundcloud.com/andrewbird/three-white-horses">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713">Https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -1142,7 +1040,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
-				'(<r><SPORTSNET id="\\d+001" url="http://www.sportsnet.ca/videos/shows/tim-and-sid-video/">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
+				'(<r><SPORTSNET id="\\d+001">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
 				function ($configurator)
 				{
@@ -1154,7 +1052,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
-//				'<r><STITCHER eid="37808629" fid="12645" url="http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
+//				'<r><STITCHER eid="37808629" fid="12645">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1164,7 +1062,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
-				'<r><TEAMCOCO id="73784" url="http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',
+				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',
 				[],
 				function ($configurator)
 				{
@@ -1174,7 +1072,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://tinypic.com/m/jujsk3/4',
-				'<r><TINYPIC id="1gg7xj" s="9" url="http://tinypic.com/m/jujsk3/4">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
+				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
 				[],
 				function ($configurator)
 				{
@@ -1184,7 +1082,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
-//				'<r><TRAILERADDICT id="85253" url="http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
+//				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1194,7 +1092,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://mrbenvey.tumblr.com/post/104191225637',
-				'<r><TUMBLR did="5f3b4bc6718317df9c2b1e77c20839ab94f949cd" id="104191225637" key="uFhWDPKj-bGU0ZlDAnUyxg" name="mrbenvey" url="http://mrbenvey.tumblr.com/post/104191225637">http://mrbenvey.tumblr.com/post/104191225637</TUMBLR></r>',
+				'<r><TUMBLR did="5f3b4bc6718317df9c2b1e77c20839ab94f949cd" id="104191225637" key="uFhWDPKj-bGU0ZlDAnUyxg" name="mrbenvey">http://mrbenvey.tumblr.com/post/104191225637</TUMBLR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1204,7 +1102,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<r><USTREAM cid="16234409" url="http://www.ustream.tv/channel/ps4-ustream-gameplay">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></r>',
+				'<r><USTREAM cid="16234409">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -1214,7 +1112,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vkontakte.ru/video-7016284_163645555',
-				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vkontakte.ru/video-7016284_163645555" vid="163645555">http://vkontakte.ru/video-7016284_163645555</VK></r>',
+				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" vid="163645555">http://vkontakte.ru/video-7016284_163645555</VK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1224,7 +1122,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vk.com/video226156999_168963041',
-				'<r><VK hash="9050a9cce6465c9e" oid="226156999" url="http://vk.com/video226156999_168963041" vid="168963041">http://vk.com/video226156999_168963041</VK></r>',
+				'<r><VK hash="9050a9cce6465c9e" oid="226156999" vid="168963041">http://vk.com/video226156999_168963041</VK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1234,7 +1132,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vk.com/newmusicvideos?z=video-13895667_161988074',
-				'<r><VK hash="de860a8e4fbe45c9" oid="-13895667" url="http://vk.com/newmusicvideos?z=video-13895667_161988074" vid="161988074">http://vk.com/newmusicvideos?z=video-13895667_161988074</VK></r>',
+				'<r><VK hash="de860a8e4fbe45c9" oid="-13895667" vid="161988074">http://vk.com/newmusicvideos?z=video-13895667_161988074</VK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1244,7 +1142,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
-				'<r><WSHH id="63133" url="http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
+				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -1254,7 +1152,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-				'<r><WSHH id="63175" url="http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
+				'<r><WSHH id="63175">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -1264,7 +1162,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo',
-				'<r><WSHH id="71468" url="http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo">http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo</WSHH></r>',
+				'<r><WSHH id="71468">http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -1274,7 +1172,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://on.wsj.com/1MJvx06',
-				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6" url="http://on.wsj.com/1MJvx06">http://on.wsj.com/1MJvx06</WSJ></r>',
+				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6">http://on.wsj.com/1MJvx06</WSJ></r>',
 				[],
 				function ($configurator)
 				{
@@ -1284,7 +1182,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'https://www.youtube.com/shared?ci=_OouqtitfX4',
-//				'<r><YOUTUBE id="qvW2nxnj9Tw" url="https://www.youtube.com/shared?ci=_OouqtitfX4">https://www.youtube.com/shared?ci=_OouqtitfX4</YOUTUBE></r>',
+//				'<r><YOUTUBE id="qvW2nxnj9Tw">https://www.youtube.com/shared?ci=_OouqtitfX4</YOUTUBE></r>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1433,7 +1331,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799',
-				'<r><ABCNEWS id="22880799" url="http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799">http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799</ABCNEWS></r>',
+				'<r><ABCNEWS id="22880799">http://abcnews.go.com/US/video/missing-malaysian-flight-words-revealed-hunt-continues-hundreds-22880799</ABCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1442,7 +1340,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://abcnews.go.com/Politics/video/special-live-1-14476486',
-				'<r><ABCNEWS id="14476486" url="http://abcnews.go.com/Politics/video/special-live-1-14476486">http://abcnews.go.com/Politics/video/special-live-1-14476486</ABCNEWS></r>',
+				'<r><ABCNEWS id="14476486">http://abcnews.go.com/Politics/video/special-live-1-14476486</ABCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1451,7 +1349,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://abcnews.go.com/video/embed?id=45798660',
-				'<r><ABCNEWS id="45798660" url="http://abcnews.go.com/video/embed?id=45798660">http://abcnews.go.com/video/embed?id=45798660</ABCNEWS></r>',
+				'<r><ABCNEWS id="45798660">http://abcnews.go.com/video/embed?id=45798660</ABCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1460,7 +1358,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<r><AMAZON id="B00GQT1LNO" tld="ca" url="http://www.amazon.ca/gp/product/B00GQT1LNO/">http://www.amazon.ca/gp/product/B00GQT1LNO/</AMAZON></r>',
+				'<r><AMAZON id="B00GQT1LNO" tld="ca">http://www.amazon.ca/gp/product/B00GQT1LNO/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1469,7 +1367,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
-				'<r><AMAZON id="B003AKZ6I8" tld="jp" url="http://www.amazon.co.jp/gp/product/B003AKZ6I8/">http://www.amazon.co.jp/gp/product/B003AKZ6I8/</AMAZON></r>',
+				'<r><AMAZON id="B003AKZ6I8" tld="jp">http://www.amazon.co.jp/gp/product/B003AKZ6I8/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1478,7 +1376,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.uk/gp/product/B00BET0NR6/',
-				'<r><AMAZON id="B00BET0NR6" tld="uk" url="http://www.amazon.co.uk/gp/product/B00BET0NR6/">http://www.amazon.co.uk/gp/product/B00BET0NR6/</AMAZON></r>',
+				'<r><AMAZON id="B00BET0NR6" tld="uk">http://www.amazon.co.uk/gp/product/B00BET0NR6/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1487,7 +1385,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/dp/B002MUC0ZY',
-				'<r><AMAZON id="B002MUC0ZY" url="http://www.amazon.com/dp/B002MUC0ZY">http://www.amazon.com/dp/B002MUC0ZY</AMAZON></r>',
+				'<r><AMAZON id="B002MUC0ZY">http://www.amazon.com/dp/B002MUC0ZY</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1496,7 +1394,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/',
-				'<r><AMAZON id="B001RB2CXY" url="http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/">http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</AMAZON></r>',
+				'<r><AMAZON id="B001RB2CXY">http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1505,7 +1403,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/gp/product/B0094H8H7I',
-				'<r><AMAZON id="B0094H8H7I" url="http://www.amazon.com/gp/product/B0094H8H7I">http://www.amazon.com/gp/product/B0094H8H7I</AMAZON></r>',
+				'<r><AMAZON id="B0094H8H7I">http://www.amazon.com/gp/product/B0094H8H7I</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1514,7 +1412,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<r><AMAZON id="B00ET2LTE6" tld="de" url="http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/">http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</AMAZON></r>',
+				'<r><AMAZON id="B00ET2LTE6" tld="de">http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1523,7 +1421,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
-				'<r><AMAZON id="B000R3QPEA" tld="es" url="http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/">http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/</AMAZON></r>',
+				'<r><AMAZON id="B000R3QPEA" tld="es">http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1532,7 +1430,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
-				'<r><AMAZON id="B005NIKPAY" tld="fr" url="http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/">http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</AMAZON></r>',
+				'<r><AMAZON id="B005NIKPAY" tld="fr">http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1541,7 +1439,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/',
-				'<r><AMAZON id="B01I3LNWQG" tld="in" url="http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/">http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/</AMAZON></r>',
+				'<r><AMAZON id="B01I3LNWQG" tld="in">http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1550,7 +1448,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.it/gp/product/B00JGOMIP6/',
-				'<r><AMAZON id="B00JGOMIP6" tld="it" url="http://www.amazon.it/gp/product/B00JGOMIP6/">http://www.amazon.it/gp/product/B00JGOMIP6/</AMAZON></r>',
+				'<r><AMAZON id="B00JGOMIP6" tld="it">http://www.amazon.it/gp/product/B00JGOMIP6/</AMAZON></r>',
 				[],
 				function ($configurator)
 				{
@@ -1559,7 +1457,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://audioboo.fm/boos/2439994-deadline-day-update',
-				'<r><AUDIOBOOM id="2439994" url="http://audioboo.fm/boos/2439994-deadline-day-update">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOOM></r>',
+				'<r><AUDIOBOOM id="2439994">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOOM></r>',
 				[],
 				function ($configurator)
 				{
@@ -1568,7 +1466,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://audioboom.com/posts/2493448-robert-patrick',
-				'<r><AUDIOBOOM id="2493448" url="https://audioboom.com/posts/2493448-robert-patrick">https://audioboom.com/posts/2493448-robert-patrick</AUDIOBOOM></r>',
+				'<r><AUDIOBOOM id="2493448">https://audioboom.com/posts/2493448-robert-patrick</AUDIOBOOM></r>',
 				[],
 				function ($configurator)
 				{
@@ -1577,7 +1475,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
-				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song" url="http://www.audiomack.com/song/random-2/buy-the-world-final-1">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
+				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1586,7 +1484,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
-				'<r><AUDIOMACK id="hz-global/double-a-side-vol3" mode="album" url="http://www.audiomack.com/album/hz-global/double-a-side-vol3">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
+				'<r><AUDIOMACK id="hz-global/double-a-side-vol3" mode="album">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1595,7 +1493,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics',
-				'<r><BLAB id="thenewabc-what-difficulty-have-you-experienced-in-ethics" url="https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics">https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics</BLAB></r>',
+				'<r><BLAB id="thenewabc-what-difficulty-have-you-experienced-in-ethics">https://blab.im/thenewabc-what-difficulty-have-you-experienced-in-ethics</BLAB></r>',
 				[],
 				function ($configurator)
 				{
@@ -1622,7 +1520,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
-				'<r><BREAK id="2278131" url="http://www.break.com/video/video-game-playing-frog-wants-more-2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></r>',
+				'<r><BREAK id="2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1631,7 +1529,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
-				'<r><CBSNEWS id="50156501" url="http://www.cbsnews.com/video/watch/?id=50156501n">http://www.cbsnews.com/video/watch/?id=50156501n</CBSNEWS></r>',
+				'<r><CBSNEWS id="50156501">http://www.cbsnews.com/video/watch/?id=50156501n</CBSNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1640,7 +1538,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.cnbc.com/gallery/?video=3000269279',
-				'<r><CNBC id="3000269279" url="http://video.cnbc.com/gallery/?video=3000269279">http://video.cnbc.com/gallery/?video=3000269279</CNBC></r>',
+				'<r><CNBC id="3000269279">http://video.cnbc.com/gallery/?video=3000269279</CNBC></r>',
 				[],
 				function ($configurator)
 				{
@@ -1649,7 +1547,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn',
-				'<r><CNN id="tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn" url="http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn">http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</CNN></r>',
+				'<r><CNN id="tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn">http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</CNN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1658,7 +1556,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html',
-				'<r><CNN id="bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn" url="http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html">http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</CNN></r>',
+				'<r><CNN id="bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn">http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</CNN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1667,7 +1565,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html',
-				'<r><CNN id="bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn" url="http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html">http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</CNN></r>',
+				'<r><CNN id="bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn">http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</CNN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1677,7 +1575,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.cnn.com/video/data/2.0/video/us/2014/09/01/lead-dnt-brown-property-seizures.cnn.html',
-				'<r><CNN id="us/2014/09/01/lead-dnt-brown-property-seizures.cnn" url="http://www.cnn.com/video/data/2.0/video/us/2014/09/01/lead-dnt-brown-property-seizures.cnn.html">http://www.cnn.com/video/data/2.0/video/us/2014/09/01/lead-dnt-brown-property-seizures.cnn.html</CNN></r>',
+				'<r><CNN id="us/2014/09/01/lead-dnt-brown-property-seizures.cnn">http://www.cnn.com/video/data/2.0/video/us/2014/09/01/lead-dnt-brown-property-seizures.cnn.html</CNN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1687,7 +1585,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/',
-				'<r><CNNMONEY id="technology/2014/05/20/t-twitch-vp-on-future.cnnmoney" url="http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/">http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</CNNMONEY></r>',
+				'<r><CNNMONEY id="technology/2014/05/20/t-twitch-vp-on-future.cnnmoney">http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</CNNMONEY></r>',
 				[],
 				function ($configurator)
 				{
@@ -1696,7 +1594,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/',
-				'<r><CNNMONEY id="technology/2014/05/20/t-twitch-vp-on-future.cnnmoney" url="http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/">http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</CNNMONEY></r>',
+				'<r><CNNMONEY id="technology/2014/05/20/t-twitch-vp-on-future.cnnmoney">http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</CNNMONEY></r>',
 				[],
 				function ($configurator)
 				{
@@ -1706,7 +1604,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
-				'<r><COLLEGEHUMOR id="1181601" url="http://www.collegehumor.com/video/1181601/more-than-friends">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></r>',
+				'<r><COLLEGEHUMOR id="1181601">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1715,7 +1613,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://coub.com/view/6veusoty',
-				'<r><COUB id="6veusoty" url="http://coub.com/view/6veusoty">http://coub.com/view/6veusoty</COUB></r>',
+				'<r><COUB id="6veusoty">http://coub.com/view/6veusoty</COUB></r>',
 				[],
 				function ($configurator)
 				{
@@ -1724,7 +1622,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<r><DAILYMOTION id="x222z1" url="http://www.dailymotion.com/video/x222z1">http://www.dailymotion.com/video/x222z1</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x222z1">http://www.dailymotion.com/video/x222z1</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1733,7 +1631,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/user/Dailymotion/2#video=x222z1',
-				'<r><DAILYMOTION id="x222z1" url="http://www.dailymotion.com/user/Dailymotion/2#video=x222z1">http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x222z1">http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1742,7 +1640,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://games.dailymotion.com/live/x15gjhi',
-				'<r><DAILYMOTION id="x15gjhi" url="http://games.dailymotion.com/live/x15gjhi">http://games.dailymotion.com/live/x15gjhi</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x15gjhi">http://games.dailymotion.com/live/x15gjhi</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1751,7 +1649,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x5e9eog?start=90',
-				'<r><DAILYMOTION id="x5e9eog" t="90" url="http://www.dailymotion.com/video/x5e9eog?start=90">http://www.dailymotion.com/video/x5e9eog?start=90</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x5e9eog" t="90">http://www.dailymotion.com/video/x5e9eog?start=90</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1760,7 +1658,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://dai.ly/x5e9eog',
-				'<r><DAILYMOTION id="x5e9eog" url="http://dai.ly/x5e9eog">http://dai.ly/x5e9eog</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x5e9eog">http://dai.ly/x5e9eog</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1769,7 +1667,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun',
-				'<r><DAILYMOTION id="x12w88" url="http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun">http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun</DAILYMOTION></r>',
+				'<r><DAILYMOTION id="x12w88">http://www.dailymotion.com/related/2344952/video/x12w88_le-peril-jeune_fun</DAILYMOTION></r>',
 				[],
 				function ($configurator)
 				{
@@ -1778,7 +1676,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
-				'<r><DEMOCRACYNOW id="2014/7/2/dn_at_almedalen_week_at_swedens" url="http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens">http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</DEMOCRACYNOW></r>',
+				'<r><DEMOCRACYNOW id="2014/7/2/dn_at_almedalen_week_at_swedens">http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</DEMOCRACYNOW></r>',
 				[],
 				function ($configurator)
 				{
@@ -1787,7 +1685,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the',
-				'<r><DEMOCRACYNOW id="blog/2015/3/13/part_2_bruce_schneier_on_the" url="http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the">http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the</DEMOCRACYNOW></r>',
+				'<r><DEMOCRACYNOW id="blog/2015/3/13/part_2_bruce_schneier_on_the">http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the</DEMOCRACYNOW></r>',
 				[],
 				function ($configurator)
 				{
@@ -1796,7 +1694,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/shows/2006/2/20',
-				'<r><DEMOCRACYNOW id="shows/2006/2/20" url="http://www.democracynow.org/shows/2006/2/20">http://www.democracynow.org/shows/2006/2/20</DEMOCRACYNOW></r>',
+				'<r><DEMOCRACYNOW id="shows/2006/2/20">http://www.democracynow.org/shows/2006/2/20</DEMOCRACYNOW></r>',
 				[],
 				function ($configurator)
 				{
@@ -1805,7 +1703,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://8tracks.com/midna/2242699',
-				'<r><EIGHTTRACKS id="2242699" url="http://8tracks.com/midna/2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
+				'<r><EIGHTTRACKS id="2242699">http://8tracks.com/midna/2242699</EIGHTTRACKS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1814,7 +1712,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.espn.com/video/clip?id=17474659',
-				'<r><ESPN id="17474659" url="http://www.espn.com/video/clip?id=17474659">http://www.espn.com/video/clip?id=17474659</ESPN></r>',
+				'<r><ESPN id="17474659">http://www.espn.com/video/clip?id=17474659</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1823,7 +1721,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308',
-				'<r><ESPN id="17474659" url="http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308">http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308</ESPN></r>',
+				'<r><ESPN id="17474659">http://www.espn.com/video/clip/_/id/17474659/categoryid/2564308</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1832,7 +1730,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref',
-				'<r><ESPN id="13887284" url="http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref">http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</ESPN></r>',
+				'<r><ESPN id="13887284">http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1841,7 +1739,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://broadband.espn.go.com/video/clip?id=17481969',
-				'<r><ESPN id="17481969" url="http://broadband.espn.go.com/video/clip?id=17481969">http://broadband.espn.go.com/video/clip?id=17481969</ESPN></r>',
+				'<r><ESPN id="17481969">http://broadband.espn.go.com/video/clip?id=17481969</ESPN></r>',
 				[],
 				function ($configurator)
 				{
@@ -1850,7 +1748,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
-				'<r><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
+				'<r><FACEBOOK id="10100658170103643">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1859,7 +1757,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10150451523596807',
-				'<r><FACEBOOK id="10150451523596807" type="video" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
+				'<r><FACEBOOK id="10150451523596807" type="video">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1868,7 +1766,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<r><FACEBOOK id="10151471074398553" type="post" url="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553" user="FacebookDevelopers">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				'<r><FACEBOOK id="10151471074398553" type="post" user="FacebookDevelopers">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1877,7 +1775,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<r><FACEBOOK id="10151471074398553" type="post" url="https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553" user="FacebookDevelopers">https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
+				'<r><FACEBOOK id="10151471074398553" type="post" user="FacebookDevelopers">https://de-de.facebook.com/FacebookDevelopers/posts/10151471074398553</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1886,7 +1784,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?fbid=10152476416772631',
-				'<r><FACEBOOK id="10152476416772631" url="https://www.facebook.com/photo.php?fbid=10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
+				'<r><FACEBOOK id="10152476416772631">https://www.facebook.com/photo.php?fbid=10152476416772631</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1913,7 +1811,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/events/640436826054815/',
-				'<r><FACEBOOK id="640436826054815" url="https://www.facebook.com/events/640436826054815/">https://www.facebook.com/events/640436826054815/</FACEBOOK></r>',
+				'<r><FACEBOOK id="640436826054815">https://www.facebook.com/events/640436826054815/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1931,7 +1829,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/groups/257086497821359/permalink/262329290630413/',
-				'<r><FACEBOOK id="262329290630413" url="https://www.facebook.com/groups/257086497821359/permalink/262329290630413/">https://www.facebook.com/groups/257086497821359/permalink/262329290630413/</FACEBOOK></r>',
+				'<r><FACEBOOK id="262329290630413">https://www.facebook.com/groups/257086497821359/permalink/262329290630413/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1940,7 +1838,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/permalink.php?story_fbid=10152253595081467&id=58617016466',
-				'<r><FACEBOOK id="10152253595081467" url="https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466">https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466</FACEBOOK></r>',
+				'<r><FACEBOOK id="10152253595081467">https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1949,7 +1847,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/events/787127511306384/permalink/849632838389184/',
-				'<r><FACEBOOK id="849632838389184" url="https://www.facebook.com/events/787127511306384/permalink/849632838389184/">https://www.facebook.com/events/787127511306384/permalink/849632838389184/</FACEBOOK></r>',
+				'<r><FACEBOOK id="849632838389184">https://www.facebook.com/events/787127511306384/permalink/849632838389184/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1958,7 +1856,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://web.facebook.com/VijayTelevision/videos/948642131881684/',
-				'<r><FACEBOOK id="948642131881684" type="video" url="https://web.facebook.com/VijayTelevision/videos/948642131881684/" user="VijayTelevision">https://web.facebook.com/VijayTelevision/videos/948642131881684/</FACEBOOK></r>',
+				'<r><FACEBOOK id="948642131881684" type="video" user="VijayTelevision">https://web.facebook.com/VijayTelevision/videos/948642131881684/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1967,7 +1865,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
-				'<r><FLICKR id="15451038758" url="https://www.flickr.com/photos/erigion/15451038758/in/photostream/">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
+				'<r><FLICKR id="15451038758">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1976,7 +1874,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://flic.kr/8757881@N04/2971804544',
-				'<r><FLICKR id="2971804544" url="https://flic.kr/8757881@N04/2971804544">https://flic.kr/8757881@N04/2971804544</FLICKR></r>',
+				'<r><FLICKR id="2971804544">https://flic.kr/8757881@N04/2971804544</FLICKR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1985,7 +1883,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/',
-				'<r><FOXNEWS id="3592758613001" url="http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/">http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</FOXNEWS></r>',
+				'<r><FOXNEWS id="3592758613001">http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</FOXNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1994,7 +1892,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
-				'<r><FUNNYORDIE id="bf313bd8b4" url="http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david">http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</FUNNYORDIE></r>',
+				'<r><FUNNYORDIE id="bf313bd8b4">http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</FUNNYORDIE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2003,7 +1901,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<r><GAMESPOT id="6415176" url="http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/">http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/</GAMESPOT></r>',
+				'<r><GAMESPOT id="6415176">http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/</GAMESPOT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2012,7 +1910,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/',
-				'<r><GAMESPOT id="6412922" url="http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/">http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</GAMESPOT></r>',
+				'<r><GAMESPOT id="6412922">http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</GAMESPOT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2021,7 +1919,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/',
-				'<r><GAMESPOT id="6414307" url="http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/">http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</GAMESPOT></r>',
+				'<r><GAMESPOT id="6414307">http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</GAMESPOT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2030,7 +1928,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305',
-				'<r><GIST id="s9e/6806305" url="https://gist.github.com/s9e/6806305">https://gist.github.com/s9e/6806305</GIST></r>',
+				'<r><GIST id="s9e/6806305">https://gist.github.com/s9e/6806305</GIST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2039,7 +1937,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/6806305',
-				'<r><GIST id="6806305" url="https://gist.github.com/6806305">https://gist.github.com/6806305</GIST></r>',
+				'<r><GIST id="6806305">https://gist.github.com/6806305</GIST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2048,7 +1946,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599',
-				'<r><GIST id="s9e/6806305/ad88d904b082c8211afa040162402015aacb8599" url="https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599">https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</GIST></r>',
+				'<r><GIST id="s9e/6806305/ad88d904b082c8211afa040162402015aacb8599">https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</GIST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2057,7 +1955,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/0ee8433f5a9a779d08ef',
-				'<r><GIST id="s9e/0ee8433f5a9a779d08ef" url="https://gist.github.com/s9e/0ee8433f5a9a779d08ef">https://gist.github.com/s9e/0ee8433f5a9a779d08ef</GIST></r>',
+				'<r><GIST id="s9e/0ee8433f5a9a779d08ef">https://gist.github.com/s9e/0ee8433f5a9a779d08ef</GIST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2066,7 +1964,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://globalnews.ca/video/1647385/mark-channels-his-70s-look/',
-				'<r><GLOBALNEWS id="1647385" url="http://globalnews.ca/video/1647385/mark-channels-his-70s-look/">http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</GLOBALNEWS></r>',
+				'<r><GLOBALNEWS id="1647385">http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</GLOBALNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2075,7 +1973,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gofundme.com/2p37ao',
-				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao">http://www.gofundme.com/2p37ao</GOFUNDME></r>',
+				'<r><GOFUNDME id="2p37ao">http://www.gofundme.com/2p37ao</GOFUNDME></r>',
 				[],
 				function ($configurator)
 				{
@@ -2084,7 +1982,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gofundme.com/2p37ao#',
-				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao#">http://www.gofundme.com/2p37ao#</GOFUNDME></r>',
+				'<r><GOFUNDME id="2p37ao">http://www.gofundme.com/2p37ao#</GOFUNDME></r>',
 				[],
 				function ($configurator)
 				{
@@ -2093,7 +1991,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gofundme.com/2p37ao?pc=trend',
-				'<r><GOFUNDME id="2p37ao" url="http://www.gofundme.com/2p37ao?pc=trend">http://www.gofundme.com/2p37ao?pc=trend</GOFUNDME></r>',
+				'<r><GOFUNDME id="2p37ao">http://www.gofundme.com/2p37ao?pc=trend</GOFUNDME></r>',
 				[],
 				function ($configurator)
 				{
@@ -2111,7 +2009,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing',
-				'<r><GOOGLEDRIVE id="0B_4NRUjxLBejNjVmeG5MUzA3Q3M" url="https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing">https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing</GOOGLEDRIVE></r>',
+				'<r><GOOGLEDRIVE id="0B_4NRUjxLBejNjVmeG5MUzA3Q3M">https://drive.google.com/file/d/0B_4NRUjxLBejNjVmeG5MUzA3Q3M/view?usp=sharing</GOOGLEDRIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2121,7 +2019,7 @@ class ParserTest extends Test
 			[
 				// https://github.com/s9e/phpbb-ext-mediaembed/issues/9
 				'https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA',
-				'<r><GOOGLEDRIVE id="1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA" url="https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA">https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA</GOOGLEDRIVE></r>',
+				'<r><GOOGLEDRIVE id="1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA">https://drive.google.com/open?id=1TAnofDHLM-Mreaju0l3--9SQAESEIpD9AA</GOOGLEDRIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2130,7 +2028,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view',
-				'<r><GOOGLEDRIVE id="0B-SjC2QWxqXRY2NfbGJ2QUcwTlU" url="https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view">https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view</GOOGLEDRIVE></r>',
+				'<r><GOOGLEDRIVE id="0B-SjC2QWxqXRY2NfbGJ2QUcwTlU">https://drive.google.com/a/monashores.net/file/d/0B-SjC2QWxqXRY2NfbGJ2QUcwTlU/view</GOOGLEDRIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2139,7 +2037,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
-				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW" url="https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW">https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
+				'<r><GOOGLEPLUS oid="110286587261352351537" pid="XMABm8rLvRW">https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW</GOOGLEPLUS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2148,7 +2046,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://plus.google.com/+JacekMiłaszewski/posts/HJEFk3SX1sL',
-				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL" url="https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL">https://plus.google.com/+JacekMiłaszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
+				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL">https://plus.google.com/+JacekMiłaszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2157,7 +2055,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL',
-				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL" url="https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL">https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
+				'<r><GOOGLEPLUS name="JacekMiłaszewski" pid="HJEFk3SX1sL">https://plus.google.com/+JacekMi%C5%82aszewski/posts/HJEFk3SX1sL</GOOGLEPLUS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2166,7 +2064,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE',
-				'<r><GOOGLESHEETS id="1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE" url="https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE">https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE</GOOGLESHEETS></r>',
+				'<r><GOOGLESHEETS id="1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE">https://docs.google.com/spreadsheets/d/1e-WiRxaToQyKPkm1x8hRu6cN6K0aQFxExo7RnCymxGE</GOOGLESHEETS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2175,7 +2073,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheet/ccc?key=0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE&usp=sharing',
-				'<r><GOOGLESHEETS id="0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE" url="https://docs.google.com/spreadsheet/ccc?key=0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE&amp;usp=sharing">https://docs.google.com/spreadsheet/ccc?key=0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE&amp;usp=sharing</GOOGLESHEETS></r>',
+				'<r><GOOGLESHEETS id="0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE">https://docs.google.com/spreadsheet/ccc?key=0AnfAFqEAnlFvdG5IMDdnd0xZQUlxZkdxbzg5SGZJQlE&amp;usp=sharing</GOOGLESHEETS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2184,7 +2082,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70',
-				'<r><GOOGLESHEETS gid="70" id="0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc" url="https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70">https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70</GOOGLESHEETS></r>',
+				'<r><GOOGLESHEETS gid="70" id="0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc">https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70</GOOGLESHEETS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2202,7 +2100,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.hudl.com/athlete/2067184/highlights/163744377',
-				'<r><HUDL athlete="2067184" highlight="163744377" url="http://www.hudl.com/athlete/2067184/highlights/163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
+				'<r><HUDL athlete="2067184" highlight="163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2211,7 +2109,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.hudl.com/video/3/323679/57719969842eb243e47883f8',
-				'<r><HUDL athlete="323679" highlight="57719969842eb243e47883f8" url="http://www.hudl.com/video/3/323679/57719969842eb243e47883f8">http://www.hudl.com/video/3/323679/57719969842eb243e47883f8</HUDL></r>',
+				'<r><HUDL athlete="323679" highlight="57719969842eb243e47883f8">http://www.hudl.com/video/3/323679/57719969842eb243e47883f8</HUDL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2220,7 +2118,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html',
-				'<r><HUMORTVNL id="344063.de-klusjesmannen-zijn-weer-van-de-partij" url="http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html">http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html</HUMORTVNL></r>',
+				'<r><HUMORTVNL id="344063.de-klusjesmannen-zijn-weer-van-de-partij">http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html</HUMORTVNL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2229,7 +2127,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html',
-				'<r><HUMORTVNL id="346135.denzel-washington-bij-graham-norton" url="http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html">http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</HUMORTVNL></r>',
+				'<r><HUMORTVNL id="346135.denzel-washington-bij-graham-norton">http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</HUMORTVNL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2238,7 +2136,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<r><IGN id="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" url="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
+				'<r><IGN id="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2247,7 +2145,7 @@ class ParserTest extends Test
 			],
 			[
 				'Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<r><IGN id="Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" url="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
+				'<r><IGN id="Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">Http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2256,7 +2154,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.imdb.com/video/epk/vi387296537/',
-				'<r><IMDB id="387296537" url="http://www.imdb.com/video/epk/vi387296537/">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
+				'<r><IMDB id="387296537">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2265,7 +2163,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785',
-				'<r><IMDB id="2482677785" url="http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785">http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</IMDB></r>',
+				'<r><IMDB id="2482677785">http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</IMDB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2301,7 +2199,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/a/9UGCL',
-				'<r><IMGUR id="a/9UGCL" url="https://imgur.com/a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
+				'<r><IMGUR id="a/9UGCL">https://imgur.com/a/9UGCL</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -2310,7 +2208,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://imgur.com/gallery/9UGCL',
-				'<r><IMGUR id="gallery/9UGCL" url="http://imgur.com/gallery/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
+				'<r><IMGUR id="gallery/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -2319,7 +2217,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://imgur.com/gallery/49H5yU8',
-				'<r><IMGUR id="gallery/49H5yU8" url="http://imgur.com/gallery/49H5yU8">http://imgur.com/gallery/49H5yU8</IMGUR></r>',
+				'<r><IMGUR id="gallery/49H5yU8">http://imgur.com/gallery/49H5yU8</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -2328,7 +2226,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/t/current_events/0I30l',
-				'<r><IMGUR id="0I30l" url="https://imgur.com/t/current_events/0I30l">https://imgur.com/t/current_events/0I30l</IMGUR></r>',
+				'<r><IMGUR id="0I30l">https://imgur.com/t/current_events/0I30l</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -2337,7 +2235,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://m.imgur.com/t/funny/PZWhzCQ',
-				'<r><IMGUR id="PZWhzCQ" url="https://m.imgur.com/t/funny/PZWhzCQ">https://m.imgur.com/t/funny/PZWhzCQ</IMGUR></r>',
+				'<r><IMGUR id="PZWhzCQ">https://m.imgur.com/t/funny/PZWhzCQ</IMGUR></r>',
 				[],
 				function ($configurator)
 				{
@@ -2346,7 +2244,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<r><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></r>',
+				'<r><INDIEGOGO id="513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></r>',
 				[],
 				function ($configurator)
 				{
@@ -2355,7 +2253,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
-				'<r><INDIEGOGO id="gameheart-redesigned" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
+				'<r><INDIEGOGO id="gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></r>',
 				[],
 				function ($configurator)
 				{
@@ -2364,7 +2262,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/5050-years-a-documentary',
-				'<r><INDIEGOGO id="5050-years-a-documentary" url="http://www.indiegogo.com/projects/5050-years-a-documentary">http://www.indiegogo.com/projects/5050-years-a-documentary</INDIEGOGO></r>',
+				'<r><INDIEGOGO id="5050-years-a-documentary">http://www.indiegogo.com/projects/5050-years-a-documentary</INDIEGOGO></r>',
 				[],
 				function ($configurator)
 				{
@@ -2373,7 +2271,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://instagram.com/p/gbGaIXBQbn/',
-				'<r><INSTAGRAM id="gbGaIXBQbn" url="http://instagram.com/p/gbGaIXBQbn/">http://instagram.com/p/gbGaIXBQbn/</INSTAGRAM></r>',
+				'<r><INSTAGRAM id="gbGaIXBQbn">http://instagram.com/p/gbGaIXBQbn/</INSTAGRAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2382,7 +2280,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://instagram.com/p/lx39ciHzD_/',
-				'<r><INSTAGRAM id="lx39ciHzD_" url="http://instagram.com/p/lx39ciHzD_/">http://instagram.com/p/lx39ciHzD_/</INSTAGRAM></r>',
+				'<r><INSTAGRAM id="lx39ciHzD_">http://instagram.com/p/lx39ciHzD_/</INSTAGRAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2391,7 +2289,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://instagram.com/p/k28LE0Dte-/',
-				'<r><INSTAGRAM id="k28LE0Dte-" url="http://instagram.com/p/k28LE0Dte-/">http://instagram.com/p/k28LE0Dte-/</INSTAGRAM></r>',
+				'<r><INSTAGRAM id="k28LE0Dte-">http://instagram.com/p/k28LE0Dte-/</INSTAGRAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2400,7 +2298,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.izlesene.com/video/lily-allen-url-badman/7600704',
-				'<r><IZLESENE id="7600704" url="http://www.izlesene.com/video/lily-allen-url-badman/7600704">http://www.izlesene.com/video/lily-allen-url-badman/7600704</IZLESENE></r>',
+				'<r><IZLESENE id="7600704">http://www.izlesene.com/video/lily-allen-url-badman/7600704</IZLESENE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2409,7 +2307,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html',
-				'<r><JWPLATFORM id="X6tRZpKj-7Y21S9TB" url="http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html">http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html</JWPLATFORM></r>',
+				'<r><JWPLATFORM id="X6tRZpKj-7Y21S9TB">http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html</JWPLATFORM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2418,7 +2316,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi',
-				'<r><JWPLATFORM id="8YYjnBKd-plsZnDJi" url="http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi">http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi</JWPLATFORM></r>',
+				'<r><JWPLATFORM id="8YYjnBKd-plsZnDJi">http://content.jwplatform.com/previews/8YYjnBKd-plsZnDJi</JWPLATFORM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2427,7 +2325,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4',
-				'<r><JWPLATFORM id="5W1gTgdo-wevz73lD" url="http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4">http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4</JWPLATFORM></r>',
+				'<r><JWPLATFORM id="5W1gTgdo-wevz73lD">http://content.jwplatform.com/videos/5W1gTgdo-wevz73lD.mp4</JWPLATFORM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2436,7 +2334,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></r>',
+				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -2445,7 +2343,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html',
-				'<r><KICKSTARTER card="card" id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</KICKSTARTER></r>',
+				'<r><KICKSTARTER card="card" id="1869987317/wish-i-was-here-1">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</KICKSTARTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -2454,7 +2352,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" video="video">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</KICKSTARTER></r>',
+				'<r><KICKSTARTER id="1869987317/wish-i-was-here-1" video="video">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</KICKSTARTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -2463,7 +2361,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html',
-				'<r><KISSVIDEO id="7789d8de8" url="http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html">http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</KISSVIDEO></r>',
+				'<r><KISSVIDEO id="7789d8de8">http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</KISSVIDEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -2472,7 +2370,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA',
-				'<r><LIVECAP channel="esl_sc2" id="uZoEz6RR1eA" url="https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA">https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA</LIVECAP></r>',
+				'<r><LIVECAP channel="esl_sc2" id="uZoEz6RR1eA">https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA</LIVECAP></r>',
 				[],
 				function ($configurator)
 				{
@@ -2481,7 +2379,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.livecap.tv/t/riotgames/uLxUzBTBs7u',
-				'<r><LIVECAP channel="riotgames" id="uLxUzBTBs7u" url="https://www.livecap.tv/t/riotgames/uLxUzBTBs7u">https://www.livecap.tv/t/riotgames/uLxUzBTBs7u</LIVECAP></r>',
+				'<r><LIVECAP channel="riotgames" id="uLxUzBTBs7u">https://www.livecap.tv/t/riotgames/uLxUzBTBs7u</LIVECAP></r>',
 				[],
 				function ($configurator)
 				{
@@ -2490,7 +2388,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
-				'<r><LIVELEAK id="3dd_1366238099" url="http://www.liveleak.com/view?i=3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></r>',
+				'<r><LIVELEAK id="3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></r>',
 				[],
 				function ($configurator)
 				{
@@ -2499,7 +2397,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://new.livestream.com/accounts/9999999999/events/9999999999',
-				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999" url="http://new.livestream.com/accounts/9999999999/events/9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
+				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2508,7 +2406,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
-				'<r><MEDIUM id="e7e2cf9b8a95" url="https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</MEDIUM></r>',
+				'<r><MEDIUM id="e7e2cf9b8a95">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</MEDIUM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2517,7 +2415,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
-				'<r><METACAFE id="10785282" url="http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/">http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</METACAFE></r>',
+				'<r><METACAFE id="10785282">http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</METACAFE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2526,7 +2424,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/',
-				'<r><MIXCLOUD id="OneTakeTapes/timsch-one-take-tapes-2" url="http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/">http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</MIXCLOUD></r>',
+				'<r><MIXCLOUD id="OneTakeTapes/timsch-one-take-tapes-2">http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</MIXCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2535,7 +2433,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg/',
-				'<r><MIXCLOUD id="s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg" url="https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg/">https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg/</MIXCLOUD></r>',
+				'<r><MIXCLOUD id="s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg">https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg/</MIXCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2544,7 +2442,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-für-kil-seine-party-liebe-grüße-aus-freiburg/',
-				'<r><MIXCLOUD id="s2ck/dj-miiiiiit-mustern-drauf-guestmix-für-kil-seine-party-liebe-grüße-aus-freiburg" url="https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-f%C3%BCr-kil-seine-party-liebe-gr%C3%BC%C3%9Fe-aus-freiburg/">https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-für-kil-seine-party-liebe-grüße-aus-freiburg/</MIXCLOUD></r>',
+				'<r><MIXCLOUD id="s2ck/dj-miiiiiit-mustern-drauf-guestmix-für-kil-seine-party-liebe-grüße-aus-freiburg">https://www.mixcloud.com/s2ck/dj-miiiiiit-mustern-drauf-guestmix-für-kil-seine-party-liebe-grüße-aus-freiburg/</MIXCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2580,7 +2478,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit',
-				'<r><MLB id="1205791883" url="http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit">http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit</MLB></r>',
+				'<r><MLB id="1205791883">http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit</MLB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2589,7 +2487,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&partnerId=as_col_20161011_66746556&adbid=10154421890311113&adbpl=fb&adbpr=64466991112',
-				'<r><MLB id="1203589883" url="http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&amp;partnerId=as_col_20161011_66746556&amp;adbid=10154421890311113&amp;adbpl=fb&amp;adbpr=64466991112">http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&amp;partnerId=as_col_20161011_66746556&amp;adbid=10154421890311113&amp;adbpl=fb&amp;adbpr=64466991112</MLB></r>',
+				'<r><MLB id="1203589883">http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&amp;partnerId=as_col_20161011_66746556&amp;adbid=10154421890311113&amp;adbpl=fb&amp;adbpr=64466991112</MLB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2598,7 +2496,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://mlb.mlb.com/r/video?content_id=1205791883',
-				'<r><MLB id="1205791883" url="http://mlb.mlb.com/r/video?content_id=1205791883">http://mlb.mlb.com/r/video?content_id=1205791883</MLB></r>',
+				'<r><MLB id="1205791883">http://mlb.mlb.com/r/video?content_id=1205791883</MLB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2607,7 +2505,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all',
-				'<r><MLB id="1202852683" url="http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all">http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all</MLB></r>',
+				'<r><MLB id="1202852683">http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all</MLB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2616,7 +2514,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/',
-				'<r><NATGEOCHANNEL id="channel/brain-games/videos/jason-silva-on-intuition" url="http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/">http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</NATGEOCHANNEL></r>',
+				'<r><NATGEOCHANNEL id="channel/brain-games/videos/jason-silva-on-intuition">http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</NATGEOCHANNEL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2626,7 +2524,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/',
-				'<r><NATGEOCHANNEL id="wild/urban-jungle/videos/leopard-in-the-city" url="http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/">http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</NATGEOCHANNEL></r>',
+				'<r><NATGEOCHANNEL id="wild/urban-jungle/videos/leopard-in-the-city">http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</NATGEOCHANNEL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2636,7 +2534,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834',
-				'<r><NBCNEWS id="785193027834" url="http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834">http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</NBCNEWS></r>',
+				'<r><NBCNEWS id="785193027834">http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</NBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2645,7 +2543,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nbcnews.com/widget/video-embed/785160259969',
-				'<r><NBCNEWS id="785160259969" url="http://www.nbcnews.com/widget/video-embed/785160259969">http://www.nbcnews.com/widget/video-embed/785160259969</NBCNEWS></r>',
+				'<r><NBCNEWS id="785160259969">http://www.nbcnews.com/widget/video-embed/785160259969</NBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -2654,7 +2552,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
-				'<r><NHL c="46322103" t="283069656" url="https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103">https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103</NHL></r>',
+				'<r><NHL c="46322103" t="283069656">https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103</NHL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2663,7 +2561,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/c-46299003',
-				'<r><NHL c="46299003" url="https://www.nhl.com/video/c-46299003">https://www.nhl.com/video/c-46299003</NHL></r>',
+				'<r><NHL c="46299003">https://www.nhl.com/video/c-46299003</NHL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2672,7 +2570,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&adbid=794558584411426816&adbpl=tw&adbpr=50004938',
-				'<r><NHL t="281748732" url="https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&amp;adbid=794558584411426816&amp;adbpl=tw&amp;adbpr=50004938">https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&amp;adbid=794558584411426816&amp;adbpl=tw&amp;adbpr=50004938</NHL></r>',
+				'<r><NHL t="281748732">https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&amp;adbid=794558584411426816&amp;adbpl=tw&amp;adbpr=50004938</NHL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2681,7 +2579,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203',
-				'<r><NHL c="45954203" t="277443720" url="https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203">https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203</NHL></r>',
+				'<r><NHL c="45954203" t="277443720">https://www.nhl.com/canadiens/video/radulovs-odd-empty-net-goal/t-277443720/c-45954203</NHL></r>',
 				[],
 				function ($configurator)
 				{
@@ -2690,7 +2588,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html',
-				'<r><NYTIMES id="100000002907606" url="http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html">http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</NYTIMES></r>',
+				'<r><NYTIMES id="100000002907606">http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</NYTIMES></r>',
 				[],
 				function ($configurator)
 				{
@@ -2699,7 +2597,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html',
-				'<r><NYTIMES id="100000001950744" url="http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html">http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</NYTIMES></r>',
+				'<r><NYTIMES id="100000001950744">http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</NYTIMES></r>',
 				[],
 				function ($configurator)
 				{
@@ -2708,7 +2606,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.nytimes.com/video/magazine/100000003166834/small-plates.html',
-				'<r><NYTIMES id="100000003166834" url="http://www.nytimes.com/video/magazine/100000003166834/small-plates.html">http://www.nytimes.com/video/magazine/100000003166834/small-plates.html</NYTIMES></r>',
+				'<r><NYTIMES id="100000003166834">http://www.nytimes.com/video/magazine/100000003166834/small-plates.html</NYTIMES></r>',
 				[],
 				function ($configurator)
 				{
@@ -2717,7 +2615,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://oddshot.tv/s/-MrDaG',
-				'<r><ODDSHOT id="-MrDaG" url="https://oddshot.tv/s/-MrDaG">https://oddshot.tv/s/-MrDaG</ODDSHOT></r>',
+				'<r><ODDSHOT id="-MrDaG">https://oddshot.tv/s/-MrDaG</ODDSHOT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2726,7 +2624,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
-				'<r><ORFIUM album_id="24371" url="https://www.orfium.com/album/24371/everybody-loves-kanye-totom/">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</ORFIUM></r>',
+				'<r><ORFIUM album_id="24371">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</ORFIUM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2735,7 +2633,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/',
-				'<r><ORFIUM set_id="614763" url="https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/">https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/</ORFIUM></r>',
+				'<r><ORFIUM set_id="614763">https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/</ORFIUM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2744,7 +2642,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/',
-				'<r><ORFIUM playlist_id="511651" url="https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/">https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/</ORFIUM></r>',
+				'<r><ORFIUM playlist_id="511651">https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/</ORFIUM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2753,7 +2651,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/',
-				'<r><ORFIUM track_id="625367" url="https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/">https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</ORFIUM></r>',
+				'<r><ORFIUM track_id="625367">https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</ORFIUM></r>',
 				[],
 				function ($configurator)
 				{
@@ -2762,7 +2660,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://pastebin.com/9jEf44nc',
-				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
+				'<r><PASTEBIN id="9jEf44nc">http://pastebin.com/9jEf44nc</PASTEBIN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2780,7 +2678,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://pastebin.com/raw.php?i=9jEf44nc',
-				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/raw.php?i=9jEf44nc">http://pastebin.com/raw.php?i=9jEf44nc</PASTEBIN></r>',
+				'<r><PASTEBIN id="9jEf44nc">http://pastebin.com/raw.php?i=9jEf44nc</PASTEBIN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2789,7 +2687,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://pastebin.com/raw/9jEf44nc',
-				'<r><PASTEBIN id="9jEf44nc" url="http://pastebin.com/raw/9jEf44nc">http://pastebin.com/raw/9jEf44nc</PASTEBIN></r>',
+				'<r><PASTEBIN id="9jEf44nc">http://pastebin.com/raw/9jEf44nc</PASTEBIN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2798,7 +2696,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.pinterest.com/pin/99360735500167749/',
-				'<r><PINTEREST id="99360735500167749" url="https://www.pinterest.com/pin/99360735500167749/">https://www.pinterest.com/pin/99360735500167749/</PINTEREST></r>',
+				'<r><PINTEREST id="99360735500167749">https://www.pinterest.com/pin/99360735500167749/</PINTEREST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2807,7 +2705,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.pinterest.com/pinterest/official-news/',
-				'<r><PINTEREST id="pinterest/official-news" url="https://www.pinterest.com/pinterest/official-news/">https://www.pinterest.com/pinterest/official-news/</PINTEREST></r>',
+				'<r><PINTEREST id="pinterest/official-news">https://www.pinterest.com/pinterest/official-news/</PINTEREST></r>',
 				[],
 				function ($configurator)
 				{
@@ -2834,7 +2732,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that',
-				'<r><PLAYSTV id="565683db95f139f47e" url="http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that">http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
+				'<r><PLAYSTV id="565683db95f139f47e">http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
 				[],
 				function ($configurator)
 				{
@@ -2843,7 +2741,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.podbean.com/media/share/pb-qtwub-4ee10c',
-				'<r><PODBEAN id="qtwub-4ee10c" url="http://www.podbean.com/media/share/pb-qtwub-4ee10c">http://www.podbean.com/media/share/pb-qtwub-4ee10c</PODBEAN></r>',
+				'<r><PODBEAN id="qtwub-4ee10c">http://www.podbean.com/media/share/pb-qtwub-4ee10c</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
@@ -2852,7 +2750,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/',
-				'<r><PREZI id="5ye8po_hmikp" url="http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
+				'<r><PREZI id="5ye8po_hmikp">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
 				[],
 				function ($configurator)
 				{
@@ -2879,7 +2777,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for',
-				'<r><REDDIT id="pics/comments/304rms" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for</REDDIT></r>',
+				'<r><REDDIT id="pics/comments/304rms">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for</REDDIT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2888,7 +2786,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl',
-				'<r><REDDIT id="pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
+				'<r><REDDIT id="pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
 				[],
 				function ($configurator)
 				{
@@ -2897,7 +2795,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<r><RUTUBE id="4118278" url="http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd">http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</RUTUBE></r>',
+				'<r><RUTUBE id="4118278">http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2906,7 +2804,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics',
-				'<r><SCRIBD id="233658242" url="http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics">http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</SCRIBD></r>',
+				'<r><SCRIBD id="233658242">http://www.scribd.com/doc/233658242/Detect-Malware-w-Memory-Forensics</SCRIBD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2915,7 +2813,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376',
-				'<r><SCRIBD id="237147661" url="https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376">https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376</SCRIBD></r>',
+				'<r><SCRIBD id="237147661">https://www.scribd.com/document/237147661/Calculus-2-Test-1-Review?in_collection=5291376</SCRIBD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2924,7 +2822,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8',
-				'<r><SCRIBD id="318498911" url="https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8">https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8</SCRIBD></r>',
+				'<r><SCRIBD id="318498911">https://www.scribd.com/mobile/document/318498911/Kerbin-Times-8</SCRIBD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2933,7 +2831,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<r><SLIDESHARE id="23431564" url="http://www.slideshare.net/Slideshare/how-23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
+				'<r><SLIDESHARE id="23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2941,29 +2839,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				// Taken from the "WordPress Code" button of the page
-				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<r><SOUNDCLOUD id="tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('soundcloud', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<r><SOUNDCLOUD id="playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('soundcloud', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd',
-				'<r><SOUNDCLOUD id="tracks/168988860" secret_token="s-GT9Cd" track_id="168988860" url="https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="tracks/168988860" secret_token="s-GT9Cd" track_id="168988860">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -2972,7 +2849,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA',
-				'<r><SPOTIFY id="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				'<r><SPOTIFY id="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
@@ -2981,7 +2858,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ',
-				'<r><SPOTIFY id="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
+				'<r><SPOTIFY id="track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
@@ -2990,7 +2867,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://store.steampowered.com/app/517160/',
-				'<r><STEAMSTORE id="517160" url="http://store.steampowered.com/app/517160/">http://store.steampowered.com/app/517160/</STEAMSTORE></r>',
+				'<r><STEAMSTORE id="517160">http://store.steampowered.com/app/517160/</STEAMSTORE></r>',
 				[],
 				function ($configurator)
 				{
@@ -2999,7 +2876,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://strawpoll.me/738091',
-				'<r><STRAWPOLL id="738091" url="http://strawpoll.me/738091">http://strawpoll.me/738091</STRAWPOLL></r>',
+				'<r><STRAWPOLL id="738091">http://strawpoll.me/738091</STRAWPOLL></r>',
 				[],
 				function ($configurator)
 				{
@@ -3008,7 +2885,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://streamable.com/e4d',
-				'<r><STREAMABLE id="e4d" url="http://streamable.com/e4d">http://streamable.com/e4d</STREAMABLE></r>',
+				'<r><STREAMABLE id="e4d">http://streamable.com/e4d</STREAMABLE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3017,7 +2894,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien',
-				'<r><TEAMCOCO id="73784" url="http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien">http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</TEAMCOCO></r>',
+				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</TEAMCOCO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3026,7 +2903,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<r><TED id="talks/eli_pariser_beware_online_filter_bubbles.html" url="http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></r>',
+				'<r><TED id="talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></r>',
 				[],
 				function ($configurator)
 				{
@@ -3044,7 +2921,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/',
-				'<r><THEATLANTIC id="358928" url="http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/">http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</THEATLANTIC></r>',
+				'<r><THEATLANTIC id="358928">http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</THEATLANTIC></r>',
 				[],
 				function ($configurator)
 				{
@@ -3053,7 +2930,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video',
-				'<r><THEGUARDIAN id="world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video" url="http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video">http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</THEGUARDIAN></r>',
+				'<r><THEGUARDIAN id="world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video">http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</THEGUARDIAN></r>',
 				[],
 				function ($configurator)
 				{
@@ -3062,7 +2939,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/',
-				'<r><THEONION id="35998" url="http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/">http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</THEONION></r>',
+				'<r><THEONION id="35998">http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</THEONION></r>',
 				[],
 				function ($configurator)
 				{
@@ -3071,7 +2948,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://tinypic.com/player.php?v=29x86j9&s=8',
-				'<r><TINYPIC id="29x86j9" s="8" url="http://tinypic.com/player.php?v=29x86j9&amp;s=8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
+				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
 				[],
 				function ($configurator)
 				{
@@ -3080,7 +2957,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://tinypic.com/r/29x86j9/8',
-				'<r><TINYPIC id="29x86j9" s="8" url="http://tinypic.com/r/29x86j9/8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
+				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
 				[],
 				function ($configurator)
 				{
@@ -3089,7 +2966,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.tmz.com/videos/0_2pr9x3rb/',
-				'<r><TMZ id="0_2pr9x3rb" url="http://www.tmz.com/videos/0_2pr9x3rb/">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
+				'<r><TMZ id="0_2pr9x3rb">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
 				[],
 				function ($configurator)
 				{
@@ -3107,7 +2984,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.twitch.tv/playstation/v/3589809',
-				'<r><TWITCH channel="playstation" url="http://www.twitch.tv/playstation/v/3589809" video_id="3589809">http://www.twitch.tv/playstation/v/3589809</TWITCH></r>',
+				'<r><TWITCH channel="playstation" video_id="3589809">http://www.twitch.tv/playstation/v/3589809</TWITCH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3116,7 +2993,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.twitch.tv/videos/29415830',
-				'<r><TWITCH url="https://www.twitch.tv/videos/29415830" video_id="29415830">https://www.twitch.tv/videos/29415830</TWITCH></r>',
+				'<r><TWITCH video_id="29415830">https://www.twitch.tv/videos/29415830</TWITCH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3125,7 +3002,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
-				'<r><TWITCH channel="twitch" clip_id="HorribleWoodpeckerHassanChop" url="https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop">https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</TWITCH></r>',
+				'<r><TWITCH channel="twitch" clip_id="HorribleWoodpeckerHassanChop">https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</TWITCH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3134,7 +3011,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG',
-				'<r><TWITCH clip_id="AcceptableCooperativeYogurtTwitchRPG" url="https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG">https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG</TWITCH></r>',
+				'<r><TWITCH clip_id="AcceptableCooperativeYogurtTwitchRPG">https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG</TWITCH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3152,7 +3029,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<r><TWITTER id="266031293945503744" url="https://twitter.com/BarackObama/statuses/266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWITTER></r>',
+				'<r><TWITTER id="266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWITTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -3161,7 +3038,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/status/266031293945503744',
-				'<r><TWITTER id="266031293945503744" url="https://twitter.com/BarackObama/status/266031293945503744">https://twitter.com/BarackObama/status/266031293945503744</TWITTER></r>',
+				'<r><TWITTER id="266031293945503744">https://twitter.com/BarackObama/status/266031293945503744</TWITTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -3170,7 +3047,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/#!/BarackObama/status/266031293945503744',
-				'<r><TWITTER id="266031293945503744" url="https://twitter.com/#!/BarackObama/status/266031293945503744">https://twitter.com/#!/BarackObama/status/266031293945503744</TWITTER></r>',
+				'<r><TWITTER id="266031293945503744">https://twitter.com/#!/BarackObama/status/266031293945503744</TWITTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -3179,7 +3056,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://mobile.twitter.com/DerekTVShow/status/463372588690202624',
-				'<r><TWITTER id="463372588690202624" url="https://mobile.twitter.com/DerekTVShow/status/463372588690202624">https://mobile.twitter.com/DerekTVShow/status/463372588690202624</TWITTER></r>',
+				'<r><TWITTER id="463372588690202624">https://mobile.twitter.com/DerekTVShow/status/463372588690202624</TWITTER></r>',
 				[],
 				function ($configurator)
 				{
@@ -3188,7 +3065,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vbox7.com/play:a87a6894c5',
-				'<r><VBOX7 id="a87a6894c5" url="http://vbox7.com/play:a87a6894c5">http://vbox7.com/play:a87a6894c5</VBOX7></r>',
+				'<r><VBOX7 id="a87a6894c5">http://vbox7.com/play:a87a6894c5</VBOX7></r>',
 				[],
 				function ($configurator)
 				{
@@ -3197,7 +3074,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.vevo.com/watch/USUV71400682',
-				'<r><VEVO id="USUV71400682" url="http://www.vevo.com/watch/USUV71400682">http://www.vevo.com/watch/USUV71400682</VEVO></r>',
+				'<r><VEVO id="USUV71400682">http://www.vevo.com/watch/USUV71400682</VEVO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3206,7 +3083,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925',
-				'<r><VEVO id="USUV71302925" url="http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925">http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</VEVO></r>',
+				'<r><VEVO id="USUV71302925">http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</VEVO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3215,7 +3092,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.viagame.com/channels/hearthstone-championship/404917',
-				'<r><VIAGAME id="404917" url="http://www.viagame.com/channels/hearthstone-championship/404917">http://www.viagame.com/channels/hearthstone-championship/404917</VIAGAME></r>',
+				'<r><VIAGAME id="404917">http://www.viagame.com/channels/hearthstone-championship/404917</VIAGAME></r>',
 				[],
 				function ($configurator)
 				{
@@ -3224,7 +3101,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.videodetective.com/movies/deadpool/38876',
-				'<r><VIDEODETECTIVE id="38876" url="http://www.videodetective.com/movies/deadpool/38876">http://www.videodetective.com/movies/deadpool/38876</VIDEODETECTIVE></r>',
+				'<r><VIDEODETECTIVE id="38876">http://www.videodetective.com/movies/deadpool/38876</VIDEODETECTIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3233,7 +3110,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm',
-				'<r><VIDEODETECTIVE id="5250" url="http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm">http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm</VIDEODETECTIVE></r>',
+				'<r><VIDEODETECTIVE id="5250">http://www.videodetective.com/movies/NATURAL_BORN_KILLERS/trailer/P00005250.htm</VIDEODETECTIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3242,7 +3119,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://videomega.tv/?ref=aPRKXgQdaD',
-				'<r><VIDEOMEGA id="aPRKXgQdaD" url="http://videomega.tv/?ref=aPRKXgQdaD">http://videomega.tv/?ref=aPRKXgQdaD</VIDEOMEGA></r>',
+				'<r><VIDEOMEGA id="aPRKXgQdaD">http://videomega.tv/?ref=aPRKXgQdaD</VIDEOMEGA></r>',
 				[],
 				function ($configurator)
 				{
@@ -3251,7 +3128,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<r><VIMEO id="67207222" url="http://vimeo.com/67207222">http://vimeo.com/67207222</VIMEO></r>',
+				'<r><VIMEO id="67207222">http://vimeo.com/67207222</VIMEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3260,7 +3137,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://player.vimeo.com/video/125956083',
-				'<r><VIMEO id="125956083" url="https://player.vimeo.com/video/125956083">https://player.vimeo.com/video/125956083</VIMEO></r>',
+				'<r><VIMEO id="125956083">https://player.vimeo.com/video/125956083</VIMEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3269,7 +3146,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222#t=90s',
-				'<r><VIMEO id="67207222" t="90" url="http://vimeo.com/67207222#t=90s">http://vimeo.com/67207222#t=90s</VIMEO></r>',
+				'<r><VIMEO id="67207222" t="90">http://vimeo.com/67207222#t=90s</VIMEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3278,7 +3155,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222#t=1m30s',
-				'<r><VIMEO id="67207222" t="90" url="http://vimeo.com/67207222#t=1m30s">http://vimeo.com/67207222#t=1m30s</VIMEO></r>',
+				'<r><VIMEO id="67207222" t="90">http://vimeo.com/67207222#t=1m30s</VIMEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3287,7 +3164,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/recorded/40771396',
-				'<r><USTREAM url="http://www.ustream.tv/recorded/40771396" vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></r>',
+				'<r><USTREAM vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></r>',
 				[],
 				function ($configurator)
 				{
@@ -3314,7 +3191,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.veoh.com/watch/v6335577TeB8kyNR',
-				'<r><VEOH id="6335577TeB8kyNR" url="http://www.veoh.com/watch/v6335577TeB8kyNR">http://www.veoh.com/watch/v6335577TeB8kyNR</VEOH></r>',
+				'<r><VEOH id="6335577TeB8kyNR">http://www.veoh.com/watch/v6335577TeB8kyNR</VEOH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3323,7 +3200,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR',
-				'<r><VEOH id="6335577TeB8kyNR" url="http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR">http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR</VEOH></r>',
+				'<r><VEOH id="6335577TeB8kyNR">http://www.veoh.com/m/watch.php?v=v6335577TeB8kyNR</VEOH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3332,7 +3209,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/channels/staffpicks/67207222',
-				'<r><VIMEO id="67207222" url="http://vimeo.com/channels/staffpicks/67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></r>',
+				'<r><VIMEO id="67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3341,7 +3218,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://vine.co/v/bYwPIluIipH',
-				'<r><VINE id="bYwPIluIipH" url="https://vine.co/v/bYwPIluIipH">https://vine.co/v/bYwPIluIipH</VINE></r>',
+				'<r><VINE id="bYwPIluIipH">https://vine.co/v/bYwPIluIipH</VINE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3350,7 +3227,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vocaroo.com/i/s0dRy3rZ47bf',
-				'<r><VOCAROO id="s0dRy3rZ47bf" url="http://vocaroo.com/i/s0dRy3rZ47bf">http://vocaroo.com/i/s0dRy3rZ47bf</VOCAROO></r>',
+				'<r><VOCAROO id="s0dRy3rZ47bf">http://vocaroo.com/i/s0dRy3rZ47bf</VOCAROO></r>',
 				[],
 				function ($configurator)
 				{
@@ -3359,7 +3236,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb',
-				'<r><VOX id="ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb" url="http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb">http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</VOX></r>',
+				'<r><VOX id="ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb">http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</VOX></r>',
 				[],
 				function ($configurator)
 				{
@@ -3368,7 +3245,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b',
-				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b" url="https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b">https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b</WASHINGTONPOST></r>',
+				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b">https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b</WASHINGTONPOST></r>',
 				[],
 				function ($configurator)
 				{
@@ -3377,7 +3254,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html',
-				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b" url="http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html">http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</WASHINGTONPOST></r>',
+				'<r><WASHINGTONPOST id="df229384-9216-11e6-bc00-1a9756d4111b">http://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</WASHINGTONPOST></r>',
 				[],
 				function ($configurator)
 				{
@@ -3386,7 +3263,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.worldstarhiphop.com/featured/71630',
-				'<r><WSHH id="71630" url="http://www.worldstarhiphop.com/featured/71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
+				'<r><WSHH id="71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -3395,7 +3272,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2',
-				'<r><WSJ id="09FB2B3B-583E-4284-99D8-FEF6C23BE4E2" url="http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2">http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2</WSJ></r>',
+				'<r><WSJ id="09FB2B3B-583E-4284-99D8-FEF6C23BE4E2">http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2</WSJ></r>',
 				[],
 				function ($configurator)
 				{
@@ -3404,7 +3281,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html',
-				'<r><WSJ id="9B3DF790-9D20-442C-B564-51524B06FD26" url="http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html">http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</WSJ></r>',
+				'<r><WSJ id="9B3DF790-9D20-442C-B564-51524B06FD26">http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</WSJ></r>',
 				[],
 				function ($configurator)
 				{
@@ -3413,7 +3290,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8',
-				'<r><WSJ id="3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8" url="http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8">http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</WSJ></r>',
+				'<r><WSJ id="3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8">http://live.wsj.com/video/seth-rogen-emotional-appeal-over-alzheimer/3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8.html?mod=trending_now_video_4#!3885A1E1-D5DE-443A-AA45-6A8F6BB8FBD8</WSJ></r>',
 				[],
 				function ($configurator)
 				{
@@ -3422,7 +3299,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html',
-				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6" url="http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html">http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html</WSJ></r>',
+				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6">http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html</WSJ></r>',
 				[],
 				function ($configurator)
 				{
@@ -3431,7 +3308,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://screen.yahoo.com/mr-short-term-memory-000000263.html',
-				'<r><YAHOOSCREEN id="mr-short-term-memory-000000263" url="https://screen.yahoo.com/mr-short-term-memory-000000263.html">https://screen.yahoo.com/mr-short-term-memory-000000263.html</YAHOOSCREEN></r>',
+				'<r><YAHOOSCREEN id="mr-short-term-memory-000000263">https://screen.yahoo.com/mr-short-term-memory-000000263.html</YAHOOSCREEN></r>',
 				[],
 				function ($configurator)
 				{
@@ -3440,7 +3317,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3',
-				'<r><XBOXCLIPS id="e3a2d685-3e9f-454f-89bf-54ddea8f29b3" url="http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3" user="dizturbd">http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</XBOXCLIPS></r>',
+				'<r><XBOXCLIPS id="e3a2d685-3e9f-454f-89bf-54ddea8f29b3" user="dizturbd">http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</XBOXCLIPS></r>',
 				[],
 				function ($configurator)
 				{
@@ -3458,7 +3335,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://xboxdvr.com/gamer/LOXITANE/video/12463958',
-				'<r><XBOXDVR id="12463958" url="http://xboxdvr.com/gamer/LOXITANE/video/12463958" user="LOXITANE">http://xboxdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
+				'<r><XBOXDVR id="12463958" user="LOXITANE">http://xboxdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
 				[],
 				function ($configurator)
 				{
@@ -3467,7 +3344,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html',
-				'<r><YAHOOSCREEN id="church-chat-satan-000000502" url="https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
+				'<r><YAHOOSCREEN id="church-chat-satan-000000502">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
 				[],
 				function ($configurator)
 				{
@@ -3476,7 +3353,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html',
-				'<r><YOUKU id="XNzQwNjcxNDM2" url="http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html">http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</YOUKU></r>',
+				'<r><YOUKU id="XNzQwNjcxNDM2">http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</YOUKU></r>',
 				[],
 				function ($configurator)
 				{
@@ -3485,7 +3362,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://m.youku.com/video/id_XNzQwNjcxNDM2.html',
-				'<r><YOUKU id="XNzQwNjcxNDM2" url="http://m.youku.com/video/id_XNzQwNjcxNDM2.html">http://m.youku.com/video/id_XNzQwNjcxNDM2.html</YOUKU></r>',
+				'<r><YOUKU id="XNzQwNjcxNDM2">http://m.youku.com/video/id_XNzQwNjcxNDM2.html</YOUKU></r>',
 				[],
 				function ($configurator)
 				{
@@ -3493,17 +3370,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'[media=youtube]-cEzsCAzTak[/media]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak"><s>[media=youtube]</s>-cEzsCAzTak<e>[/media]</e></YOUTUBE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('youtube');
-				}
-			],
-			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel"><s>[media]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/media]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[media]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/media]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3512,7 +3380,7 @@ class ParserTest extends Test
 			],
 			[
 				'xx [media url=http://www.youtube.com/watch?v=-cEzsCAzTak] xx',
-				'<r>xx <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak]</YOUTUBE> xx</r>',
+				'<r>xx <YOUTUBE id="-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak]</YOUTUBE> xx</r>',
 				[],
 				function ($configurator)
 				{
@@ -3521,7 +3389,7 @@ class ParserTest extends Test
 			],
 			[
 				'xx [media url=http://www.youtube.com/watch?v=-cEzsCAzTak /] xx',
-				'<r>xx <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak /]</YOUTUBE> xx</r>',
+				'<r>xx <YOUTUBE id="-cEzsCAzTak">[media url=http://www.youtube.com/watch?v=-cEzsCAzTak /]</YOUTUBE> xx</r>',
 				[],
 				function ($configurator)
 				{
@@ -3530,57 +3398,57 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="-cEzsCAzTak"><s>[YOUTUBE]</s>-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['id']]);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel"><s>[YOUTUBE]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/YOUTUBE]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/YOUTUBE]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?feature=player_embedded&v=-cEzsCAzTak[/YOUTUBE]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/v/-cEzsCAzTak[/YOUTUBE]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/v/-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/v/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/v/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
 			[
 				'[YOUTUBE]http://youtu.be/-cEzsCAzTak[/YOUTUBE]',
-				'<r><YOUTUBE id="-cEzsCAzTak" url="http://youtu.be/-cEzsCAzTak"><s>[YOUTUBE]</s>http://youtu.be/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
+				'<r><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>http://youtu.be/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'<r>Check this: <YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak"><URL url="http://www.youtube.com/watch?v=-cEzsCAzTak">http://www.youtube.com/watch?v=-cEzsCAzTak</URL></YOUTUBE> and that: <URL url="http://example.com">http://example.com</URL></r>',
+				'<r>Check this: <YOUTUBE id="-cEzsCAzTak"><URL url="http://www.youtube.com/watch?v=-cEzsCAzTak">http://www.youtube.com/watch?v=-cEzsCAzTak</URL></YOUTUBE> and that: <URL url="http://example.com">http://example.com</URL></r>',
 				[],
 				function ($configurator)
 				{
@@ -3590,7 +3458,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?feature=player_detailpage&v=9bZkp7q19f0#t=113',
-				'<r><YOUTUBE id="9bZkp7q19f0" t="113" url="http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0#t=113">http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0#t=113</YOUTUBE></r>',
+				'<r><YOUTUBE id="9bZkp7q19f0" t="113">http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0#t=113</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3599,7 +3467,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?feature=player_detailpage&v=9bZkp7q19f0&t=113',
-				'<r><YOUTUBE id="9bZkp7q19f0" t="113" url="http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0&amp;t=113">http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0&amp;t=113</YOUTUBE></r>',
+				'<r><YOUTUBE id="9bZkp7q19f0" t="113">http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0&amp;t=113</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3608,7 +3476,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=1h23m45s',
-				'<r><YOUTUBE id="wZZ7oFKsKzY" t="5025" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="5025">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=1h23m45s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3617,7 +3485,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
-				'<r><YOUTUBE id="wZZ7oFKsKzY" t="1425" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="1425">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=23m45s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3626,7 +3494,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=45s',
-				'<r><YOUTUBE id="wZZ7oFKsKzY" t="45" url="http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=45s">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=45s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wZZ7oFKsKzY" t="45">http://www.youtube.com/watch?v=wZZ7oFKsKzY&amp;t=45s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3635,7 +3503,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m43s',
-				'<r><YOUTUBE id="wI__53kBBKM" t="34723" url="https://youtu.be/wI__53kBBKM?t=9h38m43s">https://youtu.be/wI__53kBBKM?t=9h38m43s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="34723">https://youtu.be/wI__53kBBKM?t=9h38m43s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3644,7 +3512,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m',
-				'<r><YOUTUBE id="wI__53kBBKM" t="34680" url="https://youtu.be/wI__53kBBKM?t=9h38m">https://youtu.be/wI__53kBBKM?t=9h38m</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="34680">https://youtu.be/wI__53kBBKM?t=9h38m</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3653,7 +3521,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h43s',
-				'<r><YOUTUBE id="wI__53kBBKM" t="32443" url="https://youtu.be/wI__53kBBKM?t=9h43s">https://youtu.be/wI__53kBBKM?t=9h43s</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="32443">https://youtu.be/wI__53kBBKM?t=9h43s</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3662,7 +3530,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h',
-				'<r><YOUTUBE id="wI__53kBBKM" t="32400" url="https://youtu.be/wI__53kBBKM?t=9h">https://youtu.be/wI__53kBBKM?t=9h</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="32400">https://youtu.be/wI__53kBBKM?t=9h</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3671,7 +3539,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=38m',
-				'<r><YOUTUBE id="wI__53kBBKM" t="2280" url="https://youtu.be/wI__53kBBKM?t=38m">https://youtu.be/wI__53kBBKM?t=38m</YOUTUBE></r>',
+				'<r><YOUTUBE id="wI__53kBBKM" t="2280">https://youtu.be/wI__53kBBKM?t=38m</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3680,7 +3548,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
-				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" url="http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</YOUTUBE></r>',
+				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3689,7 +3557,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123',
-				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" t="123" url="http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123</YOUTUBE></r>',
+				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" t="123">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3698,7 +3566,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch_popup?v=qybUFnY7Y8w',
-				'<r><YOUTUBE id="qybUFnY7Y8w" url="http://www.youtube.com/watch_popup?v=qybUFnY7Y8w">http://www.youtube.com/watch_popup?v=qybUFnY7Y8w</YOUTUBE></r>',
+				'<r><YOUTUBE id="qybUFnY7Y8w">http://www.youtube.com/watch_popup?v=qybUFnY7Y8w</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3707,7 +3575,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/attribution_link?a=JdfC0C9V6ZI&u=%2Fwatch%3Fv%3DEhxJLojIE_o%26feature%3Dshare',
-				'<r><YOUTUBE id="EhxJLojIE_o" url="http://www.youtube.com/attribution_link?a=JdfC0C9V6ZI&amp;u=%2Fwatch%3Fv%3DEhxJLojIE_o%26feature%3Dshare">http://www.youtube.com/attribution_link?a=JdfC0C9V6ZI&amp;u=%2Fwatch%3Fv%3DEhxJLojIE_o%26feature%3Dshare</YOUTUBE></r>',
+				'<r><YOUTUBE id="EhxJLojIE_o">http://www.youtube.com/attribution_link?a=JdfC0C9V6ZI&amp;u=%2Fwatch%3Fv%3DEhxJLojIE_o%26feature%3Dshare</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -4184,27 +4052,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				// Taken from the "WordPress Code" button of the page
-				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/98282116&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('soundcloud', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
-				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1919974" style="border:0;height:450px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->BBCodes->add('soundcloud', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-					$configurator->MediaEmbed->add('soundcloud');
-				}
-			],
-			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
 				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
@@ -4322,15 +4169,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'[media=youtube]-cEzsCAzTak[/media]',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('youtube');
-				}
-			],
-			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
 				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
@@ -4345,7 +4183,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['id']]);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -4355,7 +4193,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -4365,7 +4203,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
+					$configurator->BBCodes->add('youtube', ['defaultAttribute' => 'url', 'contentAttributes' => ['url'], 'tagName' => 'MEDIA']);
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
@@ -4495,7 +4333,7 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg" url="http://www.bbc.com/news/business-29149086">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
+				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
 				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></span></span>',
 				function ($configurator)
 				{
@@ -4503,7 +4341,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c" url="http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
+				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
 				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></span></span>',
 				function ($configurator)
 				{
@@ -4511,7 +4349,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" url="http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
+				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
 				'<iframe data-s9e-mediaembed="reddit" allowfullscreen="" onload="var a=Math.random();window.addEventListener(\'message\',function(b){if(b.data.id==a)style.height=b.data.height+\'px\'});contentWindow.postMessage(\'s9e:\'+a,\'https://s9e.github.io\')" scrolling="no" src="https://s9e.github.io/iframe/reddit.min.html#/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" style="border:0;height:165px;max-width:800px;width:100%"></iframe>',
 				function ($configurator)
 				{
@@ -4519,7 +4357,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'<r><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
 				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				function ($configurator)
 				{
@@ -4527,7 +4365,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" url="https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:user:commodore-64:playlist:33fewoc4vDuICqL2mX95PA" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				function ($configurator)
 				{
@@ -4535,7 +4373,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'<r><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
+				'<r><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
 				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:120%"><iframe allowfullscreen="" scrolling="no" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:track:6acKqVtKngFXApjvXsU6mQ" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				function ($configurator)
 				{

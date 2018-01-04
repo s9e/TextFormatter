@@ -1,23 +1,13 @@
 <h2>Synopsis</h2>
 
-This plugin allows the user to embed content from allowed sites using a `[media]` BBCode, site-specific BBCodes such as `[youtube]`, or from simply posting a supported URL in plain text.
+This plugin allows the user to embed content from allowed sites using a `[media]` BBCode or by simply posting a supported URL in plain text. It is designed to be able to parse any of the following forms:
 
-It is designed to be able to parse any of the following forms:
+ * `[media]https://youtu.be/-cEzsCAzTak[/media]`
+ * `https://www.youtube.com/watch?v=-cEzsCAzTak`
 
- * `[media]http://www.youtube.com/watch?v=-cEzsCAzTak[/media]`  
-   _(simplest form)_
- * `[media=youtube]-cEzsCAzTak[/media]`  
-   _(from [XenForo's BB Code Media Sites](http://xenforo.com/help/bb-code-media-sites/))_
- * `[youtube]http://youtu.be/watch?v=-cEzsCAzTak[/youtube]`  
-   _(from various forum softwares such as [phpBB](https://www.phpbb.com/customise/db/bbcode/youtube/))_
- * `[youtube=http://www.youtube.com/watch?v=-cEzsCAzTak]`  
-   _(from [WordPress's YouTube short code](http://en.support.wordpress.com/videos/youtube/))_
- * `[youtube]-cEzsCAzTak[/youtube]`  
-   _(from various forum softwares such as [vBulletin](http://www.vbulletin.com/forum/forum/vbulletin-3-8/vbulletin-3-8-questions-problems-and-troubleshooting/vbulletin-quick-tips-and-customizations/204206-how-to-make-a-youtube-bb-code))_
- * `http://www.youtube.com/watch?v=-cEzsCAzTak`  
-   _(plain URLs are turned into embedded content)_
+[Other kind of markup](Other_markup.md) can be configured manually.
 
-Has built-in support for Dailymotion, Facebook, Instagram, Twitch, Twitter, YouTube [and more](https://github.com/s9e/TextFormatter/tree/master/src/Plugins/MediaEmbed/Configurator/sites/).
+It has built-in support for Facebook, Twitch, Twitter, YouTube [and many more](Sites.md).
 
 ## Example
 
@@ -32,7 +22,6 @@ $configurator->BBCodes->add(
 );
 
 // Add the sites we want to support
-$configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');
 
@@ -40,9 +29,8 @@ $configurator->MediaEmbed->add('youtube');
 extract($configurator->finalize());
 
 $examples = [
-	'[media]http://www.dailymotion.com/video/x222z1[/media]',
-	'https://www.facebook.com/video/video.php?v=10100658170103643',
-	'[youtube]-cEzsCAzTak[/youtube]'
+	'[media]https://youtu.be/-cEzsCAzTak[/media]',
+	'https://www.facebook.com/video/video.php?v=10100658170103643'
 ];
 
 foreach ($examples as $text)
@@ -54,9 +42,8 @@ foreach ($examples as $text)
 }
 ```
 ```html
-<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x222z1"></iframe></span></span>
-<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener('message',function(b){if(b.data.id==a)style.height=b.data.height+'px'});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" scrolling="no" src="https://s9e.github.io/iframe/facebook.min.html#video10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>
 <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>
+<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var a=Math.random();window.addEventListener('message',function(b){if(b.data.id==a)style.height=b.data.height+'px'});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" scrolling="no" src="https://s9e.github.io/iframe/facebook.min.html#video10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>
 ```
 
 ### Configure a site manually

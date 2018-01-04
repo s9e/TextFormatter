@@ -87,11 +87,11 @@ pages:
     - MediaEmbed:
       - Synopsis: Plugins/MediaEmbed/Synopsis.md
       - Supported sites: Plugins/MediaEmbed/Sites.md
-      - Add a supported site: Plugins/MediaEmbed/Add_bundled.md
       - Add a custom site: Plugins/MediaEmbed/Add_custom.md
       - Add a link to the original URL: Plugins/MediaEmbed/Append_template.md
       - Change a template: Plugins/MediaEmbed/Change_template.md
       - Configure a cache dir: Plugins/MediaEmbed/Performance_cache_dir.md
+      - Support other markup: Plugins/MediaEmbed/Other_markup.md
     - PipeTables:
       - Synopsis: Plugins/PipeTables/Synopsis.md
       - Syntax: Plugins/PipeTables/Syntax.md

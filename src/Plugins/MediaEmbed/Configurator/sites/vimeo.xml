@@ -6,7 +6,7 @@
 	<tags><tag>videos</tag></tags>
 
 	<attributes>
-		<t type="timestamp"/>
+		<t filterChain="#timestamp"/>
 	</attributes>
 
 	<host>vimeo.com</host>

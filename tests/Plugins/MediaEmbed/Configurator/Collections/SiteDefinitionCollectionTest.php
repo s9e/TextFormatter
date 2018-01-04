@@ -16,9 +16,11 @@ class SiteDefinitionCollectionTest extends Test
 	public function testWorks()
 	{
 		$config = [
-			'name' => 'Foo',
-			'extract' => [],
-			'scrape'  => [['extract' => [], 'match' => ['//']]]
+			'name'       => 'Foo',
+			'attributes' => [],
+			'extract'    => [],
+			'host'       => ['localhost'],
+			'scrape'     => [['extract' => [], 'match' => ['//']]]
 		];
 
 		$collection = new SiteDefinitionCollection;
@@ -68,8 +70,8 @@ class SiteDefinitionCollectionTest extends Test
 	{
 		$collection = new SiteDefinitionCollection;
 		$collection->onDuplicate('error');
-		$collection->add('foo', []);
-		$collection->add('foo', []);
+		$collection->add('foo', ['host' => ['localhost']]);
+		$collection->add('foo', ['host' => ['localhost']]);
 	}
 
 	/**
@@ -77,8 +79,9 @@ class SiteDefinitionCollectionTest extends Test
 	*/
 	public function testExtractString()
 	{
-		$original = ['extract' => '/foo/',   'scrape' => []];
-		$expected = ['extract' => ['/foo/'], 'scrape' => []];
+		$original = ['attributes' => [], 'host' => ['localhost'], 'extract' => '/foo/',   'scrape' => []];
+		$expected = $original;
+		$expected['extract'] = ['/foo/'];
 
 		$collection = new SiteDefinitionCollection;
 		$collection->add('foo', $original);
@@ -91,8 +94,8 @@ class SiteDefinitionCollectionTest extends Test
 	*/
 	public function testExtractArray()
 	{
-		$original = ['extract' => ['/foo/'], 'scrape' => []];
-		$expected = ['extract' => ['/foo/'], 'scrape' => []];
+		$original = ['attributes' => [], 'host' => ['localhost'], 'extract' => ['/foo/'], 'scrape' => []];
+		$expected = $original;
 
 		$collection = new SiteDefinitionCollection;
 		$collection->add('foo', $original);
@@ -106,13 +109,13 @@ class SiteDefinitionCollectionTest extends Test
 	public function testNormalizeScrape()
 	{
 		$original = [
-			'extract' => [],
-			'scrape'  => ['extract' => '/foo/']
+			'attributes' => [],
+			'host'       => ['localhost'],
+			'extract'    => [],
+			'scrape'     => ['extract' => '/foo/']
 		];
-		$expected = [
-			'extract' => [],
-			'scrape'  => [['extract' => ['/foo/'], 'match' => ['//']]]
-		];
+		$expected = $original;
+		$expected['scrape'] = [['extract' => ['/foo/'], 'match' => ['//']]];
 
 		$collection = new SiteDefinitionCollection;
 		$collection->add('foo', $original);
