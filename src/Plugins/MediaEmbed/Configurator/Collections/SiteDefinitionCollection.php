@@ -31,9 +31,16 @@ class SiteDefinitionCollection extends NormalizedCollection
 	{
 		if (!\is_array($siteConfig))
 			throw new InvalidArgumentException('Invalid site definition type');
-		$siteConfig           += array('extract' => array(), 'scrape' => array());
+		if (!isset($siteConfig['host']))
+			throw new InvalidArgumentException('Missing host from site definition');
+		$siteConfig           += array('attributes' => array(), 'extract' => array(), 'scrape' => array());
 		$siteConfig['extract'] = $this->normalizeRegexp($siteConfig['extract']);
+		$siteConfig['host']    = \array_map('strtolower', (array) $siteConfig['host']);
 		$siteConfig['scrape']  = $this->normalizeScrape($siteConfig['scrape']);
+		foreach ($siteConfig['attributes'] as &$attrConfig)
+			if (isset($attrConfig['filterChain']))
+				$attrConfig['filterChain'] = (array) $attrConfig['filterChain'];
+		unset($attrConfig);
 		return $siteConfig;
 	}
 	protected function normalizeRegexp($value)
