@@ -15,7 +15,6 @@ use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 abstract class TemplateHelper
@@ -387,7 +386,8 @@ abstract class TemplateHelper
 		if (strpos($template, '<xsl:') !== false)
 		{
 			$error = libxml_get_last_error();
-			throw new InvalidXslException($error->message);
+
+			throw new RuntimeException('Invalid XSL: ' . $error->message);
 		}
 
 		return self::loadTemplateAsHTML($template);

@@ -215,8 +215,8 @@ class TemplateHelperTest extends Test
 
 	/**
 	* @testdox loadTemplate() throws an exception on malformed XSL
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
-	* @expectedExceptionMessage Premature end of data
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Invalid XSL: Premature end of data
 	*/
 	public function testLoadInvalidXSL()
 	{

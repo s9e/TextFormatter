@@ -8,9 +8,10 @@
 namespace s9e\TextFormatter\Configurator\Exceptions;
 
 use DOMNode;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
-class UnsafeTemplateException extends InvalidTemplateException
+class UnsafeTemplateException extends RuntimeException
 {
 	/**
 	* @var DOMNode The node that is responsible for this exception

@@ -410,12 +410,12 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={INT;preFilter=eval}/]',
 				'',
-				new RuntimeException("Filter 'eval' is not allowed")
+				new RuntimeException("Filter 'eval' is not allowed in BBCodes")
 			],
 			[
 				'[foo={INT;postFilter=eval}/]',
 				'',
-				new RuntimeException("Filter 'eval' is not allowed")
+				new RuntimeException("Filter 'eval' is not allowed in BBCodes")
 			],
 			[
 				'[foo={REGEXP=/^foo$/}/]',

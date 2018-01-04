@@ -23,7 +23,7 @@ class EmoticonCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception when an invalid template is set
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
+	* @expectedException RuntimeException
 	*/
 	public function testInvalid()
 	{

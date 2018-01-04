@@ -775,7 +775,7 @@ class BBCodeMonkey
 			if (substr($filterName, 0, 1) !== '#'
 			 && !in_array($filterName, $this->allowedFilters, true))
 			{
-				throw new RuntimeException("Filter '" . $filterName . "' is not allowed");
+				throw new RuntimeException("Filter '" . $filterName . "' is not allowed in BBCodes");
 			}
 
 			$filter = $this->configurator->attributeFilters->get($filterName);
