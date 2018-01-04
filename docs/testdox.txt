@@ -2494,6 +2494,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
  [x] get() throws a meaningful exception if the site ID does not exist
  [x] Throws an exception if the site ID is not valid
  [x] set() throws an exception if the site config is not an array
+ [x] set() throws an exception if the site config does not contain a host
  [x] add() throws a meaningful exception if the site ID already exists
  [x] Converts the extract field to an array if it's a string
  [x] Preserves the extract field if it's an array

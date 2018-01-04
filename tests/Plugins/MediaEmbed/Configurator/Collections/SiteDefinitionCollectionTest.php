@@ -62,6 +62,17 @@ class SiteDefinitionCollectionTest extends Test
 	}
 
 	/**
+	* @testdox set() throws an exception if the site config does not contain a host
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Missing host from site definition
+	*/
+	public function testMissingHost()
+	{
+		$collection = new SiteDefinitionCollection;
+		$collection->set('x', []);
+	}
+
+	/**
 	* @testdox add() throws a meaningful exception if the site ID already exists
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Media site 'foo' already exists
