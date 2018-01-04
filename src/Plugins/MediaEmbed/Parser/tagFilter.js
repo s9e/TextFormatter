@@ -1,23 +1,10 @@
 /**
-* @param  {!Tag}    tag   The original tag
-* @param  {!Object} sites Map of [host => siteId]
+* @param {!Tag}    tag   The original tag
+* @param {!Object} hosts Map of [host => siteId]
+* @param {!Object} sites Map of [siteId => siteConfig]
 */
-function (tag, sites)
+function (tag, hosts, sites)
 {
-	function in_array(needle, haystack)
-	{
-		var k;
-		for (k in haystack)
-		{
-			if (haystack[k] === needle)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	* Filter a MEDIA tag
 	*
@@ -25,114 +12,144 @@ function (tag, sites)
 	* corresponds to the media site
 	*
 	* @param {!Tag}    tag   The original tag
-	* @param {!Object} sites Map of [host => siteId]
+	* @param {!Object} hosts Map of [host => siteId]
+	* @param {!Object} sites Map of [siteId => siteConfig]
 	*/
-	function filterTag(tag, sites)
+	function filterTag(tag, hosts, sites)
 	{
+		// Always invalidate this tag
 		tag.invalidate();
-		if (tag.hasAttribute('site'))
+
+		if (tag.hasAttribute('url'))
 		{
-			addTagFromMediaId(tag, sites);
-		}
-		else if (tag.hasAttribute('url'))
-		{
-			addTagFromMediaUrl(tag, sites);
+			var url    = tag.getAttribute('url'),
+				siteId = getSiteIdFromUrl(url, hosts);
+			if (sites[siteId])
+			{
+				var attributes = getAttributes(url, sites[siteId]);
+				if (!empty(attributes))
+				{
+					createTag(siteId.toUpperCase(), tag).setAttributes(attributes);
+				}
+			}
 		}
 	}
 
 	/**
-	* Add a site tag
+	* Add named captures from a set of regular expressions to a set of attributes
 	*
-	* @param {!Tag}    tag    The original tag
-	* @param {!string} siteId Site ID
+	* @param  {!Object} attributes Associative array of strings
+	* @param  {string}  string     Text to match
+	* @param  {!Array}  regexps    List of [regexp, map] pairs
+	* @return {boolean}            Whether any regexp matched
 	*/
-	function addSiteTag(tag, siteId)
+	function addNamedCaptures(attributes, string, regexps)
 	{
-		var endTag = tag.getEndTag();
+		var matched = false;
+		regexps.forEach(function(pair)
+		{
+			var regexp = pair[0],
+				map    = pair[1],
+				m      = regexp.exec(string);
+			if (!m)
+			{
+				return;
+			}
+
+			matched = true;
+			map.forEach(function(name, i)
+			{
+				if (m[i] > '' && name > '')
+				{
+					attributes[name] = m[i];
+				}
+			});
+		});
+
+		return matched;
+	}
+
+	/**
+	* Create a tag for a media embed
+	*
+	* @param  {string} tagName  Tag's name
+	* @param  {!Tag}   tag      Reference tag
+	* @return {!Tag}            New tag
+	*/
+	function createTag(tagName, tag)
+	{
+		var startPos = tag.getPos(),
+			endTag   = tag.getEndTag(),
+			startLen,
+			endPos,
+			endLen;
 		if (endTag)
 		{
-			var startPos = tag.getPos(),
-				startLen = tag.getLen(),
-				endPos   = endTag.getPos(),
-				endLen   = endTag.getLen();
+			startLen = tag.getLen();
+			endPos   = endTag.getPos();
+			endLen   = endTag.getLen();
 		}
 		else
 		{
-			var startPos = tag.getPos(),
-				startLen = 0,
-				endPos   = tag.getPos() + tag.getLen(),
-				endLen   = 0;
+			startLen = 0;
+			endPos   = tag.getPos() + tag.getLen();
+			endLen   = 0;
 		}
 
-		// Create a new tag and copy this tag's attributes and priority
-		addTagPair(siteId.toUpperCase(), startPos, startLen, endPos, endLen, tag.getSortPriority()).setAttributes(tag.getAttributes());
+		return addTagPair(tagName, startPos, startLen, endPos, endLen, tag.getSortPriority());
 	}
 
 	/**
-	* Add a media site tag based on the attributes of a MEDIA tag
-	*
-	* @param {!Tag}    tag   The original tag
-	* @param {!Object} sites Map of [host => siteId]
+	* @param  {!Object} attributes
+	* @return {boolean}
 	*/
-	function addTagFromMediaId(tag, sites)
+	function empty(attributes)
 	{
-		var siteId = tag.getAttribute('site').toLowerCase();
-		if (in_array(siteId, sites))
+		for (var attrName in attributes)
 		{
-			addSiteTag(tag, siteId);
+			return false;
 		}
+
+		return true;
 	}
 
 	/**
-	* Add a media site tag based on the url attribute of a MEDIA tag
+	* Return a set of attributes for given URL based on a site's config
 	*
-	* @param {!Tag}    tag   The original tag
-	* @param {!Object} sites Map of [host => siteId]
+	* @param  {string}  url    Original URL
+	* @param  {!Object} config Site config
+	* @return {!Object}        Attributes
 	*/
-	function addTagFromMediaUrl(tag, sites)
+	function getAttributes(url, config)
 	{
-		// Capture the host of the URL
-		var p = /^\w+:\/\/(?:[^@\/]*@)?([^\/]+)/.exec(tag.getAttribute('url')), siteId;
-		if (p[1])
-		{
-			siteId = findSiteIdByHost(p[1], sites);
-		}
+		var attributes = {};
+		addNamedCaptures(attributes, url, config[0]);
 
-		if (siteId)
-		{
-			addSiteTag(tag, siteId);
-		}
+		return attributes;
 	}
 
 	/**
-	* Match a given host to a site ID
+	* Return the siteId that corresponds to given URL
 	*
-	* @param  {!string}          host  Host
-	* @param  {!Object}          sites Map of [host => siteId]
-	* @return {!string|!boolean}       Site ID or FALSE
+	* @param  {string} url   Original URL
+	* @param  {!Array} hosts Map of [hostname => siteId]
+	* @return {string}       URL's siteId, or an empty string
 	*/
-	function findSiteIdByHost(host, sites)
+	function getSiteIdFromUrl(url, hosts)
 	{
-		// Start with the full host then pop domain labels off the start until we get a match
-		do
+		var m    = /^https?:\/\/([^\/]+)/.exec(url.toLowerCase()),
+			host = m[1] || '';
+		while (host > '')
 		{
-			if (sites[host])
+			if (hosts[host])
 			{
-				return sites[host];
+				return hosts[host];
 			}
-
-			var pos = host.indexOf('.');
-			if (pos < 0)
-			{
-				break;
-			}
-
-			host = host.substr(1 + pos);
+			host = host.replace(/^[^.]*./, '');
 		}
-		while (host > '');
 
-		return false;
+		return '';
 	}
 
-	return filterTag(tag, sites);
+	filterTag(tag, hosts, sites);
 }
