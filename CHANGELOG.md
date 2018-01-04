@@ -1,3 +1,50 @@
+1.0.0 (2018-01-04)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#100) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/15b61f63ad4e0694c28fd84f5d65fecf6f2d4842...e821032b862a5b75c602901be7fbdd2ef45e5a5b)
+
+### Added
+
+ - `7577e4584` Added caching HTTP client
+ - `a107e470a` Emoji: added support for textual codepoint sequences
+
+### Removed
+
+ - `147c773ea` BBCodes: removed $predefinedAttributes
+ - `06920f1fb` MediaEmbed: removed $captureURLs
+ - `ffde0c243` MediaEmbed: removed $createIndividualBBCodes
+ - `ac33fb0a2` MediaEmbed: removed Vidme
+ - `24d5ae989` MediaEmbed: removed Zippyshare
+ - `def39285e` MediaEmbed: removed appendTemplate()
+ - `7e343bf2d` MediaEmbed: removed support for custom schemes
+ - `5921a6ad1` MediaEmbed: removed unused code
+ - `21a9fce71` Parser: removed implicit invalidation in tag filters
+ - `1c136a634` Removed InvalidTemplateException and InvalidXslException classes
+ - `80ec0e641` Removed support for attribute generators and the {RANDOM} token in BBCodes
+
+### Changed
+
+ - `0c3bcb2c2` ElementInspector: updated for HTML 5.2
+ - `ff6da69aa` HTMLElements: updated configurator for HTML 5.2
+ - `0bc92a880` HTMLElements: updated the list of URL attributes
+ - `dace43e40` Litedown: restricted the characters allowed in link references' URLs
+ - `8092ea038` MediaEmbed: refactored plugin
+ - `6557a14ae` MediaEmbed: updated 8tracks
+ - `112b7457c` MediaEmbed: updated Dailymotion and Twitch
+ - `488a15907` MediaEmbed: updated Facebook
+ - `9079e50c3` MediaEmbed: updated Flickr
+ - `b7ee53bf5` MediaEmbed: updated Imgur
+ - `c0f863da8` MediaEmbed: updated Reddit
+ - `eacf0e0f8` MediaEmbed: updated Spotify
+ - `a5647eb14` MediaEmbed: updated Vimeo
+ - `3d5cfef45` Parser: reorganized filter processing
+ - `3de8c6af8` RegexpConvertor: updated Unicode properties to latest version
+ - `1987a0ba4` TemplateHelper: updated for HTML 5.2
+ - `788152faf` Updated live preview algorithm
+
+
 0.13.1 (2017-12-10)
 ===================
 
