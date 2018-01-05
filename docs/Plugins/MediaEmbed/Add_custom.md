@@ -2,22 +2,22 @@
 
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
-  * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
-  * At least one of the following:
-    * `extract` is a regexp used to extract values from the URL.
-    * `scrape` is an array that must contain at least one `extract` and zero or more `match` where:
-      * `match` is a regexp used to determine whether to scrape the content of the URL. If it's not specified, every URL is scraped.
-      * `extract` is a regexp used to extract values from the scraped page.
-  * Exactly one of the following:
-    * A `choose` array that contains a `when` array and an `otherwise` array.
-      * `when` must contain the following two elements:
-        * A `test` string that contains an XPath condition.
-        * An `iframe` or `flash` element as specified below.
-      * `otherwise` must contain one `iframe` or `flash` element as specified below.
-    * An `iframe` or `flash` element that contains an array of attributes:
-      * `src` contains the URL of the iframe or Flash object.
-      * `width` and `height` are optional and default to 640 × 360.
-      * Other attributes such as `allowfullscreen` or `scrolling` are automatically added where necessary.
+* `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
+* At least one of the following:
+    - `extract` is a regexp used to extract values from the URL.
+    - `scrape` is an array that must contain at least one `extract` and zero or more `match` where:
+        * `match` is a regexp used to determine whether to scrape the content of the URL. If it's not specified, every URL is scraped.
+        * `extract` is a regexp used to extract values from the scraped page.
+* Exactly one of the following:
+    - A `choose` array that contains a `when` array and an `otherwise` array.
+        * `when` must contain the following two elements:
+            - A `test` string that contains an XPath condition.
+            - An `iframe` or `flash` element as specified below.
+        * `otherwise` must contain one `iframe` or `flash` element as specified below.
+    - An `iframe` or `flash` element that contains an array of attributes:
+        * `src` contains the URL of the iframe or Flash object.
+        * `width` and `height` are optional and default to 640 × 360.
+        * Other attributes such as `allowfullscreen` or `scrolling` are automatically added where necessary.
 
 You can specify multiple `host`, `scheme`, `scrape`, `extract`, `match` or `when` values using arrays.
 
