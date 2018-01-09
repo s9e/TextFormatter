@@ -137,6 +137,11 @@
 		<td>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</td>
 	</tr>
 	<tr>
+		<td><code>foxsports</code></td>
+		<td>FOX Sports</td>
+		<td>https://www.foxsports.com/home/video/1132379203958</td>
+	</tr>
+	<tr>
 		<td><code>funnyordie</code></td>
 		<td>Funny or Die</td>
 		<td>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</td>

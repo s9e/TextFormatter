@@ -616,6 +616,16 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'https://www.foxsports.com/watch/undisputed/video/1127594563881',
+				'<r><FOXSPORTS id="78Ot0tahNRFG">https://www.foxsports.com/watch/undisputed/video/1127594563881</FOXSPORTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('foxsports');
+				}
+			],
+			[
 				'http://gty.im/3232182',
 				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://gty.im/3232182</GETTY></r>)',
 				[],
