@@ -248,7 +248,7 @@ class Parser
 			$catchupLen  = $catchupPos - $this->pos;
 			$catchupText = \substr($this->text, $this->pos, $catchupLen);
 			if (\strspn($catchupText, " \n\t") < $catchupLen)
-				$catchupText = '<i>' . $catchupText . '</i>';
+				$catchupText = '<i>' . \htmlspecialchars($catchupText, \ENT_NOQUOTES, 'UTF-8') . '</i>';
 			$this->output .= $catchupText;
 			$this->pos = $catchupPos;
 			if ($closeParagraph)
