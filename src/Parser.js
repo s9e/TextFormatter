@@ -568,7 +568,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		// If the catchup text is not entirely composed of whitespace, we put it inside ignore tags
 		if (!/^[ \n\t]*$/.test(catchupText))
 		{
-			catchupText = '<i>' + catchupText + '</i>';
+			catchupText = '<i>' + htmlspecialchars_noquotes(catchupText) + '</i>';
 		}
 
 		output += catchupText;
