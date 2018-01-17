@@ -554,6 +554,30 @@ xxx',
 					$parser->addBrTag(3, -1);
 				}
 			],
+			[
+				'&<>',
+				'<r><X><i>&amp;&lt;&gt;</i></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->ignoreText();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+				}
+			],
+			[
+				' &<>',
+				'<r><X><i> &amp;&lt;&gt;</i></X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->ignoreText();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+				}
+			],
 		];
 	}
 }

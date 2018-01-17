@@ -548,6 +548,15 @@ class ParserTest extends Test
 					$configurator->BBCodes->addFromRepository('URL');
 				}
 			],
+			[
+				'[x]&<>[/x]',
+				'<r><X><s>[x]</s><i>&amp;&lt;&gt;</i><e>[/x]</e></X></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addCustom('[x #ignoreText=true]{TEXT}[/x]', '{TEXT}');
+				}
+			],
 		];
 	}
 }
