@@ -1,3 +1,17 @@
+1.0.1 (2018-01-17)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/307ac0e9c69fe71b280652fe40f9da03def9d4dc...1b7e7a387d83bb048e4ca309e9e2e314624ab8d8)
+
+### Added
+
+ - `b72c04884` MediaEmbed: added FOX Sports
+
+### Fixed
+
+ - `1b7e7a387` Parser: fixed an issue with malformed XML in places where text is ignored
+
+
 1.0.0 (2018-01-04)
 ==================
 
