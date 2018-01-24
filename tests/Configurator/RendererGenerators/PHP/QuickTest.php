@@ -382,7 +382,7 @@ class QuickTest extends Test
 			$setup();
 		}
 		$php = self::getPHP($template);
-		$this->assertSame($expected, Quick::getRenderingStrategy($php));
+		$this->assertEquals($expected, Quick::getRenderingStrategy($php));
 	}
 
 	public function getRenderingStrategyTests()
@@ -587,19 +587,19 @@ class QuickTest extends Test
 			],
 			[
 				'<b><xsl:apply-templates/><xsl:apply-templates/></b>',
-				false
+				[]
 			],
 			[
 				'<xsl:if test="@foo=1"><xsl:apply-templates/></xsl:if>',
-				false
+				[]
 			],
 			[
 				'<b><xsl:apply-templates select="FOO"/></b>',
-				false
+				[]
 			],
 			[
 				'<div><xsl:copy-of select="@*"/></div>',
-				false
+				[]
 			],
 			[
 				self::ws(
@@ -612,7 +612,7 @@ class QuickTest extends Test
 						<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 					</xsl:choose>'
 				),
-				false
+				[]
 			],
 			[
 				'<xsl:value-of select="$FOO"/>',

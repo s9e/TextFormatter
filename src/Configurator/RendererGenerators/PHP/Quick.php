@@ -34,21 +34,21 @@ class Quick
 
 		foreach ($compiledTemplates as $tagName => $php)
 		{
-			$rendering = self::getRenderingStrategy($php);
-			if ($rendering === false)
+			$renderings = self::getRenderingStrategy($php);
+			if (empty($renderings))
 			{
 				$unsupported[] = $tagName;
 				continue;
 			}
 
-			foreach ($rendering as $i => list($strategy, $replacement))
+			foreach ($renderings as $i => list($strategy, $replacement))
 			{
 				$match = (($i) ? '/' : '') . $tagName;
 				$map[$strategy][$match] = $replacement;
 			}
 
 			// Record the names of tags whose template does not contain a passthrough
-			if (!isset($rendering[1]))
+			if (!isset($renderings[1]))
 			{
 				$tagNames[] = $tagName;
 			}
@@ -125,55 +125,12 @@ class Quick
 	*/
 	public static function getRenderingStrategy($php)
 	{
-		$chunks = explode('$this->at($node);', $php);
-		$renderings = [];
-
-		// If there is zero or one passthrough, we try string replacements first
-		if (count($chunks) <= 2)
-		{
-			foreach ($chunks as $k => $chunk)
-			{
-				// Try a static replacement first
-				$rendering = self::getStaticRendering($chunk);
-				if ($rendering !== false)
-				{
-					$renderings[$k] = ['static', $rendering];
-					continue;
-				}
-
-				// If this is the first chunk, we can try a dynamic replacement. This wouldn't work
-				// for the second chunk because we wouldn't have access to the attribute values
-				if ($k === 0)
-				{
-					$rendering = self::getDynamicRendering($chunk);
-					if ($rendering !== false)
-					{
-						$renderings[$k] = ['dynamic', $rendering];
-						continue;
-					}
-				}
-
-				$renderings[$k] = false;
-			}
-
-			// If we can completely render a template with string replacements, we return now
-			if (!in_array(false, $renderings, true))
-			{
-				return $renderings;
-			}
-		}
-
-		// Test whether this template can be rendered with the Quick rendering
-		$phpRenderings = self::getQuickRendering($php);
-		if ($phpRenderings === false)
-		{
-			return false;
-		}
+		$renderings = self::getStringRenderings($php);
 
 		// Keep string rendering where possible, use PHP rendering wherever else
-		foreach ($phpRenderings as $i => $phpRendering)
+		foreach (self::getQuickRendering($php) as $i => $phpRendering)
 		{
-			if (!isset($renderings[$i]) || $renderings[$i] === false || strpos($phpRendering, '$this->attributes[]') !== false)
+			if (!isset($renderings[$i]) || strpos($phpRendering, '$this->attributes[]') !== false)
 			{
 				$renderings[$i] = ['php', $phpRendering];
 			}
@@ -186,21 +143,21 @@ class Quick
 	* Generate the code for rendering a compiled template with the Quick renderer
 	*
 	* Parse and record every code path that contains a passthrough. Parse every if-else structure.
-	* When the whole structure is parsed, there are 3 possible situations:
+	* When the whole structure is parsed, there are 2 possible situations:
 	*  - no code path contains a passthrough, in which case we discard the data
 	*  - all the code paths including the mandatory "else" branch contain a passthrough, in which
 	*    case we keep the data
-	*  - only some code paths contain a passthrough, in which case we throw an exception
 	*
 	* @param  string     $php Template compiled for the PHP renderer
-	* @return array|bool      An array containing one or two strings of PHP, or FALSE
+	* @return string[]        An array containing one or two strings of PHP, or an empty array
+	*                         if the PHP cannot be converted
 	*/
 	protected static function getQuickRendering($php)
 	{
 		// xsl:apply-templates elements with a select expression are not supported
 		if (preg_match('(\\$this->at\\((?!\\$node\\);))', $php))
 		{
-			return false;
+			return [];
 		}
 
 		// Tokenize the PHP and add an empty token as terminator
@@ -241,7 +198,7 @@ class Quick
 				if (++$branch['passthrough'] > 1)
 				{
 					// Multiple passthroughs are not supported
-					return false;
+					return [];
 				}
 
 				// Skip to the semi-colon
@@ -279,11 +236,9 @@ class Quick
 
 					// Test whether this is the last brace of an if-else structure by looking for
 					// an additional elseif/else case
-					if ($tokens[$j][0] !== T_ELSEIF
-					 && $tokens[$j][0] !== T_ELSE)
+					if ($tokens[$j][0] !== T_ELSEIF && $tokens[$j][0] !== T_ELSE)
 					{
 						$passthroughs = self::getBranchesPassthrough($branch['branches']);
-
 						if ($passthroughs === [0])
 						{
 							// No branch was passthrough, move their PHP source back to this branch
@@ -306,7 +261,7 @@ class Quick
 						}
 
 						// Mixed branches (with/out passthrough) are not supported
-						return false;
+						return [];
 					}
 				}
 
@@ -365,7 +320,7 @@ class Quick
 		// Test whether any method call was left unconverted. If so, we cannot render this template
 		if (preg_match('((?<!-|\\$this)->)', $head . $tail))
 		{
-			return false;
+			return [];
 		}
 
 		return ($branch['passthrough']) ? [$head, $tail] : [$head];
@@ -589,7 +544,6 @@ class Quick
 		$copyOfAttribute = "(?<copyOfAttribute>if\\(\\\$node->hasAttribute\\('([^']+)'\\)\\)\\{\\\$this->out\\.=' \\g-1=\"'\\.htmlspecialchars\\(\\\$node->getAttribute\\('\\g-1'\\),2\\)\\.'\"';\\})";
 
 		$regexp = '(^(' . $output . '|' . $copyOfAttribute . ')*$)';
-
 		if (!preg_match($regexp, $php, $m))
 		{
 			return false;
@@ -722,13 +676,52 @@ class Quick
 			return '';
 		}
 
-		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]+|\\\\['\\\\])*)';\$)";
+		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]|\\\\['\\\\])*+)';\$)";
 		if (preg_match($regexp, $php, $m))
 		{
 			return stripslashes($m[1]);
 		}
 
 		return false;
+	}
+
+	/**
+	* Get string rendering strategies for given chunks
+	*
+	* @param  string $php
+	* @return array
+	*/
+	protected static function getStringRenderings($php)
+	{
+		$chunks = explode('$this->at($node);', $php);
+		if (count($chunks) > 2)
+		{
+			// Can't use string replacements if there are more than one xsl:apply-templates
+			return [];
+		}
+
+		$renderings = [];
+		foreach ($chunks as $k => $chunk)
+		{
+			// Try a static replacement first
+			$rendering = self::getStaticRendering($chunk);
+			if ($rendering !== false)
+			{
+				$renderings[$k] = ['static', $rendering];
+			}
+			elseif ($k === 0)
+			{
+				// If this is the first chunk, we can try a dynamic replacement. This wouldn't work
+				// for the second chunk because we wouldn't have access to the attribute values
+				$rendering = self::getDynamicRendering($chunk);
+				if ($rendering !== false)
+				{
+					$renderings[$k] = ['dynamic', $rendering];
+				}
+			}
+		}
+
+		return $renderings;
 	}
 
 	/**
