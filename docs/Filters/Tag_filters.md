@@ -31,12 +31,14 @@ $configurator->tags['block']->filterChain[] = 'myfilter';
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());
 
-$text = '[block width=10 height=10][block width=99 height=99]';
+$text = "[block width=10 height=10]\n"
+      . "[block width=99 height=99]";
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
 echo $html;
 ```
 ```html
-<div style="width:10px;height:10px" class="block"></div>[block width=99 height=99]
+<div style="width:10px;height:10px" class="block"></div>
+[block width=99 height=99]
 ```
