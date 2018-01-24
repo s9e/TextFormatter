@@ -59,7 +59,7 @@
 	<tr>
 		<td><code>cbsnews</code></td>
 		<td>CBS News Video</td>
-		<td>http://www.cbsnews.com/video/watch/?id=50156501n<br/>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</td>
+		<td>https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/</td>
 	</tr>
 	<tr>
 		<td><code>cnbc</code></td>

@@ -1258,16 +1258,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('bandcamp');
 				}
 			],
-			[
-				'http://www.cbsnews.com/videos/is-carbonated-water-a-healthy-option/',
-				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=B2AtjLUWB4Vj"></object></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('cbsnews');
-				}
-			],
 //			[
 //				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 //				'<span data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
@@ -1540,6 +1530,15 @@ class ParserTest extends Test
 			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
 				'<r><CBSNEWS id="50156501">http://www.cbsnews.com/video/watch/?id=50156501n</CBSNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
+				'http://www.cbsnews.com/videos/is-carbonated-water-a-healthy-option',
+				'<r><CBSNEWS id="is-carbonated-water-a-healthy-option">http://www.cbsnews.com/videos/is-carbonated-water-a-healthy-option</CBSNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -3729,6 +3728,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/',
+				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://www.cbsnews.com/embed/videos/is-carbonated-water-a-healthy-option/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<span data-s9e-mediaembed="collegehumor" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:61.5%"><iframe allowfullscreen="" scrolling="no" src="//www.collegehumor.com/e/1181601" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
@@ -4348,6 +4356,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
+				'<CBSNEWS pid="B2AtjLUWB4Vj">http://www.cbsnews.com/videos/is-carbonated-water-a-healthy-option/</CBSNEWS>',
+				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:62.1875%;padding-bottom:calc(56.25% + 38px)"><object data="//www.cbsnews.com/common/video/cbsnews_player.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="pType=embed&amp;si=254&amp;pid=B2AtjLUWB4Vj"></object></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cbsnews');
 				}
 			],
 			[

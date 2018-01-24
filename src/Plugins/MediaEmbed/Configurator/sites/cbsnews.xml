@@ -1,16 +1,15 @@
 <site name="CBS News Video" homepage="http://www.cbsnews.com/video/">
-	<example>http://www.cbsnews.com/video/watch/?id=50156501n</example>
-	<example>http://www.cbsnews.com/videos/is-the-us-stock-market-rigged</example>
+	<example>https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/</example>
 
 	<tags><tag>news</tag></tags>
 
 	<host>cbsnews.com</host>
+	<extract>#cbsnews\.com/videos?/(?!watch/)(?'id'[-\w]+)#</extract>
 	<extract>#cbsnews\.com/video/watch/\?id=(?'id'\d+)#</extract>
-	<scrape>
-		<match>#cbsnews\.com/videos/(?!watch/)#</match>
-		<extract>#"pid":"(?'pid'\w+)"#</extract>
-	</scrape>
 	<choose>
+		<when test="contains(@id, '-')">
+			<iframe src="https://www.cbsnews.com/embed/videos/{@id}/"/>
+		</when>
 		<when test="@pid">
 			<flash padding-height="38" src="//www.cbsnews.com/common/video/cbsnews_player.swf" flashvars="pType=embed&amp;si=254&amp;pid={@pid}"/>
 		</when>
