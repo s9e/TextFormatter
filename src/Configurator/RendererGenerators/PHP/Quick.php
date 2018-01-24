@@ -119,9 +119,8 @@ class Quick
 	/**
 	* Compute the rendering strategy for a compiled template
 	*
-	* @param  string     $php Template compiled for the PHP renderer
-	* @return array|bool      An array containing the type of replacement ('static', 'dynamic' or
-	*                         'php') and the replacement, or FALSE
+	* @param  string  $php Template compiled for the PHP renderer
+	* @return array[]      An array containing 0 to 2 pairs of [<rendering type>, <replacement>]
 	*/
 	public static function getRenderingStrategy($php)
 	{
