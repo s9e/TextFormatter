@@ -658,12 +658,8 @@ class TemplateParser
 	*/
 	protected static function removeCloseTagSiblings(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
-		foreach ($xpath->query($query) as $closeTag)
-		{
-			$closeTag->parentNode->removeChild($closeTag);
-		}
+		self::removeNodes($ir, $query);
 	}
 
 	/**
@@ -674,11 +670,8 @@ class TemplateParser
 	*/
 	protected static function removeEmptyDefaultCases(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//case[not(@test | node())]') as $case)
-		{
-			$case->parentNode->removeChild($case);
-		}
+		$query = '//case[not(@test | node())]';
+		self::removeNodes($ir, $query);
 	}
 
 	/**
@@ -774,6 +767,26 @@ class TemplateParser
 	}
 
 	/**
+	* Remove all nodes that match given XPath query
+	*
+	* @param  DOMDocument $ir
+	* @param  string      $query
+	* @param  DOMNode     $contextNode
+	* @return void
+	*/
+	protected static function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = null)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query($query, $contextNode) as $node)
+		{
+			if ($node->parentNode instanceof DOMElement)
+			{
+				$node->parentNode->removeChild($node);
+			}
+		}
+	}
+
+	/**
 	* Remove redundant closeTag elements from the tail of a switch's cases
 	*
 	* If there's a <closeTag/> right after a <switch/>, remove all <closeTag/> nodes at the
@@ -814,10 +827,8 @@ class TemplateParser
 		{
 			$id    = $closeTag->getAttribute('id');
 			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
-			foreach ($xpath->query($query, $closeTag) as $dupe)
-			{
-				$dupe->parentNode->removeChild($dupe);
-			}
+
+			self::removeNodes($ir, $query, $closeTag);
 		}
 	}
 
@@ -837,10 +848,8 @@ class TemplateParser
 		{
 			$id    = $element->getAttribute('id');
 			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
-			foreach ($xpath->query($query, $element) as $node)
-			{
-				$node->parentNode->removeChild($node);
-			}
+
+			self::removeNodes($ir, $query, $element);
 		}
 	}
 
