@@ -2420,16 +2420,13 @@ class TemplateParser
 	}
 	protected static function removeCloseTagSiblings(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
-		foreach ($xpath->query($query) as $closeTag)
-			$closeTag->parentNode->removeChild($closeTag);
+		self::removeNodes($ir, $query);
 	}
 	protected static function removeEmptyDefaultCases(DOMDocument $ir)
 	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//case[not(@test | node())]') as $case)
-			$case->parentNode->removeChild($case);
+		$query = '//case[not(@test | node())]';
+		self::removeNodes($ir, $query);
 	}
 	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
 	{
@@ -2475,6 +2472,13 @@ class TemplateParser
 			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
 		}
 	}
+	protected static function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = \null)
+	{
+		$xpath = new DOMXPath($ir);
+		foreach ($xpath->query($query, $contextNode) as $node)
+			if ($node->parentNode instanceof DOMElement)
+				$node->parentNode->removeChild($node);
+	}
 	protected static function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
 	{
 		$xpath = new DOMXPath($ir);
@@ -2491,8 +2495,7 @@ class TemplateParser
 		{
 			$id    = $closeTag->getAttribute('id');
 			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
-			foreach ($xpath->query($query, $closeTag) as $dupe)
-				$dupe->parentNode->removeChild($dupe);
+			self::removeNodes($ir, $query, $closeTag);
 		}
 	}
 	protected static function removeContentFromVoidElements(DOMDocument $ir)
@@ -2502,8 +2505,7 @@ class TemplateParser
 		{
 			$id    = $element->getAttribute('id');
 			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
-			foreach ($xpath->query($query, $element) as $node)
-				$node->parentNode->removeChild($node);
+			self::removeNodes($ir, $query, $element);
 		}
 	}
 	protected static function markBranchTables(DOMDocument $ir)
@@ -3371,19 +3373,19 @@ class Quick
 		unset($compiledTemplates['s']);
 		foreach ($compiledTemplates as $tagName => $php)
 		{
-			$rendering = self::getRenderingStrategy($php);
-			if ($rendering === \false)
+			$renderings = self::getRenderingStrategy($php);
+			if (empty($renderings))
 			{
 				$unsupported[] = $tagName;
 				continue;
 			}
-			foreach ($rendering as $i => $_562c18b7)
+			foreach ($renderings as $i => $_562c18b7)
 			{
 				list($strategy, $replacement) = $_562c18b7;
 				$match = (($i) ? '/' : '') . $tagName;
 				$map[$strategy][$match] = $replacement;
 			}
-			if (!isset($rendering[1]))
+			if (!isset($renderings[1]))
 				$tagNames[] = $tagName;
 		}
 		$php = array();
@@ -3429,44 +3431,16 @@ class Quick
 	}
 	public static function getRenderingStrategy($php)
 	{
-		$chunks = \explode('$this->at($node);', $php);
-		$renderings = array();
-		if (\count($chunks) <= 2)
-		{
-			foreach ($chunks as $k => $chunk)
-			{
-				$rendering = self::getStaticRendering($chunk);
-				if ($rendering !== \false)
-				{
-					$renderings[$k] = array('static', $rendering);
-					continue;
-				}
-				if ($k === 0)
-				{
-					$rendering = self::getDynamicRendering($chunk);
-					if ($rendering !== \false)
-					{
-						$renderings[$k] = array('dynamic', $rendering);
-						continue;
-					}
-				}
-				$renderings[$k] = \false;
-			}
-			if (!\in_array(\false, $renderings, \true))
-				return $renderings;
-		}
-		$phpRenderings = self::getQuickRendering($php);
-		if ($phpRenderings === \false)
-			return \false;
-		foreach ($phpRenderings as $i => $phpRendering)
-			if (!isset($renderings[$i]) || $renderings[$i] === \false || \strpos($phpRendering, '$this->attributes[]') !== \false)
+		$renderings = self::getStringRenderings($php);
+		foreach (self::getQuickRendering($php) as $i => $phpRendering)
+			if (!isset($renderings[$i]) || \strpos($phpRendering, '$this->attributes[]') !== \false)
 				$renderings[$i] = array('php', $phpRendering);
 		return $renderings;
 	}
 	protected static function getQuickRendering($php)
 	{
 		if (\preg_match('(\\$this->at\\((?!\\$node\\);))', $php))
-			return \false;
+			return array();
 		$tokens   = \token_get_all('<?php ' . $php);
 		$tokens[] = array(0, '');
 		\array_shift($tokens);
@@ -3495,7 +3469,7 @@ class Quick
 			 && $tokens[$i + 6]    === ';')
 			{
 				if (++$branch['passthrough'] > 1)
-					return \false;
+					return array();
 				$i += 6;
 				continue;
 			}
@@ -3515,8 +3489,7 @@ class Quick
 					$branch =& $branch['parent'];
 					$j = $i;
 					while ($tokens[++$j][0] === \T_WHITESPACE);
-					if ($tokens[$j][0] !== \T_ELSEIF
-					 && $tokens[$j][0] !== \T_ELSE)
+					if ($tokens[$j][0] !== \T_ELSEIF && $tokens[$j][0] !== \T_ELSE)
 					{
 						$passthroughs = self::getBranchesPassthrough($branch['branches']);
 						if ($passthroughs === array(0))
@@ -3531,7 +3504,7 @@ class Quick
 							++$branch['passthrough'];
 							continue;
 						}
-						return \false;
+						return array();
 					}
 				}
 				continue;
@@ -3567,7 +3540,7 @@ class Quick
 		$tail .= $branch['tail'];
 		self::convertPHP($head, $tail, (bool) $branch['passthrough']);
 		if (\preg_match('((?<!-|\\$this)->)', $head . $tail))
-			return \false;
+			return array();
 		return ($branch['passthrough']) ? array($head, $tail) : array($head);
 	}
 	protected static function convertPHP(&$head, &$tail, $passthrough)
@@ -3755,10 +3728,30 @@ class Quick
 	{
 		if ($php === '')
 			return '';
-		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]+|\\\\['\\\\])*)';\$)";
+		$regexp = "(^\\\$this->out\.='((?>[^'\\\\]|\\\\['\\\\])*+)';\$)";
 		if (\preg_match($regexp, $php, $m))
 			return \stripslashes($m[1]);
 		return \false;
+	}
+	protected static function getStringRenderings($php)
+	{
+		$chunks = \explode('$this->at($node);', $php);
+		if (\count($chunks) > 2)
+			return array();
+		$renderings = array();
+		foreach ($chunks as $k => $chunk)
+		{
+			$rendering = self::getStaticRendering($chunk);
+			if ($rendering !== \false)
+				$renderings[$k] = array('static', $rendering);
+			elseif ($k === 0)
+			{
+				$rendering = self::getDynamicRendering($chunk);
+				if ($rendering !== \false)
+					$renderings[$k] = array('dynamic', $rendering);
+			}
+		}
+		return $renderings;
 	}
 	protected static function replacePlaceholder(&$str, $uniqid, $index)
 	{
