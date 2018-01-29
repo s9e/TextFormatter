@@ -34,7 +34,7 @@
 	<tr>
 		<td><code>bbcnews</code></td>
 		<td>BBC News</td>
-		<td>http://www.bbc.com/news/science-environment-37854744</td>
+		<td>http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</td>
 	</tr>
 	<tr>
 		<td><code>blab</code></td>
