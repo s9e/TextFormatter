@@ -2949,6 +2949,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://t.me/durov/68',
+				'<r><TELEGRAM id="durov/68">https://t.me/durov/68</TELEGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
+				'https://t.me/durov',
+				'<t>https://t.me/durov</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
+				'https://t.me/addstickers/Xxxxxxxx',
+				'<t>https://t.me/addstickers/Xxxxxxxx</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
+				'https://t.me/joinchat/xxxxxxxxxxxxxxxxxxxxxx',
+				'<t>https://t.me/joinchat/xxxxxxxxxxxxxxxxxxxxxx</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
 				'http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/',
 				'<r><THEATLANTIC id="358928">http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</THEATLANTIC></r>',
 				[],

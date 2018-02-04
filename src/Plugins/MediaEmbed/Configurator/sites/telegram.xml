@@ -1,0 +1,19 @@
+<site name="Telegram" homepage="https://telegram.org/">
+	<example>https://t.me/durov/68</example>
+
+	<tags><tag>social</tag></tags>
+
+	<host>t.me</host>
+	<extract>@//t.me/(?!addstickers/|joinchat/)(?'id'\w+/\d+)@</extract>
+	<!--
+		window.addEventListener('message', function(e)
+		{
+			if (e.source === contentWindow)
+			{
+				style.height = e.data;
+			}
+		});
+		contentWindow.postMessage('', 'https://s9e.github.io');
+	-->
+	<iframe width="500" height="96" src="https://s9e.github.io/iframe/telegram.min.html#{@id}" onload="window.addEventListener('message',function(e){{if(e.source===contentWindow)style.height=e.data}});contentWindow.postMessage('','https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
+</site>

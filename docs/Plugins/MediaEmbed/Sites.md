@@ -467,6 +467,11 @@
 		<td>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>http://embed.ted.com/playlists/26/our_digital_lives.html</td>
 	</tr>
 	<tr>
+		<td><code>telegram</code></td>
+		<td>Telegram</td>
+		<td>https://t.me/durov/68</td>
+	</tr>
+	<tr>
 		<td><code>theatlantic</code></td>
 		<td>The Atlantic Video</td>
 		<td>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
