@@ -33,10 +33,12 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 	{
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+			'(\\bfunction\\s*\\w*\\s*\\([^\\)]*\\)\\s*\\{(?!\\{))',
 			'((?<!\\{)(?:\\{\\{)*\\{(?!\\{)[^}]*+$)',
 			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
 		];
 		$replace = [
+			'$0{',
 			'$0{',
 			'{$0',
 			'{$0'

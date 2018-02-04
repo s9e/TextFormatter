@@ -79,6 +79,14 @@ class FixUnescapedCurlyBracesInHtmlAttributesTest extends AbstractTest
 				'<hr title="x{{{x"/>',
 				'<hr title="x{{{{x"/>'
 			],
+			[
+				'<iframe onload="(function(){})()"/>',
+				'<iframe onload="(function(){{})()"/>',
+			],
+			[
+				'<iframe onload="(function x(){})()"/>',
+				'<iframe onload="(function x(){{})()"/>',
+			],
 		];
 	}
 }
