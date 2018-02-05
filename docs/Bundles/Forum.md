@@ -12,7 +12,7 @@ $html = TextFormatter::render($xml);
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
 ```
 
 ### Plugins
@@ -53,5 +53,5 @@ $html = TextFormatter::render($xml, [
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f642.png"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f642.png"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
 ```

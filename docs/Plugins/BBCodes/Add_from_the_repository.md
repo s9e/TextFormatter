@@ -373,7 +373,7 @@ echo $html;
 ```xsl
 <div class="spoiler">
 	<div class="spoiler-header">
-		<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>Show</span><span style="display:none">Hide</span></button>
+		<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Show</span><span style="display:none">Hide</span></button>
 		<span class="spoiler-title">Spoiler: {TEXT1}</span>
 	</div>
 	<div class="spoiler-content" style="display:none">{TEXT2}</div>

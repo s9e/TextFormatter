@@ -382,11 +382,14 @@
 
 			firstChildStyle.display  = nextSiblingStyle.display;
 			nextSiblingStyle.display = lastChildStyle.display = (firstChildStyle.display) ? '' : 'none';
+
+			// Don't submit if inside a form
+			return false;
 		-->
 		<template><![CDATA[
 			<div class="spoiler">
 				<div class="spoiler-header">
-					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none'"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
+					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
 					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
 				</div>
 				<div class="spoiler-content" style="display:none">{TEXT2}</div>
