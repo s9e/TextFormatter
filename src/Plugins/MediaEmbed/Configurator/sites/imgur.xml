@@ -4,12 +4,11 @@
 	<example>http://imgur.com/gallery/9UGCL</example>
 	<example>http://i.imgur.com/u7Yo0Vy.gifv</example>
 	<example>http://i.imgur.com/UO1UrIx.mp4</example>
-	<example>https://imgur.com/t/current_events/0I30l</example>
 
 	<tags><tag>images</tag></tags>
 
 	<host>imgur.com</host>
-	<extract>@imgur\.com/(?!r/|user/)(?:t/[^/]+/)?(?'id'(?:a/|gallery/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
+	<extract>@imgur\.com/(?![rt]/|user/)(?'id'(?:\w+/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)

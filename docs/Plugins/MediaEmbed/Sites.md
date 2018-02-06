@@ -234,7 +234,7 @@
 	<tr>
 		<td><code>imgur</code></td>
 		<td>Imgur</td>
-		<td>http://imgur.com/AsQ0K3P<br/>http://imgur.com/a/9UGCL<br/>http://imgur.com/gallery/9UGCL<br/>http://i.imgur.com/u7Yo0Vy.gifv<br/>http://i.imgur.com/UO1UrIx.mp4<br/>https://imgur.com/t/current_events/0I30l</td>
+		<td>http://imgur.com/AsQ0K3P<br/>http://imgur.com/a/9UGCL<br/>http://imgur.com/gallery/9UGCL<br/>http://i.imgur.com/u7Yo0Vy.gifv<br/>http://i.imgur.com/UO1UrIx.mp4</td>
 	</tr>
 	<tr>
 		<td><code>indiegogo</code></td>
