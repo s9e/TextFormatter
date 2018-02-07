@@ -14,7 +14,7 @@ class InlineTextElements extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:text'];
+	protected $queries = ['//xsl:text[not(@disable-output-escaping="yes")]'];
 
 	/**
 	* Test whether an element is followed by a text node

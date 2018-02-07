@@ -41,6 +41,14 @@ class InlineTextElementsTest extends AbstractTest
 				'<b><xsl:text>Hello</xsl:text><xsl:text> world</xsl:text></b>',
 				'<b>Hello world</b>'
 			],
+			[
+				'<b><xsl:text disable-output-escaping="no">AT&amp;T</xsl:text></b>',
+				'<b>AT&amp;T</b>'
+			],
+			[
+				'<b><xsl:text disable-output-escaping="yes">AT&amp;T</xsl:text></b>',
+				'<b><xsl:text disable-output-escaping="yes">AT&amp;T</xsl:text></b>'
+			],
 		];
 	}
 }
