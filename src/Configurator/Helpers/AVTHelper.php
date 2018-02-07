@@ -15,7 +15,7 @@ abstract class AVTHelper
 	/**
 	* Parse an attribute value template
 	*
-	* @link http://www.w3.org/TR/xslt#dt-attribute-value-template
+	* @link https://www.w3.org/TR/1999/REC-xslt-19991116#dt-attribute-value-template
 	*
 	* @param  string $attrValue Attribute value
 	* @return array             Array of tokens

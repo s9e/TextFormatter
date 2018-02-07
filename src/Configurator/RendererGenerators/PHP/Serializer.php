@@ -38,7 +38,7 @@ class Serializer
 	*
 	* NOTE: escaping must be performed by the caller
 	*
-	* @link http://www.w3.org/TR/xslt#dt-attribute-value-template
+	* @link https://www.w3.org/TR/1999/REC-xslt-19991116#dt-attribute-value-template
 	*
 	* @param  string $attrValue Attribute value template
 	* @return string
