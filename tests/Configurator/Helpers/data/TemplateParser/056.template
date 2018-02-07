@@ -1,0 +1,3 @@
+<xsl:text>&amp;</xsl:text>
+<xsl:text disable-output-escaping="no">&amp;</xsl:text>
+<xsl:text disable-output-escaping="yes">&amp;</xsl:text>

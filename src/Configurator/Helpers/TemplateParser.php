@@ -401,6 +401,10 @@ class TemplateParser
 	protected static function parseXslText(DOMElement $ir, DOMElement $node)
 	{
 		self::appendOutput($ir, 'literal', $node->textContent);
+		if ($node->getAttribute('disable-output-escaping') === 'yes')
+		{
+			$ir->lastChild->setAttribute('disable-output-escaping', 'yes');
+		}
 	}
 
 	/**
@@ -413,6 +417,10 @@ class TemplateParser
 	protected static function parseXslValueOf(DOMElement $ir, DOMElement $node)
 	{
 		self::appendOutput($ir, 'xpath', $node->getAttribute('select'));
+		if ($node->getAttribute('disable-output-escaping') === 'yes')
+		{
+			$ir->lastChild->setAttribute('disable-output-escaping', 'yes');
+		}
 	}
 
 	//==========================================================================
@@ -578,7 +586,7 @@ class TemplateParser
 			return 'attribute';
 		}
 
-		if ($xpath->evaluate('boolean(ancestor::element[@name="script"])', $output))
+		if ($xpath->evaluate('@disable-output-escaping="yes" or ancestor::element[@name="script"]', $output))
 		{
 			return 'raw';
 		}
@@ -683,11 +691,12 @@ class TemplateParser
 	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
 	{
 		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//output[@type="literal"]') as $output)
+		foreach ($xpath->query('//output[@type="literal"][not(@disable-output-escaping)]') as $output)
 		{
 			while ($output->nextSibling
 				&& $output->nextSibling->nodeName === 'output'
-				&& $output->nextSibling->getAttribute('type') === 'literal')
+				&& $output->nextSibling->getAttribute('type') === 'literal'
+				&& $output->nextSibling->getAttribute('disable-output-escaping') !== 'yes')
 			{
 				$output->nodeValue
 					= htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);

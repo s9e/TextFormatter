@@ -1,0 +1,1 @@
+<xsl:value-of select="@bar" disable-output-escaping="yes"/>

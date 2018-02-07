@@ -1353,6 +1353,30 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<div data-s9e-livepreview-ignore-attrs="foo"/>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				'&',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:text disable-output-escaping="yes">&amp;</xsl:text>';
+				}
+			],
+			[
+				'<r><X x="&amp;"/></r>',
+				'&',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:value-of disable-output-escaping="yes" select="@x"/>';
+				}
+			],
+			[
+				'<r><X x="&amp;"/></r>',
+				'<hr title="&amp;">',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<hr><xsl:attribute name="title"><xsl:value-of disable-output-escaping="yes" select="@x"/></xsl:attribute></hr>';
+				}
+			],
 		];
 	}
 

@@ -1,0 +1,3 @@
+<template>
+  <output disable-output-escaping="yes" escape="raw" type="xpath">@bar</output>
+</template>
