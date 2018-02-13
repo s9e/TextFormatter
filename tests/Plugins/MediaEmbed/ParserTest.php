@@ -2201,7 +2201,26 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/AsQ0K3P.jpg',
-				'<t>http://i.imgur.com/AsQ0K3P.jpg</t>',
+				'<r><IMGUR id="AsQ0K3P">http://i.imgur.com/AsQ0K3P.jpg</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'https://i.imgur.com/aPAyaEs.jpg',
+				'<r><IMGUR id="aPAyaEs">https://i.imgur.com/aPAyaEs.jpg</IMGUR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				// Thumbnails have the same URL as the full image with an extra "l", "m" or "s"
+				'https://i.imgur.com/aPAyaEss.jpg',
+				'<r><IMGUR id="aPAyaEs">https://i.imgur.com/aPAyaEss.jpg</IMGUR></r>',
 				[],
 				function ($configurator)
 				{

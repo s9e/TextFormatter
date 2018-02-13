@@ -8,7 +8,7 @@
 	<tags><tag>images</tag></tags>
 
 	<host>imgur.com</host>
-	<extract>@imgur\.com/(?![rt]/|user/)(?'id'(?:\w+/)?\w+)(?!\w|\.(?:pn|jp)g)@</extract>
+	<extract>@imgur\.com/(?![rt]/|user/)(?'id'(?:\w+/)?\w{5,7})@</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)
@@ -20,7 +20,6 @@
 				style.width  = e.data.width + 'px';
 			}
 		});
-
 		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
 	<iframe width="568" height="450" src="https://s9e.github.io/iframe/imgur.min.html#{@id}" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
