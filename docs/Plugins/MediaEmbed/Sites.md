@@ -533,7 +533,7 @@
 	</tr>
 	<tr>
 		<td><code>vevo</code></td>
-		<td>VEVO</td>
+		<td>Vevo</td>
 		<td>http://www.vevo.com/watch/USUV71400682<br/>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>
 	</tr>
 	<tr>

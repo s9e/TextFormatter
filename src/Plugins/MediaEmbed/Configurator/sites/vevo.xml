@@ -1,4 +1,4 @@
-<site name="VEVO" homepage="http://vevo.com/">
+<site name="Vevo" homepage="https://vevo.com/">
 	<example>http://www.vevo.com/watch/USUV71400682</example>
 	<example>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</example>
 
@@ -6,5 +6,5 @@
 
 	<host>vevo.com</host>
 	<extract>!vevo\.com/watch/([-/\w]+/)?(?'id'[A-Z0-9]+)!</extract>
-	<iframe width="575" height="324" src="//cache.vevo.com/m/html/embed.html?video={@id}"/>
+	<iframe src="https://embed.vevo.com/?isrc={@id}&amp;autoplay=0&amp;siteSection=html5_desktop_embedded_twitter&amp;partnerId=E6513315-1700-46BA-81CB-6CC0C8C10E8E"/>
 </site>
