@@ -987,16 +987,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.podbean.com/media/share/dir-rfuh3-318f30b',
-				'<r><PODBEAN id="rfuh3-318f30b-dir">http://www.podbean.com/media/share/dir-rfuh3-318f30b</PODBEAN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('podbean');
-				}
-			],
-			[
 				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
 				'<r><RUTUBE id="6613980">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
 				[],
