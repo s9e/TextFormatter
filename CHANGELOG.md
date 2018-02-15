@@ -17,7 +17,7 @@
  - `86f0c7ad7` BBCodes: updated SPOILER BBCode to prevent it from submitting forms
  - `7a4633b98` FixUnescapedCurlyBracesInHtmlAttributes: escape the first left brace of a function declaration
  - `74c90041a` InlineTextElements: do not inline text with disable-output-escaping="yes"
- - `58b2a389f` MediaEmbed: embed links to static images
+ - `58b2a389f` MediaEmbed: embed Imgur links to static images
  - `87671bcb8` MediaEmbed: updated BBC News
  - `95ed3fc0d` MediaEmbed: updated CBS News
  - `2b30e7523` MediaEmbed: updated Vevo
