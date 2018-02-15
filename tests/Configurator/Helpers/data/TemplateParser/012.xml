@@ -8,7 +8,7 @@
       </case>
     </switch>
     <closeTag id="1"/>
-    <element name="div" id="2" empty="maybe">
+    <element name="div" id="2">
       <closeTag id="2"/>
       <switch>
         <case test="@author">

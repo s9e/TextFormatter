@@ -1,5 +1,5 @@
 <template>
-  <element name="{local-name()}" id="1" void="maybe" empty="maybe">
+  <element name="{local-name()}" id="1" void="maybe">
     <attribute name="id">
       <output escape="attribute" type="literal">foo</output>
     </attribute>

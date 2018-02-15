@@ -1,3 +1,8 @@
+## 2.0.0 (not released)
+
+The `parseEqualityExpr()` method will be moved from `s9e\TextFormatter\Configurator\Helpers\TemplateParser` to `s9e\TextFormatter\Configurator\Helpers\XPathHelper`.
+
+
 ## 1.0.0
 
 The following method and properties have been removed from `s9e\TextFormatter\Plugins\MediaEmbed\Configurator`:

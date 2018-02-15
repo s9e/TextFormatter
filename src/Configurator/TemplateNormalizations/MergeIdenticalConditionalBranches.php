@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMElement;
 use DOMNode;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 
 /**
 * Merge xsl:when branches if they have identical content
@@ -40,7 +40,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 
 		while ($node && $this->isXsl($node, 'when'))
 		{
-			$branch = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
+			$branch = XPathHelper::parseEqualityExpr($node->getAttribute('test'));
 
 			if ($branch === false || count($branch) !== 1)
 			{

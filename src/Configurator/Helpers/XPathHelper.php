@@ -107,4 +107,65 @@ abstract class XPathHelper
 
 		return $expr;
 	}
+
+	/**
+	* Parse an XPath expression that is composed entirely of equality tests between a variable part
+	* and a constant part
+	*
+	* @param  string      $expr
+	* @return array|false
+	*/
+	public static function parseEqualityExpr($expr)
+	{
+		// Match an equality between a variable and a literal or the concatenation of strings
+		$eq = '(?<equality>'
+		    . '(?<key>@[-\\w]+|\\$\\w+|\\.)'
+		    . '(?<operator>\\s*=\\s*)'
+		    . '(?:'
+		    . '(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)'
+		    . '|'
+		    . '(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\))'
+		    . ')'
+		    . '|'
+		    . '(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key))'
+		    . ')';
+
+		// Match a string that is entirely composed of equality checks separated with "or"
+		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
+
+		if (!preg_match($regexp, $expr))
+		{
+			return false;
+		}
+
+		preg_match_all("((?J)$eq)", $expr, $matches, PREG_SET_ORDER);
+
+		$map = [];
+		foreach ($matches as $m)
+		{
+			$key = $m['key'];
+			if (!empty($m['concat']))
+			{
+				preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+
+				$value = '';
+				foreach ($strings[0] as $string)
+				{
+					$value .= substr($string, 1, -1);
+				}
+			}
+			else
+			{
+				$value = $m['literal'];
+				if ($value[0] === "'" || $value[0] === '"')
+				{
+					$value = substr($value, 1, -1);
+				}
+			}
+
+			$map[$key][] = $value;
+		}
+
+		return $map;
+	}
 }

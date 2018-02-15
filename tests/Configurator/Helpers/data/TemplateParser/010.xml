@@ -1,5 +1,5 @@
 <template>
-  <element name="b" id="1" empty="maybe">
+  <element name="b" id="1">
     <switch>
       <case test="@foo">
         <attribute name="title">

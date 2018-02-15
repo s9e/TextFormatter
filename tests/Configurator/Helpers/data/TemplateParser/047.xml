@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <template>
-  <element empty="maybe" id="1" name="div">
+  <element id="1" name="div">
     <switch>
       <case test="@foo">
         <switch>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <template>
-  <element empty="yes" id="1" name="div">
+  <element id="1" name="div">
    <attribute name="xmlns:x">
      <output escape="attribute" type="literal">urn:x</output>
    </attribute>

@@ -1,5 +1,5 @@
 <template>
-  <element name="b" id="1" empty="maybe">
+  <element name="b" id="1">
     <attribute name="title">
       <output escape="attribute" type="literal">foo</output>
     </attribute>

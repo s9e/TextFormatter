@@ -11,7 +11,7 @@ use DOMAttr;
 use DOMElement;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 
 /**
 * Inline the text content of a node or the value of an attribute where it's known
@@ -36,7 +36,7 @@ class InlineInferredValues extends AbstractNormalization
 	protected function normalizeElement(DOMElement $element)
 	{
 		// Test whether the map has exactly one key and one value
-		$map = TemplateParser::parseEqualityExpr($element->getAttribute('test'));
+		$map = XPathHelper::parseEqualityExpr($element->getAttribute('test'));
 		if ($map === false || count($map) !== 1 || count($map[key($map)]) !== 1)
 		{
 			return;

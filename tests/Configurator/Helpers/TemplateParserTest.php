@@ -8,6 +8,10 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateParser
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateParser\IRProcessor
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateParser\Normalizer
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateParser\Optimizer
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateParser\Parser
 */
 class TemplateParserTest extends Test
 {

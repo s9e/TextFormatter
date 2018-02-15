@@ -1,5 +1,5 @@
 <template>
-  <element name="a" id="1" empty="maybe">
+  <element name="a" id="1">
     <attribute name="href">
       <output escape="attribute" type="xpath">@href</output>
     </attribute>

@@ -14,7 +14,7 @@
      <output escape="attribute" type="literal">0 0 100 100</output>
    </attribute>
     <closeTag id="1"/>
-   <element empty="yes" id="2" name="rect">
+   <element id="2" name="rect">
      <attribute name="width">
        <output escape="attribute" type="literal">10</output>
      </attribute>

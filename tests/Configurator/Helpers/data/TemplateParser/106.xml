@@ -1,5 +1,5 @@
 <template>
-  <element name="div" id="1" empty="yes">
+  <element name="div" id="1">
     <attribute name="id">
       <output escape="attribute" type="literal">foo</output>
     </attribute>
