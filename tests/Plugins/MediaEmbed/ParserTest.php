@@ -3156,8 +3156,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925',
-				'<r><VEVO id="USUV71302925">http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</VEVO></r>',
+				'https://www.vevo.com/watch/justin-timberlake/say-something-(official-video)/USRV81701472',
+				'<r><VEVO id="USRV81701472">https://www.vevo.com/watch/justin-timberlake/say-something-(official-video)/USRV81701472</VEVO></r>',
 				[],
 				function ($configurator)
 				{
