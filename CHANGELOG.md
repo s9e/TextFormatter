@@ -1,3 +1,32 @@
+1.1.0 (2018-02-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7817e0b0fe8bec571f801a029bc932464f38309f...2b30e75237c8ec532f0c72e6cdb100401f0cec3f)
+
+### Added
+
+ - `ac38f54cf` MediaEmbed: added support for Telegram
+ - `5f4d01827` TemplateParser: added support for disable-output-escaping="yes"
+
+### Removed
+
+ - `08cb4d52a` MediaEmbed: removed support for Imgur's /t/ URLs
+
+### Changed
+
+ - `86f0c7ad7` BBCodes: updated SPOILER BBCode to prevent it from submitting forms
+ - `7a4633b98` FixUnescapedCurlyBracesInHtmlAttributes: escape the first left brace of a function declaration
+ - `74c90041a` InlineTextElements: do not inline text with disable-output-escaping="yes"
+ - `58b2a389f` MediaEmbed: embed links to static images
+ - `87671bcb8` MediaEmbed: updated BBC News
+ - `95ed3fc0d` MediaEmbed: updated CBS News
+ - `2b30e7523` MediaEmbed: updated Vevo
+ - `25559caf4` MediaEmbed: updated Vevo
+ - `289b1e26e` Simplified Quick renderer generator
+ - `472c568b7` TemplateParser: refactored and split into subcomponents
+ - `8a323795f` TemplateParser: simplified node removal
+
+
 1.0.1 (2018-01-17)
 ==================
 
