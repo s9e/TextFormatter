@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 use DOMNode;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class MergeIdenticalConditionalBranches extends AbstractNormalization
 {
 	protected $queries = ['//xsl:choose'];
@@ -19,7 +19,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 		$values = [];
 		while ($node && $this->isXsl($node, 'when'))
 		{
-			$branch = TemplateParser::parseEqualityExpr($node->getAttribute('test'));
+			$branch = XPathHelper::parseEqualityExpr($node->getAttribute('test'));
 			if ($branch === \false || \count($branch) !== 1)
 				break;
 			if (isset($key) && \key($branch) !== $key)
