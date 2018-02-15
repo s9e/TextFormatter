@@ -2120,469 +2120,53 @@ class TemplateInspector
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use DOMXPath;
-use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser\Normalizer;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser\Optimizer;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser\Parser;
 class TemplateParser
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 	public static function parse($template)
 	{
-		$xsl = '<xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-		$ir = new DOMDocument;
-		$ir->loadXML('<template/>');
-		self::parseChildren($ir->documentElement, $dom->documentElement);
-		self::normalize($ir);
-		return $ir;
+		$parser = new Parser(new Normalizer(new Optimizer));
+		return $parser->parse($template);
 	}
 	public static function parseEqualityExpr($expr)
 	{
-		$eq = '(?<equality>(?<key>@[-\\w]+|\\$\\w+|\\.)(?<operator>\\s*=\\s*)(?:(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)|(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\)))|(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key)))';
-		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
-		if (!\preg_match($regexp, $expr))
-			return \false;
-		\preg_match_all("((?J)$eq)", $expr, $matches, \PREG_SET_ORDER);
-		$map = array();
-		foreach ($matches as $m)
-		{
-			$key = $m['key'];
-			if (!empty($m['concat']))
-			{
-				\preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
-				$value = '';
-				foreach ($strings[0] as $string)
-					$value .= \substr($string, 1, -1);
-			}
-			else
-			{
-				$value = $m['literal'];
-				if ($value[0] === "'" || $value[0] === '"')
-					$value = \substr($value, 1, -1);
-			}
-			$map[$key][] = $value;
-		}
-		return $map;
+		return XPathHelper::parseEqualityExpr($expr);
 	}
-	protected static function parseChildren(DOMElement $ir, DOMElement $parent)
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMXPath;
+abstract class IRProcessor
+{
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+	protected $xpath;
+	protected function appendElement(DOMElement $parentNode, $name, $value = '')
 	{
-		foreach ($parent->childNodes as $child)
-		{
-			switch ($child->nodeType)
-			{
-				case \XML_COMMENT_NODE:
-					break;
-				case \XML_TEXT_NODE:
-					if (\trim($child->textContent) !== '')
-						self::appendOutput($ir, 'literal', $child->textContent);
-					break;
-				case \XML_ELEMENT_NODE:
-					self::parseNode($ir, $child);
-					break;
-				default:
-					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "''");
-			}
-		}
+		return $parentNode->appendChild($parentNode->ownerDocument->createElement($name, $value));
 	}
-	protected static function parseNode(DOMElement $ir, DOMElement $node)
+	protected function createXPath(DOMDocument $dom)
 	{
-		if ($node->namespaceURI === self::XMLNS_XSL)
-		{
-			$methodName = 'parseXsl' . \str_replace(' ', '', \ucwords(\str_replace('-', ' ', $node->localName)));
-			if (!\method_exists(__CLASS__, $methodName))
-				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
-			return self::$methodName($ir, $node);
-		}
-		$element = self::appendElement($ir, 'element');
-		$element->setAttribute('name', $node->nodeName);
-		$xpath = new DOMXPath($node->ownerDocument);
-		foreach ($xpath->query('namespace::*', $node) as $ns)
-			if ($node->hasAttribute($ns->nodeName))
-			{
-				$irAttribute = self::appendElement($element, 'attribute');
-				$irAttribute->setAttribute('name', $ns->nodeName);
-				self::appendOutput($irAttribute, 'literal', $ns->nodeValue);
-			}
-		foreach ($node->attributes as $attribute)
-		{
-			$irAttribute = self::appendElement($element, 'attribute');
-			$irAttribute->setAttribute('name', $attribute->nodeName);
-			self::appendOutput($irAttribute, 'avt', $attribute->value);
-		}
-		self::parseChildren($element, $node);
+		$this->xpath = new DOMXPath($dom);
 	}
-	protected static function parseXslApplyTemplates(DOMElement $ir, DOMElement $node)
+	protected function evaluate($expr, DOMNode $node = \null)
 	{
-		$applyTemplates = self::appendElement($ir, 'applyTemplates');
-		if ($node->hasAttribute('select'))
-			$applyTemplates->setAttribute(
-				'select',
-				$node->getAttribute('select')
-			);
+		return (isset($node)) ? $this->xpath->evaluate($expr, $node) : $this->xpath->evaluate($expr);
 	}
-	protected static function parseXslAttribute(DOMElement $ir, DOMElement $node)
+	protected function query($query, DOMNode $node = \null)
 	{
-		$attrName = $node->getAttribute('name');
-		if ($attrName !== '')
-		{
-			$attribute = self::appendElement($ir, 'attribute');
-			$attribute->setAttribute('name', $attrName);
-			self::parseChildren($attribute, $node);
-		}
-	}
-	protected static function parseXslChoose(DOMElement $ir, DOMElement $node)
-	{
-		$switch = self::appendElement($ir, 'switch');
-		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
-		{
-			if ($when->parentNode !== $node)
-				continue;
-			$case = self::appendElement($switch, 'case');
-			$case->setAttribute('test', $when->getAttribute('test'));
-			self::parseChildren($case, $when);
-		}
-		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'otherwise') as $otherwise)
-		{
-			if ($otherwise->parentNode !== $node)
-				continue;
-			$case = self::appendElement($switch, 'case');
-			self::parseChildren($case, $otherwise);
-			break;
-		}
-	}
-	protected static function parseXslComment(DOMElement $ir, DOMElement $node)
-	{
-		$comment = self::appendElement($ir, 'comment');
-		self::parseChildren($comment, $node);
-	}
-	protected static function parseXslCopyOf(DOMElement $ir, DOMElement $node)
-	{
-		$expr = $node->getAttribute('select');
-		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
-		{
-			$switch = self::appendElement($ir, 'switch');
-			$case   = self::appendElement($switch, 'case');
-			$case->setAttribute('test', $expr);
-			$attribute = self::appendElement($case, 'attribute');
-			$attribute->setAttribute('name', $m[1]);
-			self::appendOutput($attribute, 'xpath', $expr);
-			return;
-		}
-		if ($expr === '@*')
-		{
-			self::appendElement($ir, 'copyOfAttributes');
-			return;
-		}
-		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
-	}
-	protected static function parseXslElement(DOMElement $ir, DOMElement $node)
-	{
-		$elName = $node->getAttribute('name');
-		if ($elName !== '')
-		{
-			$element = self::appendElement($ir, 'element');
-			$element->setAttribute('name', $elName);
-			self::parseChildren($element, $node);
-		}
-	}
-	protected static function parseXslIf(DOMElement $ir, DOMElement $node)
-	{
-		$switch = self::appendElement($ir, 'switch');
-		$case   = self::appendElement($switch, 'case');
-		$case->setAttribute('test', $node->getAttribute('test'));
-		self::parseChildren($case, $node);
-	}
-	protected static function parseXslText(DOMElement $ir, DOMElement $node)
-	{
-		self::appendOutput($ir, 'literal', $node->textContent);
-	}
-	protected static function parseXslValueOf(DOMElement $ir, DOMElement $node)
-	{
-		self::appendOutput($ir, 'xpath', $node->getAttribute('select'));
-	}
-	protected static function normalize(DOMDocument $ir)
-	{
-		self::addDefaultCase($ir);
-		self::addElementIds($ir);
-		self::addCloseTagElements($ir);
-		self::markEmptyElements($ir);
-		self::optimize($ir);
-		self::markConditionalCloseTagElements($ir);
-		self::setOutputContext($ir);
-		self::markBranchTables($ir);
-	}
-	protected static function addDefaultCase(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
-			self::appendElement($switch, 'case');
-	}
-	protected static function addElementIds(DOMDocument $ir)
-	{
-		$id = 0;
-		foreach ($ir->getElementsByTagName('element') as $element)
-			$element->setAttribute('id', ++$id);
-	}
-	protected static function addCloseTagElements(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		$exprs = array(
-			'//applyTemplates[not(ancestor::attribute)]',
-			'//comment',
-			'//element',
-			'//output[not(ancestor::attribute)]'
-		);
-		foreach ($xpath->query(\implode('|', $exprs)) as $node)
-		{
-			$parentElementId = self::getParentElementId($node);
-			if (isset($parentElementId))
-				$node->parentNode
-				     ->insertBefore($ir->createElement('closeTag'), $node)
-				     ->setAttribute('id', $parentElementId);
-			if ($node->nodeName === 'element')
-			{
-				$id = $node->getAttribute('id');
-				self::appendElement($node, 'closeTag')->setAttribute('id', $id);
-			}
-		}
-	}
-	protected static function markConditionalCloseTagElements(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
-		{
-			$id = $closeTag->getAttribute('id');
-			$query = 'ancestor::switch/following-sibling::*/descendant-or-self::closeTag[@id = "' . $id . '"]';
-			foreach ($xpath->query($query, $closeTag) as $following)
-			{
-				$following->setAttribute('check', '');
-				$closeTag->setAttribute('set', '');
-			}
-		}
-	}
-	protected static function markEmptyElements(DOMDocument $ir)
-	{
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			$elName = $element->getAttribute('name');
-			if (\strpos($elName, '{') !== \false)
-				$element->setAttribute('void', 'maybe');
-			elseif (\preg_match(self::$voidRegexp, $elName))
-				$element->setAttribute('void', 'yes');
-			$isEmpty = self::isEmpty($element);
-			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
-				$element->setAttribute('empty', $isEmpty);
-		}
-	}
-	protected static function getOutputContext(DOMNode $output)
-	{
-		$xpath = new DOMXPath($output->ownerDocument);
-		if ($xpath->evaluate('boolean(ancestor::attribute)', $output))
-			return 'attribute';
-		if ($xpath->evaluate('boolean(ancestor::element[@name="script"])', $output))
-			return 'raw';
-		return 'text';
-	}
-	protected static function getParentElementId(DOMNode $node)
-	{
-		$parentNode = $node->parentNode;
-		while (isset($parentNode))
-		{
-			if ($parentNode->nodeName === 'element')
-				return $parentNode->getAttribute('id');
-			$parentNode = $parentNode->parentNode;
-		}
-	}
-	protected static function setOutputContext(DOMDocument $ir)
-	{
-		foreach ($ir->getElementsByTagName('output') as $output)
-			$output->setAttribute('escape', self::getOutputContext($output));
-	}
-	protected static function optimize(DOMDocument $ir)
-	{
-		$xml = $ir->saveXML();
-		$remainingLoops = 10;
-		do
-		{
-			$old = $xml;
-			self::optimizeCloseTagElements($ir);
-			$xml = $ir->saveXML();
-		}
-		while (--$remainingLoops > 0 && $xml !== $old);
-		self::removeCloseTagSiblings($ir);
-		self::removeContentFromVoidElements($ir);
-		self::mergeConsecutiveLiteralOutputElements($ir);
-		self::removeEmptyDefaultCases($ir);
-	}
-	protected static function removeCloseTagSiblings(DOMDocument $ir)
-	{
-		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
-		self::removeNodes($ir, $query);
-	}
-	protected static function removeEmptyDefaultCases(DOMDocument $ir)
-	{
-		$query = '//case[not(@test | node())]';
-		self::removeNodes($ir, $query);
-	}
-	protected static function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//output[@type="literal"]') as $output)
-			while ($output->nextSibling
-				&& $output->nextSibling->nodeName === 'output'
-				&& $output->nextSibling->getAttribute('type') === 'literal')
-			{
-				$output->nodeValue
-					= \htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
-				$output->parentNode->removeChild($output->nextSibling);
-			}
-	}
-	protected static function optimizeCloseTagElements(DOMDocument $ir)
-	{
-		self::cloneCloseTagElementsIntoSwitch($ir);
-		self::cloneCloseTagElementsOutOfSwitch($ir);
-		self::removeRedundantCloseTagElementsInSwitch($ir);
-		self::removeRedundantCloseTagElements($ir);
-	}
-	protected static function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
-		foreach ($xpath->query($query) as $switch)
-		{
-			$closeTag = $switch->nextSibling;
-			foreach ($switch->childNodes as $case)
-				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
-					$case->appendChild($closeTag->cloneNode());
-		}
-	}
-	protected static function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		$query = '//switch[not(preceding-sibling::closeTag)]';
-		foreach ($xpath->query($query) as $switch)
-		{
-			foreach ($switch->childNodes as $case)
-				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-					continue 2;
-			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
-		}
-	}
-	protected static function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = \null)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query($query, $contextNode) as $node)
-			if ($node->parentNode instanceof DOMElement)
-				$node->parentNode->removeChild($node);
-	}
-	protected static function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
-		foreach ($xpath->query($query) as $switch)
-			foreach ($switch->childNodes as $case)
-				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
-					$case->removeChild($case->lastChild);
-	}
-	protected static function removeRedundantCloseTagElements(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//closeTag') as $closeTag)
-		{
-			$id    = $closeTag->getAttribute('id');
-			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
-			self::removeNodes($ir, $query, $closeTag);
-		}
-	}
-	protected static function removeContentFromVoidElements(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//element[@void="yes"]') as $element)
-		{
-			$id    = $element->getAttribute('id');
-			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
-			self::removeNodes($ir, $query, $element);
-		}
-	}
-	protected static function markBranchTables(DOMDocument $ir)
-	{
-		$xpath = new DOMXPath($ir);
-		foreach ($xpath->query('//switch[case[2][@test]]') as $switch)
-		{
-			$key = \null;
-			$branchValues = array();
-			foreach ($switch->childNodes as $i => $case)
-			{
-				if (!$case->hasAttribute('test'))
-					continue;
-				$map = self::parseEqualityExpr($case->getAttribute('test'));
-				if ($map === \false)
-					continue 2;
-				if (\count($map) !== 1)
-					continue 2;
-				if (isset($key) && $key !== \key($map))
-					continue 2;
-				$key = \key($map);
-				$branchValues[$i] = \end($map);
-			}
-			$switch->setAttribute('branch-key', $key);
-			foreach ($branchValues as $i => $values)
-			{
-				\sort($values);
-				$switch->childNodes->item($i)->setAttribute('branch-values', \serialize($values));
-			}
-		}
-	}
-	protected static function appendElement(DOMElement $parentNode, $name, $value = '')
-	{
-		if ($value === '')
-			$element = $parentNode->ownerDocument->createElement($name);
-		else
-			$element = $parentNode->ownerDocument->createElement($name, $value);
-		$parentNode->appendChild($element);
-		return $element;
-	}
-	protected static function appendOutput(DOMElement $ir, $type, $content)
-	{
-		if ($type === 'avt')
-		{
-			foreach (AVTHelper::parse($content) as $token)
-			{
-				$type = ($token[0] === 'expression') ? 'xpath' : 'literal';
-				self::appendOutput($ir, $type, $token[1]);
-			}
-			return;
-		}
-		if ($type === 'xpath')
-			$content = \trim($content);
-		if ($type === 'literal' && $content === '')
-			return;
-		self::appendElement($ir, 'output', \htmlspecialchars($content))
-			->setAttribute('type', $type);
-	}
-	protected static function isEmpty(DOMElement $ir)
-	{
-		$xpath = new DOMXPath($ir->ownerDocument);
-		if ($xpath->evaluate('count(comment | element | output[@type="literal"])', $ir))
-			return 'no';
-		$cases = array();
-		foreach ($xpath->query('switch/case', $ir) as $case)
-			$cases[self::isEmpty($case)] = 1;
-		if (isset($cases['maybe']))
-			return 'maybe';
-		if (isset($cases['no']))
-		{
-			if (!isset($cases['yes']))
-				return 'no';
-			return 'maybe';
-		}
-		if ($xpath->evaluate('count(applyTemplates | output[@type="xpath"])', $ir))
-			return 'maybe';
-		return 'yes';
+		return (isset($node)) ? $this->xpath->query($query, $node) : $this->xpath->query($query);
 	}
 }
 
@@ -2637,6 +2221,34 @@ abstract class XPathHelper
 		$expr = \preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 		$expr = \strtr($expr, $strings);
 		return $expr;
+	}
+	public static function parseEqualityExpr($expr)
+	{
+		$eq = '(?<equality>(?<key>@[-\\w]+|\\$\\w+|\\.)(?<operator>\\s*=\\s*)(?:(?<literal>(?<string>"[^"]*"|\'[^\']*\')|0|[1-9][0-9]*)|(?<concat>concat\\(\\s*(?&string)\\s*(?:,\\s*(?&string)\\s*)+\\)))|(?:(?<literal>(?&literal))|(?<concat>(?&concat)))(?&operator)(?<key>(?&key)))';
+		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
+		if (!\preg_match($regexp, $expr))
+			return \false;
+		\preg_match_all("((?J)$eq)", $expr, $matches, \PREG_SET_ORDER);
+		$map = array();
+		foreach ($matches as $m)
+		{
+			$key = $m['key'];
+			if (!empty($m['concat']))
+			{
+				\preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
+				$value = '';
+				foreach ($strings[0] as $string)
+					$value .= \substr($string, 1, -1);
+			}
+			else
+			{
+				$value = $m['literal'];
+				if ($value[0] === "'" || $value[0] === '"')
+					$value = \substr($value, 1, -1);
+			}
+			$map[$key][] = $value;
+		}
+		return $map;
 	}
 }
 
@@ -5118,6 +4730,441 @@ class Collection implements ConfigProvider, Countable, Iterator
 * @copyright Copyright (c) 2010-2018 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
+class Normalizer extends IRProcessor
+{
+	protected $optimizer;
+	public $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
+	public function __construct(Optimizer $optimizer)
+	{
+		$this->optimizer = $optimizer;
+	}
+	public function normalize(DOMDocument $ir)
+	{
+		$this->createXPath($ir);
+		$this->addDefaultCase($ir);
+		$this->addElementIds($ir);
+		$this->addCloseTagElements($ir);
+		$this->markVoidElements($ir);
+		$this->optimizer->optimize($ir);
+		$this->markConditionalCloseTagElements($ir);
+		$this->setOutputContext($ir);
+		$this->markBranchTables($ir);
+	}
+	protected function addCloseTagElements(DOMDocument $ir)
+	{
+		$exprs = array(
+			'//applyTemplates[not(ancestor::attribute)]',
+			'//comment',
+			'//element',
+			'//output[not(ancestor::attribute)]'
+		);
+		foreach ($this->query(\implode('|', $exprs)) as $node)
+		{
+			$parentElementId = $this->getParentElementId($node);
+			if (isset($parentElementId))
+				$node->parentNode
+				     ->insertBefore($ir->createElement('closeTag'), $node)
+				     ->setAttribute('id', $parentElementId);
+			if ($node->nodeName === 'element')
+			{
+				$id = $node->getAttribute('id');
+				$this->appendElement($node, 'closeTag')->setAttribute('id', $id);
+			}
+		}
+	}
+	protected function addDefaultCase(DOMDocument $ir)
+	{
+		foreach ($this->query('//switch[not(case[not(@test)])]') as $switch)
+			$this->appendElement($switch, 'case');
+	}
+	protected function addElementIds(DOMDocument $ir)
+	{
+		$id = 0;
+		foreach ($ir->getElementsByTagName('element') as $element)
+			$element->setAttribute('id', ++$id);
+	}
+	protected function getOutputContext(DOMNode $output)
+	{
+		$contexts = array(
+			'boolean(ancestor::attribute)'             => 'attribute',
+			'@disable-output-escaping="yes"'           => 'raw',
+			'count(ancestor::element[@name="script"])' => 'raw'
+		);
+		foreach ($contexts as $expr => $context)
+			if ($this->evaluate($expr, $output))
+				return $context;
+		return 'text';
+	}
+	protected function getParentElementId(DOMNode $node)
+	{
+		$parentNode = $node->parentNode;
+		while (isset($parentNode))
+		{
+			if ($parentNode->nodeName === 'element')
+				return $parentNode->getAttribute('id');
+			$parentNode = $parentNode->parentNode;
+		}
+	}
+	protected function markBranchTables(DOMDocument $ir)
+	{
+		foreach ($this->query('//switch[case[2][@test]]') as $switch)
+			$this->markSwitchTable($switch);
+	}
+	protected function markSwitchTable(DOMElement $switch)
+	{
+		$branches = array();
+		$values   = array();
+		foreach ($this->query('./case[@test]', $switch) as $i => $case)
+		{
+			$map = XPathHelper::parseEqualityExpr($case->getAttribute('test'));
+			if ($map === \false)
+				return;
+			$values      += $map;
+			$branches[$i] = \end($map);
+		}
+		if (\count($values) !== 1)
+			return;
+		$switch->setAttribute('branch-key', \key($values));
+		foreach ($branches as $i => $values)
+		{
+			\sort($values);
+			$switch->childNodes->item($i)->setAttribute('branch-values', \serialize($values));
+		}
+	}
+	protected function markConditionalCloseTagElements(DOMDocument $ir)
+	{
+		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
+		{
+			$id = $closeTag->getAttribute('id');
+			$query = 'ancestor::switch/following-sibling::*/descendant-or-self::closeTag[@id = "' . $id . '"]';
+			foreach ($this->query($query, $closeTag) as $following)
+			{
+				$following->setAttribute('check', '');
+				$closeTag->setAttribute('set', '');
+			}
+		}
+	}
+	protected function markVoidElements(DOMDocument $ir)
+	{
+		foreach ($ir->getElementsByTagName('element') as $element)
+		{
+			$elName = $element->getAttribute('name');
+			if (\strpos($elName, '{') !== \false)
+				$element->setAttribute('void', 'maybe');
+			elseif (\preg_match($this->voidRegexp, $elName))
+				$element->setAttribute('void', 'yes');
+		}
+	}
+	protected function setOutputContext(DOMDocument $ir)
+	{
+		foreach ($ir->getElementsByTagName('output') as $output)
+			$output->setAttribute('escape', $this->getOutputContext($output));
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+class Optimizer extends IRProcessor
+{
+	public function optimize(DOMDocument $ir)
+	{
+		$this->createXPath($ir);
+		$xml = $ir->saveXML();
+		$remainingLoops = 10;
+		do
+		{
+			$old = $xml;
+			$this->optimizeCloseTagElements($ir);
+			$xml = $ir->saveXML();
+		}
+		while (--$remainingLoops > 0 && $xml !== $old);
+		$this->removeCloseTagSiblings($ir);
+		$this->removeContentFromVoidElements($ir);
+		$this->mergeConsecutiveLiteralOutputElements($ir);
+		$this->removeEmptyDefaultCases($ir);
+	}
+	protected function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
+	{
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($this->query($query) as $switch)
+		{
+			$closeTag = $switch->nextSibling;
+			foreach ($switch->childNodes as $case)
+				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
+					$case->appendChild($closeTag->cloneNode());
+		}
+	}
+	protected function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
+	{
+		$query = '//switch[not(preceding-sibling::closeTag)]';
+		foreach ($this->query($query) as $switch)
+		{
+			foreach ($switch->childNodes as $case)
+				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
+					continue 2;
+			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
+		}
+	}
+	protected function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
+	{
+		foreach ($this->query('//output[@type="literal"]') as $output)
+		{
+			$disableOutputEscaping = $output->getAttribute('disable-output-escaping');
+			while ($this->nextSiblingIsLiteralOutput($output, $disableOutputEscaping))
+			{
+				$output->nodeValue = \htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
+				$output->parentNode->removeChild($output->nextSibling);
+			}
+		}
+	}
+	protected function nextSiblingIsLiteralOutput(DOMElement $node, $disableOutputEscaping)
+	{
+		return isset($node->nextSibling) && $node->nextSibling->nodeName === 'output' && $node->nextSibling->getAttribute('type') === 'literal' && $node->nextSibling->getAttribute('disable-output-escaping') === $disableOutputEscaping;
+	}
+	protected function optimizeCloseTagElements(DOMDocument $ir)
+	{
+		$this->cloneCloseTagElementsIntoSwitch($ir);
+		$this->cloneCloseTagElementsOutOfSwitch($ir);
+		$this->removeRedundantCloseTagElementsInSwitch($ir);
+		$this->removeRedundantCloseTagElements($ir);
+	}
+	protected function removeCloseTagSiblings(DOMDocument $ir)
+	{
+		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
+		$this->removeNodes($ir, $query);
+	}
+	protected function removeContentFromVoidElements(DOMDocument $ir)
+	{
+		foreach ($this->query('//element[@void="yes"]') as $element)
+		{
+			$id    = $element->getAttribute('id');
+			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
+			$this->removeNodes($ir, $query, $element);
+		}
+	}
+	protected function removeEmptyDefaultCases(DOMDocument $ir)
+	{
+		$query = '//case[not(@test | node())]';
+		$this->removeNodes($ir, $query);
+	}
+	protected function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = \null)
+	{
+		foreach ($this->query($query, $contextNode) as $node)
+			if ($node->parentNode instanceof DOMElement)
+				$node->parentNode->removeChild($node);
+	}
+	protected function removeRedundantCloseTagElements(DOMDocument $ir)
+	{
+		foreach ($this->query('//closeTag') as $closeTag)
+		{
+			$id    = $closeTag->getAttribute('id');
+			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
+			$this->removeNodes($ir, $query, $closeTag);
+		}
+	}
+	protected function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
+	{
+		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		foreach ($this->query($query) as $switch)
+			foreach ($switch->childNodes as $case)
+				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
+					$case->removeChild($case->lastChild);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+class Parser extends IRProcessor
+{
+	protected $normalizer;
+	public function __construct(Normalizer $normalizer)
+	{
+		$this->normalizer = $normalizer;
+	}
+	public function parse($template)
+	{
+		$dom = TemplateHelper::loadTemplate($template);
+		$ir = new DOMDocument;
+		$ir->loadXML('<template/>');
+		$this->createXPath($dom);
+		$this->parseChildren($ir->documentElement, $dom->documentElement);
+		$this->normalizer->normalize($ir);
+		return $ir;
+	}
+	protected function appendAVT(DOMElement $parentNode, $avt)
+	{
+		foreach (AVTHelper::parse($avt) as $token)
+			if ($token[0] === 'expression')
+				$this->appendXPathOutput($parentNode, $token[1]);
+			else
+				$this->appendLiteralOutput($parentNode, $token[1]);
+	}
+	protected function appendLiteralOutput(DOMElement $parentNode, $content)
+	{
+		if ($content === '')
+			return;
+		$this->appendElement($parentNode, 'output', \htmlspecialchars($content))
+		     ->setAttribute('type', 'literal');
+	}
+	protected function appendXPathOutput(DOMElement $parentNode, $expr)
+	{
+		$this->appendElement($parentNode, 'output', \htmlspecialchars(\trim($expr)))
+		     ->setAttribute('type', 'xpath');
+	}
+	protected function parseChildren(DOMElement $ir, DOMElement $parent)
+	{
+		foreach ($parent->childNodes as $child)
+		{
+			switch ($child->nodeType)
+			{
+				case \XML_COMMENT_NODE:
+					break;
+				case \XML_TEXT_NODE:
+					if (\trim($child->textContent) !== '')
+						$this->appendLiteralOutput($ir, $child->textContent);
+					break;
+				case \XML_ELEMENT_NODE:
+					$this->parseNode($ir, $child);
+					break;
+				default:
+					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "''");
+			}
+		}
+	}
+	protected function parseNode(DOMElement $ir, DOMElement $node)
+	{
+		if ($node->namespaceURI === self::XMLNS_XSL)
+		{
+			$methodName = 'parseXsl' . \str_replace(' ', '', \ucwords(\str_replace('-', ' ', $node->localName)));
+			if (!\method_exists($this, $methodName))
+				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
+			return $this->$methodName($ir, $node);
+		}
+		$element = $this->appendElement($ir, 'element');
+		$element->setAttribute('name', $node->nodeName);
+		$xpath = new DOMXPath($node->ownerDocument);
+		foreach ($xpath->query('namespace::*', $node) as $ns)
+			if ($node->hasAttribute($ns->nodeName))
+			{
+				$irAttribute = $this->appendElement($element, 'attribute');
+				$irAttribute->setAttribute('name', $ns->nodeName);
+				$this->appendLiteralOutput($irAttribute, $ns->nodeValue);
+			}
+		foreach ($node->attributes as $attribute)
+		{
+			$irAttribute = $this->appendElement($element, 'attribute');
+			$irAttribute->setAttribute('name', $attribute->nodeName);
+			$this->appendAVT($irAttribute, $attribute->value);
+		}
+		$this->parseChildren($element, $node);
+	}
+	protected function parseXslApplyTemplates(DOMElement $ir, DOMElement $node)
+	{
+		$applyTemplates = $this->appendElement($ir, 'applyTemplates');
+		if ($node->hasAttribute('select'))
+			$applyTemplates->setAttribute('select', $node->getAttribute('select'));
+	}
+	protected function parseXslAttribute(DOMElement $ir, DOMElement $node)
+	{
+		$attribute = $this->appendElement($ir, 'attribute');
+		$attribute->setAttribute('name', $node->getAttribute('name'));
+		$this->parseChildren($attribute, $node);
+	}
+	protected function parseXslChoose(DOMElement $ir, DOMElement $node)
+	{
+		$switch = $this->appendElement($ir, 'switch');
+		foreach ($this->query('./xsl:when', $node) as $when)
+		{
+			$case = $this->appendElement($switch, 'case');
+			$case->setAttribute('test', $when->getAttribute('test'));
+			$this->parseChildren($case, $when);
+		}
+		foreach ($this->query('./xsl:otherwise', $node) as $otherwise)
+		{
+			$case = $this->appendElement($switch, 'case');
+			$this->parseChildren($case, $otherwise);
+			break;
+		}
+	}
+	protected function parseXslComment(DOMElement $ir, DOMElement $node)
+	{
+		$comment = $this->appendElement($ir, 'comment');
+		$this->parseChildren($comment, $node);
+	}
+	protected function parseXslCopyOf(DOMElement $ir, DOMElement $node)
+	{
+		$expr = $node->getAttribute('select');
+		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
+		{
+			$switch = $this->appendElement($ir, 'switch');
+			$case   = $this->appendElement($switch, 'case');
+			$case->setAttribute('test', $expr);
+			$attribute = $this->appendElement($case, 'attribute');
+			$attribute->setAttribute('name', $m[1]);
+			$this->appendXPathOutput($attribute, $expr);
+			return;
+		}
+		if ($expr === '@*')
+		{
+			$this->appendElement($ir, 'copyOfAttributes');
+			return;
+		}
+		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
+	}
+	protected function parseXslElement(DOMElement $ir, DOMElement $node)
+	{
+		$element = $this->appendElement($ir, 'element');
+		$element->setAttribute('name', $node->getAttribute('name'));
+		$this->parseChildren($element, $node);
+	}
+	protected function parseXslIf(DOMElement $ir, DOMElement $node)
+	{
+		$switch = $this->appendElement($ir, 'switch');
+		$case   = $this->appendElement($switch, 'case');
+		$case->setAttribute('test', $node->getAttribute('test'));
+		$this->parseChildren($case, $node);
+	}
+	protected function parseXslText(DOMElement $ir, DOMElement $node)
+	{
+		$this->appendLiteralOutput($ir, $node->textContent);
+		if ($node->getAttribute('disable-output-escaping') === 'yes')
+			$ir->lastChild->setAttribute('disable-output-escaping', 'yes');
+	}
+	protected function parseXslValueOf(DOMElement $ir, DOMElement $node)
+	{
+		$this->appendXPathOutput($ir, $node->getAttribute('select'));
+		if ($node->getAttribute('disable-output-escaping') === 'yes')
+			$ir->lastChild->setAttribute('disable-output-escaping', 'yes');
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use RuntimeException;
@@ -6788,10 +6835,12 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 	{
 		$match = array(
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+			'(\\bfunction\\s*\\w*\\s*\\([^\\)]*\\)\\s*\\{(?!\\{))',
 			'((?<!\\{)(?:\\{\\{)*\\{(?!\\{)[^}]*+$)',
 			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
 		);
 		$replace = array(
+			'$0{',
 			'$0{',
 			'{$0',
 			'{$0'
@@ -6885,13 +6934,13 @@ use DOMAttr;
 use DOMElement;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class InlineInferredValues extends AbstractNormalization
 {
 	protected $queries = array('//xsl:if', '//xsl:when');
 	protected function normalizeElement(DOMElement $element)
 	{
-		$map = TemplateParser::parseEqualityExpr($element->getAttribute('test'));
+		$map = XPathHelper::parseEqualityExpr($element->getAttribute('test'));
 		if ($map === \false || \count($map) !== 1 || \count($map[\key($map)]) !== 1)
 			return;
 		$expr  = \key($map);
@@ -6937,7 +6986,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 class InlineTextElements extends AbstractNormalization
 {
-	protected $queries = array('//xsl:text');
+	protected $queries = array('//xsl:text[not(@disable-output-escaping="yes")]');
 	protected function isFollowedByText(DOMElement $element)
 	{
 		return ($element->nextSibling && $element->nextSibling->nodeType === \XML_TEXT_NODE);
