@@ -753,6 +753,24 @@ class TemplateHelperTest extends Test
 				},
 				'<b>foo ONE bar</b>'
 			],
+			[
+				'<b>xx</b>',
+				'/x/',
+				function ($m)
+				{
+					return ['literal', 'X'];
+				},
+				'<b>XX</b>'
+			],
+			[
+				'<b>.x.x.</b>',
+				'/x/',
+				function ($m)
+				{
+					return ['literal', 'X'];
+				},
+				'<b>.X.X.</b>'
+			],
 		];
 	}
 

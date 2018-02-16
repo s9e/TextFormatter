@@ -13,6 +13,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
@@ -483,131 +484,106 @@ abstract class TemplateHelper
 	*/
 	public static function replaceTokens($template, $regexp, $fn)
 	{
-		if ($template === '')
-		{
-			return $template;
-		}
-
 		$dom   = self::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 
-		// Replace tokens in attributes
 		foreach ($xpath->query('//@*') as $attribute)
 		{
-			// Generate the new value
-			$attrValue = preg_replace_callback(
-				$regexp,
-				function ($m) use ($fn, $attribute)
-				{
-					$replacement = $fn($m, $attribute);
-
-					if ($replacement[0] === 'expression')
-					{
-						return '{' . $replacement[1] . '}';
-					}
-					elseif ($replacement[0] === 'passthrough')
-					{
-						return '{.}';
-					}
-					else
-					{
-						// Literal replacement
-						return $replacement[1];
-					}
-				},
-				$attribute->value
-			);
-
-			// Replace the attribute value
-			$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
+			self::replaceTokensInAttribute($attribute, $regexp, $fn);
 		}
-
-		// Replace tokens in text nodes
 		foreach ($xpath->query('//text()') as $node)
 		{
-			preg_match_all(
-				$regexp,
-				$node->textContent,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			if (empty($matches))
-			{
-				continue;
-			}
-
-			// Grab the node's parent so that we can rebuild the text with added variables right
-			// before the node, using DOM's insertBefore(). Technically, it would make more sense
-			// to create a document fragment, append nodes then replace the node with the fragment
-			// but it leads to namespace redeclarations, which looks ugly
-			$parentNode = $node->parentNode;
-
-			$lastPos = 0;
-			foreach ($matches as $m)
-			{
-				$pos = $m[0][1];
-
-				// Catch-up to current position
-				if ($pos > $lastPos)
-				{
-					$parentNode->insertBefore(
-						$dom->createTextNode(
-							substr($node->textContent, $lastPos, $pos - $lastPos)
-						),
-						$node
-					);
-				}
-				$lastPos = $pos + strlen($m[0][0]);
-
-				// Remove the offset data from the array, keep only the content of captures so that
-				// $_m contains the same data that preg_match() or preg_replace() would return
-				$_m = [];
-				foreach ($m as $capture)
-				{
-					$_m[] = $capture[0];
-				}
-
-				// Get the replacement for this token
-				$replacement = $fn($_m, $node);
-
-				if ($replacement[0] === 'expression')
-				{
-					// Expressions are evaluated in a <xsl:value-of/> node
-					$parentNode
-						->insertBefore(
-							$dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'),
-							$node
-						)
-						->setAttribute('select', $replacement[1]);
-				}
-				elseif ($replacement[0] === 'passthrough')
-				{
-					// Passthrough token, replace with <xsl:apply-templates/>
-					$parentNode->insertBefore(
-						$dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates'),
-						$node
-					);
-				}
-				else
-				{
-					// Literal replacement
-					$parentNode->insertBefore($dom->createTextNode($replacement[1]), $node);
-				}
-			}
-
-			// Append the rest of the text
-			$text = substr($node->textContent, $lastPos);
-			if ($text > '')
-			{
-				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			}
-
-			// Now remove the old text node
-			$parentNode->removeChild($node);
+			self::replaceTokensInText($node, $regexp, $fn);
 		}
 
 		return self::saveTemplate($dom);
+	}
+
+	/**
+	* Replace parts of an attribute that match given regexp
+	*
+	* @param  DOMAttr  $attribute Attribute
+	* @param  string   $regexp    Regexp for matching parts that need replacement
+	* @param  callback $fn        Callback used to get the replacement
+	* @return void
+	*/
+	protected static function replaceTokensInAttribute(DOMAttr $attribute, $regexp, $fn)
+	{
+		$attrValue = preg_replace_callback(
+			$regexp,
+			function ($m) use ($fn, $attribute)
+			{
+				$replacement = $fn($m, $attribute);
+				if ($replacement[0] === 'expression')
+				{
+					return '{' . $replacement[1] . '}';
+				}
+				elseif ($replacement[0] === 'passthrough')
+				{
+					return '{.}';
+				}
+				else
+				{
+					return $replacement[1];
+				}
+			},
+			$attribute->value
+		);
+		$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
+	}
+
+	/**
+	* Replace parts of a text node that match given regexp
+	*
+	* @param  DOMText  $node     Text node
+	* @param  string   $regexp   Regexp for matching parts that need replacement
+	* @param  callback $fn       Callback used to get the replacement
+	* @return void
+	*/
+	protected static function replaceTokensInText(DOMText $node, $regexp, $fn)
+	{
+		// Grab the node's parent so that we can rebuild the text with added variables right
+		// before the node, using DOM's insertBefore(). Technically, it would make more sense
+		// to create a document fragment, append nodes then replace the node with the fragment
+		// but it leads to namespace redeclarations, which looks ugly
+		$parentNode = $node->parentNode;
+		$dom        = $node->ownerDocument;
+
+		preg_match_all($regexp, $node->textContent, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+		$lastPos = 0;
+		foreach ($matches as $m)
+		{
+			$pos = $m[0][1];
+
+			// Catch-up to current position
+			$text = substr($node->textContent, $lastPos, $pos - $lastPos);
+			$parentNode->insertBefore($dom->createTextNode($text), $node);
+			$lastPos = $pos + strlen($m[0][0]);
+
+			// Get the replacement for this token
+			$replacement = $fn(array_column($m, 0), $node);
+			if ($replacement[0] === 'expression')
+			{
+				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
+				$newNode->setAttribute('select', $replacement[1]);
+			}
+			elseif ($replacement[0] === 'passthrough')
+			{
+				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
+			}
+			else
+			{
+				$newNode = $dom->createTextNode($replacement[1]);
+			}
+			$parentNode->insertBefore($newNode, $node);
+		}
+
+		// Append the rest of the text
+		$text = substr($node->textContent, $lastPos);
+		$parentNode->insertBefore($dom->createTextNode($text), $node);
+
+		// Now remove the old text node
+		$parentNode->removeChild($node);
 	}
 
 	/**
