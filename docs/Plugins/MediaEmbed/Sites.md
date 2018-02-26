@@ -434,7 +434,7 @@
 	<tr>
 		<td><code>spotify</code></td>
 		<td>Spotify</td>
-		<td>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
+		<td>https://open.spotify.com/user/ryan.lloyd.french/playlist/4jHNeLTj7CnL5JwZzmnqOL<br/>https://open.spotify.com/track/3CPjqkaMwrbht1lJpELoY0?si=K7cm7-dWTR6U7BjDn1oP7g<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
 	</tr>
 	<tr>
 		<td><code>steamstore</code></td>

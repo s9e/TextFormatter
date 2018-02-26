@@ -1,13 +1,14 @@
 <site name="Spotify" homepage="https://www.spotify.com/">
 	<source>https://developer.spotify.com/technologies/widgets/spotify-play-button/</source>
 	<source>http://news.spotify.com/2008/01/14/linking-to-spotify/</source>
-	<example>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</example>
+	<example>https://open.spotify.com/user/ryan.lloyd.french/playlist/4jHNeLTj7CnL5JwZzmnqOL</example>
+	<example>https://open.spotify.com/track/3CPjqkaMwrbht1lJpELoY0?si=K7cm7-dWTR6U7BjDn1oP7g</example>
 	<example>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</example>
 
 	<tags><tag>music</tag></tags>
 
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:album|artist|track|user)(?:[:/][-\w]+)+)!</extract>
-	<iframe width="400" height="480" src="https://embed.spotify.com/?view=coverart&amp;uri=spotify:{translate(@id,'/',':')}{translate(@path,'/',':')}"/>
+	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:album|artist|track|user)(?:[:/][-.\w]+)+)!</extract>
+	<iframe width="400" height="400" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}" allow="encrypted-media"/>
 </site>
