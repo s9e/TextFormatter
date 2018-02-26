@@ -26,6 +26,7 @@ class IframeTest extends AbstractTest
 			],
 			[
 				[
+					'allow'     => 'geolocation',
 					'onload'    => 'alert(1)',
 					'scrolling' => '',
 					'src'       => '/embed/{@id}',
@@ -34,7 +35,7 @@ class IframeTest extends AbstractTest
 						'box-shadow' => '10px 5px 5px black'
 					]
 				],
-				'<span style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" onload="alert(1)" scrolling="" src="/embed/{@id}" style="border:solid green 2px;box-shadow:10px 5px 5px black;height:100%;left:0;position:absolute;width:100%"/></span></span>'
+				'<span style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allow="geolocation" allowfullscreen="" onload="alert(1)" scrolling="" src="/embed/{@id}" style="border:solid green 2px;box-shadow:10px 5px 5px black;height:100%;left:0;position:absolute;width:100%"/></span></span>'
 			],
 			[
 				[
