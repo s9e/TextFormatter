@@ -447,6 +447,10 @@ class XPathConvertor
 				$paramName   = ltrim($match['param'], '$');
 				$phpTokens[] = '$this->getParamAsXPath(' . var_export($paramName, true) . ')';
 			}
+			else
+			{
+				$phpTokens[] = '$node->getNodePath()';
+			}
 		}
 
 		return implode('.', $phpTokens);
@@ -599,11 +603,13 @@ class XPathConvertor
 	protected function tokenizeXPathForExport($expr)
 	{
 		$tokenExprs = [
+			'(?<current>\\bcurrent\\(\\))',
 			'(?<param>\\$\\w+)',
 			'(?<literal>"[^"]*"|\'[^\']*\'|.)'
 		];
 		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
 
+		// Merge literal tokens
 		$i   = 0;
 		$max = count($matches) - 2;
 		while ($i <= $max)

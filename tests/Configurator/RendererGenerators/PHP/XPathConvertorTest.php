@@ -170,6 +170,10 @@ class XPathConvertorTest extends Test
 				'substring(.,2)',
 				"\$this->xpath->evaluate('substring(.,2)',\$node)"
 			],
+			[
+				'//X[@a = current()/@a]',
+				"\$this->xpath->evaluate('//X[@a = '.\$node->getNodePath().'/@a]',\$node)"
+			],
 		];
 	}
 
