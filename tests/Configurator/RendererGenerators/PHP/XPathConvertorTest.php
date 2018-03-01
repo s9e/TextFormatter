@@ -115,10 +115,6 @@ class XPathConvertorTest extends Test
 	{
 		return [
 			[
-				'"',
-				new RuntimeException('Unterminated string literal')
-			],
-			[
 				'@bar',
 				"\$node->getAttribute('bar')"
 			],
@@ -191,47 +187,47 @@ class XPathConvertorTest extends Test
 			[
 				'translate(@bar,"abc","ABC")',
 				"strtr(\$node->getAttribute('bar'),'abc','ABC')",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"abc\"'.','.'\"ABC\"'.')',\$node)",
+				"\$this->xpath->evaluate('translate(@bar,\"abc\",\"ABC\")',\$node)",
 			],
 			[
 				'translate(@bar,"abc","ABC")',
 				"strtr(\$node->getAttribute('bar'),'abc','ABC')",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"abc\"'.','.'\"ABC\"'.')',\$node)"
+				"\$this->xpath->evaluate('translate(@bar,\"abc\",\"ABC\")',\$node)"
 			],
 			[
 				'translate(@bar,"éè","ÉÈ")',
 				"strtr(\$node->getAttribute('bar'),['é'=>'É','è'=>'È'])",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"éè\"'.','.'\"ÉÈ\"'.')',\$node)"
+				"\$this->xpath->evaluate('translate(@bar,\"éè\",\"ÉÈ\")',\$node)"
 			],
 			[
 				'translate(@bar,"ab","ABC")',
 				"strtr(\$node->getAttribute('bar'),'ab','AB')",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"ab\"'.','.'\"ABC\"'.')',\$node)"
+				"\$this->xpath->evaluate('translate(@bar,\"ab\",\"ABC\")',\$node)"
 			],
 			[
 				'translate(@bar,"abcd","AB")',
 				"strtr(\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"abcd\"'.','.'\"AB\"'.')',\$node)"
+				"\$this->xpath->evaluate('translate(@bar,\"abcd\",\"AB\")',\$node)"
 			],
 			[
 				'translate(@bar,"abbd","ABCD")',
 				"strtr(\$node->getAttribute('bar'),'abd','ABD')",
-				"\$this->xpath->evaluate('translate(@bar,'.'\"abbd\"'.','.'\"ABCD\"'.')',\$node)"
+				"\$this->xpath->evaluate('translate(@bar,\"abbd\",\"ABCD\")',\$node)"
 			],
 			[
 				'substring-after(@foo,"/")',
 				"substr(strstr(\$node->getAttribute('foo'),'/'),1)",
-				"\$this->xpath->evaluate('substring-after(@foo,'.'\"/\"'.')',\$node)"
+				"\$this->xpath->evaluate('substring-after(@foo,\"/\")',\$node)"
 			],
 			[
 				'substring-after(@foo,"&amp;")',
 				"substr(strstr(\$node->getAttribute('foo'),'&amp;'),5)",
-				"\$this->xpath->evaluate('substring-after(@foo,'.'\"&amp;\"'.')',\$node)"
+				"\$this->xpath->evaluate('substring-after(@foo,\"&amp;\")',\$node)"
 			],
 			[
 				'substring-before(@foo,"/")',
 				"strstr(\$node->getAttribute('foo'),'/',true)",
-				"\$this->xpath->evaluate('substring-before(@foo,'.'\"/\"'.')',\$node)"
+				"\$this->xpath->evaluate('substring-before(@foo,\"/\")',\$node)"
 			],
 			[
 				'substring-before(@foo,@bar)',
@@ -342,27 +338,27 @@ class XPathConvertorTest extends Test
 			[
 				".='foo'",
 				"\$node->textContent==='foo'",
-				"\$this->xpath->evaluate('.='.'\'foo\'',\$node)"
+				"\$this->xpath->evaluate('.=\'foo\'',\$node)"
 			],
 			[
 				"@foo='foo'",
 				"\$node->getAttribute('foo')==='foo'",
-				"\$this->xpath->evaluate('@foo='.'\'foo\'',\$node)"
+				"\$this->xpath->evaluate('@foo=\'foo\'',\$node)"
 			],
 			[
 				".='fo\"o'",
 				"\$node->textContent==='fo\"o'",
-				"\$this->xpath->evaluate('.='.'\'fo\"o\'',\$node)"
+				"\$this->xpath->evaluate('.=\'fo\"o\'',\$node)"
 			],
 			[
 				'.=\'"_"\'',
 				'$node->textContent===\'"_"\'',
-				"\$this->xpath->evaluate('.='.'\'\"_\"\'',\$node)"
+				"\$this->xpath->evaluate('.=\'\"_\"\'',\$node)"
 			],
 			[
 				".='foo'or.='bar'",
 				"\$node->textContent==='foo'||\$node->textContent==='bar'",
-				"\$this->xpath->evaluate('.='.'\'foo\''.'or.='.'\'bar\'',\$node)"
+				"\$this->xpath->evaluate('.=\'foo\'or.=\'bar\'',\$node)"
 			],
 			[
 				'.=3',
@@ -399,7 +395,7 @@ class XPathConvertorTest extends Test
 			[
 				".='x'or.='y'or.='z'",
 				"\$node->textContent==='x'||\$node->textContent==='y'||\$node->textContent==='z'",
-				"\$this->xpath->evaluate('.='.'\'x\''.'or.='.'\'y\''.'or.='.'\'z\'',\$node)"
+				"\$this->xpath->evaluate('.=\'x\'or.=\'y\'or.=\'z\'',\$node)"
 			],
 			[
 				"@x and @y and @z and @a",
@@ -408,27 +404,27 @@ class XPathConvertorTest extends Test
 			[
 				"@type='gifv' and @width and @height and @height != 0",
 				"\$node->getAttribute('type')==='gifv'&&\$node->hasAttribute('width')&&\$node->hasAttribute('height')&&\$node->getAttribute('height')!=0",
-				"\$this->xpath->evaluate('@type='.'\'gifv\''.' and @width and @height and @height != 0',\$node)"
+				"\$this->xpath->evaluate('@type=\'gifv\' and @width and @height and @height != 0',\$node)"
 			],
 			[
 				"contains(@foo,'x')",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)",
-				"\$this->xpath->evaluate('contains(@foo,'.'\'x\''.')',\$node)"
+				"\$this->xpath->evaluate('contains(@foo,\'x\')',\$node)"
 			],
 			[
 				" contains( @foo , 'x' ) ",
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)",
-				"\$this->xpath->evaluate('contains( @foo , '.'\'x\''.' )',\$node)"
+				"\$this->xpath->evaluate('contains( @foo , \'x\' )',\$node)"
 			],
 			[
 				"not(contains(@id, 'bar'))",
 				"(strpos(\$node->getAttribute('id'),'bar')===false)",
-				"\$this->xpath->evaluate('not(contains(@id, '.'\'bar\''.'))',\$node)"
+				"\$this->xpath->evaluate('not(contains(@id, \'bar\'))',\$node)"
 			],
 			[
 				"starts-with(@foo,'bar')",
 				"(strpos(\$node->getAttribute('foo'),'bar')===0)",
-				"\$this->xpath->evaluate('starts-with(@foo,'.'\'bar\''.')',\$node)"
+				"\$this->xpath->evaluate('starts-with(@foo,\'bar\')',\$node)"
 			],
 			[
 				'@foo and (@bar or @baz)',
@@ -446,7 +442,7 @@ class XPathConvertorTest extends Test
 			[
 				"starts-with(@type,'decimal-') or starts-with(@type,'lower-') or starts-with(@type,'upper-')",
 				"(strpos(\$node->getAttribute('type'),'decimal-')===0)||(strpos(\$node->getAttribute('type'),'lower-')===0)||(strpos(\$node->getAttribute('type'),'upper-')===0)",
-				"\$this->xpath->evaluate('starts-with(@type,'.'\'decimal-\''.') or starts-with(@type,'.'\'lower-\''.') or starts-with(@type,'.'\'upper-\''.')',\$node)"
+				"\$this->xpath->evaluate('starts-with(@type,\'decimal-\') or starts-with(@type,\'lower-\') or starts-with(@type,\'upper-\')',\$node)"
 			],
 		];
 	}

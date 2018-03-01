@@ -436,43 +436,16 @@ class XPathConvertor
 	protected function exportXPath($expr)
 	{
 		$phpTokens = [];
-		$pos = 0;
-		$len = strlen($expr);
-		while ($pos < $len)
+		foreach ($this->tokenizeXPathForExport($expr) as $match)
 		{
-			// If we have a string literal, capture it and add its PHP representation
-			if ($expr[$pos] === "'" || $expr[$pos] === '"')
+			if (isset($match['literal']))
 			{
-				$nextPos = strpos($expr, $expr[$pos], 1 + $pos);
-				if ($nextPos === false)
-				{
-					throw new RuntimeException('Unterminated string literal in XPath expression ' . var_export($expr, true));
-				}
-
-				// Capture the string
-				$phpTokens[] = var_export(substr($expr, $pos, $nextPos + 1 - $pos), true);
-
-				// Move the cursor past the string
-				$pos = $nextPos + 1;
-
-				continue;
+				$phpTokens[] = var_export($match['literal'], true);
 			}
-
-			// Variables in XPath expressions have to be resolved at runtime via getParamAsXPath()
-			if ($expr[$pos] === '$' && preg_match('/\\$(\\w+)/', $expr, $m, 0, $pos))
+			elseif (isset($match['param']))
 			{
-				$phpTokens[] = '$this->getParamAsXPath(' . var_export($m[1], true) . ')';
-				$pos += strlen($m[0]);
-
-				continue;
-			}
-
-			// Capture everything up to the next interesting character
-			$spn = strcspn($expr, '\'"$', $pos);
-			if ($spn)
-			{
-				$phpTokens[] = var_export(substr($expr, $pos, $spn), true);
-				$pos += $spn;
+				$paramName   = ltrim($match['param'], '$');
+				$phpTokens[] = '$this->getParamAsXPath(' . var_export($paramName, true) . ')';
 			}
 		}
 
@@ -615,5 +588,41 @@ class XPathConvertor
 		$regexp = str_replace(' ', '\\s*', $regexp);
 
 		$this->regexp = $regexp;
+	}
+
+	/**
+	* Tokenize an XPath expression for use in PHP
+	*
+	* @param  string $expr XPath expression
+	* @return array
+	*/
+	protected function tokenizeXPathForExport($expr)
+	{
+		$tokenExprs = [
+			'(?<param>\\$\\w+)',
+			'(?<literal>"[^"]*"|\'[^\']*\'|.)'
+		];
+		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
+
+		$i   = 0;
+		$max = count($matches) - 2;
+		while ($i <= $max)
+		{
+			if (!isset($matches[$i]['literal']))
+			{
+				++$i;
+				continue;
+			}
+
+			$j = $i;
+			while (isset($matches[++$j]['literal']))
+			{
+				$matches[$i]['literal'] .= $matches[$j]['literal'];
+				unset($matches[$j]);
+			}
+			$i = $j;
+		}
+
+		return array_values($matches);
 	}
 }
