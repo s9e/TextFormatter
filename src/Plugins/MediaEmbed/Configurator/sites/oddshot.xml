@@ -1,9 +1,0 @@
-<site name="Oddshot" homepage="http://oddshot.tv/">
-	<example>https://oddshot.tv/s/-MrDaG</example>
-
-	<tags><tag>gaming</tag></tags>
-
-	<host>oddshot.tv</host>
-	<extract>!oddshot.tv/s/(?'id'[-\w]+)!</extract>
-	<iframe src="https://oddshot.tv/s/{@id}/embed"/>
-</site>

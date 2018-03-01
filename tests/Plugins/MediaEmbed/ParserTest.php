@@ -2652,15 +2652,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://oddshot.tv/s/-MrDaG',
-				'<r><ODDSHOT id="-MrDaG">https://oddshot.tv/s/-MrDaG</ODDSHOT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('oddshot');
-				}
-			],
-			[
 				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
 				'<r><ORFIUM album_id="24371">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</ORFIUM></r>',
 				[],

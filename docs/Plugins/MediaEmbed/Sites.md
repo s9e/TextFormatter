@@ -367,11 +367,6 @@
 		<td>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html<br/>http://movies.nytimes.com/movie/131154/Crooklyn/trailers</td>
 	</tr>
 	<tr>
-		<td><code>oddshot</code></td>
-		<td>Oddshot</td>
-		<td>https://oddshot.tv/s/-MrDaG</td>
-	</tr>
-	<tr>
 		<td><code>orfium</code></td>
 		<td>Orfium</td>
 		<td>https://www.orfium.com/album/24371/everybody-loves-kanye-totom/<br/>https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/<br/>https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/<br/>https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</td>
