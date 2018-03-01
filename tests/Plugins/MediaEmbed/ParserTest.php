@@ -708,8 +708,8 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
-				'http://gfycat.com/SereneIllfatedCapybara',
-				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" width="600">http://gfycat.com/SereneIllfatedCapybara</GFYCAT></r>',
+				'http://gfycat.com/LoathsomeHarmfulJenny',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">http://gfycat.com/LoathsomeHarmfulJenny</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -741,8 +741,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://giant.gfycat.com/SereneIllfatedCapybara.gif',
-				'<r><GFYCAT height="338" id="SereneIllfatedCapybara" width="600">http://giant.gfycat.com/SereneIllfatedCapybara.gif</GFYCAT></r>',
+				'http://giant.gfycat.com/LoathsomeHarmfulJenny.gif',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">http://giant.gfycat.com/LoathsomeHarmfulJenny.gif</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -1300,8 +1300,8 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
-				'http://gfycat.com/SereneIllfatedCapybara',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'http://gfycat.com/LoathsomeHarmfulJenny',
+				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.2105263157895%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
