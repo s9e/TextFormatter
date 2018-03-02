@@ -41,6 +41,11 @@ abstract class PHP extends Renderer
 	{
 		return ($this->enableQuickRenderer && !\preg_match($this->quickRenderingTest, $xml));
 	}
+	protected function checkTagPairContent($id, $xml)
+	{
+		if (\strpos($xml, '<' . $id, 1) !== \false)
+			throw new RuntimeException;
+	}
 	protected function getParamAsXPath($paramName)
 	{
 		return (isset($this->params[$paramName])) ? XPath::export($this->params[$paramName]) : "''";
@@ -94,11 +99,6 @@ abstract class PHP extends Renderer
 		if (isset($this->dynamic[$id]))
 			return \preg_replace($this->dynamic[$id][0], $this->dynamic[$id][1], $m[0], 1);
 		return $this->renderQuickTemplate($id, $m[0]);
-	}
-	protected function checkTagPairContent($id, $xml)
-	{
-		if (\strpos($xml, '<' . $id, 1) !== \false)
-			throw new RuntimeException;
 	}
 	protected function renderQuickSelfClosingTag(array $m)
 	{
