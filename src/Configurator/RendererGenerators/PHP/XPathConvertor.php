@@ -436,24 +436,47 @@ class XPathConvertor
 	protected function exportXPath($expr)
 	{
 		$phpTokens = [];
-		foreach ($this->tokenizeXPathForExport($expr) as $match)
+		foreach ($this->tokenizeXPathForExport($expr) as list($type, $content))
 		{
-			if (isset($match['literal']))
-			{
-				$phpTokens[] = var_export($match['literal'], true);
-			}
-			elseif (isset($match['param']))
-			{
-				$paramName   = ltrim($match['param'], '$');
-				$phpTokens[] = '$this->getParamAsXPath(' . var_export($paramName, true) . ')';
-			}
-			else
-			{
-				$phpTokens[] = '$node->getNodePath()';
-			}
+			$methodName  = 'exportXPath' . ucfirst($type);
+			$phpTokens[] = $this->$methodName($content);
 		}
 
 		return implode('.', $phpTokens);
+	}
+
+	/**
+	* Convert a "current()" XPath expression to its PHP source representation
+	*
+	* @return string
+	*/
+	protected function exportXPathCurrent()
+	{
+		return '$node->getNodePath()';
+	}
+
+	/**
+	* Convert a fragment of an XPath expression to its PHP source representation
+	*
+	* @param  string $fragment
+	* @return string
+	*/
+	protected function exportXPathFragment($fragment)
+	{
+		return var_export($fragment, true);
+	}
+
+	/**
+	* Convert an XSLT parameter to its PHP source representation
+	*
+	* @param  string $param Parameter, including the leading $
+	* @return string
+	*/
+	protected function exportXPathParam($param)
+	{
+		$paramName = ltrim($param, '$');
+
+		return '$this->getParamAsXPath(' . var_export($paramName, true) . ')';
 	}
 
 	/**
@@ -595,6 +618,44 @@ class XPathConvertor
 	}
 
 	/**
+	* Match the relevant components of an XPath expression
+	*
+	* @param  string $expr XPath expression
+	* @return array
+	*/
+	protected function matchXPathForExport($expr)
+	{
+		$tokenExprs = [
+			'(?<current>\\bcurrent\\(\\))',
+			'(?<param>\\$\\w+)',
+			'(?<fragment>"[^"]*"|\'[^\']*\'|.)'
+		];
+		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
+
+		// Merge fragment tokens
+		$i   = 0;
+		$max = count($matches) - 2;
+		while ($i <= $max)
+		{
+			if (!isset($matches[$i]['fragment']))
+			{
+				++$i;
+				continue;
+			}
+
+			$j = $i;
+			while (isset($matches[++$j]['fragment']))
+			{
+				$matches[$i]['fragment'] .= $matches[$j]['fragment'];
+				unset($matches[$j]);
+			}
+			$i = $j;
+		}
+
+		return array_values($matches);
+	}
+
+	/**
 	* Tokenize an XPath expression for use in PHP
 	*
 	* @param  string $expr XPath expression
@@ -602,33 +663,20 @@ class XPathConvertor
 	*/
 	protected function tokenizeXPathForExport($expr)
 	{
-		$tokenExprs = [
-			'(?<current>\\bcurrent\\(\\))',
-			'(?<param>\\$\\w+)',
-			'(?<literal>"[^"]*"|\'[^\']*\'|.)'
-		];
-		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
-
-		// Merge literal tokens
-		$i   = 0;
-		$max = count($matches) - 2;
-		while ($i <= $max)
+		$tokens = [];
+		foreach ($this->matchXPathForExport($expr) as $match)
 		{
-			if (!isset($matches[$i]['literal']))
+			foreach (array_reverse($match) as $k => $v)
 			{
-				++$i;
-				continue;
+				// Use the last non-numeric match
+				if (!is_numeric($k))
+				{
+					$tokens[] = [$k, $v];
+					break;
+				}
 			}
-
-			$j = $i;
-			while (isset($matches[++$j]['literal']))
-			{
-				$matches[$i]['literal'] .= $matches[$j]['literal'];
-				unset($matches[$j]);
-			}
-			$i = $j;
 		}
 
-		return array_values($matches);
+		return $tokens;
 	}
 }
