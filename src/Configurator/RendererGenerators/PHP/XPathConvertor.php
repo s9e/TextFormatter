@@ -607,7 +607,6 @@ class XPathConvertor
 		}
 		array_unshift($exprs, '(?<value>' . implode('|', $valueExprs) . ')');
 
-
 		// Assemble the final regexp
 		$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
 
