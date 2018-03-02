@@ -1,3 +1,25 @@
+1.1.1 (2018-03-02)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b2dd04095e975cd2009bff0f3f83520105be09de...d5cafb5e1aa56900d4152f7d7526fdb991e1232e)
+
+### Added
+
+ - `8e6388310` MediaEmbed: added support for "allow" attributes in iframes
+ - `26cad57a6` XPathConvertor: added support for current()
+
+### Removed
+
+ - `d5cafb5e1` MediaEmbed: removed Oddshot
+
+### Changed
+
+ - `556b72ff8` MediaEmbed: updated Gfycat
+ - `83b6bfa5d` MediaEmbed: updated Spotify
+ - `aa5532afc` TemplateHelper: reorganized replaceTokens()
+ - `dcef175d3` XPathConvertor: refactored the way XPath expressions are tokenized
+
+
 1.1.0 (2018-02-15)
 ==================
 
