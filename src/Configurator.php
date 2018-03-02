@@ -1496,6 +1496,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
@@ -1700,76 +1701,59 @@ abstract class TemplateHelper
 	}
 	public static function replaceTokens($template, $regexp, $fn)
 	{
-		if ($template === '')
-			return $template;
 		$dom   = self::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//@*') as $attribute)
-		{
-			$attrValue = \preg_replace_callback(
-				$regexp,
-				function ($m) use ($fn, $attribute)
-				{
-					$replacement = $fn($m, $attribute);
-					if ($replacement[0] === 'expression')
-						return '{' . $replacement[1] . '}';
-					elseif ($replacement[0] === 'passthrough')
-						return '{.}';
-					else
-						return $replacement[1];
-				},
-				$attribute->value
-			);
-			$attribute->value = \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8');
-		}
+			self::replaceTokensInAttribute($attribute, $regexp, $fn);
 		foreach ($xpath->query('//text()') as $node)
-		{
-			\preg_match_all(
-				$regexp,
-				$node->textContent,
-				$matches,
-				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
-			);
-			if (empty($matches))
-				continue;
-			$parentNode = $node->parentNode;
-			$lastPos = 0;
-			foreach ($matches as $m)
-			{
-				$pos = $m[0][1];
-				if ($pos > $lastPos)
-					$parentNode->insertBefore(
-						$dom->createTextNode(
-							\substr($node->textContent, $lastPos, $pos - $lastPos)
-						),
-						$node
-					);
-				$lastPos = $pos + \strlen($m[0][0]);
-				$_m = [];
-				foreach ($m as $capture)
-					$_m[] = $capture[0];
-				$replacement = $fn($_m, $node);
-				if ($replacement[0] === 'expression')
-					$parentNode
-						->insertBefore(
-							$dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of'),
-							$node
-						)
-						->setAttribute('select', $replacement[1]);
-				elseif ($replacement[0] === 'passthrough')
-					$parentNode->insertBefore(
-						$dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates'),
-						$node
-					);
-				else
-					$parentNode->insertBefore($dom->createTextNode($replacement[1]), $node);
-			}
-			$text = \substr($node->textContent, $lastPos);
-			if ($text > '')
-				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			$parentNode->removeChild($node);
-		}
+			self::replaceTokensInText($node, $regexp, $fn);
 		return self::saveTemplate($dom);
+	}
+	protected static function replaceTokensInAttribute(DOMAttr $attribute, $regexp, $fn)
+	{
+		$attrValue = \preg_replace_callback(
+			$regexp,
+			function ($m) use ($fn, $attribute)
+			{
+				$replacement = $fn($m, $attribute);
+				if ($replacement[0] === 'expression')
+					return '{' . $replacement[1] . '}';
+				elseif ($replacement[0] === 'passthrough')
+					return '{.}';
+				else
+					return $replacement[1];
+			},
+			$attribute->value
+		);
+		$attribute->value = \htmlspecialchars($attrValue, \ENT_COMPAT, 'UTF-8');
+	}
+	protected static function replaceTokensInText(DOMText $node, $regexp, $fn)
+	{
+		$parentNode = $node->parentNode;
+		$dom        = $node->ownerDocument;
+		\preg_match_all($regexp, $node->textContent, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+		$lastPos = 0;
+		foreach ($matches as $m)
+		{
+			$pos = $m[0][1];
+			$text = \substr($node->textContent, $lastPos, $pos - $lastPos);
+			$parentNode->insertBefore($dom->createTextNode($text), $node);
+			$lastPos = $pos + \strlen($m[0][0]);
+			$replacement = $fn(\array_column($m, 0), $node);
+			if ($replacement[0] === 'expression')
+			{
+				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
+				$newNode->setAttribute('select', $replacement[1]);
+			}
+			elseif ($replacement[0] === 'passthrough')
+				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
+			else
+				$newNode = $dom->createTextNode($replacement[1]);
+			$parentNode->insertBefore($newNode, $node);
+		}
+		$text = \substr($node->textContent, $lastPos);
+		$parentNode->insertBefore($dom->createTextNode($text), $node);
+		$parentNode->removeChild($node);
 	}
 	public static function saveTemplate(DOMDocument $dom)
 	{
@@ -3852,32 +3836,16 @@ class XPathConvertor
 	protected function exportXPath($expr)
 	{
 		$phpTokens = [];
-		$pos = 0;
-		$len = \strlen($expr);
-		while ($pos < $len)
-		{
-			if ($expr[$pos] === "'" || $expr[$pos] === '"')
+		foreach ($this->tokenizeXPathForExport($expr) as $match)
+			if (isset($match['literal']))
+				$phpTokens[] = \var_export($match['literal'], \true);
+			elseif (isset($match['param']))
 			{
-				$nextPos = \strpos($expr, $expr[$pos], 1 + $pos);
-				if ($nextPos === \false)
-					throw new RuntimeException('Unterminated string literal in XPath expression ' . \var_export($expr, \true));
-				$phpTokens[] = \var_export(\substr($expr, $pos, $nextPos + 1 - $pos), \true);
-				$pos = $nextPos + 1;
-				continue;
+				$paramName   = \ltrim($match['param'], '$');
+				$phpTokens[] = '$this->getParamAsXPath(' . \var_export($paramName, \true) . ')';
 			}
-			if ($expr[$pos] === '$' && \preg_match('/\\$(\\w+)/', $expr, $m, 0, $pos))
-			{
-				$phpTokens[] = '$this->getParamAsXPath(' . \var_export($m[1], \true) . ')';
-				$pos += \strlen($m[0]);
-				continue;
-			}
-			$spn = \strcspn($expr, '\'"$', $pos);
-			if ($spn)
-			{
-				$phpTokens[] = \var_export(\substr($expr, $pos, $spn), \true);
-				$pos += $spn;
-			}
-		}
+			else
+				$phpTokens[] = '$node->getNodePath()';
 		return \implode('.', $phpTokens);
 	}
 	protected function generateXPathRegexp()
@@ -3984,6 +3952,33 @@ class XPathConvertor
 		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
 		$regexp = \str_replace(' ', '\\s*', $regexp);
 		$this->regexp = $regexp;
+	}
+	protected function tokenizeXPathForExport($expr)
+	{
+		$tokenExprs = [
+			'(?<current>\\bcurrent\\(\\))',
+			'(?<param>\\$\\w+)',
+			'(?<literal>"[^"]*"|\'[^\']*\'|.)'
+		];
+		\preg_match_all('(' . \implode('|', $tokenExprs) . ')s', $expr, $matches, \PREG_SET_ORDER);
+		$i   = 0;
+		$max = \count($matches) - 2;
+		while ($i <= $max)
+		{
+			if (!isset($matches[$i]['literal']))
+			{
+				++$i;
+				continue;
+			}
+			$j = $i;
+			while (isset($matches[++$j]['literal']))
+			{
+				$matches[$i]['literal'] .= $matches[$j]['literal'];
+				unset($matches[$j]);
+			}
+			$i = $j;
+		}
+		return \array_values($matches);
 	}
 }
 
