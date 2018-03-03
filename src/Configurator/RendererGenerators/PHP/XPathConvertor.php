@@ -632,23 +632,14 @@ class XPathConvertor
 		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
 
 		// Merge fragment tokens
-		$i   = 0;
-		$max = count($matches) - 2;
-		while ($i <= $max)
+		$i = count($matches);
+		while (--$i > 0)
 		{
-			if (!isset($matches[$i]['fragment']))
+			if (isset($matches[$i]['fragment'], $matches[$i - 1]['fragment']))
 			{
-				++$i;
-				continue;
+				$matches[$i - 1]['fragment'] .= $matches[$i]['fragment'];
+				unset($matches[$i]);
 			}
-
-			$j = $i;
-			while (isset($matches[++$j]['fragment']))
-			{
-				$matches[$i]['fragment'] .= $matches[$j]['fragment'];
-				unset($matches[$j]);
-			}
-			$i = $j;
 		}
 
 		return array_values($matches);
