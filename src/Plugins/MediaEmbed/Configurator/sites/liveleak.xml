@@ -1,9 +1,13 @@
-<site name="LiveLeak" homepage="http://www.liveleak.com/">
-	<example>http://www.liveleak.com/view?i=3dd_1366238099</example>
+<site name="Liveleak" homepage="https://www.liveleak.com/">
+	<example>https://www.liveleak.com/view?t=yIcw_1520190567</example>
 
 	<tags><tag>videos</tag></tags>
 
 	<host>liveleak.com</host>
-	<extract>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</extract>
-	<iframe src="//www.liveleak.com/ll_embed?i={@id}"/>
+	<extract>!liveleak\.com/(?:e/|view\?i=)(?'id'\w+)!</extract>
+	<scrape>
+		<match>!liveleak\.com/view\?t=!</match>
+		<extract>!liveleak\.com/e/(?'id'\w+)!</extract>
+	</scrape>
+	<iframe src="//www.liveleak.com/e/{@id}"/>
 </site>

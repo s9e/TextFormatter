@@ -288,8 +288,8 @@
 	</tr>
 	<tr>
 		<td><code>liveleak</code></td>
-		<td>LiveLeak</td>
-		<td>http://www.liveleak.com/view?i=3dd_1366238099</td>
+		<td>Liveleak</td>
+		<td>https://www.liveleak.com/view?t=yIcw_1520190567</td>
 	</tr>
 	<tr>
 		<td><code>livestream</code></td>
