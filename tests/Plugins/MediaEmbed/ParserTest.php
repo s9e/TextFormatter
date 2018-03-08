@@ -737,7 +737,9 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('gfycat');
 
 					// Save an empty cache file that corresponds to this URL
-					file_put_contents($configurator->registeredVars['cacheDir'] . '/http.3872667632.gz', gzencode(''));
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
+						'https://gfycat.com/ifr/Test' => ''
+					]);
 				}
 			],
 			[
