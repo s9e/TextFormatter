@@ -83,6 +83,30 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				"<xsl:value-of select=\"substring-after('foobar', 'foo')\"/>",
 				"<xsl:value-of select=\"'bar'\"/>"
 			],
+			[
+				'<xsl:value-of select="string-length(\'abc\')"/>',
+				'<xsl:value-of select="3"/>'
+			],
+			[
+				'<xsl:value-of select="string-length(@foo)"/>',
+				'<xsl:value-of select="string-length(@foo)"/>'
+			],
+			[
+				'<xsl:value-of select="string-length()"/>',
+				'<xsl:value-of select="string-length()"/>'
+			],
+			[
+				'<xsl:value-of select="normalize-space(\'  a  b  c  \')"/>',
+				'<xsl:value-of select="\'a b c\'"/>'
+			],
+			[
+				'<xsl:value-of select="normalize-space(@foo)"/>',
+				'<xsl:value-of select="normalize-space(@foo)"/>'
+			],
+			[
+				'<xsl:value-of select="normalize-space()"/>',
+				'<xsl:value-of select="normalize-space()"/>'
+			],
 		];
 	}
 }

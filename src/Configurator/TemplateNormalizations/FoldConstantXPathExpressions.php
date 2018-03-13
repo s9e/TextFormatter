@@ -101,8 +101,8 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	*/
 	protected function isConstantExpression($expr)
 	{
-		// Remove strings to avoid false-positives
-		$expr = preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
+		// Replace strings to avoid false-positives
+		$expr = preg_replace('("[^"]*"|\'[^\']*\')', '0', $expr);
 
 		// Match function calls against the list of supported functions
 		preg_match_all('(\\w[-\\w]+(?=\\())', $expr, $m);
@@ -111,7 +111,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 			return false;
 		}
 
-		// Match unsupported characters and keywords
-		return !preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\())i', $expr);
+		// Match unsupported characters and keywords, as well as function calls without arguments
+		return !preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
 	}
 }
