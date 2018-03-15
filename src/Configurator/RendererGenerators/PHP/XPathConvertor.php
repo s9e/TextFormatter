@@ -350,25 +350,10 @@ class XPathConvertor
 		preg_match_all('(.)su', substr($to, 1, -1), $matches);
 		$to = $matches[0];
 
-		// We adjust $to to match the number of elements in $from, either by truncating it
-		// or by padding it with empty strings
-		if (count($to) > count($from))
-		{
-			$to = array_slice($to, 0, count($from));
-		}
-		else
-		{
-			// NOTE: we don't use array_merge() because of potential side-effects when
-			//       translating digits
-			while (count($from) > count($to))
-			{
-				$to[] = '';
-			}
-		}
-
-		// Remove duplicates in $from, as well as the corresponding elements in $to
+		// Remove duplicates from $from, keep matching elements in $to then add missing elements
 		$from = array_unique($from);
 		$to   = array_intersect_key($to, $from);
+		$to  += array_fill_keys(array_keys(array_diff_key($from, $to)), '');
 
 		// Start building the strtr() call
 		$php = 'strtr(' . $this->convertXPath($str) . ',';
@@ -383,22 +368,13 @@ class XPathConvertor
 		}
 		else
 		{
-			$php .= '[';
-
-			$cnt = count($from);
-			for ($i = 0; $i < $cnt; ++$i)
+			$elements = [];
+			foreach ($from as $k => $str)
 			{
-				if ($i)
-				{
-					$php .= ',';
-				}
-
-				$php .= var_export($from[$i], true) . '=>' . var_export($to[$i], true);
+				$elements[] = var_export($str, true) . '=>' . var_export($to[$k], true);
 			}
-
-			$php .= ']';
+			$php .= '[' . implode(',', $elements) . ']';
 		}
-
 		$php .= ')';
 
 		return $php;
