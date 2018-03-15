@@ -205,12 +205,8 @@ function convertCustom($filepath, &$file)
 				'$php .= 0x7fffffe;'
 			),
 			array(
-				"\$php .= '[';",
-				"\$php .= 'array(';"
-			),
-			array(
-				"\$php .= ']';",
-				"\$php .= ')';"
+				"\$php .= '[' . implode(',', \$elements) . ']';",
+				"\$php .= 'array(' . implode(',', \$elements) . ')';"
 			)
 		),
 		'PHP/XPathConvertorTest.php' => array(
