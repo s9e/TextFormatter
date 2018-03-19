@@ -772,6 +772,13 @@ class PHPTest extends Test
 					$configurator->tags->add('Z')->template = '<xsl:value-of select="../Y[1 + count(current()/preceding-sibling::Z)]/@a"/>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:value-of select="0777"/>';
+				}
+			],
 		];
 	}
 

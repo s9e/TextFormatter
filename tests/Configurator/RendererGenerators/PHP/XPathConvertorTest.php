@@ -174,6 +174,14 @@ class XPathConvertorTest extends Test
 				'//X[@a = current()/@a]',
 				"\$this->xpath->evaluate('//X[@a = '.\$node->getNodePath().'/@a]',\$node)"
 			],
+			[
+				'0',
+				"'0'"
+			],
+			[
+				'0777',
+				"'777'"
+			],
 		];
 	}
 

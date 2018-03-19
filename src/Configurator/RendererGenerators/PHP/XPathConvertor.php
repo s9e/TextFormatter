@@ -189,6 +189,9 @@ class XPathConvertor
 
 	protected function number($number)
 	{
+		// Remove leading zeros
+		$number = ltrim($number, '0') ?: 0;
+
 		return "'" . $number . "'";
 	}
 
