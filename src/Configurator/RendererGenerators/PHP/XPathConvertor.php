@@ -70,17 +70,17 @@ class XPathConvertor
 		}
 
 		// XSL: <xsl:if test="$foo">
-		// PHP: if (!empty($this->params['foo']))
+		// PHP: if ($this->params['foo']!=='')
 		if (preg_match('#^\\$(\\w+)$#', $expr, $m))
 		{
-			return '!empty($this->params[' . var_export($m[1], true) . '])';
+			return '$this->params[' . var_export($m[1], true) . "]!==''";
 		}
 
 		// XSL: <xsl:if test="not($foo)">
-		// PHP: if (empty($this->params['foo']))
+		// PHP: if ($this->params['foo']==='')
 		if (preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
 		{
-			return 'empty($this->params[' . var_export($m[1], true) . '])';
+			return '$this->params[' . var_export($m[1], true) . "]===''";
 		}
 
 		// XSL: <xsl:if test="@foo > 1">

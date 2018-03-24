@@ -327,11 +327,11 @@ class XPathConvertorTest extends Test
 			],
 			[
 				'$foo',
-				"!empty(\$this->params['foo'])"
+				"\$this->params['foo']!==''"
 			],
 			[
 				'not($foo)',
-				"empty(\$this->params['foo'])"
+				"\$this->params['foo']===''"
 			],
 			[
 				'@width > 0',

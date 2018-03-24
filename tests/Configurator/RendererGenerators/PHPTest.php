@@ -779,6 +779,19 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<xsl:value-of select="0777"/>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:if test="$EMPTY">E</xsl:if><xsl:if test="$ZERO">0</xsl:if><xsl:if test="$ONE">1</xsl:if><xsl:if test="not($EMPTY)">e</xsl:if><xsl:if test="not($ZERO)">z</xsl:if><xsl:if test="not($ONE)">o</xsl:if>';
+				},
+				function ($renderer)
+				{
+					$renderer->setParameter('EMPTY', '');
+					$renderer->setParameter('ZERO',  0);
+					$renderer->setParameter('ONE',   1);
+				}
+			],
 		];
 	}
 
