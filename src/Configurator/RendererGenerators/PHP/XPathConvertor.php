@@ -187,12 +187,18 @@ class XPathConvertor
 		return '$node->nodeName';
 	}
 
-	protected function number($number)
+	protected function number($sign, $number)
 	{
 		// Remove leading zeros
 		$number = ltrim($number, '0') ?: 0;
 
-		return "'" . $number . "'";
+		// Disable negative zero
+		if (!$number)
+		{
+			$sign = '';
+		}
+
+		return "'" . $sign . $number . "'";
 	}
 
 	protected function strlen($expr)
@@ -477,7 +483,7 @@ class XPathConvertor
 			'lname'     => 'local-name\\(\\)',
 			'param'     => ['\\$', '(?<param0>\\w+)'],
 			'string'    => '"[^"]*"|\'[^\']*\'',
-			'number'    => ['-?', '\\d++'],
+			'number'    => ['(?<number0>-?)', '(?<number1>\\d++)'],
 			'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'],
 			'contains'  => [
 				'contains',

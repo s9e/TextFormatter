@@ -182,6 +182,10 @@ class XPathConvertorTest extends Test
 				'0777',
 				"'777'"
 			],
+			[
+				'-0777',
+				"'-777'"
+			],
 		];
 	}
 
