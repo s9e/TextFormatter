@@ -1,3 +1,24 @@
+1.1.2 (2018-03-31)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a907d8dab55639b426a8a531616203e99d1a8b27...eee99ce5110e319bee5f68c4313a8e0c292dac66)
+
+### Fixed
+
+ - `dce9241bb` FoldConstantXPathExpressions: fixed an issue with function calls without arguments being incorrectly replaced
+ - `95ea73acb` XPathConvertor: fixed boolean conversion of parameters set to '0' in conditionals
+ - `49330b7fd` XPathConvertor: fixed handling of negative numbers that start with a zero
+ - `815cef8b5` XPathConvertor: fixed handling of numbers that start with a zero
+
+### Changed
+
+ - `1d8456c11` MediaEmbed: updated Liveleak
+ - `eee99ce51` MediaEmbed: updated MLB
+ - `8cfcbe30c` XPathConvertor: refactored exportXPath()
+ - `6d69d0ee0` XPathConvertor: simplified matchXPathForExport()
+ - `57c7a5d71` XPathConvertor: simplified translate()
+
+
 1.1.1 (2018-03-02)
 ==================
 
