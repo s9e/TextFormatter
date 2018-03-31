@@ -23,7 +23,7 @@ function loadPage($url)
 
 $page  = loadPage('http://w3c.github.io/html/fullindex.html');
 $xpath = new DOMXPath ($page);
-$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr[contains(., "URL")]/th';
+$query = '//h3[@id="attributes-table"]/following-sibling::table[1]/tbody/tr[contains(., "URL")]/th';
 
 // Prefill the list of filters with the "icon" attribute from the now-deprecated menuitem element
 $filters = ['icon' => '#url'];
