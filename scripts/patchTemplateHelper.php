@@ -1,8 +1,7 @@
 #!/usr/bin/php
 <?php
 
-use s9e\SimpleDOM\SimpleDOM;
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\RegexpBuilder\RegexpBuilder;
 
 include __DIR__ . '/../vendor/autoload.php';
 
@@ -44,8 +43,8 @@ foreach ($xpath->query($query) as $a)
 }
 
 $page  = loadPage('http://w3c.github.io/html/fullindex.html');
-$xpath = new DOMXPath ($page);
-$query = '//h3[@id="attributes-table"]/following-sibling::table/tbody/tr/th';
+$xpath = new DOMXPath($page);
+$query = '//h3[@id="attributes-table"]/following-sibling::table[1]/tbody/tr/th';
 foreach ($xpath->query($query) as $th)
 {
 	$tr = $th->parentNode;
@@ -105,15 +104,12 @@ foreach ($attributes as $type => $attrNames)
 $filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateHelper.php';
 $file = file_get_contents($filepath);
 
+$builder = new s9e\RegexpBuilder\Builder([
+	'meta' => ['^' => '^', '$' => '$']
+]);
 foreach ($regexps as $type => $typeRegexps)
 {
-	$regexp = RegexpBuilder::fromList(
-		$typeRegexps,
-		[
-			'delimiter'    => '/',
-			'specialChars' => ['^' => '^', '$' => '$']
-		]
-	);
+	$regexp = $builder->build($typeRegexps);
 
 	$file = preg_replace_callback(
 		'/(function get' . $type . 'Nodes\\(.*?\\$regexp = )\'.*?\'/s',
