@@ -1558,7 +1558,7 @@ abstract class TemplateHelper
 	}
 	public static function getJSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
+		$regexp = '/^(?:data-s9e-livepreview-postprocess$|on)/i';
 		$nodes  = \array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^script$/i')
@@ -1622,7 +1622,7 @@ abstract class TemplateHelper
 	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>ing|luginspage|oster|rofile)|usemap)|src)$/i';
+		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
 		{
@@ -3635,9 +3635,9 @@ class XPathConvertor
 		if (\preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
 			return '!$node->hasAttribute(' . \var_export($m[1], \true) . ')';
 		if (\preg_match('#^\\$(\\w+)$#', $expr, $m))
-			return '!empty($this->params[' . \var_export($m[1], \true) . '])';
+			return '$this->params[' . \var_export($m[1], \true) . "]!==''";
 		if (\preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
-			return 'empty($this->params[' . \var_export($m[1], \true) . '])';
+			return '$this->params[' . \var_export($m[1], \true) . "]===''";
 		if (\preg_match('#^([$@][-\\w]+)\\s*([<>])\\s*(\\d+)$#', $expr, $m))
 			return $this->convertXPath($m[1]) . $m[2] . $m[3];
 		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
@@ -3698,9 +3698,12 @@ class XPathConvertor
 	{
 		return '$node->nodeName';
 	}
-	protected function number($number)
+	protected function number($sign, $number)
 	{
-		return "'" . $number . "'";
+		$number = \ltrim($number, '0') ?: 0;
+		if (!$number)
+			$sign = '';
+		return "'" . $sign . $number . "'";
 	}
 	protected function strlen($expr)
 	{
@@ -3804,28 +3807,19 @@ class XPathConvertor
 		$from = $matches[0];
 		\preg_match_all('(.)su', \substr($to, 1, -1), $matches);
 		$to = $matches[0];
-		if (\count($to) > \count($from))
-			$to = \array_slice($to, 0, \count($from));
-		else
-			while (\count($from) > \count($to))
-				$to[] = '';
 		$from = \array_unique($from);
 		$to   = \array_intersect_key($to, $from);
+		$to  += \array_fill_keys(\array_keys(\array_diff_key($from, $to)), '');
 		$php = 'strtr(' . $this->convertXPath($str) . ',';
 		if (array(1) === \array_unique(\array_map('strlen', $from))
 		 && array(1) === \array_unique(\array_map('strlen', $to)))
 			$php .= \var_export(\implode('', $from), \true) . ',' . \var_export(\implode('', $to), \true);
 		else
 		{
-			$php .= 'array(';
-			$cnt = \count($from);
-			for ($i = 0; $i < $cnt; ++$i)
-			{
-				if ($i)
-					$php .= ',';
-				$php .= \var_export($from[$i], \true) . '=>' . \var_export($to[$i], \true);
-			}
-			$php .= ')';
+			$elements = array();
+			foreach ($from as $k => $str)
+				$elements[] = \var_export($str, \true) . '=>' . \var_export($to[$k], \true);
+			$php .= 'array(' . \implode(',', $elements) . ')';
 		}
 		$php .= ')';
 		return $php;
@@ -3843,17 +3837,26 @@ class XPathConvertor
 	protected function exportXPath($expr)
 	{
 		$phpTokens = array();
-		foreach ($this->tokenizeXPathForExport($expr) as $match)
-			if (isset($match['literal']))
-				$phpTokens[] = \var_export($match['literal'], \true);
-			elseif (isset($match['param']))
-			{
-				$paramName   = \ltrim($match['param'], '$');
-				$phpTokens[] = '$this->getParamAsXPath(' . \var_export($paramName, \true) . ')';
-			}
-			else
-				$phpTokens[] = '$node->getNodePath()';
+		foreach ($this->tokenizeXPathForExport($expr) as $_f6b3b659)
+		{
+			list($type, $content) = $_f6b3b659;
+			$methodName  = 'exportXPath' . \ucfirst($type);
+			$phpTokens[] = $this->$methodName($content);
+		}
 		return \implode('.', $phpTokens);
+	}
+	protected function exportXPathCurrent()
+	{
+		return '$node->getNodePath()';
+	}
+	protected function exportXPathFragment($fragment)
+	{
+		return \var_export($fragment, \true);
+	}
+	protected function exportXPathParam($param)
+	{
+		$paramName = \ltrim($param, '$');
+		return '$this->getParamAsXPath(' . \var_export($paramName, \true) . ')';
 	}
 	protected function generateXPathRegexp()
 	{
@@ -3866,7 +3869,7 @@ class XPathConvertor
 			'lname'     => 'local-name\\(\\)',
 			'param'     => array('\\$', '(?<param0>\\w+)'),
 			'string'    => '"[^"]*"|\'[^\']*\'',
-			'number'    => array('-?', '\\d++'),
+			'number'    => array('(?<number0>-?)', '(?<number1>\\d++)'),
 			'strlen'    => array('string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'),
 			'contains'  => array(
 				'contains',
@@ -3955,37 +3958,38 @@ class XPathConvertor
 				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 		}
 		\array_unshift($exprs, '(?<value>' . \implode('|', $valueExprs) . ')');
-
 		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
 		$regexp = \str_replace(' ', '\\s*', $regexp);
 		$this->regexp = $regexp;
 	}
-	protected function tokenizeXPathForExport($expr)
+	protected function matchXPathForExport($expr)
 	{
 		$tokenExprs = array(
 			'(?<current>\\bcurrent\\(\\))',
 			'(?<param>\\$\\w+)',
-			'(?<literal>"[^"]*"|\'[^\']*\'|.)'
+			'(?<fragment>"[^"]*"|\'[^\']*\'|.)'
 		);
 		\preg_match_all('(' . \implode('|', $tokenExprs) . ')s', $expr, $matches, \PREG_SET_ORDER);
-		$i   = 0;
-		$max = \count($matches) - 2;
-		while ($i <= $max)
-		{
-			if (!isset($matches[$i]['literal']))
+		$i = \count($matches);
+		while (--$i > 0)
+			if (isset($matches[$i]['fragment'], $matches[$i - 1]['fragment']))
 			{
-				++$i;
-				continue;
+				$matches[$i - 1]['fragment'] .= $matches[$i]['fragment'];
+				unset($matches[$i]);
 			}
-			$j = $i;
-			while (isset($matches[++$j]['literal']))
-			{
-				$matches[$i]['literal'] .= $matches[$j]['literal'];
-				unset($matches[$j]);
-			}
-			$i = $j;
-		}
 		return \array_values($matches);
+	}
+	protected function tokenizeXPathForExport($expr)
+	{
+		$tokens = array();
+		foreach ($this->matchXPathForExport($expr) as $match)
+			foreach (\array_reverse($match) as $k => $v)
+				if (!\is_numeric($k))
+				{
+					$tokens[] = array($k, $v);
+					break;
+				}
+		return $tokens;
 	}
 }
 
@@ -8051,11 +8055,11 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	}
 	protected function isConstantExpression($expr)
 	{
-		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '', $expr);
+		$expr = \preg_replace('("[^"]*"|\'[^\']*\')', '0', $expr);
 		\preg_match_all('(\\w[-\\w]+(?=\\())', $expr, $m);
 		if (\count(\array_diff($m[0], $this->supportedFunctions)) > 0)
 			return \false;
-		return !\preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\())i', $expr);
+		return !\preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
 	}
 }
 
