@@ -2536,8 +2536,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&partnerId=as_col_20161011_66746556&adbid=10154421890311113&adbpl=fb&adbpr=64466991112',
-				'<r><MLB id="1203589883">http://m.mlb.com/col/video/topic/8877456/v1203589883/a-look-at-the-best-rockies-plays-from-2016/?c_id=col&amp;partnerId=as_col_20161011_66746556&amp;adbid=10154421890311113&amp;adbpl=fb&amp;adbpr=64466991112</MLB></r>',
+				'https://www.mlb.com/video/statcast-stantons-two-homers/c-1898424783',
+				'<r><MLB id="1898424783">https://www.mlb.com/video/statcast-stantons-two-homers/c-1898424783</MLB></r>',
 				[],
 				function ($configurator)
 				{
@@ -2545,17 +2545,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://mlb.mlb.com/r/video?content_id=1205791883',
-				'<r><MLB id="1205791883">http://mlb.mlb.com/r/video?content_id=1205791883</MLB></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('mlb');
-				}
-			],
-			[
-				'http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all',
-				'<r><MLB id="1202852683">http://m.mlb.com/video/topic/7417714/v1202852683/ryan-dempster-believes-the-cubs-will-win-it-all</MLB></r>',
+				'https://www.mlb.com/news/yankees-mckinney-exits-game/c-270278462',
+				'<t>https://www.mlb.com/news/yankees-mckinney-exits-game/c-270278462</t>',
 				[],
 				function ($configurator)
 				{

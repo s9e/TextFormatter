@@ -319,7 +319,7 @@
 	<tr>
 		<td><code>mlb</code></td>
 		<td>MLB</td>
-		<td>http://m.mlb.com/video/v1205791883<br/>http://m.mlb.com/video/topic/39049312/v1211631483/cubs-celebrate-world-series-with-historic-parade</td>
+		<td>https://www.mlb.com/video/statcast-stantons-two-homers/c-1898424783<br/>https://m.mlb.com/video/v1205791883</td>
 	</tr>
 	<tr>
 		<td><code>mrctv</code></td>

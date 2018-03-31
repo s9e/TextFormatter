@@ -1,11 +1,10 @@
 <site name="MLB" homepage="http://mlb.com/video/">
-	<example>http://m.mlb.com/video/v1205791883</example>
-	<example>http://m.mlb.com/video/topic/39049312/v1211631483/cubs-celebrate-world-series-with-historic-parade</example>
+	<example>https://www.mlb.com/video/statcast-stantons-two-homers/c-1898424783</example>
+	<example>https://m.mlb.com/video/v1205791883</example>
 
 	<tags><tag>sports</tag></tags>
 
 	<host>mlb.com</host>
-	<extract>#mlb\.com/[\w/]*/v(?'id'\d+)#</extract>
-	<extract>#mlb\.com/r/video\?content_id=(?'id'\d+)#</extract>
-	<iframe src="//m.mlb.com/shared/video/embed/embed.html?content_id={@id}&amp;width=640&amp;height=360"/>
+	<extract>#mlb\.com/video/(?:[-\w/]+/)?(?:c-|v)(?'id'\d+)#</extract>
+	<iframe src="https://www.mlb.com/video/share/c-{@id}"/>
 </site>
