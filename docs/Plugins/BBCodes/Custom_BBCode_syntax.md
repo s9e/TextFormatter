@@ -164,6 +164,8 @@ BBCode options can be specified in the opening tag like an attribute, using thei
 
     [QUOTE $nestingLimit=3]{TEXT}[/QUOTE]
 
+Most scalar properties from the [BBCode class](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/BBCodes/Configurator/BBCode.html) and [Tag class](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Items/Tag.html) can be set that way.
+
 ### Tag rules
 
 [Tag rules](/Rules/Tag_rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) Multiple values can be separated with a comma. For example:
