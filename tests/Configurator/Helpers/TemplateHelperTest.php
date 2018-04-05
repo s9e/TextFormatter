@@ -700,6 +700,15 @@ class TemplateHelperTest extends Test
 				'<b title="{.}"/>'
 			],
 			[
+				'<b title="$1"/>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', 'X'];
+				},
+				'<b title="{X}"/>'
+			],
+			[
 				'<b>$1</b>',
 				'/\\$[0-9]+/',
 				function ($m)
@@ -725,6 +734,15 @@ class TemplateHelperTest extends Test
 					return ['passthrough'];
 				},
 				'<b><xsl:apply-templates/></b>'
+			],
+			[
+				'<b>$1</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', 'X'];
+				},
+				'<b><xsl:apply-templates select="X"/></b>'
 			],
 			[
 				'<b id="$1">$1</b>',

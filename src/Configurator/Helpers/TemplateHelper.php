@@ -500,6 +500,36 @@ abstract class TemplateHelper
 	}
 
 	/**
+	* Create a node that implements given replacement strategy
+	*
+	* @param  DOMDocument $dom
+	* @param  array       $replacement
+	* @return DOMNode
+	*/
+	protected static function createReplacementNode(DOMDocument $dom, array $replacement)
+	{
+		if ($replacement[0] === 'expression')
+		{
+			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
+			$newNode->setAttribute('select', $replacement[1]);
+		}
+		elseif ($replacement[0] === 'passthrough')
+		{
+			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
+			if (isset($replacement[1]))
+			{
+				$newNode->setAttribute('select', $replacement[1]);
+			}
+		}
+		else
+		{
+			$newNode = $dom->createTextNode($replacement[1]);
+		}
+
+		return $newNode;
+	}
+
+	/**
 	* Replace parts of an attribute that match given regexp
 	*
 	* @param  DOMAttr  $attribute Attribute
@@ -514,13 +544,12 @@ abstract class TemplateHelper
 			function ($m) use ($fn, $attribute)
 			{
 				$replacement = $fn($m, $attribute);
-				if ($replacement[0] === 'expression')
+				if ($replacement[0] === 'expression' || $replacement[0] === 'passthrough')
 				{
+					// Use the node's text content as the default expression
+					$replacement[] = '.';
+
 					return '{' . $replacement[1] . '}';
-				}
-				elseif ($replacement[0] === 'passthrough')
-				{
-					return '{.}';
 				}
 				else
 				{
@@ -562,19 +591,7 @@ abstract class TemplateHelper
 
 			// Get the replacement for this token
 			$replacement = $fn(array_column($m, 0), $node);
-			if ($replacement[0] === 'expression')
-			{
-				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
-				$newNode->setAttribute('select', $replacement[1]);
-			}
-			elseif ($replacement[0] === 'passthrough')
-			{
-				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
-			}
-			else
-			{
-				$newNode = $dom->createTextNode($replacement[1]);
-			}
+			$newNode     = self::createReplacementNode($dom, $replacement);
 			$parentNode->insertBefore($newNode, $node);
 		}
 
