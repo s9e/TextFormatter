@@ -22,5 +22,11 @@
 		});
 		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
-	<iframe width="568" height="450" src="https://s9e.github.io/iframe/imgur.min.html#{@id}" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="568" height="450" onload="var b=Math.random();window.addEventListener('message',function(a){{a.data.id==b&amp;&amp;(style.height=a.data.height+'px',style.width=a.data.width+'px')}});contentWindow.postMessage('s9e:'+b,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/imgur.min.html#</xsl:text>
+			<xsl:if test="@type='album'">a/</xsl:if>
+			<xsl:value-of select="@id"/>
+		]]></src>
+	</iframe>
 </site>
