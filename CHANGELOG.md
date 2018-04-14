@@ -1,3 +1,22 @@
+1.1.3 (2018-04-14)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/60fbdf7d6315e06143e0a1405c66b812d3a6d8a0...c50c7525bcbf72ec983badf31e53a542d90af234)
+
+### Added
+
+ - `692a5157f` TemplateHelper: added support for select attribute in passthrough replacements
+
+### Fixed
+
+ - `4096d3523` MediaEmbed: fixed legacy Imgur embeds
+
+### Changed
+
+ - `a6b9a107b` BBCodes\Configurator\Repository: improved error message on bad repository file
+ - `c50c7525b` XmlFileDefinitionCollection: load XML files using native PHP streams
+
+
 1.1.2 (2018-03-31)
 ==================
 
