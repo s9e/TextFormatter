@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator;
+namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections;
 
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteDefinitionCollection;
 use s9e\TextFormatter\Tests\Test;

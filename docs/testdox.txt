@@ -2480,7 +2480,7 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
  [x] Parsing tests (JavaScript) 
  [x] Parsing+rendering tests 
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollection
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection
  [x] isset('youtube') returns TRUE
  [x] isset('unknown') returns FALSE
  [x] get('*invalid*') throws an exception
@@ -2490,7 +2490,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\CachedDefinitionCollecti
  [x] Site definitions contain the site's name
  [x] Site definitions contain the site's tags
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\SiteDefinitionCollection
  [x] Can set and retrieve definitions
  [x] get() throws a meaningful exception if the site ID does not exist
  [x] Throws an exception if the site ID is not valid
@@ -2501,7 +2501,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteDefinitionCollection
  [x] Preserves the extract field if it's an array
  [x] Normalizes the scrape config
 
-s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\XmlFileDefinitionCollection
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection
  [x] isset() returns TRUE if the site config exists
  [x] isset('unknown') returns FALSE
  [x] isset('*invalid*') throws an exception
