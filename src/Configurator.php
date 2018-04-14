@@ -1709,6 +1709,23 @@ abstract class TemplateHelper
 			self::replaceTokensInText($node, $regexp, $fn);
 		return self::saveTemplate($dom);
 	}
+	protected static function createReplacementNode(DOMDocument $dom, array $replacement)
+	{
+		if ($replacement[0] === 'expression')
+		{
+			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
+			$newNode->setAttribute('select', $replacement[1]);
+		}
+		elseif ($replacement[0] === 'passthrough')
+		{
+			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
+			if (isset($replacement[1]))
+				$newNode->setAttribute('select', $replacement[1]);
+		}
+		else
+			$newNode = $dom->createTextNode($replacement[1]);
+		return $newNode;
+	}
 	protected static function replaceTokensInAttribute(DOMAttr $attribute, $regexp, $fn)
 	{
 		$attrValue = \preg_replace_callback(
@@ -1716,10 +1733,11 @@ abstract class TemplateHelper
 			function ($m) use ($fn, $attribute)
 			{
 				$replacement = $fn($m, $attribute);
-				if ($replacement[0] === 'expression')
+				if ($replacement[0] === 'expression' || $replacement[0] === 'passthrough')
+				{
+					$replacement[] = '.';
 					return '{' . $replacement[1] . '}';
-				elseif ($replacement[0] === 'passthrough')
-					return '{.}';
+				}
 				else
 					return $replacement[1];
 			},
@@ -1740,15 +1758,7 @@ abstract class TemplateHelper
 			$parentNode->insertBefore($dom->createTextNode($text), $node);
 			$lastPos = $pos + \strlen($m[0][0]);
 			$replacement = $fn(\array_column($m, 0), $node);
-			if ($replacement[0] === 'expression')
-			{
-				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
-				$newNode->setAttribute('select', $replacement[1]);
-			}
-			elseif ($replacement[0] === 'passthrough')
-				$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
-			else
-				$newNode = $dom->createTextNode($replacement[1]);
+			$newNode     = self::createReplacementNode($dom, $replacement);
 			$parentNode->insertBefore($newNode, $node);
 		}
 		$text = \substr($node->textContent, $lastPos);
