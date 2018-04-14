@@ -65,6 +65,18 @@ class XmlFileDefinitionCollectionTest extends Test
 	}
 
 	/**
+	* @testdox Works if libxml2 entity loader is disabled
+	*/
+	public function testDisableEntityLoader()
+	{
+		$old        = libxml_disable_entity_loader(true);
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$this->assertTrue(isset($collection[$siteId]));
+		libxml_disable_entity_loader($old);
+	}
+
+	/**
 	* @testdox Is iterable
 	*/
 	public function testIsIterable()

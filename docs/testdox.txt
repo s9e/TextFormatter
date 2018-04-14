@@ -2505,6 +2505,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefin
  [x] isset() returns TRUE if the site config exists
  [x] isset('unknown') returns FALSE
  [x] isset('*invalid*') throws an exception
+ [x] Works if libxml2 entity loader is disabled
  [x] Is iterable
  [x] get('foo') returns a configuration if foo.xml exists
  [x] get('unknown') throws an exception
