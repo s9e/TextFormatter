@@ -17,21 +17,8 @@ class Repository
 	protected $dom;
 	public function __construct($value, BBCodeMonkey $bbcodeMonkey)
 	{
-		if (!($value instanceof DOMDocument))
-		{
-			if (!\file_exists($value))
-				throw new InvalidArgumentException('Not a DOMDocument or the path to a repository file');
-			$dom = new DOMDocument;
-			$dom->preserveWhiteSpace = \false;
-			$useErrors = \libxml_use_internal_errors(\true);
-			$success = $dom->load($value);
-			\libxml_use_internal_errors($useErrors);
-			if (!$success)
-				throw new InvalidArgumentException('Invalid repository file');
-			$value = $dom;
-		}
 		$this->bbcodeMonkey = $bbcodeMonkey;
-		$this->dom = $value;
+		$this->dom          = ($value instanceof DOMDocument) ? $value : $this->loadRepository($value);
 	}
 	public function get($name, array $vars = array())
 	{
@@ -78,5 +65,19 @@ class Repository
 			'bbcodeName' => $bbcodeName,
 			'tag'        => $tag
 		);
+	}
+	protected function createRepositoryException($filepath)
+	{
+		return new InvalidArgumentException(\var_export($filepath, \true) . ' is not a valid BBCode repository file');
+	}
+	protected function loadRepository($filepath)
+	{
+		if (!\file_exists($filepath))
+			throw $this->createRepositoryException($filepath);
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = \false;
+		if (!$dom->loadXML(\file_get_contents($filepath), \LIBXML_NOERROR))
+			throw $this->createRepositoryException($filepath);
+		return $dom;
 	}
 }
