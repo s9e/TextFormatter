@@ -36,7 +36,7 @@ class RepositoryTest extends Test
 	/**
 	* @testdox __construct() throws an exception if passed anything else
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not a DOMDocument or the path to a repository file
+	* @expectedExceptionMessage NULL is not a valid BBCode repository file
 	*/
 	public function testConstructorInvalidPath()
 	{
@@ -46,7 +46,7 @@ class RepositoryTest extends Test
 	/**
 	* @testdox __construct() throws an exception if passed the path to a file that is not valid XML
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid repository file
+	* @expectedExceptionMessage is not a valid BBCode repository file
 	*/
 	public function testConstructorInvalidFile()
 	{

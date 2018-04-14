@@ -33,30 +33,8 @@ class Repository
 	*/
 	public function __construct($value, BBCodeMonkey $bbcodeMonkey)
 	{
-		if (!($value instanceof DOMDocument))
-		{
-			if (!file_exists($value))
-			{
-				throw new InvalidArgumentException('Not a DOMDocument or the path to a repository file');
-			}
-
-			$dom = new DOMDocument;
-			$dom->preserveWhiteSpace = false;
-
-			$useErrors = libxml_use_internal_errors(true);
-			$success = $dom->load($value);
-			libxml_use_internal_errors($useErrors);
-
-			if (!$success)
-			{
-				throw new InvalidArgumentException('Invalid repository file');
-			}
-
-			$value = $dom;
-		}
-
 		$this->bbcodeMonkey = $bbcodeMonkey;
-		$this->dom = $value;
+		$this->dom          = ($value instanceof DOMDocument) ? $value : $this->loadRepository($value);
 	}
 
 	/**
@@ -137,5 +115,39 @@ class Repository
 			'bbcodeName' => $bbcodeName,
 			'tag'        => $tag
 		];
+	}
+
+	/**
+	* Create an exception for a bad repository file path
+	*
+	* @param  mixed $filepath
+	* @return InvalidArgumentException
+	*/
+	protected function createRepositoryException($filepath)
+	{
+		return new InvalidArgumentException(var_export($filepath, true) . ' is not a valid BBCode repository file');
+	}
+
+	/**
+	* Load a repository file into a DOMDocument
+	*
+	* @param  string $filepath
+	* @return DOMDocument
+	*/
+	protected function loadRepository($filepath)
+	{
+		if (!file_exists($filepath))
+		{
+			throw $this->createRepositoryException($filepath);
+		}
+
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = false;
+		if (!$dom->loadXML(file_get_contents($filepath), LIBXML_NOERROR))
+		{
+			throw $this->createRepositoryException($filepath);
+		}
+
+		return $dom;
 	}
 }
