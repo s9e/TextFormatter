@@ -60,7 +60,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 	protected function getConfigFromXmlFile($filepath)
 	{
 		$dom = new DOMDocument;
-		$dom->load($filepath, \LIBXML_NOCDATA);
+		$dom->loadXML(\file_get_contents($filepath), \LIBXML_NOCDATA);
 		return $this->getElementConfig($dom->documentElement);
 	}
 	protected function getElementConfig(DOMElement $element)
