@@ -527,13 +527,15 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'<r><BBCNEWS id="p05wbr2s/42847060">http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</BBCNEWS></r>',
+				'(<r><BBCNEWS id="\\w+/42847060">http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</BBCNEWS></r>)',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bbcnews');
-				}
+				},
+				null,
+				'assertRegexp'
 			],
 //			[
 //				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
@@ -1272,13 +1274,14 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/p05wbr2s/42847060"></iframe></span></span>',
+				'(<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/\\w+/42847060"></iframe></span></span>)',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bbcnews');
-				}
+				},
+				'assertRegexp'
 			],
 //			[
 //				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
