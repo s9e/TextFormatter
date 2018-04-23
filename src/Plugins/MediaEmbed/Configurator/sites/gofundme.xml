@@ -1,9 +1,13 @@
 <site name="GoFundMe" homepage="http://www.gofundme.com/">
-	<example>http://www.gofundme.com/2p37ao</example>
+	<example>https://www.gofundme.com/2p37ao</example>
 
 	<tags><tag>fundraising</tag></tags>
 
 	<host>gofundme.com</host>
 	<extract>@gofundme\.com/(?'id'\w+)(?![^#?])@</extract>
-	<flash width="258" height="338" src="//funds.gofundme.com/Widgetflex.swf" flashvars="page={@id}"/>
+	<!--
+		GoFundMe uses different layouts with different aspect ratios depending on the parent
+		container. The layout for width smaller than 350px is the one that scales the least badly.
+	-->
+	<iframe width="349" padding-height="208" height="207" src="//www.gofundme.com/mvc.php?route=widgets/mediawidget&amp;fund={@id}&amp;image=1&amp;coinfo=1"/>
 </site>

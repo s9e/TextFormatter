@@ -184,7 +184,7 @@
 	<tr>
 		<td><code>gofundme</code></td>
 		<td>GoFundMe</td>
-		<td>http://www.gofundme.com/2p37ao</td>
+		<td>https://www.gofundme.com/2p37ao</td>
 	</tr>
 	<tr>
 		<td><code>googledrive</code></td>
