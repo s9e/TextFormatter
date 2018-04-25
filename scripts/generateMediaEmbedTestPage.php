@@ -14,13 +14,11 @@ $siteFile = $dirpath . '/' . $siteId . '.xml';
 
 extract($configurator->finalize());
 
-$html = '';
+$html = "\n";
 $site = simplexml_load_file($siteFile);
 foreach ($site->example as $example)
 {
-	$text  = '[media=' . $siteId . ']' . $example . '[/media]';
-	$xml   = $parser->parse($text);
-	$html .= $renderer->render($xml) . "\n";
+	$html .= $renderer->render($parser->parse($example)) . "\n";
 }
 
 $out = '<!DOCTYPE html>
