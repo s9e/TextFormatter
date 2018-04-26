@@ -8,7 +8,13 @@
 	<tags><tag>images</tag></tags>
 
 	<host>imgur.com</host>
-	<extract>@imgur\.com/(?![rt]/|user/)(?'id'(?:\w+/)?\w{5,7})@</extract>
+	<extract>@imgur\.com/(?'id'a/\w+)@</extract>
+	<extract>@i\.imgur\.com/(?'id'\w{5,7})[lms]?\.@</extract>
+	<extract>@imgur\.com/(?'id'\w+)(?![\w./])@</extract>
+	<scrape url="https://api.imgur.com/oembed.xml?url=/{@path}">
+		<match>@imgur\.com/(?![art]/|user/)(?'path'(?:gallery/)?\w+)(?![\w.])@</match>
+		<extract>@data-id="(?'id'[\w/]+)"@</extract>
+	</scrape>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)
