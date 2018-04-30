@@ -153,6 +153,8 @@ Normal spaces in a composite attributes are converted to accept any amount of wh
 
     [flash={PARSE=/^(?<flash0>\d+)\s+(?<flash1>\d+)$/}]
 
+Note that composite attributes only exist for backward compatibility and proper attribute declaration is always preferred.
+
 ### BBCode options
 
 BBCode options can be specified in the opening tag like an attribute, using their name preceded with a `$`. Boolean values can be expressed as `true` and `false` (in lowercase.) For example:
