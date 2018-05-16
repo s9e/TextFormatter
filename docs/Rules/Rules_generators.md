@@ -8,6 +8,12 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 
 <dl>
 
+<dt>AllowAll</dt>
+<dd>
+	<p><i>Purpose: convenience. Default: disabled.</i></p>
+	<p>Generates <code>allowChild</code> and <code>allowDescendant</code> rules for every combination of tags. If effectively allows any tag to be used anywhere.</p>
+</dd>
+
 <dt>AutoCloseIfVoid</dt>
 <dd>
 	<p><i>Purpose: convenience. Default: enabled.</i></p>
