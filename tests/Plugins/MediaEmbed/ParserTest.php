@@ -1205,16 +1205,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://vk.com/newmusicvideos?z=video-13895667_161988074',
-				'<r><VK hash="de860a8e4fbe45c9" oid="-13895667" vid="161988074">http://vk.com/newmusicvideos?z=video-13895667_161988074</VK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('vk');
-				}
-			],
-			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
