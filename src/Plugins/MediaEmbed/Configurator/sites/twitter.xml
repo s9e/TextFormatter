@@ -20,7 +20,7 @@
 
 		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
-	<iframe width="500" height="186" src="https://s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
+	<iframe allow="autoplay *" width="500" height="186" src="https://s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
 		<style background="url(https://abs.twimg.com/favicons/favicon.ico) no-repeat 50% 50%"/>
 	</iframe>
 </site>
