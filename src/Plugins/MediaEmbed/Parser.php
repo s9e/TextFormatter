@@ -220,7 +220,8 @@ class Parser extends ParserBase
 			}
 			if (preg_match('(^https?://[^#]+)i', $url, $m))
 			{
-				self::addNamedCaptures($attributes, self::wget($m[0], $cacheDir), $config['extract']);
+				$response = self::wget($m[0], $cacheDir, $config);
+				self::addNamedCaptures($attributes, $response, $config['extract']);
 			}
 		}
 	}
@@ -230,10 +231,17 @@ class Parser extends ParserBase
 	*
 	* @param  string      $url      URL
 	* @param  string|null $cacheDir Path to the cache directory
-	* @return string                External content
+	* @param  array       $config   Scraping config
+	* @return string                Response body
 	*/
-	protected static function wget($url, $cacheDir)
+	protected static function wget($url, $cacheDir, $config)
 	{
-		return @self::getHttpClient($cacheDir)->get($url, ['User-Agent: PHP (not Mozilla)']);
+		$headers = [];
+		if (!empty($config['user-agent']))
+		{
+			$headers[] = 'User-agent: ' . $config['user-agent'];
+		}
+
+		return @self::getHttpClient($cacheDir)->get($url, $headers);
 	}
 }
