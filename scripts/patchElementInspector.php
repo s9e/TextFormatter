@@ -194,7 +194,6 @@ function getCategories($dl)
 		}
 		else
 		{
-echo $dl->ownerDocument->saveXML($dl),"\n";
 			die("Cannot parse category '$text'\n");
 		}
 	}
