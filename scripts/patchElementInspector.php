@@ -151,44 +151,44 @@ function getCategories($dl)
 		$text = strtolower($text);
 		$text = preg_replace('(^if the element is allowed in the body: )', '', $text);
 
-		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root)\\.$)', $text, $m))
+		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root)$)', $text, $m))
 		{
 			$cat[$m[1]][''] = 1;
 		}
-		elseif (preg_match('(^(\\w+ content), but with no \\w+ element descendants\\.$)', $text, $m))
+		elseif (preg_match('(^(\\w+ content), but with no \\w+ element descendants$)', $text, $m))
 		{
 			// No need to make a distinction here
 			$cat[$m[1]][''] = 1;
 		}
-		elseif (preg_match('(^if the element’s children include at least one (\\w+) element: (\\w+ content)\\.$)', $text, $m))
+		elseif (preg_match('(^if the element’s children include at least one (\\w+) element: (\\w+ content)$)', $text, $m))
 		{
 			$cat[$m[2]][$m[1]] = 1;
 		}
-		elseif (preg_match('(^if the element’s children include at least one name-value group: (\\w+ content)\\.$)', $text, $m))
+		elseif (preg_match('(^if the element’s children include at least one name-value group: (\\w+ content)$)', $text, $m))
 		{
 			$cat[$m[1]]['dt and dd'] = 1;
 		}
-		elseif (preg_match('(^if the element has an? (\\w+) attribute: (\\w+ content)\\.$)', $text, $m))
+		elseif (preg_match('(^if the element has an? (\\w+) attribute: (\\w+ content)$)', $text, $m))
 		{
 			$cat[$m[2]]['@' . $m[1]] = 1;
 		}
-		elseif (preg_match('(^(?:(?:\\w+, )*(?:\\w+ )?(?:and \\w+ )?)?form-associated element\\.$)', $text))
+		elseif (preg_match('(^(?:(?:\\w+, )*(?:\\w+ )?(?:and \\w+ )?)?form-associated element$)', $text))
 		{
 			$cat['form-associated'][''] = 1;
 		}
-		elseif (preg_match('(^if the (\\w+) attribute is not in the (\\w+) state: (\\w+ content)\\.$)', $text, $m))
+		elseif (preg_match('(^if the (\\w+) attribute is not in the (\\w+) state: (\\w+ content)$)', $text, $m))
 		{
 			$cat[$m[3]]['@' . $m[1] . '!="' . $m[2] . '"'] = 1;
 		}
-		elseif (preg_match('(^if the (\\w+) attribute is not in the (\\w+) state: [\\w, ]*(form-associated element)\\.$)', $text, $m))
+		elseif (preg_match('(^if the (\\w+) attribute is not in the (\\w+) state: [\\w, ]*(form-associated element)$)', $text, $m))
 		{
 			$cat[$m[3]]['@' . $m[1] . '!="' . $m[2] . '"'] = 1;
 		}
-		elseif (preg_match('(^if the (\\w+) attribute is in the (\\w+) state: [\\w, ]*(form-associated element)\\.$)', $text, $m))
+		elseif (preg_match('(^if the (\\w+) attribute is in the (\\w+) state: [\\w, ]*(form-associated element)$)', $text, $m))
 		{
 			$cat[$m[3]]['@' . $m[1] . '="' . $m[2] . '"'] = 1;
 		}
-		elseif ($text === 'none.')
+		elseif ($text === 'none')
 		{
 			continue;
 		}
@@ -246,11 +246,6 @@ function getContentModel($dl, $elName)
 	$model = [];
 	foreach (getDdText(getDt($dl, 'Content model')) as $text)
 	{
-		$text = preg_replace('(\\s+)', ' ', strtolower($text));
-		$text = preg_replace('(^either:|^or:)', '', $text);
-		$text = trim($text);
-		$text = rtrim($text, '.');
-
 		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root|transparent)$)', $text, $m))
 		{
 			$model['allowChildCategory'][$m[1]][''] = 1;
@@ -476,12 +471,12 @@ function getDdText($dt)
 			{
 				foreach ($paragraphs as $p)
 				{
-					$dds[] = trim($p->textContent);
+					$dds[] = $p->textContent;
 				}
 			}
 			else
 			{
-				$dds[] = trim($node->textContent);
+				$dds[] = $node->textContent;
 			}
 		}
 		elseif ($node->nodeType !== XML_TEXT_NODE)
@@ -490,6 +485,16 @@ function getDdText($dt)
 		}
 		$node = $node->nextSibling;
 	}
+
+	foreach ($dds as &$text)
+	{
+		$text = trim($text);
+		$text = strtolower($text);
+		$text = preg_replace('(^either:|^or:)', '', $text);
+		$text = preg_replace('(\\s+)', ' ', $text);
+		$text = trim($text, ' .');
+	}
+	unset($text);
 
 	return $dds;
 }
