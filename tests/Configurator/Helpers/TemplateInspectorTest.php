@@ -540,6 +540,31 @@ class TemplateInspectorTest extends Test
 				'allowsChild',
 				'<span/>'
 			],
+			// https://www.w3.org/TR/html52/changes.html#fixing-bugs-and-matching-reality-better
+			[
+				'<div> allows <style> as child',
+				'<div><xsl:apply-templates/></div>',
+				'allowsChild',
+				'<style/>'
+			],
+			[
+				'<p> denies <style> as child',
+				'<p><xsl:apply-templates/></p>',
+				'!allowsChild',
+				'<style/>'
+			],
+			[
+				'<dl> allows <div> as child',
+				'<dl><xsl:apply-templates/></dl>',
+				'allowsChild',
+				'<div/>'
+			],
+			[
+				'<dl> denies <p> as child',
+				'<dl><xsl:apply-templates/></dl>',
+				'!allowsChild',
+				'<p/>'
+			],
 		];
 	}
 }
