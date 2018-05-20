@@ -114,11 +114,17 @@ class Parser extends ParserBase
 			if (isset($config['url']))
 				$url = self::interpolateVars($config['url'], $vars + $attributes);
 			if (\preg_match('(^https?://[^#]+)i', $url, $m))
-				self::addNamedCaptures($attributes, self::wget($m[0], $cacheDir), $config['extract']);
+			{
+				$response = self::wget($m[0], $cacheDir, $config);
+				self::addNamedCaptures($attributes, $response, $config['extract']);
+			}
 		}
 	}
-	protected static function wget($url, $cacheDir)
+	protected static function wget($url, $cacheDir, $config)
 	{
-		return @self::getHttpClient($cacheDir)->get($url, array('User-Agent: PHP (not Mozilla)'));
+		$headers = array();
+		if (!empty($config['user-agent']))
+			$headers[] = 'User-agent: ' . $config['user-agent'];
+		return @self::getHttpClient($cacheDir)->get($url, $headers);
 	}
 }
