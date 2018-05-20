@@ -27,6 +27,9 @@ class Parser extends ParserBase
 			// Remove angle brackets from the content
 			$content = str_replace(['<', '>'], '', $content);
 
+			// Remove trailing dashes
+			$content = rtrim($content, '-');
+
 			// Remove the illegal sequence "--" from the content
 			$content = str_replace('--', '', $content);
 

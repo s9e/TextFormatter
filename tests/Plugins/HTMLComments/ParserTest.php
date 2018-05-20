@@ -59,6 +59,10 @@ class ParserTest extends Test
 				'x<!--foo&gt;bar-->y',
 				'<r>x<HC content="foobar">&lt;!--foo&amp;gt;bar--&gt;</HC>y</r>'
 			],
+			[
+				'<!--foo--->',
+				'<r><HC content="foo">&lt;!--foo---&gt;</HC></r>'
+			],
 		];
 	}
 
