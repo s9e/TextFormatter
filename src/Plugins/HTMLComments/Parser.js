@@ -9,6 +9,9 @@ matches.forEach(function(m)
 	// Remove angle brackets from the content
 	content = content.replace(/[<>]/g, '');
 
+	// Remove trailing dashes
+	content = content.replace(/-+$/, '');
+
 	// Remove the illegal sequence "--" from the content
 	content = content.replace(/--/g, '');
 
