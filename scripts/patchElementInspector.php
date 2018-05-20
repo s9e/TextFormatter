@@ -138,9 +138,32 @@ foreach ($xpath->query($query) as $h4)
 	foreach ($h4->getElementsByTagName('dfn') as $dfn)
 	{
 		$elName = $dfn->textContent;
-		$elements[$elName]['categories'] = getCategories($dl);
+		$elements[$elName]['categories']  = getCategories($dl);
+		$elements[$elName]['categories'] += getCategoriesFromContexts($dl);
 		$elements[$elName] += getContentModel($dl, $elName);
 	}
+}
+
+function getCategoriesFromContexts($dl)
+{
+	$cat = [];
+	foreach (getDdText(getDt($dl, 'Contexts in which this element can be used')) as $text)
+	{
+		if (preg_match('(^where (\\w+ content) is expected$)', $text, $m))
+		{
+			$cat[$m[1]][''] = 1;
+		}
+		elseif ($text === 'in the body, where flow content is expected')
+		{
+			$cat['flow content'][''] = 1;
+		}
+		else
+		{
+			// Do nothing
+		}
+	}
+
+	return $cat;
 }
 
 function getCategories($dl)
