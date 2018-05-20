@@ -1,3 +1,24 @@
+1.1.4 (2018-05-20)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/e00b876f49f38328ee27eb7521ffe7f0323649fe...8d5ece9fef9225bf7ba44f7e86b84131ec61155a)
+
+### Added
+
+ - `65c1fedf6` MediaEmbed: added support for custom user-agent value in scrapes
+
+### Changed
+
+ - `5d97a666a` ElementInspector: updated with HTML 5.2 changes
+ - `8d5ece9fe` HTMLComments: remove trailing dashes to conform to HTML 5.2
+ - `a213d7403` MediaEmbed: updated GoFundMe
+ - `2a1977596` MediaEmbed: updated Imgur
+ - `fd5a06765` MediaEmbed: updated Team Coco
+ - `76a71ed88` MediaEmbed: updated Twitter
+ - `5a558c1da` MediaEmbed: updated VK
+ - `9e6255edc` MediaEmbed: updated VK's dimensions
+
+
 1.1.3 (2018-04-14)
 ==================
 
