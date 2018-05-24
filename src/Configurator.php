@@ -4827,23 +4827,24 @@ class Normalizer extends IRProcessor
 	}
 	protected function markSwitchTable(DOMElement $switch)
 	{
-		$branches = array();
-		$values   = array();
+		$cases = array();
+		$maps  = array();
 		foreach ($this->query('./case[@test]', $switch) as $i => $case)
 		{
 			$map = XPathHelper::parseEqualityExpr($case->getAttribute('test'));
 			if ($map === \false)
 				return;
-			$values      += $map;
-			$branches[$i] = \end($map);
+			$maps     += $map;
+			$cases[$i] = array($case, \end($map));
 		}
-		if (\count($values) !== 1)
+		if (\count($maps) !== 1)
 			return;
-		$switch->setAttribute('branch-key', \key($values));
-		foreach ($branches as $i => $values)
+		$switch->setAttribute('branch-key', \key($maps));
+		foreach ($cases as $_6920557c)
 		{
+			list($case, $values) = $_6920557c;
 			\sort($values);
-			$switch->childNodes->item($i)->setAttribute('branch-values', \serialize($values));
+			$case->setAttribute('branch-values', \serialize($values));
 		}
 	}
 	protected function markConditionalCloseTagElements(DOMDocument $ir)
