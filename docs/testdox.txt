@@ -2680,6 +2680,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Uses double quotes for attribute values
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer
+ [x] serialize() ignores text nodes in source tree
  [x] serialize() tests 
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\SwitchStatement

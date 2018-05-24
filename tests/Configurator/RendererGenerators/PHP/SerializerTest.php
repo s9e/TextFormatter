@@ -14,6 +14,26 @@ use s9e\TextFormatter\Tests\Test;
 class SerializerTest extends Test
 {
 	/**
+	* @testdox serialize() ignores text nodes in source tree
+	*/
+	public function testIgnoresTextNodes()
+	{
+		$xml = '<template>
+					<element name="br" id="1" void="yes">
+						<closeTag id="1"/>
+					</element>
+				</template>';
+
+		$expected = "\$this->out.='<'.htmlspecialchars('br',3);\$this->out.='>';";
+
+		$serializer = new Serializer;
+		$ir = new DOMDocument;
+		$ir->loadXML($xml);
+
+		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
+	}
+
+	/**
 	* @testdox serialize() tests
 	* @dataProvider getSerializeTests
 	*/

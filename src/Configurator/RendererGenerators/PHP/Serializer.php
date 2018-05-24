@@ -202,8 +202,11 @@ class Serializer
 		$php = '';
 		foreach ($ir->childNodes as $node)
 		{
-			$methodName = 'serialize' . ucfirst($node->localName);
-			$php .= $this->$methodName($node);
+			if ($node instanceof DOMElement)
+			{
+				$methodName = 'serialize' . ucfirst($node->localName);
+				$php .= $this->$methodName($node);
+			}
 		}
 
 		return $php;
