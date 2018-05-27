@@ -33,7 +33,10 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 	*/
 	protected function insertTextBefore($text, $node)
 	{
-		$node->parentNode->insertBefore($this->createTextNode($text), $node);
+		if ($text !== '')
+		{
+			$node->parentNode->insertBefore($this->createTextNode($text), $node);
+		}
 	}
 
 	/**

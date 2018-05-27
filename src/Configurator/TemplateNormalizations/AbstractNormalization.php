@@ -66,16 +66,24 @@ abstract class AbstractNormalization
 	*/
 	protected function createElement($nodeName, $textContent = '')
 	{
-		$value = htmlspecialchars($textContent, ENT_NOQUOTES, 'UTF-8');
-		$pos   = strpos($nodeName, ':');
-		if ($pos === false)
+		$methodName = 'createElement';
+		$args       = [$nodeName];
+
+		// Add the text content for the new element
+		if ($textContent !== '')
 		{
-			return $this->ownerDocument->createElement($nodeName, $value);
+			$args[] = htmlspecialchars($textContent, ENT_NOQUOTES, 'UTF-8');
 		}
 
-		$namespaceURI = $this->ownerDocument->lookupNamespaceURI(substr($nodeName, 0, $pos));
+		// Handle namespaced elements
+		$prefix = strstr($nodeName, ':', true);
+		if ($prefix > '')
+		{
+			$methodName  .= 'NS';
+			array_unshift($args, $this->ownerDocument->lookupNamespaceURI($prefix));
+		}
 
-		return $this->ownerDocument->createElementNS($namespaceURI, $nodeName, $value);
+		return call_user_func_array([$this->ownerDocument, $methodName], $args);
 	}
 
 	/**
