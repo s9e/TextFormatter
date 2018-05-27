@@ -59,7 +59,7 @@ class Optimizer extends IRProcessor
 		foreach ($this->query($query) as $switch)
 		{
 			$closeTag = $switch->nextSibling;
-			foreach ($switch->childNodes as $case)
+			foreach ($this->query('case', $switch) as $case)
 			{
 				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
 				{
@@ -83,7 +83,7 @@ class Optimizer extends IRProcessor
 		$query = '//switch[not(preceding-sibling::closeTag)]';
 		foreach ($this->query($query) as $switch)
 		{
-			foreach ($switch->childNodes as $case)
+			foreach ($this->query('case', $switch) as $case)
 			{
 				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
 				{
@@ -242,7 +242,7 @@ class Optimizer extends IRProcessor
 		$query = '//switch[name(following-sibling::*) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
 		{
-			foreach ($switch->childNodes as $case)
+			foreach ($this->query('case', $switch) as $case)
 			{
 				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
 				{
