@@ -2139,7 +2139,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() throws an exception if passed the path to a file that is not valid XML
  [x] get() throws an exception if the BBCode is not in repository
  [x] get() normalizes the name before retrieval
- [x] If the name is a BBCode name followed by a # character, get() normalizes only the first part
  [x] Variables in <usage/> are replaced
  [x] Variables in <template/> are replaced
  [x] Multiple variables can be replaced

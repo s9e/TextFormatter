@@ -84,25 +84,6 @@ class RepositoryTest extends Test
 	}
 
 	/**
-	* @testdox If the name is a BBCode name followed by a # character, get() normalizes only the first part
-	*/
-	public function testSpecialNameIsNormalized()
-	{
-		$dom = new DOMDocument;
-		$dom->loadXML(
-			'<repository>
-				<bbcode name="B#special">
-					<usage>[FOO]{TEXT}[/FOO]</usage>
-					<template/>
-				</bbcode>
-			</repository>'
-		);
-
-		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
-		$repository->get('b#special');
-	}
-
-	/**
 	* @testdox Variables in <usage/> are replaced
 	*/
 	public function testReplacedUsageVars()

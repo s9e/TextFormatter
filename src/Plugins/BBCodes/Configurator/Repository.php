@@ -46,18 +46,9 @@ class Repository
 	*/
 	public function get($name, array $vars = [])
 	{
-		// Everything before # should be a BBCode name
-		$name = preg_replace_callback(
-			'/^[^#]+/',
-			function ($m)
-			{
-				return BBCode::normalizeName($m[0]);
-			},
-			$name
-		);
-
+		$name  = BBCode::normalizeName($name);
 		$xpath = new DOMXPath($this->dom);
-		$node  = $xpath->query('//bbcode[@name="' . htmlspecialchars($name) . '"]')->item(0);
+		$node  = $xpath->query('//bbcode[@name="' . $name . '"]')->item(0);
 
 		if (!($node instanceof DOMElement))
 		{
