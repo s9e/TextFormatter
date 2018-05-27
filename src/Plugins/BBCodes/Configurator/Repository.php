@@ -12,6 +12,7 @@ use DOMElement;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Items\Tag;
 
 class Repository
 {
@@ -26,6 +27,11 @@ class Repository
 	protected $dom;
 
 	/**
+	* @var DOMXPath
+	*/
+	protected $xpath;
+
+	/**
 	* Constructor
 	*
 	* @param  mixed        $value        Either a DOMDocument or the path to a repository's XML file
@@ -35,6 +41,7 @@ class Repository
 	{
 		$this->bbcodeMonkey = $bbcodeMonkey;
 		$this->dom          = ($value instanceof DOMDocument) ? $value : $this->loadRepository($value);
+		$this->xpath        = new DOMXPath($this->dom);
 	}
 
 	/**
@@ -46,53 +53,50 @@ class Repository
 	*/
 	public function get($name, array $vars = [])
 	{
-		$name  = BBCode::normalizeName($name);
-		$xpath = new DOMXPath($this->dom);
-		$node  = $xpath->query('//bbcode[@name="' . $name . '"]')->item(0);
-
+		$name = BBCode::normalizeName($name);
+		$node = $this->xpath->query('//bbcode[@name="' . $name . '"]')->item(0);
 		if (!($node instanceof DOMElement))
 		{
 			throw new RuntimeException("Could not find '" . $name . "' in repository");
 		}
 
 		// Clone the node so we don't end up modifying the node in the repository
-		$clonedNode = $node->cloneNode(true);
+		$node = $node->cloneNode(true);
 
 		// Replace all the <var> descendants if applicable
-		foreach ($xpath->query('.//var', $clonedNode) as $varNode)
-		{
-			$varName = $varNode->getAttribute('name');
-
-			if (isset($vars[$varName]))
-			{
-				$varNode->parentNode->replaceChild(
-					$this->dom->createTextNode($vars[$varName]),
-					$varNode
-				);
-			}
-		}
+		$this->replaceVars($node, $vars);
 
 		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
-		$usage      = $xpath->evaluate('string(usage)', $clonedNode);
-		$template   = $xpath->evaluate('string(template)', $clonedNode);
-		$config     = $this->bbcodeMonkey->create($usage, $template);
-		$bbcode     = $config['bbcode'];
-		$bbcodeName = $config['bbcodeName'];
-		$tag        = $config['tag'];
+		$usage    = $this->xpath->evaluate('string(usage)', $node);
+		$template = $this->xpath->evaluate('string(template)', $node);
+		$config   = $this->bbcodeMonkey->create($usage, $template);
 
 		// Set the optional tag name
 		if ($node->hasAttribute('tagName'))
 		{
-			$bbcode->tagName = $node->getAttribute('tagName');
+			$config['bbcode']->tagName = $node->getAttribute('tagName');
 		}
 
 		// Set the rules
-		foreach ($xpath->query('rules/*', $node) as $ruleNode)
+		$this->addRules($node, $config['tag']);
+
+		return $config;
+	}
+
+	/**
+	* Add rules to given tag based on given definition
+	*
+	* @param  DOMElement $node
+	* @param  Tag        $tag
+	* @return void
+	*/
+	protected function addRules(DOMElement $node, Tag $tag)
+	{
+		foreach ($this->xpath->query('rules/*', $node) as $ruleNode)
 		{
 			$methodName = $ruleNode->nodeName;
 			$args       = [];
-
 			if ($ruleNode->textContent)
 			{
 				$args[] = $ruleNode->textContent;
@@ -100,18 +104,12 @@ class Repository
 
 			call_user_func_array([$tag->rules, $methodName], $args);
 		}
-
-		return [
-			'bbcode'     => $bbcode,
-			'bbcodeName' => $bbcodeName,
-			'tag'        => $tag
-		];
 	}
 
 	/**
 	* Create an exception for a bad repository file path
 	*
-	* @param  mixed $filepath
+	* @param  string $filepath
 	* @return InvalidArgumentException
 	*/
 	protected function createRepositoryException($filepath)
@@ -140,5 +138,27 @@ class Repository
 		}
 
 		return $dom;
+	}
+
+	/**
+	* Replace var elements in given definition
+	*
+	* @param  DOMElement $node
+	* @return array      $vars
+	*/
+	protected function replaceVars(DOMElement $node, array $vars)
+	{
+		foreach ($this->xpath->query('.//var', $node) as $varNode)
+		{
+			$varName = $varNode->getAttribute('name');
+
+			if (isset($vars[$varName]))
+			{
+				$varNode->parentNode->replaceChild(
+					$this->dom->createTextNode($vars[$varName]),
+					$varNode
+				);
+			}
+		}
 	}
 }
