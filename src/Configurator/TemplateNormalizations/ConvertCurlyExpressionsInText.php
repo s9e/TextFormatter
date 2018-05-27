@@ -12,7 +12,8 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 	protected $queries = ['//*[namespace-uri() != $XSL]/text()[contains(., "{@") or contains(., "{$")]'];
 	protected function insertTextBefore($text, $node)
 	{
-		$node->parentNode->insertBefore($this->createTextNode($text), $node);
+		if ($text !== '')
+			$node->parentNode->insertBefore($this->createTextNode($text), $node);
 	}
 	protected function normalizeNode(DOMNode $node)
 	{

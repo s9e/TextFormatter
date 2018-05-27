@@ -4062,12 +4062,17 @@ abstract class AbstractNormalization
 	}
 	protected function createElement($nodeName, $textContent = '')
 	{
-		$value = \htmlspecialchars($textContent, \ENT_NOQUOTES, 'UTF-8');
-		$pos   = \strpos($nodeName, ':');
-		if ($pos === \false)
-			return $this->ownerDocument->createElement($nodeName, $value);
-		$namespaceURI = $this->ownerDocument->lookupNamespaceURI(\substr($nodeName, 0, $pos));
-		return $this->ownerDocument->createElementNS($namespaceURI, $nodeName, $value);
+		$methodName = 'createElement';
+		$args       = [$nodeName];
+		if ($textContent !== '')
+			$args[] = \htmlspecialchars($textContent, \ENT_NOQUOTES, 'UTF-8');
+		$prefix = \strstr($nodeName, ':', \true);
+		if ($prefix > '')
+		{
+			$methodName  .= 'NS';
+			\array_unshift($args, $this->ownerDocument->lookupNamespaceURI($prefix));
+		}
+		return \call_user_func_array([$this->ownerDocument, $methodName], $args);
 	}
 	protected function createTextNode($content)
 	{
@@ -4580,24 +4585,22 @@ class Optimizer extends IRProcessor
 	}
 	protected function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
 		{
 			$closeTag = $switch->nextSibling;
-			foreach ($switch->childNodes as $case)
+			foreach ($this->query('case', $switch) as $case)
 				if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
 					$case->appendChild($closeTag->cloneNode());
 		}
 	}
 	protected function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[not(preceding-sibling::closeTag)]';
+		$query = '//switch[case/closeTag][not(case[name(*[1]) != "closeTag"])]';
 		foreach ($this->query($query) as $switch)
 		{
-			foreach ($switch->childNodes as $case)
-				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-					continue 2;
-			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
+			$case = $this->query('case/closeTag', $switch)->item(0);
+			$switch->parentNode->insertBefore($case->cloneNode(), $switch);
 		}
 	}
 	protected function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
@@ -4639,7 +4642,7 @@ class Optimizer extends IRProcessor
 	}
 	protected function removeEmptyDefaultCases(DOMDocument $ir)
 	{
-		$query = '//case[not(@test | node())]';
+		$query = '//case[not(@test)][. = ""]';
 		$this->removeNodes($ir, $query);
 	}
 	protected function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = \null)
@@ -4659,9 +4662,9 @@ class Optimizer extends IRProcessor
 	}
 	protected function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
-			foreach ($switch->childNodes as $case)
+			foreach ($this->query('case', $switch) as $case)
 				while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
 					$case->removeChild($case->lastChild);
 	}
