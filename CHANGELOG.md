@@ -1,3 +1,26 @@
+1.1.5 (2018-05-27)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/22b9429ed9b208b96313ce35c410bd73995af599...d973a468f048f05c4df6010b9bda4905556888d7)
+
+### Removed
+
+ - `1052a19e0` BBCodes: removed useless code from repository
+
+### Fixed
+
+ - `a8174fafa` Fixed a potential issue with DOMNode::$childNodes returning empty text nodes
+ - `cf1069519` Fixed a potential issue with whitespace passed to the PHP renderer generator's serializer
+ - `21ef901d2` TemplateParser: fixed a potential issue with DOMNode::$childNodes
+
+### Changed
+
+ - `588c7e272` BBCodes: reorganized Repository internals
+ - `2aabcb262` TemplateNormalizations: avoid creating empty text nodes
+ - `cb2ddd1df` TemplateParser: improved compatibility with Libxml 2.7
+ - `6e1ddead0` TemplateParser: replaced PHP conditionals with XPath predicates
+
+
 1.1.4 (2018-05-20)
 ==================
 
