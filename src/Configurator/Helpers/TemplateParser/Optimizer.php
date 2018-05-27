@@ -55,7 +55,7 @@ class Optimizer extends IRProcessor
 	*/
 	protected function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
 		{
 			$closeTag = $switch->nextSibling;
@@ -80,21 +80,11 @@ class Optimizer extends IRProcessor
 	*/
 	protected function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[not(preceding-sibling::closeTag)]';
+		$query = '//switch[case/closeTag][not(case[name(*[1]) != "closeTag"])]';
 		foreach ($this->query($query) as $switch)
 		{
-			foreach ($this->query('case', $switch) as $case)
-			{
-				if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-				{
-					// This case is either empty or does not start with a <closeTag/> so we skip
-					// to the next <switch/>
-					continue 2;
-				}
-			}
-			// Insert the first child of the last <case/>, which should be the same <closeTag/>
-			// as every other <case/>
-			$switch->parentNode->insertBefore($switch->lastChild->firstChild->cloneNode(), $switch);
+			$case = $this->query('case/closeTag', $switch)->item(0);
+			$switch->parentNode->insertBefore($case->cloneNode(), $switch);
 		}
 	}
 
@@ -239,7 +229,7 @@ class Optimizer extends IRProcessor
 	*/
 	protected function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
 	{
-		$query = '//switch[name(following-sibling::*) = "closeTag"]';
+		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
 		{
 			foreach ($this->query('case', $switch) as $case)
