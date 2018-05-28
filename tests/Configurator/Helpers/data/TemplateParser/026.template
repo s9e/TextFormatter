@@ -1,0 +1,4 @@
+<xsl:choose>
+	<xsl:when test="@x"><hr/></xsl:when>
+	<xsl:otherwise><br/></xsl:otherwise>
+</xsl:choose>
