@@ -4970,7 +4970,7 @@ class Optimizer extends IRProcessor
 	}
 	protected function removeEmptyDefaultCases(DOMDocument $ir)
 	{
-		$query = '//case[not(@test)][. = ""]';
+		$query = '//case[not(@test)][not(*)][. = ""]';
 		$this->removeNodes($ir, $query);
 	}
 	protected function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = \null)
