@@ -1,3 +1,13 @@
+1.1.6 (2018-05-28)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/4ae20a30fb8feeb4d267fd274c7421fac07862f5...d16774a0e30e6a35270ef5edde06c13dc38006eb)
+
+### Fixed
+
+ - `d16774a0e` TemplateParser: fixed an issue with empty elements being incorrectly removed from default case
+
+
 1.1.5 (2018-05-27)
 ==================
 
