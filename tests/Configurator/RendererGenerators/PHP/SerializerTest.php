@@ -94,10 +94,6 @@ class SerializerTest extends Test
 				"switch(\$node->getAttribute('foo')){case'1':\$this->out.='1';break;case'2':\$this->out.='2';break;case'3':\$this->out.='3';break;case'4':\$this->out.='4';break;case'5':\$this->out.='5';break;case'6':\$this->out.='6';break;case'7':\$this->out.='7';break;case'8':\$this->out.='8';break;default:\$this->out.='default';}"
 			],
 			[
-				'<template><closeTag id="1"/></template>',
-				new RuntimeException
-			],
-			[
 				'<template><hash/></template>',
 				new RuntimeException
 			],

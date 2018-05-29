@@ -26,39 +26,16 @@ class Serializer
 	public $useMultibyteStringFunctions = false;
 
 	/**
+	* @var DOMXPath
+	*/
+	protected $xpath;
+
+	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
 		$this->convertor = new XPathConvertor;
-	}
-
-	/**
-	* Convert an attribute value template into PHP
-	*
-	* NOTE: escaping must be performed by the caller
-	*
-	* @link https://www.w3.org/TR/1999/REC-xslt-19991116#dt-attribute-value-template
-	*
-	* @param  string $attrValue Attribute value template
-	* @return string
-	*/
-	protected function convertAttributeValueTemplate($attrValue)
-	{
-		$phpExpressions = [];
-		foreach (AVTHelper::parse($attrValue) as $token)
-		{
-			if ($token[0] === 'literal')
-			{
-				$phpExpressions[] = var_export($token[1], true);
-			}
-			else
-			{
-				$phpExpressions[] = $this->convertXPath($token[1]);
-			}
-		}
-
-		return implode('.', $phpExpressions);
 	}
 
 	/**
@@ -88,6 +65,47 @@ class Serializer
 		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 
 		return $this->convertor->convertXPath($expr);
+	}
+
+	/**
+	* Serialize the internal representation of a template into PHP
+	*
+	* @param  DOMElement $ir Internal representation
+	* @return string
+	*/
+	public function serialize(DOMElement $ir)
+	{
+		$this->xpath = new DOMXPath($ir->ownerDocument);
+
+		return $this->serializeChildren($ir);
+	}
+
+	/**
+	* Convert an attribute value template into PHP
+	*
+	* NOTE: escaping must be performed by the caller
+	*
+	* @link https://www.w3.org/TR/1999/REC-xslt-19991116#dt-attribute-value-template
+	*
+	* @param  string $attrValue Attribute value template
+	* @return string
+	*/
+	protected function convertAttributeValueTemplate($attrValue)
+	{
+		$phpExpressions = [];
+		foreach (AVTHelper::parse($attrValue) as $token)
+		{
+			if ($token[0] === 'literal')
+			{
+				$phpExpressions[] = var_export($token[1], true);
+			}
+			else
+			{
+				$phpExpressions[] = $this->convertXPath($token[1]);
+			}
+		}
+
+		return implode('.', $phpExpressions);
 	}
 
 	/**
@@ -136,9 +154,7 @@ class Serializer
 	*/
 	protected function hasMultipleCases(DOMElement $switch)
 	{
-		$xpath = new DOMXPath($switch->ownerDocument);
-
-		return $xpath->evaluate('count(case[@test]) > 1', $switch);
+		return $this->xpath->evaluate('count(case[@test]) > 1', $switch);
 	}
 
 	/**
@@ -181,17 +197,6 @@ class Serializer
 	}
 
 	/**
-	* Serialize the internal representation of a template into PHP
-	*
-	* @param  DOMElement $ir Internal representation
-	* @return string
-	*/
-	public function serialize(DOMElement $ir)
-	{
-		return $this->serializeChildren($ir);
-	}
-
-	/**
 	* Serialize all the children of given node into PHP
 	*
 	* @param  DOMElement $ir Internal representation
@@ -220,38 +225,23 @@ class Serializer
 	*/
 	protected function serializeCloseTag(DOMElement $closeTag)
 	{
-		$php = '';
+		$php = "\$this->out.='>';";
 		$id  = $closeTag->getAttribute('id');
-
-		if ($closeTag->hasAttribute('check'))
-		{
-			$php .= 'if(!isset($t' . $id . ')){';
-		}
 
 		if ($closeTag->hasAttribute('set'))
 		{
 			$php .= '$t' . $id . '=1;';
 		}
 
-		// Get the element that's being closed
-		$xpath   = new DOMXPath($closeTag->ownerDocument);
-		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
-
-		if (!($element instanceof DOMElement))
+		if ($closeTag->hasAttribute('check'))
 		{
-			throw new RuntimeException;
+			$php = 'if(!isset($t' . $id . ')){' . $php . '}';
 		}
 
-		$php .= "\$this->out.='>';";
-		if ($element->getAttribute('void') === 'maybe')
+		if ($this->xpath->evaluate('count(//element[@id="' . $id . '"][@void = "maybe"])'))
 		{
 			// Check at runtime whether this element is not void
 			$php .= 'if(!$v' . $id . '){';
-		}
-
-		if ($closeTag->hasAttribute('check'))
-		{
-			$php .= '}';
 		}
 
 		return $php;
@@ -359,30 +349,20 @@ class Serializer
 	protected function serializeHash(DOMElement $switch)
 	{
 		$statements = [];
-		foreach ($switch->getElementsByTagName('case') as $case)
+		foreach ($this->xpath->query('case[@branch-values]', $switch) as $case)
 		{
-			if (!$case->parentNode->isSameNode($switch))
+			foreach (unserialize($case->getAttribute('branch-values')) as $value)
 			{
-				continue;
-			}
-
-			if ($case->hasAttribute('branch-values'))
-			{
-				$php = $this->serializeChildren($case);
-				foreach (unserialize($case->getAttribute('branch-values')) as $value)
-				{
-					$statements[$value] = $php;
-				}
+				$statements[$value] = $this->serializeChildren($case);
 			}
 		}
-
 		if (!isset($case))
 		{
 			throw new RuntimeException;
 		}
 
-		// Test whether the last case has a branch-values. If not, it's the default case
-		$defaultCode = ($case->hasAttribute('branch-values')) ? '' : $this->serializeChildren($case);
+		$defaultCase = $this->xpath->query('case[not(@branch-values)]', $switch)->item(0);
+		$defaultCode = ($defaultCase instanceof DOMElement) ? $this->serializeChildren($defaultCase) : '';
 		$expr        = $this->convertXPath($switch->getAttribute('branch-key'));
 
 		return SwitchStatement::generate($expr, $statements, $defaultCode);
@@ -426,29 +406,21 @@ class Serializer
 			return $this->serializeHash($switch);
 		}
 
-		$php  = '';
-		$else = '';
-		foreach ($switch->getElementsByTagName('case') as $case)
+		$php   = '';
+		$if    = 'if';
+		foreach ($this->xpath->query('case', $switch) as $case)
 		{
-			if (!$case->parentNode->isSameNode($switch))
-			{
-				continue;
-			}
-
 			if ($case->hasAttribute('test'))
 			{
-				$php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
+				$php .= $if . '(' . $this->convertCondition($case->getAttribute('test')) . ')';
 			}
 			else
 			{
 				$php .= 'else';
 			}
 
-			$else = 'else';
-
-			$php .= '{';
-			$php .= $this->serializeChildren($case);
-			$php .= '}';
+			$php .= '{' . $this->serializeChildren($case) . '}';
+			$if   = 'elseif';
 		}
 
 		return $php;
