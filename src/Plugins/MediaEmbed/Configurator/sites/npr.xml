@@ -7,6 +7,7 @@
 	<host>npr.org</host>
 	<host>n.pr</host>
 	<scrape>
+		<header>Cookie: trackingChoice=false; choiceVersion=1</header>
 		<match>!npr\.org/[/\w]+/\d+!</match>
 		<match>!n\.pr/\w!</match>
 		<extract>!player/embed/(?'i'\d+)/(?'m'\d+)!</extract>
