@@ -204,3 +204,24 @@ echo $html;
 ```html
 <span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:500px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.2%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
 ```
+
+### Add custom HTTP headers when scraping
+
+Custom HTTP headers can be specified in the `scrape` configuration.
+
+```php
+$configurator->MediaEmbed->add(
+	'sitename',
+	[
+		'host'   => 'example.org',
+		'scrape' => [
+			'extract' => '#example\\.org/video/(?<id>\\d+)#',
+			'header'  => [
+				'Cookie: mycookie=1',
+				'User-agent: foo-agent'
+			]
+		],
+		'iframe' => ['src' => '//example.org/embed/{@id}']
+	]
+);
+```

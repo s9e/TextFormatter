@@ -9,7 +9,8 @@
 	<host>vkontakte.ru</host>
 	<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?\d+)_(?'vid'\d+)!</extract>
 	<extract>!vk(?:\.com|ontakte\.ru)/video_ext\.php\?oid=(?'oid'-?\d+)&amp;id=(?'vid'\d+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
-	<scrape url="http://vk.com/video{@oid}_{@vid}" user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0">
+	<scrape url="http://vk.com/video{@oid}_{@vid}">
+		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0</header>
 		<match>!vk.*?video-?\d+_\d+!</match>
 		<extract>!embed_hash(?:=|":")(?'hash'[0-9a-f]+)!</extract>
 	</scrape>

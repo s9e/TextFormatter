@@ -11,11 +11,13 @@
 	<extract>@api\.soundcloud\.com/playlists/(?'playlist_id'\d+)@</extract>
 	<extract>@api\.soundcloud\.com/tracks/(?'track_id'\d+)(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
 	<extract>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/(?=s-)(?'secret_token'[-\w]+)@</extract>
-	<scrape user-agent="PHP (not Mozilla)">
+	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@soundcloud\.com/(?!playlists/\d|tracks/\d)[-\w]+/[-\w]@</match>
 		<extract>@soundcloud:tracks:(?'track_id'\d+)@</extract>
 	</scrape>
-	<scrape user-agent="PHP (not Mozilla)">
+	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@soundcloud\.com/\w+/sets/@</match>
 		<extract>@soundcloud://playlists:(?'playlist_id'\d+)@</extract>
 	</scrape>
