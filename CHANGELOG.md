@@ -1,3 +1,18 @@
+1.1.7 (2018-06-03)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/2e99b01043cf5ea2d126489281f50114faadc5be...a7a43dec54df0e2bdda790569761128b4e58b4c9)
+
+### Added
+
+ - `50be65408` MediaEmbed: added support for custom headers when scraping
+
+### Changed
+
+ - `a7a43dec5` MediaEmbed: updated NPR
+ - `fcaa772d5` Reorganized PHP serializer code
+
+
 1.1.6 (2018-05-28)
 ==================
 
