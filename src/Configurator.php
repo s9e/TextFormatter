@@ -3390,19 +3390,10 @@ class Serializer
 {
 	public $convertor;
 	public $useMultibyteStringFunctions = \false;
+	protected $xpath;
 	public function __construct()
 	{
 		$this->convertor = new XPathConvertor;
-	}
-	protected function convertAttributeValueTemplate($attrValue)
-	{
-		$phpExpressions = [];
-		foreach (AVTHelper::parse($attrValue) as $token)
-			if ($token[0] === 'literal')
-				$phpExpressions[] = \var_export($token[1], \true);
-			else
-				$phpExpressions[] = $this->convertXPath($token[1]);
-		return \implode('.', $phpExpressions);
 	}
 	public function convertCondition($expr)
 	{
@@ -3413,6 +3404,21 @@ class Serializer
 	{
 		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 		return $this->convertor->convertXPath($expr);
+	}
+	public function serialize(DOMElement $ir)
+	{
+		$this->xpath = new DOMXPath($ir->ownerDocument);
+		return $this->serializeChildren($ir);
+	}
+	protected function convertAttributeValueTemplate($attrValue)
+	{
+		$phpExpressions = [];
+		foreach (AVTHelper::parse($attrValue) as $token)
+			if ($token[0] === 'literal')
+				$phpExpressions[] = \var_export($token[1], \true);
+			else
+				$phpExpressions[] = $this->convertXPath($token[1]);
+		return \implode('.', $phpExpressions);
 	}
 	protected function escapeLiteral($text, $context)
 	{
@@ -3430,8 +3436,7 @@ class Serializer
 	}
 	protected function hasMultipleCases(DOMElement $switch)
 	{
-		$xpath = new DOMXPath($switch->ownerDocument);
-		return $xpath->evaluate('count(case[@test]) > 1', $switch);
+		return $this->xpath->evaluate('count(case[@test]) > 1', $switch);
 	}
 	protected function serializeApplyTemplates(DOMElement $applyTemplates)
 	{
@@ -3450,10 +3455,6 @@ class Serializer
 		     . $this->serializeChildren($attribute)
 		     . "\$this->out.='\"';";
 	}
-	public function serialize(DOMElement $ir)
-	{
-		return $this->serializeChildren($ir);
-	}
 	protected function serializeChildren(DOMElement $ir)
 	{
 		$php = '';
@@ -3467,21 +3468,14 @@ class Serializer
 	}
 	protected function serializeCloseTag(DOMElement $closeTag)
 	{
-		$php = '';
+		$php = "\$this->out.='>';";
 		$id  = $closeTag->getAttribute('id');
-		if ($closeTag->hasAttribute('check'))
-			$php .= 'if(!isset($t' . $id . ')){';
 		if ($closeTag->hasAttribute('set'))
 			$php .= '$t' . $id . '=1;';
-		$xpath   = new DOMXPath($closeTag->ownerDocument);
-		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
-		if (!($element instanceof DOMElement))
-			throw new RuntimeException;
-		$php .= "\$this->out.='>';";
-		if ($element->getAttribute('void') === 'maybe')
-			$php .= 'if(!$v' . $id . '){';
 		if ($closeTag->hasAttribute('check'))
-			$php .= '}';
+			$php = 'if(!isset($t' . $id . ')){' . $php . '}';
+		if ($this->xpath->evaluate('count(//element[@id="' . $id . '"][@void = "maybe"])'))
+			$php .= 'if(!$v' . $id . '){';
 		return $php;
 	}
 	protected function serializeComment(DOMElement $comment)
@@ -3524,20 +3518,13 @@ class Serializer
 	protected function serializeHash(DOMElement $switch)
 	{
 		$statements = [];
-		foreach ($switch->getElementsByTagName('case') as $case)
-		{
-			if (!$case->parentNode->isSameNode($switch))
-				continue;
-			if ($case->hasAttribute('branch-values'))
-			{
-				$php = $this->serializeChildren($case);
-				foreach (\unserialize($case->getAttribute('branch-values')) as $value)
-					$statements[$value] = $php;
-			}
-		}
+		foreach ($this->xpath->query('case[@branch-values]', $switch) as $case)
+			foreach (\unserialize($case->getAttribute('branch-values')) as $value)
+				$statements[$value] = $this->serializeChildren($case);
 		if (!isset($case))
 			throw new RuntimeException;
-		$defaultCode = ($case->hasAttribute('branch-values')) ? '' : $this->serializeChildren($case);
+		$defaultCase = $this->xpath->query('case[not(@branch-values)]', $switch)->item(0);
+		$defaultCode = ($defaultCase instanceof DOMElement) ? $this->serializeChildren($defaultCase) : '';
 		$expr        = $this->convertXPath($switch->getAttribute('branch-key'));
 		return SwitchStatement::generate($expr, $statements, $defaultCode);
 	}
@@ -3556,20 +3543,16 @@ class Serializer
 	{
 		if ($switch->hasAttribute('branch-key') && $this->hasMultipleCases($switch))
 			return $this->serializeHash($switch);
-		$php  = '';
-		$else = '';
-		foreach ($switch->getElementsByTagName('case') as $case)
+		$php   = '';
+		$if    = 'if';
+		foreach ($this->xpath->query('case', $switch) as $case)
 		{
-			if (!$case->parentNode->isSameNode($switch))
-				continue;
 			if ($case->hasAttribute('test'))
-				$php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
+				$php .= $if . '(' . $this->convertCondition($case->getAttribute('test')) . ')';
 			else
 				$php .= 'else';
-			$else = 'else';
-			$php .= '{';
-			$php .= $this->serializeChildren($case);
-			$php .= '}';
+			$php .= '{' . $this->serializeChildren($case) . '}';
+			$if   = 'elseif';
 		}
 		return $php;
 	}

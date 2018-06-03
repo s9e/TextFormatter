@@ -122,9 +122,7 @@ class Parser extends ParserBase
 	}
 	protected static function wget($url, $cacheDir, $config)
 	{
-		$headers = [];
-		if (!empty($config['user-agent']))
-			$headers[] = 'User-agent: ' . $config['user-agent'];
+		$headers = (isset($config['header'])) ? (array) $config['header'] : [];
 		return @self::getHttpClient($cacheDir)->get($url, $headers);
 	}
 }
