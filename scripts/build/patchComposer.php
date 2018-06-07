@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$match   = array('(,\\s*"scripts"[^}]+\\})');
+$match   = array('(\\s*"version"[^,]+,)');
 $replace = array('');
 
 if (isset($_SERVER['argv'][1]))
