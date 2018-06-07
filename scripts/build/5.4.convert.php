@@ -27,7 +27,7 @@ function convertCustom($filepath, &$file)
 				throw new RuntimeException('Closure Compiler service returned invalid JSON: ' . (isset(\$msgs[json_last_error()]) ? \$msgs[json_last_error()] : 'Unknown error'));"
 			)
 		),
-		'TemplateHelper.php' => array(
+		'TemplateModifier.php' => array(
 			array(
 				'$replacement = $fn(array_column($m, 0), $node);',
 				'$_m=[];foreach($m as $v){$_m[]=$v[0];}$replacement = $fn($_m, $node);'

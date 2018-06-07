@@ -438,9 +438,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ContextSafeness
 s9e\TextFormatter\Tests\Configurator\Helpers\ElementInspector
  [x] Test cases 
 
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateInspector
- [x] evaluate() returns the return value of an XPath expression
- [x] Test cases 
+s9e\TextFormatter\Tests\Configurator\Helpers\NodeLocator
+ [x] getObjectParamsByRegexp() tests 
+ [x] getCSSNodes() tests 
+ [x] getJSNodes() tests 
+ [x] getURLNodes() tests 
+ [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
@@ -616,39 +619,43 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
+ [x] Provides loadTemplate() and saveTemplate()
+ [x] getParametersFromXSL() tests 
+ [x] highlightNode() tests 
+ [x] replaceHomogeneousTemplates() tests 
+
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateInspector
+ [x] evaluate() returns the return value of an XPath expression
+ [x] Test cases 
+
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader
+ [x] load() can load 'foo'
+ [x] save() correctly handles 'foo'
+ [x] load() can load '<xsl:value-of select="@foo"/>'
+ [x] save() correctly handles '<xsl:value-of select="@foo"/>'
+ [x] save() correctly handles an empty string
+ [x] load() can load '<ul><li>one<li>two</ul>'
+ [x] load() can load '<script>0<1 && 1>0 && alert(1)</script>'
+ [x] load() accepts unescaped ampersands
+ [x] load() converts HTML entities
+ [x] load() does not break numeric character references
+ [x] load() removes attributes with an invalid name
+ [x] load() removes attributes with an invalid namespace in XML
+ [x] load() removes attributes with an invalid namespace in HTML
+ [x] save() correctly handles '<ul><li>one<li>two</ul>'
+ [x] load() throws an exception on malformed XSL
+ [x] load() reads HTML as UTF-8
+
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateModifier
+ [x] replaceTokens() tests 
+
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() tests 
  [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
  [x] parse() throws an exception if it encounters an unsupported XSL element
  [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
  [x] Parse equality expr 
-
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
- [x] loadTemplate() can load 'foo'
- [x] saveTemplate() correctly handles 'foo'
- [x] loadTemplate() can load '<xsl:value-of select="@foo"/>'
- [x] saveTemplate() correctly handles '<xsl:value-of select="@foo"/>'
- [x] saveTemplate() correctly handles an empty string
- [x] loadTemplate() can load '<ul><li>one<li>two</ul>'
- [x] loadTemplate() can load '<script>0<1 && 1>0 && alert(1)</script>'
- [x] loadTemplate() accepts unescaped ampersands
- [x] loadTemplate() converts HTML entities
- [x] loadTemplate() does not break numeric character references
- [x] loadTemplate() removes attributes with an invalid name
- [x] loadTemplate() removes attributes with an invalid namespace in XML
- [x] loadTemplate() removes attributes with an invalid namespace in HTML
- [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
- [x] loadTemplate() throws an exception on malformed XSL
- [x] loadTemplate() reads HTML as UTF-8
- [x] getParametersFromXSL() tests 
- [x] getObjectParamsByRegexp() tests 
- [x] getCSSNodes() tests 
- [x] getJSNodes() tests 
- [x] getURLNodes() tests 
- [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
- [x] replaceTokens() tests 
- [x] highlightNode() tests 
- [x] replaceHomogeneousTemplates() tests 
 
 s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] getVariables() tests 

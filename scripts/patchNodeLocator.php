@@ -101,7 +101,7 @@ foreach ($attributes as $type => $attrNames)
 	}
 }
 
-$filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateHelper.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/TemplateHelpers/NodeLocator.php';
 $file = file_get_contents($filepath);
 
 $builder = new s9e\RegexpBuilder\Builder([

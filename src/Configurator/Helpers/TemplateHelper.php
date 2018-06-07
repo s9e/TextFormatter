@@ -15,8 +15,6 @@ use DOMNode;
 use DOMProcessingInstruction;
 use DOMText;
 use DOMXPath;
-use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 
 abstract class TemplateHelper
 {
@@ -34,40 +32,7 @@ abstract class TemplateHelper
 	*/
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//@*') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->name))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get generated attributes
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->getAttribute('name')))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get attributes created with <xsl:copy-of/>
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-
-			if (preg_match('/^@(\\w+)$/', $expr, $m)
-			 && preg_match($regexp, $m[1]))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
+		return NodeLocator::getAttributesByRegexp($dom, $regexp);
 	}
 
 	/**
@@ -78,13 +43,7 @@ abstract class TemplateHelper
 	*/
 	public static function getCSSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^style$/i';
-		$nodes  = array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^style$/i')
-		);
-
-		return $nodes;
+		return NodeLocator::getCSSNodes($dom);
 	}
 
 	/**
@@ -96,41 +55,7 @@ abstract class TemplateHelper
 	*/
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//*') as $element)
-		{
-			if (preg_match($regexp, $element->localName))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get generated elements
-		foreach ($xpath->query('//xsl:element') as $element)
-		{
-			if (preg_match($regexp, $element->getAttribute('name')))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get elements created with <xsl:copy-of/>
-		// NOTE: this method of creating elements is disallowed by default
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-
-			if (preg_match('/^\\w+$/', $expr)
-			 && preg_match($regexp, $expr))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
+		return NodeLocator::getElementsByRegexp($dom, $regexp);
 	}
 
 	/**
@@ -141,13 +66,7 @@ abstract class TemplateHelper
 	*/
 	public static function getJSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^(?:data-s9e-livepreview-postprocess$|on)/i';
-		$nodes  = array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^script$/i')
-		);
-
-		return $nodes;
+		return NodeLocator::getJSNodes($dom);
 	}
 
 	/**
@@ -163,39 +82,7 @@ abstract class TemplateHelper
 	*/
 	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Collect attributes from <embed/> elements
-		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
-		{
-			if ($attribute->nodeType === XML_ATTRIBUTE_NODE)
-			{
-				if (strtolower($attribute->parentNode->localName) === 'embed')
-				{
-					$nodes[] = $attribute;
-				}
-			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
-			{
-				// Assuming <xsl:attribute/> or <xsl:copy-of/>
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Collect <param/> descendants of <object/> elements
-		foreach ($dom->getElementsByTagName('object') as $object)
-		{
-			foreach ($object->getElementsByTagName('param') as $param)
-			{
-				if (preg_match($regexp, $param->getAttribute('name')))
-				{
-					$nodes[] = $param;
-				}
-			}
-		}
-
-		return $nodes;
+		return NodeLocator::getObjectParamsByRegexp($dom, $regexp);
 	}
 
 	/**
@@ -282,23 +169,7 @@ abstract class TemplateHelper
 	*/
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
-		$nodes  = self::getAttributesByRegexp($dom, $regexp);
-
-		/**
-		* @link http://helpx.adobe.com/flash/kb/object-tag-syntax-flash-professional.html
-		* @link http://www.sitepoint.com/control-internet-explorer/
-		*/
-		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
-		{
-			$node = $param->getAttributeNode('value');
-			if ($node)
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
+		return NodeLocator::getURLNodes($dom);
 	}
 
 	/**
@@ -321,8 +192,7 @@ abstract class TemplateHelper
 		{
 			$node->setAttribute($uniqid, '');
 		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
+		elseif ($node instanceof DOMCharacterData || $node instanceof DOMProcessingInstruction)
 		{
 			$node->data .= $uniqid;
 		}
@@ -330,7 +200,7 @@ abstract class TemplateHelper
 		$dom = $node->ownerDocument;
 		$dom->formatOutput = true;
 
-		$docXml = self::innerXML($dom->documentElement);
+		$docXml = TemplateLoader::innerXML($dom->documentElement);
 		$docXml = trim(str_replace("\n  ", "\n", $docXml));
 
 		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
@@ -350,8 +220,7 @@ abstract class TemplateHelper
 			$node->removeAttribute($uniqid);
 			$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
 		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
+		elseif ($node instanceof DOMCharacterData || $node instanceof DOMProcessingInstruction)
 		{
 			$node->data .= $uniqid;
 			$html = str_replace($uniqid, '', $html);
@@ -371,27 +240,7 @@ abstract class TemplateHelper
 	*/
 	public static function loadTemplate($template)
 	{
-		$dom = self::loadTemplateAsXML($template);
-		if ($dom)
-		{
-			return $dom;
-		}
-
-		$dom = self::loadTemplateAsXML(self::fixEntities($template));
-		if ($dom)
-		{
-			return $dom;
-		}
-
-		// If the template contains an XSL element, abort now. Otherwise, try reparsing it as HTML
-		if (strpos($template, '<xsl:') !== false)
-		{
-			$error = libxml_get_last_error();
-
-			throw new RuntimeException('Invalid XSL: ' . $error->message);
-		}
-
-		return self::loadTemplateAsHTML($template);
+		return TemplateLoader::load($template);
 	}
 
 	/**
@@ -484,123 +333,7 @@ abstract class TemplateHelper
 	*/
 	public static function replaceTokens($template, $regexp, $fn)
 	{
-		$dom   = self::loadTemplate($template);
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//@*') as $attribute)
-		{
-			self::replaceTokensInAttribute($attribute, $regexp, $fn);
-		}
-		foreach ($xpath->query('//text()') as $node)
-		{
-			self::replaceTokensInText($node, $regexp, $fn);
-		}
-
-		return self::saveTemplate($dom);
-	}
-
-	/**
-	* Create a node that implements given replacement strategy
-	*
-	* @param  DOMDocument $dom
-	* @param  array       $replacement
-	* @return DOMNode
-	*/
-	protected static function createReplacementNode(DOMDocument $dom, array $replacement)
-	{
-		if ($replacement[0] === 'expression')
-		{
-			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:value-of');
-			$newNode->setAttribute('select', $replacement[1]);
-		}
-		elseif ($replacement[0] === 'passthrough')
-		{
-			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:apply-templates');
-			if (isset($replacement[1]))
-			{
-				$newNode->setAttribute('select', $replacement[1]);
-			}
-		}
-		else
-		{
-			$newNode = $dom->createTextNode($replacement[1]);
-		}
-
-		return $newNode;
-	}
-
-	/**
-	* Replace parts of an attribute that match given regexp
-	*
-	* @param  DOMAttr  $attribute Attribute
-	* @param  string   $regexp    Regexp for matching parts that need replacement
-	* @param  callback $fn        Callback used to get the replacement
-	* @return void
-	*/
-	protected static function replaceTokensInAttribute(DOMAttr $attribute, $regexp, $fn)
-	{
-		$attrValue = preg_replace_callback(
-			$regexp,
-			function ($m) use ($fn, $attribute)
-			{
-				$replacement = $fn($m, $attribute);
-				if ($replacement[0] === 'expression' || $replacement[0] === 'passthrough')
-				{
-					// Use the node's text content as the default expression
-					$replacement[] = '.';
-
-					return '{' . $replacement[1] . '}';
-				}
-				else
-				{
-					return $replacement[1];
-				}
-			},
-			$attribute->value
-		);
-		$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
-	}
-
-	/**
-	* Replace parts of a text node that match given regexp
-	*
-	* @param  DOMText  $node     Text node
-	* @param  string   $regexp   Regexp for matching parts that need replacement
-	* @param  callback $fn       Callback used to get the replacement
-	* @return void
-	*/
-	protected static function replaceTokensInText(DOMText $node, $regexp, $fn)
-	{
-		// Grab the node's parent so that we can rebuild the text with added variables right
-		// before the node, using DOM's insertBefore(). Technically, it would make more sense
-		// to create a document fragment, append nodes then replace the node with the fragment
-		// but it leads to namespace redeclarations, which looks ugly
-		$parentNode = $node->parentNode;
-		$dom        = $node->ownerDocument;
-
-		preg_match_all($regexp, $node->textContent, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-		$lastPos = 0;
-		foreach ($matches as $m)
-		{
-			$pos = $m[0][1];
-
-			// Catch-up to current position
-			$text = substr($node->textContent, $lastPos, $pos - $lastPos);
-			$parentNode->insertBefore($dom->createTextNode($text), $node);
-			$lastPos = $pos + strlen($m[0][0]);
-
-			// Get the replacement for this token
-			$replacement = $fn(array_column($m, 0), $node);
-			$newNode     = self::createReplacementNode($dom, $replacement);
-			$parentNode->insertBefore($newNode, $node);
-		}
-
-		// Append the rest of the text
-		$text = substr($node->textContent, $lastPos);
-		$parentNode->insertBefore($dom->createTextNode($text), $node);
-
-		// Now remove the old text node
-		$parentNode->removeChild($node);
+		return TemplateModifier::replaceTokens($template, $regexp, $fn);
 	}
 
 	/**
@@ -613,112 +346,6 @@ abstract class TemplateHelper
 	*/
 	public static function saveTemplate(DOMDocument $dom)
 	{
-		return self::innerXML($dom->documentElement);
-	}
-
-	/**
-	* Replace HTML entities and unescaped ampersands in given template
-	*
-	* @param  string $template
-	* @return string
-	*/
-	protected static function fixEntities($template)
-	{
-		return preg_replace_callback(
-			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
-			function ($m)
-			{
-				return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
-			},
-			preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
-		);
-	}
-
-	/**
-	* Get the XML content of an element
-	*
-	* @param  DOMElement $element
-	* @return string
-	*/
-	protected static function innerXML(DOMElement $element)
-	{
-		// Serialize the XML then remove the outer element
-		$xml = $element->ownerDocument->saveXML($element);
-
-		$pos = 1 + strpos($xml, '>');
-		$len = strrpos($xml, '<') - $pos;
-
-		// If the template is empty, return an empty string
-		if ($len < 1)
-		{
-			return '';
-		}
-
-		$xml = substr($xml, $pos, $len);
-
-		return $xml;
-	}
-
-	/**
-	* Load given HTML template in a DOM document
-	*
-	* @param  string      $template Original template
-	* @return DOMDocument
-	*/
-	protected static function loadTemplateAsHTML($template)
-	{
-		$dom  = new DOMDocument;
-		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$dom->loadHTML($html);
-		self::removeInvalidAttributes($dom);
-		libxml_use_internal_errors($useErrors);
-
-		// Now dump the thing as XML then reload it with the proper root element
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . self::innerXML($dom->documentElement->firstChild->firstChild) . '</xsl:template>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$dom->loadXML($xml);
-		libxml_use_internal_errors($useErrors);
-
-		return $dom;
-	}
-
-	/**
-	* Load given XSL template in a DOM document
-	*
-	* @param  string           $template Original template
-	* @return bool|DOMDocument           DOMDocument on success, FALSE otherwise
-	*/
-	protected static function loadTemplateAsXML($template)
-	{
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$dom       = new DOMDocument;
-		$success   = $dom->loadXML($xml);
-		self::removeInvalidAttributes($dom);
-		libxml_use_internal_errors($useErrors);
-
-		return ($success) ? $dom : false;
-	}
-
-	/**
-	* Remove attributes with an invalid name from given DOM document
-	*
-	* @param  DOMDocument $dom
-	* @return void
-	*/
-	protected static function removeInvalidAttributes(DOMDocument $dom)
-	{
-		$xpath = new DOMXPath($dom);
-		foreach ($xpath->query('//@*') as $attribute)
-		{
-			if (!preg_match('(^(?:[-\\w]+:)?(?!\\d)[-\\w]+$)D', $attribute->nodeName))
-			{
-				$attribute->parentNode->removeAttributeNode($attribute);
-			}
-		}
+		return TemplateLoader::save($dom);
 	}
 }

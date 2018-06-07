@@ -54,12 +54,15 @@
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ContextSafenessTest.php</file>
 			<file>tests/Configurator/Helpers/ElementInspectorTest.php</file>
-			<file>tests/Configurator/Helpers/TemplateInspectorTest.php</file>
+			<file>tests/Configurator/Helpers/NodeLocatorTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpParserTest.php</file>
 			<file>tests/Configurator/Helpers/RulesHelperTest.php</file>
-			<file>tests/Configurator/Helpers/TemplateParserTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateHelperTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateInspectorTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateLoaderTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateModifierTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateParserTest.php</file>
 			<file>tests/Configurator/Helpers/XPathHelperTest.php</file>
 			<file>tests/Configurator/Items/AttributeTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilterTest.php</file>

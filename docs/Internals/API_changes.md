@@ -1,6 +1,42 @@
 ## 2.0.0 (not released)
 
-The `parseEqualityExpr()` method will be moved from `s9e\TextFormatter\Configurator\Helpers\TemplateParser` to `s9e\TextFormatter\Configurator\Helpers\XPathHelper`.
+Methods and classes that were deprecated in 1.x will be removed.
+
+
+## 1.2.0
+
+The `s9e\TextFormatter\Configurator\Helpers\TemplateHelper` class have been split into subcomponents. The current API is deprecated but remains fully functional. The new API is as follows:
+
+* **s9e\TextFormatter\Configurator\Helpers\NodeLocator**
+
+    - getAttributesByRegexp
+    - getCSSNodes
+    - getElementsByRegexp
+    - getJSNodes
+    - getObjectParamsByRegexp
+    - getURLNodes<br><br>
+
+* **s9e\TextFormatter\Configurator\Helpers\NodeLocator**
+
+    - getAttributesByRegexp
+    - getCSSNodes
+    - getElementsByRegexp
+    - getJSNodes
+    - getObjectParamsByRegexp
+    - getURLNodes<br><br>
+
+* **s9e\TextFormatter\Configurator\Helpers\TemplateLoader**
+
+    - load *<small>(previously: loadTemplate)</small>*
+    - save *<small>(previously: saveTemplate)</small>*<br><br>
+
+* **s9e\TextFormatter\Configurator\Helpers\TemplateModifier**
+
+    - replaceTokens<br><br>
+
+* **s9e\TextFormatter\Configurator\Helpers\XPathHelper**
+
+    - parseEqualityExpr
 
 
 ## 1.0.0
