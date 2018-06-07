@@ -94,69 +94,34 @@ abstract class TemplateHelper
 	public static function getParametersFromXSL($xsl)
 	{
 		$paramNames = [];
-
-		// Wrap the XSL in boilerplate code because it might not have a root element
-		$xsl = '<xsl:stylesheet xmlns:xsl="' . self::XMLNS_XSL . '">'
-		     . '<xsl:template>'
-		     . $xsl
-		     . '</xsl:template>'
-		     . '</xsl:stylesheet>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-
-		$xpath = new DOMXPath($dom);
+		$xpath      = new DOMXPath(TemplateLoader::load($xsl));
 
 		// Start by collecting XPath expressions in XSL elements
 		$query = '//xsl:*/@match | //xsl:*/@select | //xsl:*/@test';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			foreach (XPathHelper::getVariables($attribute->value) as $varName)
-			{
-				// Test whether this is the name of a local variable
-				$varQuery = 'ancestor-or-self::*/'
-				          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
-
-				if (!$xpath->query($varQuery, $attribute)->length)
-				{
-					$paramNames[] = $varName;
-				}
-			}
+			$expr        = $attribute->value;
+			$paramNames += array_flip(self::getParametersFromExpression($attribute, $expr));
 		}
 
-		// Collecting XPath expressions in attribute value templates
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
-		       . '/@*[contains(., "{")]';
+		// Collect XPath expressions in attribute value templates
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			$tokens = AVTHelper::parse($attribute->value);
-
-			foreach ($tokens as $token)
+			foreach (AVTHelper::parse($attribute->value) as $token)
 			{
-				if ($token[0] !== 'expression')
+				if ($token[0] === 'expression')
 				{
-					continue;
-				}
-
-				foreach (XPathHelper::getVariables($token[1]) as $varName)
-				{
-					// Test whether this is the name of a local variable
-					$varQuery = 'ancestor-or-self::*/'
-					          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
-
-					if (!$xpath->query($varQuery, $attribute)->length)
-					{
-						$paramNames[] = $varName;
-					}
+					$expr        = $token[1];
+					$paramNames += array_flip(self::getParametersFromExpression($attribute, $expr));
 				}
 			}
 		}
 
-		// Dedupe and sort names
-		$paramNames = array_unique($paramNames);
-		sort($paramNames);
+		// Sort the parameter names and return them in a list
+		ksort($paramNames);
 
-		return $paramNames;
+		return array_keys($paramNames);
 	}
 
 	/**
@@ -260,18 +225,16 @@ abstract class TemplateHelper
 	*/
 	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
 	{
-		$tagNames = [];
-
 		// Prepare the XPath expression used for the element's name
 		$expr = 'name()';
 
 		// Identify "simple" tags, whose template is one element of the same name. Their template
 		// can be replaced with a dynamic template shared by all the simple tags
+		$tagNames = [];
 		foreach ($templates as $tagName => $template)
 		{
 			// Generate the element name based on the tag's localName, lowercased
 			$elName = strtolower(preg_replace('/^[^:]+:/', '', $tagName));
-
 			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
 			{
 				$tagNames[] = $tagName;
@@ -293,16 +256,13 @@ abstract class TemplateHelper
 
 		// Generate a list of uppercase characters from the tags' names
 		$chars = preg_replace('/[^A-Z]+/', '', count_chars(implode('', $tagNames), 3));
-
-		if (is_string($chars) && $chars !== '')
+		if ($chars > '')
 		{
 			$expr = 'translate(' . $expr . ",'" . $chars . "','" . strtolower($chars) . "')";
 		}
 
 		// Prepare the common template
-		$template = '<xsl:element name="{' . $expr . '}">'
-		          . '<xsl:apply-templates/>'
-		          . '</xsl:element>';
+		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
 
 		// Replace the templates
 		foreach ($tagNames as $tagName)
@@ -347,5 +307,30 @@ abstract class TemplateHelper
 	public static function saveTemplate(DOMDocument $dom)
 	{
 		return TemplateLoader::save($dom);
+	}
+
+	/**
+	* Get a list of parameters from given XPath expression
+	*
+	* @param  DOMNode  $node Context node
+	* @param  string   $expr XPath expression
+	* @return string[]
+	*/
+	protected static function getParametersFromExpression(DOMNode $node, $expr)
+	{
+		$varNames   = XPathHelper::getVariables($expr);
+		$paramNames = [];
+		$xpath      = new DOMXPath($node->ownerDocument);
+		foreach ($varNames as $name)
+		{
+			// Test whether this is the name of a local variable
+			$query = 'ancestor-or-self::*/preceding-sibling::xsl:variable[@name="' . $name . '"]';
+			if (!$xpath->query($query, $node)->length)
+			{
+				$paramNames[] = $name;
+			}
+		}
+
+		return $paramNames;
 	}
 }
