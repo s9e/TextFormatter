@@ -835,21 +835,7 @@ abstract class NodeLocator
 {
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-		foreach ($xpath->query('//@*') as $attribute)
-			if (\preg_match($regexp, $attribute->name))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-			if (\preg_match($regexp, $attribute->getAttribute('name')))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^@(\\w+)$/', $expr, $m) && \preg_match($regexp, $m[1]))
-				$nodes[] = $node;
-		}
-		return $nodes;
+		return self::getNodesByRegexp($dom, $regexp, 'attribute', '@');
 	}
 	public static function getCSSNodes(DOMDocument $dom)
 	{
@@ -862,21 +848,7 @@ abstract class NodeLocator
 	}
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-		foreach ($xpath->query('//*') as $element)
-			if (\preg_match($regexp, $element->localName))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:element') as $element)
-			if (\preg_match($regexp, $element->getAttribute('name')))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^\\w+$/', $expr) && \preg_match($regexp, $expr))
-				$nodes[] = $node;
-		}
-		return $nodes;
+		return self::getNodesByRegexp($dom, $regexp, 'element', '');
 	}
 	public static function getJSNodes(DOMDocument $dom)
 	{
@@ -897,12 +869,11 @@ abstract class NodeLocator
 				if (\strtolower($attribute->parentNode->localName) === 'embed')
 					$nodes[] = $attribute;
 			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
+			elseif ($xpath->evaluate('count(ancestor::embed)', $attribute))
 				$nodes[] = $attribute;
-		foreach ($dom->getElementsByTagName('object') as $object)
-			foreach ($object->getElementsByTagName('param') as $param)
-				if (\preg_match($regexp, $param->getAttribute('name')))
-					$nodes[] = $param;
+		foreach ($xpath->query('//object//param') as $param)
+			if (\preg_match($regexp, $param->getAttribute('name')))
+				$nodes[] = $param;
 		return $nodes;
 	}
 	public static function getURLNodes(DOMDocument $dom)
@@ -915,6 +886,23 @@ abstract class NodeLocator
 			if ($node)
 				$nodes[] = $node;
 		}
+		return $nodes;
+	}
+	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type, $prefix)
+	{
+		$candidates = [];
+		$xpath      = new DOMXPath($dom);
+		foreach ($xpath->query('//' . $prefix . '*') as $node)
+			$candidates[] = [$node, $node->nodeName];
+		foreach ($xpath->query('//xsl:' . $type) as $node)
+			$candidates[] = [$node, $node->getAttribute('name')];
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+			if (\preg_match('/^' . $prefix . '(\\w+)$/', $node->getAttribute('select'), $m))
+				$candidates[] = [$node, $m[1]];
+		$nodes = [];
+		foreach ($candidates as list($node, $name))
+			if (\preg_match($regexp, $name))
+				$nodes[] = $node;
 		return $nodes;
 	}
 }
