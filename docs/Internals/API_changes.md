@@ -1,4 +1,4 @@
-## 2.0.0 (not released)
+## 2.0.0
 
 Methods and classes that were deprecated in 1.x will be removed.
 
@@ -6,15 +6,6 @@ Methods and classes that were deprecated in 1.x will be removed.
 ## 1.2.0
 
 The `s9e\TextFormatter\Configurator\Helpers\TemplateHelper` class have been split into subcomponents. The current API is deprecated but remains fully functional. The new API is as follows:
-
-* **s9e\TextFormatter\Configurator\Helpers\NodeLocator**
-
-    - getAttributesByRegexp
-    - getCSSNodes
-    - getElementsByRegexp
-    - getJSNodes
-    - getObjectParamsByRegexp
-    - getURLNodes<br><br>
 
 * **s9e\TextFormatter\Configurator\Helpers\NodeLocator**
 
