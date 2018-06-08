@@ -17,49 +17,18 @@ abstract class NodeLocator
 	*
 	* @param  DOMDocument $dom    Document
 	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
+	* @return DOMNode[]           List of DOMNode instances
 	*/
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//@*') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->name))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get generated attributes
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-		{
-			if (preg_match($regexp, $attribute->getAttribute('name')))
-			{
-				$nodes[] = $attribute;
-			}
-		}
-
-		// Get attributes created with <xsl:copy-of/>
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (preg_match('/^@(\\w+)$/', $expr, $m) && preg_match($regexp, $m[1]))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
+		return self::getNodesByRegexp($dom, $regexp, 'attribute', '@');
 	}
 
 	/**
 	* Return all DOMNodes whose content is CSS
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getCSSNodes(DOMDocument $dom)
 	{
@@ -77,50 +46,18 @@ abstract class NodeLocator
 	*
 	* @param  DOMDocument $dom    Document
 	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
+	* @return DOMNode[]           List of DOMNode instances
 	*/
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xpath = new DOMXPath($dom);
-		$nodes = [];
-
-		// Get literal attributes
-		foreach ($xpath->query('//*') as $element)
-		{
-			if (preg_match($regexp, $element->localName))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get generated elements
-		foreach ($xpath->query('//xsl:element') as $element)
-		{
-			if (preg_match($regexp, $element->getAttribute('name')))
-			{
-				$nodes[] = $element;
-			}
-		}
-
-		// Get elements created with <xsl:copy-of/>
-		// NOTE: this method of creating elements is disallowed by default
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (preg_match('/^\\w+$/', $expr) && preg_match($regexp, $expr))
-			{
-				$nodes[] = $node;
-			}
-		}
-
-		return $nodes;
+		return self::getNodesByRegexp($dom, $regexp, 'element', '');
 	}
 
 	/**
 	* Return all DOMNodes whose content is JavaScript
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getJSNodes(DOMDocument $dom)
 	{
@@ -142,7 +79,7 @@ abstract class NodeLocator
 	*
 	* @param  DOMDocument $dom    Document
 	* @param  string      $regexp
-	* @return array               Array of DOMNode instances
+	* @return DOMNode[]           List of DOMNode instances
 	*/
 	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
 	{
@@ -159,7 +96,7 @@ abstract class NodeLocator
 					$nodes[] = $attribute;
 				}
 			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
+			elseif ($xpath->evaluate('count(ancestor::embed)', $attribute))
 			{
 				// Assuming <xsl:attribute/> or <xsl:copy-of/>
 				$nodes[] = $attribute;
@@ -167,14 +104,11 @@ abstract class NodeLocator
 		}
 
 		// Collect <param/> descendants of <object/> elements
-		foreach ($dom->getElementsByTagName('object') as $object)
+		foreach ($xpath->query('//object//param') as $param)
 		{
-			foreach ($object->getElementsByTagName('param') as $param)
+			if (preg_match($regexp, $param->getAttribute('name')))
 			{
-				if (preg_match($regexp, $param->getAttribute('name')))
-				{
-					$nodes[] = $param;
-				}
+				$nodes[] = $param;
 			}
 		}
 
@@ -187,7 +121,7 @@ abstract class NodeLocator
 	* NOTE: it will also return HTML4 nodes whose content is an URI
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getURLNodes(DOMDocument $dom)
 	{
@@ -202,6 +136,54 @@ abstract class NodeLocator
 		{
 			$node = $param->getAttributeNode('value');
 			if ($node)
+			{
+				$nodes[] = $node;
+			}
+		}
+
+		return $nodes;
+	}
+
+	/**
+	* Return all nodes (literal or generated) that match given regexp
+	*
+	* @param  DOMDocument $dom    Document
+	* @param  string      $regexp Regexp
+	* @param  string      $type   Node type ('element' or 'attribute')
+	* @param  string      $prefix Prefix used in XPath ('' or '@')
+	* @return DOMNode[]           List of DOMNode instances
+	*/
+	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type, $prefix)
+	{
+		$candidates = [];
+		$xpath      = new DOMXPath($dom);
+
+		// Get natural nodes
+		foreach ($xpath->query('//' . $prefix . '*') as $node)
+		{
+			$candidates[] = [$node, $node->nodeName];
+		}
+
+		// Get XSL-generated nodes
+		foreach ($xpath->query('//xsl:' . $type) as $node)
+		{
+			$candidates[] = [$node, $node->getAttribute('name')];
+		}
+
+		// Get xsl:copy-of nodes
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+		{
+			if (preg_match('/^' . $prefix . '(\\w+)$/', $node->getAttribute('select'), $m))
+			{
+				$candidates[] = [$node, $m[1]];
+			}
+		}
+
+		// Filter candidate nodes
+		$nodes = [];
+		foreach ($candidates as list($node, $name))
+		{
+			if (preg_match($regexp, $name))
 			{
 				$nodes[] = $node;
 			}

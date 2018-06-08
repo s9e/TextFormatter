@@ -11,8 +11,8 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Helpers\NodeLocator
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateHelper
-* @covers s9e\TextFormatter\Configurator\Helpers\TemplateHelpers\NodeLocator
 */
 class NodeLocatorTest extends Test
 {
