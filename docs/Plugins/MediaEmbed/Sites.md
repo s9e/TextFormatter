@@ -604,7 +604,7 @@
 	<tr>
 		<td><code>youku</code></td>
 		<td>Youku</td>
-		<td>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</td>
+		<td>http://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
 	</tr>
 	<tr>
 		<td><code>youtube</code></td>

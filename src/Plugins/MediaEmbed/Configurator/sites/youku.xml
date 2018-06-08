@@ -1,9 +1,9 @@
 <site name="Youku" homepage="http://www.youku.com/">
-	<example>http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</example>
+	<example>http://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</example>
 
 	<tags><tag>.cn</tag></tags>
 
 	<host>youku.com</host>
-	<extract>!youku\.com/v(?:_show|ideo)/id_(?'id'\w+)!</extract>
-	<iframe padding-height="40" src="https://players.youku.com/embed/{@id}"/>
+	<extract>!youku\.com/v(?:_show|ideo)/id_(?'id'\w+=*)!</extract>
+	<iframe src="//player.youku.com/embed/{@id}"/>
 </site>
