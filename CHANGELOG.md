@@ -1,3 +1,18 @@
+1.2.0 (2018-06-10)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#120) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7565cbb8d4ddd7650b6bc52a74a16fc915dc8d89...7b909f51a8dbaff75e8a50038d8a8c3001a59da1)
+
+### Changed
+
+ - `70e7d0631` MediaEmbed: updated Youku
+ - `7b909f51a` NodeLocator: simplified code
+ - `8b647bafc` Split TemplateHelper into separate components
+ - `ec48771b3` TemplateHelper: simplified some code
+
+
 1.1.7 (2018-06-03)
 ==================
 
