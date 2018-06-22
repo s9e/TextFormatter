@@ -1,11 +1,12 @@
 <site name="Instagram" homepage="http://instagram.com/">
 	<source>http://help.instagram.com/513918941996087</source>
 	<example>http://instagram.com/p/gbGaIXBQbn/</example>
+	<example>https://www.instagram.com/tv/BkQjCfsBIzi/</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>instagram.com</host>
-	<extract>!instagram\.com/p/(?'id'[-\w]+)!</extract>
+	<extract>!instagram\.com/(?:p|tv)/(?'id'[-\w]+)!</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)

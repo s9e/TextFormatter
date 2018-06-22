@@ -239,7 +239,7 @@
 	<tr>
 		<td><code>instagram</code></td>
 		<td>Instagram</td>
-		<td>http://instagram.com/p/gbGaIXBQbn/</td>
+		<td>http://instagram.com/p/gbGaIXBQbn/<br/>https://www.instagram.com/tv/BkQjCfsBIzi/</td>
 	</tr>
 	<tr>
 		<td><code>internetarchive</code></td>
