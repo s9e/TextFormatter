@@ -8,7 +8,7 @@
 	<example>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</example>
 	<example>https://www.amazon.es/Microsoft-Sculpt-Ergonomic-Desktop-L5V-00011/dp/B00FO10ZK0/</example>
 	<example>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
-	<example>http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/</example>
+	<example>https://www.amazon.in/Vans-Unisex-Classic-Loafers-Moccasins/dp/B01I3LWMVC/</example>
 	<example>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/</example>
 	<example>https://www.amazon.com/dp/B0018CDWLS/</example>
 
@@ -37,62 +37,57 @@
 	<extract>#amazon\.(?:co\.)?(?'tld'ca|de|es|fr|in|it|jp|uk)#</extract>
 	<iframe width="120" height="240">
 		<src><![CDATA[
-			<xsl:text>//</xsl:text>
+			<xsl:text>//ws-</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@tld='es' or @tld='it'">
-					<xsl:text>rcm-eu.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=FFFFFF&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;p=8&amp;l=as1&amp;f=ifr&amp;asins=</xsl:text>
-					<xsl:value-of select="@id"/>
-					<xsl:text>&amp;o=</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@tld='es'">30</xsl:when>
-						<xsl:otherwise>29</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>&amp;t=</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@tld='es' and $AMAZON_ASSOCIATE_TAG_ES"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/></xsl:when>
-						<xsl:when test="@tld='it' and $AMAZON_ASSOCIATE_TAG_IT"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/></xsl:when>
-						<xsl:otherwise>_</xsl:otherwise>
-					</xsl:choose>
+				<xsl:when test="@tld='in'">
+					<xsl:text>in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=IN&amp;ad_type=product_link&amp;marketplace=amazon&amp;region=IN&amp;show_border=true&amp;link_opens_in_new_window=true&amp;tracking_id=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IN"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>ws-</xsl:text>
 					<xsl:choose>
-						<xsl:when test="@tld='in'">in</xsl:when>
 						<xsl:when test="@tld='jp'">fe</xsl:when>
-						<xsl:when test="@tld and contains('desfrituk',@tld)">eu</xsl:when>
+						<xsl:when test="@tld and contains('desfrituk', @tld)">eu</xsl:when>
 						<xsl:otherwise>na</xsl:otherwise>
 					</xsl:choose>
-					<xsl:text>.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=</xsl:text>
+					<xsl:text>.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=</xsl:text>
 					<xsl:choose>
-						<xsl:when test="@tld">
-							<!-- uk will become GB -->
-							<xsl:value-of select="translate(@tld,'acdefijknprstu','ACDEFIJBNPRSTG')"/>
+						<xsl:when test="@tld='ca'">
+							<xsl:text>15&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/>
 						</xsl:when>
-						<xsl:otherwise>US</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>&amp;ad_type=product_link&amp;tracking_id=</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@tld='ca'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/></xsl:when>
-						<xsl:when test="@tld='de'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/></xsl:when>
-						<xsl:when test="@tld='fr'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/></xsl:when>
-						<xsl:when test="@tld='in'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IN"/></xsl:when>
-						<xsl:when test="@tld='jp'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/></xsl:when>
-						<xsl:when test="@tld='uk'"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/></xsl:when>
-						<xsl:when test="$AMAZON_ASSOCIATE_TAG"><xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/></xsl:when>
-						<xsl:otherwise>-20</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>&amp;marketplace=amazon&amp;region=</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@tld">
-							<xsl:value-of select="translate(@tld,'acdefijknprstu','ACDEFIJBNPRSTG')"/>
+						<xsl:when test="@tld='de'">
+							<xsl:text>3&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/>
 						</xsl:when>
-						<xsl:otherwise>US</xsl:otherwise>
+						<xsl:when test="@tld='es'">
+							<xsl:text>30&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/>
+						</xsl:when>
+						<xsl:when test="@tld='fr'">
+							<xsl:text>8&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/>
+						</xsl:when>
+						<xsl:when test="@tld='it'">
+							<xsl:text>29&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/>
+						</xsl:when>
+						<xsl:when test="@tld='jp'">
+							<xsl:text>9&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/>
+						</xsl:when>
+						<xsl:when test="@tld='uk'">
+							<xsl:text>2&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>1&amp;t=</xsl:text>
+							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/>
+						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:text>&amp;asins=</xsl:text>
-					<xsl:value-of select="@id"/>
-					<xsl:text>&amp;show_border=true&amp;link_opens_in_new_window=true</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:text>&amp;asins=</xsl:text>
+			<xsl:value-of select="@id"/>
 		]]></src>
 	</iframe>
 </site>
