@@ -7,5 +7,5 @@
 
 	<host>gamespot.com</host>
 	<extract>!gamespot\.com.*?/(?:events|videos)/.*?-(?'id'\d+)/(?:[#?].*)?$!</extract>
-	<iframe width="640" height="400" src="//www.gamespot.com/videos/embed/{@id}/"/>
+	<iframe src="//www.gamespot.com/videos/embed/{@id}/"/>
 </site>
