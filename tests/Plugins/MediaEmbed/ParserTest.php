@@ -3148,15 +3148,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.viagame.com/channels/hearthstone-championship/404917',
-				'<r><VIAGAME id="404917">http://www.viagame.com/channels/hearthstone-championship/404917</VIAGAME></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('viagame');
-				}
-			],
-			[
 				'http://www.videodetective.com/movies/deadpool/38876',
 				'<r><VIDEODETECTIVE id="38876">http://www.videodetective.com/movies/deadpool/38876</VIDEODETECTIVE></r>',
 				[],

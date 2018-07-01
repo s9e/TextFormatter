@@ -527,11 +527,6 @@
 		<td>http://www.vevo.com/watch/USUV71400682<br/>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>
 	</tr>
 	<tr>
-		<td><code>viagame</code></td>
-		<td>Viagame</td>
-		<td>http://www.viagame.com/channels/hearthstone-championship/405177</td>
-	</tr>
-	<tr>
 		<td><code>videodetective</code></td>
 		<td>Video Detective</td>
 		<td>http://www.videodetective.com/movies/zootopia/658596</td>

@@ -1,9 +1,0 @@
-<site name="Viagame" homepage="http://www.viagame.com/">
-	<example>http://www.viagame.com/channels/hearthstone-championship/405177</example>
-
-	<tags><tag>gaming</tag></tags>
-
-	<host>viagame.com</host>
-	<extract>!viagame\.com/channels/[^/]+/(?'id'\d+)!</extract>
-	<iframe width="640" height="392" src="//www.viagame.com/embed/{@id}"/>
-</site>
