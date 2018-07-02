@@ -11,5 +11,5 @@
 		<extract>@property="nv:videoId" content="(?'id'\w+)@</extract>
 		<extract>@guid"?[=:]"?(?'id'\w+)@</extract>
 	</scrape>
-	<iframe width="635" height="440" src="//player.theplatform.com/p/2E2eJC/EmbeddedOffSite?guid={@id}"/>
+	<iframe padding-height="80" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid={@id}"/>
 </site>
