@@ -3704,11 +3704,21 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=IN&amp;ad_type=product_link&amp;marketplace=amazon&amp;region=IN&amp;show_border=true&amp;link_opens_in_new_window=true&amp;tracking_id=&amp;asins=B01I3LNWQG"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=&amp;asins=B01I3LNWQG"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
+				'http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=in-20&amp;asins=B01I3LNWQG"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+					$configurator->rendering->parameters['AMAZON_ASSOCIATE_TAG_IN'] = 'in-20';
 				}
 			],
 			[

@@ -39,51 +39,47 @@
 		<src><![CDATA[
 			<xsl:text>//ws-</xsl:text>
 			<xsl:choose>
+				<xsl:when test="@tld='jp'">fe</xsl:when>
+				<xsl:when test="@tld and contains('desfrinituk', @tld)">eu</xsl:when>
+				<xsl:otherwise>na</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@tld='ca'">
+					<xsl:text>15&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/>
+				</xsl:when>
+				<xsl:when test="@tld='de'">
+					<xsl:text>3&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/>
+				</xsl:when>
+				<xsl:when test="@tld='es'">
+					<xsl:text>30&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/>
+				</xsl:when>
+				<xsl:when test="@tld='fr'">
+					<xsl:text>8&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/>
+				</xsl:when>
 				<xsl:when test="@tld='in'">
-					<xsl:text>in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&amp;OneJS=1&amp;Operation=GetAdHtml&amp;MarketPlace=IN&amp;ad_type=product_link&amp;marketplace=amazon&amp;region=IN&amp;show_border=true&amp;link_opens_in_new_window=true&amp;tracking_id=</xsl:text>
+					<xsl:text>31&amp;t=</xsl:text>
 					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IN"/>
 				</xsl:when>
+				<xsl:when test="@tld='it'">
+					<xsl:text>29&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/>
+				</xsl:when>
+				<xsl:when test="@tld='jp'">
+					<xsl:text>9&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/>
+				</xsl:when>
+				<xsl:when test="@tld='uk'">
+					<xsl:text>2&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/>
+				</xsl:when>
 				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="@tld='jp'">fe</xsl:when>
-						<xsl:when test="@tld and contains('desfrituk', @tld)">eu</xsl:when>
-						<xsl:otherwise>na</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@tld='ca'">
-							<xsl:text>15&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_CA"/>
-						</xsl:when>
-						<xsl:when test="@tld='de'">
-							<xsl:text>3&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_DE"/>
-						</xsl:when>
-						<xsl:when test="@tld='es'">
-							<xsl:text>30&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_ES"/>
-						</xsl:when>
-						<xsl:when test="@tld='fr'">
-							<xsl:text>8&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_FR"/>
-						</xsl:when>
-						<xsl:when test="@tld='it'">
-							<xsl:text>29&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_IT"/>
-						</xsl:when>
-						<xsl:when test="@tld='jp'">
-							<xsl:text>9&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_JP"/>
-						</xsl:when>
-						<xsl:when test="@tld='uk'">
-							<xsl:text>2&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG_UK"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>1&amp;t=</xsl:text>
-							<xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:text>1&amp;t=</xsl:text>
+					<xsl:value-of select="$AMAZON_ASSOCIATE_TAG"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:text>&amp;asins=</xsl:text>
