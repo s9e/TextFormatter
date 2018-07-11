@@ -1185,26 +1185,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://vkontakte.ru/video-7016284_163645555',
-				'<r><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" vid="163645555">http://vkontakte.ru/video-7016284_163645555</VK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('vk');
-				}
-			],
-			[
-				'http://vk.com/video226156999_168963041',
-				'<r><VK hash="9050a9cce6465c9e" oid="226156999" vid="168963041">http://vk.com/video226156999_168963041</VK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('vk');
-				}
-			],
-			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
