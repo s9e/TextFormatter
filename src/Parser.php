@@ -1897,7 +1897,8 @@ class Parser
 
 		// Invalidate this tag if it's an unknown tag, a disabled tag, if either of its length or
 		// position is negative or if it's out of bounds
-		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
+		if ((!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
+		 || $this->isInvalidTextSpan($pos, $len))
 		{
 			$tag->invalidate();
 		}
@@ -1912,16 +1913,24 @@ class Parser
 			);
 			$tag->invalidate();
 		}
-		elseif ($len < 0 || $pos < 0 || $pos + $len > $this->textLen)
-		{
-			$tag->invalidate();
-		}
 		else
 		{
 			$this->insertTag($tag);
 		}
 
 		return $tag;
+	}
+
+	/**
+	* Test whether given text span is outside text boundaries or an invalid UTF sequence
+	*
+	* @param  integer $pos Start of text
+	* @param  integer $len Length of text
+	* @return bool
+	*/
+	protected function isInvalidTextSpan($pos, $len)
+	{
+		return ($len < 0 || $pos < 0 || $pos + $len > $this->textLen || preg_match('([\\x80-\\xBF])', substr($this->text, $pos, 1) . substr($this->text, $pos + $len, 1)));
 	}
 
 	/**

@@ -1404,6 +1404,79 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('B', 9, 3);
 				}
 			],
+			[
+				'Pokémon',
+				'<r>Pok<X>é</X>mon</r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 3, 2);
+				}
+			],
+			[
+				'Pokémon',
+				'<t>Pokémon</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 3, 1);
+				}
+			],
+			[
+				'Pokémon',
+				'<t>Pokémon</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 4, 1);
+				}
+			],
+		];
+	}
+
+	/**
+	* @testdox JavaScript tests
+	* @dataProvider getJSData
+	* @group needs-js
+	*/
+	public function testJS($original, $expected, $setup)
+	{
+		$setup($this->configurator);
+		$this->assertJSParsing($original, $expected);
+	}
+
+	public function getJSData()
+	{
+		return [
+			[
+				// U+1F600 or U+D83D U+DE00
+				"\xF0\x9F\x98\x80",
+				'<r><X>&#128512;</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->Preg->match('/.+/', 'X');
+				}
+			],
+			[
+				// U+1F600 or U+D83D U+DE00
+				"\xF0\x9F\x98\x80",
+				'<t>&#128512;</t>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->Preg->match('/./', 'X');
+				}
+			],
 		];
 	}
 
