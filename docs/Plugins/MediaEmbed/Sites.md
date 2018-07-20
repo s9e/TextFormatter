@@ -49,7 +49,7 @@
 	<tr>
 		<td><code>brightcove</code></td>
 		<td>Brightcove</td>
-		<td>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001<br/>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001<br/>http://bcove.me/rpuseykd</td>
+		<td>https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>
 	</tr>
 	<tr>
 		<td><code>cbsnews</code></td>

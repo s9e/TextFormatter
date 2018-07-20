@@ -557,16 +557,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('bleacherreport');
 //				}
 //			],
-			[
-				'http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001',
-				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('brightcove');
-				}
-			],
 //			[
 //				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 //				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
@@ -1543,6 +1533,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('break');
+				}
+			],
+			[
+				'https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&bctid=4815779906001',
+				'<r><BRIGHTCOVE bckey="AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm" bcpid="4773906090001" bctid="4815779906001">https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</BRIGHTCOVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('brightcove');
+				}
+			],
+			[
+				'https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001',
+				'<r><BRIGHTCOVE bcpid="219646971" bctid="4815779906001">https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001</BRIGHTCOVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('brightcove');
 				}
 			],
 			[
@@ -4353,6 +4361,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
+				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
+				'<span data-s9e-mediaembed="brightcove" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://link.brightcove.com/services/player/bcpid2869183374001?bckey=AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v&amp;bctid=5045373183001&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=360&amp;width=640"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('brightcove');
 				}
 			],
 			[

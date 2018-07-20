@@ -1,16 +1,35 @@
 <site name="Brightcove" homepage="https://www.brightcove.com/">
-	<example>http://link.brightcove.com/services/player/bcpid34762914001?bctid=66379363001</example>
-	<example>http://link.brightcove.com/services/player/bcpid3936710530001?bckey=AQ~~,AAAA3LlbZiE~,0uzoN5xJpHsvpxPw-K2_CalW5-PE-Ti2&amp;bctid=4669818674001</example>
-	<example>http://bcove.me/rpuseykd</example>
+	<example>https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001</example>
+	<example>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</example>
+
+	<attributes>
+		<bckey required="false"/>
+	</attributes>
 
 	<tags><tag>videos</tag></tags>
-
-	<host>bcove.me</host>
 	<host>link.brightcove.com</host>
-	<scrape>
-		<match>!bcove\.me/.!</match>
-		<match>!link\.brightcove\.com/services/player/!</match>
-		<extract>!meta name="twitter:player" content=".*?bcpid(?'bcpid'\d+).*?bckey=(?'bckey'[-,~\w]+).*?bctid=(?'bctid'\d+)!</extract>
-	</scrape>
-	<iframe src="https://link.brightcove.com/services/player/bcpid{@bcpid}?bckey={@bckey}&amp;bctid={@bctid}&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=100%25&amp;width=100%25"/>
+	<host>players.brightcove.net</host>
+	<extract>@link\.brightcove\.com/services/player/bcpid(?'bcpid'\d+).*?bckey=(?'bckey'[-,~\w]+).*?bctid=(?'bctid'\d+)@</extract>
+	<extract>@players\.brightcove\.net/(?'bcpid'\d+)/.*?videoId=(?'bctid'\d+)@</extract>
+	<iframe>
+		<src><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@bckey">
+					<xsl:text>https://link.brightcove.com/services/player/bcpid</xsl:text>
+					<xsl:value-of select="@bcpid"/>
+					<xsl:text>?bckey=</xsl:text>
+					<xsl:value-of select="@bckey"/>
+					<xsl:text>&amp;bctid=</xsl:text>
+					<xsl:value-of select="@bctid"/>
+					<xsl:text>&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=360&amp;width=640</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>https://players.brightcove.net/</xsl:text>
+					<xsl:value-of select="@bcpid"/>
+					<xsl:text>/default_default/index.html?videoId=</xsl:text>
+					<xsl:value-of select="@bctid"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
 </site>
