@@ -175,7 +175,7 @@ class ElementInspector
 		$parentName = $parent->nodeName;
 		$childName  = $child->nodeName;
 
-		return !empty(self::$htmlElements[$parentName]['cp']) && in_array($childName, self::$htmlElements[$parentName]['cp'], true);
+		return !empty(self::$htmlElements[$childName]['cp']) && in_array($parentName, self::$htmlElements[$childName]['cp'], true);
 	}
 
 	/**

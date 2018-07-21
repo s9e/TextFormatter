@@ -45,6 +45,21 @@ class ElementInspectorTest extends Test
 				false
 			],
 			[
+				'closesParent',
+				['<p><xsl:apply-templates/></p>', '<p><xsl:apply-templates/></p>'],
+				true
+			],
+			[
+				'closesParent',
+				['<div><xsl:apply-templates/></div>', '<p><xsl:apply-templates/></p>'],
+				true
+			],
+			[
+				'closesParent',
+				['<p><xsl:apply-templates/></p>', '<div><xsl:apply-templates/></div>'],
+				false
+			],
+			[
 				'disallowsText',
 				'<ul><xsl:apply-templates/></ul>',
 				true

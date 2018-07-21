@@ -230,11 +230,12 @@ class TemplateInspector
 	*/
 	public function closesParent(TemplateInspector $parent)
 	{
+		// Test whether any of this template's root nodes closes any of given template's leaf nodes
 		foreach ($this->rootNodes as $rootNode)
 		{
 			foreach ($parent->leafNodes as $leafNode)
 			{
-				if (ElementInspector::closesParent($leafNode, $rootNode))
+				if (ElementInspector::closesParent($rootNode, $leafNode))
 				{
 					return true;
 				}
