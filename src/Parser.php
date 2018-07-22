@@ -855,7 +855,8 @@ class Parser
 		$tag = new Tag($type, $name, $pos, $len, $prio);
 		if (isset($this->tagsConfig[$name]))
 			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
-		if (!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
+		if ((!isset($this->tagsConfig[$name]) && !$tag->isSystemTag())
+		 || $this->isInvalidTextSpan($pos, $len))
 			$tag->invalidate();
 		elseif (!empty($this->tagsConfig[$name]['isDisabled']))
 		{
@@ -868,11 +869,13 @@ class Parser
 			);
 			$tag->invalidate();
 		}
-		elseif ($len < 0 || $pos < 0 || $pos + $len > $this->textLen)
-			$tag->invalidate();
 		else
 			$this->insertTag($tag);
 		return $tag;
+	}
+	protected function isInvalidTextSpan($pos, $len)
+	{
+		return ($len < 0 || $pos < 0 || $pos + $len > $this->textLen || \preg_match('([\\x80-\\xBF])', \substr($this->text, $pos, 1) . \substr($this->text, $pos + $len, 1)));
 	}
 	protected function insertTag(Tag $tag)
 	{
