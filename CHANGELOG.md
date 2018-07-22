@@ -1,3 +1,34 @@
+1.2.1 (2018-07-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7b909f51a8dbaff75e8a50038d8a8c3001a59da1...8af61dce9a28079036fcdc0af897280931c4919a)
+
+### Added
+
+ - `23906f738` MediaEmbed: added Streamja
+ - `149e28792` MediaEmbed: added support for Instagram's IGTV
+ - `8af61dce9` TemplateNormalizations: added EnforceHTMLOmittedEndTags
+
+### Removed
+
+ - `972a5a2fa` MediaEmbed: removed defunct site Blab
+ - `9cc11283d` MediaEmbed: removed defunct site Viagame
+
+### Fixed
+
+ - `c0b22b293` ElementInspector: fixed incorrect results in closesParent()
+
+### Changed
+
+ - `fd66aa6f2` MediaEmbed: updated Amazon
+ - `8d2e3c683` MediaEmbed: updated Amazon (.in)
+ - `4ccf4531f` MediaEmbed: updated Brightcove
+ - `0d813046d` MediaEmbed: updated Gamespot
+ - `142e4f953` MediaEmbed: updated Kickstarter
+ - `25db4ecb8` MediaEmbed: updated MSNBC
+ - `e152afe5a` Parser: prevent tags from starting or ending in the middle of a UTF sequence
+
+
 1.2.0 (2018-06-10)
 ==================
 
