@@ -744,7 +744,7 @@ class ElementInspector
 	{
 		$parentName = $parent->nodeName;
 		$childName  = $child->nodeName;
-		return !empty(self::$htmlElements[$parentName]['cp']) && \in_array($childName, self::$htmlElements[$parentName]['cp'], \true);
+		return !empty(self::$htmlElements[$childName]['cp']) && \in_array($parentName, self::$htmlElements[$childName]['cp'], \true);
 	}
 	public static function disallowsText(DOMElement $element)
 	{
@@ -1791,7 +1791,7 @@ class TemplateInspector
 	{
 		foreach ($this->rootNodes as $rootNode)
 			foreach ($parent->leafNodes as $leafNode)
-				if (ElementInspector::closesParent($leafNode, $rootNode))
+				if (ElementInspector::closesParent($rootNode, $leafNode))
 					return \true;
 		return \false;
 	}
@@ -4561,6 +4561,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('RemoveInterElementWhitespace');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
 		$this->collection->append('UninlineAttributes');
+		$this->collection->append('EnforceHTMLOmittedEndTags');
 		$this->collection->append('FoldArithmeticConstants');
 		$this->collection->append('FoldConstantXPathExpressions');
 		$this->collection->append('InlineCDATA');
@@ -6788,6 +6789,35 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	protected function normalizeElement(DOMElement $valueOf)
 	{
 		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use s9e\TextFormatter\Configurator\Helpers\ElementInspector;
+class EnforceHTMLOmittedEndTags extends AbstractNormalization
+{
+	protected $queries = array('//*[namespace-uri() = ""]/*[namespace-uri() = ""]');
+	protected function normalizeElement(DOMElement $element)
+	{
+		$parentNode = $element->parentNode;
+		if (ElementInspector::isVoid($parentNode) || ElementInspector::closesParent($element, $parentNode))
+			$this->reparentElement($element);
+	}
+	protected function reparentElement(DOMElement $element)
+	{
+		$parentNode = $element->parentNode;
+		do
+		{
+			$isLastChild = $element->isSameNode($parentNode->lastChild);
+			$parentNode->parentNode->insertBefore($parentNode->lastChild, $parentNode->nextSibling);
+		}
+		while (!$isLastChild);
 	}
 }
 

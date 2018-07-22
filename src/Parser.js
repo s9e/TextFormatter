@@ -1854,7 +1854,7 @@ function addTag(type, name, pos, len, prio)
 
 	// Invalidate this tag if it's an unknown tag, a disabled tag, if either of its length or
 	// position is negative or if it's out of bounds
-	if (!tagsConfig[name] && !tag.isSystemTag())
+	if ((!tagsConfig[name] && !tag.isSystemTag()) || isInvalidTextSpan(pos, len))
 	{
 		tag.invalidate();
 	}
@@ -1869,16 +1869,24 @@ function addTag(type, name, pos, len, prio)
 		);
 		tag.invalidate();
 	}
-	else if (len < 0 || pos < 0 || pos + len > textLen)
-	{
-		tag.invalidate();
-	}
 	else
 	{
 		insertTag(tag);
 	}
 
 	return tag;
+}
+
+/**
+* Test whether given text span is outside text boundaries or an invalid UTF sequence
+*
+* @param  {number}  pos Start of text
+* @param  {number}  len Length of text
+* @return {boolean}
+*/
+function isInvalidTextSpan(pos, len)
+{
+	return (len < 0 || pos < 0 || pos + len > textLen || /[\uDC00-\uDFFF]/.test(text.substr(pos, 1) + text.substr(pos + len, 1)));
 }
 
 /**
