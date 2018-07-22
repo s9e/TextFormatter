@@ -250,6 +250,10 @@ class TemplateNormalizerTest extends Test
 				'<i style=" color:#123456; "/>',
 				'<i style="color:#123456"/>'
 			],
+			[
+				'<hr><hr></hr></hr>',
+				'<hr/><hr/>'
+			],
 		];
 	}
 }
