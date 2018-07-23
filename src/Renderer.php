@@ -31,8 +31,15 @@ abstract class Renderer
 		// on tags can be set during configuration
 		$flags = (LIBXML_VERSION >= 20700) ? LIBXML_COMPACT | LIBXML_PARSEHUGE : 0;
 
-		$dom = new DOMDocument;
-		$dom->loadXML($xml, $flags);
+		$useErrors = libxml_use_internal_errors(true);
+		$dom       = new DOMDocument;
+		$success   = $dom->loadXML($xml, $flags);
+		libxml_use_internal_errors($useErrors);
+
+		if (!$success)
+		{
+			throw new InvalidArgumentException('Cannot load XML: ' . libxml_get_last_error()->message);
+		}
 
 		return $dom;
 	}

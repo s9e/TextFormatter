@@ -22,6 +22,16 @@ class RendererTest extends Test
 			$renderer->__call('loadXML', ['<x/>'])
 		);
 	}
+
+	/**
+	* @testdox loadXML() throws an exception on invalid XML
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot load XML: Premature end of data in tag r
+	*/
+	public function testAttributeValuesSingleQuotes()
+	{
+		$this->configurator->rendering->getRenderer()->render('<r>');
+	}
 }
 
 class DummyRenderer extends Renderer

@@ -2750,6 +2750,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
 
 s9e\TextFormatter\Tests\Renderer
  [x] loadXML() returns a DOMDocument
+ [x] loadXML() throws an exception on invalid XML
 
 s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
