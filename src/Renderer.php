@@ -52,7 +52,7 @@ abstract class Renderer
 	*/
 	public function render($xml)
 	{
-		if (substr($xml, 0, 3) === '<t>')
+		if (substr($xml, 0, 3) === '<t>' && substr($xml, -4) === '</t>')
 		{
 			return $this->renderPlainText($xml);
 		}

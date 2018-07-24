@@ -24,13 +24,23 @@ class RendererTest extends Test
 	}
 
 	/**
-	* @testdox loadXML() throws an exception on invalid XML
+	* @testdox render() throws an exception on invalid XML with a "r" root tag
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Cannot load XML: Premature end of data in tag r
 	*/
-	public function testAttributeValuesSingleQuotes()
+	public function testInvalidXMLRich()
 	{
 		$this->configurator->rendering->getRenderer()->render('<r>');
+	}
+
+	/**
+	* @testdox render() throws an exception on truncated XML with a "t" root tag
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot load XML: Premature end of data in tag t
+	*/
+	public function testInvalidXMLPlain()
+	{
+		$this->configurator->rendering->getRenderer()->render('<t>');
 	}
 }
 
