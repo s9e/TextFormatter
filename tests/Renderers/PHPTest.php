@@ -98,6 +98,16 @@ class PHPTest extends Test
 		$renderer = new DummyRenderer;
 		$renderer->callRenderQuickTemplate();
 	}
+
+	/**
+	* @testdox render() throws an exception on invalid XML with a "r" root tag that could be rendered by the Quick renderer
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot load XML: Premature end of data in tag r
+	*/
+	public function testInvalidXMLQuick()
+	{
+		$this->configurator->rendering->getRenderer()->render('<r>');
+	}
 }
 
 class DummyRenderer extends PHP

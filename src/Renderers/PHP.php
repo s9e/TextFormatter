@@ -102,7 +102,7 @@ abstract class PHP extends Renderer
 	*/
 	protected function canQuickRender($xml)
 	{
-		return ($this->enableQuickRenderer && !preg_match($this->quickRenderingTest, $xml));
+		return ($this->enableQuickRenderer && !preg_match($this->quickRenderingTest, $xml) && substr($xml, -4) === '</r>');
 	}
 
 	/**

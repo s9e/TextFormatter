@@ -2789,6 +2789,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] The last output of the renderer is omitted for serialization
  [x] Internal objects and resources are unset after rendering
  [x] The abstract renderer has a default implementation for renderQuickTemplate()
+ [x] render() throws an exception on invalid XML with a "r" root tag that could be rendered by the Quick renderer
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
