@@ -273,8 +273,8 @@ abstract class PHP extends Renderer
 	*
 	* This stub should be overwritten by generated renderers
 	*
-	* @param  integer $id  Template's index in the quick branch table
-	* @param  string  $xml Tag's ID (tag name optionally preceded by a slash)
+	* @param  integer $id  Tag's ID (tag name optionally preceded by a slash)
+	* @param  string  $xml Tag's XML or tag pair's XML including their content
 	* @return string       Rendered template
 	*/
 	protected function renderQuickTemplate($id, $xml)
