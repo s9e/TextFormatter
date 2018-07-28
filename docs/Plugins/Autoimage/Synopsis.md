@@ -1,4 +1,4 @@
-This plugin converts plain-text image URLs into actual images. Only URLs starting with `http://` or `https://` and ending with `.gif`, `.jpeg`, `.jpg` or `.png` are converted.
+This plugin converts plain-text image URLs into actual images. Only URLs starting with `http://` or `https://` and ending with `.gif`, `.jpeg`, `.jpg`, `.png`, `.svg`, `.svgz`, or `.webp` are converted.
 
 ## Examples
 
