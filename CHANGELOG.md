@@ -1,3 +1,20 @@
+1.2.2 (2018-07-29)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8af61dce9a28079036fcdc0af897280931c4919a...cf9b031930efbb833d42585af4fd0987efe9441f)
+
+### Added
+
+ - `cf9b03193` Autoimage: added support for .svg, .svgz and .webp
+
+### Changed
+
+ - `a656b9159` EnforceHTMLOmittedEndTags: reorganized code
+ - `6e3039f2e` PHP Quick renderer: detect truncated XML with a "r" root tag
+ - `fd5e9f35a` Renderer: detect truncated XML with a "t" root tag
+ - `806df83ad` Renderer: throw an exception when loading invalid XML
+
+
 1.2.1 (2018-07-22)
 ==================
 
