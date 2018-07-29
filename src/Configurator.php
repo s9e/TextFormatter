@@ -6511,10 +6511,10 @@ class EnforceHTMLOmittedEndTags extends AbstractNormalization
 		$parentNode = $element->parentNode;
 		do
 		{
-			$isLastChild = $element->isSameNode($parentNode->lastChild);
-			$parentNode->parentNode->insertBefore($parentNode->lastChild, $parentNode->nextSibling);
+			$lastChild = $parentNode->lastChild;
+			$parentNode->parentNode->insertBefore($lastChild, $parentNode->nextSibling);
 		}
-		while (!$isLastChild);
+		while (!$lastChild->isSameNode($element));
 	}
 }
 
