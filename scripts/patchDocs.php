@@ -48,5 +48,7 @@ function patchFile($filepath)
 }
 
 patchDir(__DIR__ . '/../docs');
+@unlink('/tmp/MyBundle.php');
+@unlink('/tmp/MyRenderer.php');
 
 die("Done.\n");

@@ -15,6 +15,7 @@ pages:
     - Fatdown: Bundles/Fatdown.md
     - Forum: Bundles/Forum.md
     - MediaPack: Bundles/MediaPack.md
+    - Your own bundle: Bundles/Your_own_bundle.md
   - Templating:
     - Introduction: Templating/Introduction.md
     - Modify a template: Templating/Modify_a_template.md
