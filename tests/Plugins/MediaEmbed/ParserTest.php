@@ -754,16 +754,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('gifs');
 				}
 			],
-			[
-				'http://www.hudl.com/v/CVmja',
-				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b">http://www.hudl.com/v/CVmja</HUDL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('hudl');
-				}
-			],
+//			[
+//				'http://www.hudl.com/v/CVmja',
+//				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b">http://www.hudl.com/v/CVmja</HUDL></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('hudl');
+//				}
+//			],
 //			[
 //				'http://college.healthguru.com/video/handling-heartache',
 //				'<r><HEALTHGURU id="ZX">http://college.healthguru.com/video/handling-heartache</HEALTHGURU></r>',
