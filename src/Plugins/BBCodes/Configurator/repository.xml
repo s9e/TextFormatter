@@ -433,9 +433,11 @@
 	</bbcode>
 
 	<bbcode name="TD">
-		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]</usage>
+		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} colspan={UINT?} rowspan={UINT?} #createParagraphs=false]{TEXT}[/TD]</usage>
 		<template><![CDATA[
 			<td>
+				<xsl:copy-of select="@colspan"/>
+				<xsl:copy-of select="@rowspan"/>
 				<xsl:if test="@align">
 					<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
 				</xsl:if>
@@ -445,9 +447,11 @@
 	</bbcode>
 
 	<bbcode name="TH">
-		<usage>[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TH]</usage>
+		<usage>[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} colspan={UINT?} rowspan={UINT?} #createParagraphs=false]{TEXT}[/TH]</usage>
 		<template><![CDATA[
 			<th>
+				<xsl:copy-of select="@colspan"/>
+				<xsl:copy-of select="@rowspan"/>
 				<xsl:if test="@align">
 					<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
 				</xsl:if>

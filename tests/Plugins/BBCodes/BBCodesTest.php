@@ -647,6 +647,10 @@ class BBCodesTest extends Test
 				'<table><tr><th style="text-align:center">head</th></tr><tr><td style="text-align:right">cell</td></tr><tr><td>...</td></tr></table>'
 			],
 			[
+				'[table][tr][th colspan=1 rowspan=2]head[tr][td colspan=2 rowspan=3]cell[/table]',
+				'<table><tr><th colspan="1" rowspan="2">head</th></tr><tr><td colspan="2" rowspan="3">cell</td></tr></table>'
+			],
+			[
 				'x [u]underline[/u] y',
 				'x <u>underline</u> y'
 			],

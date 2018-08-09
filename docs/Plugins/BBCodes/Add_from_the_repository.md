@@ -433,9 +433,11 @@ echo $html;
 ```
 
 ###### TD
-```[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]```
+```[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} colspan={UINT?} rowspan={UINT?} #createParagraphs=false]{TEXT}[/TD]```
 ```xsl
 <td>
+	<xsl:copy-of select="@colspan"/>
+	<xsl:copy-of select="@rowspan"/>
 	<xsl:if test="@align">
 		<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
 	</xsl:if>
@@ -444,9 +446,11 @@ echo $html;
 ```
 
 ###### TH
-```[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TH]```
+```[TH align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} colspan={UINT?} rowspan={UINT?} #createParagraphs=false]{TEXT}[/TH]```
 ```xsl
 <th>
+	<xsl:copy-of select="@colspan"/>
+	<xsl:copy-of select="@rowspan"/>
 	<xsl:if test="@align">
 		<xsl:attribute name="style">text-align:{CHOICE}</xsl:attribute>
 	</xsl:if>
