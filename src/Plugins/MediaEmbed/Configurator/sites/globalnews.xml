@@ -1,9 +1,14 @@
 <site name="Global News" homepage="http://globalnews.ca/">
 	<example>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</example>
+	<example>https://globalnews.ca/video/rd/350539843530/?jwsource=cl</example>
 
 	<tags><tag>.ca</tag><tag>news</tag></tags>
 
 	<host>globalnews.ca</host>
 	<extract>!globalnews\.ca/video/(?'id'\d+)!</extract>
-	<iframe width="560" height="377" src="//globalnews.ca/video/embed/{@id}/"/>
+	<scrape>
+		<match>!globalnews\.ca/video/rd/!</match>
+		<extract>!globalnews\.ca/video/(?'id'\d+)!</extract>
+	</scrape>
+	<iframe src="//globalnews.ca/video/embed/{@id}/"/>
 </site>

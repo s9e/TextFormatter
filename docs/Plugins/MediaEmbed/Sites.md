@@ -174,7 +174,7 @@
 	<tr>
 		<td><code>globalnews</code></td>
 		<td>Global News</td>
-		<td>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</td>
+		<td>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/<br/>https://globalnews.ca/video/rd/350539843530/?jwsource=cl</td>
 	</tr>
 	<tr>
 		<td><code>gofundme</code></td>
