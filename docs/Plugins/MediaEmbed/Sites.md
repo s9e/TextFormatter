@@ -404,7 +404,7 @@
 	<tr>
 		<td><code>scribd</code></td>
 		<td>Scribd</td>
-		<td>http://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review?in_collection=5291376</td>
+		<td>https://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review<br/>https://www.scribd.com/presentation/324333881/600-1450-World-History-Jeopardy</td>
 	</tr>
 	<tr>
 		<td><code>slideshare</code></td>

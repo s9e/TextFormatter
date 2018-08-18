@@ -2839,6 +2839,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.scribd.com/presentation/324333881/600-1450-World-History-Jeopardy',
+				'<r><SCRIBD id="324333881">https://www.scribd.com/presentation/324333881/600-1450-World-History-Jeopardy</SCRIBD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('scribd');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
 				'<r><SLIDESHARE id="23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
 				[],
