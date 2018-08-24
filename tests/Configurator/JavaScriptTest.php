@@ -395,6 +395,20 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox Exports' order is consistent
+	*/
+	public function testExportOrder()
+	{
+		$this->configurator->javascript->exports = ['parse', 'preview'];
+		$js1 = $this->configurator->javascript->getParser();
+
+		$this->configurator->javascript->exports = ['preview', 'parse'];
+		$js2 = $this->configurator->javascript->getParser();
+
+		$this->assertSame($js1, $js2);
+	}
+
+	/**
 	* @testdox $exportMethods is an alias for $exports
 	*/
 	public function testExportMethods()

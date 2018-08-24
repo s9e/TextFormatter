@@ -1707,6 +1707,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Tag config is wholly deduplicated
  [x] The public API is created if anything is exported
  [x] The public API is not created if nothing is exported
+ [x] Exports' order is consistent
  [x] $exportMethods is an alias for $exports
  [x] Preserves live preview attributes
 

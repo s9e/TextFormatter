@@ -222,6 +222,7 @@ class JavaScript
 		{
 			$exports[] = "'" . $export . "':" . $export;
 		}
+		sort($exports);
 
 		return "window['s9e']['TextFormatter'] = {" . implode(',', $exports) . '}';
 	}
