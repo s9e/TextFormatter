@@ -3,6 +3,11 @@
 Methods and classes that were deprecated in 1.x will be removed.
 
 
+## 1.3.0
+
+`s9e\TextFormatter\Configurator\JavaScript::$exportMethods` has been renamed to `$exports`. The `$exportMethods` property is silently deprecated but remains as an alias.
+
+
 ## 1.2.0
 
 The `s9e\TextFormatter\Configurator\Helpers\TemplateHelper` class have been split into subcomponents. The current API is deprecated but remains fully functional. The new API is as follows:

@@ -50,9 +50,14 @@ class JavaScript
 	public $encoder;
 
 	/**
-	* @var array List of methods to be exported in the s9e.TextFormatter object
+	* @var array (Deprecated) List of methods to be exported in the s9e.TextFormatter object
 	*/
-	public $exportMethods = [
+	public $exportMethods;
+
+	/**
+	* @var array List of methods and properties to be exported in the s9e.TextFormatter object
+	*/
+	public $exports = [
 		'disablePlugin',
 		'disableTag',
 		'enablePlugin',
@@ -60,6 +65,7 @@ class JavaScript
 		'getLogger',
 		'parse',
 		'preview',
+		'registeredVars',
 		'setNestingLimit',
 		'setParameter',
 		'setTagLimit'
@@ -92,6 +98,8 @@ class JavaScript
 	*/
 	public function __construct(Configurator $configurator)
 	{
+		$this->exportMethods =& $this->exports;
+
 		$this->encoder              = new Encoder;
 		$this->callbackGenerator    = new CallbackGenerator;
 		$this->configOptimizer      = new ConfigOptimizer($this->encoder);
@@ -204,18 +212,18 @@ class JavaScript
 	*/
 	protected function getExports()
 	{
-		if (empty($this->exportMethods))
+		if (empty($this->exports))
 		{
 			return '';
 		}
 
-		$methods = [];
-		foreach ($this->exportMethods as $method)
+		$exports = [];
+		foreach ($this->exports as $export)
 		{
-			$methods[] = "'" . $method . "':" . $method;
+			$exports[] = "'" . $export . "':" . $export;
 		}
 
-		return "window['s9e']['TextFormatter'] = {" . implode(',', $methods) . '}';
+		return "window['s9e']['TextFormatter'] = {" . implode(',', $exports) . '}';
 	}
 
 	/**
@@ -355,7 +363,7 @@ class JavaScript
 		$src     = '';
 
 		// If getLogger() is not exported we use a dummy Logger that can be optimized away
-		$logger = (in_array('getLogger', $this->exportMethods)) ? 'Logger.js' : 'NullLogger.js';
+		$logger = (in_array('getLogger', $this->exports)) ? 'Logger.js' : 'NullLogger.js';
 
 		// Prepare the list of files
 		$files   = glob($rootDir . '/Parser/AttributeFilters/*.js');
@@ -366,7 +374,7 @@ class JavaScript
 		$files[] = $rootDir . '/Parser.js';
 
 		// Append render.js if we export the preview method
-		if (in_array('preview', $this->exportMethods, true))
+		if (in_array('preview', $this->exports, true))
 		{
 			$files[] = $rootDir . '/render.js';
 			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";

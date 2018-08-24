@@ -1705,8 +1705,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The null Logger is use if getLogger() is not exported
  [x] Callbacks correctly encode values
  [x] Tag config is wholly deduplicated
- [x] The public API is created if any method is exported
- [x] The public API is not created if no method is exported
+ [x] The public API is created if anything is exported
+ [x] The public API is not created if nothing is exported
+ [x] $exportMethods is an alias for $exports
  [x] Preserves live preview attributes
 
 s9e\TextFormatter\Tests\Configurator\Bundle

@@ -10,7 +10,7 @@ $configurator->javascript
 	->setMinifier('ClosureCompilerService')
 	->cacheDir = __DIR__ . '/../tests/.cache';
 
-$configurator->javascript->exportMethods = ['disablePlugin', 'enablePlugin', 'preview'];
+$configurator->javascript->exports = ['disablePlugin', 'enablePlugin', 'preview'];
 
 extract($configurator->finalize());
 

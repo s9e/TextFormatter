@@ -118,7 +118,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			}
 		}
 
-		$this->configurator->javascript->exportMethods = ['parse'];
+		$this->configurator->javascript->exports = ['parse'];
 		$objects = $this->configurator->finalize();
 		$src     = $objects['js'];
 

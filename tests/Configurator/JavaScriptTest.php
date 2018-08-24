@@ -327,7 +327,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testNullLogger()
 	{
-		$this->configurator->javascript->exportMethods = ['preview'];
+		$this->configurator->javascript->exports = ['preview'];
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertNotContains(
@@ -368,7 +368,7 @@ class JavaScriptTest extends Test
 		$this->configurator->rootRules->allowChild('Y');
 		$this->configurator->tags->add('X');
 		$this->configurator->tags->add('Y');
-		$this->configurator->javascript->exportMethods = ['preview'];
+		$this->configurator->javascript->exports = ['preview'];
 		$js = $this->configurator->javascript->getParser();
 
 		$this->assertNotContains('"X":{', $js);
@@ -377,21 +377,37 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox The public API is created if any method is exported
+	* @testdox The public API is created if anything is exported
 	*/
 	public function testExport()
 	{
-		$this->configurator->javascript->exportMethods = ['preview'];
+		$this->configurator->javascript->exports = ['preview'];
 		$this->assertContains("window['s9e']", $this->configurator->javascript->getParser());
 	}
 
 	/**
-	* @testdox The public API is not created if no method is exported
+	* @testdox The public API is not created if nothing is exported
 	*/
 	public function testNoExport()
 	{
-		$this->configurator->javascript->exportMethods = [];
+		$this->configurator->javascript->exports = [];
 		$this->assertNotContains("window['s9e']['TextFormatter']", $this->configurator->javascript->getParser());
+	}
+
+	/**
+	* @testdox $exportMethods is an alias for $exports
+	*/
+	public function testExportMethods()
+	{
+		$this->assertSame(
+			$this->configurator->javascript->exports,
+			$this->configurator->javascript->exportMethods
+		);
+		$this->configurator->javascript->exportMethods = ['registerVars', 'preview'];
+		$this->assertSame(
+			$this->configurator->javascript->exports,
+			$this->configurator->javascript->exportMethods
+		);
 	}
 
 	/**

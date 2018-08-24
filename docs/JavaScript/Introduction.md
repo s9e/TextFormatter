@@ -69,7 +69,7 @@ It is possible to improve the minification ratio by disabling features that are 
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->enableJavaScript();
 
-$configurator->javascript->exportMethods = [
+$configurator->javascript->exports = [
 	'parse',
 	'preview'
 ];
