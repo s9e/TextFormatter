@@ -7,6 +7,8 @@ Methods and classes that were deprecated in 1.x will be removed.
 
 `s9e\TextFormatter\Configurator\JavaScript::$exportMethods` has been renamed to `$exports`. The `$exportMethods` property is silently deprecated but remains as an alias.
 
+`s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName` is deprecated but remains functional. The names of the attributes used by this plugin will be hardcoded in a future version.
+
 
 ## 1.2.0
 
