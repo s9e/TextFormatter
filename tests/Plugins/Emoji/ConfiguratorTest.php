@@ -164,9 +164,8 @@ class ConfiguratorTest extends Test
 		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
 		$plugin->addAlias('XD', "\xF0\x9F\x98\x86");
 		$plugin->removeAlias(':)');
-		$plugin->finalize();
 
-		$this->assertArrayNotHasKey(':)', $this->configurator->registeredVars['Emoji.aliases']);
+		$this->assertArrayNotHasKey(':)', $plugin->getAliases());
 	}
 
 	/**
