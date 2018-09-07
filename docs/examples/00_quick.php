@@ -19,5 +19,5 @@ echo $html, "\n";
 
 // Outputs:
 //
-// Hello, <i>world</i> <img alt=":)" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f642.png"><br>
+// Hello, <i>world</i> <img alt=":)" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.0/png/64/1f642.png"><br>
 // Find more examples in the <a href="https://s9etextformatter.readthedocs.io/">documentation</a>.
