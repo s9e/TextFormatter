@@ -94,7 +94,7 @@ var postProcessFunctions = {};
 function preview(text, target)
 {
 	var targetDoc      = target.ownerDocument,
-		resultFragment = xslt.transformToFragment(parse(text), targetDoc),
+		resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>.*?<\/[eis]>/g, ''), targetDoc),
 		lastUpdated    = target;
 
 	// Apply post-processing
