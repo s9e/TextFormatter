@@ -46,6 +46,10 @@ class Parser extends ParserBase
 		// Short sequence, only the relevant codepoints are kept
 		$seq = str_replace(['-200d', '-fe0f'], '', $hex);
 		$tag->setAttribute($this->config['attrName'], $seq);
+
+		// Twemoji sequence, leading zeroes and trailing VS16 are removed
+		$tseq = preg_replace('(-fe0f$)', '', ltrim($hex, '0'));
+		$tag->setAttribute('tseq', $tseq);
 	}
 
 	/**

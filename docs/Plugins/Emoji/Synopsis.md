@@ -21,6 +21,29 @@ echo $html;
 Hello world <img alt="😀" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/1f600.png">
 ```
 
+### Using Twemoji
+
+Starting with 1.3.0, a new attribute `tseq` has been added for compatibility with Twemoji-style filenames.
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$tag = $configurator->Emoji->getTag();
+$tag->template = '<img src="https://twemoji.maxcdn.com/2/svg/{@tseq}.svg">';
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = '©️ Twitter';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<img src="https://twemoji.maxcdn.com/2/svg/a9.svg"> Twitter
+```
+
+
 ### Inputting emoji as codepoints
 
 In some cases, it may be desirable to input emoji as a sequence of codepoints instead of Unicode characters. Codepoints must be expressed in lowercase hexadecimal and be separated by a single dash. For example: `:1f44b-1f3fb:`. [Zero-width joiners](https://en.wikipedia.org/wiki/Zero-width_joiner) and [variation selectors 16](https://en.wikipedia.org/wiki/Variation_Selectors_(Unicode_block)) can be omitted.

@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$version = 'latest';
+$version = '5.0';
 $images = [];
 
 $url = 'http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt';
@@ -51,13 +51,15 @@ foreach ($emoji as $utf8)
 	{
 		echo bin2hex($utf8), " does not contain 0xE2, 0xEF or 0xF0. Parser.php would need to be updated.\n";
 	}
-	$seq = utf8ToSeq($utf8);
+	$hex  = utf8ToHex($utf8);
+	$seq  = removeMarks($hex);
+	$tseq = preg_replace('(-fe0f$)', '', ltrim($hex, 0));
 
 	$allText .= $utf8 . "\n";
-	$allXml  .= '<EMOJI seq="' . $seq . '">' . $utf8 . "</EMOJI>\n";
+	$allXml  .= '<EMOJI seq="' . $seq . '" tseq="' . $tseq . '">' . $utf8 . "</EMOJI>\n";
 
-	$allText .= ':' . $seq . ":\n";
-	$allXml  .= '<EMOJI seq="' . $seq . '">:' . $seq . ":</EMOJI>\n";
+	$allText .= ':' . $hex . ":\n";
+	$allXml  .= '<EMOJI seq="' . $seq . '" tseq="' . $tseq . '">:' . $hex . ":</EMOJI>\n";
 }
 $allXml .= '</r>';
 
@@ -141,9 +143,9 @@ function utf8($cp)
 	return html_entity_decode('&#x' . dechex($cp) . ';', ENT_QUOTES, 'UTF-8');
 }
 
-function utf8ToSeq($str)
+function utf8ToHex($str)
 {
-	$seq = [];
+	$hex = [];
 	$i   = 0;
 	do
 	{
@@ -160,13 +162,11 @@ function utf8ToSeq($str)
 		{
 			$cp = (($cp & 15) << 6) | (ord($str[++$i]) & 63);
 		}
-		$seq[] = sprintf('%04x', $cp);
+		$hex[] = sprintf('%04x', $cp);
 	}
 	while (++$i < strlen($str));
 
-	$seq = removeMarks(implode('-', $seq));
-
-	return $seq;
+	return implode('-', $hex);
 }
 
 function removeMarks($seq)

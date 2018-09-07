@@ -23,12 +23,12 @@ class ParserTest extends Test
 		return [
 			[
 				'⚫️',
-				'<r><EMOJI seq="26ab">⚫️</EMOJI></r>'
+				'<r><EMOJI seq="26ab" tseq="26ab">⚫️</EMOJI></r>'
 			],
 			[
 				// U+263A U+FE0F
 				'☺️',
-				'<r><EMOJI seq="263a">☺️</EMOJI></r>'
+				'<r><EMOJI seq="263a" tseq="263a">☺️</EMOJI></r>'
 			],
 			[
 				// U+263A
@@ -38,7 +38,7 @@ class ParserTest extends Test
 			[
 				// U+2615
 				'☕',
-				'<r><EMOJI seq="2615">☕</EMOJI></r>'
+				'<r><EMOJI seq="2615" tseq="2615">☕</EMOJI></r>'
 			],
 			[
 				// U+2615 U+FE0E
@@ -47,21 +47,21 @@ class ParserTest extends Test
 			],
 			[
 				'☺️',
-				'<r><EMO seq="263a">☺️</EMO></r>',
+				'<r><EMO seq="263a" tseq="263a">☺️</EMO></r>',
 				['tagName' => 'EMO']
 			],
 			[
 				'☺️',
-				'<r><EMOJI cp="263a">☺️</EMOJI></r>',
+				'<r><EMOJI cp="263a" tseq="263a">☺️</EMOJI></r>',
 				['attrName' => 'cp']
 			],
 			[
 				'☺️☺️',
-				'<r><EMOJI seq="263a">☺️</EMOJI><EMOJI seq="263a">☺️</EMOJI></r>'
+				'<r><EMOJI seq="263a" tseq="263a">☺️</EMOJI><EMOJI seq="263a" tseq="263a">☺️</EMOJI></r>'
 			],
 			[
 				'😀',
-				'<r><EMOJI seq="1f600">&#128512;</EMOJI></r>'
+				'<r><EMOJI seq="1f600" tseq="1f600">&#128512;</EMOJI></r>'
 			],
 			[
 				'▬',
@@ -69,11 +69,11 @@ class ParserTest extends Test
 			],
 			[
 				'#️⃣1️⃣2️⃣',
-				'<r><EMOJI seq="0023-20e3">#️⃣</EMOJI><EMOJI seq="0031-20e3">1️⃣</EMOJI><EMOJI seq="0032-20e3">2️⃣</EMOJI></r>'
+				'<r><EMOJI seq="0023-20e3" tseq="23-fe0f-20e3">#️⃣</EMOJI><EMOJI seq="0031-20e3" tseq="31-fe0f-20e3">1️⃣</EMOJI><EMOJI seq="0032-20e3" tseq="32-fe0f-20e3">2️⃣</EMOJI></r>'
 			],
 			[
 				':bouquet:',
-				'<r><EMOJI seq="1f490">:bouquet:</EMOJI></r>'
+				'<r><EMOJI seq="1f490" tseq="1f490">:bouquet:</EMOJI></r>'
 			],
 			[
 				':xyz:',
@@ -81,7 +81,7 @@ class ParserTest extends Test
 			],
 			[
 				':xyz:bouquet:',
-				'<r>:xyz<EMOJI seq="1f490">:bouquet:</EMOJI></r>'
+				'<r>:xyz<EMOJI seq="1f490" tseq="1f490">:bouquet:</EMOJI></r>'
 			],
 			[
 				':bouquet:',
@@ -95,15 +95,15 @@ class ParserTest extends Test
 			[
 				// :cooking: is set as an alias to :egg: in gemoji
 				':cooking:',
-				'<r><EMOJI seq="1f373">:cooking:</EMOJI></r>'
+				'<r><EMOJI seq="1f373" tseq="1f373">:cooking:</EMOJI></r>'
 			],
 			[
 				'🇯🇵',
-				'<r><EMOJI seq="1f1ef-1f1f5">&#127471;&#127477;</EMOJI></r>'
+				'<r><EMOJI seq="1f1ef-1f1f5" tseq="1f1ef-1f1f5">&#127471;&#127477;</EMOJI></r>'
 			],
 			[
 				'XD',
-				'<r><EMOJI seq="1f606">XD</EMOJI></r>',
+				'<r><EMOJI seq="1f606" tseq="1f606">XD</EMOJI></r>',
 				[],
 				function ($configurator, $plugin)
 				{
@@ -123,15 +123,15 @@ class ParserTest extends Test
 				// :copyright: is in gemoji, not emojione
 				// :unicorn: is in emojione, not gemoji
 				':copyright: :unicorn:',
-				'<r><EMOJI seq="00a9">:copyright:</EMOJI> <EMOJI seq="1f984">:unicorn:</EMOJI></r>'
+				'<r><EMOJI seq="00a9" tseq="a9">:copyright:</EMOJI> <EMOJI seq="1f984" tseq="1f984">:unicorn:</EMOJI></r>'
 			],
 			[
 				'👩‍❤️‍👨',
-				'<r><EMOJI seq="1f469-2764-1f468">&#128105;‍❤️‍&#128104;</EMOJI></r>'
+				'<r><EMOJI seq="1f469-2764-1f468" tseq="1f469-200d-2764-fe0f-200d-1f468">&#128105;‍❤️‍&#128104;</EMOJI></r>'
 			],
 			[
 				':00a9: :1f1ef-1f1f5: :1f468-200d-2764-fe0f-200d-1f468:',
-				'<r><EMOJI seq="00a9">:00a9:</EMOJI> <EMOJI seq="1f1ef-1f1f5">:1f1ef-1f1f5:</EMOJI> <EMOJI seq="1f468-2764-1f468">:1f468-200d-2764-fe0f-200d-1f468:</EMOJI></r>'
+				'<r><EMOJI seq="00a9" tseq="a9">:00a9:</EMOJI> <EMOJI seq="1f1ef-1f1f5" tseq="1f1ef-1f1f5">:1f1ef-1f1f5:</EMOJI> <EMOJI seq="1f468-2764-1f468" tseq="1f468-200d-2764-fe0f-200d-1f468">:1f468-200d-2764-fe0f-200d-1f468:</EMOJI></r>'
 			],
 			[
 				file_get_contents(__DIR__ . '/all.txt'),

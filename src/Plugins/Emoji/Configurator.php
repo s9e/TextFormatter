@@ -44,9 +44,12 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$tag = $this->configurator->tags->add($this->tagName);
-		$tag->attributes->add($this->attrName)->filterChain->append(
-			$this->configurator->attributeFilters['#identifier']
-		);
+		foreach ([$this->attrName, 'tseq'] as $attrName)
+		{
+			$tag->attributes->add($attrName)->filterChain->append(
+				$this->configurator->attributeFilters['#identifier']
+			);
+		}
 		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/3.1/png/64/{@seq}.png"/>';
 	}
 
@@ -105,7 +108,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function finalize()
 	{
-		$this->configurator->registeredVars['Emoji.aliases'] = new Dictionary($this->getAliases());
+		$this->configurator->registeredVars['Emoji.aliases'] = new Dictionary($this->aliases);
 	}
 
 	/**
