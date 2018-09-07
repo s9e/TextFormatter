@@ -1,28 +1,20 @@
 #!/usr/bin/php
 <?php
 
-$version = '5.0';
-$images = [];
+$version = '11.0';
+$emoji   = [];
+$file    = wget('http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt');
+$images  = codepointsFromFile($file, 'Emoji_Presentation');
 
-$url = 'http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt';
-$regexp = '(^([0-9A-F]+)(\\..[0-9A-F]+)?\\s*;\\s*Emoji(_Presentation)?)m';
-preg_match_all($regexp, wget($url), $matches, PREG_SET_ORDER);
-foreach ($matches as $m)
+foreach (codepointsFromFile($file, 'Emoji') as $cp)
 {
-	$start = hexdec($m[1]);
-	$end   = (empty($m[2])) ? $start : hexdec(ltrim($m[2], '.'));
-	$cp    = $start;
-	do
+	$utf8 = utf8($cp);
+	if (!isset($images[$cp]))
 	{
-		$utf8 = utf8($cp);
-		if (empty($m[3]))
-		{
-			// Append U+FE0F to emoji without Emoji_Presentation=Yes
-			$utf8 .= "\xEF\xB8\x8F";
-		}
-		$emoji[] = $utf8;
+		// Append U+FE0F to emoji without Emoji_Presentation=Yes
+		$utf8 .= "\xEF\xB8\x8F";
 	}
-	while (++$cp <= $end);
+	$emoji[] = $utf8;
 }
 
 $file  = wget('http://unicode.org/Public/emoji/' . $version . '/emoji-sequences.txt');
@@ -111,6 +103,27 @@ file_put_contents(
 );
 
 die("Done.\n");
+
+function codepointsFromFile($file, $type)
+{
+	$regexp = '(^([0-9A-F]+)(\\..[0-9A-F]+)?\\s*;\\s*' . $type . '(?!\\w))m';
+	preg_match_all($regexp, $file, $matches, PREG_SET_ORDER);
+
+	$codepoints = [];
+	foreach ($matches as $m)
+	{
+		$start = hexdec($m[1]);
+		$end   = (empty($m[2])) ? $start : hexdec(ltrim($m[2], '.'));
+		$cp    = $start;
+		do
+		{
+			$codepoints[$cp] = $cp;
+		}
+		while (++$cp <= $end);
+	}
+
+	return $codepoints;
+}
 
 function wget($url, $prefix = '')
 {
