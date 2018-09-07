@@ -36,5 +36,5 @@
 		<extract>!\bid[=:]['"]?(?'et'[-=\w]+)!</extract>
 		<extract>!\bsig[=:]['"]?(?'sig'[-=\w]+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{@height}" padding-height="49" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;sig={@sig}"/>
+	<iframe width="{@width}" height="{@height}" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;tld=com&amp;sig={@sig}&amp;caption=false&amp;ver=1"/>
 </site>

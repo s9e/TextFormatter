@@ -1305,7 +1305,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
-				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75\\.4208754208754%;padding-bottom:calc\\(67\\.1717171717172% \\+ 49px\\)"><iframe allowfullscreen="" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\\w]{22}&amp;sig=[-\\w]{43}=" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
+				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
 				[],
 				function ($configurator)
 				{
