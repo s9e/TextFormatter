@@ -122,11 +122,6 @@
 		<td>https://www.flickr.com/photos/8757881@N04/2971804544/lightbox/<br/>https://flic.kr/8757881@N04/2971804544<br/>https://flic.kr/p/5wBgXo</td>
 	</tr>
 	<tr>
-		<td><code>foratv</code></td>
-		<td>FORA.tv</td>
-		<td>http://fora.tv/2014/09/30/How_Google_Works</td>
-	</tr>
-	<tr>
 		<td><code>foxnews</code></td>
 		<td>Fox News</td>
 		<td>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</td>
