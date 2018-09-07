@@ -1,6 +1,6 @@
 ## 2.0.0
 
-Methods and classes that were deprecated in 1.x will be removed.
+Elements that were deprecated in 1.x will be removed.
 
 
 ## 1.3.0
@@ -8,6 +8,12 @@ Methods and classes that were deprecated in 1.x will be removed.
 `s9e\TextFormatter\Configurator\JavaScript::$exportMethods` has been renamed to `$exports`. The `$exportMethods` property is silently deprecated but remains as an alias.
 
 `s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName` is deprecated but remains functional. The names of the attributes used by this plugin will be hardcoded in a future version.
+
+`s9e\TextFormatter\Plugins\Emoji\Configurator::$aliases` has been made accessible (see [API](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/Emoji/Configurator.html#property_aliases) and [docs](../Plugins/Emoji/Configuration.md#manage-aliases) for usage) and the following methods are now deprecated:
+
+ - addAlias
+ - getAliases
+ - removeAlias
 
 
 ## 1.2.0

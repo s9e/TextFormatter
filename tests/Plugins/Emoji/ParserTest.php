@@ -102,12 +102,12 @@ class ParserTest extends Test
 				'<r><EMOJI seq="1f1ef-1f1f5">&#127471;&#127477;</EMOJI></r>'
 			],
 			[
-				':D',
-				'<r><EMOJI seq="1f600">:D</EMOJI></r>',
+				'XD',
+				'<r><EMOJI seq="1f606">XD</EMOJI></r>',
 				[],
 				function ($configurator, $plugin)
 				{
-					$configurator->Emoji->addAlias(':D', '😀');
+					$configurator->Emoji->addAlias('XD', '😆');
 				}
 			],
 			[

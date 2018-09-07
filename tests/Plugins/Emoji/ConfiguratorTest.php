@@ -75,34 +75,36 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox The config array contains no entry for aliases if there are none
+	* @testdox The config array contains no entry for custom aliases if there are none
 	*/
-	public function testConfigNoAliases()
+	public function testConfigNoCustomAliases()
 	{
 		$plugin = $this->configurator->Emoji;
 		$config = $plugin->asConfig();
 
-		$this->assertArrayNotHasKey('aliases',           $config);
-		$this->assertArrayNotHasKey('aliasesQuickMatch', $config);
-		$this->assertArrayNotHasKey('aliasesRegexp',     $config);
+		$this->assertArrayNotHasKey('customQuickMatch', $config);
+		$this->assertArrayNotHasKey('customRegexp',     $config);
 	}
 
 	/**
-	* @testdox The config array contains aliases if applicable
+	* @testdox A variable named Emoji.aliases is registered and contains aliases
 	*/
 	public function testConfigAliases()
 	{
 		$plugin = $this->configurator->Emoji;
 		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->finalize();
 
-		$config = $plugin->asConfig();
-
-		$this->assertArrayHasKey('aliases', $config);
-		$this->assertSame([':)' => "\xF0\x9F\x98\x80"], $config['aliases']);
+		$this->assertArrayHasKey('Emoji.aliases', $this->configurator->registeredVars);
+		$this->assertArrayHasKey(':)', $this->configurator->registeredVars['Emoji.aliases']);
+		$this->assertSame(
+			"\xF0\x9F\x98\x80",
+			$this->configurator->registeredVars['Emoji.aliases'][':)']
+		);
 	}
 
 	/**
-	* @testdox The config array contains a regexp for aliases if applicable
+	* @testdox The config array contains a regexp for custom aliases if applicable
 	*/
 	public function testConfigAliasesRegexp()
 	{
@@ -111,12 +113,12 @@ class ConfiguratorTest extends Test
 
 		$config = $plugin->asConfig();
 
-		$this->assertArrayHasKey('aliasesRegexp', $config);
-		$this->assertEquals('/:D/', $config['aliasesRegexp']);
+		$this->assertArrayHasKey('customRegexp', $config);
+		$this->assertEquals('/:D/', $config['customRegexp']);
 	}
 
 	/**
-	* @testdox The config array contains a quickMatch for aliases if applicable
+	* @testdox The config array contains a quickMatch for custom aliases if applicable
 	*/
 	public function testConfigAliasesQuickMatch()
 	{
@@ -125,8 +127,8 @@ class ConfiguratorTest extends Test
 
 		$config = $plugin->asConfig();
 
-		$this->assertArrayHasKey('aliasesQuickMatch', $config);
-		$this->assertEquals(':D', $config['aliasesQuickMatch']);
+		$this->assertArrayHasKey('customQuickMatch', $config);
+		$this->assertEquals(':D', $config['customQuickMatch']);
 	}
 
 	/**
@@ -140,7 +142,7 @@ class ConfiguratorTest extends Test
 
 		$config = $plugin->asConfig();
 
-		$this->assertArrayNotHasKey('aliasesQuickMatch', $config);
+		$this->assertArrayNotHasKey('customQuickMatch', $config);
 	}
 
 	/**
@@ -162,52 +164,50 @@ class ConfiguratorTest extends Test
 		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
 		$plugin->addAlias('XD', "\xF0\x9F\x98\x86");
 		$plugin->removeAlias(':)');
+		$plugin->finalize();
 
-		$this->assertEquals(
-			[':D' => "\xF0\x9F\x98\x80", 'XD' => "\xF0\x9F\x98\x86"],
-			$plugin->getAliases()
-		);
+		$this->assertArrayNotHasKey(':)', $this->configurator->registeredVars['Emoji.aliases']);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => false] by default
 	*/
 	public function testGetJSHintsAliasesFalse()
 	{
 		$plugin = $this->configurator->Emoji;
 		$this->assertArrayMatches(
-			['EMOJI_HAS_ALIASES' => false],
+			['EMOJI_HAS_CUSTOM_ALIASES' => false],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => true] if a custom alias exists
 	*/
 	public function testGetJSHintsAliasesTrue()
 	{
 		$plugin = $this->configurator->Emoji;
 		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
 		$this->assertArrayMatches(
-			['EMOJI_HAS_ALIASES' => true],
+			['EMOJI_HAS_CUSTOM_ALIASES' => true],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => false] by default
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => false] by default
 	*/
 	public function testGetJSHintsAliasQuickmatchFalse()
 	{
 		$plugin = $this->configurator->Emoji;
 		$this->assertArrayMatches(
-			['EMOJI_HAS_ALIAS_QUICKMATCH' => false],
+			['EMOJI_HAS_CUSTOM_QUICKMATCH' => false],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => true] if an alias quick match exists
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => true] if an alias quick match exists
 	*/
 	public function testGetJSHintsAliasQuickmatchTrue()
 	{
@@ -215,7 +215,7 @@ class ConfiguratorTest extends Test
 		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
 		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
 		$this->assertArrayMatches(
-			['EMOJI_HAS_ALIAS_QUICKMATCH' => true],
+			['EMOJI_HAS_CUSTOM_QUICKMATCH' => true],
 			$plugin->getJSHints()
 		);
 	}

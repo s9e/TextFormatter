@@ -2257,17 +2257,17 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
- [x] The config array contains no entry for aliases if there are none
- [x] The config array contains aliases if applicable
- [x] The config array contains a regexp for aliases if applicable
- [x] The config array contains a quickMatch for aliases if applicable
+ [x] The config array contains no entry for custom aliases if there are none
+ [x] A variable named Emoji.aliases is registered and contains aliases
+ [x] The config array contains a regexp for custom aliases if applicable
+ [x] The config array contains a quickMatch for custom aliases if applicable
  [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Uses EmojiOne by default
  [x] removeAlias() removes given alias
- [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => false] by default
- [x] getJSHints() returns ['EMOJI_HAS_ALIASES' => true] if an alias exists
- [x] getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => false] by default
- [x] getJSHints() returns ['EMOJI_HAS_ALIAS_QUICKMATCH' => true] if an alias quick match exists
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => false] by default
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => true] if a custom alias exists
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => false] by default
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => true] if an alias quick match exists
 
 s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests 
