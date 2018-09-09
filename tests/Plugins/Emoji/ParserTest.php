@@ -22,8 +22,12 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				'⚫',
-				'<r><EMOJI seq="26ab" tseq="26ab">⚫</EMOJI></r>'
+				"\xE2\x9A\xAB",
+				"<r><EMOJI seq=\"26ab\" tseq=\"26ab\">\xE2\x9A\xAB</EMOJI></r>"
+			],
+			[
+				"\xE2\x9A\xAB\xEF\xB8\x8F",
+				"<r><EMOJI seq=\"26ab\" tseq=\"26ab\">\xE2\x9A\xAB\xEF\xB8\x8F</EMOJI></r>"
 			],
 			[
 				// U+263A U+FE0F

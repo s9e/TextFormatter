@@ -73,7 +73,7 @@ file_put_contents(
 				'input'  => 'Bytes',
 				'output' => 'PHP'
 			]);
-			$regexp = '(' . $builder->build($emoji) . '(?!\\xEF\\xB8\\x8E))S';
+			$regexp = '(' . $builder->build($emoji) . '(?!\\xEF\\xB8\\x8E)(?:\\xEF\\xB8\\x8F)?)S';
 
 			return $m[1] . var_export($regexp, true) . ';';
 		},
@@ -94,7 +94,7 @@ file_put_contents(
 				'output'        => 'JavaScript',
 				'outputOptions' => ['case' => 'lower']
 			]);
-			$regexp = '/' . $builder->build($emoji) . '(?!\\ufe0e)/g';
+			$regexp = '/' . $builder->build($emoji) . '(?!\\ufe0e)\\ufe0f?/g';
 
 			return $m[1] . $regexp . ';';
 		},
