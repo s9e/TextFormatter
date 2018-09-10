@@ -60,7 +60,7 @@ function getHexSequence(str)
 */
 function parseCustomAliases(text)
 {
-	if (!HINT.EMOJI_HAS_CUSTOM_ALIASES || !config.customRegexp)
+	if (!HINT.EMOJI_HAS_CUSTOM_REGEXP || !config.customRegexp)
 	{
 		return;
 	}

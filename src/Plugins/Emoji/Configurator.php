@@ -122,8 +122,8 @@ class Configurator extends ConfiguratorBase
 		// NOTE: we don't set a hint to indicate whether shortnames are set in order to be able to
 		//       enable them at parsing time, regardless of the original configuration
 		return [
-			'EMOJI_HAS_CUSTOM_ALIASES'    => !empty($custom),
-			'EMOJI_HAS_CUSTOM_QUICKMATCH' => ($quickMatch !== false)
+			'EMOJI_HAS_CUSTOM_QUICKMATCH' => ($quickMatch !== false),
+			'EMOJI_HAS_CUSTOM_REGEXP'     => !empty($custom)
 		];
 	}
 

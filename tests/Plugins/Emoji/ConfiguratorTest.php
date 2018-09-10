@@ -169,26 +169,26 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => false] by default
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => false] by default
 	*/
-	public function testGetJSHintsAliasesFalse()
+	public function testGetJSHintsRegexpFalse()
 	{
 		$plugin = $this->configurator->Emoji;
 		$this->assertArrayMatches(
-			['EMOJI_HAS_CUSTOM_ALIASES' => false],
+			['EMOJI_HAS_CUSTOM_REGEXP' => false],
 			$plugin->getJSHints()
 		);
 	}
 
 	/**
-	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => true] if a custom alias exists
+	* @testdox getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => true] if a custom regexp exists
 	*/
-	public function testGetJSHintsAliasesTrue()
+	public function testGetJSHintsRegexpTrue()
 	{
 		$plugin = $this->configurator->Emoji;
 		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
 		$this->assertArrayMatches(
-			['EMOJI_HAS_CUSTOM_ALIASES' => true],
+			['EMOJI_HAS_CUSTOM_REGEXP' => true],
 			$plugin->getJSHints()
 		);
 	}

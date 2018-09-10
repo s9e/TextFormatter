@@ -2264,8 +2264,8 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Uses EmojiOne by default
  [x] removeAlias() removes given alias
- [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => false] by default
- [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_ALIASES' => true] if a custom alias exists
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => false] by default
+ [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => true] if a custom regexp exists
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => true] if an alias quick match exists
 
