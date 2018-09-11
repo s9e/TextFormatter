@@ -1,6 +1,6 @@
 ### Manage aliases
 
-Aliases can be managed via the `$aliases` property, which can be accessed as an array. See [the NormalizedCollection API](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Collections/NormalizedCollection.html) for a list of methods.
+Aliases can be managed via the `$aliases` property, an associative array that maps aliases (as keys) to fully-qualified emoji or emoji sequences (as values.)
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -19,7 +19,8 @@ echo $html;
 Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.0/png/64/1f600.png">
 ```
 
-### Configuring aliases at parsing time
+
+### Configure aliases at parsing time
 
 Starting with 1.3, emoji aliases can be read and modified at parsing time via `$parser->registeredVars['Emoji.aliases']`. Do note that while removing any aliases will prevent them from being used, only aliases that start and end with a `:` and only contain lowercase letters, digits, `_`, `-` and `+` can be added.
 
