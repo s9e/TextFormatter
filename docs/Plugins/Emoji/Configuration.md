@@ -21,7 +21,7 @@ Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.ne
 
 ### Configure aliases at parsing time
 
-Starting with 1.3, emoji aliases can be read and modified at parsing time via `$parser->registeredVars['Emoji.aliases']`. Do note that while removing any aliases will prevent them from being used, only aliases that start and end with a `:` and only contain lowercase letters, digits, `_`, `-` and `+` can be added.
+Starting with 1.3, emoji aliases can be read and modified at parsing time via `$parser->registeredVars['Emoji.aliases']` in PHP and `s9e.TextFormatter.registeredVars['Emoji.aliases']` in JavaScript. Do note that while removing an alias will prevent it from being used, only aliases that start and end with a `:` and only contain lowercase letters, digits, `_`, `-` and `+` can be added at parsing time.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
