@@ -1,4 +1,4 @@
-This plugin converts plain-text emails into clickable "mailto:" links.
+This plugin converts plain-text email addresses into clickable "mailto:" links.
 
 ## Example
 
