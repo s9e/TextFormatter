@@ -2567,6 +2567,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() throws a RuntimeException if a filter is not allowed
  [x] add() processes the optional defaultValue in attribute declarations
  [x] add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
+ [x] getSites() returns the configured sites
  [x] asConfig() returns NULL if no site was added
  [x] asConfig() returns a an array containing a "regexp" element by default, if any site was added
  [x] asConfig() creates a regexp if a site has a "host"

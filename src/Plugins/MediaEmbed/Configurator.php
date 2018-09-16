@@ -158,6 +158,16 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
+	* Return the list of configured sites
+	*
+	* @return array Site's ID as keys, site's config as values
+	*/
+	public function getSites()
+	{
+		return $this->sites;
+	}
+
+	/**
 	* Check the safety of given attributes
 	*
 	* @param  array $attributes

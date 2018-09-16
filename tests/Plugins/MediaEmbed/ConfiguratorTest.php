@@ -416,6 +416,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox getSites() returns the configured sites
+	*/
+	public function testGetSites()
+	{
+		$plugin = $this->configurator->MediaEmbed;
+		$this->assertEquals([], $plugin->getSites());
+
+		$plugin->add('youtube');
+		$this->assertArrayHasKey('youtube', $plugin->getSites());
+	}
+
+	/**
 	* @testdox asConfig() returns NULL if no site was added
 	*/
 	public function testAsConfigNullNoSite()
