@@ -44,6 +44,23 @@ class ClosureCompilerApplicationTest extends Test
 	}
 
 	/**
+	* @testdox Throws an exception if the JavaScript is invalid
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage An error occured during minification
+	*/
+	public function testInvalidJavaScript()
+	{
+		$closureCompilerBin = $this->getClosureCompilerBin();
+		if (!file_exists($closureCompilerBin))
+		{
+			$this->markTestSkipped($closureCompilerBin . ' does not exist');
+		}
+
+		$minifier = new ClosureCompilerApplication($closureCompilerBin);
+		$minifier->minify('foo bar');
+	}
+
+	/**
 	* @testdox Allows caching
 	*/
 	public function testAllowsCaching()
