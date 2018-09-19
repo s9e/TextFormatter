@@ -3211,6 +3211,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vk.com/video121599878_165723901?hash=e06b0878046e1d32',
+				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video121599878_165723901?hash=e06b0878046e1d32</VK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
+				'https://vk.com/video_ext.php?oid=121599878&id=165723901&hash=e06b0878046e1d32',
+				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video_ext.php?oid=121599878&amp;id=165723901&amp;hash=e06b0878046e1d32</VK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
 				'http://www.ustream.tv/recorded/40771396',
 				'<r><USTREAM vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></r>',
 				[],

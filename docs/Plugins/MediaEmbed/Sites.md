@@ -549,7 +549,7 @@
 	<tr>
 		<td><code>vk</code></td>
 		<td>VK</td>
-		<td>http://vkontakte.ru/video-7016284_163645555<br/>http://vk.com/video226156999_168963041<br/>http://vk.com/video_ext.php?oid=121599878&amp;id=165723901&amp;hash=e06b0878046e1d32</td>
+		<td>https://vk.com/video121599878_165723901?hash=e06b0878046e1d32<br/>https://vk.com/video_ext.php?oid=121599878&amp;id=165723901&amp;hash=e06b0878046e1d32</td>
 	</tr>
 	<tr>
 		<td><code>vocaroo</code></td>
