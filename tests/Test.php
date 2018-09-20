@@ -108,12 +108,12 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$cacheDir = __DIR__ . '/.cache';
 		if (empty($_SERVER['TRAVIS']) && file_exists($cacheDir))
 		{
-			$closureCompilerBin = $this->getClosureCompilerBin();
+			$closureCompilerNative = $this->getClosureCompilerNative();
 
-			if ($closureCompilerBin !== false)
+			if ($closureCompilerNative !== false)
 			{
 				$this->configurator->javascript
-					->setMinifier('ClosureCompilerApplication', $closureCompilerBin)
+					->setMinifier('ClosureCompilerApplication', $closureCompilerNative)
 					->cacheDir = $cacheDir;
 			}
 		}
@@ -125,7 +125,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$this->$assertMethod($expected, $this->execJS($src, $original));
 	}
 
-	public function getClosureCompilerBin()
+	public function getClosureCompilerJar()
 	{
 		static $filepath;
 
@@ -149,6 +149,13 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 
 		return $filepath;
+	}
+
+	public function getClosureCompilerNative()
+	{
+		$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';
+
+		return (file_exists($filepath)) ? $filepath : false;
 	}
 
 	protected function execJS($src, $input)

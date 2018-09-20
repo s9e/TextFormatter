@@ -15,6 +15,11 @@ Elements that were deprecated in 1.x will be removed.
  - getAliases
  - removeAlias
 
+The following properties are now deprecated in `s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerApplication`. Check out [the documentation](https://s9etextformatter.readthedocs.io/JavaScript/Minifiers/#google-closure-compiler-application) for the recommended usage.
+
+ - closureCompilerBin
+ - javaBin
+
 
 ## 1.2.0
 

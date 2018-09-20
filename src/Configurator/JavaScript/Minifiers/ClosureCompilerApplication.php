@@ -14,8 +14,14 @@ class ClosureCompilerApplication extends Minifier
 {
 	/**
 	* @var string Path to the Closure Compiler application
+	* @deprecated 1.3.0 Set a command instead
 	*/
 	public $closureCompilerBin;
+
+	/**
+	* @var string Command used to invoke the Closure Compiler application
+	*/
+	public $command;
 
 	/**
 	* @var string Closure Compiler's compilation level
@@ -29,6 +35,7 @@ class ClosureCompilerApplication extends Minifier
 
 	/**
 	* @var string Path to java interpreter
+	* @deprecated 1.3.0 Set a command instead
 	*/
 	public $javaBin = 'java';
 
@@ -40,14 +47,20 @@ class ClosureCompilerApplication extends Minifier
 	/**
 	* Constructor
 	*
-	* @param  string $filepath Path to the Closure Compiler .jar
+	* @param  string $filepathOrCommand Path to the Closure Compiler .jar or command to execute
 	*/
-	public function __construct($filepath = null)
+	public function __construct($filepathOrCommand = null)
 	{
-		if (isset($filepath))
+		if (isset($filepathOrCommand))
 		{
-			$this->closureCompilerBin = $filepath;
-			$this->testFilepaths();
+			if (file_exists($filepathOrCommand) && substr($filepathOrCommand, -4) === '.jar')
+			{
+				$this->closureCompilerBin = $filepathOrCommand;
+			}
+			else
+			{
+				$this->command = $filepathOrCommand;
+			}
 		}
 	}
 
@@ -59,9 +72,12 @@ class ClosureCompilerApplication extends Minifier
 		$key = [
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
-			$this->options,
-			$this->getClosureCompilerBinHash()
+			$this->options
 		];
+		if (isset($this->closureCompilerBin))
+		{
+			$key[] = $this->getClosureCompilerBinHash();
+		}
 
 		if ($this->excludeDefaultExterns)
 		{
@@ -94,9 +110,16 @@ class ClosureCompilerApplication extends Minifier
 
 		file_put_contents($inFile, $src);
 
-		$cmd = escapeshellcmd($this->javaBin)
-		     . ' -jar ' . escapeshellarg($this->closureCompilerBin)
-		     . ' --compilation_level ' . escapeshellarg($this->compilationLevel)
+		if (isset($this->command))
+		{
+			$cmd = $this->command;
+		}
+		else
+		{
+			$cmd = escapeshellcmd($this->javaBin) . ' -jar ' . escapeshellarg($this->closureCompilerBin);
+		}
+
+		$cmd .= ' --compilation_level ' . escapeshellarg($this->compilationLevel)
 		     . $options
 		     . ' --js ' . escapeshellarg($inFile)
 		     . ' --js_output_file ' . escapeshellarg($outFile);
@@ -142,6 +165,10 @@ class ClosureCompilerApplication extends Minifier
 	*/
 	protected function testFilepaths()
 	{
+		if (isset($this->command))
+		{
+			return;
+		}
 		if (!isset($this->closureCompilerBin))
 		{
 			throw new RuntimeException('No path set for Closure Compiler');

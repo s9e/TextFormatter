@@ -10,14 +10,68 @@ use s9e\TextFormatter\Tests\Test;
 */
 class ClosureCompilerApplicationTest extends Test
 {
-	/**
-	* @testdox Throws an exception if the filename passed to the constructor does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot find Closure Compiler at /does/not/exist
-	*/
-	public function testInvalidConstructor()
+	public static function setUpBeforeClass()
 	{
-		new ClosureCompilerApplication('/does/not/exist');
+		file_put_contents(sys_get_temp_dir() . '/test.compiler.jar', '1');
+		file_put_contents(sys_get_temp_dir() . '/test2.compiler.jar', '2');
+	}
+
+	public static function tearDownAfterClass()
+	{
+		unlink(sys_get_temp_dir() . '/test.compiler.jar');
+		unlink(sys_get_temp_dir() . '/test2.compiler.jar');
+	}
+
+	protected function getMinifier()
+	{
+		$closureCompilerNative = $this->getClosureCompilerNative();
+		if ($closureCompilerNative === false)
+		{
+			$this->markTestSkipped('Cannot find closure compiler executable');
+		}
+
+		return new ClosureCompilerApplication($closureCompilerNative);
+	}
+
+	/**
+	* @testdox Constructor accepts a command
+	* @group slow
+	*/
+	public function testConstructorCommand()
+	{
+		$path = realpath(__DIR__ . '/../../../../vendor/node_modules/google-closure-compiler-linux/compiler');
+		if (!file_exists($path))
+		{
+			$this->markTestSkipped('Cannot find native compiler');
+		}
+
+		$minifier = new ClosureCompilerApplication($path);
+		$minifier->compilationLevel = 'SIMPLE';
+		$minifier->options = '--env=CUSTOM';
+		$this->assertEquals('alert("xy");', $minifier->minify('alert("x"+"y");'));
+	}
+
+	/**
+	* @testdox Constructor accepts the path to a .jar file
+	* @group slow
+	*/
+	public function testConstructorJar()
+	{
+		if (isset($_SERVER['TRAVIS']) && strpos($_SERVER['JAVA_HOME'], 'java-7') !== false)
+		{
+			$this->markTestSkipped('Unsupported Java version');
+		}
+
+		$jar = $this->getClosureCompilerJar();
+		if ($jar === false)
+		{
+			$this->markTestSkipped('Cannot find compiler.jar');
+		}
+
+		$minifier = new ClosureCompilerApplication($jar);
+		$minifier->compilationLevel = 'SIMPLE';
+		$minifier->options = '--env=CUSTOM';
+		$this->assertEquals('alert("xy");', $minifier->minify('alert("x"+"y");'));
 	}
 
 	/**
@@ -47,16 +101,12 @@ class ClosureCompilerApplicationTest extends Test
 	* @testdox Throws an exception if the JavaScript is invalid
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage An error occured during minification
+	* @group slow
 	*/
 	public function testInvalidJavaScript()
 	{
-		$closureCompilerBin = $this->getClosureCompilerBin();
-		if (!file_exists($closureCompilerBin))
-		{
-			$this->markTestSkipped($closureCompilerBin . ' does not exist');
-		}
-
-		$minifier = new ClosureCompilerApplication($closureCompilerBin);
+		$minifier = $this->getMinifier();
+		$minifier->compilationLevel = 'WHITESPACE_ONLY';
 		$minifier->minify('foo bar');
 	}
 
@@ -65,7 +115,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testAllowsCaching()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 
 		$this->assertNotSame(false, $minifier->getCacheDifferentiator());
 	}
@@ -75,7 +125,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyCompilationLevel()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$k1 = $minifier->getCacheDifferentiator();
@@ -91,7 +141,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyOptions()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 
 		$minifier->options = '--use_types_for_optimization';
 		$k1 = $minifier->getCacheDifferentiator();
@@ -107,27 +157,13 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyApplication()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 		$k1 = $minifier->getCacheDifferentiator();
 
-		$minifier = new ClosureCompilerApplication(__DIR__ . '/NoopTest.php');
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test2.compiler.jar');
 		$k2 = $minifier->getCacheDifferentiator();
 
 		$this->assertNotEquals($k1, $k2);
-	}
-
-	/**
-	* @testdox The cache key does not depend on the path to the Closure Compiler application
-	*/
-	public function testCacheKeyNotPath()
-	{
-		$minifier = new ClosureCompilerApplication(__DIR__ . '/../Minifiers/NoopTest.php');
-		$k1 = $minifier->getCacheDifferentiator();
-
-		$minifier = new ClosureCompilerApplication(__DIR__ . '/NoopTest.php');
-		$k2 = $minifier->getCacheDifferentiator();
-
-		$this->assertSame($k1, $k2);
 	}
 
 	/**
@@ -135,7 +171,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyDefaultExterns()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 
 		$minifier->excludeDefaultExterns = true;
 		$k1 = $minifier->getCacheDifferentiator();
@@ -151,7 +187,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyCustomExterns()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 		$minifier->excludeDefaultExterns = true;
 
 		$this->assertTrue(in_array(
@@ -167,18 +203,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testWorks()
 	{
-		if (isset($_SERVER['TRAVIS']) && strpos($_SERVER['JAVA_HOME'], 'java-7') !== false)
-		{
-			$this->markTestSkipped('Unsupported Java version');
-		}
-
-		$closureCompilerBin = $this->getClosureCompilerBin();
-		if (!file_exists($closureCompilerBin))
-		{
-			$this->markTestSkipped($closureCompilerBin . ' does not exist');
-		}
-
-		$minifier = new ClosureCompilerApplication($closureCompilerBin);
+		$minifier = $this->getMinifier();
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
 		$minifier->options = '--env=CUSTOM';
 
@@ -196,13 +221,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testMinifyError()
 	{
-		$closureCompilerBin = $this->getClosureCompilerBin();
-		if (!file_exists($closureCompilerBin))
-		{
-			$this->markTestSkipped($closureCompilerBin . ' does not exist');
-		}
-
-		$minifier = new ClosureCompilerApplication($closureCompilerBin);
+		$minifier = $this->getMinifier();
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
 		$minifier->options = '--env=CUSTOM';
 		$minifier->minify('%error%');
@@ -213,7 +232,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testReplacesExterns()
 	{
-		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$minifier->excludeDefaultExterns = true;
 

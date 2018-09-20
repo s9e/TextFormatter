@@ -1116,7 +1116,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\FirstAvailable
  [x] minify() throws an exception if no minifier success
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
- [x] Throws an exception if the filename passed to the constructor does not exist
+ [x] Constructor accepts a command
+ [x] Constructor accepts the path to a .jar file
  [x] Throws an exception if the Closure Compiler's filepath is not set at minification time
  [x] Throws an exception if the Closure Compiler's file does not exist at minification time
  [x] Throws an exception if the JavaScript is invalid
@@ -1124,7 +1125,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplica
  [x] The cache key depends on the compilation level
  [x] The cache key depends on the extra options
  [x] The cache key depends on the Closure Compiler file
- [x] The cache key does not depend on the path to the Closure Compiler application
  [x] The cache key depends on whether the default externs are excluded
  [x] If the default externs are excluded, the custom externs are baked into the cache key
  [x] Works

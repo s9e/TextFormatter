@@ -14,14 +14,30 @@ $configurator->javascript->setMinifier('ClosureCompilerService');
 
 ### Google Closure Compiler application
 
-Alternatively, the [Google Closure Compiler application](https://developers.google.com/closure/compiler/docs/gettingstarted_app) can be used. This requires PHP to be able to use `exec()` and for the `java` executable and `compiler.jar` to be available locally. Like the Google Closure Compiler service, configuration is automatic.
+Alternatively, the [Google Closure Compiler application](https://developers.google.com/closure/compiler/docs/gettingstarted_app) can be used. This requires PHP to be able to use `exec()` to execute the relevant executables. Like the Google Closure Compiler service, configuration is automatic.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->enableJavaScript();
+
+// Deprecated usage
 $configurator->javascript
 	->setMinifier('ClosureCompilerApplication')
 	->closureCompilerBin = '/usr/local/bin/compiler.jar';
+
+// Recommended usage (1.3.0 and newer)
+$configurator->javascript
+	->setMinifier('ClosureCompilerApplication')
+	->command = 'java -jar /usr/local/bin/compiler.jar';
+
+// You can use npx or a native executable
+$configurator->javascript
+	->setMinifier('ClosureCompilerApplication')
+	->command = 'npx google-closure-compiler';
+
+// Short syntax
+$configurator->javascript
+	->setMinifier('ClosureCompilerApplication', 'npx google-closure-compiler');
 ```
 
 ### MatthiasMullie\\Minify
