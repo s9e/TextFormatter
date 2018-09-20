@@ -774,16 +774,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('healthguru');
 //				}
 //			],
-			[
-				'http://www.hulu.com/watch/484180',
-				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA">http://www.hulu.com/watch/484180</HULU></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('hulu');
-				}
-			],
+//			[
+//				'http://www.hulu.com/watch/484180',
+//				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA">http://www.hulu.com/watch/484180</HULU></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('hulu');
+//				}
+//			],
 			[
 				'http://imgur.com/gallery/9UGCL',
 				'<r><IMGUR id="a/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
