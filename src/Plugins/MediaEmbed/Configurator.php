@@ -80,6 +80,10 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->registeredVars['MediaEmbed.hosts'] = new Dictionary($hosts);
 		$this->configurator->registeredVars['MediaEmbed.sites'] = new Dictionary($sites);
 	}
+	public function getSites()
+	{
+		return $this->sites;
+	}
 	protected function checkAttributeFilters(array $attributes)
 	{
 		foreach ($attributes as $attrConfig)

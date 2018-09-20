@@ -9,12 +9,12 @@ var closeEm;
 var closeStrong;
 
 /**
-* @param {number} Starting position of the current EM span in the text
+* @param {?number} Starting position of the current EM span in the text
 */
 var emPos;
 
 /**
-* @param {number} Ending position of the current EM span in the text
+* @param {?number} Ending position of the current EM span in the text
 */
 var emEndPos;
 
@@ -24,12 +24,12 @@ var emEndPos;
 var remaining;
 
 /**
-* @param {number} Starting position of the current STRONG span in the text
+* @param {?number} Starting position of the current STRONG span in the text
 */
 var strongPos;
 
 /**
-* @param {number} Ending position of the current STRONG span in the text
+* @param {?number} Ending position of the current STRONG span in the text
 */
 var strongEndPos;
 
@@ -115,7 +115,7 @@ function getEmphasisByBlock(regexp, pos)
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(text))
 	{
-		var matchPos = m['index'],
+		var matchPos = +m['index'],
 			matchLen = m[0].length;
 
 		// Test whether we've just passed the limits of a block

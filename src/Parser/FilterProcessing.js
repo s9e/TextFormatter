@@ -120,7 +120,7 @@ function executeAttributeFilterChain(filterChain, attrName, attrValue)
 *
 * @param  {!Tag}            tag
 * @param  {!string}         attrName
-* @param  {!string}         regexp
+* @param  {!RegExp}         regexp
 * @param  {!Array<!string>} map
 */
 function executeAttributePreprocessor(tag, attrName, regexp, map)
@@ -143,7 +143,7 @@ function executeAttributePreprocessor(tag, attrName, regexp, map)
 * Execute a regexp and return the values of the mapped captures
 *
 * @param  {!string}                  attrValue
-* @param  {!string}                  regexp
+* @param  {!RegExp}                  regexp
 * @param  {!Array<!string>}          map
 * @return {!Object<!string,!string>}
 */

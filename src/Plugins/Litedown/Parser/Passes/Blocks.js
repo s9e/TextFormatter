@@ -46,7 +46,7 @@ function parse()
 
 	matches.forEach(function(m)
 	{
-		var matchPos = m['index'],
+		var matchPos = +m['index'],
 			matchLen = m[0].length,
 			startPos,
 			startLen,
@@ -494,7 +494,7 @@ function matchSetextLines()
 	while (m = regexp.exec(text))
 	{
 		var match    = m[0],
-			matchPos = m['index'];
+			matchPos = +m['index'];
 
 		// Compute the position of the end tag. We start on the LF character before the
 		// match and keep rewinding until we find a non-space character

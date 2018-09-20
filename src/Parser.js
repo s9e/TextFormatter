@@ -354,7 +354,7 @@ function finalizeOutput()
 	while (output !== tmp);
 
 	// Merge consecutive <i> tags
-	output = output.replace(/<\/i><i>/g, '', output);
+	output = output.replace(/<\/i><i>/g, '');
 
 	// Encode Unicode characters that are outside of the BMP
 	encodeUnicodeSupplementaryCharacters();
@@ -1154,9 +1154,10 @@ function addFosterTag(tag, fosterTag)
 *
 * @param  {!Tag}    startTag Start tag
 * @param  {!number} tagPos   End tag's position (will be adjusted for whitespace if applicable)
+* @param  {number=} prio     End tag's priority
 * @return {!Tag}
 */
-function addMagicEndTag(startTag, tagPos)
+function addMagicEndTag(startTag, tagPos, prio)
 {
 	var tagName = startTag.getName();
 
@@ -1167,7 +1168,7 @@ function addMagicEndTag(startTag, tagPos)
 	}
 
 	// Add a 0-width end tag that is paired with the given start tag
-	var endTag = addEndTag(tagName, tagPos, 0);
+	var endTag = addEndTag(tagName, tagPos, 0, prio || 0);
 	endTag.pairWith(startTag);
 
 	return endTag;
@@ -1739,7 +1740,7 @@ function tagIsAllowed(tagName)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addStartTag(name, pos, len, prio)
@@ -1753,7 +1754,7 @@ function addStartTag(name, pos, len, prio)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addEndTag(name, pos, len, prio)
@@ -1767,7 +1768,7 @@ function addEndTag(name, pos, len, prio)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addSelfClosingTag(name, pos, len, prio)
@@ -1779,7 +1780,7 @@ function addSelfClosingTag(name, pos, len, prio)
 * Add a 0-width "br" tag to force a line break at given position
 *
 * @param  {!number} pos  Position of the tag in the text
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addBrTag(pos, prio)
@@ -1792,7 +1793,7 @@ function addBrTag(pos, prio)
 *
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addIgnoreTag(pos, len, prio)
@@ -1806,7 +1807,7 @@ function addIgnoreTag(pos, len, prio)
 * Uses a zero-width tag that is actually never output in the result
 *
 * @param  {!number} pos  Position of the tag in the text
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addParagraphBreak(pos, prio)
@@ -1820,7 +1821,7 @@ function addParagraphBreak(pos, prio)
 * @param  {!Tag}    tag Original tag
 * @param  {!number} pos Copy's position
 * @param  {!number} len Copy's length
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}         Copy tag
 */
 function addCopyTag(tag, pos, len, prio)
@@ -1838,7 +1839,7 @@ function addCopyTag(tag, pos, len, prio)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
-* @param  {number}  prio Tags' priority
+* @param  {number=} prio Tags' priority
 * @return {!Tag}
 */
 function addTag(type, name, pos, len, prio)
@@ -1921,7 +1922,7 @@ function insertTag(tag)
 * @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
 * @param  {!number} endLen   Length of the start tag
-* @param  {number}  prio     Start tag's priority (the end tag will be set to minus that value)
+* @param  {number=}  prio     Start tag's priority (the end tag will be set to minus that value)
 * @return {!Tag}             Start tag
 */
 function addTagPair(name, startPos, startLen, endPos, endLen, prio)

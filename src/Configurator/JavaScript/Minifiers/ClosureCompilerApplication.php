@@ -11,26 +11,28 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 class ClosureCompilerApplication extends Minifier
 {
 	public $closureCompilerBin;
+	public $command;
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 	public $excludeDefaultExterns = \true;
 	public $javaBin = 'java';
 	public $options = '--use_types_for_optimization';
-	public function __construct($filepath = \null)
+	public function __construct($filepathOrCommand = \null)
 	{
-		if (isset($filepath))
-		{
-			$this->closureCompilerBin = $filepath;
-			$this->testFilepaths();
-		}
+		if (isset($filepathOrCommand))
+			if (\file_exists($filepathOrCommand) && \substr($filepathOrCommand, -4) === '.jar')
+				$this->closureCompilerBin = $filepathOrCommand;
+			else
+				$this->command = $filepathOrCommand;
 	}
 	public function getCacheDifferentiator()
 	{
 		$key = array(
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
-			$this->options,
-			$this->getClosureCompilerBinHash()
+			$this->options
 		);
+		if (isset($this->closureCompilerBin))
+			$key[] = $this->getClosureCompilerBinHash();
 		if ($this->excludeDefaultExterns)
 			$key[] = \file_get_contents(__DIR__ . '/../externs.application.js');
 		return $key;
@@ -45,9 +47,11 @@ class ClosureCompilerApplication extends Minifier
 		$inFile  = \sys_get_temp_dir() . '/' . $crc . '.js';
 		$outFile = \sys_get_temp_dir() . '/' . $crc . '.min.js';
 		\file_put_contents($inFile, $src);
-		$cmd = \escapeshellcmd($this->javaBin)
-		     . ' -jar ' . \escapeshellarg($this->closureCompilerBin)
-		     . ' --compilation_level ' . \escapeshellarg($this->compilationLevel)
+		if (isset($this->command))
+			$cmd = $this->command;
+		else
+			$cmd = \escapeshellcmd($this->javaBin) . ' -jar ' . \escapeshellarg($this->closureCompilerBin);
+		$cmd .= ' --compilation_level ' . \escapeshellarg($this->compilationLevel)
 		     . $options
 		     . ' --js ' . \escapeshellarg($inFile)
 		     . ' --js_output_file ' . \escapeshellarg($outFile);
@@ -71,6 +75,8 @@ class ClosureCompilerApplication extends Minifier
 	}
 	protected function testFilepaths()
 	{
+		if (isset($this->command))
+			return;
 		if (!isset($this->closureCompilerBin))
 			throw new RuntimeException('No path set for Closure Compiler');
 		if (!\file_exists($this->closureCompilerBin))
