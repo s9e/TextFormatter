@@ -1,3 +1,42 @@
+1.3.0 (2018-09-20)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#130) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/3df7e018c9c613ac8968e8d6e8440a4605b9ff26...5654c323067a48ff9a9931d74a804d927bfe05cb)
+
+### Added
+
+ - `2be2114b4` BBCodes: added colspan/rowspan to TD and TH
+ - `b1f9068e9` ClosureCompilerApplication: added support for user-defined invocation
+ - `77cd86307` Emoji: added support for Twemoji-style filenames
+ - `f73f8c737` Emoji: added support for Unicode 11.0
+ - `d64c68848` MediaEmbed: added getSites()
+ - `51a901525` MediaEmbed: added support for /presentation/ URLs in Scribd
+
+### Removed
+
+ - `4473762e5` MediaEmbed: removed Fora.tv
+
+### Fixed
+
+ - `684350c16` MediaEmbed: fixed a potential issue with cached HTTP client using the wrong cache dir
+
+### Changed
+
+ - `e2abcec27` Emoji: capture trailing U+FE0F even when it's superfluous
+ - `89d0da364` Emoji: merged default shortnames into custom aliases
+ - `5b705ab2d` Emoji: renamed JavaScript hint
+ - `71c4369a3` JavaScript: renamed $exportMethods to $exports
+ - `5baaab747` JavaScript: sort exports in lexical order
+ - `072c87d2d` MediaEmbed: updated Getty Images
+ - `70c62091a` MediaEmbed: updated Global News
+ - `7d42f039d` MediaEmbed: updated Rutube
+ - `e29597a06` MediaEmbed: updated VK
+ - `5a42834b2` RegexpConvertor: updated Unicode properties
+ - `6ccd4a31b` Remove e/i/s tags in live preview to emulate the PHP renderer's algorithm
+
+
 1.2.2 (2018-07-29)
 ==================
 
