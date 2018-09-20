@@ -20,6 +20,11 @@ class Parser extends ParserBase
 	protected static $client;
 
 	/**
+	* @var string|null Cache dir used by cached client
+	*/
+	protected static $clientCacheDir;
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
@@ -151,9 +156,10 @@ class Parser extends ParserBase
 	*/
 	protected static function getHttpClient($cacheDir)
 	{
-		if (!isset(self::$client))
+		if (!isset(self::$client) || self::$clientCacheDir !== $cacheDir)
 		{
 			self::$client = (isset($cacheDir)) ? Http::getCachingClient($cacheDir) : Http::getClient();
+			self::$clientCacheDir = $cacheDir;
 		}
 
 		return self::$client;
