@@ -105,7 +105,7 @@ function parseShortnames(text)
 	{
 		var alias  = m[0] + ':',
 			tagLen = alias.length,
-			tagPos = m['index'];
+			tagPos = +m['index'];
 		if (registeredVars['Emoji.aliases'][alias])
 		{
 			var hex = getHexSequence(registeredVars['Emoji.aliases'][alias]);

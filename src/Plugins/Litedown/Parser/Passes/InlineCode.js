@@ -65,7 +65,7 @@ function getInlineCodeMarkers()
 	while (m = regexp.exec(_text))
 	{
 		markers.push({
-			pos        : m['index'],
+			pos        : +m['index'],
 			len        : m[1].length,
 			trimBefore : trimNext,
 			trimAfter  : m[2].length,

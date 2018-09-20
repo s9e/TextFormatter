@@ -5,7 +5,7 @@
 * @param {!string} name     Name of the tag
 * @param {!number} pos      Position of the tag in the text
 * @param {!number} len      Length of text consumed by the tag
-* @param {number}  priority This tag's sorting tiebreaker
+* @param {number=} priority This tag's sorting tiebreaker
 */
 function Tag(type, name, pos, len, priority)
 {

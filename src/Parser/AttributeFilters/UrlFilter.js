@@ -153,7 +153,7 @@ var UrlFilter =
 		// the scheme separator
 		if (!p['scheme'])
 		{
-			url = url.replace(/^([^\/]*):/, '$1%3A', url);
+			url = url.replace(/^([^\/]*):/, '$1%3A');
 		}
 
 		return url;

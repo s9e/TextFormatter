@@ -34,7 +34,7 @@ if (!config.disableSymbols)
 * @param  {!number} tagPos Position of the tag in the text
 * @param  {!number} tagLen Length of text consumed by the tag
 * @param  {!string} chr    Replacement character
-* @param  {number}  prio   Tag's priority
+* @param  {number=} prio   Tag's priority
 * @return {!Tag}
 */
 function addTag(tagPos, tagLen, chr, prio)
