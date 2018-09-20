@@ -54,8 +54,8 @@ class Configurator extends ConfiguratorBase
 		$custom     = $this->getCustomAliases();
 		$quickMatch = ConfigHelper::generateQuickMatchFromList($custom);
 		return [
-			'EMOJI_HAS_CUSTOM_ALIASES'    => !empty($custom),
-			'EMOJI_HAS_CUSTOM_QUICKMATCH' => ($quickMatch !== \false)
+			'EMOJI_HAS_CUSTOM_QUICKMATCH' => ($quickMatch !== \false),
+			'EMOJI_HAS_CUSTOM_REGEXP'     => !empty($custom)
 		];
 	}
 	protected function getAliasesConfig()
