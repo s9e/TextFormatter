@@ -6,8 +6,9 @@
 
 	<host>rutube.ru</host>
 	<extract>!rutube\.ru/tracks/(?'id'\d+)!</extract>
-	<scrape>
-		<match>!rutube\.ru/video/[0-9a-f]{32}!</match>
+	<scrape url="http://rutube.ru/api/oembed/?url=https://rutube.ru/video/{@vid}/">
+		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0</header>
+		<match>!rutube\.ru/video/(?'vid'[0-9a-f]{32})!</match>
 		<extract>!rutube\.ru/play/embed/(?'id'\d+)!</extract>
 	</scrape>
 	<iframe width="720" height="405" src="//rutube.ru/play/embed/{@id}"/>

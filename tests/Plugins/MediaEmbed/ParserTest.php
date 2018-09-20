@@ -1030,16 +1030,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('podbean');
 				}
 			],
-//			[
-//				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
-//				'<r><RUTUBE id="6613980">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('rutube');
-//				}
-//			],
+			[
+				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
+				'<r><RUTUBE id="6613980">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('rutube');
+				}
+			],
 			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<r><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
