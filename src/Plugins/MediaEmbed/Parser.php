@@ -13,6 +13,7 @@ use s9e\TextFormatter\Utils\Http;
 class Parser extends ParserBase
 {
 	protected static $client;
+	protected static $clientCacheDir;
 	public function parse($text, array $matches)
 	{
 		foreach ($matches as $m)
@@ -80,8 +81,11 @@ class Parser extends ParserBase
 	}
 	protected static function getHttpClient($cacheDir)
 	{
-		if (!isset(self::$client))
+		if (!isset(self::$client) || self::$clientCacheDir !== $cacheDir)
+		{
 			self::$client = (isset($cacheDir)) ? Http::getCachingClient($cacheDir) : Http::getClient();
+			self::$clientCacheDir = $cacheDir;
+		}
 		return self::$client;
 	}
 	protected static function getSiteIdFromUrl($url, array $hosts)

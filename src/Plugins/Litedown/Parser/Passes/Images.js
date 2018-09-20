@@ -43,7 +43,7 @@ function parseInlineImages()
 	while (m = regexp.exec(text))
 	{
 		var linkInfo = m[1],
-			startPos = m['index'],
+			startPos = +m['index'],
 			endLen   = 3 + linkInfo.length,
 			endPos   = startPos + m[0].length - endLen,
 			alt      = m[0].substr(2, m[0].length - endLen - 2);

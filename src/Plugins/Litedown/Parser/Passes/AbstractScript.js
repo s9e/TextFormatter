@@ -1,8 +1,8 @@
 /**
 * @param {string}  tagName     Name of the tag used by this pass
 * @param {string}  syntaxChar  Relevant character used by this syntax
-* @param {!Regexp} shortRegexp Regexp used for the short form syntax
-* @param {!Regexp} longRegexp  Regexp used for the long form syntax
+* @param {!RegExp} shortRegexp Regexp used for the short form syntax
+* @param {!RegExp} longRegexp  Regexp used for the long form syntax
 */
 function parseAbstractScript(tagName, syntaxChar, shortRegexp, longRegexp)
 {
