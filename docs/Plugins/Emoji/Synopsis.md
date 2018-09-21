@@ -46,7 +46,7 @@ echo $html;
 
 ### Inputting emoji as codepoints
 
-In some cases, it may be desirable to input emoji as a sequence of codepoints instead of Unicode characters. Codepoints must be expressed in lowercase hexadecimal and be separated by a single dash. For example: `:1f44b-1f3fb:`. [Zero-width joiners](https://en.wikipedia.org/wiki/Zero-width_joiner) and [variation selectors 16](https://en.wikipedia.org/wiki/Variation_Selectors_(Unicode_block)) can be omitted.
+In some cases, it may be desirable to input emoji as a sequence of codepoints instead of Unicode characters. Codepoints must be expressed in lowercase hexadecimal and be separated by a single dash. For example: `:1f44b-1f3fb:`. For compatibility with Twemoji, the fully-qualified sequence using [zero-width joiners](https://en.wikipedia.org/wiki/Zero-width_joiner) and [variation selectors 16](https://en.wikipedia.org/wiki/Variation_Selectors_(Unicode_block)) should be used.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
