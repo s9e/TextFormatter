@@ -18,7 +18,7 @@ composer require s9e/text-formatter
 
 ## Versioning
 
-Versioning loosely follows [Semantic Versioning](https://semver.org/). You can [read about API changes in the documentation](https://s9etextformatter.readthedocs.io/Internals/API_changes/).
+Versioning is meant to follow [Semantic Versioning](https://semver.org/). You can [read about API changes in the documentation](https://s9etextformatter.readthedocs.io/Internals/API_changes/).
 
 ## Demo
 
