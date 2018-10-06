@@ -91,6 +91,32 @@ class Parser extends IRProcessor
 	}
 
 	/**
+	* Append the structure for a <xsl:copy-of/> element to given node
+	*
+	* @param  DOMElement $parentNode Parent node
+	* @param  string     $expr       Select expression, which is should only contain attributes
+	* @return void
+	*/
+	protected function appendConditionalAttributes(DOMElement $parentNode, $expr)
+	{
+		preg_match_all('(@([-\\w]+))', $expr, $matches);
+		foreach ($matches[1] as $attrName)
+		{
+			// Create a switch element in the IR
+			$switch = $this->appendElement($parentNode, 'switch');
+			$case   = $this->appendElement($switch, 'case');
+			$case->setAttribute('test', '@' . $attrName);
+
+			// Append an attribute element
+			$attribute = $this->appendElement($case, 'attribute');
+			$attribute->setAttribute('name', $attrName);
+
+			// Set the attribute's content, which is simply the copied attribute's value
+			$this->appendXPathOutput($attribute, '@' . $attrName);
+		}
+	}
+
+	/**
 	* Append an <output/> element for given XPath expression to given node
 	*
 	* @param  DOMElement $parentNode Parent node
@@ -273,34 +299,20 @@ class Parser extends IRProcessor
 	protected function parseXslCopyOf(DOMElement $ir, DOMElement $node)
 	{
 		$expr = $node->getAttribute('select');
-
-		// <xsl:copy-of select="@foo"/>
-		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
+		if (preg_match('#^@[-\\w]+(?:\\s*\\|\\s*@[-\\w]+)*$#', $expr, $m))
 		{
-			// Create a switch element in the IR
-			$switch = $this->appendElement($ir, 'switch');
-			$case   = $this->appendElement($switch, 'case');
-			$case->setAttribute('test', $expr);
-
-			// Append an attribute element
-			$attribute = $this->appendElement($case, 'attribute');
-			$attribute->setAttribute('name', $m[1]);
-
-			// Set the attribute's content, which is simply the copied attribute's value
-			$this->appendXPathOutput($attribute, $expr);
-
-			return;
+			// <xsl:copy-of select="@foo"/>
+			$this->appendConditionalAttributes($ir, $expr);
 		}
-
-		// <xsl:copy-of select="@*"/>
-		if ($expr === '@*')
+		elseif ($expr === '@*')
 		{
+			// <xsl:copy-of select="@*"/>
 			$this->appendElement($ir, 'copyOfAttributes');
-
-			return;
 		}
-
-		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
+		else
+		{
+			throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
+		}
 	}
 
 	/**
