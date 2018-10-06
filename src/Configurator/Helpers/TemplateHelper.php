@@ -39,7 +39,7 @@ abstract class TemplateHelper
 	* Return all DOMNodes whose content is CSS
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getCSSNodes(DOMDocument $dom)
 	{
@@ -62,7 +62,7 @@ abstract class TemplateHelper
 	* Return all DOMNodes whose content is JavaScript
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getJSNodes(DOMDocument $dom)
 	{
@@ -130,7 +130,7 @@ abstract class TemplateHelper
 	* NOTE: it will also return HTML4 nodes whose content is an URI
 	*
 	* @param  DOMDocument $dom Document
-	* @return array            Array of DOMNode instances
+	* @return DOMNode[]        List of DOMNode instances
 	*/
 	public static function getURLNodes(DOMDocument $dom)
 	{
