@@ -198,31 +198,20 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		$this->checkContext($node);
 
-		// Consider stylesheet parameters safe but test local variables/params
 		if (preg_match('/^\\$(\\w+)$/', $expr, $m))
 		{
-			$this->checkVariable($node, $tag, $m[1]);
-
 			// Either this expression came from a variable that is considered safe, or it's a
 			// stylesheet parameters, which are considered safe by default
-			return;
+			$this->checkVariable($node, $tag, $m[1]);
 		}
-
-		// Test whether the expression is safe as per the concrete implementation
-		if ($this->isExpressionSafe($expr))
-		{
-			return;
-		}
-
-		// Test whether the expression contains one single attribute
-		if (preg_match('/^@(\\w+)$/', $expr, $m))
+		elseif (preg_match('/^@([-\\w]+)$/', $expr, $m))
 		{
 			$this->checkAttribute($node, $tag, $m[1]);
-
-			return;
 		}
-
-		throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
+		elseif (!$this->isExpressionSafe($expr))
+		{
+			throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
+		}
 	}
 
 	/**
