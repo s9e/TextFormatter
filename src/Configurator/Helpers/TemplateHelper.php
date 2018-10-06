@@ -147,6 +147,13 @@ abstract class TemplateHelper
 	*/
 	public static function highlightNode(DOMNode $node, $prepend, $append)
 	{
+		// Create a copy of the document that we can modify without side effects
+		$dom = $node->ownerDocument->cloneNode(true);
+		$dom->formatOutput = true;
+
+		$xpath = new DOMXPath($dom);
+		$node  = $xpath->query($node->getNodePath())->item(0);
+
 		// Add a unique token to the node
 		$uniqid = uniqid('_');
 		if ($node instanceof DOMAttr)
@@ -162,34 +169,18 @@ abstract class TemplateHelper
 			$node->data .= $uniqid;
 		}
 
-		$dom = $node->ownerDocument;
-		$dom->formatOutput = true;
-
 		$docXml = TemplateLoader::innerXML($dom->documentElement);
 		$docXml = trim(str_replace("\n  ", "\n", $docXml));
 
 		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
 		$docHtml  = htmlspecialchars($docXml);
 
-		// Enclose the node's representation in our hilighting HTML
+		// Enclose the node's representation in our highlighting HTML
 		$html = str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
 
-		// Remove the unique token from HTML and from the node
-		if ($node instanceof DOMAttr)
-		{
-			$node->value = substr($node->value, 0, -strlen($uniqid));
-			$html = str_replace($uniqid, '', $html);
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->removeAttribute($uniqid);
-			$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
-		}
-		elseif ($node instanceof DOMCharacterData || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-			$html = str_replace($uniqid, '', $html);
-		}
+		// Remove the unique token from HTML
+		$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		$html = str_replace($uniqid, '', $html);
 
 		return $html;
 	}
