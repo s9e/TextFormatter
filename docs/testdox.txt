@@ -1373,6 +1373,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Attributes are not safe if the tag's filterChain is cleared
  [x] Attributes are not safe if the tag's filterChain does not contain the default attribute filter
  [x] Attributes can be safe with the tag's default filterChain
+ [x] Multiple attributes can be safe
+ [x] Multiple attributes can be unsafe
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
  [x] Disallowed: <b use-attribute-sets="foo"/>

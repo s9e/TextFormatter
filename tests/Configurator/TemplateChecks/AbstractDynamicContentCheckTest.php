@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 
 use DOMDocument;
 use DOMElement;
+use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -260,13 +261,47 @@ class AbstractDynamicContentCheckTest extends Test
 		$check = new DummyContentCheck;
 		$check->check($node, $tag);
 	}
+
+	/**
+	* @testdox Multiple attributes can be safe
+	*/
+	public function testCopyOfAttributesSafe()
+	{
+		$node = $this->loadTemplate('<b><xsl:copy-of select="@safe1|@safe2"/></b>');
+
+		$tag = new Tag;
+		$tag->attributes->add('safe1')->defaultValue = 1;
+		$tag->attributes->add('safe2')->defaultValue = 1;
+
+		$check = new DummyContentCheck;
+		$check->check($node, $tag);
+	}
+
+	/**
+	* @testdox Multiple attributes can be unsafe
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Attribute 'unsafe' is not properly sanitized to be used in this context
+	*/
+	public function testCopyOfAttributesUnsafe()
+	{
+		$node = $this->loadTemplate('<b><xsl:copy-of select="@safe|@unsafe"/></b>');
+
+		$tag = new Tag;
+		$tag->attributes->add('safe')->defaultValue   = 1;
+		$tag->attributes->add('unsafe')->defaultValue = 0;
+
+		$check = new DummyContentCheck;
+		$check->check($node, $tag);
+	}
 }
 
 class DummyContentCheck extends AbstractDynamicContentCheck
 {
 	protected function getNodes(DOMElement $template)
 	{
-		return $template->getElementsByTagName('b');
+		$xpath = new DOMXPath($template->ownerDocument);
+
+		return $xpath->query('//b | //xsl:copy-of');
 	}
 
 	protected function isSafe(Attribute $attribute)

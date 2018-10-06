@@ -105,6 +105,23 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	}
 
 	/**
+	* Test whether an attribute expression is safe
+	*
+	* @param  DOMNode $node Context node
+	* @param  Tag     $tag  Source tag
+	* @param  string  $expr XPath expression that evaluates to one or multiple named attributes
+	* @return void
+	*/
+	protected function checkAttributeExpression(DOMNode $node, Tag $tag, $expr)
+	{
+		preg_match_all('(@([-\\w]+))', $expr, $matches);
+		foreach ($matches[1] as $attrName)
+		{
+			$this->checkAttribute($node, $tag, $attrName);
+		}
+	}
+
+	/**
 	* Test whether an attribute node is safe
 	*
 	* @param  DOMAttr $attribute Attribute node
@@ -204,9 +221,9 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 			// stylesheet parameters, which are considered safe by default
 			$this->checkVariable($node, $tag, $m[1]);
 		}
-		elseif (preg_match('/^@([-\\w]+)$/', $expr, $m))
+		elseif (preg_match('/^@[-\\w]+(?:\\s*\\|\\s*@[-\\w]+)*$/', $expr))
 		{
-			$this->checkAttribute($node, $tag, $m[1]);
+			$this->checkAttributeExpression($node, $tag, $expr);
 		}
 		elseif (!$this->isExpressionSafe($expr))
 		{
