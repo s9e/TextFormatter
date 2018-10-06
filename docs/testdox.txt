@@ -1451,6 +1451,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowPHPTags
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeCopyOf
  [x] Allowed: <b><xsl:copy-of select="@title"/></b>
  [x] Allowed: <b><xsl:copy-of select="@data-title"/></b>
+ [x] Allowed: <b><xsl:copy-of select="@data-title|@title"/></b>
  [x] Disallowed: <b><xsl:copy-of select="FOO"/></b>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS
