@@ -229,8 +229,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		}
 		elseif ($node instanceof DOMElement)
 		{
-			if ($node->namespaceURI === self::XMLNS_XSL
-			 && $node->localName    === 'copy-of')
+			if ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'copy-of')
 			{
 				$this->checkCopyOfNode($node, $tag);
 			}
