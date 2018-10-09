@@ -855,6 +855,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://archive.org/embed/deadco2018-08-25',
+				'<r><INTERNETARCHIVE height="50" id="deadco2018-08-25&amp;playlist=1" width="300">https://archive.org/embed/deadco2018-08-25</INTERNETARCHIVE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
 				'http://video.khl.ru/events/233677',
 				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+">http://video.khl.ru/events/233677</KHL></r>)',
 				[],

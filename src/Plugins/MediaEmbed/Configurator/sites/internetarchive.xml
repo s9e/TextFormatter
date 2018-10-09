@@ -9,7 +9,7 @@
 
 	<host>archive.org</host>
 	<scrape>
-		<match>!archive\.org/details/!</match>
+		<match>!archive\.org/(?:details|embed)/!</match>
 		<extract>!meta property="twitter:player" content="https://archive.org/embed/(?'id'[^/"]+)!</extract>
 		<extract>!meta property="og:video:width" content="(?'width'\d+)!</extract>
 		<extract>!meta property="og:video:height" content="(?'height'\d+)!</extract>
