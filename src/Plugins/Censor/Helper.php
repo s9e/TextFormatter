@@ -71,7 +71,7 @@ class Helper
 		$attributesExpr = '';
 		if ($censorAttributes)
 		{
-			$attributesExpr = '|[^<">]*+(?=<|$|"(?> [-\\w]+="[^"]*+")*+\\/?>)';
+			$attributesExpr = '|[^<">]*+(?="(?> [-\\w]+="[^"]*+")*+\\/?>)';
 		}
 
 		// Modify the original regexp so that it only matches text nodes and optionally attribute
@@ -79,7 +79,7 @@ class Helper
 		$delim  = $this->regexpHtml[0];
 		$pos    = strrpos($this->regexpHtml, $delim);
 		$regexp = $delim
-		        . '(?<!&#)(?<!&)'
+		        . '(?<!&|&#)'
 		        . substr($this->regexpHtml, 1, $pos - 1)
 		        . '(?=[^<>]*+(?=<|$)' . $attributesExpr . ')'
 		        . substr($this->regexpHtml, $pos);
