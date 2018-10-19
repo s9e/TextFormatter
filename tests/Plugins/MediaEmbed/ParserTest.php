@@ -587,16 +587,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('eighttracks');
 				}
 			],
-			[
-				'https://flic.kr/p/5wBgXo',
-				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('flickr');
-				}
-			],
+//			[
+//				'https://flic.kr/p/5wBgXo',
+//				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('flickr');
+//				}
+//			],
 //			[
 //				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
 //				'<r><GAMETRAILERS id="2954127">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
