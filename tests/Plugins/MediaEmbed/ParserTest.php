@@ -2387,15 +2387,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html',
-				'<r><KISSVIDEO id="7789d8de8">http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</KISSVIDEO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('kissvideo');
-				}
-			],
-			[
 				'https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA',
 				'<r><LIVECAP channel="esl_sc2" id="uZoEz6RR1eA">https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA</LIVECAP></r>',
 				[],
@@ -3173,15 +3164,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('videodetective');
-				}
-			],
-			[
-				'http://videomega.tv/?ref=aPRKXgQdaD',
-				'<r><VIDEOMEGA id="aPRKXgQdaD">http://videomega.tv/?ref=aPRKXgQdaD</VIDEOMEGA></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('videomega');
 				}
 			],
 			[

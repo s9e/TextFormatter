@@ -262,11 +262,6 @@
 		<td>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>
 	</tr>
 	<tr>
-		<td><code>kissvideo</code></td>
-		<td>Kiss Video</td>
-		<td>https://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</td>
-	</tr>
-	<tr>
 		<td><code>libsyn</code></td>
 		<td>Libsyn</td>
 		<td>https://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
@@ -530,11 +525,6 @@
 		<td><code>videodetective</code></td>
 		<td>Video Detective</td>
 		<td>https://www.videodetective.com/movies/zootopia/658596</td>
-	</tr>
-	<tr>
-		<td><code>videomega</code></td>
-		<td>Videomega</td>
-		<td>https://videomega.tv/?ref=aPRKXgQdaD</td>
 	</tr>
 	<tr>
 		<td><code>vimeo</code></td>

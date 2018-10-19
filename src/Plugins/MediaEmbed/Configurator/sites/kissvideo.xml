@@ -1,9 +1,0 @@
-<site name="Kiss Video" homepage="https://www.kissvideo.click/index.html">
-	<example>https://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</example>
-
-	<tags><tag>videos</tag></tags>
-
-	<host>kissvideo.click</host>
-	<extract>!kissvideo\.click/[^_]*_(?'id'[0-9a-f]+)!</extract>
-	<iframe src="//www.kissvideo.click/embed.php?vid={@id}"/>
-</site>
