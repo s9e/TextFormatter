@@ -1,5 +1,5 @@
-<site name="Video Detective" homepage="http://www.videodetective.com/">
-	<example>http://www.videodetective.com/movies/zootopia/658596</example>
+<site name="Video Detective" homepage="https://www.videodetective.com/">
+	<example>https://www.videodetective.com/movies/zootopia/658596</example>
 
 	<host>videodetective.com</host>
 	<extract>!videodetective\.com/\w+/[-\w]+/(?:trailer/P0*)?(?'id'\d+)!</extract>

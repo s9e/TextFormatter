@@ -1,6 +1,6 @@
-<site name="TinyPic videos" homepage="http://tinypic.com/">
-	<example>http://tinypic.com/player.php?v=29x86j9&amp;s=8</example>
-	<example>http://tinypic.com/r/29x86j9/8</example>
+<site name="TinyPic videos" homepage="https://tinypic.com/">
+	<example>https://tinypic.com/player.php?v=29x86j9&amp;s=8</example>
+	<example>https://tinypic.com/r/29x86j9/8</example>
 
 	<tags><tag>images</tag></tags>
 

@@ -1,5 +1,5 @@
-<site name="Youku" homepage="http://www.youku.com/">
-	<example>http://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</example>
+<site name="Youku" homepage="https://www.youku.com/">
+	<example>https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</example>
 
 	<tags><tag>.cn</tag></tags>
 

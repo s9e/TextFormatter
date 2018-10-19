@@ -1,6 +1,6 @@
-<site name="Kontinental Hockey League (КХЛ)" homepage="http://www.khl.ru/">
-	<example>http://video.khl.ru/events/233677</example>
-	<example>http://video.khl.ru/quotes/251237</example>
+<site name="Kontinental Hockey League (КХЛ)" homepage="https://www.khl.ru/">
+	<example>https://video.khl.ru/events/233677</example>
+	<example>https://video.khl.ru/quotes/251237</example>
 
 	<tags><tag>.ru</tag><tag>sports</tag></tags>
 

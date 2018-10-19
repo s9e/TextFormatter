@@ -1,7 +1,7 @@
-<site name="Bandcamp" homepage="http://bandcamp.com/">
-	<example>http://proleter.bandcamp.com/album/curses-from-past-times-ep</example>
-	<example>http://proleter.bandcamp.com/track/downtown-irony</example>
-	<example>http://therunons.bandcamp.com/track/still-feel</example>
+<site name="Bandcamp" homepage="https://bandcamp.com/">
+	<example>https://proleter.bandcamp.com/album/curses-from-past-times-ep</example>
+	<example>https://proleter.bandcamp.com/track/downtown-irony</example>
+	<example>https://therunons.bandcamp.com/track/still-feel</example>
 
 	<tags><tag>music</tag></tags>
 

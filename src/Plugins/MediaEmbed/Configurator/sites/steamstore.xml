@@ -1,5 +1,5 @@
-<site name="Steam store" homepage="http://store.steampowered.com/">
-	<example>http://store.steampowered.com/app/250520/</example>
+<site name="Steam store" homepage="https://store.steampowered.com/">
+	<example>https://store.steampowered.com/app/250520/</example>
 
 	<tags><tag>gaming</tag></tags>
 

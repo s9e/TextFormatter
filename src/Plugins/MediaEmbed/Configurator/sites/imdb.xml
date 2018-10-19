@@ -1,6 +1,6 @@
-<site name="IMDb" homepage="http://www.imdb.com/">
-	<example>http://www.imdb.com/video/imdb/vi2482677785/</example>
-	<example>http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</example>
+<site name="IMDb" homepage="https://www.imdb.com/">
+	<example>https://www.imdb.com/video/imdb/vi2482677785/</example>
+	<example>https://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</example>
 
 	<tags><tag>movies</tag></tags>
 

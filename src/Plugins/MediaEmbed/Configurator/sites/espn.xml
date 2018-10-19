@@ -1,7 +1,7 @@
-<site name="ESPN" homepage="http://www.espn.com/">
-	<example>http://www.espn.com/video/clip?id=17474659</example>
-	<example>http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</example>
-	<example>http://broadband.espn.go.com/video/clip?id=17481969</example>
+<site name="ESPN" homepage="https://www.espn.com/">
+	<example>https://www.espn.com/video/clip?id=17474659</example>
+	<example>https://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref</example>
+	<example>https://broadband.espn.go.com/video/clip?id=17481969</example>
 
 	<tags><tag>sports</tag></tags>
 

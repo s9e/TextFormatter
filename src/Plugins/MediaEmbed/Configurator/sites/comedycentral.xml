@@ -1,7 +1,7 @@
-<site name="Comedy Central" homepage="http://www.comedycentral.com/funny-videos">
-	<example>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
-	<example>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
-	<example>http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</example>
+<site name="Comedy Central" homepage="https://www.cc.com/">
+	<example>https://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
+	<example>https://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
+	<example>https://tosh.cc.com/video-clips/aet4lh/rc-car-crash</example>
 
 	<tags><tag>entertainment</tag></tags>
 

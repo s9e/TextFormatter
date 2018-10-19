@@ -1,5 +1,5 @@
-<site name="Sportsnet" homepage="http://www.sportsnet.ca/">
-	<example>http://www.sportsnet.ca/soccer/west-ham-2-hull-2/</example>
+<site name="Sportsnet" homepage="https://www.sportsnet.ca/">
+	<example>https://www.sportsnet.ca/soccer/west-ham-2-hull-2/</example>
 
 	<tags><tag>.ca</tag><tag>sports</tag></tags>
 

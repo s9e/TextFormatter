@@ -1,7 +1,7 @@
-<site name="TED Talks" homepage="http://www.ted.com/">
+<site name="TED Talks" homepage="https://www.ted.com/">
 	<source>http://blog.ted.com/2011/04/01/now-you-can-embed-tedtalks-with-subtitles-enabled/</source>
-	<example>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</example>
-	<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
+	<example>https://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</example>
+	<example>https://embed.ted.com/playlists/26/our_digital_lives.html</example>
 
 	<tags><tag>presentations</tag></tags>
 

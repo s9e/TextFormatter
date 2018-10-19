@@ -1,9 +1,9 @@
-<site name="Democracy Now!" homepage="http://www.democracynow.org/">
-	<example>http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</example>
-	<example>http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the</example>
-	<example>http://www.democracynow.org/shows/2006/2/20</example>
-	<example>http://www.democracynow.org/2015/5/21/headlines</example>
-	<example>http://m.democracynow.org/stories/15236</example>
+<site name="Democracy Now!" homepage="https://www.democracynow.org/">
+	<example>https://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens</example>
+	<example>https://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the</example>
+	<example>https://www.democracynow.org/shows/2006/2/20</example>
+	<example>https://www.democracynow.org/2015/5/21/headlines</example>
+	<example>https://m.democracynow.org/stories/15236</example>
 
 	<host>democracynow.org</host>
 	<extract>!democracynow.org/(?:embed/)?(?'id'(?:\w+/)?\d+/\d+/\d+(?:/\w+)?)!</extract>

@@ -1,13 +1,13 @@
-<site name="Amazon Product" homepage="http://affiliate-program.amazon.com/">
-	<example>http://www.amazon.ca/gp/product/B00GQT1LNO/</example>
-	<example>http://www.amazon.co.jp/gp/product/B003AKZ6I8/</example>
+<site name="Amazon Product" homepage="https://affiliate-program.amazon.com/">
+	<example>https://www.amazon.ca/gp/product/B00GQT1LNO/</example>
+	<example>https://www.amazon.co.jp/gp/product/B003AKZ6I8/</example>
 	<example>https://www.amazon.co.uk/dp/B00EO4NN5C/</example>
-	<example>http://www.amazon.com/dp/B002MUC0ZY</example>
-	<example>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</example>
+	<example>https://www.amazon.com/dp/B002MUC0ZY</example>
+	<example>https://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/</example>
 	<example>https://www.amazon.com/gp/product/B00ST0KGCU/</example>
-	<example>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</example>
+	<example>https://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/</example>
 	<example>https://www.amazon.es/Microsoft-Sculpt-Ergonomic-Desktop-L5V-00011/dp/B00FO10ZK0/</example>
-	<example>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
+	<example>https://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/</example>
 	<example>https://www.amazon.in/Vans-Unisex-Classic-Loafers-Moccasins/dp/B01I3LWMVC/</example>
 	<example>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/</example>
 	<example>https://www.amazon.com/dp/B0018CDWLS/</example>

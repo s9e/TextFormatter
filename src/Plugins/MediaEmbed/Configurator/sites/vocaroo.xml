@@ -1,5 +1,5 @@
-<site name="Vocaroo" homepage="http://vocaroo.com/">
-	<example>http://vocaroo.com/i/s0dRy3rZ47bf</example>
+<site name="Vocaroo" homepage="https://vocaroo.com/">
+	<example>https://vocaroo.com/i/s0dRy3rZ47bf</example>
 
 	<host>vocaroo.com</host>
 	<extract>!vocaroo\.com/i/(?'id'\w+)!</extract>

@@ -1,7 +1,7 @@
-<site name="Livestream" homepage="http://new.livestream.com/">
-	<example>http://new.livestream.com/jbtvlive/musicmarathon</example>
-	<example>http://livestream.com/ccscsl/USChessChampionships/videos/83267610</example>
-	<example>http://livestre.am/58XNV</example>
+<site name="Livestream" homepage="https://new.livestream.com/">
+	<example>https://new.livestream.com/jbtvlive/musicmarathon</example>
+	<example>https://livestream.com/ccscsl/USChessChampionships/videos/83267610</example>
+	<example>https://livestre.am/58XNV</example>
 
 	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 

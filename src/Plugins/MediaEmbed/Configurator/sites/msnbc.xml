@@ -1,6 +1,6 @@
-<site name="MSNBC" homepage="http://www.msnbc.com/watch">
-	<example>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</example>
-	<example>http://on.msnbc.com/1qkH62o</example>
+<site name="MSNBC" homepage="https://www.msnbc.com/watch">
+	<example>https://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</example>
+	<example>https://on.msnbc.com/1qkH62o</example>
 
 	<tags><tag>news</tag></tags>
 

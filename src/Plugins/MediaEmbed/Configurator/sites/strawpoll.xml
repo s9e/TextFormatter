@@ -1,5 +1,5 @@
-<site name="Straw Poll" homepage="http://strawpoll.me/">
-	<example>http://strawpoll.me/738091</example>
+<site name="Straw Poll" homepage="https://strawpoll.me/">
+	<example>https://strawpoll.me/738091</example>
 
 	<host>strawpoll.me</host>
 	<extract>!strawpoll\.me/(?'id'\d+)!</extract>

@@ -1,6 +1,6 @@
-<site name="The Onion" homepage="http://www.theonion.com/video/">
-	<example>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
-	<example>http://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</example>
+<site name="The Onion" homepage="https://www.theonion.com/video/">
+	<example>https://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/</example>
+	<example>https://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</example>
 
 	<tags><tag>entertainment</tag></tags>
 

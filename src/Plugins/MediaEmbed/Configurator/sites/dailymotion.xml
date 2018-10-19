@@ -1,7 +1,7 @@
-<site name="Dailymotion" homepage="http://www.dailymotion.com/">
+<site name="Dailymotion" homepage="https://www.dailymotion.com/">
 	<source>http://www.dailymotion.com/doc/api/player.html</source>
-	<example>http://dai.ly/x5e9eog</example>
-	<example>http://www.dailymotion.com/video/x5e9eog</example>
+	<example>https://dai.ly/x5e9eog</example>
+	<example>https://www.dailymotion.com/video/x5e9eog</example>
 
 	<tags><tag>videos</tag></tags>
 

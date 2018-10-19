@@ -9,42 +9,42 @@
 	<tr>
 		<td><code>abcnews</code></td>
 		<td>ABC News</td>
-		<td>http://abcnews.go.com/WNN/video/dog-goes-wild-when-owner-leaves-22936610</td>
+		<td>https://abcnews.go.com/WNN/video/dog-goes-wild-when-owner-leaves-22936610</td>
 	</tr>
 	<tr>
 		<td><code>amazon</code></td>
 		<td>Amazon Product</td>
-		<td>http://www.amazon.ca/gp/product/B00GQT1LNO/<br/>http://www.amazon.co.jp/gp/product/B003AKZ6I8/<br/>https://www.amazon.co.uk/dp/B00EO4NN5C/<br/>http://www.amazon.com/dp/B002MUC0ZY<br/>http://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/<br/>https://www.amazon.com/gp/product/B00ST0KGCU/<br/>http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/<br/>https://www.amazon.es/Microsoft-Sculpt-Ergonomic-Desktop-L5V-00011/dp/B00FO10ZK0/<br/>http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/<br/>https://www.amazon.in/Vans-Unisex-Classic-Loafers-Moccasins/dp/B01I3LWMVC/<br/>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/<br/>https://www.amazon.com/dp/B0018CDWLS/</td>
+		<td>https://www.amazon.ca/gp/product/B00GQT1LNO/<br/>https://www.amazon.co.jp/gp/product/B003AKZ6I8/<br/>https://www.amazon.co.uk/dp/B00EO4NN5C/<br/>https://www.amazon.com/dp/B002MUC0ZY<br/>https://www.amazon.com/The-BeerBelly-200-001-80-Ounce-Belly/dp/B001RB2CXY/<br/>https://www.amazon.com/gp/product/B00ST0KGCU/<br/>https://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/<br/>https://www.amazon.es/Microsoft-Sculpt-Ergonomic-Desktop-L5V-00011/dp/B00FO10ZK0/<br/>https://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/<br/>https://www.amazon.in/Vans-Unisex-Classic-Loafers-Moccasins/dp/B01I3LWMVC/<br/>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/<br/>https://www.amazon.com/dp/B0018CDWLS/</td>
 	</tr>
 	<tr>
 		<td><code>audioboom</code></td>
 		<td>audioBoom</td>
-		<td>http://audioboo.fm/boos/2439994-deadline-day-update<br/>http://audioboom.com/posts/2493448-robert-patrick</td>
+		<td>https://audioboo.fm/boos/2439994-deadline-day-update<br/>https://audioboom.com/posts/2493448-robert-patrick</td>
 	</tr>
 	<tr>
 		<td><code>audiomack</code></td>
 		<td>Audiomack</td>
-		<td>http://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1<br/>http://www.audiomack.com/album/chance-the-rapper/acid-rap</td>
+		<td>https://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1<br/>https://www.audiomack.com/album/chance-the-rapper/acid-rap</td>
 	</tr>
 	<tr>
 		<td><code>bandcamp</code></td>
 		<td>Bandcamp</td>
-		<td>http://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>http://proleter.bandcamp.com/track/downtown-irony<br/>http://therunons.bandcamp.com/track/still-feel</td>
+		<td>https://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>https://proleter.bandcamp.com/track/downtown-irony<br/>https://therunons.bandcamp.com/track/still-feel</td>
 	</tr>
 	<tr>
 		<td><code>bbcnews</code></td>
 		<td>BBC News</td>
-		<td>http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</td>
+		<td>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</td>
 	</tr>
 	<tr>
 		<td><code>bleacherreport</code></td>
 		<td>Bleacher Report videos</td>
-		<td>http://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
+		<td>https://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
 	</tr>
 	<tr>
 		<td><code>break</code></td>
 		<td>Break</td>
-		<td>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
+		<td>https://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
 	</tr>
 	<tr>
 		<td><code>brightcove</code></td>
@@ -59,57 +59,57 @@
 	<tr>
 		<td><code>cnbc</code></td>
 		<td>CNBC</td>
-		<td>http://video.cnbc.com/gallery/?video=3000269279</td>
+		<td>https://video.cnbc.com/gallery/?video=3000269279</td>
 	</tr>
 	<tr>
 		<td><code>cnn</code></td>
 		<td>CNN</td>
-		<td>http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn<br/>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>
+		<td>https://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn<br/>https://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>
 	</tr>
 	<tr>
 		<td><code>cnnmoney</code></td>
 		<td>CNNMoney</td>
-		<td>http://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</td>
+		<td>https://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</td>
 	</tr>
 	<tr>
 		<td><code>collegehumor</code></td>
 		<td>CollegeHumor</td>
-		<td>http://www.collegehumor.com/video/1181601/more-than-friends</td>
+		<td>https://www.collegehumor.com/video/1181601/more-than-friends</td>
 	</tr>
 	<tr>
 		<td><code>comedycentral</code></td>
 		<td>Comedy Central</td>
-		<td>http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>http://tosh.cc.com/video-clips/aet4lh/rc-car-crash</td>
+		<td>https://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>https://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>https://tosh.cc.com/video-clips/aet4lh/rc-car-crash</td>
 	</tr>
 	<tr>
 		<td><code>coub</code></td>
 		<td>Coub</td>
-		<td>http://coub.com/view/6veusoty</td>
+		<td>https://coub.com/view/6veusoty</td>
 	</tr>
 	<tr>
 		<td><code>dailymotion</code></td>
 		<td>Dailymotion</td>
-		<td>http://dai.ly/x5e9eog<br/>http://www.dailymotion.com/video/x5e9eog</td>
+		<td>https://dai.ly/x5e9eog<br/>https://www.dailymotion.com/video/x5e9eog</td>
 	</tr>
 	<tr>
 		<td><code>democracynow</code></td>
 		<td>Democracy Now!</td>
-		<td>http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens<br/>http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the<br/>http://www.democracynow.org/shows/2006/2/20<br/>http://www.democracynow.org/2015/5/21/headlines<br/>http://m.democracynow.org/stories/15236</td>
+		<td>https://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens<br/>https://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the<br/>https://www.democracynow.org/shows/2006/2/20<br/>https://www.democracynow.org/2015/5/21/headlines<br/>https://m.democracynow.org/stories/15236</td>
 	</tr>
 	<tr>
 		<td><code>dumpert</code></td>
 		<td>dumpert</td>
-		<td>http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</td>
+		<td>https://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</td>
 	</tr>
 	<tr>
 		<td><code>eighttracks</code></td>
 		<td>8tracks</td>
-		<td>http://8tracks.com/lovinq/headphones-in-world-out<br/>http://8tracks.com/lovinq/4982023</td>
+		<td>https://8tracks.com/lovinq/headphones-in-world-out<br/>https://8tracks.com/lovinq/4982023</td>
 	</tr>
 	<tr>
 		<td><code>espn</code></td>
 		<td>ESPN</td>
-		<td>http://www.espn.com/video/clip?id=17474659<br/>http://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref<br/>http://broadband.espn.go.com/video/clip?id=17481969</td>
+		<td>https://www.espn.com/video/clip?id=17474659<br/>https://www.espn.com/espnw/video/13887284/kyrgios-angry-code-violation-almost-hitting-ref<br/>https://broadband.espn.go.com/video/clip?id=17481969</td>
 	</tr>
 	<tr>
 		<td><code>facebook</code></td>
@@ -124,7 +124,7 @@
 	<tr>
 		<td><code>foxnews</code></td>
 		<td>Fox News</td>
-		<td>http://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</td>
+		<td>https://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</td>
 	</tr>
 	<tr>
 		<td><code>foxsports</code></td>
@@ -134,27 +134,27 @@
 	<tr>
 		<td><code>funnyordie</code></td>
 		<td>Funny or Die</td>
-		<td>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</td>
+		<td>https://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</td>
 	</tr>
 	<tr>
 		<td><code>gamespot</code></td>
 		<td>Gamespot</td>
-		<td>http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/<br/>http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</td>
+		<td>https://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>https://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/<br/>https://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</td>
 	</tr>
 	<tr>
 		<td><code>gametrailers</code></td>
 		<td>GameTrailers</td>
-		<td>http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</td>
+		<td>https://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</td>
 	</tr>
 	<tr>
 		<td><code>getty</code></td>
 		<td>Getty Images</td>
-		<td>http://gty.im/3232182<br/>http://www.gettyimages.com/detail/3232182<br/>http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182<br/>http://www.gettyimages.co.uk/detail/3232182</td>
+		<td>https://gty.im/3232182<br/>https://www.gettyimages.com/detail/3232182<br/>https://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182<br/>https://www.gettyimages.co.uk/detail/3232182</td>
 	</tr>
 	<tr>
 		<td><code>gfycat</code></td>
 		<td>Gfycat</td>
-		<td>http://gfycat.com/SereneIllfatedCapybara<br/>http://giant.gfycat.com/SereneIllfatedCapybara.gif</td>
+		<td>https://gfycat.com/SereneIllfatedCapybara<br/>https://giant.gfycat.com/SereneIllfatedCapybara.gif</td>
 	</tr>
 	<tr>
 		<td><code>gifs</code></td>
@@ -169,7 +169,7 @@
 	<tr>
 		<td><code>globalnews</code></td>
 		<td>Global News</td>
-		<td>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/<br/>https://globalnews.ca/video/rd/350539843530/?jwsource=cl</td>
+		<td>https://globalnews.ca/video/1647385/mark-channels-his-70s-look/<br/>https://globalnews.ca/video/rd/350539843530/?jwsource=cl</td>
 	</tr>
 	<tr>
 		<td><code>gofundme</code></td>
@@ -194,47 +194,47 @@
 	<tr>
 		<td><code>healthguru</code></td>
 		<td>Healthguru</td>
-		<td>http://mental.healthguru.com/video/internet-addiction-signs-you-need-to-shut-down</td>
+		<td>https://mental.healthguru.com/video/internet-addiction-signs-you-need-to-shut-down</td>
 	</tr>
 	<tr>
 		<td><code>hudl</code></td>
 		<td>Hudl</td>
-		<td>http://www.hudl.com/athlete/2067184/highlights/163744377<br/>http://www.hudl.com/v/CVmja<br/>http://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>
+		<td>https://www.hudl.com/athlete/2067184/highlights/163744377<br/>https://www.hudl.com/v/CVmja<br/>https://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>
 	</tr>
 	<tr>
 		<td><code>hulu</code></td>
 		<td>Hulu</td>
-		<td>http://www.hulu.com/watch/484180</td>
+		<td>https://www.hulu.com/watch/484180</td>
 	</tr>
 	<tr>
 		<td><code>humortvnl</code></td>
 		<td>HumorTV</td>
-		<td>http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</td>
+		<td>https://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</td>
 	</tr>
 	<tr>
 		<td><code>ign</code></td>
 		<td>IGN</td>
-		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
+		<td>https://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
 	</tr>
 	<tr>
 		<td><code>imdb</code></td>
 		<td>IMDb</td>
-		<td>http://www.imdb.com/video/imdb/vi2482677785/<br/>http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</td>
+		<td>https://www.imdb.com/video/imdb/vi2482677785/<br/>https://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</td>
 	</tr>
 	<tr>
 		<td><code>imgur</code></td>
 		<td>Imgur</td>
-		<td>http://imgur.com/AsQ0K3P<br/>http://imgur.com/a/9UGCL<br/>http://imgur.com/gallery/9UGCL<br/>http://i.imgur.com/u7Yo0Vy.gifv<br/>http://i.imgur.com/UO1UrIx.mp4</td>
+		<td>https://imgur.com/AsQ0K3P<br/>https://imgur.com/a/9UGCL<br/>https://imgur.com/gallery/9UGCL<br/>https://i.imgur.com/u7Yo0Vy.gifv<br/>https://i.imgur.com/UO1UrIx.mp4</td>
 	</tr>
 	<tr>
 		<td><code>indiegogo</code></td>
 		<td>Indiegogo</td>
-		<td>http://www.indiegogo.com/projects/gameheart-redesigned</td>
+		<td>https://www.indiegogo.com/projects/gameheart-redesigned</td>
 	</tr>
 	<tr>
 		<td><code>instagram</code></td>
 		<td>Instagram</td>
-		<td>http://instagram.com/p/gbGaIXBQbn/<br/>https://www.instagram.com/tv/BkQjCfsBIzi/</td>
+		<td>https://instagram.com/p/gbGaIXBQbn/<br/>https://www.instagram.com/tv/BkQjCfsBIzi/</td>
 	</tr>
 	<tr>
 		<td><code>internetarchive</code></td>
@@ -244,32 +244,32 @@
 	<tr>
 		<td><code>izlesene</code></td>
 		<td>İzlesene</td>
-		<td>http://www.izlesene.com/video/lily-allen-url-badman/7600704</td>
+		<td>https://www.izlesene.com/video/lily-allen-url-badman/7600704</td>
 	</tr>
 	<tr>
 		<td><code>jwplatform</code></td>
 		<td>JW Platform</td>
-		<td>http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html<br/>http://content.jwplatform.com/previews/YfTSAegE-L0l35Tsd</td>
+		<td>https://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html<br/>https://content.jwplatform.com/previews/YfTSAegE-L0l35Tsd</td>
 	</tr>
 	<tr>
 		<td><code>khl</code></td>
 		<td>Kontinental Hockey League (КХЛ)</td>
-		<td>http://video.khl.ru/events/233677<br/>http://video.khl.ru/quotes/251237</td>
+		<td>https://video.khl.ru/events/233677<br/>https://video.khl.ru/quotes/251237</td>
 	</tr>
 	<tr>
 		<td><code>kickstarter</code></td>
 		<td>Kickstarter</td>
-		<td>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>
+		<td>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>
 	</tr>
 	<tr>
 		<td><code>kissvideo</code></td>
 		<td>Kiss Video</td>
-		<td>http://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</td>
+		<td>https://www.kissvideo.click/alton-towers-smiler-rollercoaster-crash_7789d8de8.html</td>
 	</tr>
 	<tr>
 		<td><code>libsyn</code></td>
 		<td>Libsyn</td>
-		<td>http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
+		<td>https://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
 	</tr>
 	<tr>
 		<td><code>livecap</code></td>
@@ -284,7 +284,7 @@
 	<tr>
 		<td><code>livestream</code></td>
 		<td>Livestream</td>
-		<td>http://new.livestream.com/jbtvlive/musicmarathon<br/>http://livestream.com/ccscsl/USChessChampionships/videos/83267610<br/>http://livestre.am/58XNV</td>
+		<td>https://new.livestream.com/jbtvlive/musicmarathon<br/>https://livestream.com/ccscsl/USChessChampionships/videos/83267610<br/>https://livestre.am/58XNV</td>
 	</tr>
 	<tr>
 		<td><code>mailru</code></td>
@@ -299,12 +299,12 @@
 	<tr>
 		<td><code>metacafe</code></td>
 		<td>Metacafe</td>
-		<td>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</td>
+		<td>https://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</td>
 	</tr>
 	<tr>
 		<td><code>mixcloud</code></td>
 		<td>Mixcloud</td>
-		<td>http://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
+		<td>https://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
 	<tr>
 		<td><code>mlb</code></td>
@@ -314,32 +314,32 @@
 	<tr>
 		<td><code>mrctv</code></td>
 		<td>MRCTV</td>
-		<td>http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
+		<td>https://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
 	</tr>
 	<tr>
 		<td><code>msnbc</code></td>
 		<td>MSNBC</td>
-		<td>http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725<br/>http://on.msnbc.com/1qkH62o</td>
+		<td>https://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725<br/>https://on.msnbc.com/1qkH62o</td>
 	</tr>
 	<tr>
 		<td><code>natgeochannel</code></td>
 		<td>National Geographic Channel</td>
-		<td>http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/<br/>http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</td>
+		<td>https://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/<br/>https://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</td>
 	</tr>
 	<tr>
 		<td><code>natgeovideo</code></td>
 		<td>National Geographic Video</td>
-		<td>http://video.nationalgeographic.com/tv/changing-earth<br/>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
+		<td>https://video.nationalgeographic.com/tv/changing-earth<br/>https://video.nationalgeographic.com/video/weirdest-superb-lyrebird</td>
 	</tr>
 	<tr>
 		<td><code>nbcnews</code></td>
 		<td>NBC News</td>
-		<td>http://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</td>
+		<td>https://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</td>
 	</tr>
 	<tr>
 		<td><code>nbcsports</code></td>
 		<td>NBC Sports</td>
-		<td>http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</td>
+		<td>https://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</td>
 	</tr>
 	<tr>
 		<td><code>nhl</code></td>
@@ -349,12 +349,12 @@
 	<tr>
 		<td><code>npr</code></td>
 		<td>NPR</td>
-		<td>http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world<br/>http://n.pr/1Qky1m5</td>
+		<td>https://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world<br/>https://n.pr/1Qky1m5</td>
 	</tr>
 	<tr>
 		<td><code>nytimes</code></td>
 		<td>The New York Times Video</td>
-		<td>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html<br/>http://movies.nytimes.com/movie/131154/Crooklyn/trailers</td>
+		<td>https://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>https://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>https://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html<br/>https://movies.nytimes.com/movie/131154/Crooklyn/trailers</td>
 	</tr>
 	<tr>
 		<td><code>orfium</code></td>
@@ -364,7 +364,7 @@
 	<tr>
 		<td><code>pastebin</code></td>
 		<td>Pastebin</td>
-		<td>http://pastebin.com/9jEf44nc</td>
+		<td>https://pastebin.com/9jEf44nc</td>
 	</tr>
 	<tr>
 		<td><code>pinterest</code></td>
@@ -374,27 +374,27 @@
 	<tr>
 		<td><code>playstv</code></td>
 		<td>Plays.tv</td>
-		<td>http://plays.tv/s/Kt4onQhyyVyz<br/>http://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
+		<td>https://plays.tv/s/Kt4onQhyyVyz<br/>https://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
 	</tr>
 	<tr>
 		<td><code>podbean</code></td>
 		<td>Podbean</td>
-		<td>http://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>http://www.podbean.com/media/share/pb-qtwub-4ee10c</td>
+		<td>https://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>https://www.podbean.com/media/share/pb-qtwub-4ee10c</td>
 	</tr>
 	<tr>
 		<td><code>prezi</code></td>
 		<td>Prezi</td>
-		<td>http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</td>
+		<td>https://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</td>
 	</tr>
 	<tr>
 		<td><code>reddit</code></td>
 		<td>Reddit threads and comments</td>
-		<td>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/<br/>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</td>
+		<td>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/<br/>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</td>
 	</tr>
 	<tr>
 		<td><code>rutube</code></td>
 		<td>Rutube</td>
-		<td>http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/<br/>http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
+		<td>https://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/<br/>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
 	</tr>
 	<tr>
 		<td><code>scribd</code></td>
@@ -404,17 +404,17 @@
 	<tr>
 		<td><code>slideshare</code></td>
 		<td>SlideShare</td>
-		<td>http://www.slideshare.net/Slideshare/how-23431564</td>
+		<td>https://www.slideshare.net/Slideshare/how-23431564</td>
 	</tr>
 	<tr>
 		<td><code>soundcloud</code></td>
 		<td>SoundCloud</td>
-		<td>http://api.soundcloud.com/tracks/98282116<br/>https://soundcloud.com/andrewbird/three-white-horses<br/>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</td>
+		<td>https://api.soundcloud.com/tracks/98282116<br/>https://soundcloud.com/andrewbird/three-white-horses<br/>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</td>
 	</tr>
 	<tr>
 		<td><code>sportsnet</code></td>
 		<td>Sportsnet</td>
-		<td>http://www.sportsnet.ca/soccer/west-ham-2-hull-2/</td>
+		<td>https://www.sportsnet.ca/soccer/west-ham-2-hull-2/</td>
 	</tr>
 	<tr>
 		<td><code>spotify</code></td>
@@ -424,22 +424,22 @@
 	<tr>
 		<td><code>steamstore</code></td>
 		<td>Steam store</td>
-		<td>http://store.steampowered.com/app/250520/</td>
+		<td>https://store.steampowered.com/app/250520/</td>
 	</tr>
 	<tr>
 		<td><code>stitcher</code></td>
 		<td>Stitcher</td>
-		<td>http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</td>
+		<td>https://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</td>
 	</tr>
 	<tr>
 		<td><code>strawpoll</code></td>
 		<td>Straw Poll</td>
-		<td>http://strawpoll.me/738091</td>
+		<td>https://strawpoll.me/738091</td>
 	</tr>
 	<tr>
 		<td><code>streamable</code></td>
 		<td>Streamable</td>
-		<td>http://streamable.com/e4d</td>
+		<td>https://streamable.com/e4d</td>
 	</tr>
 	<tr>
 		<td><code>streamja</code></td>
@@ -449,12 +449,12 @@
 	<tr>
 		<td><code>teamcoco</code></td>
 		<td>Team Coco</td>
-		<td>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode<br/>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</td>
+		<td>https://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode<br/>https://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</td>
 	</tr>
 	<tr>
 		<td><code>ted</code></td>
 		<td>TED Talks</td>
-		<td>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>http://embed.ted.com/playlists/26/our_digital_lives.html</td>
+		<td>https://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>https://embed.ted.com/playlists/26/our_digital_lives.html</td>
 	</tr>
 	<tr>
 		<td><code>telegram</code></td>
@@ -464,42 +464,42 @@
 	<tr>
 		<td><code>theatlantic</code></td>
 		<td>The Atlantic Video</td>
-		<td>http://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
+		<td>https://www.theatlantic.com/video/index/358928/computer-vision-syndrome-and-you/</td>
 	</tr>
 	<tr>
 		<td><code>theguardian</code></td>
 		<td>The Guardian</td>
-		<td>http://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</td>
+		<td>https://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</td>
 	</tr>
 	<tr>
 		<td><code>theonion</code></td>
 		<td>The Onion</td>
-		<td>http://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>http://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>
+		<td>https://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>https://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>
 	</tr>
 	<tr>
 		<td><code>tinypic</code></td>
 		<td>TinyPic videos</td>
-		<td>http://tinypic.com/player.php?v=29x86j9&amp;s=8<br/>http://tinypic.com/r/29x86j9/8</td>
+		<td>https://tinypic.com/player.php?v=29x86j9&amp;s=8<br/>https://tinypic.com/r/29x86j9/8</td>
 	</tr>
 	<tr>
 		<td><code>tmz</code></td>
 		<td>TMZ</td>
-		<td>http://www.tmz.com/videos/0_2pr9x3rb/</td>
+		<td>https://www.tmz.com/videos/0_2pr9x3rb/</td>
 	</tr>
 	<tr>
 		<td><code>traileraddict</code></td>
 		<td>Trailer Addict</td>
-		<td>http://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>
+		<td>https://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>
 	</tr>
 	<tr>
 		<td><code>tumblr</code></td>
 		<td>Tumblr</td>
-		<td>http://mrbenvey.tumblr.com/post/104191225637</td>
+		<td>https://mrbenvey.tumblr.com/post/104191225637</td>
 	</tr>
 	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
-		<td>http://www.twitch.tv/twitch<br/>http://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop<br/>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</td>
+		<td>https://www.twitch.tv/twitch<br/>https://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop<br/>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</td>
 	</tr>
 	<tr>
 		<td><code>twitter</code></td>
@@ -509,37 +509,37 @@
 	<tr>
 		<td><code>ustream</code></td>
 		<td>Ustream</td>
-		<td>http://www.ustream.tv/channel/ps4-ustream-gameplay<br/>http://www.ustream.tv/baja1000tv<br/>http://www.ustream.tv/recorded/40688256</td>
+		<td>https://www.ustream.tv/channel/ps4-ustream-gameplay<br/>https://www.ustream.tv/baja1000tv<br/>https://www.ustream.tv/recorded/40688256</td>
 	</tr>
 	<tr>
 		<td><code>vbox7</code></td>
 		<td>VBOX7</td>
-		<td>http://vbox7.com/play:3975300ec6</td>
+		<td>https://vbox7.com/play:3975300ec6</td>
 	</tr>
 	<tr>
 		<td><code>veoh</code></td>
 		<td>Veoh</td>
-		<td>http://www.veoh.com/watch/v6335577TeB8kyNR</td>
+		<td>https://www.veoh.com/watch/v6335577TeB8kyNR</td>
 	</tr>
 	<tr>
 		<td><code>vevo</code></td>
 		<td>Vevo</td>
-		<td>http://www.vevo.com/watch/USUV71400682<br/>http://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>
+		<td>https://www.vevo.com/watch/USUV71400682<br/>https://www.vevo.com/watch/eminem/the-monster-explicit/USUV71302925</td>
 	</tr>
 	<tr>
 		<td><code>videodetective</code></td>
 		<td>Video Detective</td>
-		<td>http://www.videodetective.com/movies/zootopia/658596</td>
+		<td>https://www.videodetective.com/movies/zootopia/658596</td>
 	</tr>
 	<tr>
 		<td><code>videomega</code></td>
 		<td>Videomega</td>
-		<td>http://videomega.tv/?ref=aPRKXgQdaD</td>
+		<td>https://videomega.tv/?ref=aPRKXgQdaD</td>
 	</tr>
 	<tr>
 		<td><code>vimeo</code></td>
 		<td>Vimeo</td>
-		<td>http://vimeo.com/67207222<br/>http://vimeo.com/channels/staffpicks/67207222</td>
+		<td>https://vimeo.com/67207222<br/>https://vimeo.com/channels/staffpicks/67207222</td>
 	</tr>
 	<tr>
 		<td><code>vine</code></td>
@@ -554,12 +554,12 @@
 	<tr>
 		<td><code>vocaroo</code></td>
 		<td>Vocaroo</td>
-		<td>http://vocaroo.com/i/s0dRy3rZ47bf</td>
+		<td>https://vocaroo.com/i/s0dRy3rZ47bf</td>
 	</tr>
 	<tr>
 		<td><code>vox</code></td>
 		<td>Vox</td>
-		<td>http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</td>
+		<td>https://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</td>
 	</tr>
 	<tr>
 		<td><code>washingtonpost</code></td>
@@ -569,22 +569,22 @@
 	<tr>
 		<td><code>wshh</code></td>
 		<td>WorldStarHipHop</td>
-		<td>http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>http://www.worldstarhiphop.com/featured/71630</td>
+		<td>https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>https://www.worldstarhiphop.com/featured/71630</td>
 	</tr>
 	<tr>
 		<td><code>wsj</code></td>
 		<td>The Wall Street Journal Online</td>
-		<td>http://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html<br/>http://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2<br/>http://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</td>
+		<td>https://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html<br/>https://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2<br/>https://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</td>
 	</tr>
 	<tr>
 		<td><code>xboxclips</code></td>
 		<td>XboxClips</td>
-		<td>http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</td>
+		<td>https://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</td>
 	</tr>
 	<tr>
 		<td><code>xboxdvr</code></td>
 		<td>Xbox DVR</td>
-		<td>http://xboxdvr.com/gamer/LOXITANE/video/12463958</td>
+		<td>https://xboxdvr.com/gamer/LOXITANE/video/12463958</td>
 	</tr>
 	<tr>
 		<td><code>yahooscreen</code></td>
@@ -594,11 +594,11 @@
 	<tr>
 		<td><code>youku</code></td>
 		<td>Youku</td>
-		<td>http://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
+		<td>https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
 	</tr>
 	<tr>
 		<td><code>youtube</code></td>
 		<td>YouTube</td>
-		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>
+		<td>https://www.youtube.com/watch?v=-cEzsCAzTak<br/>https://youtu.be/-cEzsCAzTak<br/>https://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>https://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>
 	</tr>
 </table>

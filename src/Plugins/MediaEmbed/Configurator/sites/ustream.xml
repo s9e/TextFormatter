@@ -1,7 +1,7 @@
-<site name="Ustream" homepage="http://www.ustream.tv/">
-	<example>http://www.ustream.tv/channel/ps4-ustream-gameplay</example>
-	<example>http://www.ustream.tv/baja1000tv</example>
-	<example>http://www.ustream.tv/recorded/40688256</example>
+<site name="Ustream" homepage="https://www.ustream.tv/">
+	<example>https://www.ustream.tv/channel/ps4-ustream-gameplay</example>
+	<example>https://www.ustream.tv/baja1000tv</example>
+	<example>https://www.ustream.tv/recorded/40688256</example>
 
 	<tags><tag>gaming</tag></tags>
 

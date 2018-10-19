@@ -1,7 +1,7 @@
-<site name="Vimeo" homepage="http://vimeo.com/">
+<site name="Vimeo" homepage="https://vimeo.com/">
 	<source>http://developer.vimeo.com/player/embedding</source>
-	<example>http://vimeo.com/67207222</example>
-	<example>http://vimeo.com/channels/staffpicks/67207222</example>
+	<example>https://vimeo.com/67207222</example>
+	<example>https://vimeo.com/channels/staffpicks/67207222</example>
 
 	<tags><tag>videos</tag></tags>
 

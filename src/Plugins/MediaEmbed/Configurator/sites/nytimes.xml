@@ -1,8 +1,8 @@
-<site name="The New York Times Video" homepage="http://www.nytimes.com/video/">
-	<example>http://www.nytimes.com/video/magazine/100000003166834/small-plates.html</example>
-	<example>http://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</example>
-	<example>http://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</example>
-	<example>http://movies.nytimes.com/movie/131154/Crooklyn/trailers</example>
+<site name="The New York Times Video" homepage="https://www.nytimes.com/video/">
+	<example>https://www.nytimes.com/video/magazine/100000003166834/small-plates.html</example>
+	<example>https://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html</example>
+	<example>https://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html</example>
+	<example>https://movies.nytimes.com/movie/131154/Crooklyn/trailers</example>
 
 	<tags><tag>movies</tag><tag>news</tag></tags>
 

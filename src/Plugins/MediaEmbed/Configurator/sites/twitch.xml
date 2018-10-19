@@ -1,7 +1,7 @@
-<site name="Twitch" homepage="http://www.twitch.tv/">
+<site name="Twitch" homepage="https://www.twitch.tv/">
 	<source>https://github.com/justintv/Twitch-API/blob/master/embed-video.md</source>
-	<example>http://www.twitch.tv/twitch</example>
-	<example>http://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
+	<example>https://www.twitch.tv/twitch</example>
+	<example>https://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
 	<example>https://www.twitch.tv/videos/29415830?t=17m17s</example>
 	<example>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop</example>
 	<example>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</example>

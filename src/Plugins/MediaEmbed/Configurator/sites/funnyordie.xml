@@ -1,6 +1,6 @@
-<site name="Funny or Die" homepage="http://www.funnyordie.com/">
+<site name="Funny or Die" homepage="https://www.funnyordie.com/">
 	<source>http://support.funnyordie.com/discussions/problems/918-embed-user-videos-widget</source>
-	<example>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
+	<example>https://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
 
 	<tags><tag>entertainment</tag></tags>
 

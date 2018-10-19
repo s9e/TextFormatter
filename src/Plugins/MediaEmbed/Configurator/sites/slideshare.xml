@@ -1,6 +1,6 @@
-<site name="SlideShare" homepage="http://www.slideshare.net/">
+<site name="SlideShare" homepage="https://www.slideshare.net/">
 	<source>http://help.slideshare.com/forums/67665-Embedding-Sharing</source>
-	<example>http://www.slideshare.net/Slideshare/how-23431564</example>
+	<example>https://www.slideshare.net/Slideshare/how-23431564</example>
 
 	<tags><tag>presentations</tag></tags>
 

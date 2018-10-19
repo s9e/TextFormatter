@@ -1,5 +1,5 @@
-<site name="Pastebin" homepage="http://pastebin.com/">
-	<example>http://pastebin.com/9jEf44nc</example>
+<site name="Pastebin" homepage="https://pastebin.com/">
+	<example>https://pastebin.com/9jEf44nc</example>
 
 	<host>pastebin.com</host>
 	<extract>@pastebin\.com/(?!u/)(?:\w+(?:\.php\?i=|/))?(?'id'\w+)@</extract>

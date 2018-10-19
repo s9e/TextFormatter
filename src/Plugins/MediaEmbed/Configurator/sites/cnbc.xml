@@ -1,5 +1,5 @@
-<site name="CNBC" homepage="http://www.cnbc.com/">
-	<example>http://video.cnbc.com/gallery/?video=3000269279</example>
+<site name="CNBC" homepage="https://www.cnbc.com/">
+	<example>https://video.cnbc.com/gallery/?video=3000269279</example>
 
 	<tags><tag>news</tag></tags>
 

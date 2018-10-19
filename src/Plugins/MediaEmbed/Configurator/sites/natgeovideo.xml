@@ -1,6 +1,6 @@
-<site name="National Geographic Video" homepage="http://video.nationalgeographic.com/">
-	<example>http://video.nationalgeographic.com/tv/changing-earth</example>
-	<example>http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</example>
+<site name="National Geographic Video" homepage="https://video.nationalgeographic.com/">
+	<example>https://video.nationalgeographic.com/tv/changing-earth</example>
+	<example>https://video.nationalgeographic.com/video/weirdest-superb-lyrebird</example>
 
 	<tags><tag>documentaries</tag></tags>
 

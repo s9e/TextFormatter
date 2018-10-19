@@ -1,9 +1,9 @@
-<site name="Imgur" homepage="http://imgur.com/">
-	<example>http://imgur.com/AsQ0K3P</example>
-	<example>http://imgur.com/a/9UGCL</example>
-	<example>http://imgur.com/gallery/9UGCL</example>
-	<example>http://i.imgur.com/u7Yo0Vy.gifv</example>
-	<example>http://i.imgur.com/UO1UrIx.mp4</example>
+<site name="Imgur" homepage="https://imgur.com/">
+	<example>https://imgur.com/AsQ0K3P</example>
+	<example>https://imgur.com/a/9UGCL</example>
+	<example>https://imgur.com/gallery/9UGCL</example>
+	<example>https://i.imgur.com/u7Yo0Vy.gifv</example>
+	<example>https://i.imgur.com/UO1UrIx.mp4</example>
 
 	<tags><tag>images</tag></tags>
 

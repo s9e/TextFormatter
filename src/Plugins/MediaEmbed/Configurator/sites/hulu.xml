@@ -1,5 +1,5 @@
-<site name="Hulu" homepage="http://www.hulu.com/">
-	<example>http://www.hulu.com/watch/484180</example>
+<site name="Hulu" homepage="https://www.hulu.com/">
+	<example>https://www.hulu.com/watch/484180</example>
 
 	<host>hulu.com</host>
 	<scrape>

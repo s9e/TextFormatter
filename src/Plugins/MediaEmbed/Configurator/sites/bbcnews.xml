@@ -1,5 +1,5 @@
-<site name="BBC News" homepage="http://www.bbc.com/news/video_and_audio/">
-	<example>http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</example>
+<site name="BBC News" homepage="https://www.bbc.com/news/video_and_audio/headlines/">
+	<example>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</example>
 
 	<tags><tag>news</tag></tags>
 

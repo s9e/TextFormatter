@@ -1,6 +1,6 @@
-<site name="National Geographic Channel" homepage="http://channel.nationalgeographic.com/">
-	<example>http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</example>
-	<example>http://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</example>
+<site name="National Geographic Channel" homepage="https://channel.nationalgeographic.com/">
+	<example>https://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</example>
+	<example>https://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</example>
 
 	<host>channel.nationalgeographic.com</host>
 	<extract>@channel\.nationalgeographic\.com/(?'id'[-/\w]+/videos/[-\w]+)@</extract>

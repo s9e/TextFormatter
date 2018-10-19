@@ -1,6 +1,6 @@
 <site name="SoundCloud" homepage="https://soundcloud.com/">
 	<source>https://soundcloud.com/pages/widgets</source>
-	<example>http://api.soundcloud.com/tracks/98282116</example>
+	<example>https://api.soundcloud.com/tracks/98282116</example>
 	<example>https://soundcloud.com/andrewbird/three-white-horses</example>
 	<example>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</example>
 

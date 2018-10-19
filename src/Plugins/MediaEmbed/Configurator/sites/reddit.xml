@@ -1,7 +1,7 @@
-<site name="Reddit threads and comments" homepage="http://www.reddit.com/">
+<site name="Reddit threads and comments" homepage="https://www.reddit.com/">
 	<source>https://www.reddit.com/wiki/embeds</source>
-	<example>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/</example>
-	<example>http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</example>
+	<example>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/</example>
+	<example>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</example>
 
 	<tags><tag>social</tag></tags>
 

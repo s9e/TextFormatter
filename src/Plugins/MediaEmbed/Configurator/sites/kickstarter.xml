@@ -1,7 +1,7 @@
-<site name="Kickstarter" homepage="http://www.kickstarter.com/">
-	<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1</example>
-	<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</example>
-	<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
+<site name="Kickstarter" homepage="https://www.kickstarter.com/">
+	<example>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1</example>
+	<example>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</example>
+	<example>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
 
 	<tags><tag>fundraising</tag></tags>
 

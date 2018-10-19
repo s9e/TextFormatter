@@ -1,8 +1,8 @@
-<site name="Getty Images" homepage="http://www.gettyimages.com/">
-	<example>http://gty.im/3232182</example>
-	<example>http://www.gettyimages.com/detail/3232182</example>
-	<example>http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</example>
-	<example>http://www.gettyimages.co.uk/detail/3232182</example>
+<site name="Getty Images" homepage="https://www.gettyimages.com/">
+	<example>https://gty.im/3232182</example>
+	<example>https://www.gettyimages.com/detail/3232182</example>
+	<example>https://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</example>
+	<example>https://www.gettyimages.co.uk/detail/3232182</example>
 
 	<tags><tag>images</tag></tags>
 

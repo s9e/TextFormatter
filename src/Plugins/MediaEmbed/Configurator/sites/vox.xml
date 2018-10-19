@@ -1,5 +1,5 @@
-<site name="Vox" homepage="http://www.vox.com/">
-	<example>http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</example>
+<site name="Vox" homepage="https://www.vox.com/">
+	<example>https://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</example>
 
 	<host>vox.com</host>
 	<extract>!vox.com/.*#ooid=(?'id'[-\w]+)!</extract>

@@ -1,9 +1,9 @@
-<site name="YouTube" homepage="http://www.youtube.com/">
-	<source>http://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
-	<example>http://www.youtube.com/watch?v=-cEzsCAzTak</example>
-	<example>http://youtu.be/-cEzsCAzTak</example>
-	<example>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
-	<example>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
+<site name="YouTube" homepage="https://www.youtube.com/">
+	<source>https://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
+	<example>https://www.youtube.com/watch?v=-cEzsCAzTak</example>
+	<example>https://youtu.be/-cEzsCAzTak</example>
+	<example>https://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
+	<example>https://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
 
 	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 

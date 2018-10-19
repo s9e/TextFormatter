@@ -1,5 +1,5 @@
-<site name="Global News" homepage="http://globalnews.ca/">
-	<example>http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</example>
+<site name="Global News" homepage="https://globalnews.ca/">
+	<example>https://globalnews.ca/video/1647385/mark-channels-his-70s-look/</example>
 	<example>https://globalnews.ca/video/rd/350539843530/?jwsource=cl</example>
 
 	<tags><tag>.ca</tag><tag>news</tag></tags>

@@ -1,6 +1,6 @@
-<site name="CNN" homepage="http://edition.cnn.com/video/">
-	<example>http://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</example>
-	<example>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
+<site name="CNN" homepage="https://edition.cnn.com/video/">
+	<example>https://edition.cnn.com/videos/tv/2015/06/09/airplane-yoga-rachel-crane-ts-orig.cnn</example>
+	<example>https://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</example>
 
 	<tags><tag>news</tag></tags>
 
