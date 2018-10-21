@@ -8,7 +8,7 @@
 	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 
 	<attributes>
-		<id filterChain="#identifier"/>
+		<id filterChain="#identifier" required="false"/>
 		<t  filterChain="#timestamp"/>
 	</attributes>
 
@@ -17,7 +17,7 @@
 	<extract>!youtube\.com/(?:watch.*?v=|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>@[#&amp;?]t=(?'t'\d[\dhms]*)@</extract>
-	<extract>!&amp;list=(?'list'[-\w]+)!</extract>
+	<extract>![&amp;?]list=(?'list'[-\w]+)!</extract>
 	<scrape>
 		<match>!/shared\?ci=!</match>
 		<extract>!/vi/(?'id'[-\w]+)!</extract>
