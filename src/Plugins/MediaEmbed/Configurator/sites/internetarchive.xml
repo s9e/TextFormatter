@@ -14,5 +14,12 @@
 		<extract>!meta property="og:video:width" content="(?'width'\d+)!</extract>
 		<extract>!meta property="og:video:height" content="(?'height'\d+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{@height}" src="https://archive.org/embed/{@id}"/>
+	<choose>
+		<when test="contains(@id,'playlist=1')">
+			<iframe max-width="640" width="100%" height="170" src="https://archive.org/embed/{@id}&amp;list_height=150"/>
+		</when>
+		<otherwise>
+			<iframe width="{@width}" height="{@height}" src="https://archive.org/embed/{@id}"/>
+		</otherwise>
+	</choose>
 </site>

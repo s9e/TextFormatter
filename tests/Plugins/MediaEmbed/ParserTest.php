@@ -1335,6 +1335,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://archive.org/details/BillGate99',
+				'<span data-s9e-mediaembed="internetarchive" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75%"><iframe allowfullscreen="" scrolling="no" src="https://archive.org/embed/BillGate99" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
+				'https://archive.org/details/DFTS2014-05-30',
+				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
 				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
