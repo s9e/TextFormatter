@@ -1,3 +1,30 @@
+1.3.1 (2018-10-29)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/1e165c0b6c7aabe24bea62680e6c2d8c94c64745...8aa52c780b9d3818d9f0760e21a54c8a864d7db5)
+
+### Added
+
+ - `8c9bfcbf2` AbstractDynamicContentCheck: added support for multiple named attributes in XPath expressions
+ - `c3c8c86ea` DisallowUnsafeCopyOf: added support for multiple attributes in xsl:copy-of
+ - `e6668ae95` MediaEmbed: added support for /embed/ URLs in Internet Archive
+ - `a2bd8c7b0` MediaEmbed: added support for YouTube playlists with no ID
+ - `e4db3c75d` TemplateParser: added support for multiple attributes in xsl:copy-of
+
+### Removed
+
+ - `119cd186e` MediaEmbed: removed defunct sites Kiss Video and Videomega
+
+### Changed
+
+ - `9a1107012` AbstractDynamicContentCheck: reorganized checkExpression() code
+ - `f1f24c6e9` Censor: simplified Helper's regexp
+ - `8aa52c780` MediaEmbed: updated Hudl
+ - `3f5de94b9` MediaEmbed: updated Internet Archive
+ - `cdb0984ad` MediaEmbed: updated example URLs to use HTTPS
+ - `23aadcb92` TemplateHelper: updated highlightNode()
+
+
 1.3.0 (2018-09-20)
 ==================
 
