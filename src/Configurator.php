@@ -1641,6 +1641,10 @@ abstract class TemplateHelper
 	}
 	public static function highlightNode(DOMNode $node, $prepend, $append)
 	{
+		$dom = $node->ownerDocument->cloneNode(\true);
+		$dom->formatOutput = \true;
+		$xpath = new DOMXPath($dom);
+		$node  = $xpath->query($node->getNodePath())->item(0);
 		$uniqid = \uniqid('_');
 		if ($node instanceof DOMAttr)
 			$node->value .= $uniqid;
@@ -1648,28 +1652,13 @@ abstract class TemplateHelper
 			$node->setAttribute($uniqid, '');
 		elseif ($node instanceof DOMCharacterData || $node instanceof DOMProcessingInstruction)
 			$node->data .= $uniqid;
-		$dom = $node->ownerDocument;
-		$dom->formatOutput = \true;
 		$docXml = TemplateLoader::innerXML($dom->documentElement);
 		$docXml = \trim(\str_replace("\n  ", "\n", $docXml));
 		$nodeHtml = \htmlspecialchars(\trim($dom->saveXML($node)));
 		$docHtml  = \htmlspecialchars($docXml);
 		$html = \str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
-		if ($node instanceof DOMAttr)
-		{
-			$node->value = \substr($node->value, 0, -\strlen($uniqid));
-			$html = \str_replace($uniqid, '', $html);
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->removeAttribute($uniqid);
-			$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
-		}
-		elseif ($node instanceof DOMCharacterData || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-			$html = \str_replace($uniqid, '', $html);
-		}
+		$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		$html = \str_replace($uniqid, '', $html);
 		return $html;
 	}
 	public static function loadTemplate($template)
@@ -4999,6 +4988,19 @@ class Parser extends IRProcessor
 		$this->appendElement($parentNode, 'output', \htmlspecialchars($content))
 		     ->setAttribute('type', 'literal');
 	}
+	protected function appendConditionalAttributes(DOMElement $parentNode, $expr)
+	{
+		\preg_match_all('(@([-\\w]+))', $expr, $matches);
+		foreach ($matches[1] as $attrName)
+		{
+			$switch = $this->appendElement($parentNode, 'switch');
+			$case   = $this->appendElement($switch, 'case');
+			$case->setAttribute('test', '@' . $attrName);
+			$attribute = $this->appendElement($case, 'attribute');
+			$attribute->setAttribute('name', $attrName);
+			$this->appendXPathOutput($attribute, '@' . $attrName);
+		}
+	}
 	protected function appendXPathOutput(DOMElement $parentNode, $expr)
 	{
 		$this->appendElement($parentNode, 'output', \htmlspecialchars(\trim($expr)))
@@ -5087,22 +5089,12 @@ class Parser extends IRProcessor
 	protected function parseXslCopyOf(DOMElement $ir, DOMElement $node)
 	{
 		$expr = $node->getAttribute('select');
-		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
-		{
-			$switch = $this->appendElement($ir, 'switch');
-			$case   = $this->appendElement($switch, 'case');
-			$case->setAttribute('test', $expr);
-			$attribute = $this->appendElement($case, 'attribute');
-			$attribute->setAttribute('name', $m[1]);
-			$this->appendXPathOutput($attribute, $expr);
-			return;
-		}
-		if ($expr === '@*')
-		{
+		if (\preg_match('#^@[-\\w]+(?:\\s*\\|\\s*@[-\\w]+)*$#', $expr, $m))
+			$this->appendConditionalAttributes($ir, $expr);
+		elseif ($expr === '@*')
 			$this->appendElement($ir, 'copyOfAttributes');
-			return;
-		}
-		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
+		else
+			throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
 	}
 	protected function parseXslElement(DOMElement $ir, DOMElement $node)
 	{
@@ -6204,6 +6196,12 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 		if (!$this->tagFiltersAttributes($tag) || !$this->isSafe($tag->attributes[$attrName]))
 			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly sanitized to be used in this context", $node);
 	}
+	protected function checkAttributeExpression(DOMNode $node, Tag $tag, $expr)
+	{
+		\preg_match_all('(@([-\\w]+))', $expr, $matches);
+		foreach ($matches[1] as $attrName)
+			$this->checkAttribute($node, $tag, $attrName);
+	}
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
 	{
 		foreach (AVTHelper::parse($attribute->value) as $token)
@@ -6236,26 +6234,18 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		$this->checkContext($node);
 		if (\preg_match('/^\\$(\\w+)$/', $expr, $m))
-		{
 			$this->checkVariable($node, $tag, $m[1]);
-			return;
-		}
-		if ($this->isExpressionSafe($expr))
-			return;
-		if (\preg_match('/^@(\\w+)$/', $expr, $m))
-		{
-			$this->checkAttribute($node, $tag, $m[1]);
-			return;
-		}
-		throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
+		elseif (\preg_match('/^@[-\\w]+(?:\\s*\\|\\s*@[-\\w]+)*$/', $expr))
+			$this->checkAttributeExpression($node, $tag, $expr);
+		elseif (!$this->isExpressionSafe($expr))
+			throw new UnsafeTemplateException("Cannot assess the safety of expression '" . $expr . "'", $node);
 	}
 	protected function checkNode(DOMNode $node, Tag $tag)
 	{
 		if ($node instanceof DOMAttr)
 			$this->checkAttributeNode($node, $tag);
 		elseif ($node instanceof DOMElement)
-			if ($node->namespaceURI === self::XMLNS_XSL
-			 && $node->localName    === 'copy-of')
+			if ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'copy-of')
 				$this->checkCopyOfNode($node, $tag);
 			else
 				$this->checkElementNode($node, $tag);
@@ -6636,7 +6626,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 		foreach ($nodes as $node)
 		{
 			$expr = $node->getAttribute('select');
-			if (!\preg_match('#^@[-\\w]*$#D', $expr))
+			if (!\preg_match('#^@[-\\w]*(?:\\s*\\|\\s*@[-\\w]*)*$#D', $expr))
 				throw new UnsafeTemplateException("Cannot assess the safety of '" . $node->nodeName . "' select expression '" . $expr . "'", $node);
 		}
 	}
