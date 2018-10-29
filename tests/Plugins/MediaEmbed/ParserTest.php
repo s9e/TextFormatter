@@ -2172,6 +2172,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.hudl.com/video/5bcf7096f56a8b0e1c93e439',
+				'<r><HUDL id="5bcf7096f56a8b0e1c93e439">https://www.hudl.com/video/5bcf7096f56a8b0e1c93e439</HUDL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('hudl');
+				}
+			],
+			[
 				'http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html',
 				'<r><HUMORTVNL id="344063.de-klusjesmannen-zijn-weer-van-de-partij">http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html</HUMORTVNL></r>',
 				[],
@@ -4415,6 +4424,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
+				'<r><HUDL athlete="2067184" highlight="163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
+				'<span data-s9e-mediaembed="hudl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.hudl.com/embed/athlete/2067184/highlights/163744377"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('hudl');
 				}
 			],
 			[

@@ -1,16 +1,38 @@
 <site name="Hudl" homepage="https://www.hudl.com/">
+	<example>https://www.hudl.com/video/59dfca6090eeac23f0eef838</example>
 	<example>https://www.hudl.com/athlete/2067184/highlights/163744377</example>
-	<example>https://www.hudl.com/v/CVmja</example>
 	<example>https://www.hudl.com/video/3/323679/57719969842eb243e47883f8</example>
 
 	<tags><tag>sports</tag></tags>
 
+	<attributes>
+		<id required="false"/>
+	</attributes>
+
 	<host>hudl.com</host>
 	<extract>!hudl\.com/athlete/(?'athlete'\d+)/highlights/(?'highlight'[\da-f]+)!</extract>
 	<extract>!hudl\.com/video/\d+/(?'athlete'\d+)/(?'highlight'[\da-f]+)!</extract>
+	<extract>@hudl\.com/video/(?'id'\w+)(?![\w/])@</extract>
 	<scrape>
 		<match>!hudl\.com/v/!</match>
 		<extract>!hudl\.com/video/\d+/(?'athlete'\d+)/(?'highlight'[\da-f]+)!</extract>
+		<extract>@hudl\.com/video/(?'id'\w+)(?![\w/])@</extract>
 	</scrape>
-	<iframe src="//www.hudl.com/embed/athlete/{@athlete}/highlights/{@highlight}"/>
+	<iframe>
+		<src><![CDATA[
+			<xsl:text>//www.hudl.com/embed/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@id">
+					<xsl:text>video/</xsl:text>
+					<xsl:value-of select="@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>athlete/</xsl:text>
+					<xsl:value-of select="@athlete"/>
+					<xsl:text>/highlights/</xsl:text>
+					<xsl:value-of select="@highlight"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
 </site>

@@ -199,7 +199,7 @@
 	<tr>
 		<td><code>hudl</code></td>
 		<td>Hudl</td>
-		<td>https://www.hudl.com/athlete/2067184/highlights/163744377<br/>https://www.hudl.com/v/CVmja<br/>https://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>
+		<td>https://www.hudl.com/video/59dfca6090eeac23f0eef838<br/>https://www.hudl.com/athlete/2067184/highlights/163744377<br/>https://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>
 	</tr>
 	<tr>
 		<td><code>hulu</code></td>
