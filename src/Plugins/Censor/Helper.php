@@ -24,11 +24,11 @@ class Helper
 	{
 		$attributesExpr = '';
 		if ($censorAttributes)
-			$attributesExpr = '|[^<">]*+(?=<|$|"(?> [-\\w]+="[^"]*+")*+\\/?>)';
+			$attributesExpr = '|[^<">]*+(?="(?> [-\\w]+="[^"]*+")*+\\/?>)';
 		$delim  = $this->regexpHtml[0];
 		$pos    = \strrpos($this->regexpHtml, $delim);
 		$regexp = $delim
-		        . '(?<!&#)(?<!&)'
+		        . '(?<!&|&#)'
 		        . \substr($this->regexpHtml, 1, $pos - 1)
 		        . '(?=[^<>]*+(?=<|$)' . $attributesExpr . ')'
 		        . \substr($this->regexpHtml, $pos);
