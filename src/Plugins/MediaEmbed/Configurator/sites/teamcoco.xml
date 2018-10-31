@@ -7,7 +7,7 @@
 	<host>teamcoco.com</host>
 	<extract>!teamcoco\.com/video/(?'id'\d+)!</extract>
 	<scrape>
-		<match>!teamcoco\.com/video/.!</match>
+		<match>!teamcoco\.com/video/\D!</match>
 		<extract>!embed/v/(?'id'\d+)!</extract>
 	</scrape>
 	<iframe src="//teamcoco.com/embed/v/{@id}"/>
