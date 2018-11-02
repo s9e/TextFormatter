@@ -2145,8 +2145,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://docs.google.com/spreadsheets/d/e/2PACX-1vSiIAqvsn0REStt7fvSKOae-kXGXotUTfxvjLHtjT5E5L56JGESE8rHsgX7F6XP147gBCc6fnOFK0QN/pubchart?oid=1465127183&format=interactive',
-				'<t>https://docs.google.com/spreadsheets/d/e/2PACX-1vSiIAqvsn0REStt7fvSKOae-kXGXotUTfxvjLHtjT5E5L56JGESE8rHsgX7F6XP147gBCc6fnOFK0QN/pubchart?oid=1465127183&amp;format=interactive</t>',
+				'https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml',
+				'<r><GOOGLESHEETS id="e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_">https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml</GOOGLESHEETS></r>',
 				[],
 				function ($configurator)
 				{

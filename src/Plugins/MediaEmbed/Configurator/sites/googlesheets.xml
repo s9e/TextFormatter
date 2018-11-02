@@ -1,10 +1,11 @@
 <site name="Google Sheets" homepage="https://www.google.com/sheets/about/">
 	<example>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</example>
+	<example>https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml</example>
 
 	<tags><tag>documents</tag></tags>
 
 	<host>docs.google.com</host>
-	<extract>@docs\.google\.com/spreadsheet(?:/ccc\?key=|s/d/)(?!e/)(?'id'[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?@</extract>
+	<extract>@docs\.google\.com/spreadsheet(?:/ccc\?key=|(?:[^e]/)+)(?'id'(?:e/)?[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?@</extract>
 	<iframe width="100%" height="500" src="https://docs.google.com/spreadsheets/d/{@id}/pubhtml?widget=true&amp;headers=false#gid={@gid}">
 		<style resize="vertical"/>
 	</iframe>
