@@ -210,6 +210,12 @@ class Parser
 	*/
 	protected function reset($text)
 	{
+		// Reject invalid UTF-8
+		if (!preg_match('//u', $text))
+		{
+			throw new InvalidArgumentException('Invalid UTF-8 input');
+		}
+
 		// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
 		$text = preg_replace('/\\r\\n?/', "\n", $text);
 		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);

@@ -155,6 +155,16 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox parse() throws an exception if the input isn't valid UTF-8
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid UTF-8 input
+	*/
+	public function testParseInvalidUTF8()
+	{
+		$this->getParser()->parse("x\xFF");
+	}
+
+	/**
 	* @testdox disableTag('FOO') disables tag 'FOO'
 	*/
 	public function testDisableTag()
