@@ -1997,7 +1997,8 @@ s9e\TextFormatter\Tests\Parser
  [x] parse() can be called multiple times in succession
  [x] parse() normalizes \r to \n
  [x] parse() normalizes \r\n to \n
- [x] parse() removes control characters that aren't allowed in XML
+ [x] parse() removes control characters that aren't allowed in XML from the input
+ [x] parse() removes control characters that aren't allowed in XML from attribute values
  [x] parse() throws an exception if the input isn't valid UTF-8
  [x] disableTag('FOO') disables tag 'FOO'
  [x] disableTag() does not have side-effects due to references

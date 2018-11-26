@@ -356,6 +356,9 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '');
 
+	// Remove control characters from the output to ensure it's valid XML
+	output = output.replace(/[\x00-\x08\x0B-\x1F]/g, '');
+
 	// Encode Unicode characters that are outside of the BMP
 	encodeUnicodeSupplementaryCharacters();
 

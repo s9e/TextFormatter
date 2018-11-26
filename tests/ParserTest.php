@@ -142,7 +142,7 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @testdox parse() removes control characters that aren't allowed in XML
+	* @testdox parse() removes control characters that aren't allowed in XML from the input
 	*/
 	public function testParseFiltersLowAscii()
 	{
@@ -151,6 +151,27 @@ class ParserTest extends Test
 		$this->assertSame(
 			"<t>Plain\t\n\n text</t>",
 			$parser->parse('Plain' . implode('', array_map('chr', range(0, 0x20))) . 'text')
+		);
+	}
+
+	/**
+	* @testdox parse() removes control characters that aren't allowed in XML from attribute values
+	*/
+	public function testParseFiltersLowAsciiAttributes()
+	{
+		$this->configurator->tags->add('X')->attributes->add('x');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'foo',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 0)->setAttribute('x', implode('', array_map('chr', range(0, 0x1F))));
+			}
+		);
+
+		$this->assertSame(
+			"<r><X x=\"\t&#10;\"/></r>",
+			$parser->parse('')
 		);
 	}
 

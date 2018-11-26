@@ -417,6 +417,9 @@ class Parser
 			$this->output = str_replace('</i><i>', '', $this->output);
 		}
 
+		// Remove control characters from the output to ensure it's valid XML
+		$this->output = preg_replace('([\\x00-\\x08\\x0B-\\x1F])', '', $this->output);
+
 		// Encode Unicode characters that are outside of the BMP
 		$this->output = Utils::encodeUnicodeSupplementaryCharacters($this->output);
 
