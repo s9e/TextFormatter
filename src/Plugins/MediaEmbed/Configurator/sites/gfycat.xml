@@ -10,10 +10,10 @@
 	</attributes>
 
 	<host>gfycat.com</host>
-	<extract>!gfycat\.com/(?:gifs/detail/)?(?'id'\w+)!</extract>
+	<extract>#gfycat\.com/(?!gaming|reactions|stickers|gifs/tag)(?:gifs/detail/|ifr(?:ame)?/)?(?'id'\w+)#</extract>
 	<scrape url="https://gfycat.com/ifr/{@id}">
 		<extract>!meta [^>]*?="\w+:\w+:height" content="(?'height'\d+)!</extract>
 		<extract>!meta [^>]*?="\w+:\w+:width" content="(?'width'\d+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{@height}" src="//gfycat.com/iframe/{@id}"/>
+	<iframe width="{@width}" height="{@height}" padding-height="44" src="//gfycat.com/ifr/{@id}"/>
 </site>
