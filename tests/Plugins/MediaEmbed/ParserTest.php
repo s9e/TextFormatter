@@ -232,6 +232,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->urlConfig->allowScheme('invalid');
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
+						'invalid://example.org/123' => '123'
+					]);
 					$configurator->MediaEmbed->add(
 						'example',
 						[
