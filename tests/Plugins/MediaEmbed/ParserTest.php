@@ -2475,6 +2475,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://medium.com/s/story/how-to-make-your-phone-into-an-ally-not-an-enemy-5e0f4302df6c',
+				'<r><MEDIUM id="5e0f4302df6c">https://medium.com/s/story/how-to-make-your-phone-into-an-ally-not-an-enemy-5e0f4302df6c</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
 				'<r><METACAFE id="10785282">http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</METACAFE></r>',
 				[],
@@ -4038,7 +4047,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
-				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" onload="window.addEventListener(\'message\',function(a){a=a.data.split(\'::\');\'m\'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+\'px\')})" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2Fe7e2cf9b8a95&amp;id=171211918195" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:400px;max-width:400px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2Fe7e2cf9b8a95" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:313px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{

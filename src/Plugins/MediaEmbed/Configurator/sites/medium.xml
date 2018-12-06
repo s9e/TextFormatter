@@ -3,21 +3,8 @@
 	<tags><tag>blogging</tag></tags>
 
 	<host>medium.com</host>
-	<extract>!medium\.com/[^/]*/(?:[-\w]+-)?(?'id'[\da-f]+)!</extract>
-	<!--
-		window.addEventListener(
-			'message',
-			function (e)
-			{
-				var p = e.data.split('::');
-				if (p[0] === 'm' && src.indexOf(p[1]) > 0 && p[2])
-				{
-					style.height = p[2] + 'px';
-				}
-			}
-		);
-	-->
-	<iframe width="400" height="400" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F{@id}&amp;id={translate(@id,'abcdef','111111')}" onload="window.addEventListener('message',function(a){{a=a.data.split('::');'m'===a[0]&amp;&amp;0&lt;src.indexOf(a[1])&amp;&amp;a[2]&amp;&amp;(style.height=a[2]+'px')}})" data-s9e-livepreview-ignore-attrs="style">
+	<extract>!medium\.com/(?:s/)?[^/]*/(?:[-\w]+-)?(?'id'[\da-f]+)!</extract>
+	<iframe width="100%" height="313" max-width="900" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F{@id}">
 		<style
 			border="1px solid"
 			border-color="#eee #ddd #bbb"
