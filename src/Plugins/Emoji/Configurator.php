@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\Emoji;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -30,6 +31,16 @@ class Configurator extends ConfiguratorBase
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'EMOJI';
+
+	/**
+	* @var string PCRE subpattern used in a negative lookbehind assertion before the emoji aliases
+	*/
+	public $notAfter = '';
+
+	/**
+	* @var string PCRE subpattern used in a negative lookahead assertion after the emoji aliases
+	*/
+	public $notBefore = '';
 
 	/**
 	* Plugin's setup
@@ -123,7 +134,8 @@ class Configurator extends ConfiguratorBase
 		//       enable them at parsing time, regardless of the original configuration
 		return [
 			'EMOJI_HAS_CUSTOM_QUICKMATCH' => ($quickMatch !== false),
-			'EMOJI_HAS_CUSTOM_REGEXP'     => !empty($custom)
+			'EMOJI_HAS_CUSTOM_REGEXP'     => !empty($custom),
+			'EMOJI_NOT_AFTER'             => (int) !empty($this->notAfter),
 		];
 	}
 
@@ -140,8 +152,48 @@ class Configurator extends ConfiguratorBase
 		$custom = $this->getCustomAliases();
 		if (!empty($custom))
 		{
-			$regexp                 = '/' . RegexpBuilder::fromList($custom) . '/';
+			$regexp = '/';
+
+			if ($this->notAfter !== '')
+			{
+				$regexp .= '(?<!' . $this->notAfter . ')';
+			}
+
+			$regexp .= RegexpBuilder::fromList($custom);
+			
+			if ($this->notBefore !== '')
+			{
+				$regexp .= '(?!' . $this->notBefore . ')';
+			}
+
+			$regexp .= '/';
+			
+			// Set the Unicode mode if Unicode properties are used
+			if (preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
+			{
+				$regexp .= 'u';
+			}
+
+			// Force the regexp to use atomic grouping for performance
+			$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+
 			$config['customRegexp'] = new Regexp($regexp, true);
+
+			// If notAfter is used, we need to create a JavaScript-specific regexp that does not use a
+			// lookbehind assertion, and we add the notAfter subpattern to the config as a variant
+			if ($this->notAfter !== '')
+			{
+				// Skip the first assertion by skipping the first N characters, where N equals the
+				// length of $this->notAfter plus 1 for the first "/" and 5 for "(?<!)"
+				$lpos = 6 + strlen($this->notAfter);
+				$rpos = strrpos($regexp, '/');
+				$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/', true);
+
+				$config['customRegexp']->setJS($jsRegexp);
+
+				$config['notAfter'] = new Regexp('/' . $this->notAfter . '/');
+			}
+
 
 			$quickMatch = ConfigHelper::generateQuickMatchFromList($custom);
 			if ($quickMatch !== false)

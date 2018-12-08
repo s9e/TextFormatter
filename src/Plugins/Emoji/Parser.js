@@ -79,6 +79,11 @@ function parseCustomAliases(text)
 	while (m = config.customRegexp.exec(text))
 	{
 		var alias = m[0], tagPos = m['index'];
+		if (HINT.EMOJI_NOT_AFTER && config.notAfter && tagPos && config.notAfter.test(text[tagPos - 1]))
+		{
+			continue;
+		}
+		
 		if (registeredVars['Emoji.aliases'][alias])
 		{
 			var hex = getHexSequence(registeredVars['Emoji.aliases'][alias]);

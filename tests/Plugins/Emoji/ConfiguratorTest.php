@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Emoji;
 
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Plugins\Emoji\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -215,6 +217,132 @@ class ConfiguratorTest extends Test
 		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
 		$this->assertArrayMatches(
 			['EMOJI_HAS_CUSTOM_QUICKMATCH' => true],
+			$plugin->getJSHints()
+		);
+	}
+		/**
+	* @testdox $plugin->notAfter can be changed
+	*/
+	public function testNotAfter()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notAfter = '\\w';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
+
+		$this->assertSame('/(?<!\\w):\)/', $config['customRegexp']);
+	}
+
+	/**
+	* @testdox The plugin's modified JavaScript regexp is correctly converted
+	*/
+	public function testNotAfterPluginJavaScriptConversion()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->addAlias('¬¬', "\xF0\x9F\x98\x80");
+		$plugin->notAfter = '\\w';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
+
+		$this->assertEquals(new Code('/(?::\)|¬¬)/g'), $config['customRegexp']);
+		$this->assertEquals(new Code('/\\w/'),        $config['notAfter']);
+	}
+
+	/**
+	* @testdox The JavaScript regexp used for notAfter is correctly converted
+	*/
+	public function testNotAfterJavaScriptConversion()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notAfter = '(?>x)';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
+
+		$this->assertEquals(new Code('/:\)/g'),    $config['customRegexp']);
+		$this->assertEquals(new Code('/(?:x)/'), $config['notAfter']);
+	}
+
+	/**
+	* @testdox $plugin->notBefore can be changed
+	*/
+	public function testNotBefore()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notBefore = '\\w';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
+
+		$this->assertSame('/:\)(?!\\w)/', $config['customRegexp']);
+	}
+
+	/**
+	* @testdox $plugin->notAfter is removed from the JavaScript regexp and added separately to the config
+	*/
+	public function testNotAfterJavaScript()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notAfter = '\\w';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'JS');
+
+		$this->assertEquals(new Code('/:\)/g', 'g'), $config['customRegexp']);
+		$this->assertEquals(new Code('/\\w/'),     $config['notAfter']);
+	}
+
+	/**
+	* @testdox The regexp has the Unicode modifier if notAfter contains a Unicode property
+	*/
+	public function testNotAfterUnicode()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notAfter = '\\pL';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
+
+		$this->assertSame('/(?<!\\pL):\)/u', $config['customRegexp']);
+	}
+
+	/**
+	* @testdox The regexp has the Unicode modifier if notBefore contains a Unicode property
+	*/
+	public function testNotBeforeUnicode()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->notBefore = '\\pL';
+
+		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
+
+		$this->assertSame('/:\)(?!\\pL)/u', $config['customRegexp']);
+	}
+	
+	/**
+	* @testdox getJSHints() returns ['EMOTICONS_NOT_AFTER' => 0] by default
+	*/
+	public function testGetJSHintsFalse()
+	{
+		$plugin = $this->configurator->Emoticons;
+		$this->assertSame(
+			['EMOTICONS_NOT_AFTER' => 0],
+			$plugin->getJSHints()
+		);
+	}
+
+	/**
+	* @testdox getJSHints() returns ['EMOTICONS_NOT_AFTER' => 1] if notAfter is set
+	*/
+	public function testGetJSHintsTrue()
+	{
+		$plugin = $this->configurator->Emoticons;
+		$plugin->notAfter = '\\w';
+		$this->assertSame(
+			['EMOTICONS_NOT_AFTER' => 1],
 			$plugin->getJSHints()
 		);
 	}
