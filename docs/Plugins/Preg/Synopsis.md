@@ -11,7 +11,9 @@ Note that while its API resembles `preg_replace()`, the implementation does *not
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Preg->replace(
 	'/@(\\w+)/',
-	'<a href="https://twitter.com/$1">$0</a>'
+	'<a href="https://twitter.com/$1">$0</a>',
+	// The third argument is optional and can be used to configure the tag's name
+	'TWITTERUSER'
 );
 
 // Get an instance of the parser and the renderer
@@ -33,7 +35,8 @@ Twitter's official tweets <a href="https://twitter.com/Twitter">@Twitter</a>
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Preg->replace(
 	'/@(?<username>\\w+)/',
-	'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
+	'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>',
+	'TWITTERUSER'
 );
 
 // Get an instance of the parser and the renderer
