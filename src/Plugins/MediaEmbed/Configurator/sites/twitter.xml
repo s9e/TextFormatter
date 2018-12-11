@@ -6,7 +6,7 @@
 	<tags><tag>social</tag></tags>
 
 	<host>twitter.com</host>
-	<extract>@twitter\.com/(?:#!/)?\w+/status(?:es)?/(?'id'\d+)@</extract>
+	<extract>@twitter\.com/(?:#!/|i/)?\w+/(?:status(?:es)?|tweet)/(?'id'\d+)@</extract>
 	<!--
 		var id = Math.random();
 		window.addEventListener('message', function(e)
@@ -20,7 +20,7 @@
 
 		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
 	-->
-	<iframe allow="autoplay *" width="500" height="230" src="https://s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
+	<iframe allow="autoplay *" width="500" height="250" src="https://s9e.github.io/iframe/twitter.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
 		<style background="url(https://abs.twimg.com/favicons/favicon.ico) no-repeat 50% 50%"/>
 	</iframe>
 </site>
