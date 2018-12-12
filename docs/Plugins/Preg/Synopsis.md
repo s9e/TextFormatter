@@ -7,12 +7,15 @@ Note that while its API resembles `preg_replace()`, the implementation does *not
 
 ### Using the PCRE syntax
 
+Using the PCRE syntax using positional arguments in the template (e.g. `$1`) is the simplest form but the least forward-compatible.
+
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Preg->replace(
 	'/@(\\w+)/',
 	'<a href="https://twitter.com/$1">$0</a>',
-	// The third argument is optional and can be used to configure the tag's name
+	// The third argument is optional and can be used to configure the tag's name.
+	// If you don't provide one, a pseudo-random name will be generated
 	'TWITTERUSER'
 );
 
@@ -30,6 +33,8 @@ Twitter's official tweets <a href="https://twitter.com/Twitter">@Twitter</a>
 ```
 
 ### Using named subpatterns and XSL
+
+Using named subpatterns and providing a tag name ensures that changes made to either the regexp or the template can be backward- and forward- compatible. Note that the template can use a combination of XSL and PCRE syntax and in this example `$0` and `<xsl:apply-templates/>` are interchangeable.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
