@@ -909,8 +909,8 @@ class PHPTest extends Test
 				"if(\$node->hasAttribute('foo'))"
 			],
 			[
-				'<xsl:if test="$a+$b=$c">...</xsl:if>',
-				"if(\$this->xpath->evaluate(\$this->getParamAsXPath('a').'+'.\$this->getParamAsXPath('b').'='.\$this->getParamAsXPath('c'),\$node))"
+				'<xsl:if test="$a+$b&gt;$c">...</xsl:if>',
+				"if(\$this->xpath->evaluate(\$this->getParamAsXPath('a').'+'.\$this->getParamAsXPath('b').'>'.\$this->getParamAsXPath('c'),\$node))",
 			],
 		];
 	}
