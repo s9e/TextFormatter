@@ -1,3 +1,6 @@
+See also [general changes](Changes.md).
+
+
 ## 2.0.0
 
 Elements that were deprecated in 1.x will be removed.
