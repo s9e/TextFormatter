@@ -1,11 +1,11 @@
 <site name="Reddit threads and comments" homepage="https://www.reddit.com/">
 	<source>https://www.reddit.com/wiki/embeds</source>
-	<example>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/</example>
-	<example>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</example>
+	<example>https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/</example>
+	<example>https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/e9m6pn9/</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>reddit.com</host>
 	<extract>!(?'id'\w+/comments/\w+(?:/\w+/\w+)?)!</extract>
-	<iframe width="800" height="165" src="https://s9e.github.io/iframe/reddit.min.html#{@id}{@path}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="800" height="165" src="https://s9e.github.io/iframe/2/reddit.min.html#{@id}{@path}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

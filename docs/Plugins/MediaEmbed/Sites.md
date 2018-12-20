@@ -384,7 +384,7 @@
 	<tr>
 		<td><code>reddit</code></td>
 		<td>Reddit threads and comments</td>
-		<td>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/<br/>https://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</td>
+		<td>https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/<br/>https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/e9m6pn9/</td>
 	</tr>
 	<tr>
 		<td><code>rutube</code></td>
@@ -454,7 +454,7 @@
 	<tr>
 		<td><code>telegram</code></td>
 		<td>Telegram</td>
-		<td>https://t.me/durov/68</td>
+		<td>https://t.me/telegram/83</td>
 	</tr>
 	<tr>
 		<td><code>theatlantic</code></td>
