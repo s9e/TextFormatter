@@ -19,7 +19,6 @@
  - `9dc6edfb2` MediaEmbed: updated dynamically-sized sites
  - `21a52e55d` Parser: reject invalid UTF-8 input
  - `ec51bb0b9` Parser: remove control characters from attribute values
- - `6b7d65548` Re-enabled test
 
 
 1.3.1 (2018-10-29)
