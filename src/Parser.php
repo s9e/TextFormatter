@@ -71,6 +71,8 @@ class Parser
 	}
 	protected function reset($text)
 	{
+		if (!\preg_match('//u', $text))
+			throw new InvalidArgumentException('Invalid UTF-8 input');
 		$text = \preg_replace('/\\r\\n?/', "\n", $text);
 		$text = \preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 		$this->logger->clear();
@@ -150,6 +152,7 @@ class Parser
 		while ($cnt > 0);
 		if (\strpos($this->output, '</i><i>') !== \false)
 			$this->output = \str_replace('</i><i>', '', $this->output);
+		$this->output = \preg_replace('([\\x00-\\x08\\x0B-\\x1F])', '', $this->output);
 		$this->output = Utils::encodeUnicodeSupplementaryCharacters($this->output);
 		$tagName = ($this->isRich) ? 'r' : 't';
 		$tmp = '<' . $tagName;
