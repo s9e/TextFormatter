@@ -1,3 +1,27 @@
+1.3.2 (2018-12-23)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8aa52c780b9d3818d9f0760e21a54c8a864d7db5...6b7d65548ee1dd7ef83f2c46748c179f2ebadedd)
+
+### Added
+
+ - `640eed514` ColorFilter: added support for alpha channel
+
+### Changed
+
+ - `7651e0c8a` MediaEmbed: updated Gfycat
+ - `9341727fd` MediaEmbed: updated Google Sheets
+ - `62b26960b` MediaEmbed: updated Instagram
+ - `3eb59f3e9` MediaEmbed: updated MSNBC and Team Coco
+ - `1ba5d6685` MediaEmbed: updated Medium
+ - `397e9f640` MediaEmbed: updated Twitter
+ - `2d1755cbd` MediaEmbed: updated Twitter
+ - `9dc6edfb2` MediaEmbed: updated dynamically-sized sites
+ - `21a52e55d` Parser: reject invalid UTF-8 input
+ - `ec51bb0b9` Parser: remove control characters from attribute values
+ - `6b7d65548` Re-enabled test
+
+
 1.3.1 (2018-10-29)
 ==================
 
