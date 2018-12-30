@@ -1,6 +1,6 @@
 <h2>Unparsing</h2>
 
-Unparsing the XML representation of parsed text will return the original plain text. It's easy and requires not configuration:
+Unparsing the XML representation of parsed text will return the original plain text. It's easy and requires no configuration:
 
 ```php
 // Let's create a parser for the example
