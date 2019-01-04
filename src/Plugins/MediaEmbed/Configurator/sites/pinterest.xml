@@ -8,20 +8,7 @@
 	<host>pinterest.com</host>
 	<extract>@pinterest.com/pin/(?'id'\d+)@</extract>
 	<extract>@pinterest.com/(?!_/|discover/|explore/|news_hub/|pin/|search/)(?'id'[-\w]+/[-\w]+)@</extract>
-	<!--
-		var id = Math.random();
-		window.addEventListener('message', function(e)
-		{
-			// NOTE: e.data.id is a string whereas id is a number
-			if (e.data.id == id)
-			{
-				style.height = e.data.height + 'px';
-			}
-		});
-
-		contentWindow.postMessage('s9e:' + id, 'https://s9e.github.io');
-	-->
-	<iframe height="360" src="https://s9e.github.io/iframe/pinterest.min.html#{@id}" onload="var a=Math.random();window.addEventListener('message',function(b){{if(b.data.id==a)style.height=b.data.height+'px'}});contentWindow.postMessage('s9e:'+a,'https://s9e.github.io')" data-s9e-livepreview-ignore-attrs="style">
+	<iframe height="360" src="https://s9e.github.io/iframe/2/pinterest.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<width><![CDATA[
 			<xsl:choose>
 				<xsl:when test="contains(@id, '/')">730</xsl:when>
