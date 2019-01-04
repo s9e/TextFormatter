@@ -2,7 +2,7 @@
 
 /**
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @copyright Copyright (c) 2010-2019 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
@@ -190,7 +190,7 @@ class PHP implements RendererGenerator
 		$header = "\n"
 		        . "/**\n"
 		        . "* @package   s9e\TextFormatter\n"
-		        . "* @copyright Copyright (c) 2010-2018 The s9e Authors\n"
+		        . "* @copyright Copyright (c) 2010-2019 The s9e Authors\n"
 		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
 		        . "*/\n";
 
