@@ -4010,6 +4010,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70',
+				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc/preview#gid=70"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googlesheets');
+				}
+			],
+			[
+				'https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml',
+				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml?widget=true&amp;headers=false#gid="></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('googlesheets');
+				}
+			],
+			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
 				'<span data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.196581%"><iframe allowfullscreen="" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
