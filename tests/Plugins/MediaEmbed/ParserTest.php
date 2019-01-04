@@ -1045,8 +1045,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
-				'<r><RUTUBE id="6613980">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></r>',
+				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
+				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{

@@ -389,7 +389,7 @@
 	<tr>
 		<td><code>rutube</code></td>
 		<td>Rutube</td>
-		<td>https://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/<br/>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
+		<td>https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/<br/>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
 	</tr>
 	<tr>
 		<td><code>scribd</code></td>
