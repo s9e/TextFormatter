@@ -447,11 +447,8 @@ class DisallowUnsafeDynamicURLTest extends Test
 	{
 		$node = $this->loadTemplate('<a><xsl:attribute name="href">http://<xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
-		$tag = new Tag;
-		$tag->attributes->add('foo')->filterChain->append(new UrlFilter);
-
 		$check = new DisallowUnsafeDynamicURL;
-		$check->check($node, $tag);
+		$check->check($node, new Tag);
 	}
 
 	/**
