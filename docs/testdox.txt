@@ -126,7 +126,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->templateChecker is an instance of TemplateChecker
  [x] $configurator->templateNormalizer is an instance of TemplateNormalizer
- [x] asConfig() calls every plugin's finalize() before retrieving their config
+ [x] asConfig() does not call finalize() before retrieving the plugins' config
  [x] asConfig() returns an array with a rootContext element
  [x] asConfig() returns an array with a registeredVars element that contains urlConfig
  [x] asConfig() returns all registeredVars including empty arrays
@@ -158,6 +158,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize() returns a parser and a renderer
  [x] finalize() does not return a JS parser by default
  [x] finalize() returns a JS parser if JavaScript was enabled
+ [x] finalize() calls each plugin's finalize()
+ [x] finalize() calls each plugin's finalize() once, even if JavaScript is enabled
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute

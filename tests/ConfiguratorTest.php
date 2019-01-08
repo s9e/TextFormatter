@@ -154,16 +154,16 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() calls every plugin's finalize() before retrieving their config
+	* @testdox asConfig() does not call finalize() before retrieving the plugins' config
 	*/
-	public function testAsConfigFinalize()
+	public function testAsConfigNoFinalize()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$this->configurator->plugins->add('Dummy', $plugin);
 
 		$config = $this->configurator->asConfig();
 		$this->assertArrayMatches(
-			['plugins' => ['Dummy' => ['finalized' => true]]],
+			['plugins' => ['Dummy' => ['finalized' => 0]]],
 			$config
 		);
 	}
@@ -587,11 +587,36 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('js', $return);
 	}
+
+	/**
+	* @testdox finalize() calls each plugin's finalize()
+	*/
+	public function testFinalizePluginFinalize()
+	{
+		$plugin = new DummyPluginConfigurator($this->configurator);
+		$this->configurator->plugins->add('Dummy', $plugin);
+		$this->configurator->finalize();
+
+		$this->assertArrayMatches(['finalized' => 1], $plugin->asConfig());
+	}
+
+	/**
+	* @testdox finalize() calls each plugin's finalize() once, even if JavaScript is enabled
+	*/
+	public function testFinalizePluginFinalizeOnce()
+	{
+		$plugin = new DummyPluginConfigurator($this->configurator);
+		$this->configurator->enableJavaScript();
+		$this->configurator->plugins->add('Dummy', $plugin);
+		$this->configurator->finalize();
+
+		$this->assertArrayMatches(['finalized' => 1], $plugin->asConfig());
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
 {
-	protected $config = ['foo' => 1];
+	protected $config = ['finalized' => 0, 'foo' => 1];
 
 	public function asConfig()
 	{
@@ -605,6 +630,6 @@ class DummyPluginConfigurator extends ConfiguratorBase
 
 	public function finalize()
 	{
-		$this->config['finalized'] = true;
+		++$this->config['finalized'];
 	}
 }

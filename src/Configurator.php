@@ -294,9 +294,6 @@ class Configurator implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		// Finalize the plugins' config
-		$this->plugins->finalize();
-
 		// Remove properties that shouldn't be turned into config arrays
 		$properties = get_object_vars($this);
 		unset($properties['attributeFilters']);
