@@ -58,6 +58,8 @@ $knownVars['pok']         = 1;
 $knownVars['punycode']    = 1;
 $knownVars['s9e']         = 1;
 $knownVars['site']        = 1;
+$knownVars['port1']       = 1;
+$knownVars['port2']       = 1;
 
 // Those are intentionally preserved
 $knownVars['host']   = 1;
