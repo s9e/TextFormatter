@@ -489,7 +489,7 @@
 	<tr>
 		<td><code>tumblr</code></td>
 		<td>Tumblr</td>
-		<td>https://mrbenvey.tumblr.com/post/104191225637</td>
+		<td>https://staff.tumblr.com/post/180624227620/</td>
 	</tr>
 	<tr>
 		<td><code>twitch</code></td>

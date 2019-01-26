@@ -1159,8 +1159,8 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://mrbenvey.tumblr.com/post/104191225637',
-				'<r><TUMBLR did="5f3b4bc6718317df9c2b1e77c20839ab94f949cd" id="104191225637" key="uFhWDPKj-bGU0ZlDAnUyxg" name="mrbenvey">http://mrbenvey.tumblr.com/post/104191225637</TUMBLR></r>',
+				'https://staff.tumblr.com/post/180624227620/',
+				'<r><TUMBLR did="0812d9593fe9183968a4da76d8c4528d52324f67" id="180624227620" key="r_BTLFg8QzTPUMVSbe3vbg" name="staff">https://staff.tumblr.com/post/180624227620/</TUMBLR></r>',
 				[],
 				function ($configurator)
 				{

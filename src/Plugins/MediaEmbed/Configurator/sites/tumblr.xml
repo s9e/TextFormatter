@@ -1,5 +1,5 @@
 <site name="Tumblr" homepage="https://www.tumblr.com/">
-	<example>https://mrbenvey.tumblr.com/post/104191225637</example>
+	<example>https://staff.tumblr.com/post/180624227620/</example>
 
 	<tags><tag>social</tag></tags>
 
@@ -10,5 +10,5 @@
 		<extract>!did=\\u0022(?'did'[-\w]+)!</extract>
 		<extract>!embed\\/post\\/(?'key'[-\w]+)!</extract>
 	</scrape>
-	<iframe width="520" height="180" src="https://s9e.github.io/iframe/2/tumblr.min.html#{@key}/{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="520" height="300" src="https://s9e.github.io/iframe/2/tumblr.min.html#{@key}/{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
