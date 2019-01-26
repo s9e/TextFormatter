@@ -16,7 +16,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.0/png/64/1f600.png">
+Hello world <img alt=":D" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.5/png/64/1f600.png">
 ```
 
 ### Configure aliases at parsing time
@@ -44,5 +44,5 @@ echo $html;
 ```
 ```html
 Hi :smiling_face:
-Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.0/png/64/1f600.png">
+Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.5/png/64/1f600.png">
 ```
