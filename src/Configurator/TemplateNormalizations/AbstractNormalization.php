@@ -79,7 +79,7 @@ abstract class AbstractNormalization
 		$prefix = strstr($nodeName, ':', true);
 		if ($prefix > '')
 		{
-			$methodName  .= 'NS';
+			$methodName .= 'NS';
 			array_unshift($args, $this->ownerDocument->lookupNamespaceURI($prefix));
 		}
 
