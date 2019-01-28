@@ -36,6 +36,10 @@ class UninlineAttributesTest extends AbstractTest
 				'<hr title="&amp;&lt;&gt;&quot;"/>',
 				'<hr><xsl:attribute name="title">&amp;&lt;&gt;"</xsl:attribute></hr>'
 			],
+			[
+				'<hr/>',
+				'<hr/>'
+			],
 		];
 	}
 }

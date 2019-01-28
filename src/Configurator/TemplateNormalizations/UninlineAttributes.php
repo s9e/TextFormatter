@@ -24,19 +24,20 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]'];
+	protected $queries = ['//*[namespace-uri() != $XSL][@*]'];
 
 	/**
 	* {@inheritdoc}
 	*/
 	protected function normalizeElement(DOMElement $element)
 	{
-		$firstChild = $element->firstChild;
+		$fragment = $element->ownerDocument->createDocumentFragment();
 		while ($element->attributes->length > 0)
 		{
 			$attribute = $element->attributes->item(0);
-			$element->insertBefore($this->uninlineAttribute($attribute), $firstChild);
+			$fragment->appendChild($this->uninlineAttribute($attribute));
 		}
+		$element->insertBefore($fragment, $element->firstChild);
 	}
 
 	/**
