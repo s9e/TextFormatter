@@ -14,11 +14,11 @@ class UninlineAttributesTest extends AbstractTest
 		return [
 			[
 				'<div class="foo"><xsl:apply-templates/></div>',
-				'<div><xsl:attribute name="class"><xsl:text>foo</xsl:text></xsl:attribute><xsl:apply-templates/></div>'
+				'<div><xsl:attribute name="class">foo</xsl:attribute><xsl:apply-templates/></div>'
 			],
 			[
 				'<div class="foo" data-x="x"><xsl:apply-templates/></div>',
-				'<div><xsl:attribute name="class"><xsl:text>foo</xsl:text></xsl:attribute><xsl:attribute name="data-x"><xsl:text>x</xsl:text></xsl:attribute><xsl:apply-templates/></div>'
+				'<div><xsl:attribute name="class">foo</xsl:attribute><xsl:attribute name="data-x">x</xsl:attribute><xsl:apply-templates/></div>'
 			],
 			[
 				'<div class="{@foo}bar{@baz}"><xsl:apply-templates/></div>',
@@ -30,11 +30,11 @@ class UninlineAttributesTest extends AbstractTest
 			],
 			[
 				'<hr title=".."/>',
-				'<hr><xsl:attribute name="title"><xsl:text>..</xsl:text></xsl:attribute></hr>'
+				'<hr><xsl:attribute name="title">..</xsl:attribute></hr>'
 			],
 			[
 				'<hr title="&amp;&lt;&gt;&quot;"/>',
-				'<hr><xsl:attribute name="title"><xsl:text>&amp;&lt;&gt;"</xsl:text></xsl:attribute></hr>'
+				'<hr><xsl:attribute name="title">&amp;&lt;&gt;"</xsl:attribute></hr>'
 			],
 		];
 	}

@@ -254,6 +254,14 @@ class TemplateNormalizerTest extends Test
 				'<hr><hr></hr></hr>',
 				'<hr/><hr/>'
 			],
+			[
+				'<hr title="}}}">',
+				'<hr title="}}}}"/>'
+			],
+			[
+				'<hr title="{{{">',
+				'<hr title="{{{{"/>'
+			],
 		];
 	}
 }
