@@ -21,6 +21,11 @@ class Serializer
 	public $convertor;
 
 	/**
+	* @var array Value of the "void" attribute of all elements, using the element's "id" as key
+	*/
+	protected $isVoid;
+
+	/**
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
 	public $useMultibyteStringFunctions = false;
@@ -75,7 +80,12 @@ class Serializer
 	*/
 	public function serialize(DOMElement $ir)
 	{
-		$this->xpath = new DOMXPath($ir->ownerDocument);
+		$this->xpath  = new DOMXPath($ir->ownerDocument);
+		$this->isVoid = [];
+		foreach ($this->xpath->query('//element') as $element)
+		{
+			$this->isVoid[$element->getAttribute('id')] = $element->getAttribute('void');
+		}
 
 		return $this->serializeChildren($ir);
 	}
@@ -238,7 +248,7 @@ class Serializer
 			$php = 'if(!isset($t' . $id . ')){' . $php . '}';
 		}
 
-		if ($this->xpath->evaluate('count(//element[@id="' . $id . '"][@void = "maybe"])'))
+		if ($this->isVoid[$id] === 'maybe')
 		{
 			// Check at runtime whether this element is not void
 			$php .= 'if(!$v' . $id . '){';
