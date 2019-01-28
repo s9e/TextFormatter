@@ -446,12 +446,12 @@ class Quick
 			// unescaped. The same applies to empty(), isset() and conditionals
 			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))'        => '$attributes[$1]',
 			'((?<!\\w)(\\d+(?:==|[-+*]))' . $getAttribute . ')'  => '$1$attributes[$2]',
-			"(empty\\(\\\$node->getAttribute\\(('[^']+')\\)\\))" => 'empty($attributes[$1])',
+			'(empty\\(' . $getAttribute . '\\))'                 => 'empty($attributes[$1])',
 			"(\\\$node->hasAttribute\\(('[^']+')\\))"            => 'isset($attributes[$1])',
 			'if($node->attributes->length)' => 'if($this->hasNonNullValues($attributes))',
 
 			// In all other situations, unescape the attribute value before use
-			"(\\\$node->getAttribute\\(('[^']+')\\))" => 'htmlspecialchars_decode($attributes[$1])'
+			'(' . $getAttribute . ')' => 'htmlspecialchars_decode($attributes[$1])'
 		];
 
 		foreach ($replacements as $match => $replace)
