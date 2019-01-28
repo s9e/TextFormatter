@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2018 The s9e Authors
+* @copyright Copyright (c) 2010-2019 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Emoji;
@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 			$tag->attributes->add($attrName)->filterChain->append(
 				$this->configurator->attributeFilters['#identifier']
 			);
-		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.0/png/64/{@seq}.png"/>';
+		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.5/png/64/{@seq}.png"/>';
 	}
 	public function addAlias($alias, $emoji)
 	{

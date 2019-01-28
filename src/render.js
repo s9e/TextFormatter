@@ -180,7 +180,7 @@ function preview(text, target)
 		i = left;
 		do
 		{
-			newNodesFragment.appendChild(newNodes[i]);
+			lastUpdated = newNodesFragment.appendChild(newNodes[i]);
 		}
 		while (i < --rightBoundary);
 
@@ -188,13 +188,10 @@ function preview(text, target)
 		if (!right)
 		{
 			oldEl.appendChild(newNodesFragment);
-			lastUpdated = oldEl.lastChild;
 		}
 		else
 		{
-			var beforeNode = oldEl.childNodes[left];
-			oldEl.insertBefore(newNodesFragment, beforeNode);
-			lastUpdated = beforeNode.previousChild;
+			oldEl.insertBefore(newNodesFragment, oldEl.childNodes[left]);
 		}
 	}
 
@@ -225,13 +222,11 @@ function preview(text, target)
 			return true;
 		}
 
-		if (oldNode.isEqualNode && oldNode.isEqualNode(newNode))
+		if (!oldNode.isEqualNode || !oldNode.isEqualNode(newNode))
 		{
-			return true;
+			syncElementAttributes(oldNode, newNode);
+			refreshElementContent(oldNode, newNode);
 		}
-
-		syncElementAttributes(oldNode, newNode);
-		refreshElementContent(oldNode, newNode);
 
 		return true;
 	}
