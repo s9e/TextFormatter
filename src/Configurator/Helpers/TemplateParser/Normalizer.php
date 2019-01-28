@@ -109,7 +109,7 @@ class Normalizer extends IRProcessor
 	protected function addElementIds(DOMDocument $ir)
 	{
 		$id = 0;
-		foreach ($ir->getElementsByTagName('element') as $element)
+		foreach ($this->query('//element') as $element)
 		{
 			$element->setAttribute('id', ++$id);
 		}
@@ -219,7 +219,7 @@ class Normalizer extends IRProcessor
 	*/
 	protected function markConditionalCloseTagElements(DOMDocument $ir)
 	{
-		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
+		foreach ($this->query('//closeTag') as $closeTag)
 		{
 			$id = $closeTag->getAttribute('id');
 
@@ -249,7 +249,7 @@ class Normalizer extends IRProcessor
 	*/
 	protected function markVoidElements(DOMDocument $ir)
 	{
-		foreach ($ir->getElementsByTagName('element') as $element)
+		foreach ($this->query('//element') as $element)
 		{
 			// Test whether this element is (maybe) void
 			$elName = $element->getAttribute('name');
@@ -274,7 +274,7 @@ class Normalizer extends IRProcessor
 	*/
 	protected function setOutputContext(DOMDocument $ir)
 	{
-		foreach ($ir->getElementsByTagName('output') as $output)
+		foreach ($this->query('//output') as $output)
 		{
 			$output->setAttribute('escape', $this->getOutputContext($output));
 		}
