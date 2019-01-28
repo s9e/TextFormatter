@@ -635,8 +635,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader
  [x] load() can load 'foo'
  [x] save() correctly handles 'foo'
  [x] load() can load '<xsl:value-of select="@foo"/>'
+ [x] load() removes redundant namespace declarations
  [x] save() correctly handles '<xsl:value-of select="@foo"/>'
  [x] save() correctly handles an empty string
+ [x] save() removes redundant declarations for the xsl namespace
  [x] load() can load '<ul><li>one<li>two</ul>'
  [x] load() can load '<script>0<1 && 1>0 && alert(1)</script>'
  [x] load() accepts unescaped ampersands

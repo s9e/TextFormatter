@@ -47,6 +47,17 @@ class TemplateLoaderTest extends Test
 	}
 
 	/**
+	* @testdox load() removes redundant namespace declarations
+	*/
+	public function testLoadRedundantNS()
+	{
+		$original = '<p xmlns:foo="urn:foo"><foo:x xmlns:foo="urn:foo"/></p>';
+		$expected = '<p xmlns:foo="urn:foo"><foo:x/></p>';
+
+		$this->assertSame($expected, TemplateLoader::save(TemplateLoader::load($original)));
+	}
+
+	/**
 	* @testdox save() correctly handles '<xsl:value-of select="@foo"/>'
 	*/
 	public function testSaveXSL()
@@ -64,6 +75,17 @@ class TemplateLoaderTest extends Test
 		$xsl = '';
 
 		$this->assertSame($xsl, TemplateLoader::save(TemplateLoader::load($xsl)));
+	}
+
+	/**
+	* @testdox save() removes redundant declarations for the xsl namespace
+	*/
+	public function testSaveRedundantNS()
+	{
+		$original = '<xsl:text xmlns:xsl="http://www.w3.org/1999/XSL/Transform">..</xsl:text>';
+		$expected = '<xsl:text>..</xsl:text>';
+
+		$this->assertSame($expected, TemplateLoader::save(TemplateLoader::load($original)));
 	}
 
 	/**

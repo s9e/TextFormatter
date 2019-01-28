@@ -76,7 +76,13 @@ abstract class TemplateLoader
 	*/
 	public static function save(DOMDocument $dom)
 	{
-		return self::innerXML($dom->documentElement);
+		$xml = self::innerXML($dom->documentElement);
+		if (strpos($xml, 'xmlns:xsl') !== false)
+		{
+			$xml = preg_replace('((<[^>]+?) xmlns:xsl="' . self::XMLNS_XSL . '")', '$1', $xml);
+		}
+
+		return $xml;
 	}
 
 	/**
@@ -109,7 +115,7 @@ abstract class TemplateLoader
 		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
-		$dom->loadHTML($html);
+		$dom->loadHTML($html, LIBXML_NSCLEAN);
 		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
 
@@ -117,7 +123,7 @@ abstract class TemplateLoader
 		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . self::innerXML($dom->documentElement->firstChild->firstChild) . '</xsl:template>';
 
 		$useErrors = libxml_use_internal_errors(true);
-		$dom->loadXML($xml);
+		$dom->loadXML($xml, LIBXML_NSCLEAN);
 		libxml_use_internal_errors($useErrors);
 
 		return $dom;
@@ -135,7 +141,7 @@ abstract class TemplateLoader
 
 		$useErrors = libxml_use_internal_errors(true);
 		$dom       = new DOMDocument;
-		$success   = $dom->loadXML($xml);
+		$success   = $dom->loadXML($xml, LIBXML_NSCLEAN);
 		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
 
