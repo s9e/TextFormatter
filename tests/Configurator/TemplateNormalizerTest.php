@@ -262,6 +262,10 @@ class TemplateNormalizerTest extends Test
 				'<hr title="{{{">',
 				'<hr title="{{{{"/>'
 			],
+			[
+				'<xsl:if test="@foo=\' \'"><hr title="{@x} {@foo} {@x}"/></xsl:if>',
+				'<xsl:if test="@foo=\' \'"><hr title="{@x}   {@x}"/></xsl:if>',
+			],
 		];
 	}
 }

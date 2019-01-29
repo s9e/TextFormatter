@@ -14,6 +14,10 @@ class InlineCDATATest extends AbstractTest
 				'<![CDATA[<br/>]]><![CDATA[<br/>]]>',
 				'&lt;br/&gt;&lt;br/&gt;'
 			],
+			[
+				'<b>.</b><![CDATA[  ]]><b>.</b>',
+				'<b>.</b><xsl:text>  </xsl:text><b>.</b>'
+			],
 		];
 	}
 }

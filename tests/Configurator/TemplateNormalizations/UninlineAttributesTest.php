@@ -21,8 +21,8 @@ class UninlineAttributesTest extends AbstractTest
 				'<div><xsl:attribute name="class">foo</xsl:attribute><xsl:attribute name="data-x">x</xsl:attribute><xsl:apply-templates/></div>'
 			],
 			[
-				'<div class="{@foo}bar{@baz}"><xsl:apply-templates/></div>',
-				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/><xsl:text>bar</xsl:text><xsl:value-of select="@baz"/></xsl:attribute><xsl:apply-templates/></div>'
+				'<div class="{@foo} bar {@baz}"><xsl:apply-templates/></div>',
+				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/> bar <xsl:value-of select="@baz"/></xsl:attribute><xsl:apply-templates/></div>'
 			],
 			[
 				'<div class=" {@foo} "><xsl:apply-templates/></div>',

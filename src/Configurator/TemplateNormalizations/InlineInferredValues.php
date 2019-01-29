@@ -107,9 +107,6 @@ class InlineInferredValues extends AbstractNormalization
 	*/
 	protected function replaceValueOf(DOMElement $valueOf, $value)
 	{
-		$valueOf->parentNode->replaceChild(
-			$valueOf->ownerDocument->createTextNode($value),
-			$valueOf
-		);
+		$valueOf->parentNode->replaceChild($this->createText($value), $valueOf);
 	}
 }

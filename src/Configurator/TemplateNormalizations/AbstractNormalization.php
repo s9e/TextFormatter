@@ -87,6 +87,19 @@ abstract class AbstractNormalization
 	}
 
 	/**
+	* Create an xsl:text element or a text node in current template
+	*
+	* @param  string  $content
+	* @return DOMNode
+	*/
+	protected function createText($content)
+	{
+		return (trim($content) === '')
+		     ? $this->createElement('xsl:text', $content)
+		     : $this->ownerDocument->createTextNode($content);
+	}
+
+	/**
 	* Create a text node in current template
 	*
 	* @param  string  $content

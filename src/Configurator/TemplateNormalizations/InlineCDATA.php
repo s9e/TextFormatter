@@ -23,7 +23,7 @@ class InlineCDATA extends AbstractNormalization
 	{
 		if ($node->nodeType === XML_CDATA_SECTION_NODE)
 		{
-			$node->parentNode->replaceChild($this->createTextNode($node->textContent), $node);
+			$node->parentNode->replaceChild($this->createText($node->textContent), $node);
 		}
 	}
 }

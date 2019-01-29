@@ -81,8 +81,7 @@ class UninlineAttributes extends AbstractNormalization
 			}
 			else
 			{
-				$childNode = $this->createElement('xsl:text');
-				$childNode->appendChild($this->createTextNode($content));
+				$childNode = $this->createText($content);
 			}
 
 			$xslAttribute->appendChild($childNode);

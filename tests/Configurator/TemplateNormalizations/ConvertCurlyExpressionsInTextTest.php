@@ -28,6 +28,10 @@ class ConvertCurlyExpressionsInTextTest extends AbstractTest
 				'<script>if (foo) { alert($BAR); }</script>',
 				'<script>if (foo) { alert($BAR); }</script>'
 			],
+			[
+				'<span>{@foo}  {@bar}</span>',
+				'<span><xsl:value-of select="@foo"/><xsl:text>  </xsl:text><xsl:value-of select="@bar"/></span>',
+			],
 		];
 	}
 }

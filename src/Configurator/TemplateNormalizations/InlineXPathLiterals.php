@@ -77,7 +77,7 @@ class InlineXPathLiterals extends AbstractNormalization
 		$textContent = $this->getTextContent($element->getAttribute('select'));
 		if ($textContent !== false)
 		{
-			$element->parentNode->replaceChild($this->createTextNode($textContent), $element);
+			$element->parentNode->replaceChild($this->createText($textContent), $element);
 		}
 	}
 }
