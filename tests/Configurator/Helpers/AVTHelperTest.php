@@ -19,11 +19,6 @@ class AVTHelperTest extends Test
 	*/
 	public function testParse($attrValue, $expected)
 	{
-		if ($expected instanceof Exception)
-		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
-		}
-
 		$this->assertSame($expected, AVTHelper::parse($attrValue));
 	}
 
@@ -99,11 +94,19 @@ class AVTHelperTest extends Test
 			],
 			[
 				'foo {"bar} baz',
-				new RuntimeException('Unterminated XPath expression')
+				[
+					['literal', 'foo '],
+					['literal', '{'],
+					['literal', '"bar} baz']
+				]
 			],
 			[
 				'foo {bar',
-				new RuntimeException('Unterminated XPath expression')
+				[
+					['literal', 'foo '],
+					['literal', '{'],
+					['literal', 'bar']
+				]
 			],
 			[
 				'<foo> {"<bar>"} &amp;',

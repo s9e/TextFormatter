@@ -22,82 +22,22 @@ abstract class AVTHelper
 	*/
 	public static function parse($attrValue)
 	{
+		preg_match_all('(\\{\\{|\\{(?:[^\'"}]|\'[^\']*\'|"[^"]*")+\\}|\\{|[^{]++)', $attrValue, $matches);
+
 		$tokens  = [];
-		$attrLen = strlen($attrValue);
-
-		$pos = 0;
-		while ($pos < $attrLen)
+		foreach ($matches[0] as $str)
 		{
-			// Look for opening brackets
-			if ($attrValue[$pos] === '{')
+			if ($str === '{{' || $str === '{')
 			{
-				// Two brackets = one literal bracket
-				if (substr($attrValue, $pos, 2) === '{{')
-				{
-					$tokens[] = ['literal', '{'];
-					$pos += 2;
-
-					continue;
-				}
-
-				// Move the cursor past the left bracket
-				++$pos;
-
-				// We're inside an inline XPath expression. We need to parse it in order to find
-				// where it ends
-				$expr = '';
-				while ($pos < $attrLen)
-				{
-					// Capture everything up to the next "interesting" char: ', " or }
-					$spn = strcspn($attrValue, '\'"}', $pos);
-					if ($spn)
-					{
-						$expr .= substr($attrValue, $pos, $spn);
-						$pos += $spn;
-					}
-
-					if ($pos >= $attrLen)
-					{
-						throw new RuntimeException('Unterminated XPath expression');
-					}
-
-					// Capture the character then move the cursor
-					$c = $attrValue[$pos];
-					++$pos;
-
-					if ($c === '}')
-					{
-						// Done with this expression
-						break;
-					}
-
-					// Look for the matching quote
-					$quotePos = strpos($attrValue, $c, $pos);
-					if ($quotePos === false)
-					{
-						throw new RuntimeException('Unterminated XPath expression');
-					}
-
-					// Capture the content of that string then move the cursor past it
-					$expr .= $c . substr($attrValue, $pos, $quotePos + 1 - $pos);
-					$pos = 1 + $quotePos;
-				}
-
-				$tokens[] = ['expression', $expr];
+				$tokens[] = ['literal', '{'];
 			}
-
-			$spn = strcspn($attrValue, '{', $pos);
-			if ($spn)
+			elseif ($str[0] === '{')
 			{
-				// Capture this chunk of attribute value
-				$str = substr($attrValue, $pos, $spn);
-
-				// Unescape right brackets
-				$str = str_replace('}}', '}', $str);
-
-				// Add the value and move the cursor
-				$tokens[] = ['literal', $str];
-				$pos += $spn;
+				$tokens[] = ['expression', substr($str, 1, -1)];
+			}
+			else
+			{
+				$tokens[] = ['literal', str_replace('}}', '}', $str)];
 			}
 		}
 
