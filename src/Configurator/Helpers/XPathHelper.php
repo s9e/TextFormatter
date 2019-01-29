@@ -132,7 +132,6 @@ abstract class XPathHelper
 
 		// Match a string that is entirely composed of equality checks separated with "or"
 		$regexp = '(^(?J)\\s*' . $eq . '\\s*(?:or\\s*(?&equality)\\s*)*$)';
-
 		if (!preg_match($regexp, $expr))
 		{
 			return false;
@@ -143,29 +142,49 @@ abstract class XPathHelper
 		$map = [];
 		foreach ($matches as $m)
 		{
-			$key = $m['key'];
-			if (!empty($m['concat']))
-			{
-				preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
-
-				$value = '';
-				foreach ($strings[0] as $string)
-				{
-					$value .= substr($string, 1, -1);
-				}
-			}
-			else
-			{
-				$value = $m['literal'];
-				if ($value[0] === "'" || $value[0] === '"')
-				{
-					$value = substr($value, 1, -1);
-				}
-			}
+			$key   = $m['key'];
+			$value = (!empty($m['concat']))
+			       ? self::evaluateConcat($m['concat'])
+			       : self::evaluateLiteral($m['literal']);
 
 			$map[$key][] = $value;
 		}
 
 		return $map;
+	}
+
+	/**
+	* Evaluate a concat() expression where all arguments are string literals
+	*
+	* @param  string $expr concat() expression
+	* @return string       Expression's value
+	*/
+	protected static function evaluateConcat($expr)
+	{
+		preg_match_all('(\'[^\']*\'|"[^"]*")', $expr, $strings);
+
+		$value = '';
+		foreach ($strings[0] as $string)
+		{
+			$value .= substr($string, 1, -1);
+		}
+
+		return $value;
+	}
+
+	/**
+	* Evaluate an XPath literal
+	*
+	* @param  string $expr XPath literal
+	* @return string       Literal's string value
+	*/
+	protected static function evaluateLiteral($expr)
+	{
+		if ($expr[0] === '"' || $expr[0] === "'")
+		{
+			$expr = substr($expr, 1, -1);
+		}
+
+		return $expr;
 	}
 }
