@@ -329,52 +329,15 @@ abstract class AVTHelper
 {
 	public static function parse($attrValue)
 	{
+		\preg_match_all('(\\{\\{|\\{(?:[^\'"}]|\'[^\']*\'|"[^"]*")+\\}|\\{|[^{]++)', $attrValue, $matches);
 		$tokens  = array();
-		$attrLen = \strlen($attrValue);
-		$pos = 0;
-		while ($pos < $attrLen)
-		{
-			if ($attrValue[$pos] === '{')
-			{
-				if (\substr($attrValue, $pos, 2) === '{{')
-				{
-					$tokens[] = array('literal', '{');
-					$pos += 2;
-					continue;
-				}
-				++$pos;
-				$expr = '';
-				while ($pos < $attrLen)
-				{
-					$spn = \strcspn($attrValue, '\'"}', $pos);
-					if ($spn)
-					{
-						$expr .= \substr($attrValue, $pos, $spn);
-						$pos += $spn;
-					}
-					if ($pos >= $attrLen)
-						throw new RuntimeException('Unterminated XPath expression');
-					$c = $attrValue[$pos];
-					++$pos;
-					if ($c === '}')
-						break;
-					$quotePos = \strpos($attrValue, $c, $pos);
-					if ($quotePos === \false)
-						throw new RuntimeException('Unterminated XPath expression');
-					$expr .= $c . \substr($attrValue, $pos, $quotePos + 1 - $pos);
-					$pos = 1 + $quotePos;
-				}
-				$tokens[] = array('expression', $expr);
-			}
-			$spn = \strcspn($attrValue, '{', $pos);
-			if ($spn)
-			{
-				$str = \substr($attrValue, $pos, $spn);
-				$str = \str_replace('}}', '}', $str);
-				$tokens[] = array('literal', $str);
-				$pos += $spn;
-			}
-		}
+		foreach ($matches[0] as $str)
+			if ($str === '{{' || $str === '{')
+				$tokens[] = array('literal', '{');
+			elseif ($str[0] === '{')
+				$tokens[] = array('expression', \substr($str, 1, -1));
+			else
+				$tokens[] = array('literal', \str_replace('}}', '}', $str));
 		return $tokens;
 	}
 	public static function replace(DOMAttr $attribute, $callback)
