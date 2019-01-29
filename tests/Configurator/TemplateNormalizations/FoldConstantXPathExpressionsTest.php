@@ -107,6 +107,10 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:value-of select="normalize-space()"/>',
 				'<xsl:value-of select="normalize-space()"/>'
 			],
+			[
+				"<b title=\"{concat('}','}}')}\"><xsl:apply-templates/></b>",
+				'<b title="{\'}}}\'}"><xsl:apply-templates/></b>',
+			],
 		];
 	}
 }

@@ -266,6 +266,14 @@ class TemplateNormalizerTest extends Test
 				'<xsl:if test="@foo=\' \'"><hr title="{@x} {@foo} {@x}"/></xsl:if>',
 				'<xsl:if test="@foo=\' \'"><hr title="{@x}   {@x}"/></xsl:if>',
 			],
+			[
+				'<hr ID="x" title="x"/>',
+				'<hr id="x" title="x"/>'
+			],
+			[
+				"<b title=\"{concat('}','}}')}\"><xsl:apply-templates/></b>",
+				'<b title="}}}}}}"><xsl:apply-templates/></b>',
+			],
 		];
 	}
 }

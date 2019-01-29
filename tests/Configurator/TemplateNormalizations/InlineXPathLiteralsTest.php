@@ -42,6 +42,14 @@ class InlineXPathLiteralsTest extends AbstractTest
 				'<hr title="x{@X}x"/>',
 				'<hr title="x{@X}x"/>'
 			],
+			[
+				'<b title="{\'}}}\'}"><xsl:apply-templates/></b>',
+				'<b title="}}}}}}"><xsl:apply-templates/></b>'
+			],
+			[
+				'<b><xsl:attribute name="title"><xsl:value-of select="\'}}}\'"/></xsl:attribute><xsl:apply-templates/></b>',
+				'<b><xsl:attribute name="title">}}}</xsl:attribute><xsl:apply-templates/></b>'
+			],
 		];
 	}
 }
