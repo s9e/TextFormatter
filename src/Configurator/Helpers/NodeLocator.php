@@ -21,7 +21,7 @@ abstract class NodeLocator
 	*/
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		return self::getNodesByRegexp($dom, $regexp, 'attribute', '@');
+		return self::getNodesByRegexp($dom, $regexp, 'attribute');
 	}
 
 	/**
@@ -50,7 +50,7 @@ abstract class NodeLocator
 	*/
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		return self::getNodesByRegexp($dom, $regexp, 'element', '');
+		return self::getNodesByRegexp($dom, $regexp, 'element');
 	}
 
 	/**
@@ -145,29 +145,28 @@ abstract class NodeLocator
 	}
 
 	/**
-	* Return all nodes (literal or generated) that match given regexp
+	* Return all nodes of given type
 	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp Regexp
-	* @param  string      $type   Node type ('element' or 'attribute')
-	* @param  string      $prefix Prefix used in XPath ('' or '@')
-	* @return DOMNode[]           List of DOMNode instances
+	* @param  DOMDocument $dom  Owner document
+	* @param  string      $type Node type ('element' or 'attribute')
+	* @return DOMNode[]         List of DOMNode instances
 	*/
-	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type, $prefix)
+	protected static function getNodes(DOMDocument $dom, $type)
 	{
-		$candidates = [];
-		$xpath      = new DOMXPath($dom);
+		$nodes  = [];
+		$prefix = ($type === 'attribute') ? '@' : '';
+		$xpath  = new DOMXPath($dom);
 
 		// Get natural nodes
 		foreach ($xpath->query('//' . $prefix . '*') as $node)
 		{
-			$candidates[] = [$node, $node->nodeName];
+			$nodes[] = [$node, $node->nodeName];
 		}
 
 		// Get XSL-generated nodes
 		foreach ($xpath->query('//xsl:' . $type) as $node)
 		{
-			$candidates[] = [$node, $node->getAttribute('name')];
+			$nodes[] = [$node, $node->getAttribute('name')];
 		}
 
 		// Get xsl:copy-of nodes
@@ -175,13 +174,25 @@ abstract class NodeLocator
 		{
 			if (preg_match('/^' . $prefix . '(\\w+)$/', $node->getAttribute('select'), $m))
 			{
-				$candidates[] = [$node, $m[1]];
+				$nodes[] = [$node, $m[1]];
 			}
 		}
 
-		// Filter candidate nodes
+		return $nodes;
+	}
+
+	/**
+	* Return all nodes (literal or generated) that match given regexp
+	*
+	* @param  DOMDocument $dom    Owner document
+	* @param  string      $regexp Regexp
+	* @param  string      $type   Node type ('element' or 'attribute')
+	* @return DOMNode[]           List of DOMNode instances
+	*/
+	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type)
+	{
 		$nodes = [];
-		foreach ($candidates as list($node, $name))
+		foreach (self::getNodes($dom, $type) as list($node, $name))
 		{
 			if (preg_match($regexp, $name))
 			{
