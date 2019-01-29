@@ -17,10 +17,10 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	protected function getOptimizationPasses()
 	{
 		// Regular expression matching a number
-		$n = '-?\\.\\d++|-?\\d++(?:\\.\\d++)?';
+		$n = '-?\\.[0-9]++|-?[0-9]++(?:\\.[0-9]++)?';
 
 		return [
-			'(^[-+0-9\\s]+$)'                                            => 'foldOperation',
+			'(^[0-9\\s]*[-+][-+0-9\\s]+$)'                               => 'foldOperation',
 			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
