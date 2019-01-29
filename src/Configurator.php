@@ -2158,23 +2158,27 @@ abstract class XPathHelper
 		$map = array();
 		foreach ($matches as $m)
 		{
-			$key = $m['key'];
-			if (!empty($m['concat']))
-			{
-				\preg_match_all('(\'[^\']*\'|"[^"]*")', $m['concat'], $strings);
-				$value = '';
-				foreach ($strings[0] as $string)
-					$value .= \substr($string, 1, -1);
-			}
-			else
-			{
-				$value = $m['literal'];
-				if ($value[0] === "'" || $value[0] === '"')
-					$value = \substr($value, 1, -1);
-			}
+			$key   = $m['key'];
+			$value = (!empty($m['concat']))
+			       ? self::evaluateConcat($m['concat'])
+			       : self::evaluateLiteral($m['literal']);
 			$map[$key][] = $value;
 		}
 		return $map;
+	}
+	protected static function evaluateConcat($expr)
+	{
+		\preg_match_all('(\'[^\']*\'|"[^"]*")', $expr, $strings);
+		$value = '';
+		foreach ($strings[0] as $string)
+			$value .= \substr($string, 1, -1);
+		return $value;
+	}
+	protected static function evaluateLiteral($expr)
+	{
+		if ($expr[0] === '"' || $expr[0] === "'")
+			$expr = \substr($expr, 1, -1);
+		return $expr;
 	}
 }
 
@@ -4413,6 +4417,12 @@ abstract class AbstractNormalization
 		}
 		return \call_user_func_array(array($this->ownerDocument, $methodName), $args);
 	}
+	protected function createText($content)
+	{
+		return (\trim($content) === '')
+		     ? $this->createElement('xsl:text', $content)
+		     : $this->ownerDocument->createTextNode($content);
+	}
 	protected function createTextNode($content)
 	{
 		return $this->ownerDocument->createTextNode($content);
@@ -4523,24 +4533,24 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('PreserveSingleSpaces');
 		$this->collection->append('RemoveComments');
 		$this->collection->append('RemoveInterElementWhitespace');
+		$this->collection->append('NormalizeElementNames');
 		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
-		$this->collection->append('UninlineAttributes');
 		$this->collection->append('EnforceHTMLOmittedEndTags');
-		$this->collection->append('FoldArithmeticConstants');
-		$this->collection->append('FoldConstantXPathExpressions');
 		$this->collection->append('InlineCDATA');
 		$this->collection->append('InlineElements');
 		$this->collection->append('InlineTextElements');
-		$this->collection->append('InlineXPathLiterals');
+		$this->collection->append('UninlineAttributes');
 		$this->collection->append('MinifyXPathExpressions');
 		$this->collection->append('NormalizeAttributeNames');
-		$this->collection->append('NormalizeElementNames');
-		$this->collection->append('NormalizeUrls');
 		$this->collection->append('OptimizeConditionalAttributes');
+		$this->collection->append('FoldArithmeticConstants');
+		$this->collection->append('FoldConstantXPathExpressions');
+		$this->collection->append('InlineXPathLiterals');
+		$this->collection->append('OptimizeChooseText');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
-		$this->collection->append('OptimizeChooseText');
 		$this->collection->append('InlineAttributes');
+		$this->collection->append('NormalizeUrls');
 		$this->collection->append('InlineInferredValues');
 		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
 		$this->collection->append('MinifyInlineCSS');
@@ -6854,7 +6864,7 @@ class InlineCDATA extends AbstractNormalization
 	protected function normalizeNode(DOMNode $node)
 	{
 		if ($node->nodeType === \XML_CDATA_SECTION_NODE)
-			$node->parentNode->replaceChild($this->createTextNode($node->textContent), $node);
+			$node->parentNode->replaceChild($this->createText($node->textContent), $node);
 	}
 }
 
@@ -6935,10 +6945,7 @@ class InlineInferredValues extends AbstractNormalization
 	}
 	protected function replaceValueOf(DOMElement $valueOf, $value)
 	{
-		$valueOf->parentNode->replaceChild(
-			$valueOf->ownerDocument->createTextNode($value),
-			$valueOf
-		);
+		$valueOf->parentNode->replaceChild($this->createText($value), $valueOf);
 	}
 }
 
@@ -7014,7 +7021,7 @@ class InlineXPathLiterals extends AbstractNormalization
 	{
 		$textContent = $this->getTextContent($element->getAttribute('select'));
 		if ($textContent !== \false)
-			$element->parentNode->replaceChild($this->createTextNode($textContent), $element);
+			$element->parentNode->replaceChild($this->createText($textContent), $element);
 	}
 }
 
@@ -7101,15 +7108,14 @@ use DOMAttr;
 use DOMElement;
 class NormalizeAttributeNames extends AbstractNormalization
 {
-	protected $queries = array('//@*', '//xsl:attribute[not(contains(@name, "{"))]');
+	protected $queries = array(
+		'//@*[name() != translate(name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")]',
+		'//xsl:attribute[not(contains(@name, "{"))][@name != translate(@name, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")]'
+	);
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		$attrName = $this->lowercase($attribute->localName);
-		if ($attrName !== $attribute->localName)
-		{
-			$attribute->parentNode->setAttribute($attrName, $attribute->value);
-			$attribute->parentNode->removeAttributeNode($attribute);
-		}
+		$attribute->parentNode->setAttribute($this->lowercase($attribute->localName), $attribute->value);
+		$attribute->parentNode->removeAttributeNode($attribute);
 	}
 	protected function normalizeElement(DOMElement $element)
 	{
@@ -7400,7 +7406,7 @@ class UninlineAttributes extends AbstractNormalization
 				$childNode->setAttribute('select', $content);
 			}
 			else
-				$childNode = $this->createTextNode($content);
+				$childNode = $this->createText($content);
 			$xslAttribute->appendChild($childNode);
 		}
 		return $xslAttribute;
@@ -7913,9 +7919,9 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 {
 	protected function getOptimizationPasses()
 	{
-		$n = '-?\\.\\d++|-?\\d++(?:\\.\\d++)?';
+		$n = '-?\\.[0-9]++|-?[0-9]++(?:\\.[0-9]++)?';
 		return array(
-			'(^[-+0-9\\s]+$)'                                            => 'foldOperation',
+			'(^[0-9\\s]*[-+][-+0-9\\s]+$)'                               => 'foldOperation',
 			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
@@ -8217,7 +8223,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		{
 			$this->adjustTextNodes('firstChild', $len);
 			$this->choose->parentNode->insertBefore(
-				$this->createTextNode(\substr($strings[0], 0, $len)),
+				$this->createText(\substr($strings[0], 0, $len)),
 				$this->choose
 			);
 		}
@@ -8232,7 +8238,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		{
 			$this->adjustTextNodes('lastChild', 0, -$len);
 			$this->choose->parentNode->insertBefore(
-				$this->createTextNode(\substr($strings[0], -$len)),
+				$this->createText(\substr($strings[0], -$len)),
 				$this->choose->nextSibling
 			);
 		}
