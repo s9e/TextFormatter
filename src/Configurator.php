@@ -803,7 +803,7 @@ abstract class NodeLocator
 {
 	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		return self::getNodesByRegexp($dom, $regexp, 'attribute', '@');
+		return self::getNodesByRegexp($dom, $regexp, 'attribute');
 	}
 	public static function getCSSNodes(DOMDocument $dom)
 	{
@@ -816,7 +816,7 @@ abstract class NodeLocator
 	}
 	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		return self::getNodesByRegexp($dom, $regexp, 'element', '');
+		return self::getNodesByRegexp($dom, $regexp, 'element');
 	}
 	public static function getJSNodes(DOMDocument $dom)
 	{
@@ -856,19 +856,24 @@ abstract class NodeLocator
 		}
 		return $nodes;
 	}
-	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type, $prefix)
+	protected static function getNodes(DOMDocument $dom, $type)
 	{
-		$candidates = [];
-		$xpath      = new DOMXPath($dom);
+		$nodes  = [];
+		$prefix = ($type === 'attribute') ? '@' : '';
+		$xpath  = new DOMXPath($dom);
 		foreach ($xpath->query('//' . $prefix . '*') as $node)
-			$candidates[] = [$node, $node->nodeName];
+			$nodes[] = [$node, $node->nodeName];
 		foreach ($xpath->query('//xsl:' . $type) as $node)
-			$candidates[] = [$node, $node->getAttribute('name')];
+			$nodes[] = [$node, $node->getAttribute('name')];
 		foreach ($xpath->query('//xsl:copy-of') as $node)
 			if (\preg_match('/^' . $prefix . '(\\w+)$/', $node->getAttribute('select'), $m))
-				$candidates[] = [$node, $m[1]];
+				$nodes[] = [$node, $m[1]];
+		return $nodes;
+	}
+	protected static function getNodesByRegexp(DOMDocument $dom, $regexp, $type)
+	{
 		$nodes = [];
-		foreach ($candidates as $_13697a20)
+		foreach (self::getNodes($dom, $type) as $_13697a20)
 		{
 			list($node, $name) = $_13697a20;
 			if (\preg_match($regexp, $name))
@@ -7091,10 +7096,7 @@ class UninlineAttributes extends AbstractNormalization
 				$childNode->setAttribute('select', $content);
 			}
 			else
-			{
-				$childNode = $this->createElement('xsl:text');
-				$childNode->appendChild($this->createTextNode($content));
-			}
+				$childNode = $this->createTextNode($content);
 			$xslAttribute->appendChild($childNode);
 		}
 		return $xslAttribute;
