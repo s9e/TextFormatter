@@ -4,6 +4,7 @@ cd $(dirname $(dirname $(dirname "$0")))
 
 git checkout master
 msg="Synced to $(git rev-parse HEAD)"
+branches=
 
 # Record the files that are non-essentials and should be ignored, starting with all the README.md
 ignore=$(find src -type f -name "*.md")
@@ -21,6 +22,7 @@ do
 
 	tmp="tmp-$version"
 	rel="release/php$version"
+	branches="$branches $rel"
 
 	git branch -D "$tmp" 2> /dev/null
 	git checkout -b "$tmp" master 2> /dev/null
@@ -50,3 +52,4 @@ do
 done
 
 git checkout master
+git push origin $branches
