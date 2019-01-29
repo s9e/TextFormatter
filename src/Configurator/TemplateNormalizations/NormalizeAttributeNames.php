@@ -15,19 +15,18 @@ class NormalizeAttributeNames extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//@*', '//xsl:attribute[not(contains(@name, "{"))]'];
+	protected $queries = [
+		'//@*[name() != translate(name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")]',
+		'//xsl:attribute[not(contains(@name, "{"))][@name != translate(@name, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")]'
+	];
 
 	/**
 	* {@inheritdoc}
 	*/
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
-		$attrName = $this->lowercase($attribute->localName);
-		if ($attrName !== $attribute->localName)
-		{
-			$attribute->parentNode->setAttribute($attrName, $attribute->value);
-			$attribute->parentNode->removeAttributeNode($attribute);
-		}
+		$attribute->parentNode->setAttribute($this->lowercase($attribute->localName), $attribute->value);
+		$attribute->parentNode->removeAttributeNode($attribute);
 	}
 
 	/**

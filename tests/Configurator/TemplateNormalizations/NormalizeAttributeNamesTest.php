@@ -18,6 +18,10 @@ class NormalizeAttributeNamesTest extends AbstractTest
 				'<b ID="FOO"/>',
 				'<b id="FOO"/>'
 			],
+			[
+				'<div><xsl:attribute name="{@NAME}">foo</xsl:attribute><xsl:apply-templates/></div>',
+				'<div><xsl:attribute name="{@NAME}">foo</xsl:attribute><xsl:apply-templates/></div>'
+			],
 		];
 	}
 }
