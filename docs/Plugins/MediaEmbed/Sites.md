@@ -463,7 +463,7 @@
 	</tr>
 	<tr>
 		<td><code>theguardian</code></td>
-		<td>The Guardian</td>
+		<td>The Guardian (obsolete)</td>
 		<td>https://www.theguardian.com/world/video/2016/apr/07/tokyos-hedgehog-cafe-encourages-you-to-embrace-prickly-pets-video</td>
 	</tr>
 	<tr>
