@@ -1,3 +1,37 @@
+1.4.0 (2019-02-01)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/77cd528dd79ff7a873f407fc76dbef8c0ec1973b...020ea657d2203a68d06e935a7e238b0efe80fafd)
+
+### Added
+
+ - `63574b76c` UninlineAttributes: added a fast path for static attributes
+
+### Changed
+
+ - `d2d21bae3` AVTHelper: simplified parse()
+ - `5644c5f88` Configurator: do not implicitly call finalize() in asConfig()
+ - `3440c0225` Emoji: updated EmojiOne URL
+ - `fc470bbd9` FoldArithmeticConstants: updated regexps
+ - `3a2d4d3c0` MediaEmbed: updated Gfycat
+ - `446c4295e` MediaEmbed: updated Gist
+ - `ea5d59768` MediaEmbed: updated Google Sheets
+ - `4be095e3e` MediaEmbed: updated Google Sheets
+ - `c216c71b5` MediaEmbed: updated Pinterest
+ - `020ea657d` MediaEmbed: updated The Guardian
+ - `582dcb793` MediaEmbed: updated Tumblr
+ - `1fc93878f` NodeLocator: reorganized internal API
+ - `c61d88266` NormalizeAttributeNames: replaced PHP conditional with XPath predicate
+ - `76f73f2ab` PHP Serializer: cache the value of all "void" attributes
+ - `8ca414940` Quick: improved the regexp used to match string literals in source
+ - `a24789833` TemplateLoader: remove redundant namespace declarations on load/save
+ - `192081983` TemplateNormalizations: improved the handling of whitespace in text nodes
+ - `1c805a2ee` TemplateNormalizer: reduced the number of passes that run on uninlined attributes
+ - `facc8d79b` TemplateParser: use XPath queries instead of DOM methods
+ - `f944f8789` UninlineAttributes: use a document fragment when creating xsl:attribute elements
+ - `4e355e608` XPathHelper: reorganized parseEqualityExpr()
+
+
 1.3.2 (2018-12-23)
 ==================
 
