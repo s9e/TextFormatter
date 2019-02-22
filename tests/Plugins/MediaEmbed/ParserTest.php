@@ -1139,6 +1139,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vm.tiktok.com/e8Ebxd/',
+				'<r><TIKTOK id="6644855752357842182">http://vm.tiktok.com/e8Ebxd/</TIKTOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tiktok');
+				}
+			],
+			[
 				'http://tinypic.com/m/jujsk3/4',
 				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
 				[],

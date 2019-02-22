@@ -1268,7 +1268,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBra
  [x] Works 
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants
- [x] Ignores locale
+ [ ] Ignores locale
  [x] Works 
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExpressions
@@ -2843,33 +2843,33 @@ s9e\TextFormatter\Tests\Unparser
  [x] Characters outside Unicode's BMP are decoded
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Cached
- [x] Settings from the proxied client are copied
- [x] Settings from the caching client are copied to the proxied client
- [x] Can work without a cache dir
- [x] Works with a cache
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] Settings from the proxied client are copied
+ [ ] Settings from the caching client are copied to the proxied client
+ [ ] Can work without a cache dir
+ [ ] Works with a cache
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Curl
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Native
- [x] Does not send "Accept-Encoding: gzip" if gzip is disabled
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] Does not send "Accept-Encoding: gzip" if gzip is disabled
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns FALSE on error
 
 s9e\TextFormatter\Tests\Configurator\Helpers\Http
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client
@@ -2882,7 +2882,7 @@ s9e\TextFormatter\Utils\XPath
  [x] export('"\'') returns concat('"',"'")
  [x] export(123) returns 123
  [x] export(123.45) returns 123.45
- [x] export(123.45) returns 123.45 regardless of locale
+ [ ] export(123.45) returns 123.45 regardless of locale
  [x] export(new stdClass) throws an exception
 
 s9e\TextFormatter\Tests\Utils

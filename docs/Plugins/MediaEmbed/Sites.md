@@ -472,6 +472,11 @@
 		<td>https://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>https://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>
 	</tr>
 	<tr>
+		<td><code>tiktok</code></td>
+		<td>TikTok</td>
+		<td>https://m.tiktok.com/v/6583727202272021766.html</td>
+	</tr>
+	<tr>
 		<td><code>tinypic</code></td>
 		<td>TinyPic videos</td>
 		<td>https://tinypic.com/player.php?v=29x86j9&amp;s=8<br/>https://tinypic.com/r/29x86j9/8</td>

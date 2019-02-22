@@ -1,0 +1,15 @@
+<site name="TikTok" homepage="https://www.tiktok.com">
+	<example>https://m.tiktok.com/v/6583727202272021766.html</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>tiktok.com</host>
+	<extract>@tiktok\.com/(?:v|i18n/share/video)/(?'id'\d+)@</extract>
+	<scrape>
+		<header>User-agent: PHP</header>
+		<match>@//vm\.tiktok\.com/.@</match>
+		<extract>@tiktok\.com/v/(?'id'\d+)@</extract>
+		<extract>@musically://musical\?id=(?'id'\d+)@</extract>
+	</scrape>
+	<iframe width="340" height="700" src="//www.tiktok.com/embed/{@id}"/>
+</site>
