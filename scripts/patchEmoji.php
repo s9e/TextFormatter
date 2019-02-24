@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$version = '11.0';
+$version = 'latest';
 $emoji   = [];
 $file    = wget('http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt');
 $images  = codepointsFromFile($file, 'Emoji_Presentation');
