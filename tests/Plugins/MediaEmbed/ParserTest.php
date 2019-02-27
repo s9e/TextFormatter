@@ -3075,24 +3075,24 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('theonion');
 				}
 			],
-			[
-				'http://tinypic.com/player.php?v=29x86j9&s=8',
-				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('tinypic');
-				}
-			],
-			[
-				'http://tinypic.com/r/29x86j9/8',
-				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('tinypic');
-				}
-			],
+//			[
+//				'http://tinypic.com/player.php?v=29x86j9&s=8',
+//				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->MediaEmbed->add('tinypic');
+//				}
+//			],
+//			[
+//				'http://tinypic.com/r/29x86j9/8',
+//				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->MediaEmbed->add('tinypic');
+//				}
+//			],
 			[
 				'http://www.tmz.com/videos/0_2pr9x3rb/',
 				'<r><TMZ id="0_2pr9x3rb">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
