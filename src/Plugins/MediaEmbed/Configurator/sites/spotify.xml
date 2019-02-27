@@ -9,6 +9,6 @@
 
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:album|artist|track|user)(?:[:/][-.\w]+)+)!</extract>
+	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:user/[-.\w]+/)?(?:album|artist|playlist|track)(?:[:/][-.\w]+)+)!</extract>
 	<iframe width="400" height="400" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}" allow="encrypted-media"/>
 </site>

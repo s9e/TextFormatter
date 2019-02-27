@@ -2928,6 +2928,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://open.spotify.com/playlist/33fewoc4vDuICqL2mX95PA',
+				'<r><SPOTIFY id="playlist/33fewoc4vDuICqL2mX95PA">https://open.spotify.com/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ',
 				'<r><SPOTIFY id="track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
 				[],
