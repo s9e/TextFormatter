@@ -16,5 +16,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<video src="http://example.org/video.mp4"></video>
+<video controls="" src="http://example.org/video.mp4"></video>
 ```

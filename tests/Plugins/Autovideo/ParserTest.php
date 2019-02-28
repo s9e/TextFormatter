@@ -72,16 +72,16 @@ class ParserTest extends Test
 		return [
 			[
 				'http://example.org/vid.mp4',
-				'<video src="http://example.org/vid.mp4"></video>'
+				'<video controls="" src="http://example.org/vid.mp4"></video>'
 			],
 			[
 				'http://example.org/vid.mp4',
-				'<video src="http://example.org/vid.mp4"></video>',
+				'<video controls="" src="http://example.org/vid.mp4"></video>',
 				['tagName' => 'FOO']
 			],
 			[
 				'http://example.org/vid.mp4',
-				'<video src="http://example.org/vid.mp4"></video>',
+				'<video controls="" src="http://example.org/vid.mp4"></video>',
 				['attrName' => 'foo']
 			],
 		];

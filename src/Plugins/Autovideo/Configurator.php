@@ -52,7 +52,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append($filter);
 
 		// Set the default template
-		$tag->template = '<video src="{@' . $this->attrName . '}"/>';
+		$tag->template = '<video controls="" src="{@' . $this->attrName . '}"/>';
 
 		// Allow URL tags to be used as fallback
 		$tag->rules->allowChild('URL');
