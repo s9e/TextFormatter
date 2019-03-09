@@ -1,3 +1,20 @@
+1.4.1 (2019-03-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/f03c717ff37e732e595eb2afb4a777c4180732e3...c164ec1163f943840e71bbdbc01ca92fa462c38b)
+
+### Added
+
+ - `01d8b015f` Autovideo: added controls to the player
+ - `496320829` MediaEmbed: added TikTok
+
+### Changed
+
+ - `2fb37c77a` Emoji: updated to Unicode 12.0
+ - `c164ec116` MediaEmbed: register variables on setup and update them in real time
+ - `c35ed70dd` MediaEmbed: updated Spotify
+
+
 1.4.0 (2019-02-01)
 ==================
 
