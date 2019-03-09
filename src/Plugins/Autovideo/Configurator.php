@@ -21,7 +21,7 @@ class Configurator extends ConfiguratorBase
 		$tag = $this->configurator->tags->add($this->tagName);
 		$filter = $this->configurator->attributeFilters['#url'];
 		$tag->attributes->add($this->attrName)->filterChain->append($filter);
-		$tag->template = '<video src="{@' . $this->attrName . '}"/>';
+		$tag->template = '<video controls="" src="{@' . $this->attrName . '}"/>';
 		$tag->rules->allowChild('URL');
 	}
 }

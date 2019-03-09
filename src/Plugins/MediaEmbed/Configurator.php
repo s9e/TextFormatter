@@ -28,6 +28,8 @@ class Configurator extends ConfiguratorBase
 	{
 		$this->defaultSites    = new CachedDefinitionCollection;
 		$this->templateBuilder = new TemplateBuilder;
+		$this->configurator->registeredVars['MediaEmbed.hosts'] = new Dictionary;
+		$this->configurator->registeredVars['MediaEmbed.sites'] = new Dictionary;
 		$this->createMediaTag();
 		if ($this->createMediaBBCode)
 			$this->configurator->BBCodes->set($this->tagName, ['contentAttributes' => ['url']]);
@@ -52,6 +54,19 @@ class Configurator extends ConfiguratorBase
 		$siteConfig['extract'] = $this->convertRegexps($siteConfig['extract']);
 		$siteConfig['scrape']  = $this->convertScrapes($siteConfig['scrape']);
 		$this->checkAttributeFilters($siteConfig['attributes']);
+		$tag = $this->addTag($siteId, $siteConfig);
+		$this->sites[$siteId] = $siteConfig;
+		foreach ($siteConfig['host'] as $host)
+			$this->configurator->registeredVars['MediaEmbed.hosts'][$host] = $siteId;
+		$this->configurator->registeredVars['MediaEmbed.sites'][$siteId] = [$siteConfig['extract'], $siteConfig['scrape']];
+		return $tag;
+	}
+	public function getSites()
+	{
+		return $this->sites;
+	}
+	protected function addTag($siteId, array $siteConfig)
+	{
 		$tag = new Tag([
 			'attributes' => $this->getAttributesConfig($siteConfig),
 			'rules'      => [
@@ -64,25 +79,7 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
-		$this->sites[$siteId] = $siteConfig;
 		return $tag;
-	}
-	public function finalize()
-	{
-		$hosts = [];
-		$sites = [];
-		foreach ($this->sites as $siteId => $siteConfig)
-		{
-			foreach ($siteConfig['host'] as $host)
-				$hosts[$host] = $siteId;
-			$sites[$siteId] = [$siteConfig['extract'], $siteConfig['scrape']];
-		}
-		$this->configurator->registeredVars['MediaEmbed.hosts'] = new Dictionary($hosts);
-		$this->configurator->registeredVars['MediaEmbed.sites'] = new Dictionary($sites);
-	}
-	public function getSites()
-	{
-		return $this->sites;
 	}
 	protected function checkAttributeFilters(array $attributes)
 	{
