@@ -66,6 +66,9 @@ class Configurator extends ConfiguratorBase
 		$this->defaultSites    = new CachedDefinitionCollection;
 		$this->templateBuilder = new TemplateBuilder;
 
+		$this->configurator->registeredVars['MediaEmbed.hosts'] = new Dictionary;
+		$this->configurator->registeredVars['MediaEmbed.sites'] = new Dictionary;
+
 		// Create a MEDIA tag
 		$this->createMediaTag();
 
@@ -119,6 +122,38 @@ class Configurator extends ConfiguratorBase
 		$this->checkAttributeFilters($siteConfig['attributes']);
 
 		// Create the tag for this site
+		$tag = $this->addTag($siteId, $siteConfig);
+
+		// Update the configurator's data
+		$this->sites[$siteId] = $siteConfig;
+		foreach ($siteConfig['host'] as $host)
+		{
+			$this->configurator->registeredVars['MediaEmbed.hosts'][$host] = $siteId;
+		}
+		$this->configurator->registeredVars['MediaEmbed.sites'][$siteId] = [$siteConfig['extract'], $siteConfig['scrape']];
+
+		return $tag;
+	}
+
+	/**
+	* Return the list of configured sites
+	*
+	* @return array Site's ID as keys, site's config as values
+	*/
+	public function getSites()
+	{
+		return $this->sites;
+	}
+
+	/**
+	* Create and return a tag that handles given media site
+	*
+	* @param  string $siteId
+	* @param  array  $siteConfig
+	* @return Tag
+	*/
+	protected function addTag($siteId, array $siteConfig)
+	{
 		$tag = new Tag([
 			'attributes' => $this->getAttributesConfig($siteConfig),
 			'rules'      => [
@@ -132,39 +167,8 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->templateNormalizer->normalizeTag($tag);
 		$this->configurator->templateChecker->checkTag($tag);
 		$this->configurator->tags->add($siteId, $tag);
-		$this->sites[$siteId] = $siteConfig;
 
 		return $tag;
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function finalize()
-	{
-		$hosts = [];
-		$sites = [];
-		foreach ($this->sites as $siteId => $siteConfig)
-		{
-			foreach ($siteConfig['host'] as $host)
-			{
-				$hosts[$host] = $siteId;
-			}
-			$sites[$siteId] = [$siteConfig['extract'], $siteConfig['scrape']];
-		}
-
-		$this->configurator->registeredVars['MediaEmbed.hosts'] = new Dictionary($hosts);
-		$this->configurator->registeredVars['MediaEmbed.sites'] = new Dictionary($sites);
-	}
-
-	/**
-	* Return the list of configured sites
-	*
-	* @return array Site's ID as keys, site's config as values
-	*/
-	public function getSites()
-	{
-		return $this->sites;
 	}
 
 	/**

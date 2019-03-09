@@ -2557,7 +2557,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Ifram
  [x] getTemplate() tests 
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
- [x] finalize() registers MediaEmbed.hosts and MediaEmbed.sites as variables
+ [x] MediaEmbed.hosts and MediaEmbed.sites are registered on instantiation
  [x] Creates a [media] BBCode by default
  [x] Does not create a [media] BBCode if createMediaBBCode is false
  [x] add('youtube') does not create a [youtube] BBCode by default

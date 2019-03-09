@@ -12,11 +12,11 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox finalize() registers MediaEmbed.hosts and MediaEmbed.sites as variables
+	* @testdox MediaEmbed.hosts and MediaEmbed.sites are registered on instantiation
 	*/
 	public function testRegistersVars()
 	{
-		$this->configurator->MediaEmbed->finalize();
+		$this->configurator->MediaEmbed;
 
 		$this->assertArrayHasKey('MediaEmbed.hosts', $this->configurator->registeredVars);
 		$this->assertArrayHasKey('MediaEmbed.sites', $this->configurator->registeredVars);
@@ -156,7 +156,7 @@ class ConfiguratorTest extends Test
 				]
 			]
 		);
-		$this->configurator->finalize();
+
 		$this->assertEquals(
 			['youtube.com' => 'youtube', 'youtu.be' => 'youtube'],
 			iterator_to_array($this->configurator->registeredVars['MediaEmbed.hosts'])
