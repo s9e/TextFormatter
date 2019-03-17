@@ -5,6 +5,6 @@
 	<tags><tag>sports</tag></tags>
 
 	<host>mlb.com</host>
-	<extract>#mlb\.com/video/(?:[-\w/]+/)?(?:c-|v)(?'id'\d+)#</extract>
+	<extract>#mlb\.com/video/(?:[-\w/]+/)?(?:c-|v|[-\w]+-c)(?'id'\d+)#</extract>
 	<iframe src="https://www.mlb.com/video/share/c-{@id}"/>
 </site>

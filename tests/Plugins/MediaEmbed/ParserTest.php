@@ -2575,6 +2575,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.mlb.com/video/harper-s-1st-game-with-phillies-c2523480183',
+				'<r><MLB id="2523480183">https://www.mlb.com/video/harper-s-1st-game-with-phillies-c2523480183</MLB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mlb');
+				}
+			],
+			[
 				'https://www.mlb.com/news/yankees-mckinney-exits-game/c-270278462',
 				'<t>https://www.mlb.com/news/yankees-mckinney-exits-game/c-270278462</t>',
 				[],
