@@ -1014,16 +1014,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('npr');
 				}
 			],
-			[
-				'http://n.pr/1Qky1m5',
-				'<r><NPR i="411271189" m="411271193">http://n.pr/1Qky1m5</NPR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('npr');
-				}
-			],
+//			[
+//				'http://n.pr/1Qky1m5',
+//				'<r><NPR i="411271189" m="411271193">http://n.pr/1Qky1m5</NPR></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('npr');
+//				}
+//			],
 			[
 				'http://plays.tv/s/Kt4onQhyyVyz',
 				'<r><PLAYSTV id="565683db95f139f47e">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
@@ -1176,6 +1176,26 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('tumblr');
+				}
+			],
+			[
+				'http://247sports.com/Player/LeSean-McCoy-25234/',
+				'<r><TWENTYFOURSEVENSPORTS player_id="149349">http://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('twentyfoursevensports');
+				}
+			],
+			[
+				'http://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
+				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">http://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('twentyfoursevensports');
 				}
 			],
 			[

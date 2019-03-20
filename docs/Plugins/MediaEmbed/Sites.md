@@ -497,6 +497,11 @@
 		<td>https://staff.tumblr.com/post/180624227620/</td>
 	</tr>
 	<tr>
+		<td><code>twentyfoursevensports</code></td>
+		<td>247Sports</td>
+		<td>https://247sports.com/Player/LeSean-McCoy-25234/<br/>https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</td>
+	</tr>
+	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
 		<td>https://www.twitch.tv/twitch<br/>https://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop<br/>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</td>

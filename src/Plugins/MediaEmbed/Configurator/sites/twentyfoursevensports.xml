@@ -1,0 +1,25 @@
+<site name="247Sports" homepage="https://247sports.com/">
+	<example>https://247sports.com/Player/LeSean-McCoy-25234/</example>
+	<example>https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</example>
+
+	<tags><tag>sports</tag></tags>
+
+	<host>247sports.com</host>
+	<extract>!247sports\.com/PlayerSport/[-\w]*?(?'player_id'\d+)/Embed!</extract>
+	<scrape>
+		<match>!247sports\.com/Player/[-\w]*?\d!</match>
+		<extract>!247sports\.com/PlayerSport/[-\w]*?(?'player_id'\d+)/Embed!</extract>
+	</scrape>
+	<scrape>
+		<match>!247sports\.com/Video/.!</match>
+		<extract>!player_id%3D(?'video_id'\d+)!</extract>
+	</scrape>
+	<choose>
+		<when test="@video_id">
+			<iframe src="https://www.cbssports.com/video/player/embed?args=player_id%3D{@video_id}%26channel%3Dmobilevideo%26pcid%3D{@video_id}%26width%3D640%26height%3D360%26autoplay%3Dfalse%26comp_ads_enabled%3Dfalse%26uvpc%3Dhttp%3A%2F%2Fsports.cbsimg.net%2Fvideo%2Fuvp%2Fconfig%2Fv4%2Fuvp_247sports.xml%26uvpc_m%3Dhttp%3A%2F%2Fsports.cbsimg.net%2Fvideo%2Fuvp%2Fconfig%2Fv4%2Fuvp_247sports_m.xml%26partner%3D247%26partner_m%3D247_mobile%26utag%3D247sportssite%26resizable%3Dtrue"/>
+		</when>
+		<otherwise>
+			<iframe width="600" height="200" src="https://247sports.com/PlayerSport/{@player_id}/Embed/" onload="window.addEventListener('message',function(e){{if(e.source===this.contentWindow&amp;&amp;e.data.height)this.style.height=e.data.height+'px'}})"/>
+		</otherwise>
+	</choose>
+</site>
