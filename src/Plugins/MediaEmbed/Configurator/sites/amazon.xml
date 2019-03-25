@@ -85,5 +85,6 @@
 			<xsl:text>&amp;asins=</xsl:text>
 			<xsl:value-of select="@id"/>
 		]]></src>
+		<style background="url(https://www.amazon.com/favicon.ico) center no-repeat"/>
 	</iframe>
 </site>
