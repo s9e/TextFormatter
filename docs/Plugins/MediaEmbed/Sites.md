@@ -37,6 +37,11 @@
 		<td>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</td>
 	</tr>
 	<tr>
+		<td><code>bitchute</code></td>
+		<td>BitChute</td>
+		<td>https://www.bitchute.com/video/y9AejeZ2vD0/</td>
+	</tr>
+	<tr>
 		<td><code>bleacherreport</code></td>
 		<td>Bleacher Report videos</td>
 		<td>https://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
