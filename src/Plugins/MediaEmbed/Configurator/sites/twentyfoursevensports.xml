@@ -7,10 +7,12 @@
 	<host>247sports.com</host>
 	<extract>!247sports\.com/PlayerSport/[-\w]*?(?'player_id'\d+)/Embed!</extract>
 	<scrape>
+		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36</header>
 		<match>!247sports\.com/Player/[-\w]*?\d!</match>
 		<extract>!247sports\.com/PlayerSport/[-\w]*?(?'player_id'\d+)/Embed!</extract>
 	</scrape>
 	<scrape>
+		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36</header>
 		<match>!247sports\.com/Video/.!</match>
 		<extract>!player_id%3D(?'video_id'\d+)!</extract>
 	</scrape>

@@ -1189,8 +1189,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://247sports.com/Player/LeSean-McCoy-25234/',
-				'<r><TWENTYFOURSEVENSPORTS player_id="149349">http://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
+				'https://247sports.com/Player/LeSean-McCoy-25234/',
+				'<r><TWENTYFOURSEVENSPORTS player_id="149349">https://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
 				[],
 				function ($configurator)
 				{
@@ -1199,8 +1199,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
-				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">http://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
+				'https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
+				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
 				[],
 				function ($configurator)
 				{
