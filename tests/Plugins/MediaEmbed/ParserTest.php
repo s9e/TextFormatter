@@ -1158,16 +1158,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tiktok');
 				}
 			],
-			[
-				'http://tinypic.com/m/jujsk3/4',
-				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tinypic');
-				}
-			],
+//			[
+//				'http://tinypic.com/m/jujsk3/4',
+//				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('tinypic');
+//				}
+//			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
