@@ -178,6 +178,21 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The JavaScript regexp does not contain atomic grouping
+	*/
+	public function testJavaScriptRegexpGrouping()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+		$plugin->add('aa');
+		$plugin->add('bb');
+
+		$config = $plugin->asConfig();
+		$regexp = $config['regexp']->getJS();
+
+		$this->assertNotContains('(?>', $regexp);
+	}
+
+	/**
 	* @testdox asConfig() creates Regexp objects for the regexps used in replacements
 	*/
 	public function testAsConfigJavaScriptReplacements()

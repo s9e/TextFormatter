@@ -2219,6 +2219,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
  [x] asConfig() creates a Regexp object for the plugin's regexp
+ [x] The JavaScript regexp does not contain atomic grouping
  [x] asConfig() creates Regexp objects for the regexps used in replacements
  [x] getTag() returns the tag that is associated with this plugin
  [x] getHelper() returns a configured instance of Helper
