@@ -1,3 +1,22 @@
+1.4.2 (2019-03-27)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/bfba51bbce7d18e0c2686f075b8910e8afa5d51a...639a92db4ec39ca6df3ef5dba94814701eea5877)
+
+### Added
+
+ - `35cd6f3bd` MediaEmbed: added 247Sports
+ - `9312daef7` MediaEmbed: added BitChute
+
+### Changed
+
+ - `639a92db4` Censor: do not use atomic grouping in JavaScript regexp
+ - `3e576cd3d` MediaEmbed: updated 247Sports
+ - `5f26c13a5` MediaEmbed: updated Amazon
+ - `78d31f3f0` MediaEmbed: updated Gfycat
+ - `ae5ac62af` MediaEmbed: updated MLB
+
+
 1.4.1 (2019-03-09)
 ==================
 
