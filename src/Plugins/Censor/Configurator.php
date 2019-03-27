@@ -113,10 +113,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 	protected function getWordsRegexp(array $words)
 	{
-		$expr = RegexpBuilder::fromList($words, $this->regexpOptions);
-		$expr = \preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $expr);
+		$expr  = RegexpBuilder::fromList($words, $this->regexpOptions);
 		$regexp = new Regexp('/(?<![\\pL\\pN])' . $expr . '(?![\\pL\\pN])/Siu');
-		$regexp->setJS('/(?:^|\\W)' . \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $expr) . '(?!\\w)/gi');
+		$expr = \str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $expr);
+		$expr = \str_replace('(?>',        '(?:',            $expr);
+		$regexp->setJS('/(?:^|\\W)' . $expr . '(?!\\w)/gi');
 		return $regexp;
 	}
 }
