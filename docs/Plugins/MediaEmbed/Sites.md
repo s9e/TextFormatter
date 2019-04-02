@@ -402,6 +402,11 @@
 		<td>https://www.scribd.com/doc/237147661/Calculus-2-Test-1-Review<br/>https://www.scribd.com/presentation/324333881/600-1450-World-History-Jeopardy</td>
 	</tr>
 	<tr>
+		<td><code>sendvid</code></td>
+		<td>Sendvid</td>
+		<td>https://sendvid.com/w99u3jjp</td>
+	</tr>
+	<tr>
 		<td><code>slideshare</code></td>
 		<td>SlideShare</td>
 		<td>https://www.slideshare.net/Slideshare/how-23431564</td>

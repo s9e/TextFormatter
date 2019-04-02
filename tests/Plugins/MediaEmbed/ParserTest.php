@@ -2949,6 +2949,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://sendvid.com/w99u3jjp',
+				'<r><SENDVID id="w99u3jjp">https://sendvid.com/w99u3jjp</SENDVID></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('sendvid');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
 				'<r><SLIDESHARE id="23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
 				[],

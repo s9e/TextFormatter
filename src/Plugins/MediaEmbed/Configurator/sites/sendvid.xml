@@ -1,0 +1,9 @@
+<site name="Sendvid" homepage="https://www.sendvid.com/">
+	<example>https://sendvid.com/w99u3jjp</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>sendvid.com</host>
+	<extract>!sendvid\.com/(?'id'\w+)!</extract>
+	<iframe src="//sendvid.com/embed/{@id}"/>
+</site>
