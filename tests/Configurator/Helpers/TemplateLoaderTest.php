@@ -253,4 +253,17 @@ class TemplateLoaderTest extends Test
 
 		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
 	}
+
+	/**
+	* @testdox load() does not load entities
+	*/
+	public function testLoadNoEntities()
+	{
+		$text = '<!DOCTYPE foo [<!ENTITY bar "XXX">]>&bar;';
+
+		$dom = TemplateLoader::load($text);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertNotContains('XXX', $dom->saveXML());
+	}
 }

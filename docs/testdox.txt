@@ -650,6 +650,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader
  [x] save() correctly handles '<ul><li>one<li>two</ul>'
  [x] load() throws an exception on malformed XSL
  [x] load() reads HTML as UTF-8
+ [x] load() does not load entities
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateModifier
  [x] replaceTokens() tests 
