@@ -39,16 +39,16 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 	<td>An array containing a list of all tags currently open.</td>
 </tr>
 <tr>
-	<td><b>parser</b></td>
-	<td>The parser itself. <sup>1</sup></td>
+	<td><b>parser</b><sup>1</sup></td>
+	<td>The parser itself.</td>
 </tr>
 <tr>
 	<td><b>tag</b></td>
 	<td>The current tag.</td>
 </tr>
 <tr>
-	<td><b>tagConfig</b></td>
-	<td>The current tag's configuration. <sup>2</sup></td>
+	<td><b>tagConfig</b><sup>2</sup></td>
+	<td>The current tag's configuration.</td>
 </tr>
 <tr>
 	<td><b>text</b></td>
