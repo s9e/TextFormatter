@@ -2,24 +2,63 @@
 
 By default, an attribute filter or a tag filter only receives one argument: the attribute's value or the tag, respectively. Additional parameters can be appended with the methods `addParameterByName()` and `addParameterByValue()` and the whole list of parameters can be cleared with `resetParameters()`. Variables set in `$configurator->registeredVars` are available by name and can be changed at parsing time via `$parser->registeredVars`. Other special parameters listed below are available by name.
 
+
+### Parameters available for all filters
+
+<table>
+<tr>
+	<td><b>logger</b></td>
+	<td>The parser's logger.</td>
+</tr>
+<tr>
+	<td><b>registeredVars</b></td>
+	<td>All of the registered variables in an array.</td>
+</tr>
+</table>
+
+
 ### Parameters available for attribute filters
 
- * `attrName` - the attribute's name
- * `attrValue` - the attribute's value
- * `logger` - the parser's logger
- * `registeredVars` - all of the registered variables in an array
+<table>
+<tr>
+	<td><b>attrName</b></td>
+	<td>The attribute's name.</td>
+</tr>
+<tr>
+	<td><b>attrValue</b></td>
+	<td>The attribute's value.</td>
+</tr>
+</table>
+
 
 ### Parameters available for tag filters
 
- * `logger` - the parser's logger
- * `openTags` - an array containing a list of all tags currently open
- * `parser` - the parser itself. <small>(This parameter is skipped in JavaScript filters)</small>
- * `registeredVars` - all of the registered variables in an array
- * `tag` - the current tag
- * `tagConfig` - the current tag's configuration <span style="color:red">⚠</span>
- * `text` - the text being parsed
+<table>
+<tr>
+	<td><b>openTags</b></td>
+	<td>An array containing a list of all tags currently open.</td>
+</tr>
+<tr>
+	<td><b>parser</b></td>
+	<td>The parser itself. <sup>1</sup></td>
+</tr>
+<tr>
+	<td><b>tag</b></td>
+	<td>The current tag.</td>
+</tr>
+<tr>
+	<td><b>tagConfig</b></td>
+	<td>The current tag's configuration. <sup>2</sup></td>
+</tr>
+<tr>
+	<td><b>text</b></td>
+	<td>The text being parsed.</td>
+</tr>
+</table>
 
-<span style="color:red">⚠</span> The `tagConfig` parameter is subject to change and may be removed in a future version.
+<sup>1</sup> This parameter is skipped in JavaScript filters.  
+<sup>2</sup> This parameter is subject to change and may be removed in a future version.
+
 
 ## Examples
 
