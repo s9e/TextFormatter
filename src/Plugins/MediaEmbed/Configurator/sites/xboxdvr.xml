@@ -1,9 +1,10 @@
-<site name="Xbox DVR" homepage="https://xboxdvr.com/">
-	<example>https://xboxdvr.com/gamer/LOXITANE/video/12463958</example>
+<site name="Gamer DVR" homepage="https://gamerdvr.com/">
+	<example>https://gamerdvr.com/gamer/LOXITANE/video/12463958</example>
 
 	<tags><tag>gaming</tag></tags>
 
+	<host>gamerdvr.com</host>
 	<host>xboxdvr.com</host>
-	<extract>!xboxdvr\.com/gamer/(?'user'[^/]+)/video/(?'id'\d+)!</extract>
-	<iframe src="//xboxdvr.com/gamer/{@user}/video/{@id}/embed"/>
+	<extract>!(?:gamer|xbox)dvr\.com/gamer/(?'user'[^/]+)/video/(?'id'\d+)!</extract>
+	<iframe src="//gamerdvr.com/gamer/{@user}/video/{@id}/embed"/>
 </site>

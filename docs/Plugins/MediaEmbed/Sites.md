@@ -593,8 +593,8 @@
 	</tr>
 	<tr>
 		<td><code>xboxdvr</code></td>
-		<td>Xbox DVR</td>
-		<td>https://xboxdvr.com/gamer/LOXITANE/video/12463958</td>
+		<td>Gamer DVR</td>
+		<td>https://gamerdvr.com/gamer/LOXITANE/video/12463958</td>
 	</tr>
 	<tr>
 		<td><code>yahooscreen</code></td>

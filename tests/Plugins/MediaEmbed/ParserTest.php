@@ -3547,6 +3547,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://gamerdvr.com/gamer/LOXITANE/video/12463958',
+				'<r><XBOXDVR id="12463958" user="LOXITANE">http://gamerdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('xboxdvr');
+				}
+			],
+			[
 				'https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html',
 				'<r><YAHOOSCREEN id="church-chat-satan-000000502">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
 				[],
