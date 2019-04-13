@@ -12,7 +12,7 @@ Elements that were deprecated in 1.x will be removed.
 
 `s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName` is deprecated but remains functional. The names of the attributes used by this plugin will be hardcoded in a future version.
 
-`s9e\TextFormatter\Plugins\Emoji\Configurator::$aliases` has been made accessible (see [API](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/Emoji/Configurator.html#property_aliases) and [docs](../Plugins/Emoji/Configuration.md#manage-aliases) for usage) and the following methods are now deprecated:
+`s9e\TextFormatter\Plugins\Emoji\Configurator::$aliases` has been made accessible (see [API](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/Emoji/Configurator.html#property_aliases) and [docs](../Plugins/Emoji/Configuration.md#manage-aliases) for usage) and the following methods are now deprecated:
 
  - addAlias
  - getAliases

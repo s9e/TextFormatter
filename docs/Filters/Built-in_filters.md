@@ -1,6 +1,6 @@
 <h2>Built-in filters</h2>
 
-[Up-to-date API doc](http://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Items/AttributeFilters.html).
+[Up-to-date API doc](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Items/AttributeFilters.html).
 
 <dl>
 <dt>#alnum</dt>
