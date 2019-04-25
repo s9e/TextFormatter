@@ -2848,7 +2848,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Cached
  [x] Settings from the proxied client are copied
  [x] Settings from the caching client are copied to the proxied client
  [x] Can work without a cache dir
- [x] Works with a cache
+ [ ] Works with a cache
  [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] post() sends the request body if set
