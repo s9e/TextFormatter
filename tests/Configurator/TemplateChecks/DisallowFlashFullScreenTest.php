@@ -105,12 +105,11 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <embed allowFullScreen="{@foo}"/>
-@foo}'
 	*/
 	public function test1f()
 	{
 		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
-		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{");
+		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{@foo}'");
 		$node = $this->loadTemplate('<embed allowFullScreen="{@foo}"/>');
 
 		try
@@ -235,12 +234,11 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <object><param name="allowFullScreen" value="{@foo}"/></object>
-@foo}'
 	*/
 	public function test4f()
 	{
 		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
-		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{");
+		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{@foo}'");
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="{@foo}"/></object>');
 
 		try
