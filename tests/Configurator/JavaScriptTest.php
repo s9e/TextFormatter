@@ -21,7 +21,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class JavaScriptTest extends Test
 {
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->configurator->enableJavaScript();
 	}
@@ -109,7 +109,7 @@ class JavaScriptTest extends Test
 		$this->configurator->enableJavaScript();
 		$this->configurator->javascript->setMinifier($mock);
 
-		$this->assertContains('/**/', $this->configurator->javascript->getParser());
+		$this->assertStringContainsString('/**/', $this->configurator->javascript->getParser());
 	}
 
 	/**
@@ -123,12 +123,12 @@ class JavaScriptTest extends Test
 
 		$this->configurator->enableJavaScript();
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'FOO',
 			$this->configurator->javascript->getParser()
 		);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'FOO',
 			$this->configurator->javascript->getParser($configurator->asConfig())
 		);
@@ -141,7 +141,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->plugins->load('Escaper', ['quickMatch' => 'foo']);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'quickMatch:"foo"',
 			$this->configurator->javascript->getParser()
 		);
@@ -154,7 +154,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->plugins->load('Escaper', ['quickMatch' => "\xC0"]);
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'quickMatch:',
 			$this->configurator->javascript->getParser()
 		);
@@ -167,7 +167,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->plugins->load('Escaper', ['quickMatch' => "\xC0xÿz"]);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'quickMatch:"x\\u00ffz"',
 			$this->configurator->javascript->getParser()
 		);
@@ -180,7 +180,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->plugins['Foobar'] = new NoJSPluginConfigurator($this->configurator);
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'Foobar',
 			$this->configurator->javascript->getParser()
 		);
@@ -188,11 +188,12 @@ class JavaScriptTest extends Test
 
 	/**
 	* @testdox getParser() throws an exception if it encounters a value that cannot be encoded into JavaScript
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot encode instance of stdClass
 	*/
 	public function testNonScalarConfigException()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Cannot encode instance of stdClass');
+
 		$this->configurator->registeredVars['foo'] = new NonScalarConfigThing;
 		$this->configurator->javascript->getParser();
 	}
@@ -209,7 +210,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'function(attrValue,attrName){return NumericFilter.filterInt(attrValue);}',
 			$js
 		);
@@ -227,7 +228,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'function(tag,tagConfig){return filterAttributes(tag,tagConfig,registeredVars,logger);}',
 			$js
 		);
@@ -245,7 +246,7 @@ class JavaScriptTest extends Test
 
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains('filterChain:[returnFalse]', $js);
+		$this->assertStringContainsString('filterChain:[returnFalse]', $js);
 	}
 
 	/**
@@ -255,7 +256,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->registeredVars = ['foo' => 'bar'];
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'registeredVars={"foo":"bar"}',
 			$this->configurator->javascript->getParser()
 		);
@@ -270,8 +271,8 @@ class JavaScriptTest extends Test
 
 		$src = $this->configurator->javascript->getParser();
 
-		$this->assertContains('registeredVars={"foo":"bar"}', $src);
-		$this->assertNotContains('cacheDir', $src);
+		$this->assertStringContainsString('registeredVars={"foo":"bar"}', $src);
+		$this->assertStringNotContainsString('cacheDir', $src);
 	}
 
 	/**
@@ -283,7 +284,7 @@ class JavaScriptTest extends Test
 
 		$src = $this->configurator->javascript->getParser();
 
-		$this->assertNotContains('className', $src);
+		$this->assertStringNotContainsString('className', $src);
 	}
 
 	/**
@@ -299,7 +300,7 @@ class JavaScriptTest extends Test
 			->resetParameters()
 			->addParameterByName('foo');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'registeredVars["foo"]',
 			$this->configurator->javascript->getParser()
 		);
@@ -312,12 +313,12 @@ class JavaScriptTest extends Test
 	{
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			file_get_contents(__DIR__ . '/../../src/Parser/Logger.js'),
 			$js
 		);
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			file_get_contents(__DIR__ . '/../../src/Parser/NullLogger.js'),
 			$js
 		);
@@ -331,12 +332,12 @@ class JavaScriptTest extends Test
 		$this->configurator->javascript->exports = ['preview'];
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			file_get_contents(__DIR__ . '/../../src/Parser/Logger.js'),
 			$js
 		);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			file_get_contents(__DIR__ . '/../../src/Parser/NullLogger.js'),
 			$js
 		);
@@ -354,7 +355,7 @@ class JavaScriptTest extends Test
 			->addParameterByValue('foo')
 			->addParameterByValue(42);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'("foo",42)',
 			$this->configurator->javascript->getParser()
 		);
@@ -372,8 +373,8 @@ class JavaScriptTest extends Test
 		$this->configurator->javascript->exports = ['preview'];
 		$js = $this->configurator->javascript->getParser();
 
-		$this->assertNotContains('"X":{', $js);
-		$this->assertNotContains('"Y":{', $js);
+		$this->assertStringNotContainsString('"X":{', $js);
+		$this->assertStringNotContainsString('"Y":{', $js);
 		$this->assertRegexp('(tagsConfig=\\{"X":(\\w+),"Y":\\1)', $js);
 	}
 
@@ -383,7 +384,7 @@ class JavaScriptTest extends Test
 	public function testExport()
 	{
 		$this->configurator->javascript->exports = ['preview'];
-		$this->assertContains("window['s9e']", $this->configurator->javascript->getParser());
+		$this->assertStringContainsString("window['s9e']", $this->configurator->javascript->getParser());
 	}
 
 	/**
@@ -392,7 +393,7 @@ class JavaScriptTest extends Test
 	public function testNoExport()
 	{
 		$this->configurator->javascript->exports = [];
-		$this->assertNotContains("window['s9e']['TextFormatter']", $this->configurator->javascript->getParser());
+		$this->assertStringNotContainsString("window['s9e']['TextFormatter']", $this->configurator->javascript->getParser());
 	}
 
 	/**
@@ -432,7 +433,7 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-ignore-attrs="style"/>';
 
-		$this->assertContains('data-s9e-livepreview-ignore-attrs', $this->configurator->javascript->getParser());
+		$this->assertStringContainsString('data-s9e-livepreview-ignore-attrs', $this->configurator->javascript->getParser());
 	}
 }
 

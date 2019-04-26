@@ -11,12 +11,12 @@ use s9e\TextFormatter\Tests\Test;
 */
 class MinifierTest extends Test
 {
-	public function setUp()
+	protected function setUp(): void
 	{
 		array_map('unlink', self::getCacheFiles());
 	}
 
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		array_map('unlink', self::getCacheFiles());
 	}
@@ -91,10 +91,12 @@ class MinifierTest extends Test
 
 	/**
 	* @testdox get() rethrows exception thrown during minification by default
-	* @expectedException Exception foo
 	*/
 	public function testGetRethrow()
 	{
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('foo');
+
 		$minifier = new DummyThrowingMinifier;
 		$minifier->get('alert("Hi")');
 	}

@@ -52,11 +52,12 @@ class AttributeFilterCollectionTest extends Test
 
 	/**
 	* @testdox set() throws an exception if value is not a valid callback or an instance of AttributeFilter
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a valid callback or an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
 	*/
 	public function testInvalidValue()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a valid callback or an instance of s9e\\TextFormatter\\Configurator\\Items\\AttributeFilter');
+
 		$collection = new AttributeFilterCollection;
 		$collection->set('#foo', '#foo');
 	}
@@ -117,22 +118,24 @@ class AttributeFilterCollectionTest extends Test
 
 	/**
 	* @testdox get() throws an exception if the filter name is neither callable not starts with # and is entirely composed of letters and digits
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid filter name
 	*/
 	public function testInvalidKey()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid filter name');
+
 		$collection = new AttributeFilterCollection;
 		$collection->get('../foo');
 	}
 
 	/**
 	* @testdox get() throws an exception on unknown filter
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown attribute filter
 	*/
 	public function testGetUnknown()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Unknown attribute filter');
+
 		$collection = new AttributeFilterCollection;
 		$collection->get('#foo');
 	}

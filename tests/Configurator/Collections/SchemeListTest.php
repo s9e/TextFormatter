@@ -59,11 +59,12 @@ class SchemeListTest extends Test
 
 	/**
 	* @testdox add('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid scheme name '*invalid*'
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid scheme name '*invalid*'");
+
 		$list = new SchemeList;
 		$list->add('*invalid*');
 	}

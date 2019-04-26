@@ -26,12 +26,5 @@ mkdir ../../tests/.cache
 
 wait
 
-# Prepare the files as for a release branch
-../build/prepareFiles.sh
-
-# Start a local webserver for the Http helper's tests
-if [ "$TRAVIS_PHP_VERSION" != '5.3.3' ]
-then
-	echo "Starting webserver"
-	php -S localhost:8000 -d "always_populate_raw_post_data=-1" -t ../../tests 2>/dev/null &
-fi
+echo "Starting webserver"
+php -S localhost:8000 -d "always_populate_raw_post_data=-1" -t ../../tests 2>/dev/null &

@@ -12,7 +12,7 @@ class NormalizedListTest extends Test
 {
 	public $normalizedList;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->normalizedList = new NormalizedList;
 	}
@@ -107,11 +107,12 @@ class NormalizedListTest extends Test
 
 	/**
 	* @testdox insert() throws an exception if the offset is out of bounds
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid offset '3'
 	*/
 	public function testInsertInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid offset '3'");
+
 		$this->normalizedList->insert(3, 1);
 	}
 
@@ -141,21 +142,23 @@ class NormalizedListTest extends Test
 
 	/**
 	* @testdox $normalizedList[1] = 'foo' throws an InvalidArgumentException if the list is empty
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid offset '1'
 	*/
 	public function testArrayAccessInvalidSet()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid offset '1'");
+
 		$this->normalizedList[1] = 'foo';
 	}
 
 	/**
 	* @testdox $normalizedList['foo'] = 'bar' throws an InvalidArgumentException
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid offset 'foo'
 	*/
 	public function testArrayAccessInvalidKey()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid offset 'foo'");
+
 		$this->normalizedList['foo'] = 'bar';
 	}
 

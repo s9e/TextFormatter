@@ -90,11 +90,12 @@ class ChoiceFilterTest extends Test
 
 	/**
 	* @testdox setValues() throws an exception if its second argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a boolean
 	*/
 	public function testSetValuesInvalidBool()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a boolean');
+
 		$filter = new ChoiceFilter;
 		$filter->setValues(['one', 'two'], 'notabool');
 	}

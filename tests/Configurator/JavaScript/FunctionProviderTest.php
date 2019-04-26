@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class FunctionProviderTest extends Test
 {
-	public function tearDown()
+	protected function tearDown(): void
 	{
 		unset(FunctionProvider::$cache['foo']);
 	}
@@ -38,11 +38,12 @@ class FunctionProviderTest extends Test
 
 	/**
 	* @testdox get() will throw an exception if the function can't be sourced
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown function 'foobar'
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Unknown function 'foobar'");
+
 		unset(FunctionProvider::$cache['foobar']);
 		FunctionProvider::get('foobar');
 	}

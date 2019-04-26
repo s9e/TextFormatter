@@ -157,11 +157,12 @@ class BBCodeCollectionTest extends Test
 
 	/**
 	* @testdox Throws an meaningful exception message when creating a BBCode that already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage BBCode 'X' already exists
 	*/
 	public function testDuplicateError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("BBCode 'X' already exists");
+
 		$collection = new BBCodeCollection;
 		$collection->onDuplicate('error');
 		$collection->add('X');
@@ -170,11 +171,12 @@ class BBCodeCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception when accessing a BBCode that does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage BBCode 'X' does not exist
 	*/
 	public function testNotExist()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("BBCode 'X' does not exist");
+
 		$collection = new BBCodeCollection;
 		$collection->get('X');
 	}

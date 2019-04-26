@@ -52,7 +52,7 @@ class ClosureCompilerServiceTest extends Test
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->minify('');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'compilation_level=ADVANCED_OPTIMIZATIONS',
 			$minifier->httpClient->body
 		);
@@ -67,7 +67,7 @@ class ClosureCompilerServiceTest extends Test
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->minify('');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'exclude_default_externs=true',
 			$minifier->httpClient->body
 		);
@@ -84,7 +84,7 @@ class ClosureCompilerServiceTest extends Test
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->minify('');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'js_externs=' . urlencode($externs),
 			$minifier->httpClient->body
 		);
@@ -145,11 +145,12 @@ class ClosureCompilerServiceTest extends Test
 
 	/**
 	* @testdox Throws an exception in case of a request failure
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not contact the Closure Compiler service
 	*/
 	public function testRequestFailure()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Could not contact the Closure Compiler service');
+
 		$minifier = new ClosureCompilerService;
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->httpClient->willReturn = false;
@@ -158,11 +159,12 @@ class ClosureCompilerServiceTest extends Test
 
 	/**
 	* @testdox Throws an exception if the response isn't valid JSON
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Closure Compiler service returned invalid JSON: Syntax error
 	*/
 	public function testJSONError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Closure Compiler service returned invalid JSON: Syntax error');
+
 		$minifier = new ClosureCompilerService;
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->httpClient->willReturn = 'not JSON';
@@ -171,11 +173,12 @@ class ClosureCompilerServiceTest extends Test
 
 	/**
 	* @testdox Throws an exception in case of a server error
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Server error 4: Unknown compression level: UNKNOWN
 	*/
 	public function testServerError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Server error 4: Unknown compression level: UNKNOWN');
+
 		$minifier = new ClosureCompilerService;
 		$minifier->compilationLevel = 'UNKNOWN';
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
@@ -186,11 +189,12 @@ class ClosureCompilerServiceTest extends Test
 
 	/**
 	* @testdox Throws an exception in case of a compilation error
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Parse error. Semi-colon expected
 	*/
 	public function testCompilationError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Parse error. Semi-colon expected');
+
 		$minifier = new ClosureCompilerService;
 		$minifier->httpClient = new ClosureCompilerServiceTestClient;
 		$minifier->httpClient->willReturn = '{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":5,"error":"Parse error. Semi-colon expected","line":"This should fail"}]}';

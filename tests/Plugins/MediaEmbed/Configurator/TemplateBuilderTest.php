@@ -25,7 +25,7 @@ class TemplateBuilderTest extends Test
 	public function testFlash()
 	{
 		$templateBuilder = new TemplateBuilder;
-		$this->assertContains('<object', $templateBuilder->getTemplate(['flash' => ['src' => '']]));
+		$this->assertStringContainsString('<object', $templateBuilder->getTemplate(['flash' => ['src' => '']]));
 	}
 
 	/**
@@ -34,7 +34,7 @@ class TemplateBuilderTest extends Test
 	public function testIframe()
 	{
 		$templateBuilder = new TemplateBuilder;
-		$this->assertContains('<iframe', $templateBuilder->getTemplate(['iframe' => ['src' => '']]));
+		$this->assertStringContainsString('<iframe', $templateBuilder->getTemplate(['iframe' => ['src' => '']]));
 	}
 
 	/**
@@ -54,8 +54,8 @@ class TemplateBuilderTest extends Test
 				]
 			]
 		]);
-		$this->assertContains('<iframe', $template);
-		$this->assertContains('<object', $template);
+		$this->assertStringContainsString('<iframe', $template);
+		$this->assertStringContainsString('<object', $template);
 	}
 
 	/**
@@ -64,7 +64,7 @@ class TemplateBuilderTest extends Test
 	public function testSiteId()
 	{
 		$templateBuilder = new TemplateBuilder;
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<span data-s9e-mediaembed="foo"',
 			$templateBuilder->build('foo', ['iframe' => ['src' => '']])
 		);
@@ -90,7 +90,7 @@ class TemplateBuilderTest extends Test
 		$templateBuilder = new TemplateBuilder;
 		$template        = $templateBuilder->build('foo', $attributes);
 
-		$this->assertContains('<span data-s9e-mediaembed="foo"', $template);
+		$this->assertStringContainsString('<span data-s9e-mediaembed="foo"', $template);
 		$this->assertNotRegexp('(<xsl:[^>]+data-s9e-mediaembed)', $template);
 	}
 }

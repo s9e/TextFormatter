@@ -33,11 +33,12 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __get() throws a RuntimeException if the property does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Property 'inexistent' does not exist
 	*/
 	public function testMagicGetInexistent()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Property 'inexistent' does not exist");
+
 		$dummy = new ConfigurableTestDummy;
 		$dummy->inexistent;
 	}
@@ -102,11 +103,12 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Cannot replace property 'fooObject' of class 's9e\TextFormatter\Tests\Configurator\Traits\Foo' with instance of 's9e\TextFormatter\Tests\Configurator\Traits\Bar'
 	*/
 	public function testMagicSetDifferentObject()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Cannot replace property 'fooObject' of class 's9e\\TextFormatter\\Tests\\Configurator\\Traits\\Foo' with instance of 's9e\\TextFormatter\\Tests\\Configurator\\Traits\\Bar'");
+
 		$dummy = new ConfigurableTestDummy;
 
 		$bar = new Bar;
@@ -159,11 +161,12 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Cannot replace property 'int' of type integer with value of type string
 	*/
 	public function testMagicSetIncompatibleType()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Cannot replace property 'int' of type integer with value of type string");
+
 		$dummy = new ConfigurableTestDummy;
 
 		$dummy->int = "55!";
@@ -191,11 +194,12 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Property 'collection' expects an array or a traversable object to be passed
 	*/
 	public function testMagicSetNonTraversable()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Property 'collection' expects an array or a traversable object to be passed");
+
 		$dummy = new ConfigurableTestDummy;
 
 		$dummy->collection = 1;
@@ -263,6 +267,7 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __unset('foo') has no effect unsetFoo() does not exist and the the property is not set
+	* @doesNotPerformAssertions
 	*/
 	public function testMagicUnsetNone()
 	{
@@ -273,11 +278,12 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __unset('foo') throws an exception if unsetFoo() does not exist and the property is set
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Property 'notUnsettable' cannot be unset
 	*/
 	public function testMagicUnsetFail()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Property 'notUnsettable' cannot be unset");
+
 		$dummy = new ConfigurableTestDummy;
 
 		unset($dummy->notUnsettable);

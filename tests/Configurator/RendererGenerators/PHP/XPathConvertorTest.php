@@ -23,7 +23,9 @@ class XPathConvertorTest extends Test
 		$convertor = new XPathConvertor;
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 		$this->assertSame($expected, $convertor->convertXPath($original));
 	}

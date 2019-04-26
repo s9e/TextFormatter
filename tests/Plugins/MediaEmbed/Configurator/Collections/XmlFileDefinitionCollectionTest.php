@@ -55,11 +55,12 @@ class XmlFileDefinitionCollectionTest extends Test
 
 	/**
 	* @testdox isset('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testIssetInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		isset($collection['*invalid*']);
 	}
@@ -84,7 +85,7 @@ class XmlFileDefinitionCollectionTest extends Test
 		$siteId     = $this->generateDefinition();
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$sites      = iterator_to_array($collection);
-		$this->assertInternalType('array', $sites);
+		$this->assertIsArray($sites);
 		$this->assertArrayHasKey($siteId, $sites);
 	}
 
@@ -96,40 +97,43 @@ class XmlFileDefinitionCollectionTest extends Test
 		$siteId     = $this->generateDefinition();
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
-		$this->assertInternalType('array', $siteConfig);
+		$this->assertIsArray($siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('localhost', $siteConfig['host']);
 	}
 
 	/**
 	* @testdox get('unknown') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Media site 'unknown' does not exist
 	*/
 	public function testGetUnknown()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Media site 'unknown' does not exist");
+
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get('unknown');
 	}
 
 	/**
 	* @testdox get('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testGetInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get('*invalid*');
 	}
 
 	/**
 	* @testdox The constructor throws an exception if the dir does not exist
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site directory
 	*/
 	public function testPathInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site directory');
+
 		new XmlFileDefinitionCollection('/invalid/path');
 	}
 
@@ -141,7 +145,7 @@ class XmlFileDefinitionCollectionTest extends Test
 		$siteId     = $this->generateDefinition();
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
-		$this->assertInternalType('array', $siteConfig);
+		$this->assertIsArray($siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('localhost', $siteConfig['host']);
 		$this->assertContains('127.0.0.1', $siteConfig['host']);
@@ -156,7 +160,7 @@ class XmlFileDefinitionCollectionTest extends Test
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
 		$this->assertArrayHasKey('attributes', $siteConfig);
-		$this->assertInternalType('array',     $siteConfig['attributes']);
+		$this->assertIsArray(    $siteConfig['attributes']);
 		$this->assertArrayHasKey('volume',     $siteConfig['attributes']);
 	}
 
@@ -169,7 +173,7 @@ class XmlFileDefinitionCollectionTest extends Test
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
 		$this->assertArrayHasKey('onload',  $siteConfig['iframe']);
-		$this->assertInternalType('string', $siteConfig['iframe']['onload']);
+		$this->assertIsString($siteConfig['iframe']['onload']);
 		$this->assertSame('alert(1)',       $siteConfig['iframe']['onload']);
 	}
 

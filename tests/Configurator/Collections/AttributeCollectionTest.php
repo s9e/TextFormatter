@@ -95,11 +95,12 @@ class AttributeCollectionTest extends Test
 
 	/**
 	* @testdox Throws an meaningful exception message when creating an Attribute that already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Attribute 'x' already exists
 	*/
 	public function testDuplicateError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Attribute 'x' already exists");
+
 		$collection = new AttributeCollection;
 		$collection->onDuplicate('error');
 		$collection->add('x');
@@ -108,11 +109,12 @@ class AttributeCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception when accessing an Attribute that does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Attribute 'x' does not exist
 	*/
 	public function testNotExist()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Attribute 'x' does not exist");
+
 		$collection = new AttributeCollection;
 		$collection->get('x');
 	}

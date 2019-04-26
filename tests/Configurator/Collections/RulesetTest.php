@@ -14,11 +14,12 @@ class RulesetTest extends Test
 {
 	/**
 	* @testdox Setting an unknown rule throws an exception
-	* @expectedException BadMethodCallException
-	* @expectedExceptionMessage Undefined method 'bar'
 	*/
 	public function testUnknownRule()
 	{
+		$this->expectException('BadMethodCallException');
+		$this->expectExceptionMessage("Undefined method 'bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->bar();
 	}
@@ -50,11 +51,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox Trying to set rules via array access throws a RuntimeException
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Not supported
 	*/
 	public function testOffsetSet()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Not supported');
+
 		$ruleset = new Ruleset;
 		$ruleset['allowChild'] = 'FOO';
 	}
@@ -182,11 +184,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox allowChild() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testAllowChildInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->allowChild('foo#bar');
 	}
@@ -219,11 +222,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox allowDescendant() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testAllowDescendantInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->allowDescendant('foo#bar');
 	}
@@ -256,6 +260,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox autoClose() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testAutoCloseValid()
 	{
@@ -265,11 +270,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox autoClose() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage autoClose() expects a boolean
 	*/
 	public function testAutoCloseInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('autoClose() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->autoClose('foo');
 	}
@@ -285,6 +291,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox autoReopen() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testAutoReopenValid()
 	{
@@ -294,11 +301,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox autoReopen() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage autoReopen() expects a boolean
 	*/
 	public function testAutoReopenInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('autoReopen() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->autoReopen('foo');
 	}
@@ -314,6 +322,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox breakParagraph() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testBreakParagraphValid()
 	{
@@ -323,11 +332,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox breakParagraph() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage breakParagraph() expects a boolean
 	*/
 	public function testBreakParagraphInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('breakParagraph() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->breakParagraph('foo');
 	}
@@ -343,11 +353,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox closeAncestor() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testCloseAncestorInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->closeAncestor('foo#bar');
 	}
@@ -398,11 +409,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox createChild() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testCreateChildInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->createChild('foo#bar');
 	}
@@ -436,6 +448,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox createParagraphs() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testCreateParagraphsValid()
 	{
@@ -445,11 +458,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox createParagraphs() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage createParagraphs() expects a boolean
 	*/
 	public function testCreateParagraphsInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('createParagraphs() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->createParagraphs('foo');
 	}
@@ -465,6 +479,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreTags() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testIgnoreTagsValid()
 	{
@@ -474,11 +489,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreTags() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage ignoreTags() expects a boolean
 	*/
 	public function testIgnoreTagsInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('ignoreTags() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->ignoreTags('foo');
 	}
@@ -494,11 +510,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox denyChild() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testDenyChildInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->denyChild('foo#bar');
 	}
@@ -532,11 +549,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox denyDescendant() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testDenyDescendantInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->denyDescendant('foo#bar');
 	}
@@ -570,6 +588,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox disableAutoLineBreaks() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testDisableAutoLineBreaksValid()
 	{
@@ -579,11 +598,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox disableAutoLineBreaks() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage disableAutoLineBreaks() expects a boolean
 	*/
 	public function testDisableAutoLineBreaksInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('disableAutoLineBreaks() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->disableAutoLineBreaks('foo');
 	}
@@ -599,6 +619,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox enableAutoLineBreaks() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testEnableAutoLineBreaksValid()
 	{
@@ -608,11 +629,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox enableAutoLineBreaks() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage enableAutoLineBreaks() expects a boolean
 	*/
 	public function testEnableAutoLineBreaksInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('enableAutoLineBreaks() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->enableAutoLineBreaks('foo');
 	}
@@ -628,11 +650,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox fosterParent() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testFosterParentInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->fosterParent('foo#bar');
 	}
@@ -666,6 +689,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreText() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testIgnoreTextValid()
 	{
@@ -675,11 +699,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreText() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage ignoreText() expects a boolean
 	*/
 	public function testIgnoreTextInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('ignoreText() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->ignoreText('foo');
 	}
@@ -695,6 +720,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox isTransparent() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testIsTransparentValid()
 	{
@@ -704,11 +730,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox isTransparent() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage isTransparent() expects a boolean
 	*/
 	public function testIsTransparentInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('isTransparent() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->isTransparent('foo');
 	}
@@ -724,6 +751,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreSurroundingWhitespace() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testIgnoreSurroundingWhitespaceValid()
 	{
@@ -733,11 +761,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage ignoreSurroundingWhitespace() expects a boolean
 	*/
 	public function testIgnoreSurroundingWhitespaceInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('ignoreSurroundingWhitespace() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->ignoreSurroundingWhitespace('foo');
 	}
@@ -753,6 +782,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox preventLineBreaks() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testPreventLineBreaksValid()
 	{
@@ -762,11 +792,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox preventLineBreaks() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage preventLineBreaks() expects a boolean
 	*/
 	public function testPreventLineBreaksInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('preventLineBreaks() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->preventLineBreaks('foo');
 	}
@@ -782,11 +813,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox requireAncestor() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testRequireAncestorInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->requireAncestor('foo#bar');
 	}
@@ -820,11 +852,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox requireParent() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testRequireParentInvalidTagName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name 'foo#bar'");
+
 		$ruleset = new Ruleset;
 		$ruleset->requireParent('foo#bar');
 	}
@@ -858,6 +891,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox suspendAutoLineBreaks() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testSuspendAutoLineBreaksValid()
 	{
@@ -867,11 +901,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox suspendAutoLineBreaks() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage suspendAutoLineBreaks() expects a boolean
 	*/
 	public function testSuspendAutoLineBreaksInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('suspendAutoLineBreaks() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->suspendAutoLineBreaks('foo');
 	}
@@ -887,6 +922,7 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox trimFirstLine() accepts a boolean
+	* @doesNotPerformAssertions
 	*/
 	public function testTrimWhitespaceValid()
 	{
@@ -896,11 +932,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox trimFirstLine() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage trimFirstLine() expects a boolean
 	*/
 	public function testTrimWhitespaceInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('trimFirstLine() expects a boolean');
+
 		$ruleset = new Ruleset;
 		$ruleset->trimFirstLine('foo');
 	}
@@ -976,11 +1013,12 @@ class RulesetTest extends Test
 
 	/**
 	* @testdox merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage merge() expects an array or an instance of Ruleset
 	*/
 	public function testSetRulesInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('merge() expects an array or an instance of Ruleset');
+
 		$ruleset = new Ruleset;
 		$ruleset->merge(false);
 	}

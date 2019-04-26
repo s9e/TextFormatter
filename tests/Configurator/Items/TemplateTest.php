@@ -43,7 +43,7 @@ class TemplateTest extends Test
 		$template = new Template($xml);
 
 		$this->assertInstanceOf('DOMDocument', $template->asDOM());
-		$this->assertContains($xml, $template->asDOM()->saveXML());
+		$this->assertStringContainsString($xml, $template->asDOM()->saveXML());
 	}
 
 	/**

@@ -38,141 +38,155 @@ class TemplateCheckerTest extends Test
 
 	/**
 	* @testdox Disallows attribute sets by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of attribute sets
 	*/
 	public function testDefaultAttributeSets()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of attribute sets');
+
 		$this->checkTemplate('<b use-attribute-sets="foo"/>');
 	}
 
 	/**
 	* @testdox Disallows <xsl:copy/> by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of an 'xsl:copy' element
 	*/
 	public function testDefaultCopy()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of an 'xsl:copy' element");
+
 		$this->checkTemplate('<xsl:copy/>');
 	}
 
 	/**
 	* @testdox Disallows disabling output escaping by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage The template contains a 'disable-output-escaping' attribute
 	*/
 	public function testDefaultDisableOutputEscaping()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("The template contains a 'disable-output-escaping' attribute");
+
 		$this->checkTemplate('<b disable-output-escaping="1"/>');
 	}
 
 	/**
 	* @testdox Disallows dynamic attribute names by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Dynamic <xsl:attribute/> names are disallowed
 	*/
 	public function testDefaultDynamicAttributeNames()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Dynamic <xsl:attribute/> names are disallowed');
+
 		$this->checkTemplate('<b><xsl:attribute name="{@foo}"/></b>');
 	}
 
 	/**
 	* @testdox Disallows dynamic element names by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Dynamic <xsl:element/> names are disallowed
 	*/
 	public function testDefaultDynamicElementNames()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Dynamic <xsl:element/> names are disallowed');
+
 		$this->checkTemplate('<xsl:element name="{@foo}"/>');
 	}
 
 	/**
 	* @testdox Disallows dynamic object param names by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage A 'param' element with a suspect name has been found
 	*/
 	public function testDefaultDynamicObjectParamNames()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("A 'param' element with a suspect name has been found");
+
 		$this->checkTemplate('<object><param name="{@foo"/></object>');
 	}
 
 	/**
 	* @testdox Disallows PHP tags by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the template
 	*/
 	public function testDefaultPHPTags()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the template');
+
 		$this->checkTemplate('<?php ?>');
 	}
 
 	/**
 	* @testdox Disallows outputing PHP tags by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the output
 	*/
 	public function testDefaultGeneratedPHPTags()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the output');
+
 		$this->checkTemplate('<b><xsl:processing-instruction name="php"/></b>');
 	}
 
 	/**
 	* @testdox Disallows potentially unsafe <xsl:copy-of/> by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of 'xsl:copy-of' select expression 'FOO'
 	*/
 	public function testDefaultCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of 'xsl:copy-of' select expression 'FOO'");
+
 		$this->checkTemplate('<b><xsl:copy-of select="FOO"/></b>');
 	}
 
 	/**
 	* @testdox Disallows potentially unsafe dynamic CSS by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDefaultDynamicCSS()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$this->checkTemplate('<b style="color:{@foo}">...</b>');
 	}
 
 	/**
 	* @testdox Disallows potentially unsafe dynamic JS by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDefaultDynamicJS()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$this->checkTemplate('<b onclick="{@foo}">...</b>');
 	}
 
 	/**
 	* @testdox Disallows potentially unsafe dynamic URLs by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDefaultDynamicURL()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$this->checkTemplate('<a href="{@foo}">...</a>');
 	}
 
 	/**
 	* @testdox Disallows document() in XPath by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function testDefaultDocumentXPath()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$this->checkTemplate('<xsl:value-of select="document(.)"/>');
 	}
 
 	/**
 	* @testdox Restricts Flash's allowScriptAccess to "sameDomain" (or lower) by default, in objects that use dynamic values
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'
 	*/
 	public function testDefaultFlashScriptAccess()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'");
+
 		$templateChecker = new TemplateChecker;
 
 		$tag = new Tag;
@@ -184,17 +198,19 @@ class TemplateCheckerTest extends Test
 
 	/**
 	* @testdox Disallows <sax:output/> by default
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'sax:output' is disallowed
 	* @link https://bugs.php.net/bug.php?id=54446
 	*/
 	public function testDefaultSaxOutput()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'sax:output' is disallowed");
+
 		$this->checkTemplate('<sax:output xmlns:sax="http://icl.com/saxon" />');
 	}
 
 	/**
 	* @testdox checkTag() doesn't do anything if the template is safe
+	* @doesNotPerformAssertions
 	*/
 	public function testSafe()
 	{
@@ -207,6 +223,7 @@ class TemplateCheckerTest extends Test
 
 	/**
 	* @testdox checkTag() doesn't check templates that are marked as unsafe
+	* @doesNotPerformAssertions
 	*/
 	public function testUnsafeTemplate()
 	{
@@ -220,6 +237,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Can be reset and reconfigured with different checks
 	* @depends testDefaultDisableOutputEscaping
+	* @doesNotPerformAssertions
 	*/
 	public function testReconfigure()
 	{
@@ -246,6 +264,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox disable() disables all checks
 	* @depends testDefaultDisableOutputEscaping
+	* @doesNotPerformAssertions
 	*/
 	public function testDisable()
 	{
@@ -258,11 +277,12 @@ class TemplateCheckerTest extends Test
 
 	/**
 	* @testdox enable() re-enables all checks
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @depends testDefaultDisableOutputEscaping
 	*/
 	public function testEnable()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+
 		$template = '<b disable-output-escaping="1"/>';
 
 		$templateChecker = new TemplateChecker;

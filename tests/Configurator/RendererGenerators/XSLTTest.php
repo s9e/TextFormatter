@@ -36,7 +36,7 @@ class XSLTTest extends Test
 		$this->configurator->tags->add('X')->template = 'X';
 		$this->configurator->tags->add('Y')->template = 'X';
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:template match="X|Y">X</xsl:template>',
 			$this->getXSL()
 		);
@@ -47,7 +47,7 @@ class XSLTTest extends Test
 	*/
 	public function testEmptyTemplates()
 	{
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:template match="e|i|s"/>',
 			$this->getXSL()
 		);
@@ -61,7 +61,7 @@ class XSLTTest extends Test
 		$this->configurator->tags->add('X:A')->template = 'X';
 		$this->configurator->tags->add('Y:B')->template = 'Y';
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'xmlns:X="urn:s9e:TextFormatter:X" xmlns:Y="urn:s9e:TextFormatter:Y"',
 			$this->getXSL()
 		);
@@ -75,7 +75,7 @@ class XSLTTest extends Test
 		$this->configurator->tags->add('X:A')->template = 'X';
 		$this->configurator->tags->add('Y:B')->template = 'Y';
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'exclude-result-prefixes="X Y"',
 			$this->getXSL()
 		);
@@ -89,12 +89,12 @@ class XSLTTest extends Test
 		$this->configurator->rendering->parameters->add('foo');
 		$this->configurator->rendering->parameters->add('bar');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:param name="foo"',
 			$this->getXSL()
 		);
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:param name="bar"',
 			$this->getXSL()
 		);
@@ -107,7 +107,7 @@ class XSLTTest extends Test
 	{
 		$this->configurator->rendering->parameters->add('foo', 'bar');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:param name="foo">bar</xsl:param>',
 			$this->getXSL()
 		);
@@ -120,7 +120,7 @@ class XSLTTest extends Test
 	{
 		$this->configurator->rendering->parameters->add('foo', '\'"&<>');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:param name="foo">\'&quot;&amp;&lt;&gt;</xsl:param>',
 			$this->getXSL()
 		);
@@ -137,14 +137,14 @@ class XSLTTest extends Test
 
 		$xsl = $this->getXSL();
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'<xsl:template match="B|I|U|p"><xsl:element name="{translate(name(),\'BIU\',\'biu\')}"><xsl:apply-templates/></xsl:element></xsl:template>',
 			$xsl
 		);
 
 		foreach ($this->configurator->tags as $tag)
 		{
-			$this->assertNotContains((string) $tag->template, $xsl);
+			$this->assertStringNotContainsString((string) $tag->template, $xsl);
 		}
 	}
 
@@ -171,8 +171,8 @@ class XSLTTest extends Test
 
 		$xsl = $this->getXSL();
 
-		$this->assertContains('<xsl:template match="X"><b>x</b></xsl:template>', $xsl);
-		$this->assertContains('<xsl:template match="Y"><b>y</b></xsl:template>', $xsl);
+		$this->assertStringContainsString('<xsl:template match="X"><b>x</b></xsl:template>', $xsl);
+		$this->assertStringContainsString('<xsl:template match="Y"><b>y</b></xsl:template>', $xsl);
 	}
 
 	/**
@@ -182,6 +182,6 @@ class XSLTTest extends Test
 	{
 		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-ignore-attrs="foo"/>';
 
-		$this->assertNotContains('livepreview', $this->getXSL());
+		$this->assertStringNotContainsString('livepreview', $this->getXSL());
 	}
 }

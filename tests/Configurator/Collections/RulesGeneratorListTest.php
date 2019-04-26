@@ -55,11 +55,12 @@ class RulesGeneratorListTest extends Test
 
 	/**
 	* @testdox add() throws an exception on invalid values
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid rules generator 'foo'
 	*/
 	public function testAddInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid rules generator 'foo'");
+
 		$collection = new RulesGeneratorList;
 		$collection->add('foo');
 	}

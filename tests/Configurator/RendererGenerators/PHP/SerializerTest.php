@@ -46,7 +46,9 @@ class SerializerTest extends Test
 		$serializer = new Serializer;
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 		if (isset($setup))
 		{

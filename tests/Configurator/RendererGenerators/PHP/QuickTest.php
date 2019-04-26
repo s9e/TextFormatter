@@ -18,7 +18,7 @@ class QuickTest extends Test
 {
 	use RendererTests;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->configurator->rendering->engine = 'PHP';
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
@@ -63,20 +63,24 @@ class QuickTest extends Test
 
 	/**
 	* @testdox The quick renderer can handle comments
-	* @expectedException InvalidArgumentException comments
 	*/
 	public function testQuickRendererComment()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('comments');
+
 		$renderer = $this->getRenderer();
 		$this->assertSame('unknown', $renderer->render('<r><!---->unknown</r>'));
 	}
 
 	/**
 	* @testdox The quick renderer can handle processing instructions
-	* @expectedException InvalidArgumentException Processing
 	*/
 	public function testQuickRendererProcessingInstruction()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Processing');
+
 		$renderer = $this->getRenderer();
 		$this->assertSame('unknown', $renderer->render('<r><?x ?>unknown</r>'));
 	}
@@ -700,7 +704,7 @@ class QuickTest extends Test
 			$compiledTemplates[$tagName] = self::getPHP($template);
 		}
 
-		$this->assertContains($contains, Quick::getSource($compiledTemplates));
+		$this->assertStringContainsString($contains, Quick::getSource($compiledTemplates));
 	}
 
 	public function getSourceTests()

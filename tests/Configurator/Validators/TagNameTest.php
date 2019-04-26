@@ -12,11 +12,12 @@ class TagNameTest extends Test
 {
 	/**
 	* @testdox normalize() throws an InvalidArgumentException if the name is invalid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name '*invalid*'
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid tag name '*invalid*'");
+
 		TagName::normalize('*invalid*');
 	}
 

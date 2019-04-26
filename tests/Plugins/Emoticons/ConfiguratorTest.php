@@ -51,8 +51,8 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains(':)', $xsl);
-		$this->assertContains('<img src="e.png"/>', $xsl);
+		$this->assertStringContainsString(':)', $xsl);
+		$this->assertStringContainsString('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -65,8 +65,8 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains(':)', $xsl);
-		$this->assertContains('<img src="e.png"/>', $xsl);
+		$this->assertStringContainsString(':)', $xsl);
+		$this->assertStringContainsString('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -79,8 +79,8 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains(":')", $xsl);
-		$this->assertContains('<img src="e.png"/>', $xsl);
+		$this->assertStringContainsString(":')", $xsl);
+		$this->assertStringContainsString('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -93,8 +93,8 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains("'&quot;_&quot;'", $xsl);
-		$this->assertContains('<img src="e.png"/>', $xsl);
+		$this->assertStringContainsString("'&quot;_&quot;'", $xsl);
+		$this->assertStringContainsString('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains('<img src="e.png"/>', $xsl);
+		$this->assertStringContainsString('<img src="e.png"/>', $xsl);
 	}
 
 	/**

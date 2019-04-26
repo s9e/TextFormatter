@@ -23,7 +23,7 @@ abstract class AbstractTest extends Test
 		return 's9e\\TextFormatter\\Bundles\\' . $bundleName;
 	}
 
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		$className = static::getClassName();
 		$className::reset();
@@ -32,7 +32,7 @@ abstract class AbstractTest extends Test
 		$className::getCachedParser()->registeredVars['cacheDir'] = __DIR__ . '/../.cache';
 	}
 
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		$className = static::getClassName();
 		$className::reset();

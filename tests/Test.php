@@ -3,12 +3,14 @@
 namespace s9e\TextFormatter\Tests;
 
 use Exception;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 
-abstract class Test extends \PHPUnit_Framework_TestCase
+abstract class Test extends TestCase
 {
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		foreach (self::$tmpFiles as $filepath)
 		{
@@ -89,7 +91,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$this->assertSame($expected, $parser->parse($original));
@@ -228,5 +232,14 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$objects = $configurator->finalize();
 
 		return $objects['parser'];
+	}
+
+	protected function getObjectProperty($object, $propName)
+	{
+		$class = new ReflectionClass(get_class($object));
+		$prop  = $class->getProperty($propName);
+		$prop->setAccessible(true);
+
+		return $prop->getValue($object);
 	}
 }

@@ -29,11 +29,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <embed allowScriptAccess="always"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'
 	*/
 	public function test1a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'");
+
 		$node = $this->loadTemplate('<embed allowScriptAccess="always"/>');
 
 		try
@@ -55,6 +56,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <embed allowScriptAccess="sameDomain"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1b()
 	{
@@ -65,6 +67,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <embed allowScriptAccess="never"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1c()
 	{
@@ -75,6 +78,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <embed/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1d()
 	{
@@ -85,11 +89,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <embed allowScriptAccess="unknown"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowScriptAccess value 'unknown'
 	*/
 	public function test1e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowScriptAccess value 'unknown'");
+
 		$node = $this->loadTemplate('<embed allowScriptAccess="unknown"/>');
 
 		try
@@ -111,11 +116,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <embed allowScriptAccess="{@foo}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowScriptAccess setting '{@foo}'
+@foo}'
 	*/
 	public function test1f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowScriptAccess setting '{");
 		$node = $this->loadTemplate('<embed allowScriptAccess="{@foo}"/>');
 
 		try
@@ -137,11 +143,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' disallows <embed allowScriptAccess="always"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'always' exceeds restricted value 'never'
 	*/
 	public function test2a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'always' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed allowScriptAccess="always"/>');
 
 		try
@@ -163,11 +170,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' disallows <embed allowScriptAccess="sameDomain"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test2b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed allowScriptAccess="sameDomain"/>');
 
 		try
@@ -189,6 +197,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' allows <embed allowScriptAccess="never"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test2c()
 	{
@@ -199,11 +208,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' disallows <embed/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test2d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed allowScriptAccess="sameDomain"/>');
 
 		try
@@ -225,11 +235,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox Disallows <embed><xsl:attribute name="allowScriptAccess"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test3()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<embed><xsl:attribute name="allowScriptAccess"/></embed>');
 
 		try
@@ -251,11 +262,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <object><param name="allowScriptAccess" value="always"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'
 	*/
 	public function test4a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'");
+
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="always"/></object>');
 
 		try
@@ -277,6 +289,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object><param name="allowScriptAccess" value="sameDomain"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test4b()
 	{
@@ -287,6 +300,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object><param name="allowScriptAccess" value="never"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test4c()
 	{
@@ -297,6 +311,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object/>
+	* @doesNotPerformAssertions
 	*/
 	public function test4d()
 	{
@@ -307,11 +322,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <object><param name="allowScriptAccess" value="unknown"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowScriptAccess value 'unknown'
 	*/
 	public function test4e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowScriptAccess value 'unknown'");
+
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="unknown"/></object>');
 
 		try
@@ -333,11 +349,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <object><param name="allowScriptAccess" value="{@foo}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowScriptAccess setting '{@foo}'
+@foo}'
 	*/
 	public function test4f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowScriptAccess setting '{");
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="{@foo}"/></object>');
 
 		try
@@ -359,11 +376,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <object><param name="allowScriptAccess" value="always"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'
 	*/
 	public function test5a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'always' exceeds restricted value 'sameDomain'");
+
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="always"/></object>');
 
 		try
@@ -385,6 +403,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object><param name="allowScriptAccess" value="sameDomain"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test5b()
 	{
@@ -395,6 +414,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object><param name="allowScriptAccess" value="never"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test5c()
 	{
@@ -405,6 +425,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' allows <object/>
+	* @doesNotPerformAssertions
 	*/
 	public function test5d()
 	{
@@ -415,11 +436,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'sameDomain' disallows <object><param name="allowScriptAccess" value="unknown"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowScriptAccess value 'unknown'
 	*/
 	public function test5e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowScriptAccess value 'unknown'");
+
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="unknown"/></object>');
 
 		try
@@ -441,11 +463,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' disallows <object><xsl:if><param name="allowScriptAccess" value="never"/></xsl:if></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test6()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<object><xsl:if><param name="allowScriptAccess" value="never"/></xsl:if></object>');
 
 		try
@@ -467,11 +490,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never' disallows <object><param name="allowScriptAccess" value="never"><xsl:attribute name="value">always</xsl:attribute></param></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test7()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<object><param name="allowScriptAccess" value="never"><xsl:attribute name="value">always</xsl:attribute></param></object>');
 
 		try
@@ -493,6 +517,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true allows <embed src="http://example.com/example.swf"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test8a()
 	{
@@ -503,11 +528,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',false disallows <embed src="http://example.com/example.swf"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test8b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed src="http://example.com/example.swf"/>');
 
 		try
@@ -529,11 +555,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true disallows <embed src="{@url}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test8c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed src="{@url}"/>');
 
 		try
@@ -555,11 +582,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true disallows <embed><xsl:copy-of select="@src"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test8d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed><xsl:copy-of select="@src"/></embed>');
 
 		try
@@ -581,6 +609,7 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true allows <object><param name="movie" value="http://example.com/example.swf"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test9a()
 	{
@@ -591,11 +620,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',false disallows <object><param name="movie" value="http://example.com/example.swf"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test9b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<object><param name="movie" value="http://example.com/example.swf"/></object>');
 
 		try
@@ -617,11 +647,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true disallows <object><param name="movie" value="{@url}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test9c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<object><param name="movie" value="{@url}"/></object>');
 
 		try
@@ -643,11 +674,12 @@ class RestrictFlashScriptAccessTest extends Test
 
 	/**
 	* @testdox 'never',true disallows <embed><xsl:apply-templates/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'
 	*/
 	public function test9d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowScriptAccess setting 'sameDomain' exceeds restricted value 'never'");
+
 		$node = $this->loadTemplate('<embed><xsl:apply-templates/></embed>');
 
 		try

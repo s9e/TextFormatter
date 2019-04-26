@@ -127,7 +127,9 @@ class AVTHelperTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$this->assertSame($expected, AVTHelper::serialize($tokens));
@@ -188,7 +190,9 @@ class AVTHelperTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$dom = new DOMDocument;

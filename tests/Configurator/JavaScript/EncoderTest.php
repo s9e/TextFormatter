@@ -125,7 +125,7 @@ class EncoderTest extends Test
 		$js = $encoder->encode(array_flip($legal));
 		foreach ($legal as $name)
 		{
-			$this->assertContains($name . ':', $js);
+			$this->assertStringContainsString($name . ':', $js);
 		}
 	}
 
@@ -153,28 +153,30 @@ class EncoderTest extends Test
 		$js = $encoder->encode(array_flip($illegal));
 		foreach ($illegal as $name)
 		{
-			$this->assertContains(json_encode($name) . ':', $js);
+			$this->assertStringContainsString(json_encode($name) . ':', $js);
 		}
 	}
 
 	/**
 	* @testdox encode() throws an exception on unsupported types
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot encode resource value
 	*/
 	public function testEncodeUnsupportedType()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Cannot encode resource value');
+
 		$encoder = new Encoder;
 		$encoder->encode(fopen('php://stdin', 'rb'));
 	}
 
 	/**
 	* @testdox encode() throws an exception on unsupported objects
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot encode instance of Closure
 	*/
 	public function testEncodeUnsupportedObjects()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Cannot encode instance of Closure');
+
 		$encoder = new Encoder;
 		$encoder->encode(function(){});
 	}

@@ -28,11 +28,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <xsl:value-of select="document(@foo)"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function test1()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$node = $this->loadTemplate('<xsl:value-of select="document(@foo)"/>');
 
 		try
@@ -54,11 +55,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <xsl:value-of select="php:function()"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the php:function() function
 	*/
 	public function test1b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the php:function() function');
+
 		$node = $this->loadTemplate('<xsl:value-of select="php:function()"/>');
 
 		try
@@ -80,11 +82,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <xsl:value-of select="php : function()"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the php:function() function
 	*/
 	public function test1c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the php:function() function');
+
 		$node = $this->loadTemplate('<xsl:value-of select="php : function()"/>');
 
 		try
@@ -106,11 +109,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <b title="...{document()}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function test2()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$node = $this->loadTemplate('<b title="...{document()}"/>');
 
 		try
@@ -132,11 +136,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <b title="...{ document () }"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function test3()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$node = $this->loadTemplate('<b title="...{ document () }"/>');
 
 		try
@@ -158,11 +163,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <b title="...{ doc&#117;ment () }"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function test4()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$node = $this->loadTemplate('<b title="...{ doc&#117;ment () }"/>');
 
 		try
@@ -184,11 +190,12 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Disallowed: <b title="{concat(\'}\',document())}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage An XPath expression uses the document() function
 	*/
 	public function test5()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('An XPath expression uses the document() function');
+
 		$node = $this->loadTemplate('<b title="{concat(\'}\',document())}"/>');
 
 		try
@@ -210,6 +217,7 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Allowed: <b title="document()"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test6()
 	{
@@ -221,6 +229,7 @@ class DisallowXPathFunctionTest extends Test
 
 	/**
 	* @testdox Allowed: <b title="{&quot;document()&quot;}"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test7()
 	{

@@ -18,44 +18,48 @@ class TagFilterChainTest extends Test
 
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testAppendInvalidCallback()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter");
+
 		$filterChain = new TagFilterChain;
 		$filterChain->append('*invalid*');
 	}
 
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testPrependInvalidCallback()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter");
+
 		$filterChain = new TagFilterChain;
 		$filterChain->prepend('*invalid*');
 	}
 
 	/**
 	* @testdox append() throws an InvalidArgumentException on uncallable callbacks
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testAppendUncallableCallback()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter');
+
 		$filterChain = new TagFilterChain;
 		$filterChain->append([__CLASS__, 'privateMethod']);
 	}
 
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable nor an instance of s9e\TextFormatter\Configurator\Items\TagFilter
 	*/
 	public function testPrependUncallableCallback()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter');
+
 		$filterChain = new TagFilterChain;
 		$filterChain->prepend([__CLASS__, 'privateMethod']);
 	}

@@ -15,7 +15,7 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testGenerate()
 	{
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'class MyBundle',
 			$this->configurator->bundleGenerator->generate('MyBundle')
 		);
@@ -28,8 +28,8 @@ class BundleGeneratorTest extends Test
 	{
 		$php = $this->configurator->bundleGenerator->generate('My\\Bundle');
 
-		$this->assertContains('namespace My;', $php);
-		$this->assertContains('class Bundle', $php);
+		$this->assertStringContainsString('namespace My;', $php);
+		$this->assertStringContainsString('class Bundle', $php);
 	}
 
 	/**
@@ -47,7 +47,7 @@ class BundleGeneratorTest extends Test
 		$this->configurator->bundleGenerator->serializer = [$mock, 'serialize'];
 		$php = $this->configurator->bundleGenerator->generate('MyBundle');
 
-		$this->assertContains('foobar', $php);
+		$this->assertStringContainsString('foobar', $php);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class BundleGeneratorTest extends Test
 		$this->configurator->bundleGenerator->unserializer = 'myunserializer';
 		$php = $this->configurator->bundleGenerator->generate('MyBundle');
 
-		$this->assertContains('myunserializer', $php);
+		$this->assertStringContainsString('myunserializer', $php);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class BundleGeneratorTest extends Test
 			include " . var_export($filepath, true) . ";
 		}";
 
-		$this->assertContains($expected, $bundle);
+		$this->assertStringContainsString($expected, $bundle);
 	}
 
 	/**
@@ -106,7 +106,7 @@ class BundleGeneratorTest extends Test
 			include " . var_export($filepath, true) . ";
 		}";
 
-		$this->assertNotContains($expected, $bundle);
+		$this->assertStringNotContainsString($expected, $bundle);
 	}
 
 	/**
@@ -124,13 +124,13 @@ class BundleGeneratorTest extends Test
 		{
 			$php = $this->configurator->bundleGenerator->generate('Foo', [$event => 'trim']);
 
-			$this->assertContains('public static $' . $event . " = 'trim';", $php);
+			$this->assertStringContainsString('public static $' . $event . " = 'trim';", $php);
 
 			foreach ($events as $notEvent)
 			{
 				if ($notEvent !== $event)
 				{
-					$this->assertNotContains($notEvent, $php);
+					$this->assertStringNotContainsString($notEvent, $php);
 				}
 			}
 		}
@@ -141,7 +141,7 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testParserSetup()
 	{
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'\\foo\\bar\\baz($parser);',
 			$this->configurator->bundleGenerator->generate(
 				'Foo',
@@ -155,7 +155,7 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testRendererSetup()
 	{
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'\\foo\\bar\\baz($renderer);',
 			$this->configurator->bundleGenerator->generate(
 				'Foo',

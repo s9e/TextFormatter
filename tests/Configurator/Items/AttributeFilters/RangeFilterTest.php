@@ -69,11 +69,12 @@ class RangeFilterTest extends Test
 
 	/**
 	* @testdox asConfig() throws an exception if the 'min' var is missing
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Range filter is missing a 'min' value
 	*/
 	public function testMissingMin()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Range filter is missing a 'min' value");
+
 		$filter = new RangeFilter;
 		$filter->setVars(['max' => 0]);
 		$filter->asConfig();
@@ -81,11 +82,12 @@ class RangeFilterTest extends Test
 
 	/**
 	* @testdox asConfig() throws an exception if the 'max' var is missing
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Range filter is missing a 'max' value
 	*/
 	public function testMissingMax()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Range filter is missing a 'max' value");
+
 		$filter = new RangeFilter;
 		$filter->setVars(['min' => 0]);
 		$filter->asConfig();
@@ -99,7 +101,7 @@ class RangeFilterTest extends Test
 		$filter = new RangeFilter;
 		$filter->setRange(1, 5);
 
-		$this->assertInternalType('array', $filter->asConfig());
+		$this->assertIsArray($filter->asConfig());
 	}
 
 	/**
@@ -118,11 +120,12 @@ class RangeFilterTest extends Test
 
 	/**
 	* @testdox setRange() throws an exception if the first argument is not a number
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Argument 1 passed to s9e\TextFormatter\Configurator\Items\AttributeFilters\RangeFilter::setRange must be an integer
 	*/
 	public function testSetRangeInvalidMin()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Argument 1 passed to s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\RangeFilter::setRange must be an integer');
+
 		$filter = new RangeFilter;
 		$filter->setRange('foo', 5);
 
@@ -130,11 +133,12 @@ class RangeFilterTest extends Test
 
 	/**
 	* @testdox setRange() throws an exception if the second argument is not a number
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Argument 2 passed to s9e\TextFormatter\Configurator\Items\AttributeFilters\RangeFilter::setRange must be an integer
 	*/
 	public function testSetRangeInvalidMax()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Argument 2 passed to s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\RangeFilter::setRange must be an integer');
+
 		$filter = new RangeFilter;
 		$filter->setRange(1, 'foo');
 
@@ -142,11 +146,12 @@ class RangeFilterTest extends Test
 
 	/**
 	* @testdox setRange() throws an exception if the min value is greater than the max value
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid range
 	*/
 	public function testSetRangeInvalidRange()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid range');
+
 		$filter = new RangeFilter;
 		$filter->setRange(5, 1);
 	}

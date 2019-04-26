@@ -28,6 +28,7 @@ class DisallowObjectParamsWithGeneratedNameTest extends Test
 
 	/**
 	* @testdox Allowed: <object><param name="foo"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{
@@ -39,11 +40,12 @@ class DisallowObjectParamsWithGeneratedNameTest extends Test
 
 	/**
 	* @testdox Disallowed: <object><param name="{@foo"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage A 'param' element with a suspect name has been found
 	*/
 	public function testDisallowedInline()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("A 'param' element with a suspect name has been found");
+
 		$node = $this->loadTemplate('<object><param name="{@foo}"/></object>');
 
 		try
@@ -65,11 +67,12 @@ class DisallowObjectParamsWithGeneratedNameTest extends Test
 
 	/**
 	* @testdox Disallowed: <object><param name="{@foo"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage A 'param' element with a suspect name has been found
 	*/
 	public function testDisallowedGenerated()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("A 'param' element with a suspect name has been found");
+
 		$node = $this->loadTemplate('<object><param><xsl:if test="@foo"><xsl:attribute name="name"><xsl:value-of select="@bar"/></xsl:attribute></xsl:if></param></object>');
 
 		try

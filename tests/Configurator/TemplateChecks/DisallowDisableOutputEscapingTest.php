@@ -28,11 +28,12 @@ class DisallowDisableOutputEscapingTest extends Test
 
 	/**
 	* @testdox Disallowed: <b disable-output-escaping="1"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage The template contains a 'disable-output-escaping' attribute
 	*/
 	public function test()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("The template contains a 'disable-output-escaping' attribute");
+
 		$node = $this->loadTemplate('<b disable-output-escaping="1"/>');
 
 		try
@@ -54,6 +55,7 @@ class DisallowDisableOutputEscapingTest extends Test
 
 	/**
 	* @testdox Allowed: <b>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

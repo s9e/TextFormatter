@@ -28,11 +28,12 @@ class DisallowElementNSTest extends Test
 
 	/**
 	* @testdox DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'svg:svg' is disallowed
 	*/
 	public function testDisallowed()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'svg:svg' is disallowed");
+
 		$node = $this->loadTemplate('<svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>');
 
 		try
@@ -54,11 +55,12 @@ class DisallowElementNSTest extends Test
 
 	/**
 	* @testdox DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg xmlns="http://www.w3.org/2000/svg"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'svg' is disallowed
 	*/
 	public function testDisallowedDefaultNS()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'svg' is disallowed");
+
 		$node = $this->loadTemplate('<svg xmlns="http://www.w3.org/2000/svg"/>');
 
 		try
@@ -80,6 +82,7 @@ class DisallowElementNSTest extends Test
 
 	/**
 	* @testdox DisallowElementNS('urn:foo', 'script') allows <b><script/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

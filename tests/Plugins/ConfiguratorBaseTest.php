@@ -50,11 +50,12 @@ class ConfiguratorBaseTest extends Test
 
 	/**
 	* @testdox An exception is thrown if an unknown property is being set by the constructor
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown property 'baz'
 	*/
 	public function testUnknownProperty()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unknown property 'baz'");
+
 		new DummyPluginConfigurator($this->configurator, ['baz' => 'baz']);
 	}
 
@@ -78,21 +79,23 @@ class ConfiguratorBaseTest extends Test
 
 	/**
 	* @testdox Constructor throws an exception if we attempt to set an attribute name but the property does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown property 'attrName'
 	*/
 	public function testAttrNameNotExist()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unknown property 'attrName'");
+
 		new EmptyPluginConfigurator($this->configurator, ['attrName' => 'XXX']);
 	}
 
 	/**
 	* @testdox Constructor throws an exception if we attempt to set a tag name but the property does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown property 'tagName'
 	*/
 	public function testTagNameNotExist()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unknown property 'tagName'");
+
 		new EmptyPluginConfigurator($this->configurator, ['tagName' => 'XXX']);
 	}
 
@@ -156,16 +159,17 @@ class ConfiguratorBaseTest extends Test
 	{
 		$dummy = new DummyPluginConfigurator($this->configurator);
 		$dummy->setQuickMatch('@');
-		$this->assertAttributeEquals('@', 'quickMatch', $dummy);
+		$this->assertEquals('@', $this->getObjectProperty($dummy, 'quickMatch'));
 	}
 
 	/**
 	* @testdox setQuickMatch() throws an exception on non-strings
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage quickMatch must be a string
 	*/
 	public function testSetQuickMatchInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('quickMatch must be a string');
+
 		$dummy = new DummyPluginConfigurator($this->configurator);
 		$dummy->setQuickMatch(null);
 	}
@@ -178,7 +182,7 @@ class ConfiguratorBaseTest extends Test
 		$dummy = new DummyPluginConfigurator($this->configurator);
 		$dummy->setQuickMatch('@');
 		$dummy->disableQuickMatch();
-		$this->assertAttributeEquals(false, 'quickMatch', $dummy);
+		$this->assertFalse($this->getObjectProperty($dummy, 'quickMatch'));
 	}
 
 	/**
@@ -188,16 +192,17 @@ class ConfiguratorBaseTest extends Test
 	{
 		$dummy = new DummyPluginConfigurator($this->configurator);
 		$dummy->setRegexpLimit(1234);
-		$this->assertAttributeEquals(1234, 'regexpLimit', $dummy);
+		$this->assertEquals(1234, $this->getObjectProperty($dummy, 'regexpLimit'));
 	}
 
 	/**
 	* @testdox setRegexpLimit() throws an exception on invalid values
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage regexpLimit must be a number greater than 0
 	*/
 	public function testSetRegexpLimitInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('regexpLimit must be a number greater than 0');
+
 		$dummy = new DummyPluginConfigurator($this->configurator);
 		$dummy->setRegexpLimit(null);
 	}
@@ -223,6 +228,7 @@ class ConfiguratorBaseTest extends Test
 
 	/**
 	* @testdox Has a default finalize() method that doesn't do anything
+	* @doesNotPerformAssertions
 	*/
 	public function testFinalize()
 	{
@@ -273,11 +279,12 @@ class ConfiguratorBaseTest extends Test
 
 	/**
 	* @testdox getTag() throws an exception if the plugin does not have a tagName property set
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage No tag associated with this plugin
 	*/
 	public function testGetTagError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('No tag associated with this plugin');
+
 		$dummy = new EmptyPluginConfigurator($this->configurator);
 
 		$dummy->getTag();
@@ -304,7 +311,7 @@ class DummyPluginConfigurator extends ConfiguratorBase
 		$this->foo = 'baz';
 	}
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->setup = $this->bar;
@@ -316,7 +323,7 @@ class TagCreatingPluginConfigurator extends ConfiguratorBase
 	public $tagName  = 'FOO';
 	public $attrName = 'BAR';
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->configurator->tags->add($this->tagName);
 	}

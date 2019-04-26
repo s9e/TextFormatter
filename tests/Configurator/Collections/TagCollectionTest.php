@@ -95,11 +95,12 @@ class TagCollectionTest extends Test
 
 	/**
 	* @testdox Throws an meaningful exception message when creating a Tag that already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Tag 'X' already exists
 	*/
 	public function testDuplicateError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Tag 'X' already exists");
+
 		$collection = new TagCollection;
 		$collection->onDuplicate('error');
 		$collection->add('X');
@@ -108,11 +109,12 @@ class TagCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception when accessing a Tag that does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Tag 'X' does not exist
 	*/
 	public function testNotExist()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Tag 'X' does not exist");
+
 		$collection = new TagCollection;
 		$collection->get('X');
 	}

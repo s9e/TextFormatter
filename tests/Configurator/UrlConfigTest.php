@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class UrlConfigTest extends Test
 {
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->urlConfig = new UrlConfig;
 	}
@@ -40,7 +40,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
-		$this->assertContains('xn--pypal-4ve\\.com', (string) $urlConfig['disallowedHosts']);
+		$this->assertStringContainsString('xn--pypal-4ve\\.com', (string) $urlConfig['disallowedHosts']);
 	}
 
 	/**
@@ -271,31 +271,34 @@ class UrlConfigTest extends Test
 
 	/**
 	* @testdox allowScheme('<invalid>') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid scheme name '<invalid>'
 	*/
 	public function testInvalidAllowScheme()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid scheme name '<invalid>'");
+
 		$this->urlConfig->allowScheme('<invalid>');
 	}
 
 	/**
 	* @testdox allowScheme('javascript') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage The JavaScript URL scheme cannot be allowed
 	*/
 	public function testAllowSchemeJavaScript()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('The JavaScript URL scheme cannot be allowed');
+
 		$this->urlConfig->allowScheme('javascript');
 	}
 
 	/**
 	* @testdox allowScheme('javaScript') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage The JavaScript URL scheme cannot be allowed
 	*/
 	public function testAllowSchemeJavaScriptCase()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('The JavaScript URL scheme cannot be allowed');
+
 		$this->urlConfig->allowScheme('javaScript');
 	}
 }

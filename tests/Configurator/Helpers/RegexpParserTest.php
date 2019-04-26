@@ -30,11 +30,12 @@ class RegexpParserTest extends Test
 
 	/**
 	* @testdox parse() throws a RuntimeException if delimiters can't be parsed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not parse regexp delimiters
 	*/
 	public function testInvalidRegexpsException1()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Could not parse regexp delimiters');
+
 		RegexpParser::parse('#foo/iD');
 	}
 
@@ -162,11 +163,12 @@ class RegexpParserTest extends Test
 
 	/**
 	* @testdox parse() throws a RuntimeException if a character class is not properly closed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find matching bracket from pos 0
 	*/
 	public function testInvalidRegexpsException2()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Could not find matching bracket from pos 0');
+
 		RegexpParser::parse('#[a-z)#');
 	}
 
@@ -542,31 +544,34 @@ class RegexpParserTest extends Test
 
 	/**
 	* @testdox parse() throws a RuntimeException if an unmatched right parenthesis is found
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find matching pattern start for right parenthesis at pos 3
 	*/
 	public function testInvalidRegexpsException4()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Could not find matching pattern start for right parenthesis at pos 3');
+
 		RegexpParser::parse('#a-z)#');
 	}
 
 	/**
 	* @testdox parse() throws a RuntimeException if an unmatched left parenthesis is found
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find matching pattern end for left parenthesis at pos 0
 	*/
 	public function testInvalidRegexpsException5()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Could not find matching pattern end for left parenthesis at pos 0');
+
 		RegexpParser::parse('#(a-z#');
 	}
 
 	/**
 	* @testdox parse() throws a RuntimeException on unsupported subpatterns
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unsupported subpattern type at pos 0
 	*/
 	public function testInvalidRegexpsUnsupportedSubpatternException()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Unsupported subpattern type at pos 0');
+
 		RegexpParser::parse('#(?(condition)yes-pattern|no-pattern)#');
 	}
 

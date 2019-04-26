@@ -34,10 +34,11 @@ class TemplateParameterCollectionTest extends Test
 
 	/**
 	* @testdox add('foo bar') throws an exception
-	* @expectedException InvalidArgumentException
 	*/
 	public function testAddInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+
 		$collection = new TemplateParameterCollection;
 		$collection->add('foo bar');
 	}

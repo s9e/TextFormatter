@@ -84,7 +84,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testRegisteredVarsVisibility()
 	{
-		$this->assertInternalType('array', $this->configurator->registeredVars);
+		$this->assertIsArray($this->configurator->registeredVars);
 	}
 
 	/**
@@ -174,7 +174,7 @@ class ConfiguratorTest extends Test
 	public function testAsConfigRootContext()
 	{
 		$config = $this->configurator->asConfig();
-		$this->assertInternalType('array', $config);
+		$this->assertIsArray($config);
 		$this->assertArrayHasKey('rootContext', $config);
 	}
 
@@ -184,7 +184,7 @@ class ConfiguratorTest extends Test
 	public function testAsConfigRegisteredVars()
 	{
 		$config = $this->configurator->asConfig();
-		$this->assertInternalType('array', $config);
+		$this->assertIsArray($config);
 		$this->assertArrayHasKey('registeredVars', $config);
 		$this->assertArrayHasKey('urlConfig', $config['registeredVars']);
 	}
@@ -322,7 +322,7 @@ class ConfiguratorTest extends Test
 		$this->configurator->tags->add('A')->filterChain->append($pc);
 
 		$parser = $this->getParser();
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 
 		$this->assertArrayNotHasKey(
 			'js',
@@ -341,7 +341,7 @@ class ConfiguratorTest extends Test
 		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($filter);
 
 		$parser = $this->getParser();
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 
 		$this->assertArrayNotHasKey(
 			'js',
@@ -419,11 +419,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox $configurator->foo throws an exception if $configurator->registeredVars['foo'] does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Undefined property 's9e\TextFormatter\Configurator::$foo'
 	*/
 	public function testMagicGetInexistentVar()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Undefined property 's9e\\TextFormatter\\Configurator::\$foo'");
+
 		$this->configurator->foo;
 	}
 
@@ -499,11 +500,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox loadBundle('../Invalid') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid bundle name
 	*/
 	public function testLoadBundleInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid bundle name');
+
 		$this->configurator->loadBundle('../Invalid');
 	}
 
@@ -528,7 +530,7 @@ class ConfiguratorTest extends Test
 
 		$file = file_get_contents($filepath);
 		$this->assertStringStartsWith('<?php', $file);
-		$this->assertContains('class Foo', $file);
+		$this->assertStringContainsString('class Foo', $file);
 	}
 
 	/**

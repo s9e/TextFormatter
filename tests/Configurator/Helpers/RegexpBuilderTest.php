@@ -1008,12 +1008,13 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Invalid UTF-8 string
 	* @testdox fromList() throws a RuntimeException if any word is not legal UTF-8
 	*/
 	public function testUTF8Exception()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Invalid UTF-8 string');
+
 		RegexpBuilder::fromList(["\xff\xff"]);
 	}
 

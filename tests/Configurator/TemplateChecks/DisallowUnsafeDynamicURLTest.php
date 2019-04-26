@@ -30,6 +30,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed: <a href="http://example.org">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedStaticAttribute()
 	{
@@ -41,6 +42,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed if #url: <a href="{@foo}">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedDynamic()
 	{
@@ -55,6 +57,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed even if unknown: <a href="http://{@foo}">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedAnchoredScheme()
 	{
@@ -66,6 +69,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed even if unknown: <a href="//{@foo}">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedAnchoredSchemeless()
 	{
@@ -77,6 +81,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed even if unknown: <a href="user/{@foo}">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedAnchoredLocalPart()
 	{
@@ -88,6 +93,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed even if unknown: <a href="#{@foo}">...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedAnchoredFragment()
 	{
@@ -99,11 +105,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <a href="{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknown()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<a href="{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -127,11 +134,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfiltered()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a href="{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -156,11 +164,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="javascript:{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredJavaScript()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a href="javascript:{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -185,11 +194,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="JAVASCRIPT:{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredJavaScriptCase()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a href="JAVASCRIPT:{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -214,11 +224,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="<TAB>javascript:{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredJavaScriptTab()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate("<a href=\"\tjavascript:{@foo}\">...</a>");
 
 		$tag = new Tag;
@@ -243,11 +254,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="vbscript:{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredVbcript()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a href="vbscript:{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -272,11 +284,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a href="data:{@foo}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredData()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a href="data:{@foo}">...</a>');
 
 		$tag = new Tag;
@@ -301,11 +314,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed: <a href="{.}">...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<a href="{.}">...</a>');
 
 		$tag = new Tag;
@@ -329,6 +343,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed if #url: <a><xsl:copy-of select="@href"/>...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedCopyOf()
 	{
@@ -343,11 +358,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <a><xsl:copy-of select="@href"/>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'href'
 	*/
 	public function testDisallowedUnknownCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'href'");
+
 		$node = $this->loadTemplate('<a><xsl:copy-of select="@href"/>...</a>');
 
 		$tag = new Tag;
@@ -371,11 +387,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a><xsl:copy-of select="@href"/>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'href' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'href' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a><xsl:copy-of select="@href"/>...</a>');
 
 		$tag = new Tag;
@@ -400,6 +417,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed if #url: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedValueOf()
 	{
@@ -414,11 +432,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknownValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
@@ -442,6 +461,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Allowed even if unknown: <a><xsl:attribute name="href">http://<xsl:value-of select="@foo"/></xsl:attribute>...</a>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedValueOfAnchored()
 	{
@@ -453,11 +473,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknownValueOfJavaScript()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href">javascript:<xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
@@ -481,11 +502,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
@@ -510,11 +532,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedValueOfDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
@@ -538,11 +561,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed: <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot allow unfiltered data in this context
 	*/
 	public function testDisallowedApplyTemplates()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot allow unfiltered data in this context');
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute>...</a>');
 
 		$tag = new Tag;
@@ -566,11 +590,12 @@ class DisallowUnsafeDynamicURLTest extends Test
 
 	/**
 	* @testdox Disallowed: <a><xsl:attribute name="href"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</a>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess context due to 'xsl:for-each'
 	*/
 	public function testUnsafeContext()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess context due to 'xsl:for-each'");
+
 		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</a>');
 
 		$tag = new Tag;

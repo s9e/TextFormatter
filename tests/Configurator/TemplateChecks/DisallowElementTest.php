@@ -29,11 +29,12 @@ class DisallowElementTest extends Test
 
 	/**
 	* @testdox DisallowElement('script') disallows <b><script/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'script' is disallowed
 	*/
 	public function testDisallowed()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'script' is disallowed");
+
 		$node = $this->loadTemplate('<b><script/></b>');
 
 		try
@@ -55,11 +56,12 @@ class DisallowElementTest extends Test
 
 	/**
 	* @testdox DisallowElement('svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'svg' is disallowed
 	*/
 	public function testDisallowedNS()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'svg' is disallowed");
+
 		$node = $this->loadTemplate('<svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>');
 
 		try
@@ -81,6 +83,7 @@ class DisallowElementTest extends Test
 
 	/**
 	* @testdox DisallowElement('script') allows <b><span/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{
@@ -92,11 +95,12 @@ class DisallowElementTest extends Test
 
 	/**
 	* @testdox DisallowElement('script') disallows <b><SCRIPT/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'script' is disallowed
 	*/
 	public function testDisallowedUppercase()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'script' is disallowed");
+
 		$node = $this->loadTemplate('<b><SCRIPT/></b>');
 
 		try
@@ -118,11 +122,12 @@ class DisallowElementTest extends Test
 
 	/**
 	* @testdox DisallowElement('script') disallows <b><xsl:element name="script"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'script' is disallowed
 	*/
 	public function testDisallowedDynamic()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Element 'script' is disallowed");
+
 		$node = $this->loadTemplate('<b><xsl:element name="script"/></b>');
 
 		try

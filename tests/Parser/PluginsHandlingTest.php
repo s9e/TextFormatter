@@ -286,11 +286,12 @@ class PluginsHandlingTest extends Test
 
 	/**
 	* @testdox registerParser() throws an exception if its second argument is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a valid callback
 	*/
 	public function testRegisterParserInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a valid callback');
+
 		$dummy  = new PluginsHandlingDummy;
 		$dummy->registerParser('Foo', '*invalid*');
 	}

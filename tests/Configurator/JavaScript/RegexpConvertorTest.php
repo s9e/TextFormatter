@@ -113,11 +113,12 @@ class RegexpConvertorTest extends Test
 
 	/**
 	* @testdox toJS() throws a RuntimeException on options (?i)
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Regexp options are not supported
 	*/
 	public function testConvertRegexpException1()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Regexp options are not supported');
+
 		RegexpConvertor::toJS('#(?i)x#');
 	}
 
@@ -131,11 +132,12 @@ class RegexpConvertorTest extends Test
 
 	/**
 	* @testdox toJS() throws a RuntimeException on subpattern options (?i:)
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Subpattern options are not supported
 	*/
 	public function testConvertRegexpException2()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Subpattern options are not supported');
+
 		RegexpConvertor::toJS('#(?i:x)#');
 	}
 
@@ -266,21 +268,23 @@ class RegexpConvertorTest extends Test
 
 	/**
 	* @testdox toJS() throws a RuntimeException on lookbehind assertions
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unsupported token type 'lookbehindAssertionStart'
 	*/
 	public function testConvertRegexpExceptionOnLookbehind()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported token type 'lookbehindAssertionStart'");
+
 		RegexpConvertor::toJS('#(?<=foo)x#');
 	}
 
 	/**
 	* @testdox toJS() throws a RuntimeException on negative lookbehind assertions
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unsupported token type 'negativeLookbehindAssertionStart'
 	*/
 	public function testConvertRegexpExceptionOnNegativeLookbehind()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported token type 'negativeLookbehindAssertionStart'");
+
 		RegexpConvertor::toJS('#(?<!foo)x#');
 	}
 

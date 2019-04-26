@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class MatthiasMullieMinifyTest extends Test
 {
-	public function setUp()
+	protected function setUp(): void
 	{
 		if (!class_exists('MatthiasMullie\\Minify\\JS'))
 		{

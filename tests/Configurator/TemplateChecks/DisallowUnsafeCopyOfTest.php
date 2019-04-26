@@ -28,6 +28,7 @@ class DisallowUnsafeCopyOfTest extends Test
 
 	/**
 	* @testdox Allowed: <b><xsl:copy-of select="@title"/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{
@@ -39,6 +40,7 @@ class DisallowUnsafeCopyOfTest extends Test
 
 	/**
 	* @testdox Allowed: <b><xsl:copy-of select="@data-title"/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedDash()
 	{
@@ -50,6 +52,7 @@ class DisallowUnsafeCopyOfTest extends Test
 
 	/**
 	* @testdox Allowed: <b><xsl:copy-of select="@data-title|@title"/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedMultipleAttributes()
 	{
@@ -61,11 +64,12 @@ class DisallowUnsafeCopyOfTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:copy-of select="FOO"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of 'xsl:copy-of' select expression 'FOO'
 	*/
 	public function testDisallowed()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of 'xsl:copy-of' select expression 'FOO'");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="FOO"/></b>');
 
 		try

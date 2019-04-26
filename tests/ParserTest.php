@@ -177,11 +177,12 @@ class ParserTest extends Test
 
 	/**
 	* @testdox parse() throws an exception if the input isn't valid UTF-8
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid UTF-8 input
 	*/
 	public function testParseInvalidUTF8()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid UTF-8 input');
+
 		$this->getParser()->parse("x\xFF");
 	}
 
@@ -193,12 +194,12 @@ class ParserTest extends Test
 		$this->configurator->tags->add('FOO');
 		$parser = $this->getParser();
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
 
 		$parser->disableTag('FOO');
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
 	}
 
@@ -215,7 +216,7 @@ class ParserTest extends Test
 
 		$parser->disableTag('FOO');
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
 		$this->assertTrue(empty($tagsConfig['BAR']['isDisabled']));
 	}
@@ -230,22 +231,23 @@ class ParserTest extends Test
 
 		$parser->disableTag('FOO');
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
 
 		$parser->enableTag('FOO');
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
 	}
 
 	/**
 	* @testdox parse() throws an exception if the parser is reset during its execution
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage The parser has been reset during execution
 	*/
 	public function testResetException()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('The parser has been reset during execution');
+
 		$parser = $this->getParser();
 
 		$parser->registerParser(
@@ -309,7 +311,7 @@ class ParserTest extends Test
 		$parser->setTagLimit('FOO', 123);
 		$parser->setTagLimit('BAR', 456);
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertSame(123, $tagsConfig['FOO']['tagLimit']);
 		$this->assertSame(456, $tagsConfig['BAR']['tagLimit']);
 	}
@@ -361,7 +363,7 @@ class ParserTest extends Test
 		$parser->setNestingLimit('FOO', 123);
 		$parser->setNestingLimit('BAR', 456);
 
-		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$tagsConfig = $this->getObjectProperty($parser, 'tagsConfig');
 		$this->assertSame(123, $tagsConfig['FOO']['nestingLimit']);
 		$this->assertSame(456, $tagsConfig['BAR']['nestingLimit']);
 	}

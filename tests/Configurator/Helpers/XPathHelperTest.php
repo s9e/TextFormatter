@@ -20,7 +20,9 @@ class XPathHelperTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$this->assertSame($expected, XPathHelper::getVariables($expr));
@@ -91,7 +93,9 @@ class XPathHelperTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$this->assertSame($expected, XPathHelper::minify($original));

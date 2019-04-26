@@ -151,7 +151,7 @@ class ConfiguratorTest extends Test
 	public function testDefaultTemplateEmojiOne()
 	{
 		$this->configurator->Emoji;
-		$this->assertContains('emojione', (string) $this->configurator->tags['EMOJI']->template);
+		$this->assertStringContainsString('emojione', (string) $this->configurator->tags['EMOJI']->template);
 	}
 
 	/**

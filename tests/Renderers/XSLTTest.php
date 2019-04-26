@@ -35,7 +35,7 @@ class XSLTTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->render('<r>..</r>');
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'XSLTProcessor',
 			serialize($renderer)
 		);
@@ -49,11 +49,7 @@ class XSLTTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->foo = 'bar';
 
-		$this->assertAttributeEquals(
-			'bar',
-			'foo',
-			unserialize(serialize($renderer))
-		);
+		$this->assertStringContainsString('s:3:"foo";s:3:"bar";', serialize($renderer));
 	}
 
 	/**

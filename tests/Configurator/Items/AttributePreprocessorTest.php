@@ -12,11 +12,12 @@ class AttributePreprocessorTest extends Test
 {
 	/**
 	* @testdox __construct() throws an InvalidArgumentException if the regexp is not valid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid regular expression
 	*/
 	public function testInvalidRegexp()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid regular expression');
+
 		new AttributePreprocessor('(?)');
 	}
 

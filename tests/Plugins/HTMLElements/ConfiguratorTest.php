@@ -106,11 +106,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowElement('script') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage elements are unsafe
 	*/
 	public function testUnsafeElement()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('elements are unsafe');
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('script');
 	}
@@ -191,22 +192,24 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowAttribute('b', 'title') throws an exception if 'b' was not explicitly allowed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Element 'b' has not been allowed
 	*/
 	public function testAttributeOnUnknownElement()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Element 'b' has not been allowed");
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowAttribute('b', 'title');
 	}
 
 	/**
 	* @testdox allowAttribute('span', 'onmouseover') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage attributes are unsafe
 	*/
 	public function testUnsafeAttribute()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('attributes are unsafe');
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('span');
 		$plugin->allowAttribute('span', 'onmouseover');
@@ -214,11 +217,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowAttribute('span', 'style') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage attributes are unsafe
 	*/
 	public function testUnsafeAttribute2()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('attributes are unsafe');
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('span');
 		$plugin->allowAttribute('span', 'style');
@@ -252,10 +256,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowElement('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException invalid
 	*/
 	public function testInvalidElementName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('invalid');
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('*invalid*');
 	}
@@ -274,10 +280,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox allowAttribute('b', '*invalid*') throws an exception
-	* @expectedException InvalidArgumentException invalid
 	*/
 	public function testInvalidAttributeName()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('invalid');
+
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', '*invalid*');

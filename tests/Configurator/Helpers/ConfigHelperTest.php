@@ -202,11 +202,12 @@ class ConfigHelperTest extends Test
 
 	/**
 	* @testdox toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot convert an instance of stdClass to array
 	*/
 	public function testInvalidObject()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Cannot convert an instance of stdClass to array');
+
 		ConfigHelper::toArray([new stdClass]);
 	}
 

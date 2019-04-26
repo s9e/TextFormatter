@@ -40,10 +40,9 @@ class RenderingTest extends Test
 	{
 		$this->configurator->rendering->setEngine('PHP', '/tmp');
 
-		$this->assertAttributeSame(
+		$this->assertSame(
 			'/tmp',
-			'cacheDir',
-			$this->configurator->rendering->engine
+			$this->getObjectProperty($this->configurator->rendering->engine, 'cacheDir')
 		);
 	}
 

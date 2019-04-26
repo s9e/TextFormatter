@@ -47,31 +47,34 @@ class TemplateParserTest extends Test
 
 	/**
 	* @testdox parse() throws an exception if it encounters a processing instruction in the stylesheet
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot parse node 'pi'
 	*/
 	public function testPI()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse node 'pi'");
+
 		TemplateParser::parse('<?pi ?>', 'xml');
 	}
 
 	/**
 	* @testdox parse() throws an exception if it encounters an unsupported XSL element
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Element 'xsl:foo' is not supported
 	*/
 	public function testUnsupportedXSL()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Element 'xsl:foo' is not supported");
+
 		TemplateParser::parse('<xsl:foo/>', 'xml');
 	}
 
 	/**
 	* @testdox parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unsupported <xsl:copy-of/> expression 'foo'
 	*/
 	public function testUnsupportedCopy()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported <xsl:copy-of/> expression 'foo'");
+
 		TemplateParser::parse('<xsl:copy-of select="foo"/>', 'xml');
 	}
 

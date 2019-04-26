@@ -30,6 +30,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed: <style>.important { color:red }</style>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedStaticElement()
 	{
@@ -41,6 +42,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed: <b style="color:red">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedStaticAttribute()
 	{
@@ -52,6 +54,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed if #color: <b style="color:{@foo}">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedDynamic()
 	{
@@ -66,11 +69,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b style="color:{@foo}">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknown()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<b style="color:{@foo}">...</b>');
 
 		$tag = new Tag;
@@ -94,11 +98,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b style="color:{@foo}">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfiltered()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b style="color:{@foo}">...</b>');
 
 		$tag = new Tag;
@@ -123,11 +128,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b style="color:{.}">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<b style="color:{.}">...</b>');
 
 		$tag = new Tag;
@@ -151,6 +157,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed if #color: <b><xsl:copy-of select="@style"/>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedCopyOf()
 	{
@@ -165,11 +172,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b><xsl:copy-of select="@style"/>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'style'
 	*/
 	public function testDisallowedUnknownCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'style'");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@style"/>...</b>');
 
 		$tag = new Tag;
@@ -193,11 +201,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:copy-of select="@style"/>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'style' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'style' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@style"/>...</b>');
 
 		$tag = new Tag;
@@ -222,6 +231,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed if #color: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedValueOf()
 	{
@@ -236,11 +246,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknownValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -264,11 +275,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -293,11 +305,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:attribute name="style"><xsl:value-of select="."/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedValueOfDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:value-of select="."/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -321,11 +334,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot allow unfiltered data in this context
 	*/
 	public function testDisallowedApplyTemplates()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot allow unfiltered data in this context');
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -349,11 +363,12 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="style"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess context due to 'xsl:for-each'
 	*/
 	public function testUnsafeContext()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess context due to 'xsl:for-each'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="style"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -377,6 +392,7 @@ class DisallowUnsafeDynamicCSSTest extends Test
 
 	/**
 	* @testdox Allowed: <b style="width:{0+@foo}px">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedNumeric()
 	{

@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BundleTest extends Test
 {
-	public function setUp()
+	protected function setUp(): void
 	{
 		DummyBundle::_reset($this);
 	}

@@ -10,13 +10,13 @@ use s9e\TextFormatter\Tests\Test;
 */
 class ClosureCompilerApplicationTest extends Test
 {
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		file_put_contents(sys_get_temp_dir() . '/test.compiler.jar', '1');
 		file_put_contents(sys_get_temp_dir() . '/test2.compiler.jar', '2');
 	}
 
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		unlink(sys_get_temp_dir() . '/test.compiler.jar');
 		unlink(sys_get_temp_dir() . '/test2.compiler.jar');
@@ -76,22 +76,24 @@ class ClosureCompilerApplicationTest extends Test
 
 	/**
 	* @testdox Throws an exception if the Closure Compiler's filepath is not set at minification time
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage No path set for Closure Compiler
 	*/
 	public function testNoPathRuntime()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('No path set for Closure Compiler');
+
 		$minifier = new ClosureCompilerApplication;
 		$minifier->minify('alert(1)');
 	}
 
 	/**
 	* @testdox Throws an exception if the Closure Compiler's file does not exist at minification time
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot find Closure Compiler at /does/not/exist
 	*/
 	public function testInvalidPathRuntime()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Cannot find Closure Compiler at /does/not/exist');
+
 		$minifier = new ClosureCompilerApplication;
 		$minifier->closureCompilerBin = '/does/not/exist';
 		$minifier->minify('alert(1)');
@@ -99,12 +101,13 @@ class ClosureCompilerApplicationTest extends Test
 
 	/**
 	* @testdox Throws an exception if the JavaScript is invalid
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage An error occured during minification
 	* @group slow
 	*/
 	public function testInvalidJavaScript()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('An error occured during minification');
+
 		$minifier = $this->getMinifier();
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
 		$minifier->minify('foo bar');
@@ -215,12 +218,13 @@ class ClosureCompilerApplicationTest extends Test
 
 	/**
 	* @testdox minify() throws an exception if an error occurs during minification
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage An error occured during minification
 	* @group slow
 	*/
 	public function testMinifyError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('An error occured during minification');
+
 		$minifier = $this->getMinifier();
 		$minifier->compilationLevel = 'WHITESPACE_ONLY';
 		$minifier->options = '--env=CUSTOM';

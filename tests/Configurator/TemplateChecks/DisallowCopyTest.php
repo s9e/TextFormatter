@@ -28,11 +28,12 @@ class DisallowCopyTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:copy/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of an 'xsl:copy' element
 	*/
 	public function test()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of an 'xsl:copy' element");
+
 		$node = $this->loadTemplate('<b><xsl:copy/></b>');
 
 		try
@@ -54,6 +55,7 @@ class DisallowCopyTest extends Test
 
 	/**
 	* @testdox Allowed: <b>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

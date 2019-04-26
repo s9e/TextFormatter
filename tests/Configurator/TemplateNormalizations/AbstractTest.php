@@ -28,7 +28,11 @@ abstract class AbstractTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage() ?: null);
+			$this->expectException(get_class($expected));
+			if ($expected->getMessage())
+			{
+				$this->expectExceptionMessage($expected->getMessage());
+			}
 		}
 
 		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'

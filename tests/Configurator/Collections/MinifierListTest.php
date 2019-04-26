@@ -25,20 +25,24 @@ class MinifierListTest extends Test
 
 	/**
 	* @testdox add() throws an exception when the value is neither a Minifier instance nor a known minifier
-	* @expectedException InvalidArgumentException Nope
 	*/
 	public function testAddNormalizeValueFail()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Nope');
+
 		$collection = new MinifierList;
 		$collection->add('Nope');
 	}
 
 	/**
 	* @testdox add() throws an exception when the value is a boolean
-	* @expectedException InvalidArgumentException false
 	*/
 	public function testAddNormalizeValueBool()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('false');
+
 		$collection = new MinifierList;
 		$collection->add(false);
 	}

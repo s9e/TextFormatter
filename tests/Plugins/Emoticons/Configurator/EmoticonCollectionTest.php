@@ -23,10 +23,11 @@ class EmoticonCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception when an invalid template is set
-	* @expectedException RuntimeException
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('RuntimeException');
+
 		$collection = new EmoticonCollection;
 		$collection->set(':)', '<xsl:foo>');
 	}
@@ -46,11 +47,12 @@ class EmoticonCollectionTest extends Test
 
 	/**
 	* @testdox Throws an meaningful exception message when creating an emoticon that already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Emoticon ':)' already exists
 	*/
 	public function testDuplicateError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Emoticon ':)' already exists");
+
 		$collection = new EmoticonCollection;
 		$collection->onDuplicate('error');
 		$collection->add(':)', ':(');
@@ -59,11 +61,12 @@ class EmoticonCollectionTest extends Test
 
 	/**
 	* @testdox Has a customized exception message on uninitialized access
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Emoticon ':)' does not exist
 	*/
 	public function testExceptionMissing()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Emoticon ':)' does not exist");
+
 		$collection = new EmoticonCollection;
 		$collection->get(':)');
 	}

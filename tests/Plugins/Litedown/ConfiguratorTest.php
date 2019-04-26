@@ -47,7 +47,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfig()
 	{
-		$this->assertInternalType('array', $this->configurator->Litedown->asConfig());
+		$this->assertIsArray($this->configurator->Litedown->asConfig());
 	}
 
 	/**

@@ -1,21 +1,20 @@
 {
 	"name": "s9e/text-formatter",
-	"version": "1.4.4-dev",
 	"type": "library",
 	"description": "Multi-purpose text formatting and markup library. Plugins offer support for BBCodes, Markdown, emoticons, HTML, embedding media (YouTube, etc...), enhanced typography and more.",
 	"homepage": "https://github.com/s9e/TextFormatter/",
 	"keywords": ["bbcode","bbcodes","blog","censor","embed","emoji","emoticons","engine","forum","html","markdown","markup","media","parser","shortcodes"],
 	"license": "MIT",
 	"require": {
-		"php":        ">=5.6.0",
+		"php":        ">=7.1",
 		"ext-dom":    "*",
 		"ext-filter": "*",
 		"lib-pcre":   ">=7.2"
 	},
 	"require-dev": {
-		"matthiasmullie/minify":       "*",
-		"php-coveralls/php-coveralls": "*",
-		"s9e/regexp-builder":          "1.*"
+		"matthiasmullie/minify": "*",
+		"phpunit/phpunit":       "^7",
+		"s9e/regexp-builder":    "1.*"
 	},
 	"suggest": {
 		"ext-curl":      "Improves the performance of the MediaEmbed plugin and some JavaScript minifiers",
@@ -35,5 +34,8 @@
 		"psr-4": {
 			"s9e\\TextFormatter\\Tests\\": "tests"
 		}
+	},
+	"extra": {
+		"version": "2.0.0-dev"
 	}
 }

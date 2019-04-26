@@ -28,11 +28,12 @@ class DisallowNodeByXPathTest extends Test
 
 	/**
 	* @testdox '//script[@src]' disallows <div><script src=""/></div>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Node 'script' is disallowed because it matches '//script[@src]'
 	*/
 	public function testDisallowed()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Node 'script' is disallowed because it matches '//script[@src]'");
+
 		$node = $this->loadTemplate('<div><script src=""/></div>');
 
 		try
@@ -54,6 +55,7 @@ class DisallowNodeByXPathTest extends Test
 
 	/**
 	* @testdox '//script[@src]' allows <div><script/></div>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

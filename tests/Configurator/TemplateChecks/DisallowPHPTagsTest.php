@@ -28,11 +28,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><?php ?></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the template
 	*/
 	public function testTemplate()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the template');
+
 		$node = $this->loadTemplate('<b><?php ?></b>');
 
 		try
@@ -54,11 +55,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><?PHP ?></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the template
 	*/
 	public function testTemplateCase()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the template');
+
 		$node = $this->loadTemplate('<b><?PHP ?></b>');
 
 		try
@@ -80,11 +82,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:processing-instruction name="php"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the output
 	*/
 	public function testOutput()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the output');
+
 		$node = $this->loadTemplate('<b><xsl:processing-instruction name="php"/></b>');
 
 		try
@@ -106,11 +109,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:processing-instruction name="PHP"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the output
 	*/
 	public function testOutputCase()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the output');
+
 		$node = $this->loadTemplate('<b><xsl:processing-instruction name="PHP"/></b>');
 
 		try
@@ -132,11 +136,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:processing-instruction name="{@foo}"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Dynamic processing instructions are not allowed
 	*/
 	public function testDynamic()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Dynamic processing instructions are not allowed');
+
 		$node = $this->loadTemplate('<b><xsl:processing-instruction name="{@foo}"/></b>');
 
 		try
@@ -158,6 +163,7 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Allowed: <b><?foo ?></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedTemplate()
 	{
@@ -168,6 +174,7 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Allowed: <b><xsl:processing-instruction name="foo"/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedOutput()
 	{
@@ -178,6 +185,7 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Allowed: <script>echo "sup";</script>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedScript()
 	{
@@ -188,11 +196,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <script language="php">echo "sup";</script>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the template
 	*/
 	public function testDisallowedScript()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the template');
+
 		$node = $this->loadTemplate('<script language="php">echo "sup";</script>');
 
 		try
@@ -214,11 +223,12 @@ class DisallowPHPTagsTest extends Test
 
 	/**
 	* @testdox Disallowed: <script language="PHP">echo "sup";</script>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage PHP tags are not allowed in the template
 	*/
 	public function testDisallowedScriptCaseInsensitive()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('PHP tags are not allowed in the template');
+
 		$node = $this->loadTemplate('<script language="PHP">echo "sup";</script>');
 
 		try

@@ -322,11 +322,12 @@ class RegexpFilterTest extends Test
 
 	/**
 	* @testdox setRegexp() throws an exception if the regexp is invalid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid regular expression '???'
 	*/
 	public function testSetRegexpInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid regular expression '???'");
+
 		$filter = new RegexpFilter;
 		$filter->setRegexp('???');
 	}
@@ -339,16 +340,17 @@ class RegexpFilterTest extends Test
 		$filter = new RegexpFilter;
 		$filter->setRegexp('/x/');
 
-		$this->assertInternalType('array', $filter->asConfig());
+		$this->assertIsArray($filter->asConfig());
 	}
 
 	/**
 	* @testdox asConfig() throws an exception if the 'regexp' var is missing
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Regexp filter is missing a 'regexp' value
 	*/
 	public function testMissingRegexp()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Regexp filter is missing a 'regexp' value");
+
 		$filter = new RegexpFilter;
 		$filter->asConfig();
 	}

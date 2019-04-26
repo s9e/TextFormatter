@@ -51,11 +51,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox add('inexistent') throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Media site 'inexistent' does not exist
 	*/
 	public function testAddInexistent()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Media site 'inexistent' does not exist");
+
 		$this->configurator->MediaEmbed->add('inexistent');
 	}
 
@@ -289,11 +290,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox add() checks the tag's safety before adding it
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'id' is not properly sanitized
 	*/
 	public function testAddUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'id' is not properly sanitized");
+
 		try
 		{
 			$this->configurator->MediaEmbed->add(
@@ -353,11 +355,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox add() throws a RuntimeException if a filter is not allowed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Filter 'eval' is not allowed in media sites
 	*/
 	public function testDisallowedFilter()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Filter 'eval' is not allowed in media sites");
+
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
@@ -400,11 +403,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox add() throws an InvalidArgumentException if the site ID is not entirely made of alphanumeric characters
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testAddInvalidId()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$tag = $this->configurator->MediaEmbed->add(
 			'../youtube',
 			[
@@ -449,7 +453,7 @@ class ConfiguratorTest extends Test
 
 		$config = $this->configurator->MediaEmbed->asConfig();
 
-		$this->assertInternalType('array', $config);
+		$this->assertIsArray($config);
 		$this->assertArrayHasKey('regexp', $config);
 	}
 

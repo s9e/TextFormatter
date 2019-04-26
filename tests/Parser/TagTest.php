@@ -344,6 +344,7 @@ class TagTest extends Test
 
 	/**
 	* @testdox Mutual invalidation doesn't cause an infinite loop
+	* @doesNotPerformAssertions
 	*/
 	public function testInvalidateNoInfiniteLoop()
 	{
@@ -753,7 +754,7 @@ class TagTest extends Test
 		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
 		$tag->setFlags(4);
 
-		$this->assertAttributeSame(4, 'flags', $tag);
+		$this->assertSame(4, $this->getObjectProperty($tag, 'flags'));
 	}
 
 	/**

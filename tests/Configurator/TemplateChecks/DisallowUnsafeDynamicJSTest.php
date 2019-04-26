@@ -30,6 +30,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed: <script>.important { alert(1) }</script>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedStaticElement()
 	{
@@ -41,6 +42,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed: <b onclick="alert(1)">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedStaticAttribute()
 	{
@@ -52,6 +54,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed if #number: <b onclick="alert({@foo})">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedDynamic()
 	{
@@ -66,11 +69,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b onclick="alert({@foo})">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknown()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<b onclick="alert({@foo})">...</b>');
 
 		$tag = new Tag;
@@ -94,11 +98,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b onclick="alert({@foo})">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfiltered()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b onclick="alert({@foo})">...</b>');
 
 		$tag = new Tag;
@@ -123,11 +128,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b onclick="alert({.})">...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<b onclick="alert({.})">...</b>');
 
 		$tag = new Tag;
@@ -151,6 +157,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed if #number: <b><xsl:copy-of select="@onclick"/>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedCopyOf()
 	{
@@ -165,11 +172,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b><xsl:copy-of select="@onclick"/>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'onclick'
 	*/
 	public function testDisallowedUnknownCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'onclick'");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@onclick"/>...</b>');
 
 		$tag = new Tag;
@@ -193,11 +201,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:copy-of select="@onclick"/>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'onclick' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredCopyOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'onclick' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@onclick"/>...</b>');
 
 		$tag = new Tag;
@@ -222,6 +231,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed if #number: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedValueOf()
 	{
@@ -236,11 +246,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unknown: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testDisallowedUnknownValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -264,11 +275,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testDisallowedUnfilteredValueOf()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -293,11 +305,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed if unfiltered: <b><xsl:attribute name="onclick"><xsl:value-of select="."/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of expression '.'
 	*/
 	public function testDisallowedValueOfDot()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of expression '.'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:value-of select="."/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -321,11 +334,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot allow unfiltered data in this context
 	*/
 	public function testDisallowedApplyTemplates()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot allow unfiltered data in this context');
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -349,11 +363,12 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="onclick"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess context due to 'xsl:for-each'
 	*/
 	public function testUnsafeContext()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess context due to 'xsl:for-each'");
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="onclick"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>');
 
 		$tag = new Tag;
@@ -377,6 +392,7 @@ class DisallowUnsafeDynamicJSTest extends Test
 
 	/**
 	* @testdox Allowed: <b onclick="this.style.width={0+@foo}">...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowedNumeric()
 	{

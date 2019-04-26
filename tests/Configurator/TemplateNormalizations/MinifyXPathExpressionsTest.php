@@ -9,11 +9,12 @@ class MinifyXPathExpressionsTest extends AbstractTest
 {
 	/**
 	* @testdox Throws an exception if a string isn't properly closed
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot parse XPath expression 'foo = "bar'
 	*/
 	public function testInvalidXPath()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse XPath expression 'foo = \"bar'");
+
 		$this->test('<xsl:if test="foo = &quot;bar">!</xsl:if>', null);
 	}
 

@@ -179,10 +179,12 @@ trait RendererTests
 
 	/**
 	* @testdox DTDs in the XML representation cause an exception to be thrown
-	* @expectedException InvalidArgumentException DTD
 	*/
 	public function testDTD()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('DTD');
+
 		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY foo "FOO">]>'
 		     . '<r>x&foo;y</r>';
 
@@ -191,28 +193,34 @@ trait RendererTests
 
 	/**
 	* @testdox Comments in the XML representation cause an exception to be thrown
-	* @expectedException InvalidArgumentException comments
 	*/
 	public function testComment()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('comments');
+
 		$this->configurator->rendering->getRenderer()->render('<r><!-- -->foo</r>');
 	}
 
 	/**
 	* @testdox Processing instructions in the XML representation cause an exception to be thrown
-	* @expectedException InvalidArgumentException Processing
 	*/
 	public function testPI()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Processing');
+
 		$this->configurator->rendering->getRenderer()->render('<r><?pi ?>foo</r>');
 	}
 
 	/**
 	* @testdox Is not vulnerable to XXE
-	* @expectedException InvalidArgumentException DTD
 	*/
 	public function testXXE()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('DTD');
+
 		$xml = '<!DOCTYPE foo [<!ELEMENT r ANY><!ENTITY xxe SYSTEM "data:text/plain,Hello">]>'
 		     . '<r>x&xxe;y</r>';
 

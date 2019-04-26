@@ -30,55 +30,60 @@ class SiteDefinitionCollectionTest extends Test
 
 	/**
 	* @testdox get() throws a meaningful exception if the site ID does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Media site 'foo' does not exist
 	*/
 	public function testUnknown()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Media site 'foo' does not exist");
+
 		$collection = new SiteDefinitionCollection;
 		$collection->get('foo');
 	}
 
 	/**
 	* @testdox Throws an exception if the site ID is not valid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testInvalidID()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$collection = new SiteDefinitionCollection;
 		$collection->set('*x*', []);
 	}
 
 	/**
 	* @testdox set() throws an exception if the site config is not an array
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site definition type
 	*/
 	public function testInvalidType()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site definition type');
+
 		$collection = new SiteDefinitionCollection;
 		$collection->set('x', '<site/>');
 	}
 
 	/**
 	* @testdox set() throws an exception if the site config does not contain a host
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Missing host from site definition
 	*/
 	public function testMissingHost()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Missing host from site definition');
+
 		$collection = new SiteDefinitionCollection;
 		$collection->set('x', []);
 	}
 
 	/**
 	* @testdox add() throws a meaningful exception if the site ID already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Media site 'foo' already exists
 	*/
 	public function testAlreadyExists()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Media site 'foo' already exists");
+
 		$collection = new SiteDefinitionCollection;
 		$collection->onDuplicate('error');
 		$collection->add('foo', ['host' => ['localhost']]);

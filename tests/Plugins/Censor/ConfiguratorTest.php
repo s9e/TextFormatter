@@ -189,7 +189,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		$regexp = $config['regexp']->getJS();
 
-		$this->assertNotContains('(?>', $regexp);
+		$this->assertStringNotContainsString('(?>', $regexp);
 	}
 
 	/**
@@ -247,6 +247,7 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox add() does not throw an exception on duplicates
+	* @doesNotPerformAssertions
 	*/
 	public function testAddDuplicate()
 	{

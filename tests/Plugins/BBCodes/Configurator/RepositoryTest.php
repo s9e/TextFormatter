@@ -16,6 +16,7 @@ class RepositoryTest extends Test
 {
 	/**
 	* @testdox __construct() accepts the path to an XML file as argument
+	* @doesNotPerformAssertions
 	*/
 	public function testConstructorFile()
 	{
@@ -24,6 +25,7 @@ class RepositoryTest extends Test
 
 	/**
 	* @testdox __construct() accepts a DOMDocument as argument
+	* @doesNotPerformAssertions
 	*/
 	public function testConstructorDOMDocument()
 	{
@@ -35,37 +37,41 @@ class RepositoryTest extends Test
 
 	/**
 	* @testdox __construct() throws an exception if passed anything else
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage NULL is not a valid BBCode repository file
 	*/
 	public function testConstructorInvalidPath()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('NULL is not a valid BBCode repository file');
+
 		$repository = new Repository(null, new BBCodeMonkey(new Configurator));
 	}
 
 	/**
 	* @testdox __construct() throws an exception if passed the path to a file that is not valid XML
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is not a valid BBCode repository file
 	*/
 	public function testConstructorInvalidFile()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('is not a valid BBCode repository file');
+
 		$repository = new Repository(__FILE__, new BBCodeMonkey(new Configurator));
 	}
 
 	/**
 	* @testdox get() throws an exception if the BBCode is not in repository
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find 'FOOBAR' in repository
 	*/
 	public function testUnknownBBCode()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Could not find 'FOOBAR' in repository");
+
 		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 		$repository->get('FOOBAR');
 	}
 
 	/**
 	* @testdox get() normalizes the name before retrieval
+	* @doesNotPerformAssertions
 	*/
 	public function testNameIsNormalized()
 	{

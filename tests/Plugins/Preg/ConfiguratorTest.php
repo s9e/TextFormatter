@@ -48,11 +48,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox The name of the tag is validated
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name
 	*/
 	public function testAddCustomTagNameInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid tag name');
+
 		$this->configurator->Preg->replace('/(?<foo>[0-9]+)/', '', 'foo:bar:baz');
 	}
 
@@ -69,11 +70,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox replace() throws an exception if the regexp is invalid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid regexp
 	*/
 	public function testInvalidRegexp()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid regexp');
+
 		$plugin = $this->configurator->plugins->load('Preg');
 		$plugin->replace('invalid', '');
 	}
@@ -391,10 +393,11 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox replace() checks the safeness of the tag
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	*/
 	public function testUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+
 		$this->configurator->Preg->replace('#<(.*)>#', '<script>$1</script>');
 	}
 

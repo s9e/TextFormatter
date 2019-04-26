@@ -26,11 +26,12 @@ class PluginCollectionTest extends Test
 
 	/**
 	* @testdox load() throws an exception if the stock plugin does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Class 's9e\TextFormatter\Plugins\Unknown\Configurator
 	*/
 	public function testLoadUnknown()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Class 's9e\\TextFormatter\\Plugins\\Unknown\\Configurator");
+
 		$this->configurator->plugins->load('Unknown');
 	}
 
@@ -62,32 +63,35 @@ class PluginCollectionTest extends Test
 
 	/**
 	* @testdox Throws an exception if the value is neither an instance of or the name of a class that implements ConfiguratorBase
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage PluginCollection::normalizeValue() expects a class name or an object that implements s9e\TextFormatter\Plugins\ConfiguratorBase
 	*/
 	public function testInvalidValue()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Plugins\\ConfiguratorBase');
+
 		$this->configurator->plugins->add('Dummy', new \stdClass);
 	}
 
 	/**
 	* @testdox Throws an exception if the plugin name is not entirely composed of letters, numbers and underscores
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid plugin name 'Dum-my'
 	*/
 	public function testInvalidNameChars()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid plugin name 'Dum-my'");
+
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$this->configurator->plugins->add('Dum-my', $plugin);
 	}
 
 	/**
 	* @testdox Throws an exception if the plugin name does not start with an uppercase letter
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid plugin name 'dummy'
 	*/
 	public function testInvalidInitial()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid plugin name 'dummy'");
+
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$this->configurator->plugins->add('dummy', $plugin);
 	}

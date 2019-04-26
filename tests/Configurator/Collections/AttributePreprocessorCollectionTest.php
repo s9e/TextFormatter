@@ -53,6 +53,7 @@ class AttributePreprocessorCollectionTest extends Test
 
 	/**
 	* @testdox Is iterable with foreach
+	* @doesNotPerformAssertions
 	*/
 	public function testIterable()
 	{
@@ -161,20 +162,22 @@ class AttributePreprocessorCollectionTest extends Test
 
 	/**
 	* @testdox merge() throws an exception when passed a non-array, non-AttributProcessorCollection
-	* @expectedException InvalidArgumentException
 	*/
 	public function testMergeInvalidArgument()
 	{
+		$this->expectException('InvalidArgumentException');
+
 		$collection = new AttributePreprocessorCollection;
 		$collection->merge('/foo/');
 	}
 
 	/**
 	* @testdox merge() throws an exception when passed a one-dimensional array
-	* @expectedException InvalidArgumentException
 	*/
 	public function testMergeInvalidArray()
 	{
+		$this->expectException('InvalidArgumentException');
+
 		$collection = new AttributePreprocessorCollection;
 		$collection->merge(['/foo/']);
 	}

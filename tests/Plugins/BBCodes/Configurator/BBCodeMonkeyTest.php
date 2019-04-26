@@ -37,7 +37,7 @@ class BBCodeMonkeyTest extends Test
 		$bbcodeMonkey   = new BBCodeMonkey(new Configurator);
 		$allowedFilters = $bbcodeMonkey->allowedFilters;
 
-		$this->assertInternalType('array', $allowedFilters);
+		$this->assertIsArray($allowedFilters);
 		$this->assertContains('strrev', $allowedFilters);
 	}
 
@@ -86,7 +86,9 @@ class BBCodeMonkeyTest extends Test
 	{
 		if ($expected instanceof Exception)
 		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+
 		}
 
 		$bbcodeMonkey = new BBCodeMonkey(new Configurator);

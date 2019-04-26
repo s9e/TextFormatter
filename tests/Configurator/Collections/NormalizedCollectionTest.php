@@ -75,6 +75,7 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox add() can be called without a second parameter
+	* @doesNotPerformAssertions
 	*/
 	public function testAddWithNoValue()
 	{
@@ -84,11 +85,12 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox add() throws a RuntimeException if the item already exists
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Item 'foobar' already exists
 	*/
 	public function testAddDuplicate()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Item 'foobar' already exists");
+
 		$collection = new NormalizedCollection;
 
 		$collection->add('foobar');
@@ -162,11 +164,12 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox get() throws a RuntimeException if the item does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Item 'foobar' does not exist
 	*/
 	public function testGetInexistent()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Item 'foobar' does not exist");
+
 		$collection = new NormalizedCollection;
 
 		$collection->get('foobar');
@@ -321,6 +324,7 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox onDuplicate() can be called with no value
+	* @doesNotPerformAssertions
 	*/
 	public function testOnDuplicateNoValue()
 	{
@@ -348,11 +352,12 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox onDuplicate('unknownvalue') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid onDuplicate action
 	*/
 	public function testOnDuplicateInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid onDuplicate action');
+
 		$collection = new NormalizedCollection;
 		$collection->onDuplicate('unknownvalue');
 	}
@@ -400,11 +405,12 @@ class NormalizedCollectionTest extends Test
 
 	/**
 	* @testdox add() throws a RuntimeException on duplicate elements if the onDuplicate action is "error"
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Item 'foo' already exists
 	*/
 	public function testOnDuplicateError()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Item 'foo' already exists");
+
 		$collection = new NormalizedCollection;
 		$collection->onDuplicate('error');
 

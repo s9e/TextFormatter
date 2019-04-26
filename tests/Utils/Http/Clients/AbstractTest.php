@@ -10,7 +10,7 @@ abstract class AbstractTest extends Test
 
 	protected $url = 'http://localhost/reflect.php';
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		if (!empty($_SERVER['TRAVIS']))
 		{
@@ -31,7 +31,7 @@ abstract class AbstractTest extends Test
 		$client = $this->getInstance();
 		$vars = unserialize($client->get($this->url));
 		$this->assertArrayHasKey('HTTP_ACCEPT_ENCODING', $vars['_SERVER']);
-		$this->assertContains('gzip', $vars['_SERVER']['HTTP_ACCEPT_ENCODING']);
+		$this->assertStringContainsString('gzip', $vars['_SERVER']['HTTP_ACCEPT_ENCODING']);
 	}
 
 	/**

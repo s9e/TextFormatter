@@ -88,22 +88,24 @@ class FirstAvailableTest extends Test
 
 	/**
 	* @testdox minify() throws an exception if no minifier is set
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage No minifier available
 	*/
 	public function testNoMinifier()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('No minifier available');
+
 		$minifier = new FirstAvailable;
 		$minifier->minify('');
 	}
 
 	/**
 	* @testdox minify() throws an exception if no minifier success
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage No minifier available
 	*/
 	public function testAllMinifiersFail()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('No minifier available');
+
 		$minifier1 = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
 		                  ->getMock();
 		$minifier1->expects($this->once())

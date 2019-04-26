@@ -99,11 +99,12 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Repository 'foo' does not exist
 	*/
 	public function testAddFromUnknownRepository()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Repository 'foo' does not exist");
+
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->addFromRepository('MYBOLD', 'foo');
 	}
@@ -174,10 +175,11 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox addFromRepository() checks that the tag is safe before adding it
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	*/
 	public function testAddFromRepositoryCheckUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+
 		$dom = new DOMDocument;
 		$dom->loadXML(
 			'<repository>
@@ -272,10 +274,11 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox addCustom() checks that the tag is safe before adding it
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	*/
 	public function testAddCustomCheckUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+
 		$plugin = $this->configurator->plugins->load('BBCodes');
 
 		try

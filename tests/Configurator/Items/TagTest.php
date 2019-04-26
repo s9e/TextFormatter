@@ -109,22 +109,24 @@ class TagTest extends Test
 
 	/**
 	* @testdox $tag->nestingLimit rejects non-numbers
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage nestingLimit must be a number greater than 0
 	*/
 	public function testNestingLimitNonNumber()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('nestingLimit must be a number greater than 0');
+
 		$tag = new Tag;
 		$tag->nestingLimit = 'invalid';
 	}
 
 	/**
 	* @testdox $tag->nestingLimit rejects numbers less than 1
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage nestingLimit must be a number greater than 0
 	*/
 	public function testNestingLimitLessThanOne()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('nestingLimit must be a number greater than 0');
+
 		$tag = new Tag;
 		$tag->nestingLimit = -1;
 	}
@@ -190,22 +192,24 @@ class TagTest extends Test
 
 	/**
 	* @testdox $tag->tagLimit rejects non-numbers
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage tagLimit must be a number greater than 0
 	*/
 	public function testTagLimitNonNumber()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('tagLimit must be a number greater than 0');
+
 		$tag = new Tag;
 		$tag->tagLimit = 'invalid';
 	}
 
 	/**
 	* @testdox $tag->tagLimit rejects numbers less than 1
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage tagLimit must be a number greater than 0
 	*/
 	public function testTagLimitLessThanOne()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('tagLimit must be a number greater than 0');
+
 		$tag = new Tag;
 		$tag->tagLimit = -1;
 	}
@@ -218,10 +222,9 @@ class TagTest extends Test
 		$tag = new Tag;
 		$tag->template = 'foo';
 
-		$this->assertAttributeInstanceOf(
+		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\Template',
-			'template',
-			$tag
+			$this->getObjectProperty($tag, 'template')
 		);
 	}
 
@@ -316,7 +319,7 @@ class TagTest extends Test
 
 		foreach ($config['filterChain'] as $filter)
 		{
-			$this->assertNotContains('executeAttributePreprocessors', $filter['callback']);
+			$this->assertStringNotContainsString('executeAttributePreprocessors', $filter['callback']);
 		}
 	}
 

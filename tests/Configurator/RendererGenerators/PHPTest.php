@@ -17,12 +17,12 @@ use s9e\TextFormatter\Tests\Test;
 */
 class PHPTest extends Test
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->configurator->rendering->engine = 'PHP';
 	}
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		array_map('unlink', glob(sys_get_temp_dir() . '/*enderer_*.php'));
 	}
@@ -109,7 +109,7 @@ class PHPTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertInstanceOf($className, $renderer);
-		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $this->getRendererSource());
+		$this->assertStringContainsString("namespace foo\\bar;\n\nclass renderer_", $this->getRendererSource());
 	}
 
 	/**
@@ -223,7 +223,7 @@ class PHPTest extends Test
 	{
 		$this->configurator->tags->add('X')->template = '<!-- Nothing here -->';
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'Nothing',
 			$this->getRendererSource()
 		);
@@ -231,32 +231,35 @@ class PHPTest extends Test
 
 	/**
 	* @testdox Throws an exception if a template contains a processing instruction
-	* @expectedException RuntimeException
 	*/
 	public function testPI()
 	{
+		$this->expectException('RuntimeException');
+
 		$this->configurator->tags->add('X')->template = '<?pi ?>';
 		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
 	* @testdox Throws an exception when encountering unsupported XSL elements
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Element 'xsl:foo' is not supported
 	*/
 	public function testUnsupported()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Element 'xsl:foo' is not supported");
+
 		$this->configurator->tags->add('X')->template = '<xsl:foo/>';
 		$this->configurator->rendering->getRenderer();
 	}
 
 	/**
 	* @testdox Throws an exception on <xsl:copy-of/> that does not copy an attribute
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unsupported <xsl:copy-of/> expression 'current()'
 	*/
 	public function testUnsupportedCopyOf()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported <xsl:copy-of/> expression 'current()'");
+
 		$this->configurator->tags->add('X')->template = '<xsl:copy-of select="current()"/>';
 		$this->configurator->rendering->getRenderer();
 	}
@@ -822,7 +825,7 @@ class PHPTest extends Test
 		{
 			foreach ((array) $contains as $str)
 			{
-				$this->assertContains($str, $this->getRendererSource());
+				$this->assertStringContainsString($str, $this->getRendererSource());
 			}
 		}
 
@@ -830,7 +833,7 @@ class PHPTest extends Test
 		{
 			foreach ((array) $notContains as $str)
 			{
-				$this->assertNotContains($str, $this->getRendererSource());
+				$this->assertStringNotContainsString($str, $this->getRendererSource());
 			}
 		}
 	}
@@ -959,6 +962,7 @@ class PHPTest extends Test
 
 	/**
 	* @testdox Can run without an optimizer
+	* @doesNotPerformAssertions
 	*/
 	public function testNoOptimizer()
 	{
@@ -984,6 +988,7 @@ class PHPTest extends Test
 
 	/**
 	* @testdox Can run without a control structures optimizer
+	* @doesNotPerformAssertions
 	*/
 	public function testNoControlStructuresOptimizer()
 	{
@@ -1624,7 +1629,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'public $enableQuickRenderer=true;',
 			$this->getRendererSource()
 		);
@@ -1638,7 +1643,7 @@ class PHPTest extends Test
 		$this->configurator->rendering->engine->enableQuickRenderer = false;
 		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
-		$this->assertNotContains(
+		$this->assertStringNotContainsString(
 			'$enableQuickRenderer=true;',
 			$this->getRendererSource()
 		);

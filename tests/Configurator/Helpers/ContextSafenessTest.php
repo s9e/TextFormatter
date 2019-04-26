@@ -16,11 +16,11 @@ class ContextSafenessTest extends Test
 	public function testGetDisallowedCharactersAsURL ()
 	{
 		$disallowedChars = ContextSafeness::getDisallowedCharactersAsURL();
-		$this->assertInternalType('array', $disallowedChars);
+		$this->assertIsArray($disallowedChars);
 
 		foreach ($disallowedChars as $char)
 		{
-			$this->assertInternalType('string', $char);
+			$this->assertIsString($char);
 		}
 	}
 
@@ -30,11 +30,11 @@ class ContextSafenessTest extends Test
 	public function testGetDisallowedCharactersInCSS ()
 	{
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
-		$this->assertInternalType('array', $disallowedChars);
+		$this->assertIsArray($disallowedChars);
 
 		foreach ($disallowedChars as $char)
 		{
-			$this->assertInternalType('string', $char);
+			$this->assertIsString($char);
 		}
 	}
 
@@ -44,11 +44,11 @@ class ContextSafenessTest extends Test
 	public function testGetDisallowedCharactersInJS ()
 	{
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
-		$this->assertInternalType('array', $disallowedChars);
+		$this->assertIsArray($disallowedChars);
 
 		foreach ($disallowedChars as $char)
 		{
-			$this->assertInternalType('string', $char);
+			$this->assertIsString($char);
 		}
 	}
 }

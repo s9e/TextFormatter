@@ -1,0 +1,15 @@
+/.coveralls.yml export-ignore
+/.gitattributes export-ignore
+/.travis.yml    export-ignore
+/CHANGELOG.md   export-ignore
+/README.md      export-ignore
+/composer.lock  export-ignore
+/docs           export-ignore
+/mkdocs.yml     export-ignore
+/phpunit.xml    export-ignore
+/scripts        export-ignore
+/src/Configurator/JavaScript/functions     export-ignore
+/src/Plugins/Litedown/Regexps.md           export-ignore
+/src/Plugins/MediaEmbed/Configurator/sites export-ignore
+/tests          export-ignore
+/vendor         export-ignore

@@ -28,11 +28,12 @@ class DisallowAttributeSetsTest extends Test
 
 	/**
 	* @testdox Disallowed: <b use-attribute-sets="foo"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of attribute sets
 	*/
 	public function test()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of attribute sets');
+
 		$node = $this->loadTemplate('<b use-attribute-sets="foo"/>');
 
 		try
@@ -54,6 +55,7 @@ class DisallowAttributeSetsTest extends Test
 
 	/**
 	* @testdox Allowed: <b>...</b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

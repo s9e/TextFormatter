@@ -67,6 +67,7 @@ class UnformattedTest extends Test
 
 	/**
 	* @testdox setParameter() doesn't do anything
+	* @doesNotPerformAssertions
 	*/
 	public function testSetParameter()
 	{

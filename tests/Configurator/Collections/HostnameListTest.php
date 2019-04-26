@@ -58,7 +58,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('pаypal.com');
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'xn--pypal-4ve\\.com',
 			(string) $list->asConfig()
 		);

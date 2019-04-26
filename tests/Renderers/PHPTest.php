@@ -16,9 +16,14 @@ class PHPTest extends Test
 {
 	use RendererTests;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->configurator->rendering->engine = 'PHP';
+	}
+
+	protected function tearDown(): void
+	{
+		array_map('unlink', glob(sys_get_temp_dir() . '/Renderer_*.php'));
 	}
 
 	/**
@@ -42,7 +47,7 @@ class PHPTest extends Test
 	{
 		$renderer = $this->configurator->rendering->getRenderer();
 
-		$this->assertNotContains('source', serialize($renderer));
+		$this->assertStringNotContainsString('source', serialize($renderer));
 	}
 
 	/**
@@ -53,7 +58,7 @@ class PHPTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 		$renderer->render('<r>xxx</r>');
 
-		$this->assertNotContains('out', serialize($renderer));
+		$this->assertStringNotContainsString('out', serialize($renderer));
 	}
 
 	/**
@@ -74,38 +79,33 @@ class PHPTest extends Test
 			{
 				continue;
 			}
+			$prop->setAccessible(true);
 
-			$this->assertAttributeNotInternalType(
-				'object',
-				$prop->getName(),
-				$renderer
-			);
-			$this->assertAttributeNotInternalType(
-				'resource',
-				$prop->getName(),
-				$renderer
-			);
+			$this->assertIsNotObject($prop->getValue($renderer));
+			$this->assertIsNotResource($prop->getValue($renderer));
 		}
 	}
 
 	/**
 	* @testdox The abstract renderer has a default implementation for renderQuickTemplate()
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Not implemented
 	*/
 	public function testDefaultQuickTemplate()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Not implemented');
+
 		$renderer = new DummyRenderer;
 		$renderer->callRenderQuickTemplate();
 	}
 
 	/**
 	* @testdox render() throws an exception on invalid XML with a "r" root tag that could be rendered by the Quick renderer
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Cannot load XML: Premature end of data in tag r
 	*/
 	public function testInvalidXMLQuick()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Cannot load XML: Premature end of data in tag r');
+
 		$this->configurator->rendering->getRenderer()->render('<r>');
 	}
 }

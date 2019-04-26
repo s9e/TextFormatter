@@ -12,11 +12,12 @@ class AttributeNameTest extends Test
 {
 	/**
 	* @testdox normalize() throws an InvalidArgumentException if the name is invalid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid attribute name '*invalid*'
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid attribute name '*invalid*'");
+
 		AttributeName::normalize('*invalid*');
 	}
 

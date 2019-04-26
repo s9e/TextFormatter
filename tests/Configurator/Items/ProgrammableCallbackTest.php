@@ -14,11 +14,12 @@ class ProgrammableCallbackTest extends Test
 {
 	/**
 	* @testdox __construct() throws an InvalidArgumentException if its argument is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage s9e\TextFormatter\Configurator\Items\ProgrammableCallback::__construct() expects a callback
 	*/
 	public function testInvalidCallback()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('s9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback::__construct() expects a callback');
+
 		new ProgrammableCallback('*invalid*');
 	}
 
@@ -111,11 +112,12 @@ class ProgrammableCallbackTest extends Test
 
 	/**
 	* @testdox addParameterByName() throws an exception when the same parameter is added twice
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Parameter 'foobar' already exists
 	*/
 	public function testAddParameterByNameDuplicated()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Parameter 'foobar' already exists");
+
 		$pc = new ProgrammableCallback('strtolower');
 		$pc->addParameterByName('foobar');
 		$pc->addParameterByName('foobar');

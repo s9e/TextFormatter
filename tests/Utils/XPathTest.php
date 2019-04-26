@@ -75,10 +75,12 @@ class XPathTest extends Test
 
 	/**
 	* @testdox export(new stdClass) throws an exception
-	* @expectedException InvalidArgumentException non-scalar
 	*/
 	public function testExportObject()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('non-scalar');
+
 		XPath::export(new \stdClass);
 	}
 }

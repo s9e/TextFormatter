@@ -12,11 +12,12 @@ class TemplateParameterNameTest extends Test
 {
 	/**
 	* @testdox normalize() throws an InvalidArgumentException if the name is invalid
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid parameter name '*invalid*'
 	*/
 	public function testInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage("Invalid parameter name '*invalid*'");
+
 		TemplateParameterName::normalize('*invalid*');
 	}
 

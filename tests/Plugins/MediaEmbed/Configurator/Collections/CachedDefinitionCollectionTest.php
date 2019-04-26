@@ -31,11 +31,12 @@ class CachedDefinitionCollectionTest extends Test
 
 	/**
 	* @testdox get('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testIssetInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$collection = new CachedDefinitionCollection;
 		$collection->get('*invalid*');
 	}
@@ -47,7 +48,7 @@ class CachedDefinitionCollectionTest extends Test
 	{
 		$collection = new CachedDefinitionCollection;
 		$sites      = iterator_to_array($collection);
-		$this->assertInternalType('array', $sites);
+		$this->assertIsArray($sites);
 		$this->assertArrayHasKey('youtube', $sites);
 	}
 
@@ -58,29 +59,31 @@ class CachedDefinitionCollectionTest extends Test
 	{
 		$collection = new CachedDefinitionCollection;
 		$siteConfig = $collection->get('youtube');
-		$this->assertInternalType('array', $siteConfig);
+		$this->assertIsArray($siteConfig);
 		$this->assertArrayHasKey('host', $siteConfig);
 		$this->assertContains('youtube.com', $siteConfig['host']);
 	}
 
 	/**
 	* @testdox get('unknown') returns FALSE
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Media site 'unknown' does not exist
 	*/
 	public function testGetUnknown()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Media site 'unknown' does not exist");
+
 		$collection = new CachedDefinitionCollection;
 		$siteConfig = $collection->get('unknown');
 	}
 
 	/**
 	* @testdox get('*invalid*') throws an exception
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid site ID
 	*/
 	public function testGetInvalid()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid site ID');
+
 		$collection = new CachedDefinitionCollection;
 		$siteConfig = $collection->get('*invalid*');
 	}

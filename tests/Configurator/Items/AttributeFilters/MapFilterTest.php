@@ -42,11 +42,12 @@ class MapFilterTest extends Test
 
 	/**
 	* @testdox asConfig() throws an exception if the 'map' var is missing
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Map filter is missing a 'map' value
 	*/
 	public function testMissingMap()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Map filter is missing a 'map' value");
+
 		$filter = new MapFilter;
 		$filter->asConfig();
 	}
@@ -57,7 +58,7 @@ class MapFilterTest extends Test
 	public function testAsConfig()
 	{
 		$filter = new MapFilter(['foo' => 'bar']);
-		$this->assertInternalType('array', $filter->asConfig());
+		$this->assertIsArray($filter->asConfig());
 	}
 
 	/**
@@ -127,22 +128,24 @@ class MapFilterTest extends Test
 
 	/**
 	* @testdox setMap() throws an exception if the second argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a boolean
 	*/
 	public function testSetMapNotBool2()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a boolean');
+
 		$filter = new MapFilter;
 		$filter->setMap(['foo' => 'bar'], 'notbool');
 	}
 
 	/**
 	* @testdox setMap() throws an exception if the third argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a boolean
 	*/
 	public function testSetMapNotBool3()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a boolean');
+
 		$filter = new MapFilter;
 		$filter->setMap(['foo' => 'bar'], true, 'notbool');
 	}

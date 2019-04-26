@@ -59,7 +59,7 @@ class DummyPluginParser extends ParserBase
 	public $configWasSet;
 	public $parserWasSet;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		++$this->called;
 		$this->configWasSet = isset($this->config);

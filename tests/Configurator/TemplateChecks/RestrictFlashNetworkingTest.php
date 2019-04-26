@@ -29,11 +29,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <embed allowNetworking="all"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'internal'
 	*/
 	public function test1a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'internal'");
+
 		$node = $this->loadTemplate('<embed allowNetworking="all"/>');
 
 		try
@@ -55,6 +56,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <embed allowNetworking="internal"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1b()
 	{
@@ -65,6 +67,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <embed allowNetworking="none"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1c()
 	{
@@ -75,11 +78,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <embed/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'internal'
 	*/
 	public function test1d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'internal'");
+
 		$node = $this->loadTemplate('<embed/>');
 
 		try
@@ -101,11 +105,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <embed allowNetworking="unknown"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowNetworking value 'unknown'
 	*/
 	public function test1e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowNetworking value 'unknown'");
+
 		$node = $this->loadTemplate('<embed allowNetworking="unknown"/>');
 
 		try
@@ -127,11 +132,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <embed allowNetworking="{@foo}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowNetworking setting '{@foo}'
+@foo}'
 	*/
 	public function test1f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowNetworking setting '{");
 		$node = $this->loadTemplate('<embed allowNetworking="{@foo}"/>');
 
 		try
@@ -153,11 +159,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' disallows <embed allowNetworking="all"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test2a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed allowNetworking="all"/>');
 
 		try
@@ -179,11 +186,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' disallows <embed allowNetworking="internal"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'internal' exceeds restricted value 'none'
 	*/
 	public function test2b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'internal' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed allowNetworking="internal"/>');
 
 		try
@@ -205,6 +213,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' allows <embed allowNetworking="none"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test2c()
 	{
@@ -215,11 +224,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' disallows <embed/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'internal' exceeds restricted value 'none'
 	*/
 	public function test2d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'internal' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed allowNetworking="internal"/>');
 
 		try
@@ -241,11 +251,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <embed allowNetworking="internal"><xsl:attribute name="allowNetworking"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test3()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<embed allowNetworking="internal"><xsl:attribute name="allowNetworking"/></embed>');
 
 		try
@@ -267,11 +278,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object><param name="allowNetworking" value="all"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'internal'
 	*/
 	public function test4a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'internal'");
+
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="all"/></object>');
 
 		try
@@ -293,6 +305,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="all"/></object> if onlyIfDynamic is TRUE
+	* @doesNotPerformAssertions
 	*/
 	public function test4aIfDynamic()
 	{
@@ -304,6 +317,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="internal"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test4b()
 	{
@@ -314,6 +328,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="none"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test4c()
 	{
@@ -324,11 +339,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'internal'
 	*/
 	public function test4d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'internal'");
+
 		$node = $this->loadTemplate('<object/>');
 
 		try
@@ -350,11 +366,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object><param name="allowNetworking" value="unknown"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowNetworking value 'unknown'
 	*/
 	public function test4e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowNetworking value 'unknown'");
+
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="unknown"/></object>');
 
 		try
@@ -376,11 +393,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object><param name="allowNetworking" value="{@foo}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowNetworking setting '{@foo}'
+@foo}'
 	*/
 	public function test4f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowNetworking setting '{");
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="{@foo}"/></object>');
 
 		try
@@ -402,11 +420,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object><param name="allowNetworking" value="all"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'internal'
 	*/
 	public function test5a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'internal'");
+
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="all"/></object>');
 
 		try
@@ -428,6 +447,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="internal"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test5b()
 	{
@@ -438,6 +458,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' allows <object><param name="allowNetworking" value="none"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test5c()
 	{
@@ -448,11 +469,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'internal' disallows <object><param name="allowNetworking" value="unknown"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowNetworking value 'unknown'
 	*/
 	public function test5e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowNetworking value 'unknown'");
+
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="unknown"/></object>');
 
 		try
@@ -474,11 +496,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' disallows <object><xsl:if><param name="allowNetworking" value="none"/></xsl:if></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test6()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<object><xsl:if><param name="allowNetworking" value="none"/></xsl:if></object>');
 
 		try
@@ -500,11 +523,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none' disallows <object><param name="allowNetworking" value="none"><xsl:attribute name="value">all</xsl:attribute></param></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test7()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<object><param name="allowNetworking" value="none"><xsl:attribute name="value">all</xsl:attribute></param></object>');
 
 		try
@@ -526,6 +550,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true allows <embed src="http://example.com/example.swf"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test8a()
 	{
@@ -536,11 +561,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',false disallows <embed src="http://example.com/example.swf"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test8b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed src="http://example.com/example.swf"/>');
 
 		try
@@ -562,11 +588,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true disallows <embed src="{@url}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test8c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed src="{@url}"/>');
 
 		try
@@ -588,11 +615,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true disallows <embed><xsl:copy-of select="@src"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test8d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed><xsl:copy-of select="@src"/></embed>');
 
 		try
@@ -614,6 +642,7 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true allows <object><param name="movie" value="http://example.com/example.swf"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test9a()
 	{
@@ -624,11 +653,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',false disallows <object><param name="movie" value="http://example.com/example.swf"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test9b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<object><param name="movie" value="http://example.com/example.swf"/></object>');
 
 		try
@@ -650,11 +680,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true disallows <object><param name="movie" value="{@url}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test9c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<object><param name="movie" value="{@url}"/></object>');
 
 		try
@@ -676,11 +707,12 @@ class RestrictFlashNetworkingTest extends Test
 
 	/**
 	* @testdox 'none',true disallows <embed><xsl:apply-templates/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowNetworking setting 'all' exceeds restricted value 'none'
 	*/
 	public function test9d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowNetworking setting 'all' exceeds restricted value 'none'");
+
 		$node = $this->loadTemplate('<embed><xsl:apply-templates/></embed>');
 
 		try

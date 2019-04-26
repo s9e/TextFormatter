@@ -28,11 +28,12 @@ class DisallowDynamicAttributeNamesTest extends Test
 
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="{@foo}"/></b>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Dynamic <xsl:attribute/> names are disallowed
 	*/
 	public function testDisallowed()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Dynamic <xsl:attribute/> names are disallowed');
+
 		$node = $this->loadTemplate('<b><xsl:attribute name="{@foo}"/></b>');
 
 		try
@@ -54,6 +55,7 @@ class DisallowDynamicAttributeNamesTest extends Test
 
 	/**
 	* @testdox Allowed: <b><xsl:attribute name="title"/></b>
+	* @doesNotPerformAssertions
 	*/
 	public function testAllowed()
 	{

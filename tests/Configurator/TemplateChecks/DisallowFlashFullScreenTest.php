@@ -29,11 +29,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <embed allowFullScreen="true"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test1a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="true"/>');
 
 		try
@@ -55,6 +56,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Allows <embed allowFullScreen="false"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1b()
 	{
@@ -65,6 +67,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Allows <embed/>
+	* @doesNotPerformAssertions
 	*/
 	public function test1d()
 	{
@@ -75,11 +78,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <embed allowFullScreen="unknown"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowFullScreen value 'unknown'
 	*/
 	public function test1e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowFullScreen value 'unknown'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="unknown"/>');
 
 		try
@@ -101,11 +105,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <embed allowFullScreen="{@foo}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowFullScreen setting '{@foo}'
+@foo}'
 	*/
 	public function test1f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{");
 		$node = $this->loadTemplate('<embed allowFullScreen="{@foo}"/>');
 
 		try
@@ -127,11 +132,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <embed allowFullScreen="false"><xsl:attribute name="allowFullScreen"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test3()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<embed allowFullScreen="false"><xsl:attribute name="allowFullScreen"/></embed>');
 
 		try
@@ -153,11 +159,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <object><param name="allowFullScreen" value="true"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test4a()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="true"/></object>');
 
 		try
@@ -179,6 +186,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Allows <object><param name="allowFullScreen" value="false"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test4b()
 	{
@@ -189,6 +197,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Allows <object/>
+	* @doesNotPerformAssertions
 	*/
 	public function test4d()
 	{
@@ -199,11 +208,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <object><param name="allowFullScreen" value="unknown"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Unknown allowFullScreen value 'unknown'
 	*/
 	public function test4e()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Unknown allowFullScreen value 'unknown'");
+
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="unknown"/></object>');
 
 		try
@@ -225,11 +235,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <object><param name="allowFullScreen" value="{@foo}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess allowFullScreen setting '{@foo}'
+@foo}'
 	*/
 	public function test4f()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess allowFullScreen setting '{");
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="{@foo}"/></object>');
 
 		try
@@ -251,11 +262,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox Disallows <object><param name="allowFullScreen" value="false"><xsl:attribute name="value">true</xsl:attribute></param></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of dynamic attributes
 	*/
 	public function test7()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage('Cannot assess the safety of dynamic attributes');
+
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="false"><xsl:attribute name="value">true</xsl:attribute></param></object>');
 
 		try
@@ -277,6 +289,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) allows <embed allowFullScreen="true" src="http://example.com/example.swf"/>
+	* @doesNotPerformAssertions
 	*/
 	public function test8a()
 	{
@@ -287,11 +300,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(false) disallows <embed allowFullScreen="true" src="http://example.com/example.swf"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test8b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="true" src="http://example.com/example.swf"/>');
 
 		try
@@ -313,11 +327,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true" src="{@url}"/>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test8c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="true" src="{@url}"/>');
 
 		try
@@ -339,11 +354,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true"><xsl:copy-of select="@src"/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test8d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="true"><xsl:copy-of select="@src"/></embed>');
 
 		try
@@ -365,6 +381,7 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) allows <object><param name="allowFullScreen" value="true"/><param name="movie" value="http://example.com/example.swf"/></object>
+	* @doesNotPerformAssertions
 	*/
 	public function test9a()
 	{
@@ -375,11 +392,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(false) disallows <object><param name="allowFullScreen" value="true"/><param name="movie" value="http://example.com/example.swf"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test9b()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="true"/><param name="movie" value="http://example.com/example.swf"/></object>');
 
 		try
@@ -401,11 +419,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) disallows <object><param name="allowFullScreen" value="true"/><param name="movie" value="{@url}"/></object>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test9c()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<object><param name="allowFullScreen" value="true"/><param name="movie" value="{@url}"/></object>');
 
 		try
@@ -427,11 +446,12 @@ class DisallowFlashFullScreenTest extends Test
 
 	/**
 	* @testdox DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true"><xsl:apply-templates/></embed>
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage allowFullScreen setting 'true' exceeds restricted value 'false'
 	*/
 	public function test9d()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("allowFullScreen setting 'true' exceeds restricted value 'false'");
+
 		$node = $this->loadTemplate('<embed allowFullScreen="true"><xsl:apply-templates/></embed>');
 
 		try

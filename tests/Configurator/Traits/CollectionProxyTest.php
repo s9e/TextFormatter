@@ -17,7 +17,7 @@ class CollectionProxyTest extends Test
 	protected $mock;
 	protected $proxy;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->mock = $this->getMockBuilder(
 			's9e\\TextFormatter\\Configurator\\Collections\\NormalizedCollection'

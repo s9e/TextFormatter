@@ -10,7 +10,7 @@ use s9e\TextFormatter\Utils\Http\Clients\Native;
 */
 class CachedTest extends AbstractTest
 {
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		array_map('unlink', glob(sys_get_temp_dir() . '/http.*.gz'));
 	}

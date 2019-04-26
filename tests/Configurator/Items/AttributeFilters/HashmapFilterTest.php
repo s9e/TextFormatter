@@ -42,11 +42,12 @@ class HashmapFilterTest extends Test
 
 	/**
 	* @testdox asConfig() throws an exception if the 'map' var is missing
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Hashmap filter is missing a 'map' value
 	*/
 	public function testMissingHashmap()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Hashmap filter is missing a 'map' value");
+
 		$filter = new HashmapFilter;
 		$filter->asConfig();
 	}
@@ -57,7 +58,7 @@ class HashmapFilterTest extends Test
 	public function testAsConfig()
 	{
 		$filter = new HashmapFilter(['foo' => 'bar']);
-		$this->assertInternalType('array', $filter->asConfig());
+		$this->assertIsArray($filter->asConfig());
 	}
 
 	/**
@@ -86,11 +87,12 @@ class HashmapFilterTest extends Test
 
 	/**
 	* @testdox Throws an exception if the second argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a boolean
 	*/
 	public function testStrictNotBool()
 	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('must be a boolean');
+
 		new HashmapFilter(['foo' => 'bar'], 'notbool');
 	}
 

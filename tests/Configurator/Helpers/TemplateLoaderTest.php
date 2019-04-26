@@ -20,7 +20,7 @@ class TemplateLoaderTest extends Test
 		$dom = TemplateLoader::load($text);
 		$this->assertInstanceOf('DOMDocument', $dom);
 
-		$this->assertContains($text, $dom->saveXML());
+		$this->assertStringContainsString($text, $dom->saveXML());
 	}
 
 	/**
@@ -43,7 +43,7 @@ class TemplateLoaderTest extends Test
 		$dom = TemplateLoader::load($xsl);
 		$this->assertInstanceOf('DOMDocument', $dom);
 
-		$this->assertContains($xsl, $dom->saveXML());
+		$this->assertStringContainsString($xsl, $dom->saveXML());
 	}
 
 	/**
@@ -99,7 +99,7 @@ class TemplateLoaderTest extends Test
 		$dom = TemplateLoader::load($html);
 		$this->assertInstanceOf('DOMDocument', $dom);
 
-		$this->assertContains($xml, $dom->saveXML());
+		$this->assertStringContainsString($xml, $dom->saveXML());
 	}
 
 	/**
@@ -113,7 +113,7 @@ class TemplateLoaderTest extends Test
 		$dom = TemplateLoader::load($html);
 		$this->assertInstanceOf('DOMDocument', $dom);
 
-		$this->assertContains($xml, $dom->saveXML());
+		$this->assertStringContainsString($xml, $dom->saveXML());
 	}
 
 	/**
@@ -197,9 +197,9 @@ class TemplateLoaderTest extends Test
 		$xml = $dom->saveXML($dom->documentElement->firstChild);
 
 		$this->assertInstanceOf('DOMDocument', $dom);
-		$this->assertContains('title=""',       $xml);
-		$this->assertNotContains('foo:bar:baz', $xml);
-		$this->assertNotContains('x:y:z',       $xml);
+		$this->assertStringContainsString('title=""',       $xml);
+		$this->assertStringNotContainsString('foo:bar:baz', $xml);
+		$this->assertStringNotContainsString('x:y:z',       $xml);
 	}
 
 	/**
@@ -213,9 +213,9 @@ class TemplateLoaderTest extends Test
 		$xml = $dom->saveXML($dom->documentElement->firstChild);
 
 		$this->assertInstanceOf('DOMDocument', $dom);
-		$this->assertContains('title=""',       $xml);
-		$this->assertNotContains('foo:bar:baz', $xml);
-		$this->assertNotContains('x:y:z',       $xml);
+		$this->assertStringContainsString('title=""',       $xml);
+		$this->assertStringNotContainsString('foo:bar:baz', $xml);
+		$this->assertStringNotContainsString('x:y:z',       $xml);
 	}
 
 	/**
@@ -231,11 +231,12 @@ class TemplateLoaderTest extends Test
 
 	/**
 	* @testdox load() throws an exception on malformed XSL
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Invalid XSL: Premature end of data
 	*/
 	public function testLoadInvalidXSL()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Invalid XSL: Premature end of data');
+
 		$xsl = '<xsl:value-of select="@foo">';
 		TemplateLoader::load($xsl);
 	}
@@ -264,6 +265,6 @@ class TemplateLoaderTest extends Test
 		$dom = TemplateLoader::load($text);
 		$this->assertInstanceOf('DOMDocument', $dom);
 
-		$this->assertNotContains('XXX', $dom->saveXML());
+		$this->assertStringNotContainsString('XXX', $dom->saveXML());
 	}
 }

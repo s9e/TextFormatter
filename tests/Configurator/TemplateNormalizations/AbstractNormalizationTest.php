@@ -40,6 +40,7 @@ class AbstractNormalizationTest extends Test
 
 	/**
 	* @testdox Nothing happens if the normalization doesn't override any method or set any query
+	* @doesNotPerformAssertions
 	*/
 	public function testNothingHappens()
 	{
@@ -49,6 +50,7 @@ class AbstractNormalizationTest extends Test
 
 	/**
 	* @testdox Nothing happens if the normalization doesn't override any method but set an element query
+	* @doesNotPerformAssertions
 	*/
 	public function testNothingHappensElement()
 	{
@@ -58,6 +60,7 @@ class AbstractNormalizationTest extends Test
 
 	/**
 	* @testdox Nothing happens if the normalization doesn't override any method but set an attribute query
+	* @doesNotPerformAssertions
 	*/
 	public function testNothingHappensAttribute()
 	{

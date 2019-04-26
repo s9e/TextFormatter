@@ -30,6 +30,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Stylesheet parameters are considered safe
+	* @doesNotPerformAssertions
 	*/
 	public function testTemplateParameter()
 	{
@@ -41,11 +42,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to an unknown attribute are unsafe
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testVarUnknown()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<xsl:variable name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
 
 		$check = new DummyContentCheck;
@@ -54,6 +56,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to an unknown attribute are ignored if ignoreUnknownAttributes() is called
+	* @doesNotPerformAssertions
 	*/
 	public function testVarUnknownIgnored()
 	{
@@ -66,11 +69,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to an unknown attribute are detected if detectUnknownAttributes() is called after ignoreUnknownAttributes()
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testVarUnknownDetected()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<xsl:variable name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
 
 		$check = new DummyContentCheck;
@@ -81,6 +85,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to a safe attribute are safe
+	* @doesNotPerformAssertions
 	*/
 	public function testVarSafe()
 	{
@@ -95,11 +100,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to an unsafe attribute are unsafe
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testVarUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<xsl:variable name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
 
 		$tag = new Tag;
@@ -124,6 +130,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to a safe variable are safe
+	* @doesNotPerformAssertions
 	*/
 	public function testVarVarSafe()
 	{
@@ -138,11 +145,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to an unsafe variable are unsafe
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testVarVarUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<xsl:variable name="foo" select="@foo"/><xsl:variable name="var" select="$foo"/><b><xsl:value-of select="$var"/></b>');
 
 		$tag = new Tag;
@@ -167,6 +175,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to a stylesheet parameter are safe
+	* @doesNotPerformAssertions
 	*/
 	public function testVarParamSafe()
 	{
@@ -178,6 +187,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Variables pointing to a stylesheet parameter of the same name are safe
+	* @doesNotPerformAssertions
 	*/
 	public function testVarParamSameName()
 	{
@@ -189,11 +199,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Local parameters pointing to an unknown attribute are unsafe
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
 	public function testParamUnknown()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
 		$node = $this->loadTemplate('<xsl:param name="var" select="@foo"/><b><xsl:value-of select="$var"/></b>');
 
 		$check = new DummyContentCheck;
@@ -202,6 +213,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Local parameters pointing to a safe attribute are safe
+	* @doesNotPerformAssertions
 	*/
 	public function testParamSafe()
 	{
@@ -216,11 +228,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Attributes are not safe if the tag's filterChain is cleared
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testUnfilteredAttribute()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:value-of select="@foo"/></b>');
 
 		$tag = new Tag;
@@ -233,11 +246,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Attributes are not safe if the tag's filterChain does not contain the default attribute filter
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
 	public function testMisfilteredAttribute()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'foo' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:value-of select="@foo"/></b>');
 
 		$tag = new Tag;
@@ -250,6 +264,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Attributes can be safe with the tag's default filterChain
+	* @doesNotPerformAssertions
 	*/
 	public function testFilteredAttribute()
 	{
@@ -264,6 +279,7 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Multiple attributes can be safe
+	* @doesNotPerformAssertions
 	*/
 	public function testCopyOfAttributesSafe()
 	{
@@ -279,11 +295,12 @@ class AbstractDynamicContentCheckTest extends Test
 
 	/**
 	* @testdox Multiple attributes can be unsafe
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Attribute 'unsafe' is not properly sanitized to be used in this context
 	*/
 	public function testCopyOfAttributesUnsafe()
 	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Attribute 'unsafe' is not properly sanitized to be used in this context");
+
 		$node = $this->loadTemplate('<b><xsl:copy-of select="@safe|@unsafe"/></b>');
 
 		$tag = new Tag;
