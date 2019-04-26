@@ -44,6 +44,17 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox setJS() can set a custom regexp
+	*/
+	public function testSetJS()
+	{
+		$regexp = new Regexp('/a++/');
+		$regexp->setJS('/a+(?!a)/');
+
+		$this->assertSame('/a+(?!a)/', $regexp->getJS());
+	}
+
+	/**
 	* @testdox Is a config provider
 	*/
 	public function testIsConfigProvider()
