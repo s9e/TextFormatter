@@ -1,3 +1,17 @@
+1.4.3 (2019-04-26)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/181b70563fdb083022c6b6c7eb3f59b6502487ff...af875b2e85d510a31616e814f18c78e1700b2449)
+
+### Added
+
+ - `5b4420b4c` MediaEmbed: added Sendvid
+
+### Changed
+
+ - `d3860f3a5` MediaEmbed: updated XboxDVR
+
+
 1.4.2 (2019-03-27)
 ==================
 
