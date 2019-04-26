@@ -13,6 +13,42 @@ use s9e\TextFormatter\Utils\XPath;
 abstract class XPathHelper
 {
 	/**
+	* Decode strings inside of an XPath expression
+	*
+	* @param  string $expr
+	* @return string
+	*/
+	public static function decodeStrings($expr)
+	{
+		return preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . hex2bin($m[2]) . $m[1];
+			},
+			$expr
+		);
+	}
+
+	/**
+	* Encode strings inside of an XPath expression
+	*
+	* @param  string $expr
+	* @return string
+	*/
+	public static function encodeStrings($expr)
+	{
+		return preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . bin2hex($m[2]) . $m[1];
+			},
+			$expr
+		);
+	}
+
+	/**
 	* Return the list of variables used in a given XPath expression
 	*
 	* @param  string $expr XPath expression

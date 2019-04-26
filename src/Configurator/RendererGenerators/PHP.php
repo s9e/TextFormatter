@@ -82,11 +82,6 @@ class PHP implements RendererGenerator
 	public $serializer;
 
 	/**
-	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
-	*/
-	public $useMultibyteStringFunctions;
-
-	/**
 	* Constructor
 	*
 	* @param string $cacheDir If set, path to the directory where the renderer will be saved
@@ -99,7 +94,6 @@ class PHP implements RendererGenerator
 			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
 			$this->optimizer = new Optimizer;
 		}
-		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
 		$this->serializer = new Serializer;
 
 		$this->normalizer = new TemplateNormalizer;
@@ -146,9 +140,6 @@ class PHP implements RendererGenerator
 	*/
 	public function generate(Rendering $rendering)
 	{
-		// Copy some options to the serializer
-		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
-
 		// Compile the templates to PHP
 		$compiledTemplates = array_map([$this, 'compileTemplate'], $rendering->getTemplates());
 

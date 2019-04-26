@@ -281,6 +281,15 @@
 			<file>tests/Plugins/Preg/ParserTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertorTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/RunnerTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanFunctionsTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanOperatorsTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/ComparisonsTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/CoreTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/MathTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/MultiByteStringManipulationTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/SingleByteStringFunctionsTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/SingleByteStringManipulationTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/BranchOutputOptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/ControlStructuresOptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/OptimizerTest.php</file>

@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Utils\XPath;
 
 class FoldArithmeticConstants extends AbstractConstantFolding
@@ -34,23 +35,9 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function evaluateExpression($expr)
 	{
-		$expr = preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
-			function ($m)
-			{
-				return $m[1] . bin2hex($m[2]) . $m[1];
-			},
-			$expr
-		);
+		$expr = XPathHelper::encodeStrings($expr);
 		$expr = parent::evaluateExpression($expr);
-		$expr = preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
-			function ($m)
-			{
-				return $m[1] . hex2bin($m[2]) . $m[1];
-			},
-			$expr
-		);
+		$expr = XPathHelper::decodeStrings($expr);
 
 		return $expr;
 	}

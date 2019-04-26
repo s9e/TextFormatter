@@ -9,7 +9,7 @@
 		"php":        ">=7.1",
 		"ext-dom":    "*",
 		"ext-filter": "*",
-		"lib-pcre":   ">=7.2"
+		"lib-pcre":   ">=8.13"
 	},
 	"require-dev": {
 		"matthiasmullie/minify": "*",

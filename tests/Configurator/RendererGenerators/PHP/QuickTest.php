@@ -176,14 +176,7 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ul><li>one</li><li>two</li><li>three</li></ul>',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<ul><li>one</li><li>two</li><li>three</li></ul>'
 			],
 			[
 				[
@@ -203,14 +196,7 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST type="upper-roman"><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li><li>three</li></ol>',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li><li>three</li></ol>'
 			],
 			[
 				[
@@ -230,14 +216,7 @@ class QuickTest extends Test
 					)
 				],
 				'<r><LIST type="square"><s>[list]</s><LI><s>[*]</s>one</LI><LI><s>[*]</s>two</LI><LI><s>[*]</s>three</LI><e>[/list]</e></LIST></r>',
-				'<ul style="list-style-type:square"><li>one</li><li>two</li><li>three</li></ul>',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<ul style="list-style-type:square"><li>one</li><li>two</li><li>three</li></ul>'
 			],
 			[
 				['IMG' => '<img src="{@url}"/>'],
@@ -262,86 +241,37 @@ class QuickTest extends Test
 			[
 				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
 				'<r><X x="&quot;&lt;&gt;"/></r>',
-				'x',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'x'
 			],
 			[
 				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
 				'<r><X x="&quot;&lt;&gt;"/></r>',
-				'x',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'x'
 			],
 			[
 				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
 				'<r><X x="1"/><X x="2"/></r>',
-				'x',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'x'
 			],
 			[
 				['X' => '<xsl:if test="11=@x">x</xsl:if>'],
 				'<r><X x="11"/><X x="2"/></r>',
-				'x',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'x'
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
 				'<r><X x="10" y="3"/></r>',
-				'<hr title="610">',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<hr title="610">'
 			],
 			[
 				['X' => '<hr title="{100+@x}"/>'],
 				'<r><X x="10" y="3"/></r>',
-				'<hr title="110">',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<hr title="110">'
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
 				'<r><X x="&amp;amp;"/></r>',
-				'<hr title="&amp;Amp;">',
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				'<hr title="&amp;Amp;">'
 			],
 			[
 				['X' => '<xsl:value-of select="@foo"/>'],
@@ -580,14 +510,7 @@ class QuickTest extends Test
 						'php',
 						'$attributes=array_pop($this->attributes);if($attributes[\'foo\']==1){if($attributes[\'foo\']==2){$html.=\'[/2]\';}else{$html.=\'[/3]\';}$html.=\'[/1]\';}else{if($attributes[\'foo\']==4){$html.=\'[/4]\';}else{$html.=\'[/5]\';}$html.=\'[/o]\';}$html.=\'END\';'
 					]
-				],
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				]
 			],
 			[
 				'<b><xsl:apply-templates/><xsl:apply-templates/></b>',
@@ -637,14 +560,7 @@ class QuickTest extends Test
 						</xsl:otherwise>
 					</xsl:choose>'
 				),
-				[['php', '$textContent=$this->getQuickTextContent($xml);if($textContent===\':)\'){$html.=\'<img src="happy.png">\';}else{$html.=htmlspecialchars($textContent,0);}']],
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				[['php', '$textContent=$this->getQuickTextContent($xml);if($textContent===\':)\'){$html.=\'<img src="happy.png">\';}else{$html.=htmlspecialchars($textContent,0);}']]
 			],
 			[
 				'<div><xsl:value-of select="@foo"/><xsl:apply-templates/></div>',
@@ -754,180 +670,68 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:if test="@x=\'&quot;&lt;&gt;\'">x</xsl:if>'],
-				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"if(\$attributes['x']==='&quot;&lt;&gt;'){\$html.='x';}"
 			],
 			[
 				['X' => '<xsl:if test="\'&quot;&lt;&gt;\'=@x">x</xsl:if>'],
-				"if('&quot;&lt;&gt;'===\$attributes['x']){\$html.='x';}",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"if('&quot;&lt;&gt;'===\$attributes['x']){\$html.='x';}"
 			],
 			[
 				['X' => '<xsl:if test="@x=1">x</xsl:if>'],
-				"if(\$attributes['x']==1){\$html.='x';}",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"if(\$attributes['x']==1){\$html.='x';}"
 			],
 			[
 				['X' => '<xsl:if test="1=@x">x</xsl:if>'],
-				"if(1==\$attributes['x']){\$html.='x';}",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"if(1==\$attributes['x']){\$html.='x';}"
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
-				"\$attributes['x']+200*\$attributes['y']",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"\$attributes['x']+200*\$attributes['y']"
 			],
 			[
 				['X' => '<hr title="{100+@x}"/>'],
-				"100+\$attributes['x']",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"100+\$attributes['x']"
 			],
 			[
 				['X' => '<xsl:if test="@x1=@x2">x</xsl:if>'],
-				"if(\$attributes['x1']===\$attributes['x2']){\$html.='x';}",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"if(\$attributes['x1']===\$attributes['x2']){\$html.='x';}"
 			],
 			[
 				['X' => '<xsl:if test="contains(@x,\'&quot;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;')!==false)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos(\$attributes['x'],'&quot;')!==false)"
 			],
 			[
 				['X' => '<xsl:if test="contains(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)"
 			],
 			[
 				['X' => '<xsl:if test="starts-with(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)"
 			],
 			[
 				['X' => '<xsl:if test="starts-with(@x,\'&quot;&lt;&gt;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)"
 			],
 			[
 				['X' => '<xsl:if test="not(contains(@x,\'&quot;\'))">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;')===false)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos(\$attributes['x'],'&quot;')===false)"
 			],
 			[
 				['X' => '<xsl:if test="not(contains(\'&quot;&lt;&gt;\',@x))">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)"
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'_','-')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'"
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'ABC','abc')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'"
 			],
 			[
 				// Replacing "a" with "A" would mess up "&amp;"
 				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
-				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'",
-				function ()
-				{
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'"
 			],
 			[
 				['X' => '<xsl:if test="@*">Y</xsl:if>'],

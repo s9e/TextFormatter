@@ -809,6 +809,27 @@ class PHPTest extends Test
 					$renderer->setParameter('ONE',   1);
 				}
 			],
+			[
+				'<r><X x="ÅÆÇÈ"/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = implode('', [
+						'<xsl:value-of select="substring(@x,0)"/>',
+						'<xsl:value-of select="substring(@x,2)"/>',
+						'<xsl:value-of select="substring(@x,10)"/>',
+						'<xsl:value-of select="substring(@x,0,2)"/>',
+						'<xsl:value-of select="substring(@x,0,10)"/>',
+						'<xsl:value-of select="substring(@x,2,2)"/>',
+						'<xsl:value-of select="substring(@x,2,10)"/>',
+						'<xsl:value-of select="substring(@x,10,10)"/>',
+						'<xsl:value-of select="substring(@x,-1,3)"/>',
+						'<xsl:value-of select="substring(@x,-10)"/>',
+						'<xsl:value-of select="substring(@x,-10,2)"/>',
+						'<xsl:value-of select="substring(@x,0,-2)"/>',
+						'<xsl:value-of select="substring(@x,0,-10)"/>'
+					]);
+				}
+			],
 		];
 	}
 
@@ -892,19 +913,8 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:value-of select="string-length(@bar)"/>',
-				"mb_strlen(\$node->getAttribute('bar'),'utf-8')",
-				'string-length',
-				function ($test)
-				{
-					if (!extension_loaded('mbstring'))
-					{
-						$this->markTestSkipped('Extension mbstring is required.');
-					}
-					if (version_compare(PCRE_VERSION, '8.13', '<'))
-					{
-						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
-					}
-				}
+				"preg_match_all('(.)su',\$node->getAttribute('bar'))",
+				'string-length'
 			],
 			// XPath in conditions
 			[
@@ -913,35 +923,9 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:if test="$a+$b&gt;$c">...</xsl:if>',
-				"if(\$this->xpath->evaluate(\$this->getParamAsXPath('a').'+'.\$this->getParamAsXPath('b').'>'.\$this->getParamAsXPath('c'),\$node))",
+				"if(\$this->xpath->evaluate(\$this->getParamAsXPath('a').'+'.\$this->getParamAsXPath('b').'>'.\$this->getParamAsXPath('c'),\$node))"
 			],
 		];
-	}
-
-	/**
-	* @requires extension mbstring
-	* @testdox useMultibyteStringFunctions is set to TRUE if mbstring is available
-	*/
-	public function testMbstringSet()
-	{
-		$generator = new PHP;
-		$this->assertTrue($generator->useMultibyteStringFunctions);
-	}
-
-	/**
-	* @testdox mbstring functions are not used if $useMultibyteStringFunctions is FALSE
-	*/
-	public function testNoMbstring()
-	{
-		$this->runCodeTest(
-			'<xsl:value-of select="string-length(@foo)"/>',
-			null,
-			'mb_strlen',
-			function ($generator)
-			{
-				$generator->useMultibyteStringFunctions = false;
-			}
-		);
 	}
 
 	/**
