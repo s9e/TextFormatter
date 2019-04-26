@@ -9,12 +9,12 @@
 		"php":        ">=7.1",
 		"ext-dom":    "*",
 		"ext-filter": "*",
-		"lib-pcre":   ">=8.13"
+		"lib-pcre":   ">=8.13",
+		"s9e/regexp-builder": "^1.4"
 	},
 	"require-dev": {
 		"matthiasmullie/minify": "*",
-		"phpunit/phpunit":       "^7",
-		"s9e/regexp-builder":    "1.*"
+		"phpunit/phpunit":       "^7"
 	},
 	"suggest": {
 		"ext-curl":      "Improves the performance of the MediaEmbed plugin and some JavaScript minifiers",

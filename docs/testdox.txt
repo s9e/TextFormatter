@@ -434,34 +434,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\AVTHelper
  [x] toXSL() tests with data set #7
  [x] toXSL() tests with data set #8
 
-s9e\TextFormatter\Tests\Configurator\Helpers\CharacterClassBuilder
- [x] Special characters are properly matched
- [x] fromList() tests with data set #0
- [x] fromList() tests with data set #1
- [x] fromList() tests with data set #2
- [x] fromList() tests with data set #3
- [x] fromList() tests with data set #4
- [x] fromList() tests with data set #5
- [x] fromList() tests with data set #6
- [x] fromList() tests with data set #7
- [x] fromList() tests with data set #8
- [x] fromList() tests with data set #9
- [x] fromList() tests with data set #10
- [x] fromList() tests with data set #11
- [x] fromList() tests with data set #12
- [x] fromList() tests with data set #13
- [x] fromList() tests with data set #14
- [x] fromList() tests with data set #15
- [x] fromList() tests with data set #16
- [x] fromList() tests with data set #17
- [x] fromList() tests with data set #18
- [x] fromList() tests with data set #19
- [x] fromList() tests with data set #20
- [x] fromList() tests with data set #21
- [x] fromList() tests with data set #22
- [x] fromList() tests with data set #23
- [x] fromList() tests with data set #24
-
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] filterConfig() filters for the right target
  [x] filterConfig() recurses into deep arrays
@@ -577,98 +549,61 @@ s9e\TextFormatter\Tests\Configurator\Helpers\NodeLocator
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
  [x] fromList(['foo', 'foo']) returns 'foo'
- [x] fromList(['FOO', 'foo']) returns '(?>FOO|foo)'
+ [x] fromList(['FOO', 'foo']) returns '(?:FOO|foo)'
  [x] fromList(['FOO', 'foo'], ["caseInsensitive" => true]) returns 'foo'
  [x] fromList(['a']) returns 'a'
  [x] fromList(['a', 'a']) returns 'a'
  [x] fromList(['/']) returns '\\/'
  [x] fromList(['/'], ["delimiter" => "#"]) returns '/'
  [x] fromList(['#'], ["delimiter" => "#"]) returns '\\#'
- [x] fromList(['apple', 'april']) returns 'ap(?>ple|ril)'
+ [x] fromList(['apple', 'april']) returns 'ap(?:ple|ril)'
  [x] fromList(['bar', 'baz']) returns 'ba[rz]'
  [x] fromList(['foo', 'fool']) returns 'fool?'
- [x] fromList(['ax', 'axed']) returns 'ax(?>ed)?'
- [x] fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[!#$(-+-.\\/:<-?[-^{|}]'
- [x] fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()\\/[\\\\\\]|]'
- [x] fromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?>x|^)y'
- [x] fromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?>y|$)'
- [x] fromList(['foo', 'bar']) returns '(?>bar|foo)'
- [x] fromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[*\\\\])(?>\\*foo|\\\\bar)'
- [x] fromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'
+ [x] fromList(['ax', 'axed']) returns 'ax(?:ed)?'
+ [x] fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[!#$(-+\\--\\/:<-?[-\\^{-}]'
+ [x] fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()\\/[-\\]|]'
+ [x] fromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:^|x)y'
+ [x] fromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:$|y)'
+ [x] fromList(['foo', 'bar']) returns '(?:bar|foo)'
  [x] fromList(['a', 'b']) returns '[ab]'
  [x] fromList(['♠', '♣', '♥', '♦']) returns '[♠♣♥♦]'
- [x] fromList(['♠', '♣', '♥', '♦', '.'], ["specialChars" => ["." => "."]]) returns '.'
  [x] fromList(['lock', 'sock']) returns '[ls]ock'
- [x] fromList(['foo', 'afoo'], ["useLookahead" => true]) returns '(?=[af])a?foo'
  [x] fromList(['boast', 'boost']) returns 'bo[ao]st'
  [x] fromList(['pest', 'pst']) returns 'pe?st'
  [x] fromList(['boast', 'boost', 'bost']) returns 'bo[ao]?st'
- [x] fromList(['boost', 'best']) returns 'b(?>e|oo)st'
- [x] fromList(['boost', 'bst']) returns 'b(?>oo)?st'
- [x] fromList(['best', 'boost', 'bust']) returns 'b(?>[eu]|oo)st'
- [x] fromList(['boost', 'bst', 'cool']) returns '(?:b(?>oo)?st|cool)'
- [x] fromList(['boost', 'bst', 'cost']) returns '(?:b(?>oo)?|co)st'
+ [x] fromList(['boost', 'best']) returns 'b(?:e|oo)st'
+ [x] fromList(['boost', 'bst']) returns 'b(?:oo)?st'
+ [x] fromList(['best', 'boost', 'bust']) returns 'b(?:[eu]|oo)st'
+ [x] fromList(['boost', 'bst', 'cool']) returns '(?:b(?:oo)?st|cool)'
+ [x] fromList(['boost', 'bst', 'cost']) returns '(?:b(?:oo)?|co)st'
  [x] fromList(['aax', 'aay', 'aax', 'aay']) returns 'aa[xy]'
  [x] fromList(['aaax', 'aaay', 'baax', 'baay']) returns '[ab]aa[xy]'
- [x] fromList(['aaax', 'aaay', 'bbaax', 'bbaay']) returns '(?>a|bb)aa[xy]'
+ [x] fromList(['aaax', 'aaay', 'bbaax', 'bbaay']) returns '(?:a|bb)aa[xy]'
  [x] fromList(['aaax', 'aaay', 'aax', 'aay']) returns 'aaa?[xy]'
- [x] fromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?>ab|cd)[xy]'
- [x] fromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?>a|bb)(?>xx|yy)'
- [x] fromList(['axx', 'ayy', 'bbxx', 'bbyy', 'c']) returns '(?>c|(?>a|bb)(?>xx|yy))'
- [x] fromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?>c|a(?>xx|yy|zz)|bb(?>xx|yy))'
- [x] fromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?>c|a[cf]|bb[cf])'
- [x] fromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?>\\.|^)(?>example\\.org|localhost)$'
- [x] fromList(['xixix', 'xoxox']) returns 'x(?>ixi|oxo)x'
+ [x] fromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?:ab|cd)[xy]'
+ [x] fromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?:a|bb)(?:xx|yy)'
+ [x] fromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?:a(?:xx|yy|zz)|bb(?:xx|yy)|c)'
+ [x] fromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?:a[cf]|bb[cf]|c)'
+ [x] fromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?:\\.|^)(?:example\\.org|localhost)$'
+ [x] fromList(['xixix', 'xoxox']) returns 'x(?:ixi|oxo)x'
  [x] fromList(['xixix', 'xixox', 'xoxox', 'xoxix']) returns 'x[io]x[io]x'
- [x] fromList(['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']) returns '(?>a|bb)(?>bar|foo)?'
+ [x] fromList(['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']) returns '(?:a|bb)(?:bar|foo)?'
  [x] fromList(['ax', 'ay', 'bx', 'by']) returns '[ab][xy]'
- [x] fromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?>c|[ab][xy])'
+ [x] fromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?:[ab][xy]|c)'
  [x] fromList(['ax', 'ay', 'bx', 'by', 'x', 'y']) returns '[ab]?[xy]'
  [x] fromList(['03', '04', '13', '14', '3', '4']) returns '[01]?[34]'
- [x] fromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?>c|a[xy]|bb[xy])'
- [x] fromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?>c|dd[xy]|[ab][xy])'
+ [x] fromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?:a[xy]|bb[xy]|c)'
+ [x] fromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?:[ab][xy]|c|dd[xy])'
  [x] fromList(['']) returns ''
  [x] fromList(['', '']) returns ''
  [x] fromList([]) returns ''
  [x] fromList(['ad', 'bd'], ["specialChars" => ["d" => "\\d"]]) returns '[ab]\\d'
- [x] fromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[\\da][\\dx]?'
- [x] fromList(['foo', 'bar', 'y', 'z']) returns '(?>[yz]|bar|foo)'
- [x] fromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?>[yz]|ba[rz]|foo)'
- [x] fromList(['a', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:a(?>a(?>cc|dd))?|bb(?>cc|dd))'
- [x] fromList(['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?>aa|bb)(?>cc|dd)?'
- [x] fromList(['aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy']) returns '(?>aa|bb)(?>(?>cc|dd)(?>xx|yy))?'
- [x] fromList(['^foo$', '^foo'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '^foo'
- [x] fromList(['^foo$', 'foo$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns 'foo$'
- [x] fromList(['bfoo', 'bfoob'], ["specialChars" => ["b" => "\\b"]]) returns '\\bfoo'
- [x] fromList(['apple', 'apple*'], ["specialChars" => ["*" => ".*?"]]) returns 'apple.*?'
- [x] fromList(['apple*', 'applepie'], ["specialChars" => ["*" => ".*?"]]) returns 'apple.*?'
- [x] fromList(['apple*', 'applepie'], ["specialChars" => ["*" => ".+?"]]) returns 'apple.+?'
- [x] fromList(['apple*', 'apple'], ["specialChars" => ["*" => ".*?"]]) returns 'apple.*?'
- [x] fromList(['apple*', 'apple+'], ["specialChars" => ["*" => ".*?", "+" => ".*"]]) returns 'apple.*'
- [x] fromList(['apple*', 'apple+'], ["specialChars" => ["*" => ".+?", "+" => ".+"]]) returns 'apple.+'
- [x] fromList(['apple*', 'apple+'], ["specialChars" => ["*" => ".*", "+" => ".+"]]) returns 'apple.*'
- [x] fromList(['applepie', 'lemonpie', 'pie', '*pie'], ["specialChars" => ["*" => ".*"]]) returns '.*pie'
- [x] fromList(['*pie*', 'lemonpie'], ["specialChars" => ["*" => ".*"]]) returns '.*pie.*'
- [x] fromList(['*pie*', 'lemonpie', 'banana'], ["specialChars" => ["*" => ".*"]]) returns '(?:.*pie.*|banana)'
- [x] fromList(['^foo$', '^foo+'], ["specialChars" => ["^" => "^", "$" => "$", "+" => ".+"]]) returns '^foo(?:$|.+)'
- [x] fromList(['^foo$', '^foo*'], ["specialChars" => ["^" => "^", "$" => "$", "*" => ".*"]]) returns '^foo.*'
- [x] fromList(['food', 'foo+'], ["specialChars" => ["d" => "\\d", "+" => ".+"]]) returns 'foo.+'
- [x] fromList(['foo*', 'foo+'], ["specialChars" => ["*" => "\\w*", "+" => ".+"]]) returns 'foo(?:\\w*|.+)'
- [x] fromList(['foo?', 'foo+'], ["specialChars" => ["?" => "\\w?", "+" => ".+"]]) returns 'foo(?:.+|\\w?)'
- [x] fromList(['fooB', 'foo+'], ["specialChars" => ["B" => "\\B", "+" => ".+"]]) returns 'foo(?:.+|\\B)'
- [x] fromList(['fooA', 'fooB', 'foo+'], ["specialChars" => ["A" => "\\A", "B" => "\\B", "+" => ".+"]]) returns 'foo(?:.+|\\A|\\B)'
- [x] fromList(['+foo+', 'fooB'], ["specialChars" => ["B" => "\\B", "+" => ".+"]]) returns '(?:.+foo.+|foo\\B)'
- [x] fromList(['+foo+', 'foo', 'bar'], ["specialChars" => ["+" => ".+"]]) returns '(?:.+foo.+|bar|foo)'
- [x] fromList(['+foo+', '+foo', 'bar'], ["specialChars" => ["+" => ".+"]]) returns '(?:.+foo.*|bar)'
- [x] fromList(['+foo+', '+foo'], ["specialChars" => ["+" => ".+"]]) returns '.+foo.*'
- [x] fromList(['++', 'a'], ["specialChars" => ["+" => ".+"]]) returns '(?:a|.+.+)'
- [x] fromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '.'
- [x] fromList(['hip', 'hop', 'h.p'], ["specialChars" => ["." => "."]]) returns 'h.p'
- [x] fromList(['hi', 'hop', 'h.p'], ["specialChars" => ["." => "."]]) returns 'h(?:i|.p)'
- [x] fromList(['h', 'h.'], ["specialChars" => ["." => "."]]) returns 'h.?'
- [x] fromList(['h.', 'hd'], ["specialChars" => ["." => ".", "d" => "\\d\\d"]]) returns 'h(?:.|\\d\\d)'
- [x] fromList(['hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'], ["specialChars" => ["X" => "."]]) returns 'h(?:...........|otel)'
- [x] fromList(['zdDhHsSvVwW', 'z..........', 'zebra'], ["specialChars" => ["d" => "\\d", "D" => "D", "h" => "\\h", "H" => "\\H", "s" => "\\s", "S" => "S", "v" => "\\v", "V" => "\\V", "w" => "\\w", "W" => "W", "." => "."]]) returns 'z(?:..........|ebra)'
+ [x] fromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[a\\d][\\dx]?'
+ [x] fromList(['foo', 'bar', 'y', 'z']) returns '(?:[yz]|bar|foo)'
+ [x] fromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?:[yz]|ba[rz]|foo)'
+ [x] fromList(['a', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))'
+ [x] fromList(['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:aa|bb)(?:cc|dd)?'
+ [x] fromList(['aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy']) returns '(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?'
  [x] fromList(['m.', 'mb'], ["specialChars" => ["." => ".", "b" => "\\b"]]) returns 'm(?:.|\\b)'
  [x] fromList(['m.', 'mB'], ["specialChars" => ["." => ".", "B" => "\\B"]]) returns 'm(?:.|\\B)'
  [x] fromList(['m.', 'mA'], ["specialChars" => ["." => ".", "A" => "\\A"]]) returns 'm(?:.|\\A)'
@@ -679,26 +614,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['m.', 'mE'], ["specialChars" => ["." => ".", "E" => "\\E"]]) returns 'm(?:.|\\E)'
  [x] fromList(['m.', 'mK'], ["specialChars" => ["." => ".", "K" => "\\K"]]) returns 'm(?:.|\\K)'
  [x] fromList(['h$', 'h.'], ["specialChars" => ["." => ".", "$" => "$"]]) returns 'h(?:$|.)'
- [x] fromList(['h?', 'ha'], ["specialChars" => ["?" => ".?"]]) returns 'h.?'
- [x] fromList(['a', 'a?', 'bb'], ["specialChars" => ["?" => ".?"]]) returns '(?:a|a.|bb)'
- [x] fromList(['h.', 'hi', 'hit'], ["specialChars" => ["." => ".?"]]) returns 'h(?:.|it)?'
- [x] fromList(['a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'], ["specialChars" => ["." => ".?"]]) returns 'a.?c.?e'
- [x] fromList(['h????', 'hello', 'heart'], ["specialChars" => ["?" => ".?"]]) returns 'h.?.?.?.?'
- [x] fromList(['x', 'xx', 'xxx']) returns 'xx?x?'
- [x] fromList(['d', 'dd', 'ddd'], ["specialChars" => ["d" => "\\d"]]) returns '\\d\\d?\\d?'
- [x] fromList(['*x', 'x'], ["specialChars" => ["*" => "[^z]+"]]) returns '[^z]*?x'
- [x] fromList(['*x', 'x'], ["specialChars" => ["*" => "[^z]?"]]) returns '[^z]?x'
- [x] fromList(['*x', 'x'], ["specialChars" => ["*" => "[^z]"]]) returns '[^z]?x'
- [x] fromList(['x.x', 'xbbx'], ["specialChars" => ["." => "."]]) returns 'x(?:.|bb)x'
- [x] fromList(['x?x', 'xbbx'], ["specialChars" => ["?" => "\\w"]]) returns 'x(?:\\w|bb)x'
- [x] fromList(['x*x', 'xb-bx'], ["specialChars" => ["*" => "\\w*"]]) returns 'x(?:\\w*|b-b)x'
- [x] fromList(['x*x', 'xb-bx'], ["specialChars" => ["*" => "\\w+"]]) returns 'x(?:\\w+|b-b)x'
  [x] fromList([':X', ':D', ':P', ':P']) returns ':[DPX]'
  [x] fromList([':X', ':D', ':P', ':p'], ["caseInsensitive" => true]) returns ':[dpx]'
  [x] fromList(['¼', '½']) returns '[¼½]'
  [x] fromList(['¼', '½'], ["unicode" => true]) returns '[¼½]'
  [x] fromList(['¼', '½'], ["unicode" => false]) returns "\xC2[\xBC\xBD]"
- [x] fromList() throws a RuntimeException if any word is not legal UTF-8
+ [x] fromList() throws a InvalidArgumentException if any word is not legal UTF-8
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() can parse plain regexps

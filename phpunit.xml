@@ -50,7 +50,6 @@
 			<file>tests/Configurator/Collections/TemplateParameterCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/AVTHelperTest.php</file>
-			<file>tests/Configurator/Helpers/CharacterClassBuilderTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ContextSafenessTest.php</file>
 			<file>tests/Configurator/Helpers/ElementInspectorTest.php</file>

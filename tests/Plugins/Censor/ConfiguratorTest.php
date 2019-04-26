@@ -139,7 +139,7 @@ class ConfiguratorTest extends Test
 		$config = ConfigHelper::filterConfig($plugin->asConfig(), 'PHP');
 
 		$this->assertSame(
-			[['/^(?>apple|cherry)$/Diu', 'banana']],
+			[['/^(?:apple|cherry)$/Diu', 'banana']],
 			$config['replacements']
 		);
 	}

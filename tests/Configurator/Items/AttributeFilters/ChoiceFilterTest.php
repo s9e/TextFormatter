@@ -51,7 +51,7 @@ class ChoiceFilterTest extends Test
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
-		       ->with('/^(?>one|two)$/Di');
+		       ->with('/^(?:one|two)$/Di');
 
 		$filter->setValues(['one', 'two']);
 	}
@@ -67,7 +67,7 @@ class ChoiceFilterTest extends Test
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
-		       ->with('/^(?>one|two)$/D');
+		       ->with('/^(?:one|two)$/D');
 
 		$filter->setValues(['one', 'two'], true);
 	}
@@ -83,7 +83,7 @@ class ChoiceFilterTest extends Test
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
-		       ->with('/^(?>pokémon|yugioh)$/Diu');
+		       ->with('/^(?:pokémon|yugioh)$/Diu');
 
 		$filter->setValues(['pokémon', 'yugioh']);
 	}
