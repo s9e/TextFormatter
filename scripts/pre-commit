@@ -5,9 +5,32 @@ cd "$ROOT"
 
 if [[ -n `git diff --cached --name-only -b src` ]]
 then
+	if [[ -n `git diff --cached --name-only -b src/Configurator/Collections/Ruleset.php` ]]
+	then
+		./scripts/patchRuleset.php
+		git update-index --add "src/Configurator/Collections/Ruleset.php"
+	fi
+	if [[ -n `git diff --cached --name-only -b src/Parser/Logger.js` ]]
+	then
+		./scripts/generateNullLogger.php
+		git update-index --add "src/Parser/NullLogger.js"
+	fi
+	if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repository.xml` ]]
+	then
+		./scripts/patchBundledBBCodesDoc.php
+	fi
+	if [[ -n `git diff --cached --name-only -b src/Plugins/FancyPants/Parser.php` ]]
+	then
+		./scripts/patchFancyPantsDoc.php
+	fi
+	if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]
+	then
+		./scripts/patchLitedownSyntax.php
+	fi
 	if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
 	then
 		./scripts/patchCachedSiteDefinitionCollection.php
+		./scripts/patchMediaEmbedDoc.php
 	fi
 
 	./scripts/generateBundles.php
@@ -25,52 +48,11 @@ then
 	git add "docs"
 fi
 
-if [[ -n `git diff --cached --name-only -b src/Configurator/Collections/Ruleset.php` ]]
-then
-	./scripts/patchRuleset.php
-	git update-index --add "src/Configurator/Collections/Ruleset.php"
-fi
-
-if [[ -n `git diff --cached --name-only -b src/Plugins/MediaEmbed/Configurator/sites` ]]
-then
-	./scripts/patchMediaEmbedDoc.php
-
-	git update-index --add "docs/Plugins/MediaEmbed/Sites.md"
-fi
-
-if [[ -n `git diff --cached --name-only -b src/Plugins/FancyPants/Parser.php` ]]
-then
-	./scripts/patchFancyPantsDoc.php
-
-	git update-index --add "docs/Plugins/FancyPants/Synopsis.md"
-fi
-
-if [[ -n `git diff --cached --name-only -b src/Plugins/BBCodes/Configurator/repository.xml` ]]
-then
-	./scripts/patchBundledBBCodesDoc.php
-
-	git update-index --add "docs/Plugins/BBCodes/Add_from_the_repository.md"
-fi
-
-if [[ -n `git diff --cached --name-only -b src/Plugins/Litedown` ]]
-then
-	./scripts/patchLitedownSyntax.php
-
-	git update-index --add "docs/Plugins/Litedown/Syntax.md"
-fi
-
 if [[ -n `git diff --cached --name-only -b tests/Configurator/Helpers/RegexpBuilderTest.php` ]]
 then
 	./scripts/patchRegexpBuilderTest.php
 
 	git update-index --add "tests/Configurator/Helpers/RegexpBuilderTest.php"
-fi
-
-if [[ -n `git diff --cached --name-only -b src/Parser/Logger.js` ]]
-then
-	./scripts/generateNullLogger.php
-
-	git update-index --add "src/Parser/NullLogger.js"
 fi
 
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
