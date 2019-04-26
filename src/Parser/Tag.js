@@ -119,23 +119,20 @@ Tag.prototype.cascadeInvalidationTo = function(tag)
 */
 Tag.prototype.invalidate = function()
 {
-	// If this tag is already invalid, we can return now. This prevent infinite loops
-	if (this.invalid)
+	// Only invalidate if this tag is valid to prevent infinite loops
+	if (!this.invalid)
 	{
-		return;
+		this.invalid = true;
+		this.cascade.forEach(
+			/**
+			* @param {!Tag} tag
+			*/
+			function(tag)
+			{
+				tag.invalidate();
+			}
+		);
 	}
-
-	this.invalid = true;
-
-	this.cascade.forEach(
-		/**
-		* @param {!Tag} tag
-		*/
-		function(tag)
-		{
-			tag.invalidate();
-		}
-	);
 }
 
 /**

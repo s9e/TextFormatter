@@ -137,17 +137,14 @@ class Tag
 	*/
 	public function invalidate()
 	{
-		// If this tag is already invalid, we can return now. This prevent infinite loops
-		if ($this->invalid)
+		// Only invalidate if this tag is valid to prevent infinite loops
+		if (!$this->invalid)
 		{
-			return;
-		}
-
-		$this->invalid = true;
-
-		foreach ($this->cascade as $tag)
-		{
-			$tag->invalidate();
+			$this->invalid = true;
+			foreach ($this->cascade as $tag)
+			{
+				$tag->invalidate();
+			}
 		}
 	}
 
