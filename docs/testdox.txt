@@ -3308,6 +3308,7 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests with data set #28
  [x] Parsing tests with data set #29
  [x] Parsing tests with data set #30
+ [x] Parsing tests with data set #31
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -3339,6 +3340,7 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests (JavaScript) with data set #28
  [x] Parsing tests (JavaScript) with data set #29
  [x] Parsing tests (JavaScript) with data set #30
+ [x] Parsing tests (JavaScript) with data set #31
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

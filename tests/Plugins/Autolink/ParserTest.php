@@ -123,7 +123,7 @@ class ParserTest extends Test
 			],
 			[
 				'~~http://example.com/~foo~~',
-				'<r><p><DEL><s>~~</s><URL url="http://example.com/~foo">http://example.com/<SUB><s>~</s>foo</SUB></URL><e>~~</e></DEL></p></r>',
+				'<r><p><DEL><s>~~</s><URL url="http://example.com/~foo">http://example.com/~foo</URL><e>~~</e></DEL></p></r>',
 				[],
 				function ($configurator)
 				{
@@ -176,7 +176,35 @@ class ParserTest extends Test
 				'“极·致·轻”，没有如果，你就是英雄！车库源码（http://src.cool）与您共同进步！',
 				'<r>“极·致·轻”，没有如果，你就是英雄！车库源码（<URL url="http://src.cool">http://src.cool</URL>）与您共同进步！</r>'
 			],
+			[
+				'http://example.org',
+				'<r><URL url="http://example.org"><X>http://example.org</X></URL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+					$configurator->tags['URL']->filterChain->append(__CLASS__ . '::addContentTag')
+						->resetParameters()
+						->addParameterByName('tag')
+						->addParameterByName('parser')
+						->setJS("
+							function (tag)
+							{
+								var tagPos = tag.getPos(),
+									tagLen = tag.getEndTag().getPos() - tagPos;
+								addSelfClosingTag('X', tagPos, tagLen, tag.getSortPriority());
+							}
+						");
+				}
+			],
 		];
+	}
+
+	public static function addContentTag($tag, $parser)
+	{
+		$tagPos = $tag->getPos();
+		$tagLen = $tag->getEndTag()->getPos() - $tagPos;
+		$parser->addSelfClosingTag('X', $tagPos, $tagLen, $tag->getSortPriority());
 	}
 
 	public function getRenderingTests()

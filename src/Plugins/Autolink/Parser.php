@@ -39,7 +39,8 @@ class Parser extends ParserBase
 		}
 
 		// Create a zero-width end tag right after the URL
-		$endTag = $this->parser->addEndTag($this->config['tagName'], $tagPos + strlen($url), 0);
+		$endPos = $tagPos + strlen($url);
+		$endTag = $this->parser->addEndTag($this->config['tagName'], $endPos, 0);
 
 		// If the URL starts with "www." we prepend "http://"
 		if ($url[3] === '.')
@@ -54,6 +55,10 @@ class Parser extends ParserBase
 
 		// Pair the tags together
 		$startTag->pairWith($endTag);
+
+		// Protect the tag's content from partial replacements with a low priority tag
+		$contentTag = $this->parser->addVerbatim($tagPos, $endPos - $tagPos, 1000);
+		$startTag->cascadeInvalidationTo($contentTag);
 	}
 
 	/**

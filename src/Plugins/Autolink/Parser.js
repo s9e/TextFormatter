@@ -19,7 +19,8 @@ function linkifyUrl(tagPos, url)
 	}
 
 	// Create a zero-width end tag right after the URL
-	var endTag = addEndTag(config.tagName, tagPos + url.length, 0);
+	var endPos = tagPos + url.length,
+		endTag = addEndTag(config.tagName, endPos, 0);
 
 	// If the URL starts with "www." we prepend "http://"
 	if (url[3] === '.')
@@ -34,6 +35,10 @@ function linkifyUrl(tagPos, url)
 
 	// Pair the tags together
 	startTag.pairWith(endTag);
+
+	// Protect the tag's content from partial replacements with a low priority tag
+	var contentTag = addVerbatim(tagPos, endPos - tagPos, 1000);
+	startTag.cascadeInvalidationTo(contentTag);
 };
 
 /**

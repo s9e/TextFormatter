@@ -2,6 +2,7 @@ Plugin     | Tag name | Priority | Notes
 ---------- | -------- | -------: | -----
 Autoimage  | IMG      |        2 |
 Autolink   | URL      |        1 |
+Autolink   | v        |     1000 |
 Autovideo  | VIDEO    |       -1 |
 Emoji      | EMOJI    |       10 |
 FancyPants | FP       |       10 | Only on single quotes
