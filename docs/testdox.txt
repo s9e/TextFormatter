@@ -1650,6 +1650,15 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressi
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] normalize() calls the user-defined callback with a DOMElement as argument
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\EnforceHTMLOmittedEndTags
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+ [x] Works with data set #3
+ [x] Works with data set #4
+ [x] Works with data set #5
+ [x] Works with data set #6
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBracesInHtmlAttributes
  [x] Works with data set #0
  [x] Works with data set #1

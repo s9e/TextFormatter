@@ -48,12 +48,10 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
 	{
 		// Ignore this attribute if its scheme is hardcoded or it starts with //
-		if (preg_match($this->exceptionRegexp, $attribute->value))
+		if (!preg_match($this->exceptionRegexp, $attribute->value))
 		{
-			return;
+			parent::checkAttributeNode($attribute, $tag);
 		}
-
-		parent::checkAttributeNode($attribute, $tag);
 	}
 
 	/**

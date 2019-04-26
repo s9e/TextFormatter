@@ -126,7 +126,7 @@ class AbstractNormalizationTest extends Test
 
 		$this->assertXmlStringEqualsXmlString(
 			'<xsl:template xmlns:xsl="' . AbstractNormalization::XMLNS_XSL . '">
-				<div data-bar="BAR" data-foo="FOO"><hr/><xsl:comment/>Text</div>
+				<div data-bar="BAR" data-foo="FOO"><hr/><xsl:comment/><b>...</b>Text</div>
 				<span/><span/>
 			</xsl:template>',
 			$template->ownerDocument->saveXML()
@@ -182,6 +182,7 @@ class TestNormalization extends AbstractNormalization
 	{
 		$node->appendChild($this->createElement('hr'));
 		$node->appendChild($this->createElement('xsl:comment'));
+		$node->appendChild($this->createElement('b', '...'));
 		$node->appendChild($this->createTextNode('Text'));
 	}
 }
