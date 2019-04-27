@@ -22,7 +22,7 @@ function addTag(tagPos, tagLen, hex)
 
 	// Short sequence, only the relevant codepoints are kept
 	var seq = hex.replace(/-(?:200d|fe0f)/g, '');
-	tag.setAttribute(config.attrName, seq);
+	tag.setAttribute('seq', seq);
 
 	// Twemoji sequence, leading zeroes and trailing VS16 are removed
 	var tseq = hex.replace(/^0+/, '').replace(/-fe0f$/, '');

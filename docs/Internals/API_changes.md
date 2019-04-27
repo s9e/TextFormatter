@@ -5,6 +5,8 @@ See also [general changes](Changes.md).
 
 Elements that were deprecated in 1.x will be removed.
 
+`s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName` has been removed.
+
 
 ## 1.3.0
 

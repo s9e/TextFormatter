@@ -55,11 +55,6 @@ class ParserTest extends Test
 				['tagName' => 'EMO']
 			],
 			[
-				'☺️',
-				'<r><EMOJI cp="263a" tseq="263a">☺️</EMOJI></r>',
-				['attrName' => 'cp']
-			],
-			[
 				'☺️☺️',
 				'<r><EMOJI seq="263a" tseq="263a">☺️</EMOJI><EMOJI seq="263a" tseq="263a">☺️</EMOJI></r>'
 			],

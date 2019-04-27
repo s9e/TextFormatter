@@ -40,15 +40,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox The name of the attribute used can be changed through the "attrName" constructor option
-	*/
-	public function testCustomAttrName()
-	{
-		$this->configurator->plugins->load('Emoji', ['attrName' => 'bar']);
-		$this->assertTrue($this->configurator->tags['EMOJI']->attributes->exists('bar'));
-	}
-
-	/**
 	* @testdox The config array contains the name of the tag
 	*/
 	public function testConfigTagName()
@@ -59,19 +50,6 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('tagName', $config);
 		$this->assertSame('FOO', $config['tagName']);
-	}
-
-	/**
-	* @testdox The config array contains the name of the attribute
-	*/
-	public function testConfigAttrName()
-	{
-		$plugin = $this->configurator->plugins->load('Emoji', ['attrName' => 'bar']);
-
-		$config = $plugin->asConfig();
-
-		$this->assertArrayHasKey('attrName', $config);
-		$this->assertSame('bar', $config['attrName']);
 	}
 
 	/**
