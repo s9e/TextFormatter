@@ -45,6 +45,14 @@ class MultiByteStringManipulationTest extends AbstractConvertorTest
 				'substring(.,2)',
 				"mb_substr(\$node->textContent,1,null,'utf-8')"
 			],
+			[
+				'substring(.,0,3)',
+				"mb_substr(\$node->textContent,0,2,'utf-8')"
+			],
+			[
+				'substring(.,-1,5)',
+				"mb_substr(\$node->textContent,0,3,'utf-8')"
+			],
 		];
 	}
 }

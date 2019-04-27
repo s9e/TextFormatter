@@ -6032,6 +6032,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Conve
  [x]  with data set #5
  [x]  with data set #6
  [x]  with data set #7
+ [x]  with data set #8
+ [x]  with data set #9
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions
  [x]  with data set #0
