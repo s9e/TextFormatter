@@ -53,5 +53,5 @@ $html = TextFormatter::render($xml, [
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="//cdn.jsdelivr.net/emojione/assets/4.5/png/64/1f642.png"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f642.svg"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
 ```

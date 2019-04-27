@@ -124,12 +124,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Uses EmojiOne by default
+	* @testdox Uses Twemoji by default
 	*/
-	public function testDefaultTemplateEmojiOne()
+	public function testDefaultTemplateTwemoji()
 	{
 		$this->configurator->Emoji;
-		$this->assertStringContainsString('emojione', (string) $this->configurator->tags['EMOJI']->template);
+		$this->assertStringContainsString('twemoji', (string) $this->configurator->tags['EMOJI']->template);
 	}
 
 	/**

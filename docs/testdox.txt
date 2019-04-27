@@ -3942,7 +3942,7 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array contains a regexp for custom aliases if applicable
  [x] The config array contains a quickMatch for custom aliases if applicable
  [x] The config array does not contain a quickMatch for aliases if impossible
- [x] Uses EmojiOne by default
+ [x] Uses Twemoji by default
  [x] removeAlias() removes given alias
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => true] if a custom regexp exists

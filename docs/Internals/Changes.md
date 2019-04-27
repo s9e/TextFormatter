@@ -10,6 +10,7 @@ The [Autolink](../Plugins/Autolink/Synopsis.md) behaviour has changed:
 The [Emoji](../Plugins/Emoji/Synopsis.md) configurator has changed:
 
  - The attribute name is now hardcoded.
+ - The default template uses Twemoji's assets.
 
 
 ## 1.4.0
