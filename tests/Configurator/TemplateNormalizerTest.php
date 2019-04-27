@@ -126,6 +126,10 @@ class TemplateNormalizerTest extends Test
 				'<hr id="foo"/>'
 			],
 			[
+				'<b><![CDATA[foo]]></b>',
+				'<b>foo</b>'
+			],
+			[
 				'<b><![CDATA[ ]]></b><![CDATA[ ]]><i><![CDATA[ ]]></i>',
 				'<b><xsl:text> </xsl:text></b><xsl:text> </xsl:text><i><xsl:text> </xsl:text></i>'
 			],

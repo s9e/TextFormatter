@@ -219,6 +219,32 @@ class TemplateLoaderTest extends Test
 	}
 
 	/**
+	* @testdox load() replaces CDATA sections in XML
+	*/
+	public function testCDATALoadXML()
+	{
+		$template = '<b><![CDATA[&amp;]]></b>';
+
+		$dom = TemplateLoader::load($template);
+		$xml = $dom->saveXML($dom->documentElement->firstChild);
+
+		$this->assertSame('<b>&amp;amp;</b>', $xml);
+	}
+
+	/**
+	* @testdox load() replaces CDATA sections in HTML
+	*/
+	public function testCDATALoadHTML()
+	{
+		$template = '<b title><![CDATA[&amp;]]></b>';
+
+		$dom = TemplateLoader::load($template);
+		$xml = $dom->saveXML($dom->documentElement->firstChild);
+
+		$this->assertSame('<b title="">&amp;amp;</b>', $xml);
+	}
+
+	/**
 	* @testdox save() correctly handles '<ul><li>one<li>two</ul>'
 	*/
 	public function testSaveHTML()

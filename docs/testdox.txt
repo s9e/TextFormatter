@@ -858,6 +858,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader
  [x] load() removes attributes with an invalid name
  [x] load() removes attributes with an invalid namespace in XML
  [x] load() removes attributes with an invalid namespace in HTML
+ [x] load() replaces CDATA sections in XML
+ [x] load() replaces CDATA sections in HTML
  [x] save() correctly handles '<ul><li>one<li>two</ul>'
  [x] load() throws an exception on malformed XSL
  [x] load() reads HTML as UTF-8
@@ -1975,6 +1977,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Default normalization rules with data set #20
  [x] Default normalization rules with data set #21
  [x] Default normalization rules with data set #22
+ [x] Default normalization rules with data set #23
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Stylesheet parameters are considered safe

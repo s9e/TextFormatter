@@ -52,7 +52,7 @@ echo $configurator->templateNormalizer->normalizeTemplate('<![CDATA[ Will not be
 ```
 ```html
  Will be inlined 
-<![CDATA[ Will not be inlined ]]>
+ Will not be inlined 
 ```
 
 ### Add your own custom normalization

@@ -111,6 +111,8 @@ abstract class TemplateLoader
 	*/
 	protected static function loadAsHTML($template)
 	{
+		$template = self::replaceCDATA($template);
+
 		$dom  = new DOMDocument;
 		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 
@@ -141,7 +143,7 @@ abstract class TemplateLoader
 
 		$useErrors = libxml_use_internal_errors(true);
 		$dom       = new DOMDocument;
-		$success   = $dom->loadXML($xml, LIBXML_NSCLEAN);
+		$success   = $dom->loadXML($xml, LIBXML_NOCDATA | LIBXML_NSCLEAN);
 		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
 
@@ -164,5 +166,23 @@ abstract class TemplateLoader
 				$attribute->parentNode->removeAttributeNode($attribute);
 			}
 		}
+	}
+
+	/**
+	* Replace CDATA sections in given template
+	*
+	* @param  string $template Original template
+	* @return string           Modified template
+	*/
+	protected static function replaceCDATA($template)
+	{
+		return preg_replace_callback(
+			'(<!\\[CDATA\\[(.*?)\\]\\]>)',
+			function ($m)
+			{
+				return htmlspecialchars($m[1]);
+			},
+			$template
+		);
 	}
 }
