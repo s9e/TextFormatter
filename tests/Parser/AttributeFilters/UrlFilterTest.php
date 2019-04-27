@@ -740,6 +740,50 @@ class UrlFilterTest extends AbstractFilterTest
 			],
 			[
 				new UrlFilter,
+				'http:example.org',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => 'example.org',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'http:example.org'
+						]
+					]
+				]
+			],
+			[
+				new UrlFilter,
+				'HTTP:EXAMPLE.ORG',
+				false,
+				[
+					[
+						'err',
+						'Missing host',
+						[
+							'scheme'    => 'http',
+							'user'      => '',
+							'pass'      => '',
+							'host'      => '',
+							'port'      => '',
+							'path'      => 'EXAMPLE.ORG',
+							'query'     => '',
+							'fragment'  => '',
+							'attrValue' => 'HTTP:EXAMPLE.ORG'
+						]
+					]
+				]
+			],
+			[
+				new UrlFilter,
 				'file:///foo.txt',
 				'file:///foo.txt',
 				[],
@@ -762,6 +806,26 @@ class UrlFilterTest extends AbstractFilterTest
 				new UrlFilter,
 				'http://example.org/Pok%c3%a9mon%c2%ae',
 				'http://example.org/Pok%C3%A9mon%C2%AE',
+			],
+			[
+				new UrlFilter,
+				'mailto:example@example.org',
+				'mailto:example@example.org',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
+			],
+			[
+				new UrlFilter,
+				'mailto:example@example.org?subject=(sub)&bcc=example2@example.org',
+				'mailto:example@example.org?subject=%28sub%29&bcc=example2@example.org',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
 			],
 		];
 	}

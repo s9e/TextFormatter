@@ -3011,6 +3011,10 @@ s9e\TextFormatter\Tests\Parser\AttributeFilters\UrlFilter
  [x] Filter with data set #55
  [x] Filter with data set #56
  [x] Filter with data set #57
+ [x] Filter with data set #58
+ [x] Filter with data set #59
+ [x] Filter with data set #60
+ [x] Filter with data set #61
  [x] J s filter with data set #0
  [x] J s filter with data set #1
  [x] J s filter with data set #2
@@ -3069,6 +3073,10 @@ s9e\TextFormatter\Tests\Parser\AttributeFilters\UrlFilter
  [x] J s filter with data set #55
  [x] J s filter with data set #56
  [x] J s filter with data set #57
+ [x] J s filter with data set #58
+ [x] J s filter with data set #59
+ [x] J s filter with data set #60
+ [x] J s filter with data set #61
 
 s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable

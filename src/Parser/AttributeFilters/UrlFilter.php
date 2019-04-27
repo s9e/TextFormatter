@@ -102,15 +102,7 @@ class UrlFilter
 		{
 			$url .= $p['scheme'] . ':';
 		}
-		if ($p['host'] === '')
-		{
-			// Allow the file: scheme to not have a host and ensure it starts with slashes
-			if ($p['scheme'] === 'file')
-			{
-				$url .= '//';
-			}
-		}
-		else
+		if ($p['host'] !== '')
 		{
 			$url .= '//';
 
@@ -137,6 +129,11 @@ class UrlFilter
 			{
 				$url .= ':' . $p['port'];
 			}
+		}
+		elseif ($p['scheme'] === 'file')
+		{
+			// Allow the file: scheme to not have a host and ensure it starts with slashes
+			$url .= '//';
 		}
 
 		// Build the path, including the query and fragment parts
@@ -221,15 +218,7 @@ class UrlFilter
 			return 'URL scheme is not allowed';
 		}
 
-		if ($p['host'] === '')
-		{
-			// Reject malformed URLs such as http:///example.org but allow schemeless paths
-			if ($p['scheme'] !== 'file' && $p['scheme'] !== '')
-			{
-				return 'Missing host';
-			}
-		}
-		else
+		if ($p['host'] !== '')
 		{
 			/**
 			* Test whether the host is valid
@@ -252,6 +241,10 @@ class UrlFilter
 			{
 				return 'URL host is not allowed';
 			}
+		}
+		elseif (preg_match('(^(?:(?:f|ht)tps?)$)', $p['scheme']))
+		{
+			return 'Missing host';
 		}
 	}
 }
