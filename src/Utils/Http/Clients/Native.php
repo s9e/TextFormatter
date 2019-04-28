@@ -27,35 +27,35 @@ class Native extends Client
 	/**
 	* {@inheritdoc}
 	*/
-	public function get($url, $headers = [])
+	public function get($url, array $options = [])
 	{
-		return $this->request('GET', $url, $headers);
+		return $this->request('GET', $url, $options);
 	}
 
 	/**
 	* {@inheritdoc}
 	*/
-	public function post($url, $headers = [], $body = '')
+	public function post($url, array $options = [], $body = '')
 	{
-		return $this->request('POST', $url, $headers, $body);
+		return $this->request('POST', $url, $options, $body);
 	}
 
 	/**
 	* Create a stream context for given request
 	*
 	* @param  string   $method  Request method
-	* @param  string[] $headers Request headers
+	* @param  array    $options Request options
 	* @param  string   $body    Request body
 	* @return resource
 	*/
-	protected function createContext($method, array $headers, $body)
+	protected function createContext($method, array $options, $body)
 	{
 		$contextOptions = [
 			'ssl'  => ['verify_peer' => $this->sslVerifyPeer],
 			'http' => [
 				'method'  => $method,
 				'timeout' => $this->timeout,
-				'header'  => $this->generateHeaders($headers, $body),
+				'header'  => $this->generateHeaders($options, $body),
 				'content' => $body
 			]
 		];
@@ -82,19 +82,20 @@ class Native extends Client
 	/**
 	* Generate a list of headers for given request
 	*
-	* @param  string[] $headers Request headers
+	* @param  array    $options Request options
 	* @param  string   $body    Request body
 	* @return string[]
 	*/
-	protected function generateHeaders(array $headers, $body)
+	protected function generateHeaders(array $options, $body)
 	{
+		$options += ['headers' => []];
 		if ($this->gzipEnabled)
 		{
-			$headers[] = 'Accept-Encoding: gzip';
+			$options['headers'][] = 'Accept-Encoding: gzip';
 		}
-		$headers[] = 'Content-Length: ' . strlen($body);
+		$options['headers'][] = 'Content-Length: ' . strlen($body);
 
-		return $headers;
+		return $options['headers'];
 	}
 
 	/**
@@ -102,12 +103,12 @@ class Native extends Client
 	*
 	* @param  string      $method  Request method
 	* @param  string      $url     Request URL
-	* @param  string[]    $headers Request headers
+	* @param  array       $options Request options
 	* @return string|bool          Response body or FALSE
 	*/
-	protected function request($method, $url, $headers, $body = '')
+	protected function request($method, $url, array $options, $body = '')
 	{
-		$response = @file_get_contents($url, false, $this->createContext($method, $headers, $body));
+		$response = @file_get_contents($url, false, $this->createContext($method, $options, $body));
 
 		return (is_string($response)) ? $this->decompress($response) : $response;
 	}

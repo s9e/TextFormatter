@@ -23,18 +23,18 @@ abstract class Client
 	* Execute a GET request and return the response's body
 	*
 	* @param  string      $url     Request URL
-	* @param  string[]    $headers Request headers
-	* @return string|bool          Response body or FALSE
+	* @param  array       $options Request options
+	* @return string|bool          Response content or FALSE
 	*/
-	abstract public function get($url, $headers = []);
+	abstract public function get($url, array $options = []);
 
 	/**
 	* Execute a POST request and return the response's body
 	*
 	* @param  string      $url     Request URL
-	* @param  string[]    $headers Request headers
+	* @param  array       $options Request options
 	* @param  string      $body    Request body
-	* @return string|bool          Response body or FALSE
+	* @return string|bool          Response content or FALSE
 	*/
-	abstract public function post($url, $headers = [], $body = '');
+	abstract public function post($url, array $options = [], $body = '');
 }

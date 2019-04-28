@@ -40,7 +40,7 @@ abstract class AbstractTest extends Test
 	public function testSendsCustomHeader()
 	{
 		$client = $this->getInstance();
-		$vars = unserialize($client->get($this->url, ['X-Foo: bar']));
+		$vars = unserialize($client->get($this->url, ['headers' => ['X-Foo: bar']]));
 		$this->assertEquals('bar', $vars['_SERVER']['HTTP_X_FOO']);
 	}
 
@@ -52,7 +52,7 @@ abstract class AbstractTest extends Test
 		$client = $this->getInstance();
 		$vars = unserialize($client->post(
 			$this->url,
-			['Content-Type: application/octet-stream'],
+			['headers' => ['Content-Type: application/octet-stream']],
 			'Foo'
 		));
 		$this->assertEquals('Foo', $vars['input']);
@@ -66,12 +66,12 @@ abstract class AbstractTest extends Test
 		$client = $this->getInstance();
 		$client->post(
 			$this->url,
-			['Content-Type: application/octet-stream'],
+			['headers' => ['Content-Type: application/octet-stream']],
 			'Foo'
 		);
 		$vars = unserialize($client->post(
 			$this->url,
-			['Content-Type: application/octet-stream']
+			['headers' => ['Content-Type: application/octet-stream']]
 		));
 		$this->assertSame('', $vars['input']);
 	}
@@ -84,7 +84,7 @@ abstract class AbstractTest extends Test
 		$client = $this->getInstance();
 		$vars = unserialize($client->post(
 			$this->url,
-			['Content-Type: application/octet-stream'],
+			['headers' => ['Content-Type: application/octet-stream']],
 			'Foo'
 		));
 		$this->assertEquals(3, $vars['_SERVER']['HTTP_CONTENT_LENGTH']);

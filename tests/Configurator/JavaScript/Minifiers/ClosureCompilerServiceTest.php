@@ -206,22 +206,22 @@ class ClosureCompilerServiceTest extends Test
 class ClosureCompilerServiceTestClient extends Client
 {
 	public $body;
-	public $headers;
+	public $options;
 	public $url;
 	public $willReturn = '{"compiledCode":""}';
 
-	public function get($url, $headers = [])
+	public function get($url, array $options = [])
 	{
 		$this->url     = $url;
-		$this->headers = $headers;
+		$this->options = $options;
 
 		return $this->willReturn;
 	}
 
-	public function post($url, $headers = [], $body = '')
+	public function post($url, array $options = [], $body = '')
 	{
 		$this->url     = $url;
-		$this->headers = $headers;
+		$this->options = $options;
 		$this->body    = $body;
 
 		return $this->willReturn;

@@ -36,7 +36,7 @@ class ParserTest extends Test
 
 		foreach ($entries as $url => $content)
 		{
-			$vars     = [$url, []];
+			$vars     = [$url, ['headers' => []]];
 			$cacheKey = strtr(base64_encode(sha1(serialize($vars), true)), '/', '_');
 
 			file_put_contents($prefix . $cacheDir . '/http.' . $cacheKey . $suffix, $content);

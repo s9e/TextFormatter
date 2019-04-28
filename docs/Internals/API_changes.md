@@ -7,6 +7,8 @@ Elements that were deprecated in 1.x will be removed.
 
 `s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName` has been removed.
 
+The second argument for `s9e\TextFormatter\Utils\Http\Client` methods `get()` and `post()` has changed. [See API](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils/Http/Client.html#method_get).
+
 
 ## 1.3.0
 
