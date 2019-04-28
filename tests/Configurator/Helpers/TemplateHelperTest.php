@@ -20,7 +20,7 @@ class TemplateHelperTest extends Test
 	{
 		$text = 'foo';
 
-		$this->assertSame($text, TemplateLoader::save(TemplateLoader::load($text)));
+		$this->assertSame($text, TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($text)));
 	}
 
 	/**
