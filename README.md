@@ -16,16 +16,16 @@ The best way to install s9e\\TextFormatter is via Composer. See [Installation](h
 composer require s9e/text-formatter
 ```
 
-## Versioning
-
-Versioning is meant to follow [Semantic Versioning](https://semver.org/). You can [read about API changes in the documentation](https://s9etextformatter.readthedocs.io/Internals/API_changes/).
-
-## Demo
-
-You can try the JavaScript version in this [BBCodes + other stuff demo](https://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](https://s9e.github.io/TextFormatter/fatdown.html).
-
 ## Examples
 
 If you can only read one example, [read how to use a bundle](https://s9etextformatter.readthedocs.io/Getting_started/Using_predefined_bundles/).
 
 You can run the scripts directly from the [examples directory](https://github.com/s9e/TextFormatter/blob/master/docs/examples) and you will find in [the manual](https://s9etextformatter.readthedocs.io/) a description of each plugin as well as other examples.
+
+## Versioning
+
+Versioning is meant to follow [Semantic Versioning](https://semver.org/). You can [read about API changes in the documentation](https://s9etextformatter.readthedocs.io/Internals/API_changes/).
+
+## Online demo
+
+You can try the JavaScript version in this [BBCodes + other stuff demo](https://s9e.github.io/TextFormatter/demo.html), or this [Markdown + stuff (Fatdown) demo](https://s9e.github.io/TextFormatter/fatdown.html).
