@@ -110,4 +110,16 @@ abstract class AbstractTest extends Test
 	{
 		$this->assertFalse($this->getInstance()->get(str_replace('reflect.php', '404', $this->url)));
 	}
+
+	/**
+	* @testdox get() returns headers if returnHeaders is true
+	*/
+	public function testGetReturnHeaders()
+	{
+		$client = $this->getInstance();
+		$this->assertRegexp(
+			'(^HTTP[^\\r]++\\r\\n(?:[-\\w]+:[^\\r]++\\r\\n)+\\r\\na:)',
+			$client->get($this->url, ['returnHeaders' => true])
+		);
+	}
 }

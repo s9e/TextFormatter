@@ -7142,6 +7142,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Cached
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
  [x] get() returns FALSE on error
+ [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Curl
  [x] Uses gzip by default if ext/zlib is availble
@@ -7151,6 +7152,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Curl
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
  [x] get() returns FALSE on error
+ [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Native
  [x] Does not send "Accept-Encoding: gzip" if gzip is disabled
@@ -7161,6 +7163,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Native
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
  [x] get() returns FALSE on error
+ [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Configurator\Helpers\Http
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client

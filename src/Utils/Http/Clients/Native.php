@@ -109,7 +109,17 @@ class Native extends Client
 	protected function request($method, $url, array $options, $body = '')
 	{
 		$response = @file_get_contents($url, false, $this->createContext($method, $options, $body));
+		if ($response === false)
+		{
+			return false;
+		}
 
-		return (is_string($response)) ? $this->decompress($response) : $response;
+		$response = $this->decompress($response);
+		if (!empty($options['returnHeaders']))
+		{
+			$response = implode("\r\n", $http_response_header) . "\r\n\r\n" . $response;
+		}
+
+		return $response;
 	}
 }

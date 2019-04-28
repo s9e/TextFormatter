@@ -24,6 +24,7 @@ class Curl extends Client
 		$options += ['headers' => []];
 
 		$handle = $this->getHandle();
+		curl_setopt($handle, CURLOPT_HEADER,     !empty($options['returnHeaders']));
 		curl_setopt($handle, CURLOPT_HTTPGET,    true);
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $options['headers']);
 		curl_setopt($handle, CURLOPT_URL,        $url);
@@ -40,6 +41,7 @@ class Curl extends Client
 		$options['headers'][] = 'Content-Length: ' . strlen($body);
 
 		$handle = $this->getHandle();
+		curl_setopt($handle, CURLOPT_HEADER,     !empty($options['returnHeaders']));
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $options['headers']);
 		curl_setopt($handle, CURLOPT_POST,       true);
 		curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
