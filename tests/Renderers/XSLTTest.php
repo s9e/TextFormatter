@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Renderers;
 
+use s9e\TextFormatter\Renderers\XSLT;
 use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
 
@@ -101,6 +102,25 @@ class XSLTTest extends Test
 		$this->assertSame(
 			'<b title="x=\'x\'"></b>',
 			$this->configurator->rendering->getRenderer()->render('<r><X x="x=\'x\'"/></r>')
+		);
+	}
+
+	/**
+	* @testdox Correctly parses parameters from the stylesheet
+	*/
+	public function testParsesParameters()
+	{
+		$xsl = 
+			'<?xml version="1.0" encoding="utf-8"?>
+				<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:output method="html" encoding="utf-8" />
+				<xsl:param name="foo">Foo</xsl:param>
+				<xsl:param name="bar"/>
+			</xsl:stylesheet>';
+
+		$this->assertEquals(
+			['foo' => 'Foo', 'bar' => ''],
+			(new XSLT($xsl))->getParameters()
 		);
 	}
 }
