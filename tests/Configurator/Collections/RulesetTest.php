@@ -183,6 +183,28 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox remove('defaultChildRule') throws an InvalidArgumentException
+	*/
+	public function testRemoveDefaultChildRule()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Cannot remove defaultChildRule');
+
+		(new Ruleset)->remove('defaultChildRule');
+	}
+
+	/**
+	* @testdox remove('defaultDescendantRule') throws an InvalidArgumentException
+	*/
+	public function testRemoveDefaultDescendantRule()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Cannot remove defaultDescendantRule');
+
+		(new Ruleset)->remove('defaultDescendantRule');
+	}
+
+	/**
 	* @testdox allowChild() throws an exception on invalid tag name
 	*/
 	public function testAllowChildInvalidTagName()

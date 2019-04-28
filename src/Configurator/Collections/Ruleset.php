@@ -250,7 +250,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	{
 		if (preg_match('(^default(?:Child|Descendant)Rule)', $type))
 		{
-			throw new RuntimeException('Cannot remove ' . $type);
+			throw new InvalidArgumentException('Cannot remove ' . $type);
 		}
 
 		if (isset($tagName))
