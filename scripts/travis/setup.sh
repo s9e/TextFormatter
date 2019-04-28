@@ -2,15 +2,15 @@
 
 cd $(dirname "$0")
 
-# Install code coverage tools if applicable and disable XDebug otherwise
+# Disable XDebug
+echo "Removing XDebug"
+phpenv config-rm xdebug.ini
+
+# Install code coverage tools if applicable
 if [ -n "$COVERAGE" ]
 then
-	# Install Scrutinizer's external code coverage tool
 	echo "Installing Scrutinizer"
 	sh -c "./installScrutinizer.sh 2>&1 &" >/dev/null 2>&1 &
-else
-	echo "Removing XDebug"
-	phpenv config-rm xdebug.ini
 fi
 
 # Install Composer dependencies after XDebug has been removed
