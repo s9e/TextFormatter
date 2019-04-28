@@ -41,7 +41,20 @@ abstract class AbstractTest extends Test
 	{
 		$client = $this->getInstance();
 		$vars = unserialize($client->get($this->url, ['headers' => ['X-Foo: bar']]));
+		$this->assertArrayHasKey('HTTP_X_FOO', $vars['_SERVER']);
 		$this->assertEquals('bar', $vars['_SERVER']['HTTP_X_FOO']);
+	}
+
+	/**
+	* @testdox Resets custom headers between requests
+	*/
+	public function testResetsCustomHeader()
+	{
+		$client = $this->getInstance();
+		$vars = unserialize($client->get($this->url, ['headers' => ['X-Foo: bar']]));
+		$this->assertArrayHasKey('HTTP_X_FOO', $vars['_SERVER']);
+		$vars = unserialize($client->get($this->url));
+		$this->assertArrayNotHasKey('HTTP_X_FOO', $vars['_SERVER']);
 	}
 
 	/**

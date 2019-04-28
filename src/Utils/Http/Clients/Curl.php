@@ -21,13 +21,12 @@ class Curl extends Client
 	*/
 	public function get($url, array $options = [])
 	{
+		$options += ['headers' => []];
+
 		$handle = $this->getHandle();
-		curl_setopt($handle, CURLOPT_HTTPGET, true);
-		curl_setopt($handle, CURLOPT_URL,     $url);
-		if (isset($options['headers']))
-		{
-			curl_setopt($handle, CURLOPT_HTTPHEADER, $options['headers']);
-		}
+		curl_setopt($handle, CURLOPT_HTTPGET,    true);
+		curl_setopt($handle, CURLOPT_HTTPHEADER, $options['headers']);
+		curl_setopt($handle, CURLOPT_URL,        $url);
 
 		return curl_exec($handle);
 	}
