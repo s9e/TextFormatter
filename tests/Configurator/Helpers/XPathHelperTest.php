@@ -208,4 +208,26 @@ class XPathHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox encodeStrings() works
+	*/
+	public function testEncodeStrings()
+	{
+		$original = '\'foo\' = "foo" or \'bar\' = "bar"';
+		$expected = '\'666f6f\' = "666f6f" or \'626172\' = "626172"';
+
+		$this->assertEquals($expected, XPathHelper::encodeStrings($original));
+	}
+
+	/**
+	* @testdox decodeStrings() works
+	*/
+	public function testDecodeStrings()
+	{
+		$original = '\'666f6f\' = "666f6f" or \'626172\' = "626172"';
+		$expected = '\'foo\' = "foo" or \'bar\' = "bar"';
+
+		$this->assertEquals($expected, XPathHelper::decodeStrings($original));
+	}
 }

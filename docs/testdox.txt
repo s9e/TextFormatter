@@ -1010,6 +1010,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] Parse equality expr with data set #5
  [x] Parse equality expr with data set #6
  [x] Parse equality expr with data set #7
+ [x] encodeStrings() works
+ [x] decodeStrings() works
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
