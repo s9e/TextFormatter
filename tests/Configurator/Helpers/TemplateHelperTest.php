@@ -20,7 +20,7 @@ class TemplateHelperTest extends Test
 	{
 		$text = 'foo';
 
-		$this->assertSame($text, TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($text)));
+		$this->assertSame($text, TemplateLoader::save(TemplateLoader::load($text)));
 	}
 
 	/**
@@ -117,7 +117,7 @@ class TemplateHelperTest extends Test
 	*/
 	public function testHighlightNode($query, $template, $expected)
 	{
-		$dom   = TemplateHelper::loadTemplate($template);
+		$dom   = TemplateLoader::load($template);
 		$xpath = new DOMXPath($dom);
 
 		$this->assertSame(

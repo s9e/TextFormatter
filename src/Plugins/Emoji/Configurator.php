@@ -48,45 +48,6 @@ class Configurator extends ConfiguratorBase
 	}
 
 	/**
-	* Add an emoji alias
-	*
-	* @deprecated 1.3.0 $this->aliases can be accessed directly
-	*
-	* @param  string $alias
-	* @param  string $emoji
-	* @return void
-	*/
-	public function addAlias($alias, $emoji)
-	{
-		$this->aliases[$alias] = $emoji;
-	}
-
-	/**
-	* Remove an emoji alias
-	*
-	* @deprecated 1.3.0 $this->aliases can be accessed directly
-	*
-	* @param  string $alias
-	* @return void
-	*/
-	public function removeAlias($alias)
-	{
-		unset($this->aliases[$alias]);
-	}
-
-	/**
-	* Get all emoji aliases
-	*
-	* @deprecated 1.3.0 $this->aliases can be accessed directly
-	*
-	* @return array
-	*/
-	public function getAliases()
-	{
-		return $this->aliases;
-	}
-
-	/**
 	* {@inheritdoc}
 	*/
 	public function asConfig()

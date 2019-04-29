@@ -6,13 +6,12 @@ use DOMDocument;
 use DOMXPath;
 use Exception;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\NodeLocator
-* @covers s9e\TextFormatter\Configurator\Helpers\TemplateHelper
 */
 class NodeLocatorTest extends Test
 {
@@ -35,7 +34,7 @@ class NodeLocatorTest extends Test
 		}
 
 		array_unshift($args, $dom);
-		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\TemplateHelper::' . $methodName, $args);
+		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\NodeLocator::' . $methodName, $args);
 
 		$this->assertEquals(count($expected), count($actual), 'Wrong node count');
 
@@ -328,7 +327,7 @@ class NodeLocatorTest extends Test
 
 		$this->assertSame(
 			[$dom->firstChild->firstChild->nextSibling],
-			TemplateHelper::getElementsByRegexp($dom, '/^foo$/')
+			NodeLocator::getElementsByRegexp($dom, '/^foo$/')
 		);
 	}
 }

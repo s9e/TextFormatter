@@ -50,11 +50,6 @@ class JavaScript
 	public $encoder;
 
 	/**
-	* @var array (Deprecated) List of methods to be exported in the s9e.TextFormatter object
-	*/
-	public $exportMethods;
-
-	/**
 	* @var array List of methods and properties to be exported in the s9e.TextFormatter object
 	*/
 	public $exports = [
@@ -98,8 +93,6 @@ class JavaScript
 	*/
 	public function __construct(Configurator $configurator)
 	{
-		$this->exportMethods =& $this->exports;
-
 		$this->encoder              = new Encoder;
 		$this->callbackGenerator    = new CallbackGenerator;
 		$this->configOptimizer      = new ConfigOptimizer($this->encoder);

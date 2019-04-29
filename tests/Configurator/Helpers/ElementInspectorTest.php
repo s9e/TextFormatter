@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -19,7 +19,7 @@ class ElementInspectorTest extends Test
 		$args = (array) $args;
 		foreach ($args as $k => $v)
 		{
-			$args[$k] = TemplateHelper::loadTemplate($v)->documentElement->firstChild;
+			$args[$k] = TemplateLoader::load($v)->documentElement->firstChild;
 		}
 
 		$actual = call_user_func_array('s9e\\TextFormatter\\Configurator\\Helpers\\ElementInspector::' . $methodName, $args);

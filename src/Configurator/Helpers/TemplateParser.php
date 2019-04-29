@@ -36,16 +36,4 @@ class TemplateParser
 
 		return $parser->parse($template);
 	}
-
-	/**
-	* Parse an XPath expression that is composed entirely of equality tests between a variable part
-	* and a constant part
-	*
-	* @param  string      $expr
-	* @return array|false
-	*/
-	public static function parseEqualityExpr($expr)
-	{
-		return XPathHelper::parseEqualityExpr($expr);
-	}
 }

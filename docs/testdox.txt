@@ -956,14 +956,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
  [x] parse() throws an exception if it encounters an unsupported XSL element
  [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
- [x] Parse equality expr with data set #0
- [x] Parse equality expr with data set #1
- [x] Parse equality expr with data set #2
- [x] Parse equality expr with data set #3
- [x] Parse equality expr with data set #4
- [x] Parse equality expr with data set #5
- [x] Parse equality expr with data set #6
- [x] Parse equality expr with data set #7
 
 s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] getVariables() tests with data set #0
@@ -1501,14 +1493,11 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\FirstAvailable
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
  [x] Constructor accepts a command
- [x] Constructor accepts the path to a .jar file
- [x] Throws an exception if the Closure Compiler's filepath is not set at minification time
- [x] Throws an exception if the Closure Compiler's file does not exist at minification time
  [x] Throws an exception if the JavaScript is invalid
  [x] Allows caching
  [x] The cache key depends on the compilation level
  [x] The cache key depends on the extra options
- [x] The cache key depends on the Closure Compiler file
+ [x] The cache key depends on the command
  [x] The cache key depends on whether the default externs are excluded
  [x] If the default externs are excluded, the custom externs are baked into the cache key
  [x] Works
@@ -2349,7 +2338,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] The public API is created if anything is exported
  [x] The public API is not created if nothing is exported
  [x] Exports' order is consistent
- [x] $exportMethods is an alias for $exports
  [x] Preserves live preview attributes
 
 s9e\TextFormatter\Tests\Configurator\Bundle
@@ -3947,7 +3935,6 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Configurator
  [x] The config array contains a quickMatch for custom aliases if applicable
  [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Uses Twemoji by default
- [x] removeAlias() removes given alias
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => false] by default
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_REGEXP' => true] if a custom regexp exists
  [x] getJSHints() returns ['EMOJI_HAS_CUSTOM_QUICKMATCH' => false] by default

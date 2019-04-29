@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator;
 use ArrayAccess;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
@@ -113,7 +113,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	*/
 	public function normalizeTemplate($template)
 	{
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 
 		// Apply all the normalizations until no more change is made or we've reached the maximum
 		// number of loops
@@ -130,7 +130,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 
 				$normalization->normalize($dom->documentElement);
 			}
-			$template = TemplateHelper::saveTemplate($dom);
+			$template = TemplateLoader::save($dom);
 		}
 		while (++$i < $this->maxIterations && $template !== $old);
 

@@ -12,7 +12,7 @@ use DOMElement;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 
 class Parser extends IRProcessor
 {
@@ -38,7 +38,7 @@ class Parser extends IRProcessor
 	*/
 	public function parse($template)
 	{
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 
 		$ir = new DOMDocument;
 		$ir->loadXML('<template/>');

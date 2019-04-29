@@ -106,7 +106,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator, $plugin)
 				{
-					$configurator->Emoji->addAlias('XD', '😆');
+					$configurator->Emoji->aliases['XD'] = '😆';
 				}
 			],
 			[
@@ -115,7 +115,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator, $plugin)
 				{
-					$configurator->Emoji->addAlias(':p', '😀');
+					$configurator->Emoji->aliases[':p'] = '😀';
 				}
 			],
 			[

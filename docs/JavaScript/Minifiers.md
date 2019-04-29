@@ -20,24 +20,17 @@ Alternatively, the [Google Closure Compiler application](https://developers.goog
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->enableJavaScript();
 
-// Deprecated usage
-$configurator->javascript
-	->setMinifier('ClosureCompilerApplication')
-	->closureCompilerBin = '/usr/local/bin/compiler.jar';
-
-// Recommended usage (1.3.0 and newer)
-$configurator->javascript
-	->setMinifier('ClosureCompilerApplication')
-	->command = 'java -jar /usr/local/bin/compiler.jar';
+// Using the Java application
+$configurator->javascript->setMinifier(
+	'ClosureCompilerApplication',
+	'java -jar /usr/local/bin/compiler.jar'
+);
 
 // You can use npx or a native executable
-$configurator->javascript
-	->setMinifier('ClosureCompilerApplication')
-	->command = 'npx google-closure-compiler';
-
-// Short syntax
-$configurator->javascript
-	->setMinifier('ClosureCompilerApplication', 'npx google-closure-compiler');
+$configurator->javascript->setMinifier(
+	'ClosureCompilerApplication',
+	'npx google-closure-compiler'
+);
 ```
 
 ### MatthiasMullie\\Minify

@@ -10,18 +10,6 @@ use s9e\TextFormatter\Tests\Test;
 */
 class ClosureCompilerApplicationTest extends Test
 {
-	public static function setUpBeforeClass(): void
-	{
-		file_put_contents(sys_get_temp_dir() . '/test.compiler.jar', '1');
-		file_put_contents(sys_get_temp_dir() . '/test2.compiler.jar', '2');
-	}
-
-	public static function tearDownAfterClass(): void
-	{
-		unlink(sys_get_temp_dir() . '/test.compiler.jar');
-		unlink(sys_get_temp_dir() . '/test2.compiler.jar');
-	}
-
 	protected function getMinifier()
 	{
 		$closureCompilerNative = $this->getClosureCompilerNative();
@@ -52,54 +40,6 @@ class ClosureCompilerApplicationTest extends Test
 	}
 
 	/**
-	* @testdox Constructor accepts the path to a .jar file
-	* @group slow
-	*/
-	public function testConstructorJar()
-	{
-		if (isset($_SERVER['TRAVIS']) && strpos($_SERVER['JAVA_HOME'], 'java-7') !== false)
-		{
-			$this->markTestSkipped('Unsupported Java version');
-		}
-
-		$jar = $this->getClosureCompilerJar();
-		if ($jar === false)
-		{
-			$this->markTestSkipped('Cannot find compiler.jar');
-		}
-
-		$minifier = new ClosureCompilerApplication($jar);
-		$minifier->compilationLevel = 'SIMPLE';
-		$minifier->options = '--env=CUSTOM';
-		$this->assertEquals('alert("xy");', $minifier->minify('alert("x"+"y");'));
-	}
-
-	/**
-	* @testdox Throws an exception if the Closure Compiler's filepath is not set at minification time
-	*/
-	public function testNoPathRuntime()
-	{
-		$this->expectException('RuntimeException');
-		$this->expectExceptionMessage('No path set for Closure Compiler');
-
-		$minifier = new ClosureCompilerApplication;
-		$minifier->minify('alert(1)');
-	}
-
-	/**
-	* @testdox Throws an exception if the Closure Compiler's file does not exist at minification time
-	*/
-	public function testInvalidPathRuntime()
-	{
-		$this->expectException('RuntimeException');
-		$this->expectExceptionMessage('Cannot find Closure Compiler at /does/not/exist');
-
-		$minifier = new ClosureCompilerApplication;
-		$minifier->closureCompilerBin = '/does/not/exist';
-		$minifier->minify('alert(1)');
-	}
-
-	/**
 	* @testdox Throws an exception if the JavaScript is invalid
 	* @group slow
 	*/
@@ -118,7 +58,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testAllowsCaching()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler');
 
 		$this->assertNotSame(false, $minifier->getCacheDifferentiator());
 	}
@@ -128,7 +68,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyCompilationLevel()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler');
 
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$k1 = $minifier->getCacheDifferentiator();
@@ -144,7 +84,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyOptions()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler');
 
 		$minifier->options = '--use_types_for_optimization';
 		$k1 = $minifier->getCacheDifferentiator();
@@ -156,14 +96,14 @@ class ClosureCompilerApplicationTest extends Test
 	}
 
 	/**
-	* @testdox The cache key depends on the Closure Compiler file
+	* @testdox The cache key depends on the command
 	*/
 	public function testCacheKeyApplication()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler1');
 		$k1 = $minifier->getCacheDifferentiator();
 
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test2.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler2');
 		$k2 = $minifier->getCacheDifferentiator();
 
 		$this->assertNotEquals($k1, $k2);
@@ -174,7 +114,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyDefaultExterns()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler');
 
 		$minifier->excludeDefaultExterns = true;
 		$k1 = $minifier->getCacheDifferentiator();
@@ -190,7 +130,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testCacheKeyCustomExterns()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		$minifier = new ClosureCompilerApplication('fake-compiler');
 		$minifier->excludeDefaultExterns = true;
 
 		$this->assertTrue(in_array(
@@ -236,12 +176,12 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testReplacesExterns()
 	{
-		$minifier = new ClosureCompilerApplication(sys_get_temp_dir() . '/test.compiler.jar');
+		// Replace the Java interpreter with a PHP script so that it outputs its own command line
+		$cmd = 'php ' . escapeshellarg(__DIR__ . '/echo.php') . ' --';
+
+		$minifier = new ClosureCompilerApplication($cmd);
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$minifier->excludeDefaultExterns = true;
-
-		// Replace the Java interpreter with a PHP script so that it outputs its own command line
-		$minifier->javaBin = 'php ' . escapeshellarg(__DIR__ . '/echo.php') . ' --';
 
 		$this->assertRegexp(
 			'#--externs \\S*externs.application.js --env=CUSTOM#',

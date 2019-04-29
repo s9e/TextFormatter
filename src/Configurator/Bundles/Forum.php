@@ -84,7 +84,7 @@ class Forum extends Bundle
 
 		foreach ($emoticons as $code => $hex)
 		{
-			$configurator->Emoji->addAlias($code, html_entity_decode('&#x' . $hex . ';'));
+			$configurator->Emoji->aliases[$code] = html_entity_decode('&#x' . $hex . ';');
 		}
 
 		$sites = ['bandcamp', 'dailymotion', 'facebook', 'indiegogo', 'instagram', 'kickstarter', 'liveleak', 'soundcloud', 'twitch', 'twitter', 'vimeo', 'vine', 'wshh', 'youtube'];

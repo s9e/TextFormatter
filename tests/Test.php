@@ -129,32 +129,6 @@ abstract class Test extends TestCase
 		$this->$assertMethod($expected, $this->execJS($src, $original));
 	}
 
-	public function getClosureCompilerJar()
-	{
-		static $filepath;
-
-		if (!isset($filepath))
-		{
-			$filepath = false;
-			$paths = [
-				'/usr/local/bin/compiler.jar',
-				'/usr/bin/compiler.jar',
-				'/tmp/compiler.jar'
-			];
-
-			foreach ($paths as $path)
-			{
-				if (file_exists($path))
-				{
-					$filepath = $path;
-					break;
-				}
-			}
-		}
-
-		return $filepath;
-	}
-
 	public function getClosureCompilerNative()
 	{
 		$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';

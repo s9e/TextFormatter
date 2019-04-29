@@ -411,22 +411,6 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox $exportMethods is an alias for $exports
-	*/
-	public function testExportMethods()
-	{
-		$this->assertSame(
-			$this->configurator->javascript->exports,
-			$this->configurator->javascript->exportMethods
-		);
-		$this->configurator->javascript->exportMethods = ['registerVars', 'preview'];
-		$this->assertSame(
-			$this->configurator->javascript->exports,
-			$this->configurator->javascript->exportMethods
-		);
-	}
-
-	/**
 	* @testdox Preserves live preview attributes
 	*/
 	public function testLivePreviewAttributes()

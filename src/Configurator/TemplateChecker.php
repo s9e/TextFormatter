@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator;
 use ArrayAccess;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
@@ -119,7 +119,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 		}
 
 		// Load the template into a DOMDocument
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 
 		foreach ($this->collection as $check)
 		{

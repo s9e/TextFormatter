@@ -24,41 +24,6 @@ abstract class TemplateHelper
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* Return all attributes (literal or generated) that match given regexp
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getAttributesByRegexp($dom, $regexp);
-	}
-
-	/**
-	* Return all DOMNodes whose content is CSS
-	*
-	* @param  DOMDocument $dom Document
-	* @return DOMNode[]        List of DOMNode instances
-	*/
-	public static function getCSSNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getCSSNodes($dom);
-	}
-
-	/**
-	* Return all elements (literal or generated) that match given regexp
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp Regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getElementsByRegexp($dom, $regexp);
-	}
-
-	/**
 	* Return all DOMNodes whose content is JavaScript
 	*
 	* @param  DOMDocument $dom Document
@@ -67,22 +32,6 @@ abstract class TemplateHelper
 	public static function getJSNodes(DOMDocument $dom)
 	{
 		return NodeLocator::getJSNodes($dom);
-	}
-
-	/**
-	* Return all elements (literal or generated) that match given regexp
-	*
-	* Will return all <param/> descendants of <object/> and all attributes of <embed/> whose name
-	* matches given regexp. This method will NOT catch <param/> elements whose 'name' attribute is
-	* set via an <xsl:attribute/>
-	*
-	* @param  DOMDocument $dom    Document
-	* @param  string      $regexp
-	* @return array               Array of DOMNode instances
-	*/
-	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getObjectParamsByRegexp($dom, $regexp);
 	}
 
 	/**
@@ -260,31 +209,6 @@ abstract class TemplateHelper
 		{
 			$templates[$tagName] = $template;
 		}
-	}
-
-	/**
-	* Replace parts of a template that match given regexp
-	*
-	* Treats attribute values as plain text. Replacements within XPath expression is unsupported.
-	* The callback must return an array with two elements. The first must be either of 'expression',
-	* 'literal' or 'passthrough', and the second element depends on the first.
-	*
-	*  - 'expression' indicates that the replacement must be treated as an XPath expression such as
-	*    '@foo', which must be passed as the second element.
-	*  - 'literal' indicates a literal (plain text) replacement, passed as its second element.
-	*  - 'passthrough' indicates that the replacement should the tag's content. It works differently
-	*    whether it is inside an attribute's value or a text node. Within an attribute's value, the
-	*    replacement will be the text content of the tag. Within a text node, the replacement
-	*    becomes an <xsl:apply-templates/> node.
-	*
-	* @param  string   $template Original template
-	* @param  string   $regexp   Regexp for matching parts that need replacement
-	* @param  callback $fn       Callback used to get the replacement
-	* @return string             Processed template
-	*/
-	public static function replaceTokens($template, $regexp, $fn)
-	{
-		return TemplateModifier::replaceTokens($template, $regexp, $fn);
 	}
 
 	/**

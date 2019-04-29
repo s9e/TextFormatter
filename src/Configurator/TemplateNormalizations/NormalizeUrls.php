@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Parser\AttributeFilters\UrlFilter;
 
 /**
@@ -23,7 +23,7 @@ class NormalizeUrls extends AbstractNormalization
 	*/
 	protected function getNodes()
 	{
-		return TemplateHelper::getURLNodes($this->ownerDocument);
+		return NodeLocator::getURLNodes($this->ownerDocument);
 	}
 
 	/**

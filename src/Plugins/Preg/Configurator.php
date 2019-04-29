@@ -12,8 +12,10 @@ use DOMText;
 use DOMXPath;
 use Exception;
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
+use s9e\TextFormatter\Configurator\Helpers\TemplateModifier;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -200,7 +202,7 @@ class Configurator extends ConfiguratorBase
 	{
 		// Replace numeric references in the template with the value of the corresponding attribute
 		// values or passthrough
-		$template = TemplateHelper::replaceTokens(
+		$template = TemplateModifier::replaceTokens(
 			$template,
 			$this->referencesRegexp,
 			function ($m, $node) use ($passthroughIdx)
@@ -228,7 +230,7 @@ class Configurator extends ConfiguratorBase
 		);
 
 		// Unescape backslashes and special characters in the template
-		$template = TemplateHelper::replaceTokens(
+		$template = TemplateModifier::replaceTokens(
 			$template,
 			'(\\\\+[0-9${\\\\])',
 			function ($m)
@@ -416,7 +418,7 @@ class Configurator extends ConfiguratorBase
 			$this->references['anywhere'][$key] = $key;
 		}
 
-		$dom   = TemplateHelper::loadTemplate($template);
+		$dom   = TemplateLoader::load($template);
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//text()') as $node)
 		{
@@ -428,7 +430,7 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
-		foreach (TemplateHelper::getURLNodes($dom) as $node)
+		foreach (NodeLocator::getURLNodes($dom) as $node)
 		{
 			// We only bother with literal attributes that start with a capture
 			if ($node instanceof DOMAttr

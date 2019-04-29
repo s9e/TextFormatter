@@ -3,11 +3,10 @@
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use Exception;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateModifier;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Helpers\TemplateHelper
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateModifier
 */
 class TemplateModifierTest extends Test
@@ -27,7 +26,7 @@ class TemplateModifierTest extends Test
 
 		$this->assertSame(
 			$expected,
-			TemplateHelper::replaceTokens($template, $regexp, $fn, $expected)
+			TemplateModifier::replaceTokens($template, $regexp, $fn, $expected)
 		);
 	}
 

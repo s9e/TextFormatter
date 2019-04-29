@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMAttr;
 use DOMElement;
 use DOMText;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
@@ -31,7 +31,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	*/
 	protected function getNodes(DOMElement $template)
 	{
-		return TemplateHelper::getURLNodes($template->ownerDocument);
+		return NodeLocator::getURLNodes($template->ownerDocument);
 	}
 
 	/**

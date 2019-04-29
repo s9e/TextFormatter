@@ -70,7 +70,7 @@ class ConfiguratorTest extends Test
 	public function testConfigAliases()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':)'] = "\xF0\x9F\x98\x80";
 		$plugin->finalize();
 
 		$this->assertArrayHasKey('Emoji.aliases', $this->configurator->registeredVars);
@@ -87,7 +87,7 @@ class ConfiguratorTest extends Test
 	public function testConfigAliasesRegexp()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':D'] = "\xF0\x9F\x98\x80";
 
 		$config = $plugin->asConfig();
 
@@ -101,7 +101,7 @@ class ConfiguratorTest extends Test
 	public function testConfigAliasesQuickMatch()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':D'] = "\xF0\x9F\x98\x80";
 
 		$config = $plugin->asConfig();
 
@@ -115,8 +115,8 @@ class ConfiguratorTest extends Test
 	public function testConfigAliasesNoQuickMatch()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
-		$plugin->addAlias(';)', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':D'] = "\xF0\x9F\x98\x80";
+		$plugin->aliases[';)'] = "\xF0\x9F\x98\x80";
 
 		$config = $plugin->asConfig();
 
@@ -130,20 +130,6 @@ class ConfiguratorTest extends Test
 	{
 		$this->configurator->Emoji;
 		$this->assertStringContainsString('twemoji', (string) $this->configurator->tags['EMOJI']->template);
-	}
-
-	/**
-	* @testdox removeAlias() removes given alias
-	*/
-	public function testRemoveAlias()
-	{
-		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
-		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
-		$plugin->addAlias('XD', "\xF0\x9F\x98\x86");
-		$plugin->removeAlias(':)');
-
-		$this->assertArrayNotHasKey(':)', $plugin->getAliases());
 	}
 
 	/**
@@ -164,7 +150,7 @@ class ConfiguratorTest extends Test
 	public function testGetJSHintsRegexpTrue()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':)'] = "\xF0\x9F\x98\x80";
 		$this->assertArrayMatches(
 			['EMOJI_HAS_CUSTOM_REGEXP' => true],
 			$plugin->getJSHints()
@@ -189,8 +175,8 @@ class ConfiguratorTest extends Test
 	public function testGetJSHintsAliasQuickmatchTrue()
 	{
 		$plugin = $this->configurator->Emoji;
-		$plugin->addAlias(':)', "\xF0\x9F\x98\x80");
-		$plugin->addAlias(':D', "\xF0\x9F\x98\x80");
+		$plugin->aliases[':)'] = "\xF0\x9F\x98\x80";
+		$plugin->aliases[':D'] = "\xF0\x9F\x98\x80";
 		$this->assertArrayMatches(
 			['EMOJI_HAS_CUSTOM_QUICKMATCH' => true],
 			$plugin->getJSHints()

@@ -8,8 +8,10 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use DOMDocument;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateModifier;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Template
@@ -87,7 +89,7 @@ class Template
 	*/
 	public function getCSSNodes()
 	{
-		return TemplateHelper::getCSSNodes($this->asDOM());
+		return NodeLocator::getCSSNodes($this->asDOM());
 	}
 
 	/**
@@ -112,7 +114,7 @@ class Template
 	*/
 	public function getJSNodes()
 	{
-		return TemplateHelper::getJSNodes($this->asDOM());
+		return NodeLocator::getJSNodes($this->asDOM());
 	}
 
 	/**
@@ -122,7 +124,7 @@ class Template
 	*/
 	public function getURLNodes()
 	{
-		return TemplateHelper::getURLNodes($this->asDOM());
+		return NodeLocator::getURLNodes($this->asDOM());
 	}
 
 	/**
@@ -174,7 +176,7 @@ class Template
 	public function replaceTokens($regexp, $fn)
 	{
 		$this->inspector    = null;
-		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
+		$this->template     = TemplateModifier::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = false;
 	}
 

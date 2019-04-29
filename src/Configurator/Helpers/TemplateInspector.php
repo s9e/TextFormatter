@@ -146,7 +146,7 @@ class TemplateInspector
 	*/
 	public function __construct($template)
 	{
-		$this->dom   = TemplateHelper::loadTemplate($template);
+		$this->dom   = TemplateLoader::load($template);
 		$this->xpath = new DOMXPath($this->dom);
 
 		$this->defaultBranchBitfield = ElementInspector::getAllowChildBitfield($this->dom->createElement('div'));
