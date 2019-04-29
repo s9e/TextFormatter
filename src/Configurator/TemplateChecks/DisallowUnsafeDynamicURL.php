@@ -24,7 +24,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	* @var string Regexp used to exclude nodes that start with a hardcoded scheme part, a hardcoded
 	*             local part, or a fragment
 	*/
-	protected $exceptionRegexp = '(^(?:(?!data|\\w*script)\\w+:|[^:]*/|#))i';
+	protected $safeUrlRegexp = '(^(?:(?!data|\\w*script)\\w+:|[^:]*/|#))i';
 
 	/**
 	* {@inheritdoc}
@@ -47,8 +47,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	*/
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
 	{
-		// Ignore this attribute if its scheme is hardcoded or it starts with //
-		if (!preg_match($this->exceptionRegexp, $attribute->value))
+		if (!$this->isSafeUrl($attribute->value))
 		{
 			parent::checkAttributeNode($attribute, $tag);
 		}
@@ -59,14 +58,31 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	*/
 	protected function checkElementNode(DOMElement $element, Tag $tag)
 	{
-		// Ignore this element if its scheme is hardcoded or it starts with //
-		if ($element->firstChild
-		 && $element->firstChild instanceof DOMText
-		 && preg_match($this->exceptionRegexp, $element->firstChild->textContent))
+		if (!$this->elementHasSafeUrl($element))
 		{
-			return;
+			parent::checkElementNode($element, $tag);
 		}
+	}
 
-		parent::checkElementNode($element, $tag);
+	/**
+	* Test whether given element contains a known-safe URL
+	*
+	* @param  DOMElement $element
+	* @return bool
+	*/
+	protected function elementHasSafeUrl(DOMElement $element)
+	{
+		return $element->firstChild instanceof DOMText && $this->isSafeUrl($element->firstChild->textContent);
+	}
+
+	/**
+	* Test whether given URL is known to be safe
+	*
+	* @param  string $url
+	* @return bool
+	*/
+	protected function isSafeUrl($url)
+	{
+		return (bool) preg_match($this->safeUrlRegexp, $url);
 	}
 }
