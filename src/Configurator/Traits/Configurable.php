@@ -82,14 +82,12 @@ trait Configurable
 		// iteratively set new values
 		if ($this->$propName instanceof NormalizedCollection)
 		{
-			if (!is_array($propValue)
-			 && !($propValue instanceof Traversable))
+			if (!is_array($propValue) && !($propValue instanceof Traversable))
 			{
 				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
 			}
 
 			$this->$propName->clear();
-
 			foreach ($propValue as $k => $v)
 			{
 				$this->$propName->set($k, $v);
@@ -114,18 +112,10 @@ trait Configurable
 			$newType = gettype($propValue);
 
 			// If the property is a boolean, we'll accept "true" and "false" as strings
-			if ($oldType === 'boolean')
+			if ($oldType === 'boolean' && preg_match('(^(?:fals|tru)e$)', $propValue))
 			{
-				if ($propValue === 'false')
-				{
-					$newType   = 'boolean';
-					$propValue = false;
-				}
-				elseif ($propValue === 'true')
-				{
-					$newType   = 'boolean';
-					$propValue = true;
-				}
+				$newType   = 'boolean';
+				$propValue = ($propValue === 'true');
 			}
 
 			if ($oldType !== $newType)
@@ -157,7 +147,6 @@ trait Configurable
 	public function __isset($propName)
 	{
 		$methodName = 'isset' . ucfirst($propName);
-
 		if (method_exists($this, $methodName))
 		{
 			return $this->$methodName();
@@ -175,26 +164,20 @@ trait Configurable
 	public function __unset($propName)
 	{
 		$methodName = 'unset' . ucfirst($propName);
-
 		if (method_exists($this, $methodName))
 		{
 			$this->$methodName();
-
-			return;
 		}
-
-		if (!isset($this->$propName))
+		elseif (isset($this->$propName))
 		{
-			return;
+			if ($this->$propName instanceof Collection)
+			{
+				$this->$propName->clear();
+			}
+			else
+			{
+				throw new RuntimeException("Property '" . $propName . "' cannot be unset");
+			}
 		}
-
-		if ($this->$propName instanceof Collection)
-		{
-			$this->$propName->clear();
-
-			return;
-		}
-
-		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 }
