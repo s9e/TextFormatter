@@ -1,27 +1,28 @@
-See also [general changes](Changes.md).
+<style>ul{font-size:16px}</style>
 
+See also [general changes](Changes.md).
 
 ## 2.0.0
 
 Elements that were deprecated in 1.x have been removed. See previous entries for current usage. This includes:
 
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getAttributesByRegexp()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getCSSNodes()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getElementsByRegexp()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getJSNodes()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getObjectParamsByRegexp()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getURLNodes()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::loadTemplate()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::replaceTokens()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateHelper::saveTemplate()`
- - `s9e\TextFormatter\Configurator\Helpers\TemplateParser::parseEqualityExpr()`
- - `s9e\TextFormatter\Configurator\JavaScript::$exportMethods`
- - `s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerApplication::$closureCompilerBin`
- - `s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerApplication::$javaBin`
- - `s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName`
- - `s9e\TextFormatter\Plugins\Emoji\Configurator::addAlias()`
- - `s9e\TextFormatter\Plugins\Emoji\Configurator::getAliases()`
- - `s9e\TextFormatter\Plugins\Emoji\Configurator::removeAlias()`
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getAttributesByRegexp()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getCSSNodes()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getElementsByRegexp()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getJSNodes()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getObjectParamsByRegexp()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getURLNodes()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::loadTemplate()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::replaceTokens()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::saveTemplate()
+ - s9e\TextFormatter\Configurator\Helpers\TemplateParser::parseEqualityExpr()
+ - s9e\TextFormatter\Configurator\JavaScript::$exportMethods
+ - s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerApplication::$closureCompilerBin
+ - s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerApplication::$javaBin
+ - s9e\TextFormatter\Plugins\Emoji\Configurator::$attrName
+ - s9e\TextFormatter\Plugins\Emoji\Configurator::addAlias()
+ - s9e\TextFormatter\Plugins\Emoji\Configurator::getAliases()
+ - s9e\TextFormatter\Plugins\Emoji\Configurator::removeAlias()
 
 The second argument for the `s9e\TextFormatter\Utils\Http\Client` methods `get()` and `post()` has changed. [See API](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils/Http/Client.html#method_get).
 
