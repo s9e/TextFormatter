@@ -121,7 +121,7 @@ class XSLTTest extends Test
 		$this->configurator->rendering->parameters->add('foo', '\'"&<>');
 
 		$this->assertStringContainsString(
-			'<xsl:param name="foo">\'&quot;&amp;&lt;&gt;</xsl:param>',
+			'<xsl:param name="foo">\'"&amp;&lt;&gt;</xsl:param>',
 			$this->getXSL()
 		);
 	}

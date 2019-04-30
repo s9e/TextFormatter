@@ -45,7 +45,6 @@ class XSLT implements RendererGenerator
 	public function getXSL(Rendering $rendering)
 	{
 		$groupedTemplates = [];
-		$prefixes         = [];
 		$templates        = $rendering->getTemplates();
 
 		// Replace simple templates if there are at least 3 of them
@@ -56,74 +55,95 @@ class XSLT implements RendererGenerator
 		{
 			$template = $this->optimizer->optimizeTemplate($template);
 			$groupedTemplates[$template][] = $tagName;
-
-			// Record the tag's prefix if applicable
-			$pos = strpos($tagName, ':');
-			if ($pos !== false)
-			{
-				$prefixes[substr($tagName, 0, $pos)] = 1;
-			}
 		}
 
 		// Declare all the namespaces in use at the top
 		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 
 		// Append the namespace declarations to the stylesheet
-		$prefixes = array_keys($prefixes);
-		sort($prefixes);
-		foreach ($prefixes as $prefix)
-		{
-			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
-		}
-
-		/**
-		* Exclude those prefixes to keep the HTML neat
-		*
-		* @link http://lenzconsulting.com/namespaces-in-xslt/#exclude-result-prefixes
-		*/
+		$prefixes = $this->getPrefixes(array_keys($templates));
 		if (!empty($prefixes))
 		{
+			foreach ($prefixes as $prefix)
+			{
+				$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+			}
+
+			/**
+			* Exclude those prefixes to keep the HTML neat
+			*
+			* @link http://lenzconsulting.com/namespaces-in-xslt/#exclude-result-prefixes
+			*/
 			$xsl .= ' exclude-result-prefixes="' . implode(' ', $prefixes) . '"';
 		}
 
 		// Start the stylesheet with the boilerplate stuff
-		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';
-		$xsl .= '/>';
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"/>';
 
 		// Add stylesheet parameters
 		foreach ($rendering->getAllParameters() as $paramName => $paramValue)
 		{
-			$xsl .= '<xsl:param name="' . htmlspecialchars($paramName) . '"';
-
-			if ($paramValue === '')
-			{
-				$xsl .= '/>';
-			}
-			else
-			{
-				$xsl .= '>' . htmlspecialchars($paramValue) . '</xsl:param>';
-			}
+			$xsl .= $this->writeTag('xsl:param', ['name' => $paramName], htmlspecialchars($paramValue, ENT_NOQUOTES));
 		}
 
 		// Add templates
 		foreach ($groupedTemplates as $template => $tagNames)
 		{
-			// Open the template element
-			$xsl .= '<xsl:template match="' . implode('|', $tagNames) . '"';
-
-			// Make it a self-closing element if the template is empty
-			if ($template === '')
-			{
-				$xsl .= '/>';
-			}
-			else
-			{
-				$xsl .= '>' . $template . '</xsl:template>';
-			}
+			$xsl .= $this->writeTag('xsl:template', ['match' => implode('|', $tagNames)], $template);
 		}
 
 		$xsl .= '</xsl:stylesheet>';
 
 		return $xsl;
+	}
+
+	/**
+	* Extract and return the sorted list of prefixes used in given list of tag names
+	*
+	* @param  string[] $tagNames
+	* @return string[]
+	*/
+	protected function getPrefixes(array $tagNames)
+	{
+		$prefixes = [];
+		foreach ($tagNames as $tagName)
+		{
+			$pos = strpos($tagName, ':');
+			if ($pos !== false)
+			{
+				$prefixes[substr($tagName, 0, $pos)] = 1;
+			}
+		}
+		$prefixes = array_keys($prefixes);
+		sort($prefixes);
+
+		return $prefixes;
+	}
+
+	/**
+	* Serialize given tag to XML
+	*
+	* @param  string $tagName
+	* @param  array  $attributes
+	* @param  string $content
+	* @return string
+	*/
+	protected function writeTag($tagName, array $attributes, $content)
+	{
+		$xml = '<' . $tagName;
+		foreach ($attributes as $attrName => $attrValue)
+		{
+			$xml .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
+		}
+		if ($content === '')
+		{
+			$xml .= '/>';
+		}
+		else
+		{
+			$xml .= '>' . $content . '</' . $tagName . '>';
+		}
+
+		return $xml;
 	}
 }
