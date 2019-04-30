@@ -95,10 +95,7 @@ class PHP implements RendererGenerator
 			$this->optimizer = new Optimizer;
 		}
 		$this->serializer = new Serializer;
-
-		$this->normalizer = new TemplateNormalizer;
-		$this->normalizer->clear();
-		$this->normalizer->append('RemoveLivePreviewAttributes');
+		$this->normalizer = new TemplateNormalizer(['RemoveLivePreviewAttributes']);
 	}
 
 	/**

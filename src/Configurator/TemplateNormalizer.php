@@ -52,6 +52,36 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	protected $collection;
 
 	/**
+	* @var string[] Default list of normalizations
+	*/
+	protected $defaultNormalizations = [
+		'PreserveSingleSpaces',
+		'RemoveComments',
+		'RemoveInterElementWhitespace',
+		'NormalizeElementNames',
+		'FixUnescapedCurlyBracesInHtmlAttributes',
+		'EnforceHTMLOmittedEndTags',
+		'InlineCDATA',
+		'InlineElements',
+		'InlineTextElements',
+		'UninlineAttributes',
+		'MinifyXPathExpressions',
+		'NormalizeAttributeNames',
+		'OptimizeConditionalAttributes',
+		'FoldArithmeticConstants',
+		'FoldConstantXPathExpressions',
+		'InlineXPathLiterals',
+		'OptimizeChooseText',
+		'OptimizeConditionalValueOf',
+		'OptimizeChoose',
+		'InlineAttributes',
+		'NormalizeUrls',
+		'InlineInferredValues',
+		'SetRelNoreferrerOnTargetedLinks',
+		'MinifyInlineCSS'
+	];
+
+	/**
 	* @var integer Maximum number of iterations over a given template
 	*/
 	protected $maxIterations = 100;
@@ -59,36 +89,22 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	/**
 	* Constructor
 	*
-	* Will load the default normalization rules
+	* Will load the default normalization rules if no list is passed
+	*
+	* @param array $normalizations List of normalizations
 	*/
-	public function __construct()
+	public function __construct(array $normalizations = null)
 	{
-		$this->collection = new TemplateNormalizationList;
+		if (!isset($normalizations))
+		{
+			$normalizations = $this->defaultNormalizations;
+		}
 
-		$this->collection->append('PreserveSingleSpaces');
-		$this->collection->append('RemoveComments');
-		$this->collection->append('RemoveInterElementWhitespace');
-		$this->collection->append('NormalizeElementNames');
-		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
-		$this->collection->append('EnforceHTMLOmittedEndTags');
-		$this->collection->append('InlineCDATA');
-		$this->collection->append('InlineElements');
-		$this->collection->append('InlineTextElements');
-		$this->collection->append('UninlineAttributes');
-		$this->collection->append('MinifyXPathExpressions');
-		$this->collection->append('NormalizeAttributeNames');
-		$this->collection->append('OptimizeConditionalAttributes');
-		$this->collection->append('FoldArithmeticConstants');
-		$this->collection->append('FoldConstantXPathExpressions');
-		$this->collection->append('InlineXPathLiterals');
-		$this->collection->append('OptimizeChooseText');
-		$this->collection->append('OptimizeConditionalValueOf');
-		$this->collection->append('OptimizeChoose');
-		$this->collection->append('InlineAttributes');
-		$this->collection->append('NormalizeUrls');
-		$this->collection->append('InlineInferredValues');
-		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
-		$this->collection->append('MinifyInlineCSS');
+		$this->collection = new TemplateNormalizationList;
+		foreach ($normalizations as $normalization)
+		{
+			$this->collection->append($normalization);
+		}
 	}
 
 	/**

@@ -21,12 +21,12 @@ class Optimizer
 	*/
 	public function __construct()
 	{
-		$this->normalizer = new TemplateNormalizer;
-		$this->normalizer->clear();
-		$this->normalizer->append('MergeConsecutiveCopyOf');
-		$this->normalizer->append('MergeIdenticalConditionalBranches');
-		$this->normalizer->append('OptimizeNestedConditionals');
-		$this->normalizer->append('RemoveLivePreviewAttributes');
+		$this->normalizer = new TemplateNormalizer([
+			'MergeConsecutiveCopyOf',
+			'MergeIdenticalConditionalBranches',
+			'OptimizeNestedConditionals',
+			'RemoveLivePreviewAttributes'
+		]);
 	}
 
 	/**

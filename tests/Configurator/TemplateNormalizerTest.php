@@ -30,6 +30,26 @@ class TemplateNormalizerTest extends Test
 	}
 
 	/**
+	* @testdox Initializes the default list of normalizations if no argument is passed to the constructor
+	*/
+	public function testConstructorDefault()
+	{
+		$normalizer = new TemplateNormalizer;
+
+		$this->assertGreaterThan(0, $normalizer->count());
+	}
+
+	/**
+	* @testdox Uses the list of normalizations passed to the constructor
+	*/
+	public function testConstructorCustom()
+	{
+		$normalizer = new TemplateNormalizer([]);
+
+		$this->assertSame(0, $normalizer->count());
+	}
+
+	/**
 	* @testdox Only executes a normalization once per run if its "onlyOnce" property is true
 	*/
 	public function testOnlyOnce()
