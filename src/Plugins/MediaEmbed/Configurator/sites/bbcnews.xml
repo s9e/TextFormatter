@@ -1,5 +1,6 @@
 <site name="BBC News" homepage="https://www.bbc.com/news/video_and_audio/headlines/">
 	<example>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</example>
+	<example>https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</example>
 
 	<tags><tag>news</tag></tags>
 
@@ -7,10 +8,12 @@
 		<id filterChain="stripslashes"/>
 	</attributes>
 
+	<host>bbc.co.uk</host>
 	<host>bbc.com</host>
+	<extract>@bbc\.co(?:m|\.uk)/news/av/embed/(?'id'[-\\\w/]+)@</extract>
 	<scrape>
-		<match>!bbc\.com/news/\w!</match>
-		<extract>!bbc\.com\\/news\\/av\\/embed\\/(?'id'[-\\\w/]+)!</extract>
+		<match>@bbc\.co(?:m|\.uk)/news/(?!av/embed/)\w@</match>
+		<extract>@bbc\.co(?:m|\.uk)\\?/news\\?/av\\?/embed\\?/(?'id'[-\\\w/]+)@</extract>
 	</scrape>
 	<iframe>
 		<src><![CDATA[

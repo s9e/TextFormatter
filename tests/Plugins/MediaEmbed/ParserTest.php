@@ -541,16 +541,16 @@ class ParserTest extends Test
 				null,
 				'assertRegexp'
 			],
-//			[
-//				'http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale',
-//				'<r><BBCNEWS id="av/entertainment-arts-39741822/gold-darth-vader-mask-goes-on-sale-in-japan">http://www.bbc.com/news/av/entertainment-arts-39741822/gold-darth-vader-mask-up-for-sale</BBCNEWS></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bbcnews');
-//				}
-//			],
+			[
+				'https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines',
+				'<r><BBCNEWS id="p0784g1m/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
 //				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
@@ -1598,6 +1598,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
+			[
+				'https://www.bbc.co.uk/news/av/embed/p0783sg7/48125671',
+				'<r><BBCNEWS id="p0783sg7/48125671">https://www.bbc.co.uk/news/av/embed/p0783sg7/48125671</BBCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
 				}
 			],
 			[

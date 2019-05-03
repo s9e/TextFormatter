@@ -34,7 +34,7 @@
 	<tr>
 		<td><code>bbcnews</code></td>
 		<td>BBC News</td>
-		<td>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</td>
+		<td>https://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull<br/>https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</td>
 	</tr>
 	<tr>
 		<td><code>bitchute</code></td>
