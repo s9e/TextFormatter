@@ -1946,7 +1946,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Implements Iterator
  [x] Initializes the default list of normalizations if no argument is passed to the constructor
  [x] Uses the list of normalizations passed to the constructor
- [x] Only executes a normalization once per run if its "onlyOnce" property is true
  [x] normalizeTag() calls each of the tag's template's normalize() method with itself as argument
  [x] normalizeTag() does not call normalize() if the template was already normalized
  [x] Default normalization rules with data set #0

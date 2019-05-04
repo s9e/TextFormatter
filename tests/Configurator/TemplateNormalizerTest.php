@@ -50,21 +50,6 @@ class TemplateNormalizerTest extends Test
 	}
 
 	/**
-	* @testdox Only executes a normalization once per run if its "onlyOnce" property is true
-	*/
-	public function testOnlyOnce()
-	{
-		$templateNormalizer = new TemplateNormalizer;
-		$templateNormalizer->append(new DummyNormalization('X'));
-		$templateNormalizer->append(new DummyNormalization('O'))->onlyOnce = true;
-
-		$this->assertRegexp(
-			'(HiXOX{10,})',
-			$templateNormalizer->normalizeTemplate('Hi')
-		);
-	}
-
-	/**
 	* @testdox normalizeTag() calls each of the tag's template's normalize() method with itself as argument
 	*/
 	public function testNormalizeTag()

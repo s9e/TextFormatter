@@ -4,6 +4,10 @@ See also [general changes](Changes.md).
 
 ## 2.0.0
 
+The following elements have been removed:
+
+ - s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization::$onlyOnce
+
 Elements that were deprecated in 1.x have been removed. See previous entries for current usage. This includes:
 
  - s9e\TextFormatter\Configurator\Helpers\TemplateHelper::getAttributesByRegexp()

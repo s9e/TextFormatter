@@ -21,11 +21,6 @@ abstract class AbstractNormalization
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* @var bool Whether this normalization should be applied only once per template
-	*/
-	public $onlyOnce = false;
-
-	/**
 	* @var DOMDocument Document that holds the template being normalized
 	*/
 	protected $ownerDocument;

@@ -57,18 +57,23 @@ echo $configurator->templateNormalizer->normalizeTemplate('<![CDATA[ Will not be
 
 ### Add your own custom normalization
 
-You can `append()` or `prepend()` a callback to the template normalizer. It will be called with one argument, a `DOMNode` that represents the `<xsl:template/>` element that contains the template, which you can modify normally. At the end, the node is serialized back to XML. The template normalizer iterates through the list of normalizations up to 5 times, until none of them modifies the template. If you set `onlyOnce` to true, the normalization will only be applied during the first loop.
+You can `append()` or `prepend()` a callback to the template normalizer. It will be called with one argument, a `DOMNode` that represents the `<xsl:template/>` element that contains the template, which you can modify normally. At the end, the node is serialized back to XML.
+
+The template normalizer iterates through the list of normalizations until none of them modifies the template or the internal iteration limit is reached. If you create a normalization that adds something to a template without testing whether it's already been added by a previous iteration, it will be run multiple times in a row.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add a callback that adds a "?" to the template and that is executed only once
+// Add a callback that adds a "?" to the template only if there isn't one already
 $configurator->templateNormalizer->append(
 	function (DOMNode $template)
 	{
-		$template->appendChild($template->ownerDocument->createTextNode('?'));
+		if (strpos($template->textContent, '?') === false)
+		{
+			$template->appendChild($template->ownerDocument->createTextNode('?'));
+		}
 	}
-)->onlyOnce = true;
+);
 
 // Add a callback that adds a "!" to the template
 $configurator->templateNormalizer->append(

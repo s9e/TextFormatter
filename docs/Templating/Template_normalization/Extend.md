@@ -50,7 +50,7 @@ $configurator->templateNormalizer->prepend(
 			$node->parentNode->replaceChild($xslIf, $node);
 		}
 	}
-)->onlyOnce = true;
+);
 
 echo $configurator->templateNormalizer->normalizeTemplate('
 	<!-- IF S_USER_LOGGED_IN -->

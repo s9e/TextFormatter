@@ -139,11 +139,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 			$old = $template;
 			foreach ($this->collection as $k => $normalization)
 			{
-				if ($i > 0 && !empty($normalization->onlyOnce))
-				{
-					continue;
-				}
-
 				$normalization->normalize($dom->documentElement);
 			}
 			$template = TemplateLoader::save($dom);
