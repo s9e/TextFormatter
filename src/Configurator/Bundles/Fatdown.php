@@ -18,6 +18,7 @@ class Fatdown extends Bundle
 	public function configure(Configurator $configurator)
 	{
 		$configurator->urlConfig->allowScheme('ftp');
+		$configurator->urlConfig->allowScheme('mailto');
 
 		$configurator->Litedown->decodeHtmlEntities = true;
 		$configurator->Autoemail;

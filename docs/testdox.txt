@@ -7247,6 +7247,7 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests (Quick enabled) with data set #10
  [x] Rendering tests (Quick enabled) with data set #11
  [x] Rendering tests (Quick enabled) with data set #12
+ [x] Rendering tests (Quick enabled) with data set #13
  [x] Rendering tests (Quick disabled) with data set #0
  [x] Rendering tests (Quick disabled) with data set #1
  [x] Rendering tests (Quick disabled) with data set #2
@@ -7260,6 +7261,7 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests (Quick disabled) with data set #10
  [x] Rendering tests (Quick disabled) with data set #11
  [x] Rendering tests (Quick disabled) with data set #12
+ [x] Rendering tests (Quick disabled) with data set #13
 
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
