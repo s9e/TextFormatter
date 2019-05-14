@@ -806,6 +806,13 @@ class PHPTest extends Test
 					$renderer->setParameter('ONE',   1);
 				}
 			],
+			[
+				'<r><X>...</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<b title="{.}"><xsl:apply-templates/></b>';
+				}
+			],
 		];
 	}
 
