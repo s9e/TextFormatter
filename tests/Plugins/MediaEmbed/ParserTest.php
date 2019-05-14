@@ -1117,6 +1117,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.sporcle.com/games/eyes355/find-five-countries',
+				'<r><SPORCLE id="15d32a898365">https://www.sporcle.com/games/eyes355/find-five-countries</SPORCLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('sporcle');
+				}
+			],
+			[
 				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
 				'(<r><SPORTSNET id="\\d+001">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
 				[],
@@ -2982,6 +2992,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://www.sporcle.com/framed/?v=8&pm&gid=15d32a898365&fid=5cd9efa1a3dc3&width=820',
+				'<r><SPORCLE id="15d32a898365">https://www.sporcle.com/framed/?v=8&amp;pm&amp;gid=15d32a898365&amp;fid=5cd9efa1a3dc3&amp;width=820</SPORCLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('sporcle');
 				}
 			],
 			[
