@@ -6178,6 +6178,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick
  [x] Rendering strategy with data set #26
  [x] Rendering strategy with data set #27
  [x] Rendering strategy with data set #28
+ [x] Rendering strategy with data set #29
  [x] Source with data set #0
  [x] Source with data set #1
  [x] Source with data set #2
@@ -6312,6 +6313,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Matches the reference rendering in edge cases with data set #49
  [x] Matches the reference rendering in edge cases with data set #50
  [x] Matches the reference rendering in edge cases with data set #51
+ [x] Matches the reference rendering in edge cases with data set #52
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #0
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #1
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #2
@@ -6364,6 +6366,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #49
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #50
  [x] Matches the reference rendering in edge cases (quick renderer) with data set #51
+ [x] Matches the reference rendering in edge cases (quick renderer) with data set #52
  [x] XPath expressions are inlined as PHP whenever possible with data set #0
  [x] XPath expressions are inlined as PHP whenever possible with data set #1
  [x] XPath expressions are inlined as PHP whenever possible with data set #2

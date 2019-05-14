@@ -124,10 +124,15 @@ class Quick
 	*/
 	public static function getRenderingStrategy($php)
 	{
+		$phpRenderings = self::getQuickRendering($php);
+		if (empty($phpRenderings))
+		{
+			return [];
+		}
 		$renderings = self::getStringRenderings($php);
 
 		// Keep string rendering where possible, use PHP rendering wherever else
-		foreach (self::getQuickRendering($php) as $i => $phpRendering)
+		foreach ($phpRenderings as $i => $phpRendering)
 		{
 			if (!isset($renderings[$i]) || strpos($phpRendering, '$this->attributes[]') !== false)
 			{

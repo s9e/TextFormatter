@@ -601,6 +601,10 @@ class QuickTest extends Test
 					]
 				]
 			],
+			[
+				'<b title="{.}"><xsl:apply-templates/></b>',
+				[]
+			],
 		];
 	}
 

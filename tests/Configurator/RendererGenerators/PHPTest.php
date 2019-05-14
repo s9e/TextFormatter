@@ -830,6 +830,13 @@ class PHPTest extends Test
 					]);
 				}
 			],
+			[
+				'<r><X>...</X></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<b title="{.}"><xsl:apply-templates/></b>';
+				}
+			],
 		];
 	}
 
