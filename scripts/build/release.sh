@@ -26,7 +26,7 @@ git commit -S --no-verify -m"Release $new_version [ci skip]" && \
 git checkout release/php5.4                                  && \
 git tag -s -m "$new_version" "$new_version"                  && \
 git push origin "$new_version"                               && \
-git checkout master                                          && \
+git checkout 1.4/master                                      && \
 php scripts/build/patchComposerVersion.php dev               && \
 git add composer.json                                        && \
 git commit --no-verify -m"Updated dev version [ci skip]"     && \
