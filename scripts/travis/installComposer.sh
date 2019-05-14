@@ -6,6 +6,7 @@ cd ../..
 if [ "$TRAVIS_PHP_VERSION" = '5.4' ]
 then
 	composer remove --dev --no-interaction --ignore-platform-reqs s9e/regexp-builder
+	composer remove --dev --no-interaction --ignore-platform-reqs phpunit/phpunit
 	composer require --dev --no-interaction "php:^5.4"
 fi
 
