@@ -13,6 +13,7 @@
 	},
 	"require-dev": {
 		"matthiasmullie/minify":       "*",
+		"phpunit/phpunit":             "<6",
 		"php-coveralls/php-coveralls": "*",
 		"s9e/regexp-builder":          "1.*"
 	},
