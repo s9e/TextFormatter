@@ -1,3 +1,13 @@
+1.4.4 (2019-05-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/5df12eb4c17849941db94c1421b1632a07acf3b1...641bdfc5516c4e0da10df19ae33d59837f08db41)
+
+### Fixed
+
+ - `f0ff2a3ff` Fixed rejection of templates that can only be partially rendered by the Quick renderer
+
+
 1.4.3 (2019-04-26)
 ==================
 
