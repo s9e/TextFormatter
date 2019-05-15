@@ -2,7 +2,8 @@
 
 cd $(dirname $(dirname $(dirname "$0")))
 
-git checkout master
+master=1.4/master
+git checkout $master
 msg="Synced to $(git rev-parse HEAD)"
 branches=
 
@@ -25,7 +26,7 @@ do
 	branches="$branches $rel"
 
 	git branch -D "$tmp" 2> /dev/null
-	git checkout -b "$tmp" master 2> /dev/null
+	git checkout -b "$tmp" $master 2> /dev/null
 
 	scripts/build/prepareFiles.sh $fullversion
 
@@ -51,5 +52,5 @@ do
 	fi
 done
 
-git checkout master
+git checkout $master
 git push origin $branches
