@@ -23,17 +23,17 @@ class Runner
 	/**
 	* @var array
 	*/
-	protected $callbacks;
+	protected $callbacks = [];
 
 	/**
 	* @var array
 	*/
-	protected $groups;
+	protected $groups = [];
 
 	/**
 	* @var array
 	*/
-	protected $matchGroup;
+	protected $matchGroup = [];
 
 	/**
 	* @var string
@@ -43,16 +43,22 @@ class Runner
 	/**
 	* @var array
 	*/
-	protected $regexps;
+	protected $regexps = [];
 
 	/**
 	* Constructor
 	*
+	* @param  AbstractConvertor[] $convertors
 	* @return void
 	*/
-	public function __construct()
+	public function __construct(array $convertors = null)
 	{
-		$this->setConvertors($this->getDefaultConvertors());
+		if (!isset($convertors))
+		{
+			$convertors = $this->getDefaultConvertors();
+		}
+
+		$this->setConvertors($convertors);
 	}
 
 	/**
@@ -85,36 +91,6 @@ class Runner
 		$match = $this->getMatch($expr);
 
 		return (isset($match, $this->matchGroup[$match[0]])) ? $this->matchGroup[$match[0]] : null;
-	}
-
-	/**
-	* Set the list of convertors used by this instance
-	*
-	* @param  AbstractConvertor[] $convertors
-	* @return void
-	*/
-	public function setConvertors(array $convertors)
-	{
-		$this->callbacks  = [];
-		$this->matchGroup = [];
-		$this->groups     = [];
-		$this->regexps    = [];
-		foreach ($convertors as $convertor)
-		{
-			$this->addConvertor($convertor);
-		}
-
-		// Sort regexps by length to keep their order consistent
-		$this->sortRegexps();
-
-		// Add regexp groups
-		foreach ($this->groups as $group => $captures)
-		{
-			sort($captures);
-			$this->regexps[$group] = '(?<' . $group . '>' . implode('|', $captures) . ')';
-		}
-
-		$this->regexp = '(^(?:' . implode('|', $this->regexps) . ')$)';
 	}
 
 	/**
@@ -226,6 +202,32 @@ class Runner
 			},
 			$regexp
 		);
+	}
+
+	/**
+	* Set the list of convertors used by this instance
+	*
+	* @param  AbstractConvertor[] $convertors
+	* @return void
+	*/
+	protected function setConvertors(array $convertors)
+	{
+		foreach ($convertors as $convertor)
+		{
+			$this->addConvertor($convertor);
+		}
+
+		// Sort regexps by length to keep their order consistent
+		$this->sortRegexps();
+
+		// Add regexp groups
+		foreach ($this->groups as $group => $captures)
+		{
+			sort($captures);
+			$this->regexps[$group] = '(?<' . $group . '>' . implode('|', $captures) . ')';
+		}
+
+		$this->regexp = '(^(?:' . implode('|', $this->regexps) . ')$)';
 	}
 
 	/**

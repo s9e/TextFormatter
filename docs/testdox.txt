@@ -5967,7 +5967,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Runner
  [x] convert() throws an exception if the expression cannot be converted
- [x] setConvertors([]) can be used to remove all convertors
+ [x] Convertors can be set in the constructor
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions
  [x]  with data set #0

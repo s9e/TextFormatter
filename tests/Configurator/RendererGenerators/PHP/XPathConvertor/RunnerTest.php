@@ -22,14 +22,13 @@ class RunnerTest extends Test
 	}
 
 	/**
-	* @testdox setConvertors([]) can be used to remove all convertors
+	* @testdox Convertors can be set in the constructor
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Cannot convert '1'
 	*/
-	public function testResetConvertors()
+	public function testCustomConvertors()
 	{
-		$runner = new Runner;
-		$runner->setConvertors([]);
+		$runner = new Runner([]);
 
 		$runner->convert('1');
 	}
