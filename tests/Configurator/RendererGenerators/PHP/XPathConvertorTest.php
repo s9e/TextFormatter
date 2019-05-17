@@ -80,6 +80,10 @@ class XPathConvertorTest extends Test
 				"\$this->xpath->evaluate('substring-after(@foo,@bar)',\$node)"
 			],
 			[
+				'translate(@foo,@bar)',
+				"\$this->xpath->evaluate('translate(@foo,@bar)',\$node)"
+			],
+			[
 				'//X[@a = current()/@a]',
 				"\$this->xpath->evaluate('string(//X[@a = '.\$node->getNodePath().'/@a])',\$node)"
 			],
