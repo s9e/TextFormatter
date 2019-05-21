@@ -1,22 +1,33 @@
 <site name="Google Sheets" homepage="https://www.google.com/sheets/about/">
 	<example>https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA</example>
 	<example>https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml</example>
+	<example>https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbciMU7t5dCB8auk-nyK-p-25TJjgUrzBuMCAiq_2ZDqoMSFAlZCctIC7y3TXS71ys_MRdoAU4Jqr/pubchart?oid=1729348495</example>
 
 	<tags><tag>documents</tag></tags>
 
 	<host>docs.google.com</host>
-	<extract>@docs\.google\.com/spreadsheet(?:/ccc\?key=|(?:[^e]/)+)(?'id'(?:e/)?[-\w]+)[^#]*(?:#gid=(?'gid'\d+))?@</extract>
-	<iframe width="100%" height="500">
-		<src><![CDATA[
-			<xsl:text>https://docs.google.com/spreadsheets/d/</xsl:text>
-			<xsl:value-of select="@id"/>
-			<xsl:choose>
-				<xsl:when test="starts-with(@id, 'e/')">/pubhtml?widget=true&amp;headers=false</xsl:when>
-				<xsl:otherwise>/preview</xsl:otherwise>
-			</xsl:choose>
-			<xsl:text>#gid=</xsl:text>
-			<xsl:value-of select="@gid"/>
-		]]></src>
-		<style resize="vertical"/>
-	</iframe>
+	<extract>@docs\.google\.com/spreadsheet(?:/ccc\?key=|(?:[^e]/)+)(?'id'(?:e/)?[-\w]+)@</extract>
+	<extract>@oid=(?'oid'\d+)@</extract>
+	<extract>@#gid=(?'gid'\d+)@</extract>
+	<extract>@/pub(?'type'chart)@</extract>
+	<choose>
+		<when test="@type='chart'">
+			<iframe width="600" height="372" src="https://docs.google.com/spreadsheets/d/{@id}/pubchart?oid={@oid}&amp;format=interactive"/>
+		</when>
+		<otherwise>
+			<iframe width="100%" height="500">
+				<src><![CDATA[
+					<xsl:text>https://docs.google.com/spreadsheets/d/</xsl:text>
+					<xsl:value-of select="@id"/>
+					<xsl:choose>
+						<xsl:when test="starts-with(@id, 'e/')">/pubhtml?widget=true&amp;headers=false</xsl:when>
+						<xsl:otherwise>/preview</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text>#gid=</xsl:text>
+					<xsl:value-of select="@gid"/>
+				]]></src>
+				<style resize="vertical"/>
+			</iframe>
+		</otherwise>
+	</choose>
 </site>
