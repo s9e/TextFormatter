@@ -7,7 +7,6 @@ $html = [];
 $html[] = '<table>';
 $html[] = '	<tr>';
 $html[] = '		<th>Id</th>';
-$html[] = '		<th>Site</th>';
 $html[] = '		<th>Example URLs</th>';
 $html[] = '	</tr>';
 
@@ -18,10 +17,9 @@ foreach (glob($dirpath . '/*.xml') as $siteFile)
 	$site   = simplexml_load_file($siteFile);
 	$siteId = basename($siteFile, '.xml');
 
-	$html[] = '	<tr>';
-	$html[] = '		<td><code>' . $siteId . '</code></td>';
-	$html[] = '		<td>' . $site['name'] . '</td>';
-	$html[] = '		<td>' . implode('<br/>', (array) $site->example) . '</td>';
+	$html[] = '	<tr title="' . $site['name'] . '">';
+	$html[] = '		<td style="font-size:75%"><code>' . $siteId . '</code></td>';
+	$html[] = '		<td style="font-size:50%">' . implode('<br/>', (array) $site->example) . '</td>';
 	$html[] = '	</tr>';
 }
 
