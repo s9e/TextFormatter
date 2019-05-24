@@ -5,7 +5,7 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 
 ### Parameters available for all filters
 
-<table>
+<table style="font-size:75%">
 <tr>
 	<td><b>logger</b></td>
 	<td>The parser's logger.</td>
@@ -19,7 +19,7 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 
 ### Parameters available for attribute filters
 
-<table>
+<table style="font-size:75%">
 <tr>
 	<td><b>attrName</b></td>
 	<td>The attribute's name.</td>
@@ -33,7 +33,7 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 
 ### Parameters available for tag filters
 
-<table>
+<table style="font-size:75%">
 <tr>
 	<td><b>openTags</b></td>
 	<td>An array containing a list of all tags currently open.</td>
