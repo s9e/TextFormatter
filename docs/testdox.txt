@@ -1328,6 +1328,7 @@ s9e\TextFormatter\Tests\Configurator\CallbackGenerator
  [x] replaceCallbacks() tests with data set #3
  [x] replaceCallbacks() tests with data set #4
  [x] replaceCallbacks() tests with data set #5
+ [x] replaceCallbacks() tests with data set #6
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
@@ -2470,6 +2471,7 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] filterTag() passes the Parser instance to tag filters via the 'parser' parameter
  [x] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
  [x] filterTag() can pass the text being parsed via the 'text' parameter
+ [x] filterTag() passes computed values innerText, outerText and tagText
  [x] filterAttributes() removes the tag's attributes if none were configured
  [x] filterAttributes() removes undefined attributes
  [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
@@ -3098,6 +3100,12 @@ s9e\TextFormatter\Tests\Parser
  [x] setNestingLimit() does not have side-effects due to references
  [x] Characters outside Unicode's BMP are encoded
  [x] Attribute preprocessors are properly run with default config
+
+s9e\TextFormatter\Tests\Parser\Functional
+ [x] Functional tests with data set #0
+ [x] Functional tests with data set #1
+ [x] Functional tests (JavaScript) with data set #0
+ [x] Functional tests (JavaScript) with data set #1
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument

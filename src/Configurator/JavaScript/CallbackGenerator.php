@@ -64,8 +64,17 @@ class CallbackGenerator
 		// Remove 'parser' as a parameter, since there's no such thing in JavaScript
 		unset($params['parser']);
 
-		// Add global vars to the list of vars in scope
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1, 'text' => 1];
+		// Rebuild the local vars map to include global vars and computed values
+		$available  = array_combine(array_keys($localVars), array_keys($localVars));
+		$available += [
+			'innerText'      => '(tag.getEndTag() ? text.substr(tag.getPos() + tag.getLen(), tag.getEndTag().getPos() - tag.getPos() - tag.getLen()) : "")',
+			'logger'         => 'logger',
+			'openTags'       => 'openTags',
+			'outerText'      => 'text.substr(tag.getPos(), (tag.getEndTag() ? tag.getEndTag().getPos() + tag.getEndTag().getLen() - tag.getPos() : tag.getLen()))',
+			'registeredVars' => 'registeredVars',
+			'tagText'        => 'text.substr(tag.getPos(), tag.getLen())',
+			'text'           => 'text'
+		];
 
 		$args = [];
 		foreach ($params as $k => $v)
@@ -75,10 +84,10 @@ class CallbackGenerator
 				// Param by value
 				$args[] = $this->encoder->encode($v);
 			}
-			elseif (isset($localVars[$k]))
+			elseif (isset($available[$k]))
 			{
-				// Param by name that matches a local var
-				$args[] = $k;
+				// Param by name that matches a local expression
+				$args[] = $available[$k];
 			}
 			else
 			{

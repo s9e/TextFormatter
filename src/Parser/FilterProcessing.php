@@ -104,15 +104,25 @@ class FilterProcessing
 		$logger->setTag($tag);
 
 		// Prepare the variables that are accessible to filters
+		$text = $parser->getText();
 		$vars = [
+			'innerText'      => '',
 			'logger'         => $logger,
 			'openTags'       => $openTags,
+			'outerText'      => substr($text, $tag->getPos(), $tag->getLen()),
 			'parser'         => $parser,
 			'registeredVars' => $parser->registeredVars,
 			'tag'            => $tag,
 			'tagConfig'      => $tagConfig,
-			'text'           => $parser->getText()
+			'tagText'        => substr($text, $tag->getPos(), $tag->getLen()),
+			'text'           => $text
 		];
+		$endTag = $tag->getEndTag();
+		if ($endTag)
+		{
+			$vars['innerText'] = substr($text, $tag->getPos() + $tag->getLen(), $endTag->getPos() - $tag->getPos() - $tag->getLen());
+			$vars['outerText'] = substr($text, $tag->getPos(), $endTag->getPos() + $endTag->getLen() - $tag->getPos());
+		}
 		foreach ($tagConfig['filterChain'] as $filter)
 		{
 			if ($tag->isInvalid())

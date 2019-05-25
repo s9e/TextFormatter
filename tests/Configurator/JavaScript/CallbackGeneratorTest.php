@@ -135,6 +135,33 @@ class CallbackGeneratorTest extends Test
 					]
 				]
 			],
+			[
+				[
+					'tags' => [
+						'X' => [
+							'filterChain' => [
+								[
+									'js' => 'function(innerText,outerText,tagText){}',
+									'params' => [
+										'innerText' => null,
+										'outerText' => null,
+										'tagText'   => null,
+									]
+								]
+							]
+						]
+					]
+				],
+				[
+					'tags' => [
+						'X' => [
+							'filterChain' => [
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return (function(innerText,outerText,tagText){})((tag.getEndTag() ? text.substr(tag.getPos() + tag.getLen(), tag.getEndTag().getPos() - tag.getPos() - tag.getLen()) : \"\"),text.substr(tag.getPos(), (tag.getEndTag() ? tag.getEndTag().getPos() + tag.getEndTag().getLen() - tag.getPos() : tag.getLen())),text.substr(tag.getPos(), tag.getLen()));}")
+							]
+						]
+					]
+				]
+			],
 		];
 	}
 }

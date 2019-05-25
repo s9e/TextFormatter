@@ -35,8 +35,16 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 
 <table style="font-size:75%">
 <tr>
+	<td><b>innerText</b><sup>3</sup></td>
+	<td>On a paired tag: the text between the two tags.<br>On a single tag: an empty string.</td>
+</tr>
+<tr>
 	<td><b>openTags</b></td>
 	<td>An array containing a list of all tags currently open.</td>
+</tr>
+<tr>
+	<td><b>outerText</b><sup>3</sup></td>
+	<td>On a paired tag: full text covered by the tag pair.<br>On a single tag: same as <code>tagText</code>.</td>
 </tr>
 <tr>
 	<td><b>parser</b><sup>1</sup></td>
@@ -51,13 +59,18 @@ By default, an attribute filter or a tag filter only receives one argument: the 
 	<td>The current tag's configuration.</td>
 </tr>
 <tr>
+	<td><b>tagText</b><sup>3</sup></td>
+	<td>The portion of text consumed by this tag.</td>
+</tr>
+<tr>
 	<td><b>text</b></td>
 	<td>The text being parsed.</td>
 </tr>
 </table>
 
 <sup>1</sup> This parameter is skipped in JavaScript filters.  
-<sup>2</sup> This parameter is subject to change and may be removed in a future version.
+<sup>2</sup> This parameter is subject to change and may be removed in a future version.  
+<sup>3</sup> Available since 2.0.0.  
 
 
 ## Examples

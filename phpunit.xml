@@ -215,6 +215,7 @@
 			<file>tests/Parser/AttributeFilters/TimestampFilterTest.php</file>
 			<file>tests/Parser/AttributeFilters/UrlFilterTest.php</file>
 			<file>tests/ParserTest.php</file>
+			<file>tests/Parser/FunctionalTest.php</file>
 
 			<file>tests/Plugins/ConfiguratorBaseTest.php</file>
 			<file>tests/Plugins/ParserBaseTest.php</file>

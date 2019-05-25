@@ -392,6 +392,37 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox filterTag() passes computed values innerText, outerText and tagText
+	*/
+	public function testFilterTagPassesComputedValues()
+	{
+		$mock = $this->getMockBuilder('stdClass')
+		             ->setMethods(['foo'])
+		             ->getMock();
+		$mock->expects($this->once())
+			     ->method('foo')
+			     ->with('...', 'ss...e', 'ss');
+
+		$tag    = $this->configurator->tags->add('X');
+		$filter = $tag->filterChain->append([$mock, 'foo']);
+		$filter->resetParameters();
+		$filter->addParameterByName('innerText');
+		$filter->addParameterByName('outerText');
+		$filter->addParameterByName('tagText');
+
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addTagPair('X', 0, 2, 5, 1);
+			}
+		);
+
+		$parser->parse('ss...e');
+	}
+
+	/**
 	* @testdox filterAttributes() removes the tag's attributes if none were configured
 	*/
 	public function testFilterAttributesNukesAttributes()
