@@ -32,6 +32,11 @@ then
 		./scripts/patchCachedSiteDefinitionCollection.php
 		./scripts/patchMediaEmbedDoc.php
 	fi
+	if [[ -n `git diff --cached --name-only -b src/Configurator/JavaScript/functions` ]]
+	then
+		./scripts/patchJavaScriptFunctionProvider.php
+		git update-index --add "src/Configurator/JavaScript/FunctionProvider.php"
+	fi
 
 	./scripts/generateBundles.php
 	./scripts/patchDocs.php
