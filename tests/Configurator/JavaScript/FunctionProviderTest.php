@@ -30,7 +30,12 @@ class FunctionProviderTest extends Test
 	public function testReturnFromFilesystem()
 	{
 		unset(FunctionProvider::$cache['foo']);
-		$filepath = __DIR__ . '/../../../src/Configurator/JavaScript/functions/foo.js';
+		$dirpath  = __DIR__ . '/../../../src/Configurator/JavaScript/functions';
+		$filepath = $dirpath . '/foo.js';
+		if (!file_exists($dirpath))
+		{
+			mkdir($dirpath);
+		}
 		self::$tmpFiles[] = $filepath;
 		file_put_contents($filepath, 'alert(2)');
 		$this->assertSame('alert(2)', FunctionProvider::get('foo'));
