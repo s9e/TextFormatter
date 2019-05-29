@@ -5972,6 +5972,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertCondition() tests with data set #29
  [x] convertCondition() tests with data set #30
  [x] convertCondition() tests with data set #31
+ [x] convertCondition() tests with data set #32
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Runner
  [x] convert() throws an exception if the expression cannot be converted
