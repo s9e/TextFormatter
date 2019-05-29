@@ -82,10 +82,18 @@ class TemplateLoaderTest extends Test
 	*/
 	public function testSaveRedundantNS()
 	{
-		$original = '<xsl:text xmlns:xsl="http://www.w3.org/1999/XSL/Transform">..</xsl:text>';
-		$expected = '<xsl:text>..</xsl:text>';
+		$original = '';
+		$expected = '<xsl:if test="0"/><xsl:if test="0"/>';
 
-		$this->assertSame($expected, TemplateLoader::save(TemplateLoader::load($original)));
+		$dom  = TemplateLoader::load($original);
+		$frag = $dom->createDocumentFragment();
+		$frag->appendChild($dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:if'))
+		     ->setAttribute('test', '0');
+		$frag->appendChild($dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:if'))
+		     ->setAttribute('test', '0');
+		$dom->firstChild->appendChild($frag);
+
+		$this->assertSame($expected, TemplateLoader::save($dom));
 	}
 
 	/**
