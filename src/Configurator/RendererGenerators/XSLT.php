@@ -11,21 +11,27 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
 use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 
 class XSLT implements RendererGenerator
 {
 	/**
-	* @var Optimizer
+	* @var TemplateNormalizer
 	*/
-	public $optimizer;
+	public $normalizer;
 
 	/**
 	* Constructor
 	*/
 	public function __construct()
 	{
-		$this->optimizer = new Optimizer;
+		$this->normalizer = new TemplateNormalizer([
+			'MergeConsecutiveCopyOf',
+			'MergeIdenticalConditionalBranches',
+			'OptimizeNestedConditionals',
+			'RemoveLivePreviewAttributes'
+		]);
 	}
 
 	/**
@@ -53,7 +59,7 @@ class XSLT implements RendererGenerator
 		// Group tags with identical templates together
 		foreach ($templates as $tagName => $template)
 		{
-			$template = $this->optimizer->optimizeTemplate($template);
+			$template = $this->normalizer->normalizeTemplate($template);
 			$groupedTemplates[$template][] = $tagName;
 		}
 

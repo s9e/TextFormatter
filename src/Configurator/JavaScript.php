@@ -128,7 +128,7 @@ class JavaScript
 
 		// Get the stylesheet used for rendering
 		$xslt      = new XSLT;
-		$xslt->optimizer->normalizer->remove('RemoveLivePreviewAttributes');
+		$xslt->normalizer->remove('RemoveLivePreviewAttributes');
 		$this->xsl = $xslt->getXSL($this->configurator->rendering);
 
 		// Prepare the parser's config

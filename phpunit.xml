@@ -298,7 +298,6 @@
 			<file>tests/Configurator/RendererGenerators/PHP/SwitchStatementTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
 			<file>tests/Configurator/RendererGenerators/UnformattedTest.php</file>
-			<file>tests/Configurator/RendererGenerators/XSLT/OptimizerTest.php</file>
 			<file>tests/Configurator/RendererGenerators/XSLTTest.php</file>
 
 			<file>tests/RendererTest.php</file>

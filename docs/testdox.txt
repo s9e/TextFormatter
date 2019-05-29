@@ -7039,11 +7039,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer
 
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT\Optimizer
- [x] optimizeTemplate() tests with data set #0
- [x] optimizeTemplate() tests with data set #1
- [x] optimizeTemplate() tests with data set #2
-
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
  [x] Merges duplicate templates
@@ -7054,7 +7049,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Includes a parameter's default value in the stylesheet
  [x] escapes a parameter's default value
  [x] Merges simple templates together
- [x] Calls $optimizer->optimizeTemplate() for each template
+ [x] Optimizes each template
  [x] Removes live preview attributes
 
 s9e\TextFormatter\Tests\Renderer

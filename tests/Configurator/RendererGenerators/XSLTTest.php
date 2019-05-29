@@ -149,30 +149,17 @@ class XSLTTest extends Test
 	}
 
 	/**
-	* @testdox Calls $optimizer->optimizeTemplate() for each template
+	* @testdox Optimizes each template
 	*/
-	public function testOptimizerCalls()
+	public function testOptimizesAll()
 	{
-		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['optimizeTemplate'])
-		             ->getMock();
-		$mock->expects($this->at(0))
-		     ->method('optimizeTemplate')
-		     ->with('<b>X</b>')
-		     ->will($this->returnValue('<b>x</b>'));
-		$mock->expects($this->at(1))
-		     ->method('optimizeTemplate')
-		     ->with('<b>Y</b>')
-		     ->will($this->returnValue('<b>y</b>'));
-
-		$this->configurator->rendering->engine->optimizer = $mock;
-		$this->configurator->tags->add('X')->template = '<b>X</b>';
-		$this->configurator->tags->add('Y')->template = '<b>Y</b>';
+		$this->configurator->tags->add('X')->template = '<b data-s9e-livepreview-postprocess=""/>';
+		$this->configurator->tags->add('Y')->template = '<i data-s9e-livepreview-postprocess=""/>';
 
 		$xsl = $this->getXSL();
 
-		$this->assertStringContainsString('<xsl:template match="X"><b>x</b></xsl:template>', $xsl);
-		$this->assertStringContainsString('<xsl:template match="Y"><b>y</b></xsl:template>', $xsl);
+		$this->assertStringContainsString('<xsl:template match="X"><b/></xsl:template>', $xsl);
+		$this->assertStringContainsString('<xsl:template match="Y"><i/></xsl:template>', $xsl);
 	}
 
 	/**
