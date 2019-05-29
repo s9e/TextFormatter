@@ -6,6 +6,8 @@ See also [general changes](Changes.md).
 
 The following elements have been removed:
 
+ - s9e\TextFormatter\Configurator\RendererGenerators\XSLT::$optimizer
+ - s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer
  - s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization::$onlyOnce
 
 Elements that were deprecated in 1.x have been removed. See previous entries for current usage. This includes:
@@ -27,11 +29,6 @@ Elements that were deprecated in 1.x have been removed. See previous entries for
  - s9e\TextFormatter\Plugins\Emoji\Configurator::addAlias()
  - s9e\TextFormatter\Plugins\Emoji\Configurator::getAliases()
  - s9e\TextFormatter\Plugins\Emoji\Configurator::removeAlias()
-
-The following elements have been removed:
-
- - s9e\TextFormatter\Configurator\RendererGenerators\XSLT::$optimizer
- - s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer
 
 The second argument for the `s9e\TextFormatter\Utils\Http\Client` methods `get()` and `post()` has changed. [See API](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils/Http/Client.html#method_get).
 
