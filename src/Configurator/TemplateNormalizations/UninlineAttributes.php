@@ -31,11 +31,11 @@ class UninlineAttributes extends AbstractNormalization
 	*/
 	protected function normalizeElement(DOMElement $element)
 	{
+		// Using a document fragment improves performance with multiple attributes
 		$fragment = $element->ownerDocument->createDocumentFragment();
 		while ($element->attributes->length > 0)
 		{
-			$attribute = $element->attributes->item(0);
-			$fragment->appendChild($this->uninlineAttribute($attribute));
+			$fragment->appendChild($this->uninlineAttribute($element->attributes->item(0)));
 		}
 		$element->insertBefore($fragment, $element->firstChild);
 	}
