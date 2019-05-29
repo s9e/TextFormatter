@@ -22,22 +22,18 @@ abstract class AVTHelper
 	*/
 	public static function parse($attrValue)
 	{
-		preg_match_all('(\\{\\{|\\{(?:[^\'"}]|\'[^\']*\'|"[^"]*")+\\}|\\{|[^{]++)', $attrValue, $matches);
+		preg_match_all('((*MARK:literal)(?:[^{]|\\{\\{)++|(*MARK:expression)\\{(?:[^}"\']|"[^"]*+"|\'[^\']*+\')++\\}|(*MARK:junk).++)s', $attrValue, $matches);
 
 		$tokens  = [];
-		foreach ($matches[0] as $str)
+		foreach ($matches[0] as $i => $str)
 		{
-			if ($str === '{{' || $str === '{')
-			{
-				$tokens[] = ['literal', '{'];
-			}
-			elseif ($str[0] === '{')
+			if ($matches['MARK'][$i] === 'expression')
 			{
 				$tokens[] = ['expression', substr($str, 1, -1)];
 			}
 			else
 			{
-				$tokens[] = ['literal', str_replace('}}', '}', $str)];
+				$tokens[] = ['literal', strtr($str, ['{{' => '{', '}}' => '}'])];
 			}
 		}
 

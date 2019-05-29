@@ -46,9 +46,7 @@ class AVTHelperTest extends Test
 			[
 				'foo {{@bar}} baz',
 				[
-					['literal', 'foo '],
-					['literal', '{'],
-					['literal', '@bar} baz']
+					['literal', 'foo {@bar} baz']
 				]
 			],
 			[
@@ -96,16 +94,14 @@ class AVTHelperTest extends Test
 				'foo {"bar} baz',
 				[
 					['literal', 'foo '],
-					['literal', '{'],
-					['literal', '"bar} baz']
+					['literal', '{"bar} baz']
 				]
 			],
 			[
 				'foo {bar',
 				[
 					['literal', 'foo '],
-					['literal', '{'],
-					['literal', 'bar']
+					['literal', '{bar']
 				]
 			],
 			[
