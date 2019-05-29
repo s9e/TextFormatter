@@ -717,7 +717,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
- [x] Provides loadTemplate() and saveTemplate()
  [x] getParametersFromXSL() tests with data set #0
  [x] getParametersFromXSL() tests with data set #1
  [x] getParametersFromXSL() tests with data set #2

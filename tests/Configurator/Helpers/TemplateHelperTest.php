@@ -14,16 +14,6 @@ use s9e\TextFormatter\Tests\Test;
 class TemplateHelperTest extends Test
 {
 	/**
-	* @testdox Provides loadTemplate() and saveTemplate()
-	*/
-	public function testDeprecatedAPI()
-	{
-		$text = 'foo';
-
-		$this->assertSame($text, TemplateLoader::save(TemplateLoader::load($text)));
-	}
-
-	/**
 	* @testdox getParametersFromXSL() tests
 	* @dataProvider getParametersTests
 	*/

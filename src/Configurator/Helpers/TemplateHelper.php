@@ -24,17 +24,6 @@ abstract class TemplateHelper
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* Return all DOMNodes whose content is JavaScript
-	*
-	* @param  DOMDocument $dom Document
-	* @return DOMNode[]        List of DOMNode instances
-	*/
-	public static function getJSNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getJSNodes($dom);
-	}
-
-	/**
 	* Return a list of parameters in use in given XSL
 	*
 	* @param  string $xsl XSL source
@@ -71,19 +60,6 @@ abstract class TemplateHelper
 		ksort($paramNames);
 
 		return array_keys($paramNames);
-	}
-
-	/**
-	* Return all DOMNodes whose content is an URL
-	*
-	* NOTE: it will also return HTML4 nodes whose content is an URI
-	*
-	* @param  DOMDocument $dom Document
-	* @return DOMNode[]        List of DOMNode instances
-	*/
-	public static function getURLNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getURLNodes($dom);
 	}
 
 	/**
@@ -132,20 +108,6 @@ abstract class TemplateHelper
 		$html = str_replace($uniqid, '', $html);
 
 		return $html;
-	}
-
-	/**
-	* Load a template as an xsl:template node
-	*
-	* Will attempt to load it as XML first, then as HTML as a fallback. Either way, an xsl:template
-	* node is returned
-	*
-	* @param  string      $template
-	* @return DOMDocument
-	*/
-	public static function loadTemplate($template)
-	{
-		return TemplateLoader::load($template);
 	}
 
 	/**
@@ -209,19 +171,6 @@ abstract class TemplateHelper
 		{
 			$templates[$tagName] = $template;
 		}
-	}
-
-	/**
-	* Serialize a loaded template back into a string
-	*
-	* NOTE: removes the root node created by loadTemplate()
-	*
-	* @param  DOMDocument $dom
-	* @return string
-	*/
-	public static function saveTemplate(DOMDocument $dom)
-	{
-		return TemplateLoader::save($dom);
 	}
 
 	/**

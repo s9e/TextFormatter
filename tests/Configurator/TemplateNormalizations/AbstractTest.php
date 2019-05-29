@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
 use DOMDocument;
 use Exception;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
 abstract class AbstractTest extends Test
@@ -46,7 +46,7 @@ abstract class AbstractTest extends Test
 
 		$this->assertSame(
 			$expected,
-			TemplateHelper::saveTemplate($dom)
+			TemplateLoader::save($dom)
 		);
 	}
 
