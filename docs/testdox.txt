@@ -1940,6 +1940,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\UninlineAttributes
  [x] Works with data set #4
  [x] Works with data set #5
  [x] Works with data set #6
+ [x] Works with data set #7
+ [x] Works with data set #8
+ [x] Works with data set #9
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Implements ArrayAccess

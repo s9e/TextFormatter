@@ -40,6 +40,18 @@ class UninlineAttributesTest extends AbstractTest
 				'<hr/>',
 				'<hr/>'
 			],
+			[
+				'<hr title="{{{{}}}}"/>',
+				'<hr><xsl:attribute name="title">{{}}</xsl:attribute></hr>'
+			],
+			[
+				'<hr title="{{{{"/>',
+				'<hr><xsl:attribute name="title">{{</xsl:attribute></hr>'
+			],
+			[
+				'<hr title="}}}}"/>',
+				'<hr><xsl:attribute name="title">}}</xsl:attribute></hr>'
+			],
 		];
 	}
 }
