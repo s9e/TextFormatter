@@ -1,3 +1,55 @@
+2.0.0 (2019-05-31)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#200) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/641bdfc5516c4e0da10df19ae33d59837f08db41...1f917de4221ea8bf03c19ce083ea3a0c65504539)
+
+### Added
+
+ - `2868b21d6` Added new named parameters to tag filters
+ - `cfb9bb738` Fatdown: added mailto to the list of allowed schemes
+ - `bec1c0810` MediaEmbed: added Sporcle
+ - `ab956458c` MediaEmbed: added support for Google Sheets charts
+ - `40adb246e` TemplateNormalizer: added support for custom normalizations list in constructor
+ - `27716cd91` Utils\Http\Client: added returnHeaders option
+
+### Removed
+
+ - `7bb7842f8` AbstractNormalization: removed the $onlyOnce property
+ - `5d443634e` Emoji: removed attribute name from configurator
+ - `4d6998300` RegexpBuilder: removed CharacterClassBuilder
+ - `07a289f23` Removed deprecated APIs
+ - `571a82ce8` Renderers\XSLT: removed unreachable code
+ - `c2e519208` TemplateHelper: removed deprecated API
+
+### Fixed
+
+ - `f018f9da3` Fixed rejection of templates that can only be partially rendered by the Quick renderer
+ - `234c8df36` Utils\Http\Client: fixed custom headers not being reset between requests
+
+### Changed
+
+ - `1f917de42` AVTHelper: improved handling of escaped braces
+ - `6f827c274` Autolink: prevent partial replacements inside of a URL
+ - `ffd66f8b8` Bumped PHP requirements to 7.1
+ - `f237bd07c` DisallowUnsafeDynamicURL: reorganized code
+ - `bf09f813a` Emoji: changed default template to use Twemoji assets
+ - `407f5208e` JavaScript\FunctionProvider: prefill cache and keep it in sync
+ - `40a9f8e66` MediaEmbed: updated BBC News
+ - `cb7888d3d` RegexpBuilder: refactored to use s9e\RegexpBuilder
+ - `bf24e0d72` RendererGenerators\XSLT: reorganized code
+ - `47c32647d` RendererGenerators\XSLT: replaced optimizer
+ - `6a71b5f29` Reorganized Configurable trait
+ - `9f029995b` Tag: reorganized invalidate()
+ - `b18ba8205` TemplateLoader: replace CDATA on load
+ - `5c18a0de1` UrlFilter: allow non-HTTP, non-FTP URLs with no authority part
+ - `e70e95de4` Utils\Http\Client: updated API
+ - `212389923` XPathConvertor: identify translate() as a string function
+ - `b9aa4c8e3` XPathConvertor: refactored and rewritten
+ - `234de3584` XPathConvertor: updated Runner constructor
+
+
 1.4.3 (2019-04-26)
 ==================
 
