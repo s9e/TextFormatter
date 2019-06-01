@@ -557,6 +557,15 @@ class ParserTest extends Test
 					$configurator->BBCodes->addCustom('[x #ignoreText=true]{TEXT}[/x]', '{TEXT}');
 				}
 			],
+			[
+				'[x]...[/x][x=]...[/x]',
+				'<r><X x="..."><s>[x]</s>...<e>[/x]</e></X><X x=""><s>[x=]</s>...<e>[/x]</e></X></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->BBCodes->addCustom('[x={TEXT1;useContent}]{TEXT2}[/x]', '');
+				}
+			],
 		];
 	}
 }
