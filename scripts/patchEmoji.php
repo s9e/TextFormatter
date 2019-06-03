@@ -45,7 +45,11 @@ foreach ($emoji as $utf8)
 	}
 	$hex  = utf8ToHex($utf8);
 	$seq  = removeMarks($hex);
-	$tseq = preg_replace('(-fe0f$)', '', ltrim($hex, 0));
+	$tseq = ltrim($hex, '0');
+	if (strpos($tseq, '-200d') === false)
+	{
+		$tseq = str_replace('-fe0f', '', $tseq);
+	}
 
 	$allText .= $utf8 . "\n";
 	$allXml  .= '<EMOJI seq="' . $seq . '" tseq="' . $tseq . '">' . $utf8 . "</EMOJI>\n";

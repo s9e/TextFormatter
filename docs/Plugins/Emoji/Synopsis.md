@@ -62,5 +62,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt=":1f937-1f3fe-200d-2640-fe0f:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f937-1f3fe-200d-2640.svg">
+Hello world <img alt=":1f937-1f3fe-200d-2640-fe0f:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f937-1f3fe-200d-2640-fe0f.svg">
 ```

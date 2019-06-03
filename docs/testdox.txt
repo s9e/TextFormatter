@@ -3977,6 +3977,8 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests with data set #20
  [x] Parsing tests with data set #21
  [x] Parsing tests with data set #22
+ [x] Parsing tests with data set #23
+ [x] Parsing tests with data set #24
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -4000,6 +4002,8 @@ s9e\TextFormatter\Tests\Plugins\Emoji\Parser
  [x] Parsing tests (JavaScript) with data set #20
  [x] Parsing tests (JavaScript) with data set #21
  [x] Parsing tests (JavaScript) with data set #22
+ [x] Parsing tests (JavaScript) with data set #23
+ [x] Parsing tests (JavaScript) with data set #24
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

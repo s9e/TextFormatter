@@ -47,8 +47,12 @@ class Parser extends ParserBase
 		$seq = str_replace(['-200d', '-fe0f'], '', $hex);
 		$tag->setAttribute('seq', $seq);
 
-		// Twemoji sequence, leading zeroes and trailing VS16 are removed
-		$tseq = preg_replace('(-fe0f$)', '', ltrim($hex, '0'));
+		// Twemoji sequence, leading zeroes are removed and VS-16 are removed from non-ZWJ sequences
+		$tseq = ltrim($hex, '0');
+		if (strpos($tseq, '-200d') === false)
+		{
+			$tseq = str_replace('-fe0f', '', $tseq);
+		}
 		$tag->setAttribute('tseq', $tseq);
 	}
 

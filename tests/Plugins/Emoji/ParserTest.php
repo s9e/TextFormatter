@@ -68,7 +68,7 @@ class ParserTest extends Test
 			],
 			[
 				'#️⃣1️⃣2️⃣',
-				'<r><EMOJI seq="0023-20e3" tseq="23-fe0f-20e3">#️⃣</EMOJI><EMOJI seq="0031-20e3" tseq="31-fe0f-20e3">1️⃣</EMOJI><EMOJI seq="0032-20e3" tseq="32-fe0f-20e3">2️⃣</EMOJI></r>'
+				'<r><EMOJI seq="0023-20e3" tseq="23-20e3">#️⃣</EMOJI><EMOJI seq="0031-20e3" tseq="31-20e3">1️⃣</EMOJI><EMOJI seq="0032-20e3" tseq="32-20e3">2️⃣</EMOJI></r>'
 			],
 			[
 				':bouquet:',
@@ -133,6 +133,16 @@ class ParserTest extends Test
 				'<r><EMOJI seq="00a9" tseq="a9">:00a9:</EMOJI> <EMOJI seq="1f1ef-1f1f5" tseq="1f1ef-1f1f5">:1f1ef-1f1f5:</EMOJI> <EMOJI seq="1f468-2764-1f468" tseq="1f468-200d-2764-fe0f-200d-1f468">:1f468-200d-2764-fe0f-200d-1f468:</EMOJI></r>'
 			],
 			[
+				// Do not remove U+FE0F from Twemoji sequences that contain U+200D
+				":man_judge: :1f468-200d-2696-fe0f: \u{1f468}\u{200d}\u{2696}\u{fe0f}",
+				'<r><EMOJI seq="1f468-2696" tseq="1f468-200d-2696-fe0f">:man_judge:</EMOJI> <EMOJI seq="1f468-2696" tseq="1f468-200d-2696-fe0f">:1f468-200d-2696-fe0f:</EMOJI> <EMOJI seq="1f468-2696" tseq="1f468-200d-2696-fe0f">&#128104;‍⚖️</EMOJI></r>'
+			],
+			[
+				// Do remove U+FE0F from Twemoji sequences that do not contain U+200D
+				":0031-20e3: \u{0031}\u{fe0f}\u{20e3}",
+				'<r><EMOJI seq="0031-20e3" tseq="31-20e3">:0031-20e3:</EMOJI> <EMOJI seq="0031-20e3" tseq="31-20e3">1️⃣</EMOJI></r>'
+			],
+			[
 				file_get_contents(__DIR__ . '/all.txt'),
 				file_get_contents(__DIR__ . '/all.xml'),
 				[],
@@ -159,7 +169,7 @@ class ParserTest extends Test
 			],
 			[
 				':copyright::registered:#️⃣',
-				'<img alt=":copyright:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/23-fe0f-20e3.svg">'
+				'<img alt=":copyright:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/23-20e3.svg">'
 			],
 		];
 	}
