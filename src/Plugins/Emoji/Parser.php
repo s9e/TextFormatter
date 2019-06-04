@@ -22,7 +22,9 @@ class Parser extends ParserBase
 		$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $tagPos, $tagLen, 10);
 		$seq = \str_replace(['-200d', '-fe0f'], '', $hex);
 		$tag->setAttribute($this->config['attrName'], $seq);
-		$tseq = \preg_replace('(-fe0f$)', '', \ltrim($hex, '0'));
+		$tseq = \ltrim($hex, '0');
+		if (\strpos($tseq, '-200d') === \false)
+			$tseq = \str_replace('-fe0f', '', $tseq);
 		$tag->setAttribute('tseq', $tseq);
 	}
 	protected function getHexSequence($str)
