@@ -2,7 +2,7 @@
 
 cd "$(dirname $0)"
 
-old_version=$(git tag | sort -rV | head -n1)
+old_version=$(git tag | grep ^1 | sort -rV | head -n1)
 new_version=$(php patchComposerVersion.php ${1-release})
 
 if [ $? -gt 0 ]
