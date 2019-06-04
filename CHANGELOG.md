@@ -1,13 +1,11 @@
-
-Notice: Undefined offset: 3 in /home/user/s9e/TextFormatter/scripts/build/generateChangelog.php on line 5
 1.4.5 (2019-06-04)
 ==================
 
-[Full commit log](https://github.com/s9e/TextFormatter/compare/5563c0a4967444920e56b93cfcc30eb21415b1cc...)
+[Full commit log](https://github.com/s9e/TextFormatter/compare/641bdfc5516c4e0da10df19ae33d59837f08db41...55dee71189dd1940084cbaf997a0aa6de82850d7)
 
-### Changed
+### Fixed
 
- - `` 
+ - `5563c0a49` Emoji: fixed Twemoji filenames for ZWJ sequences
 
 
 1.4.4 (2019-05-15)
