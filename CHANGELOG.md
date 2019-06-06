@@ -1,3 +1,15 @@
+
+Notice: Undefined offset: 3 in /home/user/s9e/TextFormatter/scripts/build/generateChangelog.php on line 5
+2.0.1 (2019-06-06)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/021b68b5b13ae0ebfb2fe495b00f6e920a9cbd86...)
+
+### Changed
+
+ - `` 
+
+
 2.0.0 (2019-05-31)
 ==================
 
