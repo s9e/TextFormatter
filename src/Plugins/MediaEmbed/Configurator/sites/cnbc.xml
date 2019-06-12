@@ -1,9 +1,14 @@
-<site name="CNBC" homepage="https://www.cnbc.com/">
+<site name="CNBC" homepage="https://www.cnbc.com/video/">
 	<example>https://video.cnbc.com/gallery/?video=3000269279</example>
+	<example>https://www.cnbc.com/video/2019/06/05/carplay-android-auto-alexa-big-tech-gets-into-our-cars.html</example>
 
 	<tags><tag>news</tag></tags>
 
-	<host>video.cnbc.com</host>
+	<host>cnbc.com</host>
 	<extract>!cnbc\.com/gallery/\?video=(?'id'\d+)!</extract>
-	<flash width="400" height="380" src="//plus.cnbc.com/rssvideosearch/action/player/id/{@id}/code/cnbcplayershare"/>
+	<scrape>
+		<match>!cnbc\.com/video/20\d\d/\d\d/\d\d/\w!</match>
+		<extract>!content_id'\s*:\s*'?(?'id'\d+)!</extract>
+	</scrape>
+	<iframe src="https://player.cnbc.com/p/gZWlPC/cnbc_global?playertype=synd&amp;byGuid={@id}&amp;size=640_360"/>
 </site>

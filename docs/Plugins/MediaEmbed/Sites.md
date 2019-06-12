@@ -51,7 +51,7 @@
 	</tr>
 	<tr title="CNBC">
 		<td style="font-size:75%"><code>cnbc</code></td>
-		<td style="font-size:50%">https://video.cnbc.com/gallery/?video=3000269279</td>
+		<td style="font-size:50%">https://video.cnbc.com/gallery/?video=3000269279<br/>https://www.cnbc.com/video/2019/06/05/carplay-android-auto-alexa-big-tech-gets-into-our-cars.html</td>
 	</tr>
 	<tr title="CNN">
 		<td style="font-size:75%"><code>cnn</code></td>
