@@ -1,5 +1,5 @@
-<site name="Bleacher Report videos" homepage="https://bleacherreport.com/">
-	<example>https://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</example>
+<site name="Bleacher Report videos" homepage="https://bleacherreport.com/videos">
+	<example>https://bleacherreport.com/articles/2687569-how-bell-brown-have-shattered-records-on-steelers-historic-playoff-run</example>
 
 	<tags><tag>sports</tag></tags>
 
@@ -7,6 +7,7 @@
 	<scrape>
 		<match>!/articles/.!</match>
 		<extract>!id="video-(?'id'[-\w]+)!</extract>
+		<extract>!video_embed\?id=(?'id'[-\w]+)!</extract>
 	</scrape>
-	<iframe src="//bleacherreport.com/video_embed?id={@id}"/>
+	<iframe width="320" height="320" src="//bleacherreport.com/video_embed?id={@id}&amp;library=video-cms"/>
 </site>

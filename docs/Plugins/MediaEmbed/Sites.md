@@ -35,7 +35,7 @@
 	</tr>
 	<tr title="Bleacher Report videos">
 		<td style="font-size:75%"><code>bleacherreport</code></td>
-		<td style="font-size:50%">https://bleacherreport.com/articles/2418813-steph-curry-salsas-after-teammate-leandro-barbosa-converts-difficult-layup</td>
+		<td style="font-size:50%">https://bleacherreport.com/articles/2687569-how-bell-brown-have-shattered-records-on-steelers-historic-playoff-run</td>
 	</tr>
 	<tr title="Break">
 		<td style="font-size:75%"><code>break</code></td>
