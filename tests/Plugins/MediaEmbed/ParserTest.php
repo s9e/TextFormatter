@@ -3549,15 +3549,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://screen.yahoo.com/mr-short-term-memory-000000263.html',
-				'<r><YAHOOSCREEN id="mr-short-term-memory-000000263">https://screen.yahoo.com/mr-short-term-memory-000000263.html</YAHOOSCREEN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('yahooscreen');
-				}
-			],
-			[
 				'http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3',
 				'<r><XBOXCLIPS id="e3a2d685-3e9f-454f-89bf-54ddea8f29b3" user="dizturbd">http://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</XBOXCLIPS></r>',
 				[],
@@ -3591,15 +3582,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('xboxdvr');
-				}
-			],
-			[
-				'https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html',
-				'<r><YAHOOSCREEN id="church-chat-satan-000000502">https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</YAHOOSCREEN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('yahooscreen');
 				}
 			],
 			[

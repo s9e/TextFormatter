@@ -481,10 +481,6 @@
 		<td style="font-size:75%"><code>xboxdvr</code></td>
 		<td style="font-size:50%">https://gamerdvr.com/gamer/LOXITANE/video/12463958</td>
 	</tr>
-	<tr title="Yahoo! Screen">
-		<td style="font-size:75%"><code>yahooscreen</code></td>
-		<td style="font-size:50%">https://screen.yahoo.com/mr-short-term-memory-000000263.html<br/>https://screen.yahoo.com/dana-carvey-snl-skits/church-chat-satan-000000502.html</td>
-	</tr>
 	<tr title="Youku">
 		<td style="font-size:75%"><code>youku</code></td>
 		<td style="font-size:50%">https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
