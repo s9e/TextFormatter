@@ -30,7 +30,6 @@ class HashmapFilterTest extends Test
 	{
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\HashmapFilter';
  		$filter = $this->getMockBuilder($className)
-		               ->disableOriginalConstructor()
 		               ->setMethods(['setMap'])
 		               ->getMock();
 

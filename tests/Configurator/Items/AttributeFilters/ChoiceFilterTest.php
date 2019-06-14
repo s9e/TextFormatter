@@ -62,9 +62,11 @@ class ChoiceFilterTest extends Test
 	*/
 	public function testSetValuesCaseSensitive()
 	{
-		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
-		             ->setMethods(['setRegexp'])
-		             ->getMock();
+		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter';
+		$filter = $this->getMockBuilder($className)
+		               ->disableOriginalConstructor()
+		               ->setMethods(['setRegexp'])
+		               ->getMock();
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')

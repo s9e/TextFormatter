@@ -5983,8 +5983,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertCondition() tests with data set #32
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Runner
- [x] convert() throws an exception if the expression cannot be converted
- [x] Convertors can be set in the constructor
+ [ ] convert() throws an exception if the expression cannot be converted
+ [ ] Convertors can be set in the constructor
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions
  [x]  with data set #0
