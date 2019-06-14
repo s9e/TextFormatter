@@ -66,6 +66,7 @@ class RenderingTest extends Test
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT')
 		             ->disableOriginalConstructor()
+		             ->setMethods(['getRenderer'])
 		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('getRenderer')

@@ -29,8 +29,9 @@ class ChoiceFilterTest extends Test
 	public function testConstructorArguments()
 	{
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter';
-		$filter = $this->getMockBuilder($className)
+ 		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
+		               ->setMethods(['setValues'])
 		               ->getMock();
 
 		$filter->expects($this->once())

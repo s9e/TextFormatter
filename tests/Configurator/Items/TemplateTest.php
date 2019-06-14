@@ -99,6 +99,7 @@ class TemplateTest extends Test
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
 		             ->disableOriginalConstructor()
+		             ->setMethods(['normalizeTemplate'])
 		             ->getMock();
 
 		$template = new Template('<br/>');
@@ -150,6 +151,7 @@ class TemplateTest extends Test
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
 		             ->disableOriginalConstructor()
+		             ->setMethods(['normalizeTemplate'])
 		             ->getMock();
 
 		$template = new Template('<br/>');
@@ -200,6 +202,7 @@ class TemplateTest extends Test
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
 		             ->disableOriginalConstructor()
+		             ->setMethods(['normalizeTemplate'])
 		             ->getMock();
 
 		$template = new Template('<br/>');

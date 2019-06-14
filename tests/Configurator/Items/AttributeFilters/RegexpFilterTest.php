@@ -285,8 +285,9 @@ class RegexpFilterTest extends Test
 	public function testConstructorArguments()
 	{
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\RegexpFilter';
-		$filter = $this->getMockBuilder($className)
+ 		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
+		               ->setMethods(['setRegexp'])
 		               ->getMock();
 
 		$filter->expects($this->once())

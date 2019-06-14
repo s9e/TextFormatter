@@ -29,8 +29,9 @@ class MapFilterTest extends Test
 	public function testConstructorArguments()
 	{
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\MapFilter';
-		$filter = $this->getMockBuilder($className)
+ 		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
+		               ->setMethods(['setMap'])
 		               ->getMock();
 
 		$filter->expects($this->once())
