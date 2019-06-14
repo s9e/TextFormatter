@@ -8,7 +8,14 @@
 	<scrape>
 		<match>@msnbc\.com/[-\w]+/watch/@</match>
 		<match>@on\.msnbc\.com/.@</match>
-		<extract>@"video":\{"current".*?guid":"(?'id'\w+)@</extract>
+		<extract>@"video":\{"current".*?id":"(?'id'\w+)@</extract>
 	</scrape>
-	<iframe padding-height="80" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid={@id}"/>
+	<choose>
+		<when test="contains(@id, '_')">
+			<iframe padding-height="80" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid={@id}"/>
+		</when>
+		<otherwise>
+			<iframe src="https://www.msnbc.com/msnbc/embedded-video/{@id}"/>
+		</otherwise>
+	</choose>
 </site>

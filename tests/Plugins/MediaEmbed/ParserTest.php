@@ -974,7 +974,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
-				'<r><MSNBC id="n_farrow_moon_140709_257794">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
+				'<r><MSNBC id="mmvo300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
 				[],
 				function ($configurator)
 				{
@@ -984,7 +984,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://on.msnbc.com/1qkH62o',
-				'<r><MSNBC id="n_farrow_moon_140709_257794">http://on.msnbc.com/1qkH62o</MSNBC></r>',
+				'<r><MSNBC id="mmvo300512323725">http://on.msnbc.com/1qkH62o</MSNBC></r>',
 				[],
 				function ($configurator)
 				{
@@ -1426,6 +1426,16 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('internetarchive');
+				}
+			],
+			[
+				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
+				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://www.msnbc.com/msnbc/embedded-video/mmvo300512323725" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('msnbc');
 				}
 			],
 			[
@@ -4621,6 +4631,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('imgur');
+				}
+			],
+			[
+				'<r><MSNBC id="n_farrow_moon_140709_257794">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
+				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:68.75%;padding-bottom:calc(56.25% + 80px)"><iframe allowfullscreen="" scrolling="no" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid=n_farrow_moon_140709_257794" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('msnbc');
 				}
 			],
 			[

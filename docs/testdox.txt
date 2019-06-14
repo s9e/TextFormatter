@@ -5180,6 +5180,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Scraping+rendering tests with data set #8
  [x] Scraping+rendering tests with data set #9
  [x] Scraping+rendering tests with data set #10
+ [x] Scraping+rendering tests with data set #11
  [x] Legacy rendering tests with data set #0
  [x] Legacy rendering tests with data set #1
  [x] Legacy rendering tests with data set #2
@@ -5190,6 +5191,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Legacy rendering tests with data set #7
  [x] Legacy rendering tests with data set #8
  [x] Legacy rendering tests with data set #9
+ [x] Legacy rendering tests with data set #10
  [x] Parsing tests with data set #0
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2
