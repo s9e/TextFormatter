@@ -12,24 +12,25 @@ class RunnerTest extends Test
 {
 	/**
 	* @testdox convert() throws an exception if the expression cannot be converted
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot convert 'foo()'
 	*/
 	public function testUnsupported()
 	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot convert 'foo()'");
+
 		$runner = new Runner;
 		$runner->convert('foo()');
 	}
 
 	/**
 	* @testdox Convertors can be set in the constructor
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot convert '1'
 	*/
 	public function testCustomConvertors()
 	{
-		$runner = new Runner([]);
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot convert '1'");
 
+		$runner = new Runner([]);
 		$runner->convert('1');
 	}
 }
