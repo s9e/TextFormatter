@@ -1,9 +1,9 @@
 <site name="&#x130;zlesene" homepage="https://www.izlesene.com/">
-	<example>https://www.izlesene.com/video/lily-allen-url-badman/7600704</example>
+	<example>https://www.izlesene.com/video/tam-1-kilo-yap-gram-gram-kapisma/10412573</example>
 
 	<tags><tag>.tr</tag></tags>
 
 	<host>izlesene.com</host>
 	<extract>!izlesene\.com/video/[-\w]+/(?'id'\d+)!</extract>
-	<iframe src="//www.izlesene.com/embedplayer/{@id}"/>
+	<iframe src="//www.izlesene.com/embedplayer/{@id}?autoplay=0"/>
 </site>

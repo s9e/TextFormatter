@@ -191,7 +191,7 @@
 	</tr>
 	<tr title="İzlesene">
 		<td style="font-size:75%"><code>izlesene</code></td>
-		<td style="font-size:50%">https://www.izlesene.com/video/lily-allen-url-badman/7600704</td>
+		<td style="font-size:50%">https://www.izlesene.com/video/tam-1-kilo-yap-gram-gram-kapisma/10412573</td>
 	</tr>
 	<tr title="JW Platform">
 		<td style="font-size:75%"><code>jwplatform</code></td>
