@@ -209,10 +209,6 @@
 		<td style="font-size:75%"><code>libsyn</code></td>
 		<td style="font-size:50%">https://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
 	</tr>
-	<tr title="LiveCap">
-		<td style="font-size:75%"><code>livecap</code></td>
-		<td style="font-size:50%">https://www.livecap.tv/s/esl_sc2/uZoEz6RR1eA<br/>https://www.livecap.tv/t/riotgames/uLxUzBTBs7u</td>
-	</tr>
 	<tr title="Liveleak">
 		<td style="font-size:75%"><code>liveleak</code></td>
 		<td style="font-size:50%">https://www.liveleak.com/view?t=yIcw_1520190567</td>
