@@ -239,7 +239,7 @@
 	</tr>
 	<tr title="MRCTV">
 		<td style="font-size:75%"><code>mrctv</code></td>
-		<td style="font-size:50%">https://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
+		<td style="font-size:50%">https://mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</td>
 	</tr>
 	<tr title="MSNBC">
 		<td style="font-size:75%"><code>msnbc</code></td>

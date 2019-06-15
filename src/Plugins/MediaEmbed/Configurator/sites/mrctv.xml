@@ -1,5 +1,5 @@
 <site name="MRCTV" homepage="https://www.mrctv.org/">
-	<example>https://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</example>
+	<example>https://mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</example>
 
 	<host>mrctv.org</host>
 	<scrape>
