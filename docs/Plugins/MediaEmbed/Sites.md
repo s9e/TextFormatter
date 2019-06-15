@@ -165,10 +165,6 @@
 		<td style="font-size:75%"><code>hulu</code></td>
 		<td style="font-size:50%">https://www.hulu.com/watch/484180</td>
 	</tr>
-	<tr title="HumorTV">
-		<td style="font-size:75%"><code>humortvnl</code></td>
-		<td style="font-size:50%">https://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</td>
-	</tr>
 	<tr title="IGN">
 		<td style="font-size:75%"><code>ign</code></td>
 		<td style="font-size:50%">https://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>

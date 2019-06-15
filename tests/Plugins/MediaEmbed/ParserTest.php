@@ -2263,24 +2263,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html',
-				'<r><HUMORTVNL id="344063.de-klusjesmannen-zijn-weer-van-de-partij">http://humortv.vara.nl/ca.344063.de-klusjesmannen-zijn-weer-van-de-partij.html</HUMORTVNL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('humortvnl');
-				}
-			],
-			[
-				'http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html',
-				'<r><HUMORTVNL id="346135.denzel-washington-bij-graham-norton">http://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</HUMORTVNL></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('humortvnl');
-				}
-			],
-			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
 				'<r><IGN id="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></r>',
 				[],

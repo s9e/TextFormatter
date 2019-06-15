@@ -1,9 +1,0 @@
-<site name="HumorTV" homepage="https://humortv.vara.nl/pg.2.pg-home.html">
-	<example>https://humortv.vara.nl/pa.346135.denzel-washington-bij-graham-norton.html</example>
-
-	<tags><tag>.nl</tag><tag>entertainment</tag></tags>
-
-	<host>humortv.vara.nl</host>
-	<extract>!humortv\.vara\.nl/\w+\.(?'id'[-.\w]+)\.html!</extract>
-	<iframe src="//humortv.vara.nl/embed.{@id}.html"/>
-</site>
