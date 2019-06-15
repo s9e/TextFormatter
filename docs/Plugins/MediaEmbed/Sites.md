@@ -157,10 +157,6 @@
 		<td style="font-size:75%"><code>googlesheets</code></td>
 		<td style="font-size:50%">https://docs.google.com/spreadsheets/d/1f988o68HDvk335xXllJD16vxLBuRcmm3vg6U9lVaYpA<br/>https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml<br/>https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbciMU7t5dCB8auk-nyK-p-25TJjgUrzBuMCAiq_2ZDqoMSFAlZCctIC7y3TXS71ys_MRdoAU4Jqr/pubchart?oid=1729348495</td>
 	</tr>
-	<tr title="Healthguru">
-		<td style="font-size:75%"><code>healthguru</code></td>
-		<td style="font-size:50%">https://mental.healthguru.com/video/internet-addiction-signs-you-need-to-shut-down</td>
-	</tr>
 	<tr title="Hudl">
 		<td style="font-size:75%"><code>hudl</code></td>
 		<td style="font-size:50%">https://www.hudl.com/video/59dfca6090eeac23f0eef838<br/>https://www.hudl.com/athlete/2067184/highlights/163744377<br/>https://www.hudl.com/video/3/323679/57719969842eb243e47883f8</td>

@@ -779,26 +779,6 @@ class ParserTest extends Test
 //				}
 //			],
 //			[
-//				'http://college.healthguru.com/video/handling-heartache',
-//				'<r><HEALTHGURU id="ZX">http://college.healthguru.com/video/handling-heartache</HEALTHGURU></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('healthguru');
-//				}
-//			],
-//			[
-//				'http://college.healthguru.com/content/video/watch/100502/handling-heartache',
-//				'<r><HEALTHGURU id="RX">http://college.healthguru.com/content/video/watch/100502/handling-heartache</HEALTHGURU></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('healthguru');
-//				}
-//			],
-//			[
 //				'http://www.hulu.com/watch/484180',
 //				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA">http://www.hulu.com/watch/484180</HULU></r>',
 //				[],
