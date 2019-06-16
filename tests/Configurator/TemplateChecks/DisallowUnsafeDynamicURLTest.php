@@ -472,6 +472,46 @@ class DisallowUnsafeDynamicURLTest extends Test
 	}
 
 	/**
+	* @testdox Disallowed if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>java</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+	*/
+	public function testDisallowedValueInChoose()
+	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
+		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>java</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+	*/
+	public function testDisallowedValueInChooseNoOtherwise()
+	{
+		$this->expectException('s9e\\TextFormatter\\Configurator\\Exceptions\\UnsafeTemplateException');
+		$this->expectExceptionMessage("Cannot assess the safety of unknown attribute 'foo'");
+
+		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed even if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>/</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+	* @doesNotPerformAssertions
+	*/
+	public function testAllowedValueOfAnchoredInChoose()
+	{
+		$node = $this->loadTemplate('<a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>/</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
 	*/
 	public function testDisallowedUnknownValueOfJavaScript()

@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMAttr;
 use DOMElement;
 use DOMText;
+use DOMXPath;
 use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -65,6 +66,31 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	}
 
 	/**
+	* Test whether every branch of a given xsl:choose element contains a known-safe URL
+	*
+	* @param  DOMElement $choose
+	* @return bool
+	*/
+	protected function chooseHasSafeUrl(DOMElement $choose)
+	{
+		$xpath        = new DOMXPath($choose->ownerDocument);
+		$hasOtherwise = false;
+		foreach ($xpath->query('xsl:when | xsl:otherwise', $choose) as $branch)
+		{
+			if (!$this->elementHasSafeUrl($branch))
+			{
+				return false;
+			}
+			if ($branch->nodeName === 'xsl:otherwise')
+			{
+				$hasOtherwise = true;
+			}
+		}
+
+		return $hasOtherwise;
+	}
+
+	/**
 	* Test whether given element contains a known-safe URL
 	*
 	* @param  DOMElement $element
@@ -72,6 +98,11 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	*/
 	protected function elementHasSafeUrl(DOMElement $element)
 	{
+		if ($element->firstChild instanceof DOMElement && $element->firstChild->nodeName === 'xsl:choose')
+		{
+			return $this->chooseHasSafeUrl($element->firstChild);
+		}
+
 		return $element->firstChild instanceof DOMText && $this->isSafeUrl($element->firstChild->textContent);
 	}
 

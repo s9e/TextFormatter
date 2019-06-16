@@ -2133,6 +2133,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
  [x] Allowed if #url: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
  [x] Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
  [x] Allowed even if unknown: <a><xsl:attribute name="href">http://<xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Disallowed if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>java</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Disallowed if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Allowed even if unknown: <a><xsl:attribute name="href"><xsl:choose><xsl:when test="@x">http://</xsl:when><xsl:otherwise>/</xsl:otherwise></xsl:choose><xsl:value-of select="@foo"/></xsl:attribute>...</a>
  [x] Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
  [x] Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
  [x] Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute>...</a>
