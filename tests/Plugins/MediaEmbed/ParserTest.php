@@ -1620,6 +1620,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.bbc.com/news/uk-england-london-48651131',
+				'<t>https://www.bbc.com/news/uk-england-london-48651131</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
 				'https://www.bitchute.com/video/y9AejeZ2vD0/',
 				'<r><BITCHUTE id="y9AejeZ2vD0">https://www.bitchute.com/video/y9AejeZ2vD0/</BITCHUTE></r>',
 				[],

@@ -12,7 +12,7 @@
 	<host>bbc.com</host>
 	<extract>@bbc\.co(?:m|\.uk)/news/av/embed/(?'id'[-\\\w/]+)@</extract>
 	<scrape>
-		<match>@bbc\.co(?:m|\.uk)/news/(?!av/embed/)\w@</match>
+		<match>@bbc\.co(?:m|\.uk)/news/(?:av(?!/embed)|video_and_audio)/\w@</match>
 		<extract>@bbc\.co(?:m|\.uk)\\?/news\\?/av\\?/embed\\?/(?'id'[-\\\w/]+)@</extract>
 	</scrape>
 	<iframe>
