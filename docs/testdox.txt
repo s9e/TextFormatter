@@ -1884,6 +1884,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChoose
  [x] Works with data set #12
  [x] Works with data set #13
  [x] Works with data set #14
+ [x] Works with data set #15
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChooseText
  [x] Works with data set #0

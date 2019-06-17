@@ -135,6 +135,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 			$this->optimizeCommonFirstChild();
 			$this->optimizeCommonLastChild();
 			$this->optimizeCommonOnlyChild();
+			$this->optimizeEmptyBranch();
 			$this->optimizeEmptyOtherwise();
 		}
 		if ($this->isEmpty())
@@ -186,6 +187,30 @@ class OptimizeChoose extends AbstractChooseOptimization
 		while ($this->matchOnlyChild())
 		{
 			$this->reparentChild();
+		}
+	}
+
+	/**
+	* Switch the logic of an xsl:otherwise if the only other branch is empty
+	*
+	* @return void
+	*/
+	protected function optimizeEmptyBranch()
+	{
+		$query = 'count(xsl:when) = 1 and count(xsl:when/node()) = 0 and xsl:otherwise';
+		if (!$this->xpath->evaluate($query, $this->choose))
+		{
+			return;
+		}
+
+		// test="@foo" becomes test="not(@foo)"
+		$when = $this->xpath('xsl:when', $this->choose)[0];
+		$when->setAttribute('test', 'not(' . $when->getAttribute('test') . ')');
+
+		$otherwise = $this->xpath('xsl:otherwise', $this->choose)[0];
+		while ($otherwise->firstChild)
+		{
+			$when->appendChild($otherwise->removeChild($otherwise->firstChild));
 		}
 	}
 

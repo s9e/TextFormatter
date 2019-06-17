@@ -33,6 +33,13 @@ class OptimizeChooseTest extends AbstractTest
 			],
 			[
 				'<xsl:choose>
+					<xsl:when test="@foo"/>
+					<xsl:otherwise>bar</xsl:otherwise>
+				</xsl:choose>',
+				'<xsl:if test="not(@foo)">bar</xsl:if>'
+			],
+			[
+				'<xsl:choose>
 					<xsl:when><br/>foo</xsl:when>
 					<xsl:otherwise><br/>bar</xsl:otherwise>
 				</xsl:choose>',
