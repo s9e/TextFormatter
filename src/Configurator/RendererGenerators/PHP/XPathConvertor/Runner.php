@@ -111,7 +111,7 @@ class Runner
 		{
 			$regexp = $this->insertCaptureNames($name, $regexp);
 			$regexp = str_replace(' ', '\\s*', $regexp);
-			$regexp = '(?<' . $name . '>' . $regexp . ')';
+			$regexp = '(?<' . $name . '>' . $regexp . '(*:' . $name . '))';
 
 			$this->callbacks[$name] = [$convertor, 'convert' . $name];
 			$this->regexps[$name]   = $regexp;
@@ -171,13 +171,9 @@ class Runner
 	{
 		if (preg_match($this->regexp, $expr, $m))
 		{
-			foreach ($m as $name => $match)
-			{
-				if ($match !== '' && isset($this->callbacks[$name]))
-				{
-					return [$name, $this->getArguments($m, $name)];
-				}
-			}
+			$name = $m['MARK'];
+
+			return [$name, $this->getArguments($m, $name)];
 		}
 
 		return null;
