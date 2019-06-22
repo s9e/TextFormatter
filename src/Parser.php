@@ -1501,9 +1501,11 @@ class Parser
 			return;
 		}
 
-		// If this tag has an autoClose rule and it's not paired with an end tag or followed by an
-		// end tag, we replace it with a self-closing tag with the same properties
+		// If this tag has an autoClose rule and it's not self-closed, paired with an end tag, or
+		// immediately followed by an end tag, we replace it with a self-closing tag with the same
+		// properties
 		if ($tag->getFlags() & self::RULE_AUTO_CLOSE
+		 && !$tag->isSelfClosingTag()
 		 && !$tag->getEndTag()
 		 && !$this->isFollowedByClosingTag($tag))
 		{
