@@ -108,9 +108,9 @@ class XPathConvertor
 	protected function exportXPath($expr)
 	{
 		$phpTokens = [];
-		foreach ($this->tokenizeXPathForExport($expr) as list($type, $content))
+		foreach ($this->tokenizeXPathForExport($expr) as [$type, $content])
 		{
-			$methodName  = 'exportXPath' . ucfirst($type);
+			$methodName  = 'exportXPath' . $type;
 			$phpTokens[] = $this->$methodName($content);
 		}
 
@@ -152,35 +152,6 @@ class XPathConvertor
 	}
 
 	/**
-	* Match the relevant components of an XPath expression
-	*
-	* @param  string $expr XPath expression
-	* @return array
-	*/
-	protected function matchXPathForExport($expr)
-	{
-		$tokenExprs = [
-			'(?<current>\\bcurrent\\(\\))',
-			'(?<param>\\$\\w+)',
-			'(?<fragment>"[^"]*"|\'[^\']*\'|.)'
-		];
-		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
-
-		// Merge fragment tokens
-		$i = count($matches);
-		while (--$i > 0)
-		{
-			if (isset($matches[$i]['fragment'], $matches[$i - 1]['fragment']))
-			{
-				$matches[$i - 1]['fragment'] .= $matches[$i]['fragment'];
-				unset($matches[$i]);
-			}
-		}
-
-		return array_values($matches);
-	}
-
-	/**
 	* Tokenize an XPath expression for use in PHP
 	*
 	* @param  string $expr XPath expression
@@ -188,18 +159,17 @@ class XPathConvertor
 	*/
 	protected function tokenizeXPathForExport($expr)
 	{
+		$tokenExprs = [
+			'(*:Current)\\bcurrent\\(\\)',
+			'(*:Param)\\$\\w+',
+			'(*:Fragment)(?:"[^"]*"|\'[^\']*\'|(?!current\\(\\)|\\$\\w).)++'
+		];
+		preg_match_all('(' . implode('|', $tokenExprs) . ')s', $expr, $matches, PREG_SET_ORDER);
+
 		$tokens = [];
-		foreach ($this->matchXPathForExport($expr) as $match)
+		foreach ($matches as $m)
 		{
-			foreach (array_reverse($match) as $k => $v)
-			{
-				// Use the last non-numeric match
-				if (!is_numeric($k))
-				{
-					$tokens[] = [$k, $v];
-					break;
-				}
-			}
+			$tokens[] = [$m['MARK'], $m[0]];
 		}
 
 		return $tokens;
