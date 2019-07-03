@@ -1545,6 +1545,19 @@ s9e\TextFormatter\Tests\Configurator\Rendering
  [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
  [x] getTemplates() returns templates gathered from tags
 
+s9e\TextFormatter\Tests\Configurator\RecursiveParser
+ [x] Throws an exception if the input cannot be matched
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+
+s9e\TextFormatter\Tests\Configurator\RecursiveParser\AbstractRecursiveMatcher
+ [x] recurse($str) calls $parser->parse($str) and returns its "value" element
+
+s9e\TextFormatter\Tests\Configurator\RecursiveParser\CachingRecursiveParser
+ [x] Returns cached result if available
+ [x] Resets cache when setMatchers() is called
+
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\AllowAll
  [x] <b> has a allowChild rule and a allowDescendant rule for <div>
 
