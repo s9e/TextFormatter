@@ -115,4 +115,20 @@ class AttributeFilterChainTest extends Test
 			$filterChain->append($filter)
 		);
 	}
+
+	/**
+	* @testdox Automatically parses callback parameters
+	*/
+	public function testAttributeFilterParams()
+	{
+		$filterChain = new AttributeFilterChain;
+		$actual      = $filterChain->append('str_replace($attrValue, "foo", "bar")');
+		$expected    = new AttributeFilter('str_replace');
+		$expected->resetParameters();
+		$expected->addParameterByName('attrValue');
+		$expected->addParameterByValue('foo');
+		$expected->addParameterByValue('bar');
+
+		$this->assertEquals($expected, $actual);
+	}
 }

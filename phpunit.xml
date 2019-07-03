@@ -52,6 +52,8 @@
 			<file>tests/Configurator/Helpers/AVTHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>tests/Configurator/Helpers/ContextSafenessTest.php</file>
+			<file>tests/Configurator/Helpers/FilterHelperTest.php</file>
+			<file>tests/Configurator/Helpers/FilterSyntaxMatcherTest.php</file>
 			<file>tests/Configurator/Helpers/ElementInspectorTest.php</file>
 			<file>tests/Configurator/Helpers/NodeLocatorTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>

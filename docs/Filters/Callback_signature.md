@@ -1,4 +1,5 @@
 <h2>Callback signature</h2>
+<style>ul { font-size:75% }</style>
 
 By default, an attribute filter or a tag filter only receives one argument: the attribute's value or the tag, respectively. Additional parameters can be appended with the methods `addParameterByName()` and `addParameterByValue()` and the whole list of parameters can be cleared with `resetParameters()`. Variables set in `$configurator->registeredVars` are available by name and can be changed at parsing time via `$parser->registeredVars`. Other special parameters listed below are available by name.
 
@@ -140,4 +141,45 @@ echo $html;
 ```html
 12345678
 1234
+```
+
+### Short syntax
+
+In addition to the verbose API, the callback signature can be specified within parentheses using a syntax similar to a subset of PHP. The supported parameter types are:
+
+ - Named parameters, using the variable notation: `$attrValue`
+ - Literals: `123`, `'string'` or `"double\nstring"`
+ - Booleans and null: `true`, `false` or `null`
+ - Short-syntax arrays that do not contain named parameters: `['foo' => 1, 'bar' => 2]`
+ - Regexp objects: `/^foo$/i`
+
+The regexp notation exists for compatibility with JavaScript. They are automatically cast as strings in PHP or as [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) literals in JavaScript. If you don't use JavaScript, you can simply use strings.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->BBCodes->addCustom('[X string={TEXT}]', '{@string}');
+
+$configurator->tags['X']->attributes['string']->filterChain
+	->append('str_replace("foo", "bar", $attrValue)');
+
+// This is the the same the following:
+//
+//$configurator->tags['X']->attributes['string']->filterChain
+//	->append('str_replace')
+//	->resetParameters()
+//	->addParameterByValue('foo')
+//	->addParameterByValue('bar')
+//	->addParameterByName('attrValue');
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = '[X="foo bar baz"]';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+bar bar baz
 ```

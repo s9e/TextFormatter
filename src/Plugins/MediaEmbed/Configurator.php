@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\FilterHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
@@ -187,7 +188,7 @@ class Configurator extends ConfiguratorBase
 			}
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
-				if (substr($filter, 0, 1) !== '#' && !in_array($filter, $this->allowedFilters, true))
+				if (!FilterHelper::isAllowed($filter, $this->allowedFilters))
 				{
 					throw new RuntimeException("Filter '$filter' is not allowed in media sites");
 				}

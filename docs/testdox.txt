@@ -181,6 +181,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
  [x] Default filters such as "#int" are normalized to an instance of the corresponding AttributeFilter
  [x] Instances of AttributeFilter are added as-is
+ [x] Automatically parses callback parameters
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
  [x] Filter names that start with # are normalized to lowercase
@@ -462,6 +463,44 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ContextSafeness
  [x] getDisallowedCharactersAsURL() returns a list of strings
  [x] getDisallowedCharactersInCSS() returns a list of strings
  [x] getDisallowedCharactersInJS() returns a list of strings
+
+s9e\TextFormatter\Tests\Configurator\Helpers\FilterHelper
+ [x] isAllowed() tests with data set #0
+ [x] isAllowed() tests with data set #1
+ [x] isAllowed() tests with data set #2
+ [x] isAllowed() tests with data set #3
+ [x] isAllowed() tests with data set #4
+ [x] isAllowed() tests with data set #5
+ [x] parse() tests with data set #0
+ [x] parse() tests with data set #1
+ [x] parse() tests with data set #2
+ [x] parse() tests with data set #3
+
+s9e\TextFormatter\Tests\Configurator\Helpers\FilterSyntaxMatcher
+ [x] parse() tests with data set #0
+ [x] parse() tests with data set #1
+ [x] parse() tests with data set #2
+ [x] parse() tests with data set #3
+ [x] parse() tests with data set #4
+ [x] parse() tests with data set #5
+ [x] parse() tests with data set #6
+ [x] parse() tests with data set #7
+ [x] parse() tests with data set #8
+ [x] parse() tests with data set #9
+ [x] parse() tests with data set #10
+ [x] parse() tests with data set #11
+ [x] parse() tests with data set #12
+ [x] parse() tests with data set #13
+ [x] parse() tests with data set #14
+ [x] parse() tests with data set #15
+ [x] parse() tests with data set #16
+ [x] parse() tests with data set #17
+ [x] parse() tests with data set #18
+ [x] parse() tests with data set #19
+ [x] parse() tests with data set #20
+ [x] parse() tests with data set #21
+ [x] parse() tests with data set #22
+ [x] parse() tests with data set #23
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ElementInspector
  [x] Test cases with data set #0

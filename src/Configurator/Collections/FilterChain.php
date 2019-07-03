@@ -8,6 +8,8 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\FilterHelper;
+use s9e\TextFormatter\Configurator\Items\Filter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 abstract class FilterChain extends NormalizedList
@@ -44,12 +46,17 @@ abstract class FilterChain extends NormalizedList
 	/**
 	* Normalize a value into an TagFilter instance
 	*
-	* @param  mixed     $value Either a valid callback or an instance of TagFilter
-	* @return TagFilter        Normalized filter
+	* @param  mixed  $value Either a valid callback or an instance of TagFilter
+	* @return Filter        Normalized filter
 	*/
 	public function normalizeValue($value)
 	{
-		$className  = $this->getFilterClassName();
+		if (is_string($value) && strpos($value, '(') !== false)
+		{
+			return $this->createFilter($value);
+		}
+
+		$className = $this->getFilterClassName();
 		if ($value instanceof $className)
 		{
 			return $value;
@@ -61,5 +68,28 @@ abstract class FilterChain extends NormalizedList
 		}
 
 		return new $className($value);
+	}
+
+	/**
+	* Create and return a filter
+	*
+	* @param  string $filterString
+	* @return Filter
+	*/
+	protected function createFilter($filterString)
+	{
+		$config = FilterHelper::parse($filterString);
+		$filter = $this->normalizeValue($config['filter']);
+		if (isset($config['params']))
+		{
+			$filter->resetParameters();
+			foreach ($config['params'] as [$type, $value])
+			{
+				$methodName = 'addParameterBy' . $type;
+				$filter->$methodName($value);
+			}
+		}
+
+		return $filter;
 	}
 }
