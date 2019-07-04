@@ -7203,7 +7203,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Cached
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] get() returns FALSE on error
  [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Curl

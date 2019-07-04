@@ -9,6 +9,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\FilterChain
 * @covers s9e\TextFormatter\Configurator\Collections\AttributeFilterChain
+* @covers s9e\TextFormatter\Configurator\Helpers\FilterHelper
 */
 class AttributeFilterChainTest extends Test
 {
