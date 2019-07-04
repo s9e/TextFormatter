@@ -1572,18 +1572,6 @@ s9e\TextFormatter\Tests\Configurator\StylesheetCompressor
  [x] encode() tests with data set #4
  [x] encode() tests with data set #5
 
-s9e\TextFormatter\Tests\Configurator\Rendering
- [x] Default engine is XSLT
- [x] setEngine('PHP') sets the engine to a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
- [x] setEngine('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
- [x] setEngine() returns the new instance of RendererGenerator
- [x] getRenderer() invokes $this->engine->getRenderer()
- [x] getAllParameters() returns parameters that were formally defined
- [x] getAllParameters() returns parameters that are inferred from the templates
- [x] getAllParameters() returns parameters that were formally defined over those that are inferred from the templates
- [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
- [x] getTemplates() returns templates gathered from tags
-
 s9e\TextFormatter\Tests\Configurator\RecursiveParser
  [x] Throws an exception if the input cannot be matched
  [x] Works with data set #0
@@ -1596,6 +1584,18 @@ s9e\TextFormatter\Tests\Configurator\RecursiveParser\AbstractRecursiveMatcher
 s9e\TextFormatter\Tests\Configurator\RecursiveParser\CachingRecursiveParser
  [x] Returns cached result if available
  [x] Resets cache when setMatchers() is called
+
+s9e\TextFormatter\Tests\Configurator\Rendering
+ [x] Default engine is XSLT
+ [x] setEngine('PHP') sets the engine to a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
+ [x] setEngine('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
+ [x] setEngine() returns the new instance of RendererGenerator
+ [x] getRenderer() invokes $this->engine->getRenderer()
+ [x] getAllParameters() returns parameters that were formally defined
+ [x] getAllParameters() returns parameters that are inferred from the templates
+ [x] getAllParameters() returns parameters that were formally defined over those that are inferred from the templates
+ [x] getTemplates() returns default templates for br and p and empty templates for i, e, s
+ [x] getTemplates() returns templates gathered from tags
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\AllowAll
  [x] <b> has a allowChild rule and a allowDescendant rule for <div>
@@ -5075,6 +5075,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\SiteDefiniti
  [x] set() throws an exception if the site config does not contain a host
  [x] add() throws a meaningful exception if the site ID already exists
  [x] Converts the extract field to an array if it's a string
+ [x] Converts the filterChain field to an array if it's a string
  [x] Preserves the extract field if it's an array
  [x] Normalizes the scrape config
 
@@ -7203,7 +7204,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Cached
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [ ] get() returns FALSE on error
+ [x] get() returns FALSE on error
  [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Curl

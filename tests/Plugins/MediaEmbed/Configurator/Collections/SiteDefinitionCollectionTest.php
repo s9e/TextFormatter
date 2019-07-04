@@ -106,6 +106,26 @@ class SiteDefinitionCollectionTest extends Test
 	}
 
 	/**
+	* @testdox Converts the filterChain field to an array if it's a string
+	*/
+	public function testFilterChainString()
+	{
+		$original = [
+			'attributes' => ['id' => ['filterChain' => '#int']],
+			'host'       => ['localhost'],
+			'extract'    => ['/foo/'],
+			'scrape'     => []
+		];
+		$expected = $original;
+		$expected['attributes']['id']['filterChain'] = ['#int'];
+
+		$collection = new SiteDefinitionCollection;
+		$collection->add('foo', $original);
+
+		$this->assertEquals($expected, $collection['foo']);
+	}
+
+	/**
 	* @testdox Preserves the extract field if it's an array
 	*/
 	public function testExtractArray()
