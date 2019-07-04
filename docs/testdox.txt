@@ -3386,6 +3386,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
  [x] BBCode::normalizeName('*invalid*') throws an exception
+ [x] BBCode::normalizeName('a:b') throws an exception
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
  [x] $bbcode->contentAttributes is an instance of AttributeList

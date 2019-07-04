@@ -93,7 +93,7 @@ class BBCode implements ConfigProvider
 			return '*';
 		}
 
-		if (!TagName::isValid($bbcodeName))
+		if (strpos($bbcodeName, ':') !== false || !TagName::isValid($bbcodeName))
 		{
 			throw new InvalidArgumentException("Invalid BBCode name '" . $bbcodeName . "'");
 		}

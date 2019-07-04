@@ -48,6 +48,17 @@ class BBCodeTest extends Test
 	}
 
 	/**
+	* @testdox BBCode::normalizeName('a:b') throws an exception
+	*/
+	public function testNormalizeNameInvalidColon()
+	{
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('Invalid BBCode name');
+
+		BBCode::normalizeName('a:b');
+	}
+
+	/**
 	* @testdox defaultAttribute accepts an attribute name and normalizes it accordingly
 	*/
 	public function testDefaultAttribute()
