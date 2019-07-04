@@ -17,10 +17,22 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BBCodeName' => '((
-			'EndTag'     => '\\[/((?&Name))\\]',
-			'StartTag'   => '\\[/?\\]',
+			'Attribute'            => '((?&AttributeName))=((?AttributeDefinition))',
+			'AttributeDefinition'  => '((?&Junk))((?&Token))',
+			'AttributeName'        => '(\\w[-\\w]*)',
+			'AttributeOptionName'  => '[a-z]\\w*',
+			'AttributeOptionValue' => '(?&ArrayValue)|[^\\s;]*',
+			'BBCodeDefinition'     => '((?&StartTag))(?:((?&Content))((?&EndTag)))?',
+			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
+			'EndTag'               => '\\[/((?&BBCodeName))\\]',
+			'Junk'                 => '(?:[^\\s\\{]|(?=\\{)(?!(?&Token))\\{)*+',
+			'StartTag'             => '\\[((?&BBCodeName)) (?&Attributes) (/?)\\]',
+			'TagOptionName'        => '[$#]?[a-z]\\w*',
+			'TagOptionValue'       => '(?&ArrayValue)|[^\\s;]*',
+			'Token'                => '\\{((?&TokenName))(?:=((?&TokenOptions)))?\\}',
+			'TokenName'            => '[A-Z]+[0-9]*',
+			'TokenOption'          => '((?&OptionName))(?:=((?OptionValue)))?',
+			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
 		];
 	];
-
 }
