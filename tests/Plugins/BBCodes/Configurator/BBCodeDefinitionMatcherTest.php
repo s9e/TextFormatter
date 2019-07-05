@@ -32,7 +32,7 @@ class BBCodeDefinitionMatcherTest extends Test
 			new FilterSyntaxMatcher($parser)
 		]);
 
-		$this->assertEquals($expected, $parser->parse($filterString)['value']);
+		$this->assertEquals($expected, $parser->parse($filterString, 'BBCodeDefinition')['value']);
 	}
 
 	public function getParseTests()
