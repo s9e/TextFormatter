@@ -18,21 +18,35 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	{
 		return [
 			'Attribute'            => '((?&AttributeName))=((?AttributeDefinition))',
-			'AttributeDefinition'  => '((?&Junk))((?&Token))',
+			'AttributeDefinition'  => '((?&Junk))((?&Token))((?&Junk))((?AttributeDefinition)*)',
 			'AttributeName'        => '(\\w[-\\w]*)',
-			'AttributeOptionName'  => '[a-z]\\w*',
-			'AttributeOptionValue' => '(?&ArrayValue)|[^\\s;]*',
+			'BBCodeAttribute'      => '((?&Attribute)|(?&Rule)|(?&TagOption))',
 			'BBCodeDefinition'     => '((?&StartTag))(?:((?&Content))((?&EndTag)))?',
 			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
+			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
 			'EndTag'               => '\\[/((?&BBCodeName))\\]',
 			'Junk'                 => '(?:[^\\s\\{]|(?=\\{)(?!(?&Token))\\{)*+',
-			'StartTag'             => '\\[((?&BBCodeName)) (?&Attributes) (/?)\\]',
-			'TagOptionName'        => '[$#]?[a-z]\\w*',
-			'TagOptionValue'       => '(?&ArrayValue)|[^\\s;]*',
-			'Token'                => '\\{((?&TokenName))(?:=((?&TokenOptions)))?\\}',
+			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
+			'RuleName'             => '(\\w+)',
+			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
+			'StartTag'             => '\\[((?&BBCodeName)) ((?&Attributes)) (/?)\\]',
+			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
+			'TagOptionName'        => '$([a-z]\\w*)',
+			'TagOptionValue'       => '(?&ArrayValue)|(?&UnquotedString)',
+			'Token'                => '\\{((?&TokenName))(?:=((?&FilterOption)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenName'            => '[A-Z]+[0-9]*',
 			'TokenOption'          => '((?&OptionName))(?:=((?OptionValue)))?',
 			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
+			'UnquotedString'       => '([^\\s;\\]{}]*)'
 		];
 	];
+
+	/**
+	* @param  string   $str
+	* @return string[]
+	*/
+	public function parseCommaSeparatedValues(string $str): array
+	{
+		return explode(',', $str);
+	}
 }
