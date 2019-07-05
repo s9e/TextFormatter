@@ -17,9 +17,8 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'Attribute'            => '((?&AttributeName))=((?&Tokens))',
-			'AttributeName'        => '\\w[-\\w]*',
-			'BBCodeAttribute'      => '((?&Attribute)|(?&Rule)|(?&TagOption))',
+			'BaseDefinition'       => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
+			'BaseDefinitions'      => '((?&BaseDefinition)) ((?&BaseDefinition)*)',
 			'BBCodeDefinition'     => '((?&StartTag)) (?:((?&Content)) ((?&EndTag)))?',
 			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
@@ -30,7 +29,9 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
 			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
-			'StartTag'             => '\\[((?&BBCodeName)) ((?&Attributes)) (/?)\\]',
+			'StartTag'             => '\\[((?&BBCodeName)) ((?&BaseDefinitions)?) (/?)\\]',
+			'TagAttribute'         => '((?&TagAttributeName))=((?&Tokens))',
+			'TagAttributeName'     => '\\w[-\\w]*',
 			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
 			'TagOptionName'        => '\\$[a-z]\\w*',
 			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
