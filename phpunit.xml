@@ -241,6 +241,7 @@
 			<file>tests/Plugins/Autovideo/ParserTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/BBCodeTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/BBCodeCollectionTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/BBCodeDefinitionMatcherTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/BBCodeMonkeyTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/RepositoryTest.php</file>
 			<file>tests/Plugins/BBCodes/Configurator/RepositoryCollectionTest.php</file>

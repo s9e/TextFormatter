@@ -17,14 +17,15 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'Attribute'            => '((?&AttributeName))=((?AttributeDefinition))',
-			'AttributeDefinition'  => '((?&Junk))((?&Token))((?&Junk))((?AttributeDefinition)*)',
+			'Attribute'            => '((?&AttributeName))=((?&AttributeDefinition))',
+			'AttributeDefinition'  => '((?&Junk))((?&Token))((?&Junk))((?&AttributeDefinition)*)',
 			'AttributeName'        => '(\\w[-\\w]*)',
 			'BBCodeAttribute'      => '((?&Attribute)|(?&Rule)|(?&TagOption))',
 			'BBCodeDefinition'     => '((?&StartTag))(?:((?&Content))((?&EndTag)))?',
 			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
 			'EndTag'               => '\\[/((?&BBCodeName))\\]',
+			'FilterValue'          => '((?&ArrayValue)|(?&UnquotedString))',
 			'Junk'                 => '(?:[^\\s\\{]|(?=\\{)(?!(?&Token))\\{)*+',
 			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
 			'RuleName'             => '(\\w+)',
@@ -32,14 +33,14 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'StartTag'             => '\\[((?&BBCodeName)) ((?&Attributes)) (/?)\\]',
 			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
 			'TagOptionName'        => '$([a-z]\\w*)',
-			'TagOptionValue'       => '(?&ArrayValue)|(?&UnquotedString)',
-			'Token'                => '\\{((?&TokenName))(?:=((?&FilterOption)))?(?: ;((?&TokenOptions)))?\\}',
+			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
+			'Token'                => '\\{((?&TokenName))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenName'            => '[A-Z]+[0-9]*',
-			'TokenOption'          => '((?&OptionName))(?:=((?OptionValue)))?',
+			'TokenOption'          => '((?&TokenOptionName))(?:=((?&TokenOptionValue)))?',
 			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
 			'UnquotedString'       => '([^\\s;\\]{}]*)'
 		];
-	];
+	}
 
 	/**
 	* @param  string   $str
