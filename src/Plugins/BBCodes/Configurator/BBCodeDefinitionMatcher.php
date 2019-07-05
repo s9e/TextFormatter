@@ -17,26 +17,26 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BaseDefinition'       => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
-			'BaseDefinitions'      => '((?&BaseDefinition)) ((?&BaseDefinition)*)',
-			'BBCodeDefinition'     => '((?&StartTag)) (?:((?&Content)?) ((?&EndTag)))?',
-			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
+			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&Content)?) ((?&BBCodeEndTag)))?',
+			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
+			'BBCodeName'           => '\\*|\\w[-\\w]*',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations)?) /?\\]',
+			'BaseDeclaration'      => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
+			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclaration)*)',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
 			'Content'              => '((?&Tokens)?)',
-			'EndTag'               => '\\[/((?&BBCodeName))\\]',
 			'FilterValue'          => '((?&ArrayValue)|(?&UnquotedString))',
-			'Junk'                 => '(?:[^\\s\\{]|(?=\\{)(?!(?&Token))\\{)*+',
+			'Junk'                 => '(?:[^\\{]|(?=\\{)(?!(?&Token))\\{)*?',
 			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
 			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
-			'StartTag'             => '\\[((?&BBCodeName)) ((?&BaseDefinitions)?) (/?)\\]',
 			'TagAttribute'         => '((?&TagAttributeName))=((?&Tokens))',
 			'TagAttributeName'     => '\\w[-\\w]*',
 			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
 			'TagOptionName'        => '\\$[a-z]\\w*',
 			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
-			'Token'                => '\\{((?&TokenName))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
-			'TokenName'            => '[A-Z]+[0-9]*',
+			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
+			'TokenId'              => '[A-Z]+[0-9]*',
 			'TokenOption'          => '((?&TokenOptionName))(?:=((?&TokenOptionValue)))?',
 			'TokenOptionName'      => '\\w+',
 			'TokenOptionValue'     => '((?&ArrayValue)|(?&UnquotedString))',
@@ -44,6 +44,35 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'Tokens'               => '((?&Junk))((?&Token))((?&Junk))((?&Tokens))?',
 			'UnquotedString'       => '[^\\s;\\]{}]*'
 		];
+	}
+
+	/**
+	* @param  string $str
+	* @return array
+	*/
+	public function parseBBCodeDefinition(string $start, string $content = ''): array
+	{
+		$definition = $this->recurse($start, 'BBCodeStartTag');
+
+		return $definition;
+	}
+
+	/**
+	* @param  string $str
+	* @return array
+	*/
+	public function parseBBCodeStartTag(string $name, string $declarations = '', string $slash = ''): array
+	{
+		$definition = ['bbcodeName' => $name];
+		if ($declarations !== '')
+		{
+			foreach ($this->recurse($declarations, 'BaseDeclarations') as $declaration)
+			{
+			}
+		}
+		var_dump(func_get_args());
+
+		return $definition;
 	}
 
 	/**
