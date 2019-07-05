@@ -19,7 +19,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		return [
 			'BaseDefinition'       => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
 			'BaseDefinitions'      => '((?&BaseDefinition)) ((?&BaseDefinition)*)',
-			'BBCodeDefinition'     => '((?&StartTag)) (?:((?&Content)) ((?&EndTag)))?',
+			'BBCodeDefinition'     => '((?&StartTag)) (?:((?&Content)?) ((?&EndTag)))?',
 			'BBCodeName'           => '(\\*|\\w[-\\w]*)',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
 			'Content'              => '((?&Tokens)?)',
