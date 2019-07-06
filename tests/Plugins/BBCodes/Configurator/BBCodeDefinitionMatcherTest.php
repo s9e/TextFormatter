@@ -102,8 +102,7 @@ class BBCodeDefinitionMatcherTest extends Test
 					'content'    => [],
 					'options'    => [
 						[
-							'name'  => 'forceLookahead',
-							'value' => true
+							'name'  => 'forceLookahead'
 						]
 					]
 				]
