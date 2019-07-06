@@ -59,8 +59,25 @@ class BBCodeDefinitionMatcherTest extends Test
 					'content'    => [],
 					'attributes' => [
 						[
-							'name' => 'foo',
+							'name'    => 'foo',
 							'content' => [['id' => 'TEXT']]
+						]
+					]
+				]
+			],
+			[
+				'[x foo={TEXT1} bar={TEXT2}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [['id' => 'TEXT1']]
+						],
+						[
+							'name'    => 'bar',
+							'content' => [['id' => 'TEXT2']]
 						]
 					]
 				]
