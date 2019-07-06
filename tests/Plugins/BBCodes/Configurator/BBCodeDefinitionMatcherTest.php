@@ -102,7 +102,20 @@ class BBCodeDefinitionMatcherTest extends Test
 					'content'    => [],
 					'options'    => [
 						[
-							'name'  => 'forceLookahead'
+							'name' => 'forceLookahead'
+						]
+					]
+				]
+			],
+			[
+				'[x $foo=[1,2]]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'options'    => [
+						[
+							'name'  => 'foo',
+							'value' => [1, 2]
 						]
 					]
 				]
