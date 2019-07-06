@@ -35,11 +35,16 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
 			],
+			'TagFilter'            => [
+				'groups' => ['BaseDeclaration'],
+				'order'  => -1,
+				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
+			],
 			'TagOption'            => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '\\$(\\w+)(?:=((?&UnquotedLiteral)))?'
 			],
-			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ;((?&TokenOptions)))?\\}',
+			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ; ((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
 			'TokenOptions'         => '(\\w+)(?:=((?&UnquotedLiteral)))?(?:; ((?&TokenOptions)))? ;?',
 			'UnquotedLiteral'      => '((?&Literal)|(?&UnquotedString))',
@@ -177,6 +182,16 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				]
 			]
 		];
+	}
+
+	/**
+	* @param  string $mode
+	* @param  string $filter
+	* @return array
+	*/
+	public function parseTagFilter(string $mode, string $filter): array
+	{
+		return ['filterChain' => [['mode' => $mode, 'filter' => $filter]]];
 	}
 
 	/**

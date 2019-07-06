@@ -203,6 +203,65 @@ class BBCodeDefinitionMatcherTest extends Test
 					]
 				]
 			],
+			[
+				'[x foo={TEXT1}
+					bar={TEXT2}
+				]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [['id' => 'TEXT1']]
+						],
+						[
+							'name'    => 'bar',
+							'content' => [['id' => 'TEXT2']]
+						]
+					]
+				]
+			],
+			[
+				'[x foo={TEXT1;
+						foo=1;
+						bar=["ab", "cd"];
+				}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [
+								[
+									'id'      => 'TEXT1',
+									'options' => [
+										['name' => 'foo', 'value' => 1],
+										['name' => 'bar', 'value' => ['ab', 'cd']]
+									]
+								]
+							]
+						]
+					]
+				]
+			],
+			[
+				'[x $tagName=FOO
+					$filterChain.append=MyFilter::foo($tag, 1, 2)
+					$filterChain.append=MyFilter::bar()
+					$filterChain.prepend=MyFilter::baz]',
+				[
+					'bbcodeName'  => 'X',
+					'content'     => [],
+					'options'     => [['name' => 'tagName', 'value' => 'FOO']],
+					'filterChain' => [
+						['mode' => 'append',  'filter' => 'MyFilter::foo($tag, 1, 2)'],
+						['mode' => 'append',  'filter' => 'MyFilter::bar()'],
+						['mode' => 'prepend', 'filter' => 'MyFilter::baz'],
+					]
+				]
+			],
 		];
 	}
 }
