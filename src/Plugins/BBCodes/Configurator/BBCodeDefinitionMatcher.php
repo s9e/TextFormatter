@@ -17,20 +17,20 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&Content)?) ((?&BBCodeEndTag)))?',
+			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations)?) /?\\]',
 			'BaseDeclaration'      => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
 			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclaration)*)',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
-			'Content'              => '((?&Tokens)?)',
 			'FilterValue'          => '((?&ArrayValue)|(?&UnquotedString))',
-			'Junk'                 => '(?:[^\\{]|(?=\\{)(?!(?&Token))\\{)*?',
+			'Junk'                 => '.*?',
+			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
 			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
-			'TagAttribute'         => '((?&TagAttributeName))=((?&Tokens))',
+			'TagAttribute'         => '((?&TagAttributeName))=((?&MixedContent))',
 			'TagAttributeName'     => '\\w[-\\w]*',
 			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
 			'TagOptionName'        => '\\$[a-z]\\w*',
@@ -41,7 +41,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'TokenOptionName'      => '\\w+',
 			'TokenOptionValue'     => '((?&ArrayValue)|(?&UnquotedString))',
 			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
-			'Tokens'               => '((?&Junk))((?&Token))((?&Junk))((?&Tokens))?',
 			'UnquotedString'       => '[^\\s;\\]{}]*'
 		];
 	}
@@ -52,7 +51,8 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseBBCodeDefinition(string $start, string $content = ''): array
 	{
-		$definition = $this->recurse($start, 'BBCodeStartTag');
+		$definition            = $this->recurse($start, 'BBCodeStartTag');
+		$definition['content'] = ($content === '') ? [] : $this->recurse($content, 'MixedContent');
 
 		return $definition;
 	}
@@ -63,14 +63,16 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseBBCodeStartTag(string $name, string $declarations = '', string $slash = ''): array
 	{
-		$definition = ['bbcodeName' => $name];
+		$definition = [
+			'bbcodeName' => $name,
+			'content'    => []
+		];
 		if ($declarations !== '')
 		{
 			foreach ($this->recurse($declarations, 'BaseDeclarations') as $declaration)
 			{
 			}
 		}
-		var_dump(func_get_args());
 
 		return $definition;
 	}
@@ -82,5 +84,54 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseCommaSeparatedValues(string $str): array
 	{
 		return explode(',', $str);
+	}
+
+	/**
+	* @param  string $junk
+	* @param  string $token
+	* @param  string $more
+	* @return array
+	*/
+	public function parseMixedContent(string $junk, string $token = null, string $more = null): array
+	{
+		$content = [];
+		if ($junk !== '')
+		{
+			$content[] = $junk;
+		}
+		if (isset($token))
+		{
+			$content[] = $this->recurse($token, 'Token');
+			if (isset($more))
+			{
+				$content = array_merge($content, $this->recurse($more, 'MixedContent'));
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	* @param  string $tokenId
+	* @param  string $optional
+	* @param  string $filterValue
+	* @param  string $tokenOptions
+	* @return array
+	*/
+	public function parseToken(string $tokenId, string $optional = '', string $filterValue = '', string $tokenOptions = ''): array
+	{
+		$token = ['id' => $tokenId];
+		if ($optional !== '')
+		{
+			$tokenOptions = 'required=false;' . $tokenOptions;
+		}
+		if ($filterValue !== '')
+		{
+		}
+		if ($tokenOptions !== '')
+		{
+		}
+
+		return $token;
 	}
 }
