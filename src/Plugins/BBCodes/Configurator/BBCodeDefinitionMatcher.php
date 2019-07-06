@@ -30,7 +30,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '#((?&RuleName))=((?&RuleValue))'
+				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
 			],
 			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
@@ -41,9 +41,8 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'TagAttributeName'     => '(\\w[-\\w]*)',
 			'TagOption'            => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '((?&TagOptionName))(?:=((?&TagOptionValue)))?'
+				'regexp' => '\\$(\\w+)(?:=((?&TagOptionValue)))?'
 			],
-			'TagOptionName'        => '\\$[a-z]\\w*',
 			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
@@ -137,6 +136,41 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 
 	/**
 	* @param  string $name
+	* @param  string $value
+	* @return mixed
+	*/
+	public function parseRule(string $name, string $value = null)
+	{
+		if (!isset($value))
+		{
+			return ['rules' => [['name' => $name]]];
+		}
+
+		$rules = [];
+		foreach ((array) $this->parseRuleValue($value) as $value)
+		{
+			$rules[] = ['name' => $name, 'value' => $value];
+		}
+
+		return ['rules' => $rules];
+	}
+
+	/**
+	* @param  string $str
+	* @return array|boolean
+	*/
+	public function parseRuleValue(string $str)
+	{
+		if (preg_match('(^(?:fals|tru)e$)i', $str))
+		{
+			return (strtolower($str) === true);
+		}
+
+		return explode(',', $str);
+	}
+
+	/**
+	* @param  string $name
 	* @param  string $content
 	* @return array
 	*/
@@ -169,7 +203,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseTagOption(string $name, string $value = null)
 	{
-		$option = ['name' => substr($name, 1)];
+		$option = ['name' => $name];
 		if (isset($value))
 		{
 			$option['value'] = $this->decodeValue($value);

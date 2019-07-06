@@ -100,11 +100,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'options'    => [
-						[
-							'name' => 'forceLookahead'
-						]
-					]
+					'options'    => [['name' => 'forceLookahead']]
 				]
 			],
 			[
@@ -116,6 +112,57 @@ class BBCodeDefinitionMatcherTest extends Test
 						[
 							'name'  => 'foo',
 							'value' => [1, 2]
+						]
+					]
+				]
+			],
+			[
+				'[x $foo="]"]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'options'    => [
+						[
+							'name'  => 'foo',
+							'value' => ']'
+						]
+					]
+				]
+			],
+			[
+				'[x #autoClose=false]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'rules'    => [
+						[
+							'name'  => 'autoClose',
+							'value' => false
+						]
+					]
+				]
+			],
+			[
+				'[x #autoClose]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'rules'      => [['name' => 'autoClose']]
+				]
+			],
+			[
+				'[x #closeParent=foo,bar]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'rules'    => [
+						[
+							'name'  => 'closeParent',
+							'value' => 'foo'
+						],
+						[
+							'name'  => 'closeParent',
+							'value' => 'bar'
 						]
 					]
 				]
