@@ -94,7 +94,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		$definition = $this->recurse($declaration, 'BaseDeclaration');
 		if ($more !== '')
 		{
-			$definition = array_merge($definition, $this->recurse($more, 'BaseDeclarations'));
+			$definition = array_merge_recursive($definition, $this->recurse($more, 'BaseDeclarations'));
 		}
 
 		return $definition;
@@ -143,8 +143,10 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	{
 		return [
 			'attributes' => [
-				'name'    => $this->recurse($name, 'TagAttributeName'),
-				'content' => $this->recurse($content, 'MixedContent')
+				[
+					'name'    => $this->recurse($name, 'TagAttributeName'),
+					'content' => $this->recurse($content, 'MixedContent')
+				]
 			]
 		];
 	}
