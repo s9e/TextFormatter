@@ -167,6 +167,42 @@ class BBCodeDefinitionMatcherTest extends Test
 					]
 				]
 			],
+			[
+				'[x foo={TEXT?}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [
+								[
+									'id'      => 'TEXT',
+									'options' => [['name' => 'required', 'value' => false]]
+								]
+							]
+						]
+					]
+				]
+			],
+			[
+				'[x foo={REGEXP=/foo/}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [
+								[
+									'id'          => 'REGEXP',
+									'filterValue' => new Regexp('/foo/', true)
+								]
+							]
+						]
+					]
+				]
+			],
 		];
 	}
 }
