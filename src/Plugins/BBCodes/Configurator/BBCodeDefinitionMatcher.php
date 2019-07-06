@@ -41,7 +41,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'TagAttributeName'     => '(\\w[-\\w]*)',
 			'TagOption'            => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '((?&TagOptionName))=((?&TagOptionValue))'
+				'regexp' => '((?&TagOptionName))(?:=((?&TagOptionValue)))?'
 			],
 			'TagOptionName'        => '\\$[a-z]\\w*',
 			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
@@ -167,16 +167,15 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $value
 	* @return array
 	*/
-	public function parseTagOption(string $name, string $value)
+	public function parseTagOption(string $name, string $value = null)
 	{
-		return [
-			'options' => [
-				[
-					'name'  => substr($name, 1),
-					'value' => $this->decodeValue($value)
-				]
-			]
-		];
+		$option = ['name' => substr($name, 1)];
+		if (isset($value))
+		{
+			$option['value'] = $this->decodeValue($value);
+		}
+
+		return ['options' => [$option]];
 	}
 
 	/**
