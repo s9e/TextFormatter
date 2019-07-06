@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
 use RuntimeException;
 use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
-use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 {
@@ -31,21 +30,18 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
 			],
-			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '((?&TagAttributeName))=((?&MixedContent))'
+				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
 			],
-			'TagAttributeName'     => '(\\w[-\\w]*)',
 			'TagOption'            => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '\\$(\\w+)(?:=((?&UnquotedLiteral)))?'
 			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOption'          => '((?&TokenOptionName))(?:=((?&UnquotedLiteral)))?',
-			'TokenOptionName'      => '\\w+',
+			'TokenOption'          => '(\\w+)(?:=((?&UnquotedLiteral)))?',
 			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
 			'UnquotedLiteral'      => '((?&Literal)|(?&UnquotedString))',
 			'UnquotedString'       => '[^\\s;\\]{}]*'
@@ -177,21 +173,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		return [
 			'attributes' => [
 				[
-					'name'    => $this->recurse($name, 'TagAttributeName'),
+					'name'    => $name,
 					'content' => $this->recurse($content, 'MixedContent')
 				]
 			]
 		];
-	}
-
-	/**
-	* @param  string $name
-	* @param  string $content
-	* @return array
-	*/
-	public function parseTagAttributeName(string $name)
-	{
-		return AttributeName::normalize($name);
 	}
 
 	/**
