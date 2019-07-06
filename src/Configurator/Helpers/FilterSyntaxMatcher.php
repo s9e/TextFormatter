@@ -19,21 +19,21 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	{
 		return [
 			'Array' => [
-				'groups' => ['ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal'],
 				'regexp' => '\\[ ((?&ArrayElements))? \\]',
 			],
 			'ArrayElement' => [
-				'regexp' => '(?:((?&ArrayKey)) => )?((?&ArrayValue))',
+				'regexp' => '(?:((?&Scalar)) => )?((?&Literal))',
 			],
 			'ArrayElements' => [
 				'regexp' => '((?&ArrayElement))(?: , ((?&ArrayElements)))?',
 			],
 			'DoubleQuotedString' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '"((?:[^\\\\"]|\\\\.)*)"',
 			],
 			'False' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '[Ff][Aa][Ll][Ss][Ee]',
 			],
 			'FilterArgs' => [
@@ -43,15 +43,15 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 				'regexp' => '([#:\\\\\\w]+)(?: \\( ((?&FilterArgs)?) \\))?',
 			],
 			'Float' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '([-+]?(?:\\.[0-9]+|[0-9]+\\.[0-9]*|[0-9]+(?=[Ee]))(?:[Ee]-?[0-9]+)?)',
 			],
 			'Integer' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '(-?(?:0[Bb][01]+|0[Xx][0-9A-Fa-f]+|[0-9]+))',
 			],
 			'Null' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '[Nn][Uu][Ll][Ll]',
 			],
 			'Param' => [
@@ -59,15 +59,15 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 				'regexp' => '\\$(\\w+(?:\\.\\w+)*)',
 			],
 			'Regexp' => [
-				'groups' => ['ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal'],
 				'regexp' => '(/(?:[^\\\\/]|\\\\.)*/)([Sgimsu]*)',
 			],
 			'SingleQuotedString' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => "'((?:[^\\\\']|\\\\.)*)'",
 			],
 			'True' => [
-				'groups' => ['ArrayKey', 'ArrayValue', 'FilterArg'],
+				'groups' => ['FilterArg', 'Literal', 'Scalar'],
 				'regexp' => '[Tt][Rr][Uu][Ee]'
 			]
 		];
@@ -105,10 +105,10 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseArrayElement(string $key, string $value): array
 	{
-		$element = ['value' => $this->recurse($value, 'ArrayValue')];
+		$element = ['value' => $this->recurse($value, 'Literal')];
 		if ($key !== '')
 		{
-			$element['key'] = $this->recurse($key, 'ArrayKey');
+			$element['key'] = $this->recurse($key, 'Scalar');
 		}
 
 		return $element;
