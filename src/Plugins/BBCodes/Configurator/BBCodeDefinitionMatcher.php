@@ -41,8 +41,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOption'          => '(\\w+)(?:=((?&UnquotedLiteral)))?',
-			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
+			'TokenOptions'         => '(\\w+)(?:=((?&UnquotedLiteral)))?(?:; ((?&TokenOptions)))? ;?',
 			'UnquotedLiteral'      => '((?&Literal)|(?&UnquotedString))',
 			'UnquotedString'       => '[^\\s;\\]{}]*'
 		];
@@ -212,12 +211,37 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 		if ($filterValue !== '')
 		{
+			$token['filterValue'] = $this->parseUnquotedLiteral($filterValue);
 		}
 		if ($tokenOptions !== '')
 		{
+			$token['options'] = $this->recurse($tokenOptions, 'TokenOptions');
 		}
 
 		return $token;
+	}
+
+	/**
+	* @param  string $name
+	* @param  string $value
+	* @param  string $more
+	* @return array
+	*/
+	public function parseTokenOptions(string $name, string $value = '', string $more = ''): array
+	{
+		$option  = ['name' => $name];
+		if ($value !== '')
+		{
+			$option['value'] = $this->parseUnquotedLiteral($value);
+		}
+
+		$options = [$option];
+		if ($more !== '')
+		{
+			$options = array_merge($options, $this->recurse($more, 'TokenOptions'));
+		}
+
+		return $options;
 	}
 
 	/**
