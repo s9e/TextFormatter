@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
@@ -159,6 +160,41 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseTagAttributeName(string $name)
 	{
 		return AttributeName::normalize($name);
+	}
+
+	/**
+	* @param  string $name
+	* @param  string $value
+	* @return array
+	*/
+	public function parseTagOption(string $name, string $value)
+	{
+		return [
+			'options' => [
+				[
+					'name'  => substr($name, 1),
+					'value' => $this->decodeValue($value)
+				]
+			]
+		];
+	}
+
+	/**
+	* 
+	*
+	* @param  string $value
+	* @return mixed
+	*/
+	protected function decodeValue(string $value)
+	{
+		try
+		{
+			return $this->recurse($value, 'ArrayValue');
+		}
+		catch (RuntimeException $e)
+		{
+			return $value;
+		}
 	}
 
 	/**

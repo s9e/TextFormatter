@@ -82,6 +82,19 @@ class BBCodeDefinitionMatcherTest extends Test
 					]
 				]
 			],
+			[
+				'[x $forceLookahead=true]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'options'    => [
+						[
+							'name'  => 'forceLookahead',
+							'value' => true
+						]
+					]
+				]
+			],
 		];
 	}
 }
