@@ -174,6 +174,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseTagAttribute(string $name, string $content)
 	{
+		if (preg_match('(^(?:"[^"]++"|\'[^\']++\')$)', $content))
+		{
+			$content = substr($content, 1, -1);
+		}
+
 		return [
 			'attributes' => [
 				[
