@@ -78,9 +78,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		];
 		if ($declarations !== '')
 		{
-			foreach ($this->recurse($declarations, 'BaseDeclarations') as $declaration)
-			{
-			}
+			$definition += $this->recurse($declarations, 'BaseDeclarations');
 		}
 
 		return $definition;
