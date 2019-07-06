@@ -42,11 +42,21 @@ class BBCodeDefinitionMatcherTest extends Test
 				'[b]{TEXT}[/b]',
 				[
 					'bbcodeName' => 'b',
-					'content'    => [
-						[
-							'tokenId' => 'TEXT'
-						]
-					]
+					'content'    => [['id' => 'TEXT']]
+				]
+			],
+			[
+				'[br]',
+				[
+					'bbcodeName' => 'br',
+					'content'    => []
+				]
+			],
+			[
+				'[x foo={TEXT}]',
+				[
+					'bbcodeName' => 'br',
+					'content'    => []
 				]
 			],
 		];
