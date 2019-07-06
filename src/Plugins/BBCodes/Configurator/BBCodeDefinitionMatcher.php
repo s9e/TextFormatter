@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
 use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 {
@@ -20,19 +21,27 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations)?) /?\\]',
-			'BaseDeclaration'      => '((?&Rule)|(?&TagAttribute)|(?&TagOption))',
-			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclaration)*)',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
+			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
 			'FilterValue'          => '((?&ArrayValue)|(?&UnquotedString))',
 			'Junk'                 => '.*?',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
-			'Rule'                 => '#((?&RuleName))=((?&RuleValue))',
+			'Rule'                 => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '#((?&RuleName))=((?&RuleValue))'
+			],
 			'RuleName'             => '\\w+',
 			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
-			'TagAttribute'         => '((?&TagAttributeName))=((?&MixedContent))',
-			'TagAttributeName'     => '\\w[-\\w]*',
-			'TagOption'            => '((?&TagOptionName))=((?&TagOptionValue))',
+			'TagAttribute'         => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '((?&TagAttributeName))=((?&MixedContent))'
+			],
+			'TagAttributeName'     => '(\\w[-\\w]*)',
+			'TagOption'            => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '((?&TagOptionName))=((?&TagOptionValue))'
+			],
 			'TagOptionName'        => '\\$[a-z]\\w*',
 			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
@@ -64,7 +73,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseBBCodeStartTag(string $name, string $declarations = '', string $slash = ''): array
 	{
 		$definition = [
-			'bbcodeName' => $name,
+			'bbcodeName' => BBCode::normalizeName($name),
 			'content'    => []
 		];
 		if ($declarations !== '')
@@ -72,6 +81,22 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			foreach ($this->recurse($declarations, 'BaseDeclarations') as $declaration)
 			{
 			}
+		}
+
+		return $definition;
+	}
+
+	/**
+	* @param  string $declaration
+	* @param  string $more
+	* @return array
+	*/
+	public function parseBaseDeclarations(string $declaration, string $more = ''): array
+	{
+		$definition = $this->recurse($declaration, 'BaseDeclaration');
+		if ($more !== '')
+		{
+			$definition = array_merge($definition, $this->recurse($more, 'BaseDeclarations'));
 		}
 
 		return $definition;
@@ -109,6 +134,31 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $content;
+	}
+
+	/**
+	* @param  string $name
+	* @param  string $content
+	* @return array
+	*/
+	public function parseTagAttribute(string $name, string $content)
+	{
+		return [
+			'attributes' => [
+				'name'    => $this->recurse($name, 'TagAttributeName'),
+				'content' => $this->recurse($content, 'MixedContent')
+			]
+		];
+	}
+
+	/**
+	* @param  string $name
+	* @param  string $content
+	* @return array
+	*/
+	public function parseTagAttributeName(string $name)
+	{
+		return AttributeName::normalize($name);
 	}
 
 	/**
