@@ -25,7 +25,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
 			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
-			'FilterValue'          => '((?&ArrayValue)|(?&UnquotedString))',
 			'Junk'                 => '.*?',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
@@ -41,15 +40,14 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'TagAttributeName'     => '(\\w[-\\w]*)',
 			'TagOption'            => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '\\$(\\w+)(?:=((?&TagOptionValue)))?'
+				'regexp' => '\\$(\\w+)(?:=((?&UnquotedLiteral)))?'
 			],
-			'TagOptionValue'       => '((?&ArrayValue)|(?&UnquotedString))',
-			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&FilterValue)))?(?: ;((?&TokenOptions)))?\\}',
+			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ;((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOption'          => '((?&TokenOptionName))(?:=((?&TokenOptionValue)))?',
+			'TokenOption'          => '((?&TokenOptionName))(?:=((?&UnquotedLiteral)))?',
 			'TokenOptionName'      => '\\w+',
-			'TokenOptionValue'     => '((?&ArrayValue)|(?&UnquotedString))',
 			'TokenOptions'         => '((?&TokenOption))(?:; ((?&TokenOptions)))?',
+			'UnquotedLiteral'      => '((?&Literal)|(?&UnquotedString))',
 			'UnquotedString'       => '[^\\s;\\]{}]*'
 		];
 	}
@@ -206,28 +204,10 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		$option = ['name' => $name];
 		if (isset($value))
 		{
-			$option['value'] = $this->decodeValue($value);
+			$option['value'] = $this->parseUnquotedLiteral($value);
 		}
 
 		return ['options' => [$option]];
-	}
-
-	/**
-	* 
-	*
-	* @param  string $value
-	* @return mixed
-	*/
-	protected function decodeValue(string $value)
-	{
-		try
-		{
-			return $this->recurse($value, 'ArrayValue');
-		}
-		catch (RuntimeException $e)
-		{
-			return $value;
-		}
 	}
 
 	/**
@@ -252,5 +232,21 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $token;
+	}
+
+	/**
+	* @param  string $str
+	* @return mixed
+	*/
+	public function parseUnquotedLiteral(string $str)
+	{
+		try
+		{
+			return $this->recurse($str, 'Literal');
+		}
+		catch (RuntimeException $e)
+		{
+			return $str;
+		}
 	}
 }
