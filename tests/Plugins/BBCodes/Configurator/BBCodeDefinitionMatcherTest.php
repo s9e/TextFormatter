@@ -262,12 +262,13 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'URL',
 					'content'    => [['id' => 'TEXT']],
-					'attributes' => [
-						[
-							'name'    => 'url',
-							'content' => [['id' => 'URL', 'options' => [['name' => 'useContent']]]]
-						]
-					]
+					'attributes' => [[
+						'name'    => 'url',
+						'content' => [[
+							'id' => 'URL',
+							'options' => [['name' => 'useContent']]
+						]]
+					]]
 				]
 			],
 			[
