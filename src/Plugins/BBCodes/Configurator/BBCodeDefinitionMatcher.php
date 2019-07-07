@@ -30,7 +30,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
 			],
-			'RuleValue'            => '((?&False)|(?&True)|(?&CommaSeparatedValues))',
+			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
@@ -159,12 +159,14 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseRuleValue(string $str)
 	{
-		if (preg_match('(^(?:fals|tru)e$)i', $str))
+		try
 		{
-			return (strtolower($str) === true);
+			return $this->recurse($str, 'Literal');
 		}
-
-		return explode(',', $str);
+		catch (RuntimeException $e)
+		{
+			return explode(',', $str);
+		}
 	}
 
 	/**
