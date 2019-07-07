@@ -24,27 +24,29 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
-			'Junk'                 => '[^{]*+',
+			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
-			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
-			'Rule'                 => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
-			],
-			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
-			'TagAttribute'         => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
-			],
-			'TagFilter'            => [
-				'groups' => ['BaseDeclaration'],
-				'order'  => -1,
-				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
-			],
-			'TagOption'            => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
-			],
+			'MixedContent'         => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
+			'BaseDeclaration:Foo' => 'FooX',
+//			'Rule'                 => [
+//				'groups' => ['BaseDeclaration'],
+//				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
+//			],
+//			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
+//			'TagAttribute'         => [
+//				'groups' => ['BaseDeclaration'],
+//				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
+//			],
+//			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
+//			'TagFilter'            => [
+//				'groups' => ['BaseDeclaration'],
+//				'order'  => -1,
+//				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
+//			],
+//			'TagOption'            => [
+//				'groups' => ['BaseDeclaration'],
+//				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
+//			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?(?: ; ((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
 			'TokenOptions'         => '(\\w+)(?:=((?&LiteralOrUnquoted)))?(?:; ((?&TokenOptions)))? ;?',
