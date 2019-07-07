@@ -21,7 +21,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
 			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
@@ -46,14 +46,9 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
-			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?'.
-				' (?:; ((?&TokenOptions))?)? '
-			.'\\}',
+			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOptionRegular'   => [
-				'groups' => ['TokenOption'],
-				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
-			],
+			'TokenOption'          => '(\\w+)(?:=((?&LiteralOrUnquoted)))?',
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
 			'UnquotedString'       => '[^\\s;\\]{}]++'
 		];
@@ -75,8 +70,13 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $str
 	* @return array
 	*/
-	public function parseBBCodeStartTag(string $name, string $declarations = '', string $slash = ''): array
+	public function parseBBCodeStartTag(string $name, string $defaultAttribute = '', string $declarations = '', string $slash = ''): array
 	{
+		if ($defaultAttribute !== '')
+		{
+			$declarations = trim($name . $defaultAttribute . ' ' . $declarations);
+		}
+
 		$definition = [
 			'bbcodeName' => BBCode::normalizeName($name),
 			'content'    => []
@@ -258,7 +258,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $value
 	* @return array
 	*/
-	public function parseTokenOptionRegular(string $name, string $value = ''): array
+	public function parseTokenOption(string $name, string $value = ''): array
 	{
 		$option  = ['name' => $name];
 		if ($value !== '')
