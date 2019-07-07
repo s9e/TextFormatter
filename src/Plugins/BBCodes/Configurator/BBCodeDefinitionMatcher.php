@@ -23,7 +23,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
-			'CommaSeparatedValues' => '(\\w+(?:,\\w+)*)',
+			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
 			'Junk'                 => '.*?',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
