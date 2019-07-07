@@ -265,6 +265,24 @@ class BBCodeDefinitionMatcherTest extends Test
 					'attributes' => []
 				]
 			],
+			[
+				'[X x={TEXT;preFilter=strtolower}]',
+				[
+					'bbcodeName' => 'URL',
+					'content'    => [],
+					'attributes' => [
+					]
+				]
+			],
+			[
+				'[X x={TEXT;filterChain.prepend=str_replace($attrValue, "_", "-")}]',
+				[
+					'bbcodeName' => 'URL',
+					'content'    => [],
+					'attributes' => [
+					]
+				]
+			],
 		];
 	}
 }
