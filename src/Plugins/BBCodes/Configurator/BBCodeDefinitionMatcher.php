@@ -22,35 +22,35 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
-			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
+			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
 			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
 			'MixedContent'         => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
 			'BaseDeclaration:Foo' => 'FooX',
-//			'Rule'                 => [
-//				'groups' => ['BaseDeclaration'],
-//				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
-//			],
-//			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
-//			'TagAttribute'         => [
-//				'groups' => ['BaseDeclaration'],
-//				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
-//			],
-//			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
-//			'TagFilter'            => [
-//				'groups' => ['BaseDeclaration'],
-//				'order'  => -1,
-//				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
-//			],
-//			'TagOption'            => [
-//				'groups' => ['BaseDeclaration'],
-//				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
-//			],
+			'Rule'                 => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
+			],
+			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
+			'TagAttribute'         => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
+			],
+			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
+			'TagFilter'            => [
+				'groups' => ['BaseDeclaration'],
+				'order'  => -1,
+				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
+			],
+			'TagOption'            => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
+			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?(?: ; ((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
 			'TokenOptions'         => '(\\w+)(?:=((?&LiteralOrUnquoted)))?(?:; ((?&TokenOptions)))? ;?',
-			'UnquotedString'       => '[^\\s;\\]{}]+'
+			'UnquotedString'       => '[^\\s;\\]{}]++'
 		];
 	}
 
