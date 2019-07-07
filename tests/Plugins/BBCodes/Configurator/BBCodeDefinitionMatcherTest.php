@@ -100,12 +100,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'options'    => [
-						[
-							'name'  => 'forceLookahead',
-							'value' => true
-						]
-					]
+					'options'    => [['name' => 'forceLookahead', 'value' => true]]
 				]
 			],
 			[
@@ -121,12 +116,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'options'    => [
-						[
-							'name'  => 'foo',
-							'value' => [1, 2]
-						]
-					]
+					'options'    => [['name' => 'foo', 'value' => [1, 2]]]
 				]
 			],
 			[
@@ -134,12 +124,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'options'    => [
-						[
-							'name'  => 'foo',
-							'value' => ']'
-						]
-					]
+					'options'    => [['name' => 'foo', 'value' => ']']]
 				]
 			],
 			[
@@ -147,12 +132,15 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'rules'    => [
-						[
-							'name'  => 'autoClose',
-							'value' => false
-						]
-					]
+					'rules'      => [['name' => 'autoClose', 'value' => false]]
+				]
+			],
+			[
+				'[x #autoClose=True]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'rules'      => [['name' => 'autoClose', 'value' => true]]
 				]
 			],
 			[
@@ -169,14 +157,8 @@ class BBCodeDefinitionMatcherTest extends Test
 					'bbcodeName' => 'X',
 					'content'    => [],
 					'rules'    => [
-						[
-							'name'  => 'closeParent',
-							'value' => 'foo'
-						],
-						[
-							'name'  => 'closeParent',
-							'value' => 'bar'
-						]
+						['name' => 'closeParent', 'value' => 'foo'],
+						['name' => 'closeParent', 'value' => 'bar']
 					]
 				]
 			],
@@ -273,6 +255,14 @@ class BBCodeDefinitionMatcherTest extends Test
 						['mode' => 'append',  'filter' => 'MyFilter::bar()'],
 						['mode' => 'prepend', 'filter' => 'MyFilter::baz'],
 					]
+				]
+			],
+			[
+				'[url={URL;useContent}]{TEXT}[/url]',
+				[
+					'bbcodeName' => 'URL',
+					'content'    => [['id' => 'TEXT']],
+					'attributes' => []
 				]
 			],
 		];
