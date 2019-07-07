@@ -268,19 +268,35 @@ class BBCodeDefinitionMatcherTest extends Test
 			[
 				'[X x={TEXT;preFilter=strtolower}]',
 				[
-					'bbcodeName' => 'URL',
+					'bbcodeName' => 'X',
 					'content'    => [],
-					'attributes' => [
-					]
+					'attributes' => [[
+						'name'    => 'x',
+						'content' => [[
+							'id'      => 'TEXT',
+							'options' => [[
+								'name'  => 'filterChain.prepend',
+								'value' => 'strtolower'
+							]]
+						]]
+					]]
 				]
 			],
 			[
 				'[X x={TEXT;filterChain.prepend=str_replace($attrValue, "_", "-")}]',
 				[
-					'bbcodeName' => 'URL',
+					'bbcodeName' => 'X',
 					'content'    => [],
-					'attributes' => [
-					]
+					'attributes' => [[
+						'name'    => 'x',
+						'content' => [[
+							'id'      => 'TEXT',
+							'options' => [[
+								'name'  => 'filterChain.prepend',
+								'value' => 'str_replace($attrValue, "_", "-")'
+							]]
+						]]
+					]]
 				]
 			],
 		];
