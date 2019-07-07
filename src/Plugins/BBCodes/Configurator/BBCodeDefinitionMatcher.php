@@ -22,33 +22,33 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
-			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
+			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s+((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
-			'Junk'                 => '.*?',
+			'Junk'                 => '[^{]++',
+			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
 			],
 			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
-			'TagAttribute'         => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
-			],
-			'TagFilter'            => [
-				'groups' => ['BaseDeclaration'],
-				'order'  => -1,
-				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
-			],
-			'TagOption'            => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '\\$(\\w+)(?:=((?&UnquotedLiteral)))?'
-			],
-			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&UnquotedLiteral)))?(?: ; ((?&TokenOptions)))?\\}',
+//			'TagAttribute'         => [
+//				'groups' => ['BaseDeclaration'],
+//				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
+//			],
+//			'TagFilter'            => [
+//				'groups' => ['BaseDeclaration'],
+//				'order'  => -1,
+//				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
+//			],
+//			'TagOption'            => [
+//				'groups' => ['BaseDeclaration'],
+//				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
+//			],
+			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?(?: ; ((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOptions'         => '(\\w+)(?:=((?&UnquotedLiteral)))?(?:; ((?&TokenOptions)))? ;?',
-			'UnquotedLiteral'      => '((?&Literal)|(?&UnquotedString))',
-			'UnquotedString'       => '[^\\s;\\]{}]*'
+			'TokenOptions'         => '(\\w+)(?:=((?&LiteralOrUnquoted)))?(?:; ((?&TokenOptions)))? ;?',
+			'UnquotedString'       => '[^\\s;\\]{}]+'
 		];
 	}
 
@@ -105,6 +105,22 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseCommaSeparatedValues(string $str): array
 	{
 		return explode(',', $str);
+	}
+
+	/**
+	* @param  string $str
+	* @return mixed
+	*/
+	public function parseLiteralOrUnquoted(string $str)
+	{
+		try
+		{
+			return $this->recurse($str, 'Literal');
+		}
+		catch (RuntimeException $e)
+		{
+			return $str;
+		}
 	}
 
 	/**
@@ -212,7 +228,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		$option = ['name' => $name];
 		if (isset($value))
 		{
-			$option['value'] = $this->parseUnquotedLiteral($value);
+			$option['value'] = $this->parseLiteralOrUnquoted($value);
 		}
 
 		return ['options' => [$option]];
@@ -234,7 +250,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 		if ($filterValue !== '')
 		{
-			$token['filterValue'] = $this->parseUnquotedLiteral($filterValue);
+			$token['filterValue'] = $this->parseLiteralOrUnquoted($filterValue);
 		}
 		if ($tokenOptions !== '')
 		{
@@ -255,7 +271,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		$option  = ['name' => $name];
 		if ($value !== '')
 		{
-			$option['value'] = $this->parseUnquotedLiteral($value);
+			$option['value'] = $this->parseLiteralOrUnquoted($value);
 		}
 
 		$options = [$option];
@@ -265,21 +281,5 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $options;
-	}
-
-	/**
-	* @param  string $str
-	* @return mixed
-	*/
-	public function parseUnquotedLiteral(string $str)
-	{
-		try
-		{
-			return $this->recurse($str, 'Literal');
-		}
-		catch (RuntimeException $e)
-		{
-			return $str;
-		}
 	}
 }
