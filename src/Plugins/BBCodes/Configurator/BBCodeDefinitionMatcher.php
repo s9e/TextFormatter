@@ -21,24 +21,30 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName)) /?\\]',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
+			'BaseDeclarations'     => '((?&BaseDeclaration)) ((?&BaseDeclarations))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
-			'Junk'                 => '[^{]++',
+			'Junk'                 => '.*?',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
-//			'TagAttribute'         => [
-//				'groups' => ['BaseDeclaration'],
-//				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
-//			],
-//			'TagFilter'            => [
-//				'groups' => ['BaseDeclaration'],
-//				'order'  => -1,
-//				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
-//			],
-//			'TagOption'            => [
-//				'groups' => ['BaseDeclaration'],
-//				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
-//			],
+			'Rule'                 => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
+			],
+			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
+			'TagAttribute'         => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
+			],
+			'TagFilter'            => [
+				'groups' => ['BaseDeclaration'],
+				'order'  => -1,
+				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
+			],
+			'TagOption'            => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
+			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?(?: ; ((?&TokenOptions)))?\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
 			'TokenOptions'         => '(\\w+)(?:=((?&LiteralOrUnquoted)))?(?:; ((?&TokenOptions)))? ;?',
@@ -99,22 +105,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseCommaSeparatedValues(string $str): array
 	{
 		return explode(',', $str);
-	}
-
-	/**
-	* @param  string $str
-	* @return mixed
-	*/
-	public function parseLiteralOrUnquoted(string $str)
-	{
-		try
-		{
-			return $this->recurse($str, 'Literal');
-		}
-		catch (RuntimeException $e)
-		{
-			return $str;
-		}
 	}
 
 	/**
@@ -275,5 +265,21 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $options;
+	}
+
+	/**
+	* @param  string $str
+	* @return mixed
+	*/
+	public function parseLiteralOrUnquoted(string $str)
+	{
+		try
+		{
+			return $this->recurse($str, 'Literal');
+		}
+		catch (RuntimeException $e)
+		{
+			return $str;
+		}
 	}
 }
