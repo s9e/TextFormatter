@@ -47,10 +47,13 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))?'.
-				' ((?:; (?&TokenOption) )*);? '
+				' ;? ((?&TokenOptions))? ;? '
 			.'\\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOption'          => '(\\w+)(?:=((?&LiteralOrUnquoted)))?',
+			'TokenOptionRegular'   => [
+				'groups' => ['TokenOption'],
+				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
+			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
 			'UnquotedString'       => '[^\\s;\\]{}]++'
 		];
@@ -255,7 +258,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $value
 	* @return array
 	*/
-	public function parseTokenOption(string $name, string $value = ''): array
+	public function parseTokenOptionRegular(string $name, string $value = ''): array
 	{
 		$option  = ['name' => $name];
 		if ($value !== '')
