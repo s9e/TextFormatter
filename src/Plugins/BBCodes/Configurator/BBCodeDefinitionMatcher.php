@@ -21,17 +21,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName)) ((?&BaseDeclarations))? /?\\]',
-			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s+((?&BaseDeclarations)))?',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName)) /?\\]',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
 			'Junk'                 => '[^{]++',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
 			'MixedContent'         => '((?&Junk))(?:((?&Token))((?&MixedContent)))?',
-			'Rule'                 => [
-				'groups' => ['BaseDeclaration'],
-				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
-			],
-			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
 //			'TagAttribute'         => [
 //				'groups' => ['BaseDeclaration'],
 //				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
