@@ -47,8 +47,8 @@ class RecursiveParser
 			$restrict = (isset($this->groupMatches[$name])) ? implode('|', $this->groupMatches[$name]) : $name;
 			$regexp   = preg_replace('(\\(\\?<(?!(?:' . $restrict . '|\\w+\\d+)>))', '(*F)$0', $regexp);
 		}
-
-//die(substr($regexp,2344,200));
+file_put_contents('/tmp/regexp.txt', $regexp);
+//die(substr($regexp,1900,200));
 		preg_match($regexp, $str, $m);
 		if (!isset($m['MARK']))
 		{
@@ -171,7 +171,7 @@ class RecursiveParser
 		$i = 0;
 
 		return preg_replace_callback(
-			'((?<!\\\\)\\((?!\\?))',
+			'((?<!\\\\)\\((?![*?]))',
 			function ($m) use (&$i, $name)
 			{
 				return '(?<' . $name . $i++ . '>';
