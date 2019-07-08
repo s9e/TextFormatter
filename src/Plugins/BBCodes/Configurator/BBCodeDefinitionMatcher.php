@@ -22,7 +22,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
-			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
 			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
@@ -48,7 +47,12 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOptionLegacyFilters' => [
+			'TokenOptionFilter' => [
+				'groups' => ['TokenOption'],
+				'order'  => -1,
+				'regexp' => 'filterChain\\.(append|prepend)=((?&FilterCallback))'
+			],
+			'TokenOptionLegacyFilter' => [
 				'groups' => ['TokenOption'],
 				'order'  => -1,
 				'regexp' => '(postFilter|preFilter)=((?&CommaSeparatedValues))'
@@ -58,6 +62,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
+			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'UnquotedString'       => '[^\\s;\\]{}]++'
 		];
 	}
