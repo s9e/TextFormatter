@@ -75,10 +75,6 @@ class RecursiveParser
 		$matchRegexps       = [];
 		$this->groupMatches = [];
 		$this->matchGroups  = [];
-<<<<<<< HEAD
-=======
-		$matchRegexps       = [];
->>>>>>> WiP
 		foreach ($this->getMatchersConfig($matchers) as $matchName => $matchConfig)
 		{
 			foreach ($matchConfig['groups'] as $group)
@@ -101,7 +97,6 @@ class RecursiveParser
 		{
 			$groupRegexps[] = '(?<' . $group . '>(?&' . implode(')|(?&', $names) . '))';
 		}
-		$define .= ')';
 
 		$this->regexp = '((?(DEFINE)' . implode('', $groupRegexps). ')'
 		              . '^(?:' . implode('|', $matchRegexps) . ')$)s';
