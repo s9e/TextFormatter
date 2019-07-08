@@ -45,8 +45,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
-			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
-			'TokenId'              => '[A-Z]+[0-9]*',
+			'Token'                => '\\{([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
 			'TokenOptionFilter'    => [
 				'groups' => ['TokenOption'],
 				'order'  => -1,
