@@ -47,8 +47,7 @@ class RecursiveParser
 			$restrict = (isset($this->groupMatches[$name])) ? implode('|', $this->groupMatches[$name]) : $name;
 			$regexp   = preg_replace('(\\(\\?<(?!(?:' . $restrict . '|\\w+\\d+)>))', '(*F)$0', $regexp);
 		}
-file_put_contents('/tmp/regexp.txt', $regexp);
-//die(substr($regexp,1900,200));
+
 		preg_match($regexp, $str, $m);
 		if (!isset($m['MARK']))
 		{
@@ -76,6 +75,10 @@ file_put_contents('/tmp/regexp.txt', $regexp);
 		$matchRegexps       = [];
 		$this->groupMatches = [];
 		$this->matchGroups  = [];
+<<<<<<< HEAD
+=======
+		$matchRegexps       = [];
+>>>>>>> WiP
 		foreach ($this->getMatchersConfig($matchers) as $matchName => $matchConfig)
 		{
 			foreach ($matchConfig['groups'] as $group)
@@ -98,6 +101,7 @@ file_put_contents('/tmp/regexp.txt', $regexp);
 		{
 			$groupRegexps[] = '(?<' . $group . '>(?&' . implode(')|(?&', $names) . '))';
 		}
+		$define .= ')';
 
 		$this->regexp = '((?(DEFINE)' . implode('', $groupRegexps). ')'
 		              . '^(?:' . implode('|', $matchRegexps) . ')$)s';
