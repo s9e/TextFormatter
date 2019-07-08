@@ -24,7 +24,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
-			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
+			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s\'";\\]}])|(?&UnquotedString))',
 			'MixedContent'         => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
@@ -62,7 +62,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
-			'UnquotedString'       => '[^\\s;\\]{}]++',
+			'UnquotedString'       => '[^\\s;\\]}]++',
 
 			// PCRE1 is sensitive to the order of expressions
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
@@ -127,6 +127,22 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseCommaSeparatedValues(string $str): array
 	{
 		return explode(',', $str);
+	}
+
+	/**
+	* @param  string $str
+	* @return mixed
+	*/
+	public function parseLiteralOrUnquoted(string $str)
+	{
+		try
+		{
+			return $this->recurse($str, 'Literal');
+		}
+		catch (RuntimeException $e)
+		{
+			return $str;
+		}
 	}
 
 	/**
@@ -327,21 +343,5 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $options;
-	}
-
-	/**
-	* @param  string $str
-	* @return mixed
-	*/
-	public function parseLiteralOrUnquoted(string $str)
-	{
-		try
-		{
-			return $this->recurse($str, 'Literal');
-		}
-		catch (RuntimeException $e)
-		{
-			return $str;
-		}
 	}
 }
