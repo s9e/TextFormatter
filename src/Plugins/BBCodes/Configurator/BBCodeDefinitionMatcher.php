@@ -64,7 +64,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
 			'UnquotedString'       => '[^\\s;\\]{}]++',
 
-			// PCRE1 is sensitive to the order of the expressions
+			// PCRE1 is sensitive to the order of expressions
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 		];
 	}

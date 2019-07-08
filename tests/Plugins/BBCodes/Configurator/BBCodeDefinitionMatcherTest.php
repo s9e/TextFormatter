@@ -185,17 +185,13 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'attributes' => [
-						[
-							'name'    => 'foo',
-							'content' => [
-								[
-									'id'          => 'REGEXP',
-									'filterValue' => new Regexp('/foo/', true)
-								]
-							]
-						]
-					]
+					'attributes' => [[
+						'name'    => 'foo',
+						'content' => [[
+							'id'          => 'REGEXP',
+							'filterValue' => new Regexp('/foo/', true)
+						]]
+					]]
 				]
 			],
 			[
@@ -228,15 +224,13 @@ class BBCodeDefinitionMatcherTest extends Test
 					'attributes' => [
 						[
 							'name'    => 'foo',
-							'content' => [
-								[
-									'id'      => 'TEXT1',
-									'options' => [
-										['name' => 'foo', 'value' => 1],
-										['name' => 'bar', 'value' => ['ab', 'cd']]
-									]
+							'content' => [[
+								'id'      => 'TEXT1',
+								'options' => [
+									['name' => 'foo', 'value' => 1           ],
+									['name' => 'bar', 'value' => ['ab', 'cd']]
 								]
-							]
+							]]
 						]
 					]
 				]
@@ -252,8 +246,8 @@ class BBCodeDefinitionMatcherTest extends Test
 					'options'     => [['name' => 'tagName', 'value' => 'FOO']],
 					'filterChain' => [
 						['mode' => 'append',  'filter' => 'MyFilter::foo($tag, 1, 2)'],
-						['mode' => 'append',  'filter' => 'MyFilter::bar()'],
-						['mode' => 'prepend', 'filter' => 'MyFilter::baz'],
+						['mode' => 'append',  'filter' => 'MyFilter::bar()'          ],
+						['mode' => 'prepend', 'filter' => 'MyFilter::baz'            ]
 					]
 				]
 			],
@@ -284,6 +278,23 @@ class BBCodeDefinitionMatcherTest extends Test
 								'name'  => 'filterChain.prepend',
 								'value' => 'strtolower'
 							]]
+						]]
+					]]
+				]
+			],
+			[
+				'[X x={TEXT;postFilter=strtolower,ucwords}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [[
+						'name'    => 'x',
+						'content' => [[
+							'id'      => 'TEXT',
+							'options' => [
+								['name'  => 'filterChain.append', 'value' => 'strtolower'],
+								['name'  => 'filterChain.append', 'value' => 'ucwords'   ]
+							]
 						]]
 					]]
 				]
