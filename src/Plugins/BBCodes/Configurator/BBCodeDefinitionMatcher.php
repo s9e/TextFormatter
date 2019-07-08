@@ -269,9 +269,9 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	}
 
 	/**
-	* @param  string $mode
-	* @param  string $filter
-	* @return array
+	* @param  string $mode   Either 'append' or 'prepend'
+	* @param  string $filter Short-syntax filter, e.g. '#int' or 'strtolower($attrValue)'
+	* @return array          Array of options
 	*/
 	public function parseTokenOptionFilter(string $mode, string $filter): array
 	{
