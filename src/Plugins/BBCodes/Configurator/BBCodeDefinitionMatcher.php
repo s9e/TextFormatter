@@ -18,7 +18,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
+			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
@@ -62,8 +62,10 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
-			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
-			'UnquotedString'       => '[^\\s;\\]{}]++'
+			'UnquotedString'       => '[^\\s;\\]{}]++',
+
+			// PCRE1 is sensitive to the order of the expressions
+			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 		];
 	}
 
@@ -264,6 +266,33 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $token;
+	}
+
+	/**
+	* @param  string $mode
+	* @param  string $filter
+	* @return array
+	*/
+	public function parseTokenOptionFilter(string $mode, string $filter): array
+	{
+		return [['name' => 'filterChain.' . $mode, 'value' => $filter]];
+	}
+
+	/**
+	* @param  string $name
+	* @param  string $values
+	* @return array
+	*/
+	public function parseTokenOptionLegacyFilter(string $name, string $values): array
+	{
+		$name    = ($name === 'preFilter') ? 'filterChain.prepend' : 'filterChain.append';
+		$options = [];
+		foreach (explode(',', $values) as $value)
+		{
+			$options[] = ['name' => $name, 'value' => $value];
+		}
+
+		return $options;
 	}
 
 	/**
