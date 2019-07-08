@@ -316,6 +316,35 @@ class BBCodeDefinitionMatcherTest extends Test
 					]]
 				]
 			],
+			[
+				'[LIST type={HASHMAP=a:lower-alpha,1:decimal,I:upper-roman}]',
+				[
+					'bbcodeName' => 'LIST',
+					'content'    => [],
+					'attributes' => [[
+						'name'    => 'type',
+						'content' => [[
+							'id'          => 'HASHMAP',
+							'filterValue' => 'a:lower-alpha,1:decimal,I:upper-roman'
+						]]
+					]]
+				]
+			],
+			[
+				// Leading digits are interpreted as a literal and the regexp won't backtrack
+				'[LIST type={HASHMAP=1:decimal,a:lower-alpha,I:upper-roman}]',
+				[
+					'bbcodeName' => 'LIST',
+					'content'    => [],
+					'attributes' => [[
+						'name'    => 'type',
+						'content' => [[
+							'id'          => 'HASHMAP',
+							'filterValue' => '1:decimal,a:lower-alpha,I:upper-roman'
+						]]
+					]]
+				]
+			],
 		];
 	}
 }
