@@ -30,7 +30,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
 			],
-			'RuleValue'            => '((?&Literal)|(?&CommaSeparatedValues))',
+			'RuleValue'            => '((?&Literal)(?![^\\s;\\]}])|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
