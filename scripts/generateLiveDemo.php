@@ -38,7 +38,7 @@ $configurator->FancyPants;
 
 $configurator->MediaEmbed->add('youtube');
 $configurator->BBCodes->add('YOUTUBE', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
-$configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="http://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
+$configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="https://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
 $configurator->javascript
 	->setMinifier('ClosureCompilerService')
@@ -78,20 +78,20 @@ ob_start();
 <body>
 	<div style="float:left;width:80%;max-width:800px">
 		<form>
-			<textarea style="width:99%" rows="15">[float=right][youtube]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
+			<textarea style="width:99%" rows="15">[float=right][youtube]https://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
 
 This is a demo of the JavaScript port of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
 
 The following plugins have been enabled:
 
 [list]
-  [*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
+  [*][b]Autolink[/b] --- loose URLs such as https://github.com are automatically turned into links
   [*][b]BBCodes[/b]
   [list=circle]
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
     [*][C][URL][/C], [C:123][C][/C:123], [C][YOUTUBE][/C], [C][FLOAT][/C], and [C][LIST][/C]
-    [*][C][CODE][/C] with real-time syntax highlighting via [url=http://softwaremaniacs.org/soft/highlight/en/]Highlight.js[/url]
+    [*][C][CODE][/C] with real-time syntax highlighting via [url=https://softwaremaniacs.org/soft/highlight/en/]Highlight.js[/url]
 	[code]$who = "world";
 printf("Hello %s\n", $who);[/code]
   [/list]

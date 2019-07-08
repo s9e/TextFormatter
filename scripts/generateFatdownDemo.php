@@ -66,7 +66,7 @@ ob_start();
 			<textarea style="width:99%" rows="15">The Fatdown bundle includes the following plugins:
 
  - **Autoemail** --- email addresses such as example@example.org are automatically turned into links
- - **Autolink** --- URLs such as http://github.com are automatically turned into links
+ - **Autolink** --- URLs such as https://github.com are automatically turned into links
  - **Escaper** --- special characters can be escaped with a backslash like \*this\*
  - **FancyPants** --- some typography is enhanced, e.g. (c) (tm) and "quotes"
  - **HTMLComments** --- you can use HTML comments <!-- like this one -->
@@ -74,8 +74,8 @@ ob_start();
  - **HTMLEntities** --- HTML entities such as &amp;hearts; are decoded
  - **Litedown** --- a Markdown*-like* syntax
  - **MediaEmbed** --- URLs from media sites are automatically embedded:  
-   http://youtu.be/QH2-TGUlwu4
- - **PipeTables** --- ASCII-style tables are supported. See [its syntax](http://s9etextformatter.readthedocs.io/Plugins/PipeTables/Syntax/)
+   https://youtu.be/QH2-TGUlwu4
+ - **PipeTables** --- ASCII-style tables are supported. See [its syntax](https://s9etextformatter.readthedocs.io/Plugins/PipeTables/Syntax/)
 
 ***
 
