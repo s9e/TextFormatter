@@ -22,7 +22,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
-			'CommaSeparatedValues' => '([-\\w]++(?:,[-\\w]++)*)',
+			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '(?:[^{[]|(?!(?&Token))\\{|(?!(?&BBCodeEndTag))\\[)*+',
 			'LiteralOrUnquoted'    => '((?&Literal)|(?&UnquotedString))',
 			'MixedContent'         => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
@@ -47,7 +47,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'Token'                => '\\{((?&TokenId))(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
 			'TokenId'              => '[A-Z]+[0-9]*',
-			'TokenOptionFilter' => [
+			'TokenOptionFilter'    => [
 				'groups' => ['TokenOption'],
 				'order'  => -1,
 				'regexp' => 'filterChain\\.(append|prepend)=((?&FilterCallback))'
