@@ -266,7 +266,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[X x={TEXT;preFilter=strtolower}]',
+				'[X x={TEXT;preFilter=#int}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -276,7 +276,7 @@ class BBCodeDefinitionMatcherTest extends Test
 							'id'      => 'TEXT',
 							'options' => [[
 								'name'  => 'filterChain.prepend',
-								'value' => 'strtolower'
+								'value' => '#int'
 							]]
 						]]
 					]]
