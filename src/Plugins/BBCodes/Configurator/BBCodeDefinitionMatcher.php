@@ -33,7 +33,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'RuleValue'            => '((?&Literal)(?![^\\s;\\]}])|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
+				'regexp' => '([a-zA-Z][-\\w]*)=(?|"((?&MixedContent))"|((?&MixedContent)))'
 			],
 			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
 			'TagFilter'            => [
