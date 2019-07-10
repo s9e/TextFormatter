@@ -171,16 +171,23 @@ class RecursiveParser
 		return preg_replace_callback(
 			// Capture either a single parenthesis or an expression that starts with (?|
 			'((?<!\\\\)\\((?![*?])|\\(\\?\\|(\\\\.|\\((?1)++\\)|[^\\\\\\(\\)])++\\))',
-			function ($m) use (&$i, $name)
+			function ($m) use (&$i, $name, $regexp)
 			{
 				if ($m[0] === '(')
 				{
 					return '(?<' . $name . $i++ . '>';
 				}
-				else
+
+				$expr = '(?';
+				foreach (explode('|', substr($m[0], 3, -1)) as $branch)
 				{
-					return $this->insertCaptureNames($name, $regexp, $i);
+					$old = $i;
+					$expr .= '|' . $this->insertCaptureNames($name, $branch, $i);
+					$i = $old;
 				}
+				$expr .= ')';
+
+				return $expr;
 			},
 			$regexp
 		);
