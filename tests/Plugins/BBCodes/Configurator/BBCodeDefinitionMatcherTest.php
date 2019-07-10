@@ -317,6 +317,23 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
+				'[X x=\'{TEXT;filterChain.prepend=str_replace($attrValue, "_", "-")}\']',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [[
+						'name'    => 'x',
+						'content' => [[
+							'id'      => 'TEXT',
+							'options' => [[
+								'name'  => 'filterChain.prepend',
+								'value' => 'str_replace($attrValue, "_", "-")'
+							]]
+						]]
+					]]
+				]
+			],
+			[
 				'[LIST type={HASHMAP=a:lower-alpha,1:decimal,I:upper-roman}]',
 				[
 					'bbcodeName' => 'LIST',
