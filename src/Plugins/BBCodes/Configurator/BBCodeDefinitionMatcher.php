@@ -327,8 +327,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	}
 
 	/**
-	* @param  string $name
-	* @param  string $value
+	* @param  string $option
 	* @param  string $more
 	* @return array
 	*/
