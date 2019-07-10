@@ -163,17 +163,24 @@ class RecursiveParser
 	*
 	* @param  string $name   Name of the regexp, used to name captures
 	* @param  string $regexp Original regexp
+	* @param  string $i      First capture number
 	* @return string         Modified regexp
 	*/
-	protected function insertCaptureNames(string $name, string $regexp): string
+	protected function insertCaptureNames(string $name, string $regexp, int &$i = 0): string
 	{
-		$i = 0;
-
 		return preg_replace_callback(
-			'((?<!\\\\)\\((?![*?]))',
+			// Capture either a single parenthesis or an expression that starts with (?|
+			'((?<!\\\\)\\((?![*?])|\\(\\?\\|(\\\\.|\\((?1)++\\)|[^\\\\\\(\\)])++\\))',
 			function ($m) use (&$i, $name)
 			{
-				return '(?<' . $name . $i++ . '>';
+				if ($m[0] === '(')
+				{
+					return '(?<' . $name . $i++ . '>';
+				}
+				else
+				{
+					return $this->insertCaptureNames($name, $regexp, $i);
+				}
 			},
 			$regexp
 		);
