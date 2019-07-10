@@ -178,13 +178,13 @@ class RecursiveParser
 					return '(?<' . $name . $i++ . '>';
 				}
 
-				// Save the capture number so we can reset it at the beginning of each branch
+				// Save the capture number so we can reset it at the beginning of each alternative
 				$old  = $i;
 				$expr = '(?';
-				foreach (explode('|', substr($m[0], 3, -1)) as $branch)
+				foreach (explode('|', substr($m[0], 3, -1)) as $alt)
 				{
 					$i     = $old;
-					$expr .= '|' . $this->insertCaptureNames($name, $branch, $i);
+					$expr .= '|' . $this->insertCaptureNames($name, $alt, $i);
 				}
 				$expr .= ')';
 
