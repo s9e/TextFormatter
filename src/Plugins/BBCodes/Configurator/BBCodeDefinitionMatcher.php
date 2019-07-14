@@ -21,7 +21,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&MixedContent))? ((?&BaseDeclarations))? /?\\]',
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
@@ -33,9 +33,9 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'RuleValue'            => '((?&Literal)(?![^\\s;\\]}])|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '([a-zA-Z][-\\w]*)=(?|"((?&MixedContent))"|\'((?&MixedContent))\'|((?&MixedContent)))'
+				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
 			],
-			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
+//			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
 			'TagFilter'            => [
 				'groups' => ['BaseDeclaration'],
 				'order'  => -1,
@@ -214,11 +214,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseTagAttribute(string $name, string $content)
 	{
 		// Remove quotes around the attribute's content
-		if (preg_match('(^(?:"[^"]++"|\'[^\']++\')$)', $content))
+		if (preg_match('(^".*"$|^\'.*\'$)s', $content))
 		{
 			$content = substr($content, 1, -1);
 		}
-
+var_dump($content);
 		return [
 			'attributes' => [
 				[
