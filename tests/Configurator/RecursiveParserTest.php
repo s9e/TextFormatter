@@ -65,6 +65,14 @@ class RecursiveParserTest extends Test
 				],
 				'NotFooBar'
 			],
+			[
+				'X',
+				[
+					'match'  => 'X1',
+					'groups' => ['Z'],
+					'value'  => "parseX1('X')"
+				]
+			],
 		];
 	}
 }
@@ -80,26 +88,14 @@ class TestMatcher implements MatcherInterface
 				'order'    => -1,
 				'callback' => [$this, 'callback']
 			],
-			'NotFooBar' => '(FooBar)'
+			'NotFooBar' => '(FooBar)',
+			'Z:X1'      => '(X)',
+			'Y:X2'      => '(X)',
+			'X:X3'      => '(X)'
 		];
 	}
 
-	public function callback($str)
-	{
-		return $this->format(__METHOD__, func_get_args());
-	}
-
-	public function parseFoo($str)
-	{
-		return $this->format(__METHOD__, func_get_args());
-	}
-
-	public function parseNotFooBar($str)
-	{
-		return $this->format(__METHOD__, func_get_args());
-	}
-
-	protected function format($methodName, $args)
+	public function __call($methodName, $args)
 	{
 		$methodName = str_replace(__CLASS__ . '::', '', $methodName);
 		$args = array_map(

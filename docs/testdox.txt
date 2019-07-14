@@ -1577,6 +1577,7 @@ s9e\TextFormatter\Tests\Configurator\RecursiveParser
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
+ [x] Works with data set #3
 
 s9e\TextFormatter\Tests\Configurator\RecursiveParser\AbstractRecursiveMatcher
  [x] recurse($str) calls $parser->parse($str) and returns its "value" element

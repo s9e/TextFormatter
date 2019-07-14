@@ -144,6 +144,7 @@ class RecursiveParser
 					'groups'   => [],
 					'order'    => 0
 				];
+				$matchConfig['name']   = $matchName;
 				$matchConfig['groups'] = array_unique(array_merge($matchConfig['groups'], $parts));
 				sort($matchConfig['groups']);
 
@@ -185,6 +186,11 @@ class RecursiveParser
 	*/
 	protected static function sortMatcherConfig(array $a, array $b): int
 	{
-		return $a['order'] - $b['order'];
+		if ($a['order'] !== $b['order'])
+		{
+			return $a['order'] - $b['order'];
+		}
+
+		return strcmp($a['name'], $b['name']);
 	}
 }
