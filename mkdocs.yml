@@ -3,7 +3,7 @@ theme: readthedocs
 repo_url: https://github.com/s9e/TextFormatter/
 markdown_extensions:
     - sane_lists
-pages:
+nav:
   - Home: index.md
   - Getting started:
     - Installation: Getting_started/Installation.md
