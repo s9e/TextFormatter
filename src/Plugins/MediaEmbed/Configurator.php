@@ -22,7 +22,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var array List of filters that are explicitly allowed in attribute definitions
 	*/
-	public $allowedFilters = ['stripslashes', 'urldecode'];
+	public $allowedFilters = ['htmlspecialchars_decode', 'stripslashes', 'urldecode'];
 
 	/**
 	* @var bool Whether to create the MEDIA BBCode

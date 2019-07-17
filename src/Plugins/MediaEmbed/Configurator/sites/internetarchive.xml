@@ -4,6 +4,7 @@
 
 	<attributes>
 		<height defaultValue="360" filterChain="#uint"/>
+		<id     filterChain="htmlspecialchars_decode"/>
 		<width  defaultValue="640" filterChain="#uint"/>
 	</attributes>
 
