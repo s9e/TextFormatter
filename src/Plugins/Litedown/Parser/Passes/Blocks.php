@@ -89,7 +89,7 @@ class Blocks extends AbstractPass
 
 				do
 				{
-					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, $quotesCnt - 999);
+					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, -999);
 					$quotes[] = $tag;
 				}
 				while ($quoteDepth > ++$quotesCnt);
