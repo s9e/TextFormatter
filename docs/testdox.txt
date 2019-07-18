@@ -2598,6 +2598,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts zero-width end tags after zero width start tag (end tags get the opportunity to close their parent before a new tag is open)
  [x] sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
+ [x] sortTags() last tiebreaker keeps tags in FIFO order
  [x] Tags occupying the same position are properly sorted regardless of the order they've been added
  [x] addBrTag() sets the tag's priority
  [x] addEndTag() sets the tag's priority

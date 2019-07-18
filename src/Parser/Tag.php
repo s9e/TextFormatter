@@ -66,7 +66,6 @@ class Tag
 
 	/**
 	* @var integer Tiebreaker used when sorting identical tags
-	* @see Parser::compareTags()
 	*/
 	protected $sortPriority;
 

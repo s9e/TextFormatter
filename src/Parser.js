@@ -1909,8 +1909,9 @@ function insertTag(tag)
 	else
 	{
 		// Scan the stack and copy every tag to the next slot until we find the correct index
-		var i = tagStack.length;
-		while (i > 0 && compareTags(tagStack[i - 1], tag) > 0)
+		var i   = tagStack.length,
+			key = getSortKey(tag);
+		while (i > 0 && key > getSortKey(tagStack[i - 1]))
 		{
 			tagStack[i] = tagStack[i - 1];
 			--i;
@@ -1957,69 +1958,82 @@ function addVerbatim(pos, len, prio)
 */
 function sortTags()
 {
-	tagStack.sort(compareTags);
+	var arr  = {},
+		keys = [],
+		i    = tagStack.length;
+	while (--i >= 0)
+	{
+		var tag = tagStack[i],
+			key = getSortKey(tag, i);
+		keys.push(key);
+		arr[key] = tag;
+	}
+	keys.sort();
+
+	i = keys.length;
+	tagStack = [];
+	while (--i >= 0)
+	{
+		tagStack.push(arr[keys[i]]);
+	}
+
 	tagStackIsSorted = true;
 }
 
 /**
-* sortTags() callback
+* Generate a key for given tag that can be used to compare its position using lexical comparisons
 *
-* Tags are stored as a stack, in LIFO order. We sort tags by position _descending_ so that they
-* are processed in the order they appear in the text.
+* Tags are sorted by position first, then by priority, then by whether they consume any text,
+* then by length, and finally in order of their creation.
 *
-* @param  {!Tag}    a First tag to compare
-* @param  {!Tag}    b Second tag to compare
-* @return {!number}
+* The stack's array is in reverse order. Therefore, tags that appear at the start of the text
+* are at the end of the array.
+*
+* @param  {!Tag}   tag
+* @param  {number} tagIndex
+* @return {string}
 */
-function compareTags(a, b)
+function getSortKey(tag, tagIndex)
 {
-	var aPos = a.getPos(),
-		bPos = b.getPos();
-
-	// First we order by pos descending
-	if (aPos !== bPos)
+	// Ensure that negative values are sorted correctly by flagging them and making them positive
+	var prioFlag = (tag.getSortPriority() >= 0),
+		prio     = tag.getSortPriority();
+	if (!prioFlag)
 	{
-		return bPos - aPos;
+		prio += (1 << 30);
 	}
 
-	// If the tags start at the same position, we'll use their sortPriority if applicable. Tags
-	// with a lower value get sorted last, which means they'll be processed first. IOW, -10 is
-	// processed before 10
-	if (a.getSortPriority() !== b.getSortPriority())
+	// Sort 0-width tags separately from the rest
+	var lenFlag = (tag.getLen() > 0),
+		lenOrder;
+	if (lenFlag)
 	{
-		return b.getSortPriority() - a.getSortPriority();
+		// Inverse their length so that longest matches are processed first
+		lenOrder = textLen - tag.getLen();
+	}
+	else
+	{
+		// Sort self-closing tags in-between start tags and end tags to keep them outside of tag
+		// pairs
+		var order = {};
+		order[Tag.END_TAG]          = 0;
+		order[Tag.SELF_CLOSING_TAG] = 1;
+		order[Tag.START_TAG]        = 2;
+		lenOrder = order[tag.getType()];
 	}
 
-	// If the tags start at the same position and have the same priority, we'll sort them
-	// according to their length, with special considerations for  zero-width tags
-	var aLen = a.getLen(),
-		bLen = b.getLen();
+	return hex32(tag.getPos()) + (+prioFlag) + hex32(prio) + (+lenFlag) + hex32(lenOrder) + hex32(tagIndex || 0);
+}
 
-	if (!aLen || !bLen)
-	{
-		// Zero-width end tags are ordered after zero-width start tags so that a pair that ends
-		// with a zero-width tag has the opportunity to be closed before another pair starts
-		// with a zero-width tag. For example, the pairs that would enclose each of the letters
-		// in the string "XY". Self-closing tags are ordered between end tags and start tags in
-		// an attempt to keep them out of tag pairs
-		if (!aLen && !bLen)
-		{
-			var order = {};
-			order[Tag.END_TAG]          = 0;
-			order[Tag.SELF_CLOSING_TAG] = 1;
-			order[Tag.START_TAG]        = 2;
+/**
+* Format given number to a 32 bit hex value
+*
+* @param  {number} number
+* @return {string}
+*/
+function hex32(number)
+{
+	var hex = number.toString(16);
 
-			return order[b.getType()] - order[a.getType()];
-		}
-
-		// Here, we know that only one of a or b is a zero-width tags. Zero-width tags are
-		// ordered after wider tags so that they have a chance to be processed before the next
-		// character is consumed, which would force them to be skipped
-		return (aLen) ? -1 : 1;
-	}
-
-	// Here we know that both tags start at the same position and have a length greater than 0.
-	// We sort tags by length ascending, so that the longest matches are processed first. If
-	// their length is identical, the order is undefined as PHP's sort isn't stable
-	return aLen - bLen;
+	return "        ".substr(hex.length) + hex;
 }

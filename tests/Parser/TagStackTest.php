@@ -421,6 +421,26 @@ class TagStackTest extends Test
 	}
 
 	/**
+	* @testdox sortTags() last tiebreaker keeps tags in FIFO order
+	*/
+	public function testSortTagsFifo()
+	{
+		$dummyStack = new DummyStack;
+
+		$t1 = $dummyStack->addStartTag('X', 0, 0);
+		$t2 = $dummyStack->addStartTag('Y', 0, 0);
+		$t3 = $dummyStack->addStartTag('Z', 0, 0);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			// The first created tag ends up at the end of the array, which is the top of the stack
+			[$t3, $t2, $t1],
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
 	* @testdox Tags occupying the same position are properly sorted regardless of the order they've been added
 	*/
 	public function testTagsAtSamePosAreSorted()
