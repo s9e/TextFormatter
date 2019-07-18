@@ -13,10 +13,7 @@ function Tag(type, name, pos, len, priority)
 	this.name = name;
 	this.pos  = +pos;
 	this.len  = +len;
-	if (typeof priority !== 'undefined')
-	{
-		this.sortPriority = +priority;
-	}
+	this.sortPriority = +priority || 0;
 
 	this.attributes = {};
 	this.cascade    = [];
@@ -181,16 +178,6 @@ Tag.prototype.removeFlags = function(flags)
 Tag.prototype.setFlags = function(flags)
 {
 	this.flags = flags;
-}
-
-/**
-* Set this tag's tiebreaker
-*
-* @param  {!number} sortPriority
-*/
-Tag.prototype.setSortPriority = function(sortPriority)
-{
-	this.sortPriority = sortPriority;
 }
 
 //==========================================================================
