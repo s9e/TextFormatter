@@ -49,6 +49,11 @@ then
 
 elif [[ -n `git diff --cached --name-only -b docs` ]]
 then
+	if [[ -n `git diff --cached --name-only -b docs/Plugins/Litedown/Syntax.md` ]]
+	then
+		./scripts/patchLitedownSyntax.php
+	fi
+
 	./scripts/patchDocs.php
 	git add "docs"
 fi
