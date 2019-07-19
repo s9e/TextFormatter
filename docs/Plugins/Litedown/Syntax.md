@@ -236,7 +236,7 @@ x^2^
 x^(n - 1)
 x^(n^2)
 x^(n^(2))
-H~2~0
+H~2~O
 ```
 ```html
 <p>x<sup>2</sup>
@@ -244,7 +244,7 @@ x<sup>2</sup>
 x<sup>n - 1</sup>
 x<sup>n<sup>2</sup></sup>
 x<sup>n<sup>2</sup></sup>
-H<sub>2</sub>0</p>
+H<sub>2</sub>O</p>
 ```
 
 ### Inline code
