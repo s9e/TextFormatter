@@ -244,7 +244,7 @@ function preview(text, target)
 			oldCnt        = oldAttributes.length,
 			newCnt        = newAttributes.length,
 			i             = oldCnt,
-			ignoreAttrs   = ' ' + oldAttributes['data-s9e-livepreview-ignore-attrs'] + ' ';
+			ignoreAttrs   = ' ' + oldEl['getAttribute']('data-s9e-livepreview-ignore-attrs') + ' ';
 
 		while (--i >= 0)
 		{
