@@ -107,6 +107,38 @@ class ForcedLineBreaksTest extends AbstractTest
 					'<p>bar</p>  </r>'
 				]
 			],
+			[
+				[
+					'forced  ',
+					'linebreak'
+				],
+				[
+					'<t><p>forced  <br/>',
+					'linebreak</p></t>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			],
+			[
+				[
+					'forced  ',
+					'',
+					'linebreak'
+				],
+				[
+					'<t><p>forced</p>  ',
+					'',
+					'<p>linebreak</p></t>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->rootRules->enableAutoLineBreaks();
+				}
+			],
 		]);
 	}
 

@@ -4784,6 +4784,8 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\ForcedLineBreaks
  [x] Parsing tests with data set #5
  [x] Parsing tests with data set #6
  [x] Parsing tests with data set #7
+ [x] Parsing tests with data set #8
+ [x] Parsing tests with data set #9
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -4792,6 +4794,8 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\ForcedLineBreaks
  [x] Parsing tests (JavaScript) with data set #5
  [x] Parsing tests (JavaScript) with data set #6
  [x] Parsing tests (JavaScript) with data set #7
+ [x] Parsing tests (JavaScript) with data set #8
+ [x] Parsing tests (JavaScript) with data set #9
  [x] Parsing+rendering tests with data set #0
 
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Images
