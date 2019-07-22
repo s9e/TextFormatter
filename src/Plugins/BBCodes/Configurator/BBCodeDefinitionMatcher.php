@@ -18,11 +18,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&MixedContent))? ((?&BaseDeclarations))? /?\\]',
+			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
