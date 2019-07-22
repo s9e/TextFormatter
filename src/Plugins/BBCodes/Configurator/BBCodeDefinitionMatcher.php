@@ -19,13 +19,18 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	{
 		return [
 			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
+			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&MixedContent))? ((?&BaseDeclarations))? /?\\]',
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
-			'MixedContent'         => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
+			'MixedContent'         => [
+				// PCRE1 complains if this appears before Token
+				'order'  => 100,
+				'regexp' => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
+			],
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
@@ -62,9 +67,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
 			'UnquotedString'       => '[^\\s;\\]}]++',
-
-			// PCRE1 is sensitive to the order of expressions
-			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
 		];
 	}
 
