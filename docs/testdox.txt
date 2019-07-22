@@ -5973,77 +5973,6 @@ s9e\TextFormatter\Tests\Plugins\Preg\Parser
  [x] Parsing+rendering tests with data set #2
  [x] Parsing+rendering tests with data set #3
 
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
- [x] convertXPath() tests with data set #0
- [x] convertXPath() tests with data set #1
- [x] convertXPath() tests with data set #2
- [x] convertXPath() tests with data set #3
- [x] convertXPath() tests with data set #4
- [x] convertXPath() tests with data set #5
- [x] convertXPath() tests with data set #6
- [x] convertXPath() tests with data set #7
- [x] convertXPath() tests with data set #8
- [x] convertXPath() tests with data set #9
- [x] convertXPath() tests with data set #10
- [x] convertXPath() tests with data set #11
- [x] convertXPath() tests with data set #12
- [x] convertXPath() tests with data set #13
- [x] convertXPath() tests with data set #14
- [x] convertXPath() tests with data set #15
- [x] convertXPath() tests with data set #16
- [x] convertXPath() tests with data set #17
- [x] convertXPath() tests with data set #18
- [x] convertXPath() tests with data set #19
- [x] convertXPath() tests with data set #20
- [x] convertXPath() tests with data set #21
- [x] convertXPath() tests with data set #22
- [x] convertXPath() tests with data set #23
- [x] convertXPath() tests with data set #24
- [x] convertXPath() tests with data set #25
- [x] convertXPath() tests with data set #26
- [x] convertXPath() tests with data set #27
- [x] convertXPath() tests with data set #28
- [x] convertXPath() tests with data set #29
- [x] convertXPath() tests with data set #30
- [x] convertXPath() tests with data set #31
- [x] convertCondition() tests with data set #0
- [x] convertCondition() tests with data set #1
- [x] convertCondition() tests with data set #2
- [x] convertCondition() tests with data set #3
- [x] convertCondition() tests with data set #4
- [x] convertCondition() tests with data set #5
- [x] convertCondition() tests with data set #6
- [x] convertCondition() tests with data set #7
- [x] convertCondition() tests with data set #8
- [x] convertCondition() tests with data set #9
- [x] convertCondition() tests with data set #10
- [x] convertCondition() tests with data set #11
- [x] convertCondition() tests with data set #12
- [x] convertCondition() tests with data set #13
- [x] convertCondition() tests with data set #14
- [x] convertCondition() tests with data set #15
- [x] convertCondition() tests with data set #16
- [x] convertCondition() tests with data set #17
- [x] convertCondition() tests with data set #18
- [x] convertCondition() tests with data set #19
- [x] convertCondition() tests with data set #20
- [x] convertCondition() tests with data set #21
- [x] convertCondition() tests with data set #22
- [x] convertCondition() tests with data set #23
- [x] convertCondition() tests with data set #24
- [x] convertCondition() tests with data set #25
- [x] convertCondition() tests with data set #26
- [x] convertCondition() tests with data set #27
- [x] convertCondition() tests with data set #28
- [x] convertCondition() tests with data set #29
- [x] convertCondition() tests with data set #30
- [x] convertCondition() tests with data set #31
- [x] convertCondition() tests with data set #32
-
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Runner
- [x] convert() throws an exception if the expression cannot be converted
- [x] Convertors can be set in the constructor
-
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions
  [x]  with data set #0
  [x]  with data set #1
@@ -6139,6 +6068,73 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Conve
  [x]  with data set #7
  [x]  with data set #8
  [x]  with data set #9
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
+ [x] convertXPath() tests with data set #0
+ [x] convertXPath() tests with data set #1
+ [x] convertXPath() tests with data set #2
+ [x] convertXPath() tests with data set #3
+ [x] convertXPath() tests with data set #4
+ [x] convertXPath() tests with data set #5
+ [x] convertXPath() tests with data set #6
+ [x] convertXPath() tests with data set #7
+ [x] convertXPath() tests with data set #8
+ [x] convertXPath() tests with data set #9
+ [x] convertXPath() tests with data set #10
+ [x] convertXPath() tests with data set #11
+ [x] convertXPath() tests with data set #12
+ [x] convertXPath() tests with data set #13
+ [x] convertXPath() tests with data set #14
+ [x] convertXPath() tests with data set #15
+ [x] convertXPath() tests with data set #16
+ [x] convertXPath() tests with data set #17
+ [x] convertXPath() tests with data set #18
+ [x] convertXPath() tests with data set #19
+ [x] convertXPath() tests with data set #20
+ [x] convertXPath() tests with data set #21
+ [x] convertXPath() tests with data set #22
+ [x] convertXPath() tests with data set #23
+ [x] convertXPath() tests with data set #24
+ [x] convertXPath() tests with data set #25
+ [x] convertXPath() tests with data set #26
+ [x] convertXPath() tests with data set #27
+ [x] convertXPath() tests with data set #28
+ [x] convertXPath() tests with data set #29
+ [x] convertXPath() tests with data set #30
+ [x] convertXPath() tests with data set #31
+ [x] convertCondition() tests with data set #0
+ [x] convertCondition() tests with data set #1
+ [x] convertCondition() tests with data set #2
+ [x] convertCondition() tests with data set #3
+ [x] convertCondition() tests with data set #4
+ [x] convertCondition() tests with data set #5
+ [x] convertCondition() tests with data set #6
+ [x] convertCondition() tests with data set #7
+ [x] convertCondition() tests with data set #8
+ [x] convertCondition() tests with data set #9
+ [x] convertCondition() tests with data set #10
+ [x] convertCondition() tests with data set #11
+ [x] convertCondition() tests with data set #12
+ [x] convertCondition() tests with data set #13
+ [x] convertCondition() tests with data set #14
+ [x] convertCondition() tests with data set #15
+ [x] convertCondition() tests with data set #16
+ [x] convertCondition() tests with data set #17
+ [x] convertCondition() tests with data set #18
+ [x] convertCondition() tests with data set #19
+ [x] convertCondition() tests with data set #20
+ [x] convertCondition() tests with data set #21
+ [x] convertCondition() tests with data set #22
+ [x] convertCondition() tests with data set #23
+ [x] convertCondition() tests with data set #24
+ [x] convertCondition() tests with data set #25
+ [x] convertCondition() tests with data set #26
+ [x] convertCondition() tests with data set #27
+ [x] convertCondition() tests with data set #28
+ [x] convertCondition() tests with data set #29
+ [x] convertCondition() tests with data set #30
+ [x] convertCondition() tests with data set #31
+ [x] convertCondition() tests with data set #32
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\BranchOutputOptimizer
  [x] optimize() tests with data set #0

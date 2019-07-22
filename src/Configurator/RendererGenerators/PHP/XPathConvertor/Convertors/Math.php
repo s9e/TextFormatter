@@ -12,31 +12,17 @@ class Math extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
-		return [
-			'Addition'       => 'Math',
-			'Division'       => 'Math',
-			'MathSub'        => 'Math',
-			'Multiplication' => 'Math',
-			'Substraction'   => 'Math'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		$number = '((?&Attribute)|(?&MathSub)|(?&Number)|(?&Parameter))';
+		$number = '((?&Attribute)|(?&MathSubExpr)|(?&Number)|(?&Parameter))';
 		$math   = '((?&Math)|' . substr($number, 1);
 
 		return [
-			'Addition'       => $number . ' \\+ ' . $math,
-			'Division'       => $number . ' div ' . $math,
-			'MathSub'        => '\\( ((?&Math)) \\)',
-			'Multiplication' => $number . ' \\* ' . $math,
-			'Substraction'   => $number . ' - ' . $math
+			'Math:Addition'       => $number . ' \\+ ' . $math,
+			'Math:Division'       => $number . ' div ' . $math,
+			'Math:MathSubExpr'    => '\\( ((?&Math)) \\)',
+			'Math:Multiplication' => $number . ' \\* ' . $math,
+			'Math:Substraction'   => $number . ' - ' . $math
 		];
 	}
 
@@ -47,7 +33,7 @@ class Math extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertAddition($expr1, $expr2)
+	public function parseAddition($expr1, $expr2)
 	{
 		return $this->convertOperation($expr1, '+', $expr2);
 	}
@@ -59,7 +45,7 @@ class Math extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertDivision($expr1, $expr2)
+	public function parseDivision($expr1, $expr2)
 	{
 		return $this->convertOperation($expr1, '/', $expr2);
 	}
@@ -70,9 +56,9 @@ class Math extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertMathSub($expr)
+	public function parseMathSubExpr($expr)
 	{
-		return '(' . $this->convert($expr) . ')';
+		return '(' . $this->recurse($expr) . ')';
 	}
 
 	/**
@@ -82,7 +68,7 @@ class Math extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertMultiplication($expr1, $expr2)
+	public function parseMultiplication($expr1, $expr2)
 	{
 		return $this->convertOperation($expr1, '*', $expr2);
 	}
@@ -94,7 +80,7 @@ class Math extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertSubstraction($expr1, $expr2)
+	public function parseSubstraction($expr1, $expr2)
 	{
 		return $this->convertOperation($expr1, '-', $expr2);
 	}
@@ -109,8 +95,8 @@ class Math extends AbstractConvertor
 	*/
 	protected function convertOperation($expr1, $operator, $expr2)
 	{
-		$expr1 = $this->convert($expr1);
-		$expr2 = $this->convert($expr2);
+		$expr1 = $this->recurse($expr1);
+		$expr2 = $this->recurse($expr2);
 
 		// Prevent two consecutive minus signs to be interpreted as a post-decrement operator
 		if ($operator === '-' && $expr2[0] === '-')

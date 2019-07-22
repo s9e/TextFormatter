@@ -12,32 +12,16 @@ class SingleByteStringFunctions extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
 		return [
-			'Contains'      => 'Boolean',
-			'EndsWith'      => 'Boolean',
-			'NotContains'   => 'Boolean',
-			'NotEndsWith'   => 'Boolean',
-			'NotStartsWith' => 'Boolean',
-			'StartsWith'    => 'Boolean',
-			'StringLength'  => 'Number'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		return [
-			'Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
-			'EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
-			'NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
-			'NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
-			'StringLength'  => 'string-length \\( ((?&String))? \\)'
+			'Boolean:Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
+			'Number:StringLength'   => 'string-length \\( ((?&String))? \\)'
 		];
 	}
 
@@ -48,7 +32,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $needle   Expression for the needle part of the call
 	* @return string
 	*/
-	public function convertContains($haystack, $needle)
+	public function parseContains($haystack, $needle)
 	{
 		return $this->generateContains($haystack, $needle, true);
 	}
@@ -60,7 +44,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $substring Expression for the substring part of the call
 	* @return string
 	*/
-	public function convertEndsWith($string, $substring)
+	public function parseEndsWith($string, $substring)
 	{
 		return $this->generateEndsWith($string, $substring, true);
 	}
@@ -72,7 +56,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $needle   Expression for the needle part of the call
 	* @return string
 	*/
-	public function convertNotContains($haystack, $needle)
+	public function parseNotContains($haystack, $needle)
 	{
 		return $this->generateContains($haystack, $needle, false);
 	}
@@ -84,7 +68,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $substring Expression for the substring part of the call
 	* @return string
 	*/
-	public function convertNotEndsWith($string, $substring)
+	public function parseNotEndsWith($string, $substring)
 	{
 		return $this->generateEndsWith($string, $substring, false);
 	}
@@ -96,7 +80,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $substring Expression for the substring part of the call
 	* @return string
 	*/
-	public function convertNotStartsWith($string, $substring)
+	public function parseNotStartsWith($string, $substring)
 	{
 		return $this->generateStartsWith($string, $substring, false);
 	}
@@ -108,7 +92,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $substring Expression for the substring part of the call
 	* @return string
 	*/
-	public function convertStartsWith($string, $substring)
+	public function parseStartsWith($string, $substring)
 	{
 		return $this->generateStartsWith($string, $substring, true);
 	}
@@ -119,9 +103,9 @@ class SingleByteStringFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertStringLength($expr = '.')
+	public function parseStringLength($expr = '.')
 	{
-		return "preg_match_all('(.)su'," . $this->convert($expr) . ')';
+		return "preg_match_all('(.)su'," . $this->recurse($expr) . ')';
 	}
 
 	/**
@@ -136,7 +120,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	{
 		$operator = ($bool) ? '!==' : '===';
 
-		return '(strpos(' . $this->convert($haystack) . ',' . $this->convert($needle) . ')' . $operator . 'false)';
+		return '(strpos(' . $this->recurse($haystack) . ',' . $this->recurse($needle) . ')' . $operator . 'false)';
 	}
 
 	/**
@@ -166,7 +150,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	{
 		$operator = ($bool) ? '===' : '!==';
 
-		return '(substr(' . $this->convert($string) . ',-' . (strlen($substring) - 2) . ')' . $operator . $this->convert($substring) . ')';
+		return '(substr(' . $this->recurse($string) . ',-' . (strlen($substring) - 2) . ')' . $operator . $this->recurse($substring) . ')';
 	}
 
 	/**
@@ -181,7 +165,7 @@ class SingleByteStringFunctions extends AbstractConvertor
 	{
 		$operator = ($bool) ? '' : '!';
 
-		return $operator . "preg_match('('.preg_quote(" . $this->convert($substring) . ").'$)D'," . $this->convert($string) . ')';
+		return $operator . "preg_match('('.preg_quote(" . $this->recurse($substring) . ").'$)D'," . $this->recurse($string) . ')';
 	}
 
 	/**
@@ -196,6 +180,6 @@ class SingleByteStringFunctions extends AbstractConvertor
 	{
 		$operator = ($bool) ? '===' : '!==';
 
-		return '(strpos(' . $this->convert($string) . ',' . $this->convert($substring) . ')' . $operator . '0)';
+		return '(strpos(' . $this->recurse($string) . ',' . $this->recurse($substring) . ')' . $operator . '0)';
 	}
 }

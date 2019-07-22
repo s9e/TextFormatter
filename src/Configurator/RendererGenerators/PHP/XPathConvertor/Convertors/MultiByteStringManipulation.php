@@ -12,20 +12,10 @@ class MultiByteStringManipulation extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
 		return [
-			'Substring' => 'String'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		return [
-			'Substring' => 'substring \\( ((?&String)) , ((?&Attribute)|(?&Math)|(?&Number)) (?:, ((?&Attribute)|(?&Math)|(?&Number)))? \\)'
+			'String:Substring' => 'substring \\( ((?&String)) , ((?&Attribute)|(?&Math)|(?&Number)) (?:, ((?&Attribute)|(?&Math)|(?&Number)))? \\)'
 		];
 	}
 
@@ -37,7 +27,7 @@ class MultiByteStringManipulation extends AbstractConvertor
 	* @param  string $exprLen
 	* @return string
 	*/
-	public function convertSubstring($exprString, $exprPos, $exprLen = null)
+	public function parseSubstring($exprString, $exprPos, $exprLen = null)
 	{
 		// Try to fix negative lengths when possible
 		if (is_numeric($exprPos) && is_numeric($exprLen) && $exprPos < 1)
@@ -46,7 +36,7 @@ class MultiByteStringManipulation extends AbstractConvertor
 		}
 
 		$args   = [];
-		$args[] = $this->convert($exprString);
+		$args[] = $this->recurse($exprString);
 		$args[] = $this->convertPos($exprPos);
 		$args[] = (isset($exprLen)) ? $this->convertLen($exprLen) : 'null';
 		$args[] = "'utf-8'";
@@ -69,7 +59,7 @@ class MultiByteStringManipulation extends AbstractConvertor
 			return (string) max(0, $expr);
 		}
 
-		return 'max(0,' . $this->convert($expr) . ')';
+		return 'max(0,' . $this->recurse($expr) . ')';
 	}
 
 	/**
@@ -85,6 +75,6 @@ class MultiByteStringManipulation extends AbstractConvertor
 			return (string) max(0, $expr - 1);
 		}
 
-		return 'max(0,' . $this->convert($expr) . '-1)';
+		return 'max(0,' . $this->recurse($expr) . '-1)';
 	}
 }

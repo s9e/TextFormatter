@@ -12,32 +12,18 @@ class Comparisons extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
-	{
-		return [
-			'Eq'  => 'Comparison',
-			'Gt'  => 'Comparison',
-			'Gte' => 'Comparison',
-			'Lt'  => 'Comparison',
-			'Lte' => 'Comparison'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
+	public function getMatchers(): array
 	{
 		$nonzero = '(0*[1-9]\\d*)';
 		$number  = '(\\d+)';
 		$scalar  = '((?&Math)|(?&Number)|(?&String))';
 
 		return [
-			'Eq'  => $scalar . ' (!?=) ' .  $scalar,
-			'Gt'  => $scalar . ' > ' . $number,
-			'Gte' => $scalar . ' >= ' . $nonzero,
-			'Lt'  => $number . ' < ' . $scalar,
-			'Lte' => $nonzero . ' <= ' . $scalar
+			'Comparison:Eq'  => $scalar . ' (!?=) ' .  $scalar,
+			'Comparison:Gt'  => $scalar . ' > ' . $number,
+			'Comparison:Gte' => $scalar . ' >= ' . $nonzero,
+			'Comparison:Lt'  => $number . ' < ' . $scalar,
+			'Comparison:Lte' => $nonzero . ' <= ' . $scalar
 		];
 	}
 
@@ -49,15 +35,18 @@ class Comparisons extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertEq($expr1, $operator, $expr2)
+	public function parseEq($expr1, $operator, $expr2)
 	{
+		$parsedExpr1 = $this->parser->parse($expr1);
+		$parsedExpr2 = $this->parser->parse($expr2);
+
 		$operator = $operator[0] . '=';
-		if ($this->runner->getType($expr1) === 'String' && $this->runner->getType($expr2) === 'String')
+		if (in_array('String', $parsedExpr1['groups'], true) && in_array('String', $parsedExpr2['groups'], true))
 		{
 			$operator .= '=';
 		}
 
-		return $this->convertComparison($expr1, $operator, $expr2);
+		return $parsedExpr1['value'] . $operator . $parsedExpr2['value'];
 	}
 
 	/**
@@ -67,7 +56,7 @@ class Comparisons extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertGt($expr1, $expr2)
+	public function parseGt($expr1, $expr2)
 	{
 		return $this->convertComparison($expr1, '>', $expr2);
 	}
@@ -79,7 +68,7 @@ class Comparisons extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertGte($expr1, $expr2)
+	public function parseGte($expr1, $expr2)
 	{
 		return $this->convertComparison($expr1, '>=', $expr2);
 	}
@@ -91,7 +80,7 @@ class Comparisons extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertLt($expr1, $expr2)
+	public function parseLt($expr1, $expr2)
 	{
 		return $this->convertComparison($expr1, '<', $expr2);
 	}
@@ -103,7 +92,7 @@ class Comparisons extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertLte($expr1, $expr2)
+	public function parseLte($expr1, $expr2)
 	{
 		return $this->convertComparison($expr1, '<=', $expr2);
 	}
@@ -118,6 +107,6 @@ class Comparisons extends AbstractConvertor
 	*/
 	protected function convertComparison($expr1, $operator, $expr2)
 	{
-		return $this->convert($expr1) . $operator . $this->convert($expr2);
+		return $this->recurse($expr1) . $operator . $this->recurse($expr2);
 	}
 }

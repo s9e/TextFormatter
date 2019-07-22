@@ -2,7 +2,15 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
 
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Runner;
+use s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Comparisons;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Core;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\MultiByteStringManipulation;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringManipulation;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -19,9 +27,22 @@ abstract class AbstractConvertorTest extends Test
 		{
 			$this->expectException('RuntimeException', 'Cannot convert');
 		}
-		$runner = new Runner;
 
-		$this->assertEquals($expected, $runner->convert($original));
+		$parser     = new RecursiveParser;
+
+		$matchers   = [];
+		$matchers[] = new SingleByteStringFunctions($parser);
+		$matchers[] = new BooleanFunctions($parser);
+		$matchers[] = new BooleanOperators($parser);
+		$matchers[] = new Comparisons($parser);
+		$matchers[] = new Core($parser);
+		$matchers[] = new Math($parser);
+		$matchers[] = new MultiByteStringManipulation($parser);
+		$matchers[] = new SingleByteStringManipulation($parser);
+
+		$parser->setMatchers($matchers);
+
+		$this->assertEquals($expected, $parser->parse($original)['value']);
 	}
 
 	abstract public function getConvertorTests();

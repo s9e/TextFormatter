@@ -12,30 +12,19 @@ class BooleanFunctions extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
 		return [
-			'BooleanParam'  => 'Boolean',
-			'HasAttribute'  => 'Boolean',
-			'HasAttributes' => 'Boolean',
-			'Not'           => 'Boolean',
-			'NotAttribute'  => 'Boolean',
-			'NotParam'      => 'Boolean'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		return [
-			'BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
-			'HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
-			'HasAttributes' => 'boolean \\( @\\* \\)',
-			'Not'           => 'not \\( ((?&Boolean)|(?&Comparison)|(?&And)|(?&Or)) \\)',
-			'NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
-			'NotParam'      => 'not \\( ((?&Parameter)) \\)'
+			'Boolean:BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
+			'Boolean:HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
+			'Boolean:HasAttributes' => 'boolean \\( @\\* \\)',
+			'Boolean:Not'           => [
+				// Only try matching generic not() invocations after special cases fail
+				'order'  => 100,
+				'regexp' => 'not \\( ((?&Boolean)|(?&Comparison)|(?&And)|(?&Or)) \\)'
+			],
+			'Boolean:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
+			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)'
 		];
 	}
 
@@ -45,9 +34,9 @@ class BooleanFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertBooleanParam($expr)
+	public function parseBooleanParam($expr)
 	{
-		return $this->convert($expr) . "!==''";
+		return $this->recurse($expr) . "!==''";
 	}
 
 	/**
@@ -56,7 +45,7 @@ class BooleanFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertHasAttribute($expr)
+	public function parseHasAttribute($expr)
 	{
 		$attrName = $this->getAttributeName($expr);
 
@@ -68,7 +57,7 @@ class BooleanFunctions extends AbstractConvertor
 	*
 	* @return string
 	*/
-	public function convertHasAttributes()
+	public function parseHasAttributes()
 	{
 		return '$node->attributes->length';
 	}
@@ -79,9 +68,9 @@ class BooleanFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertNot($expr)
+	public function parseNot($expr)
 	{
-		return '!(' . $this->convert($expr) . ')';
+		return '!(' . $this->recurse($expr) . ')';
 	}
 
 	/**
@@ -90,7 +79,7 @@ class BooleanFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertNotAttribute($expr)
+	public function parseNotAttribute($expr)
 	{
 		$attrName = $this->getAttributeName($expr);
 
@@ -103,8 +92,8 @@ class BooleanFunctions extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertNotParam($expr)
+	public function parseNotParam($expr)
 	{
-		return $this->convert($expr) . "===''";
+		return $this->recurse($expr) . "===''";
 	}
 }

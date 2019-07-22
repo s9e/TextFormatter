@@ -12,17 +12,7 @@ class BooleanOperators extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
-	{
-		return [
-			'BooleanSub' => 'Boolean'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
+	public function getMatchers(): array
 	{
 		// Create a boolean expression that can start a recursive pattern and a more complete
 		// expression that can be used in the middle of a pattern
@@ -30,9 +20,9 @@ class BooleanOperators extends AbstractConvertor
 		$booleanStarter = '((?&Boolean)|(?&Comparison))';
 
 		return [
-			'And'        => $booleanStarter . ' and ' . $booleanExpr,
-			'BooleanSub' => '\\( ' . $booleanExpr . ' \\)',
-			'Or'         => $booleanStarter . ' or ' . $booleanExpr
+			'And'                    => $booleanStarter . ' and ' . $booleanExpr,
+			'Boolean:BooleanSubExpr' => '\\( ' . $booleanExpr . ' \\)',
+			'Or'                     => $booleanStarter . ' or ' . $booleanExpr
 		];
 	}
 
@@ -43,9 +33,9 @@ class BooleanOperators extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertAnd($expr1, $expr2)
+	public function parseAnd($expr1, $expr2)
 	{
-		return $this->convert($expr1) . '&&' . $this->convert($expr2);
+		return $this->recurse($expr1) . '&&' . $this->recurse($expr2);
 	}
 
 	/**
@@ -54,9 +44,9 @@ class BooleanOperators extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertBooleanSub($expr)
+	public function parseBooleanSubExpr($expr)
 	{
-		return '(' . $this->convert($expr) . ')';
+		return '(' . $this->recurse($expr) . ')';
 	}
 
 	/**
@@ -66,8 +56,8 @@ class BooleanOperators extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertOr($expr1, $expr2)
+	public function parseOr($expr1, $expr2)
 	{
-		return $this->convert($expr1) . '||' . $this->convert($expr2);
+		return $this->recurse($expr1) . '||' . $this->recurse($expr2);
 	}
 }

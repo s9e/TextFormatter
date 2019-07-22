@@ -12,28 +12,14 @@ class SingleByteStringManipulation extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
 		return [
-			'Concat'          => 'String',
-			'NormalizeSpace'  => 'String',
-			'SubstringAfter'  => 'String',
-			'SubstringBefore' => 'String',
-			'Translate'       => 'String'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		return [
-			'Concat'          => 'concat \\( ((?&String)) ((?:, (?&String) )+)?\\)',
-			'NormalizeSpace'  => 'normalize-space \\( ((?&String)) \\)',
-			'SubstringAfter'  => 'substring-after \\( ((?&String)) , ((?&LiteralString)) \\)',
-			'SubstringBefore' => 'substring-before \\( ((?&String)) , ((?&String)) \\)',
-			'Translate'       => 'translate \\( ((?&String)) , ((?&LiteralString)) , ((?&LiteralString)) \\)'
+			'String:Concat'          => 'concat \\( ((?&String)) ((?:, (?&String) )+)?\\)',
+			'String:NormalizeSpace'  => 'normalize-space \\( ((?&String)) \\)',
+			'String:SubstringAfter'  => 'substring-after \\( ((?&String)) , ((?&LiteralString)) \\)',
+			'String:SubstringBefore' => 'substring-before \\( ((?&String)) , ((?&String)) \\)',
+			'String:Translate'       => 'translate \\( ((?&String)) , ((?&LiteralString)) , ((?&LiteralString)) \\)'
 		];
 	}
 
@@ -44,12 +30,12 @@ class SingleByteStringManipulation extends AbstractConvertor
 	* @param  string $expr2 All other comma-separated arguments, starting with a comma
 	* @return string
 	*/
-	public function convertConcat($expr1, $expr2 = null)
+	public function parseConcat($expr1, $expr2 = null)
 	{
-		$php = $this->convert($expr1);
+		$php = $this->recurse($expr1);
 		if (isset($expr2))
 		{
-			$php .= '.' . $this->convert('concat(' . ltrim($expr2, ',') . ')');
+			$php .= '.' . $this->recurse('concat(' . ltrim($expr2, ',') . ')');
 		}
 
 		return $php;
@@ -61,9 +47,9 @@ class SingleByteStringManipulation extends AbstractConvertor
 	* @param  string $expr
 	* @return string
 	*/
-	public function convertNormalizeSpace($expr)
+	public function parseNormalizeSpace($expr)
 	{
-		return "preg_replace('(\\\\s+)',' ',trim(" . $this->convert($expr) . '))';
+		return "preg_replace('(\\\\s+)',' ',trim(" . $this->recurse($expr) . '))';
 	}
 
 	/**
@@ -73,9 +59,9 @@ class SingleByteStringManipulation extends AbstractConvertor
 	* @param  string $str
 	* @return string
 	*/
-	public function convertSubstringAfter($expr, $str)
+	public function parseSubstringAfter($expr, $str)
 	{
-		return 'substr(strstr(' . $this->convert($expr) . ',' . $this->convert($str) . '),' . (strlen($str) - 2) . ')';
+		return 'substr(strstr(' . $this->recurse($expr) . ',' . $this->recurse($str) . '),' . (strlen($str) - 2) . ')';
 	}
 
 	/**
@@ -85,9 +71,9 @@ class SingleByteStringManipulation extends AbstractConvertor
 	* @param  string $expr2
 	* @return string
 	*/
-	public function convertSubstringBefore($expr1, $expr2)
+	public function parseSubstringBefore($expr1, $expr2)
 	{
-		return 'strstr(' . $this->convert($expr1) . ',' . $this->convert($expr2) . ',true)';
+		return 'strstr(' . $this->recurse($expr1) . ',' . $this->recurse($expr2) . ',true)';
 	}
 
 	/**
@@ -98,7 +84,7 @@ class SingleByteStringManipulation extends AbstractConvertor
 	* @param  string $to
 	* @return string
 	*/
-	public function convertTranslate($expr, $from, $to)
+	public function parseTranslate($expr, $from, $to)
 	{
 		$from = $this->splitStringChars($from);
 		$to   = $this->splitStringChars($to);
@@ -109,7 +95,7 @@ class SingleByteStringManipulation extends AbstractConvertor
 		$to   = array_intersect_key($to, $from);
 
 		// Build the arguments list for the strtr() call
-		$args = [$this->convert($expr)];
+		$args = [$this->recurse($expr)];
 		if ($this->isAsciiChars($from) && $this->isAsciiChars($to))
 		{
 			$args[] = $this->serializeAsciiChars($from);

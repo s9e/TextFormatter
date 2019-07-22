@@ -12,32 +12,16 @@ class Core extends AbstractConvertor
 	/**
 	* {@inheritdoc}
 	*/
-	public function getRegexpGroups()
+	public function getMatchers(): array
 	{
 		return [
-			'Attribute'     => 'String',
-			'Dot'           => 'String',
-			'LiteralNumber' => 'Number',
-			'LiteralString' => 'String',
-			'LocalName'     => 'String',
-			'Name'          => 'String',
-			'Parameter'     => 'String'
-		];
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function getRegexps()
-	{
-		return [
-			'Attribute'     => '@ ([-\\w]+)',
-			'Dot'           => '\\.',
-			'LiteralNumber' => '(-?) (\\d++)',
-			'LiteralString' => '("[^"]*"|\'[^\']*\')',
-			'LocalName'     => 'local-name \\(\\)',
-			'Name'          => 'name \\(\\)',
-			'Parameter'     => '\\$(\\w+)'
+			'String:Attribute'     => '@ ([-\\w]+)',
+			'String:Dot'           => '\\.',
+			'Number:LiteralNumber' => '(-?) (\\d++)',
+			'String:LiteralString' => '("[^"]*"|\'[^\']*\')',
+			'String:LocalName'     => 'local-name \\(\\)',
+			'String:Name'          => 'name \\(\\)',
+			'String:Parameter'     => '\\$(\\w+)'
 		];
 	}
 
@@ -47,7 +31,7 @@ class Core extends AbstractConvertor
 	* @param  string $attrName
 	* @return string
 	*/
-	public function convertAttribute($attrName)
+	public function parseAttribute($attrName)
 	{
 		return '$node->getAttribute(' . var_export($attrName, true) . ')';
 	}
@@ -57,7 +41,7 @@ class Core extends AbstractConvertor
 	*
 	* @return string
 	*/
-	public function convertDot()
+	public function parseDot()
 	{
 		return '$node->textContent';
 	}
@@ -69,7 +53,7 @@ class Core extends AbstractConvertor
 	* @param  string $number
 	* @return string
 	*/
-	public function convertLiteralNumber($sign, $number)
+	public function parseLiteralNumber($sign, $number)
 	{
 		return $this->normalizeNumber($sign, $number);
 	}
@@ -80,7 +64,7 @@ class Core extends AbstractConvertor
 	* @param  string $string Literal string, including the quotes
 	* @return string
 	*/
-	public function convertLiteralString($string)
+	public function parseLiteralString($string)
 	{
 		return var_export(substr($string, 1, -1), true);
 	}
@@ -90,7 +74,7 @@ class Core extends AbstractConvertor
 	*
 	* @return string
 	*/
-	public function convertLocalName()
+	public function parseLocalName()
 	{
 		return '$node->localName';
 	}
@@ -100,7 +84,7 @@ class Core extends AbstractConvertor
 	*
 	* @return string
 	*/
-	public function convertName()
+	public function parseName()
 	{
 		return '$node->nodeName';
 	}
@@ -111,7 +95,7 @@ class Core extends AbstractConvertor
 	* @param  string $paramName
 	* @return string
 	*/
-	public function convertParameter($paramName)
+	public function parseParameter($paramName)
 	{
 		return '$this->params[' . var_export($paramName, true) . ']';
 	}

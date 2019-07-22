@@ -8,21 +8,29 @@
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
 use RuntimeException;
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Runner;
+use s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Comparisons;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Core;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\MultiByteStringManipulation;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringManipulation;
 
 class XPathConvertor
 {
 	/**
-	* @var Runner
+	* @var RecursiveParser
 	*/
-	protected $runner;
+	protected $parser;
 
 	/**
 	* Constructor
 	*/
-	public function __construct(Runner $runner = null)
+	public function __construct(RecursiveParser $parser = null)
 	{
-		$this->runner = $runner ?: new Runner;
+		$this->parser = $parser ?: $this->getDefaultParser();
 	}
 
 	/**
@@ -52,7 +60,7 @@ class XPathConvertor
 
 		try
 		{
-			return $this->runner->convert($expr);
+			return $this->parser->parse($expr)['value'];
 		}
 		catch (RuntimeException $e)
 		{
@@ -80,7 +88,7 @@ class XPathConvertor
 		$expr = trim($expr);
 		try
 		{
-			return $this->runner->convert($expr);
+			return $this->parser->parse($expr)['value'];
 		}
 		catch (RuntimeException $e)
 		{
@@ -149,6 +157,32 @@ class XPathConvertor
 		$paramName = ltrim($param, '$');
 
 		return '$this->getParamAsXPath(' . var_export($paramName, true) . ')';
+	}
+
+	/**
+	* Generate and return the a parser with the default set of matchers
+	*
+	* @return RecursiveParser
+	*/
+	protected function getDefaultParser()
+	{
+		$parser     = new RecursiveParser;
+		$matchers   = [];
+		$matchers[] = new SingleByteStringFunctions($parser);
+		$matchers[] = new BooleanFunctions($parser);
+		$matchers[] = new BooleanOperators($parser);
+		$matchers[] = new Comparisons($parser);
+		$matchers[] = new Core($parser);
+		$matchers[] = new Math($parser);
+		if (extension_loaded('mbstring'))
+		{
+			$matchers[] = new MultiByteStringManipulation($parser);
+		}
+		$matchers[] = new SingleByteStringManipulation($parser);
+
+		$parser->setMatchers($matchers);
+
+		return $parser;
 	}
 
 	/**

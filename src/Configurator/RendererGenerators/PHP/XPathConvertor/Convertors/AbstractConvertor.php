@@ -7,51 +7,10 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
 
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Runner;
+use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
 
-abstract class AbstractConvertor
+abstract class AbstractConvertor extends AbstractRecursiveMatcher
 {
-	/**
-	* @var Runner
-	*/
-	protected $runner;
-
-	/**
-	* Constructor
-	*
-	* @param  Runner $runner
-	* @return void
-	*/
-	public function __construct(Runner $runner)
-	{
-		$this->runner = $runner;
-	}
-
-	/**
-	* Return the name of the group each regexp belongs to
-	*
-	* @return array Regexp's name as key, regexp's group as value
-	*/
-	abstract public function getRegexpGroups();
-
-	/**
-	* Return the regexps associated with this convertor
-	*
-	* @return array Regexp's name as key, regexp as value
-	*/
-	abstract public function getRegexps();
-
-	/**
-	* Convert given XPath expression to PHP
-	*
-	* @param  string $expr
-	* @return string
-	*/
-	protected function convert($expr)
-	{
-		return $this->runner->convert($expr);
-	}
-
 	/**
 	* Retrieve the attribute name from an attribute expression
 	*
