@@ -27,9 +27,9 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
 			'MixedContent'         => [
-				// PCRE1 complains if this appears before Token
+				// PCRE1 complains if this is declared before Token
 				'order'  => 100,
-				'regexp' => '((?&ContentLiteral))(?:((?&Token))((?&MixedContent)))?',
+				'regexp' => '([^{[]*?)(?:((?&Token))((?-3)))?',
 			],
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
@@ -38,9 +38,20 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'RuleValue'            => '((?&Literal)(?![^\\s;\\]}])|(?&CommaSeparatedValues))',
 			'TagAttribute'         => [
 				'groups' => ['BaseDeclaration'],
-				'regexp' => '([a-zA-Z][-\\w]*)=((?&MixedContent))'
+				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
 			],
-//			'TagAttributeValue'    => '([^\\s\\]{]*+)(?:((?&Token))((?&TagAttributeValue)))?',
+			'TagAttributeDoubleQuoted' => [
+				'groups' => ['TagAttributeValue'],
+				'regexp' => '"(([^{"]*+)(?:((?&Token))(?-3))?)"'
+			],
+			'TagAttributeSingleQuoted' => [
+				'groups' => ['TagAttributeValue'],
+				'regexp' => "'(([^{']*+)(?:((?&Token))(?-3))?)'"
+			],
+			'TagAttributeUnquoted'     => [
+				'groups' => ['TagAttributeValue'],
+				'regexp' => '(?!["\'])(([^\\s\\]{]*+)(?:((?&Token))(?-3))?)'
+			],
 			'TagFilter'            => [
 				'groups' => ['BaseDeclaration'],
 				'order'  => -1,
@@ -50,7 +61,10 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
-			'Token'                => '\\{([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}',
+			'Token'                => [
+				'order'  => -1,
+				'regexp' => '\\{([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}'
+			],
 			'TokenOptionFilter'    => [
 				'groups' => ['TokenOption'],
 				'order'  => -1,
@@ -213,19 +227,13 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $content
 	* @return array
 	*/
-	public function parseTagAttribute(string $name, string $content)
+	public function parseTagAttribute(string $name, string $content): array
 	{
-		// Remove quotes around the attribute's content
-		if (preg_match('(^".*"$|^\'.*\'$)s', $content))
-		{
-			$content = substr($content, 1, -1);
-		}
-var_dump($content);
 		return [
 			'attributes' => [
 				[
 					'name'    => $name,
-					'content' => $this->recurse($content, 'MixedContent')
+					'content' => $this->recurse($content, 'TagAttributeValue')
 				]
 			]
 		];
