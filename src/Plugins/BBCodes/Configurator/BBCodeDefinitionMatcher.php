@@ -42,15 +42,15 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'TagAttributeDoubleQuoted' => [
 				'groups' => ['TagAttributeValue'],
-				'regexp' => '"(([^{"]*+)(?:((?&Token))(?-3))?)"'
+				'regexp' => '"(([^{"]*+)(?:((?&Token))((?-3)))?)"'
 			],
 			'TagAttributeSingleQuoted' => [
 				'groups' => ['TagAttributeValue'],
-				'regexp' => "'(([^{']*+)(?:((?&Token))(?-3))?)'"
+				'regexp' => "'(([^{']*+)(?:((?&Token))((?-3)))?)'"
 			],
 			'TagAttributeUnquoted'     => [
 				'groups' => ['TagAttributeValue'],
-				'regexp' => '(?!["\'])(([^\\s\\]{]*+)(?:((?&Token))(?-3))?)'
+				'regexp' => '(?!["\'])(([^\\s\\]{]*+)(?:((?&Token))((?-3)))?)'
 			],
 			'TagFilter'            => [
 				'groups' => ['BaseDeclaration'],
@@ -237,6 +237,32 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				]
 			]
 		];
+	}
+
+	/**
+	* @param  string $content
+	* @param  string $literal
+	* @param  string $token
+	* @param  string $remain
+	* @return array
+	*/
+	public function parseTagAttributeValue(string $content, string $literal, string $token = '', string $remain = ''): array
+	{
+		$content = [];
+		if ($literal !== '')
+		{
+			$content[] = $literal;
+		}
+		if ($token !== '')
+		{
+			$content[] = $this->recurse($token, 'Token');
+			if ($remain !== '')
+			{
+				$content = array_merge($content, $this->recurse($remain, 'TagAttributeValue'));
+			}
+		}
+
+		return $content;
 	}
 
 	/**
