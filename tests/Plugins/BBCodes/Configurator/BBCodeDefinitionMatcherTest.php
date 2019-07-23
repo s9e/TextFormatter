@@ -332,7 +332,8 @@ class BBCodeDefinitionMatcherTest extends Test
 				'[x $tagName=FOO
 					$filterChain.append=MyFilter::foo($tag, 1, 2)
 					$filterChain.append=MyFilter::bar()
-					$filterChain.prepend=MyFilter::baz]',
+					$filterChain.prepend=MyFilter::baz
+				]',
 				[
 					'bbcodeName'  => 'X',
 					'content'     => [],
