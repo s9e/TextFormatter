@@ -314,18 +314,16 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
-					'attributes' => [
-						[
-							'name'    => 'foo',
-							'content' => [[
-								'id'      => 'TEXT1',
-								'options' => [
-									['name' => 'foo', 'value' => 1           ],
-									['name' => 'bar', 'value' => ['ab', 'cd']]
-								]
-							]]
-						]
-					]
+					'attributes' => [[
+						'name'    => 'foo',
+						'content' => [[
+							'id'      => 'TEXT1',
+							'options' => [
+								['name' => 'foo', 'value' => 1           ],
+								['name' => 'bar', 'value' => ['ab', 'cd']]
+							]
+						]]
+					]]
 				]
 			],
 			[
@@ -334,9 +332,9 @@ class BBCodeDefinitionMatcherTest extends Test
 					$filterChain.append=MyFilter::bar()
 					$filterChain.prepend=MyFilter::baz]',
 				[
-					'bbcodeName'  => 'X',
-					'content'     => [],
-					'options'     => [
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'options'    => [
 						['name' => 'tagName',             'value' => 'FOO'                      ],
 						['name' => 'filterChain.append',  'value' => 'MyFilter::foo($tag, 1, 2)'],
 						['name' => 'filterChain.append',  'value' => 'MyFilter::bar()'          ],
