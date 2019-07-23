@@ -20,10 +20,10 @@ class BBCodeDefinitionMatcherTest extends Test
 	*/
 	public function testParse($filterString, $expected)
 	{
-		if ($expected instanceof RuntimeException)
+		if ($expected === false)
 		{
-			$this->expectException(get_class($expected));
-			$this->expectExceptionMessage($expected->getMessage());
+			$this->expectException('RuntimeException');
+			$this->expectExceptionMessage('Cannot parse');
 		}
 
 		$parser = new RecursiveParser;
@@ -110,6 +110,27 @@ class BBCodeDefinitionMatcherTest extends Test
 						]
 					]
 				]
+			],
+			[
+				"[x foo='{NUMBER1} {NUMBER2}']",
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [
+								['id' => 'NUMBER1'],
+								' ',
+								['id' => 'NUMBER2']
+							]
+						]
+					]
+				]
+			],
+			[
+				"[x foo={NUMBER1} {NUMBER2}]",
+				false
 			],
 			[
 				'[x foo={TEXT1} bar={TEXT2}]',
