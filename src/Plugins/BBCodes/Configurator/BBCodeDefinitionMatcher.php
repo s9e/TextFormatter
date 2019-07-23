@@ -18,19 +18,19 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&MixedContent)?) ((?&BBCodeEndTag)))?',
+			'BBCodeContent'        => [
+				'callback' => [$this, 'parseContent'],
+				'regexp'   => "([^\\[{]*+(?:(?&Token)(?-1))?)"
+			],
+			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&BBCodeContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
-			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&MixedContent))? ((?&BaseDeclarations))? /?\\]',
+			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
-			'MixedContent'         => [
-				// PCRE1 complains if this is declared before Token
-				'order'  => 100,
-				'regexp' => '([^{[]*?)(?:((?&Token))((?-3)))?',
-			],
+			'MixedContent'         => '([^{]*+)(?:((?&Token))((?&MixedContent)))?',
 			'Rule'                 => [
 				'groups' => ['BaseDeclaration'],
 				'regexp' => '#(\\w+)(?:=((?&RuleValue)))?'
@@ -41,16 +41,19 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '([a-zA-Z][-\\w]*)=((?&TagAttributeValue))'
 			],
 			'TagAttributeDoubleQuoted' => [
-				'groups' => ['TagAttributeValue'],
-				'regexp' => '"(([^{"]*+)(?:((?&Token))((?-3)))?)"'
+				'callback' => [$this, 'parseContent'],
+				'groups'   => ['TagAttributeValue'],
+				'regexp'   => '"([^{"]*+(?:(?&Token)(?-1))?)"'
 			],
 			'TagAttributeSingleQuoted' => [
-				'groups' => ['TagAttributeValue'],
-				'regexp' => "'(([^{']*+)(?:((?&Token))((?-3)))?)'"
+				'callback' => [$this, 'parseContent'],
+				'groups'   => ['TagAttributeValue'],
+				'regexp'   => "'([^{']*+(?:(?&Token)(?-1))?)'"
 			],
 			'TagAttributeUnquoted'     => [
-				'groups' => ['TagAttributeValue'],
-				'regexp' => '(?!["\'])(([^\\s\\]{]*+)(?:((?&Token))((?-3)))?)'
+				'callback' => [$this, 'parseContent'],
+				'groups'   => ['TagAttributeValue'],
+				'regexp'   => '(?!["\'])([^\\s\\]{]*+(?:(?&Token)(?-1))?)'
 			],
 			'TagFilter'            => [
 				'groups' => ['BaseDeclaration'],
@@ -62,6 +65,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'regexp' => '\\$(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'Token'                => [
+				// PCRE1 complains about infinite loops if this isn't defined before MixedContent
 				'order'  => -1,
 				'regexp' => '\\{([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}'
 			],
@@ -91,7 +95,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseBBCodeDefinition(string $start, string $content = ''): array
 	{
 		$definition            = $this->recurse($start, 'BBCodeStartTag');
-		$definition['content'] = ($content === '') ? [] : $this->recurse($content, 'MixedContent');
+		$definition['content'] = ($content === '') ? [] : $this->parseContent($content);
 
 		return $definition;
 	}
@@ -161,31 +165,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	}
 
 	/**
-	* @param  string $junk
-	* @param  string $token
-	* @param  string $more
-	* @return array
-	*/
-	public function parseMixedContent(string $junk, string $token = null, string $more = null): array
-	{
-		$content = [];
-		if ($junk !== '')
-		{
-			$content[] = $junk;
-		}
-		if (isset($token))
-		{
-			$content[] = $this->recurse($token, 'Token');
-			if (isset($more))
-			{
-				$content = array_merge($content, $this->recurse($more, 'MixedContent'));
-			}
-		}
-
-		return $content;
-	}
-
-	/**
 	* @param  string $name
 	* @param  string $value
 	* @return mixed
@@ -240,13 +219,12 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	}
 
 	/**
-	* @param  string $content
 	* @param  string $literal
 	* @param  string $token
 	* @param  string $remain
 	* @return array
 	*/
-	public function parseTagAttributeValue(string $content, string $literal, string $token = '', string $remain = ''): array
+	public function parseMixedContent(string $literal, string $token = '', string $remain = ''): array
 	{
 		$content = [];
 		if ($literal !== '')
@@ -258,11 +236,20 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			$content[] = $this->recurse($token, 'Token');
 			if ($remain !== '')
 			{
-				$content = array_merge($content, $this->recurse($remain, 'TagAttributeValue'));
+				$content = array_merge($content, $this->recurse($remain, 'MixedContent'));
 			}
 		}
 
 		return $content;
+	}
+
+	/**
+	* @param  string $content
+	* @return array
+	*/
+	public function parseContent(string $content): array
+	{
+		return $this->recurse($content, 'MixedContent');
 	}
 
 	/**
