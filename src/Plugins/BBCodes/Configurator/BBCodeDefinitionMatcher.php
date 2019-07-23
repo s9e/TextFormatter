@@ -210,7 +210,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 		catch (RuntimeException $e)
 		{
-			return explode(',', $str);
+			return $this->parseCommaSeparatedValues($str);
 		}
 	}
 
@@ -322,16 +322,16 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 
 	/**
 	* @param  string $name
-	* @param  string $values
+	* @param  string $filters
 	* @return array
 	*/
-	public function parseTokenOptionLegacyFilter(string $name, string $values): array
+	public function parseTokenOptionLegacyFilter(string $name, string $filters): array
 	{
-		$name    = ($name === 'preFilter') ? 'filterChain.prepend' : 'filterChain.append';
+		$mode    = ($name === 'preFilter') ? 'prepend' : 'append';
 		$options = [];
-		foreach (explode(',', $values) as $value)
+		foreach (explode(',', $filters) as $filter)
 		{
-			$options[] = ['name' => $name, 'value' => $value];
+			$options[] = ['name' => 'filterChain.' . $mode, 'value' => $filter];
 		}
 
 		return $options;
