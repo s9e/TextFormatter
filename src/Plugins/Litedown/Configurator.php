@@ -58,6 +58,7 @@ class Configurator extends ConfiguratorBase
 			],
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
+		'ISPOILER' => '<span class="spoiler" data-s9e-livepreview-ignore-attrs="style" onclick="removeAttribute(\'style\')" style="background:#444;color:transparent"><xsl:apply-templates/></span>',
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => [
 			'attributes' => [
@@ -80,11 +81,12 @@ class Configurator extends ConfiguratorBase
 					</xsl:otherwise>
 				</xsl:choose>'
 		],
-		'QUOTE'  => '<blockquote><xsl:apply-templates/></blockquote>',
-		'STRONG' => '<strong><xsl:apply-templates/></strong>',
-		'SUB'    => '<sub><xsl:apply-templates/></sub>',
-		'SUP'    => '<sup><xsl:apply-templates/></sup>',
-		'URL'    => [
+		'QUOTE'   => '<blockquote><xsl:apply-templates/></blockquote>',
+		'SPOILER' => '<details class="spoiler" data-s9e-livepreview-ignore-attrs="open"><xsl:apply-templates/></details>',
+		'STRONG'  => '<strong><xsl:apply-templates/></strong>',
+		'SUB'     => '<sub><xsl:apply-templates/></sub>',
+		'SUP'     => '<sup><xsl:apply-templates/></sup>',
+		'URL'     => [
 			'attributes' => [
 				'title' => ['required'    => false   ],
 				'url'   => ['filterChain' => ['#url']]
@@ -141,6 +143,7 @@ class Configurator extends ConfiguratorBase
 	public function getJSParser()
 	{
 		$js = file_get_contents(__DIR__ . '/Parser/ParsedText.js') . "\n"
+		    . file_get_contents(__DIR__ . '/Parser/Passes/AbstractInlineMarkup.js') . "\n"
 		    . file_get_contents(__DIR__ . '/Parser/Passes/AbstractScript.js') . "\n"
 		    . file_get_contents(__DIR__ . '/Parser/LinkAttributesSetter.js');
 
@@ -149,6 +152,7 @@ class Configurator extends ConfiguratorBase
 			'LinkReferences',
 			'InlineCode',
 			'Images',
+			'InlineSpoiler',
 			'Links',
 			'Strikethrough',
 			'Subscript',

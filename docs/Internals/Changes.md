@@ -1,4 +1,13 @@
+<style>ul{font-size:16px}</style>
+
 See also [API changes](API_changes.md).
+
+## 2.1.0
+
+The [Litedown](../Plugins/Litedown/Synopsis.md) behaviour has changed:
+
+ - [Block spoilers](../Plugins/Litedown/Syntax.md#spoilers) and [inline spoilers](../Plugins/Litedown/Syntax.md#inline-spoilers) have been added.
+ - A forced line break forces the next newline character (U+000A) to be output verbatim. This ensures that only one line break occurs even if automatic line breaks are enabled.
 
 
 ## 2.0.0

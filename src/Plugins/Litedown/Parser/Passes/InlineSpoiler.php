@@ -7,13 +7,14 @@
 */
 namespace s9e\TextFormatter\Plugins\Litedown\Parser\Passes;
 
-class Strikethrough extends AbstractInlineMarkup
+class InlineSpoiler extends AbstractInlineMarkup
 {
 	/**
 	* {@inheritdoc}
 	*/
 	public function parse()
 	{
-		$this->parseInlineMarkup('~~', '/~~[^\\x17]+?~~(?!~)/', 'DEL');
+		$this->parseInlineMarkup('>!', '/>![^\\x17]+?!</',         'ISPOILER');
+		$this->parseInlineMarkup('||', '/\\|\\|[^\\x17]+?\\|\\|/', 'ISPOILER');
 	}
 }

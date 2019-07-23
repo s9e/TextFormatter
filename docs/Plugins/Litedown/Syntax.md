@@ -70,6 +70,25 @@ A series of lines between two markers composed of at least 3 consecutive <code>&
 ```
 ~~~
 
+### Spoilers
+
+Block spoilers are similar to blockquotes and follow the same rules as blockquotes. Block spoilers use `>!` as opening markup instead of `>`. Subsequent lines can be started with `>`.
+
+```md
+>! >! Super spoiler
+>!
+>! Spoiler
+
+No spoiler
+```
+```html
+<details class="spoiler"><details class="spoiler"><p>Super spoiler</p></details>
+
+<p>Spoiler</p></details>
+
+<p>No spoiler</p>
+```
+
 ### Headers
 
 Setext-style
@@ -215,6 +234,19 @@ When a block of three `*` or `_` is found, the order of strong/em depends on the
 <p><strong><em>foo</em> bar</strong></p>
 
 <p><em><strong>foo</strong> bar</em></p>
+```
+
+### Inline spoilers
+
+Any text between `>!` and `!<` or between `||` and `||`. Unlike block spoilers, they can be used anywhere on a line.
+
+```md
+This is a Reddit-style >!spoiler!<.
+This is a Discord-style ||spoiler||.
+```
+```html
+<p>This is a Reddit-style <span class="spoiler" onclick="removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.
+This is a Discord-style <span class="spoiler" onclick="removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.</p>
 ```
 
 ### Strikethrough

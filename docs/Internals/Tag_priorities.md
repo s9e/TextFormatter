@@ -10,6 +10,7 @@ MediaEmbed | MEDIA    |      -10 |
 Litedown   | CODE     |     -999 | Indented code block
 Litedown   | CODE     |       -1 | Fenced code block
 Litedown   | QUOTE    |     -999 |
+Litedown   | SPOILER  |     -999 |
 Litedown   | URL      |        1 | Implicit reference, e.g. `[ref]`
 Litedown   | URL      |       -1 | Reference-style, or inline
 Litedown   | i        |     1000 | Start-of-line markup

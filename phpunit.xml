@@ -267,6 +267,7 @@
 			<file>tests/Plugins/Litedown/Parser/Passes/ForcedLineBreaksTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/ImagesTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/InlineCodeTest.php</file>
+			<file>tests/Plugins/Litedown/Parser/Passes/InlineSpoilerTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/LinksTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/StrikethroughTest.php</file>
 			<file>tests/Plugins/Litedown/Parser/Passes/SubscriptTest.php</file>

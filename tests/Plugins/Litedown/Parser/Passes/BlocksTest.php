@@ -152,6 +152,80 @@ class BlocksTest extends AbstractTest
 					'<QUOTE><QUOTE><i>&gt; &gt; </i><p>bar</p></QUOTE></QUOTE></r>'
 				]
 			],
+			// Block spoilers
+			[
+				'>! ...',
+				'<r><SPOILER><i>&gt;! </i><p>...</p></SPOILER></r>'
+			],
+			[
+				'>! >! ...',
+				'<r><SPOILER><SPOILER><i>&gt;! &gt;! </i><p>...</p></SPOILER></SPOILER></r>'
+			],
+			[
+				[
+					'>! >! foo',
+					'>!',
+					'>! bar',
+					'',
+					'baz'
+				],
+				[
+					'<r><SPOILER><SPOILER><i>&gt;! &gt;! </i><p>foo</p></SPOILER>',
+					'<i>&gt;!</i>',
+					'<i>&gt;! </i><p>bar</p></SPOILER>',
+					'',
+					'<p>baz</p></r>'
+				]
+			],
+			[
+				[
+					'> >! foo',
+					'>',
+					'> bar',
+					'',
+					'baz'
+				],
+				[
+					'<r><QUOTE><SPOILER><i>&gt; &gt;! </i><p>foo</p></SPOILER>',
+					'<i>&gt;</i>',
+					'<i>&gt; </i><p>bar</p></QUOTE>',
+					'',
+					'<p>baz</p></r>'
+				]
+			],
+			[
+				[
+					'> foo',
+					'',
+					'',
+					'>! bar'
+				],
+				[
+					'<r><QUOTE><i>&gt; </i><p>foo</p></QUOTE>',
+					'',
+					'',
+					'<SPOILER><i>&gt;! </i><p>bar</p></SPOILER></r>'
+				]
+			],
+			[
+				'> >! ...',
+				'<r><QUOTE><SPOILER><i>&gt; &gt;! </i><p>...</p></SPOILER></QUOTE></r>'
+			],
+			[
+				'>! >! ... !<',
+				'<r><SPOILER><i>&gt;! </i><p><ISPOILER><s>&gt;!</s> ... <e>!&lt;</e></ISPOILER></p></SPOILER></r>'
+			],
+			[
+				// https://stackoverflow.com/editing-help#link-spoilers
+				[
+					'At the end of episode five, it turns out that',
+					">! he's actually his father."
+				],
+				[
+					'<r><p>At the end of episode five, it turns out that</p>',
+					"<SPOILER><i>&gt;! </i><p>he's actually his father.</p></SPOILER></r>"
+				]
+			],
 			// Indented code blocks
 			[
 				[
@@ -954,6 +1028,16 @@ class BlocksTest extends AbstractTest
 					'<LI><s>2. </s>second</LI></LIST></r>'
 				]
 			],
+			[
+				[
+					'>! foo',
+					'>! ---'
+				],
+				[
+					'<r><SPOILER><i>&gt;! </i><H2>foo<e>',
+					'&gt;! ---</e></H2></SPOILER></r>'
+				]
+			],
 			// Horizontal rules
 			[
 				[
@@ -1134,6 +1218,18 @@ class BlocksTest extends AbstractTest
 					'<r><QUOTE><i>&gt; </i><CODE><s>```</s><i>',
 					'&gt; </i>code<i>',
 					'&gt; </i><e>```</e></CODE></QUOTE></r>'
+				]
+			],
+			[
+				[
+					'>! ```',
+					'>! code',
+					'>! ```'
+				],
+				[
+					'<r><SPOILER><i>&gt;! </i><CODE><s>```</s><i>',
+					'&gt;! </i>code<i>',
+					'&gt;! </i><e>```</e></CODE></SPOILER></r>'
 				]
 			],
 			[

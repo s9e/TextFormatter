@@ -4572,6 +4572,16 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks
  [x] Parsing tests with data set #101
  [x] Parsing tests with data set #102
  [x] Parsing tests with data set #103
+ [x] Parsing tests with data set #104
+ [x] Parsing tests with data set #105
+ [x] Parsing tests with data set #106
+ [x] Parsing tests with data set #107
+ [x] Parsing tests with data set #108
+ [x] Parsing tests with data set #109
+ [x] Parsing tests with data set #110
+ [x] Parsing tests with data set #111
+ [x] Parsing tests with data set #112
+ [x] Parsing tests with data set #113
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -4676,6 +4686,16 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks
  [x] Parsing tests (JavaScript) with data set #101
  [x] Parsing tests (JavaScript) with data set #102
  [x] Parsing tests (JavaScript) with data set #103
+ [x] Parsing tests (JavaScript) with data set #104
+ [x] Parsing tests (JavaScript) with data set #105
+ [x] Parsing tests (JavaScript) with data set #106
+ [x] Parsing tests (JavaScript) with data set #107
+ [x] Parsing tests (JavaScript) with data set #108
+ [x] Parsing tests (JavaScript) with data set #109
+ [x] Parsing tests (JavaScript) with data set #110
+ [x] Parsing tests (JavaScript) with data set #111
+ [x] Parsing tests (JavaScript) with data set #112
+ [x] Parsing tests (JavaScript) with data set #113
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -4900,6 +4920,23 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\InlineCode
  [x] Parsing tests (JavaScript) with data set #22
  [x] Parsing tests (JavaScript) with data set #23
  [x] Parsing tests (JavaScript) with data set #24
+ [x] Parsing+rendering tests with data set #0
+
+s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\InlineSpoiler
+ [x] Parsing tests with data set #0
+ [x] Parsing tests with data set #1
+ [x] Parsing tests with data set #2
+ [x] Parsing tests with data set #3
+ [x] Parsing tests with data set #4
+ [x] Parsing tests with data set #5
+ [x] Parsing tests with data set #6
+ [x] Parsing tests (JavaScript) with data set #0
+ [x] Parsing tests (JavaScript) with data set #1
+ [x] Parsing tests (JavaScript) with data set #2
+ [x] Parsing tests (JavaScript) with data set #3
+ [x] Parsing tests (JavaScript) with data set #4
+ [x] Parsing tests (JavaScript) with data set #5
+ [x] Parsing tests (JavaScript) with data set #6
  [x] Parsing+rendering tests with data set #0
 
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links
@@ -7323,6 +7360,7 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests (Quick enabled) with data set #11
  [x] Rendering tests (Quick enabled) with data set #12
  [x] Rendering tests (Quick enabled) with data set #13
+ [x] Rendering tests (Quick enabled) with data set #14
  [x] Rendering tests (Quick disabled) with data set #0
  [x] Rendering tests (Quick disabled) with data set #1
  [x] Rendering tests (Quick disabled) with data set #2
@@ -7337,6 +7375,7 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] Rendering tests (Quick disabled) with data set #11
  [x] Rendering tests (Quick disabled) with data set #12
  [x] Rendering tests (Quick disabled) with data set #13
+ [x] Rendering tests (Quick disabled) with data set #14
 
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
