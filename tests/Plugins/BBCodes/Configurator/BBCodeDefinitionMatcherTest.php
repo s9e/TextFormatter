@@ -133,6 +133,45 @@ class BBCodeDefinitionMatcherTest extends Test
 				false
 			],
 			[
+				'[x foo={NUMBER1},{NUMBER2}]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [],
+					'attributes' => [
+						[
+							'name'    => 'foo',
+							'content' => [
+								['id' => 'NUMBER1'],
+								',',
+								['id' => 'NUMBER2']
+							]
+						]
+					]
+				]
+			],
+			[
+				'[x]{NUMBER1},{NUMBER2}[/x]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [
+						['id' => 'NUMBER1'],
+						',',
+						['id' => 'NUMBER2']
+					]
+				]
+			],
+			[
+				'[x] {NUMBER1} {NUMBER2} [/x]',
+				[
+					'bbcodeName' => 'X',
+					'content'    => [
+						['id' => 'NUMBER1'],
+						' ',
+						['id' => 'NUMBER2']
+					]
+				]
+			],
+			[
 				'[x foo={TEXT1} bar={TEXT2}]',
 				[
 					'bbcodeName' => 'X',

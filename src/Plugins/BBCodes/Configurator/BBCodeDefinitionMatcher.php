@@ -18,10 +18,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function getMatchers(): array
 	{
 		return [
-			'BBCodeContent'        => [
-				'callback' => [$this, 'parseContent'],
-				'regexp'   => "([^\\[{]*+(?:(?&Token)(?-1))?)"
-			],
+			'BBCodeContent'        => '([^\\[{]*+(?:(?&Token)(?-1))?)',
 			'BBCodeDefinition'     => '((?&BBCodeStartTag)) (?:((?&BBCodeContent)?) ((?&BBCodeEndTag)))?',
 			'BBCodeEndTag'         => '\\[/((?&BBCodeName))\\]',
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
@@ -57,7 +54,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'TagFilter'            => [
 				'groups' => ['BaseDeclaration'],
-				'order'  => -1,
 				'regexp' => '\\$filterChain\\.(append|prepend)=((?&FilterCallback))'
 			],
 			'TagOption'            => [
@@ -71,21 +67,29 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			],
 			'TokenOptionFilter'    => [
 				'groups' => ['TokenOption'],
-				'order'  => -1,
 				'regexp' => 'filterChain\\.(append|prepend)=((?&FilterCallback))'
 			],
 			'TokenOptionLegacyFilter' => [
 				'groups' => ['TokenOption'],
-				'order'  => -1,
 				'regexp' => '(postFilter|preFilter)=((?&CommaSeparatedValues))'
 			],
 			'TokenOptionLiteral'   => [
 				'groups' => ['TokenOption'],
+				'order'  => 100,
 				'regexp' => '(\\w+)(?:=((?&LiteralOrUnquoted)))?'
 			],
 			'TokenOptions'         => '((?&TokenOption)) ((?:; (?&TokenOption) )*);?',
 			'UnquotedString'       => '[^\\s;\\]}]++',
 		];
+	}
+
+	/**
+	* @param  string $content
+	* @return array
+	*/
+	public function parseBBCodeContent(string $content): array
+	{
+		return $this->parseContent(trim($content));
 	}
 
 	/**
@@ -95,7 +99,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseBBCodeDefinition(string $start, string $content = ''): array
 	{
 		$definition            = $this->recurse($start, 'BBCodeStartTag');
-		$definition['content'] = ($content === '') ? [] : $this->parseContent($content);
+		$definition['content'] = $this->parseBBCodeContent($content);
 
 		return $definition;
 	}
@@ -146,6 +150,15 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	public function parseCommaSeparatedValues(string $str): array
 	{
 		return explode(',', $str);
+	}
+
+	/**
+	* @param  string $content
+	* @return array
+	*/
+	public function parseContent(string $content): array
+	{
+		return $this->recurse($content, 'MixedContent');
 	}
 
 	/**
@@ -241,15 +254,6 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 		}
 
 		return $content;
-	}
-
-	/**
-	* @param  string $content
-	* @return array
-	*/
-	public function parseContent(string $content): array
-	{
-		return $this->recurse($content, 'MixedContent');
 	}
 
 	/**
