@@ -263,7 +263,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseTagFilter(string $mode, string $filter): array
 	{
-		return ['filterChain' => [['mode' => $mode, 'filter' => $filter]]];
+		return ['options' => [['name' => 'filterChain.' . $mode, 'value' => $filter]]];
 	}
 
 	/**
