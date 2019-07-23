@@ -336,11 +336,11 @@ class BBCodeDefinitionMatcherTest extends Test
 				[
 					'bbcodeName'  => 'X',
 					'content'     => [],
-					'options'     => [['name' => 'tagName', 'value' => 'FOO']],
-					'filterChain' => [
-						['mode' => 'append',  'filter' => 'MyFilter::foo($tag, 1, 2)'],
-						['mode' => 'append',  'filter' => 'MyFilter::bar()'          ],
-						['mode' => 'prepend', 'filter' => 'MyFilter::baz'            ]
+					'options'     => [
+						['name' => 'tagName',             'value' => 'FOO'                      ],
+						['name' => 'filterChain.append',  'value' => 'MyFilter::foo($tag, 1, 2)'],
+						['name' => 'filterChain.append',  'value' => 'MyFilter::bar()'          ],
+						['name' => 'filterChain.prepend', 'value' => 'MyFilter::baz'            ]
 					]
 				]
 			],
@@ -367,10 +367,9 @@ class BBCodeDefinitionMatcherTest extends Test
 						'name'    => 'x',
 						'content' => [[
 							'id'      => 'TEXT',
-							'options' => [[
-								'name'  => 'filterChain.prepend',
-								'value' => '#int'
-							]]
+							'options' => [
+								['name' => 'filterChain.prepend', 'value' => '#int']
+							]
 						]]
 					]]
 				]
