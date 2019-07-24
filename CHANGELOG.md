@@ -1,3 +1,51 @@
+2.1.0 (2019-07-24)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](http://s9etextformatter.readthedocs.io/Internals/API_changes/#210) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/9bd8b56ebbb9a93eb99c05141e31fded4149de0e...3da711fed8f9d7662b1ecd7e34ca9551c51b1f2b)
+
+### Added
+
+ - `aed44ffd6` Added FilterHelper and short syntax
+ - `c8e3025c5` Added RecursiveParser, to be used internally
+ - `357c9c773` DisallowUnsafeDynamicURL: added support for xsl:choose statements
+ - `3da711fed` Litedown: added support for block spoilers and inline spoilers
+
+### Removed
+
+ - `a59c76606` MediaEmbed: removed defunct site Healthguru
+ - `c7a59a846` MediaEmbed: removed defunct site LiveCap
+ - `8d4310813` MediaEmbed: removed defunct site Yahoo Screen
+ - `6f7aa1ab2` MediaEmbed: removed discontinued site HumorTV
+
+### Fixed
+
+ - `1b79cd300` Fixed default sortPriority value in Tag.js
+ - `8d6c6327b` Fixed handling of ignored attributes in live preview
+
+### Changed
+
+ - `3c63ecc4a` BBCode: properly reject colons in BBCode names during configuration
+ - `531c0e963` FilterSyntaxMatcher: renamed ArrayKey, ArrayValue to Scalar, Literal
+ - `13cfdfa2e` Litedown: set all blockquote tags to the same priority
+ - `27f70904e` Litedown: skip the next auto line break when a forced line break is used
+ - `42d410db1` MediaEmbed: updated BBC News
+ - `903568b8a` MediaEmbed: updated Bleacher Report
+ - `81239be11` MediaEmbed: updated CNBC
+ - `f2d0b1cb1` MediaEmbed: updated Internet Archive
+ - `69d0bfeb4` MediaEmbed: updated MRCTV
+ - `1a78a1e62` MediaEmbed: updated MSNBC
+ - `58874c6f0` MediaEmbed: updated İzlesene
+ - `872421b92` OptimizeChoose: switch the logic of when/otherwise if it eliminates a branch
+ - `34b2c5369` Parser: do not needlessly fix self-closing tags with an autoClose rule
+ - `f7eb4688d` Parser: improved the tag sorting algorithm
+ - `9641a2721` RecursiveParser: use the match name as a tiebreaker when sorting
+ - `7cd28aa6a` XPathConvertor: simplified tokenizeXPathForExport()
+ - `a3e52ece8` XPathConvertor: updated to use RecursiveParser
+ - `d43da72ea` XPathConvertor: use a PCRE MARK to identify the match
+
+
 2.0.1 (2019-06-06)
 ==================
 
