@@ -1,4 +1,4 @@
-<style>.main ul { font-size: 16px }</style>
+<style>.rst-content ul { font-size: 16px }</style>
 
 See also [general changes](Changes.md).
 
