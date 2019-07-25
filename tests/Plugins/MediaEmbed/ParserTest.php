@@ -893,8 +893,8 @@ class ParserTest extends Test
 				'assertRegexp'
 			],
 			[
-				'http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey',
-				'<r><LIBSYN id="3521244">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
+				'http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack',
+				'<r><LIBSYN id="8994194">http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</LIBSYN></r>',
 				[],
 				function ($configurator)
 				{
