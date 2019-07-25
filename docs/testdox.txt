@@ -5067,6 +5067,9 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Subscript
  [x] Parsing tests with data set #7
  [x] Parsing tests with data set #8
  [x] Parsing tests with data set #9
+ [x] Parsing tests with data set #10
+ [x] Parsing tests with data set #11
+ [x] Parsing tests with data set #12
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -5077,6 +5080,9 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Subscript
  [x] Parsing tests (JavaScript) with data set #7
  [x] Parsing tests (JavaScript) with data set #8
  [x] Parsing tests (JavaScript) with data set #9
+ [x] Parsing tests (JavaScript) with data set #10
+ [x] Parsing tests (JavaScript) with data set #11
+ [x] Parsing tests (JavaScript) with data set #12
  [x] Parsing+rendering tests with data set #0
 
 s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
@@ -5089,6 +5095,9 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
  [x] Parsing tests with data set #6
  [x] Parsing tests with data set #7
  [x] Parsing tests with data set #8
+ [x] Parsing tests with data set #9
+ [x] Parsing tests with data set #10
+ [x] Parsing tests with data set #11
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -5098,6 +5107,9 @@ s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript
  [x] Parsing tests (JavaScript) with data set #6
  [x] Parsing tests (JavaScript) with data set #7
  [x] Parsing tests (JavaScript) with data set #8
+ [x] Parsing tests (JavaScript) with data set #9
+ [x] Parsing tests (JavaScript) with data set #10
+ [x] Parsing tests (JavaScript) with data set #11
  [x] Parsing+rendering tests with data set #0
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection

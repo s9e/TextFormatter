@@ -70,6 +70,18 @@ class SubscriptTest extends AbstractTest
 				'~~H~2~O~~',
 				'<r><p><DEL><s>~~</s>H<SUB><s>~</s>2<e>~</e></SUB>O<e>~~</e></DEL></p></r>'
 			],
+			[
+				'~_^',
+				'<t><p>~_^</p></t>'
+			],
+			[
+				'~(_)',
+				'<r><p><SUB><s>~(</s>_<e>)</e></SUB></p></r>'
+			],
+			[
+				'~(\\(\\\\\\))',
+				'<r><p><SUB><s>~(</s>\\(\\\\\\)<e>)</e></SUB></p></r>'
+			],
 		]);
 	}
 

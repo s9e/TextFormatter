@@ -14,6 +14,6 @@ class Superscript extends AbstractScript
 	*/
 	public function parse()
 	{
-		$this->parseAbstractScript('SUP', '^', '/\\^(?!\\()[^\\x17\\s^()]++\\^?/', '/\\^\\([^\\x17()]++\\)/');
+		$this->parseAbstractScript('SUP', '^', '/\\^[^\\x17\\s!"#$%&\'()*+,\\-.\\/:;<=>?@[\\]^_`{}|~]++\\^?/', '/\\^\\([^\\x17()]++\\)/');
 	}
 }

@@ -14,6 +14,6 @@ class Subscript extends AbstractScript
 	*/
 	public function parse()
 	{
-		$this->parseAbstractScript('SUB', '~', '/~(?!\\()[^\\x17\\s~()]++~?/', '/~\\([^\\x17()]+\\)/');
+		$this->parseAbstractScript('SUB', '~', '/~[^\\x17\\s!"#$%&\'()*+,\\-.\\/:;<=>?@[\\]^_`{}|~]++~?/', '/~\\([^\\x17()]++\\)/');
 	}
 }

@@ -66,6 +66,18 @@ class SuperscriptTest extends AbstractTest
 					'<p>x<SUP><s>^</s>2</SUP></p></r>'
 				]
 			],
+			[
+				'^_^',
+				'<t><p>^_^</p></t>'
+			],
+			[
+				'^(_)',
+				'<r><p><SUP><s>^(</s>_<e>)</e></SUP></p></r>'
+			],
+			[
+				'^(\\(\\\\\\))',
+				'<r><p><SUP><s>^(</s>\\(\\\\\\)<e>)</e></SUP></p></r>'
+			],
 		]);
 	}
 
