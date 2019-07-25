@@ -1,4 +1,4 @@
-<style>ul{font-size:16px}</style>
+<style>.main ul { font-size: 16px }</style>
 
 See also [general changes](Changes.md).
 
