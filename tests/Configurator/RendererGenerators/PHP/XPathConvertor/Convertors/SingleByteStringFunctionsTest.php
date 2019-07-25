@@ -3,7 +3,6 @@
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
 
 /**
-* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Runner
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions
 */
