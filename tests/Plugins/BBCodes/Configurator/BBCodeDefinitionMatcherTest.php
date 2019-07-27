@@ -41,19 +41,19 @@ class BBCodeDefinitionMatcherTest extends Test
 			[
 				'[b]{TEXT}[/b]',
 				[
-					'bbcodeName' => 'B',
+					'bbcodeName' => 'b',
 					'content'    => [['id' => 'TEXT']]
 				]
 			],
 			[
 				'[br]',
 				[
-					'bbcodeName' => 'BR',
+					'bbcodeName' => 'br',
 					'content'    => []
 				]
 			],
 			[
-				'[x foo={TEXT}]',
+				'[X foo={TEXT}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -66,7 +66,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo="{TEXT}"]',
+				'[X foo="{TEXT}"]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -79,7 +79,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo="{NUMBER1}{NUMBER2}"]',
+				'[X foo="{NUMBER1}{NUMBER2}"]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -95,7 +95,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo="{NUMBER1} {NUMBER2}"]',
+				'[X foo="{NUMBER1} {NUMBER2}"]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -112,7 +112,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				"[x foo='{NUMBER1} {NUMBER2}']",
+				"[X foo='{NUMBER1} {NUMBER2}']",
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -129,11 +129,11 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				"[x foo={NUMBER1} {NUMBER2}]",
+				"[X foo={NUMBER1} {NUMBER2}]",
 				false
 			],
 			[
-				'[x foo={NUMBER1},{NUMBER2}]',
+				'[X foo={NUMBER1},{NUMBER2}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -150,7 +150,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x]{NUMBER1},{NUMBER2}[/x]',
+				'[X]{NUMBER1},{NUMBER2}[/x]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [
@@ -161,7 +161,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x] {NUMBER1} {NUMBER2} [/x]',
+				'[X] {NUMBER1} {NUMBER2} [/x]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [
@@ -172,7 +172,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={TEXT1} bar={TEXT2}]',
+				'[X foo={TEXT1} bar={TEXT2}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -189,7 +189,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x $forceLookahead=true]',
+				'[X $forceLookahead=true]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -197,7 +197,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x $forceLookahead]',
+				'[X $forceLookahead]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -205,7 +205,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x $foo=[1,2]]',
+				'[X $foo=[1,2]]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -213,7 +213,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x $foo="]"]',
+				'[X $foo="]"]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -221,7 +221,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x #autoClose=false]',
+				'[X #autoClose=false]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -229,7 +229,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x #autoClose=True]',
+				'[X #autoClose=True]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -237,7 +237,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x #autoClose]',
+				'[X #autoClose]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -245,7 +245,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x #closeParent=foo,bar]',
+				'[X #closeParent=foo,bar]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -256,7 +256,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={TEXT?}]',
+				'[X foo={TEXT?}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -274,7 +274,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={REGEXP=/foo/i}]',
+				'[X foo={REGEXP=/foo/i}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -288,7 +288,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={TEXT1}
+				'[X foo={TEXT1}
 					bar={TEXT2}
 				]',
 				[
@@ -307,7 +307,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={TEXT1;
+				'[X foo={TEXT1;
 						foo=1;
 						bar=["ab", "cd"];
 				}]',
@@ -327,7 +327,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x $tagName=FOO
+				'[X $tagName=FOO
 					$filterChain.append=MyFilter::foo($tag, 1, 2)
 					$filterChain.append=MyFilter::bar()
 					$filterChain.prepend=MyFilter::baz]',
@@ -343,12 +343,12 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[url={URL;useContent}]{TEXT}[/url]',
+				'[URL={URL;useContent}]{TEXT}[/url]',
 				[
 					'bbcodeName' => 'URL',
 					'content'    => [['id' => 'TEXT']],
 					'attributes' => [[
-						'name'    => 'url',
+						'name'    => 'URL',
 						'content' => [[
 							'id' => 'URL',
 							'options' => [['name' => 'useContent']]
