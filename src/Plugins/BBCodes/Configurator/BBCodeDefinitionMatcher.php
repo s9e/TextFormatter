@@ -108,7 +108,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 	* @param  string $str
 	* @return array
 	*/
-	public function parseBBCodeStartTag(string $name, string $defaultAttribute = '', string $declarations = '', string $slash = ''): array
+	public function parseBBCodeStartTag(string $name, string $defaultAttribute = '', string $declarations = ''): array
 	{
 		if ($defaultAttribute !== '')
 		{
