@@ -11,11 +11,13 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\FilterSyntaxMatcher;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\RecursiveParser;
 
 class BBCodeMonkey
 {
@@ -48,9 +50,14 @@ class BBCodeMonkey
 	];
 
 	/**
-	* @var Configurator Instance of Configurator;
+	* @var Configurator Instance of Configurator
 	*/
 	protected $configurator;
+
+	/**
+	* @var RecursiveParser Parser used to read the BBCode definition
+	*/
+	public $parser;
 
 	/**
 	* @var array Regexps used in the named subpatterns generated automatically for composite
@@ -89,6 +96,12 @@ class BBCodeMonkey
 	public function __construct(Configurator $configurator)
 	{
 		$this->configurator = $configurator;
+		$this->parser       = new RecursiveParser;
+
+		$this->parser->setMatchers([
+			new BBCodeDefinitionMatcher($this->parser),
+			new FilterSyntaxMatcher($this->parser)
+		]);
 	}
 
 	/**
@@ -169,6 +182,8 @@ class BBCodeMonkey
 	*/
 	protected function parse($usage)
 	{
+		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'];
+
 		$tag    = new Tag;
 		$bbcode = new BBCode;
 
@@ -179,68 +194,24 @@ class BBCodeMonkey
 			'passthroughToken' => null
 		];
 
-		// Encode maps to avoid special characters to interfere with definitions
-		$usage = preg_replace_callback(
-			'#(\\{(?>HASH)?MAP=)([^:]+:[^,;}]+(?>,[^:]+:[^,;}]+)*)(?=[;}])#',
-			function ($m)
-			{
-				return $m[1] . base64_encode($m[2]);
-			},
-			$usage
-		);
-
-		// Encode regexps to avoid special characters to interfere with definitions
-		$usage = preg_replace_callback(
-			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . '(?:,' . self::REGEXP . ')*)#',
-			function ($m)
-			{
-				return $m[1] . base64_encode($m[2]);
-			},
-			$usage
-		);
-
-		$regexp = '(^'
-		        // [BBCODE
-		        . '\\[(?<bbcodeName>\\S+?)'
-		        // ={TOKEN}
-		        . '(?<defaultAttribute>=.+?)?'
-		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
-		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
-		        // ] or /] or ]{TOKEN}[/BBCODE]
-		        . '\\s*(?:/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
-		        . '$)i';
-
-		if (!preg_match($regexp, trim($usage), $m))
-		{
-			throw new InvalidArgumentException('Cannot interpret the BBCode definition');
-		}
-
 		// Save the BBCode's name
-		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
-
-		// Prepare the attributes definition, e.g. "foo={BAR}"
-		$definitions = preg_split('#\\s+#', trim($m['attributes']), -1, PREG_SPLIT_NO_EMPTY);
-
-		// If there's a default attribute, we prepend it to the list using the BBCode's name as
-		// attribute name
-		if (!empty($m['defaultAttribute']))
-		{
-			array_unshift($definitions, $m['bbcodeName'] . $m['defaultAttribute']);
-		}
+		$config['bbcodeName'] = BBCode::normalizeName($definition['bbcodeName']);
 
 		// Append the content token to the attributes list under the name "content" if it's anything
 		// but raw {TEXT} (or other unfiltered tokens)
-		if (!empty($m['content']))
+		if (!empty($definition['content']))
 		{
-			$regexp = '#^\\{' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*\\}$#D';
-
-			if (preg_match($regexp, $m['content']))
+			$regexp = '(^' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*$)D';
+			if (count($definition['content']) === 1 && preg_match($regexp, $definition[0]['id']))
 			{
-				$config['passthroughToken'] = substr($m['content'], 1, -1);
+				$config['passthroughToken'] = $definition[0]['id'];
 			}
 			else
 			{
-				$definitions[] = 'content=' . $m['content'];
+				$definition['attributes'][] = [
+					'name'    => 'content',
+					'content' => $definition['content']
+				];
 				$bbcode->contentAttributes[] = 'content';
 			}
 		}
