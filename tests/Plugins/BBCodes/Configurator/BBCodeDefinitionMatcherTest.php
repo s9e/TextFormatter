@@ -274,7 +274,7 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[x foo={REGEXP=/foo/}]',
+				'[x foo={REGEXP=/foo/i}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
@@ -282,7 +282,7 @@ class BBCodeDefinitionMatcherTest extends Test
 						'name'    => 'foo',
 						'content' => [[
 							'id'          => 'REGEXP',
-							'filterValue' => new Regexp('/foo/', true)
+							'filterValue' => new Regexp('/foo/i', true)
 						]]
 					]]
 				]
