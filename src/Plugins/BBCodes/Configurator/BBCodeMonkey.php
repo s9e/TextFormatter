@@ -20,11 +20,6 @@ use s9e\TextFormatter\Configurator\Items\Template;
 class BBCodeMonkey
 {
 	/**
-	* Expression that matches a regexp such as /foo/i
-	*/
-	const REGEXP = '(.).*?(?<!\\\\)(?>\\\\\\\\)*+\\g{-1}[DSUisu]*';
-
-	/**
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
