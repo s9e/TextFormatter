@@ -115,10 +115,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			$declarations = trim($name . $defaultAttribute . ' ' . $declarations);
 		}
 
-		$definition = [
-			'bbcodeName' => BBCode::normalizeName($name),
-			'content'    => []
-		];
+		$definition = ['bbcodeName' => $name];
 		if ($declarations !== '')
 		{
 			$definition += $this->recurse($declarations, 'BaseDeclarations');
