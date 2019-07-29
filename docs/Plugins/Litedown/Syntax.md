@@ -269,6 +269,7 @@ x^(n - 1)
 x^(n^2)
 x^(n^(2))
 H~2~O
+H~(2)O
 ```
 ```html
 <p>x<sup>2</sup>
@@ -276,6 +277,7 @@ x<sup>2</sup>
 x<sup>n - 1</sup>
 x<sup>n<sup>2</sup></sup>
 x<sup>n<sup>2</sup></sup>
+H<sub>2</sub>O
 H<sub>2</sub>O</p>
 ```
 
