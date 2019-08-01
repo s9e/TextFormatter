@@ -207,7 +207,7 @@
 	</tr>
 	<tr title="Libsyn">
 		<td style="font-size:75%"><code>libsyn</code></td>
-		<td style="font-size:50%">https://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</td>
+		<td style="font-size:50%">http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</td>
 	</tr>
 	<tr title="Liveleak">
 		<td style="font-size:75%"><code>liveleak</code></td>
@@ -392,6 +392,10 @@
 	<tr title="Trailer Addict">
 		<td style="font-size:75%"><code>traileraddict</code></td>
 		<td style="font-size:50%">https://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>
+	</tr>
+	<tr title="Trending Views">
+		<td style="font-size:75%"><code>trendingviews</code></td>
+		<td style="font-size:50%">https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</td>
 	</tr>
 	<tr title="Tumblr">
 		<td style="font-size:75%"><code>tumblr</code></td>

@@ -1,0 +1,9 @@
+<site name="Trending Views" homepage="https://trendingviews.co/">
+	<example>https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>trendingviews.co</host>
+	<extract>!trendingviews.co/(?:video|embed)/(?:[^/]+-)?(?'id'\d+)!</extract>
+	<iframe src="https://trendingviews.co/embed/{@id}"/>
+</site>
