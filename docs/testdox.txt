@@ -1730,7 +1730,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FixUnescapedCurlyBra
  [x] Works with data set #18
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants
- [ ] Ignores locale
+ [x] Ignores locale
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2

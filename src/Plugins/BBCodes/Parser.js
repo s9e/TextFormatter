@@ -208,13 +208,8 @@ function parseAttributeValue()
 	// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 	//       that do not put attribute values in quotes, e.g.
 	//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-	var match = /[^\]\n]*?(?=\s*(?:\s\/)?\]|\s+[-\w]+=)/.exec(text.substr(pos));
-	if (!match)
-	{
-		throw '';
-	}
-
-	var attrValue = match[0];
+	var match     = /(?:[^\s\]]|[ \t](?!\s*(?:[-\w]+=|\/?\])))*/.exec(text.substr(pos)),
+		attrValue = match[0];
 	pos += attrValue.length;
 
 	return attrValue;

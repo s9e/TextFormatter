@@ -241,10 +241,7 @@ class Parser extends ParserBase
 		// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 		//       that do not put attribute values in quotes, e.g.
 		//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-		if (!preg_match('#[^\\]\\n]*?(?=\\s*(?:\\s/)?\\]|\\s+[-\\w]+=)#', $this->text, $m, null, $this->pos))
-		{
-			throw new RuntimeException;
-		}
+		preg_match('((?:[^\\s\\]]|[ \\t](?!\\s*(?:[-\\w]+=|/?\\])))*)', $this->text, $m, null, $this->pos);
 
 		$attrValue  = $m[0];
 		$this->pos += strlen($attrValue);
