@@ -1,3 +1,19 @@
+2.1.1 (2019-08-05)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/6902c1dc06fccea08565b8966c5a2cf01e3bc85f...decd84340b57554f78763ce1441c1a24944a2573)
+
+### Added
+
+ - `28a405d9e` MediaEmbed: added Trending Views
+
+### Changed
+
+ - `e83bf910c` BBCodes: updated the algorithm that handles backslashes
+ - `decd84340` BBCodes: updated the regexp that captures unquoted attributes
+ - `58835aa86` Litedown: exclude ASCII punctuation from inline scripts' short form
+
+
 2.1.0 (2019-07-24)
 ==================
 
