@@ -365,7 +365,7 @@ class Parser extends ParserBase
 	{
 		$quote    = $this->text[$this->pos];
 		$valuePos = $this->pos + 1;
-		while (1)
+		do
 		{
 			// Look for the next quote
 			$this->pos = strpos($this->text, $quote, $this->pos + 1);
@@ -376,27 +376,19 @@ class Parser extends ParserBase
 			}
 
 			// Test for an odd number of backslashes before this character
-			$n = 0;
-			do
+			$n = 1;
+			while ($this->text[$this->pos - $n] === '\\')
 			{
 				++$n;
 			}
-			while ($this->text[$this->pos - $n] === '\\');
-
-			if ($n % 2)
-			{
-				// If $n is odd, it means there's an even number of backslashes. We can exit this
-				// loop
-				break;
-			}
 		}
+		while ($n % 2 === 0);
 
-		// Unescape special characters ' " and \
-		$attrValue = preg_replace(
-			'#\\\\([\\\\\'"])#',
-			'$1',
-			substr($this->text, $valuePos, $this->pos - $valuePos)
-		);
+		$attrValue = substr($this->text, $valuePos, $this->pos - $valuePos);
+		if (strpos($attrValue, '\\') !== false)
+		{
+			$attrValue = strtr($attrValue, ['\\\\' => '\\', '\\"' => '"', "\\'" => "'"]);
+		}
 
 		// Skip past the closing quote
 		++$this->pos;

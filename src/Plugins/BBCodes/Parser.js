@@ -342,7 +342,7 @@ function parseQuotedAttributeValue()
 {
 	var quote    = text[pos],
 		valuePos = pos + 1;
-	while (1)
+	do
 	{
 		// Look for the next quote
 		pos = text.indexOf(quote, pos + 1);
@@ -353,22 +353,19 @@ function parseQuotedAttributeValue()
 		}
 
 		// Test for an odd number of backslashes before this character
-		var n = 0;
-		do
+		var n = 1;
+		while (text[pos - n] === '\\')
 		{
 			++n;
 		}
-		while (text[pos - n] === '\\');
-
-		if (n % 2)
-		{
-			// If n is odd, it means there's an even number of backslashes. We can exit this loop
-			break;
-		}
 	}
+	while (n % 2 === 0);
 
-	// Unescape special characters ' " and \
-	var attrValue = text.substr(valuePos, pos - valuePos).replace(/\\([\\'"])/g, '$1');
+	var attrValue = text.substr(valuePos, pos - valuePos);
+	if (attrValue.indexOf('\\') > -1)
+	{
+		attrValue = attrValue.replace(/\\([\\'"])/g, '$1');
+	}
 
 	// Skip past the closing quote
 	++pos;
