@@ -86,8 +86,25 @@ echo $html;
 	</xsl:if>
 	<xsl:apply-templates />
 </code></pre>
-<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js";a.appendChild(e)}</script>
+<script>(function(d){var head=d.getElementsByTagName("head")[0],style="github-gist",url="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/";if(typeof hljs!=="undefined")hljs._ha();else if(typeof hljsLoading==="undefined"){hljsLoading=1;if(style!=="none"){var el=d.createElement("link");el.type="text/css";el.rel="stylesheet";el.href=url+"styles/"+style+".min.css";head.appendChild(el)}el=d.createElement("script");el.type="text/javascript";el.onload=function(){var cache={},cnt=0;hljs._hb=function(block){block.removeAttribute("data-hljs");var html=block.innerHTML;if(html in cache)block.innerHTML=cache[html];else{if(++cnt&gt;7){cache={};cnt=0}hljs.highlightBlock(block.firstChild);cache[html]=block.innerHTML}};hljs._ha=function(){var blocks=d.querySelectorAll("pre[data-hljs]"),i=blocks.length;while(i&gt;0)hljs._hb(blocks.item(--i))};hljs._ha()};el.async=true;el.src=url+"highlight.min.js";head.appendChild(el)}})(document)</script>
 ```
+<table>
+	<tr>
+		<th>Var name</th>
+		<th>Default</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><code>style</code></td>
+		<td>github-gist</td>
+		<td>highlight.js style name (or "none")</td>
+	</tr>
+	<tr>
+		<td><code>url</code></td>
+		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/</td>
+		<td>highlight.js CDN URL</td>
+	</tr>
+</table>
 
 ###### COLOR
 ```[COLOR={COLOR}]{TEXT}[/COLOR]```

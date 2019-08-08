@@ -8,6 +8,7 @@ $dom->load(__DIR__ . '/../src/Plugins/BBCodes/Configurator/repository.xml');
 
 $list = [];
 
+$xpath = new DOMXPath($dom);
 foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 {
 	$name     = $bbcode->getAttribute('name');
@@ -19,7 +20,7 @@ foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 	$list[] = '```' . $usage . '```';
 	$list[] = "```xsl\n" . $template . "\n```";
 
-	$vars = $bbcode->getElementsByTagName('var');
+	$vars = $xpath->query('template/var | usage/var', $bbcode);
 	if ($vars->length)
 	{
 		$list[] = '<table>';
