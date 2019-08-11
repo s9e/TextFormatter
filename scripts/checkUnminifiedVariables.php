@@ -12,11 +12,18 @@ $usedVars = [];
 foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 {
 	$file = file_get_contents($filepath);
+	$file = preg_replace('(<script>.*?(?:<|\\\\x3c)/script>)s', '', $file);
 
 	foreach ($regexps as $regexp)
 	{
 		preg_match_all($regexp, $file, $m);
 		$usedVars += array_flip($m[0]);
+if (isset($usedVars['blocks']))
+{
+	die($file);
+		print_r($m);
+		exit;
+}
 	}
 }
 
