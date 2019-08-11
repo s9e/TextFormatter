@@ -270,7 +270,7 @@ function isValidSeparator(line)
 */
 function overwriteBlockquoteCallback(str)
 {
-	return str.replace(/>/g, ' ');
+	return str.replace(/[!>]/g, ' ');
 }
 
 /**
@@ -309,7 +309,7 @@ function overwriteMarkdown()
 	// Overwrite blockquotes
 	if (text.indexOf('>') > -1)
 	{
-		text = text.replace(/^(?:> ?)+/gm, overwriteBlockquoteCallback);
+		text = text.replace(/^(?:>!? ?)+/gm, overwriteBlockquoteCallback);
 	}
 }
 

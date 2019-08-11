@@ -271,6 +271,23 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'>! a|b',
+					'>! -|-',
+					'>! c|d'
+				],
+				[
+					'<r><SPOILER><i>&gt;! </i><TABLE><THEAD><TR><TH>a</TH><i>|</i><TH>b</TH></TR></THEAD><i>',
+					'&gt;! -|-</i>',
+					'<TBODY><TR><i>&gt;! </i><TD>c</TD><i>|</i><TD>d</TD></TR></TBODY></TABLE></SPOILER></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown;
+				}
+			],
+			[
+				[
 					'> | a | b | ',
 					'> | - | - | ',
 					'> | c | d | '

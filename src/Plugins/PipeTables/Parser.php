@@ -334,7 +334,7 @@ class Parser extends ParserBase
 	*/
 	protected function overwriteBlockquoteCallback(array $m)
 	{
-		return strtr($m[0], '>', ' ');
+		return strtr($m[0], '!>', '  ');
 	}
 
 	/**
@@ -377,7 +377,7 @@ class Parser extends ParserBase
 		// Overwrite blockquotes
 		if (strpos($this->text, '>') !== false)
 		{
-			$this->text = preg_replace_callback('/^(?:> ?)+/m', [$this, 'overwriteBlockquoteCallback'], $this->text);
+			$this->text = preg_replace_callback('/^(?:>!? ?)+/m', [$this, 'overwriteBlockquoteCallback'], $this->text);
 		}
 	}
 
