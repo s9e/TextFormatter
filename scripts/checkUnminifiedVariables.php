@@ -18,12 +18,6 @@ foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 	{
 		preg_match_all($regexp, $file, $m);
 		$usedVars += array_flip($m[0]);
-if (isset($usedVars['blocks']))
-{
-	die($file);
-		print_r($m);
-		exit;
-}
 	}
 }
 
