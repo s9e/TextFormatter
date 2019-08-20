@@ -1,4 +1,4 @@
 function(str)
 {
-	return decodeURIComponent(str);
+	return decodeURIComponent("" + str);
 }
