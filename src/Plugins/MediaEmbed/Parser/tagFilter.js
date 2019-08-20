@@ -131,9 +131,9 @@ function (tag, hosts, sites)
 	/**
 	* Return the siteId that corresponds to given URL
 	*
-	* @param  {string} url   Original URL
-	* @param  {!Array} hosts Map of [hostname => siteId]
-	* @return {string}       URL's siteId, or an empty string
+	* @param  {string}  url   Original URL
+	* @param  {!Object} hosts Map of [hostname => siteId]
+	* @return {string}        URL's siteId, or an empty string
 	*/
 	function getSiteIdFromUrl(url, hosts)
 	{
