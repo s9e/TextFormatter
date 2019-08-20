@@ -37,7 +37,6 @@ $configurator->HTMLEntities;
 $configurator->FancyPants;
 
 $configurator->MediaEmbed->add('youtube');
-$configurator->BBCodes->add('YOUTUBE', ['defaultAttribute' => 'url', 'contentAttributes' => ['url']]);
 $configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="https://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
 $configurator->javascript
@@ -78,7 +77,7 @@ ob_start();
 <body>
 	<div style="float:left;width:80%;max-width:800px">
 		<form>
-			<textarea style="width:99%" rows="15">[float=right][youtube]https://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
+			<textarea style="width:99%" rows="15">[float=right]https://www.youtube.com/watch?v=QH2-TGUlwu4[/float]
 
 This is a demo of the JavaScript port of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
 
@@ -90,7 +89,7 @@ The following plugins have been enabled:
   [list=circle]
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-    [*][C][URL][/C], [C:123][C][/C:123], [C][YOUTUBE][/C], [C][FLOAT][/C], and [C][LIST][/C]
+    [*][C][URL][/C], [C:123][C][/C:123], [C][FLOAT][/C], and [C][LIST][/C]
     [*][C][CODE][/C] with real-time syntax highlighting via [url=https://softwaremaniacs.org/soft/highlight/en/]Highlight.js[/url]
 	[code]$who = "world";
 printf("Hello %s\n", $who);[/code]
@@ -98,6 +97,7 @@ printf("Hello %s\n", $who);[/code]
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
   [*][b]FancyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
+  [*][b]MediaEmbed[/b] --- links to YouTube are transformed into playable videos
   [*][b]Preg[/b] --- the Preg plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [C]/#(?<tag>[a-z0-9]+)/i[/C] is replaced with the template [C]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/C] -- For example: #PHP, #fml
   [*][b]HTMLElements[/b] --- [C]<a>[/C] and [C]<b>[/C] tags are allowed, with two whitelisted attributes for [C]<a>[/C]: [C]href[/C] and [C]title[/C]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
