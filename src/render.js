@@ -5,7 +5,7 @@ var xslt = {
 	*/
 	init: function(xsl)
 	{
-		var stylesheet = xslt.loadXML(xsl, 'MSXML2.FreeThreadedDOMDocument.6.0');
+		var stylesheet = xslt.loadXML(xsl);
 		if (MSXML)
 		{
 			var generator = new ActiveXObject('MSXML2.XSLTemplate.6.0');
@@ -20,14 +20,13 @@ var xslt = {
 	},
 
 	/**
-	* @param {!string} xml
-	* @param {string} type
+	* @param {string} xml
 	*/
-	loadXML: function(xml, type)
+	loadXML: function(xml)
 	{
 		if (MSXML)
 		{
-			var dom = new ActiveXObject(type);
+			var dom = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.6.0');
 			dom['async'] = false;
 			dom['validateOnParse'] = false;
 			dom['loadXML'](xml);
@@ -65,7 +64,7 @@ var xslt = {
 			var div = targetDoc.createElement('div'),
 				fragment = targetDoc.createDocumentFragment();
 
-			xslt.proc['input'] = xslt.loadXML(xml, 'MSXML2.DOMDocument.6.0');
+			xslt.proc['input'] = xslt.loadXML(xml);
 			xslt.proc['transform']();
 			div.innerHTML = xslt.proc['output'];
 			while (div.firstChild)
