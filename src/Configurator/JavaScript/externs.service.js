@@ -547,6 +547,8 @@ Node.prototype.namespaceURI;
  * @implicitCast
  */
 Node.prototype.textContent;
+/** @constructor */
+function TrustedHTML() {}
 /**
  * @const {!HTMLDocument}
  */

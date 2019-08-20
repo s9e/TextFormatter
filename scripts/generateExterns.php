@@ -121,6 +121,9 @@ $externs = [
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
 	],
+	'externs/browser/w3c_trusted_types.js' => [
+		'TrustedHTML'
+	],
 	'externs/browser/window.js' => [
 		'document',
 		'window'
