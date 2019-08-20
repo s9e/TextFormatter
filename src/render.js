@@ -55,7 +55,7 @@ var xslt = {
 
 	/**
 	* @param {!string} xml
-	* @param {!HTMLDocument} targetDoc
+	* @param {Document} targetDoc
 	*/
 	transformToFragment: function(xml, targetDoc)
 	{
