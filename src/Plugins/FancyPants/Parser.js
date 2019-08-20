@@ -3,27 +3,27 @@ var attrName       = config.attrName,
 	hasDoubleQuote = (text.indexOf('"') >= 0),
 	tagName        = config.tagName;
 
-if (!config.disableQuotes)
+if (typeof config.disableQuotes === 'undefined')
 {
 	parseSingleQuotes();
 	parseSingleQuotePairs();
 	parseDoubleQuotePairs();
 }
-if (!config.disableGuillemets)
+if (typeof config.disableGuillemets === 'undefined')
 {
 	parseGuillemets();
 }
-if (!config.disableMathSymbols)
+if (typeof config.disableMathSymbols === 'undefined')
 {
 	parseNotEqualSign();
 	parseSymbolsAfterDigits();
 	parseFractions();
 }
-if (!config.disablePunctuation)
+if (typeof config.disablePunctuation === 'undefined')
 {
 	parseDashesAndEllipses();
 }
-if (!config.disableSymbols)
+if (typeof config.disableSymbols === 'undefined')
 {
 	parseSymbolsInParentheses();
 }
