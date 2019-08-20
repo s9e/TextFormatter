@@ -859,7 +859,7 @@ function getMatches(regexp, limit)
 	while (++cnt <= limit && (m = regexp.exec(text)))
 	{
 		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
-		var pos   = +m['index'],
+		var pos   = m.index,
 			match = [[m[0], pos]],
 			i = 0;
 		while (++i < m.length)

@@ -82,7 +82,7 @@ function parseCustomAliases(text)
 	config.customRegexp.lastIndex = matchPos;
 	while (m = config.customRegexp.exec(text))
 	{
-		var alias = m[0], tagPos = m['index'];
+		var alias = m[0], tagPos = m.index;
 		if (registeredVars['Emoji.aliases'][alias])
 		{
 			var hex = getHexSequence(registeredVars['Emoji.aliases'][alias]);
@@ -109,7 +109,7 @@ function parseShortnames(text)
 	{
 		var alias  = m[0] + ':',
 			tagLen = alias.length,
-			tagPos = +m['index'];
+			tagPos = m.index;
 		if (registeredVars['Emoji.aliases'][alias])
 		{
 			var hex = getHexSequence(registeredVars['Emoji.aliases'][alias]);
@@ -133,7 +133,7 @@ function parseUnicode(text)
 	unicodeRegexp.lastIndex = 0;
 	while (m = unicodeRegexp.exec(text))
 	{
-		var emoji = m[0], tagPos = m['index'];
+		var emoji = m[0], tagPos = m.index;
 		addTag(tagPos, emoji.length, getHexSequence(emoji));
 	}
 }

@@ -57,6 +57,9 @@ $externs = [
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
 
+		'RegExpResult',
+		'RegExpResult.prototype.index',
+
 		'String',
 		'String.fromCharCode',
 		'String.prototype.charAt',

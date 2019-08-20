@@ -115,7 +115,7 @@ function getEmphasisByBlock(regexp, pos)
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(text))
 	{
-		var matchPos = +m['index'],
+		var matchPos = m.index,
 			matchLen = m[0].length;
 
 		// Test whether we've just passed the limits of a block

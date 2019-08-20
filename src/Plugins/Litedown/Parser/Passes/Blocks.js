@@ -38,16 +38,16 @@ function parse()
 		matches.push(m);
 
 		// Move regexp.lastIndex if the current match is empty
-		if (m['index'] === regexp['lastIndex'])
+		if (m.index === regexp.lastIndex)
 		{
-			++regexp['lastIndex'];
+			++regexp.lastIndex;
 		}
 	}
 
 	matches.forEach(function(m)
 	{
 		var blockMarks = [],
-			matchPos   = +m['index'],
+			matchPos   = m.index,
 			matchLen   = m[0].length,
 			startPos,
 			startLen,
@@ -514,7 +514,7 @@ function matchSetextLines()
 	while (m = regexp.exec(text))
 	{
 		var match    = m[0],
-			matchPos = +m['index'];
+			matchPos = m.index;
 
 		// Compute the position of the end tag. We start on the LF character before the
 		// match and keep rewinding until we find a non-space character

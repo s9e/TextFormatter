@@ -281,6 +281,13 @@ RegExp.prototype.lastIndex;
 RegExp.prototype.test = function(str) {};
 /**
  * @constructor
+ * @extends {Array<string>}
+ */
+var RegExpResult = function() {};
+/** @type {number} */
+RegExpResult.prototype.index;
+/**
+ * @constructor
  * @implements {Iterable<string>}
  * @param {*=} opt_str
  * @return {string}
