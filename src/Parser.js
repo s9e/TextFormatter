@@ -1989,8 +1989,8 @@ function sortTags()
 * The stack's array is in reverse order. Therefore, tags that appear at the start of the text
 * are at the end of the array.
 *
-* @param  {!Tag}   tag
-* @param  {number} tagIndex
+* @param  {!Tag}    tag
+* @param  {number=} tagIndex
 * @return {string}
 */
 function getSortKey(tag, tagIndex)
