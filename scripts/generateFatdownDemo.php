@@ -7,7 +7,7 @@ $configurator = s9e\TextFormatter\Configurator\Bundles\Fatdown::getConfigurator(
 $configurator->enableJavaScript();
 
 $configurator->javascript
-	->setMinifier('ClosureCompilerService')
+	->setMinifier('ClosureCompilerApplication', __DIR__ . '/../vendor/node_modules/.bin/google-closure-compiler')
 	->cacheDir = __DIR__ . '/../tests/.cache';
 
 $configurator->javascript->exports = ['disablePlugin', 'enablePlugin', 'preview'];

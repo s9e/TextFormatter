@@ -40,7 +40,7 @@ $configurator->MediaEmbed->add('youtube');
 $configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="https://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
 $configurator->javascript
-	->setMinifier('ClosureCompilerService')
+	->setMinifier('ClosureCompilerApplication', __DIR__ . '/../vendor/node_modules/.bin/google-closure-compiler')
 	->cacheDir = __DIR__ . '/../tests/.cache';
 
 $configurator->javascript->exports = ['disablePlugin', 'enablePlugin', 'preview'];
