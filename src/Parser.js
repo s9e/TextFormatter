@@ -1946,6 +1946,7 @@ function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 *
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number=} prio Tag's priority
 * @return {!Tag}
 */
 function addVerbatim(pos, len, prio)
