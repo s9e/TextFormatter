@@ -189,7 +189,7 @@ function parseEmphasisByCharacter(character, regexp)
 /**
 * Process a list of emphasis markup strings
 *
-* @param {!Array<!Array<!number>>} block List of [matchPos, matchLen] pairs
+* @param {!Array<!Array<number>>} block List of [matchPos, matchLen] pairs
 */
 function processEmphasisBlock(block)
 {

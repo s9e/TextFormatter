@@ -7,8 +7,8 @@ matches.forEach(function(m)
 /**
 * Linkify given URL at given position
 *
-* @param {!number} tagPos URL's position in the text
-* @param {!string} url    URL
+* @param {number} tagPos URL's position in the text
+* @param {string} url    URL
 */
 function linkifyUrl(tagPos, url)
 {
@@ -51,8 +51,8 @@ function linkifyUrl(tagPos, url)
 *  - trailing slashes,
 *  - closing parentheses are balanced separately.
 *
-* @param  {!string} url Original URL
-* @return {!string}     Trimmed URL
+* @param  {string} url Original URL
+* @return {string}     Trimmed URL
 */
 function trimUrl(url)
 {

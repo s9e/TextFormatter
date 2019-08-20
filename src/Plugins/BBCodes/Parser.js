@@ -9,32 +9,32 @@ var attributes;
 var bbcodeConfig;
 
 /**
-* @type {!string} Name of the BBCode being parsed
+* @type {string} Name of the BBCode being parsed
 */
 var bbcodeName;
 
 /**
-* @type {!string} Suffix of the BBCode being parsed, including its colon
+* @type {string} Suffix of the BBCode being parsed, including its colon
 */
 var bbcodeSuffix;
 
 /**
-* @type {!number} Position of the cursor in the original text
+* @type {number} Position of the cursor in the original text
 */
 var pos;
 
 /**
-* @type {!number} Position of the start of the BBCode being parsed
+* @type {number} Position of the start of the BBCode being parsed
 */
 var startPos;
 
 /**
-* @type {!number} Length of the text being parsed
+* @type {number} Length of the text being parsed
 */
 var textLen = text.length;
 
 /**
-* @type {!string} Text being parsed, normalized to uppercase
+* @type {string} Text being parsed, normalized to uppercase
 */
 var uppercaseText = '';
 
@@ -331,7 +331,7 @@ function parseBBCodeSuffix()
 /**
 * Parse a quoted attribute value that starts at current offset
 *
-* @return {!string}
+* @return {string}
 */
 function parseQuotedAttributeValue()
 {

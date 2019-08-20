@@ -48,7 +48,7 @@ class FunctionProvider
 	return encodeURIComponent(str).replace(
 		/[!\'()*]/g,
 		/**
-		* @param {!string} c
+		* @param {string} c
 		*/
 		function(c)
 		{

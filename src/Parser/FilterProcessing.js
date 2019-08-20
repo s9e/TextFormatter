@@ -118,10 +118,10 @@ function executeAttributeFilterChain(filterChain, attrName, attrValue)
 /**
 * Execute an attribute preprocessor
 *
-* @param  {!Tag}            tag
-* @param  {!string}         attrName
-* @param  {!RegExp}         regexp
-* @param  {!Array<!string>} map
+* @param  {!Tag}           tag
+* @param  {string}         attrName
+* @param  {!RegExp}        regexp
+* @param  {!Array<string>} map
 */
 function executeAttributePreprocessor(tag, attrName, regexp, map)
 {
@@ -142,10 +142,10 @@ function executeAttributePreprocessor(tag, attrName, regexp, map)
 /**
 * Execute a regexp and return the values of the mapped captures
 *
-* @param  {!string}                  attrValue
-* @param  {!RegExp}                  regexp
-* @param  {!Array<!string>}          map
-* @return {!Object<!string,!string>}
+* @param  {string}                 attrValue
+* @param  {!RegExp}                regexp
+* @param  {!Array<string>}         map
+* @return {!Object<string,string>}
 */
 function getNamedCaptures(attrValue, regexp, map)
 {

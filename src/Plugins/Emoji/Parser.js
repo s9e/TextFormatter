@@ -36,8 +36,8 @@ function addTag(tagPos, tagLen, hex)
 /**
 * Get the sequence of Unicode codepoints that corresponds to given emoji
 *
-* @param  {!string} str UTF-8 emoji
-* @return {!string}     Codepoint sequence, e.g. "0023-20e3"
+* @param  {string} str UTF-8 emoji
+* @return {string}     Codepoint sequence, e.g. "0023-20e3"
 */
 function getHexSequence(str)
 {
@@ -60,7 +60,7 @@ function getHexSequence(str)
 /**
 * Parse custom aliases in given text
 *
-* @param {!string} text Original text
+* @param {string} text Original text
 */
 function parseCustomAliases(text)
 {
@@ -94,7 +94,7 @@ function parseCustomAliases(text)
 /**
 * Parse shortnames in given text
 *
-* @param {!string} text Original text
+* @param {string} text Original text
 */
 function parseShortnames(text)
 {
@@ -125,7 +125,7 @@ function parseShortnames(text)
 /**
 * Parse Unicode emoji in given text
 *
-* @param {!string} text Original text
+* @param {string} text Original text
 */
 function parseUnicode(text)
 {

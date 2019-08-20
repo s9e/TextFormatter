@@ -1,10 +1,10 @@
 /**
 * @constructor
 *
-* @param {!number} type     Tag's type
-* @param {!string} name     Name of the tag
-* @param {!number} pos      Position of the tag in the text
-* @param {!number} len      Length of text consumed by the tag
+* @param {number} type     Tag's type
+* @param {string} name     Name of the tag
+* @param {number} pos      Position of the tag in the text
+* @param {number} len      Length of text consumed by the tag
 * @param {number=} priority This tag's sorting tiebreaker
 */
 function Tag(type, name, pos, len, priority)
@@ -51,27 +51,27 @@ Tag.prototype.cascade;
 Tag.prototype.endTag;
 
 /**
-* @type {!boolean} Whether this tag is be invalid
+* @type {boolean} Whether this tag is be invalid
 */
 Tag.prototype.invalid = false;
 
 /**
-* @type {!number} Length of text consumed by this tag
+* @type {number} Length of text consumed by this tag
 */
 Tag.prototype.len;
 
 /**
-* @type {!string} Name of this tag
+* @type {string} Name of this tag
 */
 Tag.prototype.name;
 
 /**
-* @type {!number} Position of this tag in the text
+* @type {number} Position of this tag in the text
 */
 Tag.prototype.pos;
 
 /**
-* @type {!number} Tiebreaker used when sorting identical tags
+* @type {number} Tiebreaker used when sorting identical tags
 */
 Tag.prototype.sortPriority;
 
@@ -81,14 +81,14 @@ Tag.prototype.sortPriority;
 Tag.prototype.startTag;
 
 /**
-* @type {!number} Tag type
+* @type {number} Tag type
 */
 Tag.prototype.type;
 
 /**
 * Add a set of flags to this tag's
 *
-* @param {!number} flags
+* @param {number} flags
 */
 Tag.prototype.addFlags = function(flags)
 {
@@ -130,7 +130,7 @@ Tag.prototype.invalidate = function()
 			}
 		);
 	}
-}
+};
 
 /**
 * Pair this tag with given tag
@@ -158,12 +158,12 @@ Tag.prototype.pairWith = function(tag)
 			tag.endTag    = this;
 		}
 	}
-}
+};
 
 /**
 * Remove a set of flags from this tag's
 *
-* @param {!number} flags
+* @param {number} flags
 */
 Tag.prototype.removeFlags = function(flags)
 {
@@ -173,12 +173,12 @@ Tag.prototype.removeFlags = function(flags)
 /**
 * Set the bitfield of boolean rules that apply to this tag
 *
-* @param  {!number} flags Bitfield of boolean rules that apply to this tag
+* @param  {number} flags Bitfield of boolean rules that apply to this tag
 */
 Tag.prototype.setFlags = function(flags)
 {
 	this.flags = flags;
-}
+};
 
 //==========================================================================
 // Getters
@@ -198,7 +198,7 @@ Tag.prototype.getAttributes = function()
 	}
 
 	return attributes;
-}
+};
 
 /**
 * Return this tag's end tag
@@ -208,57 +208,57 @@ Tag.prototype.getAttributes = function()
 Tag.prototype.getEndTag = function()
 {
 	return this.endTag;
-}
+};
 
 /**
 * Return the bitfield of boolean rules that apply to this tag
 *
-* @return {!number}
+* @return {number}
 */
 Tag.prototype.getFlags = function()
 {
 	return this.flags;
-}
+};
 
 /**
 * Return the length of text consumed by this tag
 *
-* @return {!number}
+* @return {number}
 */
 Tag.prototype.getLen = function()
 {
 	return this.len;
-}
+};
 
 /**
 * Return this tag's name
 *
-* @return {!string}
+* @return {string}
 */
 Tag.prototype.getName = function()
 {
 	return this.name;
-}
+};
 
 /**
 * Return this tag's position
 *
-* @return {!number}
+* @return {number}
 */
 Tag.prototype.getPos = function()
 {
 	return this.pos;
-}
+};
 
 /**
 * Return this tag's tiebreaker
 *
-* @return {!number}
+* @return {number}
 */
 Tag.prototype.getSortPriority = function()
 {
 	return this.sortPriority;
-}
+};
 
 /**
 * Return this tag's start tag
@@ -268,17 +268,17 @@ Tag.prototype.getSortPriority = function()
 Tag.prototype.getStartTag = function()
 {
 	return this.startTag;
-}
+};
 
 /**
 * Return this tag's type
 *
-* @return {!number}
+* @return {number}
 */
 Tag.prototype.getType = function()
 {
 	return this.type;
-}
+};
 
 //==========================================================================
 // Tag's status
@@ -288,7 +288,7 @@ Tag.prototype.getType = function()
 * Test whether this tag can close given start tag
 *
 * @param  {!Tag} startTag
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.canClose = function(startTag)
 {
@@ -304,97 +304,97 @@ Tag.prototype.canClose = function(startTag)
 	}
 
 	return true;
-}
+};
 
 /**
 * Test whether this tag is a br tag
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isBrTag = function()
 {
 	return (this.name === 'br');
-}
+};
 
 /**
 * Test whether this tag is an end tag (self-closing tags inclusive)
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isEndTag = function()
 {
 	return !!(this.type & Tag.END_TAG);
-}
+};
 
 /**
 * Test whether this tag is an ignore tag
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isIgnoreTag = function()
 {
 	return (this.name === 'i');
-}
+};
 
 /**
 * Test whether this tag is invalid
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isInvalid = function()
 {
 	return this.invalid;
-}
+};
 
 /**
 * Test whether this tag represents a paragraph break
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isParagraphBreak = function()
 {
 	return (this.name === 'pb');
-}
+};
 
 /**
 * Test whether this tag is a self-closing tag
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isSelfClosingTag = function()
 {
 	return (this.type === Tag.SELF_CLOSING_TAG);
-}
+};
 
 /**
 * Test whether this tag is a special tag: "br", "i", "pb" or "v"
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isSystemTag = function()
 {
 	return ('br i pb v'.indexOf(this.name) > -1);
-}
+};
 
 /**
 * Test whether this tag is a start tag (self-closing tags inclusive)
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isStartTag = function()
 {
 	return !!(this.type & Tag.START_TAG);
-}
+};
 
 /**
 * Test whether this tag represents verbatim text
 *
-* @return {!boolean}
+* @return {boolean}
 */
 Tag.prototype.isVerbatim = function()
 {
 	return (this.name === 'v');
-}
+};
 
 //==========================================================================
 // Attributes handling
@@ -403,45 +403,45 @@ Tag.prototype.isVerbatim = function()
 /**
 * Return the value of given attribute
 *
-* @param  {!string} attrName
-* @return {!string}
+* @param  {string} attrName
+* @return {string}
 */
 Tag.prototype.getAttribute = function(attrName)
 {
 	return this.attributes[attrName];
-}
+};
 
 /**
 * Return whether given attribute is set
 *
-* @param  {!string} attrName
-* @return {!boolean}
+* @param  {string} attrName
+* @return {boolean}
 */
 Tag.prototype.hasAttribute = function(attrName)
 {
 	return (attrName in this.attributes);
-}
+};
 
 /**
 * Remove given attribute
 *
-* @param {!string} attrName
+* @param {string} attrName
 */
 Tag.prototype.removeAttribute = function(attrName)
 {
 	delete this.attributes[attrName];
-}
+};
 
 /**
 * Set the value of an attribute
 *
-* @param {!string} attrName  Attribute's name
+* @param {string} attrName  Attribute's name
 * @param {*}       attrValue Attribute's value
 */
 Tag.prototype.setAttribute = function(attrName, attrValue)
 {
 	this.attributes[attrName] = attrValue;
-}
+};
 
 /**
 * Set all of this tag's attributes at once
@@ -456,4 +456,4 @@ Tag.prototype.setAttributes = function(attributes)
 	{
 		this.attributes[attrName] = attributes[attrName];
 	}
-}
+};

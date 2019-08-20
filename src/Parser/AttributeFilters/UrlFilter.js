@@ -35,7 +35,7 @@ var UrlFilter =
 	*
 	* Similar to PHP's own parse_url() except that all parts are always returned
 	*
-	* @param  {!string} url Original URL
+	* @param  {string} url Original URL
 	* @return {!Object}
 	*/
 	parseUrl: function(url)
@@ -82,7 +82,7 @@ var UrlFilter =
 	*
 	* @param  {!Object} urlConfig
 	* @param  {!Object} p
-	* @return {!string}
+	* @return {string}
 	*/
 	rebuildUrl: function(urlConfig, p)
 	{
@@ -178,8 +178,8 @@ var UrlFilter =
 	* @link http://stackoverflow.com/a/1547922
 	* @link http://tools.ietf.org/html/rfc3986#appendix-A
 	*
-	* @param  {!string} url Original URL
-	* @return {!string}     Sanitized URL
+	* @param  {string} url Original URL
+	* @return {string}     Sanitized URL
 	*/
 	sanitizeUrl: function(url)
 	{

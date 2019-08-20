@@ -36,8 +36,8 @@ matches.forEach(function(m)
 * Capture all attributes in given string
 *
 * @param  {!Tag}    tag    Target tag
-* @param  {!string} elName Name of the HTML element
-* @param  {!string} str    String containing the attribute declarations
+* @param  {string} elName Name of the HTML element
+* @param  {string} str    String containing the attribute declarations
 */
 function captureAttributes(tag, elName, str)
 {

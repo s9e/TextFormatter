@@ -31,9 +31,9 @@ if (typeof config.disableSymbols === 'undefined')
 /**
 * Add a fancy replacement tag
 *
-* @param  {!number} tagPos Position of the tag in the text
-* @param  {!number} tagLen Length of text consumed by the tag
-* @param  {!string} chr    Replacement character
+* @param  {number} tagPos Position of the tag in the text
+* @param  {number} tagLen Length of text consumed by the tag
+* @param  {string} chr    Replacement character
 * @param  {number=} prio   Tag's priority
 * @return {!Tag}
 */
@@ -165,10 +165,10 @@ function parseNotEqualSign()
 /**
 * Parse pairs of quotes
 *
-* @param {!string} q          ASCII quote character 
+* @param {string}  q          ASCII quote character
 * @param {!RegExp} regexp     Regexp used to identify quote pairs
-* @param {!string} leftQuote  Fancy replacement for left quote
-* @param {!string} rightQuote Fancy replacement for right quote
+* @param {string}  leftQuote  Fancy replacement for left quote
+* @param {string}  rightQuote Fancy replacement for right quote
 */
 function parseQuotePairs(q, regexp, leftQuote, rightQuote)
 {

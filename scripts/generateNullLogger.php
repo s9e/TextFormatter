@@ -11,7 +11,7 @@ foreach ($matches as list($line, $doc, $funcName, $signature))
 {
 	$js .= $funcName . ':' . $doc . $signature . '{},';
 }
-$js = substr($js, 0, -1) . '}';
+$js = substr($js, 0, -1) . '};';
 
 file_put_contents($dir . '/NullLogger.js', $js);
 

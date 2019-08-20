@@ -1,7 +1,7 @@
 var MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
 var xslt = {
 	/**
-	* @param {!string} xsl
+	* @param {string} xsl
 	*/
 	init: function(xsl)
 	{
@@ -38,8 +38,8 @@ var xslt = {
 	},
 
 	/**
-	* @param {!string} paramName  Parameter name
-	* @param {!string} paramValue Parameter's value
+	* @param {string} paramName  Parameter name
+	* @param {string} paramValue Parameter's value
 	*/
 	setParameter: function(paramName, paramValue)
 	{
@@ -54,7 +54,7 @@ var xslt = {
 	},
 
 	/**
-	* @param {!string} xml
+	* @param {string} xml
 	* @param {Document} targetDoc
 	*/
 	transformToFragment: function(xml, targetDoc)
@@ -86,7 +86,7 @@ var postProcessFunctions = {};
 /**
 * Parse a given text and render it into given HTML element
 *
-* @param  {!string} text
+* @param  {string} text
 * @param  {!HTMLElement} target
 * @return {!Node}
 */
@@ -103,7 +103,7 @@ function preview(text, target)
 			i     = nodes.length;
 		while (--i >= 0)
 		{
-			/** @type {!string} */
+			/** @type {string} */
 			var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
 			if (!postProcessFunctions[code])
 			{
@@ -289,8 +289,8 @@ function preview(text, target)
 /**
 * Set the value of a stylesheet parameter
 *
-* @param {!string} paramName  Parameter name
-* @param {!string} paramValue Parameter's value
+* @param {string} paramName  Parameter name
+* @param {string} paramValue Parameter's value
 */
 function setParameter(paramName, paramValue)
 {

@@ -15,7 +15,7 @@ processTables();
 /**
 * Add current line to a table
 *
-* @param {!string} line Line of text
+* @param {string} line Line of text
 */
 function addLine(line)
 {
@@ -54,8 +54,8 @@ function addTableBody()
 /**
 * Add a cell's tags for current table at current position
 *
-* @param {!string} tagName Either TD or TH
-* @param {!string} align   Either "left", "center", "right" or ""
+* @param {string} tagName Either TD or TH
+* @param {string} align   Either "left", "center", "right" or ""
 */
 function addTableCell(tagName, align, text)
 {
@@ -93,7 +93,7 @@ function addTableHead()
 /**
 * Process given table row
 *
-* @param {!string} tagName Either TD or TH
+* @param {string}  tagName Either TD or TH
 * @param {!Object} row
 */
 function addTableRow(tagName, row)
@@ -141,8 +141,8 @@ function captureTables()
 /**
 * Create a pair of TBODY tags for given text span
 *
-* @param {!number} startPos
-* @param {!number} endPos
+* @param {number} startPos
+* @param {number} endPos
 */
 function createBodyTags(startPos, endPos)
 {
@@ -152,10 +152,10 @@ function createBodyTags(startPos, endPos)
 /**
 * Create a pair of TD or TH tags for given text span
 *
-* @param {!string} tagName  Either TD or TH
-* @param {!number} startPos
-* @param {!number} endPos
-* @param {!string} align    Either "left", "center", "right" or ""
+* @param {string} tagName  Either TD or TH
+* @param {number} startPos
+* @param {number} endPos
+* @param {string} align    Either "left", "center", "right" or ""
 */
 function createCellTags(tagName, startPos, endPos, align)
 {
@@ -177,8 +177,8 @@ function createCellTags(tagName, startPos, endPos, align)
 /**
 * Create a pair of THEAD tags for given text span
 *
-* @param {!number} startPos
-* @param {!number} endPos
+* @param {number} startPos
+* @param {number} endPos
 */
 function createHeadTags(startPos, endPos)
 {
@@ -188,8 +188,8 @@ function createHeadTags(startPos, endPos)
 /**
 * Create an ignore tag for given text span
 *
-* @param {!number} pos
-* @param {!number} len
+* @param {number} pos
+* @param {number} len
 */
 function createIgnoreTag(pos, len)
 {
@@ -199,8 +199,8 @@ function createIgnoreTag(pos, len)
 /**
 * Create a pair of TR tags for given text span
 *
-* @param {!number} startPos
-* @param {!number} endPos
+* @param {number} startPos
+* @param {number} endPos
 */
 function createRowTags(startPos, endPos)
 {
@@ -220,8 +220,8 @@ function createSeparatorTag(row)
 /**
 * Create a pair of TABLE tags for given text span
 *
-* @param {!number} startPos
-* @param {!number} endPos
+* @param {number} startPos
+* @param {number} endPos
 */
 function createTableTags(startPos, endPos)
 {
@@ -244,7 +244,7 @@ function endTable()
 /**
 * Test whether a valid table is currently buffered
 *
-* @return {!boolean}
+* @return {boolean}
 */
 function hasValidTable()
 {
@@ -254,8 +254,8 @@ function hasValidTable()
 /**
 * Test whether given line is a valid separator
 *
-* @param  {!string}  line
-* @return {!boolean}
+* @param  {string}  line
+* @return {boolean}
 */
 function isValidSeparator(line)
 {
@@ -265,8 +265,8 @@ function isValidSeparator(line)
 /**
 * Overwrite right angle brackets in given match
 *
-* @param  {!string} str
-* @return {!string}
+* @param  {string} str
+* @return {string}
 */
 function overwriteBlockquoteCallback(str)
 {
@@ -287,7 +287,7 @@ function overwriteEscapes()
 /**
 * Overwrite backticks in given match
 *
-* @param  {!string} str
+* @param  {string} str
 * @return string
 */
 function overwriteInlineCodeCallback(str)
@@ -316,8 +316,8 @@ function overwriteMarkdown()
 /**
 * Parse and return column alignments in given separator line
 *
-* @param  {!string} line
-* @return {!Array<!string>}
+* @param  {string} line
+* @return {!Array<string>}
 */
 function parseColumnAlignments(line)
 {
