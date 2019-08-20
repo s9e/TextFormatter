@@ -1,9 +1,10 @@
 /**
-* @param {!Tag}    tag   The original tag
-* @param {!Object} hosts Map of [host => siteId]
-* @param {!Object} sites Map of [siteId => siteConfig]
+* @param {!Tag}    tag      The original tag
+* @param {!Object} hosts    Map of [host => siteId]
+* @param {!Object} sites    Map of [siteId => siteConfig]
+* @param {string}  cacheDir
 */
-function (tag, hosts, sites)
+function (tag, hosts, sites, cacheDir)
 {
 	/**
 	* Filter a MEDIA tag
