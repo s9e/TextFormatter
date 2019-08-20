@@ -30,24 +30,15 @@ punycode.toASCII;
 /** @constructor */
 function XSLTProcessor() {}
 /**
- * @type {string}
- * @implicitCast
- */
-Element.prototype.innerHTML;
-/**
  * @constructor
  */
 function DOMParser() {}
 /**
- * @param {string} src The UTF16 string to be parsed.
+ * @param {!TrustedHTML|string} src The UTF16 string to be parsed.
  * @param {string} type The content type of the string.
  * @return {Document}
  */
 DOMParser.prototype.parseFromString = function(src, type) {};
-/**
- * @type {!Window}
- */
-var window;
 /**
  * @constructor
  * @extends {Node}
@@ -169,6 +160,11 @@ function Window() {}
  */
 Document.prototype.importNode = function(externalNode, deep) {};
 /**
+ * @type {string}
+ * @implicitCast
+ */
+Element.prototype.innerHTML;
+/**
  * @constructor
  * @extends {Document}
  */
@@ -212,6 +208,12 @@ Element.prototype.setAttributeNS = function(namespaceURI, qualifiedName, value) 
  */
 Node.prototype.isEqualNode = function(arg) {};
 /**
+ * @param {string} query
+ * @return {!NodeList<!Element>}
+ * @nosideeffects
+ */
+Node.prototype.querySelectorAll = function(query) {};
+/**
  * @type {string}
  */
 Node.prototype.namespaceURI;
@@ -221,7 +223,10 @@ Node.prototype.namespaceURI;
  */
 Node.prototype.textContent;
 /**
- * @type {!HTMLDocument}
- * @const
+ * @const {!HTMLDocument}
  */
 var document;
+/**
+ * @type {!Window}
+ */
+var window;

@@ -100,7 +100,7 @@ function preview(text, target)
 	// Apply post-processing
 	if (HINT.postProcessing)
 	{
-		var nodes = resultFragment['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
+		var nodes = resultFragment.querySelectorAll('[data-s9e-livepreview-postprocess]'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{

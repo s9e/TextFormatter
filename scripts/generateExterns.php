@@ -13,7 +13,6 @@ $externs = [
 		'Infinity',
 		'undefined',
 
-		'symbol',
 		'Symbol',
 
 		'decodeURIComponent',
@@ -70,15 +69,9 @@ $externs = [
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	],
-	'externs/browser/gecko_dom.js' => [
-		'Element.prototype.innerHTML'
-	],
 	'externs/browser/gecko_xml.js' => [
 		'DOMParser',
 		'DOMParser.prototype.parseFromString'
-	],
-	'externs/browser/ie_dom.js' => [
-		'window'
 	],
 	'externs/browser/w3c_dom1.js' => [
 		'Document',
@@ -113,6 +106,7 @@ $externs = [
 	],
 	'externs/browser/w3c_dom2.js' => [
 		'Document.prototype.importNode',
+		'Element.prototype.innerHTML',
 		'HTMLDocument',
 		'HTMLElement',
 	],
@@ -123,11 +117,13 @@ $externs = [
 		'Element.prototype.setAttributeNS',
 
 		'Node.prototype.isEqualNode',
+		'Node.prototype.querySelectorAll',
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
 	],
 	'externs/browser/window.js' => [
-		'document'
+		'document',
+		'window'
 	]
 ];
 
