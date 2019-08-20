@@ -1,35 +1,35 @@
 /**
-* @param {boolean} Whether current EM span is being closed by current emphasis mark
+* @type {boolean} Whether current EM span is being closed by current emphasis mark
 */
 var closeEm;
 
 /**
-* @param {boolean} Whether current EM span is being closed by current emphasis mark
+* @type {boolean} Whether current EM span is being closed by current emphasis mark
 */
 var closeStrong;
 
 /**
-* @param {?number} Starting position of the current EM span in the text
+* @type {?number} Starting position of the current EM span in the text
 */
 var emPos;
 
 /**
-* @param {?number} Ending position of the current EM span in the text
+* @type {?number} Ending position of the current EM span in the text
 */
 var emEndPos;
 
 /**
-* @param {number} Number of emphasis characters unused in current span
+* @type {number} Number of emphasis characters unused in current span
 */
 var remaining;
 
 /**
-* @param {?number} Starting position of the current STRONG span in the text
+* @type {?number} Starting position of the current STRONG span in the text
 */
 var strongPos;
 
 /**
-* @param {?number} Ending position of the current STRONG span in the text
+* @type {?number} Ending position of the current STRONG span in the text
 */
 var strongEndPos;
 
@@ -214,8 +214,8 @@ function processEmphasisMatch(matchPos, matchLen)
 		canClose = !isAfterWhitespace(matchPos),
 		closeLen = (canClose) ? Math.min(matchLen, 3) : 0;
 
-	closeEm      = (closeLen & 1) && emPos     !== null;
-	closeStrong  = (closeLen & 2) && strongPos !== null;
+	closeEm      = !!(closeLen & 1) && emPos     !== null;
+	closeStrong  = !!(closeLen & 2) && strongPos !== null;
 	emEndPos     = matchPos;
 	strongEndPos = matchPos;
 	remaining    = matchLen;
