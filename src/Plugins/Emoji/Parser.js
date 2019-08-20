@@ -12,9 +12,9 @@ parseUnicode(text);
 /**
 * Add an emoji tag for given sequence
 *
-* @param  {!integer} tagPos Position of the tag in the original text
-* @param  {!integer} tagLen Length of text consumed by the tag
-* @param  {!string}  hex    Fully-qualified sequence of codepoints in hex
+* @param  {number} tagPos Position of the tag in the original text
+* @param  {number} tagLen Length of text consumed by the tag
+* @param  {string} hex    Fully-qualified sequence of codepoints in hex
 */
 function addTag(tagPos, tagLen, hex)
 {
@@ -64,7 +64,7 @@ function getHexSequence(str)
 */
 function parseCustomAliases(text)
 {
-	if (!HINT.EMOJI_HAS_CUSTOM_REGEXP || !config.customRegexp)
+	if (!HINT.EMOJI_HAS_CUSTOM_REGEXP || typeof config.customRegexp === 'undefined')
 	{
 		return;
 	}
