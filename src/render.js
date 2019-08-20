@@ -197,34 +197,33 @@ function preview(text, target)
 	/**
 	* Update given node oldNode to make it match newNode
 	*
-	* @param {!HTMLElement} oldNode
-	* @param {!HTMLElement} newNode
-	* @return boolean Whether the node can be skipped
+	* @param {!Node} oldNode
+	* @param {!Node} newNode
+	* @return {boolean} Whether the node can be skipped
 	*/
 	function refreshNode(oldNode, newNode)
 	{
-		if (oldNode.nodeName !== newNode.nodeName
-		 || oldNode.nodeType !== newNode.nodeType)
+		if (oldNode.nodeName !== newNode.nodeName || oldNode.nodeType !== newNode.nodeType)
 		{
 			return false;
 		}
 
+		if (oldNode instanceof HTMLElement && newNode instanceof HTMLElement)
+		{
+			if (!oldNode.isEqualNode(newNode))
+			{
+				syncElementAttributes(oldNode, newNode);
+				refreshElementContent(oldNode, newNode);
+			}
+		}
 		// Node.TEXT_NODE || Node.COMMENT_NODE
-		if (oldNode.nodeType === 3 || oldNode.nodeType === 8)
+		else if (oldNode.nodeType === 3 || oldNode.nodeType === 8)
 		{
 			if (oldNode.nodeValue !== newNode.nodeValue)
 			{
 				oldNode.nodeValue = newNode.nodeValue;
 				lastUpdated = oldNode;
 			}
-
-			return true;
-		}
-
-		if (!oldNode.isEqualNode || !oldNode.isEqualNode(newNode))
-		{
-			syncElementAttributes(oldNode, newNode);
-			refreshElementContent(oldNode, newNode);
 		}
 
 		return true;
