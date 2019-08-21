@@ -56,15 +56,16 @@ function addTableBody()
 *
 * @param {string} tagName Either TD or TH
 * @param {string} align   Either "left", "center", "right" or ""
+* @param {string} content Cell's text content
 */
-function addTableCell(tagName, align, text)
+function addTableCell(tagName, align, content)
 {
 	var startPos  = pos,
-		endPos    = startPos + text.length,
+		endPos    = startPos + content.length,
 		ignoreLen;
 	pos = endPos;
 
-	var m = /^( *).*?( *)$/.exec(text);
+	var m = /^( *).*?( *)$/.exec(content);
 	if (m[1])
 	{
 		ignoreLen = m[1].length;

@@ -107,15 +107,16 @@ class Parser extends ParserBase
 	*
 	* @param  string $tagName Either TD or TH
 	* @param  string $align   Either "left", "center", "right" or ""
+	* @param  string $content Cell's text content
 	* @return void
 	*/
-	protected function addTableCell($tagName, $align, $text)
+	protected function addTableCell($tagName, $align, $content)
 	{
 		$startPos  = $this->pos;
-		$endPos    = $startPos + strlen($text);
+		$endPos    = $startPos + strlen($content);
 		$this->pos = $endPos;
 
-		preg_match('/^( *).*?( *)$/', $text, $m);
+		preg_match('/^( *).*?( *)$/', $content, $m);
 		if ($m[1])
 		{
 			$ignoreLen = strlen($m[1]);
