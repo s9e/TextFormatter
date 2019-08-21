@@ -2,9 +2,9 @@
 var UrlFilter =
 {
 	/**
-	* @param  {*} attrValue
-	* @param  {!Object} urlConfig
-	* @param  {Logger} logger
+	* @param  {*}        attrValue
+	* @param  {!Object}  urlConfig
+	* @param  {?Logger=} logger
 	* @return {*}
 	*/
 	filter: function(attrValue, urlConfig, logger)

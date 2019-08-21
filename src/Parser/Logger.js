@@ -21,7 +21,7 @@ Logger.prototype.callbacks = {};
 Logger.prototype.logs = [];
 
 /**
-* @type {Tag} Tag being processed
+* @type {?Tag} Tag being processed
 */
 Logger.prototype.tag;
 

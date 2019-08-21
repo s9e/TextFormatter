@@ -52,7 +52,7 @@ var context;
 var currentFixingCost;
 
 /**
-* @type {Tag} Current tag being processed
+* @type {?Tag} Current tag being processed
 */
 var currentTag;
 
@@ -669,8 +669,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 /**
 * Output a linebreak tag
 *
-* @param  {!Tag} tag
-* @return void
+* @param {!Tag} tag
 */
 function outputBrTag(tag)
 {
@@ -681,8 +680,7 @@ function outputBrTag(tag)
 /**
 * Output an ignore tag
 *
-* @param  {!Tag} tag
-* @return void
+* @param {!Tag} tag
 */
 function outputIgnoreTag(tag)
 {
@@ -817,7 +815,7 @@ function executePluginParser(pluginName)
 	}
 
 	var matches = [];
-	if (pluginConfig.regexp && pluginConfig.regexpLimit)
+	if (typeof pluginConfig.regexp !== 'undefined' && typeof pluginConfig.regexpLimit !== 'undefined')
 	{
 		matches = getMatches(pluginConfig.regexp, pluginConfig.regexpLimit);
 		if (!matches.length)
@@ -888,7 +886,7 @@ function getMatches(regexp, limit)
 * Get the callback for given plugin's parser
 *
 * @param  {string} pluginName
-* @return {!function(string, Array)}
+* @return {function(string, !Array)}
 */
 function getPluginParser(pluginName)
 {
@@ -903,7 +901,7 @@ function getPluginParser(pluginName)
 *
 * @param  {string}    pluginName
 * @param  {!Function} parser
-* @param  {RegExp=}   regexp
+* @param  {?RegExp=}  regexp
 * @param  {number=}   limit
 */
 function registerParser(pluginName, parser, regexp, limit)
@@ -1071,7 +1069,7 @@ function fosterParent(tag)
 			{
 				if (parentName !== tagName && currentFixingCost < maxFixingCost)
 				{
-					addFosterTag(tag, parent)
+					addFosterTag(tag, parent);
 				}
 
 				// Reinsert current tag
@@ -1715,11 +1713,9 @@ function pushContext(tag)
 
 	++cntOpen[tagName];
 	openTags.push(tag);
-	context = {
-		allowed       : allowed,
-		flags         : flags,
-		parentContext : context
-	};
+	context         = { parentContext : context };
+	context.allowed = allowed;
+	context.flags   = flags;
 }
 
 /**

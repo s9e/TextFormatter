@@ -288,7 +288,7 @@ function overwriteEscapes()
 * Overwrite backticks in given match
 *
 * @param  {string} str
-* @return string
+* @return {string}
 */
 function overwriteInlineCodeCallback(str)
 {

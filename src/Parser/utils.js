@@ -32,7 +32,8 @@ function htmlspecialchars_compat(str)
 	return str.replace(
 		/[<>&"]/g,
 		/**
-		* @param {string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{
@@ -55,7 +56,8 @@ function htmlspecialchars_noquotes(str)
 	return str.replace(
 		/[<>&]/g,
 		/**
-		* @param {string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{
@@ -73,7 +75,8 @@ function rawurlencode(str)
 	return encodeURIComponent(str).replace(
 		/[!'()*]/g,
 		/**
-		* @param {string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{

@@ -161,7 +161,7 @@ class Parser extends ParserBase
 	/**
 	* Parse attributes starting at current position
 	*
-	* @return array Associative array of [name => value]
+	* @return void
 	*/
 	protected function parseAttributes()
 	{

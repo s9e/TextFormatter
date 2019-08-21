@@ -46,7 +46,7 @@ Tag.prototype.attributes;
 Tag.prototype.cascade;
 
 /**
-* @type {Tag} End tag that unconditionally ends this start tag
+* @type {?Tag} End tag that unconditionally ends this start tag
 */
 Tag.prototype.endTag;
 
@@ -76,7 +76,7 @@ Tag.prototype.pos;
 Tag.prototype.sortPriority;
 
 /**
-* @type {Tag} Start tag that is unconditionally closed this end tag
+* @type {?Tag} Start tag that is unconditionally closed this end tag
 */
 Tag.prototype.startTag;
 
@@ -203,7 +203,7 @@ Tag.prototype.getAttributes = function()
 /**
 * Return this tag's end tag
 *
-* @return {Tag} This tag's end tag
+* @return {?Tag} This tag's end tag
 */
 Tag.prototype.getEndTag = function()
 {
@@ -263,7 +263,7 @@ Tag.prototype.getSortPriority = function()
 /**
 * Return this tag's start tag
 *
-* @return {Tag} This tag's start tag
+* @return {?Tag} This tag's start tag
 */
 Tag.prototype.getStartTag = function()
 {
@@ -450,8 +450,7 @@ Tag.prototype.setAttribute = function(attrName, attrValue)
 */
 Tag.prototype.setAttributes = function(attributes)
 {
-	this.attributes = {}
-
+	this.attributes = {};
 	for (var attrName in attributes)
 	{
 		this.attributes[attrName] = attributes[attrName];

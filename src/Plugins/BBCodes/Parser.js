@@ -98,7 +98,7 @@ function addBBCodeStartTag()
 /**
 * Parse the end tag that matches given BBCode name and suffix starting at current position
 *
-* @return {Tag}
+* @return {?Tag}
 */
 function captureEndTag()
 {
@@ -119,7 +119,7 @@ function captureEndTag()
 /**
 * Get the tag name for current BBCode
 *
-* @return string
+* @return {string}
 */
 function getTagName()
 {
@@ -129,8 +129,6 @@ function getTagName()
 
 /**
 * Parse attributes starting at current position
-*
-* @return array Associative array of [name => value]
 */
 function parseAttributes()
 {
@@ -189,7 +187,7 @@ function parseAttributes()
 /**
 * Parse the attribute value starting at current position
 *
-* @return string
+* @return {string}
 */
 function parseAttributeValue()
 {
@@ -217,8 +215,6 @@ function parseAttributeValue()
 
 /**
 * Parse current BBCode
-*
-* @return void
 */
 function parseBBCode()
 {
@@ -312,8 +308,6 @@ function parseBBCode()
 *
 * Used to explicitly pair specific tags together, e.g.
 *   [code:123][code]type your code here[/code][/code:123]
-*
-* @return void
 */
 function parseBBCodeSuffix()
 {

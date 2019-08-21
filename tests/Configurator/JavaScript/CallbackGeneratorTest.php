@@ -49,7 +49,7 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => [
 							'filterChain' => [
-								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return executeAttributePreprocessors(tag,tagConfig);}")
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n* @return {*}\n*/\nfunction(tag,tagConfig){return executeAttributePreprocessors(tag,tagConfig);}")
 							]
 						]
 					]
@@ -78,7 +78,7 @@ class CallbackGeneratorTest extends Test
 							'attributes' => [
 								'x' => [
 									'filterChain' => [
-										new Code("/**\n* @param {*} attrValue\n* @param {!string} attrName\n*/\nfunction(attrValue,attrName){return (function(z){return z})(\"FOO\");}")
+										new Code("/**\n* @param {*} attrValue\n* @param {string} attrName\n* @return {*}\n*/\nfunction(attrValue,attrName){return (function(z){return z})(\"FOO\");}")
 									]
 								]
 							]
@@ -105,7 +105,7 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => [
 							'filterChain' => [
-								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return (function(v){return v})(registeredVars[\"registered\"]);}")
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n* @return {*}\n*/\nfunction(tag,tagConfig){return (function(v){return v})(registeredVars[\"registered\"]);}")
 							]
 						]
 					]
@@ -156,7 +156,7 @@ class CallbackGeneratorTest extends Test
 					'tags' => [
 						'X' => [
 							'filterChain' => [
-								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n*/\nfunction(tag,tagConfig){return (function(innerText,outerText,tagText){})((tag.getEndTag() ? text.substr(tag.getPos() + tag.getLen(), tag.getEndTag().getPos() - tag.getPos() - tag.getLen()) : \"\"),text.substr(tag.getPos(), (tag.getEndTag() ? tag.getEndTag().getPos() + tag.getEndTag().getLen() - tag.getPos() : tag.getLen())),text.substr(tag.getPos(), tag.getLen()));}")
+								new Code("/**\n* @param {!Tag} tag\n* @param {!Object} tagConfig\n* @return {*}\n*/\nfunction(tag,tagConfig){return (function(innerText,outerText,tagText){})((tag.getEndTag() ? text.substr(tag.getPos() + tag.getLen(), tag.getEndTag().getPos() - tag.getPos() - tag.getLen()) : \"\"),text.substr(tag.getPos(), (tag.getEndTag() ? tag.getEndTag().getPos() + tag.getEndTag().getLen() - tag.getPos() : tag.getLen())),text.substr(tag.getPos(), tag.getLen()));}")
 							]
 						]
 					]

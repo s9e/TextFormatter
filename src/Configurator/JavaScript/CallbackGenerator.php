@@ -15,7 +15,7 @@ class CallbackGenerator
 	public $callbacks = [
 		'tags.*.attributes.*.filterChain.*' => [
 			'attrValue' => '*',
-			'attrName'  => '!string'
+			'attrName'  => 'string'
 		],
 		'tags.*.filterChain.*' => [
 			'tag'       => '!Tag',
@@ -138,6 +138,7 @@ class CallbackGenerator
 		{
 			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
 		}
+		$header .= "* @return {*}\n";
 		$header .= "*/\n";
 
 		return $header;

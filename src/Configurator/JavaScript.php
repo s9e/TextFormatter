@@ -146,7 +146,7 @@ class JavaScript
 		$src = $this->getMinifier()->get($src);
 
 		// Wrap the source in a function to protect the global scope
-		$src = '(function(){' . $src . '})()';
+		$src = '(function(){' . $src . '})();';
 
 		return $src;
 	}
@@ -217,7 +217,7 @@ class JavaScript
 		}
 		sort($exports);
 
-		return "window['s9e']['TextFormatter'] = {" . implode(',', $exports) . '}';
+		return "window['s9e']['TextFormatter'] = {" . implode(',', $exports) . '};';
 	}
 
 	/**
@@ -303,8 +303,8 @@ class JavaScript
 
 			$globalConfig['parser'] = new Code(
 				'/**
-				* @param {!string} text
-				* @param {!Array.<Array>} matches
+				* @param {string}          text
+				* @param {!Array.<!Array>} matches
 				*/
 				function(text, matches)
 				{

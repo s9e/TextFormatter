@@ -8,7 +8,7 @@
 */
 function executeAttributePreprocessors(tag, tagConfig)
 {
-	if (!tagConfig.attributePreprocessors)
+	if (typeof tagConfig.attributePreprocessors === 'undefined')
 	{
 		return;
 	}
@@ -49,7 +49,7 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 		{
 			attributes[attrName] = attrValue;
 		}
-		else if (HINT.attributeDefaultValue && attrConfig.defaultValue !== undefined)
+		else if (HINT.attributeDefaultValue && typeof attrConfig.defaultValue !== 'undefined')
 		{
 			attributes[attrName] = attrConfig.defaultValue;
 		}
