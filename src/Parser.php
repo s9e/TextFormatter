@@ -884,7 +884,7 @@ class Parser
 		}
 
 		$matches = [];
-		if (isset($pluginConfig['regexp']))
+		if (isset($pluginConfig['regexp'], $pluginConfig['regexpLimit']))
 		{
 			$matches = $this->getMatches($pluginConfig['regexp'], $pluginConfig['regexpLimit']);
 			if (empty($matches))
