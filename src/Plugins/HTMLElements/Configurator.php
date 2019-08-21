@@ -42,6 +42,7 @@ class Configurator extends ConfiguratorBase
 		'formaction' => '#url',
 		'href'       => '#url',
 		'icon'       => '#url',
+		'itemtype'   => '#url',
 		'longdesc'   => '#url',
 		'manifest'   => '#url',
 		'ping'       => '#url',
