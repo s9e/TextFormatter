@@ -462,8 +462,8 @@ class BBCodesTest extends Test
 				'<ul><li>one</li><li>two</li></ul>'
 			],
 			[
-				'[*]no <li> element without a parent',
-				'[*]no &lt;li&gt; element without a parent'
+				'[*]no [b]<li>[/b] element without a parent',
+				'[*]no <b>&lt;li&gt;</b> element without a parent'
 			],
 			[
 				'[b][*]no <li> element without the right parent[/b]',
