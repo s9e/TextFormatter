@@ -211,7 +211,7 @@ function parse()
 			else if (!listsCnt)
 			{
 				// We're not inside of a list already, we can start one if there's a list item
-				listIndex = (hasListItem) ? 0 : -1
+				listIndex = (hasListItem) ? 0 : -1;
 			}
 			else
 			{
@@ -242,7 +242,7 @@ function parse()
 				breakParagraph = true;
 
 				// Compute the position and amount of text consumed by the item tag
-				tagPos = matchPos + ignoreLen + indentPos
+				tagPos = matchPos + ignoreLen + indentPos;
 				tagLen = m[4].length;
 
 				// Create a LI tag that consumes its markup
@@ -422,8 +422,8 @@ function parse()
 /**
 * Close a list at given offset
 *
-* @param  {!Array}  list
-* @param  {number} textBoundary
+* @param {!Object} list
+* @param {number}  textBoundary
 */
 function closeList(list, textBoundary)
 {

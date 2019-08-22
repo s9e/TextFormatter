@@ -1,4 +1,4 @@
-var	pos, table = null, tableTag, tables, text;
+var pos, table = null, tableTag, tables, _text = text;
 
 if (config.overwriteMarkdown)
 {
@@ -124,7 +124,7 @@ function captureTables()
 	tables = [];
 
 	pos = 0;
-	text.split("\n").forEach(function(line)
+	_text.split("\n").forEach(function(line)
 	{
 		if (line.indexOf('|') < 0)
 		{
@@ -279,9 +279,9 @@ function overwriteBlockquoteCallback(str)
 */
 function overwriteEscapes()
 {
-	if (text.indexOf('\\|') > -1)
+	if (_text.indexOf('\\|') > -1)
 	{
-		text = text.replace(/\\[\\|]/g, '..');
+		_text = _text.replace(/\\[\\|]/g, '..');
 	}
 }
 
@@ -302,15 +302,15 @@ function overwriteInlineCodeCallback(str)
 function overwriteMarkdown()
 {
 	// Overwrite inline code spans
-	if (text.indexOf('`') > -1)
+	if (_text.indexOf('`') > -1)
 	{
-		text = text.replace(/`[^`]*`/g, overwriteInlineCodeCallback);
+		_text = _text.replace(/`[^`]*`/g, overwriteInlineCodeCallback);
 	}
 
 	// Overwrite blockquotes
-	if (text.indexOf('>') > -1)
+	if (_text.indexOf('>') > -1)
 	{
-		text = text.replace(/^(?:>!? ?)+/gm, overwriteBlockquoteCallback);
+		_text = _text.replace(/^(?:>!? ?)+/gm, overwriteBlockquoteCallback);
 	}
 }
 

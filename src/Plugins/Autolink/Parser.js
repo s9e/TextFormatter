@@ -39,7 +39,7 @@ function linkifyUrl(tagPos, url)
 	// Protect the tag's content from partial replacements with a low priority tag
 	var contentTag = addVerbatim(tagPos, endPos - tagPos, 1000);
 	startTag.cascadeInvalidationTo(contentTag);
-};
+}
 
 /**
 * Remove trailing punctuation from given URL
