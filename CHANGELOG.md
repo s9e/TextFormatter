@@ -1,3 +1,34 @@
+2.1.2 (2019-08-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/0c6ba01d3a30ee01c3ac7dd66a87712023a88962...d14f8c92d6f795fe1483cf7fff1f06e0b2439e81)
+
+### Fixed
+
+ - `61d2a9b6c` Emoji: fixed compiler warnings in JavaScript parser
+ - `15fa701f5` Fixed compiler warning in JavaScript version of urldecode()
+ - `b69ead06d` Fixed various compiler warnings in JavaScript sources
+ - `987acc8f4` Fixed various compiler warnings in JavaScript sources
+ - `da93809a4` Fixed various compiler warnings in JavaScript sources
+ - `55b029742` Keywords: fixed compiler warnings in JavaScript parser
+ - `b75c7ccb5` Litedown: fixed JavaScript warnings in Emphasis pass
+
+### Changed
+
+ - `6f2f1fcc9` BBCodes: updated default CODE BBCode
+ - `4dd69b5dd` FancyPants: updated JavaScript parser
+ - `bb7c27a95` HTMLElements: simplified attributes parsing
+ - `1dbbcc606` HTMLElements: updated attribute filter definitions
+ - `9e2a4e874` JavaScript: updated externs
+ - `3c3bc7d3f` JavaScript: updated externs
+ - `a28771a30` JavaScript: updated regexp result handling and casting
+ - `a2e4c9a83` Litedown: eliminated superfluous variable in Blocks pass
+ - `0ddf1936c` Litedown: made variable non-nullable in Emphasis pass
+ - `f5f10524a` Parser: ensure that regexpLimit is set before executing a plugin's regexp
+ - `fea82fedf` PipeTables: handle tables inside of spoiler blocks
+ - `ef703b9b1` Reorganized DOM diffing in live preview
+
+
 2.1.1 (2019-08-05)
 ==================
 
