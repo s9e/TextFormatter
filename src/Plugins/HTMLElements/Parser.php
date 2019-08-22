@@ -61,32 +61,19 @@ class Parser extends ParserBase
 	*/
 	protected function captureAttributes(Tag $tag, $elName, $str)
 	{
-		preg_match_all(
-			'/[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
-			$str,
-			$attrMatches
-		);
+		$regexp = '/([a-z][-a-z0-9]*)(?>\\s*=\\s*("[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i';
+		preg_match_all($regexp, $str, $matches, PREG_SET_ORDER);
 
-		foreach ($attrMatches[0] as $attrMatch)
+		foreach ($matches as $m)
 		{
-			$pos = strpos($attrMatch, '=');
-
 			/**
-			* If there's no equal sign, it's a boolean attribute and we generate a value equal
+			* If there's no value, it's a boolean attribute and we generate a value equal
 			* to the attribute's name, lowercased
 			*
 			* @link http://www.w3.org/html/wg/drafts/html/master/single-page.html#boolean-attributes
 			*/
-			if ($pos === false)
-			{
-				$pos = strlen($attrMatch);
-				$attrMatch .= '=' . strtolower($attrMatch);
-			}
-
-			// Normalize the attribute name, remove the whitespace around its value to account
-			// for cases like <b title = "foo"/>
-			$attrName  = strtolower(trim(substr($attrMatch, 0, $pos)));
-			$attrValue = trim(substr($attrMatch, 1 + $pos));
+			$attrName  = strtolower($m[1]);
+			$attrValue = $m[2] ?? $attrName;
 
 			// Use the attribute's alias if applicable
 			if (isset($this->config['aliases'][$elName][$attrName]))
