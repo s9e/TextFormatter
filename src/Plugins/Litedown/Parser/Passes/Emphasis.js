@@ -9,12 +9,12 @@ var closeEm;
 var closeStrong;
 
 /**
-* @type {?number} Starting position of the current EM span in the text
+* @type {number} Starting position of the current EM span in the text
 */
 var emPos;
 
 /**
-* @type {?number} Ending position of the current EM span in the text
+* @type {number} Ending position of the current EM span in the text
 */
 var emEndPos;
 
@@ -24,12 +24,12 @@ var emEndPos;
 var remaining;
 
 /**
-* @type {?number} Starting position of the current STRONG span in the text
+* @type {number} Starting position of the current STRONG span in the text
 */
 var strongPos;
 
 /**
-* @type {?number} Ending position of the current STRONG span in the text
+* @type {number} Ending position of the current STRONG span in the text
 */
 var strongEndPos;
 
@@ -66,7 +66,7 @@ function adjustEndingPositions()
 */
 function adjustStartingPositions()
 {
-	if (emPos !== null && emPos === strongPos)
+	if (emPos >= 0 && emPos === strongPos)
 	{
 		if (closeEm)
 		{
@@ -88,13 +88,13 @@ function closeSpans()
 	{
 		--remaining;
 		addTagPair('EM', emPos, 1, emEndPos, 1);
-		emPos = null;
+		emPos = -1;
 	}
 	if (closeStrong)
 	{
 		remaining -= 2;
 		addTagPair('STRONG', strongPos, 2, strongEndPos, 2);
-		strongPos = null;
+		strongPos = -1;
 	}
 }
 
@@ -193,8 +193,8 @@ function parseEmphasisByCharacter(character, regexp)
 */
 function processEmphasisBlock(block)
 {
-	emPos     = null,
-	strongPos = null;
+	emPos     = -1,
+	strongPos = -1;
 
 	block.forEach(function(pair)
 	{
@@ -214,8 +214,8 @@ function processEmphasisMatch(matchPos, matchLen)
 		canClose = !isAfterWhitespace(matchPos),
 		closeLen = (canClose) ? Math.min(matchLen, 3) : 0;
 
-	closeEm      = !!(closeLen & 1) && emPos     !== null;
-	closeStrong  = !!(closeLen & 2) && strongPos !== null;
+	closeEm      = !!(closeLen & 1) && emPos     >= 0;
+	closeStrong  = !!(closeLen & 2) && strongPos >= 0;
 	emEndPos     = matchPos;
 	strongEndPos = matchPos;
 	remaining    = matchLen;

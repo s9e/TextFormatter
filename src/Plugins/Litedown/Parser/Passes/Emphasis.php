@@ -84,7 +84,7 @@ class Emphasis extends AbstractPass
 	*/
 	protected function adjustStartingPositions()
 	{
-		if (isset($this->emPos) && $this->emPos === $this->strongPos)
+		if ($this->emPos >= 0 && $this->emPos === $this->strongPos)
 		{
 			if ($this->closeEm)
 			{
@@ -108,13 +108,13 @@ class Emphasis extends AbstractPass
 		{
 			--$this->remaining;
 			$this->parser->addTagPair('EM', $this->emPos, 1, $this->emEndPos, 1);
-			$this->emPos = null;
+			$this->emPos = -1;
 		}
 		if ($this->closeStrong)
 		{
 			$this->remaining -= 2;
 			$this->parser->addTagPair('STRONG', $this->strongPos, 2, $this->strongEndPos, 2);
-			$this->strongPos = null;
+			$this->strongPos = -1;
 		}
 	}
 
@@ -216,8 +216,8 @@ class Emphasis extends AbstractPass
 	*/
 	protected function processEmphasisBlock(array $block)
 	{
-		$this->emPos     = null;
-		$this->strongPos = null;
+		$this->emPos     = -1;
+		$this->strongPos = -1;
 		foreach ($block as list($matchPos, $matchLen))
 		{
 			$this->processEmphasisMatch($matchPos, $matchLen);
@@ -237,8 +237,8 @@ class Emphasis extends AbstractPass
 		$canClose = !$this->text->isAfterWhitespace($matchPos);
 		$closeLen = ($canClose) ? min($matchLen, 3) : 0;
 
-		$this->closeEm      = ($closeLen & 1) && isset($this->emPos);
-		$this->closeStrong  = ($closeLen & 2) && isset($this->strongPos);
+		$this->closeEm      = ($closeLen & 1) && $this->emPos     >= 0;
+		$this->closeStrong  = ($closeLen & 2) && $this->strongPos >= 0;
 		$this->emEndPos     = $matchPos;
 		$this->strongEndPos = $matchPos;
 		$this->remaining    = $matchLen;
