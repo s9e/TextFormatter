@@ -134,9 +134,7 @@ class Blocks extends AbstractPass
 					{
 						// Overwrite the whole block
 						$this->text->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
-
-						$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
-						$endTag->pairWith($codeTag);
+						$codeTag->pairWith($this->parser->addEndTag('CODE', $textBoundary, 0, -1));
 					}
 					else
 					{
@@ -338,9 +336,7 @@ class Blocks extends AbstractPass
 
 					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
-						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen, -1);
-						$endTag->pairWith($codeTag);
-
+						$codeTag->pairWith($this->parser->addEndTag('CODE', $tagPos, $tagLen, -1));
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 
 						// Overwrite the whole block

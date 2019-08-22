@@ -16,7 +16,6 @@ function parse()
 		textBoundary = 0,
 		breakParagraph,
 		continuation,
-		endTag,
 		ignoreLen,
 		indentStr,
 		indentLen,
@@ -152,9 +151,7 @@ function parse()
 				{
 					// Overwrite the whole block
 					overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
-
-					endTag = addEndTag('CODE', textBoundary, 0, -1);
-					endTag.pairWith(codeTag);
+					codeTag.pairWith(addEndTag('CODE', textBoundary, 0, -1));
 				}
 				else
 				{
@@ -353,9 +350,7 @@ function parse()
 
 				if (codeTag && m[5] === codeFence)
 				{
-					endTag = addEndTag('CODE', tagPos, tagLen, -1);
-					endTag.pairWith(codeTag);
-
+					codeTag.pairWith(addEndTag('CODE', tagPos, tagLen, -1));
 					addIgnoreTag(textBoundary, tagPos - textBoundary);
 
 					// Overwrite the whole block
