@@ -182,7 +182,11 @@ class BBCodeMonkey
 	*/
 	protected function parse($usage)
 	{
-		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'];
+		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'] + [
+			'attributes' => [],
+			'options'    => [],
+			'rules'      => []
+		];
 
 		$tag    = new Tag;
 		$bbcode = new BBCode;
@@ -199,68 +203,47 @@ class BBCodeMonkey
 
 		// Append the content token to the attributes list under the name "content" if it's anything
 		// but raw {TEXT} (or other unfiltered tokens)
-		if (!empty($definition['content']))
+		if ($this->containsOnlyOnePassthroughToken($definition['content']))
 		{
-			$regexp = '(^' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*$)D';
-			if (count($definition['content']) === 1 && preg_match($regexp, $definition[0]['id']))
+			$config['passthroughToken'] = $definition['content'][0]['id'];
+		}
+		elseif (!empty($definition['content']))
+		{
+			$definition['attributes'][] = [
+				'name'    => 'content',
+				'content' => $definition['content']
+			];
+			$bbcode->contentAttributes[] = 'content';
+		}
+
+		foreach ($definition['options'] as $name => $value)
+		{
+			// Allow nestingLimit and tagLimit to be set on the tag itself. We don't necessarily
+			// want every other tag property to be modifiable this way, though
+			$object = ($name === 'nestingLimit' || $name === 'tagLimit') ? $tag : $bbcode;
+
+			$object->$name = $this->convertValue($value);
+		}
+
+		foreach ($definition['rules'] as $rule)
+		{
+			$name = $rule['name'];
+			if (isset($rule['value']))
 			{
-				$config['passthroughToken'] = $definition[0]['id'];
+				$tag->rules->$name($rule['value']);
 			}
 			else
 			{
-				$definition['attributes'][] = [
-					'name'    => 'content',
-					'content' => $definition['content']
-				];
-				$bbcode->contentAttributes[] = 'content';
+				$tag->rules->$name();
 			}
 		}
 
 		// Separate the attribute definitions from the BBCode options
 		$attributeDefinitions = [];
-		foreach ($definitions as $definition)
+		foreach ($definition['attributes'] as $attributeDefinition)
 		{
-			$pos   = strpos($definition, '=');
-			$name  = substr($definition, 0, $pos);
-			$value = preg_replace('(^"(.*?)")s', '$1', substr($definition, 1 + $pos));
-
-			// Decode base64-encoded tokens
-			$value = preg_replace_callback(
-				'#(\\{(?>HASHMAP|MAP|PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
-				function ($m)
-				{
-					return $m[1] . base64_decode($m[2]);
-				},
-				$value
-			);
-
-			// If name starts with $ then it's a BBCode/tag option. If it starts with # it's a rule.
-			// Otherwise, it's an attribute definition
-			if ($name[0] === '$')
-			{
-				$optionName = substr($name, 1);
-
-				// Allow nestingLimit and tagLimit to be set on the tag itself. We don't necessarily
-				// want every other tag property to be modifiable this way, though
-				$object = ($optionName === 'nestingLimit' || $optionName === 'tagLimit') ? $tag : $bbcode;
-
-				$object->$optionName = $this->convertValue($value);
-			}
-			elseif ($name[0] === '#')
-			{
-				$ruleName = substr($name, 1);
-
-				// Supports #denyChild=foo,bar
-				foreach (explode(',', $value) as $value)
-				{
-					$tag->rules->$ruleName($this->convertValue($value));
-				}
-			}
-			else
-			{
-				$attrName = strtolower(trim($name));
-				$attributeDefinitions[] = [$attrName, $value];
-			}
+			$attrName = strtolower(trim($attributeDefinition['name']));
+			$attributeDefinitions[] = [$attrName, $attributeDefinition['value']];
 		}
 
 		// Add the attributes and get the token translation table
@@ -509,24 +492,16 @@ class BBCodeMonkey
 	}
 
 	/**
-	* Convert a human-readable value to a typed PHP value
+	* 
 	*
-	* @param  string      $value Original value
-	* @return bool|string        Converted value
+	* @param  array $content
+	* @return bool
 	*/
-	protected function convertValue($value)
+	protected function containsOnlyOnePassthroughToken(array $content): bool
 	{
-		if ($value === 'true')
-		{
-			return true;
-		}
+		$regexp = '(^' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*$)D';
 
-		if ($value === 'false')
-		{
-			return false;
-		}
-
-		return $value;
+		return (count($content) === 1 && isset($content[0]['id']) && preg_match($regexp, $content[0]['id']));
 	}
 
 	/**
