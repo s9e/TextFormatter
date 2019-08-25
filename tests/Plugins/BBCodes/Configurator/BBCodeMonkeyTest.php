@@ -111,7 +111,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[föö]',
 				'',
-				new InvalidArgumentException("Invalid BBCode name 'föö'")
+				new RuntimeException("Cannot parse '[föö]'")
 			],
 			[
 				'[foo bar=TEXT]{TEXT}[/foo]',
