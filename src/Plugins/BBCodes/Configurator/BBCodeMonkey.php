@@ -238,16 +238,8 @@ class BBCodeMonkey
 			}
 		}
 
-		// Separate the attribute definitions from the BBCode options
-		$attributeDefinitions = [];
-		foreach ($definition['attributes'] as $attributeDefinition)
-		{
-			$attrName = strtolower(trim($attributeDefinition['name']));
-			$attributeDefinitions[] = [$attrName, $attributeDefinition['value']];
-		}
-
 		// Add the attributes and get the token translation table
-		$tokens = $this->addAttributes($attributeDefinitions, $bbcode, $tag);
+		$tokens = $this->addAttributes($definition['attributes'], $bbcode, $tag);
 
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
@@ -306,8 +298,10 @@ class BBCodeMonkey
 		*/
 		$table = [];
 
-		foreach ($definitions as list($attrName, $definition))
+		foreach ($definitions as $definition)
 		{
+			$attrName = strtolower(trim($definition['name']))
+
 			// The first attribute defined is set as default
 			if (!isset($bbcode->defaultAttribute))
 			{
