@@ -106,7 +106,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'*invalid*',
 				'',
-				new InvalidArgumentException('Cannot interpret the BBCode definition')
+				new RuntimeException("Cannot parse '*invalid*'")
 			],
 			[
 				'[föö]',
