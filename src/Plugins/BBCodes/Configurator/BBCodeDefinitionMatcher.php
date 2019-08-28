@@ -10,6 +10,10 @@ namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
 
+// TODO: don't rely on FilterSyntaxMatcher, pass filters as a string?
+// $filterChain.append="strtolower($attrValue)"
+// $filterChain.append("strtolower($attrValue)")
+// $attributePreprocessors.add("name", /regexp/)
 class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 {
 	/**

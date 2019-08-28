@@ -182,11 +182,7 @@ class BBCodeMonkey
 	*/
 	protected function parse($usage)
 	{
-		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'] + [
-			'attributes' => [],
-			'options'    => [],
-			'rules'      => []
-		];
+		$definition = $this->parseDefinition($usage);
 
 		$tag    = new Tag;
 		$bbcode = new BBCode;
@@ -225,18 +221,7 @@ class BBCodeMonkey
 			$object->$name = $this->convertValue($value);
 		}
 
-		foreach ($definition['rules'] as $rule)
-		{
-			$name = $rule['name'];
-			if (isset($rule['value']))
-			{
-				$tag->rules->$name($rule['value']);
-			}
-			else
-			{
-				$tag->rules->$name();
-			}
-		}
+		$this->addRules($tag, $definition['rules']);
 
 		// Add the attributes and get the token translation table
 		$tokens = $this->addAttributes($definition['attributes'], $bbcode, $tag);
@@ -483,6 +468,29 @@ class BBCodeMonkey
 		}
 
 		return $table;
+	}
+
+	/**
+	* 
+	*
+	* @param  Tag   $tag
+	* @param  array $rules
+	* @return void
+	*/
+	protected function addRules(Tag $tag, array $rules)
+	{
+		foreach ($rules as $rule)
+		{
+			$name = $rule['name'];
+			if (isset($rule['value']))
+			{
+				$tag->rules->$name($rule['value']);
+			}
+			else
+			{
+				$tag->rules->$name();
+			}
+		}
 	}
 
 	/**
@@ -747,6 +755,24 @@ class BBCodeMonkey
 		}
 
 		return false;
+	}
+
+	/**
+	* 
+	*
+	* @return array
+	*/
+	protected function parseDefinition($usage)
+	{
+		$definition = $parser->parse($usage, 'BBCodeDefinition')['value'] + [
+			'attributes' => [],
+			'options'    => [],
+			'rules'      => []
+		];
+
+		// TODO: prepend options with $defaultAttribute based on the first attribute's name
+
+		return $definition;
 	}
 
 	/**
