@@ -15,7 +15,7 @@ class RemoveLivePreviewAttributesTest extends AbstractTest
 				'<div data-s9e-mediaembed="foo">..</div>'
 			],
 			[
-				'<div data-s9e-livepreview-postprocess="this.foo()">..</div>',
+				'<div data-s9e-livepreview-onrender="this.foo()">..</div>',
 				'<div>..</div>'
 			],
 			[
@@ -23,7 +23,7 @@ class RemoveLivePreviewAttributesTest extends AbstractTest
 				'<div>..</div>'
 			],
 			[
-				'<div data-s9e-mediaembed="foo" data-s9e-livepreview-postprocess="this.foo()">..</div>',
+				'<div data-s9e-mediaembed="foo" data-s9e-livepreview-onrender="this.foo()">..</div>',
 				'<div data-s9e-mediaembed="foo">..</div>'
 			],
 			[
@@ -31,7 +31,7 @@ class RemoveLivePreviewAttributesTest extends AbstractTest
 				'<div data-s9e-mediaembed="foo">..</div>'
 			],
 			[
-				'<div><xsl:attribute name="data-s9e-livepreview-postprocess">this.foo()</xsl:attribute>..</div>',
+				'<div><xsl:attribute name="data-s9e-livepreview-onrender">this.foo()</xsl:attribute>..</div>',
 				'<div>..</div>'
 			],
 		];

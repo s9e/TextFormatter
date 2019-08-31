@@ -284,6 +284,10 @@ class TemplateNormalizerTest extends Test
 				"<b title=\"{concat('}','}}')}\"><xsl:apply-templates/></b>",
 				'<b title="}}}}}}"><xsl:apply-templates/></b>',
 			],
+			[
+				'<div data-s9e-livepreview-postprocess="foo"/>',
+				'<div data-s9e-livepreview-onrender="foo"/>'
+			],
 		];
 	}
 }

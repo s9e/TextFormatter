@@ -81,7 +81,7 @@ var xslt = {
 }
 xslt.init(xsl);
 
-var postProcessFunctions = {};
+var functionCache = {};
 
 /**
 * Parse a given text and render it into given HTML element
@@ -97,20 +97,42 @@ function preview(text, target)
 		lastUpdated    = target;
 
 	// Apply post-processing
-	if (HINT.postProcessing)
+	if (HINT.onRender)
 	{
-		var nodes = resultFragment.querySelectorAll('[data-s9e-livepreview-postprocess]'),
+		executeEvents(resultFragment, 'onrender');
+	}
+
+	/**
+	* Execute an event's code on a given node
+	*
+	* @param {!Element} node
+	* @param {string}   eventName
+	*/
+	function executeEvent(node, eventName)
+	{
+		/** @type {string} */
+		var code = node['getAttribute']('data-s9e-livepreview-' + eventName);
+		if (!functionCache[code])
+		{
+			functionCache[code] = new Function(code);
+		}
+
+		functionCache[code]['call'](node);
+	}
+
+	/**
+	* Locate and execute an event on given document fragment
+	*
+	* @param {!DocumentFragment} fragment
+	* @param {string}            eventName
+	*/
+	function executeEvents(fragment, eventName)
+	{
+		var nodes = fragment.querySelectorAll('[data-s9e-livepreview-' + eventName + ']'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{
-			/** @type {string} */
-			var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
-			if (!postProcessFunctions[code])
-			{
-				postProcessFunctions[code] = new Function(code);
-			}
-
-			postProcessFunctions[code]['call'](nodes[i]);
+			executeEvent(nodes[i], eventName);
 		}
 	}
 

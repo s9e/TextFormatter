@@ -153,8 +153,8 @@ class XSLTTest extends Test
 	*/
 	public function testOptimizesAll()
 	{
-		$this->configurator->tags->add('X')->template = '<b data-s9e-livepreview-postprocess=""/>';
-		$this->configurator->tags->add('Y')->template = '<i data-s9e-livepreview-postprocess=""/>';
+		$this->configurator->tags->add('X')->template = '<b data-s9e-livepreview-onrender=""/>';
+		$this->configurator->tags->add('Y')->template = '<i data-s9e-livepreview-onrender=""/>';
 
 		$xsl = $this->getXSL();
 

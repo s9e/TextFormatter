@@ -2,6 +2,11 @@
 
 See also [API changes](API_changes.md).
 
+## 2.2.0
+
+The `data-s9e-livepreview-postprocess` attribute has been renamed to `data-s9e-livepreview-onrender`. The old attribute name remains as an alias but will be removed in 3.0.0. See the [list of live preview attributes](../JavaScript/Live_preview_attributes.md).
+
+
 ## 2.1.0
 
 The [Litedown](../Plugins/Litedown/Synopsis.md) behaviour has changed:

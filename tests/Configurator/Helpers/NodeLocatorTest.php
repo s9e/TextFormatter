@@ -219,7 +219,7 @@ class NodeLocatorTest extends Test
 				'//xsl:copy-of'
 			],
 			[
-				'<b data-s9e-livepreview-postprocess=""/>',
+				'<b data-s9e-livepreview-onrender=""/>',
 				'//@*'
 			],
 		];

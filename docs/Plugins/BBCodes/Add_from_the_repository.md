@@ -80,7 +80,7 @@ echo $html;
 ###### CODE
 ```[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]```
 ```xsl
-<pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
+<pre data-hljs="" data-s9e-livepreview-onrender="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
 	<xsl:if test="@lang">
 		<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
 	</xsl:if>

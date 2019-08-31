@@ -77,6 +77,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		'InlineAttributes',
 		'NormalizeUrls',
 		'InlineInferredValues',
+		'RenameLivePreviewEvent',
 		'SetRelNoreferrerOnTargetedLinks',
 		'MinifyInlineCSS'
 	];

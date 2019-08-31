@@ -35,8 +35,9 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 19	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 20	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
 21	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
-22	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
-23	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyInlineCSS
+22	s9e\TextFormatter\Configurator\TemplateNormalizations\RenameLivePreviewEvent
+23	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
+24	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyInlineCSS
 ```
 
 ### Remove a normalization

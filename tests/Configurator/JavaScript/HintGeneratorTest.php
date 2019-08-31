@@ -132,21 +132,21 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox HINT.postProcessing=0 by default
+	* @testdox HINT.onRender=0 by default
 	*/
 	public function testHintPostProcessingFalse()
 	{
-		$this->assertHintsContain('HINT.postProcessing=0');
+		$this->assertHintsContain('HINT.onRender=0');
 	}
 
 	/**
-	* @testdox HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+	* @testdox HINT.onRender=1 if "data-s9e-livepreview-onrender" appears in the stylesheet
 	*/
 	public function testHintPostProcessingTrue()
 	{
 		$this->configurator->tags->add('X')->template
-			= '<hr data-s9e-livepreview-postprocess="foo(this)"/>';
-		$this->assertHintsContain('HINT.postProcessing=1');
+			= '<hr data-s9e-livepreview-onrender="foo(this)"/>';
+		$this->assertHintsContain('HINT.onRender=1');
 	}
 
 	/**

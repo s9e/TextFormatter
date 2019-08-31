@@ -66,8 +66,7 @@ $regexps = [
 		'^style$'
 	],
 	'JS'  => [
-		'^on',
-		'^data-s9e-livepreview-postprocess$'
+		'^(?:data-s9e-livepreview-)?on',
 	],
 	'URL' => [
 		'^action$',

@@ -1444,8 +1444,8 @@ s9e\TextFormatter\Tests\Configurator\HintGenerator
  [x] HINT.fosterParent=1 if any tag has a fosterParent rule
  [x] HINT.namespaces=0 by default
  [x] HINT.namespaces=1 if any tag has a namespaces rule
- [x] HINT.postProcessing=0 by default
- [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+ [x] HINT.onRender=0 by default
+ [x] HINT.onRender=1 if "data-s9e-livepreview-onrender" appears in the stylesheet
  [x] HINT.ignoreAttrs=0 by default
  [x] HINT.ignoreAttrs=1 if "data-s9e-livepreview-ignore-attrs" appears in the stylesheet
  [x] HINT.requireAncestor=0 by default
@@ -1970,6 +1970,12 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveLivePreviewAtt
  [x] Works with data set #4
  [x] Works with data set #5
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RenameLivePreviewEvent
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+ [x] Works with data set #3
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
  [x] Works with data set #0
  [x] Works with data set #1
@@ -2029,6 +2035,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Default normalization rules with data set #21
  [x] Default normalization rules with data set #22
  [x] Default normalization rules with data set #23
+ [x] Default normalization rules with data set #24
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Stylesheet parameters are considered safe

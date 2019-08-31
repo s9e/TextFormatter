@@ -61,7 +61,7 @@ abstract class NodeLocator
 	*/
 	public static function getJSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^(?:data-s9e-livepreview-postprocess$|on)/i';
+		$regexp = '/^(?:data-s9e-livepreview-)?on/i';
 		$nodes  = array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^script$/i')

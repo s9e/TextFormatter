@@ -1,9 +1,9 @@
-### data-s9e-livepreview-postprocess
+### data-s9e-livepreview-onrender
 
-The content of a `data-s9e-livepreview-postprocess` attribute is executed after the new DOM has been generated and before it's inserted into the target element. In this context, `this` will refer to the attribute's element.
+The content of a `data-s9e-livepreview-onrender` attribute is executed after the new DOM has been generated and before it's inserted into the target element. In this context, `this` will refer to the attribute's element.
 
 ```html
-<span data-s9e-livepreview-postprocess="this.style.color='red'">This will be red.</span>
+<span data-s9e-livepreview-onrender="this.style.color='red'">This will be red.</span>
 ```
 
 ### data-s9e-livepreview-ignore-attrs
