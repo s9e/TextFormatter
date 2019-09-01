@@ -111,7 +111,7 @@ function preview(text, target)
 	function executeEvent(node, eventName)
 	{
 		/** @type {string} */
-		var code = node['getAttribute']('data-s9e-livepreview-' + eventName);
+		var code = node.getAttribute('data-s9e-livepreview-' + eventName);
 		if (!functionCache[code])
 		{
 			functionCache[code] = new Function(code);
@@ -264,7 +264,7 @@ function preview(text, target)
 			oldCnt        = oldAttributes.length,
 			newCnt        = newAttributes.length,
 			i             = oldCnt,
-			ignoreAttrs   = ' ' + oldEl['getAttribute']('data-s9e-livepreview-ignore-attrs') + ' ';
+			ignoreAttrs   = ' ' + oldEl.getAttribute('data-s9e-livepreview-ignore-attrs') + ' ';
 
 		while (--i >= 0)
 		{

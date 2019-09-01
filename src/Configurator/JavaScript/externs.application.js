@@ -62,6 +62,13 @@ Document.prototype.createElement = function(tagName, opt_typeExtension) {};
  */
 function DocumentFragment() {}
 /**
+ * @param {string} name
+ * @param {?number=} flags
+ * @return {string}
+ * @nosideeffects
+ */
+Element.prototype.getAttribute = function(name, flags) {};
+/**
  * @constructor
  * @implements {IObject<(string|number), T>}
  * @implements {IArrayLike<T>}

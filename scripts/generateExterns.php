@@ -83,6 +83,8 @@ $externs = [
 
 		'DocumentFragment',
 
+		'Element.prototype.getAttribute',
+
 		'NamedNodeMap',
 		'NamedNodeMap.prototype.item',
 		'NamedNodeMap.prototype.length',
