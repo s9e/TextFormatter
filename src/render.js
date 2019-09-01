@@ -107,7 +107,7 @@ function preview(text, target)
 		throw 'Target does not have a ownerDocument';
 	}
 
-	var resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>.*?<\/[eis]>/g, ''), targetDoc),
+	var resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>[^<]*<\/[eis]>/g, ''), targetDoc),
 		lastUpdated    = target;
 
 	// Apply post-processing
