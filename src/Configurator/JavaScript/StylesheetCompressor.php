@@ -71,10 +71,13 @@ class StylesheetCompressor
 		$this->filterSavings();
 		$this->buildDictionary();
 
-		$js = json_encode($this->getCompressedStylesheet());
+		$str = $this->getCompressedStylesheet();
+
+		// Split the stylesheet's string into 4000 bytes chunk to appease Google Closure Compiler
+		$js = implode("+\n", array_map('json_encode', str_split($str, 4000)));
 		if (!empty($this->dictionary))
 		{
-			$js .= '.replace(' . $this->getReplacementRegexp() . ',function(k){return' . json_encode($this->dictionary) . '[k]})';
+			$js = '(' . $js . ').replace(' . $this->getReplacementRegexp() . ',function(k){return' . json_encode($this->dictionary) . '[k];})';
 		}
 
 		return $js;

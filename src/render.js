@@ -20,21 +20,30 @@ var xslt = {
 	},
 
 	/**
-	* @param {string} xml
+	* @param  {string} xml
+	* @return {!Document}
 	*/
 	loadXML: function(xml)
 	{
+		var dom;
 		if (MSXML)
 		{
-			var dom = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.6.0');
+			dom = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.6.0');
 			dom['async'] = false;
 			dom['validateOnParse'] = false;
 			dom['loadXML'](xml);
-
-			return dom;
+		}
+		else
+		{
+			dom = (new DOMParser).parseFromString(xml, 'text/xml');
 		}
 
-		return (new DOMParser).parseFromString(xml, 'text/xml');
+		if (!dom)
+		{
+			throw 'Cannot parse ' + xml;
+		}
+
+		return dom;
 	},
 
 	/**
@@ -54,8 +63,9 @@ var xslt = {
 	},
 
 	/**
-	* @param {string} xml
-	* @param {Document} targetDoc
+	* @param  {string}    xml
+	* @param  {!Document} targetDoc
+	* @return {!DocumentFragment}
 	*/
 	transformToFragment: function(xml, targetDoc)
 	{
@@ -75,10 +85,9 @@ var xslt = {
 			return fragment;
 		}
 
-		// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
-		return targetDoc.importNode(xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc), true);
+		return xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc);
 	}
-}
+};
 xslt.init(xsl);
 
 var functionCache = {};
@@ -92,8 +101,13 @@ var functionCache = {};
 */
 function preview(text, target)
 {
-	var targetDoc      = target.ownerDocument,
-		resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>.*?<\/[eis]>/g, ''), targetDoc),
+	var targetDoc = target.ownerDocument;
+	if (!targetDoc)
+	{
+		throw 'Target does not have a ownerDocument';
+	}
+
+	var resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>.*?<\/[eis]>/g, ''), targetDoc),
 		lastUpdated    = target;
 
 	// Apply post-processing
@@ -137,15 +151,15 @@ function preview(text, target)
 	}
 
 	/**
-	* Update the content of given element oldEl to match element newEl
+	* Update the content of given node oldParent to match node newParent
 	*
-	* @param {!HTMLElement} oldEl
-	* @param {!HTMLElement} newEl
+	* @param {!Node} oldParent
+	* @param {!Node} newParent
 	*/
-	function refreshElementContent(oldEl, newEl)
+	function refreshElementContent(oldParent, newParent)
 	{
-		var oldNodes = oldEl.childNodes,
-			newNodes = newEl.childNodes,
+		var oldNodes = oldParent.childNodes,
+			newNodes = newParent.childNodes,
 			oldCnt   = oldNodes.length,
 			newCnt   = newNodes.length,
 			oldNode,
@@ -184,8 +198,8 @@ function preview(text, target)
 		var i = oldCnt - right;
 		while (--i >= left)
 		{
-			oldEl.removeChild(oldNodes[i]);
-			lastUpdated = oldEl;
+			oldParent.removeChild(oldNodes[i]);
+			lastUpdated = oldParent;
 		}
 
 		// Test whether there are any nodes in the new tree between the matching nodes at the left
@@ -208,11 +222,11 @@ function preview(text, target)
 		// If we haven't skipped any nodes to the right, we can just append the fragment
 		if (!right)
 		{
-			oldEl.appendChild(newNodesFragment);
+			oldParent.appendChild(newNodesFragment);
 		}
 		else
 		{
-			oldEl.insertBefore(newNodesFragment, oldEl.childNodes[left]);
+			oldParent.insertBefore(newNodesFragment, oldParent.childNodes[left]);
 		}
 	}
 

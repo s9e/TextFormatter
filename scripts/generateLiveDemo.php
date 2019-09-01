@@ -39,9 +39,10 @@ $configurator->FancyPants;
 $configurator->MediaEmbed->add('youtube');
 $configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="https://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
-$configurator->javascript
-	->setMinifier('ClosureCompilerApplication', __DIR__ . '/../vendor/node_modules/.bin/google-closure-compiler')
-	->cacheDir = __DIR__ . '/../tests/.cache';
+$filepath = __DIR__ . '/../vendor/node_modules/.bin/google-closure-compiler';
+$minifier = $configurator->javascript->setMinifier('ClosureCompilerApplication', $filepath);
+$minifier->cacheDir = __DIR__ . '/../tests/.cache';
+$minifier->options .= ' --jscomp_error "*"';
 
 $configurator->javascript->exports = ['disablePlugin', 'enablePlugin', 'preview'];
 
