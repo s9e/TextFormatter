@@ -1025,8 +1025,8 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://plays.tv/s/Kt4onQhyyVyz',
-				'<r><PLAYSTV id="565683db95f139f47e">http://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
+				'https://plays.tv/s/Kt4onQhyyVyz',
+				'<r><PLAYSTV id="565683db95f139f47e">https://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
 				[],
 				function ($configurator)
 				{
