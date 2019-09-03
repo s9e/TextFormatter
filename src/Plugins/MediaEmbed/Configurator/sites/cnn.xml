@@ -7,5 +7,5 @@
 	<host>cnn.com</host>
 	<extract>!cnn.com/videos/(?'id'.*\.cnn)!</extract>
 	<extract>!cnn\.com/video/data/2\.0/video/(?'id'.*\.cnn)!</extract>
-	<iframe src="//edition.cnn.com/video/api/embed.html#/video/{@id}"/>
+	<iframe src="//fave.api.cnn.io/v1/fav/?video={@id}&amp;customer=cnn&amp;edition=international&amp;env=prod"/>
 </site>
