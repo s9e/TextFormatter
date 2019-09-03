@@ -72,9 +72,9 @@ class RecursiveParser
 	*/
 	public function setMatchers(array $matchers): void
 	{
+		$matchRegexps       = [];
 		$this->groupMatches = [];
 		$this->matchGroups  = [];
-		$this->regexp       = '(^(?:';
 		foreach ($this->getMatchersConfig($matchers) as $matchName => $matchConfig)
 		{
 			foreach ($matchConfig['groups'] as $group)
@@ -84,20 +84,22 @@ class RecursiveParser
 
 			$regexp = $matchConfig['regexp'];
 			$regexp = $this->insertCaptureNames($matchName , $regexp);
-			$regexp = str_replace(' ', '\\s*', $regexp);
+			$regexp = str_replace(' ', '\\s*+', $regexp);
 			$regexp = '(?<' . $matchName  . '>' . $regexp . ')(*:' . $matchName  . ')';
 
-			$this->regexp                 .= $regexp . '|';
+			$matchRegexps[]                = $regexp;
 			$this->callbacks[$matchName]   = $matchConfig['callback'];
 			$this->matchGroups[$matchName] = $matchConfig['groups'];
 		}
 
+		$groupRegexps = [];
 		foreach ($this->groupMatches as $group => $names)
 		{
-			$this->regexp .= '(?<' . $group . '>(?&' . implode(')|(?&', $names) . '))|';
+			$groupRegexps[] = '(?<' . $group . '>(?&' . implode(')|(?&', $names) . '))';
 		}
 
-		$this->regexp = substr($this->regexp, 0, -1) . ')$)s';
+		$this->regexp = '((?(DEFINE)' . implode('', $groupRegexps). ')'
+		              . '^(?:' . implode('|', $matchRegexps) . ')$)s';
 	}
 
 	/**
