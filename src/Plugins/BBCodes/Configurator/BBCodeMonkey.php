@@ -285,7 +285,7 @@ class BBCodeMonkey
 
 		foreach ($definitions as $definition)
 		{
-			$attrName = strtolower(trim($definition['name']))
+			$attrName = strtolower(trim($definition['name']));
 
 			// The first attribute defined is set as default
 			if (!isset($bbcode->defaultAttribute))
@@ -764,7 +764,7 @@ class BBCodeMonkey
 	*/
 	protected function parseDefinition($usage)
 	{
-		$definition = $parser->parse($usage, 'BBCodeDefinition')['value'] + [
+		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'] + [
 			'attributes' => [],
 			'options'    => [],
 			'rules'      => []
