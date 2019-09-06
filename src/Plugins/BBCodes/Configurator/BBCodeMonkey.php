@@ -175,12 +175,102 @@ class BBCodeMonkey
 	}
 
 	/**
+	* 
+	*
+	* @return
+	*/
+	protected function parse($usage)
+	{
+		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'];
+
+		$this->config = ['bbcode' => [], 'tag' => []];
+		if (!empty($definition['attributes']))
+		{
+			$this->parseAttributes($definition['attributes']);
+		}
+		if (!empty($definition['options']))
+		{
+			$this->parseOptions($definition['options']);
+		}
+		if (!empty($definition['rules']))
+		{
+			$this->parseRules($definition['rules']);
+		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function parseAttributes(array $attributes)
+	{
+		foreach ($attributes as $attribute)
+		{
+		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function parseOptions(array $options)
+	{
+		foreach ($options as $options)
+		{
+			$name   = $option['name'];
+			$value  = $option['value'] ?? true;
+			$target = 
+
+			$this->config['tag']['options'][$name] = $value;
+		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function parseRules(array $rules)
+	{
+		foreach ($rules as $rules)
+		{
+			$name  = $rule['name'];
+			$value = $rule['value'] ?? true;
+
+			$this->config['tag']['rules'][$name] = $value;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
 	* Create a BBCode based on its reference usage
 	*
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
 	* @return array
 	*/
-	protected function parse($usage)
+	protected function _parse($usage)
 	{
 		$definition = $this->parseDefinition($usage);
 
@@ -755,24 +845,6 @@ class BBCodeMonkey
 		}
 
 		return false;
-	}
-
-	/**
-	* 
-	*
-	* @return array
-	*/
-	protected function parseDefinition($usage)
-	{
-		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'] + [
-			'attributes' => [],
-			'options'    => [],
-			'rules'      => []
-		];
-
-		// TODO: prepend options with $defaultAttribute based on the first attribute's name
-
-		return $definition;
 	}
 
 	/**
