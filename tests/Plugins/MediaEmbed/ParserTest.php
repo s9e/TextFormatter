@@ -2592,6 +2592,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://mixer.com/Ninja',
+				'<r><MIXER channel="Ninja">https://mixer.com/Ninja</MIXER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixer');
+				}
+			],
+			[
+				'https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw',
+				'<r><MIXER channel="Ninja" vod="p4sVuGe4Fk-4EPoN5enIzw">https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw</MIXER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixer');
+				}
+			],
+			[
+				'https://mixer.com/Ninja?clip=bW6ij9V7Dk-lOObMl0wiAg',
+				'<t>https://mixer.com/Ninja?clip=bW6ij9V7Dk-lOObMl0wiAg</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixer');
+				}
+			],
+			[
+				'https://mixer.com/browse/games/70323/fortnite',
+				'<t>https://mixer.com/browse/games/70323/fortnite</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mixer');
+				}
+			],
+			[
 				'http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit',
 				'<r><MLB id="1205791883">http://m.mlb.com/video/v1205791883/hughes-and-coomer-call-baezs-seriesclinching-hit</MLB></r>',
 				[],

@@ -233,6 +233,10 @@
 		<td style="font-size:75%"><code>mixcloud</code></td>
 		<td style="font-size:50%">https://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
 	</tr>
+	<tr title="Mixer">
+		<td style="font-size:75%"><code>mixer</code></td>
+		<td style="font-size:50%">https://mixer.com/Ninja<br/>https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw</td>
+	</tr>
 	<tr title="MLB">
 		<td style="font-size:75%"><code>mlb</code></td>
 		<td style="font-size:50%">https://www.mlb.com/video/statcast-stantons-two-homers/c-1898424783<br/>https://m.mlb.com/video/v1205791883</td>
