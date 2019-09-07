@@ -182,20 +182,16 @@ class BBCodeMonkey
 	protected function parse($usage)
 	{
 		$definition = $this->parser->parse($usage, 'BBCodeDefinition')['value'];
+		$definition += [
+			'attributes' => [],
+			'options'    => [],
+			'rules'      => []
+		];
 
 		$this->config = ['bbcode' => [], 'tag' => []];
-		if (!empty($definition['attributes']))
-		{
-			$this->parseAttributes($definition['attributes']);
-		}
-		if (!empty($definition['options']))
-		{
-			$this->parseOptions($definition['options']);
-		}
-		if (!empty($definition['rules']))
-		{
-			$this->parseRules($definition['rules']);
-		}
+		array_map([$this, 'parseAttribute'], $definition['attributes']);
+		array_map([$this, 'parseOption'],    $definition['options']);
+		array_map([$this, 'parseRule'],      $definition['rules']);
 	}
 
 	/**
@@ -203,11 +199,8 @@ class BBCodeMonkey
 	*
 	* @return void
 	*/
-	protected function parseAttributes(array $attributes)
+	protected function parseAttribute(array $attribute)
 	{
-		foreach ($attributes as $attribute)
-		{
-		}
 	}
 
 	/**
@@ -215,16 +208,16 @@ class BBCodeMonkey
 	*
 	* @return void
 	*/
-	protected function parseOptions(array $options)
+	protected function parseOption(array $option)
 	{
-		foreach ($options as $options)
-		{
-			$name   = $option['name'];
-			$value  = $option['value'] ?? true;
-			$target = 
+		$name   = $option['name'];
+		$value  = $option['value'] ?? true;
 
-			$this->config['tag']['options'][$name] = $value;
-		}
+		// Allow nestingLimit and tagLimit to be set on the tag itself. We don't necessarily
+		// want every other tag property to be modifiable this way, though
+		$target = ($name === 'nestingLimit' || $name === 'tagLimit') ? 'tag' : 'bbcode';
+
+		$this->config[$target][$name] = $value;
 	}
 
 	/**
@@ -232,15 +225,12 @@ class BBCodeMonkey
 	*
 	* @return void
 	*/
-	protected function parseRules(array $rules)
+	protected function parseRule(array $rule)
 	{
-		foreach ($rules as $rules)
-		{
-			$name  = $rule['name'];
-			$value = $rule['value'] ?? true;
+		$name  = $rule['name'];
+		$value = $rule['value'] ?? true;
 
-			$this->config['tag']['rules'][$name] = $value;
-		}
+		$this->config['tag']['rules'][$name] = $value;
 	}
 
 
