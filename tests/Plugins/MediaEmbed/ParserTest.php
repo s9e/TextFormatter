@@ -611,16 +611,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('gametrailers');
 //				}
 //			],
-			[
-				'https://www.foxsports.com/watch/undisputed/video/1127594563881',
-				'<r><FOXSPORTS id="78Ot0tahNRFG">https://www.foxsports.com/watch/undisputed/video/1127594563881</FOXSPORTS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('foxsports');
-				}
-			],
+//			[
+//				'https://www.foxsports.com/watch/undisputed/video/1127594563881',
+//				'<r><FOXSPORTS id="78Ot0tahNRFG">https://www.foxsports.com/watch/undisputed/video/1127594563881</FOXSPORTS></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('foxsports');
+//				}
+//			],
 			[
 				'http://gty.im/3232182',
 				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://gty.im/3232182</GETTY></r>)',
@@ -858,26 +858,26 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
-			[
-				'https://archive.org/details/DFTS2014-05-30',
-				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('internetarchive');
-				}
-			],
-			[
-				'https://archive.org/embed/deadco2018-08-25',
-				'<r><INTERNETARCHIVE height="50" id="deadco2018-08-25&amp;playlist=1" width="300">https://archive.org/embed/deadco2018-08-25</INTERNETARCHIVE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('internetarchive');
-				}
-			],
+//			[
+//				'https://archive.org/details/DFTS2014-05-30',
+//				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('internetarchive');
+//				}
+//			],
+//			[
+//				'https://archive.org/embed/deadco2018-08-25',
+//				'<r><INTERNETARCHIVE height="50" id="deadco2018-08-25&amp;playlist=1" width="300">https://archive.org/embed/deadco2018-08-25</INTERNETARCHIVE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('internetarchive');
+//				}
+//			],
 			[
 				'http://video.khl.ru/events/233677',
 				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+">http://video.khl.ru/events/233677</KHL></r>)',
@@ -902,16 +902,16 @@ class ParserTest extends Test
 				null,
 				'assertRegexp'
 			],
-			[
-				'http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey',
-				'<r><LIBSYN id="3521244">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('libsyn');
-				}
-			],
+//			[
+//				'http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey',
+//				'<r><LIBSYN id="3521244">http://bunkerbuddies.libsyn.com/interstellar-w-brandie-posey</LIBSYN></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('libsyn');
+//				}
+//			],
 			[
 				'https://www.liveleak.com/view?t=yIcw_1520190567',
 				'<r><LIVELEAK id="Clka1_1520190526">https://www.liveleak.com/view?t=yIcw_1520190567</LIVELEAK></r>',
@@ -1148,16 +1148,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
-			[
-				'http://vm.tiktok.com/e8Ebxd/',
-				'<r><TIKTOK id="6644855752357842182">http://vm.tiktok.com/e8Ebxd/</TIKTOK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tiktok');
-				}
-			],
+//			[
+//				'http://vm.tiktok.com/e8Ebxd/',
+//				'<r><TIKTOK id="6644855752357842182">http://vm.tiktok.com/e8Ebxd/</TIKTOK></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('tiktok');
+//				}
+//			],
 //			[
 //				'http://tinypic.com/m/jujsk3/4',
 //				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
@@ -1398,16 +1398,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
-			[
-				'https://archive.org/details/DFTS2014-05-30',
-				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('internetarchive');
-				}
-			],
+//			[
+//				'https://archive.org/details/DFTS2014-05-30',
+//				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('internetarchive');
+//				}
+//			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
 				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
