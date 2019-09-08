@@ -126,7 +126,6 @@ class XPathConvertor
 				}
 
 				$methodName = $k;
-				break;
 			}
 
 			if (isset($methodName))

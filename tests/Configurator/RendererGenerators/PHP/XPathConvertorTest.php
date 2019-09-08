@@ -193,6 +193,10 @@ class XPathConvertorTest extends Test
 	{
 		return [
 			[
+				'@x="x"',
+				"\$node->getAttribute('x')==='x'"
+			],
+			[
 				'string-length(@bar)',
 				"strlen(preg_replace('(.)us','.',\$node->getAttribute('bar')))"
 			],
