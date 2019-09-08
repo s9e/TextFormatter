@@ -74,14 +74,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	];
 
 	/**
-	* Constructor
-	*/
-	public function __construct()
-	{
-		$this->clear();
-	}
-
-	/**
 	* Add a rule to this set
 	*
 	* @param  string $methodName Rule name
