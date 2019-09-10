@@ -1,4 +1,5 @@
 <h2>Custom BBCode syntax</h2>
+<style>.rst-content ul { font-size: 16px }</style>
 
 `s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey` is an helper class designed to allow end users to easily express a BBCode definition, both its usage and its template. Its syntax is based and expands on phpBB's own custom BBCode interface and it aims to be compatible with the many custom BBCodes available online while being able to express most BBCode constructs.
 
