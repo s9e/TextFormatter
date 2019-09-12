@@ -9,7 +9,7 @@
 
 	<host>facebook.com</host>
 	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
-	<extract>@facebook\.com/(?'user'\w+)/(?'type'post|video)s?/@</extract>
+	<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'post|video)s?/@</extract>
 	<extract>@facebook\.com/video/(?'type'post|video)\.php@</extract>
 	<iframe src="https://s9e.github.io/iframe/2/facebook.min.html#{@type}{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

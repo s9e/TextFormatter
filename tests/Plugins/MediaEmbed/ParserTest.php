@@ -2014,6 +2014,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/www.JOE.co.uk/videos/2478883195723649/',
+				'<r><FACEBOOK id="2478883195723649" type="video" user="www.JOE.co.uk">https://www.facebook.com/www.JOE.co.uk/videos/2478883195723649/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
 				'<r><FLICKR id="15451038758">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
 				[],
