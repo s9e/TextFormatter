@@ -8,8 +8,10 @@ The content of a `data-s9e-livepreview-onrender` attribute is executed after the
 
 ### data-s9e-livepreview-ignore-attrs
 
-Contains a space-separated list of attributes whose content should not be replaced or removed in the live preview. Used in some MediaEmbed sites whose height is set dynamically.
+Contains a space-separated list of attributes whose content should not be replaced or removed in the live preview. Can be used to preserve the state of an interactive element such as `detail` during preview.
 
 ```html
-<span style="color:{@color}" data-s9e-livepreview-ignore-attrs="style">This color will not change.</span>
+<details open="" data-s9e-livepreview-ignore-attrs="open">
+This will not automatically reopen if closed during preview.
+</details>
 ```
