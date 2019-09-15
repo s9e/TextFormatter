@@ -1,6 +1,6 @@
 This plugin implements a Markdown-like syntax, inspired by modern flavors of Markdown.
 
-A more detailed description of the syntax in available in [Syntax](Syntax.md).
+A more detailed description of the syntax is available in [Syntax](Syntax.md).
 
 ## Example
 

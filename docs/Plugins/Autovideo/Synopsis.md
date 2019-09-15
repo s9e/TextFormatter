@@ -1,4 +1,4 @@
-This plugin converts plain-text video URLs into playable videos. Only URLs starting with `http://` or `https://` and ending with `.mp4, `.ogg` or `.webm` are converted.
+This plugin converts plain-text video URLs into playable videos. Only URLs starting with `http://` or `https://` and ending with `.mp4`, `.ogg` or `.webm` are converted.
 
 ## Examples
 
