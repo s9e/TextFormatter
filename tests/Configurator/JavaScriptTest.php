@@ -58,7 +58,7 @@ class JavaScriptTest extends Test
 	public function testSetMinifierArguments()
 	{
 		$javascript = new JavaScript(new Configurator);
-		$command    = 'npx google-closure-compiler';
+		$command    = 'npx google-closure-compiler-linux';
 
 		$this->assertSame(
 			$command,

@@ -131,7 +131,7 @@ abstract class Test extends TestCase
 
 	public function getClosureCompilerNative()
 	{
-		$filepath = __DIR__ . '/../vendor/node_modules/.bin/google-closure-compiler';
+		$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';
 
 		return (file_exists($filepath)) ? $filepath : false;
 	}

@@ -66,7 +66,7 @@ class MinifierListTest extends Test
 	public function testAddNormalizeValueArrayArguments()
 	{
 		$collection = new MinifierList;
-		$command    = 'npx google-closure-compiler';
+		$command    = 'npx google-closure-compiler-linux';
 		$minifier   = $collection->add(['ClosureCompilerApplication', $command]);
 
 		$this->assertInstanceOf(
