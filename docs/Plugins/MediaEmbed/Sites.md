@@ -385,10 +385,6 @@
 		<td style="font-size:75%"><code>tiktok</code></td>
 		<td style="font-size:50%">https://m.tiktok.com/v/6583727202272021766.html</td>
 	</tr>
-	<tr title="TinyPic videos">
-		<td style="font-size:75%"><code>tinypic</code></td>
-		<td style="font-size:50%">https://tinypic.com/player.php?v=29x86j9&amp;s=8<br/>https://tinypic.com/r/29x86j9/8</td>
-	</tr>
 	<tr title="TMZ">
 		<td style="font-size:75%"><code>tmz</code></td>
 		<td style="font-size:50%">https://www.tmz.com/videos/0_2pr9x3rb/</td>

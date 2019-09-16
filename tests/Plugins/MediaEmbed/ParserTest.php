@@ -1163,16 +1163,6 @@ class ParserTest extends Test
 				}
 			],
 //			[
-//				'http://tinypic.com/m/jujsk3/4',
-//				'<r><TINYPIC id="1gg7xj" s="9">http://tinypic.com/m/jujsk3/4</TINYPIC></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('tinypic');
-//				}
-//			],
-//			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
 //				[],
@@ -3182,24 +3172,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('theonion');
 				}
 			],
-//			[
-//				'http://tinypic.com/player.php?v=29x86j9&s=8',
-//				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/player.php?v=29x86j9&amp;s=8</TINYPIC></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->MediaEmbed->add('tinypic');
-//				}
-//			],
-//			[
-//				'http://tinypic.com/r/29x86j9/8',
-//				'<r><TINYPIC id="29x86j9" s="8">http://tinypic.com/r/29x86j9/8</TINYPIC></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->MediaEmbed->add('tinypic');
-//				}
-//			],
 			[
 				'http://www.tmz.com/videos/0_2pr9x3rb/',
 				'<r><TMZ id="0_2pr9x3rb">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
