@@ -67,7 +67,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'Token'                => [
 				// PCRE1 complains about infinite loops if this isn't defined before MixedContent
 				'order'  => -1,
-				'regexp' => '\\{([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}'
+				'regexp' => '\\{ ([A-Z]+[0-9]*)(\\?)?(?:=((?&LiteralOrUnquoted)))? (?:; ((?&TokenOptions))?)? \\}'
 			],
 			'TokenOptionFilter'    => [
 				'groups' => ['TokenOption'],

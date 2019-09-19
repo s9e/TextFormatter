@@ -307,10 +307,11 @@ class BBCodeDefinitionMatcherTest extends Test
 				]
 			],
 			[
-				'[X foo={TEXT1;
+				'[X foo={
+						TEXT1;
 						foo=1;
 						bar=["ab", "cd"];
-				}]',
+					}]',
 				[
 					'bbcodeName' => 'X',
 					'content'    => [],
