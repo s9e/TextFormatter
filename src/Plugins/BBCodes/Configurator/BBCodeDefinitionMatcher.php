@@ -28,6 +28,11 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 			'BBCodeName'           => '\\*|\\w[-\\w]*+',
 			'BBCodeStartTag'       => '\\[((?&BBCodeName))(=(?&TagAttributeValue))? ((?&BaseDeclarations))? /?\\]',
 			'BaseDeclarations'     => '((?&BaseDeclaration))(?:\\s++((?&BaseDeclarations)))?',
+			'CallbackArgs'         => '((?&Literal))(?: , ((?&Literal)))?'
+			'CallbackInvocation'   => [
+				'groups' => ['BaseDeclaration'],
+				'regexp' => '\\$([.\\w]+)\\( ((?&CallbackArgs)?) \\)'
+			],
 			'CommaSeparatedValues' => '([-#\\w]++(?:,[-#\\w]++)*)',
 			'ContentLiteral'       => '[^{[]*?',
 			'LiteralOrUnquoted'    => '((?&Literal)(?![^\\s;\\]}])|(?&UnquotedString))',
