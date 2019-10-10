@@ -48,6 +48,15 @@ class ParserTest extends Test
 					$plugin->escapeAll();
 				}
 			],
+			[
+				'a\\~b',
+				'<r><p>a<ESC><s>\\</s>~</ESC>b</p></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown;
+				}
+			],
 		];
 	}
 

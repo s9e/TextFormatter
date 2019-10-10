@@ -34,7 +34,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function escapeAll($bool = true)
 	{
-		$this->regexp = ($bool) ? '/\\\\./su' : '/\\\\[-!#()*+.:<>@[\\\\\\]^_`{|}]/';
+		$this->regexp = ($bool) ? '/\\\\./su' : '/\\\\[-!#()*+.:<>@[\\\\\\]^_`{|}~]/';
 	}
 
 	/**

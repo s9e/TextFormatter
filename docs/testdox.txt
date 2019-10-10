@@ -4125,7 +4125,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing+rendering tests with data set #4
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
- [x] By default only escapes the characters !#()*+-.:@[\]^_`{|}
+ [x] By default only escapes the characters !#()*+-.:@[\]^_`{|}~
  [x] $plugin->escapeAll() makes it escape any Unicode character
  [x] $plugin->escapeAll(false) reverts to default escape list
  [x] Automatically creates an "ESC" tag
@@ -4140,10 +4140,12 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2
  [x] Parsing tests with data set #3
+ [x] Parsing tests with data set #4
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
  [x] Parsing tests (JavaScript) with data set #3
+ [x] Parsing tests (JavaScript) with data set #4
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
