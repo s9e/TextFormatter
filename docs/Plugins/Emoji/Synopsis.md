@@ -23,6 +23,30 @@ Hello world <img alt="😀" class="emoji" draggable="false" src="https://twemoji
 ```
 
 
+### Using JoyPixels
+
+Check out [JoyPixels's website](https://www.joypixels.com/licenses/free) for license and attribution requirements.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$tag = $configurator->Emoji->getTag();
+$tag->template = '<img src="https://cdn.jsdelivr.net/gh/joypixels/emoji-assets@master/png/64/{@seq}.png">';
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = '😍 JoyPixels';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<img src="https://cdn.jsdelivr.net/gh/joypixels/emoji-assets@master/png/64/1f60d.png"> JoyPixels
+```
+
+
 ### Inputting emoji as codepoints
 
 In some cases, it may be desirable to input emoji as a sequence of codepoints instead of Unicode characters. Codepoints must be expressed in lowercase hexadecimal and be separated by a single dash. For example: `:1f44b-1f3fb:`. For compatibility with Twemoji, the fully-qualified sequence using [zero-width joiners](https://en.wikipedia.org/wiki/Zero-width_joiner) and [variation selectors 16](https://en.wikipedia.org/wiki/Variation_Selectors_(Unicode_block)) should be used.
