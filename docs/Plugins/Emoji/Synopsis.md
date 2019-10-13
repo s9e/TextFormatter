@@ -1,4 +1,5 @@
-Emoji are ideograms and smileys standardized by the [Unicode Consortium](http://unicode.org/emoji/). The Emoji plugin renders them as images using [EmojiOne](https://emojione.com/) assets. Please consult the EmojiOne website for license terms.
+Emoji are ideograms and smileys standardized by the [Unicode Consortium](http://unicode.org/emoji/). The Emoji plugin renders them as images using [Twemoji](https://twemoji.twitter.com/) assets. Please consult the Twemoji website for license terms and attribution requirements.
+
 
 ## Examples
 
@@ -19,28 +20,6 @@ echo $html;
 ```
 ```html
 Hello world <img alt="😀" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f600.svg">
-```
-
-### Using Twemoji
-
-Starting with 1.3.0, a new attribute `tseq` has been added for compatibility with Twemoji-style filenames.
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-
-$tag = $configurator->Emoji->getTag();
-$tag->template = '<img src="https://twemoji.maxcdn.com/2/svg/{@tseq}.svg">';
-
-// Get an instance of the parser and the renderer
-extract($configurator->finalize());
-
-$text = '©️ Twitter';
-$xml  = $parser->parse($text);
-$html = $renderer->render($xml);
-
-echo $html;
-```
-```html
-<img src="https://twemoji.maxcdn.com/2/svg/a9.svg"> Twitter
 ```
 
 
