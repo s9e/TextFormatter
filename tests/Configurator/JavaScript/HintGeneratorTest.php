@@ -168,6 +168,24 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox HINT.hash=0 by default
+	*/
+	public function testHintHashFalse()
+	{
+		$this->assertHintsContain('HINT.hash=0');
+	}
+
+	/**
+	* @testdox HINT.hash=1 if "data-s9e-livepreview-hash" appears in the stylesheet
+	*/
+	public function testHintHashTrue()
+	{
+		$this->configurator->tags->add('X')->template
+			= '<hr data-s9e-livepreview-hash=""/>';
+		$this->assertHintsContain('HINT.hash=1');
+	}
+
+	/**
 	* @testdox HINT.requireAncestor=0 by default
 	*/
 	public function testHintRequireAncestorFalse()

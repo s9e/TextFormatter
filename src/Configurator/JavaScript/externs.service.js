@@ -504,6 +504,11 @@ Document.prototype.importNode = function(externalNode, deep) {};
  */
 Element.prototype.innerHTML;
 /**
+ * @type {string}
+ * @implicitCast
+ */
+Element.prototype.outerHTML;
+/**
  * @constructor
  * @extends {Document}
  */

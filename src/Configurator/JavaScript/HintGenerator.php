@@ -113,6 +113,7 @@ class HintGenerator
 		// Test for post-processing in templates. Theorically allows for false positives and
 		// false negatives, but not in any realistic setting
 		$hints = [
+			'hash'        => 'data-s9e-livepreview-hash',
 			'ignoreAttrs' => 'data-s9e-livepreview-ignore-attrs',
 			'onRender'    => 'data-s9e-livepreview-onrender'
 		];

@@ -110,10 +110,31 @@ function preview(text, target)
 	var resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>[^<]*<\/[eis]>/g, ''), targetDoc),
 		lastUpdated    = target;
 
+	// Compute and refresh hashes
+	if (HINT.hash)
+	{
+		computeHashes(resultFragment);
+	}
+
 	// Apply post-processing
 	if (HINT.onRender)
 	{
 		executeEvents(resultFragment, 'onrender');
+	}
+
+	/**
+	* Compute and set all hashes in given document fragment
+	*
+	* @param {!DocumentFragment} fragment
+	*/
+	function computeHashes(fragment)
+	{
+		var nodes = fragment.querySelectorAll('[data-s9e-livepreview-hash]'),
+			i     = nodes.length;
+		while (--i >= 0)
+		{
+			nodes[i]['setAttribute']('data-s9e-livepreview-hash', hash(nodes[i].outerHTML));
+		}
 	}
 
 	/**
@@ -246,7 +267,7 @@ function preview(text, target)
 
 		if (oldNode instanceof HTMLElement && newNode instanceof HTMLElement)
 		{
-			if (!oldNode.isEqualNode(newNode))
+			if (!oldNode.isEqualNode(newNode) && !elementHashesMatch(oldNode, newNode))
 			{
 				syncElementAttributes(oldNode, newNode);
 				refreshElementContent(oldNode, newNode);
@@ -263,6 +284,43 @@ function preview(text, target)
 		}
 
 		return true;
+	}
+
+	/**
+	* Test whether both given elements have a hash value and both match
+	*
+	* @param  {!HTMLElement} oldEl
+	* @param  {!HTMLElement} newEl
+	* @return {boolean}
+	*/
+	function elementHashesMatch(oldEl, newEl)
+	{
+		if (!HINT.hash)
+		{
+			// Hashes can never match if there are no hashes in any template
+			return false;
+		}
+		const attrName = 'data-s9e-livepreview-hash';
+
+		return oldEl['hasAttribute'](attrName) && newEl['hasAttribute'](attrName) && oldEl['getAttribute'](attrName) === newEl['getAttribute'](attrName);
+	}
+
+	/**
+	* Hash given string
+	*
+	* @param  {string} text
+	* @return {number}
+	*/
+	function hash(text)
+	{
+		var pos = text.length, s1 = 0, s2 = 0;
+		while (--pos >= 0)
+		{
+			s1 = (s1 + text.charCodeAt(pos)) % 0xFFFF;
+			s2 = (s1 + s2) % 0xFFFF;
+		}
+
+		return (s2 << 16) | s1;
 	}
 
 	/**

@@ -112,6 +112,7 @@ $externs = [
 	'externs/browser/w3c_dom2.js' => [
 		'Document.prototype.importNode',
 		'Element.prototype.innerHTML',
+		'Element.prototype.outerHTML',
 		'HTMLDocument',
 		'HTMLElement',
 	],
