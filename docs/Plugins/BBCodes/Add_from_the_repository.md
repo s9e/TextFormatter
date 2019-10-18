@@ -80,13 +80,20 @@ echo $html;
 ###### CODE
 ```[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]```
 ```xsl
-<pre data-hljs="" data-s9e-livepreview-onrender="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
+<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(typeof hljsLoader!=='undefined')hljsLoader.highlightBlocks(this)"><code>
 	<xsl:if test="@lang">
 		<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
 	</xsl:if>
 	<xsl:apply-templates />
 </code></pre>
-<script>(function(d){var head=d.getElementsByTagName("head")[0],style="github-gist",url="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/";if(typeof hljs!=="undefined")hljs._ha();else if(typeof hljsLoading==="undefined"){hljsLoading=1;if(style!=="none"){var el=d.createElement("link");el.type="text/css";el.rel="stylesheet";el.href=url+"styles/"+style+".min.css";head.appendChild(el)}el=d.createElement("script");el.type="text/javascript";el.onload=function(){var cache={},cnt=0;hljs._hb=function(block){block.removeAttribute("data-hljs");var html=block.innerHTML;if(html in cache)block.innerHTML=cache[html];else{if(++cnt&gt;7){cache={};cnt=0}hljs.highlightBlock(block.firstChild);cache[html]=block.innerHTML}};hljs._ha=function(){var blocks=d.querySelectorAll("pre[data-hljs]"),i=blocks.length;while(i&gt;0)hljs._hb(blocks.item(--i))};hljs._ha()};el.async=true;el.src=url+"highlight.min.js";head.appendChild(el)}})(document)</script>
+<script
+	async=""
+	crossorigin="anonymous"
+	data-hljs-style="github-gist"
+	data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/"
+	data-s9e-livepreview-onrender="if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)"
+	src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"
+></script>
 ```
 <table>
 	<tr>
@@ -101,7 +108,7 @@ echo $html;
 	</tr>
 	<tr>
 		<td><code>url</code></td>
-		<td>//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/</td>
+		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</td>
 		<td>highlight.js CDN URL</td>
 	</tr>
 </table>
