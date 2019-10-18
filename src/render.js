@@ -119,7 +119,7 @@ function preview(text, target)
 	// Apply post-processing
 	if (HINT.onRender)
 	{
-		executeEvents(resultFragment, 'onrender');
+		executeEvents(resultFragment, 'render');
 	}
 
 	/**
@@ -146,7 +146,7 @@ function preview(text, target)
 	function executeEvent(node, eventName)
 	{
 		/** @type {string} */
-		var code = node.getAttribute('data-s9e-livepreview-' + eventName);
+		var code = node.getAttribute('data-s9e-livepreview-on' + eventName);
 		if (!functionCache[code])
 		{
 			functionCache[code] = new Function(code);
@@ -156,14 +156,20 @@ function preview(text, target)
 	}
 
 	/**
-	* Locate and execute an event on given document fragment
+	* Locate and execute an event on given document fragment or element
 	*
-	* @param {!DocumentFragment} fragment
-	* @param {string}            eventName
+	* @param {!DocumentFragment|!Element} root
+	* @param {string}                     eventName
 	*/
-	function executeEvents(fragment, eventName)
+	function executeEvents(root, eventName)
 	{
-		var nodes = fragment.querySelectorAll('[data-s9e-livepreview-' + eventName + ']'),
+		// Execute the event on the root node, as there is no self-or-descendant selector in CSS
+		if (root instanceof Element && root['hasAttribute']('data-s9e-livepreview-on' + eventName))
+		{
+			executeEvent(root, eventName);
+		}
+
+		var nodes = root.querySelectorAll('[data-s9e-livepreview-on' + eventName + ']'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{
@@ -236,7 +242,12 @@ function preview(text, target)
 		i = left;
 		do
 		{
-			lastUpdated = newNodesFragment.appendChild(newNodes[i]);
+			newNode = newNodes[i];
+			if (HINT.onUpdate && newNode instanceof Element)
+			{
+				executeEvents(newNode, 'update');
+			}
+			lastUpdated = newNodesFragment.appendChild(newNode);
 		}
 		while (i < --rightBoundary);
 
@@ -269,6 +280,10 @@ function preview(text, target)
 		{
 			if (!oldNode.isEqualNode(newNode) && !elementHashesMatch(oldNode, newNode))
 			{
+				if (HINT.onUpdate)
+				{
+					executeEvents(newNode, 'update');
+				}
 				syncElementAttributes(oldNode, newNode);
 				refreshElementContent(oldNode, newNode);
 			}

@@ -115,7 +115,8 @@ class HintGenerator
 		$hints = [
 			'hash'        => 'data-s9e-livepreview-hash',
 			'ignoreAttrs' => 'data-s9e-livepreview-ignore-attrs',
-			'onRender'    => 'data-s9e-livepreview-onrender'
+			'onRender'    => 'data-s9e-livepreview-onrender',
+			'onUpdate'    => 'data-s9e-livepreview-onupdate'
 		];
 		foreach ($hints as $hintName => $match)
 		{
