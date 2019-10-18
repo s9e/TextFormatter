@@ -12,7 +12,8 @@ $usedVars = [];
 foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 {
 	$file = file_get_contents($filepath);
-	$file = preg_replace('(<script>.*?(?:<|\\\\x3c)/script>)s', '', $file);
+	$file = preg_replace('(<script>.*?(?:<|\\\\x3c)/script>)s',    '', $file);
+	$file = preg_replace('(data-s9e-livepreview-on\\w+="[^"]++")', '', $file);
 
 	foreach ($regexps as $regexp)
 	{
