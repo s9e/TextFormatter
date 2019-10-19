@@ -88,7 +88,7 @@ ob_start();
 		<form>
 			<textarea style="width:99%" rows="15">[float=right]https://www.youtube.com/watch?v=QH2-TGUlwu4[/float]
 
-This is a demo of the JavaScript port of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
+This is a demo of the JavaScript port of [url=https://github.com/s9e/TextFormatter title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
 
 The following plugins have been enabled:
 
