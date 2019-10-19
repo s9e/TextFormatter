@@ -99,7 +99,7 @@ The following plugins have been enabled:
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
     [*][C][URL][/C], [C:123][C][/C:123], [C][FLOAT][/C], and [C][LIST][/C]
-    [*][C][CODE][/C] with real-time syntax highlighting via [url=https://softwaremaniacs.org/soft/highlight/en/]Highlight.js[/url]
+    [*][C][CODE][/C] with real-time syntax highlighting via [url=https://highlightjs.org/]highlight.js[/url]
 	[code]$who = "world";
 printf("Hello %s\n", $who);[/code]
   [/list]
