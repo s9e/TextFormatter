@@ -92,6 +92,7 @@ echo $html;
 	data-hljs-style="github-gist"
 	data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/"
 	data-s9e-livepreview-onrender="if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)"
+	integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ"
 	src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"
 ></script>
 ```

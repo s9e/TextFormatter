@@ -162,15 +162,15 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
+				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/" integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
 			],
 			[
 				'[code=html]<b>Hello world</b>[/code]',
-				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
+				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/" integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
+				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"></script>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', [
