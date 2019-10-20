@@ -50,6 +50,14 @@ class InlineXPathLiteralsTest extends AbstractTest
 				'<b><xsl:attribute name="title"><xsl:value-of select="\'}}}\'"/></xsl:attribute><xsl:apply-templates/></b>',
 				'<b><xsl:attribute name="title">}}}</xsl:attribute><xsl:apply-templates/></b>'
 			],
+			[
+				'<xsl:value-of select="true()"/>',
+				'true'
+			],
+			[
+				'<xsl:value-of select="false()"/>',
+				'false'
+			],
 		];
 	}
 }

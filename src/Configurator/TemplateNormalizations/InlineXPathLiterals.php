@@ -29,16 +29,9 @@ class InlineXPathLiterals extends AbstractNormalization
 	*/
 	protected function getTextContent($expr)
 	{
-		$expr = trim($expr);
-
-		if (preg_match('(^(?:\'[^\']*\'|"[^"]*")$)', $expr))
+		$regexp = '(^(?|\'([^\']*)\'|"([^"]*)"|0*([0-9]+(?:\\.[0-9]+)?)|(false|true)\\s*\\(\\s*\\))$)';
+		if (preg_match($regexp, trim($expr), $m))
 		{
-			return substr($expr, 1, -1);
-		}
-
-		if (preg_match('(^0*([0-9]+(?:\\.[0-9]+)?)$)', $expr, $m))
-		{
-			// NOTE: we specifically ignore leading zeros
 			return $m[1];
 		}
 

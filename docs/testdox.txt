@@ -1840,6 +1840,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineXPathLiterals
  [x] Works with data set #7
  [x] Works with data set #8
  [x] Works with data set #9
+ [x] Works with data set #10
+ [x] Works with data set #11
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyInlineCSS
  [x] Works with data set #0
@@ -6586,6 +6588,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] HTML rendering with data set #32
  [x] HTML rendering with data set #33
  [x] HTML rendering with data set #34
+ [x] HTML rendering with data set #35
  [x] Rendering of void and empty elements in HTML with data set #0
  [x] Rendering of void and empty elements in HTML with data set #1
  [x] Rendering of void and empty elements in HTML with data set #2

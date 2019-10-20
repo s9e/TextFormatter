@@ -1414,6 +1414,14 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<hr><xsl:attribute name="title"><xsl:value-of disable-output-escaping="yes" select="@x"/></xsl:attribute></hr>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				'truefalse',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<xsl:value-of select="true()"/><xsl:value-of select="false()"/>';
+				}
+			],
 		];
 	}
 
