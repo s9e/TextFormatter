@@ -179,6 +179,12 @@ class OptimizeChooseTest extends AbstractTest
 					</xsl:choose></xsl:otherwise>
 				</xsl:choose>'
 			],
+			[
+				'<xsl:choose>
+					<xsl:otherwise>xxx</xsl:otherwise>
+				</xsl:choose>',
+				'xxx'
+			],
 		];
 	}
 }
