@@ -14,15 +14,10 @@ class BooleanOperators extends AbstractConvertor
 	*/
 	public function getMatchers(): array
 	{
-		// Create a boolean expression that can start a recursive pattern and a more complete
-		// expression that can be used in the middle of a pattern
-		$booleanExpr    = '((?&And)|(?&Boolean)|(?&Comparison)|(?&Or))';
-		$booleanStarter = '((?&Boolean)|(?&Comparison))';
-
 		return [
-			'And'                    => $booleanStarter . ' and ' . $booleanExpr,
-			'Boolean:BooleanSubExpr' => '\\( ' . $booleanExpr . ' \\)',
-			'Or'                     => $booleanStarter . ' or ' . $booleanExpr
+			'BooleanExpression:And'  => '((?&Boolean)) and ((?&BooleanExpression)|(?&Boolean))',
+			'Boolean:BooleanSubExpr' => '\\( ((?&BooleanExpression)|(?&Boolean)) \\)',
+			'BooleanExpression:Or'   => '((?&Boolean)) or ((?&BooleanExpression)|(?&Boolean))'
 		];
 	}
 

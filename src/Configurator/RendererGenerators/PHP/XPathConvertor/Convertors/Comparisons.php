@@ -19,11 +19,11 @@ class Comparisons extends AbstractConvertor
 		$scalar  = '((?&Math)|(?&Number)|(?&String))';
 
 		return [
-			'Comparison:Eq'  => $scalar . ' (!?=) ' .  $scalar,
-			'Comparison:Gt'  => $scalar . ' > ' . $number,
-			'Comparison:Gte' => $scalar . ' >= ' . $nonzero,
-			'Comparison:Lt'  => $number . ' < ' . $scalar,
-			'Comparison:Lte' => $nonzero . ' <= ' . $scalar
+			'Boolean:Eq'  => $scalar  . ' (!?=) ' . $scalar,
+			'Boolean:Gt'  => $scalar  . ' > '     . $number,
+			'Boolean:Gte' => $scalar  . ' >= '    . $nonzero,
+			'Boolean:Lt'  => $number  . ' < '     . $scalar,
+			'Boolean:Lte' => $nonzero . ' <= '    . $scalar
 		];
 	}
 

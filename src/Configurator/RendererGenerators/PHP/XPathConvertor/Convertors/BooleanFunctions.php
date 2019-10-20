@@ -22,7 +22,7 @@ class BooleanFunctions extends AbstractConvertor
 			'Boolean:Not'           => [
 				// Only try matching generic not() invocations after special cases fail
 				'order'  => 100,
-				'regexp' => 'not \\( ((?&Boolean)|(?&Comparison)|(?&And)|(?&Or)) \\)'
+				'regexp' => 'not \\( ((?&Boolean)|(?&BooleanExpression)) \\)'
 			],
 			'Boolean:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
 			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)',
