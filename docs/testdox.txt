@@ -6054,6 +6054,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Conve
  [x]  with data set #3
  [x]  with data set #4
  [x]  with data set #5
+ [x]  with data set #6
+ [x]  with data set #7
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators
  [x]  with data set #0

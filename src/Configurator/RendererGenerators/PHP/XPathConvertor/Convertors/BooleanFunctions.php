@@ -16,6 +16,7 @@ class BooleanFunctions extends AbstractConvertor
 	{
 		return [
 			'Boolean:BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
+			'Boolean:False'         => 'false \\( \\)',
 			'Boolean:HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
 			'Boolean:HasAttributes' => 'boolean \\( @\\* \\)',
 			'Boolean:Not'           => [
@@ -24,7 +25,8 @@ class BooleanFunctions extends AbstractConvertor
 				'regexp' => 'not \\( ((?&Boolean)|(?&Comparison)|(?&And)|(?&Or)) \\)'
 			],
 			'Boolean:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
-			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)'
+			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)',
+			'Boolean:True'          => 'true \\( \\)'
 		];
 	}
 
@@ -37,6 +39,17 @@ class BooleanFunctions extends AbstractConvertor
 	public function parseBooleanParam($expr)
 	{
 		return $this->recurse($expr) . "!==''";
+	}
+
+	/**
+	* Convert a call to false()
+	*
+	* @param  string $expr
+	* @return string
+	*/
+	public function parseFalse()
+	{
+		return 'false';
 	}
 
 	/**
@@ -95,5 +108,15 @@ class BooleanFunctions extends AbstractConvertor
 	public function parseNotParam($expr)
 	{
 		return $this->recurse($expr) . "===''";
+	}
+
+	/**
+	* Convert a call to true()
+	*
+	* @return string
+	*/
+	public function parseTrue()
+	{
+		return 'true';
 	}
 }
