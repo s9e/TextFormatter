@@ -280,9 +280,9 @@ function preview(text, target)
 		{
 			if (!oldNode.isEqualNode(newNode) && !elementHashesMatch(oldNode, newNode))
 			{
-				if (HINT.onUpdate)
+				if (HINT.onUpdate && newNode['hasAttribute']('data-s9e-livepreview-onupdate'))
 				{
-					executeEvents(newNode, 'update');
+					executeEvent(newNode, 'update');
 				}
 				syncElementAttributes(oldNode, newNode);
 				refreshElementContent(oldNode, newNode);
