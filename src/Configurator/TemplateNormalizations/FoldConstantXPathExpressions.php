@@ -20,7 +20,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'ceiling',
 		'concat',
 		'contains',
-		'false',
 		'floor',
 		'normalize-space',
 		'not',
@@ -33,8 +32,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'substring-after',
 		'substring-before',
 		'sum',
-		'translate',
-		'true'
+		'translate'
 	];
 
 	/**
@@ -43,7 +41,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	protected function getOptimizationPasses()
 	{
 		return [
-			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:<=>@[\\]])++$)' => 'foldConstantXPathExpression'
+			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:@[\\]])++$)' => 'foldConstantXPathExpression'
 		];
 	}
 
@@ -77,10 +75,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 			{
 				$result     = $this->evaluate($expr);
 				$foldedExpr = XPath::export($result);
-				if (strlen($foldedExpr) < strlen($expr))
-				{
-					$expr = $foldedExpr;
-				}
+				$expr       = $this->selectReplacement($expr, $foldedExpr);
 			}
 			catch (Exception $e)
 			{
@@ -110,6 +105,24 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		}
 
 		// Match unsupported characters and keywords, as well as function calls without arguments
-		return !preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
+		return !preg_match('([^\\s!\\-0-9<=>a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
+	}
+
+	/**
+	* Select the best replacement for given expression
+	*
+	* @param  string $expr       Original expression
+	* @param  string $foldedExpr Folded expression
+	* @return string
+	*/
+	protected function selectReplacement($expr, $foldedExpr)
+	{
+		// Use the folded expression if it's smaller or it's a boolean
+		if (strlen($foldedExpr) < strlen($expr) || $foldedExpr === 'false()' || $foldedExpr === 'true()')
+		{
+			return $foldedExpr;
+		}
+
+		return $expr;
 	}
 }

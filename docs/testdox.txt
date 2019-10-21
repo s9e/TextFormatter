@@ -1798,6 +1798,11 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExp
  [x] Works with data set #26
  [x] Works with data set #27
  [x] Works with data set #28
+ [x] Works with data set #29
+ [x] Works with data set #30
+ [x] Works with data set #31
+ [x] Works with data set #32
+ [x] Works with data set #33
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
  [x] Works with data set #0

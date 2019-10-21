@@ -127,6 +127,26 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:if test="not(starts-with(\'foobar\', \'foo\'))">..</xsl:if>',
 				'<xsl:if test="false()">..</xsl:if>'
 			],
+			[
+				'<xsl:if test="1 &gt; 2">..</xsl:if>',
+				'<xsl:if test="false()">..</xsl:if>'
+			],
+			[
+				'<xsl:if test="1.1 = 1.1">..</xsl:if>',
+				'<xsl:if test="true()">..</xsl:if>'
+			],
+			[
+				'<xsl:if test="1.2 != 1.1">..</xsl:if>',
+				'<xsl:if test="true()">..</xsl:if>'
+			],
+			[
+				'<xsl:if test="1.10 != 1.1">..</xsl:if>',
+				'<xsl:if test="false()">..</xsl:if>'
+			],
+			[
+				'<xsl:if test="\'foobar\' = \'foobar\'">..</xsl:if>',
+				'<xsl:if test="true()">..</xsl:if>'
+			],
 		];
 	}
 }
