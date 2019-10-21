@@ -302,6 +302,14 @@ class TemplateNormalizerTest extends Test
 				</xsl:choose>',
 				'true'
 			],
+			[
+				'<xsl:if test="true()">...</xsl:if>',
+				'...'
+			],
+			[
+				'x<xsl:if test="0">...</xsl:if>y',
+				'xy'
+			],
 		];
 	}
 }

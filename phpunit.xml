@@ -133,6 +133,7 @@
 			<file>tests/Configurator/TemplateNormalizations/AbstractNormalizationTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/DeoptimizeIfTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/EnforceHTMLOmittedEndTagsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/FixUnescapedCurlyBracesInHtmlAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/FoldArithmeticConstantsTest.php</file>

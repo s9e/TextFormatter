@@ -1701,6 +1701,9 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressi
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] normalize() calls the user-defined callback with a DOMElement as argument
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\DeoptimizeIf
+ [x] Works with data set #0
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\EnforceHTMLOmittedEndTags
  [x] Works with data set #0
  [x] Works with data set #1
@@ -2057,6 +2060,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] Default normalization rules with data set #24
  [x] Default normalization rules with data set #25
  [x] Default normalization rules with data set #26
+ [x] Default normalization rules with data set #27
+ [x] Default normalization rules with data set #28
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
  [x] Stylesheet parameters are considered safe
@@ -7313,7 +7318,7 @@ s9e\TextFormatter\Tests\Utils\Http\Clients\Curl
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [ ] get() returns FALSE on error
+ [x] get() returns FALSE on error
  [x] get() returns headers if returnHeaders is true
 
 s9e\TextFormatter\Tests\Utils\Http\Clients\Native
