@@ -153,6 +153,7 @@
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeConditionalValueOfTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeNestedConditionalsTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/OptimizeChooseDeadBranchesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeChooseTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/OptimizeChooseTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/PreserveSingleSpacesTest.php</file>

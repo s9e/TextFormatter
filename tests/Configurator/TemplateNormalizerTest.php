@@ -288,6 +288,20 @@ class TemplateNormalizerTest extends Test
 				'<div data-s9e-livepreview-postprocess="foo"/>',
 				'<div data-s9e-livepreview-onrender="foo"/>'
 			],
+			[
+				'<xsl:choose>
+					<xsl:when test="0 + 0">false</xsl:when>
+					<xsl:otherwise>true</xsl:otherwise>
+				</xsl:choose>',
+				'true'
+			],
+			[
+				'<xsl:choose>
+					<xsl:when test="0 + 1">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>',
+				'true'
+			],
 		];
 	}
 }

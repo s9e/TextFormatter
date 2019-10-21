@@ -71,6 +71,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		'FoldArithmeticConstants',
 		'FoldConstantXPathExpressions',
 		'InlineXPathLiterals',
+		'OptimizeChooseDeadBranches',
 		'OptimizeChooseText',
 		'OptimizeConditionalValueOf',
 		'OptimizeChoose',
