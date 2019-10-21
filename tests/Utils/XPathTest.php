@@ -83,4 +83,20 @@ class XPathTest extends Test
 
 		XPath::export(new \stdClass);
 	}
+
+	/**
+	* @testdox export(false) returns 'false()'
+	*/
+	public function testExportFalse()
+	{
+		$this->assertSame('false()', XPath::export(false));
+	}
+
+	/**
+	* @testdox export(true) returns 'true()'
+	*/
+	public function testExportTrue()
+	{
+		$this->assertSame('true()', XPath::export(true));
+	}
 }
