@@ -79,6 +79,11 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	protected function normalizeElement(DOMElement $element)
 	{
 		$attrName = ($element->localName === 'value-of') ? 'select' : 'test';
-		$element->setAttribute($attrName, $this->evaluateExpression($element->getAttribute($attrName)));
+		$oldExpr  = $element->getAttribute($attrName);
+		$newExpr  = $this->evaluateExpression($oldExpr);
+		if ($newExpr !== $oldExpr)
+		{
+			$element->setAttribute($attrName, $newExpr);
+		}
 	}
 }
