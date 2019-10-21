@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
+use Exception;
 use s9e\TextFormatter\Utils\XPath;
 
 class FoldConstantXPathExpressions extends AbstractConstantFolding
@@ -15,11 +16,14 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	* @var string[] List of supported XPath functions
 	*/
 	protected $supportedFunctions = [
+		'boolean',
 		'ceiling',
 		'concat',
 		'contains',
+		'false',
 		'floor',
 		'normalize-space',
+		'not',
 		'number',
 		'round',
 		'starts-with',
@@ -29,7 +33,8 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'substring-after',
 		'substring-before',
 		'sum',
-		'translate'
+		'translate',
+		'true'
 	];
 
 	/**
@@ -40,17 +45,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		return [
 			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:<=>@[\\]])++$)' => 'foldConstantXPathExpression'
 		];
-	}
-
-	/**
-	* Test whether a value can be serialized to an XPath literal
-	*
-	* @param  mixed $value
-	* @return bool
-	*/
-	protected function canBeSerialized($value)
-	{
-		return (is_string($value) || is_integer($value) || is_float($value));
 	}
 
 	/**
@@ -79,14 +73,18 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		$expr = $m[0];
 		if ($this->isConstantExpression($expr))
 		{
-			$result = $this->evaluate($expr);
-			if ($this->canBeSerialized($result))
+			try
 			{
+				$result     = $this->evaluate($expr);
 				$foldedExpr = XPath::export($result);
 				if (strlen($foldedExpr) < strlen($expr))
 				{
 					$expr = $foldedExpr;
 				}
+			}
+			catch (Exception $e)
+			{
+				// Do nothing
 			}
 		}
 

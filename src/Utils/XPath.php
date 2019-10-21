@@ -32,6 +32,10 @@ abstract class XPath
 			// Avoid locale issues by using sprintf()
 			return preg_replace('(\\.?0+$)', '', sprintf('%F', $value));
 		}
+		if (is_bool($value))
+		{
+			return ($value) ? 'true()' : 'false()';
+		}
 
 		return self::exportString((string) $value);
 	}

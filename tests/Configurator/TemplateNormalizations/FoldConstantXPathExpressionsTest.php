@@ -111,6 +111,14 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				"<b title=\"{concat('}','}}')}\"><xsl:apply-templates/></b>",
 				'<b title="{\'}}}\'}"><xsl:apply-templates/></b>',
 			],
+			[
+				'<xsl:value-of select="contains(\'foobar\', \'foo\')"/>',
+				'<xsl:value-of select="true()"/>',
+			],
+			[
+				'<xsl:value-of select="contains(\'foo\', \'foobar\')"/>',
+				'<xsl:value-of select="false()"/>',
+			],
 		];
 	}
 }
