@@ -18,7 +18,9 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	*/
 	protected $queries = [
 		'//*[namespace-uri() != $XSL]/@*[contains(.,"{")]',
-		'//xsl:value-of'
+		'//xsl:if[@test]',
+		'//xsl:value-of[@select]',
+		'//xsl:when[@test]'
 	];
 
 	/**
@@ -69,13 +71,14 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	}
 
 	/**
-	* Replace constant expressions in given xsl:value-of element
+	* Replace constant expressions in given XSL element
 	*
-	* @param  DOMElement $valueOf
+	* @param  DOMElement $element
 	* @return void
 	*/
-	protected function normalizeElement(DOMElement $valueOf)
+	protected function normalizeElement(DOMElement $element)
 	{
-		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
+		$attrName = ($element->localName === 'value-of') ? 'select' : 'test';
+		$element->setAttribute($attrName, $this->evaluateExpression($element->getAttribute($attrName)));
 	}
 }

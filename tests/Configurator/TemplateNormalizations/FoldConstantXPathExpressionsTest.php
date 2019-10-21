@@ -119,6 +119,14 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:value-of select="contains(\'foo\', \'foobar\')"/>',
 				'<xsl:value-of select="false()"/>',
 			],
+			[
+				'<xsl:if test="starts-with(\'foobar\', \'foo\')">..</xsl:if>',
+				'<xsl:if test="true()">..</xsl:if>'
+			],
+			[
+				'<xsl:if test="not(starts-with(\'foobar\', \'foo\'))">..</xsl:if>',
+				'<xsl:if test="false()">..</xsl:if>'
+			],
 		];
 	}
 }
