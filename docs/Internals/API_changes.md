@@ -3,6 +3,14 @@
 See also [general changes](Changes.md).
 
 
+## 2.2.0
+
+The following methods are silently deprecated and will be removed in the next major release:
+
+ - s9e\TextFormatter\Configurator\TemplateChecker::disable()
+ - s9e\TextFormatter\Configurator\TemplateChecker::enable()
+
+
 ## 2.1.0
 
 `s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Runner` has been removed.

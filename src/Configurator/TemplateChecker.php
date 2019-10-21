@@ -130,6 +130,8 @@ class TemplateChecker implements ArrayAccess, Iterator
 	/**
 	* Disable all checks
 	*
+	* @deprecated 2.2.0 Use UnsafeTemplate instead
+	*
 	* @return void
 	*/
 	public function disable()
@@ -139,6 +141,8 @@ class TemplateChecker implements ArrayAccess, Iterator
 
 	/**
 	* Enable all checks
+	*
+	* @deprecated 2.2.0
 	*
 	* @return void
 	*/
