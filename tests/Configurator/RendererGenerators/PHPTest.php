@@ -1129,7 +1129,7 @@ class PHPTest extends Test
 					$configurator->tags->add('T1')->template =
 						'<b>
 							<xsl:choose>
-								<xsl:when test="1">
+								<xsl:when test="not(@x)">
 									<xsl:attribute name="foo">FOO</xsl:attribute>
 								</xsl:when>
 								<xsl:otherwise>
@@ -1137,7 +1137,7 @@ class PHPTest extends Test
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
-								<xsl:when test="0">
+								<xsl:when test="@x">
 									<xsl:attribute name="bar"/>
 								</xsl:when>
 								<xsl:otherwise>
