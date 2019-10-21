@@ -147,6 +147,10 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 				'<xsl:if test="\'foobar\' = \'foobar\'">..</xsl:if>',
 				'<xsl:if test="true()">..</xsl:if>'
 			],
+			[
+				'<xsl:value-of select="number(\'x\')"/>',
+				'<xsl:value-of select="number(\'x\')"/>'
+			],
 		];
 	}
 }

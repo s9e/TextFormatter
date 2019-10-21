@@ -31,7 +31,6 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'substring',
 		'substring-after',
 		'substring-before',
-		'sum',
 		'translate'
 	];
 

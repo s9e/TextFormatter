@@ -19,7 +19,7 @@ abstract class XPath
 	*/
 	public static function export($value)
 	{
-		if (!is_scalar($value))
+		if (!is_scalar($value) || self::isIrrational($value))
 		{
 			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
 		}
@@ -78,5 +78,16 @@ abstract class XPath
 		}
 
 		return 'concat(' . implode(',', $toks) . ')';
+	}
+
+	/**
+	* Test whether given value is an irrational number
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	protected static function isIrrational($value)
+	{
+		return is_float($value) && !is_finite($value);
 	}
 }
