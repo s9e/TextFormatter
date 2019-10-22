@@ -44,13 +44,13 @@ foreach ($xpath->query($query) as $a)
 
 $page  = loadPage('http://w3c.github.io/html/fullindex.html');
 $xpath = new DOMXPath($page);
-$query = '//h3[@id="attributes-table"]/following-sibling::table[1]/tbody/tr/th';
+$query = '//table[@id="attributes-1"]/tbody/tr/th';
 foreach ($xpath->query($query) as $th)
 {
 	$tr = $th->parentNode;
 	foreach (['CSS', 'URL'] as $type)
 	{
-		if (strpos($tr->textContent, $type) !== false)
+		if (strpos($tr->lastChild->textContent, $type) !== false)
 		{
 			foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
 			{
@@ -66,7 +66,8 @@ $regexps = [
 		'^style$'
 	],
 	'JS'  => [
-		'^(?:data-s9e-livepreview-)?on',
+		'^data-s9e-livepreview-on',
+		'^on',
 	],
 	'URL' => [
 		'^action$',

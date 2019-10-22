@@ -32,7 +32,7 @@ abstract class NodeLocator
 	*/
 	public static function getCSSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^style$/i';
+		$regexp = '/^(?:color|style)$/i';
 		$nodes  = array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^style$/i')
@@ -125,7 +125,7 @@ abstract class NodeLocator
 	*/
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
+		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|i(?:con|tem(?:id|prop|type))|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 
 		/**
