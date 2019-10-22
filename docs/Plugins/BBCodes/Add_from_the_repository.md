@@ -354,7 +354,7 @@ echo $html;
 	<tr>
 		<td><code>authorStr</code></td>
 		<td>&lt;xsl:value-of select=&quot;@author&quot; /&gt; wrote:</td>
-		<td></td>
+		<td>Author string</td>
 	</tr>
 </table>
 
@@ -384,12 +384,12 @@ echo $html;
 	<tr>
 		<td><code>min</code></td>
 		<td>8</td>
-		<td></td>
+		<td>Minimum size in px</td>
 	</tr>
 	<tr>
 		<td><code>max</code></td>
 		<td>36</td>
-		<td></td>
+		<td>Maximum size in px</td>
 	</tr>
 </table>
 
@@ -413,17 +413,17 @@ echo $html;
 	<tr>
 		<td><code>showStr</code></td>
 		<td>Show</td>
-		<td></td>
+		<td>String used for the Show button</td>
 	</tr>
 	<tr>
 		<td><code>hideStr</code></td>
 		<td>Hide</td>
-		<td></td>
+		<td>String used for the Hide button</td>
 	</tr>
 	<tr>
 		<td><code>spoilerStr</code></td>
 		<td>Spoiler:</td>
-		<td></td>
+		<td>String used for the spoiler label</td>
 	</tr>
 </table>
 

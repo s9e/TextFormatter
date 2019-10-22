@@ -287,7 +287,7 @@
 				<div>
 					<xsl:if test="@author">
 						<cite>]]>
-							<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
+							<var name="authorStr" description="Author string"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
 						<![CDATA[</cite>
 					</xsl:if>
 					<xsl:apply-templates />
@@ -311,7 +311,7 @@
 	</bbcode>
 
 	<bbcode name="SIZE">
-		<usage>[SIZE={RANGE=<var name="min">8</var>,<var name="max">36</var>}]{TEXT}[/SIZE]</usage>
+		<usage>[SIZE={RANGE=<var name="min" description="Minimum size in px">8</var>,<var name="max" description="Maximum size in px">36</var>}]{TEXT}[/SIZE]</usage>
 		<template><![CDATA[
 			<span style="font-size:{RANGE}px">{TEXT}</span>
 		]]></template>
@@ -333,8 +333,8 @@
 		<template><![CDATA[
 			<div class="spoiler">
 				<div class="spoiler-header">
-					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
-					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
+					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr" description="String used for the Show button">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr" description="String used for the Hide button">Hide</var><![CDATA[</span></button>
+					<span class="spoiler-title">]]><var name="spoilerStr" description="String used for the spoiler label">Spoiler:</var><![CDATA[ {TEXT1}</span>
 				</div>
 				<div class="spoiler-content" style="display:none">{TEXT2}</div>
 			</div>
