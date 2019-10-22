@@ -8,6 +8,8 @@ The `data-s9e-livepreview-postprocess` attribute has been renamed to `data-s9e-l
 
 The [Escaper](../Plugins/Escaper/Synopsis.md) plugins now escapes `~` by default.
 
+The backtick character `` ` `` is now considered unsafe when user input is used in a JavaScript context.
+
 
 ## 2.1.0
 

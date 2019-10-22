@@ -46,17 +46,17 @@ abstract class ContextSafeness
 	* potentially unsafe either inside or outside of a string.
 	*
 	* - "(" and ")" are disallowed to prevent executing functions.
-	* - '"',  "'" and "\" are disallowed to prevent breaking out of or interfering with strings.
+	* - '"',  "'", "\" and "`" are disallowed to prevent breaking out of or interfering with strings.
 	* - "\r", "\n", U+2028 and U+2029 are disallowed inside of JavaScript strings.
 	* - ":" and "%" are disallowed to prevent potential exploits that set document.location to a
 	*   javascript: URI.
-	* - "=" is disallowed to prevent overwriting existing vars (or constructor, such as Array's) if
+	* - "=" is disallowed to prevent overwriting existing vars (or constructors, such as Array's) if
 	*   the input is used outside of a string
 	*
 	* @return string[]
 	*/
 	public static function getDisallowedCharactersInJS()
 	{
-		return ['(', ')', '"', "'", '\\', "\r", "\n", "\xE2\x80\xA8", "\xE2\x80\xA9", ':', '%', '='];
+		return ['(', ')', '"', "'", '\\', '`', "\r", "\n", "\xE2\x80\xA8", "\xE2\x80\xA9", ':', '%', '='];
 	}
 }
