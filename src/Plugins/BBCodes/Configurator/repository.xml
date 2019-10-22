@@ -53,15 +53,21 @@
 				</xsl:if>
 				<xsl:apply-templates />
 			</code></pre>
-			<script
-				async=""
-				crossorigin="anonymous"
-				data-hljs-style="]]><var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var><![CDATA["
-				data-hljs-url="]]><var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</var><![CDATA["
-				data-s9e-livepreview-onrender="if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)"
-				integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ"
-				src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"
-			></script>
+			<script async="" crossorigin="anonymous">
+				<xsl:if test="'default' != ']]><var name='style'>github-gist</var><![CDATA['">
+					<xsl:attribute name="data-hljs-style">]]>
+						<var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var>
+					<![CDATA[</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/' != ']]><var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</var><![CDATA['">
+					<xsl:attribute name="data-hljs-url">]]>
+						<var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</var>
+					<![CDATA[</xsl:attribute>
+				</xsl:if>
+				<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
+				<xsl:attribute name="integrity">sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ</xsl:attribute>
+				<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js</xsl:attribute>
+			</script>
 		]]></template>
 	</bbcode>
 

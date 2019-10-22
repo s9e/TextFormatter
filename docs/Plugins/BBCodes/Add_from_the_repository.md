@@ -86,15 +86,21 @@ echo $html;
 	</xsl:if>
 	<xsl:apply-templates />
 </code></pre>
-<script
-	async=""
-	crossorigin="anonymous"
-	data-hljs-style="github-gist"
-	data-hljs-url="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/"
-	data-s9e-livepreview-onrender="if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)"
-	integrity="sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ"
-	src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js"
-></script>
+<script async="" crossorigin="anonymous">
+	<xsl:if test="'default' != 'github-gist'">
+		<xsl:attribute name="data-hljs-style">
+			github-gist
+		</xsl:attribute>
+	</xsl:if>
+	<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/'">
+		<xsl:attribute name="data-hljs-url">
+			https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/
+		</xsl:attribute>
+	</xsl:if>
+	<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
+	<xsl:attribute name="integrity">sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ</xsl:attribute>
+	<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js</xsl:attribute>
+</script>
 ```
 <table>
 	<tr>
@@ -105,7 +111,17 @@ echo $html;
 	<tr>
 		<td><code>style</code></td>
 		<td>github-gist</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><code>style</code></td>
+		<td>github-gist</td>
 		<td>highlight.js style name (or "none")</td>
+	</tr>
+	<tr>
+		<td><code>url</code></td>
+		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</td>
+		<td></td>
 	</tr>
 	<tr>
 		<td><code>url</code></td>

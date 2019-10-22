@@ -3822,6 +3822,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] BBCodes from repository.xml render nicely with data set #114
  [x] BBCodes from repository.xml render nicely with data set #115
  [x] BBCodes from repository.xml render nicely with data set #116
+ [x] BBCodes from repository.xml render nicely with data set #117
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #0
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #1
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #2
@@ -3939,6 +3940,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #114
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #115
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #116
+ [x] BBCodes from repository.xml are parsed identically by the JavaScript parser with data set #117
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
@@ -6917,6 +6919,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Tests from plugins with data set #282
  [x] Tests from plugins with data set #283
  [x] Tests from plugins with data set #284
+ [x] Tests from plugins with data set #285
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -7202,6 +7205,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Tests from plugins (Quick renderer) with data set #282
  [x] Tests from plugins (Quick renderer) with data set #283
  [x] Tests from plugins (Quick renderer) with data set #284
+ [x] Tests from plugins (Quick renderer) with data set #285
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
