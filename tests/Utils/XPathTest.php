@@ -99,4 +99,15 @@ class XPathTest extends Test
 	{
 		$this->assertSame('true()', XPath::export(true));
 	}
+
+	/**
+	* @testdox export(INF) throws an exception
+	*/
+	public function testExportInfinite()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('irrational');
+
+		XPath::export(INF);
+	}
 }

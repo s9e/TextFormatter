@@ -19,25 +19,52 @@ abstract class XPath
 	*/
 	public static function export($value)
 	{
-		if (!is_scalar($value) || self::isIrrational($value))
+		$callback = get_called_class() . '::export' . ucfirst(gettype($value));
+		if (!is_callable($callback))
 		{
 			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
 		}
-		if (is_int($value))
+
+		return $callback($value);
+	}
+
+	/**
+	* Export given boolean value
+	*
+	* @param  bool   $value
+	* @return string
+	*/
+	protected static function exportBoolean(bool $value): string
+	{
+		return ($value) ? 'true()' : 'false()';
+	}
+
+	/**
+	* Export given float value
+	*
+	* @param  float  $value
+	* @return string
+	*/
+	protected static function exportDouble(float $value): string
+	{
+		if (!is_finite($value))
 		{
-			return (string) $value;
-		}
-		if (is_float($value))
-		{
-			// Avoid locale issues by using sprintf()
-			return preg_replace('(\\.?0+$)', '', sprintf('%F', $value));
-		}
-		if (is_bool($value))
-		{
-			return ($value) ? 'true()' : 'false()';
+			throw new InvalidArgumentException(__METHOD__ . '() cannot export irrational numbers');
 		}
 
-		return self::exportString((string) $value);
+		// Avoid locale issues by using sprintf()
+		return preg_replace('(\\.?0+$)', '', sprintf('%F', $value));
+	}
+
+	/**
+	* Export given integer value
+	*
+	* @param  integer $value
+	* @return string
+	*/
+	protected static function exportInteger(int $value): string
+	{
+		return (string) $value;
 	}
 
 	/**
@@ -46,7 +73,7 @@ abstract class XPath
 	* @param  string $str Literal, e.g. "foo"
 	* @return string      XPath expression, e.g. "'foo'"
 	*/
-	protected static function exportString($str)
+	protected static function exportString(string $str): string
 	{
 		// foo becomes 'foo'
 		if (strpos($str, "'") === false)
@@ -78,16 +105,5 @@ abstract class XPath
 		}
 
 		return 'concat(' . implode(',', $toks) . ')';
-	}
-
-	/**
-	* Test whether given value is an irrational number
-	*
-	* @param  mixed $value
-	* @return bool
-	*/
-	protected static function isIrrational($value)
-	{
-		return is_float($value) && !is_finite($value);
 	}
 }

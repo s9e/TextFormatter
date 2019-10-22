@@ -7353,6 +7353,7 @@ s9e\TextFormatter\Utils\XPath
  [x] export(new stdClass) throws an exception
  [x] export(false) returns 'false()'
  [x] export(true) returns 'true()'
+ [x] export(INF) throws an exception
 
 s9e\TextFormatter\Tests\Utils
  [x] encodeUnicodeSupplementaryCharacters() tests with data set #0
