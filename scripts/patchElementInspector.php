@@ -1,22 +1,28 @@
 #!/usr/bin/php
 <?php
 
-function loadPage($url)
+function getPage($url)
 {
 	$filepath = sys_get_temp_dir() . '/' . basename($url);
-
 	if (!file_exists($filepath))
 	{
 		copy(
 			'compress.zlib://' . $url,
 			$filepath,
-			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+			stream_context_create(['http' => ['header' => 'Accept-encoding: gzip']])
 		);
 	}
 
+	return file_get_contents($filepath);
+}
+
+function loadPage($url)
+{
+	$html = getPage($url);
+
 	// ext/dom doesn't properly close dd elements whose end tag is absent
-	$html = file_get_contents($filepath);
 	$html = str_replace('<dd>', '</dd><dd>', $html);
+	$html = str_replace('’', "'", $html);
 
 	$page = new DOMDocument;
 	$page->preserveWhiteSpace = false;
@@ -25,13 +31,11 @@ function loadPage($url)
 	return $page;
 }
 
-$page = loadPage('http://www.w3.org/TR/html/single-page.html');
-
 //==============================================================================
 // Formatting elements, which are automatically reopened
 //==============================================================================
 
-//$page  = loadPage('http://www.w3.org/TR/html5/syntax.html');
+$page = loadPage('https://www.w3.org/TR/html53/syntax.html');
 $node = $page->getElementById('formatting')->parentNode->nextSibling;
 $formattingElements = [];
 foreach ($node->getElementsByTagName('code') as $node)
@@ -43,6 +47,7 @@ foreach ($node->getElementsByTagName('code') as $node)
 // Void elements
 //==============================================================================
 
+//$page  = loadPage('https://www.w3.org/TR/html53/syntax.html');
 $nodes = $page->getElementById('void-elements')
               ->parentNode->nextSibling
               ->getElementsByTagName('code');
@@ -57,6 +62,7 @@ foreach ($nodes as $node)
 // End tags that can be omitted => closeParent rules
 //==============================================================================
 
+//$page = loadPage('https://www.w3.org/TR/html53/syntax.html');
 $node = $page->getElementById('optional-tags');
 
 $closeParent  = [];
@@ -101,7 +107,7 @@ while (isset($node->nextSibling))
 		$closeParent[$m[1]][$elName] = 0;
 		$closeParent[$m[2]][$elName] = 0;
 	}
-	elseif (preg_match('#^((?:\\w+, )*or [a-z]+) element, or if there is no more content in the parent element and the parent element is an HTML element that is not an? (?:\\w+, )*or \\w+ element, or an autonomous custom element$#', $text, $m))
+	elseif (preg_match('#^((?:\\w+,? )*or [a-z]+) element(?:, or if there is no more content in the parent element and the parent element is an HTML element that is not an? (?:\\w+, )*or \\w+ element, or an autonomous custom element)?$#', $text, $m))
 	{
 		foreach (preg_split('(, (?:or )?)', $m[1]) as $target)
 		{
@@ -118,29 +124,45 @@ while (isset($node->nextSibling))
 // Content models
 //==============================================================================
 
-$xpath    = new DOMXPath($page);
-$elements = [];
-
-$query = '/html/body/main/section/section/h4[span/dfn[@data-dfn-type="element"]]';
-foreach ($xpath->query($query) as $h4)
+$urls = [];
+$html = getPage('https://www.w3.org/TR/html53/index.html');
+preg_match_all('(="?\\K[-\\w]++\\.html(?=#the-\\w+?-elements?(?!-)))', $html, $m);
+foreach (array_unique($m[0]) as $filename)
 {
-	if (!preg_match('(^[\\d.\\s]*The (?:\\w+, )*(?:(?:\\w+ )?and )*\\w+ elements?\\s*$)', $h4->textContent))
+	if ($filename !== 'obsolete.html')
 	{
-		echo 'Skipping ', $h4->textContent, "\n";
-		continue;
+		$urls[] = 'https://www.w3.org/TR/html53/' . $filename;
 	}
+}
 
-	$dl = $h4->nextSibling;
-	while ($dl->nodeName !== 'dl' || substr($dl->textContent, 0, 10) !== 'Categories')
+$elements = [];
+foreach ($urls as $url)
+{
+	$page     = loadPage($url);
+	$xpath    = new DOMXPath($page);
+	$query    = '/html/body/main/section/h4 | /html/body/main/section/section/h4';
+	foreach ($xpath->query($query) as $h4)
 	{
-		$dl = $dl->nextSibling;
-	}
-	foreach ($h4->getElementsByTagName('dfn') as $dfn)
-	{
-		$elName = $dfn->textContent;
-		$elements[$elName]['categories']  = getCategories($dl);
-		$elements[$elName]['categories'] += getCategoriesFromContexts($dl);
-		$elements[$elName] += getContentModel($dl, $elName);
+		$textContent = preg_replace('(\\s+)', ' ', $h4->textContent);
+
+		if (!preg_match('(^[\\d.\\s]*The (?:\\w+, )*(?:(?:\\w+ )?and )*\\w+ elements?\\s*$)', $textContent))
+		{
+			echo 'Skipping ', $h4->textContent, "\n";
+			continue;
+		}
+
+		$dl = $h4->nextSibling;
+		while ($dl->nodeName !== 'dl' || substr($dl->textContent, 0, 10) !== 'Categories')
+		{
+			$dl = $dl->nextSibling;
+		}
+		foreach ($h4->getElementsByTagName('dfn') as $dfn)
+		{
+			$elName = $dfn->textContent;
+			$elements[$elName]['categories']  = getCategories($dl);
+			$elements[$elName]['categories'] += getCategoriesFromContexts($dl);
+			$elements[$elName] += getContentModel($dl, $elName);
+		}
 	}
 }
 
@@ -173,6 +195,7 @@ function getCategories($dl)
 	{
 		$text = strtolower($text);
 		$text = preg_replace('(^if the element is allowed in the body: )', '', $text);
+		$text = preg_replace('(((?:listed|labelable|submittable|resettable),? )+and autocapitalize-inheriting )', '', $text);
 
 		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root)$)', $text, $m))
 		{
@@ -183,11 +206,11 @@ function getCategories($dl)
 			// No need to make a distinction here
 			$cat[$m[1]][''] = 1;
 		}
-		elseif (preg_match('(^if the element’s children include at least one (\\w+) element: (\\w+ content)$)', $text, $m))
+		elseif (preg_match("(^if the element's children include at least one (\\w+) element: (\\w+ content)$)", $text, $m))
 		{
 			$cat[$m[2]][$m[1]] = 1;
 		}
-		elseif (preg_match('(^if the element’s children include at least one name-value group: (\\w+ content)$)', $text, $m))
+		elseif (preg_match("(^if the element's children include at least one name-value group: (\\w+ content)$)", $text, $m))
 		{
 			$cat[$m[1]]['dt and dd'] = 1;
 		}
@@ -210,6 +233,10 @@ function getCategories($dl)
 		elseif (preg_match('(^if the (\\w+) attribute is in the (\\w+) state: [\\w, ]*(form-associated element)$)', $text, $m))
 		{
 			$cat[$m[3]]['@' . $m[1] . '="' . $m[2] . '"'] = 1;
+		}
+		elseif (preg_match('(^if the (\\w+) attribute is present: (\\w+ content)$)', $text, $m))
+		{
+			$cat[$m[2]]['@' . $m[1]] = 1;
 		}
 		elseif ($text === 'none')
 		{
@@ -269,6 +296,8 @@ function getContentModel($dl, $elName)
 	$model = [];
 	foreach (getDdText(getDt($dl, 'Content model')) as $text)
 	{
+		$text = str_replace('listed, labelable, submittable, resettable, and autocapitalize-inheriting ', '', $text);
+
 		if (preg_match('(^(\\w+ content|[-\\w]+ element|sectioning root|transparent)$)', $text, $m))
 		{
 			$model['allowChildCategory'][$m[1]][''] = 1;
@@ -317,6 +346,16 @@ function getContentModel($dl, $elName)
 			$model['allowChildElement']['tfoot']['']                      = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
+		elseif ($text === 'one or more h1, h2, h3, h4, h5, h6 elements, optionally intermixed with script-supporting elements')
+		{
+			$model['allowChildElement']['h1']['']                         = 1;
+			$model['allowChildElement']['h2']['']                         = 1;
+			$model['allowChildElement']['h3']['']                         = 1;
+			$model['allowChildElement']['h4']['']                         = 1;
+			$model['allowChildElement']['h5']['']                         = 1;
+			$model['allowChildElement']['h6']['']                         = 1;
+			$model['allowChildCategory']['script-supporting element'][''] = 1;
+		}
 		elseif ($text === 'zero or more tr and script-supporting elements')
 		{
 			$model['allowChildElement']['tr']['']                         = 1;
@@ -332,10 +371,20 @@ function getContentModel($dl, $elName)
 		{
 			$model['allowChildCategory']['flow content']['']           = 1;
 			$model['denyDescendantElement']['header']['']              = 1;
+			$model['denyDescendantElement']['footer']['']              = 1;
 			$model['denyDescendantCategory']['sectioning content'][''] = 1;
 			$model['denyDescendantCategory']['heading content']['']    = 1;
 		}
-		elseif ($text === 'phrasing content, but with no descendant labelable elements unless it is the element’s labeled control, and no descendant label elements')
+		elseif ($text === 'flow content, but with no header, footer, main, sectioning content, or heading content descendants')
+		{
+			$model['allowChildCategory']['flow content']['']           = 1;
+			$model['denyDescendantElement']['header']['']              = 1;
+			$model['denyDescendantElement']['footer']['']              = 1;
+			$model['denyDescendantElement']['main']['']                = 1;
+			$model['denyDescendantCategory']['sectioning content'][''] = 1;
+			$model['denyDescendantCategory']['heading content']['']    = 1;
+		}
+		elseif ($text === "phrasing content, but with no descendant labelable elements unless it is the element's labeled control, and no descendant label elements")
 		{
 			$model['allowChildCategory']['phrasing content'][''] = 1;
 			$model['denyDescendantCategory']['labelable element'][''] = 1;
@@ -379,15 +428,29 @@ function getContentModel($dl, $elName)
 			$model['allowChildElement']['option']['']                     = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
-		elseif ($text === 'flow content, but with no header, footer, sectioning content, or heading content descendants')
+		elseif ($text === 'flow content followed by one figcaption element')
 		{
-			$model['allowChildCategory']['flow content']['']           = 1;
-			$model['denyDescendantElement']['header']['']              = 1;
-			$model['denyDescendantElement']['footer']['']              = 1;
-			$model['denyDescendantCategory']['sectioning content'][''] = 1;
-			$model['denyDescendantCategory']['heading content']['']    = 1;
+			$model['allowChildElement']['figcaption']['']    = 1;
+			$model['allowChildCategory']['flow content'][''] = 1;
 		}
-		elseif ($text === 'flow content optionally including a figcaption child element')
+		elseif ($text === 'flow content, but with no header or footer element descendants')
+		{
+			$model['allowChildCategory']['flow content'][''] = 1;
+			$model['denyDescendantElement']['header']['']    = 1;
+			$model['denyDescendantElement']['footer']['']    = 1;
+		}
+		elseif ($text === 'flow content, but with no main, or table element descendants')
+		{
+			$model['allowChildCategory']['flow content'][''] = 1;
+			$model['denyDescendantElement']['main']['']      = 1;
+			$model['denyDescendantElement']['table']['']     = 1;
+		}
+		elseif ($text === 'flow content but with no main element descendant')
+		{
+			$model['allowChildCategory']['flow content'][''] = 1;
+			$model['denyDescendantElement']['main']['']      = 1;
+		}
+		elseif ($text === 'flow content optionally including a single figcaption child element')
 		{
 			$model['allowChildCategory']['flow content'][''] = 1;
 			$model['allowChildElement']['figcaption']['']    = 1;
@@ -398,11 +461,18 @@ function getContentModel($dl, $elName)
 			$model['denyDescendantCategory']['interactive content'][''] = 1;
 			$model['denyDescendantElement']['a']['']                    = 1;
 		}
-		elseif ($text === 'flow content, but with no heading content descendants, no sectioning content descendants, and no header, footer, or address element descendants')
+		elseif ($text === 'transparent, but with no interactive content descendants except for a elements, img elements with usemap attributes, button elements, input elements whose type attribute are in the checkbox or radio button states, input elements that are buttons, select elements with a multiple attribute or a display size greater than 1, and elements that would not be interactive content except for having the tabindex attribute specified')
+		{
+			// No need to be more specific
+			$model['allowChildCategory']['transparent']['']             = 1;
+			$model['denyDescendantCategory']['interactive content'][''] = 1;
+		}
+		elseif ($text === 'flow content, but with no heading content descendants, no sectioning content descendants, and no main, header, footer, or address element descendants')
 		{
 			$model['allowChildCategory']['flow content']['']           = 1;
 			$model['denyDescendantCategory']['heading content']['']    = 1;
 			$model['denyDescendantCategory']['sectioning content'][''] = 1;
+			$model['denyDescendantElement']['main']['']              = 1;
 			$model['denyDescendantElement']['header']['']              = 1;
 			$model['denyDescendantElement']['footer']['']              = 1;
 			$model['denyDescendantElement']['address']['']             = 1;
@@ -471,6 +541,10 @@ function getContentModel($dl, $elName)
 		elseif (preg_match('(^one element of (\\w+ content)$)', $text, $m))
 		{
 			$model['allowChildCategory'][$m[1]][''] = 1;
+		}
+		elseif ($text === 'otherwise: text, but must match requirements described in prose below')
+		{
+			$model['allowText'] = 1;
 		}
 		else
 		{
@@ -541,19 +615,21 @@ function getDt($dl, $title)
 // Gather the names of elements with a built-in "white-space: pre" CSS rule
 //==============================================================================
 
+$html = getPage('https://html.spec.whatwg.org/multipage/rendering.html');
+$html = preg_replace('(<style>.*?</style>)s', '', $html);
+$html = strip_tags($html);
+
 preg_match_all(
 	'#^(.*)\\{[^}]*?white-space:\\s*pre#m',
-	$page->getElementById('rendering')->parentNode->textContent,
+	$html,
 	$matches
 );
-
 foreach ($matches[1] as $elNames)
 {
 	foreach (explode(',', $elNames) as $elName)
 	{
 		// Remove predicates
 		$elName = preg_replace('#\\[\\w+\\]#', '', trim($elName));
-
 		if (isset($elements[$elName]))
 		{
 			$elements[$elName]['pre'] = 1;
