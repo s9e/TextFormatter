@@ -3,27 +3,27 @@ var attrName       = config.attrName,
 	hasDoubleQuote = (text.indexOf('"') >= 0),
 	tagName        = config.tagName;
 
-if (!config.disableQuotes)
+if (typeof config.disableQuotes === 'undefined')
 {
 	parseSingleQuotes();
 	parseSingleQuotePairs();
 	parseDoubleQuotePairs();
 }
-if (!config.disableGuillemets)
+if (typeof config.disableGuillemets === 'undefined')
 {
 	parseGuillemets();
 }
-if (!config.disableMathSymbols)
+if (typeof config.disableMathSymbols === 'undefined')
 {
 	parseNotEqualSign();
 	parseSymbolsAfterDigits();
 	parseFractions();
 }
-if (!config.disablePunctuation)
+if (typeof config.disablePunctuation === 'undefined')
 {
 	parseDashesAndEllipses();
 }
-if (!config.disableSymbols)
+if (typeof config.disableSymbols === 'undefined')
 {
 	parseSymbolsInParentheses();
 }
@@ -31,9 +31,9 @@ if (!config.disableSymbols)
 /**
 * Add a fancy replacement tag
 *
-* @param  {!number} tagPos Position of the tag in the text
-* @param  {!number} tagLen Length of text consumed by the tag
-* @param  {!string} chr    Replacement character
+* @param  {number} tagPos Position of the tag in the text
+* @param  {number} tagLen Length of text consumed by the tag
+* @param  {string} chr    Replacement character
 * @param  {number=} prio   Tag's priority
 * @return {!Tag}
 */
@@ -66,7 +66,7 @@ function parseDashesAndEllipses()
 		m;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'], m[0].length, chrs[m[0]]);
+		addTag(m.index, m[0].length, chrs[m[0]]);
 	}
 }
 
@@ -119,7 +119,7 @@ function parseFractions()
 	var m, regexp = /\b(?:0\/3|1\/(?:[2-9]|10)|2\/[35]|3\/[458]|4\/5|5\/[68]|7\/8)\b/g;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'], m[0].length, map[m[0]]);
+		addTag(m.index, m[0].length, map[m[0]]);
 	}
 }
 
@@ -136,8 +136,8 @@ function parseGuillemets()
 	var m, regexp = /<<( ?)(?! )[^\n<>]*?[^\n <>]\1>>(?!>)/g;
 	while (m = regexp.exec(text))
 	{
-		var left  = addTag(+m['index'],                   2, "\u00AB"),
-			right = addTag(+m['index'] + m[0].length - 2, 2, "\u00BB");
+		var left  = addTag(m.index,                   2, "\u00AB"),
+			right = addTag(m.index + m[0].length - 2, 2, "\u00BB");
 
 		left.cascadeInvalidationTo(right);
 	}
@@ -158,25 +158,25 @@ function parseNotEqualSign()
 	var m, regexp = /\b (?:!|=\/)=(?= \b)/g;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'] + 1, m[0].length - 1, "\u2260");
+		addTag(m.index + 1, m[0].length - 1, "\u2260");
 	}
 }
 
 /**
 * Parse pairs of quotes
 *
-* @param {!string} q          ASCII quote character 
+* @param {string}  q          ASCII quote character
 * @param {!RegExp} regexp     Regexp used to identify quote pairs
-* @param {!string} leftQuote  Fancy replacement for left quote
-* @param {!string} rightQuote Fancy replacement for right quote
+* @param {string}  leftQuote  Fancy replacement for left quote
+* @param {string}  rightQuote Fancy replacement for right quote
 */
 function parseQuotePairs(q, regexp, leftQuote, rightQuote)
 {
 	var m;
 	while (m = regexp.exec(text))
 	{
-		var left  = addTag(+m['index'] + m[0].indexOf(q), 1, leftQuote),
-			right = addTag(+m['index'] + m[0].length - 1, 1, rightQuote);
+		var left  = addTag(m.index + m[0].indexOf(q), 1, leftQuote),
+			right = addTag(m.index + m[0].length - 1, 1, rightQuote);
 
 		// Cascade left tag's invalidation to the right so that if we skip the left quote,
 		// the right quote remains untouched
@@ -213,7 +213,7 @@ function parseSingleQuotes()
 	while (m = regexp.exec(text))
 	{
 		// Give this tag a worse priority than default so that quote pairs take precedence
-		addTag(+m['index'] + m[0].indexOf("'"), 1, "\u2019", 10);
+		addTag(m.index + m[0].indexOf("'"), 1, "\u2019", 10);
 	}
 }
 
@@ -251,14 +251,14 @@ function parseSymbolsAfterDigits()
 		// Test for a multiply sign at the end
 		if (m[0][m[0].length - 1] === 'x')
 		{
-			addTag(+m['index'] + m[0].length - 1, 1, "\u00d7");
+			addTag(m.index + m[0].length - 1, 1, "\u00d7");
 		}
 
 		// Test for an apostrophe/prime right after the digit
 		var str = m[0].substr(1, 2);
 		if (map[str])
 		{
-			addTag(+m['index'] + 1, 1, map[str]);
+			addTag(m.index + 1, 1, map[str]);
 		}
 	}
 }
@@ -284,6 +284,6 @@ function parseSymbolsInParentheses()
 		m;
 	while (m = regexp.exec(text))
 	{
-		addTag(+m['index'], m[0].length, chrs[m[0].toLowerCase()]);
+		addTag(m.index, m[0].length, chrs[m[0].toLowerCase()]);
 	}
 }

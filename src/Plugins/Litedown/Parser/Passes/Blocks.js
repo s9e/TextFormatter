@@ -4,19 +4,18 @@ function parse()
 {
 	matchSetextLines();
 
-	var codeFence,
+	var blocks       = [],
+		blocksCnt    = 0,
+		codeFence,
 		codeIndent   = 4,
 		codeTag,
 		lineIsEmpty  = true,
 		lists        = [],
 		listsCnt     = 0,
 		newContext   = false,
-		quotes       = [],
-		quotesCnt    = 0,
 		textBoundary = 0,
 		breakParagraph,
 		continuation,
-		endTag,
 		ignoreLen,
 		indentStr,
 		indentLen,
@@ -24,7 +23,7 @@ function parse()
 		listIndex,
 		maxIndent,
 		minIndent,
-		quoteDepth,
+		blockDepth,
 		tagPos,
 		tagLen;
 
@@ -32,29 +31,30 @@ function parse()
 	// further matches
 	var matches = [],
 		m,
-		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}> ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+[^`\n]*$|~~~+[^~\n]*$)?)?/gm;
+		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}>(?:(?!!)|!(?![^\n>]*?!<)) ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+[^`\n]*$|~~~+[^~\n]*$)?)?/gm;
 	while (m = regexp.exec(text))
 	{
 		matches.push(m);
 
 		// Move regexp.lastIndex if the current match is empty
-		if (m['index'] === regexp['lastIndex'])
+		if (m.index === regexp.lastIndex)
 		{
-			++regexp['lastIndex'];
+			++regexp.lastIndex;
 		}
 	}
 
 	matches.forEach(function(m)
 	{
-		var matchPos = +m['index'],
-			matchLen = m[0].length,
+		var blockMarks = [],
+			matchPos   = m.index,
+			matchLen   = m[0].length,
 			startPos,
 			startLen,
 			endPos,
 			endLen;
 
 		ignoreLen  = 0;
-		quoteDepth = 0;
+		blockDepth = 0;
 
 		// If the last line was empty then this is not a continuation, and vice-versa
 		continuation = !lineIsEmpty;
@@ -72,44 +72,44 @@ function parse()
 		// If the line is empty and it's the first empty line then we break current paragraph.
 		breakParagraph = (lineIsEmpty && continuation);
 
-		// Count quote marks
+		// Count block marks
 		if (m[1])
 		{
-			quoteDepth = m[1].length - m[1].replace(/>/g, '').length;
+			blockMarks = getBlockMarks(m[1]);
+			blockDepth = blockMarks.length;
 			ignoreLen  = m[1].length;
-			if (codeTag && codeTag.hasAttribute('quoteDepth'))
+			if (codeTag && codeTag.hasAttribute('blockDepth'))
 			{
-				quoteDepth = Math.min(quoteDepth, codeTag.getAttribute('quoteDepth'));
-				ignoreLen  = computeQuoteIgnoreLen(m[1], quoteDepth);
+				blockDepth = Math.min(blockDepth, codeTag.getAttribute('blockDepth'));
+				ignoreLen  = computeBlockIgnoreLen(m[1], blockDepth);
 			}
 
-			// Overwrite quote markup
+			// Overwrite block markup
 			overwrite(matchPos, ignoreLen);
 		}
 
-		// Close supernumerary quotes
-		if (quoteDepth < quotesCnt && !continuation)
+		// Close supernumerary blocks
+		if (blockDepth < blocksCnt && !continuation)
 		{
 			newContext = true;
-
 			do
 			{
-				addEndTag('QUOTE', textBoundary, 0).pairWith(quotes.pop());
+				var startTag = blocks.pop();
+				addEndTag(startTag.getName(), textBoundary, 0).pairWith(startTag);
 			}
-			while (quoteDepth < --quotesCnt);
+			while (blockDepth < --blocksCnt);
 		}
 
-		// Open new quotes
-		if (quoteDepth > quotesCnt && !lineIsEmpty)
+		// Open new blocks
+		if (blockDepth > blocksCnt && !lineIsEmpty)
 		{
 			newContext = true;
-
 			do
 			{
-				var tag = addStartTag('QUOTE', matchPos, 0, quotesCnt - 999);
-				quotes.push(tag);
+				var tagName = (blockMarks[blocksCnt] === '>!') ? 'SPOILER' : 'QUOTE';
+				blocks.push(addStartTag(tagName, matchPos, 0, -999));
 			}
-			while (quoteDepth > ++quotesCnt);
+			while (blockDepth > ++blocksCnt);
 		}
 
 		// Compute the width of the indentation
@@ -151,9 +151,7 @@ function parse()
 				{
 					// Overwrite the whole block
 					overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
-
-					endTag = addEndTag('CODE', textBoundary, 0, -1);
-					endTag.pairWith(codeTag);
+					codeTag.pairWith(addEndTag('CODE', textBoundary, 0, -1));
 				}
 				else
 				{
@@ -213,7 +211,7 @@ function parse()
 			else if (!listsCnt)
 			{
 				// We're not inside of a list already, we can start one if there's a list item
-				listIndex = (hasListItem) ? 0 : -1
+				listIndex = (hasListItem) ? 0 : -1;
 			}
 			else
 			{
@@ -244,7 +242,7 @@ function parse()
 				breakParagraph = true;
 
 				// Compute the position and amount of text consumed by the item tag
-				tagPos = matchPos + ignoreLen + indentPos
+				tagPos = matchPos + ignoreLen + indentPos;
 				tagLen = m[4].length;
 
 				// Create a LI tag that consumes its markup
@@ -352,9 +350,7 @@ function parse()
 
 				if (codeTag && m[5] === codeFence)
 				{
-					endTag = addEndTag('CODE', tagPos, tagLen, -1);
-					endTag.pairWith(codeTag);
-
+					codeTag.pairWith(addEndTag('CODE', tagPos, tagLen, -1));
 					addIgnoreTag(textBoundary, tagPos - textBoundary);
 
 					// Overwrite the whole block
@@ -367,7 +363,7 @@ function parse()
 					// Create code block
 					codeTag   = addStartTag('CODE', tagPos, tagLen);
 					codeFence = m[5].replace(/[^`~]+/, '');
-					codeTag.setAttribute('quoteDepth', quoteDepth);
+					codeTag.setAttribute('blockDepth', blockDepth);
 
 					// Ignore the next character, which should be a newline
 					addIgnoreTag(tagPos + tagLen, 1);
@@ -390,7 +386,7 @@ function parse()
 			// Mark the end of the line as a boundary
 			markBoundary(lfPos);
 		}
-		else if (setextLines[lfPos] && setextLines[lfPos].quoteDepth === quoteDepth && !lineIsEmpty && !listsCnt && !codeTag)
+		else if (setextLines[lfPos] && setextLines[lfPos].blockDepth === blockDepth && !lineIsEmpty && !listsCnt && !codeTag)
 		{
 			// Setext-style header
 			addTagPair(
@@ -426,8 +422,8 @@ function parse()
 /**
 * Close a list at given offset
 *
-* @param  {!Array}  list
-* @param  {number} textBoundary
+* @param {!Object} list
+* @param {number}  textBoundary
 */
 function closeList(list, textBoundary)
 {
@@ -444,18 +440,18 @@ function closeList(list, textBoundary)
 }
 
 /**
-* Compute the amount of text to ignore at the start of a quote line
+* Compute the amount of text to ignore at the start of a block line
 *
-* @param  {string} str           Original quote markup
-* @param  {number} maxQuoteDepth Maximum quote depth
+* @param  {string} str           Original block markup
+* @param  {number} maxBlockDepth Maximum block depth
 * @return {number}               Number of characters to ignore
 */
-function computeQuoteIgnoreLen(str, maxQuoteDepth)
+function computeBlockIgnoreLen(str, maxBlockDepth)
 {
 	var remaining = str;
-	while (--maxQuoteDepth >= 0)
+	while (--maxBlockDepth >= 0)
 	{
-		remaining = remaining.replace(/^ *> ?/, '');
+		remaining = remaining.replace(/^ *>!? ?/, '');
 	}
 
 	return str.length - remaining.length;
@@ -477,6 +473,25 @@ function getAtxHeaderEndTagLen(startPos, endPos)
 }
 
 /**
+* Capture and return block marks from given string
+*
+* @param  {string} str Block markup, composed of ">", "!" and whitespace
+* @return {!Array<string>}
+*/
+function getBlockMarks(str)
+{
+	var blockMarks = [],
+		regexp     = />!?/g,
+		m;
+	while (m = regexp.exec(str))
+	{
+		blockMarks.push(m[0]);
+	}
+
+	return blockMarks;
+}
+
+/**
 * Capture and store lines that contain a Setext-tyle header
 */
 function matchSetextLines()
@@ -488,13 +503,13 @@ function matchSetextLines()
 	}
 
 	// Capture the any series of - or = alone on a line, optionally preceded with the
-	// angle brackets notation used in blockquotes
-	var m, regexp = /^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/gm;
+	// angle brackets notation used in block markup
+	var m, regexp = /^(?=[-=>])(?:>!? ?)*(?=[-=])(?:-+|=+) *$/gm;
 
 	while (m = regexp.exec(text))
 	{
 		var match    = m[0],
-			matchPos = +m['index'];
+			matchPos = m.index;
 
 		// Compute the position of the end tag. We start on the LF character before the
 		// match and keep rewinding until we find a non-space character
@@ -508,7 +523,7 @@ function matchSetextLines()
 		setextLines[matchPos - 1] = {
 			endLen     : matchPos + match.length - endPos,
 			endPos     : endPos,
-			quoteDepth : match.length - match.replace(/>/g, '').length,
+			blockDepth : match.length - match.replace(/>/g, '').length,
 			tagName    : (match[0] === '=') ? 'H1' : 'H2'
 		};
 	}

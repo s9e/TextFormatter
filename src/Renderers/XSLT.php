@@ -18,9 +18,7 @@ class XSLT extends Renderer
 		$this->stylesheet = $stylesheet;
 		\preg_match_all('#<xsl:param name="([^"]+)"(?>/>|>([^<]+))#', $stylesheet, $matches);
 		foreach ($matches[1] as $k => $paramName)
-			$this->params[$paramName] = (isset($matches[2][$k]))
-			                          ? \htmlspecialchars_decode($matches[2][$k])
-			                          : '';
+			$this->params[$paramName] = \htmlspecialchars_decode($matches[2][$k]);
 	}
 	public function __sleep()
 	{

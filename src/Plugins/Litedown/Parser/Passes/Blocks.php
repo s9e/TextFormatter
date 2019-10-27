@@ -13,6 +13,8 @@ class Blocks extends AbstractPass
 	public function parse()
 	{
 		$this->matchSetextLines();
+		$blocks       = [];
+		$blocksCnt    = 0;
 		$codeFence    = \null;
 		$codeIndent   = 4;
 		$codeTag      = \null;
@@ -20,51 +22,52 @@ class Blocks extends AbstractPass
 		$lists        = [];
 		$listsCnt     = 0;
 		$newContext   = \false;
-		$quotes       = [];
-		$quotesCnt    = 0;
 		$textBoundary = 0;
-		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}> ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*$)?)?/m';
+		$regexp = '/^(?:(?=[-*+\\d \\t>`~#_])((?: {0,3}>(?:(?!!)|!(?![^\\n>]*?!<)) ?)+)?([ \\t]+)?(\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$|=+$)?((?:[-*+]|\\d+\\.)[ \\t]+(?=\\S))?[ \\t]*(#{1,6}[ \\t]+|```+[^`\\n]*$|~~~+[^~\\n]*$)?)?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$matchPos   = $m[0][1];
-			$matchLen   = \strlen($m[0][0]);
+			$blockDepth = 0;
+			$blockMarks = [];
 			$ignoreLen  = 0;
-			$quoteDepth = 0;
+			$matchLen   = \strlen($m[0][0]);
+			$matchPos   = $m[0][1];
 			$continuation = !$lineIsEmpty;
 			$lfPos       = $this->text->indexOf("\n", $matchPos);
 			$lineIsEmpty = ($lfPos === $matchPos + $matchLen && empty($m[3][0]) && empty($m[4][0]) && empty($m[5][0]));
 			$breakParagraph = ($lineIsEmpty && $continuation);
 			if (!empty($m[1][0]))
 			{
-				$quoteDepth = \substr_count($m[1][0], '>');
+				$blockMarks = $this->getBlockMarks($m[1][0]);
+				$blockDepth = \count($blockMarks);
 				$ignoreLen  = \strlen($m[1][0]);
-				if (isset($codeTag) && $codeTag->hasAttribute('quoteDepth'))
+				if (isset($codeTag) && $codeTag->hasAttribute('blockDepth'))
 				{
-					$quoteDepth = \min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
-					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
+					$blockDepth = \min($blockDepth, $codeTag->getAttribute('blockDepth'));
+					$ignoreLen  = $this->computeBlockIgnoreLen($m[1][0], $blockDepth);
 				}
 				$this->text->overwrite($matchPos, $ignoreLen);
 			}
-			if ($quoteDepth < $quotesCnt && !$continuation)
+			if ($blockDepth < $blocksCnt && !$continuation)
 			{
 				$newContext = \true;
 				do
 				{
-					$this->parser->addEndTag('QUOTE', $textBoundary, 0)
-					             ->pairWith(\array_pop($quotes));
+					$startTag = \array_pop($blocks);
+					$this->parser->addEndTag($startTag->getName(), $textBoundary, 0)
+					             ->pairWith($startTag);
 				}
-				while ($quoteDepth < --$quotesCnt);
+				while ($blockDepth < --$blocksCnt);
 			}
-			if ($quoteDepth > $quotesCnt && !$lineIsEmpty)
+			if ($blockDepth > $blocksCnt && !$lineIsEmpty)
 			{
 				$newContext = \true;
 				do
 				{
-					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, $quotesCnt - 999);
-					$quotes[] = $tag;
+					$tagName  = ($blockMarks[$blocksCnt] === '>!') ? 'SPOILER' : 'QUOTE';
+					$blocks[] = $this->parser->addStartTag($tagName, $matchPos, 0, -999);
 				}
-				while ($quoteDepth > ++$quotesCnt);
+				while ($blockDepth > ++$blocksCnt);
 			}
 			$indentWidth = 0;
 			$indentPos   = 0;
@@ -91,8 +94,7 @@ class Blocks extends AbstractPass
 					if ($textBoundary > $codeTag->getPos())
 					{
 						$this->text->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
-						$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
-						$endTag->pairWith($codeTag);
+						$codeTag->pairWith($this->parser->addEndTag('CODE', $textBoundary, 0, -1));
 					}
 					else
 						$codeTag->invalidate();
@@ -212,8 +214,7 @@ class Blocks extends AbstractPass
 					$tagLen = $lfPos - $tagPos;
 					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
-						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen, -1);
-						$endTag->pairWith($codeTag);
+						$codeTag->pairWith($this->parser->addEndTag('CODE', $tagPos, $tagLen, -1));
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 						$this->text->overwrite($codeTag->getPos(), $tagPos + $tagLen - $codeTag->getPos());
 						$codeTag = \null;
@@ -223,7 +224,7 @@ class Blocks extends AbstractPass
 					{
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
 						$codeFence = \substr($m[5][0], 0, \strspn($m[5][0], '`~'));
-						$codeTag->setAttribute('quoteDepth', $quoteDepth);
+						$codeTag->setAttribute('blockDepth', $blockDepth);
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
 						$lang = \trim(\trim($m[5][0], '`~'));
 						if ($lang !== '')
@@ -237,7 +238,7 @@ class Blocks extends AbstractPass
 				$breakParagraph = \true;
 				$this->text->markBoundary($lfPos);
 			}
-			elseif (isset($this->setextLines[$lfPos]) && $this->setextLines[$lfPos]['quoteDepth'] === $quoteDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
+			elseif (isset($this->setextLines[$lfPos]) && $this->setextLines[$lfPos]['blockDepth'] === $blockDepth && !$lineIsEmpty && !$listsCnt && !isset($codeTag))
 			{
 				$this->parser->addTagPair(
 					$this->setextLines[$lfPos]['tagName'],
@@ -267,11 +268,11 @@ class Blocks extends AbstractPass
 			foreach ($list['itemTags'] as $itemTag)
 				$itemTag->removeFlags(Rules::RULE_CREATE_PARAGRAPHS);
 	}
-	protected function computeQuoteIgnoreLen($str, $maxQuoteDepth)
+	protected function computeBlockIgnoreLen($str, $maxBlockDepth)
 	{
 		$remaining = $str;
-		while (--$maxQuoteDepth >= 0)
-			$remaining = \preg_replace('/^ *> ?/', '', $remaining);
+		while (--$maxBlockDepth >= 0)
+			$remaining = \preg_replace('/^ *>!? ?/', '', $remaining);
 		return \strlen($str) - \strlen($remaining);
 	}
 	protected function getAtxHeaderEndTagLen($startPos, $endPos)
@@ -280,11 +281,16 @@ class Blocks extends AbstractPass
 		\preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
 		return \strlen($m[0]);
 	}
+	protected function getBlockMarks($str)
+	{
+		\preg_match_all('(>!?)', $str, $m);
+		return $m[0];
+	}
 	protected function matchSetextLines()
 	{
 		if ($this->text->indexOf('-') === \false && $this->text->indexOf('=') === \false)
 			return;
-		$regexp = '/^(?=[-=>])(?:> ?)*(?=[-=])(?:-+|=+) *$/m';
+		$regexp = '/^(?=[-=>])(?:>!? ?)*(?=[-=])(?:-+|=+) *$/m';
 		if (!\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE))
 			return;
 		foreach ($matches[0] as $_4b034d25)
@@ -296,7 +302,7 @@ class Blocks extends AbstractPass
 			$this->setextLines[$matchPos - 1] = [
 				'endLen'     => $matchPos + \strlen($match) - $endPos,
 				'endPos'     => $endPos,
-				'quoteDepth' => \substr_count($match, '>'),
+				'blockDepth' => \substr_count($match, '>'),
 				'tagName'    => ($match[0] === '=') ? 'H1' : 'H2'
 			];
 		}

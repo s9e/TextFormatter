@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 use DOMDocument;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 class TemplateDocument extends DOMDocument
 {
 	protected $template;
@@ -17,6 +17,6 @@ class TemplateDocument extends DOMDocument
 	}
 	public function saveChanges()
 	{
-		$this->template->setContent(TemplateHelper::saveTemplate($this));
+		$this->template->setContent(TemplateLoader::save($this));
 	}
 }

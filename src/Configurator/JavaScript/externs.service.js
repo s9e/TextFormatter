@@ -39,10 +39,9 @@ var Infinity;
  * @const
  */
 var undefined;
-/** @typedef {?} */
-var symbol;
 /**
- * @param {string=} opt_description
+ * @constructor
+ * @param {*=} opt_description
  * @return {symbol}
  */
 function Symbol(opt_description) {}
@@ -123,7 +122,7 @@ Array.prototype.length;
  */
 Array.prototype.pop = function() {};
 /**
- * @param {...T} var_args
+ * @param {...(T|undefined)} var_args
  * @return {number} The new length of the array.
  * @this {IArrayLike<T>}
  * @template T
@@ -145,14 +144,14 @@ Array.prototype.reverse = function() {};
  */
 Array.prototype.shift = function() {};
 /**
- * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
- * @param {*=} opt_end Zero-based index at which to end extraction.  slice
+ * @param {?number=} begin Zero-based index at which to begin extraction.
+ * @param {?number=} end Zero-based index at which to end extraction.  slice
  * @return {!Array<T>}
  * @this {IArrayLike<T>|string}
  * @template T
  * @nosideeffects
  */
-Array.prototype.slice = function(opt_begin, opt_end) {};
+Array.prototype.slice = function(begin, end) {};
 /**
  * @param {function(T,T):number=} opt_compareFn Specifies a function that
  * @this {IArrayLike<T>}
@@ -162,15 +161,15 @@ Array.prototype.slice = function(opt_begin, opt_end) {};
  */
 Array.prototype.sort = function(opt_compareFn) {};
 /**
- * @param {*=} opt_index Index at which to start changing the array. If negative,  *     will begin that many elements from the end.  A non-number type will be
- * @param {*=} opt_howMany An integer indicating the number of old array elements
+ * @param {?number=} index Index at which to start changing the array. If
+ * @param {?number=} howMany An integer indicating the number of old array
  * @param {...T} var_args
  * @return {!Array<T>}
  * @this {IArrayLike<T>}
  * @modifies {this}
  * @template T
  */
-Array.prototype.splice = function(opt_index, opt_howMany, var_args) {};
+Array.prototype.splice = function(index, howMany, var_args) {};
 /**
  * @param {...*} var_args
  * @return {number} The new length of the array
@@ -268,7 +267,7 @@ Object.prototype.toString = function() {};
 function RegExp(opt_pattern, opt_flags) {}
 /**
  * @param {*} str The string to search.
- * @return {Array<string>} This should really return an Array with a few
+ * @return {?RegExpResult}
  */
 RegExp.prototype.exec = function(str) {};
 /**
@@ -280,6 +279,13 @@ RegExp.prototype.lastIndex;
  * @return {boolean} Whether the string was matched.
  */
 RegExp.prototype.test = function(str) {};
+/**
+ * @constructor
+ * @extends {Array<string>}
+ */
+var RegExpResult = function() {};
+/** @type {number} */
+RegExpResult.prototype.index;
 /**
  * @constructor
  * @implements {Iterable<string>}
@@ -323,7 +329,7 @@ String.prototype.length;
 /**
  * @this {String|string}
  * @param {RegExp|string} pattern
- * @param {string|Function} replacement
+ * @param {?string|function(string, ...?):*} replacement
  * @return {string}
  */
 String.prototype.replace = function(pattern, replacement) {};
@@ -356,24 +362,15 @@ String.prototype.toLowerCase = function() {};
  */
 String.prototype.toUpperCase = function() {};
 /**
- * @type {string}
- * @implicitCast
- */
-Element.prototype.innerHTML;
-/**
  * @constructor
  */
 function DOMParser() {}
 /**
- * @param {string} src The UTF16 string to be parsed.
+ * @param {!TrustedHTML|string} src The UTF16 string to be parsed.
  * @param {string} type The content type of the string.
  * @return {Document}
  */
 DOMParser.prototype.parseFromString = function(src, type) {};
-/**
- * @type {!Window}
- */
-var window;
 /**
  * @constructor
  * @extends {Node}
@@ -396,6 +393,13 @@ Document.prototype.createElement = function(tagName, opt_typeExtension) {};
  * @extends {Node}
  */
 function DocumentFragment() {}
+/**
+ * @param {string} name
+ * @param {?number=} flags
+ * @return {string}
+ * @nosideeffects
+ */
+Element.prototype.getAttribute = function(name, flags) {};
 /**
  * @constructor
  * @implements {IObject<(string|number), T>}
@@ -495,6 +499,16 @@ function Window() {}
  */
 Document.prototype.importNode = function(externalNode, deep) {};
 /**
+ * @type {string}
+ * @implicitCast
+ */
+Element.prototype.innerHTML;
+/**
+ * @type {string}
+ * @implicitCast
+ */
+Element.prototype.outerHTML;
+/**
  * @constructor
  * @extends {Document}
  */
@@ -538,6 +552,12 @@ Element.prototype.setAttributeNS = function(namespaceURI, qualifiedName, value) 
  */
 Node.prototype.isEqualNode = function(arg) {};
 /**
+ * @param {string} query
+ * @return {!NodeList<!Element>}
+ * @nosideeffects
+ */
+Node.prototype.querySelectorAll = function(query) {};
+/**
  * @type {string}
  */
 Node.prototype.namespaceURI;
@@ -546,8 +566,13 @@ Node.prototype.namespaceURI;
  * @implicitCast
  */
 Node.prototype.textContent;
+/** @constructor */
+function TrustedHTML() {}
 /**
- * @type {!HTMLDocument}
- * @const
+ * @const {!HTMLDocument}
  */
 var document;
+/**
+ * @type {!Window}
+ */
+var window;
