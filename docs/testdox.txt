@@ -1767,6 +1767,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConsta
  [x] Works with data set #28
  [x] Works with data set #29
  [x] Works with data set #30
+ [x] Works with data set #31
+ [x] Works with data set #32
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExpressions
  [x] Works with data set #0

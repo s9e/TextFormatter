@@ -152,6 +152,14 @@ class FoldArithmeticConstantsTest extends AbstractTest
 				'<xsl:value-of select="2--1"/>',
 				'<xsl:value-of select="3"/>'
 			],
+			[
+				'<xsl:value-of select="@foo * 0 + 1"/>',
+				'<xsl:value-of select="@foo * 0 + 1"/>'
+			],
+			[
+				'<xsl:value-of select="@foo * (0 + 1)"/>',
+				'<xsl:value-of select="@foo * 1"/>'
+			],
 		];
 	}
 }

@@ -22,7 +22,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 
 		return [
 			'(^[0-9\\s]*[-+][-+0-9\\s]+$)'                               => 'foldOperation',
-			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
+			'( \\+ 0(?= $| [-+\\)])|(?<![^\\(])0 \\+ )'                  => 'foldAdditiveIdentity',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
 			'(\\( (?:' . $n . ') (?>(?>[-+*]|div) (?:' . $n . ') )+\\))' => 'foldSubExpression',
