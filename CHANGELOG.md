@@ -1,3 +1,60 @@
+2.2.0 (2019-10-27)
+==================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#220) for a description. ⚠️**
+
+**⚠️ This release contains functional changes. See [docs/Internals/Changes.md](https://s9etextformatter.readthedocs.io/Internals/Changes/#220) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/de2752a252047ef8899dab0ac0880be306bca474...0e277e649e6551842839eadfaf097c45b39e0bec)
+
+### Added
+
+ - `b52eb84f3` AbstractConstantFolding: added support for folding conditional expressions
+ - `da7387e1b` FoldConstantXPathExpressions: added support for boolean expressions
+ - `eeb5ec68f` FoldConstantXPathExpressions: added support for simple comparisons
+ - `a2c8cc0be` InlineXPathLiterals: added support for true() and false()
+ - `cd6eede77` Live preview: added support for data-s9e-livepreview-hash attribute
+ - `e560157b9` Live preview: added support for data-s9e-livepreview-onupdate attribute/event
+ - `fd984e34e` MediaEmbed: added Mixer
+ - `4ef14d2c5` TemplateNormalizations: added DeoptimizeIf
+ - `f7dddb9a6` TemplateNormalizations: added OptimizeChooseDeadBranches
+ - `179035702` XPathConvertor: added support for true() and false()
+
+### Removed
+
+ - `414f457ed` MediaEmbed: removed defunct site Tinypic
+ - `abf0bea88` Ruleset: removed useless code
+
+### Fixed
+
+ - `f52add17f` Fixed Google Closure Compiler warnings in live preview
+
+### Changed
+
+ - `6d8d0e82c` AbstractConstantFolding: improved performance
+ - `4d08e2493` Amend document typos
+ - `492288d7b` BBCodes: updated [code] BBCode
+ - `510176e04` BBCodes: updated [code] BBCode
+ - `ad030d0a6` BBCodes: updated [code] BBCode
+ - `98acaa712` BBCodes: updated var descriptions in bundled BBCodes
+ - `e8501554b` ContextSafeness: consider backticks unsafe in JavaScript
+ - `e7baa21e2` ElementInspector: updated to HTML 5.3
+ - `8ef407006` Emoji: updated to Unicode 12.1
+ - `71c5b4d15` Escaper: escape tildes by default
+ - `0e277e649` FoldArithmeticConstants: restricted additive identity folding
+ - `507cdadd4` FoldConstantXPathExpressions: ignore irrational numbers
+ - `74d308561` JavaScript: updated externs
+ - `bde1c604d` Live preview: improved handling of update event
+ - `ba54cfa16` Live preview: renamed data-s9e-livepreview-postprocess to data-s9e-livepreview-onrender
+ - `6b35b43c7` MediaEmbed: updated Audioboom
+ - `912a5f52c` MediaEmbed: updated CNN
+ - `3e0df2054` MediaEmbed: updated Facebook
+ - `e92f180d6` RecursiveParser: use a DEFINE group for group expressions
+ - `99b7f0b84` RegexpConvertor: updated properties to latest Unicode specs
+ - `8b2ba9100` XPath: reorganized code
+ - `ed9e70daa` XPathConvertor: simplified grouping of boolean operators and expressions
+
+
 2.1.2 (2019-08-22)
 ==================
 
