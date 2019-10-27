@@ -46,12 +46,7 @@ class UrlFilter
 		$url = '';
 		if ($p['scheme'] !== '')
 			$url .= $p['scheme'] . ':';
-		if ($p['host'] === '')
-		{
-			if ($p['scheme'] === 'file')
-				$url .= '//';
-		}
-		else
+		if ($p['host'] !== '')
 		{
 			$url .= '//';
 			if ($p['user'] !== '')
@@ -65,6 +60,8 @@ class UrlFilter
 			if ($p['port'] !== '')
 				$url .= ':' . $p['port'];
 		}
+		elseif ($p['scheme'] === 'file')
+			$url .= '//';
 		$path = $p['path'] . $p['query'] . $p['fragment'];
 		$path = \preg_replace_callback(
 			'/%.?[a-f]/',
@@ -94,12 +91,7 @@ class UrlFilter
 	{
 		if ($p['scheme'] !== '' && !\preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 			return 'URL scheme is not allowed';
-		if ($p['host'] === '')
-		{
-			if ($p['scheme'] !== 'file' && $p['scheme'] !== '')
-				return 'Missing host';
-		}
-		else
+		if ($p['host'] !== '')
 		{
 			$regexp = '/^(?!-)[-a-z0-9]{0,62}[a-z0-9](?:\\.(?!-)[-a-z0-9]{0,62}[a-z0-9])*$/i';
 			if (!\preg_match($regexp, $p['host']))
@@ -110,5 +102,7 @@ class UrlFilter
 			 || (isset($urlConfig['restrictedHosts']) && !\preg_match($urlConfig['restrictedHosts'], $p['host'])))
 				return 'URL host is not allowed';
 		}
+		elseif (\preg_match('(^(?:(?:f|ht)tps?)$)', $p['scheme']))
+			return 'Missing host';
 	}
 }

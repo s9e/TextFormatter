@@ -34,21 +34,12 @@ class Parser extends ParserBase
 	}
 	protected function captureAttributes(Tag $tag, $elName, $str)
 	{
-		\preg_match_all(
-			'/[a-z][-a-z0-9]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
-			$str,
-			$attrMatches
-		);
-		foreach ($attrMatches[0] as $attrMatch)
+		$regexp = '/([a-z][-a-z0-9]*)(?>\\s*=\\s*("[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i';
+		\preg_match_all($regexp, $str, $matches, \PREG_SET_ORDER);
+		foreach ($matches as $m)
 		{
-			$pos = \strpos($attrMatch, '=');
-			if ($pos === \false)
-			{
-				$pos = \strlen($attrMatch);
-				$attrMatch .= '=' . \strtolower($attrMatch);
-			}
-			$attrName  = \strtolower(\trim(\substr($attrMatch, 0, $pos)));
-			$attrValue = \trim(\substr($attrMatch, 1 + $pos));
+			$attrName  = \strtolower($m[1]);
+			$attrValue = $m[2] ?? $attrName;
 			if (isset($this->config['aliases'][$elName][$attrName]))
 				$attrName = $this->config['aliases'][$elName][$attrName];
 			if ($attrValue[0] === '"' || $attrValue[0] === "'")

@@ -11,7 +11,7 @@ config.generics.forEach(function(entry)
 
 	while (m = regexp.exec(text))
 	{
-		var startTagPos = m['index'],
+		var startTagPos = m.index,
 			matchLen    = m[0].length,
 			tag;
 

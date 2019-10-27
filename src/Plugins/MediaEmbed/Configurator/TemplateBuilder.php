@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
@@ -33,11 +33,11 @@ class TemplateBuilder
 	}
 	protected function addSiteId($siteId, $template)
 	{
-		$dom   = TemplateHelper::loadTemplate($template);
+		$dom   = TemplateLoader::load($template);
 		$xpath = new DOMXPath($dom);
-		$query = '//*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"][not(ancestor::*[namespace-uri() != "' . TemplateHelper::XMLNS_XSL . '"])]';
+		$query = '//*[namespace-uri() != "' . TemplateLoader::XMLNS_XSL . '"][not(ancestor::*[namespace-uri() != "' . TemplateLoader::XMLNS_XSL . '"])]';
 		foreach ($xpath->query($query) as $element)
 			$element->setAttribute('data-s9e-mediaembed', $siteId);
-		return TemplateHelper::saveTemplate($dom);
+		return TemplateLoader::save($dom);
 	}
 }

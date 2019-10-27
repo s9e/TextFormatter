@@ -2,9 +2,9 @@
 var UrlFilter =
 {
 	/**
-	* @param  {*} attrValue
-	* @param  {!Object} urlConfig
-	* @param  {Logger} logger
+	* @param  {*}        attrValue
+	* @param  {!Object}  urlConfig
+	* @param  {?Logger=} logger
 	* @return {*}
 	*/
 	filter: function(attrValue, urlConfig, logger)
@@ -35,7 +35,7 @@ var UrlFilter =
 	*
 	* Similar to PHP's own parse_url() except that all parts are always returned
 	*
-	* @param  {!string} url Original URL
+	* @param  {string} url Original URL
 	* @return {!Object}
 	*/
 	parseUrl: function(url)
@@ -82,7 +82,7 @@ var UrlFilter =
 	*
 	* @param  {!Object} urlConfig
 	* @param  {!Object} p
-	* @return {!string}
+	* @return {string}
 	*/
 	rebuildUrl: function(urlConfig, p)
 	{
@@ -91,15 +91,7 @@ var UrlFilter =
 		{
 			url += p['scheme'] + ':';
 		}
-		if (p['host'] === '')
-		{
-			// Allow the file: scheme to not have a host and ensure it starts with slashes
-			if (p['scheme'] === 'file')
-			{
-				url += '//';
-			}
-		}
-		else
+		if (p['host'] !== '')
 		{
 			url += '//';
 
@@ -126,6 +118,11 @@ var UrlFilter =
 			{
 				url += ':' + p['port'];
 			}
+		}
+		else if (p['scheme'] === 'file')
+		{
+			// Allow the file: scheme to not have a host and ensure it starts with slashes
+			url += '//';
 		}
 
 		// Build the path, including the query and fragment parts
@@ -181,8 +178,8 @@ var UrlFilter =
 	* @link http://stackoverflow.com/a/1547922
 	* @link http://tools.ietf.org/html/rfc3986#appendix-A
 	*
-	* @param  {!string} url Original URL
-	* @return {!string}     Sanitized URL
+	* @param  {string} url Original URL
+	* @return {string}     Sanitized URL
 	*/
 	sanitizeUrl: function(url)
 	{
@@ -203,15 +200,7 @@ var UrlFilter =
 			return 'URL scheme is not allowed';
 		}
 
-		if (p['host'] === '')
-		{
-			// Reject malformed URLs such as http:///example.org but allow schemeless paths
-			if (p['scheme'] !== 'file' && p['scheme'] !== '')
-			{
-				return 'Missing host';
-			}
-		}
-		else
+		if (p['host'] !== '')
 		{
 			/**
 			* Test whether the host is valid
@@ -234,6 +223,10 @@ var UrlFilter =
 			{
 				return 'URL host is not allowed';
 			}
+		}
+		else if (/^(?:(?:f|ht)tps?)$/.test(p['scheme']))
+		{
+			return 'Missing host';
 		}
 	}
 };

@@ -39,7 +39,7 @@ class BBCode implements ConfigProvider
 	{
 		if ($bbcodeName === '*')
 			return '*';
-		if (!TagName::isValid($bbcodeName))
+		if (\strpos($bbcodeName, ':') !== \false || !TagName::isValid($bbcodeName))
 			throw new InvalidArgumentException("Invalid BBCode name '" . $bbcodeName . "'");
 		return TagName::normalize($bbcodeName);
 	}

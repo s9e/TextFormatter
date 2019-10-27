@@ -11,7 +11,7 @@ class CallbackGenerator
 	public $callbacks = [
 		'tags.*.attributes.*.filterChain.*' => [
 			'attrValue' => '*',
-			'attrName'  => '!string'
+			'attrName'  => 'string'
 		],
 		'tags.*.filterChain.*' => [
 			'tag'       => '!Tag',
@@ -32,13 +32,22 @@ class CallbackGenerator
 	protected function buildCallbackArguments(array $params, array $localVars)
 	{
 		unset($params['parser']);
-		$localVars += ['logger' => 1, 'openTags' => 1, 'registeredVars' => 1, 'text' => 1];
+		$available  = \array_combine(\array_keys($localVars), \array_keys($localVars));
+		$available += [
+			'innerText'      => '(tag.getEndTag() ? text.substr(tag.getPos() + tag.getLen(), tag.getEndTag().getPos() - tag.getPos() - tag.getLen()) : "")',
+			'logger'         => 'logger',
+			'openTags'       => 'openTags',
+			'outerText'      => 'text.substr(tag.getPos(), (tag.getEndTag() ? tag.getEndTag().getPos() + tag.getEndTag().getLen() - tag.getPos() : tag.getLen()))',
+			'registeredVars' => 'registeredVars',
+			'tagText'        => 'text.substr(tag.getPos(), tag.getLen())',
+			'text'           => 'text'
+		];
 		$args = [];
 		foreach ($params as $k => $v)
 			if (isset($v))
 				$args[] = $this->encoder->encode($v);
-			elseif (isset($localVars[$k]))
-				$args[] = $k;
+			elseif (isset($available[$k]))
+				$args[] = $available[$k];
 			else
 				$args[] = 'registeredVars[' . \json_encode($k) . ']';
 		return \implode(',', $args);
@@ -59,6 +68,7 @@ class CallbackGenerator
 		$header = "/**\n";
 		foreach ($params as $paramName => $paramType)
 			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
+		$header .= "* @return {*}\n";
 		$header .= "*/\n";
 		return $header;
 	}

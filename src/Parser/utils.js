@@ -1,6 +1,6 @@
 /**
-* @param  {!string} str
-* @return {!string}
+* @param  {string} str
+* @return {string}
 */
 function html_entity_decode(str)
 {
@@ -18,8 +18,8 @@ function html_entity_decode(str)
 }
 
 /**
-* @param  {!string} str
-* @return {!string}
+* @param  {string} str
+* @return {string}
 */
 function htmlspecialchars_compat(str)
 {
@@ -32,7 +32,8 @@ function htmlspecialchars_compat(str)
 	return str.replace(
 		/[<>&"]/g,
 		/**
-		* @param {!string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{
@@ -42,8 +43,8 @@ function htmlspecialchars_compat(str)
 }
 
 /**
-* @param  {!string} str
-* @return {!string}
+* @param  {string} str
+* @return {string}
 */
 function htmlspecialchars_noquotes(str)
 {
@@ -55,7 +56,8 @@ function htmlspecialchars_noquotes(str)
 	return str.replace(
 		/[<>&]/g,
 		/**
-		* @param {!string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{
@@ -65,15 +67,16 @@ function htmlspecialchars_noquotes(str)
 }
 
 /**
-* @param  {!string} str
-* @return {!string}
+* @param  {string} str
+* @return {string}
 */
 function rawurlencode(str)
 {
 	return encodeURIComponent(str).replace(
 		/[!'()*]/g,
 		/**
-		* @param {!string} c
+		* @param  {string} c
+		* @return {string}
 		*/
 		function(c)
 		{
@@ -83,7 +86,7 @@ function rawurlencode(str)
 }
 
 /**
-* @return {!boolean}
+* @return {boolean}
 */
 function returnFalse()
 {
@@ -91,7 +94,7 @@ function returnFalse()
 }
 
 /**
-* @return {!boolean}
+* @return {boolean}
 */
 function returnTrue()
 {

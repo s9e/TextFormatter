@@ -48,12 +48,12 @@ class Parser extends ParserBase
 			$this->addTableRow('TD', $this->table['rows'][$i]);
 		$this->createBodyTags($this->table['rows'][2]['pos'], $this->pos);
 	}
-	protected function addTableCell($tagName, $align, $text)
+	protected function addTableCell($tagName, $align, $content)
 	{
 		$startPos  = $this->pos;
-		$endPos    = $startPos + \strlen($text);
+		$endPos    = $startPos + \strlen($content);
 		$this->pos = $endPos;
-		\preg_match('/^( *).*?( *)$/', $text, $m);
+		\preg_match('/^( *).*?( *)$/', $content, $m);
 		if ($m[1])
 		{
 			$ignoreLen = \strlen($m[1]);
@@ -155,7 +155,7 @@ class Parser extends ParserBase
 	}
 	protected function overwriteBlockquoteCallback(array $m)
 	{
-		return \strtr($m[0], '>', ' ');
+		return \strtr($m[0], '!>', '  ');
 	}
 	protected function overwriteEscapes()
 	{
@@ -171,7 +171,7 @@ class Parser extends ParserBase
 		if (\strpos($this->text, '`') !== \false)
 			$this->text = \preg_replace_callback('/`[^`]*`/', [$this, 'overwriteInlineCodeCallback'], $this->text);
 		if (\strpos($this->text, '>') !== \false)
-			$this->text = \preg_replace_callback('/^(?:> ?)+/m', [$this, 'overwriteBlockquoteCallback'], $this->text);
+			$this->text = \preg_replace_callback('/^(?:>!? ?)+/m', [$this, 'overwriteBlockquoteCallback'], $this->text);
 	}
 	protected function parseColumnAlignments($line)
 	{

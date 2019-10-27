@@ -1,15 +1,15 @@
 /**
-* @var {boolean} Whether to decode HTML entities when decoding text
+* @type {boolean} Whether to decode HTML entities when decoding text
 */
 var decodeHtmlEntities = config.decodeHtmlEntities;
 
 /**
-* @var {bool} Whether text contains escape characters
+* @type {boolean} Whether text contains escape characters
 */
 var hasEscapedChars = false;
 
 /**
-* @var {bool} Whether text contains link references
+* @type {boolean} Whether text contains link references
 */
 var hasReferences = false;
 

@@ -9,13 +9,12 @@
 		"php":        ">=5.6.0",
 		"ext-dom":    "*",
 		"ext-filter": "*",
-		"lib-pcre":   ">=7.2"
+		"lib-pcre":   ">=8.13",
+		"s9e/regexp-builder": "^1.4"
 	},
 	"require-dev": {
-		"matthiasmullie/minify":       "*",
-		"phpunit/phpunit":             "<6",
-		"php-coveralls/php-coveralls": "*",
-		"s9e/regexp-builder":          "1.*"
+		"matthiasmullie/minify": "*",
+		"phpunit/phpunit":       "^7 || 8.2.*"
 	},
 	"suggest": {
 		"ext-curl":      "Improves the performance of the MediaEmbed plugin and some JavaScript minifiers",
@@ -35,5 +34,8 @@
 		"psr-4": {
 			"s9e\\TextFormatter\\Tests\\": "tests"
 		}
+	},
+	"extra": {
+		"version": "2.2.0-dev"
 	}
 }

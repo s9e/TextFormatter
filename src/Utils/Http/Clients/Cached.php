@@ -17,19 +17,19 @@ class Cached extends Client
 		$this->timeout       = $client->timeout;
 		$this->sslVerifyPeer = $client->sslVerifyPeer;
 	}
-	public function get($url, $headers = [])
+	public function get($url, array $options = [])
 	{
-		$filepath = $this->getCachedFilepath([$url, $headers]);
+		$filepath = $this->getCachedFilepath([$url, $options]);
 		if (isset($filepath) && \file_exists(\preg_replace('(^compress\\.zlib://)', '', $filepath)))
 			return \file_get_contents($filepath);
-		$content = $this->getClient()->get($url, $headers);
+		$content = $this->getClient()->get($url, $options);
 		if (isset($filepath) && $content !== \false)
 			\file_put_contents($filepath, $content);
 		return $content;
 	}
-	public function post($url, $headers = [], $body = '')
+	public function post($url, array $options = [], $body = '')
 	{
-		return $this->getClient()->post($url, $headers, $body);
+		return $this->getClient()->post($url, $options, $body);
 	}
 	protected function getCachedFilepath(array $vars)
 	{
