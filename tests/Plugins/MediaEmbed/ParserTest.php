@@ -903,8 +903,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.liveleak.com/view?t=yIcw_1520190567',
-				'<r><LIVELEAK id="Clka1_1520190526">https://www.liveleak.com/view?t=yIcw_1520190567</LIVELEAK></r>',
+				'https://www.liveleak.com/view?t=sby0J_1571998103',
+				'<r><LIVELEAK id="Szpn_1571998103">https://www.liveleak.com/view?t=sby0J_1571998103</LIVELEAK></r>',
 				[],
 				function ($configurator)
 				{
