@@ -43,7 +43,7 @@ function parseInlineImages()
 	while (m = regexp.exec(text))
 	{
 		var linkInfo = m[1],
-			startPos = +m['index'],
+			startPos = m.index,
 			endLen   = 3 + linkInfo.length,
 			endPos   = startPos + m[0].length - endLen,
 			alt      = m[0].substr(2, m[0].length - endLen - 2);
@@ -60,7 +60,7 @@ function parseReferenceImages()
 	var m, regexp = /!\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\](?: ?\[([^\x17[\]]+)\])?/g;
 	while (m = regexp.exec(text))
 	{
-		var startPos = +m['index'],
+		var startPos = m.index,
 			endPos   = startPos + 2 + m[1].length,
 			endLen   = 1,
 			alt      = m[1],

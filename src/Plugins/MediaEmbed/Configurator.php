@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\FilterHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
@@ -16,7 +17,7 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\CachedDefiniti
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 class Configurator extends ConfiguratorBase
 {
-	public $allowedFilters = array('stripslashes', 'urldecode');
+	public $allowedFilters = array('htmlspecialchars_decode', 'stripslashes', 'urldecode');
 	protected $createMediaBBCode = \true;
 	public $defaultSites;
 	protected $quickMatch = '://';
@@ -88,7 +89,7 @@ class Configurator extends ConfiguratorBase
 			if (empty($attrConfig['filterChain']))
 				continue;
 			foreach ($attrConfig['filterChain'] as $filter)
-				if (\substr($filter, 0, 1) !== '#' && !\in_array($filter, $this->allowedFilters, \true))
+				if (!FilterHelper::isAllowed($filter, $this->allowedFilters))
 					throw new RuntimeException("Filter '$filter' is not allowed in media sites");
 		}
 	}

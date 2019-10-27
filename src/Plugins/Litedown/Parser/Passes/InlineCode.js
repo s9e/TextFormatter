@@ -65,11 +65,11 @@ function getInlineCodeMarkers()
 	while (m = regexp.exec(_text))
 	{
 		markers.push({
-			pos        : +m['index'],
+			pos        : m.index,
 			len        : m[1].length,
 			trimBefore : trimNext,
 			trimAfter  : m[2].length,
-			next       : m['index'] + m[0].length
+			next       : m.index + m[0].length
 		});
 		trimNext = m[0].length - m[0].replace(/\s+$/, '').length;
 	}

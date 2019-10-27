@@ -14,7 +14,7 @@ class Iframe extends TemplateGenerator
 		'scrolling'       => 'no',
 		'style'           => array('border' => '0')
 	);
-	protected $iframeAttributes = array('allow', 'data-s9e-livepreview-ignore-attrs', 'data-s9e-livepreview-postprocess', 'onload', 'scrolling', 'src', 'style');
+	protected $iframeAttributes = array('allow', 'data-s9e-livepreview-ignore-attrs', 'data-s9e-livepreview-onrender', 'onload', 'scrolling', 'src', 'style');
 	protected function getContentTemplate()
 	{
 		$attributes = $this->mergeAttributes($this->defaultIframeAttributes, $this->getFilteredAttributes());

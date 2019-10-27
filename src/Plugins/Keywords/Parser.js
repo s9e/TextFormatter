@@ -2,7 +2,7 @@ var regexps  = config.regexps,
 	tagName  = config.tagName,
 	attrName = config.attrName;
 
-var onlyFirst = config.onlyFirst,
+var onlyFirst = typeof config.onlyFirst !== 'undefined',
 	keywords  = {};
 
 regexps.forEach(function(regexp)
@@ -12,9 +12,8 @@ regexps.forEach(function(regexp)
 	regexp.lastIndex = 0;
 	while (m = regexp.exec(text))
 	{
-		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
 		var value = m[0],
-			pos   = +m['index'];
+			pos   = m.index;
 
 		if (onlyFirst)
 		{

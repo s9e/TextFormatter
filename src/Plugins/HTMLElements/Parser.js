@@ -36,38 +36,26 @@ matches.forEach(function(m)
 * Capture all attributes in given string
 *
 * @param  {!Tag}    tag    Target tag
-* @param  {!string} elName Name of the HTML element
-* @param  {!string} str    String containing the attribute declarations
+* @param  {string} elName Name of the HTML element
+* @param  {string} str    String containing the attribute declarations
 */
 function captureAttributes(tag, elName, str)
 {
-	// Capture attributes
-	var attrRegexp = /[a-z][-a-z0-9]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
+	var regexp = /([a-z][-a-z0-9]*)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
 		attrName,
 		attrValue,
-		attrMatch,
-		pos;
+		m;
 
-	while (attrMatch = attrRegexp.exec(str))
+	while (m = regexp.exec(str))
 	{
-		pos = attrMatch[0].indexOf('=');
-
 		/**
-		* If there's no equal sign, it's a boolean attribute and we generate a value equal
+		* If there's no value, it's a boolean attribute and we generate a value equal
 		* to the attribute's name, lowercased
 		*
 		* @link http://www.w3.org/html/wg/drafts/html/master/single-page.html#boolean-attributes
 		*/
-		if (pos < 0)
-		{
-			pos = attrMatch[0].length;
-			attrMatch[0] += '=' + attrMatch[0].toLowerCase();
-		}
-
-		// Normalize the attribute name, remove the whitespace around its value to account
-		// for cases like <b title = "foo"/>
-		attrName  = attrMatch[0].substr(0, pos).toLowerCase().replace(/^\s+/, '').replace('/\s+$/', '');
-		attrValue = attrMatch[0].substr(1 + pos).replace(/^\s+/, '').replace('/\s+$/', '');
+		attrName  = m[1].toLowerCase();
+		attrValue = (typeof m[2] !== 'undefined') ? m[2] : attrName;
 
 		// Use the attribute's alias if applicable
 		if (HINT.HTMLELEMENTS_HAS_ALIASES && config.aliases && config.aliases[elName] && config.aliases[elName][attrName])

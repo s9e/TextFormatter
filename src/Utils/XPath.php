@@ -11,15 +11,26 @@ abstract class XPath
 {
 	public static function export($value)
 	{
-		if (!\is_scalar($value))
+		$callback = \get_called_class() . '::export' . \ucfirst(\gettype($value));
+		if (!\is_callable($callback))
 			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
-		if (\is_int($value))
-			return (string) $value;
-		if (\is_float($value))
-			return \preg_replace('(\\.?0+$)', '', \sprintf('%F', $value));
-		return self::exportString((string) $value);
+		return $callback($value);
 	}
-	protected static function exportString($str)
+	protected static function exportBoolean(bool $value): string
+	{
+		return ($value) ? 'true()' : 'false()';
+	}
+	protected static function exportDouble(float $value): string
+	{
+		if (!\is_finite($value))
+			throw new InvalidArgumentException(__METHOD__ . '() cannot export irrational numbers');
+		return \preg_replace('(\\.?0+$)', '', \sprintf('%F', $value));
+	}
+	protected static function exportInteger(int $value): string
+	{
+		return (string) $value;
+	}
+	protected static function exportString(string $str): string
 	{
 		if (\strpos($str, "'") === \false)
 			return "'" . $str . "'";

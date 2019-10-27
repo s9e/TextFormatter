@@ -37,9 +37,10 @@ class StylesheetCompressor
 		$this->estimateSavings();
 		$this->filterSavings();
 		$this->buildDictionary();
-		$js = \json_encode($this->getCompressedStylesheet());
+		$str = $this->getCompressedStylesheet();
+		$js = \implode("+\n", \array_map('json_encode', \str_split($str, 4000)));
 		if (!empty($this->dictionary))
-			$js .= '.replace(' . $this->getReplacementRegexp() . ',function(k){return' . \json_encode($this->dictionary) . '[k]})';
+			$js = '(' . $js . ').replace(' . $this->getReplacementRegexp() . ',function(k){return' . \json_encode($this->dictionary) . '[k];})';
 		return $js;
 	}
 	protected function buildDictionary()

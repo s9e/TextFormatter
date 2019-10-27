@@ -11,8 +11,10 @@ use DOMText;
 use DOMXPath;
 use Exception;
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
+use s9e\TextFormatter\Configurator\Helpers\TemplateModifier;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -109,7 +111,7 @@ class Configurator extends ConfiguratorBase
 	protected function convertTemplate($template, $passthroughIdx)
 	{
 		$_this = $this;
-		$template = TemplateHelper::replaceTokens(
+		$template = TemplateModifier::replaceTokens(
 			$template,
 			$this->referencesRegexp,
 			function ($m, $node) use ($passthroughIdx, $_this)
@@ -124,7 +126,7 @@ class Configurator extends ConfiguratorBase
 				return array('literal', '');
 			}
 		);
-		$template = TemplateHelper::replaceTokens(
+		$template = TemplateModifier::replaceTokens(
 			$template,
 			'(\\\\+[0-9${\\\\])',
 			function ($m)
@@ -228,7 +230,7 @@ class Configurator extends ConfiguratorBase
 			$key = \trim($match, '\\${}');
 			$this->references['anywhere'][$key] = $key;
 		}
-		$dom   = TemplateHelper::loadTemplate($template);
+		$dom   = TemplateLoader::load($template);
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//text()') as $node)
 		{
@@ -239,7 +241,7 @@ class Configurator extends ConfiguratorBase
 				$this->references['inText'][$key] = $key;
 			}
 		}
-		foreach (TemplateHelper::getURLNodes($dom) as $node)
+		foreach (NodeLocator::getURLNodes($dom) as $node)
 			if ($node instanceof DOMAttr
 			 && \preg_match('(^(?:[$\\\\]\\d+|\\$\\{\\d+\\}))', \trim($node->value), $m))
 			{

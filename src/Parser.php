@@ -378,7 +378,7 @@ class Parser
 		if (isset($pluginConfig['quickMatch']) && \strpos($this->text, $pluginConfig['quickMatch']) === \false)
 			return;
 		$matches = array();
-		if (isset($pluginConfig['regexp']))
+		if (isset($pluginConfig['regexp'], $pluginConfig['regexpLimit']))
 		{
 			$matches = $this->getMatches($pluginConfig['regexp'], $pluginConfig['regexpLimit']);
 			if (empty($matches))
@@ -689,6 +689,7 @@ class Parser
 			return;
 		}
 		if ($tag->getFlags() & self::RULE_AUTO_CLOSE
+		 && !$tag->isSelfClosingTag()
 		 && !$tag->getEndTag()
 		 && !$this->isFollowedByClosingTag($tag))
 		{
@@ -887,8 +888,9 @@ class Parser
 			$this->tagStack[] = $tag;
 		else
 		{
-			$i = \count($this->tagStack);
-			while ($i > 0 && self::compareTags($this->tagStack[$i - 1], $tag) > 0)
+			$i   = \count($this->tagStack);
+			$key = $this->getSortKey($tag);
+			while ($i > 0 && $key > $this->getSortKey($this->tagStack[$i - 1]))
 			{
 				$this->tagStack[$i] = $this->tagStack[$i - 1];
 				--$i;
@@ -909,32 +911,34 @@ class Parser
 	}
 	protected function sortTags()
 	{
-		\usort($this->tagStack, __CLASS__ . '::compareTags');
+		$arr = array();
+		foreach ($this->tagStack as $i => $tag)
+		{
+			$key       = $this->getSortKey($tag, $i);
+			$arr[$key] = $tag;
+		}
+		\krsort($arr);
+		$this->tagStack         = \array_values($arr);
 		$this->tagStackIsSorted = \true;
 	}
-	protected static function compareTags(Tag $a, Tag $b)
+	protected function getSortKey(Tag $tag, int $tagIndex = 0): string
 	{
-		$aPos = $a->getPos();
-		$bPos = $b->getPos();
-		if ($aPos !== $bPos)
-			return $bPos - $aPos;
-		if ($a->getSortPriority() !== $b->getSortPriority())
-			return $b->getSortPriority() - $a->getSortPriority();
-		$aLen = $a->getLen();
-		$bLen = $b->getLen();
-		if (!$aLen || !$bLen)
+		$prioFlag = ($tag->getSortPriority() >= 0);
+		$prio     = $tag->getSortPriority();
+		if (!$prioFlag)
+			$prio += (1 << 30);
+		$lenFlag = ($tag->getLen() > 0);
+		if ($lenFlag)
+			$lenOrder = $this->textLen - $tag->getLen();
+		else
 		{
-			if (!$aLen && !$bLen)
-			{
-				$order = array(
-					Tag::END_TAG          => 0,
-					Tag::SELF_CLOSING_TAG => 1,
-					Tag::START_TAG        => 2
-				);
-				return $order[$b->getType()] - $order[$a->getType()];
-			}
-			return ($aLen) ? -1 : 1;
+			$order = array(
+				Tag::END_TAG          => 0,
+				Tag::SELF_CLOSING_TAG => 1,
+				Tag::START_TAG        => 2
+			);
+			$lenOrder = $order[$tag->getType()];
 		}
-		return $aLen - $bLen;
+		return \sprintf('%8x%d%8x%d%8x%8x', $tag->getPos(), $prioFlag, $prio, $lenFlag, $lenOrder, $tagIndex);
 	}
 }

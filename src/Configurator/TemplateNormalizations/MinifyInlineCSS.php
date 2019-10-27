@@ -1,0 +1,37 @@
+<?php
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+class MinifyInlineCSS extends AbstractNormalization
+{
+	protected $queries = array('//*[namespace-uri() != $XSL]/@style');
+	protected function normalizeAttribute(DOMAttr $attribute)
+	{
+		$css = $attribute->nodeValue;
+		if (!\preg_match('(\\{(?!@\\w+\\}))', $css))
+			$attribute->nodeValue = $this->minify($css);
+	}
+	protected function minify($css)
+	{
+		$css = \trim($css, " \n\t;");
+		$css = \preg_replace('(\\s*([,:;])\\s*)', '$1', $css);
+		$css = \preg_replace_callback(
+			'((?<=[\\s:])#[0-9a-f]{3,6})i',
+			function ($m)
+			{
+				return \strtolower($m[0]);
+			},
+			$css
+		);
+		$css = \preg_replace('((?<=[\\s:])#([0-9a-f])\\1([0-9a-f])\\2([0-9a-f])\\3)', '#$1$2$3', $css);
+		$css = \preg_replace('((?<=[\\s:])#f00\\b)', 'red', $css);
+		$css = \preg_replace('((?<=[\\s:])0px\\b)', '0', $css);
+		return $css;
+	}
+}

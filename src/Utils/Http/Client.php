@@ -10,6 +10,6 @@ abstract class Client
 {
 	public $sslVerifyPeer = \false;
 	public $timeout = 10;
-	abstract public function get($url, $headers = array());
-	abstract public function post($url, $headers = array(), $body = '');
+	abstract public function get($url, array $options = array());
+	abstract public function post($url, array $options = array(), $body = '');
 }

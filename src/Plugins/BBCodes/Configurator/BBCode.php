@@ -44,8 +44,7 @@ class BBCode implements ConfigProvider
 		}
 		if ($this->$propName instanceof NormalizedCollection)
 		{
-			if (!\is_array($propValue)
-			 && !($propValue instanceof Traversable))
+			if (!\is_array($propValue) && !($propValue instanceof Traversable))
 				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
 			$this->$propName->clear();
 			foreach ($propValue as $k => $v)
@@ -61,17 +60,11 @@ class BBCode implements ConfigProvider
 		{
 			$oldType = \gettype($this->$propName);
 			$newType = \gettype($propValue);
-			if ($oldType === 'boolean')
-				if ($propValue === 'false')
-				{
-					$newType   = 'boolean';
-					$propValue = \false;
-				}
-				elseif ($propValue === 'true')
-				{
-					$newType   = 'boolean';
-					$propValue = \true;
-				}
+			if ($oldType === 'boolean' && \preg_match('(^(?:fals|tru)e$)', $propValue))
+			{
+				$newType   = 'boolean';
+				$propValue = ($propValue === 'true');
+			}
 			if ($oldType !== $newType)
 			{
 				$tmp = $propValue;
@@ -95,18 +88,12 @@ class BBCode implements ConfigProvider
 	{
 		$methodName = 'unset' . \ucfirst($propName);
 		if (\method_exists($this, $methodName))
-		{
 			$this->$methodName();
-			return;
-		}
-		if (!isset($this->$propName))
-			return;
-		if ($this->$propName instanceof Collection)
-		{
-			$this->$propName->clear();
-			return;
-		}
-		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
+		elseif (isset($this->$propName))
+			if ($this->$propName instanceof Collection)
+				$this->$propName->clear();
+			else
+				throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 	protected $contentAttributes;
 	protected $defaultAttribute;
@@ -130,7 +117,7 @@ class BBCode implements ConfigProvider
 	{
 		if ($bbcodeName === '*')
 			return '*';
-		if (!TagName::isValid($bbcodeName))
+		if (\strpos($bbcodeName, ':') !== \false || !TagName::isValid($bbcodeName))
 			throw new InvalidArgumentException("Invalid BBCode name '" . $bbcodeName . "'");
 		return TagName::normalize($bbcodeName);
 	}

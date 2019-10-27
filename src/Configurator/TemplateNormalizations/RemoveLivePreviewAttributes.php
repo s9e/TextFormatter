@@ -1,0 +1,25 @@
+<?php
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+class RemoveLivePreviewAttributes extends AbstractNormalization
+{
+	protected $queries = array(
+		'//@*           [starts-with(name(), "data-s9e-livepreview-")]',
+		'//xsl:attribute[starts-with(@name,  "data-s9e-livepreview-")]'
+	);
+	protected function normalizeAttribute(DOMAttr $attribute)
+	{
+		$attribute->parentNode->removeAttributeNode($attribute);
+	}
+	protected function normalizeElement(DOMElement $element)
+	{
+		$element->parentNode->removeChild($element);
+	}
+}

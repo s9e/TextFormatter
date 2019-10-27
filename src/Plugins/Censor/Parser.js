@@ -33,8 +33,8 @@ matches.forEach(function(m)
 /**
 * Test whether given word is allowed
 *
-* @param  {!string}  word
-* @return {!boolean}
+* @param  {string}  word
+* @return {boolean}
 */
 function isAllowed(word)
 {

@@ -27,7 +27,6 @@ class JavaScript
 	protected $configOptimizer;
 	protected $configurator;
 	public $encoder;
-	public $exportMethods;
 	public $exports = array(
 		'disablePlugin',
 		'disableTag',
@@ -47,7 +46,6 @@ class JavaScript
 	protected $xsl;
 	public function __construct(Configurator $configurator)
 	{
-		$this->exportMethods =& $this->exports;
 		$this->encoder              = new Encoder;
 		$this->callbackGenerator    = new CallbackGenerator;
 		$this->configOptimizer      = new ConfigOptimizer($this->encoder);
@@ -65,7 +63,7 @@ class JavaScript
 	{
 		$this->configOptimizer->reset();
 		$xslt      = new XSLT;
-		$xslt->optimizer->normalizer->remove('RemoveLivePreviewAttributes');
+		$xslt->normalizer->remove('RemoveLivePreviewAttributes');
 		$this->xsl = $xslt->getXSL($this->configurator->rendering);
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
 		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
@@ -73,7 +71,7 @@ class JavaScript
 		$src = $this->getHints() . $this->injectConfig($this->getSource());
 		$src .= "if (!window['s9e']) window['s9e'] = {};\n" . $this->getExports();
 		$src = $this->getMinifier()->get($src);
-		$src = '(function(){' . $src . '})()';
+		$src = '(function(){' . $src . '})();';
 		return $src;
 	}
 	public function setMinifier($minifier)
@@ -105,7 +103,7 @@ class JavaScript
 		foreach ($this->exports as $export)
 			$exports[] = "'" . $export . "':" . $export;
 		\sort($exports);
-		return "window['s9e']['TextFormatter'] = {" . \implode(',', $exports) . '}';
+		return "window['s9e']['TextFormatter'] = {" . \implode(',', $exports) . '};';
 	}
 	protected function getHints()
 	{
@@ -149,8 +147,8 @@ class JavaScript
 				$globalConfig['regexp'] = new Code(RegexpConvertor::toJS($globalConfig['regexp'], \true));
 			$globalConfig['parser'] = new Code(
 				'/**
-				* @param {!string} text
-				* @param {!Array.<Array>} matches
+				* @param {string}          text
+				* @param {!Array.<!Array>} matches
 				*/
 				function(text, matches)
 				{

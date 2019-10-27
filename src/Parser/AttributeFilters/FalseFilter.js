@@ -3,7 +3,7 @@ var FalseFilter =
 {
 	/**
 	* @param  {*} attrValue
-	* @return {!boolean}
+	* @return {boolean}
 	*/
 	filter: function(attrValue)
 	{

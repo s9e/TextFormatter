@@ -10,36 +10,28 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 class ClosureCompilerApplication extends Minifier
 {
-	public $closureCompilerBin;
 	public $command;
 	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 	public $excludeDefaultExterns = \true;
-	public $javaBin = 'java';
 	public $options = '--use_types_for_optimization';
-	public function __construct($filepathOrCommand = \null)
+	public function __construct($command)
 	{
-		if (isset($filepathOrCommand))
-			if (\file_exists($filepathOrCommand) && \substr($filepathOrCommand, -4) === '.jar')
-				$this->closureCompilerBin = $filepathOrCommand;
-			else
-				$this->command = $filepathOrCommand;
+		$this->command = $command;
 	}
 	public function getCacheDifferentiator()
 	{
 		$key = array(
+			$this->command,
 			$this->compilationLevel,
 			$this->excludeDefaultExterns,
 			$this->options
 		);
-		if (isset($this->closureCompilerBin))
-			$key[] = $this->getClosureCompilerBinHash();
 		if ($this->excludeDefaultExterns)
 			$key[] = \file_get_contents(__DIR__ . '/../externs.application.js');
 		return $key;
 	}
 	public function minify($src)
 	{
-		$this->testFilepaths();
 		$options = ($this->options) ? ' ' . $this->options : '';
 		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 			$options .= ' --externs ' . __DIR__ . '/../externs.application.js --env=CUSTOM';
@@ -47,11 +39,8 @@ class ClosureCompilerApplication extends Minifier
 		$inFile  = \sys_get_temp_dir() . '/' . $crc . '.js';
 		$outFile = \sys_get_temp_dir() . '/' . $crc . '.min.js';
 		\file_put_contents($inFile, $src);
-		if (isset($this->command))
-			$cmd = $this->command;
-		else
-			$cmd = \escapeshellcmd($this->javaBin) . ' -jar ' . \escapeshellarg($this->closureCompilerBin);
-		$cmd .= ' --compilation_level ' . \escapeshellarg($this->compilationLevel)
+		$cmd = $this->command
+		     . ' --compilation_level ' . \escapeshellarg($this->compilationLevel)
 		     . $options
 		     . ' --js ' . \escapeshellarg($inFile)
 		     . ' --js_output_file ' . \escapeshellarg($outFile);
@@ -65,21 +54,5 @@ class ClosureCompilerApplication extends Minifier
 		if (!empty($return))
 			throw new RuntimeException('An error occured during minification: ' . \implode("\n", $output));
 		return $src;
-	}
-	protected function getClosureCompilerBinHash()
-	{
-		static $cache = array();
-		if (!isset($cache[$this->closureCompilerBin]))
-			$cache[$this->closureCompilerBin] = \md5_file($this->closureCompilerBin);
-		return $cache[$this->closureCompilerBin];
-	}
-	protected function testFilepaths()
-	{
-		if (isset($this->command))
-			return;
-		if (!isset($this->closureCompilerBin))
-			throw new RuntimeException('No path set for Closure Compiler');
-		if (!\file_exists($this->closureCompilerBin))
-			throw new RuntimeException('Cannot find Closure Compiler at ' . $this->closureCompilerBin);
 	}
 }

@@ -21,10 +21,10 @@ var NumericFilter =
 
 	/**
 	* @param  {*}       attrValue
-	* @param  {!number} min
-	* @param  {!number} max
-	* @param  {Logger}  logger
-	* @return {!number|boolean}
+	* @param  {number}  min
+	* @param  {number}  max
+	* @param  {?Logger} logger
+	* @return {number|boolean}
 	*/
 	filterRange: function(attrValue, min, max, logger)
 	{

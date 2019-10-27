@@ -10,19 +10,23 @@ use s9e\TextFormatter\Utils\Http\Client;
 class Curl extends Client
 {
 	protected static $handle;
-	public function get($url, $headers = array())
+	public function get($url, array $options = array())
 	{
+		$options += array('headers' => array());
 		$handle = $this->getHandle();
+		\curl_setopt($handle, \CURLOPT_HEADER,     !empty($options['returnHeaders']));
 		\curl_setopt($handle, \CURLOPT_HTTPGET,    \true);
-		\curl_setopt($handle, \CURLOPT_HTTPHEADER, $headers);
+		\curl_setopt($handle, \CURLOPT_HTTPHEADER, $options['headers']);
 		\curl_setopt($handle, \CURLOPT_URL,        $url);
 		return \curl_exec($handle);
 	}
-	public function post($url, $headers = array(), $body = '')
+	public function post($url, array $options = array(), $body = '')
 	{
-		$headers[] = 'Content-Length: ' . \strlen($body);
+		$options             += array('headers' => array());
+		$options['headers'][] = 'Content-Length: ' . \strlen($body);
 		$handle = $this->getHandle();
-		\curl_setopt($handle, \CURLOPT_HTTPHEADER, $headers);
+		\curl_setopt($handle, \CURLOPT_HEADER,     !empty($options['returnHeaders']));
+		\curl_setopt($handle, \CURLOPT_HTTPHEADER, $options['headers']);
 		\curl_setopt($handle, \CURLOPT_POST,       \true);
 		\curl_setopt($handle, \CURLOPT_POSTFIELDS, $body);
 		\curl_setopt($handle, \CURLOPT_URL,        $url);

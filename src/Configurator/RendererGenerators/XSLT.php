@@ -10,13 +10,19 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT\Optimizer;
 use s9e\TextFormatter\Configurator\Rendering;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Renderers\XSLT as XSLTRenderer;
 class XSLT implements RendererGenerator
 {
-	public $optimizer;
+	public $normalizer;
 	public function __construct()
 	{
-		$this->optimizer = new Optimizer;
+		$this->normalizer = new TemplateNormalizer(array(
+			'MergeConsecutiveCopyOf',
+			'MergeIdenticalConditionalBranches',
+			'OptimizeNestedConditionals',
+			'RemoveLivePreviewAttributes'
+		));
 	}
 	public function getRenderer(Rendering $rendering)
 	{
@@ -25,43 +31,51 @@ class XSLT implements RendererGenerator
 	public function getXSL(Rendering $rendering)
 	{
 		$groupedTemplates = array();
-		$prefixes         = array();
 		$templates        = $rendering->getTemplates();
 		TemplateHelper::replaceHomogeneousTemplates($templates, 3);
 		foreach ($templates as $tagName => $template)
 		{
-			$template = $this->optimizer->optimizeTemplate($template);
+			$template = $this->normalizer->normalizeTemplate($template);
 			$groupedTemplates[$template][] = $tagName;
+		}
+		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
+		$prefixes = $this->getPrefixes(\array_keys($templates));
+		if (!empty($prefixes))
+		{
+			foreach ($prefixes as $prefix)
+				$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+			$xsl .= ' exclude-result-prefixes="' . \implode(' ', $prefixes) . '"';
+		}
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"/>';
+		foreach ($rendering->getAllParameters() as $paramName => $paramValue)
+			$xsl .= $this->writeTag('xsl:param', array('name' => $paramName), \htmlspecialchars($paramValue, \ENT_NOQUOTES));
+		foreach ($groupedTemplates as $template => $tagNames)
+			$xsl .= $this->writeTag('xsl:template', array('match' => \implode('|', $tagNames)), $template);
+		$xsl .= '</xsl:stylesheet>';
+		return $xsl;
+	}
+	protected function getPrefixes(array $tagNames)
+	{
+		$prefixes = array();
+		foreach ($tagNames as $tagName)
+		{
 			$pos = \strpos($tagName, ':');
 			if ($pos !== \false)
 				$prefixes[\substr($tagName, 0, $pos)] = 1;
 		}
-		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 		$prefixes = \array_keys($prefixes);
 		\sort($prefixes);
-		foreach ($prefixes as $prefix)
-			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
-		if (!empty($prefixes))
-			$xsl .= ' exclude-result-prefixes="' . \implode(' ', $prefixes) . '"';
-		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"';
-		$xsl .= '/>';
-		foreach ($rendering->getAllParameters() as $paramName => $paramValue)
-		{
-			$xsl .= '<xsl:param name="' . \htmlspecialchars($paramName) . '"';
-			if ($paramValue === '')
-				$xsl .= '/>';
-			else
-				$xsl .= '>' . \htmlspecialchars($paramValue) . '</xsl:param>';
-		}
-		foreach ($groupedTemplates as $template => $tagNames)
-		{
-			$xsl .= '<xsl:template match="' . \implode('|', $tagNames) . '"';
-			if ($template === '')
-				$xsl .= '/>';
-			else
-				$xsl .= '>' . $template . '</xsl:template>';
-		}
-		$xsl .= '</xsl:stylesheet>';
-		return $xsl;
+		return $prefixes;
+	}
+	protected function writeTag($tagName, array $attributes, $content)
+	{
+		$xml = '<' . $tagName;
+		foreach ($attributes as $attrName => $attrValue)
+			$xml .= ' ' . $attrName . '="' . \htmlspecialchars($attrValue) . '"';
+		if ($content === '')
+			$xml .= '/>';
+		else
+			$xml .= '>' . $content . '</' . $tagName . '>';
+		return $xml;
 	}
 }

@@ -13,6 +13,7 @@ use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Emphasis;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\ForcedLineBreaks;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Images;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\InlineCode;
+use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\InlineSpoiler;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\LinkReferences;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Links;
 use s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Strikethrough;
@@ -29,6 +30,7 @@ class Parser extends ParserBase
 		$pass=new LinkReferences($this->parser, $text);$pass->parse();
 		$pass=new InlineCode($this->parser, $text);$pass->parse();
 		$pass=new Images($this->parser, $text);$pass->parse();
+		(new InlineSpoiler($this->parser, $text))->parse();
 		$pass=new Links($this->parser, $text);$pass->parse();
 		$pass=new Strikethrough($this->parser, $text);$pass->parse();
 		$pass=new Subscript($this->parser, $text);$pass->parse();

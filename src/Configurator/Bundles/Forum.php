@@ -74,7 +74,7 @@ class Forum extends Bundle
 			':lol:' => '1F602'
 		);
 		foreach ($emoticons as $code => $hex)
-			$configurator->Emoji->addAlias($code, \html_entity_decode('&#x' . $hex . ';'));
+			$configurator->Emoji->aliases[$code] = \html_entity_decode('&#x' . $hex . ';');
 		$sites = array('bandcamp', 'dailymotion', 'facebook', 'indiegogo', 'instagram', 'kickstarter', 'liveleak', 'soundcloud', 'twitch', 'twitter', 'vimeo', 'vine', 'wshh', 'youtube');
 		foreach ($sites as $siteId)
 		{

@@ -81,7 +81,7 @@ class ClosureCompilerService extends OnlineMinifier
 	{
 		return $this->httpClient->post(
 			$this->url,
-			array('Content-Type: application/x-www-form-urlencoded'),
+			array('headers' => array('Content-Type: application/x-www-form-urlencoded')),
 			$body
 		);
 	}

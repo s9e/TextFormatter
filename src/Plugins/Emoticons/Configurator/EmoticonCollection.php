@@ -8,13 +8,13 @@
 namespace s9e\TextFormatter\Plugins\Emoticons\Configurator;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 class EmoticonCollection extends NormalizedCollection
 {
 	protected $onDuplicateAction = 'replace';
 	public function normalizeValue($value)
 	{
-		return TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($value));
+		return TemplateLoader::save(TemplateLoader::load($value));
 	}
 	protected function getAlreadyExistsException($key)
 	{

@@ -14,22 +14,22 @@ class Native extends Client
 	{
 		$this->gzipEnabled = \extension_loaded('zlib');
 	}
-	public function get($url, $headers = array())
+	public function get($url, array $options = array())
 	{
-		return $this->request('GET', $url, $headers);
+		return $this->request('GET', $url, $options);
 	}
-	public function post($url, $headers = array(), $body = '')
+	public function post($url, array $options = array(), $body = '')
 	{
-		return $this->request('POST', $url, $headers, $body);
+		return $this->request('POST', $url, $options, $body);
 	}
-	protected function createContext($method, array $headers, $body)
+	protected function createContext($method, array $options, $body)
 	{
 		$contextOptions = array(
 			'ssl'  => array('verify_peer' => $this->sslVerifyPeer),
 			'http' => array(
 				'method'  => $method,
 				'timeout' => $this->timeout,
-				'header'  => $this->generateHeaders($headers, $body),
+				'header'  => $this->generateHeaders($options, $body),
 				'content' => $body
 			)
 		);
@@ -41,16 +41,22 @@ class Native extends Client
 			return \gzdecode($content);
 		return $content;
 	}
-	protected function generateHeaders(array $headers, $body)
+	protected function generateHeaders(array $options, $body)
 	{
+		$options += array('headers' => array());
 		if ($this->gzipEnabled)
-			$headers[] = 'Accept-Encoding: gzip';
-		$headers[] = 'Content-Length: ' . \strlen($body);
-		return $headers;
+			$options['headers'][] = 'Accept-Encoding: gzip';
+		$options['headers'][] = 'Content-Length: ' . \strlen($body);
+		return $options['headers'];
 	}
-	protected function request($method, $url, $headers, $body = '')
+	protected function request($method, $url, array $options, $body = '')
 	{
-		$response = @\file_get_contents($url, \false, $this->createContext($method, $headers, $body));
-		return (\is_string($response)) ? $this->decompress($response) : $response;
+		$response = @\file_get_contents($url, \false, $this->createContext($method, $options, $body));
+		if ($response === \false)
+			return \false;
+		$response = $this->decompress($response);
+		if (!empty($options['returnHeaders']))
+			$response = \implode("\r\n", $http_response_header) . "\r\n\r\n" . $response;
+		return $response;
 	}
 }
