@@ -42,11 +42,12 @@ class Tag
 	}
 	public function invalidate()
 	{
-		if ($this->invalid)
-			return;
-		$this->invalid = \true;
-		foreach ($this->cascade as $tag)
-			$tag->invalidate();
+		if (!$this->invalid)
+		{
+			$this->invalid = \true;
+			foreach ($this->cascade as $tag)
+				$tag->invalidate();
+		}
 	}
 	public function pairWith(Tag $tag)
 	{

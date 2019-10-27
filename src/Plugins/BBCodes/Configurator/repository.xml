@@ -43,82 +43,32 @@
 		]]></template>
 	</bbcode>
 
-	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: https://highlightjs.org/ -->
+	<!-- [CODE] BBCode, uses highlight.js for highlighting: https://highlightjs.org/ -->
 	<bbcode name="CODE">
 		<usage>[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]</usage>
 		<template><![CDATA[
-			<pre data-hljs="" data-s9e-livepreview-postprocess="if('undefined'!==typeof hljs)hljs._hb(this)"><code>
+			<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(typeof hljsLoader!=='undefined')hljsLoader.highlightBlocks(this)"><code>
 				<xsl:if test="@lang">
 					<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
 				</xsl:if>
 				<xsl:apply-templates />
 			</code></pre>
-			<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js";a.appendChild(e)}</script>
+			<script async="" crossorigin="anonymous">
+				<xsl:if test="'default' != ']]><var name='style'>github-gist</var><![CDATA['">
+					<xsl:attribute name="data-hljs-style">]]>
+						<var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var>
+					<![CDATA[</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/' != ']]><var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</var><![CDATA['">
+					<xsl:attribute name="data-hljs-url">]]>
+						<var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/</var>
+					<![CDATA[</xsl:attribute>
+				</xsl:if>
+				<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
+				<xsl:attribute name="integrity">sha384-fiUfbVu5WfS+y/0EiW3QpI0iZScy4ET77WKz9f0dGwHGgLNQz6pQa8AdSi8Y59ZZ</xsl:attribute>
+				<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.1/loader.min.js</xsl:attribute>
+			</script>
 		]]></template>
-		<ignore><![CDATA[
-			if (typeof hljs !== 'undefined')
-			{
-				hljs['_ha']();
-			}
-			else if (typeof hljsLoading === 'undefined')
-			{
-				hljsLoading = 1;
-
-				var head = document.getElementsByTagName('head')[0],
-					el   = document.createElement('link');
-
-				el.type = 'text/css';
-				el.rel  = 'stylesheet';
-				el.href = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css';
-
-				head.appendChild(el);
-
-				el        = document.createElement('script');
-				el.type   = 'text/javascript';
-				el.onload = function()
-				{
-					var cache = {}, cnt = 0;
-
-					// Highlight block
-					hljs['_hb'] = function (block)
-					{
-						block.removeAttribute('data-hljs');
-
-						var html = block.innerHTML;
-						if (html in cache)
-						{
-							block.innerHTML = cache[html];
-						}
-						else
-						{
-							if (++cnt > 7)
-							{
-								cache = {};
-								cnt = 0;
-							}
-							hljs['highlightBlock'](block.firstChild);
-							cache[html] = block.innerHTML;
-						}
-					};
-
-					// Highlight all
-					hljs['_ha'] = function ()
-					{
-						var blocks = document.querySelectorAll('pre[data-hljs]'),
-							i = blocks.length;
-						while (i > 0)
-						{
-							hljs['_hb'](blocks.item(--i));
-						}
-					};
-					hljs['_ha']();
-				};
-				el.async = true;
-				el.src   = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js';
-
-				head.appendChild(el);
-			}
-		]]></ignore>
 	</bbcode>
 
 	<bbcode name="COLOR">
@@ -343,7 +293,7 @@
 				<div>
 					<xsl:if test="@author">
 						<cite>]]>
-							<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
+							<var name="authorStr" description="Author string"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
 						<![CDATA[</cite>
 					</xsl:if>
 					<xsl:apply-templates />
@@ -367,7 +317,7 @@
 	</bbcode>
 
 	<bbcode name="SIZE">
-		<usage>[SIZE={RANGE=<var name="min">8</var>,<var name="max">36</var>}]{TEXT}[/SIZE]</usage>
+		<usage>[SIZE={RANGE=<var name="min" description="Minimum size in px">8</var>,<var name="max" description="Maximum size in px">36</var>}]{TEXT}[/SIZE]</usage>
 		<template><![CDATA[
 			<span style="font-size:{RANGE}px">{TEXT}</span>
 		]]></template>
@@ -389,8 +339,8 @@
 		<template><![CDATA[
 			<div class="spoiler">
 				<div class="spoiler-header">
-					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr">Hide</var><![CDATA[</span></button>
-					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
+					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr" description="String used for the Show button">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr" description="String used for the Hide button">Hide</var><![CDATA[</span></button>
+					<span class="spoiler-title">]]><var name="spoilerStr" description="String used for the spoiler label">Spoiler:</var><![CDATA[ {TEXT1}</span>
 				</div>
 				<div class="spoiler-content" style="display:none">{TEXT2}</div>
 			</div>

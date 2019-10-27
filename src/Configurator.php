@@ -329,15 +329,13 @@ abstract class AVTHelper
 {
 	public static function parse($attrValue)
 	{
-		\preg_match_all('(\\{\\{|\\{(?:[^\'"}]|\'[^\']*\'|"[^"]*")+\\}|\\{|[^{]++)', $attrValue, $matches);
+		\preg_match_all('((*MARK:literal)(?:[^{]|\\{\\{)++|(*MARK:expression)\\{(?:[^}"\']|"[^"]*+"|\'[^\']*+\')++\\}|(*MARK:junk).++)s', $attrValue, $matches);
 		$tokens  = [];
-		foreach ($matches[0] as $str)
-			if ($str === '{{' || $str === '{')
-				$tokens[] = ['literal', '{'];
-			elseif ($str[0] === '{')
+		foreach ($matches[0] as $i => $str)
+			if ($matches['MARK'][$i] === 'expression')
 				$tokens[] = ['expression', \substr($str, 1, -1)];
 			else
-				$tokens[] = ['literal', \str_replace('}}', '}', $str)];
+				$tokens[] = ['literal', \strtr($str, ['{{' => '{', '}}' => '}'])];
 		return $tokens;
 	}
 	public static function replace(DOMAttr $attribute, callable $callback)
@@ -370,108 +368,6 @@ abstract class AVTHelper
 			else
 				$xsl .= \htmlspecialchars($content, \ENT_NOQUOTES, 'UTF-8');
 		return $xsl;
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2019 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\Helpers;
-class CharacterClassBuilder
-{
-	protected $chars;
-	public $delimiter = '/';
-	protected $ranges;
-	public function fromList(array $chars)
-	{
-		$this->chars = $chars;
-		$this->unescapeLiterals();
-		\sort($this->chars);
-		$this->storeRanges();
-		$this->reorderDash();
-		$this->fixCaret();
-		$this->escapeSpecialChars();
-		return $this->buildCharacterClass();
-	}
-	protected function buildCharacterClass()
-	{
-		$str = '[';
-		foreach ($this->ranges as list($start, $end))
-			if ($end > $start + 2)
-				$str .= $this->chars[$start] . '-' . $this->chars[$end];
-			else
-				$str .= \implode('', \array_slice($this->chars, $start, $end + 1 - $start));
-		$str .= ']';
-		return $str;
-	}
-	protected function escapeSpecialChars()
-	{
-		$specialChars = ['\\', ']', $this->delimiter];
-		foreach (\array_intersect($this->chars, $specialChars) as $k => $v)
-			$this->chars[$k] = '\\' . $v;
-	}
-	protected function fixCaret()
-	{
-		$k = \array_search('^', $this->chars, \true);
-		if ($this->ranges[0][0] !== $k)
-			return;
-		if (isset($this->ranges[1]))
-		{
-			$range           = $this->ranges[0];
-			$this->ranges[0] = $this->ranges[1];
-			$this->ranges[1] = $range;
-		}
-		else
-			$this->chars[$k] = '\\^';
-	}
-	protected function reorderDash()
-	{
-		$dashIndex = \array_search('-', $this->chars, \true);
-		if ($dashIndex === \false)
-			return;
-		$k = \array_search([$dashIndex, $dashIndex], $this->ranges, \true);
-		if ($k > 0)
-		{
-			unset($this->ranges[$k]);
-			\array_unshift($this->ranges, [$dashIndex, $dashIndex]);
-		}
-		$commaIndex = \array_search(',', $this->chars);
-		$range      = [$commaIndex, $dashIndex];
-		$k          = \array_search($range, $this->ranges, \true);
-		if ($k !== \false)
-		{
-			$this->ranges[$k] = [$commaIndex, $commaIndex];
-			\array_unshift($this->ranges, [$dashIndex, $dashIndex]);
-		}
-	}
-	protected function storeRanges()
-	{
-		$values = [];
-		foreach ($this->chars as $char)
-			if (\strlen($char) === 1)
-				$values[] = \ord($char);
-			else
-				$values[] = \false;
-		$i = \count($values) - 1;
-		$ranges = [];
-		while ($i >= 0)
-		{
-			$start = $i;
-			$end   = $i;
-			while ($start > 0 && $values[$start - 1] === $values[$end] - ($end + 1 - $start))
-				--$start;
-			$ranges[] = [$start, $end];
-			$i = $start - 1;
-		}
-		$this->ranges = \array_reverse($ranges);
-	}
-	protected function unescapeLiterals()
-	{
-		foreach ($this->chars as $k => $char)
-			if ($char[0] === '\\' && \preg_match('(^\\\\[^a-z]$)Di', $char))
-				$this->chars[$k] = \substr($char, 1);
 	}
 }
 
@@ -587,113 +483,116 @@ use DOMXPath;
 class ElementInspector
 {
 	protected static $htmlElements = [
-		'a'=>['c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1],
+		'a'=>['c'=>"\17\0\0\0\0\2",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\2",'t'=>1,'fe'=>1],
 		'abbr'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'address'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\200\44",'b'=>1,'cp'=>['p']],
-		'article'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'aside'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
+		'address'=>['c'=>"\3\10",'ac'=>"\1",'dd'=>"\200\14",'b'=>1,'cp'=>['p']],
+		'article'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
+		'aside'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
+		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\40\1",'ac29'=>'not(@src)','dd'=>"\0\0\0\0\0\4",'dd42'=>'@src','t'=>1],
 		'b'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'base'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'base'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'bdi'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'bdo'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'blockquote'=>['c'=>"\23",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'body'=>['c'=>"\20\0\2",'ac'=>"\1",'dd'=>"\0",'b'=>1],
+		'blockquote'=>['c'=>"\103",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'body'=>['c'=>"\100\0\40",'ac'=>"\1",'dd'=>"\0",'b'=>1],
 		'br'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'button'=>['c'=>"\17\1",'ac'=>"\4",'dd'=>"\10"],
-		'caption'=>['c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1],
+		'button'=>['c'=>"\17\2",'ac'=>"\4",'dd'=>"\10"],
+		'canvas'=>['c'=>"\47",'ac'=>"\0",'dd'=>"\0",'t'=>1],
+		'caption'=>['c'=>"\0\1",'ac'=>"\1",'dd'=>"\0\0\20",'b'=>1],
 		'cite'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'code'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'col'=>['c'=>"\0\0\10",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\0\2",'ac'=>"\0\0\10",'ac19'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e?'=>'@span','b'=>1],
+		'col'=>['c'=>"\0\0\200",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'colgroup'=>['c'=>"\0\1",'ac'=>"\0\0\200",'ac23'=>'not(@span)','dd'=>"\0",'nt'=>1,'e'=>1,'e?'=>'@span','b'=>1],
 		'data'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'datalist'=>['c'=>"\5",'ac'=>"\4\0\200\10",'dd'=>"\0"],
-		'dd'=>['c'=>"\0\100\100",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['dd','dt']],
+		'datalist'=>['c'=>"\5",'ac'=>"\4\0\1\100",'dd'=>"\0"],
+		'dd'=>['c'=>"\0\200\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['dd','dt']],
 		'del'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1],
-		'details'=>['c'=>"\33",'ac'=>"\1\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'dfn'=>['c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"],
-		'dialog'=>['c'=>"\21",'ac'=>"\1",'dd'=>"\0",'b'=>1],
-		'div'=>['c'=>"\3\100",'ac'=>"\1\0\300",'ac0'=>'not(ancestor::dl)','dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\100\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'dt'=>['c'=>"\0\100\100",'ac'=>"\1",'dd'=>"\200\4\0\40",'b'=>1,'cp'=>['dd','dt']],
+		'details'=>['c'=>"\113",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'dfn'=>['c'=>"\7\0\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\0\100"],
+		'dialog'=>['c'=>"\101",'ac'=>"\1",'dd'=>"\0",'b'=>1],
+		'div'=>['c'=>"\3\200",'ac'=>"\1\0\1\4",'ac0'=>'not(ancestor::dl)','dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'dl'=>['c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\1",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'dt'=>['c'=>"\0\200\0\4",'ac'=>"\1",'dd'=>"\200\4\10",'b'=>1,'cp'=>['dd','dt']],
 		'em'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'embed'=>['c'=>"\57",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'fieldset'=>['c'=>"\23\1",'ac'=>"\1\0\0\20",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'figcaption'=>['c'=>"\0\0\0\0\0\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'figure'=>['c'=>"\23",'ac'=>"\1\0\0\0\0\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'footer'=>['c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'form'=>['c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
+		'fieldset'=>['c'=>"\103\2",'ac'=>"\1\0\0\200",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'figcaption'=>['c'=>"\0\0\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'figure'=>['c'=>"\103",'ac'=>"\1\0\0\0\0\10",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'footer'=>['c'=>"\3\110\10",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
+		'form'=>['c'=>"\3\0\0\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\40",'b'=>1,'cp'=>['p']],
 		'h1'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'h2'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'h3'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'h4'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'h5'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'h6'=>['c'=>"\203",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'head'=>['c'=>"\0\0\2",'ac'=>"\100",'dd'=>"\0",'nt'=>1,'b'=>1],
-		'header'=>['c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
+		'head'=>['c'=>"\0\0\40",'ac'=>"\20",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'header'=>['c'=>"\3\110\10",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
 		'hr'=>['c'=>"\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
-		'html'=>['c'=>"\0",'ac'=>"\0\0\2",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'html'=>['c'=>"\0",'ac'=>"\0\0\40",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'i'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'iframe'=>['c'=>"\57",'ac'=>"\4",'dd'=>"\0"],
-		'img'=>['c'=>"\57\20\4",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'input'=>['c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'img'=>['c'=>"\57\40\100",'c3'=>'@usemap','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'input'=>['c'=>"\17\40",'c3'=>'@type!="hidden"','c13'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
 		'ins'=>['c'=>"\7",'ac'=>"\0",'dd'=>"\0",'t'=>1],
 		'kbd'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'label'=>['c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\200\0\0\4"],
-		'legend'=>['c'=>"\0\0\0\20",'ac'=>"\204",'dd'=>"\0",'b'=>1],
-		'li'=>['c'=>"\0\0\0\0\200",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\105",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
-		'main'=>['c'=>"\3\0\0\0\10",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
+		'label'=>['c'=>"\17\40\0\0\10",'ac'=>"\4",'dd'=>"\0\0\2\0\10"],
+		'legend'=>['c'=>"\0\0\0\200",'ac'=>"\204",'dd'=>"\0",'b'=>1],
+		'li'=>['c'=>"\0\0\0\0\0\1",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['li']],
+		'link'=>['c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1],
+		'main'=>['c'=>"\3\110\20\0\20",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
 		'mark'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'media element'=>['c'=>"\0\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
-		'meta'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'meter'=>['c'=>"\7\200\0\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"],
-		'nav'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>['p']],
-		'object'=>['c'=>"\47\1",'ac'=>"\0\0\0\0\1",'dd'=>"\0",'t'=>1],
-		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\200\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'optgroup'=>['c'=>"\0\0\1",'ac'=>"\0\0\200\10",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
-		'option'=>['c'=>"\0\0\1\10",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>['option']],
-		'output'=>['c'=>"\7\1",'ac'=>"\4",'dd'=>"\0"],
+		'media element'=>['c'=>"\0\0\0\0\0\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'meta'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'meter'=>['c'=>"\7\0\2\0\4",'ac'=>"\4",'dd'=>"\0\0\0\0\4"],
+		'nav'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['p']],
+		'noscript'=>['c'=>"\25",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
+		'object'=>['c'=>"\47",'ac'=>"\0\0\0\0\2",'dd'=>"\0",'t'=>1],
+		'ol'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\1\0\0\1",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'optgroup'=>['c'=>"\0\0\4",'ac'=>"\0\0\1\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['optgroup','option']],
+		'option'=>['c'=>"\0\0\4\100",'ac'=>"\0",'dd'=>"\0",'b'=>1,'cp'=>['option']],
+		'output'=>['c'=>"\7\2",'ac'=>"\4",'dd'=>"\0"],
 		'p'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'param'=>['c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
-		'picture'=>['c'=>"\45",'ac'=>"\0\0\204",'dd'=>"\0",'nt'=>1],
+		'param'=>['c'=>"\0\0\0\0\2",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'picture'=>['c'=>"\45",'ac'=>"\0\0\101",'dd'=>"\0",'nt'=>1],
 		'pre'=>['c'=>"\3",'ac'=>"\4",'dd'=>"\0",'pre'=>1,'b'=>1,'cp'=>['p']],
-		'progress'=>['c'=>"\7\200\0\1",'ac'=>"\4",'dd'=>"\0\0\0\1"],
+		'progress'=>['c'=>"\7\0\2\10",'ac'=>"\4",'dd'=>"\0\0\0\10"],
 		'q'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'rb'=>['c'=>"\0\10",'ac'=>"\4",'dd'=>"\0",'b'=>1],
-		'rp'=>['c'=>"\0\10\40",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
-		'rt'=>['c'=>"\0\10\40",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rp','rt']],
-		'rtc'=>['c'=>"\0\10",'ac'=>"\4\0\40",'dd'=>"\0",'b'=>1],
-		'ruby'=>['c'=>"\7",'ac'=>"\4\10",'dd'=>"\0"],
+		'rb'=>['c'=>"\0\20",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rb','rt','rtc']],
+		'rp'=>['c'=>"\0\20\0\2",'ac'=>"\4",'dd'=>"\0",'b'=>1],
+		'rt'=>['c'=>"\0\20\0\2",'ac'=>"\4",'dd'=>"\0",'b'=>1,'cp'=>['rb','rt']],
+		'rtc'=>['c'=>"\0\20",'ac'=>"\4\0\0\2",'dd'=>"\0",'b'=>1,'cp'=>['rt','rtc']],
+		'ruby'=>['c'=>"\7",'ac'=>"\4\20",'dd'=>"\0"],
 		's'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
 		'samp'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'script'=>['c'=>"\105\0\200",'ac'=>"\0",'dd'=>"\0",'to'=>1],
+		'script'=>['c'=>"\25\0\1",'ac'=>"\0",'dd'=>"\0",'to'=>1],
 		'section'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['p']],
-		'select'=>['c'=>"\17\1",'ac'=>"\0\0\201",'dd'=>"\0",'nt'=>1],
+		'select'=>['c'=>"\17\2",'ac'=>"\0\0\5",'dd'=>"\0",'nt'=>1],
+		'slot'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'t'=>1],
 		'small'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'source'=>['c'=>"\0\0\4\4",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'source'=>['c'=>"\0\0\100\40",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'span'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
 		'strong'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'style'=>['c'=>"\101",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'style'=>['c'=>"\21",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
 		'sub'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'summary'=>['c'=>"\0\0\0\2",'ac'=>"\204",'dd'=>"\0",'b'=>1],
+		'summary'=>['c'=>"\0\0\0\20",'ac'=>"\204",'dd'=>"\0",'b'=>1],
 		'sup'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'table'=>['c'=>"\3\0\0\200",'ac'=>"\0\2\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
-		'tbody'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
-		'td'=>['c'=>"\20\0\20",'ac'=>"\1",'dd'=>"\0",'b'=>1,'cp'=>['td','th']],
-		'template'=>['c'=>"\0\0\10",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'b'=>1],
-		'textarea'=>['c'=>"\17\1",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1],
-		'tfoot'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
-		'th'=>['c'=>"\0\0\20",'ac'=>"\1",'dd'=>"\200\4\0\40",'b'=>1,'cp'=>['td','th']],
-		'thead'=>['c'=>"\0\2",'ac'=>"\0\0\200\0\100",'dd'=>"\0",'nt'=>1,'b'=>1],
+		'table'=>['c'=>"\3\0\20",'ac'=>"\0\1\1",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'tbody'=>['c'=>"\0\1",'ac'=>"\0\0\1\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
+		'td'=>['c'=>"\100\0\0\1",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>['td','th']],
+		'template'=>['c'=>"\25\0\201",'ac'=>"\0",'dd'=>"\0",'nt'=>1],
+		'textarea'=>['c'=>"\17\2",'ac'=>"\0",'dd'=>"\0",'pre'=>1,'to'=>1],
+		'tfoot'=>['c'=>"\0\1",'ac'=>"\0\0\1\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['tbody','td','th','thead','tr']],
+		'th'=>['c'=>"\0\0\0\1",'ac'=>"\1",'dd'=>"\200\104",'b'=>1,'cp'=>['td','th']],
+		'thead'=>['c'=>"\0\1",'ac'=>"\0\0\1\0\200",'dd'=>"\0",'nt'=>1,'b'=>1],
 		'time'=>['c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime','dd'=>"\0"],
-		'title'=>['c'=>"\100",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
-		'tr'=>['c'=>"\0\2\0\0\100",'ac'=>"\0\0\220",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
-		'track'=>['c'=>"\0\0\0\100",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'title'=>['c'=>"\20",'ac'=>"\0",'dd'=>"\0",'to'=>1,'b'=>1],
+		'tr'=>['c'=>"\0\1\0\0\200",'ac'=>"\0\0\1\1",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['td','th','tr']],
+		'track'=>['c'=>"\0\0\0\0\1",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'u'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0",'fe'=>1],
-		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\200\0\200",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
+		'ul'=>['c'=>"\3",'c1'=>'li','ac'=>"\0\0\1\0\0\1",'dd'=>"\0",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'var'=>['c'=>"\7",'ac'=>"\4",'dd'=>"\0"],
-		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1],
+		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\40\1",'ac29'=>'not(@src)','dd'=>"\0\0\0\0\0\4",'dd42'=>'@src','t'=>1],
 		'wbr'=>['c'=>"\5",'ac'=>"\0",'dd'=>"\0",'nt'=>1,'e'=>1,'v'=>1]
 	];
 	public static function closesParent(DOMElement $child, DOMElement $parent)
@@ -801,7 +700,7 @@ abstract class NodeLocator
 	}
 	public static function getCSSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^style$/i';
+		$regexp = '/^(?:color|style)$/i';
 		$nodes  = \array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^style$/i')
@@ -814,7 +713,7 @@ abstract class NodeLocator
 	}
 	public static function getJSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^(?:data-s9e-livepreview-postprocess$|on)/i';
+		$regexp = '/^(?:data-s9e-livepreview-)?on/i';
 		$nodes  = \array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^script$/i')
@@ -840,7 +739,7 @@ abstract class NodeLocator
 	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
+		$regexp = '/(?:^(?:action|background|c(?:ite|lassid|odebase)|data|formaction|href|i(?:con|tem(?:id|prop|type))|longdesc|manifest|p(?:ing|luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
 		{
@@ -880,513 +779,30 @@ abstract class NodeLocator
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
-use RuntimeException;
+use s9e\RegexpBuilder\Builder;
 abstract class RegexpBuilder
 {
-	protected static $characterClassBuilder;
 	public static function fromList(array $words, array $options = [])
 	{
-		if (empty($words))
-			return '';
 		$options += [
 			'delimiter'       => '/',
 			'caseInsensitive' => \false,
 			'specialChars'    => [],
-			'unicode'         => \true,
-			'useLookahead'    => \false
+			'unicode'         => \true
 		];
 		if ($options['caseInsensitive'])
 		{
 			foreach ($words as &$word)
-				$word = \strtr(
-					$word,
-					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-					'abcdefghijklmnopqrstuvwxyz'
-				);
+				$word = \strtr($word, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
 			unset($word);
 		}
-		$words = \array_unique($words);
-		\sort($words);
-		$initials = [];
-		$esc  = $options['specialChars'];
-		$esc += [$options['delimiter'] => '\\' . $options['delimiter']];
-		$esc += [
-			'!' => '!',
-			'-' => '-',
-			':' => ':',
-			'<' => '<',
-			'=' => '=',
-			'>' => '>',
-			'}' => '}'
-		];
-		$splitWords = [];
-		foreach ($words as $word)
-		{
-			$regexp = ($options['unicode']) ? '(.)us' : '(.)s';
-			if (\preg_match_all($regexp, $word, $matches) === \false)
-				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
-			$splitWord = [];
-			foreach ($matches[0] as $pos => $c)
-			{
-				if (!isset($esc[$c]))
-					$esc[$c] = \preg_quote($c);
-				if ($pos === 0)
-					$initials[] = $esc[$c];
-				$splitWord[] = $esc[$c];
-			}
-			$splitWords[] = $splitWord;
-		}
-		self::$characterClassBuilder            = new CharacterClassBuilder;
-		self::$characterClassBuilder->delimiter = $options['delimiter'];
-		$regexp = self::assemble([self::mergeChains($splitWords)]);
-		if ($options['useLookahead']
-		 && \count($initials) > 1
-		 && $regexp[0] !== '[')
-		{
-			$useLookahead = \true;
-			foreach ($initials as $initial)
-				if (!self::canBeUsedInCharacterClass($initial))
-				{
-					$useLookahead = \false;
-					break;
-				}
-			if ($useLookahead)
-				$regexp = '(?=' . self::generateCharacterClass($initials) . ')' . $regexp;
-		}
-		return $regexp;
-	}
-	protected static function mergeChains(array $chains, $preventRemerge = \false)
-	{
-		if (!isset($chains[1]))
-			return $chains[0];
-		$mergedChain = self::removeLongestCommonPrefix($chains);
-		if (!isset($chains[0][0])
-		 && !\array_filter($chains))
-			return $mergedChain;
-		$suffix = self::removeLongestCommonSuffix($chains);
-		if (isset($chains[1]))
-		{
-			self::optimizeDotChains($chains);
-			self::optimizeCatchallChains($chains);
-		}
-		$endOfChain = \false;
-		$remerge = \false;
-		$groups = [];
-		foreach ($chains as $chain)
-		{
-			if (!isset($chain[0]))
-			{
-				$endOfChain = \true;
-				continue;
-			}
-			$head = $chain[0];
-			if (isset($groups[$head]))
-				$remerge = \true;
-			$groups[$head][] = $chain;
-		}
-		$characterClass = [];
-		foreach ($groups as $head => $groupChains)
-		{
-			$head = (string) $head;
-			if ($groupChains === [[$head]]
-			 && self::canBeUsedInCharacterClass($head))
-				$characterClass[$head] = $head;
-		}
-		\sort($characterClass);
-		if (isset($characterClass[1]))
-		{
-			foreach ($characterClass as $char)
-				unset($groups[$char]);
-			$head = self::generateCharacterClass($characterClass);
-			$groups[$head][] = [$head];
-			$groups = [$head => $groups[$head]]
-			        + $groups;
-		}
-		if ($remerge && !$preventRemerge)
-		{
-			$mergedChains = [];
-			foreach ($groups as $head => $groupChains)
-				$mergedChains[] = self::mergeChains($groupChains);
-			self::mergeTails($mergedChains);
-			$regexp = \implode('', self::mergeChains($mergedChains, \true));
-			if ($endOfChain)
-				$regexp = self::makeRegexpOptional($regexp);
-			$mergedChain[] = $regexp;
-		}
-		else
-		{
-			self::mergeTails($chains);
-			$mergedChain[] = self::assemble($chains);
-		}
-		foreach ($suffix as $atom)
-			$mergedChain[] = $atom;
-		return $mergedChain;
-	}
-	protected static function mergeTails(array &$chains)
-	{
-		self::mergeTailsCC($chains);
-		self::mergeTailsAltern($chains);
-		$chains = \array_values($chains);
-	}
-	protected static function mergeTailsCC(array &$chains)
-	{
-		$groups = [];
-		foreach ($chains as $k => $chain)
-			if (isset($chain[1])
-			 && !isset($chain[2])
-			 && self::canBeUsedInCharacterClass($chain[0]))
-				$groups[$chain[1]][$k] = $chain;
-		foreach ($groups as $groupChains)
-		{
-			if (\count($groupChains) < 2)
-				continue;
-			$chains = \array_diff_key($chains, $groupChains);
-			$chains[] = self::mergeChains(\array_values($groupChains));
-		}
-	}
-	protected static function mergeTailsAltern(array &$chains)
-	{
-		$groups = [];
-		foreach ($chains as $k => $chain)
-			if (!empty($chain))
-			{
-				$tail = \array_slice($chain, -1);
-				$groups[$tail[0]][$k] = $chain;
-			}
-		foreach ($groups as $tail => $groupChains)
-		{
-			if (\count($groupChains) < 2)
-				continue;
-			$mergedChain = self::mergeChains(\array_values($groupChains));
-			$oldLen = 0;
-			foreach ($groupChains as $groupChain)
-				$oldLen += \array_sum(\array_map('strlen', $groupChain));
-			if ($oldLen <= \array_sum(\array_map('strlen', $mergedChain)))
-				continue;
-			$chains = \array_diff_key($chains, $groupChains);
-			$chains[] = $mergedChain;
-		}
-	}
-	protected static function removeLongestCommonPrefix(array &$chains)
-	{
-		$pLen = 0;
-		while (1)
-		{
-			$c = \null;
-			foreach ($chains as $chain)
-			{
-				if (!isset($chain[$pLen]))
-					break 2;
-				if (!isset($c))
-				{
-					$c = $chain[$pLen];
-					continue;
-				}
-				if ($chain[$pLen] !== $c)
-					break 2;
-			}
-			++$pLen;
-		}
-		if (!$pLen)
-			return [];
-		$prefix = \array_slice($chains[0], 0, $pLen);
-		foreach ($chains as &$chain)
-			$chain = \array_slice($chain, $pLen);
-		unset($chain);
-		return $prefix;
-	}
-	protected static function removeLongestCommonSuffix(array &$chains)
-	{
-		$chainsLen = \array_map('count', $chains);
-		$maxLen = \min($chainsLen);
-		if (\max($chainsLen) === $maxLen)
-			--$maxLen;
-		$sLen = 0;
-		while ($sLen < $maxLen)
-		{
-			$c = \null;
-			foreach ($chains as $k => $chain)
-			{
-				$pos = $chainsLen[$k] - ($sLen + 1);
-				if (!isset($c))
-				{
-					$c = $chain[$pos];
-					continue;
-				}
-				if ($chain[$pos] !== $c)
-					break 2;
-			}
-			++$sLen;
-		}
-		if (!$sLen)
-			return [];
-		$suffix = \array_slice($chains[0], -$sLen);
-		foreach ($chains as &$chain)
-			$chain = \array_slice($chain, 0, -$sLen);
-		unset($chain);
-		return $suffix;
-	}
-	protected static function assemble(array $chains)
-	{
-		$endOfChain = \false;
-		$regexps        = [];
-		$characterClass = [];
-		foreach ($chains as $chain)
-		{
-			if (empty($chain))
-			{
-				$endOfChain = \true;
-				continue;
-			}
-			if (!isset($chain[1])
-			 && self::canBeUsedInCharacterClass($chain[0]))
-				$characterClass[$chain[0]] = $chain[0];
-			else
-				$regexps[] = \implode('', $chain);
-		}
-		if (!empty($characterClass))
-		{
-			\sort($characterClass);
-			$regexp = (isset($characterClass[1]))
-					? self::generateCharacterClass($characterClass)
-					: $characterClass[0];
-			\array_unshift($regexps, $regexp);
-		}
-		if (empty($regexps))
-			return '';
-		if (isset($regexps[1]))
-		{
-			$regexp = \implode('|', $regexps);
-			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
-		}
-		else
-			$regexp = $regexps[0];
-		if ($endOfChain)
-			$regexp = self::makeRegexpOptional($regexp);
-		return $regexp;
-	}
-	protected static function makeRegexpOptional($regexp)
-	{
-		if (\preg_match('#^\\.\\+\\??$#', $regexp))
-			return \str_replace('+', '*', $regexp);
-		if (\preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
-			return $m[1] . '?' . $m[2];
-		if (\preg_match('#^(?:[$^]|\\\\[bBAZzGQEK])$#', $regexp))
-			return '';
-		if (\preg_match('#^\\\\?.$#Dus', $regexp))
-			$isAtomic = \true;
-		elseif (\preg_match('#^[^[(].#s', $regexp))
-			$isAtomic = \false;
-		else
-		{
-			$def    = RegexpParser::parse('#' . $regexp . '#');
-			$tokens = $def['tokens'];
-			switch (\count($tokens))
-			{
-				case 1:
-					$startPos = $tokens[0]['pos'];
-					$len      = $tokens[0]['len'];
-					$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
-					if ($isAtomic && $tokens[0]['type'] === 'characterClass')
-					{
-						$regexp = \rtrim($regexp, '+*?');
-						if (!empty($tokens[0]['quantifiers']) && $tokens[0]['quantifiers'] !== '?')
-							$regexp .= '*';
-					}
-					break;
-				case 2:
-					if ($tokens[0]['type'] === 'nonCapturingSubpatternStart'
-					 && $tokens[1]['type'] === 'nonCapturingSubpatternEnd')
-					{
-						$startPos = $tokens[0]['pos'];
-						$len      = $tokens[1]['pos'] + $tokens[1]['len'];
-						$isAtomic = (bool) ($startPos === 0 && $len === \strlen($regexp));
-						break;
-					}
-					default:
-					$isAtomic = \false;
-			}
-		}
-		if (!$isAtomic)
-			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
-		$regexp .= '?';
-		return $regexp;
-	}
-	protected static function generateCharacterClass(array $chars)
-	{
-		return self::$characterClassBuilder->fromList($chars);
-	}
-	protected static function canBeUsedInCharacterClass($char)
-	{
-		if (\preg_match('#^\\\\[aefnrtdDhHsSvVwW]$#D', $char))
-			return \true;
-		if (\preg_match('#^\\\\[^A-Za-z0-9]$#Dus', $char))
-			return \true;
-		if (\preg_match('#..#Dus', $char))
-			return \false;
-		if (\preg_quote($char) !== $char
-		 && !\preg_match('#^[-!:<=>}]$#D', $char))
-			return \false;
-		return \true;
-	}
-	protected static function optimizeDotChains(array &$chains)
-	{
-		$validAtoms = [
-			'\\d' => 1, '\\D' => 1, '\\h' => 1, '\\H' => 1,
-			'\\s' => 1, '\\S' => 1, '\\v' => 1, '\\V' => 1,
-			'\\w' => 1, '\\W' => 1,
-			'\\^' => 1, '\\$' => 1, '\\.' => 1, '\\?' => 1,
-			'\\[' => 1, '\\]' => 1, '\\(' => 1, '\\)' => 1,
-			'\\+' => 1, '\\*' => 1, '\\\\' => 1
-		];
-		do
-		{
-			$hasMoreDots = \false;
-			foreach ($chains as $k1 => $dotChain)
-			{
-				$dotKeys = \array_keys($dotChain, '.?', \true);
-				if (!empty($dotKeys))
-				{
-					$dotChain[$dotKeys[0]] = '.';
-					$chains[$k1] = $dotChain;
-					\array_splice($dotChain, $dotKeys[0], 1);
-					$chains[] = $dotChain;
-					if (isset($dotKeys[1]))
-						$hasMoreDots = \true;
-				}
-			}
-		}
-		while ($hasMoreDots);
-		foreach ($chains as $k1 => $dotChain)
-		{
-			$dotKeys = \array_keys($dotChain, '.', \true);
-			if (empty($dotKeys))
-				continue;
-			foreach ($chains as $k2 => $tmpChain)
-			{
-				if ($k2 === $k1)
-					continue;
-				foreach ($dotKeys as $dotKey)
-				{
-					if (!isset($tmpChain[$dotKey]))
-						continue 2;
-					if (!\preg_match('#^.$#Du', \preg_quote($tmpChain[$dotKey]))
-					 && !isset($validAtoms[$tmpChain[$dotKey]]))
-						continue 2;
-					$tmpChain[$dotKey] = '.';
-				}
-				if ($tmpChain === $dotChain)
-					unset($chains[$k2]);
-			}
-		}
-	}
-	protected static function optimizeCatchallChains(array &$chains)
-	{
-		$precedence = [
-			'.*'  => 3,
-			'.*?' => 2,
-			'.+'  => 1,
-			'.+?' => 0
-		];
-		$tails = [];
-		foreach ($chains as $k => $chain)
-		{
-			if (!isset($chain[0]))
-				continue;
-			$head = $chain[0];
-			if (!isset($precedence[$head]))
-				continue;
-			$tail = \implode('', \array_slice($chain, 1));
-			if (!isset($tails[$tail])
-			 || $precedence[$head] > $tails[$tail]['precedence'])
-				$tails[$tail] = [
-					'key'        => $k,
-					'precedence' => $precedence[$head]
-				];
-		}
-		$catchallChains = [];
-		foreach ($tails as $tail => $info)
-			$catchallChains[$info['key']] = $chains[$info['key']];
-		foreach ($catchallChains as $k1 => $catchallChain)
-		{
-			$headExpr = $catchallChain[0];
-			$tailExpr = \false;
-			$match    = \array_slice($catchallChain, 1);
-			if (isset($catchallChain[1])
-			 && isset($precedence[\end($catchallChain)]))
-				$tailExpr = \array_pop($match);
-			$matchCnt = \count($match);
-			foreach ($chains as $k2 => $chain)
-			{
-				if ($k2 === $k1)
-					continue;
-				$start = 0;
-				$end = \count($chain);
-				if ($headExpr[1] === '+')
-				{
-					$found = \false;
-					foreach ($chain as $start => $atom)
-						if (self::matchesAtLeastOneCharacter($atom))
-						{
-							$found = \true;
-							break;
-						}
-					if (!$found)
-						continue;
-				}
-				if ($tailExpr === \false)
-					$end = $start;
-				else
-				{
-					if ($tailExpr[1] === '+')
-					{
-						$found = \false;
-						while (--$end > $start)
-							if (self::matchesAtLeastOneCharacter($chain[$end]))
-							{
-								$found = \true;
-								break;
-							}
-						if (!$found)
-							continue;
-					}
-					$end -= $matchCnt;
-				}
-				while ($start <= $end)
-				{
-					if (\array_slice($chain, $start, $matchCnt) === $match)
-					{
-						unset($chains[$k2]);
-						break;
-					}
-					++$start;
-				}
-			}
-		}
-	}
-	protected static function matchesAtLeastOneCharacter($expr)
-	{
-		if (\preg_match('#^[$*?^]$#', $expr))
-			return \false;
-		if (\preg_match('#^.$#u', $expr))
-			return \true;
-		if (\preg_match('#^.\\+#u', $expr))
-			return \true;
-		if (\preg_match('#^\\\\[^bBAZzGQEK1-9](?![*?])#', $expr))
-			return \true;
-		return \false;
-	}
-	protected static function canUseAtomicGrouping($expr)
-	{
-		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\.#', $expr))
-			return \false;
-		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*[+*]#', $expr))
-			return \false;
-		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\(?(?<!\\()\\?#', $expr))
-			return \false;
-		if (\preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\\\[a-z0-9]#', $expr))
-			return \false;
-		return \true;
+		$builder = new Builder([
+			'delimiter' => $options['delimiter'],
+			'meta'      => $options['specialChars'],
+			'input'     => $options['unicode'] ? 'Utf8' : 'Bytes',
+			'output'    => $options['unicode'] ? 'Utf8' : 'Bytes'
+		]);
+		return $builder->build($words);
 	}
 }
 
@@ -1552,26 +968,6 @@ use DOMXPath;
 abstract class TemplateHelper
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
-	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getAttributesByRegexp($dom, $regexp);
-	}
-	public static function getCSSNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getCSSNodes($dom);
-	}
-	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getElementsByRegexp($dom, $regexp);
-	}
-	public static function getJSNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getJSNodes($dom);
-	}
-	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
-	{
-		return NodeLocator::getObjectParamsByRegexp($dom, $regexp);
-	}
 	public static function getParametersFromXSL($xsl)
 	{
 		$paramNames = [];
@@ -1592,10 +988,6 @@ abstract class TemplateHelper
 				}
 		\ksort($paramNames);
 		return \array_keys($paramNames);
-	}
-	public static function getURLNodes(DOMDocument $dom)
-	{
-		return NodeLocator::getURLNodes($dom);
 	}
 	public static function highlightNode(DOMNode $node, $prepend, $append)
 	{
@@ -1619,10 +1011,6 @@ abstract class TemplateHelper
 		$html = \str_replace($uniqid, '', $html);
 		return $html;
 	}
-	public static function loadTemplate($template)
-	{
-		return TemplateLoader::load($template);
-	}
 	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
 	{
 		$expr = 'name()';
@@ -1645,14 +1033,6 @@ abstract class TemplateHelper
 		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
 		foreach ($tagNames as $tagName)
 			$templates[$tagName] = $template;
-	}
-	public static function replaceTokens($template, $regexp, $fn)
-	{
-		return TemplateModifier::replaceTokens($template, $regexp, $fn);
-	}
-	public static function saveTemplate(DOMDocument $dom)
-	{
-		return TemplateLoader::save($dom);
 	}
 	protected static function getParametersFromExpression(DOMNode $node, $expr)
 	{
@@ -1703,7 +1083,7 @@ class TemplateInspector
 	protected $xpath;
 	public function __construct($template)
 	{
-		$this->dom   = TemplateHelper::loadTemplate($template);
+		$this->dom   = TemplateLoader::load($template);
 		$this->xpath = new DOMXPath($this->dom);
 		$this->defaultBranchBitfield = ElementInspector::getAllowChildBitfield($this->dom->createElement('div'));
 		$this->analyseRootNodes();
@@ -2000,6 +1380,7 @@ abstract class TemplateLoader
 	}
 	protected static function loadAsHTML($template)
 	{
+		$template = self::replaceCDATA($template);
 		$dom  = new DOMDocument;
 		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 		$useErrors = \libxml_use_internal_errors(\true);
@@ -2017,7 +1398,7 @@ abstract class TemplateLoader
 		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
 		$useErrors = \libxml_use_internal_errors(\true);
 		$dom       = new DOMDocument;
-		$success   = $dom->loadXML($xml, \LIBXML_NSCLEAN);
+		$success   = $dom->loadXML($xml, \LIBXML_NOCDATA | \LIBXML_NSCLEAN);
 		self::removeInvalidAttributes($dom);
 		\libxml_use_internal_errors($useErrors);
 		return ($success) ? $dom : \false;
@@ -2028,6 +1409,17 @@ abstract class TemplateLoader
 		foreach ($xpath->query('//@*') as $attribute)
 			if (!\preg_match('(^(?:[-\\w]+:)?(?!\\d)[-\\w]+$)D', $attribute->nodeName))
 				$attribute->parentNode->removeAttributeNode($attribute);
+	}
+	protected static function replaceCDATA($template)
+	{
+		return \preg_replace_callback(
+			'(<!\\[CDATA\\[(.*?)\\]\\]>)',
+			function ($m)
+			{
+				return \htmlspecialchars($m[1]);
+			},
+			$template
+		);
 	}
 }
 
@@ -2048,10 +1440,6 @@ class TemplateParser
 	{
 		$parser = new Parser(new Normalizer(new Optimizer));
 		return $parser->parse($template);
-	}
-	public static function parseEqualityExpr($expr)
-	{
-		return XPathHelper::parseEqualityExpr($expr);
 	}
 }
 
@@ -2097,6 +1485,28 @@ use RuntimeException;
 use s9e\TextFormatter\Utils\XPath;
 abstract class XPathHelper
 {
+	public static function decodeStrings($expr)
+	{
+		return \preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . \hex2bin($m[2]) . $m[1];
+			},
+			$expr
+		);
+	}
+	public static function encodeStrings($expr)
+	{
+		return \preg_replace_callback(
+			'(([\'"])(.*?)\\1)s',
+			function ($m)
+			{
+				return $m[1] . \bin2hex($m[2]) . $m[1];
+			},
+			$expr
+		);
+	}
 	public static function getVariables($expr)
 	{
 		$expr = \preg_replace('/(["\']).*?\\1/s', '$1$1', $expr);
@@ -2180,8 +1590,10 @@ abstract class XPathHelper
 */
 namespace s9e\TextFormatter\Configurator\Items;
 use DOMDocument;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateModifier;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 class Template
 {
@@ -2211,7 +1623,7 @@ class Template
 	}
 	public function getCSSNodes()
 	{
-		return TemplateHelper::getCSSNodes($this->asDOM());
+		return NodeLocator::getCSSNodes($this->asDOM());
 	}
 	public function getInspector()
 	{
@@ -2221,11 +1633,11 @@ class Template
 	}
 	public function getJSNodes()
 	{
-		return TemplateHelper::getJSNodes($this->asDOM());
+		return NodeLocator::getJSNodes($this->asDOM());
 	}
 	public function getURLNodes()
 	{
-		return TemplateHelper::getURLNodes($this->asDOM());
+		return NodeLocator::getURLNodes($this->asDOM());
 	}
 	public function getParameters()
 	{
@@ -2246,7 +1658,7 @@ class Template
 	public function replaceTokens($regexp, $fn)
 	{
 		$this->inspector    = \null;
-		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
+		$this->template     = TemplateModifier::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = \false;
 	}
 	public function setContent($template)
@@ -2267,40 +1679,40 @@ use InvalidArgumentException;
 class FunctionProvider
 {
 	public static $cache = [
-		'addslashes'=>'function(str)
+		'addslashes' => 'function(str)
 {
 	return str.replace(/["\'\\\\]/g, \'\\\\$&\').replace(/\\u0000/g, \'\\\\0\');
 }',
-		'dechex'=>'function(str)
+		'dechex' => 'function(str)
 {
 	return parseInt(str).toString(16);
 }',
-		'intval'=>'function(str)
+		'intval' => 'function(str)
 {
 	return parseInt(str) || 0;
 }',
-		'ltrim'=>'function(str)
+		'ltrim' => 'function(str)
 {
 	return str.replace(/^[ \\n\\r\\t\\0\\x0B]+/g, \'\');
 }',
-		'mb_strtolower'=>'function(str)
+		'mb_strtolower' => 'function(str)
 {
 	return str.toLowerCase();
 }',
-		'mb_strtoupper'=>'function(str)
+		'mb_strtoupper' => 'function(str)
 {
 	return str.toUpperCase();
 }',
-		'mt_rand'=>'function(min, max)
+		'mt_rand' => 'function(min, max)
 {
 	return (min + Math.floor(Math.random() * (max + 1 - min)));
 }',
-		'rawurlencode'=>'function(str)
+		'rawurlencode' => 'function(str)
 {
 	return encodeURIComponent(str).replace(
 		/[!\'()*]/g,
 		/**
-		* @param {!string} c
+		* @param {string} c
 		*/
 		function(c)
 		{
@@ -2308,11 +1720,11 @@ class FunctionProvider
 		}
 	);
 }',
-		'rtrim'=>'function(str)
+		'rtrim' => 'function(str)
 {
 	return str.replace(/[ \\n\\r\\t\\0\\x0B]+$/g, \'\');
 }',
-		'str_rot13'=>'function(str)
+		'str_rot13' => 'function(str)
 {
 	return str.replace(
 		/[a-z]/gi,
@@ -2322,37 +1734,37 @@ class FunctionProvider
 		}
 	);
 }',
-		'stripslashes'=>'function(str)
+		'stripslashes' => 'function(str)
 {
 	// NOTE: this will not correctly transform \\0 into a NULL byte. I consider this a feature
 	//       rather than a bug. There\'s no reason to use NULL bytes in a text.
 	return str.replace(/\\\\([\\s\\S]?)/g, \'\\\\1\');
 }',
-		'strrev'=>'function(str)
+		'strrev' => 'function(str)
 {
 	return str.split(\'\').reverse().join(\'\');
 }',
-		'strtolower'=>'function(str)
+		'strtolower' => 'function(str)
 {
 	return str.toLowerCase();
 }',
-		'strtotime'=>'function(str)
+		'strtotime' => 'function(str)
 {
 	return Date.parse(str) / 1000;
 }',
-		'strtoupper'=>'function(str)
+		'strtoupper' => 'function(str)
 {
 	return str.toUpperCase();
 }',
-		'trim'=>'function(str)
+		'trim' => 'function(str)
 {
 	return str.replace(/^[ \\n\\r\\t\\0\\x0B]+/g, \'\').replace(/[ \\n\\r\\t\\0\\x0B]+$/g, \'\');
 }',
-		'ucfirst'=>'function(str)
+		'ucfirst' => 'function(str)
 {
 	return str[0].toUpperCase() + str.substr(1);
 }',
-		'ucwords'=>'function(str)
+		'ucwords' => 'function(str)
 {
 	return str.replace(
 		/(?:^|\\s)[a-z]/g,
@@ -2362,11 +1774,11 @@ class FunctionProvider
 		}
 	);
 }',
-		'urldecode'=>'function(str)
+		'urldecode' => 'function(str)
 {
-	return decodeURIComponent(str);
+	return decodeURIComponent("" + str);
 }',
-		'urlencode'=>'function(str)
+		'urlencode' => 'function(str)
 {
 	return encodeURIComponent(str);
 }'
@@ -2383,6 +1795,124 @@ class FunctionProvider
 		}
 		throw new InvalidArgumentException("Unknown function '" . $funcName . "'");
 	}
+} declare(strict_types=1);
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator;
+use RuntimeException;
+use s9e\TextFormatter\Configurator\RecursiveParser\MatcherInterface;
+class RecursiveParser
+{
+	protected $callbacks = [];
+	protected $groupMatches = [];
+	protected $matchGroups = [];
+	protected $regexp;
+	public function parse(string $str, string $name = '')
+	{
+		$regexp = $this->regexp;
+		if ($name !== '')
+		{
+			$restrict = (isset($this->groupMatches[$name])) ? \implode('|', $this->groupMatches[$name]) : $name;
+			$regexp   = \preg_replace('(\\(\\?<(?!(?:' . $restrict . '|\\w+\\d+)>))', '(*F)$0', $regexp);
+		}
+		\preg_match($regexp, $str, $m);
+		if (!isset($m['MARK']))
+			throw new RuntimeException('Cannot parse ' . \var_export($str, \true));
+		$name = $m['MARK'];
+		$args = $this->getArguments($m, $name);
+		return [
+			'groups' => $this->matchGroups[$name] ?? [],
+			'match'  => $name,
+			'value'  => \call_user_func_array($this->callbacks[$name], $args)
+		];
+	}
+	public function setMatchers(array $matchers): void
+	{
+		$matchRegexps       = [];
+		$this->groupMatches = [];
+		$this->matchGroups  = [];
+		foreach ($this->getMatchersConfig($matchers) as $matchName => $matchConfig)
+		{
+			foreach ($matchConfig['groups'] as $group)
+				$this->groupMatches[$group][] = $matchName;
+			$regexp = $matchConfig['regexp'];
+			$regexp = $this->insertCaptureNames($matchName , $regexp);
+			$regexp = \str_replace(' ', '\\s*+', $regexp);
+			$regexp = '(?<' . $matchName  . '>' . $regexp . ')(*:' . $matchName  . ')';
+			$matchRegexps[]                = $regexp;
+			$this->callbacks[$matchName]   = $matchConfig['callback'];
+			$this->matchGroups[$matchName] = $matchConfig['groups'];
+		}
+		$groupRegexps = [];
+		foreach ($this->groupMatches as $group => $names)
+			$groupRegexps[] = '(?<' . $group . '>(?&' . \implode(')|(?&', $names) . '))';
+		$this->regexp = '((?(DEFINE)' . \implode('', $groupRegexps). ')^(?:' . \implode('|', $matchRegexps) . ')$)s';
+	}
+	protected function getArguments(array $matches, string $name): array
+	{
+		$args = [];
+		$i    = 0;
+		while (isset($matches[$name . $i]))
+		{
+			$args[] = $matches[$name . $i];
+			++$i;
+		}
+		return $args;
+	}
+	protected function getMatchersConfig(array $matchers): array
+	{
+		$matchersConfig = [];
+		foreach ($matchers as $matcher)
+			foreach ($matcher->getMatchers() as $matchName => $matchConfig)
+			{
+				if (\is_string($matchConfig))
+					$matchConfig = ['regexp' => $matchConfig];
+				$parts       = \explode(':', $matchName);
+				$matchName   = \array_pop($parts);
+				$matchConfig += [
+					'callback' => [$matcher, 'parse' . $matchName],
+					'groups'   => [],
+					'order'    => 0
+				];
+				$matchConfig['name']   = $matchName;
+				$matchConfig['groups'] = \array_unique(\array_merge($matchConfig['groups'], $parts));
+				\sort($matchConfig['groups']);
+				$matchersConfig[$matchName] = $matchConfig;
+			}
+		\uasort($matchersConfig, 'static::sortMatcherConfig');
+		return $matchersConfig;
+	}
+	protected function insertCaptureNames(string $name, string $regexp): string
+	{
+		$i = 0;
+		return \preg_replace_callback(
+			'((?<!\\\\)\\((?!\\?))',
+			function ($m) use (&$i, $name)
+			{
+				return '(?<' . $name . $i++ . '>';
+			},
+			$regexp
+		);
+	}
+	protected static function sortMatcherConfig(array $a, array $b): int
+	{
+		if ($a['order'] !== $b['order'])
+			return $a['order'] - $b['order'];
+		return \strcmp($a['name'], $b['name']);
+	}
+} declare(strict_types=1);
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RecursiveParser;
+interface MatcherInterface
+{
+	public function getMatchers(): array;
 }
 
 /*
@@ -3320,7 +2850,6 @@ class Serializer
 {
 	public $convertor;
 	protected $isVoid;
-	public $useMultibyteStringFunctions = \false;
 	protected $xpath;
 	public function __construct()
 	{
@@ -3328,13 +2857,14 @@ class Serializer
 	}
 	public function convertCondition($expr)
 	{
-		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 		return $this->convertor->convertCondition($expr);
 	}
 	public function convertXPath($expr)
 	{
-		$this->convertor->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
-		return $this->convertor->convertXPath($expr);
+		$php = $this->convertor->convertXPath($expr);
+		if (\is_numeric($php))
+			$php = "'" . $php . "'";
+		return $php;
 	}
 	public function serialize(DOMElement $ir)
 	{
@@ -3542,232 +3072,66 @@ class SwitchStatement
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
-use LogicException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Comparisons;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Core;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\MultiByteStringManipulation;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringManipulation;
 class XPathConvertor
 {
-	public $pcreVersion;
-	protected $regexp;
-	public $useMultibyteStringFunctions = \false;
-	public function __construct()
+	protected $parser;
+	public function __construct(RecursiveParser $parser = \null)
 	{
-		$this->pcreVersion = \PCRE_VERSION;
+		$this->parser = $parser ?: $this->getDefaultParser();
 	}
 	public function convertCondition($expr)
 	{
-		$expr = \trim($expr);
-		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
-			return '$node->hasAttribute(' . \var_export($m[1], \true) . ')';
-		if ($expr === '@*')
-			return '$node->attributes->length';
-		if (\preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
-			return '!$node->hasAttribute(' . \var_export($m[1], \true) . ')';
-		if (\preg_match('#^\\$(\\w+)$#', $expr, $m))
-			return '$this->params[' . \var_export($m[1], \true) . "]!==''";
-		if (\preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
-			return '$this->params[' . \var_export($m[1], \true) . "]===''";
-		if (\preg_match('#^([$@][-\\w]+)\\s*([<>])\\s*(\\d+)$#', $expr, $m))
-			return $this->convertXPath($m[1]) . $m[2] . $m[3];
-		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
+		$expr = \preg_replace(
+			'((^|\\(\\s*|\\b(?:and|or)\\s*)([\\(\\s]*)([$@][-\\w]+|@\\*)([\\)\\s]*)(?=$|\\s+(?:and|or)))',
+			'$1$2boolean($3)$4',
+			\trim($expr)
+		);
+		$expr = \preg_replace(
+			'(not\\(boolean\\(([$@][-\\w]+)\\)\\))',
+			'not($1)',
+			$expr
+		);
+		try
+		{
+			return $this->parser->parse($expr)['value'];
+		}
+		catch (RuntimeException $e)
+		{
+			}
+		if (!\preg_match('([=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\()', $expr))
 			$expr = 'boolean(' . $expr . ')';
-		return $this->convertXPath($expr);
+		return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
 	}
 	public function convertXPath($expr)
 	{
 		$expr = \trim($expr);
-		$this->generateXPathRegexp();
-		if (\preg_match($this->regexp, $expr, $m))
+		try
 		{
-			$methodName = \null;
-			foreach ($m as $k => $v)
-			{
-				if (\is_numeric($k) || $v === '' || $v === \null || !\method_exists($this, $k))
-					continue;
-				$methodName = $k;
-				break;
-			}
-			if (isset($methodName))
-			{
-				$args = [$m[$methodName]];
-				$i = 0;
-				while (isset($m[$methodName . $i]))
-				{
-					$args[$i] = $m[$methodName . $i];
-					++$i;
-				}
-				return \call_user_func_array([$this, $methodName], $args);
-			}
+			return $this->parser->parse($expr)['value'];
 		}
-		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
+		catch (RuntimeException $e)
+		{
+			}
+		if (!\preg_match('(^[-\\w]*s(?:late|pace|tring)[-\\w]*\\()', $expr))
 			$expr = 'string(' . $expr . ')';
 		return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
-	}
-	protected function attr($attrName)
-	{
-		return '$node->getAttribute(' . \var_export($attrName, \true) . ')';
-	}
-	protected function dot()
-	{
-		return '$node->textContent';
-	}
-	protected function param($paramName)
-	{
-		return '$this->params[' . \var_export($paramName, \true) . ']';
-	}
-	protected function string($string)
-	{
-		return \var_export(\substr($string, 1, -1), \true);
-	}
-	protected function lname()
-	{
-		return '$node->localName';
-	}
-	protected function name()
-	{
-		return '$node->nodeName';
-	}
-	protected function number($sign, $number)
-	{
-		$number = \ltrim($number, '0') ?: 0;
-		if (!$number)
-			$sign = '';
-		return "'" . $sign . $number . "'";
-	}
-	protected function strlen($expr)
-	{
-		if ($expr === '')
-			$expr = '.';
-		$php = $this->convertXPath($expr);
-		return ($this->useMultibyteStringFunctions)
-			? 'mb_strlen(' . $php . ",'utf-8')"
-			: "strlen(preg_replace('(.)us','.'," . $php . '))';
-	}
-	protected function contains($haystack, $needle)
-	{
-		return '(strpos(' . $this->convertXPath($haystack) . ',' . $this->convertXPath($needle) . ')!==false)';
-	}
-	protected function startswith($string, $substring)
-	{
-		return '(strpos(' . $this->convertXPath($string) . ',' . $this->convertXPath($substring) . ')===0)';
-	}
-	protected function not($expr)
-	{
-		return '!(' . $this->convertCondition($expr) . ')';
-	}
-	protected function notcontains($haystack, $needle)
-	{
-		return '(strpos(' . $this->convertXPath($haystack) . ',' . $this->convertXPath($needle) . ')===false)';
-	}
-	protected function substr($exprString, $exprPos, $exprLen = \null)
-	{
-		if (!$this->useMultibyteStringFunctions)
-		{
-			$expr = 'substring(' . $exprString . ',' . $exprPos;
-			if (isset($exprLen))
-				$expr .= ',' . $exprLen;
-			$expr .= ')';
-			return '$this->xpath->evaluate(' . $this->exportXPath($expr) . ',$node)';
-		}
-		$php = 'mb_substr(' . $this->convertXPath($exprString) . ',';
-		if (\is_numeric($exprPos))
-			$php .= \max(0, $exprPos - 1);
-		else
-			$php .= 'max(0,' . $this->convertXPath($exprPos) . '-1)';
-		$php .= ',';
-		if (isset($exprLen))
-			if (\is_numeric($exprLen))
-				if (\is_numeric($exprPos) && $exprPos < 1)
-					$php .= \max(0, $exprPos + $exprLen - 1);
-				else
-					$php .= \max(0, $exprLen);
-			else
-				$php .= 'max(0,' . $this->convertXPath($exprLen) . ')';
-		else
-			$php .= 'null';
-		$php .= ",'utf-8')";
-		return $php;
-	}
-	protected function substringafter($expr, $str)
-	{
-		return 'substr(strstr(' . $this->convertXPath($expr) . ',' . $this->convertXPath($str) . '),' . (\strlen($str) - 2) . ')';
-	}
-	protected function substringbefore($expr1, $expr2)
-	{
-		return 'strstr(' . $this->convertXPath($expr1) . ',' . $this->convertXPath($expr2) . ',true)';
-	}
-	protected function cmp($expr1, $operator, $expr2)
-	{
-		$operands  = [];
-		$operators = [
-			'='  => '===',
-			'!=' => '!==',
-			'>'  => '>',
-			'>=' => '>=',
-			'<'  => '<',
-			'<=' => '<='
-		];
-		foreach ([$expr1, $expr2] as $expr)
-			if (\is_numeric($expr))
-			{
-				$operators['=']  = '==';
-				$operators['!='] = '!=';
-				$operands[] = \preg_replace('(^0(.+))', '$1', $expr);
-			}
-			else
-				$operands[] = $this->convertXPath($expr);
-		return \implode($operators[$operator], $operands);
-	}
-	protected function bool($expr1, $operator, $expr2)
-	{
-		$operators = [
-			'and' => '&&',
-			'or'  => '||'
-		];
-		return $this->convertCondition($expr1) . $operators[$operator] . $this->convertCondition($expr2);
-	}
-	protected function parens($expr)
-	{
-		return '(' . $this->convertXPath($expr) . ')';
-	}
-	protected function translate($str, $from, $to)
-	{
-		\preg_match_all('(.)su', \substr($from, 1, -1), $matches);
-		$from = $matches[0];
-		\preg_match_all('(.)su', \substr($to, 1, -1), $matches);
-		$to = $matches[0];
-		$from = \array_unique($from);
-		$to   = \array_intersect_key($to, $from);
-		$to  += \array_fill_keys(\array_keys(\array_diff_key($from, $to)), '');
-		$php = 'strtr(' . $this->convertXPath($str) . ',';
-		if ([1] === \array_unique(\array_map('strlen', $from))
-		 && [1] === \array_unique(\array_map('strlen', $to)))
-			$php .= \var_export(\implode('', $from), \true) . ',' . \var_export(\implode('', $to), \true);
-		else
-		{
-			$elements = [];
-			foreach ($from as $k => $str)
-				$elements[] = \var_export($str, \true) . '=>' . \var_export($to[$k], \true);
-			$php .= '[' . \implode(',', $elements) . ']';
-		}
-		$php .= ')';
-		return $php;
-	}
-	protected function math($expr1, $operator, $expr2)
-	{
-		if (!\is_numeric($expr1))
-			$expr1 = $this->convertXPath($expr1);
-		if (!\is_numeric($expr2))
-			$expr2 = $this->convertXPath($expr2);
-		if ($operator === 'div')
-			$operator = '/';
-		return $expr1 . $operator . $expr2;
 	}
 	protected function exportXPath($expr)
 	{
 		$phpTokens = [];
-		foreach ($this->tokenizeXPathForExport($expr) as list($type, $content))
+		foreach ($this->tokenizeXPathForExport($expr) as [$type, $content])
 		{
-			$methodName  = 'exportXPath' . \ucfirst($type);
+			$methodName  = 'exportXPath' . $type;
 			$phpTokens[] = $this->$methodName($content);
 		}
 		return \implode('.', $phpTokens);
@@ -3785,137 +3149,33 @@ class XPathConvertor
 		$paramName = \ltrim($param, '$');
 		return '$this->getParamAsXPath(' . \var_export($paramName, \true) . ')';
 	}
-	protected function generateXPathRegexp()
+	protected function getDefaultParser()
 	{
-		if (isset($this->regexp))
-			return;
-		$patterns = [
-			'attr'      => ['@', '(?<attr0>[-\\w]+)'],
-			'dot'       => '\\.',
-			'name'      => 'name\\(\\)',
-			'lname'     => 'local-name\\(\\)',
-			'param'     => ['\\$', '(?<param0>\\w+)'],
-			'string'    => '"[^"]*"|\'[^\']*\'',
-			'number'    => ['(?<number0>-?)', '(?<number1>\\d++)'],
-			'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value)?)', '\\)'],
-			'contains'  => [
-				'contains',
-				'\\(',
-				'(?<contains0>(?&value))',
-				',',
-				'(?<contains1>(?&value))',
-				'\\)'
-			],
-			'translate' => [
-				'translate',
-				'\\(',
-				'(?<translate0>(?&value))',
-				',',
-				'(?<translate1>(?&string))',
-				',',
-				'(?<translate2>(?&string))',
-				'\\)'
-			],
-			'substr' => [
-				'substring',
-				'\\(',
-				'(?<substr0>(?&value))',
-				',',
-				'(?<substr1>(?&value))',
-				'(?:, (?<substr2>(?&value)))?',
-				'\\)'
-			],
-			'substringafter' => [
-				'substring-after',
-				'\\(',
-				'(?<substringafter0>(?&value))',
-				',',
-				'(?<substringafter1>(?&string))',
-				'\\)'
-			],
-			'substringbefore' => [
-				'substring-before',
-				'\\(',
-				'(?<substringbefore0>(?&value))',
-				',',
-				'(?<substringbefore1>(?&value))',
-				'\\)'
-			],
-			'startswith' => [
-				'starts-with',
-				'\\(',
-				'(?<startswith0>(?&value))',
-				',',
-				'(?<startswith1>(?&value))',
-				'\\)'
-			],
-			'math' => [
-				'(?<math0>(?&attr)|(?&number)|(?&param))',
-				'(?<math1>[-+*]|div)',
-				'(?<math2>(?&math)|(?&math0))'
-			],
-			'notcontains' => [
-				'not',
-				'\\(',
-				'contains',
-				'\\(',
-				'(?<notcontains0>(?&value))',
-				',',
-				'(?<notcontains1>(?&value))',
-				'\\)',
-				'\\)'
-			]
-		];
-		$exprs = [];
-		if (\version_compare($this->pcreVersion, '8.13', '>='))
-		{
-			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
-			$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)|(?&math)) \\))';
-			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&not)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&bool)|(?&cmp)|(?&not)|(?&value)|(?&parens)))';
-			$exprs[] = '(?<not>not \\( (?<not0>(?&bool)|(?&value)) \\))';
-			$patterns['math'][0] = \str_replace('))', ')|(?&parens))', $patterns['math'][0]);
-			$patterns['math'][1] = \str_replace('))', ')|(?&parens))', $patterns['math'][1]);
-		}
-		$valueExprs = [];
-		foreach ($patterns as $name => $pattern)
-		{
-			if (\is_array($pattern))
-				$pattern = \implode(' ', $pattern);
-			if (\strpos($pattern, '?&') === \false || \version_compare($this->pcreVersion, '8.13', '>='))
-				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
-		}
-		\array_unshift($exprs, '(?<value>' . \implode('|', $valueExprs) . ')');
-		$regexp = '#^(?:' . \implode('|', $exprs) . ')$#S';
-		$regexp = \str_replace(' ', '\\s*', $regexp);
-		$this->regexp = $regexp;
-	}
-	protected function matchXPathForExport($expr)
-	{
-		$tokenExprs = [
-			'(?<current>\\bcurrent\\(\\))',
-			'(?<param>\\$\\w+)',
-			'(?<fragment>"[^"]*"|\'[^\']*\'|.)'
-		];
-		\preg_match_all('(' . \implode('|', $tokenExprs) . ')s', $expr, $matches, \PREG_SET_ORDER);
-		$i = \count($matches);
-		while (--$i > 0)
-			if (isset($matches[$i]['fragment'], $matches[$i - 1]['fragment']))
-			{
-				$matches[$i - 1]['fragment'] .= $matches[$i]['fragment'];
-				unset($matches[$i]);
-			}
-		return \array_values($matches);
+		$parser     = new RecursiveParser;
+		$matchers   = [];
+		$matchers[] = new SingleByteStringFunctions($parser);
+		$matchers[] = new BooleanFunctions($parser);
+		$matchers[] = new BooleanOperators($parser);
+		$matchers[] = new Comparisons($parser);
+		$matchers[] = new Core($parser);
+		$matchers[] = new Math($parser);
+		if (\extension_loaded('mbstring'))
+			$matchers[] = new MultiByteStringManipulation($parser);
+		$matchers[] = new SingleByteStringManipulation($parser);
+		$parser->setMatchers($matchers);
+		return $parser;
 	}
 	protected function tokenizeXPathForExport($expr)
 	{
+		$tokenExprs = [
+			'(*:Current)\\bcurrent\\(\\)',
+			'(*:Param)\\$\\w+',
+			'(*:Fragment)(?:"[^"]*"|\'[^\']*\'|(?!current\\(\\)|\\$\\w).)++'
+		];
+		\preg_match_all('(' . \implode('|', $tokenExprs) . ')s', $expr, $matches, \PREG_SET_ORDER);
 		$tokens = [];
-		foreach ($this->matchXPathForExport($expr) as $match)
-			foreach (\array_reverse($match) as $k => $v)
-				if (!\is_numeric($k))
-				{
-					$tokens[] = [$k, $v];
-					break;
-				}
+		foreach ($matches as $m)
+			$tokens[] = [$m['MARK'], $m[0]];
 		return $tokens;
 	}
 }
@@ -3972,7 +3232,6 @@ use DOMXPath;
 abstract class AbstractNormalization
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
-	public $onlyOnce = \false;
 	protected $ownerDocument;
 	protected $queries = [];
 	protected $xpath;
@@ -4139,8 +3398,7 @@ trait Configurable
 		}
 		if ($this->$propName instanceof NormalizedCollection)
 		{
-			if (!\is_array($propValue)
-			 && !($propValue instanceof Traversable))
+			if (!\is_array($propValue) && !($propValue instanceof Traversable))
 				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
 			$this->$propName->clear();
 			foreach ($propValue as $k => $v)
@@ -4156,17 +3414,11 @@ trait Configurable
 		{
 			$oldType = \gettype($this->$propName);
 			$newType = \gettype($propValue);
-			if ($oldType === 'boolean')
-				if ($propValue === 'false')
-				{
-					$newType   = 'boolean';
-					$propValue = \false;
-				}
-				elseif ($propValue === 'true')
-				{
-					$newType   = 'boolean';
-					$propValue = \true;
-				}
+			if ($oldType === 'boolean' && \preg_match('(^(?:fals|tru)e$)', $propValue))
+			{
+				$newType   = 'boolean';
+				$propValue = ($propValue === 'true');
+			}
 			if ($oldType !== $newType)
 			{
 				$tmp = $propValue;
@@ -4190,18 +3442,12 @@ trait Configurable
 	{
 		$methodName = 'unset' . \ucfirst($propName);
 		if (\method_exists($this, $methodName))
-		{
 			$this->$methodName();
-			return;
-		}
-		if (!isset($this->$propName))
-			return;
-		if ($this->$propName instanceof Collection)
-		{
-			$this->$propName->clear();
-			return;
-		}
-		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
+		elseif (isset($this->$propName))
+			if ($this->$propName instanceof Collection)
+				$this->$propName->clear();
+			else
+				throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 }
 
@@ -4611,7 +3857,7 @@ use DOMElement;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 class Parser extends IRProcessor
 {
 	protected $normalizer;
@@ -4621,7 +3867,7 @@ class Parser extends IRProcessor
 	}
 	public function parse($template)
 	{
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 		$ir = new DOMDocument;
 		$ir->loadXML('<template/>');
 		$this->createXPath($dom);
@@ -5132,6 +4378,25 @@ class Code implements FilterableConfigValue
 	{
 		return ($target === 'JS') ? $this : \null;
 	}
+} declare(strict_types=1);
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RecursiveParser;
+abstract class AbstractRecursiveMatcher implements MatcherInterface
+{
+	protected $parser;
+	public function __construct(RecursiveParser $parser)
+	{
+		$this->parser = $parser;
+	}
+	protected function recurse(string $str, string $restrict = '')
+	{
+		return $this->parser->parse($str, $restrict)['value'];
+	}
 }
 
 /*
@@ -5165,7 +4430,6 @@ class PHP implements RendererGenerator
 	protected $normalizer;
 	public $optimizer;
 	public $serializer;
-	public $useMultibyteStringFunctions;
 	public function __construct($cacheDir = \null)
 	{
 		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : \sys_get_temp_dir();
@@ -5174,11 +4438,8 @@ class PHP implements RendererGenerator
 			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;
 			$this->optimizer = new Optimizer;
 		}
-		$this->useMultibyteStringFunctions = \extension_loaded('mbstring');
 		$this->serializer = new Serializer;
-		$this->normalizer = new TemplateNormalizer;
-		$this->normalizer->clear();
-		$this->normalizer->append('RemoveLivePreviewAttributes');
+		$this->normalizer = new TemplateNormalizer(['RemoveLivePreviewAttributes']);
 	}
 	public function getRenderer(Rendering $rendering)
 	{
@@ -5195,7 +4456,6 @@ class PHP implements RendererGenerator
 	}
 	public function generate(Rendering $rendering)
 	{
-		$this->serializer->useMultibyteStringFunctions = $this->useMultibyteStringFunctions;
 		$compiledTemplates = \array_map([$this, 'compileTemplate'], $rendering->getTemplates());
 		$php = [];
 		$php[] = ' extends \\s9e\\TextFormatter\\Renderers\\PHP';
@@ -5768,7 +5028,7 @@ namespace s9e\TextFormatter\Configurator;
 use ArrayAccess;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
@@ -5812,7 +5072,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 			return;
 		if (!isset($tag))
 			$tag = new Tag;
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 		foreach ($this->collection as $check)
 			$check->check($dom->documentElement, $tag);
 	}
@@ -6424,7 +5684,9 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 {
 	protected $queries = [
 		'//*[namespace-uri() != $XSL]/@*[contains(.,"{")]',
-		'//xsl:value-of'
+		'//xsl:if[@test]',
+		'//xsl:value-of[@select]',
+		'//xsl:when[@test]'
 	];
 	abstract protected function getOptimizationPasses();
 	protected function evaluateExpression($expr)
@@ -6449,9 +5711,34 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 			}
 		);
 	}
-	protected function normalizeElement(DOMElement $valueOf)
+	protected function normalizeElement(DOMElement $element)
 	{
-		$valueOf->setAttribute('select', $this->evaluateExpression($valueOf->getAttribute('select')));
+		$attrName = ($element->localName === 'value-of') ? 'select' : 'test';
+		$oldExpr  = $element->getAttribute($attrName);
+		$newExpr  = $this->evaluateExpression($oldExpr);
+		if ($newExpr !== $oldExpr)
+			$element->setAttribute($attrName, $newExpr);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+class DeoptimizeIf extends AbstractNormalization
+{
+	protected $queries = ['//xsl:if[@test]'];
+	protected function normalizeElement(DOMElement $if)
+	{
+		$choose = $this->createElement('xsl:choose');
+		$when   = $choose->appendChild($this->createElement('xsl:when'));
+		$when->setAttribute('test', $if->getAttribute('test'));
+		while ($if->firstChild)
+			$when->appendChild($if->firstChild);
+		$if->parentNode->replaceChild($choose, $if);
 	}
 }
 
@@ -6681,10 +5968,8 @@ class InlineXPathLiterals extends AbstractNormalization
 	];
 	protected function getTextContent($expr)
 	{
-		$expr = \trim($expr);
-		if (\preg_match('(^(?:\'[^\']*\'|"[^"]*")$)', $expr))
-			return \substr($expr, 1, -1);
-		if (\preg_match('(^0*([0-9]+(?:\\.[0-9]+)?)$)', $expr, $m))
+		$regexp = '(^(?|\'([^\']*)\'|"([^"]*)"|0*([0-9]+(?:\\.[0-9]+)?)|(false|true)\\s*\\(\\s*\\))$)';
+		if (\preg_match($regexp, \trim($expr), $m))
 			return $m[1];
 		return \false;
 	}
@@ -6864,13 +6149,13 @@ namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMAttr;
 use DOMElement;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Parser\AttributeFilters\UrlFilter;
 class NormalizeUrls extends AbstractNormalization
 {
 	protected function getNodes()
 	{
-		return TemplateHelper::getURLNodes($this->ownerDocument);
+		return NodeLocator::getURLNodes($this->ownerDocument);
 	}
 	protected function normalizeAttribute(DOMAttr $attribute)
 	{
@@ -7020,6 +6305,32 @@ class RemoveLivePreviewAttributes extends AbstractNormalization
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMAttr;
+use DOMElement;
+class RenameLivePreviewEvent extends AbstractNormalization
+{
+	protected $queries = [
+		'//*[@data-s9e-livepreview-postprocess]',
+		'//xsl:attribute/@name[. = "data-s9e-livepreview-postprocess"]'
+	];
+	protected function normalizeAttribute(DOMAttr $attribute)
+	{
+		$attribute->value = 'data-s9e-livepreview-onrender';
+	}
+	protected function normalizeElement(DOMElement $element)
+	{
+		$value = $element->getAttribute('data-s9e-livepreview-postprocess');
+		$element->setAttribute('data-s9e-livepreview-onrender', $value);
+		$element->removeAttribute('data-s9e-livepreview-postprocess');
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMElement;
 class SetRelNoreferrerOnTargetedLinks extends AbstractNormalization
 {
@@ -7063,10 +6374,7 @@ class UninlineAttributes extends AbstractNormalization
 	{
 		$fragment = $element->ownerDocument->createDocumentFragment();
 		while ($element->attributes->length > 0)
-		{
-			$attribute = $element->attributes->item(0);
-			$fragment->appendChild($this->uninlineAttribute($attribute));
-		}
+			$fragment->appendChild($this->uninlineAttribute($element->attributes->item(0)));
 		$element->insertBefore($fragment, $element->firstChild);
 	}
 	protected function uninlineAttribute(DOMAttr $attribute)
@@ -7109,41 +6417,50 @@ namespace s9e\TextFormatter\Configurator;
 use ArrayAccess;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 class TemplateNormalizer implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 	protected $collection;
+	protected $defaultNormalizations = [
+		'PreserveSingleSpaces',
+		'RemoveComments',
+		'RemoveInterElementWhitespace',
+		'NormalizeElementNames',
+		'FixUnescapedCurlyBracesInHtmlAttributes',
+		'EnforceHTMLOmittedEndTags',
+		'InlineCDATA',
+		'InlineElements',
+		'InlineTextElements',
+		'UninlineAttributes',
+		'MinifyXPathExpressions',
+		'NormalizeAttributeNames',
+		'OptimizeConditionalAttributes',
+		'FoldArithmeticConstants',
+		'FoldConstantXPathExpressions',
+		'InlineXPathLiterals',
+		'DeoptimizeIf',
+		'OptimizeChooseDeadBranches',
+		'OptimizeChooseText',
+		'OptimizeChoose',
+		'OptimizeConditionalValueOf',
+		'InlineAttributes',
+		'NormalizeUrls',
+		'InlineInferredValues',
+		'RenameLivePreviewEvent',
+		'SetRelNoreferrerOnTargetedLinks',
+		'MinifyInlineCSS'
+	];
 	protected $maxIterations = 100;
-	public function __construct()
+	public function __construct(array $normalizations = \null)
 	{
+		if (!isset($normalizations))
+			$normalizations = $this->defaultNormalizations;
 		$this->collection = new TemplateNormalizationList;
-		$this->collection->append('PreserveSingleSpaces');
-		$this->collection->append('RemoveComments');
-		$this->collection->append('RemoveInterElementWhitespace');
-		$this->collection->append('NormalizeElementNames');
-		$this->collection->append('FixUnescapedCurlyBracesInHtmlAttributes');
-		$this->collection->append('EnforceHTMLOmittedEndTags');
-		$this->collection->append('InlineCDATA');
-		$this->collection->append('InlineElements');
-		$this->collection->append('InlineTextElements');
-		$this->collection->append('UninlineAttributes');
-		$this->collection->append('MinifyXPathExpressions');
-		$this->collection->append('NormalizeAttributeNames');
-		$this->collection->append('OptimizeConditionalAttributes');
-		$this->collection->append('FoldArithmeticConstants');
-		$this->collection->append('FoldConstantXPathExpressions');
-		$this->collection->append('InlineXPathLiterals');
-		$this->collection->append('OptimizeChooseText');
-		$this->collection->append('OptimizeConditionalValueOf');
-		$this->collection->append('OptimizeChoose');
-		$this->collection->append('InlineAttributes');
-		$this->collection->append('NormalizeUrls');
-		$this->collection->append('InlineInferredValues');
-		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
-		$this->collection->append('MinifyInlineCSS');
+		foreach ($normalizations as $normalization)
+			$this->collection->append($normalization);
 	}
 	public function normalizeTag(Tag $tag)
 	{
@@ -7152,18 +6469,14 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	}
 	public function normalizeTemplate($template)
 	{
-		$dom = TemplateHelper::loadTemplate($template);
+		$dom = TemplateLoader::load($template);
 		$i = 0;
 		do
 		{
 			$old = $template;
 			foreach ($this->collection as $k => $normalization)
-			{
-				if ($i > 0 && !empty($normalization->onlyOnce))
-					continue;
 				$normalization->normalize($dom->documentElement);
-			}
-			$template = TemplateHelper::saveTemplate($dom);
+			$template = TemplateLoader::save($dom);
 		}
 		while (++$i < $this->maxIterations && $template !== $old);
 		return $template;
@@ -7430,10 +6743,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		'suspendAutoLineBreaks'       => 'addBooleanRule',
 		'trimFirstLine'               => 'addBooleanRule'
 	];
-	public function __construct()
-	{
-		$this->clear();
-	}
 	public function __call($methodName, array $args)
 	{
 		if (!isset($this->rules[$methodName]))
@@ -7512,7 +6821,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function remove($type, $tagName = \null)
 	{
 		if (\preg_match('(^default(?:Child|Descendant)Rule)', $type))
-			throw new RuntimeException('Cannot remove ' . $type);
+			throw new InvalidArgumentException('Cannot remove ' . $type);
 		if (isset($tagName))
 		{
 			$tagName = TagName::normalize($tagName);
@@ -7558,16 +6867,36 @@ abstract class Filter extends ProgrammableCallback
 * @copyright Copyright (c) 2010-2019 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+use s9e\TextFormatter\Configurator\RecursiveParser\AbstractRecursiveMatcher;
+abstract class AbstractConvertor extends AbstractRecursiveMatcher
+{
+	protected function getAttributeName($expr)
+	{
+		return \preg_replace('([\\s@])', '', $expr);
+	}
+	protected function normalizeNumber($sign, $number)
+	{
+		$number = \ltrim($number, '0');
+		return ($number === '') ? '0' : $sign . $number;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMElement;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 {
 	protected function getNodes(DOMElement $template)
 	{
-		return TemplateHelper::getCSSNodes($template->ownerDocument);
+		return NodeLocator::getCSSNodes($template->ownerDocument);
 	}
 	protected function isExpressionSafe($expr)
 	{
@@ -7586,14 +6915,14 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMElement;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 {
 	protected function getNodes(DOMElement $template)
 	{
-		return TemplateHelper::getJSNodes($template->ownerDocument);
+		return NodeLocator::getJSNodes($template->ownerDocument);
 	}
 	protected function isExpressionSafe($expr)
 	{
@@ -7614,15 +6943,16 @@ namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMAttr;
 use DOMElement;
 use DOMText;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\NodeLocator;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
 class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 {
-	protected $exceptionRegexp = '(^(?:(?!data|\\w*script)\\w+:|[^:]*/|#))i';
+	protected $safeUrlRegexp = '(^(?:(?!data|\\w*script)\\w+:|[^:]*/|#))i';
 	protected function getNodes(DOMElement $template)
 	{
-		return TemplateHelper::getURLNodes($template->ownerDocument);
+		return NodeLocator::getURLNodes($template->ownerDocument);
 	}
 	protected function isSafe(Attribute $attribute)
 	{
@@ -7630,17 +6960,36 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	}
 	protected function checkAttributeNode(DOMAttr $attribute, Tag $tag)
 	{
-		if (\preg_match($this->exceptionRegexp, $attribute->value))
-			return;
-		parent::checkAttributeNode($attribute, $tag);
+		if (!$this->isSafeUrl($attribute->value))
+			parent::checkAttributeNode($attribute, $tag);
 	}
 	protected function checkElementNode(DOMElement $element, Tag $tag)
 	{
-		if ($element->firstChild
-		 && $element->firstChild instanceof DOMText
-		 && \preg_match($this->exceptionRegexp, $element->firstChild->textContent))
-			return;
-		parent::checkElementNode($element, $tag);
+		if (!$this->elementHasSafeUrl($element))
+			parent::checkElementNode($element, $tag);
+	}
+	protected function chooseHasSafeUrl(DOMElement $choose)
+	{
+		$xpath        = new DOMXPath($choose->ownerDocument);
+		$hasOtherwise = \false;
+		foreach ($xpath->query('xsl:when | xsl:otherwise', $choose) as $branch)
+		{
+			if (!$this->elementHasSafeUrl($branch))
+				return \false;
+			if ($branch->nodeName === 'xsl:otherwise')
+				$hasOtherwise = \true;
+		}
+		return $hasOtherwise;
+	}
+	protected function elementHasSafeUrl(DOMElement $element)
+	{
+		if ($element->firstChild instanceof DOMElement && $element->firstChild->nodeName === 'xsl:choose')
+			return $this->chooseHasSafeUrl($element->firstChild);
+		return $element->firstChild instanceof DOMText && $this->isSafeUrl($element->firstChild->textContent);
+	}
+	protected function isSafeUrl($url)
+	{
+		return (bool) \preg_match($this->safeUrlRegexp, $url);
 	}
 }
 
@@ -7667,6 +7016,7 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 use s9e\TextFormatter\Utils\XPath;
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
@@ -7675,7 +7025,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 		$n = '-?\\.[0-9]++|-?[0-9]++(?:\\.[0-9]++)?';
 		return [
 			'(^[0-9\\s]*[-+][-+0-9\\s]+$)'                               => 'foldOperation',
-			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
+			'( \\+ 0(?= $| [-+\\)])|(?<![^\\(])0 \\+ )'                  => 'foldAdditiveIdentity',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
 			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
 			'(\\( (?:' . $n . ') (?>(?>[-+*]|div) (?:' . $n . ') )+\\))' => 'foldSubExpression',
@@ -7684,23 +7034,9 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function evaluateExpression($expr)
 	{
-		$expr = \preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
-			function ($m)
-			{
-				return $m[1] . \bin2hex($m[2]) . $m[1];
-			},
-			$expr
-		);
+		$expr = XPathHelper::encodeStrings($expr);
 		$expr = parent::evaluateExpression($expr);
-		$expr = \preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
-			function ($m)
-			{
-				return $m[1] . \hex2bin($m[2]) . $m[1];
-			},
-			$expr
-		);
+		$expr = XPathHelper::decodeStrings($expr);
 		return $expr;
 	}
 	protected function foldAdditiveIdentity(array $m)
@@ -7735,15 +7071,18 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use Exception;
 use s9e\TextFormatter\Utils\XPath;
 class FoldConstantXPathExpressions extends AbstractConstantFolding
 {
 	protected $supportedFunctions = [
+		'boolean',
 		'ceiling',
 		'concat',
 		'contains',
 		'floor',
 		'normalize-space',
+		'not',
 		'number',
 		'round',
 		'starts-with',
@@ -7752,18 +7091,13 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		'substring',
 		'substring-after',
 		'substring-before',
-		'sum',
 		'translate'
 	];
 	protected function getOptimizationPasses()
 	{
 		return [
-			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:<=>@[\\]])++$)' => 'foldConstantXPathExpression'
+			'(^(?:"[^"]*"|\'[^\']*\'|\\.[0-9]|[^"$&\'./:@[\\]])++$)' => 'foldConstantXPathExpression'
 		];
-	}
-	protected function canBeSerialized($value)
-	{
-		return (\is_string($value) || \is_integer($value) || \is_float($value));
 	}
 	protected function evaluate($expr)
 	{
@@ -7777,13 +7111,15 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		$expr = $m[0];
 		if ($this->isConstantExpression($expr))
 		{
-			$result = $this->evaluate($expr);
-			if ($this->canBeSerialized($result))
+			try
 			{
+				$result     = $this->evaluate($expr);
 				$foldedExpr = XPath::export($result);
-				if (\strlen($foldedExpr) < \strlen($expr))
-					$expr = $foldedExpr;
+				$expr       = $this->selectReplacement($expr, $foldedExpr);
 			}
+			catch (Exception $e)
+			{
+				}
 		}
 		return $expr;
 	}
@@ -7793,7 +7129,13 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 		\preg_match_all('(\\w[-\\w]+(?=\\())', $expr, $m);
 		if (\count(\array_diff($m[0], $this->supportedFunctions)) > 0)
 			return \false;
-		return !\preg_match('([^\\s\\-0-9a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
+		return !\preg_match('([^\\s!\\-0-9<=>a-z\\(-.]|\\.(?![0-9])|\\b[-a-z](?![-\\w]+\\()|\\(\\s*\\))i', $expr);
+	}
+	protected function selectReplacement($expr, $foldedExpr)
+	{
+		if (\strlen($foldedExpr) < \strlen($expr) || $foldedExpr === 'false()' || $foldedExpr === 'true()')
+			return $foldedExpr;
+		return $expr;
 	}
 }
 
@@ -7865,6 +7207,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 			$this->optimizeCommonFirstChild();
 			$this->optimizeCommonLastChild();
 			$this->optimizeCommonOnlyChild();
+			$this->optimizeEmptyBranch();
 			$this->optimizeEmptyOtherwise();
 		}
 		if ($this->isEmpty())
@@ -7886,6 +7229,17 @@ class OptimizeChoose extends AbstractChooseOptimization
 	{
 		while ($this->matchOnlyChild())
 			$this->reparentChild();
+	}
+	protected function optimizeEmptyBranch()
+	{
+		$query = 'count(xsl:when) = 1 and count(xsl:when/node()) = 0 and xsl:otherwise';
+		if (!$this->xpath->evaluate($query, $this->choose))
+			return;
+		$when = $this->xpath('xsl:when', $this->choose)[0];
+		$when->setAttribute('test', 'not(' . $when->getAttribute('test') . ')');
+		$otherwise = $this->xpath('xsl:otherwise', $this->choose)[0];
+		while ($otherwise->firstChild)
+			$when->appendChild($otherwise->removeChild($otherwise->firstChild));
 	}
 	protected function optimizeEmptyOtherwise()
 	{
@@ -7912,6 +7266,51 @@ class OptimizeChoose extends AbstractChooseOptimization
 		$childNode->appendChild($this->choose->parentNode->replaceChild($childNode, $this->choose));
 		foreach ($branches as $branch)
 			$this->adoptChildren($branch);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+class OptimizeChooseDeadBranches extends AbstractChooseOptimization
+{
+	protected function isAlwaysFalse($expr)
+	{
+		$regexp = '(^(?:""|\'\'|0|0*\\.0+|false\\s*\\(\\s*\\))$)';
+		return (bool) \preg_match($regexp, \trim($expr));
+	}
+	protected function isAlwaysTrue($expr)
+	{
+		$regexp = '(^(?:"[^"]++"|\'[^\']++\'|0[0-9]+|[1-9][0-9]*|[0-9]*\\.0*[1-9][0-9]*|true\\s*\\(\\s*\\))$)';
+		return (bool) \preg_match($regexp, \trim($expr));
+	}
+	protected function makeOtherwise(DOMElement $when)
+	{
+		$otherwise = $this->createElement('xsl:otherwise');
+		while ($when->firstChild)
+			$otherwise->appendChild($when->firstChild);
+		$when->parentNode->replaceChild($otherwise, $when);
+	}
+	protected function optimizeChoose()
+	{
+		$removeAll = \false;
+		$tests     = [];
+		foreach ($this->getBranches() as $branch)
+		{
+			$test = \trim($branch->getAttribute('test'));
+			if ($removeAll || isset($tests[$test]) || $this->isAlwaysFalse($test))
+				$branch->parentNode->removeChild($branch);
+			elseif ($this->isAlwaysTrue($test))
+			{
+				$removeAll = \true;
+				$this->makeOtherwise($branch);
+			}
+			$tests[$test] = 1;
+		}
 	}
 }
 
@@ -8315,8 +7714,443 @@ class TagFilter extends Filter
 * @copyright Copyright (c) 2010-2019 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class BooleanFunctions extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'Boolean:BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
+			'Boolean:False'         => 'false \\( \\)',
+			'Boolean:HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
+			'Boolean:HasAttributes' => 'boolean \\( @\\* \\)',
+			'Boolean:Not'           => [
+				'order'  => 100,
+				'regexp' => 'not \\( ((?&Boolean)|(?&BooleanExpression)) \\)'
+			],
+			'Boolean:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
+			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)',
+			'Boolean:True'          => 'true \\( \\)'
+		];
+	}
+	public function parseBooleanParam($expr)
+	{
+		return $this->recurse($expr) . "!==''";
+	}
+	public function parseFalse()
+	{
+		return 'false';
+	}
+	public function parseHasAttribute($expr)
+	{
+		$attrName = $this->getAttributeName($expr);
+		return '$node->hasAttribute(' . \var_export($attrName, \true) . ')';
+	}
+	public function parseHasAttributes()
+	{
+		return '$node->attributes->length';
+	}
+	public function parseNot($expr)
+	{
+		return '!(' . $this->recurse($expr) . ')';
+	}
+	public function parseNotAttribute($expr)
+	{
+		$attrName = $this->getAttributeName($expr);
+		return '!$node->hasAttribute(' . \var_export($attrName, \true) . ')';
+	}
+	public function parseNotParam($expr)
+	{
+		return $this->recurse($expr) . "===''";
+	}
+	public function parseTrue()
+	{
+		return 'true';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class BooleanOperators extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'BooleanExpression:And'  => '((?&Boolean)) and ((?&BooleanExpression)|(?&Boolean))',
+			'Boolean:BooleanSubExpr' => '\\( ((?&BooleanExpression)|(?&Boolean)) \\)',
+			'BooleanExpression:Or'   => '((?&Boolean)) or ((?&BooleanExpression)|(?&Boolean))'
+		];
+	}
+	public function parseAnd($expr1, $expr2)
+	{
+		return $this->recurse($expr1) . '&&' . $this->recurse($expr2);
+	}
+	public function parseBooleanSubExpr($expr)
+	{
+		return '(' . $this->recurse($expr) . ')';
+	}
+	public function parseOr($expr1, $expr2)
+	{
+		return $this->recurse($expr1) . '||' . $this->recurse($expr2);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class Comparisons extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		$nonzero = '(0*[1-9]\\d*)';
+		$number  = '(\\d+)';
+		$scalar  = '((?&Math)|(?&Number)|(?&String))';
+		return [
+			'Boolean:Eq'  => $scalar  . ' (!?=) ' . $scalar,
+			'Boolean:Gt'  => $scalar  . ' > '     . $number,
+			'Boolean:Gte' => $scalar  . ' >= '    . $nonzero,
+			'Boolean:Lt'  => $number  . ' < '     . $scalar,
+			'Boolean:Lte' => $nonzero . ' <= '    . $scalar
+		];
+	}
+	public function parseEq($expr1, $operator, $expr2)
+	{
+		$parsedExpr1 = $this->parser->parse($expr1);
+		$parsedExpr2 = $this->parser->parse($expr2);
+		$operator = $operator[0] . '=';
+		if (\in_array('String', $parsedExpr1['groups'], \true) && \in_array('String', $parsedExpr2['groups'], \true))
+			$operator .= '=';
+		return $parsedExpr1['value'] . $operator . $parsedExpr2['value'];
+	}
+	public function parseGt($expr1, $expr2)
+	{
+		return $this->convertComparison($expr1, '>', $expr2);
+	}
+	public function parseGte($expr1, $expr2)
+	{
+		return $this->convertComparison($expr1, '>=', $expr2);
+	}
+	public function parseLt($expr1, $expr2)
+	{
+		return $this->convertComparison($expr1, '<', $expr2);
+	}
+	public function parseLte($expr1, $expr2)
+	{
+		return $this->convertComparison($expr1, '<=', $expr2);
+	}
+	protected function convertComparison($expr1, $operator, $expr2)
+	{
+		return $this->recurse($expr1) . $operator . $this->recurse($expr2);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class Core extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'String:Attribute'     => '@ ([-\\w]+)',
+			'String:Dot'           => '\\.',
+			'Number:LiteralNumber' => '(-?) (\\d++)',
+			'String:LiteralString' => '("[^"]*"|\'[^\']*\')',
+			'String:LocalName'     => 'local-name \\(\\)',
+			'String:Name'          => 'name \\(\\)',
+			'String:Parameter'     => '\\$(\\w+)'
+		];
+	}
+	public function parseAttribute($attrName)
+	{
+		return '$node->getAttribute(' . \var_export($attrName, \true) . ')';
+	}
+	public function parseDot()
+	{
+		return '$node->textContent';
+	}
+	public function parseLiteralNumber($sign, $number)
+	{
+		return $this->normalizeNumber($sign, $number);
+	}
+	public function parseLiteralString($string)
+	{
+		return \var_export(\substr($string, 1, -1), \true);
+	}
+	public function parseLocalName()
+	{
+		return '$node->localName';
+	}
+	public function parseName()
+	{
+		return '$node->nodeName';
+	}
+	public function parseParameter($paramName)
+	{
+		return '$this->params[' . \var_export($paramName, \true) . ']';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class Math extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		$number = '((?&Attribute)|(?&MathSubExpr)|(?&Number)|(?&Parameter))';
+		$math   = '((?&Math)|' . \substr($number, 1);
+		return [
+			'Math:Addition'       => $number . ' \\+ ' . $math,
+			'Math:Division'       => $number . ' div ' . $math,
+			'Math:MathSubExpr'    => '\\( ((?&Math)) \\)',
+			'Math:Multiplication' => $number . ' \\* ' . $math,
+			'Math:Substraction'   => $number . ' - ' . $math
+		];
+	}
+	public function parseAddition($expr1, $expr2)
+	{
+		return $this->convertOperation($expr1, '+', $expr2);
+	}
+	public function parseDivision($expr1, $expr2)
+	{
+		return $this->convertOperation($expr1, '/', $expr2);
+	}
+	public function parseMathSubExpr($expr)
+	{
+		return '(' . $this->recurse($expr) . ')';
+	}
+	public function parseMultiplication($expr1, $expr2)
+	{
+		return $this->convertOperation($expr1, '*', $expr2);
+	}
+	public function parseSubstraction($expr1, $expr2)
+	{
+		return $this->convertOperation($expr1, '-', $expr2);
+	}
+	protected function convertOperation($expr1, $operator, $expr2)
+	{
+		$expr1 = $this->recurse($expr1);
+		$expr2 = $this->recurse($expr2);
+		if ($operator === '-' && $expr2[0] === '-')
+			$operator .= ' ';
+		return $expr1 . $operator . $expr2;
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class MultiByteStringManipulation extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'String:Substring' => 'substring \\( ((?&String)) , ((?&Attribute)|(?&Math)|(?&Number)) (?:, ((?&Attribute)|(?&Math)|(?&Number)))? \\)'
+		];
+	}
+	public function parseSubstring($exprString, $exprPos, $exprLen = \null)
+	{
+		if (\is_numeric($exprPos) && \is_numeric($exprLen) && $exprPos < 1)
+			$exprLen += $exprPos - 1;
+		$args   = [];
+		$args[] = $this->recurse($exprString);
+		$args[] = $this->convertPos($exprPos);
+		$args[] = (isset($exprLen)) ? $this->convertLen($exprLen) : 'null';
+		$args[] = "'utf-8'";
+		return 'mb_substr(' . \implode(',', $args) . ')';
+	}
+	protected function convertLen($expr)
+	{
+		if (\is_numeric($expr))
+			return (string) \max(0, $expr);
+		return 'max(0,' . $this->recurse($expr) . ')';
+	}
+	protected function convertPos($expr)
+	{
+		if (\is_numeric($expr))
+			return (string) \max(0, $expr - 1);
+		return 'max(0,' . $this->recurse($expr) . '-1)';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class SingleByteStringFunctions extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'Boolean:Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
+			'Number:StringLength'   => 'string-length \\( ((?&String))? \\)'
+		];
+	}
+	public function parseContains($haystack, $needle)
+	{
+		return $this->generateContains($haystack, $needle, \true);
+	}
+	public function parseEndsWith($string, $substring)
+	{
+		return $this->generateEndsWith($string, $substring, \true);
+	}
+	public function parseNotContains($haystack, $needle)
+	{
+		return $this->generateContains($haystack, $needle, \false);
+	}
+	public function parseNotEndsWith($string, $substring)
+	{
+		return $this->generateEndsWith($string, $substring, \false);
+	}
+	public function parseNotStartsWith($string, $substring)
+	{
+		return $this->generateStartsWith($string, $substring, \false);
+	}
+	public function parseStartsWith($string, $substring)
+	{
+		return $this->generateStartsWith($string, $substring, \true);
+	}
+	public function parseStringLength($expr = '.')
+	{
+		return "preg_match_all('(.)su'," . $this->recurse($expr) . ')';
+	}
+	protected function generateContains($haystack, $needle, $bool)
+	{
+		$operator = ($bool) ? '!==' : '===';
+		return '(strpos(' . $this->recurse($haystack) . ',' . $this->recurse($needle) . ')' . $operator . 'false)';
+	}
+	protected function generateEndsWith($string, $substring, $bool)
+	{
+		return (\preg_match('(^(?:\'[^\']+\'|"[^"]+")$)D', $substring))
+		     ? $this->generateEndsWithLiteral($string, $substring, $bool)
+		     : $this->generateEndsWithExpression($string, $substring, $bool);
+	}
+	protected function generateEndsWithLiteral($string, $substring, $bool)
+	{
+		$operator = ($bool) ? '===' : '!==';
+		return '(substr(' . $this->recurse($string) . ',-' . (\strlen($substring) - 2) . ')' . $operator . $this->recurse($substring) . ')';
+	}
+	protected function generateEndsWithExpression($string, $substring, $bool)
+	{
+		$operator = ($bool) ? '' : '!';
+		return $operator . "preg_match('('.preg_quote(" . $this->recurse($substring) . ").'$)D'," . $this->recurse($string) . ')';
+	}
+	protected function generateStartsWith($string, $substring, $bool)
+	{
+		$operator = ($bool) ? '===' : '!==';
+		return '(strpos(' . $this->recurse($string) . ',' . $this->recurse($substring) . ')' . $operator . '0)';
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors;
+class SingleByteStringManipulation extends AbstractConvertor
+{
+	public function getMatchers(): array
+	{
+		return [
+			'String:Concat'          => 'concat \\( ((?&String)) ((?:, (?&String) )+)?\\)',
+			'String:NormalizeSpace'  => 'normalize-space \\( ((?&String)) \\)',
+			'String:SubstringAfter'  => 'substring-after \\( ((?&String)) , ((?&LiteralString)) \\)',
+			'String:SubstringBefore' => 'substring-before \\( ((?&String)) , ((?&String)) \\)',
+			'String:Translate'       => 'translate \\( ((?&String)) , ((?&LiteralString)) , ((?&LiteralString)) \\)'
+		];
+	}
+	public function parseConcat($expr1, $expr2 = \null)
+	{
+		$php = $this->recurse($expr1);
+		if (isset($expr2))
+			$php .= '.' . $this->recurse('concat(' . \ltrim($expr2, ',') . ')');
+		return $php;
+	}
+	public function parseNormalizeSpace($expr)
+	{
+		return "preg_replace('(\\\\s+)',' ',trim(" . $this->recurse($expr) . '))';
+	}
+	public function parseSubstringAfter($expr, $str)
+	{
+		return 'substr(strstr(' . $this->recurse($expr) . ',' . $this->recurse($str) . '),' . (\strlen($str) - 2) . ')';
+	}
+	public function parseSubstringBefore($expr1, $expr2)
+	{
+		return 'strstr(' . $this->recurse($expr1) . ',' . $this->recurse($expr2) . ',true)';
+	}
+	public function parseTranslate($expr, $from, $to)
+	{
+		$from = $this->splitStringChars($from);
+		$to   = $this->splitStringChars($to);
+		$to   = \array_pad($to, \count($from), '');
+		$from = \array_unique($from);
+		$to   = \array_intersect_key($to, $from);
+		$args = [$this->recurse($expr)];
+		if ($this->isAsciiChars($from) && $this->isAsciiChars($to))
+		{
+			$args[] = $this->serializeAsciiChars($from);
+			$args[] = $this->serializeAsciiChars($to);
+		}
+		else
+			$args[] = $this->serializeMap($from, $to);
+		return 'strtr(' . \implode(',', $args) . ')';
+	}
+	protected function isAsciiChars(array $chars)
+	{
+		return ([1] === \array_unique(\array_map('strlen', $chars)));
+	}
+	protected function serializeAsciiChars(array $chars)
+	{
+		return \var_export(\implode('', $chars), \true);
+	}
+	protected function serializeMap(array $from, array $to)
+	{
+		$elements = [];
+		foreach ($from as $k => $str)
+			$elements[] = \var_export($str, \true) . '=>' . \var_export($to[$k], \true);
+		return '[' . \implode(',', $elements) . ']';
+	}
+	protected function splitStringChars($string)
+	{
+		\preg_match_all('(.)su', \substr($string, 1, -1), $matches);
+		return $matches[0];
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\FilterHelper;
+use s9e\TextFormatter\Configurator\Items\Filter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 abstract class FilterChain extends NormalizedList
 {
@@ -8332,12 +8166,29 @@ abstract class FilterChain extends NormalizedList
 	}
 	public function normalizeValue($value)
 	{
-		$className  = $this->getFilterClassName();
+		if (\is_string($value) && \strpos($value, '(') !== \false)
+			return $this->createFilter($value);
+		$className = $this->getFilterClassName();
 		if ($value instanceof $className)
 			return $value;
 		if (!\is_callable($value))
 			throw new InvalidArgumentException('Filter ' . \var_export($value, \true) . ' is neither callable nor an instance of ' . $className);
 		return new $className($value);
+	}
+	protected function createFilter($filterString)
+	{
+		$config = FilterHelper::parse($filterString);
+		$filter = $this->normalizeValue($config['filter']);
+		if (isset($config['params']))
+		{
+			$filter->resetParameters();
+			foreach ($config['params'] as [$type, $value])
+			{
+				$methodName = 'addParameterBy' . $type;
+				$filter->$methodName($value);
+			}
+		}
+		return $filter;
 	}
 }
 

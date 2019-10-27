@@ -6,10 +6,11 @@
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown\Parser\Passes;
-class Subscript extends AbstractScript
+class InlineSpoiler extends AbstractInlineMarkup
 {
 	public function parse()
 	{
-		$this->parseAbstractScript('SUB', '~', '/~[^\\x17\\s!"#$%&\'()*+,\\-.\\/:;<=>?@[\\]^_`{}|~]++~?/', '/~\\([^\\x17()]++\\)/');
+		$this->parseInlineMarkup('>!', '/>![^\\x17]+?!</',         'ISPOILER');
+		$this->parseInlineMarkup('||', '/\\|\\|[^\\x17]+?\\|\\|/', 'ISPOILER');
 	}
 }

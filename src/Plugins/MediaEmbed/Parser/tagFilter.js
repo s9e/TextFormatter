@@ -1,9 +1,10 @@
 /**
-* @param {!Tag}    tag   The original tag
-* @param {!Object} hosts Map of [host => siteId]
-* @param {!Object} sites Map of [siteId => siteConfig]
+* @param {!Tag}    tag      The original tag
+* @param {!Object} hosts    Map of [host => siteId]
+* @param {!Object} sites    Map of [siteId => siteConfig]
+* @param {string}  cacheDir
 */
-function (tag, hosts, sites)
+function (tag, hosts, sites, cacheDir)
 {
 	/**
 	* Filter a MEDIA tag
@@ -131,9 +132,9 @@ function (tag, hosts, sites)
 	/**
 	* Return the siteId that corresponds to given URL
 	*
-	* @param  {string} url   Original URL
-	* @param  {!Array} hosts Map of [hostname => siteId]
-	* @return {string}       URL's siteId, or an empty string
+	* @param  {string}  url   Original URL
+	* @param  {!Object} hosts Map of [hostname => siteId]
+	* @return {string}        URL's siteId, or an empty string
 	*/
 	function getSiteIdFromUrl(url, hosts)
 	{

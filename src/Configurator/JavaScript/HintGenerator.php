@@ -46,8 +46,14 @@ class HintGenerator
 	}
 	protected function setRenderingHints()
 	{
-		$this->hints['postProcessing'] = (int) (\strpos($this->xsl, 'data-s9e-livepreview-postprocess') !== \false);
-		$this->hints['ignoreAttrs']    = (int) (\strpos($this->xsl, 'data-s9e-livepreview-ignore-attrs') !== \false);
+		$hints = [
+			'hash'        => 'data-s9e-livepreview-hash',
+			'ignoreAttrs' => 'data-s9e-livepreview-ignore-attrs',
+			'onRender'    => 'data-s9e-livepreview-onrender',
+			'onUpdate'    => 'data-s9e-livepreview-onupdate'
+		];
+		foreach ($hints as $hintName => $match)
+			$this->hints[$hintName] = (int) (\strpos($this->xsl, $match) !== \false);
 	}
 	protected function setRulesHints()
 	{

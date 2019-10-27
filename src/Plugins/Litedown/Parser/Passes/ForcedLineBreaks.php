@@ -13,7 +13,9 @@ class ForcedLineBreaks extends AbstractPass
 		$pos = $this->text->indexOf("  \n");
 		while ($pos !== \false)
 		{
-			$this->parser->addBrTag($pos + 2);
+			$this->parser->addBrTag($pos + 2)->cascadeInvalidationTo(
+				$this->parser->addVerbatim($pos + 2, 1)
+			);
 			$pos = $this->text->indexOf("  \n", $pos + 3);
 		}
 	}

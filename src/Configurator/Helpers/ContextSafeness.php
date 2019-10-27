@@ -18,6 +18,6 @@ abstract class ContextSafeness
 	}
 	public static function getDisallowedCharactersInJS()
 	{
-		return ['(', ')', '"', "'", '\\', "\r", "\n", "\xE2\x80\xA8", "\xE2\x80\xA9", ':', '%', '='];
+		return ['(', ')', '"', "'", '\\', '`', "\r", "\n", "\xE2\x80\xA8", "\xE2\x80\xA9", ':', '%', '='];
 	}
 }

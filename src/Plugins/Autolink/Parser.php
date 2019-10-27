@@ -18,12 +18,15 @@ class Parser extends ParserBase
 	{
 		if (!\preg_match('/^[^:]+:|^www\\./i', $url))
 			return;
-		$endTag = $this->parser->addEndTag($this->config['tagName'], $tagPos + \strlen($url), 0);
+		$endPos = $tagPos + \strlen($url);
+		$endTag = $this->parser->addEndTag($this->config['tagName'], $endPos, 0);
 		if ($url[3] === '.')
 			$url = 'http://' . $url;
 		$startTag = $this->parser->addStartTag($this->config['tagName'], $tagPos, 0, 1);
 		$startTag->setAttribute($this->config['attrName'], $url);
 		$startTag->pairWith($endTag);
+		$contentTag = $this->parser->addVerbatim($tagPos, $endPos - $tagPos, 1000);
+		$startTag->cascadeInvalidationTo($contentTag);
 	}
 	protected function trimUrl($url)
 	{
