@@ -14,6 +14,7 @@ foreach (glob(__DIR__ . '/../tests/.cache/minifier.*.js') as $filepath)
 	$file = file_get_contents($filepath);
 	$file = preg_replace('(<script>.*?(?:<|\\\\x3c)/script>)s',    '', $file);
 	$file = preg_replace('(data-s9e-livepreview-on\\w+="[^"]++")', '', $file);
+	$file = preg_replace('(\\$.)', '  ', $file);
 
 	foreach ($regexps as $regexp)
 	{
@@ -53,15 +54,15 @@ $knownVars['url']           = 1;
 $knownVars['window']        = 1;
 
 // Known false positives
-$knownVars['hljs']        = 1;
-$knownVars['hljsLoading'] = 1;
-$knownVars['id']          = 1;
-$knownVars['pok']         = 1;
-$knownVars['punycode']    = 1;
-$knownVars['s9e']         = 1;
-$knownVars['site']        = 1;
-$knownVars['port1']       = 1;
-$knownVars['port2']       = 1;
+$knownVars['hljs']       = 1;
+$knownVars['hljsLoader'] = 1;
+$knownVars['id']         = 1;
+$knownVars['pok']        = 1;
+$knownVars['punycode']   = 1;
+$knownVars['s9e']        = 1;
+$knownVars['site']       = 1;
+$knownVars['port1']      = 1;
+$knownVars['port2']      = 1;
 
 // Those are intentionally preserved
 $knownVars['host']   = 1;
