@@ -2,7 +2,8 @@ site_name: s9e\TextFormatter
 theme: readthedocs
 repo_url: https://github.com/s9e/TextFormatter/
 markdown_extensions:
-    - sane_lists
+  - sane_lists
+requirements_file: docs/requirements.txt
 nav:
   - Home: index.md
   - Getting started:
