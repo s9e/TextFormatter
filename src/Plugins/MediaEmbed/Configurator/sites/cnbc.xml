@@ -8,7 +8,7 @@
 	<extract>!cnbc\.com/gallery/\?video=(?'id'\d+)!</extract>
 	<scrape>
 		<match>!cnbc\.com/video/20\d\d/\d\d/\d\d/\w!</match>
-		<extract>!content_id'\s*:\s*'?(?'id'\d+)!</extract>
+		<extract>!byGuid=(?'id'\d+)!</extract>
 	</scrape>
 	<iframe src="https://player.cnbc.com/p/gZWlPC/cnbc_global?playertype=synd&amp;byGuid={@id}&amp;size=640_360"/>
 </site>
