@@ -2528,6 +2528,60 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853',
+				'<r><MEGAPHONE id="LKN8165322853">https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
+				'https://player.megaphone.fm/LKN8165322853',
+				'<r><MEGAPHONE id="LKN8165322853">https://player.megaphone.fm/LKN8165322853</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
+				'https://playlist.megaphone.fm/?e=BL3815124285',
+				'<r><MEGAPHONE id="BL3815124285">https://playlist.megaphone.fm/?e=BL3815124285</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
+				'https://traffic.megaphone.fm/BWG2907286286.mp3',
+				'<r><MEGAPHONE id="BWG2907286286">https://traffic.megaphone.fm/BWG2907286286.mp3</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
+				'https://megaphone.link/STU8778452176',
+				'<r><MEGAPHONE id="STU8778452176">https://megaphone.link/STU8778452176</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
+				'https://dcs.megaphone.fm/HSW1449223469.mp3?key=e9f77ccda70e1295a7d5ec683ace532d',
+				'<r><MEGAPHONE id="HSW1449223469">https://dcs.megaphone.fm/HSW1449223469.mp3?key=e9f77ccda70e1295a7d5ec683ace532d</MEGAPHONE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+				}
+			],
+			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
 				'<r><METACAFE id="10785282">http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</METACAFE></r>',
 				[],

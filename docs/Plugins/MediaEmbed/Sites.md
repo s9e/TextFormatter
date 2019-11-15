@@ -225,6 +225,10 @@
 		<td style="font-size:75%"><code>medium</code></td>
 		<td style="font-size:50%">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</td>
 	</tr>
+	<tr title="Megaphone">
+		<td style="font-size:75%"><code>megaphone</code></td>
+		<td style="font-size:50%">https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853<br/>https://player.megaphone.fm/LKN8165322853</td>
+	</tr>
 	<tr title="Metacafe">
 		<td style="font-size:75%"><code>metacafe</code></td>
 		<td style="font-size:50%">https://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</td>
