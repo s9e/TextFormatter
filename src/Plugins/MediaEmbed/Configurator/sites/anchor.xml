@@ -1,0 +1,9 @@
+<site name="Anchor" homepage="https://anchor.fm/">
+	<example>https://anchor.fm/aconversationwith/episodes/Answering-Voicemails-A-Conversation-With-You--2-e6e7lg</example>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>anchor.fm</host>
+	<extract>@anchor.fm/[-\w]+/episodes/(?:[-\w]+-)(?'id'\w+)(?![-\w])@</extract>
+	<iframe width="100%" height="102" max-width="700" src="//anchor.fm/embed/episodes/x-{@id}"/>
+</site>

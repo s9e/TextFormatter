@@ -1569,6 +1569,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://anchor.fm/blockhash-exploring-the-blockchain/episodes/Daniel-Gouldman---CEO-of-Ternio-e8vruo/a-a11ehhg',
+				'<r><ANCHOR id="e8vruo">https://anchor.fm/blockhash-exploring-the-blockchain/episodes/Daniel-Gouldman---CEO-of-Ternio-e8vruo/a-a11ehhg</ANCHOR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('anchor');
+				}
+			],
+			[
 				'http://audioboo.fm/boos/2439994-deadline-day-update',
 				'<r><AUDIOBOOM id="2439994">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOOM></r>',
 				[],
