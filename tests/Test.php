@@ -118,7 +118,7 @@ abstract class Test extends TestCase
 			{
 				$minifier = $this->configurator->javascript->setMinifier('ClosureCompilerApplication', $closureCompilerNative);
 				$minifier->cacheDir = $cacheDir;
-				$minifier->options .= ' --jscomp_error "*"';
+				$minifier->options .= ' --jscomp_error "*" --jscomp_off "strictCheckTypes"';
 			}
 		}
 

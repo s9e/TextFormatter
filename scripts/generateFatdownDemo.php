@@ -9,7 +9,7 @@ $configurator->enableJavaScript();
 $filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';
 $minifier = $configurator->javascript->setMinifier('ClosureCompilerApplication', $filepath);
 $minifier->cacheDir = __DIR__ . '/../tests/.cache';
-$minifier->options .= ' --jscomp_error "*"';
+$minifier->options .= ' --jscomp_error "*" --jscomp_off "strictCheckTypes"';
 
 $configurator->javascript->exports = ['disablePlugin', 'enablePlugin', 'preview'];
 
