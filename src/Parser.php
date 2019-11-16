@@ -1732,19 +1732,15 @@ class Parser
 
 		// Recompute the allowed tags
 		$allowed = [];
-		if ($tagFlags & self::RULE_IS_TRANSPARENT)
+		foreach ($this->context['allowed'] as $k => $v)
 		{
-			foreach ($this->context['allowed'] as $k => $v)
+			// If the current tag is not transparent, override the low bits (allowed children) of
+			// current context with its high bits (allowed descendants)
+			if (!($tagFlags & self::RULE_IS_TRANSPARENT))
 			{
-				$allowed[] = $tagConfig['allowed'][$k] & $v;
+				$v = ($v & 0xFF00) | ($v >> 8);
 			}
-		}
-		else
-		{
-			foreach ($this->context['allowed'] as $k => $v)
-			{
-				$allowed[] = $tagConfig['allowed'][$k] & (($v & 0xFF00) | ($v >> 8));
-			}
+			$allowed[] = $tagConfig['allowed'][$k] & $v;
 		}
 
 		// Use this tag's flags as a base for this context and add inherited rules

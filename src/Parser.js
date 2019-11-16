@@ -1687,20 +1687,16 @@ function pushContext(tag)
 
 	// Recompute the allowed tags
 	var allowed = [];
-	if (HINT.RULE_IS_TRANSPARENT && (tagFlags & RULE_IS_TRANSPARENT))
+	context.allowed.forEach(function(v, k)
 	{
-		context.allowed.forEach(function(v, k)
+		// If the current tag is not transparent, override the low bits (allowed children) of
+		// current context with its high bits (allowed descendants)
+		if (!HINT.RULE_IS_TRANSPARENT || !(tagFlags & RULE_IS_TRANSPARENT))
 		{
-			allowed.push(tagConfig.allowed[k] & v);
-		});
-	}
-	else
-	{
-		context.allowed.forEach(function(v, k)
-		{
-			allowed.push(tagConfig.allowed[k] & ((v & 0xFF00) | (v >> 8)));
-		});
-	}
+			v = (v & 0xFF00) | (v >> 8);
+		}
+		allowed.push(tagConfig.allowed[k] & v);
+	});
 
 	// Use this tag's flags as a base for this context and add inherited rules
 	var flags = tagFlags | (context.flags & RULES_INHERITANCE);
