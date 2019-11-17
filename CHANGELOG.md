@@ -1,3 +1,24 @@
+2.3.0 (2019-11-17)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/1ccc5c9c22603df36ff0628f4ff1aaae3d8a8fc4...7dde9892c03cf4106d7454f2fb0f1481f417e163)
+
+### Added
+
+ - `7dde9892c` Added support for custom header in generated PHP files
+ - `727da332c` Bundle: added getParser() and getRenderer() definitions to base class
+ - `e707f6f28` BundleGenerator: added support for bundling the JavaScript source
+ - `5c576086a` MediaEmbed: added Anchor
+ - `2ec9591ce` MediaEmbed: added Megaphone
+
+### Changed
+
+ - `729fbb540` MediaEmbed: updated CNBC
+ - `a669a53d4` Parser: simplified the computation of allowed tags in new context
+ - `e4030cf6a` StylesheetCompressor: split into smaller chunks to appease Google Closure Compiler
+ - `30654b4f5` Updated JavaScript Logger
+
+
 2.2.0 (2019-10-27)
 ==================
 
