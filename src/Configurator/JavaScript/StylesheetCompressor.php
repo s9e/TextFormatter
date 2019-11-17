@@ -73,8 +73,8 @@ class StylesheetCompressor
 
 		$str = $this->getCompressedStylesheet();
 
-		// Split the stylesheet's string into 4000 bytes chunk to appease Google Closure Compiler
-		$js = implode("+\n", array_map('json_encode', str_split($str, 4000)));
+		// Split the stylesheet's string into 2000 bytes chunks to appease Google Closure Compiler
+		$js = implode("+\n", array_map('json_encode', str_split($str, 2000)));
 		if (!empty($this->dictionary))
 		{
 			$js = '(' . $js . ').replace(' . $this->getReplacementRegexp() . ',function(k){return' . json_encode($this->dictionary) . '[k];})';
