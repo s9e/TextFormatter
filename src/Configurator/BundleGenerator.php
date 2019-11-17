@@ -122,9 +122,7 @@ class BundleGenerator
 		}
 
 		$php[] = '	/**';
-		$php[] = '	* Return a new instance of s9e\\TextFormatter\\Parser';
-		$php[] = '	*';
-		$php[] = '	* @return s9e\\TextFormatter\\Parser';
+		$php[] = '	* {@inheritdoc}';
 		$php[] = '	*/';
 		$php[] = '	public static function getParser()';
 		$php[] = '	{';
@@ -144,9 +142,7 @@ class BundleGenerator
 		$php[] = '	}';
 		$php[] = '';
 		$php[] = '	/**';
-		$php[] = '	* Return a new instance of s9e\\TextFormatter\\Renderer';
-		$php[] = '	*';
-		$php[] = '	* @return s9e\\TextFormatter\\Renderer';
+		$php[] = '	* {@inheritdoc}';
 		$php[] = '	*/';
 		$php[] = '	public static function getRenderer()';
 		$php[] = '	{';

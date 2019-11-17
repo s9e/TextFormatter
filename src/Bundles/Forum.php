@@ -20,9 +20,7 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	protected static $renderer;
 
 	/**
-	* Return a new instance of s9e\TextFormatter\Parser
-	*
-	* @return s9e\TextFormatter\Parser
+	* {@inheritdoc}
 	*/
 	public static function getParser()
 	{
@@ -30,9 +28,7 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	}
 
 	/**
-	* Return a new instance of s9e\TextFormatter\Renderer
-	*
-	* @return s9e\TextFormatter\Renderer
+	* {@inheritdoc}
 	*/
 	public static function getRenderer()
 	{

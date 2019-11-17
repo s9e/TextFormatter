@@ -7,10 +7,6 @@
 */
 namespace s9e\TextFormatter;
 
-/**
-* @method Parser   getParser()
-* @method Renderer getRenderer()
-*/
 abstract class Bundle
 {
 	/**
@@ -42,6 +38,20 @@ abstract class Bundle
 
 		return static::$renderer;
 	}
+
+	/**
+	* Return a new instance of s9e\TextFormatter\Parser
+	*
+	* @return Parser
+	*/
+	abstract public static function getParser();
+
+	/**
+	* Return a new instance of s9e\TextFormatter\Renderer
+	*
+	* @return Renderer
+	*/
+	abstract public static function getRenderer();
 
 	/**
 	* Parse given text using a singleton instance of the bundled Parser
