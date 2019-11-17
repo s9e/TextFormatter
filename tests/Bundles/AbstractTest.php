@@ -63,6 +63,15 @@ abstract class AbstractTest extends Test
 	}
 
 	/**
+	* @testdox getParser() returns a non-empty string
+	*/
+	public function testGetJS()
+	{
+		$className = static::getClassName();
+		$this->assertNotSame('', $className::getJS());
+	}
+
+	/**
 	* @testdox getParser() returns an instance of s9e\TextFormatter\Parser
 	*/
 	public function testGetParser()

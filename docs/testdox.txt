@@ -2449,6 +2449,8 @@ s9e\TextFormatter\Tests\Configurator\Bundle
 s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() returns the bundle's PHP source
  [x] generate() accepts namespaced class names
+ [x] generate() does not create a JS parser if JavaScript is not enabled
+ [x] generate() creates a JS parser if JavaScript is enabled
  [x] A custom serializer can be set in $bundleGenerator->serializer
  [x] A custom unserializer can be set in $bundleGenerator->unserializer
  [x] If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
@@ -7415,6 +7417,7 @@ s9e\TextFormatter\Tests\Utils
  [x] replaceAttributes() tests with data set #11
 
 s9e\TextFormatter\Tests\Bundle
+ [x] The default implementation for getJS() returns an empty string
  [x] parse() creates a parser, parses the input and returns the output
  [x] parse() reuses the same parser on consecutive calls
  [x] parse() executes static::$beforeParse before calling the parser's parse() method
@@ -7432,6 +7435,7 @@ s9e\TextFormatter\Tests\Bundle
 s9e\TextFormatter\Tests\Bundles\Fatdown
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
  [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a non-empty string
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
  [x] getParser() returns a new instance of s9e\TextFormatter\Parser
  [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
@@ -7473,6 +7477,7 @@ s9e\TextFormatter\Tests\Bundles\Fatdown
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
  [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a non-empty string
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
  [x] getParser() returns a new instance of s9e\TextFormatter\Parser
  [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer
@@ -7542,6 +7547,7 @@ s9e\TextFormatter\Tests\Bundles\Forum
 s9e\TextFormatter\Tests\Bundles\MediaPack
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser
  [x] getCachedParser() returns the same instance of s9e\TextFormatter\Parser
+ [x] getParser() returns a non-empty string
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
  [x] getParser() returns a new instance of s9e\TextFormatter\Parser
  [x] getCachedRenderer() returns an instance of s9e\TextFormatter\Renderer

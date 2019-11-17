@@ -54,6 +54,16 @@ abstract class Bundle
 	abstract public static function getRenderer();
 
 	/**
+	* Return the source of the JavaScript parser if available
+	*
+	* @return string
+	*/
+	public static function getJS()
+	{
+		return '';
+	}
+
+	/**
 	* Parse given text using a singleton instance of the bundled Parser
 	*
 	* @param  string $text Original text

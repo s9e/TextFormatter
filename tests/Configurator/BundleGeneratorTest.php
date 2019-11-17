@@ -33,6 +33,27 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox generate() does not create a JS parser if JavaScript is not enabled
+	*/
+	public function testNoJavaScript()
+	{
+		$php = $this->configurator->bundleGenerator->generate('Bundle');
+
+		$this->assertStringNotContainsString('getJS', $php);
+	}
+
+	/**
+	* @testdox generate() creates a JS parser if JavaScript is enabled
+	*/
+	public function testJavaScript()
+	{
+		$this->configurator->enableJavaScript();
+		$php = $this->configurator->bundleGenerator->generate('Bundle');
+
+		$this->assertStringContainsString('getJS', $php);
+	}
+
+	/**
 	* @testdox A custom serializer can be set in $bundleGenerator->serializer
 	*/
 	public function testCustomSerializer()

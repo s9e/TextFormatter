@@ -16,6 +16,14 @@ class BundleTest extends Test
 	}
 
 	/**
+	* @testdox The default implementation for getJS() returns an empty string
+	*/
+	public function testGetJS()
+	{
+		$this->assertSame('', DummyBundle::getJS());
+	}
+
+	/**
 	* @testdox parse() creates a parser, parses the input and returns the output
 	*/
 	public function testParse()

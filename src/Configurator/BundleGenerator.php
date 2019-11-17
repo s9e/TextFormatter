@@ -121,6 +121,18 @@ class BundleGenerator
 			}
 		}
 
+		if (isset($objects['js']))
+		{
+			$php[] = '	/**';
+			$php[] = '	* {@inheritdoc}';
+			$php[] = '	*/';
+			$php[] = '	public static function getJS()';
+			$php[] = '	{';
+			$php[] = '		return ' . var_export($objects['js'], true) . ';';
+			$php[] = '	}';
+			$php[] = '';
+		}
+
 		$php[] = '	/**';
 		$php[] = '	* {@inheritdoc}';
 		$php[] = '	*/';
