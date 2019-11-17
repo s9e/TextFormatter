@@ -3,6 +3,8 @@
 */
 function Logger()
 {
+	this.callbacks = {};
+	this.logs      = [];
 }
 
 /**
@@ -13,12 +15,12 @@ Logger.prototype.attrName;
 /**
 * @type {!Object.<string,!Array>} 2D array of [<log type> => [<callbacks>]]
 */
-Logger.prototype.callbacks = {};
+Logger.prototype.callbacks;
 
 /**
 * @type {!Array.<!Array>} Log entries in the form [[<type>,<msg>,<context>]]
 */
-Logger.prototype.logs = [];
+Logger.prototype.logs;
 
 /**
 * @type {?Tag} Tag being processed
