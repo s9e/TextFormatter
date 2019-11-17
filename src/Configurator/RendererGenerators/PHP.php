@@ -77,6 +77,15 @@ class PHP implements RendererGenerator
 	public $optimizer;
 
 	/**
+	* @var string File header
+	*/
+	public $phpHeader = '/**
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/';
+
+	/**
 	* @var Serializer Serializer
 	*/
 	public $serializer;
@@ -175,12 +184,7 @@ class PHP implements RendererGenerator
 		$this->lastClassName = $className;
 
 		// Prepare the header
-		$header = "\n"
-		        . "/**\n"
-		        . "* @package   s9e\TextFormatter\n"
-		        . "* @copyright Copyright (c) 2010-2019 The s9e Authors\n"
-		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
-		        . "*/\n";
+		$header = "\n" . $this->phpHeader . "\n";
 
 		// Declare the namespace and class name
 		$pos = strrpos($className, '\\');

@@ -54,6 +54,19 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox The bundle file contains the header set in $configurator->phpHeader
+	*/
+	public function testFileHeader()
+	{
+		$header = '/* doc goes here */';
+
+		$this->configurator->phpHeader = $header;
+		$php = $this->configurator->bundleGenerator->generate('Bundle');
+
+		$this->assertStringContainsString($header, $php);
+	}
+
+	/**
 	* @testdox A custom serializer can be set in $bundleGenerator->serializer
 	*/
 	public function testCustomSerializer()

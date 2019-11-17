@@ -113,6 +113,16 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox The file's first docblock can be set in $rendererGenerator->phpHeader
+	*/
+	public function testFileHeader()
+	{
+		$header = '/* doc goes here */';
+		$this->configurator->rendering->engine->phpHeader = $header;
+		$this->assertStringContainsString($header, $this->getRendererSource());
+	}
+
+	/**
 	* @testdox If $rendererGenerator->filepath is set, the renderer is saved to this file
 	*/
 	public function testFilepathProp()

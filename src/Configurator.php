@@ -64,6 +64,15 @@ class Configurator implements ConfigProvider
 	public $javascript;
 
 	/**
+	* @var string PHP files header
+	*/
+	public $phpHeader = '/**
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/';
+
+	/**
 	* @var PluginCollection Loaded plugins
 	*/
 	public $plugins;

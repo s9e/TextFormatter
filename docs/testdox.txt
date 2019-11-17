@@ -2451,6 +2451,7 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() accepts namespaced class names
  [x] generate() does not create a JS parser if JavaScript is not enabled
  [x] generate() creates a JS parser if JavaScript is enabled
+ [x] The bundle file contains the header set in $configurator->phpHeader
  [x] A custom serializer can be set in $bundleGenerator->serializer
  [x] A custom unserializer can be set in $bundleGenerator->unserializer
  [x] If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
@@ -6450,6 +6451,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] The prefix used for generated class names can be changed in $rendererGenerator->defaultClassPrefix
  [x] The class name can be set in $rendererGenerator->className
  [x] The class name can be namespaced
+ [x] The file's first docblock can be set in $rendererGenerator->phpHeader
  [x] If $rendererGenerator->filepath is set, the renderer is saved to this file
  [x] A path to a cache dir can be passed to the constructor
  [x] Uses the system's temporary files dir if no cache dir is passed to the constructor

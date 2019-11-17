@@ -53,6 +53,12 @@ class BundleGenerator
 		// Add default options
 		$options += ['autoInclude' => true];
 
+		// Copy the PHP files header if applicable
+		if ($this->configurator->rendering->engine instanceof PHP)
+		{
+			$this->configurator->rendering->engine->phpHeader = $this->configurator->phpHeader;
+		}
+
 		// Get the parser and renderer
 		$objects  = $this->configurator->finalize();
 		$parser   = $objects['parser'];
@@ -67,12 +73,8 @@ class BundleGenerator
 		}
 
 		// Start with the standard header
-		$php = [];
-		$php[] = '/**';
-		$php[] = '* @package   s9e\TextFormatter';
-		$php[] = '* @copyright Copyright (c) 2010-2019 The s9e Authors';
-		$php[] = '* @license   http://www.opensource.org/licenses/mit-license.php The MIT License';
-		$php[] = '*/';
+		$php   = [];
+		$php[] = $this->configurator->phpHeader;
 
 		if ($namespace)
 		{
