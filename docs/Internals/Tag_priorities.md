@@ -1,3 +1,6 @@
+Tags with a lower priority number are processed before those with a higher number.
+
+
 Plugin     | Tag name | Priority | Notes
 ---------- | -------- | -------: | -----
 Autoimage  | IMG      |        2 |
