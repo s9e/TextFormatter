@@ -15,13 +15,13 @@ class SingleByteStringFunctions extends AbstractConvertor
 	public function getMatchers(): array
 	{
 		return [
-			'Boolean:Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
-			'Boolean:EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
-			'Boolean:NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
-			'Number:StringLength'   => 'string-length \\( ((?&String))? \\)'
+			'Boolean:BooleanFunction:Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:BooleanFunction:EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
+			'Boolean:BooleanFunction:NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:BooleanFunction:NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:BooleanFunction:NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			'Boolean:BooleanFunction:StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
+			'Number:StringLength'                   => 'string-length \\( ((?&String))? \\)'
 		];
 	}
 

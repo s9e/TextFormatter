@@ -6232,6 +6232,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor
  [x] convertXPath() tests with data set #29
  [x] convertXPath() tests with data set #30
  [x] convertXPath() tests with data set #31
+ [x] convertXPath() tests with data set #32
+ [x] convertXPath() tests with data set #33
+ [x] convertXPath() tests with data set #34
  [x] convertCondition() tests with data set #0
  [x] convertCondition() tests with data set #1
  [x] convertCondition() tests with data set #2

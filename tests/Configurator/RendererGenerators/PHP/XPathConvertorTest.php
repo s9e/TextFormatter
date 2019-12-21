@@ -172,6 +172,18 @@ class XPathConvertorTest extends Test
 				'100 * (@height + 49) div @width',
 				"100*(\$node->getAttribute('height')+49)/\$node->getAttribute('width')"
 			],
+			[
+				'200 + boolean(@bar) * 200',
+				"200+\$node->hasAttribute('bar')*200"
+			],
+			[
+				'200 + (@bar > 0) * 200',
+				"200+(\$node->getAttribute('bar')>0)*200"
+			],
+			[
+				'contains(@foo, "foo") + string-length(@bar)',
+				"(strpos(\$node->getAttribute('foo'),'foo')!==false)+preg_match_all('(.)su',\$node->getAttribute('bar'))"
+			],
 		];
 	}
 

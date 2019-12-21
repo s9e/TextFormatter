@@ -14,7 +14,7 @@ class Math extends AbstractConvertor
 	*/
 	public function getMatchers(): array
 	{
-		$number = '((?&Attribute)|(?&MathSubExpr)|(?&Number)|(?&Parameter))';
+		$number = '((?&Attribute)|(?&BooleanFunction)|(?&BooleanSubExpr)|(?&MathSubExpr)|(?&Number)|(?&Parameter))';
 		$math   = '((?&Math)|' . substr($number, 1);
 
 		return [

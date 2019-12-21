@@ -15,18 +15,18 @@ class BooleanFunctions extends AbstractConvertor
 	public function getMatchers(): array
 	{
 		return [
-			'Boolean:BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
-			'Boolean:False'         => 'false \\( \\)',
-			'Boolean:HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
-			'Boolean:HasAttributes' => 'boolean \\( @\\* \\)',
-			'Boolean:Not'           => [
+			'Boolean:BooleanFunction:BooleanParam'  => 'boolean \\( ((?&Parameter)) \\)',
+			'Boolean:BooleanFunction:False'         => 'false \\( \\)',
+			'Boolean:BooleanFunction:HasAttribute'  => 'boolean \\( ((?&Attribute)) \\)',
+			'Boolean:BooleanFunction:HasAttributes' => 'boolean \\( @\\* \\)',
+			'Boolean:BooleanFunction:Not'           => [
 				// Only try matching generic not() invocations after special cases fail
 				'order'  => 100,
 				'regexp' => 'not \\( ((?&Boolean)|(?&BooleanExpression)) \\)'
 			],
-			'Boolean:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
-			'Boolean:NotParam'      => 'not \\( ((?&Parameter)) \\)',
-			'Boolean:True'          => 'true \\( \\)'
+			'Boolean:BooleanFunction:NotAttribute'  => 'not \\( ((?&Attribute)) \\)',
+			'Boolean:BooleanFunction:NotParam'      => 'not \\( ((?&Parameter)) \\)',
+			'Boolean:BooleanFunction:True'          => 'true \\( \\)'
 		];
 	}
 
