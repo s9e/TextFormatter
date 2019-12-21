@@ -160,6 +160,14 @@ class XPathHelperTest extends Test
 				'333 div 111',
 				'333div111'
 			],
+			[
+				'a1 - 1',
+				'a1 -1'
+			],
+			[
+				'12 - 5',
+				'12-5'
+			],
 		];
 	}
 
