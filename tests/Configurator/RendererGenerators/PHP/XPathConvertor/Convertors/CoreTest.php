@@ -20,6 +20,10 @@ class CoreTest extends AbstractConvertorTest
 				'@  foo',
 				"\$node->getAttribute('foo')"
 			],
+			[
+				'@foo-1',
+				"\$node->getAttribute('foo-1')"
+			],
 			// Dot
 			[
 				'.',

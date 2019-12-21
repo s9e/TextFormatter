@@ -15,7 +15,7 @@ class Core extends AbstractConvertor
 	public function getMatchers(): array
 	{
 		return [
-			'String:Attribute'     => '@ ([-\\w]+)',
+			'String:Attribute'     => '@ ([-\\w]++)',
 			'String:Dot'           => '\\.',
 			'Number:LiteralNumber' => '(-?) (\\d++)',
 			'String:LiteralString' => '("[^"]*"|\'[^\']*\')',

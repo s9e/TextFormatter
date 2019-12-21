@@ -6145,6 +6145,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Conve
  [x]  with data set #11
  [x]  with data set #12
  [x]  with data set #13
+ [x]  with data set #14
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math
  [x]  with data set #0
