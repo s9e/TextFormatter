@@ -82,6 +82,7 @@ class XPathHelperTest extends Test
 			[false, 'foodiv ( @height + 100 )'],
 			[true,  '@foo div (1+1)'],
 			[true,  '100*(49+@height)div@width'],
+			[true,  '400-200*boolean(@foo)'],
 		];
 	}
 

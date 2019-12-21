@@ -8,6 +8,13 @@
 namespace s9e\TextFormatter\Configurator\Helpers;
 
 use RuntimeException;
+use s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanFunctions;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Comparisons;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Core;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions;
 use s9e\TextFormatter\Utils\XPath;
 
 abstract class XPathHelper
@@ -77,14 +84,20 @@ abstract class XPathHelper
 	*/
 	public static function isExpressionNumeric($expr)
 	{
-		// Trim the expression and remove parentheses that are not part of a function call. PCRE
-		// does not support lookbehind assertions of variable length so we have to flip the string.
-		// We exclude the XPath operator "div" (flipped into "vid") to avoid false positives
-		$expr = strrev(preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', strrev($expr)));
-		$expr = str_replace(')', ' ', $expr);
-		if (preg_match('(^\\s*([$@][-\\w]++|-?\\.\\d++|-?\\d++(?:\\.\\d++)?)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
+		// Detect simple arithmetic operations
+		if (preg_match('(^([$@][-\\w]++|-?[.\\d]++)(?: *(?:[-*+]|div) *(?1))+$)', $expr))
 		{
 			return true;
+		}
+
+		// Try parsing the expression as a math expression
+		try
+		{
+			return (bool) self::getXPathParser()->parse($expr, 'Math');
+		}
+		catch (RuntimeException $e)
+		{
+			// Do nothing
 		}
 
 		return false;
@@ -222,5 +235,30 @@ abstract class XPathHelper
 		}
 
 		return $expr;
+	}
+
+	/**
+	* Generate and return a cached XPath parser with a default set of matchers
+	*
+	* @return RecursiveParser
+	*/
+	protected static function getXPathParser()
+	{
+		static $parser;
+		if (!isset($parser))
+		{
+			$parser     = new RecursiveParser;
+			$matchers   = [];
+			$matchers[] = new BooleanFunctions($parser);
+			$matchers[] = new BooleanOperators($parser);
+			$matchers[] = new Comparisons($parser);
+			$matchers[] = new Core($parser);
+			$matchers[] = new Math($parser);
+			$matchers[] = new SingleByteStringFunctions($parser);
+
+			$parser->setMatchers($matchers);
+		}
+
+		return $parser;
 	}
 }

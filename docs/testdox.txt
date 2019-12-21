@@ -1020,6 +1020,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper
  [x] isExpressionNumeric() tests with data set #17
  [x] isExpressionNumeric() tests with data set #18
  [x] isExpressionNumeric() tests with data set #19
+ [x] isExpressionNumeric() tests with data set #20
  [x] minify() tests with data set #0
  [x] minify() tests with data set #1
  [x] minify() tests with data set #2
