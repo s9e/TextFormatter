@@ -345,6 +345,10 @@
 		<td style="font-size:75%"><code>spotify</code></td>
 		<td style="font-size:50%">https://open.spotify.com/user/ryan.lloyd.french/playlist/4jHNeLTj7CnL5JwZzmnqOL<br/>https://open.spotify.com/track/3CPjqkaMwrbht1lJpELoY0?si=K7cm7-dWTR6U7BjDn1oP7g<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
 	</tr>
+	<tr title="Spreaker">
+		<td style="font-size:75%"><code>spreaker</code></td>
+		<td style="font-size:50%">https://www.spreaker.com/show/2-up-front_1<br/>https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</td>
+	</tr>
 	<tr title="Steam store">
 		<td style="font-size:75%"><code>steamstore</code></td>
 		<td style="font-size:50%">https://store.steampowered.com/app/250520/</td>

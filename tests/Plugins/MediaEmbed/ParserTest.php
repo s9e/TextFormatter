@@ -1132,6 +1132,26 @@ class ParserTest extends Test
 				null,
 				'assertRegexp'
 			],
+			[
+				'https://www.spreaker.com/show/2-up-front_1',
+				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
+			[
+				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
+				'<r><SPREAKER episode_id="12449095">https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</SPREAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
 //			[
 //				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
 //				'<r><STITCHER eid="37808629" fid="12645">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
@@ -1424,6 +1444,26 @@ class ParserTest extends Test
 					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://www.spreaker.com/show/2-up-front_1',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
+			[
+				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
 			[
@@ -3103,6 +3143,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'https://spreaker.com/episode/12449095',
+				'<r><SPREAKER episode_id="12449095">https://spreaker.com/episode/12449095</SPREAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
 			[
