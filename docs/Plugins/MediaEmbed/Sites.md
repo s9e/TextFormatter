@@ -297,10 +297,6 @@
 		<td style="font-size:75%"><code>pinterest</code></td>
 		<td style="font-size:50%">https://www.pinterest.com/pin/99360735500167749/<br/>https://www.pinterest.com/pinterest/official-news/</td>
 	</tr>
-	<tr title="Plays.tv">
-		<td style="font-size:75%"><code>playstv</code></td>
-		<td style="font-size:50%">https://plays.tv/s/Kt4onQhyyVyz<br/>https://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</td>
-	</tr>
 	<tr title="Podbean">
 		<td style="font-size:75%"><code>podbean</code></td>
 		<td style="font-size:50%">https://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>https://www.podbean.com/media/share/pb-qtwub-4ee10c</td>

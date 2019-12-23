@@ -1025,20 +1025,6 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'https://plays.tv/s/Kt4onQhyyVyz',
-				'<r><PLAYSTV id="565683db95f139f47e">https://plays.tv/s/Kt4onQhyyVyz</PLAYSTV></r>',
-				[],
-				function ($configurator)
-				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped();
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('playstv');
-				}
-			],
-			[
 				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
 				'<r><PODBEAN id="gupid-6a18d0">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
 				[],
@@ -2972,15 +2958,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('pinterest');
-				}
-			],
-			[
-				'https://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that',
-				'<r><PLAYSTV id="565683db95f139f47e">https://plays.tv/video/565683db95f139f47e/full-length-version-radeon-software-crimson-edition-is-amds-revolutionary-new-graphics-software-that</PLAYSTV></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('playstv');
 				}
 			],
 			[
