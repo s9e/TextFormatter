@@ -406,6 +406,21 @@ class RulesHandlingTest extends Test
 					$parser->addTagPair('X', 3, 0, 4, 0, -1);
 				}
 			],
+			[
+				"[code]\n...\n[/code]\n[code:123]\n...\n[/code:123]",
+				"<r><CODE><s>[code]</s><i>\n</i>...\n<e>[/code]</e></CODE>\n<CODE><s>[code:123]</s><i>\n</i>...\n<e>[/code:123]</e></CODE></r>",
+				function ($configurator)
+				{
+					$configurator->tags->add('CODE');
+					$configurator->tags->add('CODE')->rules->trimFirstLine();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('CODE', 0, 6);
+					$parser->addEndTag('CODE', 11, 7);
+					$parser->addTagPair('CODE', 19, 10, 34, 11);
+				}
+			],
 		];
 	}
 }

@@ -2817,6 +2817,7 @@ s9e\TextFormatter\Tests\Parser\RulesHandling
  [x] Works with data set #23
  [x] Works with data set #24
  [x] Works with data set #25
+ [x] Works with data set #26
 
 s9e\TextFormatter\Tests\Parser\AttributeFilters\AlnumFilter
  [x] Filter with data set #0

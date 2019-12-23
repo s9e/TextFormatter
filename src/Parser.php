@@ -1517,7 +1517,6 @@ class Parser
 		}
 
 		if ($tag->getFlags() & self::RULE_TRIM_FIRST_LINE
-		 && !$tag->getEndTag()
 		 && substr($this->text, $tag->getPos() + $tag->getLen(), 1) === "\n")
 		{
 			$this->addIgnoreTag($tag->getPos() + $tag->getLen(), 1);

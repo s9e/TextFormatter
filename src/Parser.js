@@ -1479,7 +1479,6 @@ function processStartTag(tag)
 
 	if (HINT.RULE_TRIM_FIRST_LINE
 	 && tag.getFlags() & RULE_TRIM_FIRST_LINE
-	 && !tag.getEndTag()
 	 && text[tag.getPos() + tag.getLen()] === "\n")
 	{
 		addIgnoreTag(tag.getPos() + tag.getLen(), 1);
