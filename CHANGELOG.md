@@ -1,3 +1,28 @@
+2.3.1 (2019-12-26)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/26d6ee3a931a25acfea3096f62f0cc42172f3859...84f8f35fdc9f636e9c18a39397baddf0cb99bd5d)
+
+### Added
+
+ - `abc127c7d` MediaEmbed: added Spreaker
+ - `0aaff6af6` XPathConvertor: added support for booleans in math expressions
+
+### Removed
+
+ - `0d8acace1` MediaEmbed: removed defunct site Plays.tv
+
+### Fixed
+
+ - `84f8f35fd` Parser: fixed trimFirstLine rule ignored on paired tags
+
+### Changed
+
+ - `0764f9e3c` XPathConvertor: do not backtrack on attribute names
+ - `07df31fbe` XPathHelper: improved minification of substractions
+ - `b19a9207e` XPathHelper: use the XPathConvertor parser for complex expressions
+
+
 2.3.0 (2019-11-17)
 ==================
 
