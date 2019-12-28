@@ -26,6 +26,10 @@ class ParserTest extends Test
 				'<r>Go to <URL url="http://www.example.com/">http://www.example.com/</URL> for more info</r>'
 			],
 			[
+				'GO TO HTTP://WWW.EXAMPLE.COM/ FOR MORE INFO',
+				'<r>GO TO <URL url="http://WWW.EXAMPLE.COM/">HTTP://WWW.EXAMPLE.COM/</URL> FOR MORE INFO</r>'
+			],
+			[
 				'Go to http://www.example.com/ for more info',
 				'<r>Go to <URL url="http://www.example.com/">http://www.example.com/</URL> for more info</r>'
 			],
