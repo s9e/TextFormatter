@@ -201,6 +201,15 @@ class ParserTest extends Test
 						");
 				}
 			],
+			[
+				'(mailto:user@localhost)',
+				'<r>(<URL url="mailto:user@localhost">mailto:user@localhost</URL>)</r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
+			],
 		];
 	}
 

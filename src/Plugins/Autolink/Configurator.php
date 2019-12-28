@@ -62,7 +62,7 @@ class Configurator extends ConfiguratorBase
 		];
 		if (!$this->matchWww)
 		{
-			$config['quickMatch'] = '://';
+			$config['quickMatch'] = ':';
 		}
 
 		return $config;
@@ -75,13 +75,13 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getRegexp()
 	{
-		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
+		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . ':';
 		if ($this->matchWww)
 		{
 			$anchor = '(?:' . $anchor . '|www\\.)';
 		}
 
-		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s()\\[\\]'
+		$regexp = '#\\b' . $anchor . '(?>[^\\s()\\[\\]'
 		        . '\\x{FF01}-\\x{FF0F}\\x{FF1A}-\\x{FF20}\\x{FF3B}-\\x{FF40}\\x{FF5B}-\\x{FF65}'
 		        . ']|\\([^\\s()]*\\)|\\[\\w*\\])++#Siu';
 
