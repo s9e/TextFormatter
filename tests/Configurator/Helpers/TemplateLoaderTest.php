@@ -167,9 +167,9 @@ class TemplateLoaderTest extends Test
 	}
 
 	/**
-	* @testdox load() converts HTML5 entities
+	* @testdox load() converts HTML5 entities in XSLT templates
 	*/
-	public function testLoadHtml5Entities()
+	public function testLoadHtml5EntitiesXslt()
 	{
 		$template = '<b title="&percnt;"><xsl:apply-templates/></b>';
 		$xml      = '<b title="%"><xsl:apply-templates/></b>';
