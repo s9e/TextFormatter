@@ -136,7 +136,26 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseDoubleQuotedString(string $str): string
 	{
-		return stripcslashes($str);
+		/**
+		* @link https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.double
+		*/
+		return preg_replace_callback(
+			'(\\\\([nrtvef\\\\$"]|[0-7]{1,3}|x[0-9A-Fa-f]{1,2}|u\\{[0-9A-Fa-f]+\\}))',
+			function ($m)
+			{
+				if ($m[1] === 'e')
+				{
+					return "\e";
+				}
+				if ($m[1][0] === 'u')
+				{
+					return html_entity_decode('&#x' . substr($m[1], 2, -1) . ';', ENT_QUOTES, 'utf-8');
+				}
+
+				return stripcslashes($m[0]);
+			},
+			$str
+		);
 	}
 
 	/**

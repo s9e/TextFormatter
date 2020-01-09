@@ -150,6 +150,22 @@ class FilterSyntaxMatcherTest extends Test
 				]
 			],
 			[
+				'foo("\\n\\r\\t\\v\\e\\f", "\\\\", "\\$", "\\"", "\\012", "\\77", "\\x40", "\\u{0040}")',
+				[
+					'filter' => 'foo',
+					'params' => [
+						['Value', "\n\r\t\v\e\f"],
+						['Value', "\\"],
+						['Value', "\$"],
+						['Value', "\""],
+						['Value', "\012"],
+						['Value', "\77"],
+						['Value', "\x40"],
+						['Value', "\u{0040}"]
+					]
+				]
+			],
+			[
 				"str_replace('\\\\\\'', '\\'', \$attrValue)",
 				[
 					'filter' => 'str_replace',
