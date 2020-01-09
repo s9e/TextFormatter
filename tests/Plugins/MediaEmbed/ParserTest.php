@@ -3123,6 +3123,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://open.spotify.com/episode/37Tik1kHq7J2WcYcoLiypt',
+				'<r><SPOTIFY id="episode/37Tik1kHq7J2WcYcoLiypt">https://open.spotify.com/episode/37Tik1kHq7J2WcYcoLiypt</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'https://spreaker.com/episode/12449095',
 				'<r><SPREAKER episode_id="12449095">https://spreaker.com/episode/12449095</SPREAKER></r>',
 				[],
@@ -4388,6 +4397,24 @@ class ParserTest extends Test
 			[
 				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
 				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/track/3lDpjvbifbmrmzWGE8F9zd" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'https://open.spotify.com/episode/37Tik1kHq7J2WcYcoLiypt',
+				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/episode/37Tik1kHq7J2WcYcoLiypt" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'https://open.spotify.com/show/6BKcIaN8Mcjg6v4iYLnCNY',
+				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/show/6BKcIaN8Mcjg6v4iYLnCNY" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
