@@ -28,10 +28,10 @@ abstract class XPathHelper
 	public static function decodeStrings($expr)
 	{
 		return preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
+			'(\'[^\']*+\'|"[^"]*+")',
 			function ($m)
 			{
-				return $m[1] . hex2bin($m[2]) . $m[1];
+				return $m[0][0] . hex2bin(substr($m[0], 1, -1)) . $m[0][0];
 			},
 			$expr
 		);
@@ -46,10 +46,10 @@ abstract class XPathHelper
 	public static function encodeStrings($expr)
 	{
 		return preg_replace_callback(
-			'(([\'"])(.*?)\\1)s',
+			'(\'[^\']*+\'|"[^"]*+")',
 			function ($m)
 			{
-				return $m[1] . bin2hex($m[2]) . $m[1];
+				return $m[0][0] . bin2hex(substr($m[0], 1, -1)) . $m[0][0];
 			},
 			$expr
 		);
