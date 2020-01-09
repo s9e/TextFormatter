@@ -167,6 +167,20 @@ class TemplateLoaderTest extends Test
 	}
 
 	/**
+	* @testdox load() converts HTML5 entities
+	*/
+	public function testLoadHtml5Entities()
+	{
+		$template = '<b title="&percnt;"><xsl:apply-templates/></b>';
+		$xml      = '<b title="%"><xsl:apply-templates/></b>';
+
+		$dom = TemplateLoader::load($template);
+		$this->assertInstanceOf('DOMDocument', $dom);
+
+		$this->assertSame($xml, $dom->saveXML($dom->documentElement->firstChild));
+	}
+
+	/**
 	* @testdox load() does not break numeric character references
 	*/
 	public function testLoadNumericCharacterReferences()

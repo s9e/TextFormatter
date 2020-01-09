@@ -97,7 +97,7 @@ abstract class TemplateLoader
 			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
 			function ($m)
 			{
-				return html_entity_decode($m[0], ENT_NOQUOTES, 'UTF-8');
+				return html_entity_decode($m[0], ENT_HTML5 | ENT_NOQUOTES, 'UTF-8');
 			},
 			preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
 		);

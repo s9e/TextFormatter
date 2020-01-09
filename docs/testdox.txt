@@ -895,6 +895,7 @@ Template Loader (s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader)
  [x] load() can load '<ul><li>one<li>two</ul>'
  [x] load() accepts unescaped ampersands
  [x] load() converts HTML entities
+ [x] load() converts HTML5 entities
  [x] load() does not break numeric character references
  [x] load() removes attributes with an invalid name
  [x] load() removes attributes with an invalid namespace in XML
