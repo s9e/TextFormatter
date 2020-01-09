@@ -543,13 +543,15 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines',
-				'<r><BBCNEWS id="p0784g1m/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>',
+				'(<r><BBCNEWS id="\\w+/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>)',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bbcnews');
-				}
+				},
+				null,
+				'assertRegexp'
 			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
