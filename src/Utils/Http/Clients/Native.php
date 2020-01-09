@@ -104,6 +104,7 @@ class Native extends Client
 	* @param  string      $method  Request method
 	* @param  string      $url     Request URL
 	* @param  array       $options Request options
+	* @param  string      $body    Request body
 	* @return string|bool          Response body or FALSE
 	*/
 	protected function request($method, $url, array $options, $body = '')

@@ -44,7 +44,6 @@ class BooleanFunctions extends AbstractConvertor
 	/**
 	* Convert a call to false()
 	*
-	* @param  string $expr
 	* @return string
 	*/
 	public function parseFalse()

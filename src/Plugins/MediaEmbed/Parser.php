@@ -210,9 +210,9 @@ class Parser extends ParserBase
 	* Scrape values and add them to current attributes
 	*
 	* @param  array       &$attributes Attributes
-	* @param  string|null  $cacheDir   Path to the cache directory
 	* @param  string       $url        Original URL
 	* @param  array        $config     Scraping config
+	* @param  string|null  $cacheDir   Path to the cache directory
 	* @return void
 	*/
 	protected static function scrape(array &$attributes, $url, array $config, $cacheDir)

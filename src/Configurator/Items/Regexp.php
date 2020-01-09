@@ -34,7 +34,8 @@ class Regexp implements ConfigProvider, FilterableConfigValue
 	/**
 	* Constructor
 	*
-	* @param  string $regexp PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
+	* @param string $regexp   PCRE regexp, with delimiters and modifiers, e.g. "/foo/i"
+	* @param bool   $isGlobal Whether this regexp should have the global flag set in JavaScript
 	*/
 	public function __construct($regexp, $isGlobal = false)
 	{

@@ -144,7 +144,8 @@ class Repository
 	* Replace var elements in given definition
 	*
 	* @param  DOMElement $node
-	* @return array      $vars
+	* @param  array      $vars
+	* @return void
 	*/
 	protected function replaceVars(DOMElement $node, array $vars)
 	{

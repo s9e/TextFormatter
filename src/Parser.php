@@ -962,6 +962,8 @@ class Parser
 	*
 	* @param  string   $pluginName
 	* @param  callback $parser
+	* @param  string   $regexp
+	* @param  integer  $limit
 	* @return void
 	*/
 	public function registerParser($pluginName, $parser, $regexp = null, $limit = PHP_INT_MAX)
