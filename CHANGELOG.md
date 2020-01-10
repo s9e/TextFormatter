@@ -1,3 +1,25 @@
+2.3.2 (2020-01-10)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/65a0605f163b8ffcf7145357f167b153f31cd168...0f71669094219adf9ea620acf870bff66d356b4d)
+
+### Added
+
+ - `f6c496721` Autolink: added support for rootless URLs
+ - `0f7166909` FilterSyntaxMatcher: added support for numeric literal separator
+ - `d519bad01` HTMLEntities: added support for HTML5 entities
+ - `076524e87` MediaEmbed: added support for Spotify podcasts
+ - `1bd195933` TemplateLoader: added support for HTML 5 entities in HTML templates
+ - `ba20ec844` TemplateLoader: added support for HTML 5 entities in XSLT templates
+
+### Changed
+
+ - `3fe1f6482` BBCodes: updated default CODE BBCode
+ - `b3cea0820` FilterSyntaxMatcher: improved support for escaped characters
+ - `94071e2fe` TemplateLoader: improved handling of HTML5's AMP entity
+ - `33d90df58` XPathHelper: rewritten string encoder
+
+
 2.3.1 (2019-12-26)
 ==================
 
