@@ -197,7 +197,7 @@ abstract class TemplateLoader
 			{
 				return html_entity_decode($m[0], ENT_HTML5 | ENT_NOQUOTES, 'UTF-8');
 			},
-			$template
+			str_replace('&AMP;', '&amp;', $template)
 		);
 	}
 }

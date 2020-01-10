@@ -171,8 +171,8 @@ class TemplateLoaderTest extends Test
 	*/
 	public function testLoadHtml5EntitiesXslt()
 	{
-		$template = '<b title="&percnt;"><xsl:apply-templates/></b>';
-		$xml      = '<b title="%"><xsl:apply-templates/></b>';
+		$template = '<b title="&percnt; &AMP;"><xsl:apply-templates/></b>';
+		$xml      = '<b title="% &amp;"><xsl:apply-templates/></b>';
 
 		$dom = TemplateLoader::load($template);
 		$this->assertInstanceOf('DOMDocument', $dom);
@@ -185,8 +185,8 @@ class TemplateLoaderTest extends Test
 	*/
 	public function testLoadHtml5EntitiesHtml()
 	{
-		$template = '<hr title="&percnt;">';
-		$xml      = '<hr title="%"/>';
+		$template = '<hr title="&percnt; &AMP;">';
+		$xml      = '<hr title="% &amp;"/>';
 
 		$dom = TemplateLoader::load($template);
 		$this->assertInstanceOf('DOMDocument', $dom);
