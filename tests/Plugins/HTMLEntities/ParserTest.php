@@ -55,6 +55,14 @@ class ParserTest extends Test
 				'&#00;&#32;',
 				'<r>&amp;#00;<HE char=" ">&amp;#32;</HE></r>'
 			],
+			[
+				'&#00;&#32;',
+				'<r>&amp;#00;<HE char=" ">&amp;#32;</HE></r>'
+			],
+			[
+				'&Hat;',
+				'<r><HE char="^">&amp;Hat;</HE></r>'
+			],
 		];
 	}
 

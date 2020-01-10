@@ -22,7 +22,7 @@ class Parser extends ParserBase
 		foreach ($matches as $m)
 		{
 			$entity = $m[0][0];
-			$chr    = html_entity_decode($entity, ENT_QUOTES, 'UTF-8');
+			$chr    = html_entity_decode($entity, ENT_HTML5 | ENT_QUOTES, 'UTF-8');
 
 			if ($chr === $entity || ord($chr) < 32)
 			{

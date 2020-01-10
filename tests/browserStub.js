@@ -13,6 +13,7 @@ document = {
 						function (entity)
 						{
 							var table = {
+								'&Hat;'    : '^',
 								'&lt;'     : '<',
 								'&gt;'     : '>',
 								'&amp;'    : '&',
