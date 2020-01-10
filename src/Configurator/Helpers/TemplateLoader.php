@@ -93,14 +93,10 @@ abstract class TemplateLoader
 	*/
 	protected static function fixEntities($template)
 	{
-		return preg_replace_callback(
-			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
-			function ($m)
-			{
-				return html_entity_decode($m[0], ENT_HTML5 | ENT_NOQUOTES, 'UTF-8');
-			},
-			preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
-		);
+		$template = self::replaceEntities($template);
+		$template = preg_replace('(&(?!quot;|amp;|apos;|lt;|gt;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template);
+
+		return $template;
 	}
 
 	/**
@@ -112,6 +108,7 @@ abstract class TemplateLoader
 	protected static function loadAsHTML($template)
 	{
 		$template = self::replaceCDATA($template);
+		$template = self::replaceEntities($template);
 
 		$dom  = new DOMDocument;
 		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
@@ -181,6 +178,24 @@ abstract class TemplateLoader
 			function ($m)
 			{
 				return htmlspecialchars($m[1]);
+			},
+			$template
+		);
+	}
+
+	/**
+	* Replace known HTML entities
+	*
+	* @param  string $template
+	* @return string
+	*/
+	protected static function replaceEntities(string $template): string
+	{
+		return preg_replace_callback(
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
+			function ($m)
+			{
+				return html_entity_decode($m[0], ENT_HTML5 | ENT_NOQUOTES, 'UTF-8');
 			},
 			$template
 		);

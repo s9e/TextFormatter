@@ -896,6 +896,7 @@ Template Loader (s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader)
  [x] load() accepts unescaped ampersands
  [x] load() converts HTML entities
  [x] load() converts HTML5 entities in XSLT templates
+ [x] load() converts HTML5 entities in HTML templates
  [x] load() does not break numeric character references
  [x] load() removes attributes with an invalid name
  [x] load() removes attributes with an invalid namespace in XML
