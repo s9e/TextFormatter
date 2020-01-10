@@ -502,6 +502,16 @@ Filter Syntax Matcher (s9e\TextFormatter\Tests\Configurator\Helpers\FilterSyntax
  [x] parse() tests with data set #22
  [x] parse() tests with data set #23
  [x] parse() tests with data set #24
+ [x] parse() tests with data set #25
+ [x] parse() tests with data set #26
+ [x] parse() tests with data set #27
+ [x] parse() tests with data set #28
+ [x] parse() tests with data set #29
+ [x] parse() tests with data set #30
+ [x] parse() tests with data set #31
+ [x] parse() tests with data set #32
+ [x] parse() tests with data set #33
+ [x] parse() tests with data set #34
 
 Element Inspector (s9e\TextFormatter\Tests\Configurator\Helpers\ElementInspector)
  [x] Test cases with data set #0

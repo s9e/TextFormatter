@@ -44,11 +44,11 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 			],
 			'Float' => [
 				'groups' => ['FilterArg', 'Literal', 'Scalar'],
-				'regexp' => '([-+]?(?:\\.[0-9]+|[0-9]+\\.[0-9]*|[0-9]+(?=[Ee]))(?:[Ee]-?[0-9]+)?)',
+				'regexp' => '([-+]?(?:\\.[0-9]+(?:_[0-9]+)*|[0-9]+(?:_[0-9]+)*\\.(?!_)[0-9]*(?:_[0-9]+)*|[0-9]+(?:_[0-9]+)*(?=[Ee]))(?:[Ee]-?[0-9]+(?:_[0-9]+)*)?)',
 			],
 			'Integer' => [
 				'groups' => ['FilterArg', 'Literal', 'Scalar'],
-				'regexp' => '(-?(?:0[Bb][01]+|0[Xx][0-9A-Fa-f]+|[0-9]+))',
+				'regexp' => '(-?(?:0[Bb][01]+(?:_[01]+)*|0[Xx][0-9A-Fa-f]+(?:_[0-9A-Fa-f]+)*|[0-9]+(?:_[0-9]+)*))',
 			],
 			'Null' => [
 				'groups' => ['FilterArg', 'Literal', 'Scalar'],
@@ -215,7 +215,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseFloat(string $str): float
 	{
-		return (float) $str;
+		return (float) str_replace('_', '', $str);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseInteger(string $str): int
 	{
-		return intval($str, 0);
+		return intval(str_replace('_', '', $str), 0);
 	}
 
 	/**

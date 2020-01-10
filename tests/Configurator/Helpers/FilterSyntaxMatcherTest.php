@@ -129,6 +129,57 @@ class FilterSyntaxMatcherTest extends Test
 				]
 			],
 			[
+				'foo(6.674_083e-11, 299_792_458, 0xCAFE_F00D, 0b0101_1111, 0137_041, 1_0.1_1e1_0)',
+				[
+					'filter' => 'foo',
+					'params' => [
+						['Value', 6.674083e-11],
+						['Value', 299792458   ],
+						['Value', 0xCAFEF00D  ],
+						['Value', 0b01011111  ],
+						['Value', 0137041     ],
+						['Value', 10.11e10    ]
+					]
+				]
+			],
+			// https://wiki.php.net/rfc/numeric_literal_separator#restrictions
+			[
+				'foo(_100)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(100_)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(1__1)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(1_.0)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(1._0)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(0x_123)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(0b_101)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(1_e2)',
+				new RuntimeException('Cannot parse')
+			],
+			[
+				'foo(1e_2)',
+				new RuntimeException('Cannot parse')
+			],
+			[
 				'foo(1.5, -.5)',
 				[
 					'filter' => 'foo',
