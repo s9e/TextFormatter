@@ -142,6 +142,10 @@ class XPathHelperTest extends Test
 				'@foo- -1=2'
 			],
 			[
+				'( ( ( 1 + 1 ) * 1 ) * 1 )',
+				'(((1+1)*1)*1)'
+			],
+			[
 				' foo or _bar ',
 				'foo or _bar'
 			],

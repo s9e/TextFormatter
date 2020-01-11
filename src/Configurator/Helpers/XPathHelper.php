@@ -124,11 +124,11 @@ abstract class XPathHelper
 		$expr = preg_replace('/\\s+/', ' ', $expr);
 
 		// Remove the space between a non-word character and a word character
-		$expr = preg_replace('/([-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
-		$expr = preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
+		$expr = preg_replace('/[-a-z_0-9]\\K (?=[^-a-z_0-9])/i', '', $expr);
+		$expr = preg_replace('/[^-a-z_0-9]\\K (?=[-a-z_0-9])/i', '', $expr);
 
 		// Remove the space between two non-word characters as long as they're not two -
-		$expr = preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+		$expr = preg_replace('/(?!- -)[^-a-z_0-9]\\K (?=[^-a-z_0-9])/i', '', $expr);
 
 		// Remove the space between a - and a word character, as long as there's a space before -
 		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
