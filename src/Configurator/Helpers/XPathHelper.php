@@ -111,26 +111,14 @@ abstract class XPathHelper
 	*/
 	public static function minify($expr)
 	{
-		$old     = $expr;
-		$strings = [];
+		preg_match_all('("[^"]*+"|\'[^\']*+\'|[\'"](*:X))', $expr, $m);
+		if (!empty($m['MARK']))
+		{
+			throw new RuntimeException("Cannot parse XPath expression '" . $expr . "'");
+		}
 
 		// Trim the surrounding whitespace then temporarily remove literal strings
-		$expr = preg_replace_callback(
-			'/"[^"]*"|\'[^\']*\'/',
-			function ($m) use (&$strings)
-			{
-				$uniqid = '(' . sha1(uniqid()) . ')';
-				$strings[$uniqid] = $m[0];
-
-				return $uniqid;
-			},
-			trim($expr)
-		);
-
-		if (preg_match('/[\'"]/', $expr))
-		{
-			throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
-		}
+		$expr = self::encodeStrings(trim($expr));
 
 		// Normalize whitespace to a single space
 		$expr = preg_replace('/\\s+/', ' ', $expr);
@@ -152,7 +140,7 @@ abstract class XPathHelper
 		$expr = preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
 
 		// Restore the literals
-		$expr = strtr($expr, $strings);
+		$expr = self::decodeStrings($expr);
 
 		return $expr;
 	}
