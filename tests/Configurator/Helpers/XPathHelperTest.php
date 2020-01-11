@@ -166,12 +166,20 @@ class XPathHelperTest extends Test
 				'333div111'
 			],
 			[
+				'(1 + 1) div 111',
+				'(1+1)div111'
+			],
+			[
 				'a1 - 1',
 				'a1 -1'
 			],
 			[
 				'12 - 5',
 				'12-5'
+			],
+			[
+				"starts-with(@id, 'episode/') or starts-with(@id, 'show/')",
+				"starts-with(@id,'episode/')orstarts-with(@id,'show/')"
 			],
 		];
 	}

@@ -136,8 +136,11 @@ abstract class XPathHelper
 		// Remove the spaces between a number and a div or "-" operator and the next token
 		$expr = preg_replace('/(?:^|[ \\(])\\d+\\K (div|-) ?/', '$1', $expr);
 
-		// Remove the space between the div operator the next token
+		// Remove the space between the div operator and the next token
 		$expr = preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
+
+		// Remove the space between a boolean operator the next token
+		$expr = preg_replace('/([ \\)](?:and|or)) (?=[$0-9@A-Za-z])/', '$1', $expr);
 
 		// Restore the literals
 		$expr = self::decodeStrings($expr);
