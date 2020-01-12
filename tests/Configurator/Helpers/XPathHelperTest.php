@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
+use DOMDocument;
+use DOMXPath;
 use Exception;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
@@ -100,6 +102,13 @@ class XPathHelperTest extends Test
 		}
 
 		$this->assertSame($expected, XPathHelper::minify($original));
+
+		// Ensure the expected result is valid
+		if (is_string($expected) && $expected !== '')
+		{
+			$xpath = new DOMXPath(new DOMDocument);
+			$xpath->evaluate($expected);
+		}
 	}
 
 	public function getMinifyTests()
@@ -147,7 +156,7 @@ class XPathHelperTest extends Test
 			],
 			[
 				' foo or _bar ',
-				'foo or _bar'
+				'foo or_bar'
 			],
 			[
 				'foo = "bar',
@@ -180,6 +189,22 @@ class XPathHelperTest extends Test
 			[
 				"starts-with(@id, 'episode/') or starts-with(@id, 'show/')",
 				"starts-with(@id,'episode/')orstarts-with(@id,'show/')"
+			],
+			[
+				'@foo = 1 or @bar = 2',
+				'@foo=1or@bar=2'
+			],
+			[
+				'@foo = a_1 or @bar = 2',
+				'@foo=a_1 or@bar=2'
+			],
+			[
+				'@foo = 1 or @bar = 2',
+				'@foo=1or@bar=2'
+			],
+			[
+				'true() and true()',
+				'true()andtrue()'
 			],
 		];
 	}

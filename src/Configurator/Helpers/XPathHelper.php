@@ -121,26 +121,26 @@ abstract class XPathHelper
 		$expr = self::encodeStrings(trim($expr));
 
 		// Normalize whitespace to a single space
-		$expr = preg_replace('/\\s+/', ' ', $expr);
+		$expr = preg_replace('(\\s+)', ' ', $expr);
 
-		// Remove the space between a non-word character and a word character
-		$expr = preg_replace('/[-a-z_0-9]\\K (?=[^-a-z_0-9])/i', '', $expr);
-		$expr = preg_replace('/[^-a-z_0-9]\\K (?=[-a-z_0-9])/i', '', $expr);
+		$regexps = [
+			// Remove the space between a non-word character and a word character
+			'([-a-z_0-9]\\K (?=[^-a-z_0-9]))i',
+			'([^-a-z_0-9]\\K (?=[-a-z_0-9]))i',
 
-		// Remove the space between two non-word characters as long as they're not two -
-		$expr = preg_replace('/(?!- -)[^-a-z_0-9]\\K (?=[^-a-z_0-9])/i', '', $expr);
+			// Remove the space between two non-word characters as long as they're not two -
+			'((?!- -)[^-a-z_0-9]\\K (?=[^-a-z_0-9]))i',
 
-		// Remove the space between a - and a word character, as long as there's a space before -
-		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+			// Remove the space between a - and a word character as long as there's a space before -
+			'( -\\K (?=[a-z_0-9]))i',
 
-		// Remove the spaces between a number and a div or "-" operator and the next token
-		$expr = preg_replace('/(?:^|[ \\(])\\d+\\K (div|-) ?/', '$1', $expr);
+			// Remove the space between an operator and the next token
+			'([ \\)](?:and|div|or)\\K )',
 
-		// Remove the space between the div operator and the next token
-		$expr = preg_replace('/([^-a-z_0-9]div) (?=[$0-9@])/', '$1', $expr);
-
-		// Remove the space between a boolean operator the next token
-		$expr = preg_replace('/([ \\)](?:and|or)) (?=[$0-9@A-Za-z])/', '$1', $expr);
+			// Remove the space after a number
+			'(\\b\\d+\\K )'
+		];
+		$expr = preg_replace($regexps, '', $expr);
 
 		// Restore the literals
 		$expr = self::decodeStrings($expr);
