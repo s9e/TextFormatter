@@ -3570,6 +3570,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vocaroo.com/3OlvdB6eiiK',
+				'<r><VOCAROO id="3OlvdB6eiiK">https://vocaroo.com/3OlvdB6eiiK</VOCAROO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vocaroo');
+				}
+			],
+			[
+				'https://voca.ro/3OlvdB6eiiK',
+				'<r><VOCAROO id="3OlvdB6eiiK">https://voca.ro/3OlvdB6eiiK</VOCAROO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vocaroo');
+				}
+			],
+			[
 				'http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb',
 				'<r><VOX id="ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb">http://www.vox.com/2015/7/21/9005857/ant-man-marvel-apology-review#ooid=ltbzJkdTpKpE-O6hOfD3YJew3t3MppXb</VOX></r>',
 				[],
@@ -4520,6 +4538,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vine');
+				}
+			],
+			[
+				'https://old.vocaroo.com/i/s1HNgmYD4bIH',
+				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:148px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:29.72973%"><object data="//vocaroo.com/player.swf?playMediaID=s1HNgmYD4bIH&amp;autoplay=0" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"></object></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vocaroo');
+				}
+			],
+			[
+				'https://vocaroo.com/3OlvdB6eiiK',
+				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:20%"><iframe allowfullscreen="" scrolling="no" src="https://vocaroo.com/embed/3OlvdB6eiiK" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vocaroo');
 				}
 			],
 			[

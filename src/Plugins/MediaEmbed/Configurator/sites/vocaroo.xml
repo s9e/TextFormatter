@@ -1,7 +1,15 @@
 <site name="Vocaroo" homepage="https://vocaroo.com/">
-	<example>https://vocaroo.com/i/s0dRy3rZ47bf</example>
+	<example>https://vocaroo.com/3OlvdB6eiiK</example>
 
+	<host>voca.ro</host>
 	<host>vocaroo.com</host>
-	<extract>!vocaroo\.com/i/(?'id'\w+)!</extract>
-	<flash width="148" height="44" src="//vocaroo.com/player.swf?playMediaID={@id}&amp;autoplay=0"/>
+	<extract>!voca(?:\.ro|roo\.com)/(?:i/)?(?'id'\w+)!</extract>
+	<choose>
+		<when test="starts-with(@id, 's0') or starts-with(@id, 's1')">
+			<flash width="148" height="44" src="//vocaroo.com/player.swf?playMediaID={@id}&amp;autoplay=0"/>
+		</when>
+		<otherwise>
+			<iframe width="300" height="60" src="https://vocaroo.com/embed/{@id}"/>
+		</otherwise>
+	</choose>
 </site>
