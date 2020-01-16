@@ -1,9 +1,0 @@
-<site name="CollegeHumor" homepage="https://www.collegehumor.com/">
-	<example>https://www.collegehumor.com/video/1181601/more-than-friends</example>
-
-	<tags><tag>entertainment</tag></tags>
-
-	<host>collegehumor.com</host>
-	<extract>!collegehumor\.com/(?:video|embed)/(?'id'\d+)!</extract>
-	<iframe width="600" height="369" src="//www.collegehumor.com/e/{@id}"/>
-</site>

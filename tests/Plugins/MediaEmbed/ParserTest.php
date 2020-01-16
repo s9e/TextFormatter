@@ -1780,15 +1780,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.collegehumor.com/video/1181601/more-than-friends',
-				'<r><COLLEGEHUMOR id="1181601">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('collegehumor');
-				}
-			],
-			[
 				'http://coub.com/view/6veusoty',
 				'<r><COUB id="6veusoty">http://coub.com/view/6veusoty</COUB></r>',
 				[],
@@ -4088,15 +4079,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('cbsnews');
-				}
-			],
-			[
-				'http://www.collegehumor.com/video/1181601/more-than-friends',
-				'<span data-s9e-mediaembed="collegehumor" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:61.5%"><iframe allowfullscreen="" scrolling="no" src="//www.collegehumor.com/e/1181601" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('collegehumor');
 				}
 			],
 			[

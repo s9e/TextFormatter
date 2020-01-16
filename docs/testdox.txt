@@ -5659,7 +5659,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #268
  [x] Parsing tests with data set #269
  [x] Parsing tests with data set #270
- [x] Parsing tests with data set #271
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -5931,7 +5930,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #268
  [x] Parsing tests (JavaScript) with data set #269
  [x] Parsing tests (JavaScript) with data set #270
- [x] Parsing tests (JavaScript) with data set #271
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -6015,7 +6013,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #80
  [x] Parsing+rendering tests with data set #81
  [x] Parsing+rendering tests with data set #82
- [x] Parsing+rendering tests with data set #83
 
 Configurator (s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator)
  [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
@@ -6992,7 +6989,6 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #286
  [x] Tests from plugins with data set #287
  [x] Tests from plugins with data set #288
- [x] Tests from plugins with data set #289
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -7282,7 +7278,6 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #286
  [x] Tests from plugins (Quick renderer) with data set #287
  [x] Tests from plugins (Quick renderer) with data set #288
- [x] Tests from plugins (Quick renderer) with data set #289
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
