@@ -139,25 +139,30 @@ Tag.prototype.invalidate = function()
 */
 Tag.prototype.pairWith = function(tag)
 {
-	if (this.name === tag.name)
+	if (this.canBePaired(this, tag))
 	{
-		if (this.type === Tag.START_TAG
-		 && tag.type  === Tag.END_TAG
-		 && tag.pos   >=  this.pos)
-		{
-			this.endTag  = tag;
-			tag.startTag = this;
+		this.endTag  = tag;
+		tag.startTag = this;
 
-			this.cascadeInvalidationTo(tag);
-		}
-		else if (this.type === Tag.END_TAG
-		      && tag.type  === Tag.START_TAG
-		      && tag.pos   <=  this.pos)
-		{
-			this.startTag = tag;
-			tag.endTag    = this;
-		}
+		this.cascadeInvalidationTo(tag);
 	}
+	else if (this.canBePaired(tag, this))
+	{
+		this.startTag = tag;
+		tag.endTag    = this;
+	}
+};
+
+/**
+* Test whether two tags can be paired
+*
+* @param  {!Tag} startTag
+* @param  {!Tag} endTag
+* @return {boolean}
+*/
+Tag.prototype.canBePaired = function(startTag, endTag)
+{
+	return startTag.name === endTag.name && startTag.type === Tag.START_TAG && endTag.type === Tag.END_TAG && startTag.pos <= startTag.pos;
 };
 
 /**
@@ -293,10 +298,7 @@ Tag.prototype.getType = function()
 Tag.prototype.canClose = function(startTag)
 {
 	if (this.invalid
-	 || this.name !== startTag.name
-	 || startTag.type !== Tag.START_TAG
-	 || this.type !== Tag.END_TAG
-	 || this.pos < startTag.pos
+	 || !this.canBePaired(startTag, this)
 	 || (this.startTag && this.startTag !== startTag)
 	 || (startTag.endTag && startTag.endTag !== this))
 	{
