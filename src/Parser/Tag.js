@@ -173,7 +173,7 @@ Tag.prototype.removeFlags = function(flags)
 /**
 * Set the bitfield of boolean rules that apply to this tag
 *
-* @param  {number} flags Bitfield of boolean rules that apply to this tag
+* @param {number} flags Bitfield of boolean rules that apply to this tag
 */
 Tag.prototype.setFlags = function(flags)
 {

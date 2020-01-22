@@ -190,7 +190,7 @@ class Tag
 	/**
 	* Set the bitfield of boolean rules that apply to this tag
 	*
-	* @param  integer Bitfield of boolean rules that apply to this tag
+	* @param  integer $flags Bitfield of boolean rules that apply to this tag
 	* @return void
 	*/
 	public function setFlags($flags)
