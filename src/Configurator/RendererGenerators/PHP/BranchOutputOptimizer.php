@@ -367,7 +367,7 @@ class BranchOutputOptimizer
 	/**
 	* Parse the if block (including elseif/else branches) starting at current index
 	*
-	* @return void
+	* @return array
 	*/
 	protected function parseIfBlock()
 	{
