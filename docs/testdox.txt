@@ -1057,6 +1057,11 @@ XPath Helper (s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper)
  [x] minify() tests with data set #20
  [x] minify() tests with data set #21
  [x] minify() tests with data set #22
+ [x] minify() tests with data set #23
+ [x] minify() tests with data set #24
+ [x] minify() tests with data set #25
+ [x] minify() tests with data set #26
+ [x] minify() tests with data set #27
  [x] Parse equality expr with data set #0
  [x] Parse equality expr with data set #1
  [x] Parse equality expr with data set #2
@@ -1893,7 +1898,6 @@ Minify Inline CSS (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\M
  [x] Works with data set #8
 
 Minify XPath Expressions (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions)
- [x] Throws an exception if a string isn't properly closed
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
@@ -1906,6 +1910,7 @@ Minify XPath Expressions (s9e\TextFormatter\Tests\Configurator\TemplateNormaliza
  [x] Works with data set #9
  [x] Works with data set #10
  [x] Works with data set #11
+ [x] Works with data set #12
 
 Merge Consecutive Copy Of (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MergeConsecutiveCopyOf)
  [x] Works with data set #0

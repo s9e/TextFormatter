@@ -111,13 +111,15 @@ abstract class XPathHelper
 	*/
 	public static function minify($expr)
 	{
-		preg_match_all('("[^"]*+"|\'[^\']*+\'|[\'"](*:X))', $expr, $m);
-		if (!empty($m['MARK']))
+		$expr = trim($expr);
+
+		// Test whether there's any characters that can be removed
+		if (!preg_match('([\\s\\)])', $expr))
 		{
-			throw new RuntimeException("Cannot parse XPath expression '" . $expr . "'");
+			return $expr;
 		}
 
-		// Trim the surrounding whitespace then temporarily remove literal strings
+		// Temporarily encode the content of literal strings
 		$expr = self::encodeStrings(trim($expr));
 
 		// Normalize whitespace to a single space
@@ -142,10 +144,42 @@ abstract class XPathHelper
 		];
 		$expr = preg_replace($regexps, '', $expr);
 
+		// Remove consecutive parentheses where redundant
+		$expr = self::removeRedundantParentheses($expr);
+
 		// Restore the literals
 		$expr = self::decodeStrings($expr);
 
 		return $expr;
+	}
+
+	/**
+	* Remove consecutive parentheses where redundant
+	*/
+	protected static function removeRedundantParentheses(string $expr): string
+	{
+		// Add parentheses around the original expression and terminate the expression with a space
+		preg_match_all('(([\\(\\)])|[^\\(\\)]++)', '(' . $expr . ') ', $m);
+		$tokens = $m[0];
+		$parens = array_filter($m[1]);
+
+		// Iterate over parentheses and remove the inner pair when consecutive parentheses are found
+		$depth = 0;
+		$left  = [];
+		foreach ($parens as $k => $token)
+		{
+			if ($token === '(')
+			{
+				$left[$depth++] = $k;
+			}
+			elseif (--$depth > 0 && $tokens[$k + 1] === ')' && $left[$depth - 1] === $left[$depth] - 1)
+			{
+				unset($tokens[$k], $tokens[$left[$depth]]);
+			}
+		}
+
+		// Remove the extra parentheses as well as the last token before serializing them
+		return implode('', array_slice($tokens, 1, -2));
 	}
 
 	/**

@@ -151,16 +151,12 @@ class XPathHelperTest extends Test
 				'@foo- -1=2'
 			],
 			[
-				'( ( ( 1 + 1 ) * 1 ) * 1 )',
-				'(((1+1)*1)*1)'
+				'1 + ( ( ( 1 + 1 ) * 1 ) * 1 )',
+				'1+(((1+1)*1)*1)'
 			],
 			[
 				' foo or _bar ',
 				'foo or_bar'
-			],
-			[
-				'foo = "bar',
-				new RuntimeException("Cannot parse XPath expression 'foo = \"bar'")
 			],
 			[
 				'100 * (315 + 30) div 560',
@@ -191,6 +187,26 @@ class XPathHelperTest extends Test
 				"starts-with(@id,'episode/')orstarts-with(@id,'show/')"
 			],
 			[
+				'2 * (1 + 1)',
+				'2*(1+1)'
+			],
+			[
+				'(1 + 1) * (1 + 1)',
+				'(1+1)*(1+1)'
+			],
+			[
+				'2 * ( ( 1 + 1 ) )',
+				'2*(1+1)'
+			],
+			[
+				'2 * ( ( ( 1 + 1 ) ) )',
+				'2*(1+1)'
+			],
+			[
+				'2 * ( ( ( 1 + 1 ) + ( 1 + 1 ) ) )',
+				'2*((1+1)+(1+1))'
+			],
+			[
 				'@foo = 1 or @bar = 2',
 				'@foo=1or@bar=2'
 			],
@@ -205,6 +221,10 @@ class XPathHelperTest extends Test
 			[
 				'true() and true()',
 				'true()andtrue()'
+			],
+			[
+				'(1+(1+1))',
+				'1+(1+1)'
 			],
 		];
 	}

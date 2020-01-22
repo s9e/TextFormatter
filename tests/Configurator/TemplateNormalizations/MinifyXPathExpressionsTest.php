@@ -7,17 +7,6 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 */
 class MinifyXPathExpressionsTest extends AbstractTest
 {
-	/**
-	* @testdox Throws an exception if a string isn't properly closed
-	*/
-	public function testInvalidXPath()
-	{
-		$this->expectException('RuntimeException');
-		$this->expectExceptionMessage("Cannot parse XPath expression 'foo = \"bar'");
-
-		$this->test('<xsl:if test="foo = &quot;bar">!</xsl:if>', null);
-	}
-
 	public function getData()
 	{
 		return [
@@ -68,6 +57,10 @@ class MinifyXPathExpressionsTest extends AbstractTest
 			[
 				'<b title="{ &quot;&amp;lt;&quot; }"/>',
 				'<b title="{&quot;&amp;lt;&quot;}"/>'
+			],
+			[
+				'<b title="{(1+1)}"/>',
+				'<b title="{1+1}"/>'
 			],
 		];
 	}
