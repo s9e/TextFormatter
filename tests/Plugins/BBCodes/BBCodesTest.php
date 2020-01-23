@@ -162,15 +162,15 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-NkXoTL9Bauivu1p27LszPE2CDs/jZMF0+p1ZhlmRzoKXJfPk8pcQKmFLlvx5FDuk" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.4/loader.min.js"></script>',
+				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-zmUXofHyFIwgOUqZ7LgJySh3+QxRXTN5r9PV86t5Wu1m8yixc2x3UyDkFTmKH5L1" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.6/loader.min.js"></script>',
 			],
 			[
 				'[code=html]<b>Hello world</b>[/code]',
-				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-NkXoTL9Bauivu1p27LszPE2CDs/jZMF0+p1ZhlmRzoKXJfPk8pcQKmFLlvx5FDuk" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.4/loader.min.js"></script>',
+				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-zmUXofHyFIwgOUqZ7LgJySh3+QxRXTN5r9PV86t5Wu1m8yixc2x3UyDkFTmKH5L1" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.6/loader.min.js"></script>',
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" integrity="sha384-NkXoTL9Bauivu1p27LszPE2CDs/jZMF0+p1ZhlmRzoKXJfPk8pcQKmFLlvx5FDuk" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.4/loader.min.js"></script>',
+				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" integrity="sha384-zmUXofHyFIwgOUqZ7LgJySh3+QxRXTN5r9PV86t5Wu1m8yixc2x3UyDkFTmKH5L1" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.6/loader.min.js"></script>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', [
@@ -181,7 +181,7 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" integrity="sha384-NkXoTL9Bauivu1p27LszPE2CDs/jZMF0+p1ZhlmRzoKXJfPk8pcQKmFLlvx5FDuk" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.4/loader.min.js"></script>',
+				'<pre><code>echo "Hello world";</code></pre><script async="" crossorigin="anonymous" integrity="sha384-zmUXofHyFIwgOUqZ7LgJySh3+QxRXTN5r9PV86t5Wu1m8yixc2x3UyDkFTmKH5L1" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.6/loader.min.js"></script>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', [

@@ -8,16 +8,29 @@ if (!preg_match($regexp, $file, $m))
 	die("Cannot parse hljs-loader README.md\n");
 }
 
-$filepath = __DIR__ . '/../src/Plugins/BBCodes/Configurator/repository.xml';
-$old      = file_get_contents($filepath);
+array_map(
+	function ($filepath) use ($m)
+	{
+		$replacements = [
+			'(https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@.*?/build/)' => $m['url'],
+			'(https://cdn.jsdelivr.net/gh/s9e/hljs-loader@.*?/loader.min.js)'  => $m['src'],
+			'(<xsl:attribute name="integrity">\\K[^<]++)'                      => $m['integrity'],
+			'( integrity="\\K[^"]++(?=.*?hljs))'                               => $m['integrity']
+		];
 
-$new = $old;
-$new = preg_replace('(https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@.*?/build/)', $m['url'], $new);
-$new = preg_replace('(https://cdn.jsdelivr.net/gh/s9e/hljs-loader@.*?/loader.min.js)', $m['src'], $new);
-$new = preg_replace('(<xsl:attribute name="integrity">\\K[^<]++)', $m['integrity'], $new);
-
-if ($new !== $old)
-{
-	file_put_contents($filepath, $new);
-	echo "Patched $filepath.\n";
-}
+		$old = file_get_contents($filepath);
+		$new = preg_replace(array_keys($replacements), $replacements, $old);
+		if ($new !== $old)
+		{
+			file_put_contents($filepath, $new);
+			echo "Patched $filepath.\n";
+		}
+	},
+	[
+		__DIR__ . '/../src/Plugins/BBCodes/Configurator/repository.xml',
+		__DIR__ . '/../tests/Bundles/data/Forum/016.html',
+		__DIR__ . '/../tests/Bundles/data/Forum/017.html',
+		__DIR__ . '/../tests/Bundles/data/Forum/026.html',
+		__DIR__ . '/../tests/Plugins/BBCodes/BBCodesTest.php'
+	]
+);
