@@ -852,7 +852,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/DFTS2014-05-30',
-				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
+				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1&amp;twitterv=01" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -862,7 +862,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/embed/deadco2018-08-25',
-				'<r><INTERNETARCHIVE height="50" id="deadco2018-08-25&amp;playlist=1" width="300">https://archive.org/embed/deadco2018-08-25</INTERNETARCHIVE></r>',
+				'<r><INTERNETARCHIVE height="50" id="deadco2018-08-25&amp;playlist=1&amp;twitterv=01" width="300">https://archive.org/embed/deadco2018-08-25</INTERNETARCHIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -1402,7 +1402,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/DFTS2014-05-30',
-				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;twitterv=01&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
