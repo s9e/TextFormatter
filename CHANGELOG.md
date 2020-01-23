@@ -1,3 +1,24 @@
+2.3.3 (2020-01-23)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/dc1858a6a72794050c55484012dba18eaf8348bf...0af04297e21ec50f8fdd0ac385a602991921fe37)
+
+### Removed
+
+ - `b79f84836` MediaEmbed: removed defunct site CollegeHumor
+
+### Changed
+
+ - `0af04297e` BBCodes: updated default CODE BBCode
+ - `385992df9` MediaEmbed: updated Vocaroo
+ - `138821eac` Tag: reorganized code
+ - `ad91b2d37` XPathHelper: improved minification of boolean operators
+ - `6943368f2` XPathHelper: improved minification of consecutive non-word characters
+ - `55782b27a` XPathHelper: remove redundant parentheses in minify()
+ - `26004e063` XPathHelper: replaced string encoder in minify()
+ - `00510a5b6` XPathHelper: simplified and improved minification of operators
+
+
 2.3.2 (2020-01-10)
 ==================
 
