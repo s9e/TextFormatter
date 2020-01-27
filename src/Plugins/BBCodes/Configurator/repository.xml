@@ -54,14 +54,14 @@
 				<xsl:apply-templates />
 			</code></pre>
 			<script async="" crossorigin="anonymous">
-				<xsl:if test="'default' != ']]><var name='style'>github-gist</var><![CDATA['">
+				<xsl:if test="'default' != ']]><var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var><![CDATA['">
 					<xsl:attribute name="data-hljs-style">]]>
-						<var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var>
+						<var name='style'>github-gist</var>
 					<![CDATA[</xsl:attribute>
 				</xsl:if>
-				<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/' != ']]><var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/</var><![CDATA['">
+				<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/' != ']]><var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/</var><![CDATA['">
 					<xsl:attribute name="data-hljs-url">]]>
-						<var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/</var>
+						<var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/</var>
 					<![CDATA[</xsl:attribute>
 				</xsl:if>
 				<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>

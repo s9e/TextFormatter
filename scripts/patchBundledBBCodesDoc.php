@@ -20,8 +20,19 @@ foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 	$list[] = '```' . $usage . '```';
 	$list[] = "```xsl\n" . $template . "\n```";
 
-	$vars = $xpath->query('template/var | usage/var', $bbcode);
-	if ($vars->length)
+	$vars = [];
+	foreach ($xpath->query('template/var | usage/var', $bbcode) as $var)
+	{
+		$name = $var->getAttribute('name');
+		if (!isset($vars[$name]))
+		{
+			$vars[$name] = [
+				'default'     => htmlspecialchars($var->textContent),
+				'description' => $var->getAttribute('description')
+			];
+		}
+	}
+	if (!empty($vars))
 	{
 		$list[] = '<table>';
 		$list[] = '	<tr>';
@@ -29,12 +40,12 @@ foreach ($dom->getElementsByTagName('bbcode') as $bbcode)
 		$list[] = '		<th>Default</th>';
 		$list[] = '		<th>Description</th>';
 		$list[] = '	</tr>';
-		foreach ($vars as $var)
+		foreach ($vars as $name => $var)
 		{
 			$list[] = '	<tr>';
-			$list[] = '		<td><code>' . $var->getAttribute('name') . '</code></td>';
-			$list[] = '		<td>' . htmlspecialchars($var->textContent) . '</td>';
-			$list[] = '		<td>' . $var->getAttribute('description') . '</td>';
+			$list[] = '		<td><code>' . $name . '</code></td>';
+			$list[] = '		<td>' . $var['default'] . '</td>';
+			$list[] = '		<td>' . $var['description'] . '</td>';
 			$list[] = '	</tr>';
 		}
 		$list[] = '</table>';

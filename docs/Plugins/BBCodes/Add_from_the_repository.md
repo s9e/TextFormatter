@@ -111,17 +111,7 @@ echo $html;
 	<tr>
 		<td><code>style</code></td>
 		<td>github-gist</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><code>style</code></td>
-		<td>github-gist</td>
 		<td>highlight.js style name (or "none")</td>
-	</tr>
-	<tr>
-		<td><code>url</code></td>
-		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/</td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><code>url</code></td>
