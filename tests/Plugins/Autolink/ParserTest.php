@@ -31,10 +31,6 @@ class ParserTest extends Test
 			],
 			[
 				'Go to http://www.example.com/ for more info',
-				'<r>Go to <URL url="http://www.example.com/">http://www.example.com/</URL> for more info</r>'
-			],
-			[
-				'Go to http://www.example.com/ for more info',
 				'<r>Go to <FOO url="http://www.example.com/">http://www.example.com/</FOO> for more info</r>',
 				['tagName' => 'FOO']
 			],
@@ -120,6 +116,14 @@ class ParserTest extends Test
 			[
 				'Link in angle brackets: <http://example.com/foo>',
 				'<r>Link in angle brackets: &lt;<URL url="http://example.com/foo">http://example.com/foo</URL>&gt;</r>'
+			],
+			[
+				'Link in Japanese quotes: 「http://www.example.com/」',
+				'<r>Link in Japanese quotes: 「<URL url="http://www.example.com/">http://www.example.com/</URL>」</r>',
+				[],
+				null,
+				// This will fail in JavaScript because of the lack of Unicode properties
+				'<r>Link in Japanese quotes: 「<URL url="http://www.example.com/%E3%80%8D">http://www.example.com/」</URL></r>'
 			],
 			[
 				'http://example.com/foo~ http://example.com/~foo',
