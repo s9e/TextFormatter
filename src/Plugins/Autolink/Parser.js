@@ -56,5 +56,5 @@ function linkifyUrl(tagPos, url)
 */
 function trimUrl(url)
 {
-	return url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
+	return url.replace(/(?![-_=\/)])[\s!-.:-@[-`{-~]+$/, '');
 }
