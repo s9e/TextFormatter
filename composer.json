@@ -14,7 +14,8 @@
 	},
 	"require-dev": {
 		"matthiasmullie/minify": "*",
-		"phpunit/phpunit":       "*"
+		"phpunit/phpunit":       "*",
+		"sami/sami":             "4.*"
 	},
 	"suggest": {
 		"ext-curl":      "Improves the performance of the MediaEmbed plugin and some JavaScript minifiers",
