@@ -34,7 +34,7 @@ Here be <a href="http://example.org">the <b>bold</b> URL</a>.
 
 ### Using the custom syntax
 
-Note: this syntax is meant to be compatible with [phpBB's custom BBCodes](https://www.phpbb.com/customise/db/custom_bbcodes-26/).
+Note: this syntax is meant to be compatible with [phpBB's custom BBCodes](https://www.phpbb.com/customise/db/custom_bbcodes-26).
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
