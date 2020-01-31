@@ -1,5 +1,6 @@
 site_name: s9e\TextFormatter
 theme: readthedocs
+extra_css: ["extra.css"]
 repo_url: https://github.com/s9e/TextFormatter/
 markdown_extensions:
   - sane_lists

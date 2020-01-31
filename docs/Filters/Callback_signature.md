@@ -1,5 +1,4 @@
 <h2>Callback signature</h2>
-<style>.rst-content ul { font-size: 16px }</style>
 
 By default, an attribute filter or a tag filter only receives one argument: the attribute's value or the tag, respectively. Additional parameters can be appended with the methods `addParameterByName()` and `addParameterByValue()` and the whole list of parameters can be cleared with `resetParameters()`. Variables set in `$configurator->registeredVars` are available by name and can be changed at parsing time via `$parser->registeredVars`. Other special parameters listed below are available by name.
 

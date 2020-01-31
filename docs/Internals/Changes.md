@@ -1,5 +1,3 @@
-<style>.rst-content ul { font-size: 16px }</style>
-
 See also [API changes](API_changes.md).
 
 ## 2.2.0
