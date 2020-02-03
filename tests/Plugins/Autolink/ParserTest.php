@@ -214,6 +214,10 @@ class ParserTest extends Test
 					$configurator->urlConfig->allowScheme('mailto');
 				}
 			],
+			[
+				'https://www.example.com/#/',
+				'<r><URL url="https://www.example.com/#/">https://www.example.com/#/</URL></r>'
+			],
 		];
 	}
 

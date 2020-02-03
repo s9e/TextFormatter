@@ -66,16 +66,16 @@ class Parser extends ParserBase
 	*
 	* We remove most ASCII non-letters and Unicode punctuation from the end of the string.
 	* Exceptions:
-	*  - dashes (some YouTube URLs end with a dash due to the video ID)
-	*  - equal signs (because of "foo?bar="),
+	*  - dashes, (some YouTube URLs end with a dash due to the video ID)
+	*  - equal signs, (because of "foo?bar=")
 	*  - trailing slashes,
-	*  - closing parentheses are balanced separately.
+	*  - closing parentheses. (they are balanced separately)
 	*
 	* @param  string $url Original URL
 	* @return string      Trimmed URL
 	*/
 	protected function trimUrl($url)
 	{
-		return preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
+		return preg_replace('#(?:(?![-=/)])[\\s!-.:-@[-`{-~\\pP])+$#Du', '', $url);
 	}
 }
