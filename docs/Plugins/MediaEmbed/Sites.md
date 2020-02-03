@@ -387,7 +387,7 @@
 	</tr>
 	<tr title="TikTok">
 		<td style="font-size:75%"><code>tiktok</code></td>
-		<td style="font-size:50%">https://m.tiktok.com/v/6583727202272021766.html</td>
+		<td style="font-size:50%">https://vm.tiktok.com/Vm1ErH/</td>
 	</tr>
 	<tr title="TMZ">
 		<td style="font-size:75%"><code>tmz</code></td>
