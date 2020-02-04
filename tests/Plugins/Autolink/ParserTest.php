@@ -218,6 +218,15 @@ class ParserTest extends Test
 				'https://www.example.com/#/',
 				'<r><URL url="https://www.example.com/#/">https://www.example.com/#/</URL></r>'
 			],
+			[
+				// Not quite the famous _why but close enough
+				'https://twitter.com/why_',
+				'<r><URL url="https://twitter.com/why_">https://twitter.com/why_</URL></r>'
+			],
+			[
+				'https://example.org/?id=abc-',
+				'<r><URL url="https://example.org/?id=abc-">https://example.org/?id=abc-</URL></r>'
+			],
 		];
 	}
 

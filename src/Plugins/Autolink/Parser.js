@@ -46,7 +46,7 @@ function linkifyUrl(tagPos, url)
 *
 * We remove most ASCII non-letters from the end of the string.
 * Exceptions:
-*  - dashes, (some YouTube URLs end with a dash due to the video ID)
+*  - dashes and underscores, (base64 IDs could end with one)
 *  - equal signs, (because of "foo?bar=")
 *  - trailing slashes,
 *  - closing parentheses. (they are balanced separately)
@@ -56,5 +56,5 @@ function linkifyUrl(tagPos, url)
 */
 function trimUrl(url)
 {
-	return url.replace(/(?:(?![-=\/)])[\s!-.:-@[-`{-~])+$/, '');
+	return url.replace(/(?:(?![-=)\/_])[\s!-.:-@[-`{-~])+$/, '');
 }
