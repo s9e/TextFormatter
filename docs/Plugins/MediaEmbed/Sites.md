@@ -387,7 +387,7 @@
 	</tr>
 	<tr title="TikTok">
 		<td style="font-size:75%"><code>tiktok</code></td>
-		<td style="font-size:50%">https://vm.tiktok.com/Vm1ErH/</td>
+		<td style="font-size:50%">https://www.tiktok.com/@lauren.feagans/video/6789430799839104261<br/>https://vm.tiktok.com/Vm1ErH/</td>
 	</tr>
 	<tr title="TMZ">
 		<td style="font-size:75%"><code>tmz</code></td>
