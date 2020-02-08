@@ -20,27 +20,27 @@ use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
 use s9e\TextFormatter\Utils\XPath;
 
 /**
-* @method mixed   add(string $key, mixed $value)
+* @method mixed   add(string $key, mixed $value) Add an item to this collection
 * @method array   asConfig()
-* @method void    clear()
-* @method bool    contains(mixed $value)
+* @method void    clear()                        Empty this collection
+* @method bool    contains(mixed $value)         Test whether a given value is present in this collection
 * @method integer count()
 * @method mixed   current()
-* @method void    delete(string $key)
-* @method bool    exists(string $key)
-* @method mixed   get(string $key)
-* @method mixed   indexOf(mixed $value)
+* @method void    delete(string $key)            Delete an item from this collection
+* @method bool    exists(string $key)            Test whether an item of given key exists
+* @method mixed   get(string $key)               Return a value from this collection
+* @method mixed   indexOf(mixed $value)          Find the index of a given value
 * @method integer|string key()
 * @method mixed   next()
-* @method string  normalizeKey(string $key)
-* @method string  normalizeValue(string $value)
+* @method string  normalizeKey(string $key)      Normalize an item's key
+* @method string  normalizeValue(string $value)  Normalize an emoticon's template
 * @method bool    offsetExists(string|integer $offset)
 * @method mixed   offsetGet(string|integer $offset)
 * @method void    offsetSet(string|integer $offset, mixed $value)
 * @method void    offsetUnset(string|integer $offset)
-* @method string  onDuplicate(string|null $action)
+* @method string  onDuplicate(string|null $action) Query and set the action to take when add() is called with a key that already exists
 * @method void    rewind()
-* @method mixed   set(string $key, mixed $value)
+* @method mixed   set(string $key, mixed $value) Set and overwrite a value in this collection
 * @method bool    valid()
 */
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator

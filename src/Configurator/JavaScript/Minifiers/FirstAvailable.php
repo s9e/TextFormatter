@@ -16,32 +16,32 @@ use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
 
 /**
-* @method mixed   add(mixed $value, null $void)
-* @method mixed   append(mixed $value)
-* @method array   asConfig()
-* @method void    clear()
-* @method bool    contains(mixed $value)
-* @method integer count()
-* @method mixed   current()
-* @method void    delete(string $key)
-* @method bool    exists(string $key)
-* @method mixed   get(string $key)
-* @method mixed   indexOf(mixed $value)
-* @method mixed   insert(integer $offset, mixed $value)
+* @method mixed    add(mixed $value, null $void)  Add (append) a value to this list
+* @method mixed    append(mixed $value)           Append a value to this list
+* @method array    asConfig()
+* @method void     clear()                        Empty this collection
+* @method bool     contains(mixed $value)         Test whether a given value is present in this collection
+* @method integer  count()
+* @method mixed    current()
+* @method void     delete(string $key)            Delete a value from this list and remove gaps in keys
+* @method bool     exists(string $key)            Test whether an item of given key exists
+* @method mixed    get(string $key)               Return a value from this collection
+* @method mixed    indexOf(mixed $value)          Find the index of a given value
+* @method mixed    insert(integer $offset, mixed $value) Insert a value at an arbitrary 0-based position
 * @method integer|string key()
-* @method mixed   next()
-* @method integer normalizeKey(mixed $key)
-* @method Minifier normalizeValue(Minifier|string $minifier)
-* @method bool    offsetExists(string|integer $offset)
-* @method mixed   offsetGet(string|integer $offset)
-* @method void    offsetSet(mixed $offset, mixed $value)
-* @method void    offsetUnset(string|integer $offset)
-* @method string  onDuplicate(string|null $action)
-* @method mixed   prepend(mixed $value)
-* @method integer remove(mixed $value)
-* @method void    rewind()
-* @method mixed   set(string $key, mixed $value)
-* @method bool    valid()
+* @method mixed    next()
+* @method integer  normalizeKey(mixed $key)       Ensure that the key is a valid offset
+* @method Minifier normalizeValue(Minifier|string $minifier) Normalize the value to an object
+* @method bool     offsetExists(string|integer $offset)
+* @method mixed    offsetGet(string|integer $offset)
+* @method void     offsetSet(mixed $offset, mixed $value) Custom offsetSet() implementation to allow assignment with a null offset to append to the
+* @method void     offsetUnset(string|integer $offset)
+* @method string   onDuplicate(string|null $action) Query and set the action to take when add() is called with a key that already exists
+* @method mixed    prepend(mixed $value)          Prepend a value to this list
+* @method integer  remove(mixed $value)           Remove all items matching given value
+* @method void     rewind()
+* @method mixed    set(string $key, mixed $value) Set and overwrite a value in this collection
+* @method bool     valid()
 */
 class FirstAvailable extends Minifier implements ArrayAccess
 {

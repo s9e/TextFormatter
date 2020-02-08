@@ -6,7 +6,6 @@ include __DIR__ . '/../vendor/autoload.php';
 function getMethodAnnotations($className)
 {
 	static $methods = [];
-
 	if (isset($methods[$className]))
 	{
 		return $methods[$className];
@@ -20,13 +19,16 @@ function getMethodAnnotations($className)
 		// It's easier to hardcode asConfig() than properly dig through ancestry
 		if ($methodName === 'asConfig')
 		{
-			$methods[$className]['asConfig'] = 'array   asConfig()';
+			$methods[$className]['asConfig'] = [
+				'description' => '',
+				'methodSig'   => 'asConfig()',
+				'returnType'  => 'array'
+			];
 
 			continue;
 		}
 
 		$doc = $method->getDocComment();
-
 		if (strpos($doc, '{@inheritdoc}') !== false)
 		{
 			$parentMethods = getMethodAnnotations($class->getParentClass()->getName());
@@ -44,12 +46,56 @@ function getMethodAnnotations($className)
 			$args[] = $m[1] . ' ' . $m[2];
 		}
 
-		$methods[$className][$methodName] = str_pad($returnType, 7) . ' ' . $methodName . '(' . implode(', ', $args) . ')';
+		$desc = '';
+		if (preg_match('(^[\\s\\*/]++\\K(?!@).*)', $doc, $m))
+		{
+			$desc = $m[0];
+		}
+
+		$methods[$className][$methodName] = [
+			'description' => $desc,
+			'returnType'  => $returnType,
+			'methodSig'   => $methodName . '(' . implode(', ', $args) . ')'
+		];
 	}
 
 	ksort($methods[$className]);
 
 	return $methods[$className];
+}
+
+function formatMethods(array $methods)
+{
+	$lenSig  = getColumnSize($methods, 'methodSig',  30);
+	$lenType = getColumnSize($methods, 'returnType', 12);
+	$return  = [];
+	foreach ($methods as $methodName => $method)
+	{
+		$text = str_pad($method['returnType'], $lenType)
+		      . ' '
+		      . str_pad($method['methodSig'], $lenSig)
+		      . ' '
+		      . $method['description'];
+
+		$return[$methodName] = trim($text);
+	}
+
+	return $return;
+}
+
+function getColumnSize(array $rows, string $columnName, int $max)
+{
+	$size = 0;
+	foreach ($rows as $row)
+	{
+		$len = strlen($row[$columnName]);
+		if ($len > $size && $len <= $max)
+		{
+			$size = $len;
+		}
+	}
+
+	return $size;
 }
 
 function patchDir($dirpath)
@@ -92,7 +138,7 @@ function patchFile($filepath)
 		}
 	}
 
-	$methods = getMethodAnnotations($className);
+	$methods = formatMethods(getMethodAnnotations($className));
 
 	$old  = $file;
 	$file = preg_replace_callback(
