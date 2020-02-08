@@ -2,7 +2,7 @@
 
 You can find more examples of custom BBCodes in the bundled [repository.xml](https://github.com/s9e/TextFormatter/blob/master/src/Plugins/BBCodes/Configurator/repository.xml).
 
-You may also look into [phpBB's own custom BBCodes](https://www.phpbb.com/customise/db/custom_bbcodes-26/) as most of them are compatible.
+You may also look into [phpBB's own custom BBCodes](https://www.phpbb.com/customise/db/custom_bbcodes-26) as most of them are compatible.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
