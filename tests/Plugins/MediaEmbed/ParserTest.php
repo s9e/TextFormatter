@@ -3678,6 +3678,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gameclips.io/boulderBaby5568/035a50fa-2d54-4820-aa44-f0f43a873308',
+				'<r><XBOXCLIPS id="035a50fa-2d54-4820-aa44-f0f43a873308" user="boulderBaby5568">https://gameclips.io/boulderBaby5568/035a50fa-2d54-4820-aa44-f0f43a873308</XBOXCLIPS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('xboxclips');
+				}
+			],
+			[
+				'https://gameclips.io/game/1840411466/week',
+				'<t>https://gameclips.io/game/1840411466/week</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('xboxclips');
+				}
+			],
+			[
 				'http://xboxdvr.com/gamer/LOXITANE/video/12463958',
 				'<r><XBOXDVR id="12463958" user="LOXITANE">http://xboxdvr.com/gamer/LOXITANE/video/12463958</XBOXDVR></r>',
 				[],

@@ -469,9 +469,9 @@
 		<td style="font-size:75%"><code>wsj</code></td>
 		<td style="font-size:50%">https://www.wsj.com/video/nba-players-primp-with-pedicures/9E476D54-6A60-4F3F-ABC1-411014552DE6.html<br/>https://live.wsj.com/#!09FB2B3B-583E-4284-99D8-FEF6C23BE4E2<br/>https://live.wsj.com/video/seahawks-qb-russell-wilson-on-super-bowl-win/9B3DF790-9D20-442C-B564-51524B06FD26.html</td>
 	</tr>
-	<tr title="XboxClips">
+	<tr title="GameClips.io">
 		<td style="font-size:75%"><code>xboxclips</code></td>
-		<td style="font-size:50%">https://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</td>
+		<td style="font-size:50%">https://gameclips.io/boulderBaby5568/035a50fa-2d54-4820-aa44-f0f43a873308</td>
 	</tr>
 	<tr title="Gamer DVR">
 		<td style="font-size:75%"><code>xboxdvr</code></td>

@@ -1,9 +1,10 @@
-<site name="XboxClips" homepage="https://xboxclips.com/">
-	<example>https://xboxclips.com/dizturbd/e3a2d685-3e9f-454f-89bf-54ddea8f29b3</example>
+<site name="GameClips.io" homepage="https://gameclips.io/">
+	<example>https://gameclips.io/boulderBaby5568/035a50fa-2d54-4820-aa44-f0f43a873308</example>
 
 	<tags><tag>gaming</tag></tags>
 
+	<host>gameclips.io</host>
 	<host>xboxclips.com</host>
-	<extract>@xboxclips\.com/(?'user'[^/]+)/(?!screenshots/)(?'id'[-0-9a-f]+)@</extract>
-	<iframe src="//xboxclips.com/{@user}/{@id}/embed"/>
+	<extract>@(?:gameclips\.io|xboxclips\.com)/(?!game/)(?'user'[^/]+)/(?!screenshots/)(?'id'[-0-9a-f]+)@</extract>
+	<iframe width="560" height="315" src="//gameclips.io/{@user}/{@id}/embed"/>
 </site>
