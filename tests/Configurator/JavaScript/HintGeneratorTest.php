@@ -357,6 +357,40 @@ class HintGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox HINT.regexp=0 by default
+	*/
+	public function testHintRegexpFalse()
+	{
+		$this->assertHintsContain('HINT.regexp=0');
+	}
+
+	/**
+	* @testdox HINT.regexp=1 if a plugin has a regexp
+	*/
+	public function testHintRegexpTrue()
+	{
+		$this->configurator->Autolink;
+		$this->assertHintsContain('HINT.regexp=1');
+	}
+
+	/**
+	* @testdox HINT.regexpLimit=0 by default
+	*/
+	public function testHintRegexpLimitFalse()
+	{
+		$this->assertHintsContain('HINT.regexpLimit=0');
+	}
+
+	/**
+	* @testdox HINT.regexpLimit=1 if a plugin has a regexpLimit
+	*/
+	public function testHintRegexpLimitTrue()
+	{
+		$this->configurator->Autolink->setRegexpLimit(10);
+		$this->assertHintsContain('HINT.regexpLimit=1');
+	}
+
+	/**
 	* @testdox Contains hints from plugins
 	*/
 	public function testPluginHints()

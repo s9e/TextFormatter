@@ -97,9 +97,17 @@ class HintGenerator
 	*/
 	protected function setPluginsHints()
 	{
-		foreach ($this->plugins as $plugins)
+		foreach ($this->plugins as $plugin)
 		{
-			$this->hints += $plugins->getJSHints();
+			$this->hints += $plugin->getJSHints();
+		}
+
+		$this->hints['regexp']      = 0;
+		$this->hints['regexpLimit'] = 0;
+		foreach ($this->config['plugins'] as $pluginConfig)
+		{
+			$this->hints['regexp']      |= isset($pluginConfig['regexp']);
+			$this->hints['regexpLimit'] |= isset($pluginConfig['regexpLimit']);
 		}
 	}
 

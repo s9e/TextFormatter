@@ -1498,6 +1498,10 @@ Hint Generator (s9e\TextFormatter\Tests\Configurator\HintGenerator)
  [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
  [x] HINT.RULE_TRIM_FIRST_LINE=0 by default
  [x] HINT.RULE_TRIM_FIRST_LINE=1 if any tag has an trimFirstLine rule
+ [x] HINT.regexp=0 by default
+ [x] HINT.regexp=1 if a plugin has a regexp
+ [x] HINT.regexpLimit=0 by default
+ [x] HINT.regexpLimit=1 if a plugin has a regexpLimit
  [x] Contains hints from plugins
 
 Regexp Convertor (s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor)

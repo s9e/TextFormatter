@@ -815,7 +815,7 @@ function executePluginParser(pluginName)
 	}
 
 	var matches = [];
-	if (typeof pluginConfig.regexp !== 'undefined' && typeof pluginConfig.regexpLimit !== 'undefined')
+	if (HINT.regexp && HINT.regexpLimit && typeof pluginConfig.regexp !== 'undefined' && typeof pluginConfig.regexpLimit !== 'undefined')
 	{
 		matches = getMatches(pluginConfig.regexp, pluginConfig.regexpLimit);
 		if (!matches.length)
