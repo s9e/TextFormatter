@@ -5,7 +5,8 @@
 
 	<host>tumblr.com</host>
 	<extract>!(?'name'[-\w]+)\.tumblr\.com/post/(?'id'\d+)!</extract>
-	<scrape url="http://www.tumblr.com/oembed/1.0?url=http://{@name}.tumblr.com/post/{@id}">
+	<scrape url="https://www.tumblr.com/oembed/1.0?url=https://{@name}.tumblr.com/post/{@id}">
+		<header>User-agent: curl</header>
 		<match>!\w\.tumblr\.com/post/\d!</match>
 		<extract>!did=\\u0022(?'did'[-\w]+)!</extract>
 		<extract>!embed\\/post\\/(?'key'[-\w]+)!</extract>
