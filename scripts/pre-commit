@@ -67,7 +67,7 @@ fi
 
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
-	phpunit --exclude-group none --stop-on-failure --testdox-text docs/testdox.txt
+	./vendor/bin/phpunit --exclude-group none --stop-on-failure --testdox-text docs/testdox.txt
 
 	if [ $? -ne 0 ]
 	then
