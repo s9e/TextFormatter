@@ -195,7 +195,15 @@ class XPathConvertorTest extends Test
 				"\$node->hasAttribute('foo')"
 			],
 			[
+				'boolean(@foo)',
+				"\$node->hasAttribute('foo')"
+			],
+			[
 				'not(@foo)',
+				"!\$node->hasAttribute('foo')"
+			],
+			[
+				'not(boolean(@foo))',
 				"!\$node->hasAttribute('foo')"
 			],
 			[

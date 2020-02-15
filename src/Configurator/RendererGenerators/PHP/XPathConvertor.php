@@ -46,7 +46,7 @@ class XPathConvertor
 	{
 		// Replace @attr with boolean(@attr) in boolean expressions
 		$expr = preg_replace(
-			'((^|\\(\\s*|\\b(?:and|or)\\s*)([\\(\\s]*)([$@][-\\w]+|@\\*)([\\)\\s]*)(?=$|\\s+(?:and|or)))',
+			'((^|(?<!\\bboolean)\\(\\s*|\\b(?:and|or)\\s*)([\\(\\s]*)([$@][-\\w]+|@\\*)([\\)\\s]*)(?=$|\\s+(?:and|or)))',
 			'$1$2boolean($3)$4',
 			trim($expr)
 		);
