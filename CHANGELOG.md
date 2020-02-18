@@ -1,3 +1,26 @@
+2.3.4 (2020-02-18)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d958fd32471905fbecd2337b2e92ae131e45be94...3b08570a2a944b5a52f9282f86b8561bd46a3363)
+
+### Added
+
+ - `9db9113e6` Autolink: added support for trailing underscores
+ - `4de32bb77` JavaScript: added minifier hints for plugin regexp
+
+### Fixed
+
+ - `c7d1b9e72` Autolink: fixed an issue where valid characters could be removed from the end of a URL
+ - `3b08570a2` TemplateNormalizer: fixed an issue where the XSL namespace could become unregistered in XPath
+
+### Changed
+
+ - `3d1969853` MediaEmbed: updated MSNBC and Tumblr
+ - `c1e06bc87` MediaEmbed: updated TikTok
+ - `9bf0d3823` MediaEmbed: updated XboxClips, now GameClips.io
+ - `19674d155` XPathConvertor: do not add extraneous calls to boolean() in conditions
+
+
 2.3.3 (2020-01-23)
 ==================
 
