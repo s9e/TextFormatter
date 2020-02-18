@@ -70,8 +70,8 @@ class OptimizeChooseDeadBranchesTest extends AbstractTest
 					<xsl:when test="0.0">false</xsl:when>
 					<xsl:when test="\'\'">false</xsl:when>
 					<xsl:when test=\'""\'>false</xsl:when>
-					<xsl:when test="00">00 is not false</xsl:when>
-					<xsl:otherwise>never</xsl:otherwise>
+					<xsl:when test="00">false</xsl:when>
+					<xsl:otherwise>always</xsl:otherwise>
 				</xsl:choose>',
 				'<xsl:choose>
 					
@@ -79,8 +79,8 @@ class OptimizeChooseDeadBranchesTest extends AbstractTest
 					
 					
 					
-					<xsl:otherwise>00 is not false</xsl:otherwise>
 					
+					<xsl:otherwise>always</xsl:otherwise>
 				</xsl:choose>'
 			],
 			[
@@ -106,6 +106,16 @@ class OptimizeChooseDeadBranchesTest extends AbstractTest
 			[
 				'<xsl:choose>
 					<xsl:when test="\'0\'">always</xsl:when>
+					<xsl:otherwise>never</xsl:otherwise>
+				</xsl:choose>',
+				'<xsl:choose>
+					<xsl:otherwise>always</xsl:otherwise>
+					
+				</xsl:choose>'
+			],
+			[
+				'<xsl:choose>
+					<xsl:when test="1.0">always</xsl:when>
 					<xsl:otherwise>never</xsl:otherwise>
 				</xsl:choose>',
 				'<xsl:choose>
