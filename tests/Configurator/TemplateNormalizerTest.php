@@ -310,6 +310,29 @@ class TemplateNormalizerTest extends Test
 				'x<xsl:if test="0">...</xsl:if>y',
 				'xy'
 			],
+			[
+				'<xsl:choose>
+					<xsl:when test="$STYLE_ID=6">
+						<xsl:choose>
+							<xsl:when test="true()">
+								<xsl:choose>
+									<xsl:when test="true()">_</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<xsl:when test="true()">
+								<xsl:choose>
+									<xsl:when test="true()">_</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>',
+				'_'
+			],
 		];
 	}
 }

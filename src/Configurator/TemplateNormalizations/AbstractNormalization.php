@@ -45,6 +45,7 @@ abstract class AbstractNormalization
 	{
 		$this->ownerDocument = $template->ownerDocument;
 		$this->xpath         = new DOMXPath($this->ownerDocument);
+		$this->xpath->registerNamespace('xsl', self::XMLNS_XSL);
 		foreach ($this->getNodes() as $node)
 		{
 			$this->normalizeNode($node);

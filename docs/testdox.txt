@@ -2000,6 +2000,7 @@ Optimize Choose (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Opt
  [x] Works with data set #14
  [x] Works with data set #15
  [x] Works with data set #16
+ [x] Works with data set #17
 
 Optimize Choose Text (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChooseText)
  [x] Works with data set #0
@@ -2102,6 +2103,7 @@ Template Normalizer (s9e\TextFormatter\Tests\Configurator\TemplateNormalizer)
  [x] Default normalization rules with data set #26
  [x] Default normalization rules with data set #27
  [x] Default normalization rules with data set #28
+ [x] Default normalization rules with data set #29
 
 Abstract Dynamic Content Check (s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck)
  [x] Stylesheet parameters are considered safe
