@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Helpers;
+namespace s9e\TextFormatter\Tests\Utils;
 
 use s9e\TextFormatter\Utils\Http;
 use s9e\TextFormatter\Tests\Test;

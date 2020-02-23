@@ -7440,7 +7440,7 @@ Native (s9e\TextFormatter\Tests\Utils\Http\Clients\Native)
  [x] get() returns FALSE on error
  [x] get() returns headers if returnHeaders is true
 
-Http (s9e\TextFormatter\Tests\Configurator\Helpers\Http)
+Http (s9e\TextFormatter\Tests\Utils\Http)
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client
  [x] getCachingClient() returns an instance of s9e\TextFormatter\Utils\Http\Clients\Cached that implements s9e\TextFormatter\Utils\Http\Client
 
