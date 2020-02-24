@@ -1,3 +1,14 @@
+2.3.5 (2020-02-24)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/2e1fcc28af2131802d4a99f98840279f27f8a34f...732a54ac75d178bb4a07344af946e05fa92c37c9)
+
+### Fixed
+
+ - `15bfc779b` OptimizeChooseDeadBranches: fixed 00 incorrectly considered true
+ - `732a54ac7` XPathHelper: fixed an issue with overzealous minification
+
+
 2.3.4 (2020-02-18)
 ==================
 
