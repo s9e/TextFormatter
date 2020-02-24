@@ -136,8 +136,8 @@ abstract class XPathHelper
 			// Remove the space between a - and a word character as long as there's a space before -
 			'( -\\K (?=[a-z_0-9]))i',
 
-			// Remove the space between an operator and the next token
-			'([ \\)](?:and|div|or)\\K )',
+			// Remove the space between an operator and the next token if it's a left parenthesis
+			'([ \\)](?:and|div|mod|or)\\K (?=\\())',
 
 			// Remove the space after a number
 			'(\\b\\d+\\K )'

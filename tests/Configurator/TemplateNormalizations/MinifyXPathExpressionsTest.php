@@ -43,8 +43,8 @@ class MinifyXPathExpressionsTest extends AbstractTest
 				'<div><xsl:if test="@foo- -1=2">!</xsl:if></div>'
 			],
 			[
-				'<div><xsl:if test=" foo or _bar ">!</xsl:if></div>',
-				'<div><xsl:if test="foo or_bar">!</xsl:if></div>'
+				'<div><xsl:if test=" foo or ( bar and baz ) ">!</xsl:if></div>',
+				'<div><xsl:if test="foo or(bar and baz)">!</xsl:if></div>'
 			],
 			[
 				'<b title="foo { @ bar } baz { @ quux }"/>',

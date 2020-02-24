@@ -1062,6 +1062,7 @@ XPath Helper (s9e\TextFormatter\Tests\Configurator\Helpers\XPathHelper)
  [x] minify() tests with data set #25
  [x] minify() tests with data set #26
  [x] minify() tests with data set #27
+ [x] minify() tests with data set #28
  [x] Parse equality expr with data set #0
  [x] Parse equality expr with data set #1
  [x] Parse equality expr with data set #2

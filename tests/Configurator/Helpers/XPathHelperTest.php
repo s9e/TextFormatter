@@ -156,11 +156,11 @@ class XPathHelperTest extends Test
 			],
 			[
 				' foo or _bar ',
-				'foo or_bar'
+				'foo or _bar'
 			],
 			[
 				'100 * (315 + 30) div 560',
-				'100*(315+30)div560'
+				'100*(315+30)div 560'
 			],
 			[
 				'@div or @div',
@@ -168,11 +168,15 @@ class XPathHelperTest extends Test
 			],
 			[
 				'333 div 111',
-				'333div111'
+				'333div 111'
+			],
+			[
+				'333 div (1+1)',
+				'333div(1+1)'
 			],
 			[
 				'(1 + 1) div 111',
-				'(1+1)div111'
+				'(1+1)div 111'
 			],
 			[
 				'a1 - 1',
@@ -184,7 +188,7 @@ class XPathHelperTest extends Test
 			],
 			[
 				"starts-with(@id, 'episode/') or starts-with(@id, 'show/')",
-				"starts-with(@id,'episode/')orstarts-with(@id,'show/')"
+				"starts-with(@id,'episode/')or starts-with(@id,'show/')"
 			],
 			[
 				'2 * (1 + 1)',
@@ -219,8 +223,13 @@ class XPathHelperTest extends Test
 				'@foo=1or@bar=2'
 			],
 			[
+				/**
+				* @link https://www.w3.org/TR/1999/REC-xpath-19991116/#exprlex
+				*
+				* "Otherwise, the token must not be recognized as a MultiplyOperator, an OperatorName, a NodeType, a FunctionName, or an AxisName."
+				*/
 				'true() and true()',
-				'true()andtrue()'
+				'true()and true()'
 			],
 			[
 				'(1+(1+1))',
