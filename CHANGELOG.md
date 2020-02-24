@@ -1,3 +1,13 @@
+2.3.6 (2020-02-24)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/947cfecab65578dc0a50cc319f760e25a4ac3f75...3eae3fbe1e2244677850dfe3b292635619dcea4f)
+
+### Changed
+
+ - `3eae3fbe1` MediaEmbed: updated definitions
+
+
 2.3.5 (2020-02-24)
 ==================
 
