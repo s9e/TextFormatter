@@ -81,7 +81,7 @@ function parseInt(num, base) {}
  * @implements {IArrayLike<T>}
  * @implements {Iterable<T>}
  * @param {...*} var_args
- * @return {!Array<?>}
+ * @return {!Array}
  * @nosideeffects
  * @template T
  */
@@ -493,9 +493,9 @@ function Element() {}
  */
 function Window() {}
 /**
- * @param {Node} externalNode
- * @param {boolean} deep
- * @return {Node}
+ * @param {!Node} externalNode
+ * @param {boolean=} deep
+ * @return {!Node}
  */
 Document.prototype.importNode = function(externalNode, deep) {};
 /**
