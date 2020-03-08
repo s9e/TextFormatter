@@ -473,12 +473,25 @@ Node.prototype.parentNode;
  */
 Node.prototype.removeChild = function(oldChild) {};
 /**
+ * @param {Node} newChild
+ * @param {Node} oldChild
+ * @return {!Node}
+ */
+Node.prototype.replaceChild = function(newChild, oldChild) {};
+/**
  * @constructor
  * @implements {IArrayLike<T>}
  * @implements {Iterable<T>}
  * @template T
  */
 function NodeList() {}
+/**
+ * @param {?function(this:S, T, number, !NodeList<T>): ?} callback
+ * @param {S=} opt_thisobj
+ * @template S
+ * @return {undefined}
+ */
+NodeList.prototype.forEach = function(callback, opt_thisobj) {};
 /**
  * @type {number}
  */

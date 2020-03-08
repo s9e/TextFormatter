@@ -46,6 +46,7 @@ $knownVars['Object']        = 1;
 $knownVars['contentWindow'] = 1;
 $knownVars['data']          = 1;
 $knownVars['document']      = 1;
+$knownVars['parentNode']    = 1;
 $knownVars['prototype']     = 1;
 $knownVars['src']           = 1;
 $knownVars['style']         = 1;

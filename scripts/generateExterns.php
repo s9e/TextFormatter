@@ -101,8 +101,10 @@ $externs = [
 		'Node.prototype.ownerDocument',
 		'Node.prototype.parentNode',
 		'Node.prototype.removeChild',
+		'Node.prototype.replaceChild',
 
 		'NodeList',
+		'NodeList.prototype.forEach',
 		'NodeList.prototype.length',
 
 		'Element',
