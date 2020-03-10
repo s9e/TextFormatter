@@ -1,3 +1,20 @@
+2.3.7 (2020-03-10)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b96dc121d2dfaabe7e3df42e76d93ffb857cf377...544f430f9c182b88cc9da9374a80353f6c4e466f)
+
+### Fixed
+
+ - `12bdf56b7` JavaScript: fixed scripts not being executed on Blink browsers
+
+### Changed
+
+ - `544f430f9` BBCodes: updated default CODE BBCode
+ - `61d3dcf2a` BBCodes: updated default CODE BBCode
+ - `194bc5388` BBCodes: updated default CODE BBCode
+ - `98fa77467` JavaScript: updated externs
+
+
 2.3.6 (2020-02-24)
 ==================
 
