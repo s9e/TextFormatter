@@ -80,27 +80,30 @@ echo $html;
 ###### CODE
 ```[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]```
 ```xsl
-<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(typeof hljsLoader!=='undefined')hljsLoader.highlightBlocks(this)"><code>
-	<xsl:if test="@lang">
-		<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
-	</xsl:if>
-	<xsl:apply-templates />
-</code></pre>
-<script async="" crossorigin="anonymous">
-	<xsl:if test="'default' != 'github-gist'">
-		<xsl:attribute name="data-hljs-style">
-			github-gist
-		</xsl:attribute>
-	</xsl:if>
-	<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/'">
-		<xsl:attribute name="data-hljs-url">
-			https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/
-		</xsl:attribute>
-	</xsl:if>
-	<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
-	<xsl:attribute name="integrity">sha384-PG1zopchh98J/8eUG/5ESEA+dE1Art6Ym1XKxLljmoOwlodOfUguCC/cydPWZSQ/</xsl:attribute>
-	<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.8/loader.min.js</xsl:attribute>
-</script>
+<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(typeof hljsLoader!=='undefined')hljsLoader.highlightBlocks(this)">
+	<code>
+		<xsl:if test="@lang">
+			<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
+		</xsl:if>
+		<xsl:apply-templates />
+	</code>
+	<script async="" crossorigin="anonymous">
+		<xsl:if test="'default' != 'github-gist'">
+			<xsl:attribute name="data-hljs-style">
+				github-gist
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/'">
+			<xsl:attribute name="data-hljs-url">
+				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
+		<xsl:attribute name="integrity">sha384-PG1zopchh98J/8eUG/5ESEA+dE1Art6Ym1XKxLljmoOwlodOfUguCC/cydPWZSQ/</xsl:attribute>
+		<xsl:attribute name="onload">hljsLoader.highlightBlocks(this.parentNode)</xsl:attribute>
+		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.8/loader.min.js</xsl:attribute>
+	</script>
+</pre>
 ```
 <table>
 	<tr>
