@@ -15,7 +15,7 @@
 			<iframe width="100%" height="152" max-width="900" src="https://open.spotify.com/embed/{@id}" allow="encrypted-media"/>
 		</when>
 		<otherwise>
-			<iframe width="400" height="400" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}" allow="encrypted-media"/>
+			<iframe width="320" height="320" padding-height="80" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}" allow="encrypted-media"/>
 		</otherwise>
 	</choose>
 </site>
