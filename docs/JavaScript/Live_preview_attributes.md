@@ -2,7 +2,7 @@
 
 The value of a `data-s9e-livepreview-hash` attribute is automatically replaced during rendering with a hash that corresponds to the `outerHTML` value of its parent element. Elements with matching hashes are considered identical during DOM diffing, regardless of their content. This can be used to quickly skip deep trees or content that is modified post-rendering.
 
-The hashing algorithm is unspecified and may change between minor releases.
+The hashing algorithm is left unspecified and may change between minor releases.
 
 
 ### data-s9e-livepreview-ignore-attrs
