@@ -21,6 +21,11 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 	protected $supportedElements = [];
 
 	/**
+	* @var string[] 
+	*/
+	protected $supportedFunctions = [];
+
+	/**
 	* Check for elements not supported by the PHP renderer
 	*
 	* @param DOMElement $template <xsl:template/> node
@@ -28,12 +33,22 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 	*/
 	public function check(DOMElement $template, Tag $tag): void
 	{
-		$this->checkXslElements();
+		$this->checkXslElements($template);
+		$this->checkXPathExpressions($template);
 	}
 
-	/**
-	* Check XSL elements in given template
-	*/
+	protected function checkXPathExpression(string $expr): void
+	{
+	}
+
+	protected function checkXPathExpressions(DOMElement $template): void
+	{
+		foreach ($this->getXPathExpressions($template) as $expr)
+		{
+			$this->checkXPathExpression($expr);
+		}
+	}
+
 	protected function checkXslElements(DOMElement $template): void
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
@@ -51,5 +66,31 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 				$this->$methodName($node);
 			}
 		}
+	}
+
+	protected function checkXPathExpressions(DOMElement $template): array
+	{
+		$exprs = [];
+		$xpath = new DOMXPath($template->ownerDocument);
+
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(. "{")]';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			foreach (AVTHelper::parse($attribute->value) as [$type, $content])
+			{
+				if ($type === 'expression')
+				{
+					$exprs[] = $content;
+				}
+			}
+		}
+
+		$query = '//xsl:if/@test | //xsl:value-of/@select | //xsl:when/@test';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			$exprs[] = $attribute->value;
+		}
+
+		return $exprs;
 	}
 }
