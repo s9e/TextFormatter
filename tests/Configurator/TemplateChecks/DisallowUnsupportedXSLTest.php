@@ -25,23 +25,39 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 	/**
 	* @testdox Disallowed: <xsl:message>..</xsl:message>
 	*/
-	public function test()
+	public function testUnsupportedElement()
 	{
 		$this->expectException('RuntimeException');
 		$this->expectExceptionMessage('xsl:message elements are not supported');
 
 		$node = $this->loadTemplate('<xsl:message>..</xsl:message>');
 
-		try
-		{
-			$check = new DisallowUnsupportedXSL;
-			$check->check($node, new Tag);
-		}
-		catch (UnsafeTemplateException $e)
-		{
-			$this->assertTrue($e->getNode()->isSameNode($node->firstChild));
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 
-			throw $e;
-		}
+	/**
+	* @testdox Allowed: <xsl:apply-templates/>
+	* @doesNotPerformAssertions
+	*/
+	public function testApplyTemplates()
+	{
+		$node = $this->loadTemplate('<xsl:apply-templates/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:apply-templates mode="unsupported"/>
+	*/
+	public function testApplyTemplatesMode()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:apply-templates elements do not support the mode attribute');
+
+		$node = $this->loadTemplate('<xsl:apply-templates mode="unsupported"/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
 	}
 }

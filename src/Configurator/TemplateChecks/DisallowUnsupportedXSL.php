@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
 use DOMElement;
+use RuntimeException;
 
 class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 {
