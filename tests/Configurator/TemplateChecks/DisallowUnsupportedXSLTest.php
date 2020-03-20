@@ -110,4 +110,29 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <xsl:value-of select="@foo"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testValueOfAttribute()
+	{
+		$node = $this->loadTemplate('<xsl:value-of select="@foo"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:value-of/>
+	*/
+	public function testValueOf()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:value-of elements require a select attribute');
+
+		$node = $this->loadTemplate('<xsl:value-of/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
