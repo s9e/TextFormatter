@@ -11,9 +11,6 @@ use DOMElement;
 
 class DisallowUncompilableXSL extends AbstractXSLSupportCheck
 {
-	/**
-	* @var string[] 
-	*/
 	protected $supportedElements = [
 		'apply-templates',
 		'attribute',
@@ -27,6 +24,8 @@ class DisallowUncompilableXSL extends AbstractXSLSupportCheck
 		'value-of',
 		'when'
 	];
+
+	protected $supportedFunctions = ['boolean', 'ceiling', 'concat', 'contains', 'count', 'current', 'false', 'floor', 'last', 'local-name', 'name', 'normalize-space', 'not', 'number', 'position', 'round', 'starts-with', 'string', 'string-length', 'substring', 'substring-after', 'substring-before', 'sum', 'system-property', 'translate', 'true'];
 
 	protected function checkXslCopyOfElement(DOMElement $copyOf): void
 	{

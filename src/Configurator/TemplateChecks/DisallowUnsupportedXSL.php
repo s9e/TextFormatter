@@ -11,9 +11,6 @@ use DOMElement;
 
 class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 {
-	/**
-	* @var string[] 
-	*/
 	protected $supportedElements = [
 		'apply-templates',
 		'attribute',
@@ -28,6 +25,8 @@ class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 		'variable',
 		'when'
 	];
+
+	protected $supportedFunctions = ['boolean', 'ceiling', 'concat', 'contains', 'count', 'current', 'document', 'element-available', 'false', 'floor', 'format-number', 'function-available', 'generate-id', 'id', 'key', 'lang', 'last', 'local-name', 'name', 'namespace-uri', 'normalize-space', 'not', 'number', 'position', 'round', 'starts-with', 'string', 'string-length', 'substring', 'substring-after', 'substring-before', 'sum', 'system-property', 'translate', 'true', 'unparsed-entity-uri'];
 
 	protected function checkXslApplyTemplatesElement(DOMElement $applyTemplates): void
 	{
