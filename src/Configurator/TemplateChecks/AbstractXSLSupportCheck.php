@@ -82,12 +82,12 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		}
 	}
 
-	protected function checkXPathExpressions(DOMElement $template): array
+	protected function getXPathExpressions(DOMElement $template): array
 	{
 		$exprs = [];
 		$xpath = new DOMXPath($template->ownerDocument);
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(. "{")]';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			foreach (AVTHelper::parse($attribute->value) as [$type, $content])

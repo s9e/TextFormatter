@@ -44,14 +44,6 @@ class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 		}
 	}
 
-	protected function checkXslCopyOfElement(DOMElement $copyOf): void
-	{
-		if (!$copyOf->hasAttribute('select'))
-		{
-			throw new RuntimeException('xsl:copy-of elements require a select attribute');
-		}
-	}
-
 	protected function checkXslIfElement(DOMElement $if): void
 	{
 		if (!$if->hasAttribute('test'))

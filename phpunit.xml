@@ -183,6 +183,7 @@
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicCSSTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicJSTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicURLTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUnsupportedXSLTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowXPathFunctionTest.php</file>
 			<file>tests/Configurator/TemplateChecks/RestrictFlashNetworkingTest.php</file>
 			<file>tests/Configurator/TemplateChecks/RestrictFlashScriptAccessTest.php</file>
