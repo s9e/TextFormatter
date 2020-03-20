@@ -135,4 +135,28 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <xsl:value-of select="concat('foo()', &quot;bar()&quot;)"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testSupportedFunction()
+	{
+		$node = $this->loadTemplate('<xsl:value-of select="concat(\'foo()\', &quot;bar()&quot;)"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:value-of select="foo('bar')"/>
+	*/
+	public function testUnsupportedFunction()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('XPath function foo is not supported');
+
+		$node = $this->loadTemplate('<xsl:value-of select="foo(\'bar\')"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
