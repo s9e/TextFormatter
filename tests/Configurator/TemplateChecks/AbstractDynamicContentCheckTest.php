@@ -9,25 +9,12 @@ use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck;
-use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 */
-class AbstractDynamicContentCheckTest extends Test
+class AbstractDynamicContentCheckTest extends AbstractTemplateCheckTest
 {
-	protected function loadTemplate($template)
-	{
-		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom->documentElement;
-	}
-
 	/**
 	* @testdox Stylesheet parameters are considered safe
 	* @doesNotPerformAssertions

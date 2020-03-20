@@ -7,25 +7,12 @@ use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowCopy;
-use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowCopy
 */
-class DisallowCopyTest extends Test
+class DisallowCopyTest extends AbstractTemplateCheckTest
 {
-	protected function loadTemplate($template)
-	{
-		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom->documentElement;
-	}
-
 	/**
 	* @testdox Disallowed: <b><xsl:copy/></b>
 	*/

@@ -7,26 +7,13 @@ use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
-use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractFlashRestriction
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess
 */
-class RestrictFlashScriptAccessTest extends Test
+class RestrictFlashScriptAccessTest extends AbstractTemplateCheckTest
 {
-	protected function loadTemplate($template)
-	{
-		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom->documentElement;
-	}
-
 	/**
 	* @testdox 'sameDomain' disallows <embed allowScriptAccess="always"/>
 	*/

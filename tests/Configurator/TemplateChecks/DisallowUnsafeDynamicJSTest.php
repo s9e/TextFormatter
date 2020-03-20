@@ -8,26 +8,13 @@ use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\NumberFilter;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicJS;
-use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
 */
-class DisallowUnsafeDynamicJSTest extends Test
+class DisallowUnsafeDynamicJSTest extends AbstractTemplateCheckTest
 {
-	protected function loadTemplate($template)
-	{
-		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom->documentElement;
-	}
-
 	/**
 	* @testdox Allowed: <script>.important { alert(1) }</script>
 	* @doesNotPerformAssertions

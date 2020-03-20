@@ -7,25 +7,12 @@ use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
-use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS
 */
-class DisallowElementNSTest extends Test
+class DisallowElementNSTest extends AbstractTemplateCheckTest
 {
-	protected function loadTemplate($template)
-	{
-		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom->documentElement;
-	}
-
 	/**
 	* @testdox DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
 	*/
