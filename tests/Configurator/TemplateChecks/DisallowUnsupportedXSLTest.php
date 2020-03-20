@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsupportedXSL;
 
 /**
+* @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractXSLSupportCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsupportedXSL
 */
 class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
