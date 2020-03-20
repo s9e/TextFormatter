@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 
-use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;

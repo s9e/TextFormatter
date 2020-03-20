@@ -2,8 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 
-use DOMDocument;
-use DOMElement;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowAttributeSets;
