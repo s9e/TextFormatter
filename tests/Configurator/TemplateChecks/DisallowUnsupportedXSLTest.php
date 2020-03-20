@@ -60,4 +60,29 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <xsl:copy-of/>
+	* @doesNotPerformAssertions
+	*/
+	public function testCopyOfAttribute()
+	{
+		$node = $this->loadTemplate('<xsl:copy-of select="@foo"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:copy-of/>
+	*/
+	public function testCopyOf()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:copy-of elements require a select attribute');
+
+		$node = $this->loadTemplate('<xsl:copy-of/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
