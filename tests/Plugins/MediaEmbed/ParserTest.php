@@ -493,42 +493,36 @@ class ParserTest extends Test
 	public function getScrapingTests()
 	{
 		return [
-			[
-				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
-				[],
-				function ($configurator)
-				{
-					// Skip during cache preload
-					if (isset($_SERVER['CACHE_PRELOAD']))
-					{
-						$this->markTestSkipped();
-					}
-
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
-			[
-				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<r><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
-			[
-				'http://therunons.bandcamp.com/track/still-feel',
-				'<r><BANDCAMP track_id="2146686782">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
+//			[
+//				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
+//				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
+//			[
+//				'http://proleter.bandcamp.com/track/muhammad-ali',
+//				'<r><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
+//			[
+//				'http://therunons.bandcamp.com/track/still-feel',
+//				'<r><BANDCAMP track_id="2146686782">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
 				'(<r><BBCNEWS id="\\w+/42847060">http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</BBCNEWS></r>)',
@@ -609,6 +603,12 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					// Skip during cache preload
+					if (isset($_SERVER['CACHE_PRELOAD']))
+					{
+						$this->markTestSkipped();
+					}
+
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('flickr');
 				}
@@ -1292,42 +1292,36 @@ class ParserTest extends Test
 	public function getScrapingRenderingTests()
 	{
 		return [
-			[
-				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					// Skip during cache preload
-					if (isset($_SERVER['CACHE_PRELOAD']))
-					{
-						$this->markTestSkipped();
-					}
-
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
-			[
-				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
-			[
-				'http://therunons.bandcamp.com/track/still-feel',
-				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bandcamp');
-				}
-			],
+//			[
+//				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></span></span>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
+//			[
+//				'http://proleter.bandcamp.com/track/muhammad-ali',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></span></span>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
+//			[
+//				'http://therunons.bandcamp.com/track/still-feel',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></span></span>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('bandcamp');
+//				}
+//			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
 				'(<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/\\w+/42847060"></iframe></span></span>)',
