@@ -48,7 +48,7 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 			{
 				if (!in_array($funcName, $this->supportedFunctions, true))
 				{
-					throw new RuntimeException('XPath function ' . $funcName . ' is not supported');
+					throw new RuntimeException('XPath function ' . $funcName . '() is not supported');
 				}
 			}
 		}

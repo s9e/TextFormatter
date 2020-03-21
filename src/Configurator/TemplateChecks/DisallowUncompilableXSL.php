@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
 use DOMElement;
+use RuntimeException;
 
 class DisallowUncompilableXSL extends AbstractXSLSupportCheck
 {
@@ -29,7 +30,7 @@ class DisallowUncompilableXSL extends AbstractXSLSupportCheck
 
 	protected function checkXslCopyOfElement(DOMElement $copyOf): void
 	{
-		$expr = $node->getAttribute('select');
+		$expr = $copyOf->getAttribute('select');
 		if (!preg_match('#^@[-\\w]+(?:\\s*\\|\\s*@[-\\w]+)*$#', $expr) && $expr !== '@*')
 		{
 			throw new RuntimeException("Unsupported xsl:copy-of expression '" . $expr . "'");
