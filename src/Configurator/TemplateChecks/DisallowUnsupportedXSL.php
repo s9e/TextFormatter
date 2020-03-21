@@ -61,7 +61,7 @@ class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 		}
 	}
 
-	protected function checkXslVariable(DOMElement $variable): void
+	protected function checkXslVariableElement(DOMElement $variable): void
 	{
 		if (!$variable->hasAttribute('name'))
 		{

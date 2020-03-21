@@ -138,12 +138,62 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 	}
 
 	/**
-	* @testdox Allowed: <xsl:value-of select="concat('foo()', &quot;bar()&quot;)"/>
+	* @testdox Allowed: <xsl:variable name="foo"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testVariableNamed()
+	{
+		$node = $this->loadTemplate('<xsl:variable name="foo"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:variable/>
+	*/
+	public function testVariable()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:variable elements require a name attribute');
+
+		$node = $this->loadTemplate('<xsl:variable/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed: <xsl:when test="@foo"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testWhenAttribute()
+	{
+		$node = $this->loadTemplate('<xsl:when test="@foo"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:when/>
+	*/
+	public function testWhen()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:when elements require a test attribute');
+
+		$node = $this->loadTemplate('<xsl:when/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed: <xsl:value-of select="substring-after('foo()', &quot;bar()&quot;)"/>
 	* @doesNotPerformAssertions
 	*/
 	public function testSupportedFunction()
 	{
-		$node = $this->loadTemplate('<xsl:value-of select="concat(\'foo()\', &quot;bar()&quot;)"/>');
+		$node = $this->loadTemplate('<xsl:value-of select="substring-after(\'foo()\', &quot;bar()&quot;)"/>');
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}

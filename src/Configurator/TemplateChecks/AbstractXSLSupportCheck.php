@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\TemplateChecks;
 use DOMElement;
 use DOMXPath;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
 
