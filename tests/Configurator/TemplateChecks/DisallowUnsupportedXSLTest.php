@@ -160,4 +160,17 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Disallowed: <hr title="{foo()}"/>
+	*/
+	public function testUnsupportedFunctionAVT()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('XPath function foo is not supported');
+
+		$node = $this->loadTemplate('<hr title="{foo()}"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
