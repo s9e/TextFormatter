@@ -17,12 +17,12 @@ use s9e\TextFormatter\Configurator\TemplateCheck;
 abstract class AbstractXSLSupportCheck extends TemplateCheck
 {
 	/**
-	* @var string[] 
+	* @var string[] List of supported XSL elements (local name only)
 	*/
 	protected $supportedElements = [];
 
 	/**
-	* @var string[] 
+	* @var string[]  List of supported XPath functions
 	*/
 	protected $supportedFunctions = [];
 
