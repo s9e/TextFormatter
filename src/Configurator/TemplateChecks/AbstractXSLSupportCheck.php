@@ -40,17 +40,15 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 	protected function checkXPathExpression(string $expr): void
 	{
 		preg_match_all('("[^"]*+"|\'[^\']*+\'|(*:fn)[-\\w]++(?=\\s*\\())', $expr, $m);
-		if (empty($m['MARK']))
+		if (!empty($m['MARK']))
 		{
-			return;
-		}
-
-		$funcNames = array_intersect_key($m[0], $m['MARK']);
-		foreach ($funcNames as $funcName)
-		{
-			if (!in_array($funcName, $this->supportedFunctions, true))
+			$funcNames = array_intersect_key($m[0], $m['MARK']);
+			foreach ($funcNames as $funcName)
 			{
-				throw new RuntimeException('XPath function ' . $funcName . ' is not supported');
+				if (!in_array($funcName, $this->supportedFunctions, true))
+				{
+					throw new RuntimeException('XPath function ' . $funcName . ' is not supported');
+				}
 			}
 		}
 	}
