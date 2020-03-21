@@ -38,6 +38,9 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		$this->checkXPathExpressions($template);
 	}
 
+	/**
+	* Check given XPath expression
+	*/
 	protected function checkXPathExpression(string $expr): void
 	{
 		preg_match_all('("[^"]*+"|\'[^\']*+\'|(*:fn)[-\\w]++(?=\\s*\\())', $expr, $m);
@@ -54,6 +57,9 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		}
 	}
 
+	/**
+	* Check all XPath expressions in given template
+	*/
 	protected function checkXPathExpressions(DOMElement $template): void
 	{
 		foreach ($this->getXPathExpressions($template) as $expr)
@@ -62,6 +68,9 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		}
 	}
 
+	/**
+	* Check all XSL elements in given template
+	*/
 	protected function checkXslElements(DOMElement $template): void
 	{
 		$xpath = new DOMXPath($template->ownerDocument);
@@ -81,6 +90,9 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		}
 	}
 
+	/**
+	* Return all XPath expressions in given template
+	*/
 	protected function getXPathExpressions(DOMElement $template): array
 	{
 		$exprs = [];
