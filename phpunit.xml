@@ -179,6 +179,7 @@
 			<file>tests/Configurator/TemplateChecks/DisallowNodeByXPathTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowObjectParamsWithGeneratedNameTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowPHPTagsTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUncompilableXSLTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeCopyOfTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicCSSTest.php</file>
 			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicJSTest.php</file>
