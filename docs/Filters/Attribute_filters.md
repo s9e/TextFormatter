@@ -1,6 +1,7 @@
 ### How attribute filters work
 
-Attribute filters are callbacks. During parsing, they are called for each attribute using the attribute's value as sole argument and their return value replaces the attribute's value. If the return value is `false` then the attribute is declared invalid and no more filter is applied.
+Attribute filters are callbacks that can be used to validate or sanitize user input. During parsing, they are called for each attribute using the attribute's value as sole argument and their return value replaces the attribute's value. If the return value is `false` then the attribute is declared invalid and no more filter is applied.
+
 
 ### Add a custom attribute filter
 
