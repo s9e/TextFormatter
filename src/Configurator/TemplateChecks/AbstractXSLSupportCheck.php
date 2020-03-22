@@ -98,7 +98,7 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		$exprs = [];
 		$xpath = new DOMXPath($template->ownerDocument);
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
+		$query = '//xsl:*/@name | //*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			foreach (AVTHelper::parse($attribute->value) as [$type, $content])

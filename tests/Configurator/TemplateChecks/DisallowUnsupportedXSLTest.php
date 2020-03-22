@@ -223,4 +223,29 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <xsl:element name="{string(@name)}"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testDynamicName()
+	{
+		$node = $this->loadTemplate('<xsl:element name="{string(@name)}"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:element name="{foo(@name)}"/>
+	*/
+	public function testDynamicNameUnsupported()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('XPath function foo() is not supported');
+
+		$node = $this->loadTemplate('<xsl:element name="{foo(@name)}"/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
