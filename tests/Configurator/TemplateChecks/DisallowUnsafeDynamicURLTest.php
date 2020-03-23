@@ -89,6 +89,30 @@ class DisallowUnsafeDynamicURLTest extends AbstractTemplateCheckTest
 	}
 
 	/**
+	* @testdox Allowed even if unknown: <a href="foo#{@foo}">...</a>
+	* @doesNotPerformAssertions
+	*/
+	public function testAllowedLocalUrlWithFragment()
+	{
+		$node = $this->loadTemplate('<a href="foo#{@foo}">...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed even if unknown: <a href="foo?{@foo}">...</a>
+	* @doesNotPerformAssertions
+	*/
+	public function testAllowedLocalUrlWithQuery()
+	{
+		$node = $this->loadTemplate('<a href="foo?{@foo}">...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Disallowed if unknown: <a href="{@foo}">...</a>
 	*/
 	public function testDisallowedUnknown()

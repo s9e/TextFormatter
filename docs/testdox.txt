@@ -2250,6 +2250,8 @@ Disallow Unsafe Dynamic URL (s9e\TextFormatter\Tests\Configurator\TemplateChecks
  [x] Allowed even if unknown: <a href="//{@foo}">...</a>
  [x] Allowed even if unknown: <a href="user/{@foo}">...</a>
  [x] Allowed even if unknown: <a href="#{@foo}">...</a>
+ [x] Allowed even if unknown: <a href="foo#{@foo}">...</a>
+ [x] Allowed even if unknown: <a href="foo?{@foo}">...</a>
  [x] Disallowed if unknown: <a href="{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="javascript:{@foo}">...</a>
@@ -5379,9 +5381,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #52
  [x] Scraping tests with data set #53
  [x] Scraping tests with data set #54
- [x] Scraping tests with data set #55
- [x] Scraping tests with data set #56
- [x] Scraping tests with data set #57
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -5393,9 +5392,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping+rendering tests with data set #8
  [x] Scraping+rendering tests with data set #9
  [x] Scraping+rendering tests with data set #10
- [x] Scraping+rendering tests with data set #11
- [x] Scraping+rendering tests with data set #12
- [x] Scraping+rendering tests with data set #13
  [x] Legacy rendering tests with data set #0
  [x] Legacy rendering tests with data set #1
  [x] Legacy rendering tests with data set #2
