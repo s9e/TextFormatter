@@ -12,19 +12,7 @@ use RuntimeException;
 
 class DisallowUncompilableXSL extends AbstractXSLSupportCheck
 {
-	protected $supportedElements = [
-		'apply-templates',
-		'attribute',
-		'choose',
-		'comment',
-		'copy-of',
-		'element',
-		'if',
-		'otherwise',
-		'text',
-		'value-of',
-		'when'
-	];
+	protected $supportedElements = ['apply-templates', 'attribute', 'choose', 'comment', 'copy-of', 'element', 'if', 'otherwise', 'text', 'value-of', 'when'];
 
 	protected $supportedFunctions = ['boolean', 'ceiling', 'concat', 'contains', 'count', 'current', 'false', 'floor', 'last', 'local-name', 'name', 'normalize-space', 'not', 'number', 'position', 'round', 'starts-with', 'string', 'string-length', 'substring', 'substring-after', 'substring-before', 'sum', 'system-property', 'translate', 'true'];
 

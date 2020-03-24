@@ -106,7 +106,7 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 			}
 		}
 
-		$query = '//xsl:if/@test | //xsl:value-of/@select | //xsl:when/@test';
+		$query = '//xsl:*/@select | //xsl:*/@test';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			$exprs[] = $attribute->value;

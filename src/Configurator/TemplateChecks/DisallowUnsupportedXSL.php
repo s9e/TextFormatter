@@ -12,20 +12,7 @@ use RuntimeException;
 
 class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 {
-	protected $supportedElements = [
-		'apply-templates',
-		'attribute',
-		'choose',
-		'comment',
-		'copy-of',
-		'element',
-		'if',
-		'otherwise',
-		'text',
-		'value-of',
-		'variable',
-		'when'
-	];
+	protected $supportedElements = ['apply-templates', 'attribute', 'choose', 'comment', 'copy-of', 'element', 'for-each', 'if', 'number', 'otherwise', 'processing-instruction', 'sort', 'text', 'value-of', 'variable', 'when'];
 
 	protected $supportedFunctions = ['boolean', 'ceiling', 'concat', 'contains', 'count', 'current', 'document', 'element-available', 'false', 'floor', 'format-number', 'function-available', 'generate-id', 'id', 'key', 'lang', 'last', 'local-name', 'name', 'namespace-uri', 'normalize-space', 'not', 'number', 'position', 'round', 'starts-with', 'string', 'string-length', 'substring', 'substring-after', 'substring-before', 'sum', 'system-property', 'translate', 'true', 'unparsed-entity-uri'];
 
