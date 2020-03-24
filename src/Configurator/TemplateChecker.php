@@ -82,6 +82,9 @@ class TemplateChecker implements ArrayAccess, Iterator
 		$this->collection->append(new DisallowElementNS('http://icl.com/saxon', 'output'));
 		$this->collection->append(new DisallowXPathFunction('document'));
 		$this->collection->append(new RestrictFlashScriptAccess('sameDomain', true));
+
+		// Check for unsupported XSL last to allow for the more specialized checks to be run first
+		$this->collection->append('DisallowUnsupportedXSL');
 	}
 
 	/**
