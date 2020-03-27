@@ -1439,6 +1439,7 @@ class Parser
 				[
 					'tag'      => $tag,
 					'tagName'  => $tagName,
+					'tagCount' => $this->cntTotal[$tagName],
 					'tagLimit' => $tagConfig['tagLimit']
 				]
 			);
@@ -1469,6 +1470,7 @@ class Parser
 				[
 					'tag'          => $tag,
 					'tagName'      => $tagName,
+					'nestingCount' => $this->cntOpen[$tagName],
 					'nestingLimit' => $tagConfig['nestingLimit']
 				]
 			);
