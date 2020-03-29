@@ -22,9 +22,14 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 	protected $supportedElements = [];
 
 	/**
-	* @var string[]  List of supported XPath functions
+	* @var string[] List of supported XPath functions
 	*/
 	protected $supportedFunctions = [];
+
+	/**
+	* @var string[] List of supported XPath operators
+	*/
+	protected $supportedOperators = ['and', 'div', 'mod', 'or'];
 
 	/**
 	* Check for elements not supported by the PHP renderer
@@ -46,7 +51,7 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		preg_match_all('("[^"]*+"|\'[^\']*+\'|([-\\w]++)(?=\\s*\\())', $expr, $m);
 		foreach (array_filter($m[1]) as $funcName)
 		{
-			if (!in_array($funcName, $this->supportedFunctions, true))
+			if (!in_array($funcName, $this->supportedFunctions, true) && !in_array($funcName, $this->supportedOperators, true))
 			{
 				throw new RuntimeException('XPath function ' . $funcName . '() is not supported');
 			}

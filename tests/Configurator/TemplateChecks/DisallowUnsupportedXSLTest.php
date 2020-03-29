@@ -248,4 +248,15 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
+
+	/**
+	* @testdox Allowed: <xsl:if test="foo and (bar or (baz mod (1 + 1)))"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testOperators()
+	{
+		$node = $this->loadTemplate('<xsl:if test="foo and (bar or (baz mod (1 + 1)))"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
 }
