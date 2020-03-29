@@ -199,6 +199,17 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 	}
 
 	/**
+	* @testdox Allowed: <xsl:value-of select="1-number(@foo)"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testSupportedFunctionBoundary()
+	{
+		$node = $this->loadTemplate('<xsl:value-of select="1-number(@foo)"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Disallowed: <xsl:value-of select="foo('bar')"/>
 	*/
 	public function testUnsupportedFunction()
