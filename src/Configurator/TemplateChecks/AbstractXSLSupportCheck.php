@@ -51,7 +51,8 @@ abstract class AbstractXSLSupportCheck extends TemplateCheck
 		preg_match_all('("[^"]*+"|\'[^\']*+\'|((?:[a-z]++-)*+[a-z]++)(?=\\s*\\())', $expr, $m);
 		foreach (array_filter($m[1]) as $funcName)
 		{
-			if (!in_array($funcName, $this->supportedFunctions, true) && !in_array($funcName, $this->supportedOperators, true))
+			if (!in_array($funcName, $this->supportedFunctions, true)
+			 && !in_array($funcName, $this->supportedOperators, true))
 			{
 				throw new RuntimeException('XPath function ' . $funcName . '() is not supported');
 			}
