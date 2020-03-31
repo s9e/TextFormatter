@@ -1,3 +1,19 @@
+2.4.0 (2020-03-31)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/39088b779b71e120098a7a8a8f7dc4900cb8b671...6d9dcd09ca05a503c6ba7b1e146d1f05805f7f20)
+
+### Added
+
+ - `6d9dcd09c` TemplateChecks: added DisallowUncompilableXSL
+ - `039015605` TemplateChecks: added DisallowUnsupportedXSL, enabled by default
+
+### Changed
+
+ - `a5ddda129` DisallowUnsafeDynamicURL: improved detection of safe URLs
+ - `27dbc900b` MediaEmbed: updated Spotify
+
+
 2.3.7 (2020-03-10)
 ==================
 
