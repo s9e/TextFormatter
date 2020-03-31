@@ -2275,6 +2275,29 @@ Disallow Unsafe Dynamic URL (s9e\TextFormatter\Tests\Configurator\TemplateChecks
  [x] Disallowed: <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute>...</a>
  [x] Disallowed: <a><xsl:attribute name="href"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</a>
 
+Disallow Unsupported XSL (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsupportedXSL)
+ [x] Allowed: <b>...</b>
+ [x] Disallowed: <xsl:message>..</xsl:message>
+ [x] Allowed: <xsl:apply-templates/>
+ [x] Disallowed: <xsl:apply-templates mode="unsupported"/>
+ [x] Allowed: <xsl:copy-of select="@foo"/>
+ [x] Disallowed: <xsl:copy-of/>
+ [x] Allowed: <xsl:if test="@foo"/>
+ [x] Disallowed: <xsl:if/>
+ [x] Allowed: <xsl:value-of select="@foo"/>
+ [x] Disallowed: <xsl:value-of/>
+ [x] Allowed: <xsl:variable name="foo"/>
+ [x] Disallowed: <xsl:variable/>
+ [x] Allowed: <xsl:when test="@foo"/>
+ [x] Disallowed: <xsl:when/>
+ [x] Allowed: <xsl:value-of select="substring-after('foo()', &quot;bar()&quot;)"/>
+ [x] Allowed: <xsl:value-of select="1-number(@foo)"/>
+ [x] Disallowed: <xsl:value-of select="foo('bar')"/>
+ [x] Disallowed: <hr title="{foo()}"/>
+ [x] Allowed: <xsl:element name="{string(@name)}"/>
+ [x] Disallowed: <xsl:element name="{foo(@name)}"/>
+ [x] Allowed: <xsl:if test="foo and (bar or (baz mod (1 + 1)))"/>
+
 Disallow XPath Function (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowXPathFunction)
  [x] Disallowed: <xsl:value-of select="document(@foo)"/>
  [x] Disallowed: <xsl:value-of select="php:function()"/>
