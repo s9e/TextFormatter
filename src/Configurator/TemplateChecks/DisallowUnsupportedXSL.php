@@ -26,41 +26,34 @@ class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 
 	protected function checkXslCopyOfElement(DOMElement $copyOf): void
 	{
-		if (!$copyOf->hasAttribute('select'))
-		{
-			throw new RuntimeException('xsl:copy-of elements require a select attribute');
-		}
+		$this->requireAttribute($copyOf, 'select');
 	}
 
 	protected function checkXslIfElement(DOMElement $if): void
 	{
-		if (!$if->hasAttribute('test'))
-		{
-			throw new RuntimeException('xsl:if elements require a test attribute');
-		}
+		$this->requireAttribute($if, 'test');
 	}
 
 	protected function checkXslValueOfElement(DOMElement $valueOf): void
 	{
-		if (!$valueOf->hasAttribute('select'))
-		{
-			throw new RuntimeException('xsl:value-of elements require a select attribute');
-		}
+		$this->requireAttribute($valueOf, 'select');
 	}
 
 	protected function checkXslVariableElement(DOMElement $variable): void
 	{
-		if (!$variable->hasAttribute('name'))
-		{
-			throw new RuntimeException('xsl:variable elements require a name attribute');
-		}
+		$this->requireAttribute($variable, 'name');
 	}
 
 	protected function checkXslWhenElement(DOMElement $when): void
 	{
-		if (!$when->hasAttribute('test'))
+		$this->requireAttribute($when, 'test');
+	}
+
+	protected function requireAttribute(DOMElement $element, string $attrName)
+	{
+		if (!$element->hasAttribute($attrName))
 		{
-			throw new RuntimeException('xsl:when elements require a test attribute');
+			throw new RuntimeException('xsl:' . $element->localName . ' elements require a ' . $attrName . ' attribute');
 		}
 	}
 }
