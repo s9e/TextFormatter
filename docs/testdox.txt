@@ -2201,6 +2201,15 @@ Disallow PHPTags (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowPH
  [x] Disallowed: <script language="php">echo "sup";</script>
  [x] Disallowed: <script language="PHP">echo "sup";</script>
 
+Disallow Uncompilable XSL (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUncompilableXSL)
+ [x] Allowed: <b>...</b>
+ [x] Disallowed: <xsl:variable name="foo"/>
+ [x] Allowed: <xsl:copy-of select="@foo"/>
+ [x] Disallowed: <xsl:copy-of select="foo"/>
+ [x] Allowed: <xsl:value-of select="string-length(@foo)"/>
+ [x] Disallowed: <xsl:value-of select="document()"/>
+ [x] Disallowed: <hr title="{foo()}"/>
+
 Disallow Unsafe Copy Of (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeCopyOf)
  [x] Allowed: <b><xsl:copy-of select="@title"/></b>
  [x] Allowed: <b><xsl:copy-of select="@data-title"/></b>

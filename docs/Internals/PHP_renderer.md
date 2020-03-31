@@ -29,3 +29,28 @@ Custom:  MyRenderer
 Last class: MyRenderer
 Last file:  /tmp/MyRenderer.php
 ```
+
+
+### PHP renderer limitations
+
+Not every XSL element and XPath function is supported by the PHP renderer. One way to detect unsupported templates early in the configuration is to enable the `DisallowUncompilableXSL` template check.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+// Add the DisallowUncompilableXSL check
+$configurator->templateChecker->append('DisallowUncompilableXSL');
+
+// Create a BBCode with an unsupported element
+try
+{
+	$configurator->BBCodes->addCustom('[x]', '<xsl:processing-instruction name="foo"/>');
+}
+catch (RuntimeException $e)
+{
+	echo get_class($e), ': ', $e->getMessage();
+}
+```
+```
+RuntimeException: xsl:processing-instruction elements are not supported
+```
