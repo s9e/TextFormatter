@@ -29,6 +29,28 @@ class DisallowUnsupportedXSL extends AbstractXSLSupportCheck
 		$this->requireAttribute($copyOf, 'select');
 	}
 
+	protected function checkXslAttributeElement(DOMElement $attribute): void
+	{
+		$this->requireAttribute($attribute, 'name');
+
+		$attrName = $attribute->getAttribute('name');
+		if (!preg_match('(^(?:\\{[^\\}]++\\}|[-.\\pL])++$)Du', $attrName))
+		{
+			throw new RuntimeException("Unsupported xsl:attribute name '" . $attrName . "'");
+		}
+	}
+
+	protected function checkXslElementElement(DOMElement $element): void
+	{
+		$this->requireAttribute($element, 'name');
+
+		$elName = $element->getAttribute('name');
+		if (!preg_match('(^(?:\\{[^\\}]++\\}|[-.\\pL])++(?::(?:\\{[^\\}]++\\}|[-.\\pL])++)?$)Du', $elName))
+		{
+			throw new RuntimeException("Unsupported xsl:element name '" . $elName . "'");
+		}
+	}
+
 	protected function checkXslIfElement(DOMElement $if): void
 	{
 		$this->requireAttribute($if, 'test');

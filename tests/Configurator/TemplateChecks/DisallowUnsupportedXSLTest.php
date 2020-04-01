@@ -261,6 +261,106 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTest
 	}
 
 	/**
+	* @testdox Allowed: <xsl:element name="x-div"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testElementCustomName()
+	{
+		$node = $this->loadTemplate('<xsl:element name="x-div"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed: <xsl:element name="x:div"/>
+	* @doesNotPerformAssertions
+	*/
+	public function testElementNamespacedName()
+	{
+		$node = $this->loadTemplate('<xsl:element name="x:div"/>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:element name="x div"/>
+	*/
+	public function testElementCustomNameUnsupported()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported xsl:element name 'x div'");
+
+		$node = $this->loadTemplate('<xsl:element name="x div"/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:element/>
+	*/
+	public function testElementMissingName()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:element elements require a name attribute');
+
+		$node = $this->loadTemplate('<xsl:element/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed: <b><xsl:attribute name="data-foo"/></b>
+	* @doesNotPerformAssertions
+	*/
+	public function testAttributeCustomName()
+	{
+		$node = $this->loadTemplate('<b><xsl:attribute name="data-foo"/></b>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed: <b><xsl:attribute name="{@name}"/></b>
+	* @doesNotPerformAssertions
+	*/
+	public function testAttributeDynamicName()
+	{
+		$node = $this->loadTemplate('<b><xsl:attribute name="{@name}"/></b>');
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <b><xsl:attribute name="data foo"/></b>
+	*/
+	public function testAttributeCustomNameUnsupported()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported xsl:attribute name 'data foo'");
+
+		$node = $this->loadTemplate('<b><xsl:attribute name="data foo"/></b>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <xsl:attribute/>
+	*/
+	public function testAttributeMissingName()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('xsl:attribute elements require a name attribute');
+
+		$node = $this->loadTemplate('<xsl:attribute/>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Allowed: <xsl:if test="foo and (bar or (baz mod (1 + 1)))"/>
 	* @doesNotPerformAssertions
 	*/
