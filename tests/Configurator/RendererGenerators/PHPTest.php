@@ -1603,7 +1603,7 @@ class PHPTest extends Test
 			$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
 
 			$obj = new $className;
-			if (is_callable([$obj, 'getRenderingTests']))
+			if (method_exists($obj, 'getRenderingTests'))
 			{
 				foreach ($obj->getRenderingTests() as $test)
 				{
