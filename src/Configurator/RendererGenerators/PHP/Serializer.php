@@ -165,6 +165,26 @@ class Serializer
 	}
 
 	/**
+	* Test whether given attribute declaration is a minimizable boolean attribute
+	*
+	* The test is case-sensitive and only covers attribute that are minimized by libxslt
+	*
+	* @param  string $attrName Attribute name
+	* @param  string $php      Attribute content, in PHP
+	* @return boolean
+	*/
+	protected function isBooleanAttribute(string $attrName, string $php): bool
+	{
+		$attrNames = ['checked', 'compact', 'declare', 'defer', 'disabled', 'ismap', 'multiple', 'nohref', 'noresize', 'noshade', 'nowrap', 'readonly', 'selected'];
+		if (!in_array($attrName, $attrNames, true))
+		{
+			return false;
+		}
+
+		return ($php === '' || $php === "\$this->out.='" . $attrName . "';");
+	}
+
+	/**
 	* Serialize an <applyTemplates/> node
 	*
 	* @param  DOMElement $applyTemplates <applyTemplates/> node
@@ -198,9 +218,15 @@ class Serializer
 		// NOTE: the attribute name is escaped by default to account for dynamically-generated names
 		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . ENT_QUOTES . ')';
 
-		return "\$this->out.=' '." . $phpAttrName . ".'=\"';"
-		     . $this->serializeChildren($attribute)
-		     . "\$this->out.='\"';";
+		$php     = "\$this->out.=' '." . $phpAttrName;
+		$content = $this->serializeChildren($attribute);
+		if (!$this->isBooleanAttribute($attrName, $content))
+		{
+			$php .= ".'=\"';" . $content . "\$this->out.='\"'";
+		}
+		$php .= ';';
+
+		return $php;
 	}
 
 	/**

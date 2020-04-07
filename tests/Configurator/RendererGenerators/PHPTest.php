@@ -848,6 +848,20 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->template = '<b title="{.}"><xsl:apply-templates/></b>';
 				}
 			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<input autofocus="" checked="" disabled="" readonly="" required="" value=""/>';
+				}
+			],
+			[
+				'<r><X/></r>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->template = '<input autofocus="autofocus" checked="checked" disabled="disabled" readonly="readonly" required="required" value="value"/>';
+				}
+			],
 		];
 	}
 
