@@ -533,7 +533,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('bbcnews');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines',
@@ -545,7 +545,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('bbcnews');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
@@ -643,7 +643,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
@@ -655,7 +655,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182',
@@ -667,7 +667,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				"http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667",
@@ -679,7 +679,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				"http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667",
@@ -691,7 +691,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206',
@@ -703,7 +703,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://gfycat.com/LoathsomeHarmfulJenny',
@@ -880,7 +880,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('khl');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://video.khl.ru/quotes/251237',
@@ -892,7 +892,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('khl');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack',
@@ -1118,7 +1118,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('sportsnet');
 				},
 				null,
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'https://www.spreaker.com/show/2-up-front_1',
@@ -1331,7 +1331,7 @@ class ParserTest extends Test
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('bbcnews');
 				},
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 //			[
 //				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
@@ -1362,7 +1362,7 @@ class ParserTest extends Test
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
-				'assertRegexp'
+				'assertMatchesRegularExpression'
 			],
 			[
 				'http://gfycat.com/LoathsomeHarmfulJenny',

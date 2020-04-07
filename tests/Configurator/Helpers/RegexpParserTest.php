@@ -747,12 +747,12 @@ class RegexpParserTest extends Test
 		{
 			if ($result)
 			{
-				$methodName = 'assertRegExp';
+				$methodName = 'assertMatchesRegularExpression';
 				$msg = var_export($regexp, true) . ' should match ' . var_export($char, true);
 			}
 			else
 			{
-				$methodName = 'assertNotRegExp';
+				$methodName = 'assertDoesNotMatchRegularExpression';
 				$msg = var_export($regexp, true) . ' should not match ' . var_export($char, true);
 			}
 

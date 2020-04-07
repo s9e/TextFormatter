@@ -91,6 +91,6 @@ class TemplateBuilderTest extends Test
 		$template        = $templateBuilder->build('foo', $attributes);
 
 		$this->assertStringContainsString('<span data-s9e-mediaembed="foo"', $template);
-		$this->assertNotRegexp('(<xsl:[^>]+data-s9e-mediaembed)', $template);
+		$this->assertDoesNotMatchRegularExpression('(<xsl:[^>]+data-s9e-mediaembed)', $template);
 	}
 }

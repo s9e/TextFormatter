@@ -43,7 +43,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('example.org');
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			(string) $list->asConfig(),
 			'example.org'
 		);
@@ -72,7 +72,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('*.example.org');
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			(string) $list->asConfig(),
 			'www.example.org'
 		);
@@ -86,7 +86,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('example.org');
 
-		$this->assertNotRegexp(
+		$this->assertDoesNotMatchRegularExpression(
 			(string) $list->asConfig(),
 			'www.example.org'
 		);
@@ -100,7 +100,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('example.*');
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			(string) $list->asConfig(),
 			'example.org'
 		);
@@ -114,7 +114,7 @@ class HostnameListTest extends Test
 		$list = new HostnameList;
 		$list->add('example');
 
-		$this->assertNotRegexp(
+		$this->assertDoesNotMatchRegularExpression(
 			(string) $list->asConfig(),
 			'example.org'
 		);

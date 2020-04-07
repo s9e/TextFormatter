@@ -136,7 +136,7 @@ class ConfiguratorTest extends Test
 		$url  = 'http://www.bar.com';
 
 		$config = $this->configurator->plugins->load('Autolink')->asConfig();
-		$this->assertRegExp($config['regexp'], $text);
+		$this->assertMatchesRegularExpression($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);
@@ -151,7 +151,7 @@ class ConfiguratorTest extends Test
 		$url  = 'HTTP://WWW.BAR.COM';
 
 		$config = $this->configurator->plugins->load('Autolink')->asConfig();
-		$this->assertRegExp($config['regexp'], $text);
+		$this->assertMatchesRegularExpression($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);
@@ -166,7 +166,7 @@ class ConfiguratorTest extends Test
 		$url  = 'http://www.bar.com/index.php?arr[foo]=1';
 
 		$config = $this->configurator->plugins->load('Autolink')->asConfig();
-		$this->assertRegExp($config['regexp'], $text);
+		$this->assertMatchesRegularExpression($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);
@@ -181,7 +181,7 @@ class ConfiguratorTest extends Test
 		$url  = 'http://www.bar.com/index.php?foo=1';
 
 		$config = $this->configurator->plugins->load('Autolink')->asConfig();
-		$this->assertRegExp($config['regexp'], $text);
+		$this->assertMatchesRegularExpression($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);
@@ -196,7 +196,7 @@ class ConfiguratorTest extends Test
 		$url  = 'http://www.bar.com/index.php?arr[foo]=1';
 
 		$config = $this->configurator->plugins->load('Autolink')->asConfig();
-		$this->assertRegExp($config['regexp'], $text);
+		$this->assertMatchesRegularExpression($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);

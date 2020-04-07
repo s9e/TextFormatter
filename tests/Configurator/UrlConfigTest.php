@@ -50,7 +50,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'example.org');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'example.org');
 	}
 
 	/**
@@ -60,7 +60,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'EXAMPLE.ORG');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'EXAMPLE.ORG');
 	}
 
 	/**
@@ -70,7 +70,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -80,7 +80,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'myexample.org');
+		$this->assertDoesNotMatchRegularExpression((string) $urlConfig['disallowedHosts'], 'myexample.org');
 	}
 
 	/**
@@ -90,7 +90,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org', false);
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
+		$this->assertDoesNotMatchRegularExpression((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -100,7 +100,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.example.org');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -110,7 +110,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'www.xxx.example.org');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'www.xxx.example.org');
 	}
 
 	/**
@@ -120,7 +120,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'example.org');
+		$this->assertDoesNotMatchRegularExpression((string) $urlConfig['disallowedHosts'], 'example.org');
 	}
 
 	/**
@@ -130,7 +130,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp((string) $urlConfig['disallowedHosts'], 'example.org.org');
+		$this->assertDoesNotMatchRegularExpression((string) $urlConfig['disallowedHosts'], 'example.org.org');
 	}
 
 	/**
@@ -140,7 +140,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'xxx.com');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'xxx.com');
 	}
 
 	/**
@@ -150,7 +150,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'foo.xxx');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'foo.xxx');
 	}
 
 	/**
@@ -160,7 +160,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['disallowedHosts'], 'myxxxsite.com');
+		$this->assertMatchesRegularExpression((string) $urlConfig['disallowedHosts'], 'myxxxsite.com');
 	}
 
 	/**
@@ -170,7 +170,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->restrictHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegExp((string) $urlConfig['restrictedHosts'], 'www.example.org');
+		$this->assertMatchesRegularExpression((string) $urlConfig['restrictedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -180,7 +180,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->restrictHost('example.org', false);
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertNotRegExp((string) $urlConfig['restrictedHosts'], 'www.example.org');
+		$this->assertDoesNotMatchRegularExpression((string) $urlConfig['restrictedHosts'], 'www.example.org');
 	}
 
 	/**
@@ -192,7 +192,7 @@ class UrlConfigTest extends Test
 		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($regexp, 'http');
+		$this->assertMatchesRegularExpression($regexp, 'http');
 	}
 
 	/**
@@ -204,7 +204,7 @@ class UrlConfigTest extends Test
 		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($regexp, 'https');
+		$this->assertMatchesRegularExpression($regexp, 'https');
 	}
 
 	/**
@@ -216,7 +216,7 @@ class UrlConfigTest extends Test
 		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($regexp, 'HTTPS');
+		$this->assertMatchesRegularExpression($regexp, 'HTTPS');
 	}
 
 	/**
@@ -228,7 +228,7 @@ class UrlConfigTest extends Test
 		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertNotRegExp($regexp, 'ftp');
+		$this->assertDoesNotMatchRegularExpression($regexp, 'ftp');
 	}
 
 	/**
@@ -266,7 +266,7 @@ class UrlConfigTest extends Test
 		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($regexp, 'ftp');
+		$this->assertMatchesRegularExpression($regexp, 'ftp');
 	}
 
 	/**

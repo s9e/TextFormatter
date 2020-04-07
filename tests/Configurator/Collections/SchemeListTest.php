@@ -50,11 +50,11 @@ class SchemeListTest extends Test
 
 		$regexp = (string) $list->asConfig();
 
-		$this->assertRegexp($regexp,    'http');
-		$this->assertRegexp($regexp,    'https');
-		$this->assertRegexp($regexp,    'ftp');
-		$this->assertRegexp($regexp,    'FTP');
-		$this->assertNotRegexp($regexp, 'ftps');
+		$this->assertMatchesRegularExpression($regexp,    'http');
+		$this->assertMatchesRegularExpression($regexp,    'https');
+		$this->assertMatchesRegularExpression($regexp,    'ftp');
+		$this->assertMatchesRegularExpression($regexp,    'FTP');
+		$this->assertDoesNotMatchRegularExpression($regexp, 'ftps');
 	}
 
 	/**

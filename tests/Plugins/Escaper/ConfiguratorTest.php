@@ -23,7 +23,7 @@ class ConfiguratorTest extends Test
 		do
 		{
 			$c = chr($i);
-			$method = (strpos($chars, $c) === false) ? 'assertNotRegExp' : 'assertRegExp';
+			$method = (strpos($chars, $c) === false) ? 'assertDoesNotMatchRegularExpression' : 'assertMatchesRegularExpression';
 			$this->$method($regexp, '\\' . $c);
 		}
 		while (++$i < 128);
@@ -40,8 +40,8 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 		$regexp = $config['regexp'];
 
-		$this->assertRegExp($regexp, '\\a');
-		$this->assertRegexp($regexp, 'x\\♥x');
+		$this->assertMatchesRegularExpression($regexp, '\\a');
+		$this->assertMatchesRegularExpression($regexp, 'x\\♥x');
 
 		preg_match($regexp, 'x\\♥x', $m);
 		$this->assertSame('\\♥', $m[0]);
@@ -57,13 +57,13 @@ class ConfiguratorTest extends Test
 		$plugin->escapeAll();
 		$config = $plugin->asConfig();
 		$regexp = $config['regexp'];
-		$this->assertRegExp($regexp, '\\a');
+		$this->assertMatchesRegularExpression($regexp, '\\a');
 
 		$plugin->escapeAll(false);
 		$config = $plugin->asConfig();
 		$regexp = $config['regexp'];
-		$this->assertNotRegExp($regexp, '\\a');
-		$this->assertRegExp($regexp, '\\\\');
+		$this->assertDoesNotMatchRegularExpression($regexp, '\\a');
+		$this->assertMatchesRegularExpression($regexp, '\\\\');
 	}
 
 	/**

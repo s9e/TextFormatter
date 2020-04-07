@@ -376,7 +376,7 @@ class JavaScriptTest extends Test
 
 		$this->assertStringNotContainsString('"X":{', $js);
 		$this->assertStringNotContainsString('"Y":{', $js);
-		$this->assertRegexp('(tagsConfig=\\{"X":(\\w+),"Y":\\1)', $js);
+		$this->assertMatchesRegularExpression('(tagsConfig=\\{"X":(\\w+),"Y":\\1)', $js);
 	}
 
 	/**

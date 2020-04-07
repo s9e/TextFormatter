@@ -117,7 +117,7 @@ abstract class AbstractTest extends Test
 	public function testGetReturnHeaders()
 	{
 		$client = $this->getInstance();
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			'(^HTTP[^\\r]++\\r\\n(?:[-\\w]+:[^\\r]++\\r\\n)+\\r\\na:)',
 			$client->get($this->url, ['returnHeaders' => true])
 		);

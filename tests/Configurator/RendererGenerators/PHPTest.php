@@ -66,7 +66,7 @@ class PHPTest extends Test
 	*/
 	public function testClassNameGenerated()
 	{
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			'/class Renderer_\\w{40}/',
 			$this->getRendererSource()
 		);
@@ -79,7 +79,7 @@ class PHPTest extends Test
 	{
 		$this->configurator->rendering->engine->defaultClassPrefix = 'Foo\\Bar_renderer_';
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			'/class Bar_renderer_\\w{40}/',
 			$this->getRendererSource()
 		);
@@ -197,7 +197,7 @@ class PHPTest extends Test
 		$renderer = $this->configurator->rendering->getRenderer();
 
 		$this->assertFileExists($filepath);
-		$this->assertFileNotExists($cacheDir . '/' . get_class($renderer) . '.php');
+		$this->assertFileDoesNotExist($cacheDir . '/' . get_class($renderer) . '.php');
 	}
 
 	/**
@@ -221,7 +221,7 @@ class PHPTest extends Test
 
 		$this->configurator->rendering->getRenderer();
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			'(^' . preg_quote($cacheDir) . '/Renderer_\\w{40}\\.php$)',
 			$this->configurator->rendering->engine->lastFilepath
 		);

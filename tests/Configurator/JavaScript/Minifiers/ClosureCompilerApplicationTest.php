@@ -183,7 +183,7 @@ class ClosureCompilerApplicationTest extends Test
 		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
 		$minifier->excludeDefaultExterns = true;
 
-		$this->assertRegexp(
+		$this->assertMatchesRegularExpression(
 			'#--externs \\S*externs.application.js --env=CUSTOM#',
 			$minifier->minify('/**/')
 		);

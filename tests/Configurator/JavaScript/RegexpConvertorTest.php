@@ -169,7 +169,7 @@ class RegexpConvertorTest extends Test
 	public function testConvertRegexp7()
 	{
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
 			(string) RegexpConvertor::toJS('#[0-9\\pL]#')
 		);
@@ -181,7 +181,7 @@ class RegexpConvertorTest extends Test
 	public function testConvertRegexp7b()
 	{
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
 			(string) RegexpConvertor::toJS('#[0-9\\p{L}]#')
 		);
@@ -193,7 +193,7 @@ class RegexpConvertorTest extends Test
 	public function testConvertRegexp8()
 	{
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
 			(string) RegexpConvertor::toJS('#\\pL00\\pL#')
 		);
@@ -205,7 +205,7 @@ class RegexpConvertorTest extends Test
 	public function testConvertRegexp8b()
 	{
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
 			(string) RegexpConvertor::toJS('#\\p{L}00\\p{L}#')
 		);
