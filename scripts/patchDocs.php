@@ -37,7 +37,7 @@ function patchFile($filepath)
 
 			// Replace generated IDs with a placeholder
 			$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
-
+var_dump($m);
 			return $m['block'] . "\n" . $m['open'] . "\n" . $output . "\n" . $m['close'];
 		},
 		$file
@@ -52,7 +52,7 @@ exit;
 	}
 }
 
-patchDir(__DIR__ . '/../docs');
+patchDir(__DIR__ . '/../docs/Plugins/TaskLists');
 @unlink('/tmp/MyBundle.php');
 @unlink('/tmp/MyRenderer.php');
 
