@@ -35,6 +35,12 @@ function patchFile($filepath)
 			eval($php);
 			$output = rtrim(ob_get_clean(), "\n");
 
+			// Replace generated IDs with a placeholder
+			if (strpos($output, 'task-id') !== false)
+			{
+				$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
+			}
+
 			return $m['block'] . "\n" . $m['open'] . "\n" . $output . "\n" . $m['close'];
 		},
 		$file

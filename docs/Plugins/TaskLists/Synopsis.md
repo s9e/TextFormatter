@@ -1,0 +1,90 @@
+This plugin implements task lists, a form of markup compatible with GitHub/GitLab Flavored Markdown and other dialects.
+
+This plugin requires a `LI` tag to function properly. If there is no `LI` tag defined when the plugin is initialized, the Litedown plugin is automatically loaded.
+
+Task lists are 
+
+
+### Syntax
+
+```md
+- [x] Checked
+- [ ] Unchecked
+```
+
+
+### References
+
+ - <https://docs.gitlab.com/ee/user/markdown.html#task-lists>
+ - <https://github.com/mity/md4c/wiki/Markdown-Syntax:-Task-Lists>
+ - <https://github.github.com/gfm/#task-list-items-extension->
+
+
+## Examples
+
+Note that all of the reference outputs, random IDs have been replaced with a `...` placeholder for convenience.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Litedown;
+$configurator->TaskLists;
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = "- [x] checked\n"
+      . "- [X] Checked\n"
+      . "- [ ] unchecked"; 
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> checked</li>
+<li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> Checked</li>
+<li data-task-id="..."><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+```
+
+
+### Allow tasks to be toggled
+
+Setting the `TASKLISTS_EDITABLE` parameter to a non-empty value will make tasks editable.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Litedown;
+$configurator->TaskLists;
+
+extract($configurator->finalize());
+
+$text = "- [x] checked\n"
+      . "- [ ] unchecked";
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html, "\n\n";
+
+// Render it again but make the tasks editable
+$renderer->setParameter('TASKLISTS_EDITABLE', '1');
+
+echo $renderer->render($xml);
+
+```
+```html
+<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> checked</li>
+<li data-task-id="..."><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+
+<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked> checked</li>
+<li data-task-id="..."><input data-task-id="..." type="checkbox"> unchecked</li></ul>
+```
+
+
+### Styling task lists
+
+```css
+ul > li[data-task-id]
+{
+	list-style-type: none;
+}
+```
