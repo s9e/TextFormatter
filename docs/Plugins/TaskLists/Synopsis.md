@@ -96,7 +96,7 @@ $text = "- [ ] First\n"
 $xml  = $parser->parse($text);
 
 // Extract the ID for the first task
-preg_match('(id="(\\w+)', $xml, $m);
+preg_match('(id="(\\w+))', $xml, $m);
 $id = $m[1];
 
 // Show the original text and stats
