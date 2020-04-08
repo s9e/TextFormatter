@@ -41,9 +41,9 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> checked</li>
-<li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> Checked</li>
-<li data-task-id="..."><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> checked</li>
+<li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> Checked</li>
+<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
 ```
 
 
@@ -72,11 +72,11 @@ echo $renderer->render($xml);
 
 ```
 ```html
-<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked disabled> checked</li>
-<li data-task-id="..."><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> checked</li>
+<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
 
-<ul><li data-task-id="..."><input data-task-id="..." type="checkbox" checked> checked</li>
-<li data-task-id="..."><input data-task-id="..." type="checkbox"> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked> checked</li>
+<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox"> unchecked</li></ul>
 ```
 
 
