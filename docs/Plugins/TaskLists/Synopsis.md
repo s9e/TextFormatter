@@ -8,8 +8,17 @@ Each task is assigned a pseudo-random hexadecimal ID generated at parsing time.
 ### Syntax
 
 ```md
+Markdown style:
+
 - [x] Checked
 - [ ] Unchecked
+
+BBCode style:
+
+[list]
+[*][x] Checked
+[*][ ] Unchecked
+[/list]
 ```
 
 
