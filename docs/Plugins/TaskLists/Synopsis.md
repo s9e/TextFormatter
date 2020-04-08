@@ -69,7 +69,6 @@ echo $html, "\n\n";
 $renderer->setParameter('TASKLISTS_EDITABLE', '1');
 
 echo $renderer->render($xml);
-
 ```
 ```html
 <ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> checked</li>
@@ -77,6 +76,33 @@ echo $renderer->render($xml);
 
 <ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked> checked</li>
 <li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox"> unchecked</li></ul>
+```
+
+
+### Using the API
+
+```php
+use s9e\TextFormatter\Plugins\TaskLists\Helper;
+use s9e\TextFormatter\Unparser;
+
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Litedown;
+$configurator->TaskLists;
+
+extract($configurator->finalize());
+
+$text = "- [ ] First\n"
+      . "- [ ] Second";
+$xml  = $parser->parse($text);
+
+// Extract the ID for the first task
+preg_match('(id="(\\w+)', $xml, $m);
+$id = $m[1];
+
+// Show the original text and stats
+echo "Before:\n", Unparser::unparse($xml), "\n", json_encode(Helper::getStats($xml)), "\n";
+```
+```
 ```
 
 
