@@ -81,6 +81,8 @@ echo $renderer->render($xml);
 
 ### Using the API
 
+The [Helper](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/TaskLists/Helper.html) class provides an API to extract stats from, and change a task's state in the XML representation of a parsed text.
+
 ```php
 use s9e\TextFormatter\Plugins\TaskLists\Helper;
 use s9e\TextFormatter\Unparser;
@@ -100,23 +102,25 @@ preg_match('(id="(\\w+))', $xml, $match);
 $id = $match[1];
 
 // Show the original text and stats
-echo "Before:\n", Unparser::unparse($xml), "\n", json_encode(Helper::getStats($xml)), "\n\n";
+echo "Before:\n", Unparser::unparse($xml), "\n\n", json_encode(Helper::getStats($xml)), "\n\n";
 
 // Change the state of a given task with setTaskComplete() or setTaskIncomplete()
 $xml = Helper::setTaskComplete($xml, $id);
 
 // Show the updated text and stats
-echo "After:\n", Unparser::unparse($xml), "\n", json_encode(Helper::getStats($xml));
+echo "After:\n", Unparser::unparse($xml), "\n\n", json_encode(Helper::getStats($xml));
 ```
 ```
 Before:
 - [ ] First
 - [ ] Second
+
 {"complete":0,"incomplete":2}
 
 After:
 - [x] First
 - [ ] Second
+
 {"complete":1,"incomplete":1}
 ```
 
