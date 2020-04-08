@@ -2,7 +2,7 @@ This plugin implements task lists, a form of markup compatible with GitHub/GitLa
 
 This plugin requires a `LI` tag to function properly. If there is no `LI` tag defined when the plugin is initialized, the Litedown plugin is automatically loaded.
 
-Each task is assigned a 13-characters pseudo-random hexadecimal ID generated at parsing time.
+Each task is assigned a pseudo-random hexadecimal ID generated at parsing time.
 
 
 ### Syntax
