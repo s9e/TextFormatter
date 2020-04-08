@@ -24,7 +24,7 @@ use s9e\TextFormatter\Configurator\Traits\Configurable;
 * @property integer $nestingLimit Maximum nesting level for this tag
 * @property Ruleset $rules Rules associated with this tag
 * @property integer $tagLimit Maximum number of this tag per message
-* @property Template $template Template associated with this tag
+* @property-read Template $template Template associated with this tag
 * @property-write string|Template $template Template associated with this tag
 */
 class Tag implements ConfigProvider
