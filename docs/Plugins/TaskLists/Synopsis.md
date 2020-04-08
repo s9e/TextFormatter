@@ -2,7 +2,7 @@ This plugin implements task lists, a form of markup compatible with GitHub/GitLa
 
 This plugin requires a `LI` tag to function properly. If there is no `LI` tag defined when the plugin is initialized, the Litedown plugin is automatically loaded.
 
-Task lists are 
+Each task is assigned a 13-characters pseudo-random hexadecimal ID generated at parsing time.
 
 
 ### Syntax
@@ -22,7 +22,7 @@ Task lists are
 
 ## Examples
 
-Note that all of the reference outputs, random IDs have been replaced with a `...` placeholder for convenience.
+Note that in all of the reference outputs, random IDs have been replaced with a `...` placeholder for convenience.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -82,9 +82,15 @@ echo $renderer->render($xml);
 
 ### Styling task lists
 
+Task lists can be styled via the `data-task-*` attributes. A common pattern is to hide the list item in unordered lists and cross-out completed tasks.
+
 ```css
 ul > li[data-task-id]
 {
 	list-style-type: none;
+}
+li[data-task-state="complete"]
+{
+	text-decoration: line-through rgba(0, 0, 0, .6);
 }
 ```
