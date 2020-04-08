@@ -26,8 +26,8 @@ function patchFile($filepath)
 		function ($m)
 		{
 			$php = preg_replace(
-				'/\\$configurator =.*/',
-				"\$0\n\$configurator->registeredVars['cacheDir'] = " . var_export(__DIR__ . '/../tests/.cache', true) . ";\n",
+				'/\\$configurator =.*\\n\\K/',
+				'$configurator->registeredVars["cacheDir"] = ' . var_export(__DIR__ . '/../tests/.cache', true) . ";\n",
 				$m['code']
 			);
 
@@ -37,7 +37,7 @@ function patchFile($filepath)
 
 			// Replace generated IDs with a placeholder
 			$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
-var_dump($m);
+
 			return $m['block'] . "\n" . $m['open'] . "\n" . $output . "\n" . $m['close'];
 		},
 		$file
@@ -46,13 +46,11 @@ var_dump($m);
 	if ($text !== $file)
 	{
 		echo "\x1b[1mPatching $filepath\x1b[0m\n";
-
-exit;
 		file_put_contents($filepath, $text);
 	}
 }
 
-patchDir(__DIR__ . '/../docs/Plugins/TaskLists');
+patchDir(__DIR__ . '/../docs');
 @unlink('/tmp/MyBundle.php');
 @unlink('/tmp/MyRenderer.php');
 
