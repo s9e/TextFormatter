@@ -36,10 +36,7 @@ function patchFile($filepath)
 			$output = rtrim(ob_get_clean(), "\n");
 
 			// Replace generated IDs with a placeholder
-			if (strpos($output, 'task-id') !== false)
-			{
-				$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
-			}
+			$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
 
 			return $m['block'] . "\n" . $m['open'] . "\n" . $output . "\n" . $m['close'];
 		},
@@ -49,6 +46,8 @@ function patchFile($filepath)
 	if ($text !== $file)
 	{
 		echo "\x1b[1mPatching $filepath\x1b[0m\n";
+
+exit;
 		file_put_contents($filepath, $text);
 	}
 }
