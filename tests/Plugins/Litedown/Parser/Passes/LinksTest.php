@@ -153,6 +153,32 @@ class LinksTest extends AbstractTest
 				'[..]( http://example.org )',
 				'<r><p><URL url="http://example.org"><s>[</s>..<e>]( http://example.org )</e></URL></p></r>'
 			],
+			// Automatic links
+			[
+				'.. <https://example.org> ..',
+				'<r><p>.. <URL url="https://example.org"><s>&lt;</s>https://example.org<e>&gt;</e></URL> ..</p></r>'
+			],
+			[
+				'.. <https://example.org/&#20;/> ..',
+				'<r><p>.. <URL url="https://example.org/&amp;#20;/"><s>&lt;</s>https://example.org/&amp;#20;/<e>&gt;</e></URL> ..</p></r>'
+			],
+			[
+				'<https://example.org/\[\>',
+				'<r><p><URL url="https://example.org/%5C%5B%5C"><s>&lt;</s>https://example.org/\[\<e>&gt;</e></URL></p></r>'
+			],
+			[
+				'<mailto:user@example.org>',
+				'<r><p><URL url="mailto:user@example.org"><s>&lt;</s>mailto:user@example.org<e>&gt;</e></URL></p></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
+			],
+			[
+				'<user@example.org>',
+				'<r><p><EMAIL email="user@example.org"><s>&lt;</s>user@example.org<e>&gt;</e></EMAIL></p></r>'
+			],
 			// Reference links
 			[
 				[
@@ -385,7 +411,7 @@ class LinksTest extends AbstractTest
 
 	public function getRenderingTests()
 	{
-		return self::fixTests([
+		return [
 			[
 				'[Link text](http://example.org)',
 				'<p><a href="http://example.org">Link text</a></p>'
@@ -394,6 +420,10 @@ class LinksTest extends AbstractTest
 				'[Link text](http://example.org "Link title")',
 				'<p><a href="http://example.org" title="Link title">Link text</a></p>'
 			],
-		]);
+			[
+				'.. <https://example.org/&#20;/> ..',
+				'<p>.. <a href="https://example.org/&amp;#20;/">https://example.org/&amp;#20;/</a> ..</p>'
+			],
+		];
 	}
 }

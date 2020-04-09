@@ -22,6 +22,10 @@ class Links extends AbstractPass
 		{
 			$this->parseInlineLinks();
 		}
+		if ($this->text->indexOf('<') !== false)
+		{
+			$this->parseAutomaticLinks();
+		}
 		if ($this->text->hasReferences)
 		{
 			$this->parseReferenceLinks();
@@ -72,6 +76,41 @@ class Links extends AbstractPass
 		}
 
 		return $labels;
+	}
+
+	/**
+	* Parse automatic links markup
+	*
+	* @return void
+	*/
+	protected function parseAutomaticLinks()
+	{
+		preg_match_all(
+			'/<[-+.\\w]++([:@])[^\\x17\\s>]++>/',
+			$this->text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		foreach ($matches[0] as $i => $m)
+		{
+			$content  = $this->text->decode(str_replace("\x1B", "\\\x1B", substr($m[0], 1, -1)));
+			$startPos = $m[1];
+			$endPos   = $startPos + strlen($m[0]) - 1;
+
+			if ($matches[1][$i][0] === ':')
+			{
+				$tagName  = 'URL';
+				$attrName = 'url';
+			}
+			else
+			{
+				$tagName  = 'EMAIL';
+				$attrName = 'email';
+			}
+
+			$this->parser->addTagPair($tagName, $startPos, 1, $endPos, 1)
+			             ->setAttribute($attrName, $content);
+		}
 	}
 
 	/**

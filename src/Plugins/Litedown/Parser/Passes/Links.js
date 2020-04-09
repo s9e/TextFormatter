@@ -4,6 +4,10 @@ function parse()
 	{
 		parseInlineLinks();
 	}
+	if (text.indexOf('<') !== -1)
+	{
+		parseAutomaticLinks();
+	}
 	if (hasReferences)
 	{
 		parseReferenceLinks();
@@ -47,6 +51,35 @@ function getLabels()
 	}
 
 	return labels;
+}
+
+/**
+* Parse automatic links markup
+*/
+function parseAutomaticLinks()
+{
+	var m, regexp = /<[-+.\w]+([:@])[^\x17\s>]+>/g;
+	while (m = regexp.exec(text))
+	{
+		var content  = decode(m[0].substr(1, m[0].length - 2).replace(/\x1B/g, "\\\x1B")),
+			startPos = m.index,
+			endPos   = startPos + m[0].length - 1,
+			tagName,
+			attrName;
+
+		if (m[1] === ':')
+		{
+			tagName  = 'URL';
+			attrName = 'url';
+		}
+		else
+		{
+			tagName  = 'EMAIL';
+			attrName = 'email';
+		}
+
+		addTagPair(tagName, startPos, 1, endPos, 1).setAttribute(attrName, content);
+	}
 }
 
 /**
