@@ -62,7 +62,7 @@ class Helper
 	* @param  string $id  Task's ID
 	* @return string      Updated XML
 	*/
-	public static function setTaskComplete(string $xml, string $id): string
+	public static function markTaskComplete(string $xml, string $id): string
 	{
 		return self::setTaskState($xml, $id, 'complete', 'x');
 	}
@@ -74,7 +74,7 @@ class Helper
 	* @param  string $id  Task's ID
 	* @return string      Updated XML
 	*/
-	public static function setTaskIncomplete(string $xml, string $id): string
+	public static function markTaskIncomplete(string $xml, string $id): string
 	{
 		return self::setTaskState($xml, $id, 'incomplete', ' ');
 	}

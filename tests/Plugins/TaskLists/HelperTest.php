@@ -65,9 +65,9 @@ class HelperTest extends Test
 	}
 
 	/**
-	* @dataProvider getSetTaskStateTests
+	* @dataProvider getMarkTaskStateTests
 	*/
-	public function testSetTaskState($methodName, $xml, $id, $expected)
+	public function testMarkTaskState($methodName, $xml, $id, $expected)
 	{
 		$xml      = implode("\n", $xml);
 		$expected = implode("\n", $expected);
@@ -75,11 +75,11 @@ class HelperTest extends Test
 		$this->assertEquals($expected, Helper::$methodName($xml, $id));
 	}
 
-	public function getSetTaskStateTests()
+	public function getMarkTaskStateTests()
 	{
 		return [
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -93,7 +93,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskIncomplete',
+				'markTaskIncomplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -107,7 +107,7 @@ class HelperTest extends Test
 				],
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -121,7 +121,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -135,7 +135,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -149,7 +149,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
 					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
@@ -163,7 +163,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					'<r><TASK id="123">[ ]</TASK></r>'
 				],
@@ -173,7 +173,7 @@ class HelperTest extends Test
 				]
 			],
 			[
-				'setTaskComplete',
+				'markTaskComplete',
 				[
 					// Cannot happen under normal circumstances
 					'<r><TASK id="123"/></r>'
