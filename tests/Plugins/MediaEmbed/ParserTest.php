@@ -2035,6 +2035,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/marketplace/item/500023920905237/',
+				'<t>https://www.facebook.com/marketplace/item/500023920905237/</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://www.flickr.com/photos/erigion/15451038758/in/photostream/',
 				'<r><FLICKR id="15451038758">https://www.flickr.com/photos/erigion/15451038758/in/photostream/</FLICKR></r>',
 				[],
