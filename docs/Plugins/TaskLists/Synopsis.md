@@ -113,8 +113,8 @@ $id = $match[1];
 // Show the original text and stats
 echo "Before:\n", Unparser::unparse($xml), "\n\n", json_encode(Helper::getStats($xml)), "\n\n";
 
-// Change the state of a given task with setTaskComplete() or setTaskIncomplete()
-$xml = Helper::setTaskComplete($xml, $id);
+// Change the state of a given task with markTaskComplete() or markTaskIncomplete()
+$xml = Helper::markTaskComplete($xml, $id);
 
 // Show the updated text and stats
 echo "After:\n", Unparser::unparse($xml), "\n\n", json_encode(Helper::getStats($xml));

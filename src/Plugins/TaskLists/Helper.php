@@ -85,7 +85,7 @@ class Helper
 	* @param  string $xml    Parsed XML
 	* @param  string $id     Task's ID
 	* @param  string $state  Task's state ("complete" or "incomplete")
-	* @param  string $marker Task marker ("x" or " ")
+	* @param  string $marker State marker ("x" or " ")
 	* @return string         Updated XML
 	*/
 	protected static function setTaskState(string $xml, string $id, string $state, string $marker): string
