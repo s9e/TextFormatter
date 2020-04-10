@@ -105,9 +105,10 @@ extract($configurator->finalize());
 $text = "- [ ] First\n"
       . "- [ ] Second";
 $xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
-// Extract the ID for the first task
-preg_match('(id="(\\w+))', $xml, $match);
+// Extract the first task's ID from the HTML
+preg_match('(data-task-id="(\\w+))', $html, $match);
 $id = $match[1];
 
 // Show the original text and stats
