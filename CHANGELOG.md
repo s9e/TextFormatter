@@ -1,3 +1,20 @@
+2.4.1 (2020-04-11)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a9644df49d31c2fcadf65cc2e6b5816c75a390ae...7e3c1a8c0eaf65ab7b62b798696530904b0bd113)
+
+### Added
+
+ - `5c358aa8f` DisallowUnsupportedXSL: added xsl:attribute and xsl:element checks
+
+### Changed
+
+ - `af2944f19` DisallowUnsupportedXSL: refactored attribute requirements
+ - `7e3c1a8c0` MediaEmbed: updated Facebook
+ - `7290f8b4e` PHP renderer: match libxslt serialization of minimizable attributes in HTML
+ - `7414ca9d5` Quick renderer: replaced hardcoded value with constant
+
+
 2.4.0 (2020-03-31)
 ==================
 
