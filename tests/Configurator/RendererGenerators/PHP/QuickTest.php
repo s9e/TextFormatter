@@ -658,7 +658,7 @@ class QuickTest extends Test
 					'B' => '<b><xsl:if test="@foo">B</xsl:if><xsl:apply-templates/></b>',
 					'X' => '<xsl:apply-templates/><xsl:apply-templates/>'
 				],
-				"\$quickRenderingTest='(<(?:[!?]|X[ />]))';"
+				"\$quickRenderingTest='((?<=<)(?:[!?]|X[ />]))';"
 			],
 			[
 				['X' => '<xsl:value-of select="@x"/>'],

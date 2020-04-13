@@ -43,7 +43,7 @@ abstract class PHP extends Renderer
 	/**
 	* @var string Regexp that matches nodes that SHOULD NOT be rendered by the quick renderer
 	*/
-	protected $quickRenderingTest = '(<[!?])';
+	protected $quickRenderingTest = '((?<=<)[!?])';
 
 	/**
 	* @var array Dictionary of static replacements used by the Quick renderer [id => replacement]

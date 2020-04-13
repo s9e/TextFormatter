@@ -78,7 +78,7 @@ class Quick
 		// Build a regexp that matches tags that cannot be rendered with the Quick renderer
 		if (!empty($unsupported))
 		{
-			$regexp = '(<(?:[!?]|' . RegexpBuilder::fromList($unsupported) . '[ />]))';
+			$regexp = '((?<=<)(?:[!?]|' . RegexpBuilder::fromList($unsupported) . '[ />]))';
 			$php[]  = '	/** {@inheritdoc} */';
 			$php[]  = '	protected $quickRenderingTest=' . var_export($regexp, true) . ';';
 		}

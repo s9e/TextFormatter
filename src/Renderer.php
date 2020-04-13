@@ -145,13 +145,14 @@ abstract class Renderer
 	*/
 	protected function checkUnsupported($xml)
 	{
-		if (strpos($xml, '<!') !== false)
+		if (preg_match('((?<=<)[!?])', $xml, $m))
 		{
-			throw new InvalidArgumentException('DTDs, CDATA nodes and comments are not allowed');
-		}
-		if (strpos($xml, '<?') !== false)
-		{
-			throw new InvalidArgumentException('Processing instructions are not allowed');
+			$errors = [
+				'!' => 'DTDs, CDATA nodes and comments are not allowed',
+				'?' => 'Processing instructions are not allowed'
+			];
+
+			throw new InvalidArgumentException($errors[$m[0]]);
 		}
 	}
 
