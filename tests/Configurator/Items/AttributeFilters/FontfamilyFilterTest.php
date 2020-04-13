@@ -9,7 +9,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Configurator\Items\AttributeFilters\FontfamilyFilter
 */
-class FontfamilyTest extends Test
+class FontfamilyFilterTest extends Test
 {
 	/**
 	* @testdox Is safe as URL

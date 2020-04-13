@@ -1165,7 +1165,7 @@ Float Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FloatF
  [x] Is safe in JS
  [x] Is safe in URL
 
-Fontfamily (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Fontfamily)
+Fontfamily Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\FontfamilyFilter)
  [x] Is safe as URL
  [x] Is safe in CSS
  [x] Is not safe in JS
