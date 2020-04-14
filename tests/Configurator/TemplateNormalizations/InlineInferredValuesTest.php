@@ -5,8 +5,6 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 use DOMDocument;
 use s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues;
 
-include_once __DIR__ . '/../../bootstrap.php';
-
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
 */

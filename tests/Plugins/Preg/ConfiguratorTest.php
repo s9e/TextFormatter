@@ -9,8 +9,6 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Plugins\Preg\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
-include_once __DIR__ . '/../../bootstrap.php';
-
 /**
 * @covers s9e\TextFormatter\Plugins\Preg\Configurator
 */

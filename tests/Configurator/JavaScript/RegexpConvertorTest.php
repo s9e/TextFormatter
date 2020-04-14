@@ -5,8 +5,6 @@ namespace s9e\TextFormatter\Tests\Configurator\JavaScript;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
-include_once __DIR__ . '/../../bootstrap.php';
-
 /**
 * @covers s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor
 */
