@@ -30,6 +30,8 @@ class Helper
 		$task = $parser->addSelfClosingTag('TASK', $pos, 3);
 		$task->setAttribute('id',    $taskId);
 		$task->setAttribute('state', $taskState);
+
+		$listItem->cascadeInvalidationTo($task);
 	}
 
 	/**

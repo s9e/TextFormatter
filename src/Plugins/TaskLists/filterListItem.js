@@ -23,4 +23,6 @@ function (listItem, text)
 
 	task.setAttribute('id',    taskId);
 	task.setAttribute('state', taskState);
+
+	listItem.cascadeInvalidationTo(task);
 }
