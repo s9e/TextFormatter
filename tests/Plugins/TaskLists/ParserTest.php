@@ -41,6 +41,16 @@ class ParserTest extends Test
 			],
 			[
 				[
+					'* [x] checked',
+					'* [ ] unchecked'
+				],
+				[
+					'<r><LIST><LI><s>* </s><TASK id="?" state="complete">[x]</TASK> checked</LI>',
+					'<LI><s>* </s><TASK id="?" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+				]
+			],
+			[
+				[
 					'- [x] checked',
 					'- none',
 					'- [ ] unchecked'
