@@ -28,7 +28,7 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 
 <dt id="blockelementscloseformattingelements">BlockElementsCloseFormattingElements</dt>
 <dd>
-	<p><i>Purpose: compliance. Default: disabled.</i></p>
+	<p><i>Purpose: compliance. Default: enabled.</i></p>
 	<p>Generates a <code>closeParent</code> rule for tags that are renderered as "block" elements, targeting formatting elements. For example, <code>div</code> inside of <code>b</code>.</p>
 </dd>
 
