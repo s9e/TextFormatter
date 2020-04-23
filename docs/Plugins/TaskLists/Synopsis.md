@@ -2,10 +2,12 @@ This plugin implements task lists, a form of markup compatible with GitHub/GitLa
 
 This plugin requires a `LI` tag to function properly. If there is no `LI` tag defined when the plugin is initialized, the Litedown plugin is automatically loaded.
 
-Each task is assigned a pseudo-random hexadecimal ID generated at parsing time.
+Each task is assigned a pseudo-random alphanumeric ID generated at parsing time.
 
 
 ### Syntax
+
+A task is represented by a `[x]` or `[ ]` marker immediately following a list item.
 
 ```md
 Markdown style:
@@ -107,7 +109,7 @@ $text = "- [ ] First\n"
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
-// Extract the first task's ID from the HTML
+// Capture the first task's ID from the HTML
 preg_match('(data-task-id="(\\w+))', $html, $match);
 $id = $match[1];
 
