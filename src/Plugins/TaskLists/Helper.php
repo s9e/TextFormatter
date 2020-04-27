@@ -25,7 +25,7 @@ class Helper
 
 		// Create a tag for the task and assign it a random ID
 		$taskId    = uniqid();
-		$taskState = ($str === '[ ]') ? 'incomplete' : 'complete';
+		$taskState = ($str === '[ ]') ? 'unchecked' : 'checked';
 
 		$task = $parser->addSelfClosingTag('TASK', $pos, 3);
 		$task->setAttribute('id',    $taskId);
@@ -38,11 +38,11 @@ class Helper
 	* Return stats from a parsed representation
 	*
 	* @param  string $xml Parsed XML
-	* @return array       Number of "complete" and "incomplete" tasks
+	* @return array       Number of "checked" and "unchecked" tasks
 	*/
 	public static function getStats(string $xml): array
 	{
-		$stats = ['complete' => 0, 'incomplete' => 0];
+		$stats = ['checked' => 0, 'unchecked' => 0];
 
 		preg_match_all('(<TASK(?: [^=]++="[^"]*+")*? state="\\K\\w++)', $xml, $m);
 		foreach ($m[0] as $state)

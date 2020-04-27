@@ -18,7 +18,7 @@ function (listItem, text)
 
 	// Create a tag for the task and assign it a random ID
 	var taskId    = Math.random().toString(16).substr(2),
-		taskState = (str === '[ ]') ? 'incomplete' : 'complete',
+		taskState = (str === '[ ]') ? 'unchecked' : 'checked',
 		task      = addSelfClosingTag('TASK', pos, 3);
 
 	task.setAttribute('id',    taskId);
