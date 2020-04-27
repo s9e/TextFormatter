@@ -52,9 +52,9 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> checked</li>
-<li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> Checked</li>
-<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="checked"><input data-task-id="..." type="checkbox" disabled> checked</li>
+<li data-task-id="..." data-task-state="checked"><input data-task-id="..." type="checkbox" disabled> Checked</li>
+<li data-task-id="..." data-task-state="unchecked"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
 ```
 
 
@@ -82,11 +82,11 @@ $renderer->setParameter('TASKLISTS_EDITABLE', '1');
 echo $renderer->render($xml);
 ```
 ```html
-<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked disabled> checked</li>
-<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="checked"><input data-task-id="..." type="checkbox" disabled> checked</li>
+<li data-task-id="..." data-task-state="unchecked"><input data-task-id="..." type="checkbox" disabled> unchecked</li></ul>
 
-<ul><li data-task-id="..." data-task-state="complete"><input data-task-id="..." type="checkbox" checked> checked</li>
-<li data-task-id="..." data-task-state="incomplete"><input data-task-id="..." type="checkbox"> unchecked</li></ul>
+<ul><li data-task-id="..." data-task-state="checked"><input data-task-id="..." type="checkbox"> checked</li>
+<li data-task-id="..." data-task-state="unchecked"><input data-task-id="..." type="checkbox"> unchecked</li></ul>
 ```
 
 
@@ -127,13 +127,13 @@ Before:
 - [ ] First
 - [ ] Second
 
-{"complete":0,"incomplete":2}
+{"checked":0,"unchecked":2}
 
 After:
 - [x] First
 - [ ] Second
 
-{"complete":1,"incomplete":1}
+{"checked":0,"unchecked":1,"complete":1}
 ```
 
 
