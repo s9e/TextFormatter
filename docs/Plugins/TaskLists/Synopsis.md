@@ -45,7 +45,7 @@ extract($configurator->finalize());
 
 $text = "- [x] checked\n"
       . "- [X] Checked\n"
-      . "- [ ] unchecked"; 
+      . "- [ ] unchecked";
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
