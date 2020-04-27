@@ -60,7 +60,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add('id')->filterChain->append('#identifier');
 		$tag->attributes->add('state')->filterChain->append('#identifier');
 		$tag->template = '<input data-task-id="{@id}" type="checkbox">
-			<xsl:if test="@state = \'complete\'"><xsl:attribute name="checked"/></xsl:if>
+			<xsl:if test="@state = \'checked\'"><xsl:attribute name="checked"/></xsl:if>
 			<xsl:if test="not($TASKLISTS_EDITABLE)"><xsl:attribute name="disabled"/></xsl:if>
 		</input>';
 	}

@@ -35,8 +35,8 @@ class HelperTest extends Test
 					'...'
 				],
 				[
-					'complete'   => 0,
-					'incomplete' => 0
+					'checked'   => 0,
+					'unchecked' => 0
 				]
 			],
 			[
@@ -46,8 +46,8 @@ class HelperTest extends Test
 					'- [ ] unchecked'
 				],
 				[
-					'complete'   => 2,
-					'incomplete' => 1
+					'checked'   => 2,
+					'unchecked' => 1
 				]
 			],
 		];
@@ -59,7 +59,7 @@ class HelperTest extends Test
 	public function testGetStatsCustom()
 	{
 		$xml      = '<r><TASK id="" state="custom"/></r>';
-		$expected = ['complete' => 0, 'custom' => 1, 'incomplete' => 0];
+		$expected = ['checked' => 0, 'custom' => 1, 'unchecked' => 0];
 
 		$this->assertEquals($expected, Helper::getStats($xml));
 	}
@@ -81,85 +81,85 @@ class HelperTest extends Test
 			[
 				'checkTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				'345',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="complete">[x]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="checked">[x]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
 				'uncheckTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				'234',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="incomplete">[ ]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="unchecked">[ ]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 			],
 			[
 				'checkTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				'234',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[x]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[x]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
 				'checkTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
 					'<LI><s>- </s><TASK id="345" state="custom">[?]</TASK> unchecked</LI></LIST></r>'
 				],
 				'345',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="complete">[x]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="checked">[x]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
 				'checkTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				'111',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="345" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="345" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
 				'checkTask',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
 					'<LI><s>- </s><TASK a="a" b="b" id="345" z="z">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				'345',
 				[
-					'<r><LIST><LI><s>- </s><TASK id="123" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="234" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK a="a" b="b" id="345" state="complete" z="z">[x]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="123" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="234" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK a="a" b="b" id="345" state="checked" z="z">[x]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
@@ -169,7 +169,7 @@ class HelperTest extends Test
 				],
 				'123',
 				[
-					'<r><TASK id="123" state="complete">[x]</TASK></r>'
+					'<r><TASK id="123" state="checked">[x]</TASK></r>'
 				]
 			],
 			[

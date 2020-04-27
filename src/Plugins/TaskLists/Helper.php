@@ -58,7 +58,7 @@ class Helper
 	}
 
 	/**
-	* Mark given task complete in XML
+	* Mark given task checked in XML
 	*
 	* @param  string $xml Parsed XML
 	* @param  string $id  Task's ID
@@ -66,11 +66,11 @@ class Helper
 	*/
 	public static function checkTask(string $xml, string $id): string
 	{
-		return self::setTaskState($xml, $id, 'complete', 'x');
+		return self::setTaskState($xml, $id, 'checked', 'x');
 	}
 
 	/**
-	* Mark given task incomplete in XML
+	* Mark given task unchecked in XML
 	*
 	* @param  string $xml Parsed XML
 	* @param  string $id  Task's ID
@@ -78,7 +78,7 @@ class Helper
 	*/
 	public static function uncheckTask(string $xml, string $id): string
 	{
-		return self::setTaskState($xml, $id, 'incomplete', ' ');
+		return self::setTaskState($xml, $id, 'unchecked', ' ');
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Helper
 	*
 	* @param  string $xml    Parsed XML
 	* @param  string $id     Task's ID
-	* @param  string $state  Task's state ("complete" or "incomplete")
+	* @param  string $state  Task's state ("checked" or "unchecked")
 	* @param  string $marker State marker ("x" or " ")
 	* @return string         Updated XML
 	*/

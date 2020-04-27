@@ -34,9 +34,9 @@ class ParserTest extends Test
 					'- [ ] unchecked'
 				],
 				[
-					'<r><LIST><LI><s>- </s><TASK id="?" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>- </s><TASK id="?" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>- </s><TASK id="?" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>- </s><TASK id="?" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>- </s><TASK id="?" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>- </s><TASK id="?" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
@@ -45,8 +45,8 @@ class ParserTest extends Test
 					'* [ ] unchecked'
 				],
 				[
-					'<r><LIST><LI><s>* </s><TASK id="?" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>* </s><TASK id="?" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<r><LIST><LI><s>* </s><TASK id="?" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>* </s><TASK id="?" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
@@ -56,9 +56,9 @@ class ParserTest extends Test
 					'- [ ] unchecked'
 				],
 				[
-					'<r><LIST><LI><s>- </s><TASK id="?" state="complete">[x]</TASK> checked</LI>',
+					'<r><LIST><LI><s>- </s><TASK id="?" state="checked">[x]</TASK> checked</LI>',
 					'<LI><s>- </s>none</LI>',
-					'<LI><s>- </s><TASK id="?" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<LI><s>- </s><TASK id="?" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				]
 			],
 			[
@@ -70,9 +70,9 @@ class ParserTest extends Test
 				],
 				[
 					'<r><LIST><s>[list]</s>',
-					'<LI><s>[*]</s><TASK id="?" state="complete">[x]</TASK> checked</LI>',
-					'<LI><s>[*]</s><TASK id="?" state="complete">[X]</TASK> Checked</LI>',
-					'<LI><s>[*]</s><TASK id="?" state="incomplete">[ ]</TASK> unchecked</LI></LIST></r>'
+					'<LI><s>[*]</s><TASK id="?" state="checked">[x]</TASK> checked</LI>',
+					'<LI><s>[*]</s><TASK id="?" state="checked">[X]</TASK> Checked</LI>',
+					'<LI><s>[*]</s><TASK id="?" state="unchecked">[ ]</TASK> unchecked</LI></LIST></r>'
 				],
 				[],
 				function ($configurator)
@@ -95,9 +95,9 @@ class ParserTest extends Test
 					'- [ ] unchecked'
 				],
 				[
-					'<ul><li data-task-id="?" data-task-state="complete"><input data-task-id="?" type="checkbox" checked disabled> checked</li>',
-					'<li data-task-id="?" data-task-state="complete"><input data-task-id="?" type="checkbox" checked disabled> Checked</li>',
-					'<li data-task-id="?" data-task-state="incomplete"><input data-task-id="?" type="checkbox" disabled> unchecked</li></ul>'
+					'<ul><li data-task-id="?" data-task-state="checked"><input data-task-id="?" type="checkbox" checked disabled> checked</li>',
+					'<li data-task-id="?" data-task-state="checked"><input data-task-id="?" type="checkbox" checked disabled> Checked</li>',
+					'<li data-task-id="?" data-task-state="unchecked"><input data-task-id="?" type="checkbox" disabled> unchecked</li></ul>'
 				]
 			],
 			[
@@ -106,8 +106,8 @@ class ParserTest extends Test
 					'- [ ] unchecked'
 				],
 				[
-					'<ul><li data-task-id="?" data-task-state="complete"><input data-task-id="?" type="checkbox" checked> checked</li>',
-					'<li data-task-id="?" data-task-state="incomplete"><input data-task-id="?" type="checkbox"> unchecked</li></ul>'
+					'<ul><li data-task-id="?" data-task-state="checked"><input data-task-id="?" type="checkbox" checked> checked</li>',
+					'<li data-task-id="?" data-task-state="unchecked"><input data-task-id="?" type="checkbox"> unchecked</li></ul>'
 				],
 				[],
 				function ($configurator)
