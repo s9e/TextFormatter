@@ -25,11 +25,11 @@ abstract class Utils
 	public static function getAttributeValues($xml, $tagName, $attrName)
 	{
 		$values = [];
-		if (strpos($xml, '<' . $tagName) !== false)
+		if (strpos($xml, $tagName) !== false)
 		{
-			$regexp = '(<' . preg_quote($tagName) . '(?= )[^>]*? ' . preg_quote($attrName) . '="([^"]*+))';
+			$regexp = '((?<=<)' . preg_quote($tagName) . '(?= )[^>]*? ' . preg_quote($attrName) . '="\\K[^"]*+)';
 			preg_match_all($regexp, $xml, $matches);
-			foreach ($matches[1] as $value)
+			foreach ($matches[0] as $value)
 			{
 				$values[] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
 			}
@@ -83,7 +83,7 @@ abstract class Utils
 	*/
 	public static function removeTag($xml, $tagName, $nestingLevel = 0)
 	{
-		if (strpos($xml, '<' . $tagName) === false)
+		if (strpos($xml, $tagName) === false)
 		{
 			return $xml;
 		}
@@ -111,16 +111,22 @@ abstract class Utils
 	*/
 	public static function replaceAttributes($xml, $tagName, callable $callback)
 	{
-		if (strpos($xml, '<' . $tagName) === false)
+		if (strpos($xml, $tagName) === false)
 		{
 			return $xml;
 		}
 
 		return preg_replace_callback(
-			'((<' . preg_quote($tagName) . ')(?=[ />])[^>]*?(/?>))',
+			'((?<=<)' . preg_quote($tagName) . '(?=[ />])\\K[^>]*+)',
 			function ($m) use ($callback)
 			{
-				return $m[1] . self::serializeAttributes($callback(self::parseAttributes($m[0]))) . $m[2];
+				$str = self::serializeAttributes($callback(self::parseAttributes($m[0])));
+				if (substr($m[0], -1) === '/')
+				{
+					$str .= '/';
+				}
+
+				return $str;
 			},
 			$xml
 		);
@@ -168,7 +174,7 @@ abstract class Utils
 		$attributes = [];
 		if (strpos($xml, '="') !== false)
 		{
-			preg_match_all('(([^ =]++)="([^"]*))S', $xml, $matches);
+			preg_match_all('(([^ =]++)="([^"]*))', $xml, $matches);
 			foreach ($matches[1] as $i => $attrName)
 			{
 				$attributes[$attrName] = html_entity_decode($matches[2][$i], ENT_QUOTES, 'UTF-8');
