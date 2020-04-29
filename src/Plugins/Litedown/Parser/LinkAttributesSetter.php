@@ -29,6 +29,10 @@ trait LinkAttributesSetter
 			$title = substr(trim(substr($url, $pos)), 1, -1);
 			$url   = substr($url, 0, $pos);
 		}
+		if (preg_match('/^<.+>$/', $url))
+		{
+			$url = str_replace('\\>', '>', substr($url, 1, -1));
+		}
 
 		$tag->setAttribute($attrName, $this->text->decode($url));
 		if ($title > '')

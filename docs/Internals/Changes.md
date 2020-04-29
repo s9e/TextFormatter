@@ -1,10 +1,16 @@
 See also [API changes](API_changes.md).
 
+
+## 2.5.0
+
+The [Litedown](../Plugins/Litedown/Synopsis.md) plugin now supports [automatic links](https://daringfireball.net/projects/markdown/syntax#autolink) and creates an `EMAIL` tag.
+
+
 ## 2.2.0
 
 The `data-s9e-livepreview-postprocess` attribute has been renamed to `data-s9e-livepreview-onrender`. The old attribute name remains as an alias but will be removed in 3.0.0. See the [list of live preview attributes](../JavaScript/Live_preview_attributes.md).
 
-The [Escaper](../Plugins/Escaper/Synopsis.md) plugins now escapes `~` by default.
+The [Escaper](../Plugins/Escaper/Synopsis.md) plugin now escapes `~` by default.
 
 The backtick character `` ` `` is now considered unsafe when user input is used in a JavaScript context.
 

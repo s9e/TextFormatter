@@ -72,7 +72,7 @@ class InlineCode extends AbstractPass
 
 		preg_match_all(
 			'/(`+)(\\s*)[^\\x17`]*/',
-			str_replace("\x1BB", '\\`', $this->text),
+			str_replace("\x1BD", '\\`', $this->text),
 			$matches,
 			PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
 			$pos

@@ -43,6 +43,10 @@ class Configurator extends ConfiguratorBase
 		],
 		'DEL'    => '<del><xsl:apply-templates/></del>',
 		'EM'     => '<em><xsl:apply-templates/></em>',
+		'EMAIL'  => [
+			'attributes' => ['email' => ['filterChain' => ['#email']]],
+			'template'   => '<a href="mailto:{@email}"><xsl:apply-templates/></a>'
+		],
 		'H1'     => '<h1><xsl:apply-templates/></h1>',
 		'H2'     => '<h2><xsl:apply-templates/></h2>',
 		'H3'     => '<h3><xsl:apply-templates/></h3>',

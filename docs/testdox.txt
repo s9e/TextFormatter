@@ -5129,6 +5129,17 @@ Links (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links)
  [x] Parsing tests with data set #45
  [x] Parsing tests with data set #46
  [x] Parsing tests with data set #47
+ [x] Parsing tests with data set #48
+ [x] Parsing tests with data set #49
+ [x] Parsing tests with data set #50
+ [x] Parsing tests with data set #51
+ [x] Parsing tests with data set #52
+ [x] Parsing tests with data set #53
+ [x] Parsing tests with data set #54
+ [x] Parsing tests with data set #55
+ [x] Parsing tests with data set #56
+ [x] Parsing tests with data set #57
+ [x] Parsing tests with data set #58
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -5177,8 +5188,20 @@ Links (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links)
  [x] Parsing tests (JavaScript) with data set #45
  [x] Parsing tests (JavaScript) with data set #46
  [x] Parsing tests (JavaScript) with data set #47
+ [x] Parsing tests (JavaScript) with data set #48
+ [x] Parsing tests (JavaScript) with data set #49
+ [x] Parsing tests (JavaScript) with data set #50
+ [x] Parsing tests (JavaScript) with data set #51
+ [x] Parsing tests (JavaScript) with data set #52
+ [x] Parsing tests (JavaScript) with data set #53
+ [x] Parsing tests (JavaScript) with data set #54
+ [x] Parsing tests (JavaScript) with data set #55
+ [x] Parsing tests (JavaScript) with data set #56
+ [x] Parsing tests (JavaScript) with data set #57
+ [x] Parsing tests (JavaScript) with data set #58
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
+ [x] Parsing+rendering tests with data set #2
 
 Strikethrough (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Strikethrough)
  [x] Parsing tests with data set #0
@@ -7614,6 +7637,7 @@ Fatdown (s9e\TextFormatter\Tests\Bundles\Fatdown)
  [x] Rendering tests (Quick enabled) with data set #12
  [x] Rendering tests (Quick enabled) with data set #13
  [x] Rendering tests (Quick enabled) with data set #14
+ [x] Rendering tests (Quick enabled) with data set #15
  [x] Rendering tests (Quick disabled) with data set #0
  [x] Rendering tests (Quick disabled) with data set #1
  [x] Rendering tests (Quick disabled) with data set #2
@@ -7629,6 +7653,7 @@ Fatdown (s9e\TextFormatter\Tests\Bundles\Fatdown)
  [x] Rendering tests (Quick disabled) with data set #12
  [x] Rendering tests (Quick disabled) with data set #13
  [x] Rendering tests (Quick disabled) with data set #14
+ [x] Rendering tests (Quick disabled) with data set #15
 
 Forum (s9e\TextFormatter\Tests\Bundles\Forum)
  [x] getCachedParser() returns an instance of s9e\TextFormatter\Parser

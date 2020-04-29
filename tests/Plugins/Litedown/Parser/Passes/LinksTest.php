@@ -76,6 +76,15 @@ class LinksTest extends AbstractTest
 				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](http://example.com/ \'Link title\')</e></URL> ..</p></r>'
 			],
 			[
+				".. [link](<http://example.com/> 'Link title') ..",
+				'<r><p>.. <URL title="Link title" url="http://example.com/"><s>[</s>link<e>](&lt;http://example.com/&gt; \'Link title\')</e></URL> ..</p></r>'
+			],
+			[
+				// https://johnmacfarlane.net/babelmark2/?normalize=1&text=%5Blink%5D(%3Chttp%3A%2F%2Fexample.com%2F%5C%3E%3E+%27Link+title%27)
+				"[link](<http://example.com/\\>> 'Link title')",
+				'<r><p><URL title="Link title" url="http://example.com/%3E"><s>[</s>link<e>](&lt;http://example.com/\\&gt;&gt; \'Link title\')</e></URL></p></r>'
+			],
+			[
 				'[not a link]',
 				'<t><p>[not a link]</p></t>'
 			],
@@ -152,6 +161,46 @@ class LinksTest extends AbstractTest
 			[
 				'[..]( http://example.org )',
 				'<r><p><URL url="http://example.org"><s>[</s>..<e>]( http://example.org )</e></URL></p></r>'
+			],
+			// Automatic links
+			[
+				'.. <https://example.org> ..',
+				'<r><p>.. <URL url="https://example.org"><s>&lt;</s>https://example.org<e>&gt;</e></URL> ..</p></r>'
+			],
+			[
+				// https://johnmacfarlane.net/babelmark2/?normalize=1&text=%5C%3Chttps%3A%2F%2Fexample.org%2F%3E%0A
+				'.. \<https://example.org> ..',
+				'<t><p>.. \&lt;https://example.org&gt; ..</p></t>'
+			],
+			[
+				'.. <https://example.org/&#20;/> ..',
+				'<r><p>.. <URL url="https://example.org/&amp;#20;/"><s>&lt;</s>https://example.org/&amp;#20;/<e>&gt;</e></URL> ..</p></r>'
+			],
+			[
+				// https://johnmacfarlane.net/babelmark2/?normalize=1&text=%3Chttps%3A%2F%2Fexample.org%2F%5C%5B%5C%3E
+				'<https://example.org/\\[\\>',
+				'<r><p><URL url="https://example.org/%5C%5B%5C"><s>&lt;</s>https://example.org/\\[\\<e>&gt;</e></URL></p></r>'
+			],
+			[
+				'<http://foo.bar.example.org/test?q=hello&id=22&boolean>',
+				'<r><p><URL url="http://foo.bar.example.org/test?q=hello&amp;id=22&amp;boolean"><s>&lt;</s>http://foo.bar.example.org/test?q=hello&amp;id=22&amp;boolean<e>&gt;</e></URL></p></r>'
+			],
+			[
+				'<mailto:user@example.org>',
+				'<r><p><URL url="mailto:user@example.org"><s>&lt;</s>mailto:user@example.org<e>&gt;</e></URL></p></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
+			],
+			[
+				'<user@example.org>',
+				'<r><p><EMAIL email="user@example.org"><s>&lt;</s>user@example.org<e>&gt;</e></EMAIL></p></r>'
+			],
+			[
+				'<foo+special@Bar.baz-bar0.example.org>',
+				'<r><p><EMAIL email="foo+special@Bar.baz-bar0.example.org"><s>&lt;</s>foo+special@Bar.baz-bar0.example.org<e>&gt;</e></EMAIL></p></r>'
 			],
 			// Reference links
 			[
@@ -380,12 +429,25 @@ class LinksTest extends AbstractTest
 					'<i>[1]: http://example.org/?x\\[1\\]=2</i></r>'
 				]
 			],
+			[
+				// https://johnmacfarlane.net/babelmark2/?normalize=1&text=%5Blink%5D%5B1%5D%0A%0A%5B1%5D%3A+%3Chttps%3A%2F%2Fexample.org%2F%5C%3E%3E
+				[
+					'[link][1]',
+					'',
+					'[1]: <https://example.org/\>>'
+				],
+				[
+					'<r><p><URL url="https://example.org/%3E"><s>[</s>link<e>][1]</e></URL></p>',
+					'',
+					'<i>[1]: &lt;https://example.org/\&gt;&gt;</i></r>'
+				]
+			],
 		]);
 	}
 
 	public function getRenderingTests()
 	{
-		return self::fixTests([
+		return [
 			[
 				'[Link text](http://example.org)',
 				'<p><a href="http://example.org">Link text</a></p>'
@@ -394,6 +456,10 @@ class LinksTest extends AbstractTest
 				'[Link text](http://example.org "Link title")',
 				'<p><a href="http://example.org" title="Link title">Link text</a></p>'
 			],
-		]);
+			[
+				'.. <https://example.org/&#20;/> ..',
+				'<p>.. <a href="https://example.org/&amp;#20;/">https://example.org/&amp;#20;/</a> ..</p>'
+			],
+		];
 	}
 }
