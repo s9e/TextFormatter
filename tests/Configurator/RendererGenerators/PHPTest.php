@@ -1551,7 +1551,7 @@ class PHPTest extends Test
 	* @testdox Tests from plugins
 	* @dataProvider getPluginsTests
 	*/
-	public function testPlugins($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
+	public function testPlugins($pluginName, $original, $expected, array $pluginOptions = [], $setup = null, $assertMethod = 'assertSame')
 	{
 		$this->configurator->rendering->engine = 'PHP';
 		$this->configurator->rendering->engine->enableQuickRenderer = false;
@@ -1578,7 +1578,7 @@ class PHPTest extends Test
 
 		extract($this->configurator->finalize());
 
-		$this->assertSame($expected, $renderer->render($parser->parse($original)));
+		$this->$assertMethod($expected, $renderer->render($parser->parse($original)));
 	}
 
 	/**
@@ -1587,7 +1587,7 @@ class PHPTest extends Test
 	* @requires extension tokenizer
 	* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Quick
 	*/
-	public function testPluginsQuick($pluginName, $original, $expected, array $pluginOptions = [], $setup = null)
+	public function testPluginsQuick($pluginName, $original, $expected, array $pluginOptions = [], $setup = null, $assertMethod = 'assertSame')
 	{
 		$this->testPlugins(
 			$pluginName,
@@ -1602,7 +1602,8 @@ class PHPTest extends Test
 				{
 					$setup($configurator, $plugin);
 				}
-			}
+			},
+			$assertMethod
 		);
 	}
 

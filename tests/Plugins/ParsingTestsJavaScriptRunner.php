@@ -27,6 +27,6 @@ trait ParsingTestsJavaScriptRunner
 			$setup($this->configurator, $plugin);
 		}
 
-		$this->assertJSParsing($original, $expected);
+		$this->assertJSParsing($original, $expected, $assertMethod);
 	}
 }

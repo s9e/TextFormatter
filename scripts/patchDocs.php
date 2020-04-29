@@ -26,14 +26,17 @@ function patchFile($filepath)
 		function ($m)
 		{
 			$php = preg_replace(
-				'/\\$configurator =.*/',
-				"\$0\n\$configurator->registeredVars['cacheDir'] = " . var_export(__DIR__ . '/../tests/.cache', true) . ";\n",
+				'/\\$configurator =.*\\n\\K/',
+				'$configurator->registeredVars["cacheDir"] = ' . var_export(__DIR__ . '/../tests/.cache', true) . ";\n",
 				$m['code']
 			);
 
 			ob_start();
 			eval($php);
 			$output = rtrim(ob_get_clean(), "\n");
+
+			// Replace generated IDs with a placeholder
+			$output = preg_replace('(task-id="\\K\\w++)', '...', $output);
 
 			return $m['block'] . "\n" . $m['open'] . "\n" . $output . "\n" . $m['close'];
 		},

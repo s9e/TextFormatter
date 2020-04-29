@@ -290,6 +290,9 @@
 			<file>tests/Plugins/PipeTables/ParserTest.php</file>
 			<file>tests/Plugins/Preg/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Preg/ParserTest.php</file>
+			<file>tests/Plugins/TaskLists/ConfiguratorTest.php</file>
+			<file>tests/Plugins/TaskLists/ParserTest.php</file>
+			<file>tests/Plugins/TaskLists/HelperTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanFunctionsTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanOperatorsTest.php</file>
