@@ -43,6 +43,9 @@ class Configurator extends ConfiguratorBase
 		$tag->template = preg_replace(
 			'(<li[^>]*+>(?!<xsl:if test="TASK">)\\K)',
 			'<xsl:if test="TASK">
+				<xsl:attribute name="data-s9e-livepreview-ignore-attrs">
+					<xsl:text>data-task-id</xsl:text>
+				</xsl:attribute>
 				<xsl:attribute name="data-task-id">
 					<xsl:value-of select="TASK/@id"/>
 				</xsl:attribute>
@@ -59,7 +62,7 @@ class Configurator extends ConfiguratorBase
 		$tag = $this->configurator->tags->add('TASK');
 		$tag->attributes->add('id')->filterChain->append('#identifier');
 		$tag->attributes->add('state')->filterChain->append('#identifier');
-		$tag->template = '<input data-task-id="{@id}" type="checkbox">
+		$tag->template = '<input data-task-id="{@id}" data-s9e-livepreview-ignore-attrs="data-task-id" type="checkbox">
 			<xsl:if test="@state = \'checked\'"><xsl:attribute name="checked"/></xsl:if>
 			<xsl:if test="not($TASKLISTS_EDITABLE)"><xsl:attribute name="disabled"/></xsl:if>
 		</input>';
