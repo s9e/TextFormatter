@@ -1,3 +1,22 @@
+2.5.0 (2020-04-29)
+==================
+
+**⚠️ This release contains functional changes. See [docs/Internals/Changes.md](https://s9etextformatter.readthedocs.io/Internals/Changes/#250) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b9e564e26f6b33d775577d24f4188ce98bb0402d...c12c0db9c823a1c1aa519f5eb96b958c813a4fe2)
+
+### Added
+
+ - `f2d1ff160` Added TaskLists plugin
+ - `c12c0db9c` Fatdown: added TaskLists
+ - `96912cdeb` Litedown: added support for automatic links
+
+### Changed
+
+ - `885f7e234` Renderer: improved performance of safety check
+ - `436c2d8d9` Utils: improved the performance of various functions
+
+
 2.4.1 (2020-04-11)
 ==================
 
