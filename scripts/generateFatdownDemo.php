@@ -58,6 +58,14 @@ ob_start();
 			border: solid 1px #ddd;
 			background-color: #fff;
 		}
+		ul > li[data-task-id]
+		{
+			list-style-type: none;
+		}
+		li[data-task-state="checked"]
+		{
+			text-decoration: line-through rgba(0, 0, 0, .6);
+		}
 	</style>
 
 </head>
