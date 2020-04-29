@@ -23,7 +23,7 @@ echo $html;
 
 #### Why Fatdown doesn't suck
 
-Unlike the original Markdown, Fatdown's HTML support **does not leave you wide open to [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting)**. Markdown is designed for publishers, not user input.
+Unlike the original Markdown specification and most Markdown flavours, Fatdown's HTML support does not allow [JavaScript to be executed](https://en.wikipedia.org/wiki/Cross-site_scripting) and is suitable for untrusted input.
 
 ```php
 use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
@@ -50,6 +50,7 @@ echo $html;
  * Litedown
  * MediaEmbed
  * PipeTables
+ * TaskLists
 
 ### HTMLElements
 

@@ -28,6 +28,7 @@ class Fatdown extends Bundle
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 		$configurator->PipeTables;
+		$configurator->TaskLists;
 
 		$htmlAliases = [
 			'a'      => ['URL', 'href' => 'url'],

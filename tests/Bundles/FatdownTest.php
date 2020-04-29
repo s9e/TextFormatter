@@ -8,4 +8,8 @@ namespace s9e\TextFormatter\Tests\Bundles;
 */
 class FatdownTest extends AbstractTest
 {
+	protected function postprocessActualHtml(string $html): string
+	{
+		return preg_replace('(data-task-id="\\K\\w++)', '...', $html);
+	}
 }

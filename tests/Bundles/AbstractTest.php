@@ -160,6 +160,7 @@ abstract class AbstractTest extends Test
 
 		$xml  = $className::parse($text);
 		$html = $className::render($xml, $params);
+		$html = $this->postprocessActualHtml($html);
 
 		// Reset the renderer if params were set
 		if (!empty($params))
@@ -168,6 +169,11 @@ abstract class AbstractTest extends Test
 		}
 
 		$this->assertSame($expected, $html);
+	}
+
+	protected function postprocessActualHtml(string $html): string
+	{
+		return $html;
 	}
 
 	/**
