@@ -44,7 +44,7 @@ class Configurator extends ConfiguratorBase
 				$this->configurator->attributeFilters['#identifier']
 			);
 		}
-		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/{@tseq}.svg"/>';
+		$tag->template = '<img alt="{.}" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/{@tseq}.svg"/>';
 	}
 
 	/**

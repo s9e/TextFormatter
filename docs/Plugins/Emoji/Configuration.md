@@ -16,7 +16,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt=":D" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f600.svg">
+Hello world <img alt=":D" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">
 ```
 
 ### Configure aliases at parsing time
@@ -44,7 +44,7 @@ echo $html;
 ```
 ```html
 Hi :smiling_face:
-Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/2/svg/1f600.svg">
+Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">
 ```
 
 ### Using Twemoji assets with text parsed on an older release
@@ -57,7 +57,7 @@ $configurator->Emoji->getTag()->template =
 	'<xsl:choose>
 		<xsl:when test="@tseq">
 			<img alt="{.}" class="emoji" draggable="false"
-				src="//twemoji.maxcdn.com/2/svg/{@tseq}.svg"/>
+				src="//twemoji.maxcdn.com/v/latest/svg/{@tseq}.svg"/>
 		</xsl:when>
 		<xsl:otherwise>
 			<img alt="{.}" class="emoji" draggable="false"
@@ -74,5 +74,5 @@ echo $renderer->render($xml);
 ```
 ```html
 <img alt="©️" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/s9e/emoji-assets-twemoji@12.0.1/dist/svgz/00a9.svgz">
-<img alt="©️" class="emoji" draggable="false" src="//twemoji.maxcdn.com/2/svg/a9.svg">
+<img alt="©️" class="emoji" draggable="false" src="//twemoji.maxcdn.com/v/latest/svg/a9.svg">
 ```
