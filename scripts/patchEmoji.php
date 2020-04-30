@@ -1,9 +1,11 @@
 #!/usr/bin/php
 <?php
 
-$version = 'latest';
+$emojiVersion = '13.0';
+$ucdVersion   = '13.0.0';
+
 $emoji   = [];
-$file    = wget('http://unicode.org/Public/emoji/' . $version . '/emoji-data.txt');
+$file    = wget('http://unicode.org/Public/' . $ucdVersion . '/ucd/emoji/emoji-data.txt');
 $images  = codepointsFromFile($file, 'Emoji_Presentation');
 
 foreach (codepointsFromFile($file, 'Emoji') as $cp)
@@ -17,8 +19,8 @@ foreach (codepointsFromFile($file, 'Emoji') as $cp)
 	$emoji[] = $utf8;
 }
 
-$file  = wget('http://unicode.org/Public/emoji/' . $version . '/emoji-sequences.txt');
-$file .= wget('http://unicode.org/Public/emoji/' . $version . '/emoji-zwj-sequences.txt');
+$file  = wget('http://unicode.org/Public/emoji/' . $emojiVersion . '/emoji-sequences.txt');
+$file .= wget('http://unicode.org/Public/emoji/' . $emojiVersion . '/emoji-zwj-sequences.txt');
 preg_match_all('(^[0-9A-F ]+)m', $file, $matches);
 foreach ($matches[0] as $seq)
 {
