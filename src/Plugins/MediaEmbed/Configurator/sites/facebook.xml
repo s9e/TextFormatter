@@ -1,15 +1,13 @@
 <site name="Facebook" homepage="https://www.facebook.com/">
 	<example>https://www.facebook.com/FacebookDevelopers/posts/10151471074398553</example>
-	<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
-	<example>https://www.facebook.com/photo.php?fbid=10152476416772631</example>
-	<example>https://www.facebook.com/ign/videos/10153762113196633/</example>
-	<example>https://www.facebook.com/southamptonfc/videos/vb.220396037973624/1357764664236750/</example>
+	<example>https://www.facebook.com/watch/?v=224353158889229</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>facebook.com</host>
 	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!marketplace/|pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
-	<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'post|video)s?/@</extract>
-	<extract>@facebook\.com/video/(?'type'post|video)\.php@</extract>
+	<extract>@facebook\.com/(?'user'[.\w]+)/(?=(?:post|video)s?/)(?'type'[pv])@</extract>
+	<extract>@facebook\.com/video/(?=post|video)(?'type'[pv])@</extract>
+	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
 	<iframe src="https://s9e.github.io/iframe/2/facebook.min.html#{@type}{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

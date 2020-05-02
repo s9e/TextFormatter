@@ -95,7 +95,7 @@
 	</tr>
 	<tr title="Facebook">
 		<td style="font-size:75%"><code>facebook</code></td>
-		<td style="font-size:50%">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553<br/>https://www.facebook.com/video/video.php?v=10150451523596807<br/>https://www.facebook.com/photo.php?fbid=10152476416772631<br/>https://www.facebook.com/ign/videos/10153762113196633/<br/>https://www.facebook.com/southamptonfc/videos/vb.220396037973624/1357764664236750/</td>
+		<td style="font-size:50%">https://www.facebook.com/FacebookDevelopers/posts/10151471074398553<br/>https://www.facebook.com/watch/?v=224353158889229</td>
 	</tr>
 	<tr title="Flickr">
 		<td style="font-size:75%"><code>flickr</code></td>
