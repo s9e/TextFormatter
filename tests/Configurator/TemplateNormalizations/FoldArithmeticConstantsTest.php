@@ -10,7 +10,6 @@ class FoldArithmeticConstantsTest extends AbstractTest
 {
 	/**
 	* @testdox Ignores locale
-	* @runInSeparateProcess
 	*/
 	public function testLocale()
 	{

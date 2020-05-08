@@ -62,15 +62,19 @@ class XPathTest extends Test
 
 	/**
 	* @testdox export(123.45) returns 123.45 regardless of locale
-	* @runInSeparateProcess
 	*/
 	public function testExportFloatLocale()
 	{
-		if (!setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR'))
+		$old = setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR');
+		if ($old === false)
 		{
 			$this->markTestSkipped('Cannot set locale');
 		}
-		$this->assertSame('123.45', XPath::export(123.45));
+
+		$actual = XPath::export(123.45);
+		setlocale(LC_NUMERIC, $old);
+
+		$this->assertSame('123.45', $actual);
 	}
 
 	/**
