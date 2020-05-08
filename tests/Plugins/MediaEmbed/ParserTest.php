@@ -1057,8 +1057,8 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/',
-				'<r><PODBEAN id="gupid-6a18d0">https://judodaveroman.podbean.com/e/judo-chop-suey-ep-20-freestyle-judo-founder-steve-scott/</PODBEAN></r>',
+				'https://howtofail.podbean.com/e/how-to-fail-m-gawdat-c19/',
+				'<r><PODBEAN id="gmyyz-d6e065">https://howtofail.podbean.com/e/how-to-fail-m-gawdat-c19/</PODBEAN></r>',
 				[],
 				function ($configurator)
 				{
