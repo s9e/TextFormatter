@@ -1,0 +1,21 @@
+<site name="GIPHY" homepage="https://giphy.com/">
+	<example>https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif</example>
+	<example>https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM</example>
+	<example>https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</example>
+
+	<tags><tag>images</tag></tags>
+
+	<attributes>
+		<height defaultValue="360" filterChain="#uint"/>
+		<width  defaultValue="640" filterChain="#uint"/>
+	</attributes>
+
+	<host>giphy.com</host>
+	<extract>!giphy\.com/(?:gifs/|media/)(?:[-\w]+-)*(?'id'\w+)!</extract>
+	<extract>!i\.giphy\.com/(?'id'\w+)!</extract>
+	<scrape url="https://giphy.com/services/oembed?url=https://media.giphy.com/media/{@id}/giphy.gif">
+		<extract>!"height"\s*:\s*(?'height'\d+)!</extract>
+		<extract>!"width"\s*:\s*(?'width'\d+)!</extract>
+	</scrape>
+	<iframe width="{@width}" height="{@height}" src="//giphy.com/embed/{@id}"/>
+</site>

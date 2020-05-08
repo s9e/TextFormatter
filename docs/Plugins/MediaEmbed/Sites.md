@@ -133,6 +133,10 @@
 		<td style="font-size:75%"><code>gifs</code></td>
 		<td style="font-size:50%">https://gifs.com/gif/zm4DLy<br/>https://j.gifs.com/Y6YZoO.gif</td>
 	</tr>
+	<tr title="GIPHY">
+		<td style="font-size:75%"><code>giphy</code></td>
+		<td style="font-size:50%">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif<br/>https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM<br/>https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</td>
+	</tr>
 	<tr title="GitHub Gist">
 		<td style="font-size:75%"><code>gist</code></td>
 		<td style="font-size:50%">https://gist.github.com/s9e/0ee8433f5a9a779d08ef<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
