@@ -8,6 +8,22 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 */
 class FoldConstantXPathExpressionsTest extends AbstractTest
 {
+	/**
+	* @testdox Ignores locale
+	*/
+	public function testLocale()
+	{
+		if (!setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR'))
+		{
+			$this->markTestSkipped('Cannot set locale');
+		}
+
+		$this->test(
+			'<xsl:value-of select="1.5 + 1"/>',
+			'<xsl:value-of select="2.5"/>'
+		);
+	}
+
 	public function getData()
 	{
 		return [
