@@ -49,6 +49,25 @@ trait RendererTests
 	}
 
 	/**
+	* @testdox Ignores locale
+	*/
+	public function testLocale()
+	{
+		if (!setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR'))
+		{
+			$this->markTestSkipped('Cannot set locale');
+		}
+
+		$xml = '<r><X/></r>';
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="1.4 + 1.1"/>';
+
+		$this->assertSame(
+			'2.5',
+			$this->configurator->rendering->getRenderer()->render($xml)
+		);
+	}
+
+	/**
 	* @testdox getParameter() returns the default value of a parameter
 	*/
 	public function testGetParameterDefault()

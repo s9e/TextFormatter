@@ -287,11 +287,16 @@ abstract class PHP extends Renderer
 	*/
 	protected function renderRichText($xml)
 	{
+		$this->setLocale();
+
 		try
 		{
 			if ($this->canQuickRender($xml))
 			{
-				return $this->renderQuick($xml);
+				$html = $this->renderQuick($xml);
+				$this->restoreLocale();
+
+				return $html;
 			}
 		}
 		catch (RuntimeException $e)
@@ -305,6 +310,7 @@ abstract class PHP extends Renderer
 		$this->at($dom->documentElement);
 		$html        = $this->out;
 		$this->reset();
+		$this->restoreLocale();
 
 		return $html;
 	}

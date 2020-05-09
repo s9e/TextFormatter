@@ -6577,6 +6577,7 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
+ [x] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -7444,6 +7445,7 @@ XSLT (s9e\TextFormatter\Tests\Renderers\XSLT)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
+ [x] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -7474,6 +7476,7 @@ PHP (s9e\TextFormatter\Tests\Renderers\PHP)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
+ [x] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters

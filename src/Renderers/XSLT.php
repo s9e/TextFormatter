@@ -117,7 +117,9 @@ class XSLT extends Renderer
 
 		// Perform the transformation and cast it as a string because it may return NULL if the
 		// transformation didn't output anything
+		$this->setLocale();
 		$output = (string) $this->proc->transformToXml($dom);
+		$this->restoreLocale();
 
 		// XSLTProcessor does not correctly identify <embed> as a void element. We fix it by
 		// removing </embed> end tags

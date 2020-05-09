@@ -18,6 +18,11 @@ abstract class Renderer
 	protected $params = [];
 
 	/**
+	* @var string Saved locale
+	*/
+	protected $savedLocale = '0';
+
+	/**
 	* Create a return a new DOMDocument loaded with given XML
 	*
 	* @param  string      $xml Source XML
@@ -181,5 +186,28 @@ abstract class Renderer
 	protected static function decodeEntity(array $m)
 	{
 		return htmlspecialchars(html_entity_decode($m[0], ENT_QUOTES, 'UTF-8'), ENT_COMPAT);
+	}
+
+	/**
+	* Restore the original locale
+	*/
+	protected function restoreLocale(): void
+	{
+		if ($this->savedLocale !== 'C')
+		{
+			setlocale(LC_NUMERIC, $this->savedLocale);
+		}
+	}
+
+	/**
+	* Temporarily set the locale to C
+	*/
+	protected function setLocale(): void
+	{
+		$this->savedLocale = setlocale(LC_NUMERIC, '0');
+		if ($this->savedLocale !== 'C')
+		{
+			setlocale(LC_NUMERIC, 'C');
+		}
 	}
 }
