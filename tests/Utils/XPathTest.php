@@ -12,6 +12,11 @@ use s9e\TextFormatter\Tests\Test;
 */
 class XPathTest extends Test
 {
+	public function tearDown(): void
+	{
+		setlocale(LC_NUMERIC, 'C');
+	}
+
 	/**
 	* @testdox export('foo') returns 'foo'
 	*/
@@ -65,16 +70,12 @@ class XPathTest extends Test
 	*/
 	public function testExportFloatLocale()
 	{
-		$old = setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR');
-		if ($old === false)
+		if (!setlocale(LC_NUMERIC, 'en_DK.utf8', 'fr_FR'))
 		{
 			$this->markTestSkipped('Cannot set locale');
 		}
 
-		$actual = XPath::export(123.45);
-		setlocale(LC_NUMERIC, $old);
-
-		$this->assertSame('123.45', $actual);
+		$this->assertSame('123.45', XPath::export(123.45));
 	}
 
 	/**

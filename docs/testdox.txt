@@ -1768,7 +1768,7 @@ Fix Unescaped Curly Braces In Html Attributes (s9e\TextFormatter\Tests\Configura
  [x] Works with data set #18
 
 Fold Arithmetic Constants (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants)
- [ ] Ignores locale
+ [x] Ignores locale
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
@@ -1804,6 +1804,7 @@ Fold Arithmetic Constants (s9e\TextFormatter\Tests\Configurator\TemplateNormaliz
  [x] Works with data set #32
 
 Fold Constant XPath Expressions (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExpressions)
+ [x] Ignores locale
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
@@ -7555,7 +7556,7 @@ XPath (s9e\TextFormatter\Utils\XPath)
  [x] export('"\'') returns concat('"',"'")
  [x] export(123) returns 123
  [x] export(123.45) returns 123.45
- [ ] export(123.45) returns 123.45 regardless of locale
+ [x] export(123.45) returns 123.45 regardless of locale
  [x] export(new stdClass) throws an exception
  [x] export(false) returns 'false()'
  [x] export(true) returns 'true()'

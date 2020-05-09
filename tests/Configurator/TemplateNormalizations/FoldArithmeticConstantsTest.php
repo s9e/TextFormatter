@@ -8,6 +8,11 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 */
 class FoldArithmeticConstantsTest extends AbstractTest
 {
+	public function tearDown(): void
+	{
+		setlocale(LC_NUMERIC, 'C');
+	}
+
 	/**
 	* @testdox Ignores locale
 	*/
