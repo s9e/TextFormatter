@@ -84,7 +84,7 @@ class XSLT implements RendererGenerator
 		}
 
 		// Start the stylesheet with the boilerplate stuff
-		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"/>';
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"/><xsl:decimal-format decimal-separator="."/>';
 
 		// Add stylesheet parameters
 		foreach ($rendering->getAllParameters() as $paramName => $paramValue)
