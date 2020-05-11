@@ -18,4 +18,8 @@
 		<extract>!"width"\s*:\s*(?'width'\d+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="//giphy.com/embed/{@id}"/>
+
+	<video width="{@width}" height="{@height}" poster="https://media.giphy.com/media/{@id}/giphy_s.gif">
+		<source type="video/mp4" src="https://media.giphy.com/media/{@id}/giphy.mp4"/>
+	</video>
 </site>

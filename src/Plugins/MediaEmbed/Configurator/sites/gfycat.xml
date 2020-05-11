@@ -21,4 +21,10 @@
 		<extract>!"width":(?'width'\d+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" padding-height="44" src="//gfycat.com/ifr/{@id}"/>
+
+	<video width="{@width}" height="{@height}" poster="https://thumbs.gfycat.com/{@id}-mobile.jpg">
+		<source type="video/mp4"  src="https://giant.gfycat.com/{@id}.mp4"/>
+		<source type="video/webm" src="https://giant.gfycat.com/{@id}.webm"/>
+		<source type="video/mp4"  src="https://thumbs.gfycat.com/{@id}-mobile.mp4"/>
+	</video>
 </site>

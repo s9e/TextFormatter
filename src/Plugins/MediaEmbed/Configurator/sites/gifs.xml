@@ -16,4 +16,9 @@
 		<extract>!meta property="og:image:height" content="(?'height'\d+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="//gifs.com/embed/{@id}"/>
+
+	<video width="{@width}" height="{@height}" poster="https://j.gifs.com/{@id}.jpg">
+		<source type="video/mp4" src="https://j.gifs.com/{@id}@large.mp4"/>
+		<source type="video/mp4" src="https://j.gifs.com/{@id}.mp4"/>
+	</video>
 </site>
