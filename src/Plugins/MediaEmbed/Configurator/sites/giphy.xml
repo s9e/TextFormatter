@@ -2,6 +2,7 @@
 	<example>https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif</example>
 	<example>https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM</example>
 	<example>https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</example>
+	<example>https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL</example>
 
 	<tags><tag>images</tag></tags>
 
@@ -11,13 +12,20 @@
 	</attributes>
 
 	<host>giphy.com</host>
-	<extract>!giphy\.com/(?:gifs/|media/)(?:[-\w]+-)*(?'id'\w+)!</extract>
-	<extract>!i\.giphy\.com/(?'id'\w+)!</extract>
+	<extract>!giphy\.com/(?'type'gif|video|webp)\w+/(?:[-\w]+-)*(?'id'\w+)!</extract>
+	<extract>!giphy\.com/media/(?'id'\w+)/\w+\.(?'type'gif|webp)!</extract>
+	<extract>!i\.giphy\.com/(?'id'\w+)\.(?'type'gif|webp)!</extract>
 	<scrape url="https://giphy.com/services/oembed?url=https://media.giphy.com/media/{@id}/giphy.gif">
 		<extract>!"height"\s*:\s*(?'height'\d+)!</extract>
 		<extract>!"width"\s*:\s*(?'width'\d+)!</extract>
 	</scrape>
-	<iframe width="{@width}" height="{@height}" src="//giphy.com/embed/{@id}"/>
+	<iframe width="{@width}" height="{@height}">
+		<src><![CDATA[
+			<xsl:text>//giphy.com/embed/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="@type='video'">/video</xsl:if>
+		]]></src>
+	</iframe>
 
 	<video width="{@width}" height="{@height}" poster="https://media.giphy.com/media/{@id}/giphy_s.gif">
 		<source type="video/mp4" src="https://media.giphy.com/media/{@id}/giphy.mp4"/>

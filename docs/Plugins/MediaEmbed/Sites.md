@@ -135,7 +135,7 @@
 	</tr>
 	<tr title="GIPHY">
 		<td style="font-size:75%"><code>giphy</code></td>
-		<td style="font-size:50%">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif<br/>https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM<br/>https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</td>
+		<td style="font-size:50%">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif<br/>https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM<br/>https://i.giphy.com/l41m1wcjpWJZi5w7S.gif<br/>https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL</td>
 	</tr>
 	<tr title="GitHub Gist">
 		<td style="font-size:75%"><code>gist</code></td>

@@ -761,8 +761,18 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://j.gifs.com/Y6YZoO.gif',
+				'<r><GIFS height="200" id="Y6YZoO" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('gifs');
+				}
+			],
+			[
 				'https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif',
-				'<r><GIPHY height="160" id="UGUqsAtHh3T1e" width="160">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif</GIPHY></r>',
+				'<r><GIPHY height="160" id="UGUqsAtHh3T1e" type="gif" width="160">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif</GIPHY></r>',
 				[],
 				function ($configurator)
 				{
@@ -772,7 +782,17 @@ class ParserTest extends Test
 			],
 			[
 				'https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM',
-				'<r><GIPHY height="169" id="FsjDdnIRcroIM" width="300">https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM</GIPHY></r>',
+				'<r><GIPHY height="169" id="FsjDdnIRcroIM" type="gif" width="300">https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM</GIPHY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('giphy');
+				}
+			],
+			[
+				'https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL',
+				'<r><GIPHY height="270" id="VG8PNQDwsfOzU4mQAL" type="video" width="480">https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL</GIPHY></r>',
 				[],
 				function ($configurator)
 				{
@@ -782,7 +802,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://i.giphy.com/l41m1wcjpWJZi5w7S.gif',
-				'<r><GIPHY height="358" id="l41m1wcjpWJZi5w7S" width="500">https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</GIPHY></r>',
+				'<r><GIPHY height="358" id="l41m1wcjpWJZi5w7S" type="gif" width="500">https://i.giphy.com/l41m1wcjpWJZi5w7S.gif</GIPHY></r>',
 				[],
 				function ($configurator)
 				{
@@ -791,13 +811,13 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://j.gifs.com/Y6YZoO.gif',
-				'<r><GIFS height="200" id="Y6YZoO" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
+				'https://i.giphy.com/l41m1wcjpWJZi5w7S.webp',
+				'<r><GIPHY height="358" id="l41m1wcjpWJZi5w7S" type="webp" width="500">https://i.giphy.com/l41m1wcjpWJZi5w7S.webp</GIPHY></r>',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gifs');
+					$configurator->MediaEmbed->add('giphy');
 				}
 			],
 //			[
@@ -1412,6 +1432,26 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('gfycat');
+				}
+			],
+			[
+				'https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM',
+				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/FsjDdnIRcroIM"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('giphy');
+				}
+			],
+			[
+				'https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL',
+				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:480px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/VG8PNQDwsfOzU4mQAL/video"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('giphy');
 				}
 			],
 			[
